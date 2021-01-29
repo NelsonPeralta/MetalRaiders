@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Pickable
+  - Player_1_Inventory
+  - Dirt
+  - Blood
+  - Player 1
+  - Weapon Binder
+  - Weapon
+  - Player Camera
+  - Current Ammo Text
+  - Total Ammo Text
+  - Bullet Renderer
+  - Casing Spawn Point
+  - Muzzleflash Light
+  - Muzzleflash Particles
+  - Spark Particles
+  - Bullet Spawn Point
+  - Grenade Spawn Point
+  - GasTank
+  - Target
+  - ExplosiveBarrel
+  - Collide
+  - Player Inventory
+  - Player Informer
+  - Scope BG
+  - Scope
+  - SFX
+  - Crosshairs
+  - Attachment
+  - Components
+  - Weapon Sounds
+  - ZombieAttackTrigger
+  - Zombie
+  - Ammo Pickup Sound
+  - Grenade Pickup Sound
+  - Frag Grenade Ammo Text
+  - Pickup Collider
+  - Raycast Origin
+  - Shooting Scripts
+  - Spawn Point
+  - Level Manager
+  - Player Manager
+  - Game Settings
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Third Person Model
+  - First Person
+  - Player
+  - FPS Bullet
+  - Outerbox
+  - Hitbox
+  - Roof
+  - Motion Tracker
+  - Obstacle
+  - 17
+  - 18
+  - 19
+  - 20
+  - 21
+  - NIWBullets
+  - Hide
+  - P1 FPS
+  - P2 FPS
+  - P3 FPS
+  - P4 FPS
+  - P1 TPS
+  - P2 TPS
+  - P3 TPS
+  - P4 TPS
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: New Layer
+    uniqueID: 229720111
+    locked: 0
