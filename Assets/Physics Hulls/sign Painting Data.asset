@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0de965f2e710c1c489ead8e62cd25da0, type: 3}
+  m_Name: sign Painting Data
+  m_EditorClassIdentifier: 
+  hullData: {fileID: 11400000, guid: d53119dbc120abf47807e9f22dba3c14, type: 2}
+  sourceMesh: {fileID: 4300018, guid: 7b23fcb368491cf4ca8fcd85d12bb784, type: 3}
+  activeHull: 2
+  faceThickness: 0.1
+  hulls:
+  - name: Hull 1
+    isVisible: 1
+    type: 0
+    colour: {r: 0, g: 1, b: 1, a: 0.3}
+    material: {fileID: 0}
+    enableInflation: 1
+    inflationAmount: 0.1
+    isTrigger: 0
+    isChildCollider: 0
+    selectedFaces: 4400000048000000490000004a0000004b0000007100000042000000410000003f0000003e0000003d0000003c0000003b000000390000003800000046000000450000002300000024000000250000002600000027000000280000007000000033000000340000002a0000002d0000002e0000002f0000002c0000002b00000031000000
+    collisionMesh: {fileID: 0}
+    faceCollisionMesh: {fileID: 0}
+    collisionBox:
+      m_Center: {x: 0.0045930147, y: 0.06423269, z: -0.000000230968}
+      m_Extent: {x: 0.9801994, y: 0.4899208, z: 0.034308333}
+    hasColliderError: 0
+    numColliderFaces: 0
+  - name: Hull 2
+    isVisible: 1
+    type: 1
+    colour: {r: 1, g: 0, b: 1, a: 0.3}
+    material: {fileID: 0}
+    enableInflation: 0
+    inflationAmount: 0.01
+    isTrigger: 0
+    isChildCollider: 0
+    selectedFaces: 0b0000000a0000000d0000000c00000008000000090000000e0000000f000000
+    collisionMesh: {fileID: 3618190843703776114, guid: d53119dbc120abf47807e9f22dba3c14,
+      type: 2}
+    faceCollisionMesh: {fileID: 0}
+    collisionBox:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+    hasColliderError: 0
+    numColliderFaces: 6
+  - name: Hull 3
+    isVisible: 1
+    type: 1
+    colour: {r: 1, g: 1, b: 0, a: 0.3}
+    material: {fileID: 0}
+    enableInflation: 0
+    inflationAmount: 0.01
+    isTrigger: 0
+    isChildCollider: 0
+    selectedFaces: 0400000005000000020000000300000006000000070000000000000001000000
+    collisionMesh: {fileID: -4698093810558677360, guid: d53119dbc120abf47807e9f22dba3c14,
+      type: 2}
+    faceCollisionMesh: {fileID: 0}
+    collisionBox:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+    hasColliderError: 0
+    numColliderFaces: 6
