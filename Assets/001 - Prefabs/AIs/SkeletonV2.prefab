@@ -23726,8 +23726,9 @@ MonoBehaviour:
   editMode: 0
   autoSeekTarget: 0
   isDead: 0
-  Health: 150
-  points: 150
+  DefaultHealth: 200
+  Health: 200
+  points: 200
   defaultSpeed: 5
   defaultAcceleration: 10
   damage: 16

@@ -431,8 +431,8 @@ public class SwarmMode : MonoBehaviour
             if (!newZombie.GetComponent<ZombieScript>().swarmMode)
                 newZombie.GetComponent<ZombieScript>().swarmMode = this;
             newZombie.GetComponent<ZombieScript>().target = pManager.allPlayers[b].transform;
-            zombiesAlive = zombiesAlive + 1;
-            zombiesLeftToSpawn = zombiesLeftToSpawn - 1;
+            zombiesAlive ++;
+            zombiesLeftToSpawn --;
 
             //if (ZombieSpawns[i] != null)
             //{
@@ -453,6 +453,16 @@ public class SwarmMode : MonoBehaviour
         {
             int i = Random.Range(0, skeletonSpawns.Length);
             int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+
+            var newSkeleton = skeletonPool.SpawnPooledGameObject();
+            newSkeleton.transform.position = skeletonSpawns[i].transform.position;
+            newSkeleton.transform.rotation = skeletonSpawns[i].transform.rotation;
+            newSkeleton.SetActive(true);
+            if (!newSkeleton.GetComponent<Skeleton>().swarmMode)
+                newSkeleton.GetComponent<Skeleton>().swarmMode = this;
+            newSkeleton.GetComponent<Skeleton>().target = pManager.allPlayers[b].transform;
+            skeletonsAlive ++;
+            skeletonsLeftToSpawn --;
 
             //if (skeletonSpawns[i] != null)
             //{

@@ -21,6 +21,7 @@ public class Skeleton : MonoBehaviour
 
     [Header("Properties")]
     public bool isDead;
+    public float DefaultHealth;
     public float Health;
     public int points;
     public float defaultSpeed;
@@ -95,15 +96,9 @@ public class Skeleton : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        firstHitHealth = Mathf.CeilToInt((Health / 2));
-
-        nma.speed = defaultSpeed;
-        if(target)
-            targetMovement = target.gameObject.GetComponent<Movement>();
-        StartCoroutine(PlaySound());
-        InRangeActionManager();
+        ResetSkeleton();
     }
 
     // Update is called once per frame
@@ -152,7 +147,7 @@ public class Skeleton : MonoBehaviour
         if (Health <= 0 && !isDead)
         {
             nma.speed = 0;
-            Die();
+            StartCoroutine(Die());
             isDead = true;
         }
     }
@@ -290,10 +285,9 @@ public class Skeleton : MonoBehaviour
         }
     }
 
-    void Die()
+    IEnumerator Die()
     {
-        Destroy(gameObject, 10f);
-        Destroy(Aura);
+        Aura.SetActive(false);
         nma.enabled = false;
         anim.Play("Die");
 
@@ -306,7 +300,7 @@ public class Skeleton : MonoBehaviour
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
-            hitbox.gameObject.layer = 23; //Ground
+            //hitbox.gameObject.layer = 23; //Ground
             hitbox.gameObject.SetActive(false);
         }
 
@@ -317,6 +311,10 @@ public class Skeleton : MonoBehaviour
             TransferPoints();
         }
         DropRandomWeapon();
+        target = null;
+
+        yield return new WaitForSeconds(5);
+        gameObject.SetActive(false);
     }
 
     public IEnumerator Guard()
@@ -544,15 +542,15 @@ public class Skeleton : MonoBehaviour
             if (objectInLOS.GetComponent<PlayerHitbox>())
             {
                 GameObject playerInLOS = objectInLOS.GetComponent<PlayerHitbox>().player.gameObject;
-
-                if (playerInLOS == target.gameObject)
+                if (target)
                 {
-                    targetInLOS = true;
-                }
-                else
-                {
-                    if (!resettingTargetInLOS)
-                        StartCoroutine(ResetTargetInLOS());
+                    if (playerInLOS == target.gameObject)
+                        targetInLOS = true;
+                    else
+                    {
+                        if (!resettingTargetInLOS)
+                            StartCoroutine(ResetTargetInLOS());
+                    }
                 }
             }
         }
@@ -613,5 +611,33 @@ public class Skeleton : MonoBehaviour
         {
             fireballSpawnPoint.transform.LookAt(target);
         }
+    }
+
+    void ResetSkeleton()
+    {
+        firstHitHealth = Mathf.CeilToInt((DefaultHealth / 2));
+        nma.enabled = true;
+        nma.speed = defaultSpeed;
+        if (target)
+            targetMovement = target.gameObject.GetComponent<Movement>();
+        StartCoroutine(PlaySound());
+        InRangeActionManager();
+
+        Health = DefaultHealth;
+        isDead = false;
+
+        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        {
+            hitbox.gameObject.SetActive(true);
+        }
+
+        motionTrackerDot.SetActive(true);
+
+        nextAttackCooldown = 0;
+        lastPlayerWhoShot = null;
+        otherPlayerShot = false;
+        targetSwitchCountdown = targetSwitchCountdownDefault;
+        targetSwitchReady = true;
+        Aura.SetActive(true);
     }
 }

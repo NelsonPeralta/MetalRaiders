@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pooledObject: []
-  objectPrefab: {fileID: 6407237786346386500, guid: 87e722aed3b07854b8db259e0741e926,
+  objectPrefab: {fileID: 6258186488468177427, guid: 7fb6dc8cba642db459979b6fe0d4b527,
     type: 3}
   amountToPool: 24
 --- !u!1001 &42454279
@@ -9763,7 +9763,7 @@ MonoBehaviour:
   pManager: {fileID: 1001359698}
   ssManager: {fileID: 1001359697}
   zombiePool: {fileID: 4284037863468950460}
-  skeletonPool: {fileID: 0}
+  skeletonPool: {fileID: 38388214}
   watcherPool: {fileID: 0}
   trollPool: {fileID: 0}
   hellhoundPool: {fileID: 0}
@@ -9839,8 +9839,8 @@ MonoBehaviour:
   watchersLeftToSpawn: 0
   hellhoundsLeftToSpawn: 0
   trollsLeftToSpawn: 0
-  maxZombiesOnMap: 1
-  maxSkeletonsOnMap: 0
+  maxZombiesOnMap: 0
+  maxSkeletonsOnMap: 1
   maxWatchersOnMap: 0
   maxHellhoundsOnMap: 0
   maxTrollsOnMap: 0
