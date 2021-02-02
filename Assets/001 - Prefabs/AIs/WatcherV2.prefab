@@ -12020,6 +12020,7 @@ MonoBehaviour:
   swarmMode: {fileID: 0}
   pManager: {fileID: 0}
   hitboxes: {fileID: 1673082706048369688}
+  defaultHealth: 150
   Health: 150
   points: 150
   isDead: 0

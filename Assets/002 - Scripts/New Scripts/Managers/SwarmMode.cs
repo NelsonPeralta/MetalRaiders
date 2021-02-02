@@ -489,6 +489,16 @@ public class SwarmMode : MonoBehaviour
             int i = Random.Range(0, watcherSpawns.Length);
             int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
 
+            var newWatcher = watcherPool.SpawnPooledGameObject();
+            newWatcher.transform.position = watcherSpawns[i].transform.position;
+            newWatcher.transform.rotation = watcherSpawns[i].transform.rotation;
+            newWatcher.SetActive(true);
+            if (!newWatcher.GetComponent<Watcher>().swarmMode)
+                newWatcher.GetComponent<Watcher>().swarmMode = this;
+            newWatcher.GetComponent<Watcher>().target = pManager.allPlayers[b].transform;
+            watchersAlive++;
+            watchersLeftToSpawn--;
+
             //if (watcherSpawns[i] != null)
             //{
             //    GameObject watcher = Instantiate(watcherPrefab, watcherSpawns[i].gameObject.transform.position, watcherSpawns[i].gameObject.transform.rotation);

@@ -13,6 +13,7 @@ public class Watcher : MonoBehaviour
     public Hitboxes hitboxes;
 
     [Header("Properties")]
+    public float defaultHealth;
     public float Health;
     public int points;
     public bool isDead;
@@ -70,8 +71,9 @@ public class Watcher : MonoBehaviour
     public ParticleSystem shield;
     public SphereCollider shieldCollider;
 
-    private void Start()
+    private void OnEnable()
     {
+        ResetWatcher();
         ActionManager();
     }
 
@@ -120,39 +122,39 @@ public class Watcher : MonoBehaviour
 
     void Movement()
     {
-            if (Health > 0)
+        if (Health > 0)
+        {
+            if (target != null)
             {
-                if (target != null)
+                if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
                 {
-                    if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
-                    {
-                        nma.SetDestination(target.position);
-                    }
-                    else if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0)
-                    {
-                        target = null;
-                    }
+                    nma.SetDestination(target.position);
+                }
+                else if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0)
+                {
+                    target = null;
+                }
 
-                    if (swarmMode != null)
+                if (swarmMode != null)
+                {
+                    if (swarmMode.editMode)
                     {
-                        if (swarmMode.editMode)
-                        {
-                            nma.speed = 0.01f;
-                        }
+                        nma.speed = 0.01f;
                     }
                 }
-                else
-                {
-                    LookForNewRandomPlayer();
-                }
             }
-            if (Health <= 0 && !isDead)
+            else
             {
-                nma.speed = 0;
-                Die();
-                isDead = true;
+                LookForNewRandomPlayer();
             }
-        
+        }
+        if (Health <= 0 && !isDead)
+        {
+            nma.speed = 0;
+            StartCoroutine(Die());
+            isDead = true;
+        }
+
 
         if (!isDead)
         {
@@ -262,7 +264,7 @@ public class Watcher : MonoBehaviour
                     }
                     nextAction = "";
                     isReadyToAttack = false;
-                    StartCoroutine(ActionCooldown(nextActionCooldown/2));
+                    StartCoroutine(ActionCooldown(nextActionCooldown / 2));
                     ActionManager();
                 }
             }
@@ -333,11 +335,11 @@ public class Watcher : MonoBehaviour
         }
     }
 
-    void Die()
+    IEnumerator Die()
     {
         var ds = Instantiate(deathSmoke, transform.position + new Vector3(0, 1, 0), transform.rotation);
         Destroy(ds, 5);
-        Destroy(gameObject, 0.5f);
+        //Destroy(gameObject, 0.5f);
         nma.enabled = false;
         animator.Play("Take Damage");
         isDead = true;
@@ -351,7 +353,7 @@ public class Watcher : MonoBehaviour
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
-            hitbox.gameObject.layer = 23; //Ground
+            //hitbox.gameObject.layer = 23; //Ground
             hitbox.gameObject.SetActive(false);
         }
 
@@ -363,6 +365,10 @@ public class Watcher : MonoBehaviour
             TransferPoints();
         }
         DropRandomWeapon();
+        target = null;
+
+        yield return new WaitForSeconds(0.5f);
+        gameObject.SetActive(false);
     }
 
     void LookForNewRandomPlayer()
@@ -464,15 +470,16 @@ public class Watcher : MonoBehaviour
             {
                 GameObject playerInLOS = objectInLOS.GetComponent<PlayerHitbox>().player.gameObject;
 
-                if (playerInLOS == target.gameObject)
-                {
-                    targetInLOS = true;
-                }
-                else
-                {
-                    if (!resettingTargetInLOS)
-                        StartCoroutine(ResetTargetInLOS());
-                }
+                if (target && playerInLOS)
+                    if (playerInLOS == target.gameObject)
+                    {
+                        targetInLOS = true;
+                    }
+                    else
+                    {
+                        if (!resettingTargetInLOS)
+                            StartCoroutine(ResetTargetInLOS());
+                    }
             }
         }
         else
@@ -534,5 +541,37 @@ public class Watcher : MonoBehaviour
 
         targetInLOS = false;
         resettingTargetInLOS = false;
+    }
+
+    void ResetWatcher()
+    {
+        nma.enabled = true;
+        nma.speed = defaultSpeed;
+
+        //StartCoroutine(PlaySound());
+        //if (placeholderSkin)
+        //    placeholderSkin.SetActive(false);
+        //randomSkin();
+
+        Health = defaultHealth;
+        isDead = false;
+        isInRange = false;
+        isInMeleeRange = false;
+        targetInLOS = false;
+        isReadyToAttack = true;
+
+
+        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        {
+            hitbox.gameObject.SetActive(true);
+        }
+
+        motionTrackerDot.SetActive(true);
+
+        nextActionCooldown = 2;
+        lastPlayerWhoShot = null;
+        otherPlayerShot = false;
+        targetSwitchCountdown = targetSwitchCountdownDefault;
+        targetSwitchReady = true;
     }
 }

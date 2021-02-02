@@ -625,6 +625,10 @@ public class Skeleton : MonoBehaviour
 
         Health = DefaultHealth;
         isDead = false;
+        IsInMeleeRange = false;
+        IsInMidRange = false;
+        targetInLOS = false;
+        isReadyToAttack = true;
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
