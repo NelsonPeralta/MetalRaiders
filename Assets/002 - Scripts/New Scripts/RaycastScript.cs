@@ -117,90 +117,84 @@ public class RaycastScript : MonoBehaviour
     {
         if (Physics.Raycast(raySpawn, puCollider.transform.forward * raycastRange, out hit, 10000, layerMask)) // Need a Raycast Range Overload to work with LayerMask
         {
-                if (hit.transform.gameObject.GetComponent<PlayerHitbox>() == null && hit.transform.gameObject.GetComponent<AIHitbox>() == null)
+
+            if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null)
+            {
+                targetDistance = hit.distance;
+
+                if (targetDistance <= wProperties.RedReticuleRange && target != null)
                 {
-                    //Debug.Log("Hitting Ground");
-                    //Debug.Log("Obstacle Ray Hitting = " + hit.transform.gameObject.name);
-                    target = null;
-                    aiHitbox = null;
-                    targetHitbox = null;
-                    targetDistance = raycastRange;
+                    if (string.Equals(target.GetComponent<AllPlayerScripts>().playerMPProperties.team.Trim(), playerMPProperties.team.Trim()))
+                    {
+                        crosshairScript.friendlyRRisActive = true;
+                    }
+                    else
+                    {
+                        crosshairScript.RRisActive = true;
+                    }
+                }
+                else if (targetDistance > wProperties.RedReticuleRange && target != null)
+                {
                     crosshairScript.RRisActive = false;
                     crosshairScript.friendlyRRisActive = false;
                 }
 
-                if (hit.transform.gameObject.layer == 16)
+                if (hit.transform.gameObject.layer == 12)
                 {
-                    //Debug.Log("Hitting Object with Ray");
+                    crosshairScript.RRisActive = false;
+                    crosshairScript.friendlyRRisActive = false;
+                    targetHitbox = null;
                 }
+            }
 
-                if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null)
+            if (hit.transform.gameObject.GetComponent<AIHitbox>() != null)
+            {
+
+                //Debug.Log("Check 2");
+                targetDistance = hit.distance;
+
+                if (wProperties != null)
                 {
-                    targetDistance = hit.distance;
-
                     if (targetDistance <= wProperties.RedReticuleRange && target != null)
                     {
-                        if (string.Equals(target.GetComponent<AllPlayerScripts>().playerMPProperties.team.Trim(), playerMPProperties.team.Trim()))
+                        //Debug.Log("Here 2");
+                        if (string.Equals(hit.transform.gameObject.GetComponent<AIHitbox>().team.Trim(), playerMPProperties.team.Trim()))
                         {
+                            //Debug.Log("Here 3");
                             crosshairScript.friendlyRRisActive = true;
                         }
                         else
                         {
+                            //Debug.Log("Here 4");
                             crosshairScript.RRisActive = true;
                         }
                     }
                     else if (targetDistance > wProperties.RedReticuleRange && target != null)
                     {
+                        //Debug.Log("Here 5");
                         crosshairScript.RRisActive = false;
                         crosshairScript.friendlyRRisActive = false;
                     }
 
                     if (hit.transform.gameObject.layer == 12)
                     {
+                        //Debug.Log("Here 6");
                         crosshairScript.RRisActive = false;
                         crosshairScript.friendlyRRisActive = false;
-                        targetHitbox = null;
+                        aiHitbox = null;
                     }
                 }
-
-                if (hit.transform.gameObject.GetComponent<AIHitbox>() != null)
-                {
-
-                    //Debug.Log("Check 2");
-                    targetDistance = hit.distance;
-
-                    if (wProperties != null)
-                    {
-                        if (targetDistance <= wProperties.RedReticuleRange && target != null)
-                        {
-                            //Debug.Log("Here 2");
-                            if (string.Equals(hit.transform.gameObject.GetComponent<AIHitbox>().team.Trim(), playerMPProperties.team.Trim()))
-                            {
-                                //Debug.Log("Here 3");
-                                crosshairScript.friendlyRRisActive = true;
-                            }
-                            else
-                            {
-                                //Debug.Log("Here 4");
-                                crosshairScript.RRisActive = true;
-                            }
-                        }
-                        else if (targetDistance > wProperties.RedReticuleRange && target != null)
-                        {
-                            //Debug.Log("Here 5");
-                            crosshairScript.RRisActive = false;
-                            crosshairScript.friendlyRRisActive = false;
-                        }
-
-                        if (hit.transform.gameObject.layer == 12)
-                        {
-                            //Debug.Log("Here 6");
-                            crosshairScript.RRisActive = false;
-                            crosshairScript.friendlyRRisActive = false;
-                            aiHitbox = null;
-                        }
-                    }
-                }            
+            }
+        }
+        else
+        {
+            Debug.Log("No hit");
+            target = null;
+            aiHitbox = null;
+            targetHitbox = null;
+            targetDistance = raycastRange;
+            crosshairScript.RRisActive = false;
+            crosshairScript.friendlyRRisActive = false;
         }
     }
 }

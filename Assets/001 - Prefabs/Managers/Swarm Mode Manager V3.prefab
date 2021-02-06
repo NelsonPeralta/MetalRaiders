@@ -670,6 +670,8 @@ Transform:
   - {fileID: 2895372177459000018}
   - {fileID: 8833287863417832715}
   - {fileID: 8833287863481363179}
+  - {fileID: 3630140095715694555}
+  - {fileID: 6563901005260219779}
   m_Father: {fileID: 3117516504529519404}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1003,6 +1005,100 @@ Transform:
   m_Father: {fileID: 1771406624451355452}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1988416318053934655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6563901005260219779}
+  - component: {fileID: 7250139209349883002}
+  m_Layer: 0
+  m_Name: Trolls
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6563901005260219779
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988416318053934655}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4754956661482728494}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7250139209349883002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988416318053934655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89a3f33078fb0a408dc6b93b93b7b0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pooledObject: []
+  objectPrefab: {fileID: 7034514158808054889, guid: 1f639476dc15a584bb205419125f2295,
+    type: 3}
+  amountToPool: 24
+--- !u!1 &2036733117777383558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3630140095715694555}
+  - component: {fileID: 463532029279491962}
+  m_Layer: 0
+  m_Name: Hellhounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3630140095715694555
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036733117777383558}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4754956661482728494}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &463532029279491962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036733117777383558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89a3f33078fb0a408dc6b93b93b7b0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pooledObject: []
+  objectPrefab: {fileID: 2526179230586925567, guid: fcc590c19b4548946b9b588fa5e5994a,
+    type: 3}
+  amountToPool: 24
 --- !u!1 &2148543314638493073
 GameObject:
   m_ObjectHideFlags: 0
@@ -2398,8 +2494,8 @@ MonoBehaviour:
   zombiePool: {fileID: 4748431454468319042}
   skeletonPool: {fileID: 8833287863417832712}
   watcherPool: {fileID: 8833287863481363178}
-  trollPool: {fileID: 0}
-  hellhoundPool: {fileID: 0}
+  trollPool: {fileID: 7250139209349883002}
+  hellhoundPool: {fileID: 463532029279491962}
   blackKnightPrefab: {fileID: 0}
   flameTyrantPrefab: {fileID: 0}
   players:
@@ -2448,7 +2544,7 @@ MonoBehaviour:
   - {fileID: 5888028900920881444}
   - {fileID: 2383517818725659747}
   - {fileID: 2497225569295449064}
-  waveNumber: 3
+  waveNumber: 0
   waveInProgress: 0
   newWaveDelay: 2
   bossWaveTimer: 120
@@ -2487,6 +2583,10 @@ MonoBehaviour:
   nextHellhoundSpawnTime: 0
   trollSpawnDelay: 12
   nextTrollSpawnTime: 0
+  parachuteWeaponCrates:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   RandwomWeaponDrop: {fileID: 6445044613576669946, guid: 0e9b03b94e0523f46a944f34999d62b3,
     type: 3}
   dropLocation: {fileID: 492067740658921570}

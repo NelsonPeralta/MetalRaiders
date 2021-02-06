@@ -2893,6 +2893,7 @@ MonoBehaviour:
   simpleLOS: {fileID: 0}
   shield: {fileID: 0}
   motionTrackerDot: {fileID: 2526179230621561660}
+  DefaultHealth: 75
   Health: 75
   points: 75
   defaultSpeed: 10

@@ -67,6 +67,9 @@ public class Watcher : MonoBehaviour
     public GameObject wall;
     public GameObject deathSmoke;
 
+    [Header("Sounds")]
+    public AudioClip summonWall;
+
     [Header("Shield")]
     public ParticleSystem shield;
     public SphereCollider shieldCollider;
@@ -234,33 +237,48 @@ public class Watcher : MonoBehaviour
                 }
                 else if (nextAction == "Wall")
                 {
+                    bool spawnWall = true;
                     var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
                     var mov = target.GetComponent<Movement>();
+                    var wal = Instantiate(wall);
                     if (mov.direction == "Backwards")
                     {
                         animator.Play("Summon");
-                        var wal = Instantiate(wall, pSurro.back.transform.position, pSurro.back.transform.rotation);
+                        wal.transform.position = pSurro.back.transform.position;
+                        wal.transform.rotation = pSurro.back.transform.rotation;
+                        //var wal = Instantiate(wall, pSurro.back.transform.position, pSurro.back.transform.rotation);
                         wal.transform.Rotate(-90, 0, 0);
                     }
                     else if (mov.direction == "Left")
                     {
                         animator.Play("Summon");
-                        var wal = Instantiate(wall, pSurro.left.transform.position, pSurro.left.transform.rotation);
+                        wal.transform.position = pSurro.back.transform.position;
+                        wal.transform.rotation = pSurro.back.transform.rotation;
+                        //var wal = Instantiate(wall, pSurro.left.transform.position, pSurro.left.transform.rotation);
                         wal.transform.Rotate(-90, 90, 0);
                     }
                     else if (mov.direction == "Right")
                     {
                         animator.Play("Summon");
-                        var wal = Instantiate(wall, pSurro.right.transform.position, pSurro.right.transform.rotation);
+                        wal.transform.position = pSurro.back.transform.position;
+                        wal.transform.rotation = pSurro.back.transform.rotation;
+                        //var wal = Instantiate(wall, pSurro.right.transform.position, pSurro.right.transform.rotation);
                         wal.transform.Rotate(-90, 90, 0);
                     }
                     else
                     {
+                        Destroy(wal);
                         animator.Play("Projectile");
                         var proj = Instantiate(projectile, projectileSpawnPoint.transform.position, projectileSpawnPoint.transform.rotation);
                         proj.GetComponent<Fireball>().damage = projectileDamage;
                         proj.GetComponent<Fireball>().force = projectileSpeed;
                         Destroy(proj, 5);
+                        spawnWall = false;
+                    }
+                    if (spawnWall)
+                    {
+                        wal.GetComponent<AudioSource>().clip = summonWall;
+                        wal.GetComponent<AudioSource>().Play();
                     }
                     nextAction = "";
                     isReadyToAttack = false;
@@ -361,7 +379,7 @@ public class Watcher : MonoBehaviour
 
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
         }
         DropRandomWeapon();

@@ -17,6 +17,7 @@ public class Hellhound : MonoBehaviour
     //public AIFieldOfVision fov;
 
     [Header("Hellhound Settings")]
+    public float DefaultHealth;
     public float Health = 100;
     public int points;
     public float defaultSpeed;
@@ -73,11 +74,9 @@ public class Hellhound : MonoBehaviour
     public GameObject smoke;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        nma.speed = defaultSpeed;
-
-        StartCoroutine(PlaySound());
+        ResetHellhound();
     }
 
     // Update is called once per frame
@@ -123,7 +122,7 @@ public class Hellhound : MonoBehaviour
         if (Health <= 0 && !isDead)
         {
             nma.speed = 0;
-            Die();
+            StartCoroutine(Die());
             isDead = true;
         }
     }
@@ -202,9 +201,8 @@ public class Hellhound : MonoBehaviour
         }
     }
 
-    void Die()
+    IEnumerator Die()
     {
-        Destroy(gameObject, 0.5f);
         nma.enabled = false;
         anim.Play("Take Damage");
         StartCoroutine(SpawnSmoke());
@@ -220,7 +218,7 @@ public class Hellhound : MonoBehaviour
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
-            hitbox.gameObject.layer = 23; //Ground
+            //hitbox.gameObject.layer = 23; //Ground
             hitbox.gameObject.SetActive(false);
         }
 
@@ -228,11 +226,16 @@ public class Hellhound : MonoBehaviour
 
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
         }
         DropRandomAmmoPack();
         //DropRandomWeapon();
+
+        target = null;
+
+        yield return new WaitForSeconds(0.5f);
+        gameObject.SetActive(false);
     }
 
     void AnimationCheck()
@@ -414,5 +417,28 @@ public class Hellhound : MonoBehaviour
         {
             target = swarmMode.NewTargetFromSwarmScript();
         }
+    }
+
+    void ResetHellhound()
+    {
+        nma.enabled = true;
+        nma.speed = defaultSpeed;
+        StartCoroutine(PlaySound());
+
+        Health = DefaultHealth;
+        isDead = false;
+        IsInMeleeRange = false;
+        isReadyToAttack = true;
+
+        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+            hitbox.gameObject.SetActive(true);
+
+        motionTrackerDot.SetActive(true);
+
+        meleeAttackCooldown = 0;
+        lastPlayerWhoShot = null;
+        otherPlayerShot = false;
+        targetSwitchCountdown = targetSwitchCountdownDefault;
+        targetSwitchReady = true;
     }
 }

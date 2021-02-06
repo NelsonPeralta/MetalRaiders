@@ -99,6 +99,7 @@ public class SwarmMode : MonoBehaviour
     public float nextTrollSpawnTime = 0f;
 
     [Header("Weapon Drop")]
+    public GameObject[] parachuteWeaponCrates = new GameObject[3];
     public GameObject RandwomWeaponDrop;
     public GameObject dropLocation;
 
@@ -304,8 +305,14 @@ public class SwarmMode : MonoBehaviour
         if (waveNumber % 5 == 0)
         {
             Debug.Log("Weapon Drop");
-            var drop = Instantiate(RandwomWeaponDrop, dropLocation.transform.position, dropLocation.transform.rotation);
-            Destroy(drop, 10);
+            foreach (GameObject crate in parachuteWeaponCrates)
+                crate.GetComponent<ParachuteWeaponDrop>().spawnCrate();
+
+            if (RandwomWeaponDrop)
+            {
+                var drop = Instantiate(RandwomWeaponDrop, dropLocation.transform.position, dropLocation.transform.rotation);
+                Destroy(drop, 10);
+            }
 
             yield return new WaitForSeconds(25f);
         }
@@ -321,13 +328,13 @@ public class SwarmMode : MonoBehaviour
 
     void CalculateMaxDefaultAIsForRound()
     {
-        maxZombiesForRound = ssManager.numberOfPlayers * 2 + Mathf.CeilToInt(waveNumber / 2);
+        maxZombiesForRound = ssManager.numberOfPlayers * 3 + Mathf.CeilToInt(waveNumber / 2);
         zombiesLeftToSpawn = maxZombiesForRound;
 
-        maxSkeletonsForRound = ssManager.numberOfPlayers * 3 + Mathf.CeilToInt(waveNumber / 2);
+        maxSkeletonsForRound = ssManager.numberOfPlayers * 4 + Mathf.CeilToInt(waveNumber / 2);
         skeletonsLeftToSpawn = maxSkeletonsForRound;
 
-        maxWatchersForRound = ssManager.numberOfPlayers * 2 + Mathf.CeilToInt(waveNumber / 2);
+        maxWatchersForRound = ssManager.numberOfPlayers * 3 + Mathf.CeilToInt(waveNumber / 2);
         watchersLeftToSpawn = maxWatchersForRound;
 
         if (waveNumber % 5 == 0 && waveNumber % 10 != 0)
@@ -514,21 +521,36 @@ public class SwarmMode : MonoBehaviour
 
     void SpawnHellhound()
     {
-        //if (hasSpaceToSpawnHellhound)
-        //{
-        //    int i = Random.Range(0, hellhoundSpawns.Length);
-        //    int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+        if (hasSpaceToSpawnHellhound)
+        {
+            int i = Random.Range(0, hellhoundSpawns.Length);
+            int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
 
-        //    if (hellhoundSpawns[i] != null)
-        //    {
-        //        GameObject hellhound = Instantiate(hellhoundPrefab, hellhoundSpawns[i].gameObject.transform.position, hellhoundSpawns[i].gameObject.transform.rotation);
-        //        hellhound.GetComponent<Hellhound>().swarmMode = this;
-        //        hellhound.GetComponent<Hellhound>().target = pManager.allPlayers[b].transform;
-        //        hellhoundsAlive = hellhoundsAlive + 1;
-        //        hellhoundsLeftToSpawn = hellhoundsLeftToSpawn - 1;
-        //    }
-        //}
+            var newHound = hellhoundPool.SpawnPooledGameObject();
+            newHound.transform.position = hellhoundSpawns[i].transform.position;
+            newHound.transform.rotation = hellhoundSpawns[i].transform.rotation;
+            newHound.SetActive(true);
+            if (!newHound.GetComponent<Hellhound>().swarmMode)
+                newHound.GetComponent<Hellhound>().swarmMode = this;
+            newHound.GetComponent<Hellhound>().target = pManager.allPlayers[b].transform;
+            hellhoundsAlive++;
+            hellhoundsLeftToSpawn--;
 
+            //if (hasSpaceToSpawnHellhound)
+            //{
+            //    int i = Random.Range(0, hellhoundSpawns.Length);
+            //    int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+
+            //    if (hellhoundSpawns[i] != null)
+            //    {
+            //        GameObject hellhound = Instantiate(hellhoundPrefab, hellhoundSpawns[i].gameObject.transform.position, hellhoundSpawns[i].gameObject.transform.rotation);
+            //        hellhound.GetComponent<Hellhound>().swarmMode = this;
+            //        hellhound.GetComponent<Hellhound>().target = pManager.allPlayers[b].transform;
+            //        hellhoundsAlive = hellhoundsAlive + 1;
+            //        hellhoundsLeftToSpawn = hellhoundsLeftToSpawn - 1;
+            //    }
+            //}
+        }
         nextHellhoundSpawnTime = gameTime.totalGameTime + hellhoundSpawnDelay;
     }
 
@@ -538,6 +560,16 @@ public class SwarmMode : MonoBehaviour
         {
             int i = Random.Range(0, trollSpawns.Length);
             int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+
+            var newTroll = trollPool.SpawnPooledGameObject();
+            newTroll.transform.position = trollSpawns[i].transform.position;
+            newTroll.transform.rotation = trollSpawns[i].transform.rotation;
+            newTroll.SetActive(true);
+            if (!newTroll.GetComponent<Troll>().swarmMode)
+                newTroll.GetComponent<Troll>().swarmMode = this;
+            newTroll.GetComponent<Troll>().target = pManager.allPlayers[b].transform;
+            trollsAlive++;
+            trollsLeftToSpawn--;
 
             //if (trollSpawns[i] != null)
             //{

@@ -218,10 +218,10 @@ public class WeaponPickUp : MonoBehaviour
 
                         Destroy(weaponCollidingWith);
                         ResetCollider();
+                        pInventory.playDrawSound();
                     }
 
                 }
-
                 else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
                 {
                     ReplaceWeapon(weaponCollidingWith.gameObject.GetComponent<LootableWeapon>());
@@ -233,6 +233,7 @@ public class WeaponPickUp : MonoBehaviour
                         pProperties.DropActiveWeapon(weaponEquippedToDrop1);
                         Destroy(weaponCollidingWith);
                         ResetCollider();
+                        pInventory.playDrawSound();
                     }
                 }
 
@@ -290,8 +291,6 @@ public class WeaponPickUp : MonoBehaviour
             pInventory.activeWeapon = weaponCollidingWithInInventory;
 
             pInventory.activeWeapon = weaponCollidingWithInInventory.gameObject;
-            sfxManager.mainAudioSource.clip = sfxManager.cockingClip1;
-            sfxManager.mainAudioSource.Play();
 
             weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = pickupWeaponScript.ammoInThisWeapon;
             pickupExtraAmmoFromWeapon();
@@ -311,8 +310,6 @@ public class WeaponPickUp : MonoBehaviour
             pInventory.activeWeapon = weaponCollidingWithInInventory;
 
             pInventory.activeWeapon = weaponCollidingWithInInventory.gameObject;
-            sfxManager.mainAudioSource.clip = sfxManager.cockingClip1;
-            sfxManager.mainAudioSource.Play();
 
             weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = pickupWeaponScript.ammoInThisWeapon;
             pickupExtraAmmoFromWeapon();
@@ -336,9 +333,6 @@ public class WeaponPickUp : MonoBehaviour
 
             pInventory.weaponsEquiped[1].gameObject.SetActive(true);
             pInventory.weaponsEquiped[0].gameObject.SetActive(false);
-
-            sfxManager.mainAudioSource.clip = sfxManager.cockingClip1;
-            sfxManager.mainAudioSource.Play();
 
             pInventory.hasSecWeap = true;
 

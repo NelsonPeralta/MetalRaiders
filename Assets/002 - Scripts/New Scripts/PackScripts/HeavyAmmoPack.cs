@@ -35,7 +35,7 @@ public class HeavyAmmoPack : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             pInventory = other.gameObject.GetComponent<PlayerProperties>().pInventory;
-            aSource = other.gameObject.GetComponent<AllPlayerScripts>().playerSFXs.ammoPickupAudioSource;
+            aSource = other.gameObject.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
 
             ammoAllowedToRemoveFromThisPack = pInventory.maxHeavyAmmo - pInventory.heavyAmmo;
 

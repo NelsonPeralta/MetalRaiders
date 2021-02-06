@@ -307,7 +307,7 @@ public class Skeleton : MonoBehaviour
         motionTrackerDot.SetActive(false);
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
         }
         DropRandomWeapon();
@@ -578,7 +578,7 @@ public class Skeleton : MonoBehaviour
 
     IEnumerator PlaySound()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(8f);
 
         int playSound = Random.Range(0, 2);
 

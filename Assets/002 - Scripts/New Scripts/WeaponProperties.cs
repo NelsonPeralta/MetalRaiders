@@ -40,12 +40,14 @@ public class WeaponProperties : MonoBehaviour
     [Header("Recoil")]
     public bool hasRecoil;
     public float recoilAmount;
-    public CameraScript camScript;        
+    public CameraScript camScript;
 
     [Header("Sounds")]
+    public AudioClip draw;
     public AudioClip Fire;
     public AudioClip Reload_1;
-    public AudioClip Reload_2;    
+    public AudioClip Reload_2;
+    public AudioClip holster;
 
     [Header("Fully Automatic Setings")]
     public bool isFullyAutomatic; public float timeBetweenFABullets = .01f;

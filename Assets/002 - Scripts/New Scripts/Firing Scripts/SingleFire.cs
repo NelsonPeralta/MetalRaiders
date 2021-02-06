@@ -125,8 +125,8 @@ public class SingleFire : MonoBehaviour
                 rocket.GetComponent<Rocket>().playerWhoThrewGrenade = pController.gameObject;
             }
 
-            shootingAudioSource.clip = wProperties.Fire;
-            shootingAudioSource.Play();
+            wProperties.mainAudioSource.clip = wProperties.Fire;
+            wProperties.mainAudioSource.Play();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////

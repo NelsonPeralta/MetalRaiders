@@ -207,7 +207,7 @@ public class ZombieScript : MonoBehaviour
         //lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
         }
         DropRandomLoot();
@@ -266,7 +266,7 @@ public class ZombieScript : MonoBehaviour
 
     IEnumerator PlaySound()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(8f);
 
         int playSound = Random.Range(0, 2);
 
@@ -413,6 +413,8 @@ public class ZombieScript : MonoBehaviour
 
         Health = DefaultHealth;
         isDead = false;
+        IsInMeleeRange = false;
+        isReadyToAttack = true;
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {

@@ -15,6 +15,7 @@ public class Troll : MonoBehaviour
     public GameObject motionTrackerDot;
 
     [Header("Troll Settings")]
+    public float DefaultHealth;
     public float Health = 500;
     public bool isDead;
     public int points;
@@ -68,10 +69,9 @@ public class Troll : MonoBehaviour
     public BoneLookAt boneLookAt;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        nma.speed = defaultSpeed;
-        StartCoroutine(PlaySound());
+        ResetTroll();
     }
 
     // Update is called once per frame
@@ -118,7 +118,7 @@ public class Troll : MonoBehaviour
         if (Health <= 0 && !isDead)
         {
             nma.speed = 0;
-            Die();
+            StartCoroutine(Die());
             isDead = true;
         }
     }
@@ -196,9 +196,8 @@ public class Troll : MonoBehaviour
         }
     }
 
-    void Die()
+    IEnumerator Die()
     {
-        Destroy(gameObject, 5f);
         nma.enabled = false;
         anim.Play("Die");
 
@@ -213,13 +212,13 @@ public class Troll : MonoBehaviour
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
-            hitbox.gameObject.layer = 23; //Ground
+            //hitbox.gameObject.layer = 23; //Ground
             hitbox.gameObject.SetActive(false);
         }
 
         motionTrackerDot.SetActive(false);
 
-        lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+        lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
         TransferPoints();
         //DropRandomAmmoPack();
         DropRandomWeapon();
@@ -228,6 +227,11 @@ public class Troll : MonoBehaviour
         {
             boneLookAt.disactive = true;
         }
+
+        target = null;
+
+        yield return new WaitForSeconds(5);
+        gameObject.SetActive(false);
     }
 
     void AnimationCheck()
@@ -423,7 +427,7 @@ public class Troll : MonoBehaviour
 
     void SimpleTargetChange()
     {
-        if (swarmMode != null)
+        if (swarmMode != null && !isDead)
         {
             int activePlayers = swarmMode.ssManager.numberOfPlayers;
             int randomActivePlayer = Random.Range(0, activePlayers);
@@ -438,5 +442,28 @@ public class Troll : MonoBehaviour
         {
             target = swarmMode.NewTargetFromSwarmScript();
         }
+    }
+
+    void ResetTroll()
+    {
+        nma.enabled = true;
+        nma.speed = defaultSpeed;
+        StartCoroutine(PlaySound());
+
+        Health = DefaultHealth;
+        isDead = false;
+        IsInMeleeRange = false;
+        isReadyToAttack = true;
+
+        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+            hitbox.gameObject.SetActive(true);
+
+        motionTrackerDot.SetActive(true);
+
+        meleeAttackCooldown = 0;
+        lastPlayerWhoShot = null;
+        otherPlayerShot = false;
+        targetSwitchCountdown = targetSwitchCountdownDefault;
+        targetSwitchReady = true;
     }
 }

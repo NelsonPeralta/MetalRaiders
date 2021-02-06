@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
-    public PlayerSFXs sfxManager;
     public WeaponSounds weapSounds;
     public PlayerProperties playerProperties;
     public PlayerInventory pInventory;
@@ -260,8 +259,7 @@ public class PlayerController : MonoBehaviour
                     isAiming = true;
                     mainCam.fieldOfView = wProperties.aimFOV;
 
-                    sfxManager.mainAudioSource.clip = sfxManager.aimingSound;
-                    sfxManager.mainAudioSource.Play();
+                    allPlayerScripts.aimingScript.playAimSound();
 
                     if (wProperties.aimFOV == 30)
                     {
@@ -304,8 +302,7 @@ public class PlayerController : MonoBehaviour
                     mainCam.fieldOfView = playerProperties.defaultFov;
                     playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
 
-                    sfxManager.mainAudioSource.clip = sfxManager.aimingSound;
-                    sfxManager.mainAudioSource.Play();
+                    allPlayerScripts.aimingScript.playAimSound();
 
                     mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
                     aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
@@ -568,8 +565,8 @@ public class PlayerController : MonoBehaviour
         {
             holstered = true;
 
-            sfxManager.mainAudioSource.clip = weapSounds.holsterSound;
-            sfxManager.mainAudioSource.Play();
+            //sfxManager.mainAudioSource.clip = weapSounds.holsterSound;
+            //sfxManager.mainAudioSource.Play();
 
             hasBeenHolstered = true;
         }
@@ -577,8 +574,8 @@ public class PlayerController : MonoBehaviour
         {
             holstered = false;
 
-            sfxManager.mainAudioSource.clip = weapSounds.drawWeaponSound;
-            sfxManager.mainAudioSource.Play();
+            //sfxManager.mainAudioSource.clip = weapSounds.drawWeaponSound;
+            //sfxManager.mainAudioSource.Play();
 
             hasBeenHolstered = false;
         }
@@ -1236,8 +1233,8 @@ IEnumerator Reload()
         mainCam.fieldOfView = playerProperties.defaultFov;
         playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
 
-        sfxManager.mainAudioSource.clip = sfxManager.aimingSound;
-        sfxManager.mainAudioSource.Play();
+        if(isAiming)
+            allPlayerScripts.aimingScript.playAimSound();
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
         aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);

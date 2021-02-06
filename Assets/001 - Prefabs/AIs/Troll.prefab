@@ -580,6 +580,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2009,6 +2010,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2408,6 +2410,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2432,6 +2435,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7034470511576213947
 GameObject:
   m_ObjectHideFlags: 0
@@ -2563,6 +2567,7 @@ MonoBehaviour:
   meleeTrigger: {fileID: 7033116902404757454}
   shield: {fileID: 0}
   motionTrackerDot: {fileID: 7033116903114995771}
+  DefaultHealth: 500
   Health: 500
   isDead: 0
   points: 500
@@ -2777,6 +2782,10 @@ PrefabInstance:
       value: SM_Wep_Troll_01
       objectReference: {fileID: 0}
     - target: {fileID: 4582690453958646, guid: 39e0fb4b243ffb645a622d1945004ee5, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4582690453958646, guid: 39e0fb4b243ffb645a622d1945004ee5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.097160414
       objectReference: {fileID: 0}
@@ -2789,6 +2798,10 @@ PrefabInstance:
       value: 0.06818305
       objectReference: {fileID: 0}
     - target: {fileID: 4582690453958646, guid: 39e0fb4b243ffb645a622d1945004ee5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.58739793
+      objectReference: {fileID: 0}
+    - target: {fileID: 4582690453958646, guid: 39e0fb4b243ffb645a622d1945004ee5, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.6716574
       objectReference: {fileID: 0}
@@ -2799,14 +2812,6 @@ PrefabInstance:
     - target: {fileID: 4582690453958646, guid: 39e0fb4b243ffb645a622d1945004ee5, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.39365447
-      objectReference: {fileID: 0}
-    - target: {fileID: 4582690453958646, guid: 39e0fb4b243ffb645a622d1945004ee5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.58739793
-      objectReference: {fileID: 0}
-    - target: {fileID: 4582690453958646, guid: 39e0fb4b243ffb645a622d1945004ee5, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4582690453958646, guid: 39e0fb4b243ffb645a622d1945004ee5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

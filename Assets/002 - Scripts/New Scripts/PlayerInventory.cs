@@ -16,7 +16,8 @@ public class PlayerInventory : MonoBehaviour
 
     [Space(20)]
     [Header("Data")]
-    public string StartingWeapon = "M4";
+    public string StartingWeapon;
+    public string StartingWeapon2;
     public int activeWeapIs = 0;
     public GameObject activeWeapon;
     public bool hasSecWeap = false;
@@ -64,12 +65,15 @@ public class PlayerInventory : MonoBehaviour
     public GameObject weaponMesh1Location3;
     public GameObject weaponMesh2Location3;
 
+    AudioSource audioSource;
+
     /// <summary>
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
 
     public void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         cManager = GetComponent<ChildManager>();
 
         //FindAllWeaponsInPlayer();
@@ -134,30 +138,24 @@ public class PlayerInventory : MonoBehaviour
             if (weaponsEquiped[0].gameObject.activeSelf)
             {
                 weaponsEquiped[1].gameObject.SetActive(true);
-                weaponsEquiped[0].gameObject.SetActive(false);
-
-                sfxManager.mainAudioSource.clip = sfxManager.cockingClip1;
-                sfxManager.mainAudioSource.Play();
+                weaponsEquiped[0].gameObject.SetActive(false);                
 
                 activeWeapon = weaponsEquiped[1].gameObject;
                 activeWeapIs = 1;
 
                 StartCoroutine(ToggleTPPistolIdle(0));
             }
-
             else if (weaponsEquiped[1].gameObject.activeSelf)
             {
                 weaponsEquiped[1].gameObject.SetActive(false);
-                weaponsEquiped[0].gameObject.SetActive(true);
-
-                sfxManager.mainAudioSource.clip = sfxManager.cockingClip2;
-                sfxManager.mainAudioSource.Play();
+                weaponsEquiped[0].gameObject.SetActive(true);                
 
                 activeWeapon = weaponsEquiped[0].gameObject;
                 activeWeapIs = 0;
 
                 StartCoroutine(ToggleTPPistolIdle(1));
             }
+            playDrawSound();
         }
     }
 
@@ -241,7 +239,13 @@ public class PlayerInventory : MonoBehaviour
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
-
+                else if (Unequipped[i].name == StartingWeapon2)
+                {
+                    Unequipped[i].gameObject.SetActive(false);
+                    weaponsEquiped[1] = Unequipped[i].gameObject;
+                    //Debug.Log("Check 1");
+                    hasSecWeap = true;
+                }
                 else if (Unequipped[i].name != StartingWeapon)
                 {
                     Unequipped[i].gameObject.SetActive(false);
@@ -384,5 +388,11 @@ public class PlayerInventory : MonoBehaviour
             pController.tPersonController.anim.SetBool("Idle Rifle", true);
             pController.tPersonController.anim.SetBool("Idle Pistol", false);
         }
+    }
+
+    public void playDrawSound()
+    {
+        audioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
+        audioSource.Play();
     }
 }
