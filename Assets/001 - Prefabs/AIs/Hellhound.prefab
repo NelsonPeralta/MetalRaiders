@@ -2918,6 +2918,8 @@ MonoBehaviour:
     type: 3}
   grenadeAmmoPack: {fileID: 1937134780927942671, guid: 64f85ca88ae00674792ea857fc460356,
     type: 3}
+  maxAmmoPrefab: {fileID: 6216787332192456009, guid: 9c2eb4aef64e177479e9201e7104317d,
+    type: 3}
   droppableWeapons:
   - {fileID: 6055085170543161295, guid: 0127b600be5606c438d3b7a73726813b, type: 3}
   - {fileID: 1859821213927685301, guid: 024363d65e754bf48a0d9ccf88fc099f, type: 3}

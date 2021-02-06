@@ -43,7 +43,7 @@ public class ParachuteWeaponDrop : MonoBehaviour
         parachute.SetActive(true);
         parachuteDropped.SetActive(false);
         audioSource.clip = fall;
-        audioSource.volume = 0.5f;
+        audioSource.volume = 0.25f;
         audioSource.Play();
         transform.position = spawnPoint;
         GetComponent<Rigidbody>().useGravity = true;
@@ -51,8 +51,9 @@ public class ParachuteWeaponDrop : MonoBehaviour
         fallFinished = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
+        Debug.Log($"Parachute collision: {other.gameObject.name}");
         if (!fallFinished)
         {
             GetComponent<Rigidbody>().useGravity = false;

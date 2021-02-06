@@ -47,6 +47,7 @@ public class Hellhound : MonoBehaviour
     public GameObject grenadeAmmoPack;
 
     [Header("Weapons")]
+    public GameObject maxAmmoPrefab;
     public GameObject[] droppableWeapons;
 
     [Header("Attack FX")]
@@ -229,7 +230,7 @@ public class Hellhound : MonoBehaviour
             lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
         }
-        DropRandomAmmoPack();
+        DropLoot();
         //DropRandomWeapon();
 
         target = null;
@@ -261,8 +262,15 @@ public class Hellhound : MonoBehaviour
     }
 
 
-    void DropRandomAmmoPack()
+    void DropLoot()
     {
+        if (swarmMode)
+            if (swarmMode.hellhoundsAlive == 0)
+            {
+                var maxAmmo = Instantiate(maxAmmoPrefab, gameObject.transform.position + new Vector3(0, 1, 0), gameObject.transform.rotation);
+                Destroy(maxAmmo, 30);
+            }
+        /*
         int ChanceToDrop = Random.Range(1, 11);
 
         if (ChanceToDrop <= 6)
@@ -273,7 +281,7 @@ public class Hellhound : MonoBehaviour
         if (ChanceToDrop >= 7)
         {
             Instantiate(heavyAmmoPack, gameObject.transform.position, gameObject.transform.rotation);
-        }
+        }*/
     }
 
     void DropRandomWeapon()
