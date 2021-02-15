@@ -318,6 +318,7 @@ public class WeaponPickUp : MonoBehaviour
 
             StartCoroutine(pInventory.ToggleTPPistolIdle(1));
         }
+        pInventory.changeAmmoCounter();
     }
 
 

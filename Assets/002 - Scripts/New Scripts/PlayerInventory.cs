@@ -55,7 +55,13 @@ public class PlayerInventory : MonoBehaviour
     public int maxSmallAmmo = 72;
     public int maxHeavyAmmo = 60;
     public int maxPowerAmmo = 8;
-    
+
+    [Header("HUD Components")]
+    public AmmoHUDCounter smallAmmoHudCounter;
+    public AmmoHUDCounter heavyAmmoHudCounter;
+    public AmmoHUDCounter powerAmmoHudCounter;
+    public GameObject lowAmmoIndicator;
+    public GameObject noAmmoIndicator;
 
     [Header("Weapon Meshes On Player")]
     public GameObject weaponMesh1;
@@ -129,6 +135,8 @@ public class PlayerInventory : MonoBehaviour
                 leftWeapon = null;
             }
         }
+
+        CheckIfLowAmmo();
     }
 
     public void SwapWeapons()
@@ -137,25 +145,32 @@ public class PlayerInventory : MonoBehaviour
         {
             if (weaponsEquiped[0].gameObject.activeSelf)
             {
+                //DisableAmmoHUDCounters();
                 weaponsEquiped[1].gameObject.SetActive(true);
                 weaponsEquiped[0].gameObject.SetActive(false);                
 
                 activeWeapon = weaponsEquiped[1].gameObject;
                 activeWeapIs = 1;
 
+                changeAmmoCounter();
                 StartCoroutine(ToggleTPPistolIdle(0));
             }
             else if (weaponsEquiped[1].gameObject.activeSelf)
             {
+                //DisableAmmoHUDCounters();
                 weaponsEquiped[1].gameObject.SetActive(false);
                 weaponsEquiped[0].gameObject.SetActive(true);                
 
                 activeWeapon = weaponsEquiped[0].gameObject;
                 activeWeapIs = 0;
 
+                changeAmmoCounter();
                 StartCoroutine(ToggleTPPistolIdle(1));
             }
             playDrawSound();
+
+            string test = weaponsEquiped[0].GetComponent<WeaponProperties>().weaponType.ToString();
+            Debug.Log(test);
         }
     }
 
@@ -230,19 +245,21 @@ public class PlayerInventory : MonoBehaviour
             {
                 if (Unequipped[i].name == StartingWeapon)
                 {
-                    Unequipped[i].gameObject.SetActive(true);
+                    //DisableAmmoHUDCounters();
                     weaponsEquiped[0] = Unequipped[i].gameObject;
                     //Debug.Log("Check 1");
                     activeWeapon = weaponsEquiped[0];
                     weaponsEquiped[0] = activeWeapon;
                     activeWeapIs = 0;
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    Unequipped[i].gameObject.SetActive(true);
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
                 else if (Unequipped[i].name == StartingWeapon2)
                 {
                     Unequipped[i].gameObject.SetActive(false);
                     weaponsEquiped[1] = Unequipped[i].gameObject;
+                    weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().maxAmmoInWeapon;
                     //Debug.Log("Check 1");
                     hasSecWeap = true;
                 }
@@ -252,7 +269,7 @@ public class PlayerInventory : MonoBehaviour
                 }
             }
         }
-
+        changeAmmoCounter();
         gwProperties.CheckFireMode();
     }
 
@@ -394,5 +411,59 @@ public class PlayerInventory : MonoBehaviour
     {
         audioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
         audioSource.Play();
+    }
+
+    void DisableAmmoHUDCounters()
+    {
+        smallAmmoHudCounter.changeToHolstered();
+        heavyAmmoHudCounter.changeToHolstered();
+        powerAmmoHudCounter.changeToHolstered();
+    }
+
+    public void changeAmmoCounter()
+    {
+        Debug.Log("The active weapon is:" + activeWeapon.name);
+        if(activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Small")
+        {
+            smallAmmoHudCounter.changeToDrawn();
+            heavyAmmoHudCounter.changeToHolstered();
+            powerAmmoHudCounter.changeToHolstered();
+        }else if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Heavy")
+        {
+            smallAmmoHudCounter.changeToHolstered();
+            heavyAmmoHudCounter.changeToDrawn();
+            powerAmmoHudCounter.changeToHolstered();
+        }else if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Power")
+        {
+            smallAmmoHudCounter.changeToHolstered();
+            heavyAmmoHudCounter.changeToHolstered();
+            powerAmmoHudCounter.changeToDrawn();
+        }
+    }
+
+    public void UpdateAllExtraAmmoHuds()
+    {
+        smallAmmoHudCounter.UpdateExtraAmmo();
+        heavyAmmoHudCounter.UpdateExtraAmmo();
+        powerAmmoHudCounter.UpdateExtraAmmo();
+    }
+
+    public void CheckIfLowAmmo()
+    {
+        if (currentAmmo == 0 && currentExtraAmmo == 0)
+        {
+            lowAmmoIndicator.SetActive(false);
+            noAmmoIndicator.SetActive(true);
+        }
+        else if (currentAmmo < activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon * 0.4f && currentExtraAmmo >= 0)
+        {
+            lowAmmoIndicator.SetActive(true);
+            noAmmoIndicator.SetActive(false);
+        }
+        else
+        {
+            lowAmmoIndicator.SetActive(false);
+            noAmmoIndicator.SetActive(false);
+        }
     }
 }

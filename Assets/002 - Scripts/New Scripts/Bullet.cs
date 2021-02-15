@@ -61,10 +61,10 @@ public class Bullet : MonoBehaviour
         if (crosshairScript && wProperties)
             if (!crosshairScript.RRisActive)
             {
-                if (wProperties.weaponType == "Shotgun")
-                {
-                    //gameObject.SetActive(false);
-                }
+                //if (wProperties.weaponType == "Shotgun")
+                //{
+                //    //gameObject.SetActive(false);
+                //}
 
                 useUpdateVoid = true;
             }

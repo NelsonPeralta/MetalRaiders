@@ -172,7 +172,7 @@ public class PlayerProperties : MonoBehaviour
         if (!pController.isDualWielding)
         {
 
-            currentAmmoText.text = pInventory.currentAmmo.ToString();
+            //currentAmmoText.text = pInventory.currentAmmo.ToString();
 
             if (pInventory.activeWeapIs == 0)
             {
@@ -180,7 +180,7 @@ public class PlayerProperties : MonoBehaviour
                 {
                     wProperties = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
 
-
+                    /*
                     if (wProperties.smallAmmo)
                     {
                         totalAmmoText.text = pInventory.smallAmmo.ToString();
@@ -194,7 +194,7 @@ public class PlayerProperties : MonoBehaviour
                     else if (wProperties.powerAmmo)
                     {
                         totalAmmoText.text = pInventory.powerAmmo.ToString();
-                    }
+                    }*/
                 }
             }
 
@@ -202,6 +202,7 @@ public class PlayerProperties : MonoBehaviour
             {
                 wProperties = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
 
+                /*
                 if (wProperties.smallAmmo)
                 {
                     totalAmmoText.text = pInventory.smallAmmo.ToString();
@@ -216,6 +217,7 @@ public class PlayerProperties : MonoBehaviour
                 {
                     totalAmmoText.text = pInventory.powerAmmo.ToString();
                 }
+                */
             }
         }
 

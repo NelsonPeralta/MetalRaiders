@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum weaponType { Assault_Rifle, DMR, Pistol, SMG, Shotgun, Sniper };
+
 public class WeaponProperties : MonoBehaviour
 {
     [Header("Weapon Info")]
     public string weaponName;
     public bool hasReticule;
     public string reticule;
-    public string weaponType;
+    public weaponType weaponType;
     public int storedWeaponNumber;
     public int damage = 50;
     public int bulletSpeed = 250;
@@ -67,6 +69,7 @@ public class WeaponProperties : MonoBehaviour
     public bool genericReload;
 
     [Header("Ammo Type")]
+    public AmmoType ammoType;
     public bool smallAmmo;
     public bool heavyAmmo;
     public bool powerAmmo;
@@ -92,6 +95,7 @@ public class WeaponProperties : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log($"ENUM DEBUG TEST: {weaponType}");
 
         if (isNormalBullet)
         {
@@ -136,5 +140,16 @@ public class WeaponProperties : MonoBehaviour
                     camScript.xRotation -= recoilAmount;
             }
         }
+    }
+
+    public string getAmmoType()
+    {
+        if (smallAmmo)
+            return "Small";
+        else if (heavyAmmo)
+            return "Heavy";
+        else if (powerAmmo)
+            return "Power";
+        return "";
     }
 }

@@ -26,6 +26,8 @@ public class MaxAmmo : MonoBehaviour
                             playerInventory.heavyAmmo = playerInventory.maxHeavyAmmo;
                             playerInventory.powerAmmo = playerInventory.maxPowerAmmo;
                             playerInventory.grenades = playerInventory.maxGrenades;
+
+                            playerInventory.UpdateAllExtraAmmoHuds();
                         }
 
                     }
@@ -37,6 +39,7 @@ public class MaxAmmo : MonoBehaviour
                     playerInventory.heavyAmmo = playerInventory.maxHeavyAmmo;
                     playerInventory.powerAmmo = playerInventory.maxPowerAmmo;
                     playerInventory.grenades = playerInventory.maxGrenades;
+                    playerInventory.UpdateAllExtraAmmoHuds();
                 }
                 audioSource.Play();
                 ammoGiven = true;

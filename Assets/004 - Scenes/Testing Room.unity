@@ -603,6 +603,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParachuteHeavyWeaponCrate
       objectReference: {fileID: 0}
+    - target: {fileID: 4022050036139456966, guid: f810d56f7df7bd146b4eecd8c0fc6dbd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4022050036139718258, guid: f810d56f7df7bd146b4eecd8c0fc6dbd,
         type: 3}
       propertyPath: m_RootOrder
@@ -1883,6 +1888,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParachuteHeavyWeaponCrate (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4022050036139456966, guid: f810d56f7df7bd146b4eecd8c0fc6dbd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4022050036139718258, guid: f810d56f7df7bd146b4eecd8c0fc6dbd,
         type: 3}
       propertyPath: m_RootOrder
@@ -2663,6 +2673,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ParachuteHeavyWeaponCrate (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4022050036139456966, guid: f810d56f7df7bd146b4eecd8c0fc6dbd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4022050036139718258, guid: f810d56f7df7bd146b4eecd8c0fc6dbd,
         type: 3}
