@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6218843951745078763}
   - component: {fileID: 6089501127754626069}
   - component: {fileID: 6090598657826531217}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4897,7 +4897,7 @@ GameObject:
   - component: {fileID: 6216787332192456008}
   - component: {fileID: 6216787332192456011}
   - component: {fileID: 269315109524191869}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: MaxAmmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9838,7 +9838,7 @@ GameObject:
   - component: {fileID: 6220113965012762411}
   - component: {fileID: 6089822232121980125}
   - component: {fileID: 6089205322203147943}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

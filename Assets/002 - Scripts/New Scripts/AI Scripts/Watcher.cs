@@ -526,10 +526,11 @@ public class Watcher : MonoBehaviour
     {
         int ChanceToDrop = Random.Range(0, 10);
 
-        if (ChanceToDrop <= 3)
+        if (ChanceToDrop <= 3) // Debug: 3 nomrally
         {
             int randomInt = Random.Range(0, droppableWeapons.Length - 1);
             GameObject weapon = Instantiate(droppableWeapons[randomInt], gameObject.transform.position + new Vector3(0, 0.5f, 0), gameObject.transform.rotation);
+            weapon.GetComponent<LootableWeapon>().RandomAmmo();
             weapon.gameObject.name = weapon.name.Replace("(Clone)", "");
 
             Destroy(weapon, 60);

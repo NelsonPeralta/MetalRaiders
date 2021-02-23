@@ -14,4 +14,9 @@ public class LootableWeapon : MonoBehaviour
     public bool smallAmmo;
     public bool heavyAmmo;
     public bool powerAmmo;
+
+    public void RandomAmmo() {
+        ammoInThisWeapon = (int)Mathf.Ceil(Random.Range(0, ammoInThisWeapon));
+        extraAmmo = (int)Mathf.Ceil(Random.Range(0, extraAmmo));
+    }
 }
