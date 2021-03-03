@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db463c953776f084b841e82a7b09b741, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EditMode: 0
   gameSettings: {fileID: 0}
   useThisGameMode: 0
   players:
@@ -51,7 +52,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  killsToWin: 1
+  killsToWin: 25
   audioSource: {fileID: 5472876906322344835}
   gameOver: {fileID: 8300000, guid: cc7b50779af928145b64b562f3c32b95, type: 3}
 --- !u!82 &5472876906322344835

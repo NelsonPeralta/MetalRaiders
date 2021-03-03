@@ -82,4 +82,15 @@ public class SlayerManager : MonoBehaviour
             }
         }
     }
+
+    void ConfigureTeams()
+    {
+        if (players.Length > 0)
+        {
+            foreach (GameObject player in players)
+            {
+                
+            }
+        }
+    }
 }
