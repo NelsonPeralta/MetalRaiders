@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SlayerManager : MonoBehaviour
 {
+    public bool EditMode;
     public GameSettings gameSettings;
     public bool useThisGameMode;
 
@@ -21,7 +22,7 @@ public class SlayerManager : MonoBehaviour
     {
         if (GameObject.Find("Game Settings") != null)
             gameSettings = GameObject.FindGameObjectWithTag("Game Settings").gameObject.GetComponent<GameSettings>();
-        if (gameSettings && gameSettings.loadSlayer)
+        if (gameSettings && gameSettings.loadSlayer || EditMode)
             GivePlayersThis();
         ConfigureUIPoints();
     }

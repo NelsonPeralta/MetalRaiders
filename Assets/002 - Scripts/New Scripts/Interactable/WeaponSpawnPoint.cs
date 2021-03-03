@@ -6,6 +6,7 @@ public class WeaponSpawnPoint : MonoBehaviour
 {
     public GameObject weapon;
     public GameObject weaponPlaceHolder;
+    public GameObject weaponSpawned;
     public float timeToSpawn;
     public bool spawnAtStart;
 
@@ -29,8 +30,12 @@ public class WeaponSpawnPoint : MonoBehaviour
 
     void SpawnNewWeapon()
     {
-        var newWeap = Instantiate(weapon, gameObject.transform.position, 
-            gameObject.transform.rotation); //* Quaternion.Euler(180, 0, 180)
-        newWeap.name = newWeap.name.Replace("(Clone)", "");
+        if (!weaponSpawned)
+        {
+            var newWeap = Instantiate(weapon, gameObject.transform.position,
+                gameObject.transform.rotation); //* Quaternion.Euler(180, 0, 180)
+            newWeap.name = newWeap.name.Replace("(Clone)", "");
+            weaponSpawned = newWeap;
+        }
     }
 }
