@@ -364,6 +364,7 @@ public class PlayerController : MonoBehaviour
         if (player.GetButtonDown("Crouch"))
         {
             Debug.Log("Crouching");
+            movement.tPersonScripts.anim.SetBool("Jump", false);
             movement.tPersonScripts.anim.SetBool("Crouch", true);
             isCrouching = true;
             mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);

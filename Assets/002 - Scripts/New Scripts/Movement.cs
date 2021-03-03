@@ -161,7 +161,7 @@ public class Movement : MonoBehaviour
             tPersonScripts.anim.SetBool("Jump", false);
             speed = defaultSpeed;
         }
-        else
+        else if(!isGrounded && !tPersonScripts.anim.GetBool("Crouch"))
         {
             tPersonScripts.anim.SetBool("Jump", true);
             speed = defaultSpeed * 2 / 3;

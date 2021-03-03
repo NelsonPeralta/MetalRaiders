@@ -31,6 +31,7 @@ public class Bullet : MonoBehaviour
     public bool blueTeam = false;
     public bool yellowTeam = false;
     public bool greenTeam = false;
+    float defaultTimeToDespawn = .5f, timeToDespawn;
 
 
     [Header("Bullet Behavior")]
@@ -74,27 +75,34 @@ public class Bullet : MonoBehaviour
             }
 
         originalPos = transform.position;
-
-            InvokeRepeating("calculateDistanceTraveled", 0.01f, 0.01f);
+        timeToDespawn = CalculateTimeToDespawn();
+        Debug.Log($"BULLET CALCULATE DESPAWN TIME: {CalculateTimeToDespawn()}");
     }
 
-    void calculateDistanceTraveled()
+    float CalculateTimeToDespawn()
     {
-        if(gameObject.activeSelf)
-        {
-            distanceTravelled = (transform.position - originalPos).magnitude;
-
-            if (distanceTravelled >= range)
-                gameObject.SetActive(false);
-        }
+        return (range / bulletSpeed);
     }
 
-    void Update()
+    void Despawn()
+    {
+        if (timeToDespawn > 0)
+            timeToDespawn -= Time.deltaTime;
+        else
+            gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        Despawn();
+    }
+
+    void FixedUpdate()
     {
         //May change from FixedUpdate to Update to calculate the distrance travelled
         //Debug.Log(damageDealt);
         prePos = transform.position;
-        transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed);
+        transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
         
 
         
