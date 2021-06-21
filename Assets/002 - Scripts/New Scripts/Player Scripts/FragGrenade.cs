@@ -11,6 +11,7 @@ public class FragGrenade : MonoBehaviour
     public float grenadeTimer = 1.0f;
     public float throwForce = 625.0f;
     public Transform explosionPrefab;
+    float velocityOnCollision = 5f;
 
     [Header("Background Info")]
     public GameObject playerWhoThrewGrenade;
@@ -40,6 +41,7 @@ public class FragGrenade : MonoBehaviour
     {
         if (collision.gameObject.layer != 22 && !hasHitObject) // Non-Interactable Layer
         {
+            Debug.Log(GetComponent<Rigidbody>().velocity);
             StartCoroutine(ExplosionCountdown());
             PlaySound(impactSound);
         }

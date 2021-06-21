@@ -12,6 +12,7 @@ public class GameObjectPool : MonoBehaviour
     {
         for(int i = 0; i < amountToPool; i++)
         {
+            //Debug.Log($"Spawning: {objectPrefab.name}");
             GameObject obj = Instantiate(objectPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             pooledObject.Add(obj);

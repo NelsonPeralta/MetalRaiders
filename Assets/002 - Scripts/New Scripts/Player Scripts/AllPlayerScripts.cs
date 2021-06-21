@@ -15,6 +15,7 @@ public class AllPlayerScripts : MonoBehaviour
     public RaycastScript raycastScript;
     public PlayerUIComponents playerUIComponents;
     public Aiming aimingScript;
+    public WaveCounter waveCounter;
     [Header("Sounds")]
     public PlayerSFXs playerSFXs;
     public Announcer announcer;

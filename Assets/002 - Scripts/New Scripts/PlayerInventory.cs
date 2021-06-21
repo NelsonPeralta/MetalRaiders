@@ -170,7 +170,7 @@ public class PlayerInventory : MonoBehaviour
             playDrawSound();
 
             string test = weaponsEquiped[0].GetComponent<WeaponProperties>().weaponType.ToString();
-            Debug.Log(test);
+            //Debug.Log(test);
         }
     }
 
@@ -305,7 +305,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void SwapGunsOnCharacter(int secondaryWeapon)
     {
-        Debug.Log("Active weapon:" + activeWeapon.name);
+        //Debug.Log("Active weapon:" + activeWeapon.name);
 
         foreach(GameObject weap in Unequipped)
         {
@@ -422,7 +422,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void changeAmmoCounter()
     {
-        Debug.Log("The active weapon is:" + activeWeapon.name);
+        //Debug.Log("The active weapon is:" + activeWeapon.name);
         if(activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Small")
         {
             smallAmmoHudCounter.changeToDrawn();

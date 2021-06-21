@@ -5,7 +5,7 @@ using UnityEngine;
 public class RaycastScript : MonoBehaviour
 {
     public GameObject firstRayHit;
-    public PlayerManager pManager;
+    public MyPlayerManager pManager;
 
     public int playerRewiredID;
     public Transform puCollider;
@@ -188,7 +188,7 @@ public class RaycastScript : MonoBehaviour
         }
         else
         {
-            Debug.Log("No hit");
+            //Debug.Log("No hit");
             target = null;
             aiHitbox = null;
             targetHitbox = null;

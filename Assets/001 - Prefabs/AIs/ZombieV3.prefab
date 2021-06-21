@@ -6379,13 +6379,13 @@ MonoBehaviour:
   hasBeenMeleedRecently: 0
   extraHealth: {fileID: 324850244380182827, guid: 080e498d1683170478b29b10cefe20a7,
     type: 3}
-  smallAmmoPack: {fileID: 7421505056183394235, guid: 33268c4cf7719f84e89e60836d67d3c7,
+  smallAmmoPack: {fileID: 7421505056183394235, guid: 906ea3979109a7b40b59f266e72972c3,
     type: 3}
-  heavyAmmoPack: {fileID: 4390517542131663724, guid: 895c7a417d6bf634187dc2a5a528e9ad,
+  heavyAmmoPack: {fileID: 4390517542131663724, guid: 41e5a168311fc9d429958f774ef52355,
     type: 3}
-  powerAmmoPack: {fileID: 2352401233832416907, guid: 612a1e2136c98db4cb728f4957e81ef6,
+  powerAmmoPack: {fileID: 2352401233832416907, guid: c663879745f57484fa4eb19b0bf1b8eb,
     type: 3}
-  grenadeAmmoPack: {fileID: 1937134780927942671, guid: 64f85ca88ae00674792ea857fc460356,
+  grenadeAmmoPack: {fileID: 1937134780927942671, guid: 87ac2625a070c8845851b8d2d28ae7eb,
     type: 3}
   audioSource: {fileID: 6407237786346386503}
   audioClips:

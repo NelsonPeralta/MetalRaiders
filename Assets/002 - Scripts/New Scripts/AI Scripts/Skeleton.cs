@@ -567,14 +567,14 @@ public class Skeleton : MonoBehaviour
     {
         nma.speed = defaultSpeed;
         anim.SetBool("Run", true);
-        anim.SetBool("Idle", false);
+        //anim.SetBool("Idle", false);
     }
 
     void Idle()
     {
         nma.speed = 0;
         anim.SetBool("Run", false);
-        anim.SetBool("Idle", true);
+        //anim.SetBool("Idle", true);
     }
 
     IEnumerator PlaySound()

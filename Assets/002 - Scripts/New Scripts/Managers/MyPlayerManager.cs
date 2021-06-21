@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class MyPlayerManager : MonoBehaviour
 {
     public ChildManager cManager;
     public SplitScreenManager ssManager;
@@ -17,7 +17,7 @@ public class PlayerManager : MonoBehaviour
         cManager = GetComponent<ChildManager>();
         ssManager = GetComponent<SplitScreenManager>();
 
-        ssManager.pManager = gameObject.GetComponent<PlayerManager>();
+        ssManager.pManager = gameObject.GetComponent<MyPlayerManager>();
 
         allPlayers = GameObject.FindGameObjectsWithTag("Player");
         playerCount = allPlayers.Length;
@@ -64,8 +64,8 @@ public class PlayerManager : MonoBehaviour
         Camera gunCam = allPlayers[playerID].gameObject.GetComponent<AllPlayerScripts>().playerUIComponents.gunCamera;
         GameObject firstPersonModels = allPlayers[playerID].gameObject.GetComponent<PlayerProperties>().firstPersonModels;
         GameObject thirdPersonModels = allPlayers[playerID].gameObject.GetComponent<PlayerProperties>().thirdPersonModels;
-        Debug.Log($"Set Layers of Player: {allPlayers[playerID].gameObject.name}");
-        Debug.Log($"Player {playerID} REWIRED ID = {allPlayers[playerID].gameObject.GetComponent<PlayerProperties>().playerRewiredID}");
+        //Debug.Log($"Set Layers of Player: {allPlayers[playerID].gameObject.name}");
+        //Debug.Log($"Player {playerID} REWIRED ID = {allPlayers[playerID].gameObject.GetComponent<PlayerProperties>().playerRewiredID}");
 
         if (playerID == 0)
         {

@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isWallGun: 0
   ammoInThisWeapon: 2
-  extraAmmo: 2
+  extraAmmo: 4
   isDualWieldable: 0
   weaponType: Shotgun
   smallAmmo: 0

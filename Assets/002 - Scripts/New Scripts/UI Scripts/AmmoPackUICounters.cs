@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AmmoPackUICounters : MonoBehaviour
 {
-    PlayerManager pManager;
+    MyPlayerManager pManager;
     
     [Header("Ammo Packs")]
     public GameObject[] smallAmmoPacks = new GameObject[4]; // 1Power, 2 Heavy, 4 Small standard map
@@ -16,7 +16,7 @@ public class AmmoPackUICounters : MonoBehaviour
 
     private void Start()
     {
-        pManager = GameObject.FindGameObjectWithTag("Player Manager").GetComponent<PlayerManager>();
+        pManager = GameObject.FindGameObjectWithTag("Player Manager").GetComponent<MyPlayerManager>();
 
         AssignCamerasToAmmoPackTextScript();
     }

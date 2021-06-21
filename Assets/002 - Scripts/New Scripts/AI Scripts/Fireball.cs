@@ -120,7 +120,7 @@ public class Fireball : MonoBehaviour
                         if (playerDistance < radius)
                         {
                             float calculatedDamage = damage * (1 - (playerDistance / radius));
-                            Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
+                            //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
                             player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                             
                         }
@@ -129,7 +129,7 @@ public class Fireball : MonoBehaviour
             }
             if (hit.GetComponent<AIHitbox>() != null)
             {
-                Debug.Log("Hit AI");
+                //Debug.Log("Hit AI");
                 GameObject ai;
                 ai = hit.GetComponent<AIHitbox>().aiGO;
                 float aiDistance = Vector3.Distance(hit.transform.position, transform.position);

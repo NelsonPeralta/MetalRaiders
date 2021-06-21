@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MultiplayerManager : MonoBehaviour
 {
     //public SplitScreenManager ssManager;
-    public PlayerManager pManager;
+    public MyPlayerManager pManager;
     public bool FFA = false;
     public bool teamSlayer = false;
 
@@ -39,7 +39,7 @@ public class MultiplayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pManager = GameObject.FindGameObjectWithTag("Player Manager").GetComponent<PlayerManager>();
+        pManager = GameObject.FindGameObjectWithTag("Player Manager").GetComponent<MyPlayerManager>();
         //ssManager = GameObject.FindGameObjectWithTag("Player Manager").GetComponent<SplitScreenManager>();
         //ssManager.numberOfPlayers = numberOfPlayers;
 
@@ -70,7 +70,7 @@ public class MultiplayerManager : MonoBehaviour
     {
         if (FFA)
         {
-            PlayerManager pManager = GetComponent<PlayerManager>();
+            MyPlayerManager pManager = GetComponent<MyPlayerManager>();
             //pManager.
         }
     }

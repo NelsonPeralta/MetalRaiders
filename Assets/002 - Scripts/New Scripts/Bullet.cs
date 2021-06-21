@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
     [Header("Other Scripts")]
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
-    public PlayerManager pManager;
+    public MyPlayerManager pManager;
     public GameObject playerWhoShot;
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
@@ -76,7 +76,7 @@ public class Bullet : MonoBehaviour
 
         originalPos = transform.position;
         timeToDespawn = CalculateTimeToDespawn();
-        Debug.Log($"BULLET CALCULATE DESPAWN TIME: {CalculateTimeToDespawn()}");
+        //Debug.Log($"BULLET CALCULATE DESPAWN TIME: {CalculateTimeToDespawn()}");
     }
 
     float CalculateTimeToDespawn()
@@ -103,9 +103,9 @@ public class Bullet : MonoBehaviour
         //Debug.Log(damageDealt);
         prePos = transform.position;
         transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
-        
 
-        
+
+
 
         hits = Physics.RaycastAll(new Ray(prePos, (transform.position - prePos).normalized), (transform.position - prePos).magnitude);//, layerMask);
 
@@ -118,12 +118,12 @@ public class Bullet : MonoBehaviour
             //Debug.Log(damageDealt);
             if (hits[i].collider.gameObject.layer != 22) //Any object that has the Layer Ground
             {
-                Debug.Log(hits[i].collider.gameObject.name);
+                //Debug.Log(hits[i].collider.gameObject.name);
                 GameObject hit = hits[i].collider.gameObject;
-                Debug.Log(damageDealt);
+                //Debug.Log(damageDealt);
                 if (hits[i].collider.gameObject.GetComponent<AIHitbox>() != null)
                 {
-                    Debug.Log("Has AI Script" + damageDealt);
+                    //Debug.Log("Has AI Script" + damageDealt);
 
                     AIHitbox hitbox = hits[i].collider.gameObject.GetComponent<AIHitbox>();
                     AIDamage(hitbox, hits[i]);
@@ -136,7 +136,7 @@ public class Bullet : MonoBehaviour
                 }
                 else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<AIHitbox>())
                 {
-                    Debug.Log("Bullet hit object with no hitbox: " + hit.name);
+                    //Debug.Log("Bullet hit object with no hitbox: " + hit.name);
                     GameObject genericHit = allPlayerScripts.playerGenericHitPool.SpawnPooledGameObject();
                     genericHit.transform.position = hits[i].point;
                     genericHit.SetActive(true);
@@ -245,29 +245,29 @@ public class Bullet : MonoBehaviour
 
     void AIDamage(AIHitbox aiHB, RaycastHit hit)
     {
-        Debug.Log($"Damage dealt: {damageDealt}");
+        //Debug.Log($"Damage dealt: {damageDealt}");
         //Debug.Log(aiHB.gameObject.name);
 
         if (!damageDealt)
         {
-            Debug.Log("Hit 0 " + damageDealt);
+            //Debug.Log("Hit 0 " + damageDealt);
 
             if (isNormalBullet) /////////////////////////////////////////////////////////////////////////////////////Normal Bullet
             {
                 aiHB.UpdateAIHealth(true, damage, playerWhoShot.gameObject);
-                Debug.Log("Hit 1");
+                //Debug.Log("Hit 1");
             }
             if (isHeadshotCapable) //////////////////////////////////////////////////////////////////////////////// Is Headshot Capable
             {
                 if (aiHB.isHead)
                 {
                     aiHB.UpdateAIHealth(true, damage * 2, playerWhoShot.gameObject);
-                    Debug.Log("Hit 2");
+                    //Debug.Log("Hit 2");
                 }
                 else
                 {
                     aiHB.UpdateAIHealth(true, damage, playerWhoShot.gameObject);
-                    Debug.Log("Hit 3");
+                    //Debug.Log("Hit 3");
                 }
             }
             if (canBleedthroughHeadshot) /////////////////////////////////////////////////////////////////////////// Can Bleedthrough Headshot
@@ -275,18 +275,18 @@ public class Bullet : MonoBehaviour
                 if (aiHB.isHead)
                 {
                     aiHB.UpdateAIHealth(true, damage * 2, playerWhoShot.gameObject);
-                    Debug.Log("Hit 4");
+                    //Debug.Log("Hit 4");
                 }
                 else
                 {
                     aiHB.UpdateAIHealth(true, damage, playerWhoShot.gameObject);
-                    Debug.Log("Hit 5");
+                    //Debug.Log("Hit 5");
                 }
             }
             if (canBleedthroughAnything) /////////////////////////////////////////////////////////////////////////////// Can Bleedthrough Anything
             {
                 aiHB.UpdateAIHealth(true, damage, playerWhoShot.gameObject);
-                Debug.Log("Hit 6");
+                //Debug.Log("Hit 6");
             }
 
             GameObject magicBloodEffect = Instantiate(magicBlood);

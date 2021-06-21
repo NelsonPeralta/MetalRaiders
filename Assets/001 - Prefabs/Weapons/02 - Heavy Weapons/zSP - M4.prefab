@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 276393848149439676, guid: 8429a170b15c4da4d8b29cdebd15304f, type: 3}
   weaponPlaceHolder: {fileID: 5056588379642228244}
-  timeToSpawn: 90
+  weaponSpawned: {fileID: 0}
+  timeToSpawn: 120
   spawnAtStart: 1
 --- !u!1001 &5042183211518368424
 PrefabInstance:
@@ -55,6 +56,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1646928776585728878}
     m_Modifications:
+    - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -69,6 +80,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
         type: 3}
@@ -87,16 +103,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
         type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
-        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -109,11 +115,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 276393848149338268, guid: 8429a170b15c4da4d8b29cdebd15304f,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 276393848149439676, guid: 8429a170b15c4da4d8b29cdebd15304f,
         type: 3}

@@ -234,22 +234,22 @@ public class BlackKnight : MonoBehaviour
                 if (!IsInMeleeRange)
                 {
                     nma.speed = defaultSpeed;
-                    anim.SetBool("Run", true);
-                    anim.SetBool("Idle", false);
+                    //anim.SetBool("Run", true);
+                    //anim.SetBool("Idle", false);
                 }
 
                 if (IsInMidRange)
                 {
                     nma.speed = 0;
-                    anim.SetBool("Run", false);
-                    anim.SetBool("Idle", true);
+                    //anim.SetBool("Run", false);
+                    //anim.SetBool("Idle", true);
                 }
             }
             if (target == null)
             {
                 nma.speed = 0;
-                anim.SetBool("Walk", false);
-                anim.SetBool("Idle", true);
+                //anim.SetBool("Walk", false);
+                //anim.SetBool("Idle", true);
             }
 
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Walk"))

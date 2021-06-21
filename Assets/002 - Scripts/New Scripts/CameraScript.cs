@@ -17,7 +17,7 @@ public class CameraScript : MonoBehaviour
     public PlayerProperties pProperties;
     public Camera mainCam;
     public Camera gunCam;
-    public PlayerManager pManager;
+    public MyPlayerManager pManager;
 
     float mouseX, mouseY;
 

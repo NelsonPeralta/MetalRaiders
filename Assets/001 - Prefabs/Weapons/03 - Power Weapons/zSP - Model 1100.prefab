@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 3979653744636850995, guid: b2cf3c8a1e265344491bcb08bbf65cf7, type: 3}
   weaponPlaceHolder: {fileID: 245072385473371944}
-  timeToSpawn: 120
+  weaponSpawned: {fileID: 0}
+  timeToSpawn: 180
   spawnAtStart: 1
 --- !u!1001 &3772958721618226203
 PrefabInstance:
@@ -59,6 +60,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Model 1100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
         type: 3}
@@ -77,6 +88,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -88,16 +104,6 @@ PrefabInstance:
     - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
@@ -114,11 +120,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3979653744637144851, guid: b2cf3c8a1e265344491bcb08bbf65cf7,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2cf3c8a1e265344491bcb08bbf65cf7, type: 3}

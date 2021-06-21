@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3147452801136011701}
   - component: {fileID: 2989526795265113181}
   - component: {fileID: 2988588540827564763}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4884,7 +4884,7 @@ GameObject:
   - component: {fileID: 3150535142487441690}
   - component: {fileID: 3150535142487441684}
   - component: {fileID: 3150535142487441691}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: Extra Life
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9825,7 +9825,7 @@ GameObject:
   - component: {fileID: 3148608811437809173}
   - component: {fileID: 2989319408701714433}
   - component: {fileID: 2989842787062772021}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}

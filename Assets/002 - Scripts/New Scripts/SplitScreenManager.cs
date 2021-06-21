@@ -5,7 +5,7 @@ using UnityEngine;
 public class SplitScreenManager : MonoBehaviour
 {
     public int numberOfPlayers = 1;
-    public PlayerManager pManager;
+    public MyPlayerManager pManager;
     public bool usePlayerCounter = false;
 
     private void Awake()

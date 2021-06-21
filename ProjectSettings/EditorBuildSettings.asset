@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/004 - Scenes/000 - Main Menu.unity
     guid: 95ef80117ce58714d8d65b0ee07e4c5c
-  - enabled: 1
+  - enabled: 0
     path: Assets/004 - Scenes/Swarm Scenes/Coop - 001 - Downpour.unity
     guid: a93b5d263042c224cb5e592853df0d71
   - enabled: 0
@@ -23,4 +23,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/004 - Scenes/Testing Room.unity
     guid: 7345f6a1040b50043b4b8a9440506f6b
+  - enabled: 0
+    path: Assets/004 - Scenes/EmptyScene.unity
+    guid: 0d9681976c6c61d4a8161e6a788dc524
+  - enabled: 1
+    path: Assets/004 - Scenes/Testing Room 2.unity
+    guid: b36f86ced13373f4bab43f9d875ebb3e
   m_configObjects: {}

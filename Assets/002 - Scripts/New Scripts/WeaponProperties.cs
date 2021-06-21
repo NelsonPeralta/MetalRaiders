@@ -95,7 +95,7 @@ public class WeaponProperties : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"ENUM DEBUG TEST: {weaponType}");
+        //Debug.Log($"ENUM DEBUG TEST: {weaponType}");
 
         if (isNormalBullet)
         {

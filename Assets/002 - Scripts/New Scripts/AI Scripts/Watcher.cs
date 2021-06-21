@@ -9,7 +9,7 @@ public class Watcher : MonoBehaviour
     public NavMeshAgent nma;
     public AudioSource aSource;
     public SwarmMode swarmMode;
-    public PlayerManager pManager;
+    public MyPlayerManager pManager;
     public Hitboxes hitboxes;
 
     [Header("Properties")]
@@ -327,14 +327,14 @@ public class Watcher : MonoBehaviour
     {
         nma.speed = defaultSpeed;
         animator.SetBool("Fly Forward", true);
-        animator.SetBool("Idle", false);
+        //animator.SetBool("Idle", false);
     }
 
     void Idle()
     {
         nma.speed = 0;
         animator.SetBool("Fly Forward", false);
-        animator.SetBool("Idle", true);
+        //animator.SetBool("Idle", true);
         if (target)
         {
             Vector3 targetPostition = new Vector3(target.position.x,

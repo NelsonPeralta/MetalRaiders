@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 7380403232810786472, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9, type: 3}
   weaponPlaceHolder: {fileID: 7396708063191447029}
-  timeToSpawn: 90
+  weaponSpawned: {fileID: 0}
+  timeToSpawn: 120
   spawnAtStart: 1
 --- !u!1001 &56883682268408669
 PrefabInstance:
@@ -55,6 +56,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3459951776169016052}
     m_Modifications:
+    - target: {fileID: 7378303310632504174, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7378303310632504174, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -72,6 +78,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7378303310632504174, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7378303310632504174, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -83,16 +94,6 @@ PrefabInstance:
     - target: {fileID: 7378303310632504174, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7378303310632504174, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7378303310632504174, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7378303310632504174, guid: 44ae85b2f5b922c4fa0ccbac0202b0d9,
