@@ -6,12 +6,11 @@ public class SpawnManager : MonoBehaviour
 {
 	public static SpawnManager Instance;
 
-	Spawnpoint[] spawnpoints;
+	public SpawnPoint[] spawnpoints;
 
 	void Awake()
 	{
 		Instance = this;
-		spawnpoints = GetComponentsInChildren<Spawnpoint>();
 	}
 
 	public Transform GetSpawnpoint()

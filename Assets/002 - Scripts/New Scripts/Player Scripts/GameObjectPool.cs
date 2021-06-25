@@ -4,24 +4,44 @@ using UnityEngine;
 
 public class GameObjectPool : MonoBehaviour
 {
-    public List<GameObject> pooledObject = new List<GameObject>();
-    public GameObject objectPrefab;
     public int amountToPool;
+
+    [Header("Bullets")]
+    public List<GameObject> bullets = new List<GameObject>();
+    public GameObject bulletPrefab;
+
+    [Header("Bullets")]
+    public List<GameObject> genericHits = new List<GameObject>();
+    public GameObject genericHitPrefab;
+
 
     private void Start()
     {
         for(int i = 0; i < amountToPool; i++)
         {
-            //Debug.Log($"Spawning: {objectPrefab.name}");
-            GameObject obj = Instantiate(objectPrefab, transform.position, transform.rotation);
+            GameObject obj = Instantiate(bulletPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
-            pooledObject.Add(obj);
+            bullets.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+            obj = Instantiate(genericHitPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            genericHits.Add(obj);
+            obj.transform.parent = gameObject.transform;
         }
     }
 
-    public GameObject SpawnPooledGameObject()
+    public GameObject SpawnPooledBullet()
     {
-        foreach (GameObject obj in pooledObject)
+        foreach (GameObject obj in bullets)
+            if (!obj.activeSelf)
+                return obj;
+        return null;
+    }
+
+    public GameObject SpawnPooledGenericHit()
+    {
+        foreach (GameObject obj in genericHits)
             if (!obj.activeSelf)
                 return obj;
         return null;

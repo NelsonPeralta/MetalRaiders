@@ -37,6 +37,9 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!pController.PV.IsMine)
+            return;
+
         if (pController.lastControllerType.ToString() != "Keyboard" && pController.lastControllerType.ToString() != "Mouse")
             mouseSensitivity = pProperties.activeSensitivity;
         else
@@ -59,6 +62,7 @@ public class CameraScript : MonoBehaviour
                 playerBody.Rotate(Vector3.up * mouseX);
             }
         }
+
     }
 
     public void SetPlayerIDInInput()

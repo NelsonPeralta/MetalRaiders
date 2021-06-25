@@ -109,7 +109,7 @@ public class LevelManager : MonoBehaviour
             if(child.gameObject.tag == "Spawn Point")
             {
                 Debug.Log("Found Spawn Point");
-                if(child.gameObject.GetComponent<SpawnPointScript>().normalZombie)
+                if(child.gameObject.GetComponent<SpawnPoint>().normalZombie)
                 {
                     normalsZombieSpawns[normalZombieCounter] = child.gameObject;
                     normalZombieCounter = normalZombieCounter + 1;

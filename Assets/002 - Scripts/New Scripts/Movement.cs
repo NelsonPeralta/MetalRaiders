@@ -62,31 +62,47 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        float x = player.GetAxis("Move Horizontal");
-        float z = player.GetAxis("Move Vertical");
-        Vector3 direction = new Vector3(x, 0f, z).normalized;
-        xDirection = direction.x;
-        zDirection = direction.z;
-
-        if (isGrounded && velocity.y < 0)
+        if (pController.PV.IsMine)
         {
-            velocity.y = -3f;
-        }
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+            float x = player.GetAxis("Move Horizontal");
+            float z = player.GetAxis("Move Vertical");
+            Vector3 direction = new Vector3(x, 0f, z).normalized;
+            xDirection = direction.x;
+            zDirection = direction.z;
 
-        if (x != 0 || z != 0)
-        {
-            if (isGrounded)
+            if (isGrounded && velocity.y < 0)
             {
-                if(pController.anim)
-                    pController.anim.SetBool("Walk", true);
+                velocity.y = -3f;
+            }
 
-                if (pController.isDualWielding)
+            if (x != 0 || z != 0)
+            {
+                if (isGrounded)
                 {
-                    if(pController.animDWRight != null)
-                        pController.animDWRight.SetBool("Walk", true);
-                    if(pController.animDWLeft != null)
-                        pController.animDWLeft.SetBool("Walk", true);
+                    if (pController.anim)
+                        pController.anim.SetBool("Walk", true);
+
+                    if (pController.isDualWielding)
+                    {
+                        if (pController.animDWRight != null)
+                            pController.animDWRight.SetBool("Walk", true);
+                        if (pController.animDWLeft != null)
+                            pController.animDWLeft.SetBool("Walk", true);
+                    }
+                }
+                else
+                {
+                    if (pController.anim != null)
+                    {
+                        pController.anim.SetBool("Walk", false);
+                    }
+
+                    if (pController.isDualWielding)
+                    {
+                        pController.animDWRight.SetBool("Walk", false);
+                        pController.animDWLeft.SetBool("Walk", false);
+                    }
                 }
             }
             else
@@ -98,55 +114,42 @@ public class Movement : MonoBehaviour
 
                 if (pController.isDualWielding)
                 {
-                    pController.animDWRight.SetBool("Walk", false);
-                    pController.animDWLeft.SetBool("Walk", false);
+                    if (pController.animDWRight != null)
+                        pController.animDWRight.SetBool("Walk", false);
+                    if (pController.animDWLeft != null)
+                        pController.animDWLeft.SetBool("Walk", false);
                 }
             }
+
+            if (!pProperties.isDead)
+            {
+                if (!pController.isCrouching)
+                {
+                    Vector3 move = transform.right * x + transform.forward * z;
+                    cController.Move(move * defaultSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    Vector3 move = transform.right * x + transform.forward * z;
+                    cController.Move(move * defaultSpeed * .5f * Time.deltaTime);
+                }
+            }
+
+
+
+            CheckDirection(direction.x, direction.z);
+
+            velocity.y += gravity * Time.deltaTime;
+
+            cController.Move(velocity * Time.deltaTime);
+
+            if (!CalculatingPlayerSpeed)
+                StartCoroutine(CalculatePlayerSpeed());
+
+            Jump();
+            CheckMovingForward();
+            ControlAnimationSpeed();
         }
-        else
-        {
-            if (pController.anim != null)
-            {
-                pController.anim.SetBool("Walk", false);
-            }
-
-            if (pController.isDualWielding)
-            {
-                if (pController.animDWRight != null)
-                    pController.animDWRight.SetBool("Walk", false);
-                if (pController.animDWLeft != null)
-                    pController.animDWLeft.SetBool("Walk", false);
-            }
-        }
-
-        if (!pProperties.isDead)
-        {
-            if (!pController.isCrouching)
-            {
-                Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * defaultSpeed * Time.deltaTime);
-            }
-            else
-            {
-                Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * defaultSpeed * .5f * Time.deltaTime);
-            }
-        }
-
-
-
-        CheckDirection(direction.x, direction.z);
-
-        velocity.y += gravity * Time.deltaTime;
-
-        cController.Move(velocity * Time.deltaTime);
-
-        if (!CalculatingPlayerSpeed)
-            StartCoroutine(CalculatePlayerSpeed());
-
-        Jump();
-        CheckMovingForward();
-        ControlAnimationSpeed();
     }
 
     public void SetPlayerIDInInput()
@@ -161,7 +164,7 @@ public class Movement : MonoBehaviour
             tPersonScripts.anim.SetBool("Jump", false);
             speed = defaultSpeed;
         }
-        else if(!isGrounded && !tPersonScripts.anim.GetBool("Crouch"))
+        else if(!isGrounded && tPersonScripts.anim && !tPersonScripts.anim.GetBool("Crouch"))
         {
             tPersonScripts.anim.SetBool("Jump", true);
             speed = defaultSpeed * 2 / 3;

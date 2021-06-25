@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -22,7 +23,6 @@ public class PlayerController : MonoBehaviour
     public BurstFire burstFire;
     public SingleFire singleFire;
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
-    public ChildManager childManager;
     public Rewired.Player player;
     public int playerRewiredID;
     public CrosshairScript crosshairScript;
@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour
     public Melee melee;
     public ThirdPersonScript tPersonController;
     public ControllerType lastControllerType;
+
+    public PhotonView PV;
+    public PlayerManager playerManager;
+    public GameObjectPool objectPool;
 
     Quaternion savedCamRotation;
     GameObject camChild;
@@ -82,15 +86,36 @@ public class PlayerController : MonoBehaviour
     public int ammoRightWeaponIsMissing;
     public int ammoLeftWeaponIsMissing;
 
+    void Awake()
+    {
+        PV = GetComponent<PhotonView>();
+
+        playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+    }
+
+
     public void Start()
     {
         if (hasFoundComponents == false)
         {
+            objectPool = GameObject.FindGameObjectWithTag("ObjectPool").GetComponent<GameObjectPool>();
             SetPlayerIDInInput();
-            childManager = gameObject.GetComponent<ChildManager>();
             StartCoroutine(FindComponents());
             ReferenceCameraToSpherecast();
         }
+
+        if (PV.IsMine)
+        {
+
+        }
+        else
+        {
+            gunCam.gameObject.SetActive(false);
+            mainCam.gameObject.SetActive(false);
+
+        }
+
+
 
     }
 
@@ -106,8 +131,8 @@ public class PlayerController : MonoBehaviour
 
         //pInventory = GameObject.FindGameObjectWithTag("Player Inventory").GetComponent<PlayerInventoryManager>();
 
-        playerProperties = GetComponent<PlayerProperties>();
-        gwProperties = GetComponent<GeneralWeapProperties>();
+        //playerProperties = GetComponent<PlayerProperties>();
+        //gwProperties = GetComponent<GeneralWeapProperties>();
         //wProperties = childManager.FindChildWithTag("Weapon").GetComponent<WeaponProperties>();
 
         //fullyAutomaticFire = childManager.FindChildWithTagScript("Shooting Scripts").GetComponent<FullyAutomaticFire>();
@@ -128,6 +153,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (!PV.IsMine)
+            return;
+
         UpdateWeaponPropertiesAndAnimator();
         if (playerProperties != null)
         {
@@ -155,6 +183,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(TestButton());
         if (ReInput.controllers != null)
             lastControllerType = ReInput.controllers.GetLastActiveControllerType();
+
     }
 
 
@@ -1234,7 +1263,7 @@ IEnumerator Reload()
         mainCam.fieldOfView = playerProperties.defaultFov;
         playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
 
-        if(isAiming)
+        if (isAiming)
             allPlayerScripts.aimingScript.playAimSound();
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);

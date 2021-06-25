@@ -6,10 +6,10 @@ public class AllPlayerScripts : MonoBehaviour
 {
     [Header("General")]
     public PlayerProperties playerProperties;
+    public PlayerController playerController;
     [Header("Inventory")]
     public PlayerInventory playerInventory;
     public WeaponPickUp weaponPickUp;
-    public GameObjectPool playerBulletPool;    
     [Header("UI Components")]
     public CrosshairScript crosshairScript;
     public RaycastScript raycastScript;
@@ -22,7 +22,6 @@ public class AllPlayerScripts : MonoBehaviour
     [Header("Multiplayer Scripts")]
     public PlayerMPProperties playerMPProperties;
     [Header("Pools")]
-    public GameObjectPool playerGenericHitPool;
     public GameObjectPool playerFirstMuzzleFlash;
     public GameObjectPool playerThirdMuzzleFlash;
 }

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class PlayerProperties : MonoBehaviour
+public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
 {
     public AllPlayerScripts allPlayerScripts;
 
@@ -163,6 +165,43 @@ public class PlayerProperties : MonoBehaviour
             playerLivesText.text = swarmMode.playerLives.ToString();
         }
 
+        if (pController.PV.IsMine)
+        {
+
+        }
+        else
+        {
+            firstPersonModels.layer = 23; // 24 = P1 FPS
+            thirdPersonModels.layer = 0; // 0 = Default
+
+            ChildManager childManager = firstPersonModels.GetComponent<ChildManager>();
+            for (int i = 0; i < childManager.allChildren.Count; i++)
+            {
+                childManager.allChildren[i].layer = 23;
+            }
+
+            childManager = thirdPersonModels.GetComponent<ChildManager>();
+            for (int i = 0; i < childManager.allChildren.Count; i++)
+            {
+                childManager.allChildren[i].layer = 0;
+            }
+        }
+
+    }
+
+    public void TakeDamage(int damage)
+    {
+        Debug.Log("Player Took Damage");
+        pController.PV.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+    }
+
+    [PunRPC]
+    void RPC_TakeDamage(int damage)
+    {
+        if (!pController.PV.IsMine)
+            return;
+
+        SetHealth(10, false, 0);
     }
 
     private void FixedUpdate()

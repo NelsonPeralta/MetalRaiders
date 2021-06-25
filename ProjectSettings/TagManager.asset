@@ -5,47 +5,37 @@ TagManager:
   serializedVersion: 2
   tags:
   - Pickable
-  - Player_1_Inventory
-  - Dirt
-  - Blood
-  - Player 1
-  - Weapon Binder
-  - Weapon
-  - Player Camera
-  - Current Ammo Text
-  - Total Ammo Text
-  - Bullet Renderer
-  - Casing Spawn Point
-  - Muzzleflash Light
-  - Muzzleflash Particles
-  - Spark Particles
-  - Bullet Spawn Point
-  - Grenade Spawn Point
-  - GasTank
-  - Target
-  - ExplosiveBarrel
-  - Collide
-  - Player Inventory
-  - Player Informer
-  - Scope BG
-  - Scope
-  - SFX
-  - Crosshairs
-  - Attachment
-  - Components
-  - Weapon Sounds
-  - ZombieAttackTrigger
-  - Zombie
-  - Ammo Pickup Sound
-  - Grenade Pickup Sound
-  - Frag Grenade Ammo Text
-  - Pickup Collider
-  - Raycast Origin
-  - Shooting Scripts
-  - Spawn Point
   - Level Manager
   - Player Manager
   - Game Settings
+  - CoopMenu
+  - ObjectPool
+  - Bullet Spawn Point
+  - Grenade Spawn Point
+  - Weapon
+  - Spark Particles
+  - Muzzleflash Particles
+  - Bullet Renderer
+  - Crosshairs
+  - Muzzleflash Light
+  - Casing Spawn Point
+  - Weapon Binder
+  - Attachment
+  - Scope BG
+  - Ammo Pickup Sound
+  - Weapon Sounds
+  - SFX
+  - Grenade Pickup Sound
+  - Player Informer
+  - Player Camera
+  - Components
+  - Player Inventory
+  - Raycast Origin
+  - Total Ammo Text
+  - Pickup Collider
+  - Current Ammo Text
+  - Shooting Scripts
+  - Frag Grenade Ammo Text
   layers:
   - Default
   - TransparentFX

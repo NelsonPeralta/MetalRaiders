@@ -10,11 +10,6 @@ public class ThirdPersonScript : MonoBehaviour {
     public int playerRewiredID;
 
 
-	private void Start () 
-	{
-		anim = gameObject.GetComponent<Animator> ();
-    }
-
 	private void Update () 
 	{
         ///////////////////////////////////////////////////////////////////////////////////// Controller 

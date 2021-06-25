@@ -449,27 +449,18 @@ public class SwarmMode : MonoBehaviour
     {
         if (hasSpaceToSpawnZombie)
         {
-            int i = Random.Range(0, ZombieSpawns.Length);
-            int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+            //int i = Random.Range(0, ZombieSpawns.Length);
+            //int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
 
-            var newZombie = zombiePool.SpawnPooledGameObject();
-            newZombie.transform.position = ZombieSpawns[i].transform.position;
-            newZombie.transform.rotation = ZombieSpawns[i].transform.rotation;
-            newZombie.SetActive(true);
-            if (!newZombie.GetComponent<ZombieScript>().swarmMode)
-                newZombie.GetComponent<ZombieScript>().swarmMode = this;
-            newZombie.GetComponent<ZombieScript>().target = pManager.allPlayers[b].transform;
-            zombiesAlive ++;
-            zombiesLeftToSpawn --;
-
-            //if (ZombieSpawns[i] != null)
-            //{
-            //    GameObject zombie = Instantiate(zombiePrefab, ZombieSpawns[i].gameObject.transform.position, ZombieSpawns[i].gameObject.transform.rotation);
-            //    zombie.GetComponent<ZombieScript>().swarmMode = this;
-            //    zombie.GetComponent<ZombieScript>().target = pManager.allPlayers[b].transform;
-            //    zombiesAlive = zombiesAlive + 1;
-            //    zombiesLeftToSpawn = zombiesLeftToSpawn - 1;
-            //}
+            //var newZombie = zombiePool.SpawnPooledGameObject();
+            //newZombie.transform.position = ZombieSpawns[i].transform.position;
+            //newZombie.transform.rotation = ZombieSpawns[i].transform.rotation;
+            //newZombie.SetActive(true);
+            //if (!newZombie.GetComponent<ZombieScript>().swarmMode)
+            //    newZombie.GetComponent<ZombieScript>().swarmMode = this;
+            //newZombie.GetComponent<ZombieScript>().target = pManager.allPlayers[b].transform;
+            //zombiesAlive ++;
+            //zombiesLeftToSpawn --;
         }
 
         nextZombieSpawnTime = gameTime.totalGameTime + zombieSpawnDelay;
@@ -479,32 +470,18 @@ public class SwarmMode : MonoBehaviour
     {
         if (hasSpaceToSpawnSkeleton)
         {
-            int i = Random.Range(0, skeletonSpawns.Length);
-            int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+            //int i = Random.Range(0, skeletonSpawns.Length);
+            //int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
 
-            var newSkeleton = skeletonPool.SpawnPooledGameObject();
-            newSkeleton.transform.position = skeletonSpawns[i].transform.position;
-            newSkeleton.transform.rotation = skeletonSpawns[i].transform.rotation;
-            newSkeleton.SetActive(true);
-            if (!newSkeleton.GetComponent<Skeleton>().swarmMode)
-                newSkeleton.GetComponent<Skeleton>().swarmMode = this;
-            newSkeleton.GetComponent<Skeleton>().target = pManager.allPlayers[b].transform;
-            skeletonsAlive ++;
-            skeletonsLeftToSpawn --;
-
-            //if (skeletonSpawns[i] != null)
-            //{
-            //    GameObject skeleton = Instantiate(skeletonPrefab, skeletonSpawns[i].gameObject.transform.position, skeletonSpawns[i].gameObject.transform.rotation);
-            //    skeleton.GetComponent<Skeleton>().swarmMode = this;
-            //    skeleton.GetComponent<Skeleton>().target = pManager.allPlayers[b].transform;
-            //    /*
-            //    skeleton.GetComponent<AIFieldOfVision>().player0 = pManager.allPlayers[0].transform;
-            //    skeleton.GetComponent<AIFieldOfVision>().player1 = pManager.allPlayers[1].transform;
-            //    skeleton.GetComponent<AIFieldOfVision>().player2 = pManager.allPlayers[2].transform;
-            //    skeleton.GetComponent<AIFieldOfVision>().player3 = pManager.allPlayers[3].transform;*/
-            //    skeletonsAlive = skeletonsAlive + 1;
-            //    skeletonsLeftToSpawn = skeletonsLeftToSpawn - 1;
-            //}
+            //var newSkeleton = skeletonPool.SpawnPooledGameObject();
+            //newSkeleton.transform.position = skeletonSpawns[i].transform.position;
+            //newSkeleton.transform.rotation = skeletonSpawns[i].transform.rotation;
+            //newSkeleton.SetActive(true);
+            //if (!newSkeleton.GetComponent<Skeleton>().swarmMode)
+            //    newSkeleton.GetComponent<Skeleton>().swarmMode = this;
+            //newSkeleton.GetComponent<Skeleton>().target = pManager.allPlayers[b].transform;
+            //skeletonsAlive ++;
+            //skeletonsLeftToSpawn --;
         }
 
         nextSkeletonSpawnTime = gameTime.totalGameTime + skeletonSpawnDelay;
@@ -514,27 +491,18 @@ public class SwarmMode : MonoBehaviour
     {
         if (hasSpaceToSpawnWatcher)
         {
-            int i = Random.Range(0, watcherSpawns.Length);
-            int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+            //int i = Random.Range(0, watcherSpawns.Length);
+            //int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
 
-            var newWatcher = watcherPool.SpawnPooledGameObject();
-            newWatcher.transform.position = watcherSpawns[i].transform.position;
-            newWatcher.transform.rotation = watcherSpawns[i].transform.rotation;
-            newWatcher.SetActive(true);
-            if (!newWatcher.GetComponent<Watcher>().swarmMode)
-                newWatcher.GetComponent<Watcher>().swarmMode = this;
-            newWatcher.GetComponent<Watcher>().target = pManager.allPlayers[b].transform;
-            watchersAlive++;
-            watchersLeftToSpawn--;
-
-            //if (watcherSpawns[i] != null)
-            //{
-            //    GameObject watcher = Instantiate(watcherPrefab, watcherSpawns[i].gameObject.transform.position, watcherSpawns[i].gameObject.transform.rotation);
-            //    watcher.GetComponent<Watcher>().swarmMode = this;
-            //    watcher.GetComponent<Watcher>().target = pManager.allPlayers[b].transform;
-            //    watchersAlive = watchersAlive + 1;
-            //    watchersLeftToSpawn = watchersLeftToSpawn - 1;
-            //}
+            //var newWatcher = watcherPool.SpawnPooledGameObject();
+            //newWatcher.transform.position = watcherSpawns[i].transform.position;
+            //newWatcher.transform.rotation = watcherSpawns[i].transform.rotation;
+            //newWatcher.SetActive(true);
+            //if (!newWatcher.GetComponent<Watcher>().swarmMode)
+            //    newWatcher.GetComponent<Watcher>().swarmMode = this;
+            //newWatcher.GetComponent<Watcher>().target = pManager.allPlayers[b].transform;
+            //watchersAlive++;
+            //watchersLeftToSpawn--;
         }
 
         nextWatcherSpawnTime = gameTime.totalGameTime + watcherSpawnDelay;
@@ -544,33 +512,18 @@ public class SwarmMode : MonoBehaviour
     {
         if (hasSpaceToSpawnHellhound)
         {
-            int i = Random.Range(0, hellhoundSpawns.Length);
-            int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+            //int i = Random.Range(0, hellhoundSpawns.Length);
+            //int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
 
-            var newHound = hellhoundPool.SpawnPooledGameObject();
-            newHound.transform.position = hellhoundSpawns[i].transform.position;
-            newHound.transform.rotation = hellhoundSpawns[i].transform.rotation;
-            newHound.SetActive(true);
-            if (!newHound.GetComponent<Hellhound>().swarmMode)
-                newHound.GetComponent<Hellhound>().swarmMode = this;
-            newHound.GetComponent<Hellhound>().target = pManager.allPlayers[b].transform;
-            hellhoundsAlive++;
-            hellhoundsLeftToSpawn--;
-
-            //if (hasSpaceToSpawnHellhound)
-            //{
-            //    int i = Random.Range(0, hellhoundSpawns.Length);
-            //    int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
-
-            //    if (hellhoundSpawns[i] != null)
-            //    {
-            //        GameObject hellhound = Instantiate(hellhoundPrefab, hellhoundSpawns[i].gameObject.transform.position, hellhoundSpawns[i].gameObject.transform.rotation);
-            //        hellhound.GetComponent<Hellhound>().swarmMode = this;
-            //        hellhound.GetComponent<Hellhound>().target = pManager.allPlayers[b].transform;
-            //        hellhoundsAlive = hellhoundsAlive + 1;
-            //        hellhoundsLeftToSpawn = hellhoundsLeftToSpawn - 1;
-            //    }
-            //}
+            //var newHound = hellhoundPool.SpawnPooledGameObject();
+            //newHound.transform.position = hellhoundSpawns[i].transform.position;
+            //newHound.transform.rotation = hellhoundSpawns[i].transform.rotation;
+            //newHound.SetActive(true);
+            //if (!newHound.GetComponent<Hellhound>().swarmMode)
+            //    newHound.GetComponent<Hellhound>().swarmMode = this;
+            //newHound.GetComponent<Hellhound>().target = pManager.allPlayers[b].transform;
+            //hellhoundsAlive++;
+            //hellhoundsLeftToSpawn--;
         }
         nextHellhoundSpawnTime = gameTime.totalGameTime + hellhoundSpawnDelay;
     }
@@ -579,27 +532,18 @@ public class SwarmMode : MonoBehaviour
     {
         if (hasSpaceToSpawnTroll)
         {
-            int i = Random.Range(0, trollSpawns.Length);
-            int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+            //int i = Random.Range(0, trollSpawns.Length);
+            //int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
 
-            var newTroll = trollPool.SpawnPooledGameObject();
-            newTroll.transform.position = trollSpawns[i].transform.position;
-            newTroll.transform.rotation = trollSpawns[i].transform.rotation;
-            newTroll.SetActive(true);
-            if (!newTroll.GetComponent<Troll>().swarmMode)
-                newTroll.GetComponent<Troll>().swarmMode = this;
-            newTroll.GetComponent<Troll>().target = pManager.allPlayers[b].transform;
-            trollsAlive++;
-            trollsLeftToSpawn--;
-
-            //if (trollSpawns[i] != null)
-            //{
-            //    GameObject troll = Instantiate(trollPrefab, trollSpawns[i].gameObject.transform.position, trollSpawns[i].gameObject.transform.rotation);
-            //    troll.GetComponent<Troll>().swarmMode = this;
-            //    troll.GetComponent<Troll>().target = pManager.allPlayers[b].transform;
-            //    trollsAlive = trollsAlive + 1;
-            //    trollsLeftToSpawn = trollsLeftToSpawn - 1;
-            //}
+            //var newTroll = trollPool.SpawnPooledGameObject();
+            //newTroll.transform.position = trollSpawns[i].transform.position;
+            //newTroll.transform.rotation = trollSpawns[i].transform.rotation;
+            //newTroll.SetActive(true);
+            //if (!newTroll.GetComponent<Troll>().swarmMode)
+            //    newTroll.GetComponent<Troll>().swarmMode = this;
+            //newTroll.GetComponent<Troll>().target = pManager.allPlayers[b].transform;
+            //trollsAlive++;
+            //trollsLeftToSpawn--;
         }
         nextTrollSpawnTime = gameTime.totalGameTime + trollSpawnDelay;
     }

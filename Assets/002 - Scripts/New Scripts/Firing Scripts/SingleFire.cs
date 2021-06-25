@@ -86,7 +86,7 @@ public class SingleFire : MonoBehaviour
             //Spawns projectile from bullet spawnpoint
             if (!wProperties.usesGrenades && !wProperties.usesRockets)
             {
-                var bullet = allPlayerScripts.playerBulletPool.SpawnPooledGameObject();
+                var bullet = allPlayerScripts.playerController.objectPool.SpawnPooledBullet();
                 bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
                 bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
                 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Bullet : MonoBehaviour
 {
@@ -132,12 +133,17 @@ public class Bullet : MonoBehaviour
                 {
                     Debug.Log(hits[i].collider.gameObject.layer);
                     PlayerHitbox hitbox = hits[i].collider.gameObject.GetComponent<PlayerHitbox>();
-                    PlayerDamage(hitbox);
+                    //PlayerDamage(hitbox);
+                    //allPlayerScripts.playerController.PV.RPC("DamagePlayer", RpcTarget.All, hitbox);
+
+                    PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
+                    playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(10);
+                    //allPlayerScripts.playerController.PV.RPC("DamagePlayerSimple", RpcTarget.All, playerProperties);
                 }
                 else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<AIHitbox>())
                 {
                     //Debug.Log("Bullet hit object with no hitbox: " + hit.name);
-                    GameObject genericHit = allPlayerScripts.playerGenericHitPool.SpawnPooledGameObject();
+                    GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
                     genericHit.transform.position = hits[i].point;
                     genericHit.SetActive(true);
                     gameObject.SetActive(false);
@@ -152,7 +158,8 @@ public class Bullet : MonoBehaviour
         Debug.DrawLine(transform.position, prePos);
     }
 
-    void PlayerDamage(PlayerHitbox pHitbox)
+    [PunRPC]
+    void DamagePlayer(PlayerHitbox pHitbox)
     {
 
         Debug.Log(pHitbox.gameObject.layer);
@@ -240,6 +247,15 @@ public class Bullet : MonoBehaviour
 
             damageDealt = true; ;
             gameObject.SetActive(false);
+        }
+    }
+
+    [PunRPC]
+    void DamagePlayerSimple(PlayerProperties playerProperties)
+    {
+        if (!damageDealt)
+        {
+            playerProperties.SetHealth(10, false, 1);
         }
     }
 
