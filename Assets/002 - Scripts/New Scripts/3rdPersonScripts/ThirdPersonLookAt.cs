@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class ThirdPersonLookAt : MonoBehaviourPun, IPunObservable
+public class ThirdPersonLookAt : MonoBehaviour
 {
     public Animator anim;
     public Transform lookAtGO;
     public Transform chest;
     public Movement movement;
-    public PhotonView photonView;
+    //public PhotonView photonView;
 
     public int directionIndicator;
 
@@ -26,35 +26,35 @@ public class ThirdPersonLookAt : MonoBehaviourPun, IPunObservable
     public Vector3 BackwardsOffset;
     public Vector3 LeftBackwardsOffset;
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        //Debug.Log("In OPSV");
-        anim = GetComponent<Animator>();
-        chest = anim.GetBoneTransform(HumanBodyBones.Chest);
-        if (stream.IsWriting) // If I am the owner
-        {
-            //Debug.Log("Writing: " + lookAtGO.position);
-            stream.SendNext(lookAtGO.position);
-        }
-        else if (stream.IsReading) // If I am a client
-        {
-            //Debug.Log("In Reading: " + stream.ReceiveNext());
-            //if (chest)
-            //{
-            //    Debug.Log("There is a chest");
-            //    chest.LookAt((Vector3)stream.ReceiveNext());
-            //}
-            //else
-            //{
-            //    Debug.Log("There is no chest");
-            //}
-        }
-    }
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+    //    //Debug.Log("In OPSV");
+    //    anim = GetComponent<Animator>();
+    //    chest = anim.GetBoneTransform(HumanBodyBones.Chest);
+    //    if (stream.IsWriting) // If I am the owner
+    //    {
+    //        //Debug.Log("Writing: " + lookAtGO.position);
+    //        stream.SendNext(lookAtGO.position);
+    //    }
+    //    else if (stream.IsReading) // If I am a client
+    //    {
+    //        //Debug.Log("In Reading: " + stream.ReceiveNext());
+    //        //if (chest)
+    //        //{
+    //        //    Debug.Log("There is a chest");
+    //        //    chest.LookAt((Vector3)stream.ReceiveNext());
+    //        //}
+    //        //else
+    //        //{
+    //        //    Debug.Log("There is no chest");
+    //        //}
+    //    }
+    //}
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
-        photonView = GetComponent<PhotonView>();
+        //photonView = GetComponent<PhotonView>();
         if (!chest)
             chest = anim.GetBoneTransform(HumanBodyBones.Chest);
         currentOffset = iddleOffset;
