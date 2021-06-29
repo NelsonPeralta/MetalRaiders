@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             gunCam.gameObject.SetActive(false);
             mainCam.gameObject.SetActive(false);
-
+            allPlayerScripts.playerUIComponents.gameObject.SetActive(false);
         }
 
 
@@ -165,6 +165,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 CheckReloadButton();
                 CheckAmmoForAutoReload();
                 Aiming();
+                //PV.RPC("Melee", RpcTarget.All);
                 Melee();
                 Crouch();
                 Grenade();
@@ -375,14 +376,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }*/
     }
 
+    [PunRPC]
     void Melee()
     {
         if (!playerProperties.isDead)
         {
             if (player.GetButtonDown("Melee") && !isMeleeing /* && !isInspecting */)
             {
+                Debug.Log(player);
                 anim.Play("Knife Attack 2", 0, 0f);
-                StartCoroutine(Melee3PS());
+                tPersonController.anim.SetBool("Melee", true); // Must use Bools in the upper body animations in order to work with PUN
+                //StartCoroutine(Melee3PS());
                 melee.PlayMeleeSound();
             }
         }

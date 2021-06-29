@@ -191,7 +191,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
 
     public void TakeDamage(int damage)
     {
-        Debug.Log("Player Took Damage");
         pController.PV.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
@@ -374,12 +373,14 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
         {
             if (!headshot)
             {
-                Death(false, playerWhoShotThisPlayer);
+                //Death(false, playerWhoShotThisPlayer);
+                pController.PV.RPC("Die", RpcTarget.All, false, playerWhoShotThisPlayer);
                 PlayDeathSound();
             }
             else
             {
-                Death(true, playerWhoShotThisPlayer);
+                //Death(true, playerWhoShotThisPlayer);
+                pController.PV.RPC("Die", RpcTarget.All, true, playerWhoShotThisPlayer);
                 PlayDeathSound();
             }
         }
@@ -428,7 +429,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
 
                     if (Health <= 0)
                     {
-                        Death(true, playerWhoKilledThisPlayer);
+                        //Death(true, playerWhoKilledThisPlayer);
+                        pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
                         PlayDeathSound();
                     }
                 }
@@ -442,7 +444,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
 
                     if (Health <= 0)
                     {
-                        Death(true, playerWhoKilledThisPlayer);
+                        //Death(true, playerWhoKilledThisPlayer);
+                        pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
                         PlayDeathSound();
                     }
                 }
@@ -457,7 +460,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
 
                 if (Health <= 0)
                 {
-                    Death(true, playerWhoKilledThisPlayer);
+                    //Death(true, playerWhoKilledThisPlayer);
+                    pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
                     PlayDeathSound();
                 }
             }
@@ -477,7 +481,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
 
             if (Health <= 0)
             {
-                Death(true, playerWhoKilledThisPlayer);
+                //Death(true, playerWhoKilledThisPlayer);
+                pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
                 PlayDeathSound();
             }
         }
@@ -548,8 +553,12 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
-    void Death(bool headshot, int playerWhoKilledThisPlayer)
+    [PunRPC]
+    void Die(bool headshot, int playerWhoKilledThisPlayer)
     {
+        if (isDead)
+            return;
+
         UpdateMPPoints(playerRewiredID, playerWhoKilledThisPlayer);
         Debug.Log("Player Death Script"); 
         pController.Unscope();
@@ -582,7 +591,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
         {
             //mainCamera.cullingMask |= (1 << 28);
             gunCamera.cullingMask &= ~(1 << 24);
-            Debug.Log("Turned Off Gun Layers");
             //Debug.Log("Player 1 Camera2");
         }
         else if (playerRewiredID == 1)
@@ -633,7 +641,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
         }
 
         DropAllOnDeath();
-        ragdollScript.SpawnRagdoll();
+        SpawnRagdoll();
+        //pController.PV.RPC("SpawnRagdoll", RpcTarget.All);
 
         //var go1 = Instantiate(thirsPersonDeathGO, thirdPersonDeathSpawnPoint.transform.position, thirdPersonDeathSpawnPoint.transform.rotation);
 
@@ -642,6 +651,59 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
 
         shieldAlarmAudioSource.Stop();
         shieldAudioSource.Stop();
+    }
+
+    //[PunRPC]
+    void SpawnRagdoll()
+    {
+
+        var ragdoll = pController.objectPool.SpawnPooledPlayerRagdoll();
+
+        // LAG with the Head and Chest, unknown cause
+        //////////////////////////////
+        
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position = ragdollScript.Head.position;
+        //Debug.Log("Player Head Pos: " + ragdollScript.Head.position + "; Ragdoll head position: " + ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position);
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.position = ragdollScript.Chest.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = ragdollScript.Hips.position;
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.rotation = ragdollScript.Head.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.rotation = ragdollScript.Chest.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = ragdollScript.Hips.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = ragdollScript.UpperArmLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = ragdollScript.UpperArmRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = ragdollScript.UpperArmLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = ragdollScript.UpperArmRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = ragdollScript.LowerArmLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = ragdollScript.LowerArmRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = ragdollScript.LowerArmLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = ragdollScript.LowerArmRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = ragdollScript.UpperLegLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = ragdollScript.UpperLegRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = ragdollScript.UpperLegLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = ragdollScript.UpperLegRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = ragdollScript.LowerLegLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = ragdollScript.LowerLegRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = ragdollScript.LowerLegLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = ragdollScript.LowerLegRight.rotation;
+
+        ragdoll.SetActive(true);
     }
 
     void RespawnCountdown()
@@ -657,47 +719,51 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
             {
                 if (swarmMode.playerLives > 0)
                 {
-                    Respawn();
+                    //Respawn();
+                    pController.PV.RPC("Die", RpcTarget.All);
                     respawnStarted = false;
                     respawnCountdown = 0;
                 }
             }
             else
             {
-                Respawn();
+                //Respawn();
+                pController.PV.RPC("Respawn", RpcTarget.All);
                 respawnStarted = false;
                 respawnCountdown = 0;
             }
         }
     }
 
+    [PunRPC]
     void Respawn()
     {
+        if (!isDead)
+            return;
         isDead = false;
         mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(-30, 0, 0);
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, mainOriginalCameraPosition.y, mainOriginalCameraPosition.z);
 
-        if (playerRewiredID == 0)
-        {
-            mainCamera.cullingMask &= ~(1 << 28);
-            gunCamera.cullingMask |= (1 << 24);
-        }
-        else if (playerRewiredID == 1)
-        {
-            mainCamera.cullingMask &= ~(1 << 29);
-            gunCamera.cullingMask |= (1 << 25);
-        }
-        else if (playerRewiredID == 2)
-        {
-            mainCamera.cullingMask |= (1 << 30);
-            gunCamera.cullingMask |= (1 << 26);
-        }
-        else if (playerRewiredID == 3)
-        {
-            //mainCamera.cullingMask |= (1 << 31);
-            gunCamera.cullingMask |= (1 << 27);
-        }
-
+            if (playerRewiredID == 0)
+            {
+                mainCamera.cullingMask &= ~(1 << 28);
+                gunCamera.cullingMask |= (1 << 24);
+            }
+            else if (playerRewiredID == 1)
+            {
+                mainCamera.cullingMask &= ~(1 << 29);
+                gunCamera.cullingMask |= (1 << 25);
+            }
+            else if (playerRewiredID == 2)
+            {
+                mainCamera.cullingMask |= (1 << 30);
+                gunCamera.cullingMask |= (1 << 26);
+            }
+            else if (playerRewiredID == 3)
+            {
+                //mainCamera.cullingMask |= (1 << 31);
+                gunCamera.cullingMask |= (1 << 27);
+            }
 
 
         foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
@@ -707,7 +773,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable
 
                 if (playerRewiredID == 0)
                 {
-                    go.layer = 28;
+                    if (pController.PV.IsMine)
+                        go.layer = 28;
+                    else
+                        go.layer = 29;
                 }
                 else if (playerRewiredID == 1)
                 {

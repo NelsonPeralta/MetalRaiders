@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviourPunCallbacks
 {
+    public PhotonView photonView;
     [Header("Other Scripts")]
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
@@ -15,6 +16,7 @@ public class Bullet : MonoBehaviour
     public ZombieScript zScript;
     public RaycastScript raycastScript;
     public CrosshairScript crosshairScript;
+    public GameObjectPool gameObjectPool;
 
     public GameObject collision;
     public GameObject bulletTarget;
@@ -53,6 +55,10 @@ public class Bullet : MonoBehaviour
     public GameObject magicBlood;
     public GameObject shieldHit;
 
+    void Awake()
+    {
+        gameObjectPool = GameObjectPool.gameObjectPoolInstance;
+    }
 
     void OnEnable()
     {
@@ -131,22 +137,23 @@ public class Bullet : MonoBehaviour
                 }
                 else if (hits[i].collider.gameObject.GetComponent<PlayerHitbox>() != null && hits[i].collider.gameObject.layer != 23)
                 {
-                    Debug.Log(hits[i].collider.gameObject.layer);
                     PlayerHitbox hitbox = hits[i].collider.gameObject.GetComponent<PlayerHitbox>();
                     //PlayerDamage(hitbox);
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayer", RpcTarget.All, hitbox);
 
                     PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
-                    playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(10);
+                    if(playerProperties.Health > 0)
+                        playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(10);
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayerSimple", RpcTarget.All, playerProperties);
                 }
                 else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<AIHitbox>())
                 {
-                    //Debug.Log("Bullet hit object with no hitbox: " + hit.name);
-                    GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
-                    genericHit.transform.position = hits[i].point;
-                    genericHit.SetActive(true);
-                    gameObject.SetActive(false);
+                    photonView.RPC("SpawnGenericHit", RpcTarget.All, hits[i].point);
+
+                    //GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
+                    //genericHit.transform.position = hits[i].point;
+                    //genericHit.SetActive(true);
+                    //gameObject.SetActive(false);
                 }
                 else
                 {
@@ -251,12 +258,12 @@ public class Bullet : MonoBehaviour
     }
 
     [PunRPC]
-    void DamagePlayerSimple(PlayerProperties playerProperties)
+    void SpawnGenericHit(Vector3 point)
     {
-        if (!damageDealt)
-        {
-            playerProperties.SetHealth(10, false, 1);
-        }
+        GameObject genericHit = gameObjectPool.SpawnPooledGenericHit();
+        genericHit.transform.position = point;
+        genericHit.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     void AIDamage(AIHitbox aiHB, RaycastHit hit)

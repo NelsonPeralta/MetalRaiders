@@ -46,10 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   amountToPool: 100
   bullets: []
-  bulletPrefab: {fileID: 1086664671600574, guid: 06868a22d896cdc478fa140aadb0be79,
+  bulletPrefab: {fileID: 652686745487404900, guid: be7ba75c7401067478ca44c36f3954e7,
     type: 3}
   genericHits: []
-  genericHitPrefab: {fileID: 1620636520166436, guid: 07757cf211bd45044a1f1917658b9e66,
+  genericHitPrefab: {fileID: 8649884254006485902, guid: 8ea603131d195f2438c4eafba1c9f895,
+    type: 3}
+  ragdolls: []
+  ragdollPrefab: {fileID: 6960028148522978984, guid: 72d2b2848eccf4948b1fbeae6309ab7e,
     type: 3}
 --- !u!114 &-6797353524191117134
 MonoBehaviour:

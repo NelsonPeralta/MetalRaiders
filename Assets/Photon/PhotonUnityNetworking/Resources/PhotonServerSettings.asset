@@ -38,6 +38,15 @@ MonoBehaviour:
   - DamagePlayer
   - DamagePlayerSimple
   - RPC_TakeDamage
+  - Die
+  - SpawnRagdoll
+  - Respawn
+  - Melee
+  - PlayerChestRotation
+  - SpawnGenericHit
+  - Shoot
+  - Fire
+  - UpdateOffset
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

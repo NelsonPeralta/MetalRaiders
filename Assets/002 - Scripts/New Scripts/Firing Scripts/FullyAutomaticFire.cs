@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using System.IO;
 
-public class FullyAutomaticFire : MonoBehaviour
+public class FullyAutomaticFire : MonoBehaviourPunCallbacks
 {
     public AllPlayerScripts allPlayerScripts;
+    public PhotonView photonView;
+    public GameObjectPool gameObjectPool;
 
     [Header("Other Scripts")]
     public int playerRewiredID;
@@ -27,7 +31,18 @@ public class FullyAutomaticFire : MonoBehaviour
 
     private bool hasFoundComponents = false;
 
-    public void Start()
+    void Awake()
+    {
+        gameObjectPool = GameObjectPool.gameObjectPoolInstance;
+    }
+
+    private void Start()
+    {
+        photonView = gameObject.GetComponent<PhotonView>();
+    }
+
+    [PunRPC]
+    public void Shoot()
     {
         if (hasFoundComponents == false)
         {
@@ -85,13 +100,12 @@ public class FullyAutomaticFire : MonoBehaviour
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Spawn bullet from bullet spawnpoint
-            var bullet = allPlayerScripts.playerController.objectPool.SpawnPooledBullet();
+            var bullet = gameObjectPool.SpawnPooledBullet();
             bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
             bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
 
             bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
             bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
-            //var bullet = (Transform)Instantiate(gwProperties.bulletPrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
             bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
             bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
             bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
@@ -132,7 +146,9 @@ public class FullyAutomaticFire : MonoBehaviour
                 {
                     if (pController.isShooting /*|| Script.isShooting*/)
                     {
-                        StartCoroutine(Fire(false, false));
+                        //Fire(false, false);
+
+                        photonView.RPC("Fire", RpcTarget.All, false, false);
                     }
                 }
 
@@ -141,7 +157,7 @@ public class FullyAutomaticFire : MonoBehaviour
                     if (pInventory.weaponsEquiped[0])
                         wProperties = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
                     else
-                        ;
+                        return;
                 else if (pInventory.activeWeapIs == 1)
                     if (pInventory.weaponsEquiped[1])
                         wProperties = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
@@ -155,15 +171,22 @@ public class FullyAutomaticFire : MonoBehaviour
 
 
 
-
-    IEnumerator Fire(bool thisIsShootingRight, bool thisIsShootingLeft)
+    [PunRPC]
+    public void Fire(bool thisIsShootingRight, bool thisIsShootingLeft)
     {
+
+
+
+
+
+
         ThisisShooting = true;
-        Start();
+        //Start();
+        photonView.RPC("Shoot", RpcTarget.All);
 
         /*wProperties.mainAudioSource.clip = wProperties.Fire;
         wProperties.mainAudioSource.Play();*/
-        yield return new WaitForSeconds(nextFireInterval);
+        //yield return new WaitForSeconds(nextFireInterval);
         ThisisShooting = false;
     }
 
