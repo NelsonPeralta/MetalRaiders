@@ -21,6 +21,10 @@ public class GameObjectPool : MonoBehaviour
     public List<GameObject> ragdolls = new List<GameObject>();
     public GameObject ragdollPrefab;
 
+    [Header("Testing Object")]
+    public List<GameObject> testingObjects = new List<GameObject>();
+    public GameObject testingObjectPrefab;
+
     private void Awake()
     {
         if (gameObjectPoolInstance)
@@ -34,16 +38,14 @@ public class GameObjectPool : MonoBehaviour
 
     private void Start()
     {
-        for(int i = 0; i < amountToPool; i++)
+        for (int i = 0; i < amountToPool; i++)
         {
-            //GameObject obj = Instantiate(bulletPrefab, transform.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlinePlayerBullet"), Vector3.zero, Quaternion.identity);
+            GameObject obj = Instantiate(bulletPrefab, transform.position, transform.rotation); // Spawning them on the Photon Network will make it ignore the static variable
             obj.SetActive(false);
             bullets.Add(obj);
             obj.transform.parent = gameObject.transform;
 
-            //obj = Instantiate(genericHitPrefab, transform.position, transform.rotation);
-            obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineGenericHit"), Vector3.zero, Quaternion.identity);
+            obj = Instantiate(genericHitPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             genericHits.Add(obj);
             obj.transform.parent = gameObject.transform;
@@ -51,6 +53,11 @@ public class GameObjectPool : MonoBehaviour
             obj = Instantiate(ragdollPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             ragdolls.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+            obj = Instantiate(testingObjectPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            testingObjects.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
     }
@@ -74,6 +81,14 @@ public class GameObjectPool : MonoBehaviour
     public GameObject SpawnPooledPlayerRagdoll()
     {
         foreach (GameObject obj in ragdolls)
+            if (!obj.activeSelf)
+                return obj;
+        return null;
+    }
+
+    public GameObject SpawnPooledTestingObject()
+    {
+        foreach (GameObject obj in testingObjects)
             if (!obj.activeSelf)
                 return obj;
         return null;

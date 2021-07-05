@@ -1,103 +1,40 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using System.IO;
 
-public class FullyAutomaticFire : MonoBehaviourPunCallbacks
+public class FullyAutomaticFire : MonoBehaviourPun
 {
     public AllPlayerScripts allPlayerScripts;
-    public PhotonView photonView;
+    public CommonFiringActions CommonFiringActions;
+    public PhotonView PV;
     public GameObjectPool gameObjectPool;
 
     [Header("Other Scripts")]
     public int playerRewiredID;
-    public bool redTeam = false;
-    public bool blueTeam = false;
-    public bool yellowTeam = false;
-    public bool greenTeam = false;
     public PlayerProperties pProperties;
     public PlayerController pController;
     public ThirdPersonScript tPersonController;
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
     public GeneralWeapProperties gwProperties;
-    public ChildManager cManager;
 
     public float nextFireInterval;
+    float fireInterval = 0;
 
     private bool ThisisShooting = false;
     private bool hasButtonDown = false;
-
-    private bool hasFoundComponents = false;
 
     void Awake()
     {
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
     }
 
-    private void Start()
-    {
-        photonView = gameObject.GetComponent<PhotonView>();
-    }
-
     [PunRPC]
-    public void Shoot()
+    public void ShootAuto()
     {
-        if (hasFoundComponents == false)
+        if (wProperties.isFullyAutomatic && !pController.isDualWielding && !pController.isDrawingWeapon)
         {
-            cManager = gameObject.GetComponentInParent<ChildManager>();
-            StartCoroutine(FindComponents());
-
-            hasFoundComponents = true;
-        }
-
-
-
-        if (ThisisShooting && wProperties.isFullyAutomatic && !pController.isDualWielding && !pController.isDrawingWeapon)
-        {
-            if (pController.anim != null)
-            {
-                wProperties.currentAmmo -= 1;
-                pController.anim.Play("Fire", 0, 0f);
-                StartCoroutine(Player3PSFiringAnimation());
-            }
-
-            //If random muzzle is false
-            if (!gwProperties.randomMuzzleflash &&
-                gwProperties.enableMuzzleflash == true /*&& !silencer*/)
-            {
-                if(gwProperties.muzzleflashLight)
-                    gwProperties.muzzleParticles.Emit(1);
-                //Light flash start
-                StartCoroutine(gwProperties.MuzzleFlashLight());
-            }
-            else if (gwProperties.randomMuzzleflash == true)
-            {
-                Debug.Log("In Random Muzzle Flash");
-                //Only emit if random value is 1
-                if (gwProperties.randomMuzzleflashValue == 1)
-                {
-                    if (gwProperties.enableSparks == true)
-                    {
-                        Debug.Log("Emitted Random Spark");
-                        //Emit random amount of spark particles
-                        gwProperties.sparkParticles.Emit(Random.Range(gwProperties.minSparkEmission, gwProperties.maxSparkEmission));
-
-                    }
-                    if (gwProperties.enableMuzzleflash == true /*&& !silencer*/)
-                    {
-                        Debug.Log("Coroutine Muzzle Flashlight");
-                        gwProperties.muzzleParticles.Emit(1);
-                        //Light flash start
-                        StartCoroutine(gwProperties.MuzzleFlashLight());
-
-
-                    }
-                }
-            }
-
-
+            Debug.Log("Spawned Bullet and player is : " + wProperties.pController.name);
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Spawn bullet from bullet spawnpoint
             var bullet = gameObjectPool.SpawnPooledBullet();
@@ -111,26 +48,35 @@ public class FullyAutomaticFire : MonoBehaviourPunCallbacks
             bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
             bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
             bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;
-            bullet.SetActive(true);
-            var mf = Instantiate(gwProperties.muzzleFlashEffect, gwProperties.bulletSpawnPoint.transform.position,
-            gwProperties.bulletSpawnPoint.transform.rotation);
-            Destroy(mf, 1);
-            wProperties.Recoil();
-
             SetTeamToBulletScript(bullet.transform);
-
-            BulletDetector detectorScript = bullet.GetComponent<BulletDetector>();
-
-            //Spawn casing prefab at spawnpoint
-            //Instantiate(gwProperties.bigCasingPrefab, gwProperties.casingSpawnPoint.transform.position, gwProperties.casingSpawnPoint.transform.rotation);
-
-            wProperties.mainAudioSource.clip = wProperties.Fire;
-            wProperties.mainAudioSource.Play();
-
-            //tPersonController.anim.SetBool("Fire", false);
-
+            bullet.SetActive(true);
         }
 
+
+        //// BACKUP CODE
+        /////
+        ///
+        //if (!PV.IsMine)
+        //    return;
+        //if (wProperties.isFullyAutomatic && !pController.isDualWielding && !pController.isDrawingWeapon)
+        //{
+        //    Debug.Log("Spawned Bullet and player is : " + wProperties.pController.name);
+        //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //    //Spawn bullet from bullet spawnpoint
+        //    var bullet = gameObjectPool.SpawnPooledBullet();
+        //    bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
+        //    bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
+
+        //    bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
+        //    bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
+        //    bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+        //    bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
+        //    bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+        //    bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
+        //    bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;
+        //    SetTeamToBulletScript(bullet.transform);
+        //    bullet.SetActive(true);
+        //}
     }
 
     public void Update()
@@ -146,9 +92,13 @@ public class FullyAutomaticFire : MonoBehaviourPunCallbacks
                 {
                     if (pController.isShooting /*|| Script.isShooting*/)
                     {
-                        //Fire(false, false);
+                        Debug.Log("Trying to shoot from FAF script");
+                        PV.RPC("ShootAuto", RpcTarget.All); // Doesnt work
+                        PV.RPC("RPC_Shoot_Projectile_Test", RpcTarget.All); // Works
 
-                        photonView.RPC("Fire", RpcTarget.All, false, false);
+                        StartFiringIntervalCooldown();
+                        //FireAuto(false, false);
+                        //PV.RPC("FireAuto", RpcTarget.All, false, false);
                     }
                 }
 
@@ -157,7 +107,7 @@ public class FullyAutomaticFire : MonoBehaviourPunCallbacks
                     if (pInventory.weaponsEquiped[0])
                         wProperties = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
                     else
-                        return;
+                        ;
                 else if (pInventory.activeWeapIs == 1)
                     if (pInventory.weaponsEquiped[1])
                         wProperties = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
@@ -166,58 +116,40 @@ public class FullyAutomaticFire : MonoBehaviourPunCallbacks
                     hasButtonDown = false;
             }
         }
+
+        FireIntervalCooldown();
     }
 
 
 
 
     [PunRPC]
-    public void Fire(bool thisIsShootingRight, bool thisIsShootingLeft)
+    public void FireAuto(bool thisIsShootingRight, bool thisIsShootingLeft)
     {
+        if (ThisisShooting)
+            return;
 
-
-
-
-
-
-        ThisisShooting = true;
-        //Start();
-        photonView.RPC("Shoot", RpcTarget.All);
-
-        /*wProperties.mainAudioSource.clip = wProperties.Fire;
-        wProperties.mainAudioSource.Play();*/
-        //yield return new WaitForSeconds(nextFireInterval);
-        ThisisShooting = false;
+        // Must only spawn bullet. SFXs must only be called if isMine
+        //PV.RPC("ShootAuto", RpcTarget.All);
+        ShootAuto();
+        CommonFiringActions.AfterShootingAction(wProperties);
+        StartFiringIntervalCooldown();
     }
 
-    IEnumerator FindComponents()
+    [PunRPC]
+    void RPC_Shoot_Projectile_Test()
     {
-        yield return new WaitForEndOfFrame();
+        GameObject bullet = gameObjectPool.SpawnPooledBullet();
 
-        pController = gameObject.GetComponentInParent<PlayerController>();
-        //pInventory = cManager.FindChildWithTag("Player Inventory").GetComponent<PlayerInventory>();
-        //wProperties = cManager.FindChildWithTag("Weapon").GetComponent<WeaponProperties>();
-        gwProperties = gameObject.GetComponentInParent<GeneralWeapProperties>();
+        bullet.transform.position = gameObject.transform.position;
+        bullet.transform.rotation = gameObject.transform.rotation;
+        bullet.SetActive(true);
     }
 
     public void SetTeamToBulletScript(Transform bullet)
     {
-        if (redTeam)
-        {
-            bullet.gameObject.GetComponent<Bullet>().redTeam = true;
-        }
-        else if (blueTeam)
-        {
-            bullet.gameObject.GetComponent<Bullet>().blueTeam = true;
-        }
-        else if (yellowTeam)
-        {
-            bullet.gameObject.GetComponent<Bullet>().yellowTeam = true;
-        }
-        else if (greenTeam)
-        {
-            bullet.gameObject.GetComponent<Bullet>().greenTeam = true;
-        }
+        // TO DO
+        //  Add a variable string with all small caracters for team variable
     }
 
     IEnumerator Player3PSFiringAnimation()
@@ -225,4 +157,21 @@ public class FullyAutomaticFire : MonoBehaviourPunCallbacks
         tPersonController.anim.Play("Fire");
         yield return new WaitForEndOfFrame();
     }
+
+    void StartFiringIntervalCooldown()
+    {
+        fireInterval = nextFireInterval;
+        ThisisShooting = true;
+    }
+
+    void FireIntervalCooldown()
+    {
+        if (!ThisisShooting)
+            return;
+        fireInterval -= Time.deltaTime;
+
+        if (fireInterval <= 0)
+            ThisisShooting = false;
+    }
+
 }

@@ -54,6 +54,9 @@ MonoBehaviour:
   ragdolls: []
   ragdollPrefab: {fileID: 6960028148522978984, guid: 72d2b2848eccf4948b1fbeae6309ab7e,
     type: 3}
+  testingObjects: []
+  testingObjectPrefab: {fileID: 4932562514326571089, guid: 58cf38eb4faf0504abb19237fdc480ef,
+    type: 3}
 --- !u!114 &-6797353524191117134
 MonoBehaviour:
   m_ObjectHideFlags: 0

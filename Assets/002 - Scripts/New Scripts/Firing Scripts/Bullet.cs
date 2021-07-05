@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class Bullet : MonoBehaviourPunCallbacks
 {
-    public PhotonView photonView;
+    public PhotonView PV;
     [Header("Other Scripts")]
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
@@ -60,7 +60,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
     }
 
-    void OnEnable()
+    override public void OnEnable()
     {
         distanceTravelled = 0;
         damageDealt = false;
@@ -101,11 +101,12 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        Despawn();
+        //Despawn();
     }
 
     void FixedUpdate()
     {
+
         //May change from FixedUpdate to Update to calculate the distrance travelled
         //Debug.Log(damageDealt);
         prePos = transform.position;
@@ -142,13 +143,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayer", RpcTarget.All, hitbox);
 
                     PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
-                    if(playerProperties.Health > 0)
+                    if (playerProperties.Health > 0)
                         playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(10);
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayerSimple", RpcTarget.All, playerProperties);
                 }
                 else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<AIHitbox>())
                 {
-                    photonView.RPC("SpawnGenericHit", RpcTarget.All, hits[i].point);
+                    //PV.RPC("SpawnGenericHit", RpcTarget.All, hits[i].point);
+                    //damageDealt = true;
 
                     //GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
                     //genericHit.transform.position = hits[i].point;
@@ -169,101 +171,104 @@ public class Bullet : MonoBehaviourPunCallbacks
     void DamagePlayer(PlayerHitbox pHitbox)
     {
 
-        Debug.Log(pHitbox.gameObject.layer);
-        PlayerProperties hitPlayerProperties = pHitbox.player.GetComponent<PlayerProperties>();
+        //Debug.Log(pHitbox.gameObject.layer);
+        //PlayerProperties hitPlayerProperties = pHitbox.player.GetComponent<PlayerProperties>();
 
-        if (!damageDealt)
-        {
-            if (isNormalBullet) /////////////////////////////////////////////////////////////////////////////////////Normal Bullet
-            {
-                if (hitPlayerProperties.hasShield) //If Player has Shields
-                {
-                    if (hitPlayerProperties.Shield > 0)
-                    {
-                        hitPlayerProperties.SetShield(damage);
-                    }
-                    else
-                    {
-                        hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
-                    }
-                }
-                else // If Player does not have Armor
-                {
-                    hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
-                }
-            }
-            if (isHeadshotCapable) //////////////////////////////////////////////////////////////////////////////// Is Headshot Capable
-            {
-                if (hitPlayerProperties.hasShield)
-                {
-                    if (hitPlayerProperties.Shield > 0)
-                    {
-                        hitPlayerProperties.SetShield(damage);
-                    }
-                    else if (hitPlayerProperties.Shield <= 0 && pHitbox.isHead)
-                    {
-                        hitPlayerProperties.SetHealth(damage, true, playerRewiredID);
-                    }
-                    else if (hitPlayerProperties.Shield <= 0 && !pHitbox.isHead)
-                    {
-                        hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
-                    }
-                }
-                else // If Player does not have Armor
-                {
-                    hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
-                }
-            }
-            if (canBleedthroughHeadshot) /////////////////////////////////////////////////////////////////////////// Can Bleedthrough Headshot
-            {
-                if (hitPlayerProperties.hasShield)
-                {
-                    if (hitPlayerProperties.Shield > 0 && !pHitbox.isHead)
-                    {
-                        hitPlayerProperties.SetShield(damage);
-                    }
-                    else if (hitPlayerProperties.Shield > 0 && pHitbox.isHead)
-                    {
-                        hitPlayerProperties.BleedthroughDamage(damage, true, playerRewiredID);
-                    }
-                    else if (hitPlayerProperties.Shield <= 0 && !pHitbox.isHead)
-                    {
-                        hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
-                    }
-                    else if (hitPlayerProperties.Shield <= 0 && pHitbox.isHead)
-                    {
-                        hitPlayerProperties.SetHealth(damage, true, playerRewiredID);
-                    }
-                }
-                else if (!hitPlayerProperties.hasShield) // If Player does not have Armor
-                {
-                    if (pHitbox.isHead)
-                    {
-                        hitPlayerProperties.SetHealth(damage, true, playerRewiredID);
-                    }
-                    else
-                    {
-                        hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
-                    }
-                }
-            }
-            if (canBleedthroughAnything) /////////////////////////////////////////////////////////////////////////////// Can Bleedthrough Anything
-            {
+        //if (!damageDealt)
+        //{
+        //    if (isNormalBullet) /////////////////////////////////////////////////////////////////////////////////////Normal Bullet
+        //    {
+        //        if (hitPlayerProperties.hasShield) //If Player has Shields
+        //        {
+        //            if (hitPlayerProperties.Shield > 0)
+        //            {
+        //                hitPlayerProperties.SetShield(damage);
+        //            }
+        //            else
+        //            {
+        //                hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
+        //            }
+        //        }
+        //        else // If Player does not have Armor
+        //        {
+        //            hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
+        //        }
+        //    }
+        //    if (isHeadshotCapable) //////////////////////////////////////////////////////////////////////////////// Is Headshot Capable
+        //    {
+        //        if (hitPlayerProperties.hasShield)
+        //        {
+        //            if (hitPlayerProperties.Shield > 0)
+        //            {
+        //                hitPlayerProperties.SetShield(damage);
+        //            }
+        //            else if (hitPlayerProperties.Shield <= 0 && pHitbox.isHead)
+        //            {
+        //                hitPlayerProperties.SetHealth(damage, true, playerRewiredID);
+        //            }
+        //            else if (hitPlayerProperties.Shield <= 0 && !pHitbox.isHead)
+        //            {
+        //                hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
+        //            }
+        //        }
+        //        else // If Player does not have Armor
+        //        {
+        //            hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
+        //        }
+        //    }
+        //    if (canBleedthroughHeadshot) /////////////////////////////////////////////////////////////////////////// Can Bleedthrough Headshot
+        //    {
+        //        if (hitPlayerProperties.hasShield)
+        //        {
+        //            if (hitPlayerProperties.Shield > 0 && !pHitbox.isHead)
+        //            {
+        //                hitPlayerProperties.SetShield(damage);
+        //            }
+        //            else if (hitPlayerProperties.Shield > 0 && pHitbox.isHead)
+        //            {
+        //                hitPlayerProperties.BleedthroughDamage(damage, true, playerRewiredID);
+        //            }
+        //            else if (hitPlayerProperties.Shield <= 0 && !pHitbox.isHead)
+        //            {
+        //                hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
+        //            }
+        //            else if (hitPlayerProperties.Shield <= 0 && pHitbox.isHead)
+        //            {
+        //                hitPlayerProperties.SetHealth(damage, true, playerRewiredID);
+        //            }
+        //        }
+        //        else if (!hitPlayerProperties.hasShield) // If Player does not have Armor
+        //        {
+        //            if (pHitbox.isHead)
+        //            {
+        //                hitPlayerProperties.SetHealth(damage, true, playerRewiredID);
+        //            }
+        //            else
+        //            {
+        //                hitPlayerProperties.SetHealth(damage, false, playerRewiredID);
+        //            }
+        //        }
+        //    }
+        //    if (canBleedthroughAnything) /////////////////////////////////////////////////////////////////////////////// Can Bleedthrough Anything
+        //    {
 
-            }
+        //    }
 
-            damageDealt = true; ;
-            gameObject.SetActive(false);
-        }
+        //    damageDealt = true; ;
+        //    gameObject.SetActive(false);
+        //}
     }
 
     [PunRPC]
     void SpawnGenericHit(Vector3 point)
     {
-        GameObject genericHit = gameObjectPool.SpawnPooledGenericHit();
-        genericHit.transform.position = point;
-        genericHit.SetActive(true);
-        gameObject.SetActive(false);
+        //if (!PV.IsMine)
+        //    return;
+        //Debug.Log("Spawned Generic Hit from Bullet Script. Damage dealt: " + damageDealt);
+        //GameObject genericHit = gameObjectPool.SpawnPooledGenericHit();
+        //genericHit.transform.position = point;
+        //genericHit.SetActive(true);
+        //gameObject.SetActive(false);
     }
 
     void AIDamage(AIHitbox aiHB, RaycastHit hit)

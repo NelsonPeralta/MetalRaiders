@@ -6,15 +6,19 @@ public class SpawnManager : MonoBehaviour
 {
 	public static SpawnManager Instance;
 
-	public SpawnPoint[] spawnpoints;
+	public List<SpawnPoint> genericSpawnPoints;
 
 	void Awake()
 	{
+        if(genericSpawnPoints.Count == 0)
+            foreach (Transform child in transform)
+                genericSpawnPoints.Add(child.GetComponent<SpawnPoint>());
+        
 		Instance = this;
 	}
 
-	public Transform GetSpawnpoint()
+	public Transform GetGenericSpawnpoint()
 	{
-		return spawnpoints[Random.Range(0, spawnpoints.Length)].transform;
+		return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
 	}
 }

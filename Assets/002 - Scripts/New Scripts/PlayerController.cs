@@ -5,7 +5,7 @@ using Rewired;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 
-public class PlayerController : MonoBehaviourPunCallbacks
+public class PlayerController : MonoBehaviourPun
 {
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -156,6 +156,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!PV.IsMine)
             return;
 
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    PV.RPC("RPC_Shoot_Projectile_Test", RpcTarget.All);
+        //}
+
         UpdateWeaponPropertiesAndAnimator();
         if (playerProperties != null)
         {
@@ -237,6 +242,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting)
                 {
                     isShooting = true;
+
                 }
                 else
                 {
@@ -263,6 +269,42 @@ public class PlayerController : MonoBehaviourPunCallbacks
                     wProperties.projectileToHide.SetActive(false);*/
         }
     }
+
+    //[PunRPC]
+    //void RPC_Shoot_Projectile_Test()
+    //{
+    //    GameObject bullet = objectPool.SpawnPooledBullet();
+
+    //    bullet.transform.position = gameObject.transform.position;
+    //    bullet.transform.rotation = gameObject.transform.rotation;
+    //    bullet.SetActive(true);
+    //}
+
+    //[PunRPC]
+    //public void ShootAutoTest()
+    //{
+    //    if (!PV.IsMine)
+    //        return;
+    //    if (wProperties.isFullyAutomatic && !isDualWielding && !isDrawingWeapon)
+    //    {
+    //        Debug.Log("Spawned Bullet and player is : " + wProperties.pController.name);
+    //        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //        //Spawn bullet from bullet spawnpoint
+    //        var bullet = objectPool.SpawnPooledBullet();
+    //        bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
+    //        bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
+
+    //        bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
+    //        bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
+    //        bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+    //        bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
+    //        bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+    //        bullet.gameObject.GetComponent<Bullet>().raycastScript = playerProperties.raycastScript;
+    //        bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerProperties.cScript;
+    //        //SetTeamToBulletScript(bullet.transform);
+    //        bullet.SetActive(true);
+    //    }
+    //}
 
     void Aiming()
     {

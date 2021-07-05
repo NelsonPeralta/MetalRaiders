@@ -1,10 +1,13 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class SingleFire : MonoBehaviour
 {
     public AllPlayerScripts allPlayerScripts;
+    public PhotonView PV;
+    public GameObjectPool gameObjectPool;
+
     [Header("Other Scripts")]
     public int playerRewiredID;
     public bool redTeam = false;
@@ -21,13 +24,25 @@ public class SingleFire : MonoBehaviour
     public AudioSource shootingAudioSource;
 
     public float nextFireInterval;
+    float fireInterval = 0;
 
     private bool ThisisShooting = false;
     private bool hasButtonDown = false;
 
     private bool hasFoundComponents = false;
 
-    public void Start()
+    void Awake()
+    {
+        gameObjectPool = GameObjectPool.gameObjectPoolInstance;
+    }
+
+    private void Start()
+    {
+        PV = gameObject.GetComponent<PhotonView>();
+    }
+
+    [PunRPC]
+    public void ShootSingle()
     {
         if (hasFoundComponents == false)
         {
@@ -38,11 +53,13 @@ public class SingleFire : MonoBehaviour
 
         }
 
-        if (ThisisShooting && wProperties.isSingleFire && !pController.isDualWielding && !pController.isDrawingWeapon)
+        WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+
+        if (activeWeapon.isSingleFire && !pController.isDualWielding && !pController.isDrawingWeapon)
         {
             if (pController.anim != null)
             {
-                wProperties.currentAmmo -= 1;
+                activeWeapon.currentAmmo -= 1;
                 pController.anim.Play("Fire", 0, 0f);
                 StartCoroutine(Player3PSFiringAnimation());
             }
@@ -84,14 +101,14 @@ public class SingleFire : MonoBehaviour
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Spawns projectile from bullet spawnpoint
-            if (!wProperties.usesGrenades && !wProperties.usesRockets)
+            if (!activeWeapon.usesGrenades && !activeWeapon.usesRockets)
             {
-                var bullet = allPlayerScripts.playerController.objectPool.SpawnPooledBullet();
+                var bullet = gameObjectPool.SpawnPooledBullet();
                 bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
                 bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
                 
                 bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
-                bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
+                bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
                 //var bullet = (Transform)Instantiate(gwProperties.bulletPrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
                 bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
                 bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
@@ -102,7 +119,7 @@ public class SingleFire : MonoBehaviour
                 var mf = Instantiate(gwProperties.muzzleFlashEffect, gwProperties.bulletSpawnPoint.transform.position,
                 gwProperties.bulletSpawnPoint.transform.rotation);
                 Destroy(mf, 1);
-                wProperties.Recoil();
+                activeWeapon.Recoil();
 
                 SetTeamToBulletScript(bullet.transform);
 
@@ -112,21 +129,21 @@ public class SingleFire : MonoBehaviour
                 //Spawn casing prefab at spawnpoint
                 //Instantiate(gwProperties.bigCasingPrefab, gwProperties.casingSpawnPoint.transform.position, gwProperties.casingSpawnPoint.transform.rotation);
             }
-            else if (wProperties.usesGrenades)
+            else if (activeWeapon.usesGrenades)
             {
                 var grenade = Instantiate(gwProperties.grenadeLauncherProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
-                grenade.GetComponent<Rocket>().damage = wProperties.damage;
+                grenade.GetComponent<Rocket>().damage = activeWeapon.damage;
                 grenade.GetComponent<Rocket>().playerWhoThrewGrenade = pController.gameObject;
             }
-            else if (wProperties.usesRockets)
+            else if (activeWeapon.usesRockets)
             {
                 var rocket = Instantiate(gwProperties.rocketProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
-                rocket.GetComponent<Rocket>().damage = wProperties.damage;
+                rocket.GetComponent<Rocket>().damage = activeWeapon.damage;
                 rocket.GetComponent<Rocket>().playerWhoThrewGrenade = pController.gameObject;
             }
 
-            wProperties.mainAudioSource.clip = wProperties.Fire;
-            wProperties.mainAudioSource.Play();
+            activeWeapon.mainAudioSource.clip = activeWeapon.Fire;
+            activeWeapon.mainAudioSource.Play();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -139,53 +156,45 @@ public class SingleFire : MonoBehaviour
         {
             if (!pController.isDualWielding)
             {
-                if (wProperties != null)
-                {
+                if (wProperties)
                     nextFireInterval = wProperties.timeBetweenSingleBullets;
-                }
 
                 if (pController.isShooting && !ThisisShooting && !hasButtonDown)
                 {
-                    StartCoroutine(SingleFireVoid(false, false));
+                    PV.RPC("FireSingle", RpcTarget.All, false, false);
                     hasButtonDown = true;
                 }
 
                 if (pInventory != null)
                 {
                     if (pInventory.activeWeapIs == 0)
-                    {
                         if (pInventory.weaponsEquiped[0] != null)
-                        {
                             wProperties = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
-                        }
-                    }
 
                     else if (pInventory.activeWeapIs == 1)
-                    {
                         wProperties = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
-                    }
                 }
 
                 if (pController.player.GetButtonUp("Shoot"))
-                {
                     hasButtonDown = false;
-                }
             }
         }
+        FireIntervalCooldown();
     }
 
 
 
 
 
-    IEnumerator SingleFireVoid(bool thisIsShootingRight, bool thisIsShootingLeft)
+    [PunRPC]
+    public void FireSingle(bool thisIsShootingRight, bool thisIsShootingLeft)
     {
-        ThisisShooting = true;
-        Start();
+        if (ThisisShooting)
+            return;
 
-        yield return new WaitForSeconds(nextFireInterval);
-        ThisisShooting = false;
+        PV.RPC("ShootSingle", RpcTarget.All);
 
+        StartFiringIntervalCooldown();
     }
 
     IEnumerator FindComponents()
@@ -222,5 +231,21 @@ public class SingleFire : MonoBehaviour
     {
         thirdPersonScript.anim.Play("Fire");
         yield return new WaitForEndOfFrame();
+    }
+
+    void StartFiringIntervalCooldown()
+    {
+        fireInterval = nextFireInterval;
+        ThisisShooting = true;
+    }
+
+    void FireIntervalCooldown()
+    {
+        if (!ThisisShooting)
+            return;
+        fireInterval -= Time.deltaTime;
+
+        if (fireInterval <= 0)
+            ThisisShooting = false;
     }
 }

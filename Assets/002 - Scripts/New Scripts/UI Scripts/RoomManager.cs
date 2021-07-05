@@ -37,7 +37,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
 		if(scene.buildIndex == 1) // We're in the game scene
 		{
 			PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
-			PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
+            if(!GameObjectPool.gameObjectPoolInstance)
+			    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
         }
 	}
 }
