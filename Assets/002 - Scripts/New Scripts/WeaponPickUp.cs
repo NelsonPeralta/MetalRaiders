@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class WeaponPickUp : MonoBehaviour
+public class WeaponPickUp : MonoBehaviourPun
 {
     [Header("Other Scripts")]
     public PlayerProperties pProperties;
@@ -13,6 +14,7 @@ public class WeaponPickUp : MonoBehaviour
     public PlayerSFXs sfxManager;
     public Text pickupText;
     public AudioSource ammoPickupAudioSource;
+    public PhotonView PV;
     //public ControllerScript cScript;
 
     public GameObject weaponCollidingWithInInventory; // Stores weapon in order to use Update void without "other"
@@ -202,14 +204,18 @@ public class WeaponPickUp : MonoBehaviour
 
     private void Update()
     {
+        if (!PV.IsMine)
+            return;
+
         if (isOnTrigger == true && canPickup == true)
         {
             if (pController.player.GetButtonShortPressDown("Reload") /*|| cScript.InteractButtonPressed*/)
             {
-                Debug.Log("Player holding RELOAD button");
                 if (pInventory.weaponsEquiped[1] == null) // Looks for Secondary Weapon
                 {
-                    PickupSecWeap();
+                    Debug.Log("RPC: Picking up second weapon");
+                    //PickupSecWeap();
+                    PV.RPC("PickupSecWeap", RpcTarget.All);
 
                     if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
                     {
@@ -224,19 +230,23 @@ public class WeaponPickUp : MonoBehaviour
                 }
                 else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
                 {
-                    ReplaceWeapon(weaponCollidingWith.gameObject.GetComponent<LootableWeapon>());
-                    Debug.Log(pInventory.activeWeapon.name);
+                    Debug.Log("RPC: Replacing weapon. " + weaponCollidingWith.name);
+                    int lwPId = weaponCollidingWith.GetComponent<PhotonView>().ViewID;
+                    if (PhotonView.Find(lwPId))
+                        Debug.Log("Found Lootable Weapon using Photon with its id");
+                    PV.RPC("ReplaceWeapon", RpcTarget.All, lwPId);
+                    //ReplaceWeapon(weaponCollidingWith.gameObject.GetComponent<LootableWeapon>());
 
                     if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
                     {
-                        Debug.Log(weaponEquippedToDrop1.name);
-                        pProperties.DropActiveWeapon(weaponEquippedToDrop1);
-                        Destroy(weaponCollidingWith);
+                        //pProperties.DropActiveWeapon(weaponEquippedToDrop1);
+                        //PhotonView.Find(lwPId).gameObject.SetActive(false);
+                        Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
+                        PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPId);
                         ResetCollider();
                         pInventory.playDrawSound();
                     }
                 }
-
             }
 
         }
@@ -260,13 +270,13 @@ public class WeaponPickUp : MonoBehaviour
 
                 pController.isDualWielding = true;
 
-                
+
                 if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
                 {
                     Destroy(weaponCollidingWith);
                     ResetCollider();
                 }
-                
+
             }
 
         }
@@ -278,9 +288,10 @@ public class WeaponPickUp : MonoBehaviour
 
 
 
-
-    public void ReplaceWeapon(LootableWeapon pickupWeaponScript)
+    [PunRPC]
+    public void ReplaceWeapon(int collidingWeaponPhotonId)
     {
+        LootableWeapon lws = PhotonView.Find(collidingWeaponPhotonId).gameObject.GetComponent<LootableWeapon>();
         Debug.Log("Replace Weapon");
         if (pInventory.activeWeapIs == 1)
         {
@@ -293,7 +304,7 @@ public class WeaponPickUp : MonoBehaviour
 
             pInventory.activeWeapon = weaponCollidingWithInInventory.gameObject;
 
-            weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = pickupWeaponScript.ammoInThisWeapon;
+            weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
             pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
 
             Debug.Log("Replace Weapon 1");
@@ -312,7 +323,7 @@ public class WeaponPickUp : MonoBehaviour
 
             pInventory.activeWeapon = weaponCollidingWithInInventory.gameObject;
 
-            weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = pickupWeaponScript.ammoInThisWeapon;
+            weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
             pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
 
             Debug.Log("Replace Weapon 1");
@@ -322,12 +333,9 @@ public class WeaponPickUp : MonoBehaviour
         pInventory.changeAmmoCounter();
     }
 
-
-
+    [PunRPC]
     public void PickupSecWeap()
     {
-
-
         if (weaponCollidingWithInInventory.gameObject.GetComponent<WeaponProperties>() != null)
         {
             pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
@@ -345,6 +353,13 @@ public class WeaponPickUp : MonoBehaviour
         }
 
         StartCoroutine(pInventory.ToggleTPPistolIdle(0));
+    }
+
+    [PunRPC]
+    public void RPC_DisableCollidingWeapon(int collidingWeaponPhotonId)
+    {
+        Debug.Log("RPC: Disabling lootable weapon");
+        weaponCollidingWith.SetActive(false);
     }
 
     public void PickupAmmoFromWeapon(GameObject weapon)

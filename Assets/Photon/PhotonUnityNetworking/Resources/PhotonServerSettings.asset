@@ -56,6 +56,9 @@ MonoBehaviour:
   - DestroySpaceship
   - RespawnSpaceship
   - SwapWeapons
+  - PickupSecWeap
+  - ReplaceWeapon
+  - RPC_DisableCollidingWeapon
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

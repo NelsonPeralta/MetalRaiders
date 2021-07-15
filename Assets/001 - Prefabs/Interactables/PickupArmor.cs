@@ -246,16 +246,20 @@ public class PickupArmor : MonoBehaviour
                                 {
                                     if (weapon.name != pProperties.pInventory.weaponsEquiped[0].gameObject.name)
                                     {
+                                        // TO DO: equip player minigun
+
                                         pProperties.wPickup.weaponCollidingWithInInventory = pProperties.pInventory.Unequipped[i].gameObject;
-                                        pProperties.wPickup.ReplaceWeapon(weapon.GetComponent<LootableWeapon>());
+                                        //pProperties.wPickup.ReplaceWeapon(weapon.GetComponent<LootableWeapon>()); // Cant send script using RPC
                                     }
                                 }
                                 else
                                 {
                                     if (weapon.name != pProperties.pInventory.weaponsEquiped[1].gameObject.name)
                                     {
+                                        // TO DO: equip player minigun
+
                                         pProperties.wPickup.weaponCollidingWithInInventory = pProperties.pInventory.Unequipped[i].gameObject;
-                                        pProperties.wPickup.ReplaceWeapon(weapon.GetComponent<LootableWeapon>());
+                                        //pProperties.wPickup.ReplaceWeapon(weapon.GetComponent<LootableWeapon>()); // Cant send script using RPC
                                     }
                                 }
                             }

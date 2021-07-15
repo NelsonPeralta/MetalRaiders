@@ -174,7 +174,8 @@ public class PlayerInventory : MonoBehaviourPun
                 changeAmmoCounter();
                 StartCoroutine(ToggleTPPistolIdle(1));
             }
-            playDrawSound();
+            if(PV.IsMine)
+                playDrawSound();
 
             string test = weaponsEquiped[0].GetComponent<WeaponProperties>().weaponType.ToString();
             //Debug.Log(test);

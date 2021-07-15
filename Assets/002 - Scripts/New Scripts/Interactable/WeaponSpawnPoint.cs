@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using UnityEngine.SceneManagement;
+using System.IO;
 
 public class WeaponSpawnPoint : MonoBehaviour
 {
@@ -32,8 +35,9 @@ public class WeaponSpawnPoint : MonoBehaviour
     {
         if (!weaponSpawned)
         {
-            var newWeap = Instantiate(weapon, gameObject.transform.position,
-                gameObject.transform.rotation); //* Quaternion.Euler(180, 0, 180)
+            //var newWeap = Instantiate(weapon, gameObject.transform.position, gameObject.transform.rotation); //* Quaternion.Euler(180, 0, 180)
+
+            var newWeap = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "WeaponPool"), Vector3.zero + new Vector3(0, 5, 0), Quaternion.identity);
             newWeap.name = newWeap.name.Replace("(Clone)", "");
             weaponSpawned = newWeap;
         }
