@@ -15,7 +15,6 @@ public class FullyAutomaticFire : MonoBehaviourPun
     public PlayerController pController;
     public ThirdPersonScript tPersonController;
     public PlayerInventory pInventory;
-    public WeaponProperties wProperties;
     public GeneralWeapProperties gwProperties;
 
     public float nextFireInterval;
@@ -30,35 +29,20 @@ public class FullyAutomaticFire : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void ShootAuto(Vector3 realPosition, Quaternion realRotation)
+    public void ShootAuto()
     {
-        if (wProperties.isFullyAutomatic && !pController.isDualWielding && !pController.isDrawingWeapon)
+        WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+
+        if (activeWeapon.isFullyAutomatic && !pController.isDualWielding && !pController.isDrawingWeapon)
         {
-            Debug.Log("Spawned Bullet and player is : " + wProperties.pController.name);
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Spawn bullet from bullet spawnpoint
             var bullet = gameObjectPool.SpawnPooledBullet();
-
-            if (photonView.IsMine)
-            {
-                bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-                bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
-            }
-            else
-            {
-                bullet.transform.position = realPosition;
-                bullet.transform.rotation = realRotation;
-
-                bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-                bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
-
-            }
-
-            //bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-            //bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
+            bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
+            bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
 
             bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
-            bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
+            bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
             bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
             bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
             bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
@@ -66,53 +50,42 @@ public class FullyAutomaticFire : MonoBehaviourPun
             bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;
             SetTeamToBulletScript(bullet.transform);
             bullet.SetActive(true);
+
+            Debug.Log("Fired Auto");
+            activeWeapon.currentAmmo -= 1;
+            if (pController.anim != null)
+            {
+                pController.anim.Play("Fire", 0, 0f);
+                StartCoroutine(Player3PSFiringAnimation());
+            }
+            activeWeapon.mainAudioSource.clip = activeWeapon.Fire;
+            activeWeapon.mainAudioSource.Play();
+            activeWeapon.Recoil();
         }
 
-
-        //// BACKUP CODE
-        /////
-        ///
-        //if (!PV.IsMine)
-        //    return;
-        //if (wProperties.isFullyAutomatic && !pController.isDualWielding && !pController.isDrawingWeapon)
-        //{
-        //    Debug.Log("Spawned Bullet and player is : " + wProperties.pController.name);
-        //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //    //Spawn bullet from bullet spawnpoint
-        //    var bullet = gameObjectPool.SpawnPooledBullet();
-        //    bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-        //    bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
-
-        //    bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
-        //    bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
-        //    bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-        //    bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
-        //    bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-        //    bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
-        //    bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;
-        //    SetTeamToBulletScript(bullet.transform);
-        //    bullet.SetActive(true);
-        //}
     }
 
     public void Update()
     {
+        if (!PV.IsMine)
+            return;
+
         if (pController != null)
         {
             if (!pController.isDualWielding)
             {
-                if (wProperties)
-                    nextFireInterval = wProperties.timeBetweenFABullets;
+                    WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+                if (activeWeapon)
+                    nextFireInterval = activeWeapon.timeBetweenFABullets;
 
                 if (!ThisisShooting)
                 {
-                    if (pController.isShooting /*|| Script.isShooting*/)
+                    if (pController.isShooting && activeWeapon.isFullyAutomatic)
                     {
                         BulletSpawnPoint bsp = gwProperties.bulletSpawnPoint.GetComponent<BulletSpawnPoint>();
 
                         Debug.Log("Trying to shoot from FAF script");
-                        PV.RPC("ShootAuto", RpcTarget.All, bsp.GetRealPosition(), bsp.GetRealRotation()); // Doesnt work
-                        //PV.RPC("RPC_Shoot_Projectile_Test", RpcTarget.All, bsp.GetRealPosition(), bsp.GetRealRotation()); // Works
+                        PV.RPC("ShootAuto", RpcTarget.All);
 
                         StartFiringIntervalCooldown();
                         //FireAuto(false, false);
@@ -123,12 +96,12 @@ public class FullyAutomaticFire : MonoBehaviourPun
 
                 if (pInventory.activeWeapIs == 0)
                     if (pInventory.weaponsEquiped[0])
-                        wProperties = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
+                        activeWeapon = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
                     else
                         ;
                 else if (pInventory.activeWeapIs == 1)
                     if (pInventory.weaponsEquiped[1])
-                        wProperties = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
+                        activeWeapon = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
 
                 if (pController.player.GetButtonUp("Shoot"))
                     hasButtonDown = false;
@@ -150,7 +123,8 @@ public class FullyAutomaticFire : MonoBehaviourPun
         // Must only spawn bullet. SFXs must only be called if isMine
         //PV.RPC("ShootAuto", RpcTarget.All);
         //ShootAuto();
-        CommonFiringActions.AfterShootingAction(wProperties);
+        WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        CommonFiringActions.AfterShootingAction(activeWeapon);
         StartFiringIntervalCooldown();
     }
 

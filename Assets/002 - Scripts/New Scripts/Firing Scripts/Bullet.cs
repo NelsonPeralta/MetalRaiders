@@ -101,7 +101,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        //Despawn();
+        Despawn();
     }
 
     void FixedUpdate()
@@ -152,10 +152,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                     //PV.RPC("SpawnGenericHit", RpcTarget.All, hits[i].point);
                     //damageDealt = true;
 
-                    //GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
-                    //genericHit.transform.position = hits[i].point;
-                    //genericHit.SetActive(true);
-                    //gameObject.SetActive(false);
+                    GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
+                    genericHit.transform.position = hits[i].point;
+                    genericHit.SetActive(true);
+                    gameObject.SetActive(false);
                 }
                 else
                 {

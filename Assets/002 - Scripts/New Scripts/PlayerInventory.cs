@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class PlayerInventory : MonoBehaviour
+public class PlayerInventory : MonoBehaviourPun
 {
     [Header("Other Scripts")]
     public PlayerSFXs sfxManager;
@@ -13,6 +14,7 @@ public class PlayerInventory : MonoBehaviour
     public GeneralWeapProperties gwProperties;
     public ReloadScript rScript;
     public DualWielding dWielding;
+    public PhotonView PV;
 
     [Space(20)]
     [Header("Data")]
@@ -95,6 +97,9 @@ public class PlayerInventory : MonoBehaviour
 
     private void Update()
     {
+        if (!PV.IsMine)
+            return;
+
         AmmoManager();
 
         if (pController.player.GetButtonDown("Switch Weapons") && !pController.isDualWielding /*Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetAxis("Mouse ScrollWheel") < 0 /*|| cScript.SwitchWeaponsButtonPressed*/)
@@ -109,7 +114,8 @@ public class PlayerInventory : MonoBehaviour
 
             if (pController.pInventory.weaponsEquiped[1] != null && !pProperties.isDead)
             {
-                SwapWeapons();
+                PV.RPC("SwapWeapons", RpcTarget.All);
+                //SwapWeapons();
             }
         }
 
@@ -139,6 +145,7 @@ public class PlayerInventory : MonoBehaviour
         CheckIfLowAmmo();
     }
 
+    [PunRPC]
     public void SwapWeapons()
     {
         if (hasSecWeap == true)
