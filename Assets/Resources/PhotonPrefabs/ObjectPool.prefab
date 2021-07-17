@@ -45,8 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   amountToPool: 100
+  objectsSpawned: 0
   bullets: []
   bulletPrefab: {fileID: 652686745487404900, guid: be7ba75c7401067478ca44c36f3954e7,
+    type: 3}
+  bloodHits: []
+  bloodHitPrefab: {fileID: 1146961906002798, guid: 04f6f308bd2d35947a3a6b2a626d1980,
     type: 3}
   genericHits: []
   genericHitPrefab: {fileID: 8649884254006485902, guid: 8ea603131d195f2438c4eafba1c9f895,

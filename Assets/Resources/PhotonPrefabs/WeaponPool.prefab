@@ -114,6 +114,10 @@ MonoBehaviour:
   allWeapons: []
   weaponPrefabs:
   - {fileID: 3229197204112864979, guid: d3503e4978fa8374fbdd46bac43b9032, type: 3}
+  - {fileID: 3597432282059856759, guid: d7e81e30b1d33194892348b1aaa5a2d7, type: 3}
+  - {fileID: 1949347182520484858, guid: e2164acd966433848aebc6a0f4f9f77e, type: 3}
+  - {fileID: 3643358748772534935, guid: 157cb1412fd7ae54587dd0237bdeb155, type: 3}
+  - {fileID: 2358512475867249925, guid: d09320bf544d2fd4392c045b1e89758f, type: 3}
 --- !u!114 &3287139061112353082
 MonoBehaviour:
   m_ObjectHideFlags: 0

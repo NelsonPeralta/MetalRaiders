@@ -305,7 +305,7 @@ public class WeaponPickUp : MonoBehaviourPun
             pInventory.activeWeapon = weaponCollidingWithInInventory.gameObject;
 
             weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
-            pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
+            //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
 
             Debug.Log("Replace Weapon 1");
 
@@ -324,7 +324,7 @@ public class WeaponPickUp : MonoBehaviourPun
             pInventory.activeWeapon = weaponCollidingWithInInventory.gameObject;
 
             weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
-            pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
+            //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
 
             Debug.Log("Replace Weapon 1");
 
@@ -349,7 +349,7 @@ public class WeaponPickUp : MonoBehaviourPun
             pInventory.activeWeapon = pInventory.weaponsEquiped[1].gameObject;
             pInventory.activeWeapIs = 1;
 
-            pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
+            //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
         }
 
         StartCoroutine(pInventory.ToggleTPPistolIdle(0));
@@ -373,7 +373,7 @@ public class WeaponPickUp : MonoBehaviourPun
             {
                 if (weaponScript.smallAmmo)
                 {
-                    pickupExtraAmmoFromWeapon(weaponScript);
+                    //pickupExtraAmmoFromWeapon(weaponScript);
                     int ammoAllowedToRemoveFromWeapon = pInventory.maxSmallAmmo - pInventory.smallAmmo;
 
                     if (weaponScript.ammoInThisWeapon <= ammoAllowedToRemoveFromWeapon)
@@ -399,7 +399,7 @@ public class WeaponPickUp : MonoBehaviourPun
                 }
                 if (weaponScript.heavyAmmo)
                 {
-                    pickupExtraAmmoFromWeapon(weaponScript);
+                    //pickupExtraAmmoFromWeapon(weaponScript);
                     int ammoAllowedToRemoveFromWeapon = pInventory.maxHeavyAmmo - pInventory.heavyAmmo;
 
                     if (weaponScript.ammoInThisWeapon <= ammoAllowedToRemoveFromWeapon)
@@ -424,7 +424,7 @@ public class WeaponPickUp : MonoBehaviourPun
                 }
                 if (weaponScript.powerAmmo)
                 {
-                    pickupExtraAmmoFromWeapon(weaponScript);
+                    //pickupExtraAmmoFromWeapon(weaponScript);
                     int ammoAllowedToRemoveFromWeapon = pInventory.maxPowerAmmo - pInventory.powerAmmo;
 
                     if (weaponScript.ammoInThisWeapon <= ammoAllowedToRemoveFromWeapon)
@@ -502,56 +502,56 @@ public class WeaponPickUp : MonoBehaviourPun
 
     }
 
-    void pickupExtraAmmoFromWeapon(LootableWeapon weapon)
-    {
-        Debug.Log("Extra ammo: " + weapon.extraAmmo);
-        if (weapon.smallAmmo)
-        {
-            int availableExtraAmmo = weapon.extraAmmo;
-            int ammoMissing = pInventory.maxSmallAmmo - pInventory.smallAmmo;
+    //void pickupExtraAmmoFromWeapon(LootableWeapon weapon)
+    //{
+    //    Debug.Log("Extra ammo: " + weapon.extraAmmo);
+    //    if (weapon.smallAmmo)
+    //    {
+    //        int availableExtraAmmo = weapon.extraAmmo;
+    //        int ammoMissing = pInventory.maxSmallAmmo - pInventory.smallAmmo;
 
-            if (ammoMissing >= availableExtraAmmo)
-            {
-                pInventory.smallAmmo = pInventory.smallAmmo + availableExtraAmmo;
-            }
-            else
-            {
-                pInventory.smallAmmo = pInventory.maxSmallAmmo;
-            }
-        }
+    //        if (ammoMissing >= availableExtraAmmo)
+    //        {
+    //            pInventory.smallAmmo = pInventory.smallAmmo + availableExtraAmmo;
+    //        }
+    //        else
+    //        {
+    //            pInventory.smallAmmo = pInventory.maxSmallAmmo;
+    //        }
+    //    }
 
-        if (weapon.heavyAmmo)
-        {
-            int availableExtraAmmo = weapon.extraAmmo;
-            int ammoMissing = pInventory.maxHeavyAmmo - pInventory.heavyAmmo;
+    //    if (weapon.heavyAmmo)
+    //    {
+    //        int availableExtraAmmo = weapon.extraAmmo;
+    //        int ammoMissing = pInventory.maxHeavyAmmo - pInventory.heavyAmmo;
 
-            Debug.Log("Ammo Missing = " + ammoMissing + " available Extra Ammo = " + availableExtraAmmo + " heavy ammo in stock = " + pInventory.heavyAmmo);
+    //        Debug.Log("Ammo Missing = " + ammoMissing + " available Extra Ammo = " + availableExtraAmmo + " heavy ammo in stock = " + pInventory.heavyAmmo);
 
-            if (ammoMissing >= availableExtraAmmo)
-            {
-                //Debug.Log("Grabbed extra ammo");
-                pInventory.heavyAmmo = pInventory.heavyAmmo + availableExtraAmmo;
-            }
-            else
-            {
-                Debug.Log("Maxxed Ammo");
-                pInventory.heavyAmmo = pInventory.maxHeavyAmmo;
-            }
-        }
+    //        if (ammoMissing >= availableExtraAmmo)
+    //        {
+    //            //Debug.Log("Grabbed extra ammo");
+    //            pInventory.heavyAmmo = pInventory.heavyAmmo + availableExtraAmmo;
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("Maxxed Ammo");
+    //            pInventory.heavyAmmo = pInventory.maxHeavyAmmo;
+    //        }
+    //    }
 
-        if (weapon.powerAmmo)
-        {
-            int availableExtraAmmo = weapon.extraAmmo;
-            int ammoMissing = pInventory.maxPowerAmmo - pInventory.powerAmmo;
+    //    if (weapon.powerAmmo)
+    //    {
+    //        int availableExtraAmmo = weapon.extraAmmo;
+    //        int ammoMissing = pInventory.maxPowerAmmo - pInventory.powerAmmo;
 
-            if (ammoMissing >= availableExtraAmmo)
-            {
-                pInventory.powerAmmo = pInventory.powerAmmo + availableExtraAmmo;
-            }
-            else
-            {
-                pInventory.powerAmmo = pInventory.maxPowerAmmo;
-            }
-        }
-    }
+    //        if (ammoMissing >= availableExtraAmmo)
+    //        {
+    //            pInventory.powerAmmo = pInventory.powerAmmo + availableExtraAmmo;
+    //        }
+    //        else
+    //        {
+    //            pInventory.powerAmmo = pInventory.maxPowerAmmo;
+    //        }
+    //    }
+    //}
 }

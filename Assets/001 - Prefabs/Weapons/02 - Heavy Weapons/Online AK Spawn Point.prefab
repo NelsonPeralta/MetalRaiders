@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: AK-47
-  weaponPlaceHolder: {fileID: 0}
+  weaponPlaceHolder: {fileID: 3331478715308775961}
   weaponSpawned: {fileID: 0}
   timeToSpawn: 120
   spawnAtStart: 1

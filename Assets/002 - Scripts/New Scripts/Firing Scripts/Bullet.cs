@@ -106,6 +106,8 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void FixedUpdate()
     {
+        //if (!PV.IsMine)
+        //    return;
 
         //May change from FixedUpdate to Update to calculate the distrance travelled
         //Debug.Log(damageDealt);
@@ -117,7 +119,8 @@ public class Bullet : MonoBehaviourPunCallbacks
 
         hits = Physics.RaycastAll(new Ray(prePos, (transform.position - prePos).normalized), (transform.position - prePos).magnitude);//, layerMask);
 
-        for (int i = 0; i < hits.Length; i++)
+        // Normal for loop checks farthest first; for (int i = 0; i < hits.Length; i++)
+        for (int i = hits.Length - 1; i >= 0; i--)
         {
             //Debug.Log(hits[i].transform.position);
             //distanceTravelled += (transform.position - prePos).magnitude;
@@ -126,6 +129,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             //Debug.Log(damageDealt);
             if (hits[i].collider.gameObject.layer != 22) //Any object that has the Layer Ground
             {
+                string hitMessage = "Unknow bullet behaviour";
                 //Debug.Log(hits[i].collider.gameObject.name);
                 GameObject hit = hits[i].collider.gameObject;
                 //Debug.Log(damageDealt);
@@ -136,31 +140,41 @@ public class Bullet : MonoBehaviourPunCallbacks
                     AIHitbox hitbox = hits[i].collider.gameObject.GetComponent<AIHitbox>();
                     AIDamage(hitbox, hits[i]);
                 }
-                else if (hits[i].collider.gameObject.GetComponent<PlayerHitbox>() != null && hits[i].collider.gameObject.layer != 23)
+                else if (hits[i].collider.gameObject.GetComponent<PlayerHitbox>() != null && hits[i].collider.gameObject.layer != 23 && !damageDealt)
                 {
+                    hitMessage = "Hit Player at: + " + hit.name + damageDealt;
+
                     PlayerHitbox hitbox = hits[i].collider.gameObject.GetComponent<PlayerHitbox>();
                     //PlayerDamage(hitbox);
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayer", RpcTarget.All, hitbox);
 
                     PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
-                    if (playerProperties.Health > 0)
-                        playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(10);
+                    if (!playerProperties.isDead)
+                    {
+                        playerProperties.SetHealth(damage, false, 0);
+                        //if (playerProperties.Health > 0)
+                        //  playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
+
+                        GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
+                        bloodHit.transform.position = hits[i].point;
+                        bloodHit.SetActive(true);
+
+                        damageDealt = true;
+                    }
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayerSimple", RpcTarget.All, playerProperties);
                 }
-                else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<AIHitbox>())
+                else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>())
                 {
                     //PV.RPC("SpawnGenericHit", RpcTarget.All, hits[i].point);
                     //damageDealt = true;
 
+                    hitMessage = "Hit: + " + hit.name;
                     GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
                     genericHit.transform.position = hits[i].point;
                     genericHit.SetActive(true);
-                    gameObject.SetActive(false);
                 }
-                else
-                {
-                    Debug.Log("Unknow bullet behaviour");
-                }
+                //Debug.Log(hitMessage);
+                gameObject.SetActive(false);
             }
         }
 

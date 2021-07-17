@@ -28,7 +28,7 @@ public class WeaponPool : MonoBehaviour
         {
             for (int j = 0; j < amountToPool; j++)
             {
-                GameObject newWeap = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", weaponPrefabs[i].name), Vector3.zero, Quaternion.identity);
+                GameObject newWeap = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weaponPrefabs[i].name), Vector3.zero, Quaternion.identity);
                 newWeap.name = newWeap.name.Replace("(Clone)", "");
                 newWeap.SetActive(false);
                 allWeapons.Add(newWeap);

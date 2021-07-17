@@ -38,6 +38,7 @@ public class CrosshairScript : MonoBehaviour
 
     private void Update()
     {
+        //Debug.Log("RR: " + RRisActive);
         if (pInventory != null)
         {
             if (pInventory.activeWeapIs == 0)

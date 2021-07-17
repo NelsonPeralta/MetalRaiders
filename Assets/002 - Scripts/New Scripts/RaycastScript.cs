@@ -103,12 +103,10 @@ public class RaycastScript : MonoBehaviour
             }
             else if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null && hit.transform.gameObject.GetComponent<PlayerHitbox>().gameObject.layer == 13)
             {
-                if (hit.transform.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<PlayerProperties>().playerRewiredID != playerRewiredID) //If its player's own Hitbox, ignore
-                {
+                
                     target = hit.transform.gameObject.GetComponent<PlayerHitbox>().player;
                     targetHitbox = hit.transform.gameObject.GetComponent<PlayerHitbox>();
                     targetDistance = hit.distance;
-                }
             }
         }
     }
@@ -121,17 +119,20 @@ public class RaycastScript : MonoBehaviour
             if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null)
             {
                 targetDistance = hit.distance;
+                //Debug.Log("Detecting Player Hitbox. Target distance: " + targetDistance + ". RRR: + " + wProperties.RedReticuleRange);
 
                 if (targetDistance <= wProperties.RedReticuleRange && target != null)
                 {
-                    if (string.Equals(target.GetComponent<AllPlayerScripts>().playerMPProperties.team.Trim(), playerMPProperties.team.Trim()))
-                    {
-                        crosshairScript.friendlyRRisActive = true;
-                    }
-                    else
-                    {
-                        crosshairScript.RRisActive = true;
-                    }
+                    //Debug.Log("Toggling RRR to TRUE");
+                    crosshairScript.RRisActive = true;
+                    //if (string.Equals(target.GetComponent<AllPlayerScripts>().playerMPProperties.team.Trim(), playerMPProperties.team.Trim()))
+                    //{
+                    //    crosshairScript.friendlyRRisActive = true;
+                    //}
+                    //else
+                    //{
+                    //    crosshairScript.RRisActive = true;
+                    //}
                 }
                 else if (targetDistance > wProperties.RedReticuleRange && target != null)
                 {
@@ -139,12 +140,6 @@ public class RaycastScript : MonoBehaviour
                     crosshairScript.friendlyRRisActive = false;
                 }
 
-                if (hit.transform.gameObject.layer == 12)
-                {
-                    crosshairScript.RRisActive = false;
-                    crosshairScript.friendlyRRisActive = false;
-                    targetHitbox = null;
-                }
             }
 
             if (hit.transform.gameObject.GetComponent<AIHitbox>() != null)
@@ -176,13 +171,6 @@ public class RaycastScript : MonoBehaviour
                         crosshairScript.friendlyRRisActive = false;
                     }
 
-                    if (hit.transform.gameObject.layer == 12)
-                    {
-                        //Debug.Log("Here 6");
-                        crosshairScript.RRisActive = false;
-                        crosshairScript.friendlyRRisActive = false;
-                        aiHitbox = null;
-                    }
                 }
             }
         }

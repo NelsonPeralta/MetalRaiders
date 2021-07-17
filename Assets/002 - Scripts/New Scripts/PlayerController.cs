@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviourPun
     public GameObjectPool objectPool;
 
     Quaternion savedCamRotation;
-    GameObject camChild;
 
     [HideInInspector]
     public bool hasBeenHolstered = false, holstered, isRunning, isWalking;
@@ -143,7 +142,6 @@ public class PlayerController : MonoBehaviourPun
         notMyFPSController = gameObject.GetComponent<FPSControllerLPFP.FpsControllerLPFP>();
         savedCamRotation = mainCam.transform.localRotation;
 
-        camChild = mainCam.gameObject.transform.GetChild(0).gameObject;
     }
 
     public void SetPlayerIDInInput()
@@ -333,31 +331,31 @@ public class PlayerController : MonoBehaviourPun
 
                     allPlayerScripts.aimingScript.playAimSound();
 
-                    if (wProperties.aimFOV == 30)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(9f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(3.5f, 0, 0);
-                    }
+                    //if (wProperties.aimFOV == 30)
+                    //{
+                    //    mainCam.transform.localRotation = Quaternion.Euler(9f, 0, 0);
+                    //    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(3.5f, 0, 0);
+                    //}
 
-                    if (wProperties.aimFOV == 45)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(8.25f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(5.5f, 0, 0);
-                    }
+                    //if (wProperties.aimFOV == 45)
+                    //{
+                    //    mainCam.transform.localRotation = Quaternion.Euler(8.25f, 0, 0);
+                    //    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(5.5f, 0, 0);
+                    //}
 
-                    if (wProperties.aimFOV == 40)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(2.75f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(4.82f, 0, 0);
-                        playerProperties.activeSensitivity = 100f;
-                    }
+                    //if (wProperties.aimFOV == 40)
+                    //{
+                    //    mainCam.transform.localRotation = Quaternion.Euler(2.75f, 0, 0);
+                    //    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(4.82f, 0, 0);
+                    //    playerProperties.activeSensitivity = 100f;
+                    //}
 
-                    if (wProperties.aimFOV == 20)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(5.25f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(2.34f, 0, 0);
-                        playerProperties.activeSensitivity = 50f;
-                    }
+                    //if (wProperties.aimFOV == 20)
+                    //{
+                    //    mainCam.transform.localRotation = Quaternion.Euler(5.25f, 0, 0);
+                    //    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(2.34f, 0, 0);
+                    //    playerProperties.activeSensitivity = 50f;
+                    //}
 
                     /*
                     else if (wProperties.aimFOV == 60)
@@ -376,8 +374,8 @@ public class PlayerController : MonoBehaviourPun
 
                     allPlayerScripts.aimingScript.playAimSound();
 
-                    mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
+                    //mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                    //aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
 
                     UpdateAimingLayers();
                 }
@@ -1305,6 +1303,7 @@ IEnumerator Reload()
 
     public void Unscope()
     {
+        Debug.Log("Unscope Script");
         isAiming = false;
         mainCam.fieldOfView = playerProperties.defaultFov;
         playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
@@ -1313,7 +1312,7 @@ IEnumerator Reload()
             allPlayerScripts.aimingScript.playAimSound();
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
+        //aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
 
         UpdateAimingLayers();
     }
