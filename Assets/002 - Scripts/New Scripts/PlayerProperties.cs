@@ -342,7 +342,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     {
         if (stream.IsWriting)
         {
-            //Debug.Log("Writing Health");
+            //Debug.Log("Writing Health " + Health + isDead + hasJustRespawned);
             stream.SendNext(Health);
             stream.SendNext(isDead);
             stream.SendNext(hasJustRespawned);
@@ -353,14 +353,15 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             bool isDeadRead = (bool)stream.ReceiveNext();
             bool hasJustRespawnedRead = (bool)stream.ReceiveNext();
             Debug.Log("Reading Health: " + healthRead + ". Health: " + this.Health + ". IsDead: " + isDeadRead + ". Has Just Respawned " + hasJustRespawnedRead);// has just respawned not being counted
-            if(hasJustRespawnedRead)
+            if(hasJustRespawnedRead || (healthRead == 0 && Health == 100))
             {
+                Debug.Log("Fixng Maxing Health");
                 photonView.RPC("RPC_SetHealth", RpcTarget.All, (float)maxHealth);
-                Respawn();
             }
             else if (healthRead != this.Health && !hasJustRespawnedRead)
             {
                 //RPC_SetHealth(Mathf.Min(healthRead, Health));
+                Debug.Log("Fixing Health " + healthRead + Health + this.Health);
                 photonView.RPC("RPC_SetHealth", RpcTarget.All, Mathf.Min(healthRead, Health));
                 SetHealth(0, false, 0);
             }
@@ -764,6 +765,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             else
             {
                 //Respawn();
+                //hasJustRespawned = true;
                 pController.PV.RPC("Respawn", RpcTarget.All);
                 respawnStarted = false;
                 respawnCountdown = 0;
@@ -774,13 +776,16 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     [PunRPC]
     void Respawn()
     {
+        Debug.Log("Respawing " + isDead + hasJustRespawned);
         if (!isDead)
             return;
+        hasJustRespawned = true;
         isDead = false;
 
-        hasJustRespawned = true;
         Health = maxHealth;
         healthSlider.value = maxHealth;
+
+        Debug.Log("Respawing " + Health + isDead + hasJustRespawned);
 
         if (hasShield)
         {
@@ -914,6 +919,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     IEnumerator ResetHasJustSpawned()
     {
         yield return new WaitForSeconds(0.1f);
+        Debug.Log("Resetting HasJustSpawned " + hasJustRespawned + isDead + Health);
         hasJustRespawned = false;
     }
 
