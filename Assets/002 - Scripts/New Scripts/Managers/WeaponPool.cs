@@ -28,6 +28,7 @@ public class WeaponPool : MonoBehaviour
         {
             for (int j = 0; j < amountToPool; j++)
             {
+                // TO DO: Spawn them using normal instantiate instead and fix LootableWeapon script according to it (Start method)
                 GameObject newWeap = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weaponPrefabs[i].name), Vector3.zero, Quaternion.identity);
                 newWeap.name = newWeap.name.Replace("(Clone)", "");
                 newWeap.SetActive(false);
@@ -41,9 +42,29 @@ public class WeaponPool : MonoBehaviour
     {
         for (int i = 0; i < allWeapons.Count; i++)
         {
-            if (allWeapons[i].name == weaponName)
+            if (allWeapons[i].name == weaponName && !allWeapons[i].activeSelf)
                 return allWeapons[i];
         }
         return null;
+    }
+
+    public int GetWeaponIndex(GameObject weapon)
+    {
+        for (int i = 0; i < allWeapons.Count; i++)
+        {
+            if (allWeapons[i] == weapon)
+                return i;
+        }
+        return 0;
+    }
+
+    public LootableWeapon GetLootableWeaponScript(int index)
+    {
+        return allWeapons[index].GetComponent<LootableWeapon>();
+    }
+
+    public void DisablePooledWeapon(int index)
+    {
+        allWeapons[index].SetActive(false);
     }
 }

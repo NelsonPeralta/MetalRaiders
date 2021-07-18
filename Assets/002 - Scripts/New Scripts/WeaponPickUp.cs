@@ -6,6 +6,9 @@ using Photon.Pun;
 
 public class WeaponPickUp : MonoBehaviourPun
 {
+    [Header("Singletons")]
+    WeaponPool weaponPool;
+
     [Header("Other Scripts")]
     public PlayerProperties pProperties;
     public PlayerInventory pInventory;
@@ -42,6 +45,7 @@ public class WeaponPickUp : MonoBehaviourPun
 
     private void Start()
     {
+        weaponPool = WeaponPool.weaponPoolInstance;
         //pInventory = GameObject.FindGameObjectWithTag("Player Inventory").GetComponent<PlayerInventoryManager>();
         //pController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         //pickupText = GameObject.FindGameObjectWithTag("Player Informer").GetComponent<Text>();
@@ -231,9 +235,10 @@ public class WeaponPickUp : MonoBehaviourPun
                 else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
                 {
                     Debug.Log("RPC: Replacing weapon. " + weaponCollidingWith.name);
-                    int lwPId = weaponCollidingWith.GetComponent<PhotonView>().ViewID;
-                    if (PhotonView.Find(lwPId))
-                        Debug.Log("Found Lootable Weapon using Photon with its id");
+                    //int lwPId = weaponCollidingWith.GetComponent<PhotonView>().ViewID;
+                    int lwPId = weaponPool.GetWeaponIndex(weaponCollidingWith);
+                    //if (PhotonView.Find(lwPId))
+                    //    Debug.Log("Found Lootable Weapon using Photon with its id: " + lwPId);
                     PV.RPC("ReplaceWeapon", RpcTarget.All, lwPId);
                     //ReplaceWeapon(weaponCollidingWith.gameObject.GetComponent<LootableWeapon>());
 
@@ -291,7 +296,8 @@ public class WeaponPickUp : MonoBehaviourPun
     [PunRPC]
     public void ReplaceWeapon(int collidingWeaponPhotonId)
     {
-        LootableWeapon lws = PhotonView.Find(collidingWeaponPhotonId).gameObject.GetComponent<LootableWeapon>();
+        LootableWeapon lws = weaponPool.GetLootableWeaponScript(collidingWeaponPhotonId);
+        //LootableWeapon lws = PhotonView.Find(collidingWeaponPhotonId).gameObject.GetComponent<LootableWeapon>();
         Debug.Log("Replace Weapon");
         if (pInventory.activeWeapIs == 1)
         {
