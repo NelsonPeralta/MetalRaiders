@@ -5,17 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Pickable
-  - Level Manager
-  - Player Manager
-  - Game Settings
-  - CoopMenu
-  - ObjectPool
-  - Bullet Spawn Point
   - Grenade Spawn Point
-  - Weapon
-  - Spark Particles
-  - Muzzleflash Particles
-  - Bullet Renderer
   - Crosshairs
   - Muzzleflash Light
   - Casing Spawn Point
@@ -27,15 +17,23 @@ TagManager:
   - SFX
   - Grenade Pickup Sound
   - Player Informer
-  - Player Camera
   - Components
-  - Player Inventory
-  - Raycast Origin
   - Total Ammo Text
   - Pickup Collider
   - Current Ammo Text
   - Shooting Scripts
-  - Frag Grenade Ammo Text
+  - Player Manager
+  - Spawn Point
+  - Weapon
+  - Player Camera
+  - Player Inventory
+  - Spark Particles
+  - Muzzleflash Particles
+  - Bullet Renderer
+  - Bullet Spawn Point
+  - ObjectPool
+  - Spawn Manager
+  - Scene Manager
   layers:
   - Default
   - TransparentFX

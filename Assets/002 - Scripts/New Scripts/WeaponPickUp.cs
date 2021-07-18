@@ -391,7 +391,8 @@ public class WeaponPickUp : MonoBehaviourPun
 
                     if (weaponScript.ammoInThisWeapon == 0)
                     {
-                        Destroy(weapon.gameObject);
+                        //Destroy(weapon.gameObject);
+                        weapon.SetActive(false);
                         Debug.Log("Destroyed Small Weapon");
                         ResetCollider();
                         StartCoroutine(ResetColliderLate());
@@ -417,7 +418,8 @@ public class WeaponPickUp : MonoBehaviourPun
 
                     if (weaponScript.ammoInThisWeapon == 0)
                     {
-                        Destroy(weapon.gameObject);
+                        //Destroy(weapon.gameObject);
+                        weapon.SetActive(false);
                         ResetCollider();
                         StartCoroutine(ResetColliderLate());
                     }
@@ -442,7 +444,8 @@ public class WeaponPickUp : MonoBehaviourPun
 
                     if (weaponScript.ammoInThisWeapon == 0)
                     {
-                        Destroy(weapon.gameObject);
+                        //Destroy(weapon.gameObject);
+                        weapon.SetActive(false);
                         ResetCollider();
                         StartCoroutine(ResetColliderLate());
 
@@ -450,7 +453,8 @@ public class WeaponPickUp : MonoBehaviourPun
                 }
                 if (weaponScript.ammoInThisWeapon == 0)
                 {
-                    Destroy(weapon.gameObject);
+                    //Destroy(weapon.gameObject);
+                    weapon.SetActive(false);
                     ResetCollider();
                     StartCoroutine(ResetColliderLate());
                 }

@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32847b4cd33ab694eb46869766b70ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amountToPool: 1
+  amountToPool: 5
   allWeapons: []
   weaponPrefabs:
   - {fileID: 3229197204112864979, guid: d3503e4978fa8374fbdd46bac43b9032, type: 3}

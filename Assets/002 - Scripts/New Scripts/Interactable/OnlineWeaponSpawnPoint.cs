@@ -48,6 +48,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
             Debug.Log("Spawned Online Weapon");
             var newWeap = weaponPool.GetWeaponFromList(weapon);
             newWeap.transform.position = transform.position;
+            newWeap.transform.rotation = transform.rotation;
             newWeap.SetActive(true);
             weaponSpawned = newWeap;
         }

@@ -7,6 +7,8 @@ using Photon.Realtime;
 
 public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObservable
 {
+    [Header("Singletons")]
+    public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
 
     [Header("Models")]
@@ -14,11 +16,11 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     public GameObject thirdPersonModels;
 
     [Header("Player Info")]
-    public int maxHealth = 100;
-    public int maxShield = 150;
-    public float Health = 100;
-    public float Shield = 150;
-    public float meleeDamage = 150;
+    public int maxHealth;
+    public int maxShield;
+    public float Health;
+    public float Shield;
+    public float meleeDamage; // default: 150
     public bool isDead = false;
     public bool hasJustRespawned;
     public float respawnTime = 5;
@@ -130,9 +132,13 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
 
     private void Start()
     {
+        spawnManager = SpawnManager.spawnManagerInstance;
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
         activeSensitivity = defaultSensitivity;
+        Health = maxHealth;
+        healthSlider.maxValue = maxHealth;
+        healthSlider.value = maxHealth;
 
         if (!hasFoundComponents)
         {
@@ -352,16 +358,16 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             float healthRead = (float)stream.ReceiveNext();
             bool isDeadRead = (bool)stream.ReceiveNext();
             bool hasJustRespawnedRead = (bool)stream.ReceiveNext();
-            Debug.Log("Reading Health: " + healthRead + ". Health: " + this.Health + ". IsDead: " + isDeadRead + ". Has Just Respawned " + hasJustRespawnedRead);// has just respawned not being counted
-            if(hasJustRespawnedRead || (healthRead == 0 && Health == 100))
+            //Debug.Log("Reading Health: " + healthRead + ". Health: " + this.Health + ". IsDead: " + isDeadRead + ". Has Just Respawned " + hasJustRespawnedRead);// has just respawned not being counted
+            if(hasJustRespawnedRead || (healthRead == 0 && Health == maxHealth))
             {
-                Debug.Log("Fixng Maxing Health");
+                //Debug.Log("Fixng Maxing Health");
                 photonView.RPC("RPC_SetHealth", RpcTarget.All, (float)maxHealth);
             }
             else if (healthRead != this.Health && !hasJustRespawnedRead)
             {
                 //RPC_SetHealth(Mathf.Min(healthRead, Health));
-                Debug.Log("Fixing Health " + healthRead + Health + this.Health);
+                //Debug.Log("Fixing Health " + healthRead + Health + this.Health);
                 photonView.RPC("RPC_SetHealth", RpcTarget.All, Mathf.Min(healthRead, Health));
                 SetHealth(0, false, 0);
             }
@@ -792,6 +798,15 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             Shield = maxShield;
             shieldSlider.value = maxShield;
         }
+
+        if (spawnManager)
+        {
+            Transform spawnPoint = spawnManager.GetGenericSpawnpoint();
+            Debug.Log("Spawning with generic spawn + " + spawnPoint);
+
+            transform.position = spawnPoint.position + new Vector3(0, 2, 0);
+            transform.rotation = spawnPoint.rotation;
+        }
         mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(-30, 0, 0);
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, mainOriginalCameraPosition.y, mainOriginalCameraPosition.z);
 
@@ -891,6 +906,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             swarmMode.playerLives = swarmMode.playerLives - 1;
             swarmMode.UpdatePlayerLives();
         }
+
+        
 
         foreach (GameObject go in hitboxes)
         {

@@ -169,9 +169,9 @@ public class PlayerController : MonoBehaviourPun
                 CheckAmmoForAutoReload();
                 Aiming();
                 //PV.RPC("Melee", RpcTarget.All);
-                Melee();
+                //Melee();
                 Crouch();
-                Grenade();
+                //Grenade(); //TO DO: Spawn Grenades the same way as bullets
                 SelectFire();
                 SwitchGrenades();
                 //AutoReloadVoid();

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-	public static SpawnManager Instance;
+	public static SpawnManager spawnManagerInstance;
 
 	public List<SpawnPoint> genericSpawnPoints;
 
@@ -13,8 +13,8 @@ public class SpawnManager : MonoBehaviour
         if(genericSpawnPoints.Count == 0)
             foreach (Transform child in transform)
                 genericSpawnPoints.Add(child.GetComponent<SpawnPoint>());
-        
-		Instance = this;
+
+        spawnManagerInstance = this;
 	}
 
 	public Transform GetGenericSpawnpoint()
