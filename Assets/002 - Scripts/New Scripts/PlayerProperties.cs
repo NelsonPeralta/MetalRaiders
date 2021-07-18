@@ -353,10 +353,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             bool isDeadRead = (bool)stream.ReceiveNext();
             bool hasJustRespawnedRead = (bool)stream.ReceiveNext();
             Debug.Log("Reading Health: " + healthRead + ". Health: " + this.Health + ". IsDead: " + isDeadRead + ". Has Just Respawned " + hasJustRespawnedRead);// has just respawned not being counted
-            if(healthRead == maxHealth && hasJustRespawnedRead)
+            if(hasJustRespawnedRead)
             {
                 photonView.RPC("RPC_SetHealth", RpcTarget.All, (float)maxHealth);
-                SetHealth(0, false, 0);
+                Respawn();
             }
             else if (healthRead != this.Health && !hasJustRespawnedRead)
             {
@@ -690,7 +690,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     //[PunRPC]
     void SpawnRagdoll()
     {
-
+        Debug.Log("Spawning ragdoll. " + isDead + hasJustRespawned);
+        if (hasJustRespawned)
+            return;
         var ragdoll = pController.objectPool.SpawnPooledPlayerRagdoll();
 
         // LAG with the Head and Chest, unknown cause
