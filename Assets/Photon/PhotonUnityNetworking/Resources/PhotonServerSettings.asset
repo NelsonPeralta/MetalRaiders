@@ -60,6 +60,8 @@ MonoBehaviour:
   - ReplaceWeapon
   - RPC_DisableCollidingWeapon
   - RPC_SetHealth
+  - UpdatePlayerTimers
+  - UpdateTimer
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

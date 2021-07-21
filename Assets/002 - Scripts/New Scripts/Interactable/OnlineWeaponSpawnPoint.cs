@@ -45,7 +45,6 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
         else if (!weaponSpawned || !weaponSpawned.activeSelf)
         {
             //var newWeap = Instantiate(weapon, gameObject.transform.position, gameObject.transform.rotation); //* Quaternion.Euler(180, 0, 180)
-            Debug.Log("Spawned Online Weapon");
             var newWeap = weaponPool.GetWeaponFromList(weapon);
             newWeap.transform.position = transform.position;
             newWeap.transform.rotation = transform.rotation;

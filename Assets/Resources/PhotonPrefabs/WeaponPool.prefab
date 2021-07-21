@@ -111,6 +111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   amountToPool: 5
+  timerPrefab: {fileID: 0}
+  timer: {fileID: 0}
   allWeapons: []
   weaponPrefabs:
   - {fileID: 3229197204112864979, guid: d3503e4978fa8374fbdd46bac43b9032, type: 3}
@@ -118,6 +120,9 @@ MonoBehaviour:
   - {fileID: 1949347182520484858, guid: e2164acd966433848aebc6a0f4f9f77e, type: 3}
   - {fileID: 3643358748772534935, guid: 157cb1412fd7ae54587dd0237bdeb155, type: 3}
   - {fileID: 2358512475867249925, guid: d09320bf544d2fd4392c045b1e89758f, type: 3}
+  allAmmoPacks: []
+  ammoPackPrefabs:
+  - {fileID: 2951767692589565496, guid: ceeee44a0fded01489eb0d30486002ba, type: 3}
 --- !u!114 &3287139061112353082
 MonoBehaviour:
   m_ObjectHideFlags: 0

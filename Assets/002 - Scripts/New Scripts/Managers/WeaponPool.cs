@@ -8,8 +8,17 @@ public class WeaponPool : MonoBehaviour
     public static WeaponPool weaponPoolInstance;
     public int amountToPool;
 
+    [Header("Timer")]
+    public GameObject timerPrefab;
+    public GameObject timer;
+
+    [Header("Weapons")]
     public List<GameObject> allWeapons = new List<GameObject>();
     public List<GameObject> weaponPrefabs = new List<GameObject>();
+
+    [Header("Ammo")]
+    public List<GameObject> allAmmoPacks = new List<GameObject>();
+    public List<GameObject> ammoPackPrefabs = new List<GameObject>();
 
     private void Awake()
     {
@@ -25,7 +34,6 @@ public class WeaponPool : MonoBehaviour
     private void Start()
     {
         for (int i = 0; i < weaponPrefabs.Count; i++)
-        {
             for (int j = 0; j < amountToPool; j++)
             {
                 // TO DO: Spawn them using normal instantiate instead and fix LootableWeapon script according to it (Start method)
@@ -35,7 +43,16 @@ public class WeaponPool : MonoBehaviour
                 allWeapons.Add(newWeap);
                 newWeap.transform.parent = gameObject.transform;
             }
-        }
+
+        for (int i = 0; i < ammoPackPrefabs.Count; i++)
+            for (int j = 0; j < amountToPool; j++)
+            {
+                GameObject newAmmoPack = Instantiate(ammoPackPrefabs[i], transform.position + new Vector3(0 -100, 0), transform.rotation);
+                newAmmoPack.GetComponent<AmmoPack>().weaponPool = this;
+                newAmmoPack.GetComponent<AmmoPack>().ExecuteAction();
+                allAmmoPacks.Add(newAmmoPack);
+                newAmmoPack.transform.parent = gameObject.transform;
+            }
     }
 
     public GameObject GetWeaponFromList(string weaponName)
@@ -66,5 +83,17 @@ public class WeaponPool : MonoBehaviour
     public void DisablePooledWeapon(int index)
     {
         allWeapons[index].SetActive(false);
+    }
+
+    // Ammo Pack Methods
+
+    public GameObject GetAmmoPackFromList(string ammoType)
+    {
+        for (int i = 0; i < allAmmoPacks.Count; i++)
+        {
+            if (allAmmoPacks[i].GetComponent<AmmoPack>().ammoType == ammoType && !allAmmoPacks[i].GetComponent<AmmoPack>().spawnPoint)
+                return allAmmoPacks[i];
+        }
+        return null;
     }
 }
