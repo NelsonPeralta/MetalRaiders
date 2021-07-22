@@ -83,7 +83,7 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
 
     void UpdateTimerTexts()
     {
-        if (playerTimerTexts.Count > 0 && playerTimerTexts.Count > 0)
+        if (playerTimerTexts.Count > 0)
             foreach (Text text in playerTimerTexts)
                 text.text = $"{(totalTime / 60).ToString("00")}:{(totalTime % 60).ToString("00")}";
     }
