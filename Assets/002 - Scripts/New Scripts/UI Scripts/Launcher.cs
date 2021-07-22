@@ -47,6 +47,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 	public void CreateRoom()
 	{
+        RoomOptions options = new RoomOptions();
+        options.BroadcastPropsChangeToAll = true;
 		if(string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
 		{
 			return; // Do nothing

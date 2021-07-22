@@ -33,11 +33,6 @@ public class AmmoPack : MonoBehaviour
         weaponPool = WeaponPool.weaponPoolInstance;
     }
 
-    private void Update()
-    {
-        RespawnCountdown();
-    }
-
     public void ExecuteAction()
     {
         defaultAmmo = ammoInThisPack;
@@ -60,8 +55,6 @@ public class AmmoPack : MonoBehaviour
             enablePack(defaultAmmo);
         else
             enablePack(RandomAmmo());
-
-        respawnTriggered = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -120,38 +113,10 @@ public class AmmoPack : MonoBehaviour
         else
             enablePack(RandomAmmo());
 
-        if(canRespawn)
-            StartCoroutine(Respawn(spawnTime));
+        //if(canRespawn)
+        //    StartCoroutine(Respawn(spawnTime));
     }
 
-    public void RespawnCountdown()
-    {
-        if (respawnTriggered)
-        {
-            respawnCountdown -= Time.deltaTime;
-        }
-
-        if (respawnCountdown <= 0)
-        {
-
-            //Respawn();
-            //hasJustRespawned = true;
-            
-                respawnTriggered = false;
-                respawnCountdown = 0;
-
-            if (!randomAmount)
-                enablePack(defaultAmmo);
-            else
-                enablePack(RandomAmmo());
-
-            if (canRespawn)
-            {
-                respawnCountdown = spawnTime;
-                respawnTriggered = true;
-            }
-        }
-    }
 
     void enablePack(int ammoCount)
     {
@@ -174,6 +139,9 @@ public class AmmoPack : MonoBehaviour
                 correspondingAmmoPackInPool.model.SetActive(false);
                 correspondingAmmoPackInPool.ammoInThisPack = 0;
                 correspondingAmmoPackInPool.ammoText.text = "";
+
+                if(canRespawn)
+                    StartCoroutine(Respawn(spawnTime));
             }
     }
 

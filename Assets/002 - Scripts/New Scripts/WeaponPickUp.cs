@@ -112,7 +112,7 @@ public class WeaponPickUp : MonoBehaviourPun
                                         }
                                         else
                                         {
-                                            PickupAmmoFromWeapon(other.gameObject);
+                                            //PickupAmmoFromWeapon(other.gameObject);
                                         }
                                     }
                                     else
@@ -126,7 +126,7 @@ public class WeaponPickUp : MonoBehaviourPun
                                         }
                                         else
                                         {
-                                            PickupAmmoFromWeapon(other.gameObject);
+                                            //PickupAmmoFromWeapon(other.gameObject);
                                         }
                                     }
                                 }
@@ -136,7 +136,7 @@ public class WeaponPickUp : MonoBehaviourPun
                 }
                 else
                 {
-                    PickupAmmoFromWeapon(other.gameObject);
+                    //PickupAmmoFromWeapon(other.gameObject);
                 }
             }
 
@@ -365,9 +365,11 @@ public class WeaponPickUp : MonoBehaviourPun
     public void RPC_DisableCollidingWeapon(int collidingWeaponPhotonId)
     {
         Debug.Log("RPC: Disabling lootable weapon");
-        weaponCollidingWith.SetActive(false);
+        //weaponCollidingWith.SetActive(false);
+        weaponCollidingWith.GetComponent<LootableWeapon>().DisableWeapon();
     }
 
+    // TO DO: make it across all the network
     public void PickupAmmoFromWeapon(GameObject weapon)
     {
         Debug.Log("In Ammo Pickuo From Weapon: " + weapon);

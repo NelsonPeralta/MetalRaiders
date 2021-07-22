@@ -138,6 +138,7 @@ MonoBehaviour:
   smallAmmo: 0
   heavyAmmo: 1
   powerAmmo: 0
+  onlineWeaponSpawnPoint: {fileID: 0}
 --- !u!114 &2336910426173594846
 MonoBehaviour:
   m_ObjectHideFlags: 0

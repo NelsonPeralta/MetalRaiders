@@ -6,6 +6,7 @@ using System.IO;
 public class WeaponPool : MonoBehaviour
 {
     public static WeaponPool weaponPoolInstance;
+    public static OnlineGameTime onlineGameTimeInstance;
     public int amountToPool;
 
     [Header("Timer")]
@@ -33,11 +34,14 @@ public class WeaponPool : MonoBehaviour
 
     private void Start()
     {
+        onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
+
         for (int i = 0; i < weaponPrefabs.Count; i++)
             for (int j = 0; j < amountToPool; j++)
             {
                 // TO DO: Spawn them using normal instantiate instead and fix LootableWeapon script according to it (Start method)
                 GameObject newWeap = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weaponPrefabs[i].name), Vector3.zero, Quaternion.identity);
+                //GameObject newWeap = Instantiate(weaponPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
                 newWeap.name = newWeap.name.Replace("(Clone)", "");
                 newWeap.SetActive(false);
                 allWeapons.Add(newWeap);
@@ -52,6 +56,8 @@ public class WeaponPool : MonoBehaviour
                 newAmmoPack.GetComponent<AmmoPack>().ExecuteAction();
                 allAmmoPacks.Add(newAmmoPack);
                 newAmmoPack.transform.parent = gameObject.transform;
+
+                //int spawnTime = newAmmoPack.GetComponent<AmmoPack>().spawnTime;
             }
     }
 

@@ -15,6 +15,8 @@ public class LootableWeapon : MonoBehaviour
     public bool heavyAmmo;
     public bool powerAmmo;
 
+    public OnlineWeaponSpawnPoint onlineWeaponSpawnPoint;
+
     private void Start()
     {
         //Debug.Log("Lootable Weapon Root: " + transform.parent);
@@ -31,5 +33,12 @@ public class LootableWeapon : MonoBehaviour
     public void RandomAmmo() {
         ammoInThisWeapon = (int)Mathf.Ceil(Random.Range(0, ammoInThisWeapon));
         extraAmmo = (int)Mathf.Ceil(Random.Range(0, extraAmmo));
+    }
+
+    public void DisableWeapon()
+    {
+        //onlineWeaponSpawnPoint.StartCoroutine(onlineWeaponSpawnPoint.RespawnWeapon());
+        onlineWeaponSpawnPoint.EmptyWeaponCache();
+        gameObject.SetActive(false);
     }
 }

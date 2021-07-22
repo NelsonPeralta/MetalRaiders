@@ -47,6 +47,7 @@ MonoBehaviour:
   PV: {fileID: 4102360176370456841}
   totalTime: 0
   playerTimerTexts: []
+  ammoPackSpawnTimes: 
 --- !u!114 &4102360176370456841
 MonoBehaviour:
   m_ObjectHideFlags: 0
