@@ -74,7 +74,7 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-        Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
+        //Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
         if (changedProps.ContainsKey("totaltime"))
             totalTime = (int)changedProps["totaltime"];
 

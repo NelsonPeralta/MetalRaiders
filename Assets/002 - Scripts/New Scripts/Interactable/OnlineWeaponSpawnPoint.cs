@@ -7,7 +7,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
 {
     public string weapon;
     public GameObject weaponPlaceHolder;
-    public GameObject weaponSpawned;
+    public LootableWeapon weaponSpawned;
     public int timeToSpawn;
     //public bool spawnAtStart;
 
@@ -23,45 +23,34 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
         if (weaponPlaceHolder)
             weaponPlaceHolder.gameObject.SetActive(false);
 
-        //if (spawnAtStart)
-            StartCoroutine( SpawnNewWeaponFromWeaponPool(0.1f));
-
-        //StartCoroutine(RespawnWeapon());
-    }
-
-    public IEnumerator RespawnWeapon(int newTimeToSpawn = 0)
-    {
-        if(newTimeToSpawn == 0)
-            yield return new WaitForSeconds(timeToSpawn);
-        else
-            yield return new WaitForSeconds(newTimeToSpawn);
-        SpawnNewWeaponFromWeaponPool(0.1f);
-        //StartCoroutine(RespawnWeapon());
+        StartCoroutine(SpawnNewWeaponFromWeaponPool(0.1f));
     }
 
     IEnumerator SpawnNewWeaponFromWeaponPool(float delay)
     {
         yield return new WaitForSeconds(delay);
+        if (weaponPool.allWeapons.Count <= 0)
+            StartCoroutine(SpawnNewWeaponFromWeaponPool(0.1f));
         if (!weaponSpawned)
         {
             Debug.Log("Spawning New Weapon");
-            //var newWeap = Instantiate(weapon, gameObject.transform.position, gameObject.transform.rotation); //* Quaternion.Euler(180, 0, 180)
-            var newWeap = weaponPool.GetWeaponFromList(weapon);
+            var newWeap = weaponPool.GetWeaponFromList(weapon).GetComponent<LootableWeapon>();
             newWeap.transform.position = transform.position;
             newWeap.transform.rotation = transform.rotation;
-            newWeap.SetActive(true);
-            newWeap.GetComponent<LootableWeapon>().onlineWeaponSpawnPoint = this;
+            newWeap.gameObject.SetActive(true);
+            newWeap.onlineWeaponSpawnPoint = this;
             weaponSpawned = newWeap;
         }
+        else
+            weaponSpawned.EnableWeapon();
     }
 
-    public void EmptyWeaponCache()
+    public void StartRespawn()
     {
-        weaponSpawned = null;
-        Debug.Log($"Time weapon grabbed: {onlineGameTime.totalTime}");
 
         int timeWeaponWasGrabbed = onlineGameTime.totalTime;
         int newSpawnTime = timeToSpawn - (timeWeaponWasGrabbed % timeToSpawn);
+        Debug.Log($"Time weapon grabbed: {onlineGameTime.totalTime}. New Spawn Time: {newSpawnTime}");
         StartCoroutine(SpawnNewWeaponFromWeaponPool(newSpawnTime));
     }
 }

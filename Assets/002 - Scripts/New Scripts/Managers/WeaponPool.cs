@@ -3,7 +3,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 
-public class WeaponPool : MonoBehaviour
+public class WeaponPool : MonoBehaviourPun
 {
     public static WeaponPool weaponPoolInstance;
     public static OnlineGameTime onlineGameTimeInstance;
@@ -51,9 +51,9 @@ public class WeaponPool : MonoBehaviour
         for (int i = 0; i < ammoPackPrefabs.Count; i++)
             for (int j = 0; j < amountToPool; j++)
             {
-                GameObject newAmmoPack = Instantiate(ammoPackPrefabs[i], transform.position + new Vector3(0 -100, 0), transform.rotation);
+                GameObject newAmmoPack = Instantiate(ammoPackPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
                 newAmmoPack.GetComponent<AmmoPack>().weaponPool = this;
-                newAmmoPack.GetComponent<AmmoPack>().ExecuteAction();
+                newAmmoPack.SetActive(false);
                 allAmmoPacks.Add(newAmmoPack);
                 newAmmoPack.transform.parent = gameObject.transform;
 

@@ -234,12 +234,12 @@ public class WeaponPickUp : MonoBehaviourPun
                 }
                 else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
                 {
-                    Debug.Log("RPC: Replacing weapon. " + weaponCollidingWith.name);
-                    //int lwPId = weaponCollidingWith.GetComponent<PhotonView>().ViewID;
+                    int weaponCollidingWithInInventoryIndex = 0;
+                    for (int i = 0; i < pInventory.Unequipped.Length; i++)
+                        if (weaponCollidingWithInInventory == pInventory.Unequipped[i])
+                            weaponCollidingWithInInventoryIndex = i;
                     int lwPId = weaponPool.GetWeaponIndex(weaponCollidingWith);
-                    //if (PhotonView.Find(lwPId))
-                    //    Debug.Log("Found Lootable Weapon using Photon with its id: " + lwPId);
-                    PV.RPC("ReplaceWeapon", RpcTarget.All, lwPId);
+                    PV.RPC("ReplaceWeapon", RpcTarget.All, lwPId, weaponCollidingWithInInventoryIndex);
                     //ReplaceWeapon(weaponCollidingWith.gameObject.GetComponent<LootableWeapon>());
 
                     if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
@@ -294,7 +294,7 @@ public class WeaponPickUp : MonoBehaviourPun
 
 
     [PunRPC]
-    public void ReplaceWeapon(int collidingWeaponPhotonId)
+    public void ReplaceWeapon(int collidingWeaponPhotonId, int weaponCollidingWithInInventoryIndex)
     {
         LootableWeapon lws = weaponPool.GetLootableWeaponScript(collidingWeaponPhotonId);
         //LootableWeapon lws = PhotonView.Find(collidingWeaponPhotonId).gameObject.GetComponent<LootableWeapon>();
@@ -303,7 +303,8 @@ public class WeaponPickUp : MonoBehaviourPun
         {
             weaponEquippedToDrop1 = pInventory.activeWeapon;
 
-            weaponCollidingWithInInventory.SetActive(true);
+            weaponCollidingWithInInventory = pInventory.Unequipped[weaponCollidingWithInInventoryIndex];
+            pInventory.Unequipped[weaponCollidingWithInInventoryIndex].SetActive(true);
             pInventory.weaponsEquiped[1].gameObject.SetActive(false);
             pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
             pInventory.activeWeapon = weaponCollidingWithInInventory;
@@ -566,4 +567,16 @@ public class WeaponPickUp : MonoBehaviourPun
     //        }
     //    }
     //}
+
+    public void DisableAmmoPackWithRPC(int index)
+    {
+        PV.RPC("DespawnAmmoPack_RPC", RpcTarget.All, index);
+    }
+
+    [PunRPC]
+    void DespawnAmmoPack_RPC(int index)
+    {
+        weaponPool.allAmmoPacks[index].GetComponent<AmmoPack>().spawnPoint.StartRespawn();
+        weaponPool.allAmmoPacks[index].SetActive(false);
+    }
 }

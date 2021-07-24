@@ -130,9 +130,12 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     public AudioClip shieldHitClip;
     public AudioClip shieldAlarmClip;
 
+    public PhotonView PV;
+
     private void Start()
     {
         spawnManager = SpawnManager.spawnManagerInstance;
+        PV = GetComponent<PhotonView>();
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
         activeSensitivity = defaultSensitivity;
@@ -359,7 +362,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             bool isDeadRead = (bool)stream.ReceiveNext();
             bool hasJustRespawnedRead = (bool)stream.ReceiveNext();
             //Debug.Log("Reading Health: " + healthRead + ". Health: " + this.Health + ". IsDead: " + isDeadRead + ". Has Just Respawned " + hasJustRespawnedRead);// has just respawned not being counted
-            if(hasJustRespawnedRead || (healthRead == 0 && Health == maxHealth))
+            if (hasJustRespawnedRead || (healthRead == 0 && Health == maxHealth))
             {
                 //Debug.Log("Fixng Maxing Health");
                 photonView.RPC("RPC_SetHealth", RpcTarget.All, (float)maxHealth);
@@ -374,7 +377,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
         }
     }
 
-    
+
 
     public void TakeDamage(int damage)
     {
@@ -831,33 +834,33 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             gunCamera.cullingMask |= (1 << 27);
         }
 
+        StartCoroutine(MakeThirdPersonModelVisible());
+        //foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
+        //{
+        //    if (go != null)
+        //    {
 
-        foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
-        {
-            if (go != null)
-            {
-
-                if (playerRewiredID == 0)
-                {
-                    if (pController.PV.IsMine)
-                        go.layer = 28;
-                    else
-                        go.layer = 29;
-                }
-                else if (playerRewiredID == 1)
-                {
-                    go.layer = 29;
-                }
-                else if (playerRewiredID == 2)
-                {
-                    go.layer = 30;
-                }
-                else if (playerRewiredID == 3)
-                {
-                    go.layer = 31;
-                }
-            }
-        }
+        //        if (playerRewiredID == 0)
+        //        {
+        //            if (pController.PV.IsMine)
+        //                go.layer = 28;
+        //            else
+        //                go.layer = 29;
+        //        }
+        //        else if (playerRewiredID == 1)
+        //        {
+        //            go.layer = 29;
+        //        }
+        //        else if (playerRewiredID == 2)
+        //        {
+        //            go.layer = 30;
+        //        }
+        //        else if (playerRewiredID == 3)
+        //        {
+        //            go.layer = 31;
+        //        }
+        //    }
+        //}
 
 
 
@@ -907,7 +910,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
             swarmMode.UpdatePlayerLives();
         }
 
-        
+
 
         foreach (GameObject go in hitboxes)
         {
@@ -931,6 +934,35 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
         }
 
         StartCoroutine(ResetHasJustSpawned());
+    }
+
+    IEnumerator MakeThirdPersonModelVisible()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        foreach (GameObject go in hitboxes)
+            if (go != null)
+            {
+                go.SetActive(true);
+                go.layer = 13;
+
+                if (go.GetComponent<BoxCollider>() != null)
+                    go.GetComponent<BoxCollider>().enabled = true;
+
+                if (go.GetComponent<SphereCollider>() != null)
+                    go.GetComponent<SphereCollider>().enabled = true;
+
+                characterController.enabled = true;
+            }
+
+        foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
+            if (go != null)
+                if (playerRewiredID == 0)
+                    if (pController.PV.IsMine)
+                        go.layer = 28;
+                    else
+                        go.layer = 29;
+
     }
 
     IEnumerator ResetHasJustSpawned()
