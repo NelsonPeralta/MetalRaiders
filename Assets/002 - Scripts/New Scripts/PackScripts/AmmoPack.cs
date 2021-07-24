@@ -57,13 +57,13 @@ public class AmmoPack : MonoBehaviour
                 ammoToRemoveFromThisPack = ammoInThisPack;
 
             if (ammoType == "small")
-                pInventory.smallAmmo += ammoInThisPack;
+                pInventory.smallAmmo += ammoToRemoveFromThisPack;
             else if (ammoType == "heavy")
-                pInventory.heavyAmmo += ammoInThisPack;
+                pInventory.heavyAmmo += ammoToRemoveFromThisPack;
             else if (ammoType == "power")
-                pInventory.powerAmmo += ammoInThisPack;
+                pInventory.powerAmmo += ammoToRemoveFromThisPack;
             else if (ammoType == "grenade")
-                pInventory.grenades += ammoInThisPack;
+                pInventory.grenades += ammoToRemoveFromThisPack;
 
             ammoInThisPack -= ammoToRemoveFromThisPack;
             ammoText.text = ammoInThisPack.ToString();

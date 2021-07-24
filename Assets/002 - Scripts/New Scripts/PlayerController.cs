@@ -171,7 +171,7 @@ public class PlayerController : MonoBehaviourPun
                 //PV.RPC("Melee", RpcTarget.All);
                 //Melee();
                 Crouch();
-                //Grenade(); //TO DO: Spawn Grenades the same way as bullets
+                Grenade(); //TO DO: Spawn Grenades the same way as bullets
                 SelectFire();
                 SwitchGrenades();
                 //AutoReloadVoid();
@@ -456,11 +456,11 @@ public class PlayerController : MonoBehaviourPun
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {
-                StartCoroutine(GrenadeSpawnDelay());
                 pInventory.grenades = pInventory.grenades - 1;
-                //Play grenade throw animation
                 anim.Play("GrenadeThrow", 0, 0.0f);
-                StartCoroutine(ThrowGrenade3PS());
+                PV.RPC("ThrowGrenade_RPC", RpcTarget.All);
+                //StartCoroutine(GrenadeSpawnDelay());
+                //StartCoroutine(ThrowGrenade3PS());
             }
         }
 
@@ -857,6 +857,14 @@ public class PlayerController : MonoBehaviourPun
     /// /////////////////////////////////////////////////////////////////////////////////// Coroutines ////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
     /// <returns></returns>
+    /// 
+
+    [PunRPC]
+    public void ThrowGrenade_RPC()
+    {
+        StartCoroutine(GrenadeSpawnDelay());
+        StartCoroutine(ThrowGrenade3PS());
+    }
 
     private IEnumerator GrenadeSpawnDelay()
     {

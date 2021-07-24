@@ -120,6 +120,7 @@ MonoBehaviour:
   - {fileID: 1949347182520484858, guid: e2164acd966433848aebc6a0f4f9f77e, type: 3}
   - {fileID: 3643358748772534935, guid: 157cb1412fd7ae54587dd0237bdeb155, type: 3}
   - {fileID: 2358512475867249925, guid: d09320bf544d2fd4392c045b1e89758f, type: 3}
+  - {fileID: 3961792897310896968, guid: 009dd02cd58b6da44a5d9f221233fe21, type: 3}
   allAmmoPacks: []
   ammoPackPrefabs:
   - {fileID: 5941519958152811868, guid: ceeee44a0fded01489eb0d30486002ba, type: 3}
