@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-
-public class ReloadScript : MonoBehaviour
+public class ReloadScript : MonoBehaviourPun
 {
     [Header("MANUAL LINKING")]
     public PlayerController pController;
+    public PhotonView PV;
 
     const int DEFAULT_RELOAD_TIME = 1;
 
@@ -194,8 +195,12 @@ public class ReloadScript : MonoBehaviour
     {
         if (pController.wProperties.usesMags)
         {
-            reloadAudioSource.clip = pController.wProperties.Reload_1;
-            reloadAudioSource.Play();
+            if (PV.IsMine)
+                for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
+                    if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.wProperties.gameObject)
+                        PV.RPC("PlayReloadSound_RPC", RpcTarget.All, i);
+            //reloadAudioSource.clip = pController.wProperties.Reload_1;
+            //reloadAudioSource.Play();
 
             if (!isOutOfAmmo)
                 pController.anim.Play("Reload Ammo Left", 0, 0f);
@@ -236,8 +241,12 @@ public class ReloadScript : MonoBehaviour
         }
         if (pController.wProperties.usesSingleAmmo)
         {
-            reloadAudioSource.clip = pController.wProperties.Reload_1;
-            reloadAudioSource.Play();
+            if (PV.IsMine)
+                for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
+                    if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.wProperties.gameObject)
+                        PV.RPC("PlayReloadSound_RPC", RpcTarget.All, i);
+            //reloadAudioSource.clip = pController.wProperties.Reload_1;
+            //reloadAudioSource.Play();
             pController.anim.Play("Reload", 0, 0f);
             pController.Unscope();
 
@@ -272,5 +281,12 @@ public class ReloadScript : MonoBehaviour
             reloadIsCanceled = false;
             reloadSingleCountdown = singleAmmoTime;
         }
+    }
+
+    [PunRPC]
+    void PlayReloadSound_RPC(int activeWeaponIndex)
+    {
+        reloadAudioSource.clip = pController.pInventory.allWeaponsInInventory[activeWeaponIndex].GetComponent<WeaponProperties>().Reload_1;
+        reloadAudioSource.Play();
     }
 }

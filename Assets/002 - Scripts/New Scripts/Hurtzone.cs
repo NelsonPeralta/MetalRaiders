@@ -209,12 +209,12 @@ public class Hurtzone : MonoBehaviour
                             }
                             else
                             {
-                                player.SetHealth(damage, false, 99);
+                                player.Damage(damage, false, 99);
                             }
                         }
                         else // If Player does not have Armor
                         {
-                            player.SetHealth(damage, false, 99);
+                            player.Damage(damage, false, 99);
                         }
                     }
                 }

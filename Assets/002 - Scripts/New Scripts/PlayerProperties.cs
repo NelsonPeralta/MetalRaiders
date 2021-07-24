@@ -5,11 +5,12 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObservable
+public class PlayerProperties : MonoBehaviourPunCallbacks
 {
     [Header("Singletons")]
     public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
+    public PlayerManager playerManager;
 
     [Header("Models")]
     public GameObject firstPersonModels;
@@ -135,6 +136,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     private void Start()
     {
         spawnManager = SpawnManager.spawnManagerInstance;
+        playerManager = PlayerManager.playerManagerInstance;
+        playerManager.allPlayers.Add(this);
         PV = GetComponent<PhotonView>();
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
@@ -347,41 +350,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
 
 
 
-    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
-        {
-            //Debug.Log("Writing Health " + Health + isDead + hasJustRespawned);
-            stream.SendNext(Health);
-            stream.SendNext(isDead);
-            stream.SendNext(hasJustRespawned);
-        }
-        else
-        {
-            float healthRead = (float)stream.ReceiveNext();
-            bool isDeadRead = (bool)stream.ReceiveNext();
-            bool hasJustRespawnedRead = (bool)stream.ReceiveNext();
-            //Debug.Log("Reading Health: " + healthRead + ". Health: " + this.Health + ". IsDead: " + isDeadRead + ". Has Just Respawned " + hasJustRespawnedRead);// has just respawned not being counted
-            if (hasJustRespawnedRead || (healthRead == 0 && Health == maxHealth))
-            {
-                //Debug.Log("Fixng Maxing Health");
-                photonView.RPC("RPC_SetHealth", RpcTarget.All, (float)maxHealth);
-            }
-            else if (healthRead != this.Health && !hasJustRespawnedRead)
-            {
-                //RPC_SetHealth(Mathf.Min(healthRead, Health));
-                //Debug.Log("Fixing Health " + healthRead + Health + this.Health);
-                photonView.RPC("RPC_SetHealth", RpcTarget.All, Mathf.Min(healthRead, Health));
-                SetHealth(0, false, 0);
-            }
-        }
-    }
-
-
 
     public void TakeDamage(int damage)
     {
-        SetHealth(damage, false, 0);
+        Damage(damage, false, 0);
     }
 
     [PunRPC]
@@ -389,53 +361,55 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     {
         Debug.Log("Player taking " + damage + " damage");
 
-        SetHealth(damage, false, 0);
+        Damage(damage, false, 0);
     }
-    public void SetHealth(int healthDamage, bool headshot, int playerWhoShotThisPlayer)
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayer)
     {
-        if (isDead)
-            return;
-        //Debug.Log("TRYING Setting Health");
-        //if (!photonView.IsMine)
-        //    return;
-        Debug.Log("Setting Health " + isDead);
-        pController.Unscope();
-        healthHasBeenHit = true;
-
-        shieldRechargeCountdown = shieldRechargeDelay;
-        healthRegenerationCountdown = healthRegenerationDelay;
-
-        if (healthSlider.value < healthDamage || headshot)
+        for(int i = 0; i < playerManager.allPlayers.Count; i++)
         {
-            Health = 0;
-            healthSlider.value = 0;
-        }
-        else
-        {
-            Health = Health - healthDamage;
-            healthSlider.value = healthSlider.value - healthDamage;
-            PlayHurtSound();
-        }
-
-        if (Health <= 0)
-        {
-            Die(headshot, playerWhoShotThisPlayer);
-            //pController.PV.RPC("Die", RpcTarget.All, false, playerWhoShotThisPlayer);
-            PlayDeathSound();
+            if (playerManager.allPlayers[i].gameObject == gameObject)
+                photonView.RPC("Damage_RPC", RpcTarget.All, playerManager.allPlayers[i].PV.ViewID, healthDamage);
+            //Debug.Log("Found player damaged");
         }
     }
 
     [PunRPC]
-    public void RPC_SetHealth(float newHealth)
+    void Damage_RPC(int photonId, int damage)
     {
-        Debug.Log("BEFORE RPC Setting Health " + newHealth + " " + isDead);
-        if (isDead)
-            return;
-        Debug.Log("Inside RPC Setting Health " + newHealth + " " + isDead);
+        PlayerProperties pp = null;
 
-        Health = newHealth;
-        healthSlider.value = newHealth;
+        foreach (PlayerProperties ppl in playerManager.allPlayers)
+            if (ppl.PV.ViewID == photonId)
+                pp = ppl;
+
+        //PlayerProperties pp = playerManager.allPlayers[index];
+
+        Debug.Log($"Setting Health :{Health}, damage: {damage}, Is Dead: {isDead}. Is Mine: {PV.IsMine}");
+        //pController.Unscope();
+        //healthHasBeenHit = true;
+
+        //shieldRechargeCountdown = shieldRechargeDelay;
+        //healthRegenerationCountdown = healthRegenerationDelay;
+
+        if (pp.healthSlider.value < damage)
+        {
+            pp.Health = 0;
+            pp.healthSlider.value = 0;
+        }
+        else
+        {
+            pp.Health -= damage;
+            pp.healthSlider.value -= damage;
+        }
+
+        if (pp.Health <= 0)
+        {
+            pp.Die(false, 0);
+        }
+        else if (pp.Health > 0 && pp.Health < pp.maxHealth && damage > 0)
+            pp.PlayHurtSound();
     }
+
 
     public void BleedthroughDamage(float damage, bool headshot, int playerWhoKilledThisPlayer)
     {
@@ -608,9 +582,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
     [PunRPC]
     void Die(bool headshot, int playerWhoKilledThisPlayer)
     {
+        Debug.Log("Player Death Script Is Dead: " + isDead);
         if (isDead)
             return;
-
+        PlayDeathSound();
         isDead = true;
         Debug.Log("Player Death Script");
         UpdateMPPoints(playerRewiredID, playerWhoKilledThisPlayer);
@@ -1055,6 +1030,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IDamageable, IPunObse
 
     void PlayDeathSound()
     {
+        Debug.Log("Playing Death Sound");
         int randomSound = Random.Range(0, deathClips.Length);
         playerVoice.clip = deathClips[randomSound];
         playerVoice.Play();

@@ -423,13 +423,8 @@ public class PlayerController : MonoBehaviourPun
         {
             if (player.GetButtonDown("Melee") && !isMeleeing && PV.IsMine)
             {
-                melee.PlayMeleeSound();
                 Debug.Log("RPC Call: Melee");
                 PV.RPC("Melee_RPC", RpcTarget.All);
-                //anim.Play("Knife Attack 2", 0, 0f);
-                //tPersonController.anim.SetBool("Melee", true); // Must use Bools in the upper body animations in order to work with PUN
-                ////StartCoroutine(Melee3PS());
-                //melee.PlayMeleeSound();
             }
         }
     }
@@ -437,6 +432,8 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee_RPC()
     {
+        melee.audioSource.clip = melee.knifeSound;
+        melee.audioSource.Play();
         anim.Play("Knife Attack 2", 0, 0f);
         StartCoroutine(Melee3PS());
     }
@@ -852,10 +849,16 @@ public class PlayerController : MonoBehaviourPun
     IEnumerator Melee3PS()
     {
         tPersonController.anim.Play("Melee");
+        StartCoroutine(ShowMeleeKnife());
         yield return new WaitForEndOfFrame();
     }
 
-
+    IEnumerator ShowMeleeKnife()
+    {
+        melee.knifeGameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        melee.knifeGameObject.SetActive(false);
+    }
 
 
 

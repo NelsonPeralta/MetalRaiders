@@ -34,11 +34,11 @@ public class weaponPUTZ : MonoBehaviour
                 pickupText.text = "Pick up " + other.gameObject.name;
                 pickupWeap = other.gameObject;
 
-                for (int i = 0; i < pInventory.Unequipped.Length; i++)
+                for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
                 {
-                    if(pInventory.Unequipped[i] != null)
+                    if(pInventory.allWeaponsInInventory[i] != null)
                     {
-                        if(pickupWeap.gameObject.name == pInventory.Unequipped[i].gameObject.name)
+                        if(pickupWeap.gameObject.name == pInventory.allWeaponsInInventory[i].gameObject.name)
                         {
 
                         }

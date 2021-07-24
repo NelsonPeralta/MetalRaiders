@@ -45,7 +45,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     [Space(20)]
     [Header("Unequipped Weapons")]
-    public GameObject[] Unequipped = new GameObject[25];
+    public GameObject[] allWeaponsInInventory = new GameObject[25];
 
     [Space(20)]
     [Header("Ammo")]
@@ -208,9 +208,9 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if ((child.GetComponent<Tags>() != null) && (child.GetComponent<Tags>().hasTag("Weapon")) && (child.gameObject.GetComponent<WeaponProperties>() != null))
             {
-                Unequipped[childCounter] = child.gameObject;
-                Unequipped[childCounter].gameObject.GetComponent<WeaponProperties>().weaponName = Unequipped[childCounter].gameObject.name;
-                Unequipped[childCounter].gameObject.GetComponent<WeaponProperties>().storedWeaponNumber = childCounter;
+                allWeaponsInInventory[childCounter] = child.gameObject;
+                allWeaponsInInventory[childCounter].gameObject.GetComponent<WeaponProperties>().weaponName = allWeaponsInInventory[childCounter].gameObject.name;
+                allWeaponsInInventory[childCounter].gameObject.GetComponent<WeaponProperties>().storedWeaponNumber = childCounter;
                 childCounter = childCounter + 1;
             }
         }
@@ -247,33 +247,33 @@ public class PlayerInventory : MonoBehaviourPun
     {
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
 
-        for (int i = 0; i < Unequipped.Length; i++)
+        for (int i = 0; i < allWeaponsInInventory.Length; i++)
         {
-            if (Unequipped[i] != null)
+            if (allWeaponsInInventory[i] != null)
             {
-                if (Unequipped[i].name == StartingWeapon)
+                if (allWeaponsInInventory[i].name == StartingWeapon)
                 {
                     //DisableAmmoHUDCounters();
-                    weaponsEquiped[0] = Unequipped[i].gameObject;
+                    weaponsEquiped[0] = allWeaponsInInventory[i].gameObject;
                     //Debug.Log("Check 1");
                     activeWeapon = weaponsEquiped[0];
                     weaponsEquiped[0] = activeWeapon;
                     activeWeapIs = 0;
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
-                    Unequipped[i].gameObject.SetActive(true);
+                    allWeaponsInInventory[i].gameObject.SetActive(true);
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
-                else if (Unequipped[i].name == StartingWeapon2)
+                else if (allWeaponsInInventory[i].name == StartingWeapon2)
                 {
-                    Unequipped[i].gameObject.SetActive(false);
-                    weaponsEquiped[1] = Unequipped[i].gameObject;
+                    allWeaponsInInventory[i].gameObject.SetActive(false);
+                    weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
                     weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().maxAmmoInWeapon;
                     //Debug.Log("Check 1");
                     hasSecWeap = true;
                 }
-                else if (Unequipped[i].name != StartingWeapon)
+                else if (allWeaponsInInventory[i].name != StartingWeapon)
                 {
-                    Unequipped[i].gameObject.SetActive(false);
+                    allWeaponsInInventory[i].gameObject.SetActive(false);
                 }
             }
         }
@@ -315,7 +315,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         //Debug.Log("Active weapon:" + activeWeapon.name);
 
-        foreach(GameObject weap in Unequipped)
+        foreach(GameObject weap in allWeaponsInInventory)
         {
             if(weap.GetComponent<WeaponProperties>().thirdPersonModelEquipped)
                 weap.GetComponent<WeaponProperties>().thirdPersonModelEquipped.SetActive(false);
@@ -431,6 +431,8 @@ public class PlayerInventory : MonoBehaviourPun
     public void changeAmmoCounter()
     {
         //Debug.Log("The active weapon is:" + activeWeapon.name);
+        if (!activeWeapon)
+            return;
         if(activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Small")
         {
             smallAmmoHudCounter.changeToDrawn();

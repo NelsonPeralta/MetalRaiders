@@ -151,7 +151,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
                     if (!playerProperties.isDead)
                     {
-                        playerProperties.SetHealth(damage, false, 0);
+                        playerProperties.Damage(damage, false, 0);
                         //if (playerProperties.Health > 0)
                         //  playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
 

@@ -66,18 +66,18 @@ public class WeaponPickUp : MonoBehaviourPun
                 {
                     weaponCollidingWith = other.gameObject;
 
-                    for (int i = 0; i < pInventory.Unequipped.Length; i++) //Looks for a weapon in the Unequipped Array for the Gameobject with the same name
+                    for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++) //Looks for a weapon in the Unequipped Array for the Gameobject with the same name
                     {
-                        if (pInventory.Unequipped[i] != null)
+                        if (pInventory.allWeaponsInInventory[i] != null)
                         {
-                            if (other.gameObject.name == pInventory.Unequipped[i].gameObject.name)
+                            if (other.gameObject.name == pInventory.allWeaponsInInventory[i].gameObject.name)
                             {
                                 if (pInventory.weaponsEquiped[1] == null)
                                 {
                                     if (other.gameObject.name != pInventory.weaponsEquiped[0].gameObject.name)
                                     {
                                         //Debug.Log("Here");
-                                        weaponCollidingWithInInventory = pInventory.Unequipped[i].gameObject; // Adds the weapon in "pickupWeap"
+                                        weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
                                         pickupText.text = "Pick up " + weaponCollidingWithInInventory.name;
                                         canPickup = true;
                                     }
@@ -106,7 +106,7 @@ public class WeaponPickUp : MonoBehaviourPun
                                         if (other.gameObject.name != pInventory.weaponsEquiped[0].gameObject.name)
                                         {
                                             //Debug.Log("Here");
-                                            weaponCollidingWithInInventory = pInventory.Unequipped[i].gameObject; // Adds the weapon in "pickupWeap"
+                                            weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
                                             pickupText.text = "Pick up " + weaponCollidingWithInInventory.name;
                                             canPickup = true;
                                         }
@@ -120,7 +120,7 @@ public class WeaponPickUp : MonoBehaviourPun
                                         if (other.gameObject.name != pInventory.weaponsEquiped[1].gameObject.name)
                                         {
                                             //Debug.Log("Here");
-                                            weaponCollidingWithInInventory = pInventory.Unequipped[i].gameObject; // Adds the weapon in "pickupWeap"
+                                            weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
                                             pickupText.text = "Pick up " + weaponCollidingWithInInventory.name;
                                             canPickup = true;
                                         }
@@ -147,15 +147,15 @@ public class WeaponPickUp : MonoBehaviourPun
                 Debug.Log("In script");
                 weaponCollidingWith = other.gameObject;
 
-                for (int i = 0; i < pInventory.Unequipped.Length; i++) //Looks for a weapon in the Unequipped Array for the Gameobject with the same name
+                for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++) //Looks for a weapon in the Unequipped Array for the Gameobject with the same name
                 {
-                    if (pInventory.Unequipped[i] != null)
+                    if (pInventory.allWeaponsInInventory[i] != null)
                     {
-                        if (other.gameObject.name == pInventory.Unequipped[i].gameObject.name)
+                        if (other.gameObject.name == pInventory.allWeaponsInInventory[i].gameObject.name)
                         {
                             if (weaponHasMoreAmmoThanCurrent)
                             {
-                                weaponCollidingWithInInventory = pInventory.Unequipped[i].gameObject; // Adds the weapon in "pickupWeap"
+                                weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
 
                                 canPickup = true;
                             }
@@ -235,8 +235,8 @@ public class WeaponPickUp : MonoBehaviourPun
                 else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
                 {
                     int weaponCollidingWithInInventoryIndex = 0;
-                    for (int i = 0; i < pInventory.Unequipped.Length; i++)
-                        if (weaponCollidingWithInInventory == pInventory.Unequipped[i])
+                    for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
+                        if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
                             weaponCollidingWithInInventoryIndex = i;
                     int lwPId = weaponPool.GetWeaponIndex(weaponCollidingWith);
                     PV.RPC("ReplaceWeapon", RpcTarget.All, lwPId, weaponCollidingWithInInventoryIndex);
@@ -303,8 +303,8 @@ public class WeaponPickUp : MonoBehaviourPun
         {
             weaponEquippedToDrop1 = pInventory.activeWeapon;
 
-            weaponCollidingWithInInventory = pInventory.Unequipped[weaponCollidingWithInInventoryIndex];
-            pInventory.Unequipped[weaponCollidingWithInInventoryIndex].SetActive(true);
+            weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
+            pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].SetActive(true);
             pInventory.weaponsEquiped[1].gameObject.SetActive(false);
             pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
             pInventory.activeWeapon = weaponCollidingWithInInventory;
