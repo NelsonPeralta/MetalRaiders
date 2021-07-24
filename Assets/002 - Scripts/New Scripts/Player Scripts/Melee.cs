@@ -21,7 +21,7 @@ public class Melee : MonoBehaviour
             {
                 var AIHitbox = hit.gameObject.GetComponent<AIHitbox>();
 
-                if (pController.player.GetButtonDown("Melee") && !pController.isMeleeing)
+                if (pController.player.GetButtonDown("Melee") && !pController.isMeleeing && pController.PV.IsMine)
                 {
                     AIHitbox.UpdateAIHealthMelee(pProperties.meleeDamage, pProperties.gameObject);
                 }

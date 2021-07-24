@@ -66,6 +66,9 @@ MonoBehaviour:
   - _DisableAmmoPackGameObjectWithIndex_RPC
   - DespawnAmmoPack_RPC
   - ThrowGrenade_RPC
+  - SwitchGrenades_RPC
+  - Melee_RPC
+  - Player3PReloadAnimation_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviourPun
                 CheckAmmoForAutoReload();
                 Aiming();
                 //PV.RPC("Melee", RpcTarget.All);
-                //Melee();
+                Melee();
                 Crouch();
                 Grenade(); //TO DO: Spawn Grenades the same way as bullets
                 SelectFire();
@@ -421,15 +421,24 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!playerProperties.isDead)
         {
-            if (player.GetButtonDown("Melee") && !isMeleeing /* && !isInspecting */)
+            if (player.GetButtonDown("Melee") && !isMeleeing && PV.IsMine)
             {
-                Debug.Log(player);
-                anim.Play("Knife Attack 2", 0, 0f);
-                tPersonController.anim.SetBool("Melee", true); // Must use Bools in the upper body animations in order to work with PUN
-                //StartCoroutine(Melee3PS());
                 melee.PlayMeleeSound();
+                Debug.Log("RPC Call: Melee");
+                PV.RPC("Melee_RPC", RpcTarget.All);
+                //anim.Play("Knife Attack 2", 0, 0f);
+                //tPersonController.anim.SetBool("Melee", true); // Must use Bools in the upper body animations in order to work with PUN
+                ////StartCoroutine(Melee3PS());
+                //melee.PlayMeleeSound();
             }
         }
+    }
+
+    [PunRPC]
+    void Melee_RPC()
+    {
+        anim.Play("Knife Attack 2", 0, 0f);
+        StartCoroutine(Melee3PS());
     }
 
     void Crouch()
@@ -612,24 +621,31 @@ public class PlayerController : MonoBehaviourPun
 
     void SwitchGrenades()
     {
-        if (player.GetButtonDown("Switch Grenades"))
+        if (player.GetButtonDown("Switch Grenades") && PV.IsMine)
         {
-            if (fragGrenadesActive)
-            {
-                fragGrenadesActive = false;
-                stickyGrenadesActive = true;
+            Debug.Log("RPC: Switching Grenades");
+            PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
+        }
+    }
 
-                allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(false);
-                allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(true);
-            }
-            else if (stickyGrenadesActive)
-            {
-                fragGrenadesActive = true;
-                stickyGrenadesActive = false;
+    [PunRPC]
+    void SwitchGrenades_RPC()
+    {
+        if (fragGrenadesActive)
+        {
+            fragGrenadesActive = false;
+            stickyGrenadesActive = true;
 
-                allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(true);
-                allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(false);
-            }
+            allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(false);
+            allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(true);
+        }
+        else if (stickyGrenadesActive)
+        {
+            fragGrenadesActive = true;
+            stickyGrenadesActive = false;
+
+            allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(true);
+            allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(false);
         }
     }
 
@@ -813,6 +829,18 @@ public class PlayerController : MonoBehaviourPun
     {
         tPersonController.anim.Play("Throw Grenade");
         yield return new WaitForEndOfFrame();
+    }
+
+    public void Player3PReloadAnimation()
+    {
+        if (PV.IsMine)
+            PV.RPC("Player3PReloadAnimation_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void Player3PReloadAnimation_RPC()
+    {
+        StartCoroutine(Reload3PS());
     }
 
     public IEnumerator Reload3PS()

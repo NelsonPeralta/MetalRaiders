@@ -244,7 +244,7 @@ public class ReloadScript : MonoBehaviour
             Reload(0, 0, 0, singleReloadTime);
         }
 
-        StartCoroutine(pController.Reload3PS());
+        pController.Player3PReloadAnimation();
     }
 
     public void Reload(float countdownTime, float shellOpenTime, float shellInsertTime, float singleAmmoTime)
