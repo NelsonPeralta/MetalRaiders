@@ -158,6 +158,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         healthSlider.maxValue = maxHealth;
         healthSlider.value = maxHealth;
 
+        if (respawnTime <= healthRegenerationDelay)
+            respawnTime = healthRegenerationDelay + 0.5f; // To avoid the health regen sound going off
+
         if (!hasFoundComponents)
         {
             //cManager = gameObject.GetComponent<ChildManager>();
@@ -945,6 +948,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     void PlayHealthStartSound()
     {
+        Debug.Log("Health Reachrge Sound");
+        if (isDead || isRespawning)
+            return;
         if (shieldAudioSource.isPlaying)
         {
             shieldAudioSource.Stop();
