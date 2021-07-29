@@ -5,6 +5,7 @@ using System.IO;
 
 public class WeaponPool : MonoBehaviourPun
 {
+    public PhotonView PV;
     public static WeaponPool weaponPoolInstance;
     public static OnlineGameTime onlineGameTimeInstance;
     public int amountToPool;
@@ -101,5 +102,10 @@ public class WeaponPool : MonoBehaviourPun
                 return allAmmoPacks[i];
         }
         return null;
+    }
+
+    private void OnDestroy()
+    {
+        weaponPoolInstance = null;
     }
 }

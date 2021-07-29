@@ -7,42 +7,70 @@ using System.IO;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
-	public static RoomManager Instance;
+    public static RoomManager Instance;
 
-	void Awake()
-	{
-		if(Instance)
-		{
-			Destroy(gameObject);
-			return;
-		}
-		DontDestroyOnLoad(gameObject);
-		Instance = this;
-	}
+    void Awake()
+    {
+        if (Instance)
+        {
+            Debug.Log("There is a Room Manager Instance");
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+        Instance = this;
+    }
 
-	public override void OnEnable()
-	{
-		base.OnEnable();
-		SceneManager.sceneLoaded += OnSceneLoaded;
-	}
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
-	public override void OnDisable()
-	{
-		base.OnDisable();
-		SceneManager.sceneLoaded -= OnSceneLoaded;
-	}
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
-	void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
-	{
-		if(scene.buildIndex == 1) // We're in the game scene
-		{
-			PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
-            if(!GameObjectPool.gameObjectPoolInstance)
-			    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
+    void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        //if (Instance != this)
+        //    Destroy(gameObject);
+        Debug.Log("Scene Loaded");
+        if (scene.buildIndex == 1) // We're in the game scene
+        {
+            Debug.Log($"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
+            if (!PlayerManager.playerManagerInstance)
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
+            if (!GameObjectPool.gameObjectPoolInstance)
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
             if (!WeaponPool.weaponPoolInstance)
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineWeaponPool"), Vector3.zero + new Vector3(0, 5, 0), Quaternion.identity);
             if (!OnlineGameTime.onlineGameTimeInstance)
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
+            if (!MultiplayerManager.multiplayerManagerInstance)
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineMultiplayerManager"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
         }
-	}
+        else
+        {
+            try
+            {
+                //if (PlayerManager.playerManagerInstance)
+                //    PhotonNetwork.Destroy(PlayerManager.playerManagerInstance.PV);
+                //if (GameObjectPool.gameObjectPoolInstance)
+                //    PhotonNetwork.Destroy(GameObjectPool.gameObjectPoolInstance.PV);
+                //if (WeaponPool.weaponPoolInstance)
+                //    PhotonNetwork.Destroy(WeaponPool.weaponPoolInstance.PV);
+                //if (OnlineGameTime.onlineGameTimeInstance)
+                //    PhotonNetwork.Destroy(OnlineGameTime.onlineGameTimeInstance.PV);
+                //if (MultiplayerManager.multiplayerManagerInstance)
+                //    PhotonNetwork.Destroy(MultiplayerManager.multiplayerManagerInstance.PV);
+            }
+            catch
+            {
+
+            }
+        }
+    }
 }

@@ -10,7 +10,7 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager playerManagerInstance;
     public List<PlayerProperties> allPlayers = new List<PlayerProperties>();
-	PhotonView PV;
+	public PhotonView PV;
 	GameObject controller;
 
 	void Awake()
@@ -46,4 +46,17 @@ public class PlayerManager : MonoBehaviour
 		PhotonNetwork.Destroy(controller);
 		CreateController();
 	}
+
+    public PlayerProperties GetPlayerWithGivenPhotonId(int id)
+    {
+        for (int i = 0; i < allPlayers.Count; i++)
+            if (allPlayers[i].GetComponent<PhotonView>().ViewID == id)
+                return allPlayers[i];
+        return null;
+    }
+
+    private void OnDestroy()
+    {
+        playerManagerInstance = null;
+    }
 }

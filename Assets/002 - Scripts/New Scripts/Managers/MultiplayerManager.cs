@@ -2,138 +2,127 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class MultiplayerManager : MonoBehaviour
 {
-    //public SplitScreenManager ssManager;
-    public MyPlayerManager pManager;
-    public bool FFA = false;
-    public bool teamSlayer = false;
+    public PhotonView PV;
+    [Header("Singletons")]
+    public static MultiplayerManager multiplayerManagerInstance;
+    public static PlayerManager playerManager;
 
-    [Header("FFA Scoring")]
-    public int player0Score;
-    public int player1Score;
-    public int player2Score;
-    public int player3Score;
+    [Header("Gametype")]
+    public string gametype;
+    public int pointsToWin;
 
-    [Header("Team Slayer Scoring")]
-    public int blueTeamScore;
-    public int redTeamScore;
+    [Header("Players")]
+    public List<PlayerMultiplayerStats> playerMultiplayerStats = new List<PlayerMultiplayerStats>();
 
-    [Header("Score Text (MANUAL LINKING")]
-    public Text player0ScoreText1;
-    public Text player0ScoreText2;
-    public Text player1ScoreText1;
-    public Text player1ScoreText2;
-    public Text player2ScoreText1;
-    public Text player2ScoreText2;
-    public Text player3ScoreText1;
-    public Text player3ScoreText2;
+    // private variables
+    int listCreationRetries = 10;
 
-    public Text blueTeamScoreText;
-    public Text redTeamScoreText;
-
-    [Header("Spawns (NEEDS TO BE FILLED FOR RESPAWNS TO WORK")]
-    public GameObject[] GenericSpawns = new GameObject[10];
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        pManager = GameObject.FindGameObjectWithTag("Player Manager").GetComponent<MyPlayerManager>();
-        //ssManager = GameObject.FindGameObjectWithTag("Player Manager").GetComponent<SplitScreenManager>();
-        //ssManager.numberOfPlayers = numberOfPlayers;
-
-        player0Score = 0;
-        player1Score = 0;
-        player2Score = 0;
-        player3Score = 0;
-
-        player0ScoreText1.text = player0Score.ToString();
-        player0ScoreText2.text = player0Score.ToString();
-        player1ScoreText1.text = player1Score.ToString();
-        player1ScoreText2.text = player1Score.ToString();
-        player2ScoreText1.text = player2Score.ToString();
-        player2ScoreText2.text = player2Score.ToString();
-        player3ScoreText1.text = player3Score.ToString();
-        player3ScoreText2.text = player3Score.ToString();
-
-        GivePlayersThis();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void SetTeams()
-    {
-        if (FFA)
+        if (multiplayerManagerInstance)
         {
-            MyPlayerManager pManager = GetComponent<MyPlayerManager>();
-            //pManager.
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+        multiplayerManagerInstance = this;
+    }
+
+    private void Start()
+    {
+        playerManager = PlayerManager.playerManagerInstance;
+        StartCoroutine(CreateMultiplayerStatList());
+    }
+
+    IEnumerator CreateMultiplayerStatList()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (playerManager.allPlayers.Count > playerMultiplayerStats.Count)
+        {
+            playerMultiplayerStats.Clear();
+            for (int i = 0; i < playerManager.allPlayers.Count; i++)
+            {
+                PlayerMultiplayerStats pms = new PlayerMultiplayerStats(playerManager.allPlayers[i]);
+
+                playerMultiplayerStats.Add(pms);
+                Debug.Log(playerMultiplayerStats.Count);
+            }
+        }
+
+        listCreationRetries--;
+
+        if (listCreationRetries > 0)
+            StartCoroutine(CreateMultiplayerStatList());
+    }
+
+    public void AddToScore(int playerPhotonIdWhoGotTheKill, int playerWhoDiedPVID)
+    {
+        Debug.Log($"Add to Score: {playerPhotonIdWhoGotTheKill} killed {playerWhoDiedPVID}");
+        if (gametype == "ffa")
+        {
+            PlayerMultiplayerStats playerWhoGotKillMS = FindPlayerWithPhotonViewId(playerPhotonIdWhoGotTheKill);
+            playerWhoGotKillMS.kills++;
+
+            PlayerMultiplayerStats playerWhoWasKilledMS = FindPlayerWithPhotonViewId(playerWhoDiedPVID);
+            playerWhoWasKilledMS.deaths++;
+
+            foreach (PlayerProperties pp in playerManager.allPlayers)
+                if (pp.PV.IsMine)
+                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKillMS.playerName, playerWhoWasKilledMS.playerName);
+
+            UpdateAllPlayerScores();
+            CheckForEndGame();
         }
     }
 
-    void GivePlayersThis()
+
+    PlayerMultiplayerStats FindPlayerWithPhotonViewId(int pvid)
     {
-        foreach (GameObject player in pManager.allPlayers)
+        for (int i = 0; i < playerMultiplayerStats.Count; i++)
         {
-            player.GetComponent<PlayerProperties>().multiplayerManager = this;
+            Debug.Log(playerMultiplayerStats[i].playerName + "" + playerMultiplayerStats[i].PVID);
+            if (playerMultiplayerStats[i].PVID == pvid)
+                return playerMultiplayerStats[i];
+        }
+
+        return null;
+    }
+    void UpdateAllPlayerScores()
+    {
+        for (int i = 0; i < playerMultiplayerStats.Count; i++)
+        {
+            playerMultiplayerStats[i].player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsRed.text = playerMultiplayerStats[i].kills.ToString();
         }
     }
 
-    public void AddToScore(int player)
+    void CheckForEndGame()
     {
-        if (FFA)
-        {
-            if (player == 0 && player0ScoreText1 != null)
+        if (gametype == "ffa")
+            for (int i = 0; i < playerMultiplayerStats.Count; i++)
             {
-                player0Score = player0Score + 1;
-                player0ScoreText1.text = player0Score.ToString();
+                if (playerMultiplayerStats[i].kills >= pointsToWin)
+                    EndGame();
+            }
+    }
 
-            }
-            else if (player == 1 && player1ScoreText1 != null)
-            {
-                player1Score = player1Score + 1;
-                player1ScoreText1.text = player1Score.ToString();
-            }
-            else if (player == 2 && player2ScoreText1 != null)
-            {
-                player2Score = player2Score + 1;
-                player2ScoreText1.text = player2Score.ToString();
-            }
-            else if (player == 3 && player3ScoreText1 != null)
-            {
-                player3Score = player3Score + 1;
-                player3ScoreText1.text = player3Score.ToString();
-            }
+    void EndGame()
+    {
+        playerMultiplayerStats[0].player.GetComponent<AllPlayerScripts>().announcer.PlayGameOverClip();
 
-            ///
-            ///   Update 2nd Text
-            ///
+        playerMultiplayerStats[0].player.LeaveRoomWithDelay();
+    }
 
-            if (player0ScoreText2 != null)
-            {
-                int greaterEnnemiScorePlayer0 = Mathf.Max(player1Score, player2Score, player3Score);
-                player0ScoreText2.text = greaterEnnemiScorePlayer0.ToString();
-            }
-            if (player1ScoreText2 != null)
-            {
-                int greaterEnnemiScorePlayer1 = Mathf.Max(player0Score, player2Score, player3Score);
-                player1ScoreText2.text = greaterEnnemiScorePlayer1.ToString();
-            }
-            if (player2ScoreText2 != null)
-            {
-                int greaterEnnemiScorePlayer2 = Mathf.Max(player1Score, player0Score, player3Score);
-                player2ScoreText2.text = greaterEnnemiScorePlayer2.ToString();
-            }
-            if (player3ScoreText2 != null)
-            {
-                int greaterEnnemiScorePlayer3 = Mathf.Max(player1Score, player2Score, player0Score);
-                player3ScoreText2.text = greaterEnnemiScorePlayer3.ToString();
-            }
+    private void OnDestroy()
+    {
+        multiplayerManagerInstance = null;
+    }
 
-        }
+    public void GetScoresByHighest()
+    {
+        List<PlayerMultiplayerStats> scores = new List<PlayerMultiplayerStats>();
     }
 }

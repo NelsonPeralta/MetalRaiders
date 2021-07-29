@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Melee : MonoBehaviour
 {
@@ -60,7 +61,7 @@ public class Melee : MonoBehaviour
                     if (playerToDamage.Health < pProperties.meleeDamage)
                         RemoveCorrespondingPlayer(playerToDamage.gameObject);
 
-                    playerToDamage.Damage((int)pProperties.meleeDamage, false, 0);
+                    playerToDamage.Damage((int)pProperties.meleeDamage, false, pProperties.GetComponent<PhotonView>().ViewID);
                 }
         }
     }

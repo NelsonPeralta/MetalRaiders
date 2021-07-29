@@ -88,13 +88,8 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
                 text.text = $"{(totalTime / 60).ToString("00")}:{(totalTime % 60).ToString("00")}";
     }
 
-    void RespawnWeapons()
+    private void OnDestroy()
     {
-
-    }
-
-    void RespawnAmmoPacks()
-    {
-
+        onlineGameTimeInstance = null;
     }
 }

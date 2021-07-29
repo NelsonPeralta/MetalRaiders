@@ -247,7 +247,7 @@ public class WatcherBackup : MonoBehaviour
         projec.GetComponent<Rocket>().damage = damage;
 
         projec.GetComponent<Rocket>().force = projectileSpeed;
-        projec.GetComponent<Rocket>().playerWhoThrewGrenade = gameObject;
+        //projec.GetComponent<Rocket>().playerWhoThrewGrenade = gameObject;
     }
 
     void BackAwayFromPlayer()

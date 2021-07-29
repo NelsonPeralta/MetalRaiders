@@ -4,13 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
-public class PlayerProperties : MonoBehaviourPunCallbacks
+public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 {
     [Header("Singletons")]
     public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
     public PlayerManager playerManager;
+    public MultiplayerManager multiplayerManager;
 
     [Header("Models")]
     public GameObject firstPersonModels;
@@ -20,15 +22,15 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
     public int maxHealth;
     public int maxShield;
     public float Health;
+    public float readHealth;
     public float Shield;
     public float meleeDamage; // default: 150
-    public bool isDead = false;
-    public bool hasJustRespawned;
+    public bool isDead;
+    public bool isRespawning;
+    public Coroutine respawnCoroutine;
     public float respawnTime = 5;
     public int playerRewiredID;
-    public float respawnCountdown;
-    public bool respawnStarted;
-    public int playerWhoKilledThisPlayerID; // Revenge Medal
+    public int lastPlayerWhoDamagedThisPlayerPVID; // Revenge Medal
 
     public bool hasShield = false;
     public bool needsHealthPack = false;
@@ -40,7 +42,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
     public WeaponProperties wProperties;
     //public ChildManager cManager;
     public PlayerController pController;
-    public MultiplayerManager multiplayerManager;
     public SwarmMode swarmMode;
     public Movement mScript;
     public CrosshairScript cScript;
@@ -62,6 +63,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
     public Text fragGrenadeText;
     public Text InformerText;
     public Text playerLivesText;
+    public Text HealthDebuggerText;
+    public Text readHealthDebuggerText;
 
     [Header("UI Components Game Objects")]
     public GameObject GrenadeInfo;
@@ -81,7 +84,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
     public bool shieldRechargeAllowed;
     public bool healthRegenerationAllowed;
     public bool armorHasBeenHit = false;
-    public bool healthHasBeenHit = false;
+    public bool triggerHealthRecharge = false;
 
     public float shieldRechargeCountdown;
     public float healthRegenerationCountdown;
@@ -133,16 +136,25 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
 
     public PhotonView PV;
 
+    public void UpdateHealthTextDebugger()
+    {
+        HealthDebuggerText.text = Health.ToString();
+        readHealthDebuggerText.text = readHealth.ToString();
+    }
+
     private void Start()
     {
         spawnManager = SpawnManager.spawnManagerInstance;
         playerManager = PlayerManager.playerManagerInstance;
+        multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
         playerManager.allPlayers.Add(this);
         PV = GetComponent<PhotonView>();
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
         activeSensitivity = defaultSensitivity;
         Health = maxHealth;
+        HealthDebuggerText.text = $"Health: {Health.ToString()}";
+        readHealth = Health;
         healthSlider.maxValue = maxHealth;
         healthSlider.value = maxHealth;
 
@@ -304,13 +316,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
         }
 
         HealthAndshieldRecharge();
-
-        if (respawnStarted)
-        {
-            RespawnCountdown();
-        }
-
         CheckRRIsOn();
+        Die();
     }
 
     /// <summary>
@@ -348,68 +355,28 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
         }
     }
 
-
-
-
-    public void TakeDamage(int damage)
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        Damage(damage, false, 0);
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, playerWhoShotThisPlayerPhotonId);
+
     }
 
     [PunRPC]
-    void RPC_TakeDamage(int damage)
+    void Damage_RPC(float newHealth, int playerWhoShotThisPlayerPhotonId)
     {
-        Debug.Log("Player taking " + damage + " damage");
+        lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
+        Health = newHealth;
+        healthSlider.value = Health;
+        triggerHealthRecharge = true;
+        healthRegenerationCountdown = healthRegenerationDelay;
+        PlayHurtSound();
+        UpdateHealthTextDebugger();
 
-        Damage(damage, false, 0);
+        if (Health <= 0)
+            isDead = true;
     }
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayer)
-    {
-        for(int i = 0; i < playerManager.allPlayers.Count; i++)
-        {
-            if (playerManager.allPlayers[i].gameObject == gameObject)
-                photonView.RPC("Damage_RPC", RpcTarget.All, playerManager.allPlayers[i].PV.ViewID, healthDamage);
-            //Debug.Log("Found player damaged");
-        }
-    }
-
-    [PunRPC]
-    void Damage_RPC(int photonId, int damage)
-    {
-        PlayerProperties pp = null;
-
-        foreach (PlayerProperties ppl in playerManager.allPlayers)
-            if (ppl.PV.ViewID == photonId)
-                pp = ppl;
-
-        //PlayerProperties pp = playerManager.allPlayers[index];
-
-        Debug.Log($"Setting Health :{Health}, damage: {damage}, Is Dead: {isDead}. Is Mine: {PV.IsMine}");
-        //pController.Unscope();
-        //healthHasBeenHit = true;
-
-        //shieldRechargeCountdown = shieldRechargeDelay;
-        //healthRegenerationCountdown = healthRegenerationDelay;
-
-        if (pp.healthSlider.value < damage)
-        {
-            pp.Health = 0;
-            pp.healthSlider.value = 0;
-        }
-        else
-        {
-            pp.Health -= damage;
-            pp.healthSlider.value -= damage;
-        }
-
-        if (pp.Health <= 0)
-        {
-            pp.Die(false, 0);
-        }
-        else if (pp.Health > 0 && pp.Health < pp.maxHealth && damage > 0)
-            pp.PlayHurtSound();
-    }
-
 
     public void BleedthroughDamage(float damage, bool headshot, int playerWhoKilledThisPlayer)
     {
@@ -424,7 +391,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
             {
                 if (Shield > 0)
                 {
-                    healthHasBeenHit = true;
+                    triggerHealthRecharge = true;
                     armorHasBeenHit = true;
 
                     float damageLeft = damage - Shield;
@@ -462,7 +429,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
                 }
                 else if (Shield <= 0)
                 {
-                    healthHasBeenHit = true;
+                    triggerHealthRecharge = true;
                     Health = Health - damage;
                     healthSlider.value = Health;
 
@@ -478,7 +445,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
             }
             else
             {
-                healthHasBeenHit = true;
+                triggerHealthRecharge = true;
                 Health = Health - damage;
                 healthSlider.value = Health;
 
@@ -502,7 +469,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
             PlayShieldDownSound();
             StartCoroutine(PlayShieldAlarmSound());
 
-            healthHasBeenHit = true;
+            triggerHealthRecharge = true;
             armorHasBeenHit = true;
 
             if (Health <= 0)
@@ -532,7 +499,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
             }
         }
 
-        if (healthHasBeenHit)
+        if (triggerHealthRecharge)
         {
             healthRegenerationAllowed = false;
             healthRegenerationCountdown -= Time.deltaTime;
@@ -540,12 +507,12 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
             if (healthRegenerationCountdown < 0 && !needsHealthPack)
             {
                 healthRegenerationAllowed = true;
-                healthHasBeenHit = false;
+                triggerHealthRecharge = false;
             }
             else if (healthRegenerationCountdown < 0 && !hasShield && !needsHealthPack)
             {
                 healthRegenerationAllowed = true;
-                healthHasBeenHit = false;
+                triggerHealthRecharge = false;
             }
         }
 
@@ -579,105 +546,32 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
-    void Die(bool headshot, int playerWhoKilledThisPlayer)
+    void Die()
     {
-        Debug.Log("Player Death Script Is Dead: " + isDead);
-        if (isDead)
+        if (!isDead || respawnCoroutine != null || isRespawning)
             return;
+        if(lastPlayerWhoDamagedThisPlayerPVID != 0)
+            multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID);
+        isRespawning = true;
+        Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
         PlayDeathSound();
-        isDead = true;
-        Debug.Log("Player Death Script");
-        UpdateMPPoints(playerRewiredID, playerWhoKilledThisPlayer);
-        pController.Unscope();
-        gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
-
-        pController.isShooting = false;
-
-        playerWhoKilledThisPlayerID = playerWhoKilledThisPlayer;
-
-        if (multiplayerManager != null)
-        {
-            multiplayerManager.AddToScore(playerWhoKilledThisPlayerID);
-        }
-
-        int ogThirdPersonLayer = thirdPersonGO.layer;
-
-        mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
-        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
-
-        if (playerRewiredID == 0)
-        {
-            //mainCamera.cullingMask |= (1 << 28);
-            gunCamera.cullingMask &= ~(1 << 24);
-            //Debug.Log("Player 1 Camera2");
-        }
-        else if (playerRewiredID == 1)
-        {
-            //Debug.Log("Player 2 Camera1");
-            //mainCamera.cullingMask |= (1 << 29);
-            gunCamera.cullingMask &= ~(1 << 25);
-            //Debug.Log("Player 2 Camera2");
-        }
-        else if (playerRewiredID == 2)
-        {
-            //mainCamera.cullingMask |= (1 << 30);
-            gunCamera.cullingMask &= ~(1 << 26);
-        }
-        else if (playerRewiredID == 3)
-        {
-            //mainCamera.cullingMask |= (1 << 31);
-            gunCamera.cullingMask &= ~(1 << 27);
-        }
-
-        foreach (GameObject go in hitboxes)
-        {
-            if (go != null)
-            {
-                go.layer = 23;
-                go.SetActive(false);
-
-                if (go.GetComponent<BoxCollider>() != null)
-                {
-                    go.GetComponent<BoxCollider>().enabled = false;
-                }
-
-                if (go.GetComponent<SphereCollider>() != null)
-                {
-                    go.GetComponent<SphereCollider>().enabled = false;
-                }
-
-                characterController.enabled = false;
-            }
-        }
-
-        foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
-        {
-            if (go != null)
-            {
-                go.layer = 23;
-            }
-        }
-
-        //DropAllOnDeath();
-        SpawnRagdoll();
-        //pController.PV.RPC("SpawnRagdoll", RpcTarget.All);
-
-        //var go1 = Instantiate(thirsPersonDeathGO, thirdPersonDeathSpawnPoint.transform.position, thirdPersonDeathSpawnPoint.transform.rotation);
-
-        respawnCountdown = respawnTime;
-        respawnStarted = true;
-
-        shieldAlarmAudioSource.Stop();
-        shieldAudioSource.Stop();
+        respawnCoroutine = StartCoroutine(Respawn_Coroutine());
+        StartCoroutine(MidRespawnAction());
     }
 
-    //[PunRPC]
+    IEnumerator MidRespawnAction()
+    {
+        yield return new WaitForSeconds(respawnTime / 2);
+        Health = maxHealth;
+        readHealth = Health;
+        Transform spawnPoint = spawnManager.GetGenericSpawnpoint();
+        transform.position = spawnPoint.position + new Vector3(0, 2, 0);
+        transform.rotation = spawnPoint.rotation;
+        isDead = false;
+    }
+
     void SpawnRagdoll()
     {
-        Debug.Log("Spawning ragdoll. " + isDead + hasJustRespawned);
-        if (hasJustRespawned)
-            return;
         var ragdoll = pController.objectPool.SpawnPooledPlayerRagdoll();
 
         // LAG with the Head and Chest, unknown cause
@@ -725,51 +619,62 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
         ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = ragdollScript.LowerLegRight.rotation;
 
         ragdoll.SetActive(true);
+        StartCoroutine(DespawnRagdoll(ragdoll));
     }
 
-    void RespawnCountdown()
+    IEnumerator DespawnRagdoll(GameObject ragdoll)
     {
-        if (respawnStarted)
-        {
-            respawnCountdown -= Time.deltaTime;
-        }
-
-        if (respawnCountdown <= 0)
-        {
-            if (swarmMode != null)
-            {
-                if (swarmMode.playerLives > 0)
-                {
-                    //Respawn();
-                    pController.PV.RPC("Die", RpcTarget.All);
-                    respawnStarted = false;
-                    respawnCountdown = 0;
-                }
-            }
-            else
-            {
-                //Respawn();
-                //hasJustRespawned = true;
-                pController.PV.RPC("Respawn", RpcTarget.All);
-                respawnStarted = false;
-                respawnCountdown = 0;
-            }
-        }
+        yield return new WaitForSeconds(30);
+        ragdoll.SetActive(false);
     }
 
-    [PunRPC]
+    IEnumerator Respawn_Coroutine()
+    {
+        gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
+
+        pController.isShooting = false;
+
+        mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
+        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
+
+        gunCamera.cullingMask &= ~(1 << 24);
+
+        foreach (GameObject go in hitboxes)
+            if (go != null)
+            {
+                go.layer = 23;
+                go.SetActive(false);
+
+                if (go.GetComponent<BoxCollider>() != null)
+                    go.GetComponent<BoxCollider>().enabled = false;
+
+                if (go.GetComponent<SphereCollider>() != null)
+                    go.GetComponent<SphereCollider>().enabled = false;
+
+                characterController.enabled = false;
+            }
+
+        foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
+            if (go != null)
+                go.layer = 23;
+
+        SpawnRagdoll();
+        respawnCoroutine = null;
+        Health = maxHealth;
+        yield return new WaitForSeconds(respawnTime);
+        Respawn();
+    }
+
     void Respawn()
     {
-        Debug.Log("Respawing " + isDead + hasJustRespawned);
-        if (!isDead)
+        if (!isRespawning)
             return;
-        hasJustRespawned = true;
-        isDead = false;
+        isRespawning = false;
+        respawnCoroutine = null;
 
         Health = maxHealth;
         healthSlider.value = maxHealth;
 
-        Debug.Log("Respawing " + Health + isDead + hasJustRespawned);
 
         if (hasShield)
         {
@@ -777,14 +682,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
             shieldSlider.value = maxShield;
         }
 
-        if (spawnManager)
-        {
-            Transform spawnPoint = spawnManager.GetGenericSpawnpoint();
-            Debug.Log("Spawning with generic spawn + " + spawnPoint);
 
-            transform.position = spawnPoint.position + new Vector3(0, 2, 0);
-            transform.rotation = spawnPoint.rotation;
-        }
         mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(-30, 0, 0);
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, mainOriginalCameraPosition.y, mainOriginalCameraPosition.z);
 
@@ -854,19 +752,19 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
         }
         pInventory.weaponsEquiped[1] = null;
 
-        if (multiplayerManager != null)
-        {
-            int randomSpawn = Random.Range(0, multiplayerManager.GenericSpawns.Length + 1);
+        //if (multiplayerManager != null)
+        //{
+        //    int randomSpawn = Random.Range(0, multiplayerManager.GenericSpawns.Length + 1);
 
-            Debug.Log("Number of spawns = " + multiplayerManager.GenericSpawns.Length);
-            Debug.Log("Randwom spawn is = " + multiplayerManager.GenericSpawns[randomSpawn].gameObject.name);
+        //    Debug.Log("Number of spawns = " + multiplayerManager.GenericSpawns.Length);
+        //    Debug.Log("Randwom spawn is = " + multiplayerManager.GenericSpawns[randomSpawn].gameObject.name);
 
-            gameObject.transform.position = new Vector3(multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.x,
-                multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.y + 2,
-                multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.z);
+        //    gameObject.transform.position = new Vector3(multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.x,
+        //        multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.y + 2,
+        //        multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.z);
 
-            gameObject.transform.rotation = multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.rotation;
-        }
+        //    gameObject.transform.rotation = multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.rotation;
+        //}
 
         if (swarmMode != null)
         {
@@ -907,8 +805,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
                 characterController.enabled = true;
             }
         }
-
-        StartCoroutine(ResetHasJustSpawned());
     }
 
     IEnumerator MakeThirdPersonModelVisible()
@@ -938,13 +834,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
                     else
                         go.layer = 29;
 
-    }
-
-    IEnumerator ResetHasJustSpawned()
-    {
-        yield return new WaitForSeconds(0.1f);
-        Debug.Log("Resetting HasJustSpawned " + hasJustRespawned + isDead + Health);
-        hasJustRespawned = false;
     }
 
     void SetHealthAndShieldValues()
@@ -1112,5 +1001,47 @@ public class PlayerProperties : MonoBehaviourPunCallbacks
             allPlayerScripts.playerMPProperties.UpdatePoints(playerWhoDied, playerWhoKilled);
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            //Debug.Log("Writing Health");
+            stream.SendNext(Health);
+        }
+        else
+        {
+            float newReadHealth = (float)stream.ReceiveNext();
+            //Debug.Log($"Reading Health: {readHealth}. Health: + {Health}. NEW Reading Health{newReadHealth}");// has just respawned not being counted
+            //Debug.Log(newReadHealth != readHealth);
+            //Debug.Log(Mathf.Min(newReadHealth, readHealth));
+            //Debug.Log(Health != readHealth);
+            //Debug.Log(Mathf.Min(Health, readHealth));
+            //Debug.Log(Health != readHealth + Mathf.Min(Health, readHealth));
+            //if (newReadHealth != readHealth)
+            //{
+            //    Health = Mathf.Min(newReadHealth, readHealth);
+            //    readHealth = Mathf.Min(newReadHealth, readHealth);
+            //if (PhotonNetwork.IsMasterClient)
+            //    PV.RPC("FixHealth", RpcTarget.All, Health);
+            //}
 
+
+            //UpdateHealthTextDebugger();
+        }
+    }
+
+    public void LeaveRoomWithDelay()
+    {
+        StartCoroutine(LeaveRoomWithDelay_Coroutine());
+    }
+
+    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)
+    {
+        yield return new WaitForSeconds(5);
+
+        Cursor.visible = true;
+        PhotonNetwork.LeaveRoom();
+        //SceneManager.LoadScene("Main Menu");
+        PhotonNetwork.LoadLevel(0);
+    }
 }

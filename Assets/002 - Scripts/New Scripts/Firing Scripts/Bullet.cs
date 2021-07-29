@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
     public MyPlayerManager pManager;
-    public GameObject playerWhoShot;
+    public PlayerProperties playerWhoShot;
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
     public ZombieScript zScript;
@@ -151,7 +151,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
                     if (!playerProperties.isDead)
                     {
-                        playerProperties.Damage(damage, false, 0);
+                        playerProperties.Damage(damage, false, playerWhoShot.GetComponent<PhotonView>().ViewID);
                         //if (playerProperties.Health > 0)
                         //  playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
 
@@ -160,6 +160,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         bloodHit.SetActive(true);
 
                         damageDealt = true;
+                        Debug.Log(hitMessage);
                     }
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayerSimple", RpcTarget.All, playerProperties);
                 }

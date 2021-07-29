@@ -48,10 +48,9 @@ public class CameraScript : MonoBehaviour
             //Debug.Log("LAst Controller is M&K");
         }
 
-        if (pController.playerProperties != null)
+        if (pController.playerProperties != null && !pController.pauseMenuOpen)
         {
-            if (!pController.playerProperties.isDead)
-            {
+            
                 mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
                 mouseY = player.GetAxis("Mouse Y") * mouseSensitivity * 0.5f * Time.deltaTime;
 
@@ -60,7 +59,6 @@ public class CameraScript : MonoBehaviour
 
                 transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
                 playerBody.Rotate(Vector3.up * mouseX);
-            }
         }
 
     }

@@ -62,7 +62,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!pController.PV.IsMine)
+        if (!pController.PV.IsMine || pController.pauseMenuOpen)
             return;
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);

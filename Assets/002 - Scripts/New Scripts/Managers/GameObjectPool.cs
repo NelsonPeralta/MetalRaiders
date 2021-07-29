@@ -6,6 +6,7 @@ using System.IO;
 
 public class GameObjectPool : MonoBehaviour
 {
+    public PhotonView PV;
     public static GameObjectPool gameObjectPoolInstance;
     public int amountToPool;
     public bool objectsSpawned = false;
@@ -112,5 +113,25 @@ public class GameObjectPool : MonoBehaviour
             if (!obj.activeSelf)
                 return obj;
         return null;
+    }
+
+    private void OnDestroy()
+    {
+        foreach (GameObject go in bullets)
+            Destroy(go);
+
+        foreach (GameObject go in bloodHits)
+            Destroy(go);
+
+        foreach (GameObject go in genericHits)
+            Destroy(go);
+
+        foreach (GameObject go in ragdolls)
+            Destroy(go);
+
+        foreach (GameObject go in testingObjects)
+            Destroy(go);
+
+        gameObjectPoolInstance = null;
     }
 }

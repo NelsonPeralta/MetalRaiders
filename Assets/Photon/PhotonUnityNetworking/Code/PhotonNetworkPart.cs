@@ -1003,14 +1003,15 @@ namespace Photon.Pun
                 // if some other view is in the list already, we got a problem. it might be undestructible. print out error
                 if (netView != listedView)
                 {
-                    Debug.LogError(string.Format("PhotonView ID duplicate found: {0}. New: {1} old: {2}. Maybe one wasn't destroyed on scene load?! Check for 'DontDestroyOnLoad'. Destroying old entry, adding new.", netView.ViewID, netView, listedView));
+                    //Debug.LogError(string.Format("PhotonView ID duplicate found: {0}. New: {1} old: {2}. Maybe one wasn't destroyed on scene load?! Check for 'DontDestroyOnLoad'. Destroying old entry, adding new.", netView.ViewID, netView, listedView));
+                    Debug.LogWarning(string.Format("PhotonView ID duplicate found: {0}. New: {1} old: {2}. Maybe one wasn't destroyed on scene load?! Check for 'DontDestroyOnLoad'. Destroying old entry, adding new.", netView.ViewID, netView, listedView));
                 }
                 else
                 {
                     return;
                 }
 
-                RemoveInstantiatedGO(listedView.gameObject, true);
+                //RemoveInstantiatedGO(listedView.gameObject, true);
             }
 
             // Debug.Log("adding view to known list: " + netView);

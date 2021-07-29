@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Rocket : MonoBehaviour
 {
-    public GameObject playerWhoThrewGrenade;
+    public PlayerProperties playerWhoThrewGrenade;
 
     [Header("Settings")]
     public float damage; // Determined in Weapon Properties Script
@@ -117,7 +117,8 @@ public class Rocket : MonoBehaviour
                     {
                         float calculatedDamage = damage * (1 - (playerDistance / radius));
                         Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
-                        player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
+                        //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
+                        player.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
                     }
                 }
             }
@@ -160,7 +161,7 @@ public class Rocket : MonoBehaviour
                     if (hit.GetComponent<AIHitbox>().aiHealth > 0)
                     {
                         float calculatedDamage = damage * (1 - (aiDistance / radius));
-                        hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade);
+                        hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
                     }
 
                 }

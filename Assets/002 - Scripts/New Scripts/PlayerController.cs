@@ -85,6 +85,8 @@ public class PlayerController : MonoBehaviourPun
     public int ammoRightWeaponIsMissing;
     public int ammoLeftWeaponIsMissing;
 
+    public bool pauseMenuOpen;
+
     void Awake()
     {
         PV = GetComponent<PhotonView>();
@@ -164,20 +166,25 @@ public class PlayerController : MonoBehaviourPun
         {
             if (!playerProperties.isDead)
             {
-                Shooting();
-                CheckReloadButton();
-                CheckAmmoForAutoReload();
-                Aiming();
-                //PV.RPC("Melee", RpcTarget.All);
-                Melee();
-                Crouch();
-                Grenade(); //TO DO: Spawn Grenades the same way as bullets
-                SelectFire();
-                SwitchGrenades();
-                //AutoReloadVoid();
-                HolsterAndInspect();
                 StartButton();
-                CheckDrawingWeapon();
+                BackButton();
+                
+                if (!pauseMenuOpen)
+                {
+                    Shooting();
+                    CheckReloadButton();
+                    CheckAmmoForAutoReload();
+                    Aiming();
+                    //PV.RPC("Melee", RpcTarget.All);
+                    Melee();
+                    Crouch();
+                    Grenade(); //TO DO: Spawn Grenades the same way as bullets
+                    SelectFire();
+                    SwitchGrenades();
+                    //AutoReloadVoid();
+                    HolsterAndInspect();
+                    CheckDrawingWeapon();
+                }
             }
         }
 
@@ -912,7 +919,7 @@ public class PlayerController : MonoBehaviourPun
 
             grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
 
-            grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = gameObject;
+            grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = playerProperties;
             grenade.GetComponent<FragGrenade>().playerRewiredID = playerRewiredID;
             grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
 
@@ -927,7 +934,7 @@ public class PlayerController : MonoBehaviourPun
 
             grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
 
-            grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = gameObject;
+            grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = playerProperties;
             grenade.GetComponent<StickyGrenade>().playerRewiredID = playerRewiredID;
             grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
@@ -1419,44 +1426,70 @@ IEnumerator Reload()
         if (player.GetButtonDown("Start") || player.GetButtonDown("Escape"))
         {
             Debug.Log($"Pausing game");
-            PauseGame();
+            TogglePauseGame();
         }
     }
 
-    public void PauseGame()
+    void BackButton()
     {
-        if (Time.timeScale != 0)
+        if (player.GetButtonDown("Back") || player.GetButtonUp("Back"))
         {
-            Debug.Log($"Number of player: {StaticVariables.numberOfPlayers}");
-            Time.timeScale = 0;
-            if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
-                if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
-                {
-                    Debug.Log("Pause MaK");
-                    Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
-                    allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(true);
-                }
-                else
-                    allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
-            else
-                allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
+            Debug.Log($"Back Button");
+            allPlayerScripts.scoreboardManager.ToggleScoreboard();
+        }
+    }
+
+    public void TogglePauseGame()
+    {
+        if (!pauseMenuOpen)
+        {
+            Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
+            Cursor.visible = true;
+            allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(true);
+            pauseMenuOpen = true;
         }
         else
         {
-            Time.timeScale = 1;
-            if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
-                Cursor.lockState = CursorLockMode.Locked;
-            allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked; // Must Unlock Cursor so it can detect buttons
+            Cursor.visible = false;
             allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(false);
-            allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
+            pauseMenuOpen = false;
         }
+        //if (Time.timeScale != 0)
+        //{
+        //    Debug.Log($"Number of player: {StaticVariables.numberOfPlayers}");
+        //    Time.timeScale = 0;
+        //    if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
+        //        if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
+        //        {
+        //            Debug.Log("Pause MaK");
+        //            Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
+        //            allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(true);
+        //        }
+        //        else
+        //            allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
+        //    else
+        //        allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
+        //}
+        //else
+        //{
+        //    Time.timeScale = 1;
+        //    if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
+        //        Cursor.lockState = CursorLockMode.Locked;
+        //    allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
+        //    allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(false);
+        //    allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
+        //}
     }
 
     public void ReturnToMainMenu()
     {
         //Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 1;
-        SceneManager.LoadScene("000 - Main Menu");
+        //Time.timeScale = 1;
+        //SceneManager.LoadScene("000 - Main Menu");
+
+        PhotonNetwork.LoadLevel(0);
+        PhotonNetwork.LeaveRoom();
     }
 }
 

@@ -9,10 +9,12 @@ using System.Linq;
 public class Launcher : MonoBehaviourPunCallbacks
 {
 	public static Launcher Instance; // Singleton of the Photon Launcher
+    public PhotonView PV;
 
     // SerializeField makes private variables visible in the inspector
 	[SerializeField] TMP_InputField roomNameInputField;
-	[SerializeField] TMP_Text errorText;
+	[SerializeField] TMP_InputField nicknameInputField;
+    [SerializeField] TMP_Text errorText;
 	[SerializeField] TMP_Text roomNameText;
 	[SerializeField] Transform roomListContent;
 	[SerializeField] GameObject roomListItemPrefab;
@@ -29,6 +31,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 	{
 		Debug.Log("Connecting to Master");
 		PhotonNetwork.ConnectUsingSettings();
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 	}
 
 	public override void OnConnectedToMaster()
@@ -66,20 +70,32 @@ public class Launcher : MonoBehaviourPunCallbacks
 		MenuManager.Instance.OpenMenu("room"); // Show the "room" menu
 		roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
-		Player[] players = PhotonNetwork.PlayerList;
-
-		foreach(Transform child in playerListContent)
-		{
-			Destroy(child.gameObject);
-		}
-
-		for(int i = 0; i < players.Count(); i++)
-		{
-			Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
-		}
+        UpdatePlayerList();
 
 		startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 	}
+
+    [PunRPC]
+    public void UpdatePlayerList()
+    {
+        Player[] players = PhotonNetwork.PlayerList;
+
+        foreach (Transform child in playerListContent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < players.Count(); i++)
+        {
+            Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
+        }
+    }
+
+    public void UpdateNickname()
+    {
+        PhotonNetwork.NickName = nicknameInputField.text;
+        PV.RPC("UpdatePlayerList", RpcTarget.All);
+    }
 
 	public override void OnMasterClientSwitched(Player newMasterClient)
 	{
