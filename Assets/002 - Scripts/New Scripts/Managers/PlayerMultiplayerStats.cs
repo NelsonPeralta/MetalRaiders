@@ -17,4 +17,12 @@ public class PlayerMultiplayerStats : MonoBehaviour
         PVID = pp.GetComponent<PhotonView>().ViewID;
         playerName = pp.GetComponent<PhotonView>().Owner.NickName;
     }
+
+    public PlayerMultiplayerStats(int pvid, string pName, int k, int d)
+    {
+        PVID = pvid;
+        playerName = pName;
+        kills = k;
+        deaths = d;
+    }
 }

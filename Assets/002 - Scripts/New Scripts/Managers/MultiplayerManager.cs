@@ -71,7 +71,7 @@ public class MultiplayerManager : MonoBehaviour
             playerWhoWasKilledMS.deaths++;
 
             foreach (PlayerProperties pp in playerManager.allPlayers)
-                if (pp.PV.IsMine)
+                if (pp.PV.IsMine && pp)
                     pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKillMS.playerName, playerWhoWasKilledMS.playerName);
 
             UpdateAllPlayerScores();
@@ -82,11 +82,18 @@ public class MultiplayerManager : MonoBehaviour
 
     PlayerMultiplayerStats FindPlayerWithPhotonViewId(int pvid)
     {
+
         for (int i = 0; i < playerMultiplayerStats.Count; i++)
         {
-            Debug.Log(playerMultiplayerStats[i].playerName + "" + playerMultiplayerStats[i].PVID);
+            Debug.Log(playerMultiplayerStats[i].playerName + "; " + playerMultiplayerStats[i].PVID + "; " + pvid);
             if (playerMultiplayerStats[i].PVID == pvid)
                 return playerMultiplayerStats[i];
+        }
+
+        if (pvid == 99)
+        {
+            Debug.Log("No PMS");
+            return new PlayerMultiplayerStats(99, "Guardians", 0, 0);
         }
 
         return null;
