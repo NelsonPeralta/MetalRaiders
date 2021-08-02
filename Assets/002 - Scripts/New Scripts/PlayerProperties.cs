@@ -22,7 +22,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public int maxHealth;
     public int maxShield;
     public float Health;
-    public float readHealth;
     public float Shield;
     public float meleeDamage; // default: 150
     public bool isDead;
@@ -31,11 +30,16 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public float respawnTime = 5;
     public int playerRewiredID;
     public int lastPlayerWhoDamagedThisPlayerPVID; // Revenge Medal
-
     public bool hasShield = false;
     public bool needsHealthPack = false;
     public bool needsShieldPack = false;
     public bool hasMotionTracker = false;
+
+    [Header("Networked Variables")]
+    public float networkedHealth;
+    public Vector3 networkedPosition;
+    public Vector3 lagDistance;
+    public float lagDistanceMagnitude;
 
     [Header("Other Scripts")]
     public PlayerInventory pInventory;
@@ -139,7 +143,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public void UpdateHealthTextDebugger()
     {
         HealthDebuggerText.text = Health.ToString();
-        readHealthDebuggerText.text = readHealth.ToString();
+        readHealthDebuggerText.text = networkedHealth.ToString();
     }
 
     private void Start()
@@ -154,7 +158,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         activeSensitivity = defaultSensitivity;
         Health = maxHealth;
         HealthDebuggerText.text = $"Health: {Health.ToString()}";
-        readHealth = Health;
+        networkedHealth = Health;
         healthSlider.maxValue = maxHealth;
         healthSlider.value = maxHealth;
 
@@ -220,8 +224,24 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
+    private void Update()
+    {
+        UpdateLagDistance();
+    }
 
+    void UpdateLagDistance()
+    {
+        if (PV.IsMine)
+            return;
+        lagDistance = networkedPosition - transform.position;
+        lagDistanceMagnitude = lagDistance.magnitude;
 
+        //if(lagDistance.magnitude > 0.001f)
+        //{
+        //    transform.position = networkedPosition;
+        //    lagDistance = Vector3.zero;
+        //}
+    }
     private void FixedUpdate()
     {
         fragGrenadeText.text = pInventory.grenades.ToString();
@@ -360,9 +380,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, playerWhoShotThisPlayerPhotonId);
+            PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, playerWhoShotThisPlayerPhotonId);
+        //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
+        //if (!PhotonNetwork.IsMasterClient)
+        //    return;
 
     }
 
@@ -553,7 +574,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!isDead || respawnCoroutine != null || isRespawning)
             return;
-        if(lastPlayerWhoDamagedThisPlayerPVID != 0)
+        if (lastPlayerWhoDamagedThisPlayerPVID != 0)
             multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID);
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
@@ -566,7 +587,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(respawnTime / 2);
         Health = maxHealth;
-        readHealth = Health;
+        networkedHealth = Health;
         Transform spawnPoint = spawnManager.GetGenericSpawnpoint();
         transform.position = spawnPoint.position + new Vector3(0, 2, 0);
         transform.rotation = spawnPoint.rotation;
@@ -1012,23 +1033,20 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             //Debug.Log("Writing Health");
-            stream.SendNext(Health);
+                stream.SendNext(Health);
+            stream.SendNext(transform.position);
         }
         else
         {
-            float newReadHealth = (float)stream.ReceiveNext();
-            //Debug.Log($"Reading Health: {readHealth}. Health: + {Health}. NEW Reading Health{newReadHealth}");// has just respawned not being counted
-            //Debug.Log(newReadHealth != readHealth);
-            //Debug.Log(Mathf.Min(newReadHealth, readHealth));
-            //Debug.Log(Health != readHealth);
-            //Debug.Log(Mathf.Min(Health, readHealth));
-            //Debug.Log(Health != readHealth + Mathf.Min(Health, readHealth));
+            networkedHealth = (float)stream.ReceiveNext();
+            networkedPosition = (Vector3)stream.ReceiveNext();
+            //Debug.Log($"Reading Health: {readHealth}. Health: + {Health}. NEW Reading Health{readHealth}");// has just respawned not being counted
             //if (newReadHealth != readHealth)
             //{
             //    Health = Mathf.Min(newReadHealth, readHealth);
             //    readHealth = Mathf.Min(newReadHealth, readHealth);
-            //if (PhotonNetwork.IsMasterClient)
-            //    PV.RPC("FixHealth", RpcTarget.All, Health);
+            //    if (PhotonNetwork.IsMasterClient)
+            //        PV.RPC("FixHealth", RpcTarget.All, Health);
             //}
 
 

@@ -34,6 +34,7 @@ public class MultiplayerManager : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 100;
         playerManager = PlayerManager.playerManagerInstance;
         StartCoroutine(CreateMultiplayerStatList());
     }

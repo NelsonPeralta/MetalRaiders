@@ -151,16 +151,24 @@ public class Bullet : MonoBehaviourPunCallbacks
                     PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
                     if (!playerProperties.isDead)
                     {
-                        playerProperties.Damage(damage, false, playerWhoShot.GetComponent<PhotonView>().ViewID);
-                        //if (playerProperties.Health > 0)
-                        //  playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
+                        Debug.Log($"Player Who shot is Mine: {playerWhoShot.PV.IsMine}");
+                        if (playerWhoShot.PV.IsMine)
+                        {
+                            playerProperties.Damage(damage, false, playerWhoShot.GetComponent<PhotonView>().ViewID);
+                            //if (playerProperties.Health > 0)
+                            //  playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
 
-                        GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
-                        bloodHit.transform.position = hits[i].point;
-                        bloodHit.SetActive(true);
+                            GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
+                            bloodHit.transform.position = hits[i].point;
+                            bloodHit.SetActive(true);
 
-                        damageDealt = true;
-                        Debug.Log(hitMessage);
+                            damageDealt = true;
+                            Debug.Log(hitMessage);
+                        }
+                        else
+                        {
+                            gameObject.SetActive(false);
+                        }
                     }
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayerSimple", RpcTarget.All, playerProperties);
                 }

@@ -15,6 +15,7 @@ public class Movement : MonoBehaviour
     public ThirdPersonLookAt tpLookAt;
     public PlayerProperties pProperties;
     public PlayerSFXs sfx;
+    public GroundCheck groundCheckScript;
     public float defaultSpeed = 5f;
     public float speed;
     public float playerSpeed;
@@ -65,7 +66,8 @@ public class Movement : MonoBehaviour
         if (!pController.PV.IsMine || pController.pauseMenuOpen)
             return;
 
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = groundCheckScript.isGrounded;
         float x = player.GetAxis("Move Horizontal");
         float z = player.GetAxis("Move Vertical");
         Vector3 direction = new Vector3(x, 0f, z).normalized;
