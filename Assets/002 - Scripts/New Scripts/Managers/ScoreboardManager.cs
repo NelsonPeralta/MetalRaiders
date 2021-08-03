@@ -27,7 +27,7 @@ public class ScoreboardManager : MonoBehaviour
         multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
     }
 
-    public void ToggleScoreboard()
+    public void OpenScoreboard()
     {
         UpdateScoreboard();
         if (!scoreboardOpen)
@@ -35,11 +35,12 @@ public class ScoreboardManager : MonoBehaviour
             scoreboardUIGO.SetActive(true);
             scoreboardOpen = true;
         }
-        else
-        {
-            scoreboardUIGO.SetActive(false);
-            scoreboardOpen = false;
-        }
+    }
+
+    public void CloseScoreboard()
+    {
+        scoreboardUIGO.SetActive(false);
+        scoreboardOpen = false;
     }
 
     public void UpdateScoreboard()

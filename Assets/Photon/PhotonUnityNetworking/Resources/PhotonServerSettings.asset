@@ -74,6 +74,8 @@ MonoBehaviour:
   - Damage_RPC
   - FixHealth
   - UpdatePlayerList
+  - DisableThisBullet
+  - DiableBullet_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

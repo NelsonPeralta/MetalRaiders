@@ -180,7 +180,8 @@ public class StickyGrenade : MonoBehaviour
                     {
                         float calculatedDamage = damage * (1 - (playerDistance / radius));
                         //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                        player.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
+                        if (playerWhoThrewGrenade.PV.IsMine)
+                            player.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
                     }
                 }
             }
@@ -226,7 +227,8 @@ public class StickyGrenade : MonoBehaviour
                         Debug.Log(hit.GetComponent<AIHitbox>().aiGO.name);
                         Debug.Log(calculatedDamage);
                         Debug.Log(aiDistance);
-                        hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
+                        if (playerWhoThrewGrenade.PV.IsMine)
+                            hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
                     }
                 }
             }

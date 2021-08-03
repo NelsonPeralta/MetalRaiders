@@ -167,7 +167,8 @@ public class Bullet : MonoBehaviourPunCallbacks
                         }
                         else
                         {
-                            gameObject.SetActive(false);
+                            if (playerWhoShot.PV.IsMine)
+                                playerWhoShot.DisableBullet(gameObject);
                         }
                     }
                     //allPlayerScripts.playerController.PV.RPC("DamagePlayerSimple", RpcTarget.All, playerProperties);
@@ -183,11 +184,18 @@ public class Bullet : MonoBehaviourPunCallbacks
                     genericHit.SetActive(true);
                 }
                 //Debug.Log(hitMessage);
-                gameObject.SetActive(false);
+                if (playerWhoShot.PV.IsMine)
+                    playerWhoShot.DisableBullet(gameObject);
             }
         }
 
         Debug.DrawLine(transform.position, prePos);
+    }
+
+    [PunRPC]
+    void DisableThisBullet()
+    {
+        gameObject.SetActive(false);
     }
 
     [PunRPC]

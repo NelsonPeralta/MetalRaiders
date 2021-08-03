@@ -13,6 +13,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public AllPlayerScripts allPlayerScripts;
     public PlayerManager playerManager;
     public MultiplayerManager multiplayerManager;
+    public GameObjectPool gameObjectPool;
 
     [Header("Models")]
     public GameObject firstPersonModels;
@@ -151,6 +152,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         spawnManager = SpawnManager.spawnManagerInstance;
         playerManager = PlayerManager.playerManagerInstance;
         multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
+        gameObjectPool = GameObjectPool.gameObjectPoolInstance;
         playerManager.allPlayers.Add(this);
         PV = GetComponent<PhotonView>();
         //PhotonNetwork.SendRate = 100;
@@ -579,6 +581,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
         PlayDeathSound();
+        allPlayerScripts.playerUIComponents.scoreboard.CloseScoreboard();
         respawnCoroutine = StartCoroutine(Respawn_Coroutine());
         StartCoroutine(MidRespawnAction());
     }
@@ -1067,5 +1070,18 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         PhotonNetwork.LeaveRoom();
         //SceneManager.LoadScene("Main Menu");
         PhotonNetwork.LoadLevel(0);
+    }
+
+    public void DisableBullet(GameObject bulletGO)
+    {
+        for(int i = 0; i < gameObjectPool.bullets.Count; i++)
+            if(bulletGO == gameObjectPool.bullets[i])
+                PV.RPC("DiableBullet_RPC", RpcTarget.All, i);
+    }
+
+    [PunRPC]
+    void DiableBullet_RPC(int index)
+    {
+        gameObjectPool.bullets[index].SetActive(false);
     }
 }

@@ -27,6 +27,7 @@ public class PlayerUIComponents : MonoBehaviour
 
     [Header("Center", order = 4)]
     public Transform center;
+    public ScoreboardManager scoreboard;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;

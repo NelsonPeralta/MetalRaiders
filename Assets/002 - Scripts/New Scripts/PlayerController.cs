@@ -1432,10 +1432,12 @@ IEnumerator Reload()
 
     void BackButton()
     {
-        if (player.GetButtonDown("Back") || player.GetButtonUp("Back"))
+        if (player.GetButtonDown("Back"))
         {
-            Debug.Log($"Back Button");
-            allPlayerScripts.scoreboardManager.ToggleScoreboard();
+            allPlayerScripts.scoreboardManager.OpenScoreboard();
+        }else if (player.GetButtonUp("Back"))
+        {
+            allPlayerScripts.scoreboardManager.CloseScoreboard();
         }
     }
 

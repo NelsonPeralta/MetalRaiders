@@ -113,7 +113,8 @@ public class FragGrenade : MonoBehaviour
                     if (!player.GetComponent<PlayerProperties>().isDead)
                     {
                         float calculatedDamage = damage * (1 - (playerDistance / radius));
-                        player.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
+                        if(playerWhoThrewGrenade.PV.IsMine)
+                            player.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
                         //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     }
                 }
@@ -160,7 +161,8 @@ public class FragGrenade : MonoBehaviour
                         Debug.Log(hit.GetComponent<AIHitbox>().aiGO.name);
                         Debug.Log(calculatedDamage);
                         Debug.Log(aiDistance);
-                        hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
+                        if (playerWhoThrewGrenade.PV.IsMine)
+                            hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
                     }
                 }
             }

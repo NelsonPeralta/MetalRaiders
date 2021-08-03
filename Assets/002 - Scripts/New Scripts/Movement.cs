@@ -5,6 +5,7 @@ using Rewired;
 
 public class Movement : MonoBehaviour
 {
+    public AllPlayerScripts allPlayerScripts;
     public CharacterController cController;
     public Rigidbody rBody;
     public PlayerController pController;

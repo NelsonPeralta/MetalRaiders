@@ -51,7 +51,8 @@ public class GeneralWeapProperties : MonoBehaviour
     public GameObject burstFireUIGO;
     public GameObject automaticFireUIGO;
 
-
+    [Header("Bullets Shot by this player")]
+    public List<Bullet> bulletsShotByplayer = new List<Bullet>();
 
     void Start()
     {
