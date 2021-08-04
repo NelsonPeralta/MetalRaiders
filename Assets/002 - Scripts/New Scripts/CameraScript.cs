@@ -44,7 +44,10 @@ public class CameraScript : MonoBehaviour
             mouseSensitivity = pProperties.activeSensitivity;
         else
         {
-            mouseSensitivity = pProperties.activeSensitivity / 25;
+            if(!pController.isAiming)
+                mouseSensitivity = pProperties.activeSensitivity / 25;
+            else
+                mouseSensitivity = pProperties.activeSensitivity / 100;
             //Debug.Log("LAst Controller is M&K");
         }
 

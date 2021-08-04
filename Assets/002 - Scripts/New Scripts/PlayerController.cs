@@ -164,7 +164,7 @@ public class PlayerController : MonoBehaviourPun
         UpdateWeaponPropertiesAndAnimator();
         if (playerProperties != null)
         {
-            if (!playerProperties.isDead)
+            if (!playerProperties.isDead && !playerProperties.isRespawning)
             {
                 StartButton();
                 BackButton();
