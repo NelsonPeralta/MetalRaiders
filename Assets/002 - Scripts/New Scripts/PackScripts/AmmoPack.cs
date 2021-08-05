@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 using TMPro;
+using Photon.Pun;
 
 public class AmmoPack : MonoBehaviour
 {
+    public PhotonView PV;
+
     [Header("Single")]
     public WeaponPool weaponPool;
     public OnlineGameTime onlineGameTime;
@@ -31,69 +34,25 @@ public class AmmoPack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Ammo Pack Collided With: " + other);
-        if (other.GetComponent<PlayerProperties>() && ammoInThisPack > 0)
-        {
-            playerProperties = other.GetComponent<PlayerProperties>();
-            PlayerInventory pInventory = other.GetComponent<PlayerProperties>().pInventory;
-            AudioSource aSource = other.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
 
-            int ammoToRemoveFromThisPack = 0;
-            if (ammoType == "small")
-                ammoToRemoveFromThisPack = pInventory.maxSmallAmmo - pInventory.smallAmmo;
-            else if (ammoType == "heavy")
-                ammoToRemoveFromThisPack = pInventory.maxHeavyAmmo - pInventory.heavyAmmo;
-            else if (ammoType == "power")
-                ammoToRemoveFromThisPack = pInventory.maxPowerAmmo - pInventory.powerAmmo;
-            else if (ammoType == "grenade")
-                ammoToRemoveFromThisPack = pInventory.maxGrenades - pInventory.grenades;
-
-            if (ammoToRemoveFromThisPack > 0 && playerProperties.PV.IsMine)
-                aSource.Play();
-            else
-                return;
-
-            if (ammoInThisPack <= ammoToRemoveFromThisPack)
-                ammoToRemoveFromThisPack = ammoInThisPack;
-
-            if (ammoType == "small")
-                pInventory.smallAmmo += ammoToRemoveFromThisPack;
-            else if (ammoType == "heavy")
-                pInventory.heavyAmmo += ammoToRemoveFromThisPack;
-            else if (ammoType == "power")
-                pInventory.powerAmmo += ammoToRemoveFromThisPack;
-            else if (ammoType == "grenade")
-                pInventory.grenades += ammoToRemoveFromThisPack;
-
-            ammoInThisPack -= ammoToRemoveFromThisPack;
-            ammoText.text = ammoInThisPack.ToString();
-
-                DisableAmmoPack();
-        }
     }
 
     public void EnablePack()
     {
-        for (int i = 0; i < weaponPool.allAmmoPacks.Count; i++)
-            if (weaponPool.allAmmoPacks[i] == gameObject)
-            {
-
-                AmmoPack correspondingAmmoPackInPool = weaponPool.allAmmoPacks[i].GetComponent<AmmoPack>();
-                correspondingAmmoPackInPool.ammoInThisPack = defaultAmmo;
-                correspondingAmmoPackInPool.UpdateAmmoText();
-                correspondingAmmoPackInPool.gameObject.SetActive(true);
-            }
+        ammoInThisPack = defaultAmmo;
+        UpdateAmmoText();
+        gameObject.SetActive(true);
     }
 
     void DisableAmmoPack()
     {
-        for(int i = 0; i < weaponPool.allAmmoPacks.Count; i++)
-            if(weaponPool.allAmmoPacks[i] == gameObject)
+        Debug.Log("Disabling ammo pack. Weapon pool: " + WeaponPool.weaponPoolInstance);
+        if (!weaponPool)
+            weaponPool = WeaponPool.weaponPoolInstance;
+        for (int i = 0; i < weaponPool.allAmmoPacks.Count; i++)
+            if (weaponPool.allAmmoPacks[i] == gameObject)
             {
-                AmmoPack correspondingAmmoPackInPool = weaponPool.allAmmoPacks[i].GetComponent<AmmoPack>();
-                //if (spawnPoint)
-                //    spawnPoint.StartRespawn();
-                //correspondingAmmoPackInPool.gameObject.SetActive(false);
+                Debug.Log($"Disabling Ammo Pack: {i}");
                 playerProperties.allPlayerScripts.weaponPickUp.DisableAmmoPackWithRPC(i);
             }
     }
@@ -107,5 +66,11 @@ public class AmmoPack : MonoBehaviour
     void UpdateAmmoText()
     {
         ammoText.text = ammoInThisPack.ToString();
+    }
+
+    public void StartRespawn()
+    {
+        spawnPoint.StartRespawn();
+        gameObject.SetActive(false);
     }
 }

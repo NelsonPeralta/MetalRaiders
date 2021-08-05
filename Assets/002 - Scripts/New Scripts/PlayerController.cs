@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (hasFoundComponents == false)
         {
-            objectPool = GameObject.FindGameObjectWithTag("ObjectPool").GetComponent<GameObjectPool>();
+            objectPool = GameObjectPool.gameObjectPoolInstance;
             SetPlayerIDInInput();
             StartCoroutine(FindComponents());
             ReferenceCameraToSpherecast();
@@ -448,19 +448,25 @@ public class PlayerController : MonoBehaviourPun
     void Crouch()
     {
         if (player.GetButtonDown("Crouch"))
-        {
-            Debug.Log("Crouching");
-            movement.tPersonScripts.anim.SetBool("Jump", false);
-            movement.tPersonScripts.anim.SetBool("Crouch", true);
-            isCrouching = true;
-            mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);
-        }
+            EnableCrouch();
         else if (player.GetButtonUp("Crouch"))
-        {
-            movement.tPersonScripts.anim.SetBool("Crouch", false);
-            isCrouching = false;
-            mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);
-        }
+            DisableCrouch();
+    }
+
+    void EnableCrouch()
+    {
+        Debug.Log("Crouching");
+        movement.tPersonScripts.anim.SetBool("Jump", false);
+        movement.tPersonScripts.anim.SetBool("Crouch", true);
+        isCrouching = true;
+        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);
+    }
+
+    public void DisableCrouch()
+    {
+        movement.tPersonScripts.anim.SetBool("Crouch", false);
+        isCrouching = false;
+        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);
     }
 
     void Grenade()
@@ -916,6 +922,9 @@ public class PlayerController : MonoBehaviourPun
             var grenade = Instantiate(pInventory.grenadePrefab,
                 gwProperties.grenadeSpawnPoint.transform.position,
                 gwProperties.grenadeSpawnPoint.transform.rotation);
+
+            foreach (GameObject hb in playerProperties.hitboxes)
+                Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
 
             grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
 

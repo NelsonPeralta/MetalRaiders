@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
+using System.Collections;
 
 public class WeaponPool : MonoBehaviourPun
 {
@@ -19,6 +20,7 @@ public class WeaponPool : MonoBehaviourPun
     public List<GameObject> weaponPrefabs = new List<GameObject>();
 
     [Header("Ammo")]
+    public List<OnlineAmmoPackSpawnPoint> allAmmoPackSpawnPoints = new List<OnlineAmmoPackSpawnPoint>();
     public List<GameObject> allAmmoPacks = new List<GameObject>();
     public List<GameObject> ammoPackPrefabs = new List<GameObject>();
 
@@ -52,6 +54,7 @@ public class WeaponPool : MonoBehaviourPun
         for (int i = 0; i < ammoPackPrefabs.Count; i++)
             for (int j = 0; j < amountToPool; j++)
             {
+                //GameObject newAmmoPack = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AmmoPacks", ammoPackPrefabs[i].name), new Vector3(0 - 100, 0), Quaternion.identity);
                 GameObject newAmmoPack = Instantiate(ammoPackPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
                 newAmmoPack.GetComponent<AmmoPack>().weaponPool = this;
                 newAmmoPack.SetActive(false);
@@ -60,6 +63,11 @@ public class WeaponPool : MonoBehaviourPun
 
                 //int spawnTime = newAmmoPack.GetComponent<AmmoPack>().spawnTime;
             }
+
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("ammo_pack_spawn_point"))
+            allAmmoPackSpawnPoints.Add(go.GetComponent<OnlineAmmoPackSpawnPoint>());
+
+        //StartCoroutine(GiveAmmoPackSpawnPointAnAmmoPack());
     }
 
     public GameObject GetWeaponFromList(string weaponName)
@@ -104,8 +112,54 @@ public class WeaponPool : MonoBehaviourPun
         return null;
     }
 
+    public GameObject GetAmmoPackWithPhotonId(int photonId)
+    {
+        for (int i = 0; i < allAmmoPacks.Count; i++)
+        {
+            if (allAmmoPacks[i].GetComponent<PhotonView>().ViewID == photonId)
+                return allAmmoPacks[i];
+        }
+        return null;
+    }
+
     private void OnDestroy()
     {
         weaponPoolInstance = null;
+    }
+
+    IEnumerator GiveAmmoPackSpawnPointAnAmmoPack()
+    {
+        yield return new WaitForSeconds(3);
+        for (int i = 0; i < allAmmoPackSpawnPoints.Count; i++)
+        {
+            string ammoType = allAmmoPackSpawnPoints[i].ammoType;
+            int ammoPackPhotonId = 0;
+            int ammoPackIndex = 99;
+
+            for (int j = 0; j < allAmmoPacks.Count; j++)
+                if (allAmmoPacks[j].GetComponent<AmmoPack>().ammoType == ammoType && !allAmmoPacks[j].GetComponent<AmmoPack>().spawnPoint && !allAmmoPackSpawnPoints[i].ammoPack)
+                {
+                    allAmmoPacks[j].GetComponent<AmmoPack>().spawnPoint = allAmmoPackSpawnPoints[i];
+                    ammoPackPhotonId = allAmmoPacks[j].GetComponent<PhotonView>().ViewID;
+                    ammoPackIndex = j;
+                }
+
+            if (PhotonNetwork.IsMasterClient)
+                PV.RPC("GiveAmmoPackSpawnPointAnAmmoPack_RPC", RpcTarget.All, allAmmoPackSpawnPoints[i].transform.position, ammoPackIndex);
+        }
+    }
+
+    [PunRPC]
+    void GiveAmmoPackSpawnPointAnAmmoPack_RPC(Vector3 spawnPointPosition, int ammoPackIndex)
+    {
+        AmmoPack ap = allAmmoPacks[ammoPackIndex].GetComponent<AmmoPack>();
+        for (int i = 0; i < allAmmoPackSpawnPoints.Count; i++)
+        {
+            if (allAmmoPackSpawnPoints[i].transform.position == spawnPointPosition)
+                allAmmoPackSpawnPoints[i].ammoPack = ap;
+
+            ap.gameObject.SetActive(true);
+            ap.transform.position = spawnPointPosition;
+        }
     }
 }

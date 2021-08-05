@@ -570,6 +570,9 @@ public class WeaponPickUp : MonoBehaviourPun
 
     public void DisableAmmoPackWithRPC(int index)
     {
+        if (!PV.IsMine)
+            return;
+        Debug.Log("Disabling Ammo Pack");
         PV.RPC("DespawnAmmoPack_RPC", RpcTarget.All, index);
     }
 

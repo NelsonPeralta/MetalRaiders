@@ -4,36 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Pickable
-  - Grenade Spawn Point
-  - Crosshairs
-  - Muzzleflash Light
-  - Casing Spawn Point
-  - Weapon Binder
-  - Attachment
-  - Scope BG
-  - Ammo Pickup Sound
-  - Weapon Sounds
-  - SFX
-  - Grenade Pickup Sound
-  - Player Informer
-  - Components
-  - Total Ammo Text
-  - Pickup Collider
-  - Current Ammo Text
-  - Shooting Scripts
-  - Player Manager
-  - Spawn Point
-  - Weapon
-  - Player Camera
-  - Player Inventory
-  - Spark Particles
-  - Muzzleflash Particles
-  - Bullet Renderer
-  - Bullet Spawn Point
-  - ObjectPool
-  - Spawn Manager
-  - Scene Manager
+  - ammo_pack_spawn_point
   layers:
   - Default
   - TransparentFX

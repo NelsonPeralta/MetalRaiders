@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7379173688729605431}
   m_Layer: 0
   m_Name: Online Grenade Ammo Pack Spawn Point
-  m_TagString: Untagged
+  m_TagString: ammo_pack_spawn_point
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e07e980db0b66d4ea1fbcec10f1fe21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PV: {fileID: 0}
   weaponPool: {fileID: 0}
   onlineGameTime: {fileID: 0}
   ammoType: grenade

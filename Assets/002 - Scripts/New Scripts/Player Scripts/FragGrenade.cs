@@ -41,6 +41,7 @@ public class FragGrenade : MonoBehaviour
     {
         if (collision.gameObject.layer != 22 && !hasHitObject) // Non-Interactable Layer
         {
+            Debug.Log($"Grenade Collided with: {collision.gameObject.name}");
             Debug.Log(GetComponent<Rigidbody>().velocity);
             StartCoroutine(ExplosionCountdown());
             PlaySound(impactSound);

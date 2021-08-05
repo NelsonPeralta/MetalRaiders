@@ -19969,7 +19969,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!114 &6315304384730974867
 MonoBehaviour:
@@ -19983,6 +19983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e77e572154c53a49a5832a4f84b9acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PV: {fileID: 0}
   weaponPool: {fileID: 0}
   onlineGameTime: {fileID: 0}
   ammoType: power
@@ -20161,8 +20162,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 2
-  m_fontSizeBase: 2
+  m_fontSize: 3
+  m_fontSizeBase: 3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

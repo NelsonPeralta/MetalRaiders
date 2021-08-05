@@ -76,6 +76,9 @@ MonoBehaviour:
   - UpdatePlayerList
   - DisableThisBullet
   - DiableBullet_RPC
+  - DisableAmmoPack
+  - SpawnAmmoPackWithPhotonId_RPC
+  - GiveAmmoPackSpawnPointAnAmmoPack_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

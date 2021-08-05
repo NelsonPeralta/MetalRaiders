@@ -9,7 +9,7 @@ public class BushEnteringNoise : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (audioSource.isPlaying)
+        if (!other.transform.root.GetComponent<PlayerProperties>() || audioSource.isPlaying)
             return;
         audioSource.clip = bushEnteringClip;
         audioSource.Play();

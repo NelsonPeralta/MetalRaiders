@@ -14,6 +14,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public PlayerManager playerManager;
     public MultiplayerManager multiplayerManager;
     public GameObjectPool gameObjectPool;
+    public WeaponPool weaponPool;
 
     [Header("Models")]
     public GameObject firstPersonModels;
@@ -153,6 +154,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         playerManager = PlayerManager.playerManagerInstance;
         multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
+        weaponPool = WeaponPool.weaponPoolInstance;
         playerManager.allPlayers.Add(this);
         PV = GetComponent<PhotonView>();
         //PhotonNetwork.SendRate = 100;
@@ -580,6 +582,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID);
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
+        pController.DisableCrouch();
         PlayDeathSound();
         allPlayerScripts.playerUIComponents.scoreboard.CloseScoreboard();
         respawnCoroutine = StartCoroutine(Respawn_Coroutine());
@@ -1015,7 +1018,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             {
                 if (cScript.RRisActive)
                 {
-                    activeSensitivity = defaultSensitivity / 5;
+                    activeSensitivity = defaultSensitivity / 10;
                 }
                 else
                 {
