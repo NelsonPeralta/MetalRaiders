@@ -168,7 +168,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 StartButton();
                 BackButton();
-                
+
                 if (!pauseMenuOpen)
                 {
                     Shooting();
@@ -917,36 +917,33 @@ public class PlayerController : MonoBehaviourPun
         yield return new WaitForSeconds(pInventory.grenadeSpawnDelay);
         //Spawn grenade prefab at spawnpoint
 
+        var grenade = Instantiate(pInventory.grenadePrefab);
+        Destroy(grenade.gameObject);
+
         if (fragGrenadesActive)
         {
-            var grenade = Instantiate(pInventory.grenadePrefab,
-                gwProperties.grenadeSpawnPoint.transform.position,
-                gwProperties.grenadeSpawnPoint.transform.rotation);
-
-            foreach (GameObject hb in playerProperties.hitboxes)
-                Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
-
-            grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
-
+            grenade = Instantiate(pInventory.grenadePrefab,
+               gwProperties.grenadeSpawnPoint.transform.position,
+               gwProperties.grenadeSpawnPoint.transform.rotation);
             grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = playerProperties;
             grenade.GetComponent<FragGrenade>().playerRewiredID = playerRewiredID;
             grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
-
-            Destroy(grenade, 10);
         }
-
-        if (stickyGrenadesActive)
+        else if (stickyGrenadesActive)
         {
-            var grenade = Instantiate(pInventory.stickyGrenadePrefab,
-                gwProperties.grenadeSpawnPoint.transform.position,
-                gwProperties.grenadeSpawnPoint.transform.rotation);
-
-            grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
-
+            grenade = Instantiate(pInventory.stickyGrenadePrefab,
+               gwProperties.grenadeSpawnPoint.transform.position,
+               gwProperties.grenadeSpawnPoint.transform.rotation);
             grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = playerProperties;
             grenade.GetComponent<StickyGrenade>().playerRewiredID = playerRewiredID;
             grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
+
+        foreach (GameObject hb in playerProperties.hitboxes)
+            Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+
+        grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
+        Destroy(grenade.gameObject, 10);
     }
 
     //Reload
@@ -1444,7 +1441,8 @@ IEnumerator Reload()
         if (player.GetButtonDown("Back"))
         {
             allPlayerScripts.scoreboardManager.OpenScoreboard();
-        }else if (player.GetButtonUp("Back"))
+        }
+        else if (player.GetButtonUp("Back"))
         {
             allPlayerScripts.scoreboardManager.CloseScoreboard();
         }

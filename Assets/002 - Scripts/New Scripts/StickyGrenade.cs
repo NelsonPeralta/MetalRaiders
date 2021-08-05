@@ -79,7 +79,7 @@ public class StickyGrenade : MonoBehaviour
             else
             {
                 if (collision.gameObject.GetComponent<PlayerController>() == null
-                    && collision.gameObject.layer != 22)
+                    && collision.gameObject.layer != 22 && collision.transform.root.gameObject != playerWhoThrewGrenade.gameObject)
                 {
                     Debug.Log("Collision = " + collision.gameObject.name + " GO Layer: " + collision.gameObject.layer
                         + " Root GO : " + collision.gameObject.transform.root.gameObject.name);

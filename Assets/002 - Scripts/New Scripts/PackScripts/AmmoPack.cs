@@ -44,19 +44,6 @@ public class AmmoPack : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    void DisableAmmoPack()
-    {
-        Debug.Log("Disabling ammo pack. Weapon pool: " + WeaponPool.weaponPoolInstance);
-        if (!weaponPool)
-            weaponPool = WeaponPool.weaponPoolInstance;
-        for (int i = 0; i < weaponPool.allAmmoPacks.Count; i++)
-            if (weaponPool.allAmmoPacks[i] == gameObject)
-            {
-                Debug.Log($"Disabling Ammo Pack: {i}");
-                playerProperties.allPlayerScripts.weaponPickUp.DisableAmmoPackWithRPC(i);
-            }
-    }
-
     int RandomAmmo()
     {
         int ranAmmo = (int)Mathf.Floor(Random.Range(1, (defaultAmmo * 0.8f)));
@@ -66,11 +53,5 @@ public class AmmoPack : MonoBehaviour
     void UpdateAmmoText()
     {
         ammoText.text = ammoInThisPack.ToString();
-    }
-
-    public void StartRespawn()
-    {
-        spawnPoint.StartRespawn();
-        gameObject.SetActive(false);
     }
 }
