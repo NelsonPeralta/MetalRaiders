@@ -43,6 +43,7 @@ public class GeneralWeapProperties : MonoBehaviour
 
     [Header("Spawnpoints")]
     public Transform casingSpawnPoint;
+    public Vector3 defaultBulletSpawnPoint;
     public Transform bulletSpawnPoint;
     public Transform grenadeSpawnPoint;
 
@@ -56,7 +57,7 @@ public class GeneralWeapProperties : MonoBehaviour
 
     void Start()
     {
-
+        defaultBulletSpawnPoint = bulletSpawnPoint.localPosition;
         if(hasFoundComponents == false)
         {
             cManager = GetComponent<ChildManager>();
