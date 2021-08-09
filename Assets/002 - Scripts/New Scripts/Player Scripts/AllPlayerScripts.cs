@@ -18,6 +18,7 @@ public class AllPlayerScripts : MonoBehaviour
     public WaveCounter waveCounter;
     public ScoreboardManager scoreboardManager;
     public KillFeedManager killFeedManager;
+    public DamageIndicatorManager damageIndicatorManager;
     [Header("Sounds")]
     public PlayerSFXs playerSFXs;
     public Announcer announcer;

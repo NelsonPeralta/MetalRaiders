@@ -383,7 +383,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-            PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
+        PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
         //if (!PhotonNetwork.IsMasterClient)
         //    return;
@@ -393,6 +393,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Damage_RPC(float newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId)
     {
+        allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
         lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
         Health = newHealth;
         healthSlider.value = Health;
@@ -575,7 +576,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    void Die(bool wasHeadshot) 
+    void Die(bool wasHeadshot)
     {
         if (!isDead || respawnCoroutine != null || isRespawning)
             return;
@@ -1042,7 +1043,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             //Debug.Log("Writing Health");
-                stream.SendNext(Health);
+            stream.SendNext(Health);
             stream.SendNext(transform.position);
         }
         else
@@ -1080,8 +1081,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     public void DisableBullet(GameObject bulletGO)
     {
-        for(int i = 0; i < gameObjectPool.bullets.Count; i++)
-            if(bulletGO == gameObjectPool.bullets[i])
+        for (int i = 0; i < gameObjectPool.bullets.Count; i++)
+            if (bulletGO == gameObjectPool.bullets[i])
                 PV.RPC("DiableBullet_RPC", RpcTarget.All, i);
     }
 

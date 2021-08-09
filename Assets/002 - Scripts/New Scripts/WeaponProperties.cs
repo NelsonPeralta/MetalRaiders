@@ -17,7 +17,7 @@ public class WeaponProperties : MonoBehaviour
     public float range;
     public bool canSelectFire;
     public bool pistolIdle;
-    
+
     [Header("Inventory")]
     public int currentAmmo;
     public int maxAmmoInWeapon;
@@ -52,19 +52,26 @@ public class WeaponProperties : MonoBehaviour
     public AudioClip Reload_2;
     public AudioClip holster;
 
+    [Header("Firing Mode")]
+    public int fireRate; // To be used later to replace old variables
+    public float delayBetweenBullets;
+
     [Header("Fully Automatic Setings")]
-    public bool isFullyAutomatic; public float timeBetweenFABullets = .01f;
+    public bool isFullyAutomatic; 
+    public float timeBetweenFABullets = .01f;
 
     [Header("Burst Mode Settings")]
-    public bool isBurstWeapon; public float timeBetweenBurstBullets = .01f, timeBetweenBurstCompletion = .01f;
+    public bool isBurstWeapon; 
+    public float timeBetweenBurstBullets = .01f, timeBetweenBurstCompletion = .01f;
 
     [Header("Single Fire Settings")]
-    public bool isSingleFire; public float timeBetweenSingleBullets = .01f;
+    public bool isSingleFire; 
+    public float timeBetweenSingleBullets = .01f;
 
     [Header("Reload Properties")]
     public ReloadScript reloadScript;
     public float defaultReloadSpeed;
-    public bool usesMags;    
+    public bool usesMags;
     public bool usesShells;
     public bool usesSingleAmmo;
     public bool genericReload;
@@ -96,6 +103,11 @@ public class WeaponProperties : MonoBehaviour
 
     private void Start()
     {
+        if (fireRate <= 0)
+            fireRate = 10;
+        delayBetweenBullets = 1f / fireRate;
+        Debug.Log($"Delay Between Bullets: {delayBetweenBullets}");
+
         if (headshotMultiplier <= 0)
             headshotMultiplier = 1;
         //Debug.Log($"ENUM DEBUG TEST: {weaponType}");
@@ -139,7 +151,7 @@ public class WeaponProperties : MonoBehaviour
         {
             if (hasRecoil)
             {
-                if(!pController.movement.isGrounded || !pController.isCrouching)
+                if (!pController.movement.isGrounded || !pController.isCrouching)
                     camScript.xRotation -= recoilAmount;
             }
         }

@@ -377,8 +377,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWallGun: 0
-  ammoInThisWeapon: 48
-  extraAmmo: 48
+  ammoInThisWeapon: 24
+  extraAmmo: 24
   isDualWieldable: 0
   weaponType: SMG
   smallAmmo: 1
