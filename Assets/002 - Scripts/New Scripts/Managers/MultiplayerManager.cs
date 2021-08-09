@@ -66,7 +66,8 @@ public class MultiplayerManager : MonoBehaviour
         if (gametype == "ffa")
         {
             PlayerMultiplayerStats playerWhoGotKillMS = FindPlayerWithPhotonViewId(playerPhotonIdWhoGotTheKill);
-            playerWhoGotKillMS.kills++;
+            if (playerPhotonIdWhoGotTheKill != playerWhoDiedPVID)
+                playerWhoGotKillMS.kills++;
 
             PlayerMultiplayerStats playerWhoWasKilledMS = FindPlayerWithPhotonViewId(playerWhoDiedPVID);
             playerWhoWasKilledMS.deaths++;

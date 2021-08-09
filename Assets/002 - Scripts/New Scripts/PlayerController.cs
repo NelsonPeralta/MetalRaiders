@@ -477,6 +477,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {
+                Unscope();
                 pInventory.grenades = pInventory.grenades - 1;
                 anim.Play("GrenadeThrow", 0, 0.0f);
                 PV.RPC("ThrowGrenade_RPC", RpcTarget.All);
