@@ -78,7 +78,7 @@ public class WeaponPickUp : MonoBehaviourPun
                                     {
                                         //Debug.Log("Here");
                                         weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
-                                        pickupText.text = "Pick up " + weaponCollidingWithInInventory.name;
+                                        pickupText.text = "Hold R to pick up " + weaponCollidingWithInInventory.name;
                                         canPickup = true;
                                     }
                                     else
@@ -107,7 +107,7 @@ public class WeaponPickUp : MonoBehaviourPun
                                         {
                                             //Debug.Log("Here");
                                             weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
-                                            pickupText.text = "Pick up " + weaponCollidingWithInInventory.name;
+                                            pickupText.text = "Hold R to pick up " + weaponCollidingWithInInventory.name;
                                             canPickup = true;
                                         }
                                         else
@@ -121,7 +121,7 @@ public class WeaponPickUp : MonoBehaviourPun
                                         {
                                             //Debug.Log("Here");
                                             weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
-                                            pickupText.text = "Pick up " + weaponCollidingWithInInventory.name;
+                                            pickupText.text = "Hold R to pick up " + weaponCollidingWithInInventory.name;
                                             canPickup = true;
                                         }
                                         else
@@ -193,7 +193,7 @@ public class WeaponPickUp : MonoBehaviourPun
 
                 if (canPickupDW && weaponCollidingWith != null)
                 {
-                    pickupText.text = "Pick up " + other.gameObject.name + " or press Reload to Dual Wield";
+                    pickupText.text = "Hold R to pick up " + other.gameObject.name + " or press Reload to Dual Wield";
                 }
             }
 

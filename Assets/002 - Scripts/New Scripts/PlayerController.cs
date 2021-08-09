@@ -460,6 +460,7 @@ public class PlayerController : MonoBehaviourPun
         movement.tPersonScripts.anim.SetBool("Crouch", true);
         isCrouching = true;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);
+        gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.35f, 0);
     }
 
     public void DisableCrouch()
@@ -467,6 +468,7 @@ public class PlayerController : MonoBehaviourPun
         movement.tPersonScripts.anim.SetBool("Crouch", false);
         isCrouching = false;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);
+        gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, .35f, 0);
     }
 
     void Grenade()

@@ -344,7 +344,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
         HealthAndshieldRecharge();
         CheckRRIsOn();
-        Die();
     }
 
     /// <summary>
@@ -384,7 +383,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-            PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, playerWhoShotThisPlayerPhotonId);
+            PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
         //if (!PhotonNetwork.IsMasterClient)
         //    return;
@@ -392,7 +391,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    void Damage_RPC(float newHealth, int playerWhoShotThisPlayerPhotonId)
+    void Damage_RPC(float newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId)
     {
         lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
         Health = newHealth;
@@ -404,6 +403,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
         if (Health <= 0)
             isDead = true;
+
+        Die(wasHeadshot);
     }
 
     public void BleedthroughDamage(float damage, bool headshot, int playerWhoKilledThisPlayer)
@@ -574,12 +575,12 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    void Die()
+    void Die(bool wasHeadshot) 
     {
         if (!isDead || respawnCoroutine != null || isRespawning)
             return;
         if (lastPlayerWhoDamagedThisPlayerPVID != 0)
-            multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID);
+            multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
         pController.DisableCrouch();
@@ -942,6 +943,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     void PlayHurtSound()
     {
+        if (Health <= 0)
+            return;
         int randomSound = Random.Range(0, hurtClips.Length);
         playerVoice.clip = hurtClips[randomSound];
         playerVoice.Play();

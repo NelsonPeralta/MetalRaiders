@@ -20,15 +20,18 @@ public class KillFeedManager : MonoBehaviour
        multiplayerManager= MultiplayerManager.multiplayerManagerInstance;
     }
 
-    public void EnterNewFeed(string playerWhoGotKillName, string playerWhoWasKilledName)
+    public void EnterNewFeed(string playerWhoGotKillName, string playerWhoWasKilledName, bool wasHeadshot)
     {
-        StartCoroutine(SpawnNewFeed_Coroutine(playerWhoGotKillName, playerWhoWasKilledName));
+        StartCoroutine(SpawnNewFeed_Coroutine(playerWhoGotKillName, playerWhoWasKilledName, wasHeadshot));
     }
 
-    IEnumerator SpawnNewFeed_Coroutine(string playerWhoGotKillName, string playerWhoWasKilledName)
+    IEnumerator SpawnNewFeed_Coroutine(string playerWhoGotKillName, string playerWhoWasKilledName, bool wasHeadshot)
     {
         var nkf = Instantiate(killFeedItemPrefab, gridLayout.transform);
-        nkf.GetComponent<TMP_Text>().text = $"{playerWhoGotKillName} Killed {playerWhoWasKilledName}";
+        var headshotFeed = $"";
+        if(wasHeadshot)
+            headshotFeed = $"with a headshot!";
+        nkf.GetComponent<TMP_Text>().text = $"{playerWhoGotKillName} Killed {playerWhoWasKilledName} {headshotFeed}";
         yield return new WaitForSeconds(5);
         Destroy(nkf);
     }

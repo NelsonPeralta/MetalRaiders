@@ -60,7 +60,7 @@ public class MultiplayerManager : MonoBehaviour
             StartCoroutine(CreateMultiplayerStatList());
     }
 
-    public void AddToScore(int playerPhotonIdWhoGotTheKill, int playerWhoDiedPVID)
+    public void AddToScore(int playerPhotonIdWhoGotTheKill, int playerWhoDiedPVID, bool wasHeadshot)
     {
         Debug.Log($"Add to Score: {playerPhotonIdWhoGotTheKill} killed {playerWhoDiedPVID}");
         if (gametype == "ffa")
@@ -73,7 +73,7 @@ public class MultiplayerManager : MonoBehaviour
 
             foreach (PlayerProperties pp in playerManager.allPlayers)
                 if (pp.PV.IsMine && pp)
-                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKillMS.playerName, playerWhoWasKilledMS.playerName);
+                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKillMS.playerName, playerWhoWasKilledMS.playerName, wasHeadshot);
 
             UpdateAllPlayerScores();
             CheckForEndGame();

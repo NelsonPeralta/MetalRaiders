@@ -31,11 +31,12 @@ public class WeaponProperties : MonoBehaviour
     [Header("Aiming")]
     public bool canAim;
     public float aimFOV;
-    public float aimRRR;    
+    public float aimRRR;
+    public bool isHeadshotCapable;
+    public float headshotMultiplier;
 
     [Header("Bullet Behavior")]
     public bool isNormalBullet;
-    public bool isHeadshotCapable;
     public bool canBleedthroughHeadshot;
     public bool canBleedthroughAnything;
 
@@ -95,6 +96,8 @@ public class WeaponProperties : MonoBehaviour
 
     private void Start()
     {
+        if (headshotMultiplier <= 0)
+            headshotMultiplier = 1;
         //Debug.Log($"ENUM DEBUG TEST: {weaponType}");
 
         if (isNormalBullet)

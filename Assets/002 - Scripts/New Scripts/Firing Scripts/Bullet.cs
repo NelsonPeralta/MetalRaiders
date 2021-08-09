@@ -154,7 +154,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                         Debug.Log($"Player Who shot is Mine: {playerWhoShot.PV.IsMine}");
                         if (playerWhoShot.PV.IsMine)
                         {
-                            playerProperties.Damage(damage, false, playerWhoShot.GetComponent<PhotonView>().ViewID);
+                            bool wasHeadshot = false;
+                            if (hitbox.isHead && wProperties.isHeadshotCapable)
+                            {
+                                damage = (int)(damage * wProperties.headshotMultiplier);
+                                wasHeadshot = true;
+                            }
+
+                            playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
                             //if (playerProperties.Health > 0)
                             //  playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
 
