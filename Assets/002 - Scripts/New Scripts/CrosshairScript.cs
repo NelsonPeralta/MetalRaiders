@@ -237,14 +237,16 @@ public class CrosshairScript : MonoBehaviour
 
     public void ActivateRedCrosshair()
     {
-        if(ActiveCrosshair.GetComponent<Crosshair>())
-            ActiveCrosshair.GetComponent<Crosshair>().redReticuleVersion.SetActive(true);
+        if (ActiveCrosshair)
+            if (ActiveCrosshair.GetComponent<Crosshair>())
+                ActiveCrosshair.GetComponent<Crosshair>().redReticuleVersion.SetActive(true);
     }
 
     public void DeactivateRedCrosshair()
     {
-        if (ActiveCrosshair.GetComponent<Crosshair>())
-            ActiveCrosshair.GetComponent<Crosshair>().redReticuleVersion.SetActive(false);
+        if (ActiveCrosshair)
+            if (ActiveCrosshair.GetComponent<Crosshair>())
+                ActiveCrosshair.GetComponent<Crosshair>().redReticuleVersion.SetActive(false);
     }
     public void FindComponents()
     {
