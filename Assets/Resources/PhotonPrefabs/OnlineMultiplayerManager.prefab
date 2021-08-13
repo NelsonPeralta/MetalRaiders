@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PV: {fileID: 4206518677158901735}
   gametype: ffa
-  pointsToWin: 3
+  pointsToWin: 15
   playerMultiplayerStats: []
 --- !u!114 &4206518677158901735
 MonoBehaviour:
