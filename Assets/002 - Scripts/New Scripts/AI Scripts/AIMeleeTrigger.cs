@@ -18,7 +18,7 @@ public class AIMeleeTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "player")
         {
             player = other.gameObject;
             pProperties = other.gameObject.GetComponent<PlayerProperties>();

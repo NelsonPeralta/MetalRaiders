@@ -47,7 +47,7 @@ public class MyPlayerManager : MonoBehaviour
 
             allPlayers[i].gameObject.GetComponent<Tags>().tags[0] = "Player " + i;
 
-            allPlayers[i].gameObject.GetComponent<AllPlayerScripts>().raycastScript.playerRewiredID = i;
+            allPlayers[i].gameObject.GetComponent<AllPlayerScripts>().aimAssist.playerRewiredID = i;
 
             allPlayers[i].gameObject.GetComponentInChildren<FullyAutomaticFire>().playerRewiredID = i;
             allPlayers[i].gameObject.GetComponentInChildren<BurstFire>().playerRewiredID = i;

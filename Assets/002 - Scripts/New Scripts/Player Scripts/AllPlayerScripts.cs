@@ -11,8 +11,9 @@ public class AllPlayerScripts : MonoBehaviour
     public PlayerInventory playerInventory;
     public WeaponPickUp weaponPickUp;
     [Header("UI Components")]
+    public CameraScript cameraScript;
     public CrosshairScript crosshairScript;
-    public RaycastScript raycastScript;
+    public AimAssist aimAssist;
     public PlayerUIComponents playerUIComponents;
     public Aiming aimingScript;
     public WaveCounter waveCounter;
@@ -23,7 +24,7 @@ public class AllPlayerScripts : MonoBehaviour
     public PlayerSFXs playerSFXs;
     public Announcer announcer;
     [Header("Multiplayer Scripts")]
-    public PlayerMPProperties playerMPProperties;
+    public PlayerMultiplayerStats playerMultiplayerStats;
     [Header("Pools")]
     public GameObjectPool playerFirstMuzzleFlash;
     public GameObjectPool playerThirdMuzzleFlash;

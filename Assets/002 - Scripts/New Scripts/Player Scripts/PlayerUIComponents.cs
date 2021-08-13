@@ -28,6 +28,9 @@ public class PlayerUIComponents : MonoBehaviour
     [Header("Center", order = 4)]
     public Transform center;
     public ScoreboardManager scoreboard;
+    public GameObject headshotIndicator;
+    Coroutine showHeadshotIndicatorCoroutine;
+    Coroutine hideHeadshotIndicatorCoroutine;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;
@@ -50,5 +53,41 @@ public class PlayerUIComponents : MonoBehaviour
         onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
 
         onlineGameTimeInstance.playerTimerTexts.Add(Timer);
+
+        headshotIndicator.SetActive(false);
     }
+
+    public void ShowHeadshotIndicator()
+    {
+        if (hideHeadshotIndicatorCoroutine != null)
+            StopCoroutine(hideHeadshotIndicatorCoroutine);
+        if (showHeadshotIndicatorCoroutine != null)
+            StopCoroutine(showHeadshotIndicatorCoroutine);
+
+        hideHeadshotIndicatorCoroutine = StartCoroutine(HideHeadshotIndicator_Coroutine());
+        showHeadshotIndicatorCoroutine = StartCoroutine(ShowHeadshotIndicator_Coroutine());
+    }
+
+    IEnumerator HideHeadshotIndicator_Coroutine()
+    {
+        if (headshotIndicator.activeSelf)
+        {
+            if (showHeadshotIndicatorCoroutine != null)
+                StopCoroutine(showHeadshotIndicatorCoroutine);
+            headshotIndicator.SetActive(false);
+            yield return new WaitForSeconds(0.25f);
+            StartCoroutine(ShowHeadshotIndicator_Coroutine());
+        }else
+            StartCoroutine(ShowHeadshotIndicator_Coroutine());
+    }
+    IEnumerator ShowHeadshotIndicator_Coroutine()
+    {
+        if (!headshotIndicator.activeSelf)
+            headshotIndicator.SetActive(true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        headshotIndicator.SetActive(false);
+    }
+
 }

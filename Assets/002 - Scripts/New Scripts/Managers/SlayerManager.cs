@@ -34,17 +34,17 @@ public class SlayerManager : MonoBehaviour
 
         foreach (GameObject player in players)
         {
-            if (player.GetComponent<PlayerProperties>().playerRewiredID == playerWhoKilled)
-                player.GetComponent<AllPlayerScripts>().playerMPProperties.AddKill(true);
+            //if (player.GetComponent<PlayerProperties>().playerRewiredID == playerWhoKilled)
+            //    player.GetComponent<AllPlayerScripts>().playerMPProperties.AddKill(true);
 
-            if (player.GetComponent<AllPlayerScripts>().playerMPProperties.kills > secondPlaceKills)
-                secondPlaceKills = player.GetComponent<AllPlayerScripts>().playerMPProperties.kills;
+            //if (player.GetComponent<AllPlayerScripts>().playerMPProperties.kills > secondPlaceKills)
+            //    secondPlaceKills = player.GetComponent<AllPlayerScripts>().playerMPProperties.kills;
 
-            if (player.GetComponent<PlayerProperties>().playerRewiredID != playerWhoKilled)
-                player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsBlue.text = secondPlaceKills.ToString();
+            //if (player.GetComponent<PlayerProperties>().playerRewiredID != playerWhoKilled)
+            //    player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsBlue.text = secondPlaceKills.ToString();
 
-            if (player.GetComponent<AllPlayerScripts>().playerMPProperties.kills >= killsToWin)
-                EndGame();
+            //if (player.GetComponent<AllPlayerScripts>().playerMPProperties.kills >= killsToWin)
+            //    EndGame();
         }
     }
 
@@ -61,7 +61,7 @@ public class SlayerManager : MonoBehaviour
             {
                 if (player)
                 {
-                    player.GetComponent<AllPlayerScripts>().playerMPProperties.slayerManager = this;
+                    //player.GetComponent<AllPlayerScripts>().playerMPProperties.slayerManager = this;
                 }
             }
         }

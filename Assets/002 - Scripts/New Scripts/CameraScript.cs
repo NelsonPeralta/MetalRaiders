@@ -18,12 +18,16 @@ public class CameraScript : MonoBehaviour
     public Camera mainCam;
     public Camera gunCam;
     public MyPlayerManager pManager;
+    public Vector3 mainCamDefaultLocalPosition;
+    public Quaternion mainCamDefaultLocalRotation;
 
     float mouseX, mouseY;
 
     // Start is called before the first frame update
     void Start()
     {
+        mainCamDefaultLocalPosition = mainCam.transform.localPosition;
+        mainCamDefaultLocalRotation = mainCam.transform.localRotation;
         Cursor.lockState = CursorLockMode.Locked;
 
         if (pManager == null)

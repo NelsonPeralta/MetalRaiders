@@ -8,7 +8,7 @@ public class SimpleAILineOfSight : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "player")
         {
             playerInLineOfSight = true;
         }
@@ -16,7 +16,7 @@ public class SimpleAILineOfSight : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "player")
         {
             playerInLineOfSight = true;
         }
@@ -24,7 +24,7 @@ public class SimpleAILineOfSight : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "player")
         {
             playerInLineOfSight = false;
         }

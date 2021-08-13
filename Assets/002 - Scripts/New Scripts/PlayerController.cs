@@ -930,7 +930,7 @@ public class PlayerController : MonoBehaviourPun
                gwProperties.grenadeSpawnPoint.transform.rotation);
             grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = playerProperties;
             grenade.GetComponent<FragGrenade>().playerRewiredID = playerRewiredID;
-            grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
+            //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
         else if (stickyGrenadesActive)
         {
@@ -939,7 +939,7 @@ public class PlayerController : MonoBehaviourPun
                gwProperties.grenadeSpawnPoint.transform.rotation);
             grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = playerProperties;
             grenade.GetComponent<StickyGrenade>().playerRewiredID = playerRewiredID;
-            grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
+            //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
 
         foreach (GameObject hb in playerProperties.hitboxes)

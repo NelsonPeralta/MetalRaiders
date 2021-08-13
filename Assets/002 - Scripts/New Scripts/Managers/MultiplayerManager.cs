@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
-public class MultiplayerManager : MonoBehaviour
+public class MultiplayerManager : MonoBehaviourPunCallbacks
 {
     public PhotonView PV;
     [Header("Singletons")]
@@ -18,6 +19,9 @@ public class MultiplayerManager : MonoBehaviour
     [Header("Players")]
     public List<PlayerMultiplayerStats> playerMultiplayerStats = new List<PlayerMultiplayerStats>();
 
+    ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+
+
     // private variables
     int listCreationRetries = 10;
 
@@ -30,13 +34,28 @@ public class MultiplayerManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
         multiplayerManagerInstance = this;
+
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        customProperties["score"] = 0;
+        PhotonNetwork.SetPlayerCustomProperties(customProperties);
     }
 
     private void Start()
     {
-        Application.targetFrameRate = 100;
         playerManager = PlayerManager.playerManagerInstance;
-        StartCoroutine(CreateMultiplayerStatList());
+        //if (PhotonNetwork.IsMasterClient)
+        //    StartCoroutine(CreateMultiplayerStatList());
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+        if (changedProps.ContainsKey("score"))
+            Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
+        //    playerMultiplayerStats = (List<PlayerMultiplayerStats>)changedProps["totaltime"];
+
+        //UpdateTimerTexts();
     }
 
     IEnumerator CreateMultiplayerStatList()
@@ -53,52 +72,143 @@ public class MultiplayerManager : MonoBehaviour
                 Debug.Log(playerMultiplayerStats.Count);
             }
         }
-
-        listCreationRetries--;
-
-        if (listCreationRetries > 0)
-            StartCoroutine(CreateMultiplayerStatList());
     }
+
 
     public void AddToScore(int playerPhotonIdWhoGotTheKill, int playerWhoDiedPVID, bool wasHeadshot)
     {
-        Debug.Log($"Add to Score: {playerPhotonIdWhoGotTheKill} killed {playerWhoDiedPVID}");
-        if (gametype == "ffa")
+        PlayerMultiplayerStats playerWhoGotTheKillMS = PhotonView.Find(playerPhotonIdWhoGotTheKill).GetComponent<PlayerMultiplayerStats>();
+        PlayerMultiplayerStats playerWhoGotKilledMS = PhotonView.Find(playerWhoDiedPVID).GetComponent<PlayerMultiplayerStats>();
+
+
+        List<PlayerProperties> allPlayers = new List<PlayerProperties>();
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+            allPlayers.Add(go.GetComponent<PlayerProperties>());
+
+        if (PhotonNetwork.IsMasterClient)
         {
-            PlayerMultiplayerStats playerWhoGotKillMS = FindPlayerWithPhotonViewId(playerPhotonIdWhoGotTheKill);
+            Debug.Log("Add to Score Method");
             if (playerPhotonIdWhoGotTheKill != playerWhoDiedPVID)
-                playerWhoGotKillMS.kills++;
+            {
+                Debug.Log($"Player who will get kill: {playerPhotonIdWhoGotTheKill}");
 
-            PlayerMultiplayerStats playerWhoWasKilledMS = FindPlayerWithPhotonViewId(playerWhoDiedPVID);
-            playerWhoWasKilledMS.deaths++;
+                playerWhoGotTheKillMS.AddKill(pointsToWin);
+            }
 
-            foreach (PlayerProperties pp in playerManager.allPlayers)
+            Debug.Log($"Player who will get death: {playerWhoDiedPVID}");
+
+            playerWhoGotKilledMS.AddDeath();
+        }
+
+        if (playerPhotonIdWhoGotTheKill != playerWhoDiedPVID)
+        {
+            foreach (PlayerProperties pp in allPlayers)
                 if (pp.PV.IsMine && pp)
-                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKillMS.playerName, playerWhoWasKilledMS.playerName, wasHeadshot);
+                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotTheKillMS.playerName, playerWhoGotKilledMS.playerName, wasHeadshot);
+        }
+        else
+        {
+            foreach (PlayerProperties pp in allPlayers)
+                if (pp.PV.IsMine && pp)
+                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKilledMS.playerName);
+        }
 
-            UpdateAllPlayerScores();
-            CheckForEndGame();
+        CheckForEndGame();
+
+        //Debug.Log($"Add to Score: {playerPhotonIdWhoGotTheKill} killed {playerWhoDiedPVID}");
+        //if (gametype == "ffa")
+        //{
+        //    PlayerMultiplayerStats playerWhoGotKillMS = FindPlayerWithPhotonViewId(playerPhotonIdWhoGotTheKill);
+        //    if (playerPhotonIdWhoGotTheKill != playerWhoDiedPVID)
+        //        playerWhoGotKillMS.kills++;
+
+        //    PlayerMultiplayerStats playerWhoWasKilledMS = FindPlayerWithPhotonViewId(playerWhoDiedPVID);
+        //    playerWhoWasKilledMS.deaths++;
+
+        //    PV.RPC("SpawnNewFeedForClients_RPC", RpcTarget.All, playerWhoGotKillMS.playerName, playerWhoWasKilledMS.playerName, wasHeadshot);
+
+        //    //multiplayerManagerCustomProperties.Add("score", playerMultiplayerStats);
+        //    //PhotonNetwork.SetPlayerCustomProperties(multiplayerManagerCustomProperties);
+
+        //    UpdateClientScores();
+        //    UpdateAllPlayerScores();
+        //}
+    }
+
+    [PunRPC]
+    void SpawnNewFeedForClients_RPC(string playerWhoGotKillName, string playerWhoWasKilledName, bool wasHeadshot)
+    {
+        List<PlayerProperties> allPlayers = new List<PlayerProperties>();
+        foreach (GameObject pp in GameObject.FindGameObjectsWithTag("player"))
+        {
+            Debug.Log(pp);
+            allPlayers.Add(pp.GetComponent<PlayerProperties>());
+        }
+        foreach (PlayerProperties pp in allPlayers)
+            if (pp.PV.IsMine && pp)
+                pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKillName, playerWhoWasKilledName, wasHeadshot);
+    }
+
+    void UpdateClientScores()
+    {
+        PV.RPC("ClearClientScores", RpcTarget.All);
+
+        for (int i = 0; i < playerMultiplayerStats.Count; i++)
+        {
+            int pvid = playerMultiplayerStats[i].PVID;
+            string name = playerMultiplayerStats[i].playerName;
+            int kills = playerMultiplayerStats[i].kills;
+            int deaths = playerMultiplayerStats[i].deaths;
+
+            PV.RPC("UpdateClientScores_RPC", RpcTarget.All, pvid, name, kills, deaths);
         }
     }
 
+    [PunRPC]
+    void ClearClientScores()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
 
+        playerMultiplayerStats.Clear();
+    }
+
+    [PunRPC]
+    void UpdateClientScores_RPC(int pvid, string pName, int kills, int deaths)
+    {
+        if (PhotonNetwork.IsMasterClient)
+            return;
+
+        var newPMS = new PlayerMultiplayerStats(pvid, pName, kills, deaths);
+        playerMultiplayerStats.Add(newPMS);
+    }
     PlayerMultiplayerStats FindPlayerWithPhotonViewId(int pvid)
     {
-
+        PlayerMultiplayerStats pms = new PlayerMultiplayerStats(0, "Empty", 0, 0);
         for (int i = 0; i < playerMultiplayerStats.Count; i++)
         {
             Debug.Log(playerMultiplayerStats[i].playerName + "; " + playerMultiplayerStats[i].PVID + "; " + pvid);
             if (playerMultiplayerStats[i].PVID == pvid)
+            {
+                Debug.Log("Found existing PMS");
                 return playerMultiplayerStats[i];
+            }
         }
 
         if (pvid == 99)
         {
-            Debug.Log("No PMS");
-            return new PlayerMultiplayerStats(99, "Guardians", 0, 0);
+            pms = new PlayerMultiplayerStats(99, "Guardians", 0, 0);
+            return pms;
         }
 
-        return null;
+        if (pms.PVID <= 0) // If theres is no such player and it wasnt the "Guardians", create player stats
+        {
+            AddPlayerToLists(pvid);
+            pms = FindPlayerWithPhotonViewId(pvid); // Potential Loop
+        }
+
+        Debug.Log(pms);
+        return pms;
     }
     void UpdateAllPlayerScores()
     {
@@ -108,21 +218,39 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
-    void CheckForEndGame()
+    public void CheckForEndGame()
     {
+        Debug.Log("Checking for End Game");
+        List<PlayerMultiplayerStats> allPlayersMS = new List<PlayerMultiplayerStats>();
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+            allPlayersMS.Add(go.GetComponent<PlayerMultiplayerStats>());
+
         if (gametype == "ffa")
-            for (int i = 0; i < playerMultiplayerStats.Count; i++)
+            for (int i = 0; i < allPlayersMS.Count; i++)
             {
-                if (playerMultiplayerStats[i].kills >= pointsToWin)
+                Debug.Log(allPlayersMS[i].kills);
+                if (allPlayersMS[i].kills >= pointsToWin - 1)// Due to latency, the kill variable for the player is not updated before this method triggers
+                {
+                    Debug.Log("Hit game kill cap");
                     EndGame();
+                }
             }
     }
 
     void EndGame()
     {
-        playerMultiplayerStats[0].player.GetComponent<AllPlayerScripts>().announcer.PlayGameOverClip();
+        Debug.Log("Ending Game");
+        List<PlayerProperties> allPlayers = new List<PlayerProperties>();
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+            allPlayers.Add(go.GetComponent<PlayerProperties>());
 
-        playerMultiplayerStats[0].player.LeaveRoomWithDelay();
+        for (int i = 0; i < allPlayers.Count; i++)
+        {
+            if (!allPlayers[i].PV.IsMine)
+                return;
+                allPlayers[i].allPlayerScripts.announcer.PlayGameOverClip();
+                allPlayers[i].LeaveRoomWithDelay();
+        }
     }
 
     private void OnDestroy()
@@ -133,5 +261,18 @@ public class MultiplayerManager : MonoBehaviour
     public void GetScoresByHighest()
     {
         List<PlayerMultiplayerStats> scores = new List<PlayerMultiplayerStats>();
+    }
+
+    void AddPlayerToLists(int pvid)
+    {
+        Debug.Log("No such Multiplayer Stat Script. Creating one now.");
+        var newPlayer = PhotonView.Find(pvid).GetComponent<PlayerProperties>();
+        PlayerMultiplayerStats pms = new PlayerMultiplayerStats(newPlayer);
+        playerMultiplayerStats.Add(pms);
+
+        for (int i = 0; i < playerManager.allPlayers.Count; i++)
+            if (playerManager.allPlayers[i].PV.ViewID == pvid)
+                return;
+        playerManager.allPlayers.Add(newPlayer);
     }
 }

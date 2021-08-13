@@ -51,8 +51,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public SwarmMode swarmMode;
     public Movement mScript;
     public CrosshairScript cScript;
+    public AimAssist aimAssist;
     public WeaponPickUp wPickup;
-    public RaycastScript raycastScript;
+    public AimAssist raycastScript;
     public PlayerSurroundings pSurroundings;
 
     [Header("Camera Options")]
@@ -157,6 +158,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         weaponPool = WeaponPool.weaponPoolInstance;
         playerManager.allPlayers.Add(this);
         PV = GetComponent<PhotonView>();
+        gameObject.name = $"Player ({PV.Owner.NickName})";
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
         activeSensitivity = defaultSensitivity;
@@ -393,7 +395,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Damage_RPC(float newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId)
     {
-        allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
+        if(PV.IsMine)
+            allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
         lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
         Health = newHealth;
         healthSlider.value = Health;
@@ -401,6 +404,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         healthRegenerationCountdown = healthRegenerationDelay;
         PlayHurtSound();
         UpdateHealthTextDebugger();
+        pController.Unscope();
 
         if (Health <= 0)
             isDead = true;
@@ -703,7 +707,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             return;
         isRespawning = false;
         respawnCoroutine = null;
-
+        pController.Unscope();
         Health = maxHealth;
         healthSlider.value = maxHealth;
 
@@ -715,8 +719,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         }
 
 
-        mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(-30, 0, 0);
-        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, mainOriginalCameraPosition.y, mainOriginalCameraPosition.z);
+        mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
+        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
 
         if (playerRewiredID == 0)
         {
@@ -1016,11 +1020,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     void CheckRRIsOn()
     {
-        if (cScript != null)
-        {
             if (!pController.isAiming)
             {
-                if (cScript.RRisActive)
+                if (aimAssist.redReticulIsOn)
                 {
                     activeSensitivity = defaultSensitivity / 10;
                 }
@@ -1029,13 +1031,12 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
                     activeSensitivity = defaultSensitivity;
                 }
             }
-        }
     }
 
     void UpdateMPPoints(int playerWhoDied, int playerWhoKilled)
     {
-        if (allPlayerScripts.playerMPProperties)
-            allPlayerScripts.playerMPProperties.UpdatePoints(playerWhoDied, playerWhoKilled);
+        //if (allPlayerScripts.playerMPProperties)
+        //    allPlayerScripts.playerMPProperties.UpdatePoints(playerWhoDied, playerWhoKilled);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

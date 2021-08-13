@@ -46,13 +46,18 @@ public class ScoreboardManager : MonoBehaviour
     public void UpdateScoreboard()
     {
         DisableAllRows();
-        for (int i = 0; i < multiplayerManager.playerMultiplayerStats.Count; i++)
+        List<PlayerMultiplayerStats> allPlayersMS = new List<PlayerMultiplayerStats>();
+
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+            allPlayersMS.Add(go.GetComponent<PlayerMultiplayerStats>());
+
+        for (int i = 0; i < allPlayersMS.Count; i++)
         {
-            scoreboardRows[i].playerNameText.text = multiplayerManager.playerMultiplayerStats[i].playerName;
+            scoreboardRows[i].playerNameText.text = allPlayersMS[i].playerName;
 
-            scoreboardRows[i].playerKillsText.text = multiplayerManager.playerMultiplayerStats[i].kills.ToString();
+            scoreboardRows[i].playerKillsText.text = allPlayersMS[i].kills.ToString();
 
-            scoreboardRows[i].playerDeathsText.text = multiplayerManager.playerMultiplayerStats[i].deaths.ToString();
+            scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
 
             scoreboardRows[i].gameObject.SetActive(true);
         }

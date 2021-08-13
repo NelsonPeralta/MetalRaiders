@@ -14,7 +14,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
     public ZombieScript zScript;
-    public RaycastScript raycastScript;
+    public AimAssist raycastScript;
     public CrosshairScript crosshairScript;
     public GameObjectPool gameObjectPool;
 
@@ -159,6 +159,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                             {
                                 damage = (int)(damage * wProperties.headshotMultiplier);
                                 wasHeadshot = true;
+                                playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
                             }
 
                             playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);

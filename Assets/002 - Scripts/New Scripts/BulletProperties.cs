@@ -42,7 +42,7 @@ public class BulletProperties : MonoBehaviour
         }
 
         //Ignore collision if bullet collides with "Player" tag
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "player")
         {
             //Physics.IgnoreCollision (collision.collider);
             Debug.LogWarning("Collides with player");

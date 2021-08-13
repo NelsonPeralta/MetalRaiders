@@ -6,6 +6,7 @@ using Photon.Pun;
 public class PlayerInventory : MonoBehaviourPun
 {
     [Header("Other Scripts")]
+    public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
     public CrosshairScript crosshairScript;
     public PlayerController pController;
@@ -105,6 +106,8 @@ public class PlayerInventory : MonoBehaviourPun
         if (pController.player.GetButtonDown("Switch Weapons") && !pController.isDualWielding /*Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetAxis("Mouse ScrollWheel") < 0 /*|| cScript.SwitchWeaponsButtonPressed*/)
         {
             pController.Unscope();
+            crosshairScript.DeactivateRedCrosshair();
+            allPlayerScripts.aimAssist.ResetRedReticule();
 
             if (pController.isReloading && pController.pInventory.weaponsEquiped[1] != null)
             {
@@ -112,7 +115,7 @@ public class PlayerInventory : MonoBehaviourPun
 
             }
 
-            if (pController.pInventory.weaponsEquiped[1] != null && !pProperties.isDead)
+            if (pController.pInventory.weaponsEquiped[1] != null && !pProperties.isDead && !pProperties.isRespawning)
             {
                 PV.RPC("SwapWeapons", RpcTarget.All);
                 //SwapWeapons();

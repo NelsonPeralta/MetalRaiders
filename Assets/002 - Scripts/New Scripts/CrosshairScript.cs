@@ -212,7 +212,7 @@ public class CrosshairScript : MonoBehaviour
 
 
                         }
-                    }                    
+                    }
                 }
             }
             else if (friendlyRRisActive == true)
@@ -235,8 +235,17 @@ public class CrosshairScript : MonoBehaviour
         }
     }
 
+    public void ActivateRedCrosshair()
+    {
+        if(ActiveCrosshair.GetComponent<Crosshair>())
+            ActiveCrosshair.GetComponent<Crosshair>().redReticuleVersion.SetActive(true);
+    }
 
-
+    public void DeactivateRedCrosshair()
+    {
+        if (ActiveCrosshair.GetComponent<Crosshair>())
+            ActiveCrosshair.GetComponent<Crosshair>().redReticuleVersion.SetActive(false);
+    }
     public void FindComponents()
     {
         //Debug.Log(pInventory.activeWeapIs);

@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6157950f0df8c4299deb74c57e0621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 0}
+  PV: {fileID: 4206518677158901735}
   gametype: ffa
-  pointsToWin: 15
+  pointsToWin: 3
   playerMultiplayerStats: []
 --- !u!114 &4206518677158901735
 MonoBehaviour:

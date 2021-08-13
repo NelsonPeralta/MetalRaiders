@@ -38,7 +38,7 @@ public class HeavyAmmoPack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (sphereCollider.enabled && other.gameObject.tag == "Player")
+        if (sphereCollider.enabled && other.gameObject.tag == "player")
         {
             pInventory = other.gameObject.GetComponent<PlayerProperties>().pInventory;
             aSource = other.gameObject.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
