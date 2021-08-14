@@ -10,6 +10,8 @@ public class DamageIndicatorManager : MonoBehaviour
     public int damageIndicatorLifeTime;
     public void SpawnNewDamageIndicator(int playerWhoShotPID)
     {
+        if (playerWhoShotPID == 99) // Guardians
+            return;
         StartCoroutine(SpawnNewDamageIndicator_Coroutine(playerWhoShotPID));
     }
 

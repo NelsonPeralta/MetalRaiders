@@ -77,43 +77,54 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
     public void AddToScore(int playerPhotonIdWhoGotTheKill, int playerWhoDiedPVID, bool wasHeadshot)
     {
-        PlayerMultiplayerStats playerWhoGotTheKillMS = PhotonView.Find(playerPhotonIdWhoGotTheKill).GetComponent<PlayerMultiplayerStats>();
-        PlayerMultiplayerStats playerWhoGotKilledMS = PhotonView.Find(playerWhoDiedPVID).GetComponent<PlayerMultiplayerStats>();
+            List<PlayerProperties> allPlayers = new List<PlayerProperties>();
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+                allPlayers.Add(go.GetComponent<PlayerProperties>());
 
-
-        List<PlayerProperties> allPlayers = new List<PlayerProperties>();
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
-            allPlayers.Add(go.GetComponent<PlayerProperties>());
-
-        if (PhotonNetwork.IsMasterClient)
+            PlayerMultiplayerStats playerWhoGotKilledMS = PhotonView.Find(playerWhoDiedPVID).GetComponent<PlayerMultiplayerStats>();
+        if (playerPhotonIdWhoGotTheKill != 99)
         {
-            Debug.Log("Add to Score Method");
-            if (playerPhotonIdWhoGotTheKill != playerWhoDiedPVID)
-            {
-                Debug.Log($"Player who will get kill: {playerPhotonIdWhoGotTheKill}");
+            PlayerMultiplayerStats playerWhoGotTheKillMS = PhotonView.Find(playerPhotonIdWhoGotTheKill).GetComponent<PlayerMultiplayerStats>();
 
-                playerWhoGotTheKillMS.AddKill(pointsToWin);
+
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                Debug.Log("Add to Score Method");
+                if (playerPhotonIdWhoGotTheKill != playerWhoDiedPVID)
+                {
+                    Debug.Log($"Player who will get kill: {playerPhotonIdWhoGotTheKill}");
+
+                    playerWhoGotTheKillMS.AddKill(pointsToWin);
+                }
+
+                Debug.Log($"Player who will get death: {playerWhoDiedPVID}");
+
+                playerWhoGotKilledMS.AddDeath();
             }
 
-            Debug.Log($"Player who will get death: {playerWhoDiedPVID}");
+            if (playerPhotonIdWhoGotTheKill != playerWhoDiedPVID)
+            {
+                foreach (PlayerProperties pp in allPlayers)
+                    if (pp.PV.IsMine && pp)
+                        pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotTheKillMS.playerName, playerWhoGotKilledMS.playerName, wasHeadshot);
+            }
+            else
+            {
+                foreach (PlayerProperties pp in allPlayers)
+                    if (pp.PV.IsMine && pp)
+                        pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKilledMS.playerName);
+            }
 
-            playerWhoGotKilledMS.AddDeath();
-        }
-
-        if (playerPhotonIdWhoGotTheKill != playerWhoDiedPVID)
-        {
-            foreach (PlayerProperties pp in allPlayers)
-                if (pp.PV.IsMine && pp)
-                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotTheKillMS.playerName, playerWhoGotKilledMS.playerName, wasHeadshot);
+            CheckForEndGame();
         }
         else
         {
+            playerWhoGotKilledMS.AddDeath();
             foreach (PlayerProperties pp in allPlayers)
                 if (pp.PV.IsMine && pp)
-                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKilledMS.playerName);
+                    pp.allPlayerScripts.killFeedManager.EnterNewFeed("Guardians", playerWhoGotKilledMS.playerName, false);
         }
-
-        CheckForEndGame();
 
         //Debug.Log($"Add to Score: {playerPhotonIdWhoGotTheKill} killed {playerWhoDiedPVID}");
         //if (gametype == "ffa")
