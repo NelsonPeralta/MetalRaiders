@@ -128,6 +128,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     [Header("Player Voice")]
     public AudioSource playerVoice;
+    public AudioClip sprintingClip;
     public AudioClip[] meleeClips;
     public AudioClip[] hurtClips;
     public AudioClip[] deathClips;
@@ -963,6 +964,22 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         playerVoice.Play();
     }
 
+    public void PlaySprintingSound()
+    {
+        if (playerVoice.isPlaying)
+            return;
+        playerVoice.loop = true;
+        playerVoice.volume = 0.05f;
+        playerVoice.clip = sprintingClip;
+        playerVoice.Play();
+    }
+
+    public void StopPlayingPlayerVoice()
+    {
+        playerVoice.loop = false;
+        playerVoice.volume = 0.5f;
+        playerVoice.Stop();
+    }
     void PlayShieldHitSound()
     {
         shieldAudioSource.clip = shieldHitClip;

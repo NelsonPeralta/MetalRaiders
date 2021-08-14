@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviourPun
     public GeneralWeapProperties gwProperties;
     public WeaponProperties wProperties;
     public Animator anim;
+    public AudioSource playerVoice;
     public Camera mainCam;
     public Camera gunCam;
     public CameraScript camScript;
@@ -46,7 +47,7 @@ public class PlayerController : MonoBehaviourPun
     public bool isInspecting, isShooting, aimSoundHasPlayed = false, hasFoundComponents = false;
 
     public bool isReloading, reloadAnimationStarted, reloadWasCanceled, isFiring,
-        isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isMeleeing;
+        isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isMeleeing, isSprinting;
 
     //Used for fire rate
     private float lastFired;
@@ -171,6 +172,10 @@ public class PlayerController : MonoBehaviourPun
 
                 if (!pauseMenuOpen)
                 {
+                    Sprint();
+                    SwitchGrenades();
+                    if (isSprinting)
+                        return;
                     Shooting();
                     CheckReloadButton();
                     CheckAmmoForAutoReload();
@@ -180,7 +185,6 @@ public class PlayerController : MonoBehaviourPun
                     Crouch();
                     Grenade(); //TO DO: Spawn Grenades the same way as bullets
                     SelectFire();
-                    SwitchGrenades();
                     //AutoReloadVoid();
                     HolsterAndInspect();
                     CheckDrawingWeapon();
@@ -238,41 +242,90 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    void Sprint()
+    {
+        if (movement.direction == "Forward" && player.GetButton("Sprint"))
+        {
+            if (!movement.isGrounded)
+                return;
+            EnableSprint();
+        }
+        else
+        {
+            DisableSprint();
+        }
+    }
+
+    void EnableSprint()
+    {
+        if (isSprinting)
+            return;
+        isSprinting = true;
+        anim.SetBool("Run", true);
+        tPersonController.anim.SetBool("Sprint", true);
+        tPersonController.anim.SetBool("Idle Rifle", false);
+        tPersonController.anim.SetBool("Idle Pistol", false);
+        playerProperties.playerVoice.volume = 0.1f;
+        playerProperties.PlaySprintingSound();
+    }
+
+    void DisableSprint()
+    {
+        if (!isSprinting)
+            return;
+        isSprinting = false;
+        anim.SetBool("Run", false);
+        tPersonController.anim.SetBool("Sprint", false);
+
+        if (pInventory.activeWeapon.GetComponent<WeaponProperties>().pistolIdle)
+        {
+            tPersonController.anim.SetBool("Idle Pistol", true);
+            tPersonController.anim.SetBool("Idle Rifle", false);
+        }
+        else
+        {
+            tPersonController.anim.SetBool("Idle Rifle", true);
+            tPersonController.anim.SetBool("Idle Pistol", false);
+        }
+
+        playerProperties.StopPlayingPlayerVoice();
+    }
+
     void Shooting()
     {
-        if (!playerProperties.isDead)
+        if (playerProperties.isDead || isSprinting)
+            return;
+
+        if (!isDualWielding)
         {
-            if (!isDualWielding)
+            if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting)
             {
-                if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting)
-                {
-                    isShooting = true;
+                isShooting = true;
 
-                }
-                else
-                {
-                    isShooting = false;
-                }
             }
-
-            if (isDualWielding)
+            else
             {
-                if (player.GetButton("Shoot") && !dwRightWP.outOfAmmo && !isReloadingRight && !isShootingRight)
-                {
-                    Debug.Log("Is Shooting Right");
-                    isShootingRight = true;
-                }
-                else
-                {
-                    isShootingRight = false;
-                }
+                isShooting = false;
             }
-
-            /*
-            if (wProperties)
-                if (wProperties.projectileToHide != null && wProperties.outOfAmmo)
-                    wProperties.projectileToHide.SetActive(false);*/
         }
+
+        if (isDualWielding)
+        {
+            if (player.GetButton("Shoot") && !dwRightWP.outOfAmmo && !isReloadingRight && !isShootingRight)
+            {
+                Debug.Log("Is Shooting Right");
+                isShootingRight = true;
+            }
+            else
+            {
+                isShootingRight = false;
+            }
+        }
+
+        /*
+        if (wProperties)
+            if (wProperties.projectileToHide != null && wProperties.outOfAmmo)
+                wProperties.projectileToHide.SetActive(false);*/
     }
 
     //[PunRPC]

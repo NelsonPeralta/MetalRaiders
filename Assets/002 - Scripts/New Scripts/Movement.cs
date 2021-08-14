@@ -129,13 +129,21 @@ public class Movement : MonoBehaviour
         {
             if (!pController.isCrouching)
             {
-                Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * defaultSpeed * Time.deltaTime);
+                if (pController.isSprinting)
+                {
+                    Vector3 move = transform.right * x + transform.forward * z;
+                    cController.Move(move * defaultSpeed * 1.5f * Time.deltaTime);
+                }
+                else
+                {
+                    Vector3 move = transform.right * x + transform.forward * z;
+                    cController.Move(move * defaultSpeed * Time.deltaTime);
+                }
             }
             else
             {
                 Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * defaultSpeed * .5f * Time.deltaTime);
+                cController.Move(move * defaultSpeed * .75f * Time.deltaTime);
             }
         }
 
@@ -359,7 +367,7 @@ public class Movement : MonoBehaviour
                 {
                     playerSpeed = 1;
                     pController.anim.speed = 1;
-                    if(tpLookAt.anim)
+                    if (tpLookAt.anim)
                         tpLookAt.anim.speed = 1;
                 }
             }

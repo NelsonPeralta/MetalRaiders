@@ -87,6 +87,8 @@ public class AimAssist : MonoBehaviour
 
     void RedReticule()
     {
+        if (!player.allPlayerScripts.playerInventory.activeWeapon)
+            return;
         if(Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out hit, raycastRange, layerMask))
         {
             targetDistance = Vector3.Distance(hit.transform.position, player.transform.position);
