@@ -20,19 +20,11 @@ public class HealthBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (healthSlider.value > 60)
-        {
-            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(0, 255, 0, 255);
-        }
-
-        if (healthSlider.value < 60 && healthSlider.value >= 25)
-        {
-            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 255, 0, 255);
-        }
-
-        if (healthSlider.value < 25)
-        {
-            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 0, 0, 255);
-        }
+        if (healthSlider.value >= (healthSlider.maxValue * 0.6f))
+            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(0, 255, 0, 255); // Green
+        else if (healthSlider.value <= (healthSlider.maxValue * 0.25f))
+            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 0, 0, 255); // Red
+        else
+            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 255, 0, 255); // Yellow
     }
 }

@@ -248,28 +248,29 @@ public class PlayerController : MonoBehaviourPun
         {
             if (!movement.isGrounded)
                 return;
-            switch (lastControllerType)
-            {
-                case ControllerType.Keyboard:
-                    if (player.GetButton("Sprint"))
-                        EnableSprint();
-                    else if (player.GetButtonUp("Sprint"))
-                        DisableSprint();
-                    break;
 
-                case ControllerType.Joystick: // Controller
-                    if (player.GetButtonDown("Sprint"))
-                        EnableSprint();
-                    break;
+            if(lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
+            {
+                if (player.GetButton("Sprint"))
+                    EnableSprint();
+                else if (player.GetButtonUp("Sprint"))
+                    DisableSprint();
             }
+            else if(lastControllerType == ControllerType.Joystick)
+                if (player.GetButtonDown("Sprint"))
+                    EnableSprint();
         }
         else
-        {
             DisableSprint();
-        }
     }
 
     void EnableSprint()
+    {
+        PV.RPC("EnableSprint_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void EnableSprint_RPC()
     {
         if (isSprinting)
             return;
@@ -283,6 +284,12 @@ public class PlayerController : MonoBehaviourPun
     }
 
     void DisableSprint()
+    {
+        PV.RPC("DisableSprint_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void DisableSprint_RPC()
     {
         if (!isSprinting)
             return;

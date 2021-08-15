@@ -166,9 +166,9 @@ public class Bullet : MonoBehaviourPunCallbacks
                             //if (playerProperties.Health > 0)
                             //  playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
 
-                            GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
-                            bloodHit.transform.position = hits[i].point;
-                            bloodHit.SetActive(true);
+                            //GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
+                            //bloodHit.transform.position = hits[i].point;
+                            //bloodHit.SetActive(true);
 
                             damageDealt = true;
                             Debug.Log(hitMessage);

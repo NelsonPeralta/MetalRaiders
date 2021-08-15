@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
+using Photon.Pun;
 
 public class Movement : MonoBehaviour
 {
+    public PhotonView PV;
     public AllPlayerScripts allPlayerScripts;
     public CharacterController cController;
     public Rigidbody rBody;
@@ -44,7 +46,7 @@ public class Movement : MonoBehaviour
     public int playerRewiredID;
 
     [Header("Audio")]
-    public AudioSource walkingSound;
+    public AudioSource walkingSoundAS;
     public bool walkingSoundPlaying;
 
     // Start is called before the first frame update
@@ -303,7 +305,7 @@ public class Movement : MonoBehaviour
         {
             directionIndicator = 0;
             direction = "Idle";
-            walkingSound.Pause();
+            PauseWalkingSound();
             walkingSoundPlaying = false;
         }
 
@@ -313,13 +315,13 @@ public class Movement : MonoBehaviour
             {
                 if (!walkingSoundPlaying)
                 {
-                    walkingSound.Play();
+                    PlayWalkingSound();
                     walkingSoundPlaying = true; ;
                 }
             }
             else
             {
-                walkingSound.Pause();
+                PauseWalkingSound();
                 walkingSoundPlaying = false;
             }
         }
@@ -394,6 +396,28 @@ public class Movement : MonoBehaviour
                 playerSpeed = 1;
         }
         CalculatingPlayerSpeed = false;
+    }
+
+    void PlayWalkingSound()
+    {
+        PV.RPC("PlayWalkingSound_RPC", RpcTarget.All);
+    }
+
+    void PauseWalkingSound()
+    {
+        PV.RPC("PauseWalkingSoundRPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void PlayWalkingSound_RPC()
+    {
+        walkingSoundAS.Play();
+    }
+
+    [PunRPC]
+    void PauseWalkingSoundRPC()
+    {
+        walkingSoundAS.Pause();
     }
 }
 

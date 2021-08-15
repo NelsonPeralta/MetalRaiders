@@ -82,6 +82,12 @@ MonoBehaviour:
   - ClearClientScores
   - UpdateClientScores_RPC
   - SpawnNewFeedForClients_RPC
+  - PauseWalkingSoundRPC
+  - PlayWalkingSound_RPC
+  - PlaySprintingSound_RPC
+  - StopPlayingPlayerVoice_RPC
+  - DisableSprint_RPC
+  - EnableSprint_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

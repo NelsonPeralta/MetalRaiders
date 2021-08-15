@@ -25,44 +25,13 @@ public class Melee : MonoBehaviour
     }
     private void Update()
     {
-        //Collider[] colliders = Physics.OverlapBox(gameObject.transform.position, transform.localScale);
-
-        //foreach (Collider hit in colliders)
-        //{
-        //    if(hit.gameObject.GetComponent<AIHitbox>() != null)
-        //    {
-        //        var AIHitbox = hit.gameObject.GetComponent<AIHitbox>();
-
-        //        if (pController.player.GetButtonDown("Melee") && !pController.isMeleeing)
-        //        {
-        //            AIHitbox.UpdateAIHealthMelee(pProperties.meleeDamage, pProperties.gameObject);
-        //        }
-        //    }
-
-
-
-        //    if (hit.gameObject.GetComponent<PlayerHitbox>() != null)
-        //    {
-        //        var playerHitbox = hit.gameObject.GetComponent<PlayerHitbox>();
-        //        var playerInZone = playerHitbox.player.GetComponent<PlayerProperties>();
-        //        //Debug.Log($"Player in Melee zone: {playerInZone.PV.ViewID}");
-
-        //        if (pController.player.GetButtonDown("Melee") && playerInZone.gameObject != pProperties.gameObject)
-        //        {
-        //            //playerHitbox.player.GetComponent<PlayerProperties>().BleedthroughDamage(pProperties.meleeDamage, false, pProperties.playerRewiredID);
-
-        //            playerInZone.SetHealth((int)pProperties.meleeDamage, false, 0);
-        //        }
-        //    }
-
-        //}
 
         if (pController.player.GetButtonDown("Melee") && meleeReady && pProperties.PV.IsMine)
         {
             StartCoroutine(DisableMelee());
-            StartCoroutine(EnableMeleeIndicator());
             if (playersInMeleeZone.Count > 0)
             {
+                StartCoroutine(EnableMeleeIndicator());
 
                 for (int i = 0; i < playersInMeleeZone.Count; i++)
                 {

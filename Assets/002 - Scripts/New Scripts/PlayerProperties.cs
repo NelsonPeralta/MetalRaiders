@@ -401,6 +401,11 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
         Health = newHealth;
         healthSlider.value = Health;
+
+        GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
+        bloodHit.transform.position = gameObject.transform.position + new Vector3(0, -0.5f, 0);
+        bloodHit.SetActive(true);
+
         triggerHealthRecharge = true;
         healthRegenerationCountdown = healthRegenerationDelay;
         PlayHurtSound();
@@ -966,6 +971,12 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     public void PlaySprintingSound()
     {
+        PV.RPC("PlaySprintingSound_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void PlaySprintingSound_RPC()
+    {
         if (playerVoice.isPlaying)
             return;
         playerVoice.loop = true;
@@ -975,6 +986,12 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     public void StopPlayingPlayerVoice()
+    {
+        PV.RPC("StopPlayingPlayerVoice_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void StopPlayingPlayerVoice_RPC()
     {
         playerVoice.loop = false;
         playerVoice.volume = 0.5f;
