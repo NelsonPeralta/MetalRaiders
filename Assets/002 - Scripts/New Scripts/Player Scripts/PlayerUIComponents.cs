@@ -75,7 +75,7 @@ public class PlayerUIComponents : MonoBehaviour
             if (showHeadshotIndicatorCoroutine != null)
                 StopCoroutine(showHeadshotIndicatorCoroutine);
             headshotIndicator.SetActive(false);
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.1f);
             StartCoroutine(ShowHeadshotIndicator_Coroutine());
         }else
             StartCoroutine(ShowHeadshotIndicator_Coroutine());
@@ -85,7 +85,7 @@ public class PlayerUIComponents : MonoBehaviour
         if (!headshotIndicator.activeSelf)
             headshotIndicator.SetActive(true);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.25f);
 
         headshotIndicator.SetActive(false);
     }

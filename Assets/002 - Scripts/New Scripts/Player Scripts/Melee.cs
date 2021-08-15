@@ -11,12 +11,18 @@ public class Melee : MonoBehaviour
     [Header("Players in Melee Zone")]
     public List<PlayerProperties> playersInMeleeZone;
 
-    [Header("Other")]
+    [Header("Components")]
     bool meleeReady = true;
+    public GameObject meleeIndicator;
     public GameObject knifeGameObject;
     public AudioSource audioSource;
     public AudioClip knifeSound;
 
+
+    private void Start()
+    {
+        meleeIndicator.SetActive(false);
+    }
     private void Update()
     {
         //Collider[] colliders = Physics.OverlapBox(gameObject.transform.position, transform.localScale);
@@ -54,7 +60,10 @@ public class Melee : MonoBehaviour
         if (pController.player.GetButtonDown("Melee") && meleeReady && pProperties.PV.IsMine)
         {
             StartCoroutine(DisableMelee());
+            StartCoroutine(EnableMeleeIndicator());
             if (playersInMeleeZone.Count > 0)
+            {
+
                 for (int i = 0; i < playersInMeleeZone.Count; i++)
                 {
                     PlayerProperties playerToDamage = playersInMeleeZone[i];
@@ -63,6 +72,7 @@ public class Melee : MonoBehaviour
 
                     playerToDamage.Damage((int)pProperties.meleeDamage, false, pProperties.GetComponent<PhotonView>().ViewID);
                 }
+            }
         }
     }
 
@@ -95,6 +105,12 @@ public class Melee : MonoBehaviour
                 playersInMeleeZone.RemoveAt(i);
     }
 
+    IEnumerator EnableMeleeIndicator()
+    {
+        meleeIndicator.SetActive(true);
+        yield return new WaitForSeconds(0.25f);
+        meleeIndicator.SetActive(false);
+    }
     IEnumerator DisableMelee()
     {
         meleeReady = false;

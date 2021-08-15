@@ -244,11 +244,24 @@ public class PlayerController : MonoBehaviourPun
 
     void Sprint()
     {
-        if (movement.direction == "Forward" && player.GetButton("Sprint"))
+        if (movement.direction == "Forward")
         {
             if (!movement.isGrounded)
                 return;
-            EnableSprint();
+            switch (lastControllerType)
+            {
+                case ControllerType.Keyboard:
+                    if (player.GetButton("Sprint"))
+                        EnableSprint();
+                    else if (player.GetButtonUp("Sprint"))
+                        DisableSprint();
+                    break;
+
+                case ControllerType.Joystick: // Controller
+                    if (player.GetButtonDown("Sprint"))
+                        EnableSprint();
+                    break;
+            }
         }
         else
         {
