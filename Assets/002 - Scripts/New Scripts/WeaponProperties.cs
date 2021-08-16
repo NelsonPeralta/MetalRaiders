@@ -159,7 +159,9 @@ public class WeaponProperties : MonoBehaviour
                     bulletsToIgnoreRecoil--;
                     return;
                 }
-                if (!pController.movement.isGrounded || !pController.isCrouching)
+                if(pController.isCrouching)
+                    camScript.xRotation -= recoilAmount / 2f;
+                else if (!pController.movement.isGrounded || !pController.isCrouching)
                     camScript.xRotation -= recoilAmount;
 
             }
