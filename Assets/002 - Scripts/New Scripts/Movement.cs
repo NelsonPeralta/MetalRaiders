@@ -24,7 +24,7 @@ public class Movement : MonoBehaviour
     public float playerSpeed;
     public float jumpForce = 6f;
 
-    float gravity = -9.81f;
+    float gravity = -12f; // -9.81f
 
     public Vector3 velocity;
     public Vector3 lastPos;
