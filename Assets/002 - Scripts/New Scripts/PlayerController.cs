@@ -249,14 +249,14 @@ public class PlayerController : MonoBehaviourPun
             if (!movement.isGrounded)
                 return;
 
-            if(lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
+            if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
             {
                 if (player.GetButton("Sprint"))
                     EnableSprint();
                 else if (player.GetButtonUp("Sprint"))
                     DisableSprint();
             }
-            else if(lastControllerType == ControllerType.Joystick)
+            else if (lastControllerType == ControllerType.Joystick)
                 if (player.GetButtonDown("Sprint"))
                     EnableSprint();
         }
@@ -264,7 +264,7 @@ public class PlayerController : MonoBehaviourPun
             DisableSprint();
     }
 
-    void EnableSprint()
+    public void EnableSprint()
     {
         PV.RPC("EnableSprint_RPC", RpcTarget.All);
     }
@@ -1270,7 +1270,7 @@ IEnumerator Reload()
                 }
             }
         }
-
+        pInventory.activeWeapon.GetComponent<WeaponProperties>().ResetBulletToIgnoreRecoil();
     }
 
     public void TransferAmmoDW(bool reloadedRight, bool reloadedLeft)

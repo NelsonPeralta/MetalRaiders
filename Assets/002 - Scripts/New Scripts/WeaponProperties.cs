@@ -43,6 +43,8 @@ public class WeaponProperties : MonoBehaviour
     [Header("Recoil")]
     public bool hasRecoil;
     public float recoilAmount;
+    public int defaultBulletsToIgnoreRecoil; // Only for Fully Auto
+    int bulletsToIgnoreRecoil;
     public CameraScript camScript;
 
     [Header("Sounds")]
@@ -103,6 +105,7 @@ public class WeaponProperties : MonoBehaviour
 
     private void Start()
     {
+        bulletsToIgnoreRecoil = defaultBulletsToIgnoreRecoil;
         if (fireRate <= 0)
             fireRate = 10;
         delayBetweenBullets = 1f / fireRate;
@@ -151,8 +154,14 @@ public class WeaponProperties : MonoBehaviour
         {
             if (hasRecoil)
             {
+                if (bulletsToIgnoreRecoil > 0)
+                {
+                    bulletsToIgnoreRecoil--;
+                    return;
+                }
                 if (!pController.movement.isGrounded || !pController.isCrouching)
                     camScript.xRotation -= recoilAmount;
+
             }
         }
     }
@@ -166,5 +175,10 @@ public class WeaponProperties : MonoBehaviour
         else if (powerAmmo)
             return "Power";
         return "";
+    }
+
+    public void ResetBulletToIgnoreRecoil()
+    {
+        bulletsToIgnoreRecoil = defaultBulletsToIgnoreRecoil;
     }
 }

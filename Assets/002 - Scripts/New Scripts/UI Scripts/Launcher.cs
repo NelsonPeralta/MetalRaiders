@@ -8,8 +8,9 @@ using System.Linq;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
-    public static Launcher Instance; // Singleton of the Photon Launcher
+    public static Launcher launcherInstance; // Singleton of the Photon Launcher
     public PhotonView PV;
+    public int levelToLoadIndex;
 
     // SerializeField makes private variables visible in the inspector
     [SerializeField] TMP_InputField roomNameInputField;
@@ -24,11 +25,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        Instance = this;
+        launcherInstance = this;
     }
 
     void Start()
     {
+        if (levelToLoadIndex == 0)
+            levelToLoadIndex = 1;
         Debug.Log("Connecting to Master");
         PhotonNetwork.ConnectUsingSettings();
         Cursor.visible = true;
@@ -112,7 +115,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.LoadLevel(levelToLoadIndex);
     }
 
     public void LeaveRoom()
@@ -151,4 +154,5 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
+
 }

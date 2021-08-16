@@ -25136,7 +25136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 5
-  damage: 250
+  damage: 300
   power: 100
   grenadeTimer: 1
   throwForce: 625
