@@ -5,6 +5,7 @@ using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -21,7 +22,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject roomListItemPrefab;
     [SerializeField] Transform playerListContent;
     [SerializeField] GameObject PlayerListItemPrefab;
+    [SerializeField] TMP_Text mapSelectedText;
+
+    [Header("Master Client Only")]
     [SerializeField] GameObject startGameButton;
+    [SerializeField] GameObject mapSelector;
 
     void Awake()
     {
@@ -77,6 +82,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         UpdatePlayerList();
 
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        mapSelector.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     [PunRPC]
@@ -155,4 +161,26 @@ public class Launcher : MonoBehaviourPunCallbacks
         Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
 
+    public void ChangeLevelToLoadWithIndex(int index)
+    {
+        levelToLoadIndex = index;
+        PV.RPC("UpdateSelectedMap", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void UpdateSelectedMap()
+    {
+        mapSelectedText.text = $"Map: {NameFromIndex(levelToLoadIndex).Replace("PVP - ", "")}";
+    }
+
+    // By JimmyCushnie
+    // Reference: https://answers.unity.com/questions/1262342/how-to-get-scene-name-at-certain-buildindex.html
+    private static string NameFromIndex(int BuildIndex)
+    {
+        string path = SceneUtility.GetScenePathByBuildIndex(BuildIndex);
+        int slash = path.LastIndexOf('/');
+        string name = path.Substring(slash + 1);
+        int dot = name.LastIndexOf('.');
+        return name.Substring(0, dot);
+    }
 }

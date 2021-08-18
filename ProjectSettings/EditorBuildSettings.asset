@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/004 - Scenes/Testing Room 2.unity
     guid: b36f86ced13373f4bab43f9d875ebb3e
-  - enabled: 0
+  - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP  - Lighthouse.unity
     guid: 38cf578bd469df6449ce6788067dd73f
   - enabled: 0

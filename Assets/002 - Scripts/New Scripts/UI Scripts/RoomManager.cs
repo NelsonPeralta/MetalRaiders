@@ -38,7 +38,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         //if (Instance != this)
         //    Destroy(gameObject);
         Debug.Log("Scene Loaded");
-        if (scene.buildIndex == 1) // We're in the game scene
+        if (scene.buildIndex > 0) // We're in the game scene
         {
             Debug.Log($"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
             if (!PlayerManager.playerManagerInstance)
