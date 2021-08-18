@@ -534,6 +534,8 @@ public class PlayerController : MonoBehaviourPun
         isCrouching = true;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);
         gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.35f, 0);
+        GetComponent<CharacterController>().height = 1.25f;
+        GetComponent<CharacterController>().center = new Vector3(0, -0.7f, 0);
     }
 
     public void DisableCrouch()
@@ -542,6 +544,9 @@ public class PlayerController : MonoBehaviourPun
         isCrouching = false;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);
         gwProperties.bulletSpawnPoint.localPosition = gwProperties.defaultBulletSpawnPoint;
+
+        GetComponent<CharacterController>().height = 1.7f; // Default values on the prefab
+        GetComponent<CharacterController>().center = new Vector3(0, -0.5f, 0); // Default values on the prefab
     }
 
     void Grenade()
