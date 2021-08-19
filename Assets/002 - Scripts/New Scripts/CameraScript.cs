@@ -8,6 +8,7 @@ public class CameraScript : MonoBehaviour
     public float mouseSensitivity;
     public Transform playerBody;
     public float xRotation = 0f;
+    public float yRotation = 0f;
     float minXClamp = -90;
     float maxXClamp = 90;
 
@@ -48,7 +49,7 @@ public class CameraScript : MonoBehaviour
             mouseSensitivity = pProperties.activeSensitivity;
         else
         {
-            if(!pController.isAiming)
+            if (!pController.isAiming)
                 mouseSensitivity = pProperties.activeSensitivity / 25;
             else
                 mouseSensitivity = pProperties.activeSensitivity / 75;
@@ -57,15 +58,16 @@ public class CameraScript : MonoBehaviour
 
         if (pController.playerProperties != null && !pController.pauseMenuOpen)
         {
-            
-                mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-                mouseY = player.GetAxis("Mouse Y") * mouseSensitivity * 0.5f * Time.deltaTime;
 
-                xRotation -= mouseY;
-                xRotation = Mathf.Clamp(xRotation, minXClamp, maxXClamp);
+            mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+            mouseY = player.GetAxis("Mouse Y") * mouseSensitivity * 0.5f * Time.deltaTime;
 
-                transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-                playerBody.Rotate(Vector3.up * mouseX);
+            xRotation -= mouseY;
+            yRotation -= mouseX;
+            xRotation = Mathf.Clamp(xRotation, minXClamp, maxXClamp);
+
+            transform.localRotation = Quaternion.Euler(xRotation, 0, 0f);
+            playerBody.Rotate(Vector3.up * mouseX);
         }
 
     }
@@ -73,5 +75,10 @@ public class CameraScript : MonoBehaviour
     public void SetPlayerIDInInput()
     {
         player = ReInput.players.GetPlayer(playerRewiredID);
+    }
+
+    public void RotateCameraBy(float rotationAmount)
+    {
+        playerBody.Rotate(Vector3.up  * rotationAmount);
     }
 }

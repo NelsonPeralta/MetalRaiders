@@ -42,7 +42,8 @@ public class WeaponProperties : MonoBehaviour
 
     [Header("Recoil")]
     public bool hasRecoil;
-    public float recoilAmount;
+    public float verticalRecoil = 1;
+    public float horizontalRecoil = 1;
     public int defaultBulletsToIgnoreRecoil; // Only for Fully Auto
     int bulletsToIgnoreRecoil;
     public CameraScript camScript;
@@ -59,15 +60,15 @@ public class WeaponProperties : MonoBehaviour
     public float delayBetweenBullets;
 
     [Header("Fully Automatic Setings")]
-    public bool isFullyAutomatic; 
+    public bool isFullyAutomatic;
     public float timeBetweenFABullets = .01f;
 
     [Header("Burst Mode Settings")]
-    public bool isBurstWeapon; 
+    public bool isBurstWeapon;
     public float timeBetweenBurstBullets = .01f, timeBetweenBurstCompletion = .01f;
 
     [Header("Single Fire Settings")]
-    public bool isSingleFire; 
+    public bool isSingleFire;
     public float timeBetweenSingleBullets = .01f;
 
     [Header("Reload Properties")]
@@ -150,8 +151,7 @@ public class WeaponProperties : MonoBehaviour
 
     public void Recoil()
     {
-        if (camScript != null)
-        {
+        if (camScript)
             if (hasRecoil)
             {
                 if (bulletsToIgnoreRecoil > 0)
@@ -159,13 +159,18 @@ public class WeaponProperties : MonoBehaviour
                     bulletsToIgnoreRecoil--;
                     return;
                 }
-                if(pController.isCrouching)
-                    camScript.xRotation -= recoilAmount / 2f;
+                float ranHorRecoil = Random.Range(-horizontalRecoil, horizontalRecoil);
+                if (pController.isCrouching)
+                {
+                    camScript.xRotation -= verticalRecoil / 2f;
+                    camScript.yRotation -= ranHorRecoil / 2;
+                }
                 else if (!pController.movement.isGrounded || !pController.isCrouching)
-                    camScript.xRotation -= recoilAmount;
-
+                {
+                    camScript.xRotation -= verticalRecoil;
+                    camScript.RotateCameraBy(ranHorRecoil);
+                }
             }
-        }
     }
 
     public string getAmmoType()
