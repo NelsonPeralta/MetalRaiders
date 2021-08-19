@@ -361,7 +361,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     */
     public void SetShield(int shieldDamage)
     {
-        pController.Unscope();
+        pController.ScopeOut();
         armorHasBeenHit = true;
 
         shieldRechargeCountdown = shieldRechargeDelay;
@@ -410,7 +410,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         healthRegenerationCountdown = healthRegenerationDelay;
         PlayHurtSound();
         UpdateHealthTextDebugger();
-        pController.Unscope();
+        pController.ScopeOut();
 
         if (Health <= 0)
             isDead = true;
@@ -421,7 +421,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public void BleedthroughDamage(float damage, bool headshot, int playerWhoKilledThisPlayer)
     {
         Debug.Log("Bleedthrough Damage");
-        pController.Unscope();
+        pController.ScopeOut();
         shieldRechargeCountdown = shieldRechargeDelay;
         healthRegenerationCountdown = healthRegenerationDelay;
 
@@ -713,7 +713,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             return;
         isRespawning = false;
         respawnCoroutine = null;
-        pController.Unscope();
+        pController.ScopeOut();
         Health = maxHealth;
         healthSlider.value = maxHealth;
 

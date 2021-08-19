@@ -155,7 +155,7 @@ public class ZombieScript : MonoBehaviour
                 if (!meleeTrigger.pProperties.isDead)
                 {
                     meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
-                    target.GetComponent<PlayerController>().Unscope();
+                    target.GetComponent<PlayerController>().ScopeOut();
                     anim.Play("Attack");
                     nma.velocity = Vector3.zero;
 

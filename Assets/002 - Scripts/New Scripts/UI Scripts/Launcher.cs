@@ -41,6 +41,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        ChangeLevelToLoadWithIndex(levelToLoadIndex);
     }
 
     public override void OnConnectedToMaster()
@@ -163,14 +165,14 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
-        levelToLoadIndex = index;
-        PV.RPC("UpdateSelectedMap", RpcTarget.All);
+        PV.RPC("UpdateSelectedMap", RpcTarget.All, index);
     }
 
     [PunRPC]
-    public void UpdateSelectedMap()
+    public void UpdateSelectedMap(int index)
     {
-        mapSelectedText.text = $"Map: {NameFromIndex(levelToLoadIndex).Replace("PVP - ", "")}";
+        levelToLoadIndex = index;
+        mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("PVP - ", "")}";
     }
 
     // By JimmyCushnie

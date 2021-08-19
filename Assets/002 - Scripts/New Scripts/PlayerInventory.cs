@@ -105,7 +105,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (pController.player.GetButtonDown("Switch Weapons") && !pController.isDualWielding /*Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetAxis("Mouse ScrollWheel") < 0 /*|| cScript.SwitchWeaponsButtonPressed*/)
         {
-            pController.Unscope();
+            pController.ScopeOut();
             crosshairScript.DeactivateRedCrosshair();
             allPlayerScripts.aimAssist.ResetRedReticule();
 

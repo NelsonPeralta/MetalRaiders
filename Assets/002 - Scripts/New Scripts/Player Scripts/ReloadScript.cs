@@ -206,7 +206,7 @@ public class ReloadScript : MonoBehaviourPun
                 pController.anim.Play("Reload Ammo Left", 0, 0f);
             else
                 pController.anim.Play("Reload Out Of Ammo", 0, 0f);
-            pController.Unscope();
+            pController.ScopeOut();
 
             if (pController.gwProperties.bulletInMagRenderer != null)
             {
@@ -235,7 +235,7 @@ public class ReloadScript : MonoBehaviourPun
             Reload(0, DEFAULT_RELOAD_TIME / pController.wProperties.defaultReloadSpeed,
                 DEFAULT_RELOAD_TIME / pController.wProperties.defaultReloadSpeed, 0);
             pController.anim.Play("Reload Open", 0, 0f);
-            pController.Unscope();
+            pController.ScopeOut();
 
 
         }
@@ -248,7 +248,7 @@ public class ReloadScript : MonoBehaviourPun
             //reloadAudioSource.clip = pController.wProperties.Reload_1;
             //reloadAudioSource.Play();
             pController.anim.Play("Reload", 0, 0f);
-            pController.Unscope();
+            pController.ScopeOut();
 
             Reload(0, 0, 0, singleReloadTime);
         }

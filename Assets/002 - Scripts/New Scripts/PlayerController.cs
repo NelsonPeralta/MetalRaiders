@@ -411,39 +411,6 @@ public class PlayerController : MonoBehaviourPun
 
                     allPlayerScripts.aimingScript.playAimSound();
 
-                    //if (wProperties.aimFOV == 30)
-                    //{
-                    //    mainCam.transform.localRotation = Quaternion.Euler(9f, 0, 0);
-                    //    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(3.5f, 0, 0);
-                    //}
-
-                    //if (wProperties.aimFOV == 45)
-                    //{
-                    //    mainCam.transform.localRotation = Quaternion.Euler(8.25f, 0, 0);
-                    //    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(5.5f, 0, 0);
-                    //}
-
-                    //if (wProperties.aimFOV == 40)
-                    //{
-                    //    mainCam.transform.localRotation = Quaternion.Euler(2.75f, 0, 0);
-                    //    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(4.82f, 0, 0);
-                    //    playerProperties.activeSensitivity = 100f;
-                    //}
-
-                    //if (wProperties.aimFOV == 20)
-                    //{
-                    //    mainCam.transform.localRotation = Quaternion.Euler(5.25f, 0, 0);
-                    //    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(2.34f, 0, 0);
-                    //    playerProperties.activeSensitivity = 50f;
-                    //}
-
-                    /*
-                    else if (wProperties.aimFOV == 60)
-                    {
-                        cam.transform.localRotation = Quaternion.Euler(5.5f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
-                    }*/
-
                     UpdateAimingLayers();
                 }
                 else
@@ -454,46 +421,54 @@ public class PlayerController : MonoBehaviourPun
 
                     allPlayerScripts.aimingScript.playAimSound();
 
-                    //mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                    //aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
 
                     UpdateAimingLayers();
                 }
 
 
 
-
-
-                //StartCoroutine(ChangeCamRotation());
-                /*
-                cam.transform.localRotation = Quaternion.Euler(-4.8f, 0, 0);
-                Debug.Log(savedCamRotation);
-                camChild.transform.localRotation = Quaternion.Euler(4.8f, 0, 0);
-                */
-
             }
 
         }
-        /*
-        else if (player.GetButtonUp("Aim") && !isReloading && !isRunning && !isInspecting)
-        {
 
-            isAiming = false;
+        //if (movement.direction == "Forward")
+        //{
+        //    if (!movement.isGrounded)
+        //        return;
 
-            cam.fieldOfView = 60;
-            cam.transform.localRotation = savedCamRotation;
-            camChild.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
+        //    if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
+        //    {
+        //        if (player.GetButton("Sprint"))
+        //            EnableSprint();
+        //        else if (player.GetButtonUp("Sprint"))
+        //            DisableSprint();
+        //    }
+        //    else if (lastControllerType == ControllerType.Joystick)
+        //        if (player.GetButtonDown("Sprint"))
+        //            EnableSprint();
+        //}
+        //else
+        //    DisableSprint();
+    }
 
-            //anim.SetBool("Aim", false);
+    public void ScopeIn()
+    {
 
-            sfxManager.mainAudioSource.clip = sfxManager.aimingSound;
-            sfxManager.mainAudioSource.Play();
+    }
+    public void ScopeOut()
+    {
+        Debug.Log("Unscope Script");
+        isAiming = false;
+        mainCam.fieldOfView = playerProperties.defaultFov;
+        playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
 
-            cam.fieldOfView = 60;
+        if (isAiming)
+            allPlayerScripts.aimingScript.playAimSound();
 
+        mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        //aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
 
-        
-        }*/
+        UpdateAimingLayers();
     }
 
     [PunRPC]
@@ -555,7 +530,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {
-                Unscope();
+                ScopeOut();
                 pInventory.grenades = pInventory.grenades - 1;
                 anim.Play("GrenadeThrow", 0, 0.0f);
                 PV.RPC("ThrowGrenade_RPC", RpcTarget.All);
@@ -1434,21 +1409,7 @@ IEnumerator Reload()
     }
     */
 
-    public void Unscope()
-    {
-        Debug.Log("Unscope Script");
-        isAiming = false;
-        mainCam.fieldOfView = playerProperties.defaultFov;
-        playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
-
-        if (isAiming)
-            allPlayerScripts.aimingScript.playAimSound();
-
-        mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        //aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
-
-        UpdateAimingLayers();
-    }
+    
 
     public void UpdateAimingLayers()
     {
