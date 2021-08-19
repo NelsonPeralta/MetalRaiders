@@ -215,6 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponName: patriot
   isWallGun: 0
   ammoInThisWeapon: 15
   extraAmmo: 30

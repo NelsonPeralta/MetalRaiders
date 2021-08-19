@@ -215,11 +215,16 @@ public class WeaponPickUp : MonoBehaviourPun
         {
             if (pController.player.GetButtonShortPressDown("Reload") /*|| cScript.InteractButtonPressed*/)
             {
-                if (pInventory.weaponsEquiped[1] == null) // Looks for Secondary Weapon
+                    int weaponCollidingWithInInventoryIndex = 0;
+                    for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
+                        if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
+                            weaponCollidingWithInInventoryIndex = i;
+                    int lwPId = weaponPool.GetWeaponIndex(weaponCollidingWith);
+                if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
                 {
                     Debug.Log("RPC: Picking up second weapon");
                     //PickupSecWeap();
-                    PV.RPC("PickupSecWeap", RpcTarget.All);
+                    PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPId, weaponCollidingWithInInventoryIndex);
 
                     if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
                     {
@@ -234,11 +239,6 @@ public class WeaponPickUp : MonoBehaviourPun
                 }
                 else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
                 {
-                    int weaponCollidingWithInInventoryIndex = 0;
-                    for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
-                        if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
-                            weaponCollidingWithInInventoryIndex = i;
-                    int lwPId = weaponPool.GetWeaponIndex(weaponCollidingWith);
                     PV.RPC("ReplaceWeapon", RpcTarget.All, lwPId, weaponCollidingWithInInventoryIndex);
                     //ReplaceWeapon(weaponCollidingWith.gameObject.GetComponent<LootableWeapon>());
 
@@ -263,7 +263,7 @@ public class WeaponPickUp : MonoBehaviourPun
             {
                 pInventory.leftWeaponCurrentAmmo = weaponCollidingWith.GetComponent<LootableWeapon>().ammoInThisWeapon;
 
-                pInventory.activeWeapon.SetActive(false);
+                pInventory.activeWeapon.gameObject.SetActive(false);
 
                 pInventory.rightWeapon = rightArmWeaponInInventory;
                 pInventory.leftWeapon = leftArmWeaponInInventory;
@@ -301,15 +301,15 @@ public class WeaponPickUp : MonoBehaviourPun
         Debug.Log("Replace Weapon");
         if (pInventory.activeWeapIs == 1)
         {
-            weaponEquippedToDrop1 = pInventory.activeWeapon;
+            weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
             weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
             pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].SetActive(true);
             pInventory.weaponsEquiped[1].gameObject.SetActive(false);
             pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
-            pInventory.activeWeapon = weaponCollidingWithInInventory;
+            pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
 
-            pInventory.activeWeapon = weaponCollidingWithInInventory.gameObject;
+            pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
 
             weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
             //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
@@ -321,14 +321,14 @@ public class WeaponPickUp : MonoBehaviourPun
 
         if (pInventory.activeWeapIs == 0)
         {
-            weaponEquippedToDrop1 = pInventory.activeWeapon;
+            weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
             weaponCollidingWithInInventory.SetActive(true);
             pInventory.weaponsEquiped[0].gameObject.SetActive(false);
             pInventory.weaponsEquiped[0] = weaponCollidingWithInInventory;
-            pInventory.activeWeapon = weaponCollidingWithInInventory;
+            pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
 
-            pInventory.activeWeapon = weaponCollidingWithInInventory.gameObject;
+            pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
 
             weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
             //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
@@ -341,25 +341,26 @@ public class WeaponPickUp : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void PickupSecWeap()
+    public void PickupSecondWeapon(int collidingWeaponPhotonId, int weaponCollidingWithInInventoryIndex)
     {
-        if (weaponCollidingWithInInventory.gameObject.GetComponent<WeaponProperties>() != null)
-        {
-            pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
-            pInventory.activeWeapon = pInventory.weaponsEquiped[1];
+        LootableWeapon lws = weaponPool.GetLootableWeaponScript(collidingWeaponPhotonId);
+        weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
-            pInventory.weaponsEquiped[1].gameObject.SetActive(true);
-            pInventory.weaponsEquiped[0].gameObject.SetActive(false);
+        weaponCollidingWithInInventory.SetActive(true);
+        pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
+        pInventory.holsteredWeapon = pInventory.activeWeapon;
+        pInventory.activeWeapon.gameObject.SetActive(false);
+        pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
+        pInventory.activeWeapIs = 1;
+        hasSecWeap = true;
 
-            pInventory.hasSecWeap = true;
+        weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
+        //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
 
-            pInventory.activeWeapon = pInventory.weaponsEquiped[1].gameObject;
-            pInventory.activeWeapIs = 1;
+        Debug.Log("Replace Weapon 1");
 
-            //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
-        }
-
-        StartCoroutine(pInventory.ToggleTPPistolIdle(0));
+        StartCoroutine(pInventory.ToggleTPPistolIdle(1));
+        pInventory.changeAmmoCounter();
     }
 
     [PunRPC]

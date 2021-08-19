@@ -237,7 +237,7 @@ public class PickupArmor : MonoBehaviour
                                 if (weapon.name != pProperties.pInventory.weaponsEquiped[0].name)
                                 {
                                     pProperties.wPickup.weaponCollidingWithInInventory = pProperties.pInventory.allWeaponsInInventory[i].gameObject;
-                                    pProperties.wPickup.PickupSecWeap();
+                                    //pProperties.wPickup.Pic();
                                 }
                             }
                             else

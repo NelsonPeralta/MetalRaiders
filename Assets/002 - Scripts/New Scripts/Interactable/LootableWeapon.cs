@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LootableWeapon : MonoBehaviour
 {
+    public string weaponName;
     public bool isWallGun;
     public int ammoInThisWeapon;
     public int extraAmmo;

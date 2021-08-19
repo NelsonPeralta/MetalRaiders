@@ -22,7 +22,8 @@ public class PlayerInventory : MonoBehaviourPun
     public string StartingWeapon;
     public string StartingWeapon2;
     public int activeWeapIs = 0;
-    public GameObject activeWeapon;
+    public WeaponProperties activeWeapon;
+    public WeaponProperties holsteredWeapon;
     public bool hasSecWeap = false;
 
     [Space(20)]
@@ -103,7 +104,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         AmmoManager();
 
-        if (pController.player.GetButtonDown("Switch Weapons") && !pController.isDualWielding /*Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetAxis("Mouse ScrollWheel") < 0 /*|| cScript.SwitchWeaponsButtonPressed*/)
+        if (pController.player.GetButtonDown("Switch Weapons"))
         {
             pController.ScopeOut();
             crosshairScript.DeactivateRedCrosshair();
@@ -135,7 +136,7 @@ public class PlayerInventory : MonoBehaviourPun
                 pProperties.DropActiveWeapon(leftWeapon);
 
                 activeWeapon.GetComponent<WeaponProperties>().currentAmmo = rightWeapon.GetComponent<WeaponProperties>().currentAmmo;
-                activeWeapon.SetActive(true);
+                activeWeapon.gameObject.SetActive(true);
 
                 rightWeapon.SetActive(false);
                 leftWeapon.SetActive(false);
@@ -159,7 +160,7 @@ public class PlayerInventory : MonoBehaviourPun
                 weaponsEquiped[1].gameObject.SetActive(true);
                 weaponsEquiped[0].gameObject.SetActive(false);                
 
-                activeWeapon = weaponsEquiped[1].gameObject;
+                activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
                 activeWeapIs = 1;
 
                 changeAmmoCounter();
@@ -171,7 +172,7 @@ public class PlayerInventory : MonoBehaviourPun
                 weaponsEquiped[1].gameObject.SetActive(false);
                 weaponsEquiped[0].gameObject.SetActive(true);                
 
-                activeWeapon = weaponsEquiped[0].gameObject;
+                activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
                 activeWeapIs = 0;
 
                 changeAmmoCounter();
@@ -191,14 +192,14 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (weaponsEquiped[0] != null)
             {
-                activeWeapon = weaponsEquiped[0].gameObject;
+                activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
             }
         }
         else if (activeWeapIs == 1)
         {
             if (weaponsEquiped[1] != null)
             {
-                activeWeapon = weaponsEquiped[1].gameObject;
+                activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
             }
         }
     }
@@ -259,8 +260,8 @@ public class PlayerInventory : MonoBehaviourPun
                     //DisableAmmoHUDCounters();
                     weaponsEquiped[0] = allWeaponsInInventory[i].gameObject;
                     //Debug.Log("Check 1");
-                    activeWeapon = weaponsEquiped[0];
-                    weaponsEquiped[0] = activeWeapon;
+                    activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
+                    weaponsEquiped[0] = activeWeapon.gameObject;
                     activeWeapIs = 0;
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
                     allWeaponsInInventory[i].gameObject.SetActive(true);
