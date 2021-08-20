@@ -332,7 +332,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (!isDualWielding)
         {
-            if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting)
+            if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
             {
                 isShooting = true;
 
@@ -345,7 +345,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (player.GetButton("Shoot") && !dwRightWP.outOfAmmo && !isReloadingRight && !isShootingRight)
+            if (player.GetButton("Shoot") && !dwRightWP.outOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
                 Debug.Log("Is Shooting Right");
                 isShootingRight = true;
@@ -490,7 +490,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!playerProperties.isDead)
         {
-            if (player.GetButtonDown("Melee") && !isMeleeing && PV.IsMine)
+            if (player.GetButtonDown("Melee") && !isMeleeing && !isShooting && !isThrowingGrenade && !isSprinting)
             {
                 Debug.Log("RPC Call: Melee");
                 PV.RPC("Melee_RPC", RpcTarget.All);
@@ -540,7 +540,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
-        if (player.GetButtonDown("Throw Grenade") && !isDualWielding /* && !isInspecting */)
+        if (player.GetButtonDown("Throw Grenade") && !isDualWielding && !isShooting && !isMeleeing && !isSprinting /* && !isInspecting */)
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {

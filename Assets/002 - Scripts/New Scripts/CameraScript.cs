@@ -60,7 +60,7 @@ public class CameraScript : MonoBehaviour
         {
 
             mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            mouseY = player.GetAxis("Mouse Y") * mouseSensitivity * 0.5f * Time.deltaTime;
+            mouseY = player.GetAxis("Mouse Y") * mouseSensitivity * 0.75f * Time.deltaTime;
 
             xRotation -= mouseY;
             yRotation -= mouseX;
