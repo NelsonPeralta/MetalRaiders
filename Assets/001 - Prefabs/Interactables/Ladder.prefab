@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c66a8e45911d75b4a999931668357756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notes: Keep an angle at 10 degrees or more
+  notes: Keep an angle at 5 degrees or more
 --- !u!1001 &5021255356348446343
 PrefabInstance:
   m_ObjectHideFlags: 0

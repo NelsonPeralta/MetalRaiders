@@ -20,7 +20,7 @@ public class Ladder : MonoBehaviour
 
             other.GetComponent<CharacterController>().slopeLimit = 180;
         other.GetComponent<CharacterController>().stepOffset = 1;
-        other.GetComponent<Movement>().defaultSpeed = other.GetComponent<Movement>().defaultSpeed / 5;
+        other.GetComponent<Movement>().defaultSpeed = other.GetComponent<Movement>().defaultSpeed / 10;
     }
 
     private void OnTriggerExit(Collider other)

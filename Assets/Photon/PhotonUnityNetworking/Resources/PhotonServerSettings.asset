@@ -90,6 +90,7 @@ MonoBehaviour:
   - EnableSprint_RPC
   - UpdateSelectedMap
   - PickupSecondWeapon
+  - SwitchWeapons
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

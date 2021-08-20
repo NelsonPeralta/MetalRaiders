@@ -39,7 +39,6 @@ public class WeaponPickUp : MonoBehaviourPun
 
     private bool isOnTrigger = false;
     private bool canPickup = false;
-    private bool hasSecWeap = false;
     bool InSameAmmoType;
     bool weaponHasMoreAmmoThanCurrent;
 
@@ -352,7 +351,7 @@ public class WeaponPickUp : MonoBehaviourPun
         pInventory.activeWeapon.gameObject.SetActive(false);
         pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
         pInventory.activeWeapIs = 1;
-        hasSecWeap = true;
+        pInventory.hasSecWeap = true;
 
         weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
         //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());

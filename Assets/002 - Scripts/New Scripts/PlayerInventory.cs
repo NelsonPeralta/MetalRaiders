@@ -118,7 +118,7 @@ public class PlayerInventory : MonoBehaviourPun
 
             if (pController.pInventory.weaponsEquiped[1] != null && !pProperties.isDead && !pProperties.isRespawning)
             {
-                PV.RPC("SwapWeapons", RpcTarget.All);
+                PV.RPC("SwitchWeapons", RpcTarget.All);
                 //SwapWeapons();
             }
         }
@@ -150,7 +150,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void SwapWeapons()
+    public void SwitchWeapons()
     {
         if (hasSecWeap == true)
         {
