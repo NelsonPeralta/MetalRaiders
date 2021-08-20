@@ -592,6 +592,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             return;
         if (lastPlayerWhoDamagedThisPlayerPVID != 0)
             multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
+        pInventory.holsteredWeapon = null;
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
         pController.DisableCrouch();
