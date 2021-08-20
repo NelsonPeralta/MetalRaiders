@@ -19,11 +19,13 @@ public class Movement : MonoBehaviour
     public PlayerProperties pProperties;
     public PlayerSFXs sfx;
     public GroundCheck groundCheckScript;
+    public GroundCheck roofCheckScript;
     public float defaultSpeed = 5f;
     public float speed;
     public float playerSpeed;
     public float jumpForce = 6f;
 
+    public float defaultGravity = -12f;
     float gravity = -12f; // -9.81f
 
     public Vector3 velocity;
@@ -52,6 +54,7 @@ public class Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gravity = defaultGravity;
         SetPlayerIDInInput();
         cManager = gameObject.GetComponent<ChildManager>();
         //tPersonScripts = cManager.FindChildWithTagScript("Third Person GO").GetComponent<ThirdPersonScript>();
@@ -195,6 +198,11 @@ public class Movement : MonoBehaviour
 
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+
+        if (roofCheckScript.isGrounded)
+            gravity = defaultGravity * 10;
+        else
+            gravity = defaultGravity;
     }
 
     int CheckDirection(float xValue, float zValue)

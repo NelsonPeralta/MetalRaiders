@@ -282,6 +282,7 @@ public class PlayerInventory : MonoBehaviourPun
             }
         }
         changeAmmoCounter();
+        playDrawSound();
         gwProperties.CheckFireMode();
     }
 
