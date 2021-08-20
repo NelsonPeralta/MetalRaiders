@@ -1492,6 +1492,7 @@ IEnumerator Reload()
 
     public void TogglePauseGame()
     {
+        Debug.Log("Toggling Pause Menu");
         if (!pauseMenuOpen)
         {
             Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
@@ -1535,6 +1536,7 @@ IEnumerator Reload()
 
     public void ReturnToMainMenu()
     {
+        Debug.Log("Returning to Main Menu");
         //Cursor.lockState = CursorLockMode.Locked;
         //Time.timeScale = 1;
         //SceneManager.LoadScene("000 - Main Menu");

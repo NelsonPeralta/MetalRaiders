@@ -359,7 +359,7 @@ public class WeaponPickUp : MonoBehaviourPun
 
         Debug.Log("Replace Weapon 1");
 
-        StartCoroutine(pInventory.ToggleTPPistolIdle(1));
+        StartCoroutine(pInventory.ToggleTPPistolIdle(0));
         pInventory.changeAmmoCounter();
     }
 

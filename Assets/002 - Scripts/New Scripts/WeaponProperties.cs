@@ -43,7 +43,7 @@ public class WeaponProperties : MonoBehaviour
     [Header("Recoil")]
     public bool hasRecoil;
     public float verticalRecoil = 1;
-    public float horizontalRecoil = 1;
+    public float horizontalRecoil = 1f;
     public int defaultBulletsToIgnoreRecoil; // Only for Fully Auto
     int bulletsToIgnoreRecoil;
     public CameraScript camScript;
