@@ -15,6 +15,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public MultiplayerManager multiplayerManager;
     public GameObjectPool gameObjectPool;
     public WeaponPool weaponPool;
+    public OnlineSwarmManager onlineSwarmManager;
 
     [Header("Models")]
     public GameObject firstPersonModels;
@@ -155,6 +156,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         spawnManager = SpawnManager.spawnManagerInstance;
         playerManager = PlayerManager.playerManagerInstance;
         multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
+        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
         weaponPool = WeaponPool.weaponPoolInstance;
         playerManager.allPlayers.Add(this);
