@@ -60,17 +60,37 @@ public class Launcher : MonoBehaviourPunCallbacks
             PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
 
-    public void CreateRoom()
+    public void CreateMultiplayerRoom()
     {
         RoomOptions options = new RoomOptions();
         options.BroadcastPropsChangeToAll = true;
+        options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+        options.CustomRoomProperties.Add("mode", "multiplayer");
         if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
         {
             return; // Do nothing
         }
 
         // else
-        PhotonNetwork.CreateRoom(roomNameInputField.text); // Create a room with the text in parameter
+        PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
+        MenuManager.Instance.OpenMenu("loading"); // Show the loading menu/message
+
+        // When creating a room is done, OnJoinedRoom() will automatically trigger
+    }
+
+    public void CreateSwarmRoom()
+    {
+        RoomOptions options = new RoomOptions();
+        options.BroadcastPropsChangeToAll = true;
+        options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+        options.CustomRoomProperties.Add("mode", "swarm");
+        if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
+        {
+            return; // Do nothing
+        }
+
+        // else
+        PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
         MenuManager.Instance.OpenMenu("loading"); // Show the loading menu/message
 
         // When creating a room is done, OnJoinedRoom() will automatically trigger
@@ -80,6 +100,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         MenuManager.Instance.OpenMenu("room"); // Show the "room" menu
         roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
+        Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
 
         UpdatePlayerList();
 
@@ -174,6 +195,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         levelToLoadIndex = index;
         mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("PVP - ", "")}";
     }
+
 
     // By JimmyCushnie
     // Reference: https://answers.unity.com/questions/1262342/how-to-get-scene-name-at-certain-buildindex.html
