@@ -33,7 +33,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
             StartCoroutine(SpawnNewWeaponFromWeaponPool(0.1f));
         if (!weaponSpawned)
         {
-            Debug.Log("Spawning New Weapon");
+            //Debug.Log("Spawning New Weapon");
             var newWeap = weaponPool.GetWeaponFromList(weapon).GetComponent<LootableWeapon>();
             newWeap.transform.position = transform.position;
             newWeap.transform.rotation = transform.rotation;

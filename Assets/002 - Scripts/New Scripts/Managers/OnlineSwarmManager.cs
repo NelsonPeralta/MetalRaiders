@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using Photon.Pun;
 public class OnlineSwarmManager : MonoBehaviour
 {
     public static OnlineSwarmManager onlineSwarmManagerInstance;
+    public PhotonView PV;
     public bool editMode = true;
     //public bool gameIsPaused;
     public MyPlayerManager pManager;
@@ -133,8 +134,16 @@ public class OnlineSwarmManager : MonoBehaviour
     public Text player2PointsText;
     public Text player3PointsText;
 
+    public OnlineGameTime onlineGameTimeInstance;
+    public AISpawnManager aiSpawnManagerInstance;
+    public AIPool aiPool;
+    float totalGameTime;
     void Start()
     {
+        onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
+        aiSpawnManagerInstance = AISpawnManager.aISpawnManagerInstance;
+        if (playerLives == 0)
+            playerLives = 5;
         ResetPoints();
         StartCoroutine(PlayAmbientSound());
         StartCoroutine(UpdateWaveNumber(waveNumber));
@@ -143,73 +152,71 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void Update()
     {
-        return;
         if (waveInProgress && !editMode)
         {
             CheckMaxAIsOnMap();
+            totalGameTime = onlineGameTimeInstance.totalTime;
 
             if (zombiesLeftToSpawn > 0)
             {
-                if (gameTime.totalGameTime > nextZombieSpawnTime)
+                if (totalGameTime > nextZombieSpawnTime)
                 {
                     SpawnZombie();
                 }
             }
 
 
-            if (skeletonsLeftToSpawn > 0)
-            {
-                if (gameTime.totalGameTime > nextSkeletonSpawnTime)
-                {
-                    SpawnSkeleton();
-                }
-            }
+            //if (skeletonsLeftToSpawn > 0)
+            //{
+            //    if (totalGameTime > nextSkeletonSpawnTime)
+            //    {
+            //        SpawnSkeleton();
+            //    }
+            //}
 
-            if (watchersLeftToSpawn > 0)
-            {
-                if (gameTime.totalGameTime > nextWatcherSpawnTime)
-                {
-                    SpawnWatcher();
-                }
-            }
+            //if (watchersLeftToSpawn > 0)
+            //{
+            //    if (totalGameTime > nextWatcherSpawnTime)
+            //    {
+            //        SpawnWatcher();
+            //    }
+            //}
 
-            if (hellhoundsLeftToSpawn > 0)
-            {
-                if (gameTime.totalGameTime > nextHellhoundSpawnTime)
-                {
-                    SpawnHellhound();
-                }
-            }
+            //if (hellhoundsLeftToSpawn > 0)
+            //{
+            //    if (totalGameTime > nextHellhoundSpawnTime)
+            //    {
+            //        SpawnHellhound();
+            //    }
+            //}
 
-            if (trollsLeftToSpawn > 0)
-            {
-                if (gameTime.totalGameTime > nextTrollSpawnTime)
-                {
-                    Debug.Log("Trying to spawn Troll");
-                    SpawnTroll();
-                }
-            }
+            //if (trollsLeftToSpawn > 0)
+            //{
+            //    if (totalGameTime > nextTrollSpawnTime)
+            //    {
+            //        Debug.Log("Trying to spawn Troll");
+            //        SpawnTroll();
+            //    }
+            //}
 
-
-
-            if (isBossWave)
-            {
-                if (blackKnightsAlive == 0 && flameTyrantsAlive == 0)
-                {
-                    waveInProgress = false;
-                    isBossWave = false;
-                    StartCoroutine(WaveEnd());
-                }
-            }
-            else
-            {
-                if (skeletonsLeftToSpawn == 0 && skeletonsAlive == 0 && watchersLeftToSpawn == 0 && watchersAlive == 0 &&
-                                hellhoundsLeftToSpawn == 0 && hellhoundsAlive == 0 && trollsLeftToSpawn == 0 && trollsAlive == 0)
-                {
-                    waveInProgress = false;
-                    StartCoroutine(WaveEnd());
-                }
-            }
+            //if (isBossWave)
+            //{
+            //    if (blackKnightsAlive == 0 && flameTyrantsAlive == 0)
+            //    {
+            //        waveInProgress = false;
+            //        isBossWave = false;
+            //        StartCoroutine(WaveEnd());
+            //    }
+            //}
+            //else
+            //{
+            //    if (skeletonsLeftToSpawn == 0 && skeletonsAlive == 0 && watchersLeftToSpawn == 0 && watchersAlive == 0 &&
+            //                    hellhoundsLeftToSpawn == 0 && hellhoundsAlive == 0 && trollsLeftToSpawn == 0 && trollsAlive == 0)
+            //    {
+            //        waveInProgress = false;
+            //        StartCoroutine(WaveEnd());
+            //    }
+            //}
         }
     }
 
@@ -348,14 +355,12 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void CalculateMaxDefaultAIsForRound()
     {
-        maxZombiesForRound = ssManager.numberOfPlayers * 3 + Mathf.CeilToInt(waveNumber / 2);
-        zombiesLeftToSpawn = maxZombiesForRound;
-
-        maxSkeletonsForRound = ssManager.numberOfPlayers * 4 + Mathf.CeilToInt(waveNumber / 2);
-        skeletonsLeftToSpawn = maxSkeletonsForRound;
-
-        maxWatchersForRound = ssManager.numberOfPlayers * 3 + Mathf.CeilToInt(waveNumber / 2);
-        watchersLeftToSpawn = maxWatchersForRound;
+        allPlayers = GetAllPlayers();
+        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
+        maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
+        maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
+        maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;
+        maxTrollsForRound = trollsLeftToSpawn = 0;
 
         if (waveNumber % 5 == 0) //&& waveNumber % 10 != 0
         {
@@ -364,36 +369,16 @@ public class OnlineSwarmManager : MonoBehaviour
             audioSource.Play();
 
             Debug.Log("Calculatin Hellhounds");
-            maxHellhoundsForRound = ssManager.numberOfPlayers * 5 + Mathf.CeilToInt(waveNumber / 2);
-            hellhoundsLeftToSpawn = maxHellhoundsForRound;
-        }
-        else
-        {
-            Debug.Log("Hellhounds at 0" + waveNumber);
-            maxHellhoundsForRound = 0;
-            hellhoundsLeftToSpawn = 0;
+            maxHellhoundsForRound = hellhoundsLeftToSpawn = allPlayers.Count * 5 + Mathf.CeilToInt(waveNumber / 2);
         }
 
-        if (waveNumber > 5)
+        if (waveNumber % 3 == 0)
         {
-            if (waveNumber % 2 == 0)
-            {
-                maxTrollsForRound = (Mathf.FloorToInt(waveNumber / 3));
-                trollsLeftToSpawn = maxTrollsForRound;
-            }
-            if (waveNumber % 5 == 0)
-            {
-                maxTrollsForRound = 0;
-                trollsLeftToSpawn = 0;
-            }
-        }
-        else
-        {
-            maxTrollsForRound = 0;
-            trollsLeftToSpawn = 0;
+            maxTrollsForRound = (Mathf.FloorToInt(waveNumber / 3));
+            trollsLeftToSpawn = maxTrollsForRound;
         }
 
-        if (waveNumber % 5 == 0 || waveNumber % 10 == 0)
+        if (waveNumber % 5 == 0)
         {
             maxZombiesForRound = 0;
             zombiesLeftToSpawn = 0;
@@ -403,10 +388,10 @@ public class OnlineSwarmManager : MonoBehaviour
             watchersLeftToSpawn = 0;
         }
 
-        if (waveNumber % 10 == 0)
-        {
-            StartCoroutine(CalculateBossWave());
-        }
+        //if (waveNumber % 10 == 0)
+        //{
+        //    StartCoroutine(CalculateBossWave());
+        //}
     }
 
     IEnumerator CalculateBossWave()
@@ -436,33 +421,35 @@ public class OnlineSwarmManager : MonoBehaviour
     void WaveStart()
     {
         waveInProgress = true;
+        totalGameTime = onlineGameTimeInstance.totalTime;
 
-        nextZombieSpawnTime = gameTime.totalGameTime + zombieSpawnDelay;
-        nextSkeletonSpawnTime = gameTime.totalGameTime + skeletonSpawnDelay;
-        nextWatcherSpawnTime = gameTime.totalGameTime + watcherSpawnDelay;
-        nextHellhoundSpawnTime = gameTime.totalGameTime + hellhoundSpawnDelay;
-        nextTrollSpawnTime = gameTime.totalGameTime + trollSpawnDelay;
+        nextZombieSpawnTime = totalGameTime + zombieSpawnDelay;
+        nextSkeletonSpawnTime = totalGameTime + skeletonSpawnDelay;
+        nextWatcherSpawnTime = totalGameTime + watcherSpawnDelay;
+        nextHellhoundSpawnTime = totalGameTime + hellhoundSpawnDelay;
+        nextTrollSpawnTime = totalGameTime + trollSpawnDelay;
     }
 
     void SpawnZombie()
     {
-        if (hasSpaceToSpawnZombie)
-        {
-            //int i = Random.Range(0, ZombieSpawns.Length);
-            //int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+        nextZombieSpawnTime = totalGameTime + zombieSpawnDelay;
+        if (!hasSpaceToSpawnZombie)
+            return;
 
-            //var newZombie = zombiePool.SpawnPooledGameObject();
-            //newZombie.transform.position = ZombieSpawns[i].transform.position;
-            //newZombie.transform.rotation = ZombieSpawns[i].transform.rotation;
-            //newZombie.SetActive(true);
-            //if (!newZombie.GetComponent<ZombieScript>().swarmMode)
-            //    newZombie.GetComponent<ZombieScript>().swarmMode = this;
-            //newZombie.GetComponent<ZombieScript>().target = pManager.allPlayers[b].transform;
-            //zombiesAlive ++;
-            //zombiesLeftToSpawn --;
-        }
+        allPlayers = GetAllPlayers();
+        Transform spawnPoint = aiSpawnManagerInstance.GetGenericSpawnpoint();
+        int a = Random.Range(0, allPlayers.Count);
 
-        nextZombieSpawnTime = gameTime.totalGameTime + zombieSpawnDelay;
+        var newZombie = aiPool.GetPooledZombie().gameObject;
+        newZombie.transform.position = spawnPoint.position;
+        newZombie.transform.rotation = spawnPoint.rotation;
+        newZombie.SetActive(true);
+
+        if (!newZombie.GetComponent<ZombieScript>().onlineSwarmManager)
+            newZombie.GetComponent<ZombieScript>().onlineSwarmManager = this;
+        newZombie.GetComponent<ZombieScript>().target = allPlayers[a].transform;
+        zombiesAlive++;
+        zombiesLeftToSpawn--;
     }
 
     void SpawnSkeleton()
@@ -483,7 +470,7 @@ public class OnlineSwarmManager : MonoBehaviour
             //skeletonsLeftToSpawn --;
         }
 
-        nextSkeletonSpawnTime = gameTime.totalGameTime + skeletonSpawnDelay;
+        nextSkeletonSpawnTime = totalGameTime + skeletonSpawnDelay;
     }
 
     void SpawnWatcher()
@@ -591,18 +578,21 @@ public class OnlineSwarmManager : MonoBehaviour
 
     IEnumerator PlayAmbientSound()
     {
-        if (waveNumber == 0)
+        if (ambientMusics.Length > 0)
         {
-            int randomSound = Random.Range(0, ambientMusics.Length - 1);
-            audioSource.clip = ambientMusics[randomSound];
-            audioSource.Play();
-        }
+            if (waveNumber == 0)
+            {
+                int randomSound = Random.Range(0, ambientMusics.Length - 1);
+                audioSource.clip = ambientMusics[randomSound];
+                audioSource.Play();
+            }
 
-        if (waveNumber % 5 != 0 || waveNumber % 10 != 0)
-        {
-            int randomSound = Random.Range(0, ambientMusics.Length - 1);
-            audioSource.clip = ambientMusics[randomSound];
-            audioSource.Play();
+            if (waveNumber % 5 != 0 || waveNumber % 10 != 0)
+            {
+                int randomSound = Random.Range(0, ambientMusics.Length - 1);
+                audioSource.clip = ambientMusics[randomSound];
+                audioSource.Play();
+            }
         }
 
         yield return new WaitForSeconds(180f);
@@ -672,16 +662,11 @@ public class OnlineSwarmManager : MonoBehaviour
 
     public void UpdatePlayerLives()
     {
-        foreach (GameObject player in pManager.allPlayers)
+        allPlayers = GetAllPlayers();
+        foreach (PlayerProperties player in allPlayers)
         {
-            if (player)
-            {
-                if (player.activeSelf)
-                {
-                    //Debug.Log("Player is Active");
-                    player.GetComponent<PlayerProperties>().playerLivesText.text = playerLives.ToString();
-                }
-            }
+            player.allPlayerScripts.playerUIComponents.swarmLivesHolder.SetActive(true);
+            player.allPlayerScripts.playerUIComponents.swarmLivesText.text = playerLives.ToString();
         }
     }
 

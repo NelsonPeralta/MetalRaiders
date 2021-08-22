@@ -5,9 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
 	public static SpawnManager spawnManagerInstance;
-
 	public List<SpawnPoint> genericSpawnPoints;
-
 	void Awake()
 	{
         if(genericSpawnPoints.Count == 0)

@@ -51,65 +51,35 @@ public class AimAssist : MonoBehaviour
         if (!player.PV.IsMine)
             return;
         RedReticule();
-        //if (!pController.isDualWielding)
-        //{
-        //    if (pInventory.activeWeapIs == 0)
-        //    {
-        //        if (pInventory.weaponsEquiped[0] != null)
-        //        {
-        //            wProperties = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
-        //        }
-        //    }
-        //    else if (pInventory.activeWeapIs == 1)
-        //    {
-        //        wProperties = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
-        //    }
-
-        //    raySpawn = puCollider.transform.position + new Vector3(0, 0f, 0);
-
-        //    if (wProperties != null)
-        //    {
-        //        raycastRange = wProperties.RedReticuleRange;
-        //    }
-
-        //    ShootInspectorRay();
-        //    ShootPlayerRay();
-        //    ShootObstacleRay();
-        //}
-        //else
-        //{
-        //    crosshairScript.RRisActive = false;
-        //    crosshairScript.friendlyRRisActive = false;
-        //    targetHitbox = null;
-        //    aiHitbox = null;
-        //}
     }
 
     void RedReticule()
     {
         if (!player.allPlayerScripts.playerInventory.activeWeapon)
             return;
-        if(Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out hit, raycastRange, layerMask))
+        if (Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out hit, raycastRange, layerMask))
         {
             targetDistance = Vector3.Distance(hit.transform.position, player.transform.position);
+            firstRayHit = hit.transform.gameObject;
             float gunRRR = player.allPlayerScripts.playerInventory.activeWeapon.GetComponent<WeaponProperties>().RedReticuleRange;
 
-            if (!hit.transform.gameObject.GetComponent<PlayerHitbox>())
+            if (!hit.transform.gameObject.GetComponent<PlayerHitbox>() && !hit.transform.gameObject.GetComponent<AIHitbox>())
             {
                 ResetRedReticule();
                 return;
             }
 
-            if (hit.transform.root.GetComponent<PlayerProperties>() && hit.transform.root.gameObject != player.gameObject && targetDistance <= gunRRR)
-                ActivateRedReticule();
-            else
-                ResetRedReticule();
-    }
+            if (hit.transform.root.GetComponent<PlayerProperties>() || hit.transform.GetComponent<AIHitbox>())
+                if (hit.transform.root.gameObject != player.gameObject && targetDistance <= gunRRR)
+                    ActivateRedReticule();
+                else
+                    ResetRedReticule();
+        }
         else
         {
             ResetRedReticule();
         }
-            Debug.DrawRay(mainCam.transform.position, mainCam.transform.forward * 100, Color.green);
+        Debug.DrawRay(mainCam.transform.position, mainCam.transform.forward * 100, Color.green);
     }
 
     void ActivateRedReticule()
@@ -150,10 +120,10 @@ public class AimAssist : MonoBehaviour
             }
             else if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null && hit.transform.gameObject.GetComponent<PlayerHitbox>().gameObject.layer == 13)
             {
-                
-                    target = hit.transform.gameObject.GetComponent<PlayerHitbox>().player;
-                    targetHitbox = hit.transform.gameObject.GetComponent<PlayerHitbox>();
-                    targetDistance = hit.distance;
+
+                target = hit.transform.gameObject.GetComponent<PlayerHitbox>().player;
+                targetHitbox = hit.transform.gameObject.GetComponent<PlayerHitbox>();
+                targetDistance = hit.distance;
             }
         }
     }

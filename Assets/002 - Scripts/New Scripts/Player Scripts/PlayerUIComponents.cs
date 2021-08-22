@@ -18,6 +18,8 @@ public class PlayerUIComponents : MonoBehaviour
     public Transform topLeft;
     public GameObject fragGrenadeIcon;
     public GameObject stickyGrenadeIcon;
+    public GameObject swarmLivesHolder;
+    public Text swarmLivesText;
 
     [Header("Top Middle", order = 2)]
     public Transform topMiddle;

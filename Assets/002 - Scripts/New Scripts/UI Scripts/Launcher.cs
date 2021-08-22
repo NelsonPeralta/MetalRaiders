@@ -98,14 +98,23 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        MenuManager.Instance.OpenMenu("room"); // Show the "room" menu
-        roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
         Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
+        string roomType = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString() + "_room";
+        string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+
+        MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
+        roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
         UpdatePlayerList();
 
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        mapSelector.SetActive(PhotonNetwork.IsMasterClient);
+        if(mode == "multiplayer")
+            mapSelector.SetActive(PhotonNetwork.IsMasterClient);
+        if(mode == "swarm")
+        {
+            mapSelector.SetActive(PhotonNetwork.IsMasterClient);
+            levelToLoadIndex = 4;
+        }
     }
 
     [PunRPC]

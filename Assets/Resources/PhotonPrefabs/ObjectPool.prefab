@@ -46,7 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PV: {fileID: 0}
   amountToPool: 1000
-  objectsSpawned: 0
   bullets: []
   bulletPrefab: {fileID: 652686745487404900, guid: be7ba75c7401067478ca44c36f3954e7,
     type: 3}

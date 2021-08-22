@@ -9,21 +9,15 @@ public class GameObjectPool : MonoBehaviour
     public PhotonView PV;
     public static GameObjectPool gameObjectPoolInstance;
     public int amountToPool;
-    public bool objectsSpawned = false;
+    bool objectsSpawned = false;
 
-    [Header("Bullets")]
+    [Header("Base Objects")]
     public List<GameObject> bullets = new List<GameObject>();
     public GameObject bulletPrefab;
-
-    [Header("Blood Hit")]
     public List<GameObject> bloodHits = new List<GameObject>();
     public GameObject bloodHitPrefab;
-
-    [Header("Generic Hit")]
     public List<GameObject> genericHits = new List<GameObject>();
     public GameObject genericHitPrefab;
-
-    [Header("Player Ragdoll")]
     public List<GameObject> ragdolls = new List<GameObject>();
     public GameObject ragdollPrefab;
 
@@ -44,42 +38,46 @@ public class GameObjectPool : MonoBehaviour
 
     private void Start()
     {
-        if (!GameObjectPool.gameObjectPoolInstance.objectsSpawned)
-            for (int i = 0; i < amountToPool; i++)
-            {
-                GameObject obj = Instantiate(bulletPrefab, transform.position, transform.rotation);
-                //GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlinePlayerBullet"), Vector3.zero, Quaternion.identity);
-                obj.SetActive(false);
-                bullets.Add(obj);
-                obj.transform.parent = gameObject.transform;
+        if (GameObjectPool.gameObjectPoolInstance.objectsSpawned)
+            return;
+        for (int i = 0; i < amountToPool; i++)
+        {
+            GameObject obj = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            //GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlinePlayerBullet"), Vector3.zero, Quaternion.identity);
+            obj.SetActive(false);
+            bullets.Add(obj);
+            obj.transform.parent = gameObject.transform;
 
-                obj = Instantiate(bloodHitPrefab, transform.position, transform.rotation);
-                obj.SetActive(false);
-                bloodHits.Add(obj);
-                obj.transform.parent = gameObject.transform;
+            obj = Instantiate(bloodHitPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            bloodHits.Add(obj);
+            obj.transform.parent = gameObject.transform;
 
-                obj = Instantiate(genericHitPrefab, transform.position, transform.rotation);
-                obj.SetActive(false);
-                genericHits.Add(obj);
-                obj.transform.parent = gameObject.transform;
+            obj = Instantiate(genericHitPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            genericHits.Add(obj);
+            obj.transform.parent = gameObject.transform;
 
-                obj = Instantiate(ragdollPrefab, transform.position, transform.rotation);
-                obj.SetActive(false);
-                ragdolls.Add(obj);
-                obj.transform.parent = gameObject.transform;
+            obj = Instantiate(ragdollPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            ragdolls.Add(obj);
+            obj.transform.parent = gameObject.transform;
 
-                obj = Instantiate(testingObjectPrefab, transform.position, transform.rotation);
-                obj.SetActive(false);
-                testingObjects.Add(obj);
-                obj.transform.parent = gameObject.transform;
-            }
+            obj = Instantiate(testingObjectPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            testingObjects.Add(obj);
+            obj.transform.parent = gameObject.transform;
+        }
     }
 
     public GameObject SpawnPooledBullet()
     {
         foreach (GameObject obj in bullets)
             if (!obj.activeSelf)
+            {
+                StartCoroutine(DisableObjectAfterTime(obj));
                 return obj;
+            }
         return null;
     }
 
@@ -87,7 +85,11 @@ public class GameObjectPool : MonoBehaviour
     {
         foreach (GameObject obj in bloodHits)
             if (!obj.activeSelf)
-                return obj;
+                if (!obj.activeSelf)
+                {
+                    StartCoroutine(DisableObjectAfterTime(obj));
+                    return obj;
+                }
         return null;
     }
 
@@ -95,7 +97,11 @@ public class GameObjectPool : MonoBehaviour
     {
         foreach (GameObject obj in genericHits)
             if (!obj.activeSelf)
-                return obj;
+                if (!obj.activeSelf)
+                {
+                    StartCoroutine(DisableObjectAfterTime(obj));
+                    return obj;
+                }
         return null;
     }
 
@@ -103,7 +109,11 @@ public class GameObjectPool : MonoBehaviour
     {
         foreach (GameObject obj in ragdolls)
             if (!obj.activeSelf)
-                return obj;
+                if (!obj.activeSelf)
+                {
+                    StartCoroutine(DisableObjectAfterTime(obj));
+                    return obj;
+                }
         return null;
     }
 
@@ -111,10 +121,13 @@ public class GameObjectPool : MonoBehaviour
     {
         foreach (GameObject obj in testingObjects)
             if (!obj.activeSelf)
-                return obj;
+                if (!obj.activeSelf)
+                {
+                    StartCoroutine(DisableObjectAfterTime(obj));
+                    return obj;
+                }
         return null;
     }
-
     private void OnDestroy()
     {
         foreach (GameObject go in bullets)
@@ -133,5 +146,11 @@ public class GameObjectPool : MonoBehaviour
             Destroy(go);
 
         gameObjectPoolInstance = null;
+    }
+
+    IEnumerator DisableObjectAfterTime(GameObject obj, int time = 1)
+    {
+        yield return new WaitForSeconds(time);
+        obj.SetActive(false);
     }
 }

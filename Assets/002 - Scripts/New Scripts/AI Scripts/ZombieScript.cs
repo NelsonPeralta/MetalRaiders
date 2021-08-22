@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class ZombieScript : MonoBehaviour
 {
+    public PhotonView PV;
+    public OnlineSwarmManager onlineSwarmManager;
     public NavMeshAgent nma;
     public Animator anim;
     public SwarmMode swarmMode;
