@@ -28,6 +28,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [Header("Master Client Only")]
     [SerializeField] GameObject startGameButton;
     [SerializeField] GameObject mapSelector;
+    [SerializeField] GameObject multiplayerMapSelector;
+    [SerializeField] GameObject swarmMapSelector;
 
     void Awake()
     {
@@ -113,11 +115,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log($"Is Master Client: {PV.ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         if(mode == "multiplayer")
+        {
+            mapSelector = multiplayerMapSelector;
             mapSelector.SetActive(PhotonNetwork.IsMasterClient);
+        }
         if(mode == "swarm")
         {
+            mapSelector = swarmMapSelector;
             mapSelector.SetActive(PhotonNetwork.IsMasterClient);
-            levelToLoadIndex = 4;
         }
     }
 
@@ -208,6 +213,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         levelToLoadIndex = index;
         mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("PVP - ", "")}";
+        mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("Coop - ", "")}";
     }
 
 

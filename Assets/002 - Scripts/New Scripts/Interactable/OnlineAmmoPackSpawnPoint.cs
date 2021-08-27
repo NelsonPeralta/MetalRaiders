@@ -9,6 +9,7 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
     public OnlineGameTime onlineGameTime;
 
     [Header("Info")]
+    public bool randomAmmo;
     public string ammoType;
     public GameObject Placeholder;
     public AmmoPack ammoPack;
@@ -44,6 +45,9 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
         {
             ammoPack.EnablePack();
         }
+
+        if (randomAmmo)
+            ammoPack.SetRandomAmmoAsDefault();
     }
 
     public void StartRespawn()

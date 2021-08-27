@@ -99,6 +99,7 @@ MonoBehaviour:
   - LookForNewPlayer_RPC
   - DisableHealthPack_RPC
   - RespawnHealthPack_RPC
+  - SetRandomAmmoAsDefault_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

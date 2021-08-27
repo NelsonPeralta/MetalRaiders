@@ -12,6 +12,7 @@ public class AmmoPack : MonoBehaviour
     public OnlineGameTime onlineGameTime;
 
     [Header("Ammo")]
+    public bool randomAmmo;
     public string ammoType;
     int defaultAmmo;
     public int ammoInThisPack;
@@ -27,7 +28,10 @@ public class AmmoPack : MonoBehaviour
     {
         weaponPool = WeaponPool.weaponPoolInstance;
         onlineGameTime = OnlineGameTime.onlineGameTimeInstance;
-        defaultAmmo = ammoInThisPack;
+        if (!randomAmmo)
+            defaultAmmo = ammoInThisPack;
+        else
+            defaultAmmo = GetRandomAmmo();
         UpdateAmmoText();
     }
 
@@ -44,7 +48,7 @@ public class AmmoPack : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    int RandomAmmo()
+    int GetRandomAmmo()
     {
         int ranAmmo = (int)Mathf.Floor(Random.Range(1, (defaultAmmo * 0.8f)));
         return ranAmmo;
@@ -53,5 +57,18 @@ public class AmmoPack : MonoBehaviour
     void UpdateAmmoText()
     {
         ammoText.text = ammoInThisPack.ToString();
+    }
+
+    public void SetRandomAmmoAsDefault()
+    {
+        defaultAmmo = GetRandomAmmo();
+        UpdateAmmoText();
+    }
+
+    [PunRPC]
+    public void SetRandomAmmoAsDefault_RPC()
+    {
+        defaultAmmo = GetRandomAmmo();
+        UpdateAmmoText();
     }
 }
