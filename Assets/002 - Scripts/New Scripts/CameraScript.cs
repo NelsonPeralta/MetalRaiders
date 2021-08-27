@@ -5,6 +5,7 @@ using Rewired;
 
 public class CameraScript : MonoBehaviour
 {
+    public float defaultMouseSensitivy;
     public float mouseSensitivity;
     public Transform playerBody;
     public float xRotation = 0f;
@@ -46,15 +47,17 @@ public class CameraScript : MonoBehaviour
             return;
 
         if (pController.lastControllerType.ToString() != "Keyboard" && pController.lastControllerType.ToString() != "Mouse")
-            mouseSensitivity = pProperties.activeSensitivity;
-        else
+            mouseSensitivity = defaultMouseSensitivy;
+        else if (pController.lastControllerType.ToString() == "Keyboard" || pController.lastControllerType.ToString() == "Mouse")
         {
-            if (!pController.isAiming)
-                mouseSensitivity = pProperties.activeSensitivity / 25;
-            else
-                mouseSensitivity = pProperties.activeSensitivity / 75;
-            //Debug.Log("LAst Controller is M&K");
+            mouseSensitivity = defaultMouseSensitivy / 25;
         }
+
+        if (pController.isAiming)
+            mouseSensitivity = mouseSensitivity / 2;
+
+        if (pProperties.aimAssist.redReticuleIsOn)
+            mouseSensitivity = mouseSensitivity / 3;
 
         if (pController.playerProperties != null && !pController.pauseMenuOpen)
         {
@@ -79,6 +82,6 @@ public class CameraScript : MonoBehaviour
 
     public void RotateCameraBy(float rotationAmount)
     {
-        playerBody.Rotate(Vector3.up  * rotationAmount);
+        playerBody.Rotate(Vector3.up * rotationAmount);
     }
 }

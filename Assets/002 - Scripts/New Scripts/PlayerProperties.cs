@@ -60,8 +60,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     [Header("Camera Options")]
     [Tooltip("Default value for camera field of view (40 is recommended).")]
     public float defaultFov = 60.0f;
-    public float defaultSensitivity = 150f;
-    public float activeSensitivity;
 
     [Header("UI Components Text")]
     public Text currentAmmoText;
@@ -164,7 +162,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         gameObject.name = $"Player ({PV.Owner.NickName})";
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
-        activeSensitivity = defaultSensitivity;
         Health = maxHealth;
         HealthDebuggerText.text = $"Health: {Health.ToString()}";
         networkedHealth = Health;
@@ -348,7 +345,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         }
 
         HealthAndshieldRecharge();
-        CheckRRIsOn();
     }
 
     /// <summary>
@@ -398,14 +394,14 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Damage_RPC(float newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId)
     {
-        if(PV.IsMine)
+        if (PV.IsMine)
             allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
         lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
         Health = newHealth;
         healthSlider.value = Health;
 
         GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
-        bloodHit.transform.position = gameObject.transform.position + new Vector3(0, -0.5f, 0);
+        bloodHit.transform.position = gameObject.transform.position + new Vector3(0, -0.4f, 0);
         bloodHit.SetActive(true);
 
         triggerHealthRecharge = true;
@@ -577,7 +573,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
             if (!healthRegenerating)
             {
-                PlayHealthStartSound();
+                PlayHealthRechargeSound();
                 healthRegenerating = true;
             }
         }
@@ -592,7 +588,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!isDead || respawnCoroutine != null || isRespawning)
             return;
-        if (lastPlayerWhoDamagedThisPlayerPVID != 0)
+        if (lastPlayerWhoDamagedThisPlayerPVID != 0 && multiplayerManager)
             multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
         pInventory.holsteredWeapon = null;
         isRespawning = true;
@@ -664,13 +660,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = ragdollScript.LowerLegRight.rotation;
 
         ragdoll.SetActive(true);
-        StartCoroutine(DespawnRagdoll(ragdoll));
-    }
-
-    IEnumerator DespawnRagdoll(GameObject ragdoll)
-    {
-        yield return new WaitForSeconds(30);
-        ragdoll.SetActive(false);
     }
 
     IEnumerator Respawn_Coroutine()
@@ -1018,7 +1007,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         shieldAudioSource.Play();
     }
 
-    void PlayHealthStartSound()
+    public void PlayHealthRechargeSound()
     {
         Debug.Log("Health Reachrge Sound");
         if (isDead || isRespawning)
@@ -1055,20 +1044,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    void CheckRRIsOn()
-    {
-            if (!pController.isAiming)
-            {
-                if (aimAssist.redReticulIsOn)
-                {
-                    activeSensitivity = defaultSensitivity / 10;
-                }
-                else
-                {
-                    activeSensitivity = defaultSensitivity;
-                }
-            }
-    }
 
     void UpdateMPPoints(int playerWhoDied, int playerWhoKilled)
     {

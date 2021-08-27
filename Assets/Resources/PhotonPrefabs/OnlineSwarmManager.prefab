@@ -28,8 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 405308141312357712}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -77,34 +76,25 @@ MonoBehaviour:
   - {fileID: 0}
   waveNumber: 0
   waveInProgress: 0
-  newWaveDelay: 0
+  newWaveDelay: 15
   bossWaveTimer: 0
   zombiesAlive: 0
   skeletonsAlive: 0
   watchersAlive: 0
   hellhoundsAlive: 0
   trollsAlive: 0
-  maxZombiesForRound: 0
-  maxSkeletonsForRound: 0
-  maxWatchersForRound: 0
-  maxHellhoundsForRound: 0
-  maxTrollsForRound: 0
-  isBossWave: 0
-  maxBlackKnightsForRound: 0
-  blackKnightsAlive: 0
-  maxFlameTyrantsForRound: 0
-  flameTyrantsAlive: 0
   zombiesLeftToSpawn: 0
   skeletonsLeftToSpawn: 0
   watchersLeftToSpawn: 0
   hellhoundsLeftToSpawn: 0
   trollsLeftToSpawn: 0
+  isBossWave: 0
   maxZombiesOnMap: 12
   maxSkeletonsOnMap: 8
   maxWatchersOnMap: 8
   maxHellhoundsOnMap: 24
   maxTrollsOnMap: 4
-  zombieSpawnDelay: 3.5
+  zombieSpawnDelay: 2
   nextZombieSpawnTime: 0
   skeletonSpawnDelay: 3
   nextSkeletonSpawnTime: 0
@@ -142,7 +132,12 @@ MonoBehaviour:
   player3PointsText: {fileID: 0}
   onlineGameTimeInstance: {fileID: 0}
   aiSpawnManagerInstance: {fileID: 0}
-  aiPool: {fileID: 6245470751023525347}
+  aiPool: {fileID: 0}
+  healthPacks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &4710131147709720510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,79 +145,6 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5506794971816424258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!1 &7164031536568529875
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 405308141312357712}
-  - component: {fileID: 6245470751023525347}
-  - component: {fileID: 7851670612771719784}
-  m_Layer: 0
-  m_Name: AI Pool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &405308141312357712
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7164031536568529875}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 407597114198664401}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6245470751023525347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7164031536568529875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2998618492252694bae40ac3c56200f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  amountToPool: 10
-  skeletons: []
-  skeletonPrefab: {fileID: 6258186488468177427, guid: d52f18b9470c8d64891513152f25bb30,
-    type: 3}
-  zombies: []
-  zombiePrefab: {fileID: 6407237786346386500, guid: 87f9942042fad7b42bed70a1db7051d1,
-    type: 3}
---- !u!114 &7851670612771719784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7164031536568529875}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}

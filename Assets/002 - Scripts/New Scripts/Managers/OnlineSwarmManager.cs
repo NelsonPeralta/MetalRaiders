@@ -30,6 +30,7 @@ public class OnlineSwarmManager : MonoBehaviour
     public List<PlayerProperties> allPlayers = new List<PlayerProperties>();
     public List<OnlinePlayerSwarmScript> allPlayerSwarmScripts = new List<OnlinePlayerSwarmScript>();
     public int playerLives;
+    List<WaveCounter> allPlayerWaveCounters = new List<WaveCounter>();
 
     [Header("AI Spawns")]
     public GameObject[] ZombieSpawns;
@@ -56,26 +57,25 @@ public class OnlineSwarmManager : MonoBehaviour
     public int hellhoundsAlive;
     public int trollsAlive;
 
-    [Header("General Game Information")]
-    public int maxZombiesForRound;
-    public int maxSkeletonsForRound;
-    public int maxWatchersForRound;
-    public int maxHellhoundsForRound;
-    public int maxTrollsForRound;
-
-    [Header("Boss AIs Information")]
-    public bool isBossWave;
-    public int maxBlackKnightsForRound;
-    public int blackKnightsAlive;
-    public int maxFlameTyrantsForRound;
-    public int flameTyrantsAlive;
-
     [Header("AIs Left To Spawn")]
     public int zombiesLeftToSpawn;
     public int skeletonsLeftToSpawn;
     public int watchersLeftToSpawn;
     public int hellhoundsLeftToSpawn;
     public int trollsLeftToSpawn;
+
+    int maxZombiesForRound;
+    int maxSkeletonsForRound;
+    int maxWatchersForRound;
+    int maxHellhoundsForRound;
+    int maxTrollsForRound;
+
+    public bool isBossWave;
+    int maxBlackKnightsForRound;
+    int blackKnightsAlive;
+    int maxFlameTyrantsForRound;
+    int flameTyrantsAlive;
+
 
     [Header("AIs Open Space")]
     public int maxZombiesOnMap;
@@ -138,12 +138,40 @@ public class OnlineSwarmManager : MonoBehaviour
     public AISpawnManager aiSpawnManagerInstance;
     public AIPool aiPool;
     float totalGameTime;
+
+    [Header("Health Packs")]
+    public List<HealthPack> healthPacks = new List<HealthPack>();
+    private void Awake()
+    {
+        PV = gameObject.GetComponent<PhotonView>();
+        if (PV.Owner.IsMasterClient)
+        {
+            onlineSwarmManagerInstance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            foreach (Transform child in transform)
+                Destroy(child.gameObject);
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
+        healthPacks = GetAllHealthPacks();
+        aiPool = AIPool.aIPoolInstance;
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
         aiSpawnManagerInstance = AISpawnManager.aISpawnManagerInstance;
         if (playerLives == 0)
             playerLives = 5;
+
+        allPlayers = GetAllPlayers();
+        foreach (PlayerProperties pp in allPlayers)
+            pp.needsHealthPack = true;
+
         ResetPoints();
         StartCoroutine(PlayAmbientSound());
         StartCoroutine(UpdateWaveNumber(waveNumber));
@@ -152,18 +180,16 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void Update()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         if (waveInProgress && !editMode)
         {
             CheckMaxAIsOnMap();
             totalGameTime = onlineGameTimeInstance.totalTime;
 
             if (zombiesLeftToSpawn > 0)
-            {
                 if (totalGameTime > nextZombieSpawnTime)
-                {
                     SpawnZombie();
-                }
-            }
 
 
             //if (skeletonsLeftToSpawn > 0)
@@ -210,12 +236,12 @@ public class OnlineSwarmManager : MonoBehaviour
             //}
             //else
             //{
-            //    if (skeletonsLeftToSpawn == 0 && skeletonsAlive == 0 && watchersLeftToSpawn == 0 && watchersAlive == 0 &&
-            //                    hellhoundsLeftToSpawn == 0 && hellhoundsAlive == 0 && trollsLeftToSpawn == 0 && trollsAlive == 0)
-            //    {
-            //        waveInProgress = false;
-            //        StartCoroutine(WaveEnd());
-            //    }
+            if (skeletonsLeftToSpawn == 0 && skeletonsAlive == 0 && watchersLeftToSpawn == 0 && watchersAlive == 0 &&
+                            hellhoundsLeftToSpawn == 0 && hellhoundsAlive == 0 && trollsLeftToSpawn == 0 && trollsAlive == 0 && zombiesLeftToSpawn == 0 && zombiesAlive == 0)
+            {
+                waveInProgress = false;
+                StartCoroutine(WaveEnd());
+            }
             //}
         }
     }
@@ -223,132 +249,40 @@ public class OnlineSwarmManager : MonoBehaviour
     IEnumerator UpdateWaveNumber(int param1)
     {
         waveNumber = waveNumber + 1;
-        List<WaveCounter> waveCounters = new List<WaveCounter>();
+        allPlayerWaveCounters = GetAllPlayerWaveCounters();
 
         yield return new WaitForSeconds(3.5f);
 
-        if (pManager)
-        {
-            foreach (GameObject player in pManager.allPlayers)
+        if (allPlayerWaveCounters.Count > 0)
+            foreach (WaveCounter wc in allPlayerWaveCounters)
             {
-                if (player.GetComponent<AllPlayerScripts>().waveCounter)
-                    waveCounters.Add(player.GetComponent<AllPlayerScripts>().waveCounter);
+                wc.gameObject.SetActive(true);
+                wc.waveText.text = $"Wave: {waveNumber}";
             }
-        }
 
-        if (waveCounters.Count > 0)
-            foreach (WaveCounter wc in waveCounters)
-                wc.gameObject.SetActive(false);
-
-        if (waveCounters.Count > 0)
-            foreach (WaveCounter wc in waveCounters)
-                StartCoroutine(wc.UpdateWaveNumber(waveNumber));
-
-        /*
-
-        if (players[0] != null)
-        {
-            if (players[0].gameObject.GetComponent<WaveCounter>() != null)
-            {
-                WaveCounter wc = players[0].gameObject.GetComponent<WaveCounter>();
-                StartCoroutine(wc.UpdateWaveNumber(waveNumber));
-                
-            }
-        }
-
-        if (gameInformerPlayer1 != null)
-            gameInformerPlayer1.gameObject.SetActive(false);
-        if (gameInformerPlayer2 != null)
-            gameInformerPlayer2.gameObject.SetActive(false);
-        if (gameInformerPlayer3 != null)
-            gameInformerPlayer3.gameObject.SetActive(false);
-        if (gameInformerPlayer4 != null)
-            gameInformerPlayer4.gameObject.SetActive(false);
-
-        if (gameInformerPlayer1 != null)
-            gameInformerPlayer1.gameObject.GetComponent<Text>().text = "Wave " + waveNumber;
-        if (gameInformerPlayer2 != null)
-            gameInformerPlayer2.gameObject.GetComponent<Text>().text = "Wave " + waveNumber;
-        if (gameInformerPlayer3 != null)
-            gameInformerPlayer3.gameObject.GetComponent<Text>().text = "Wave " + waveNumber;
-        if (gameInformerPlayer4 != null)
-            gameInformerPlayer4.gameObject.GetComponent<Text>().text = "Wave " + waveNumber;
-        yield return new WaitForSeconds(.25f);
-
-        if (gameInformerPlayer1 != null)
-            gameInformerPlayer1.gameObject.SetActive(true);
-        if (gameInformerPlayer2 != null)
-            gameInformerPlayer2.gameObject.SetActive(true);
-        if (gameInformerPlayer3 != null)
-            gameInformerPlayer3.gameObject.SetActive(true);
-        if (gameInformerPlayer4 != null)
-            gameInformerPlayer4.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.25f);
-
-        if (gameInformerPlayer1 != null)
-            gameInformerPlayer1.gameObject.SetActive(false);
-        if (gameInformerPlayer2 != null)
-            gameInformerPlayer2.gameObject.SetActive(false);
-        if (gameInformerPlayer3 != null)
-            gameInformerPlayer3.gameObject.SetActive(false);
-        if (gameInformerPlayer4 != null)
-            gameInformerPlayer4.gameObject.SetActive(false);
-        yield return new WaitForSeconds(.25f);
-
-        if (gameInformerPlayer1 != null)
-            gameInformerPlayer1.gameObject.SetActive(true);
-        if (gameInformerPlayer2 != null)
-            gameInformerPlayer2.gameObject.SetActive(true);
-        if (gameInformerPlayer3 != null)
-            gameInformerPlayer3.gameObject.SetActive(true);
-        if (gameInformerPlayer4 != null)
-            gameInformerPlayer4.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.25f);
-
-        if (gameInformerPlayer1 != null)
-            gameInformerPlayer1.gameObject.SetActive(false);
-        if (gameInformerPlayer2 != null)
-            gameInformerPlayer2.gameObject.SetActive(false);
-        if (gameInformerPlayer3 != null)
-            gameInformerPlayer3.gameObject.SetActive(false);
-        if (gameInformerPlayer4 != null)
-            gameInformerPlayer4.gameObject.SetActive(false);
-        yield return new WaitForSeconds(.25f);
-
-        if (gameInformerPlayer1 != null)
-            gameInformerPlayer1.gameObject.SetActive(true);
-        if (gameInformerPlayer2 != null)
-            gameInformerPlayer2.gameObject.SetActive(true);
-        if (gameInformerPlayer3 != null)
-            gameInformerPlayer3.gameObject.SetActive(true);
-        if (gameInformerPlayer4 != null)
-            gameInformerPlayer4.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.25f);
-
-        */
 
         CalculateMaxDefaultAIsForRound();
 
-        if (waveNumber % 5 == 0)
-        {
-            Debug.Log("Weapon Drop");
-            foreach (GameObject crate in parachuteWeaponCrates)
-                crate.GetComponent<ParachuteWeaponDrop>().spawnCrate();
+        //if (waveNumber % 5 == 0)
+        //{
+        //    Debug.Log("Weapon Drop");
+        //    foreach (GameObject crate in parachuteWeaponCrates)
+        //        crate.GetComponent<ParachuteWeaponDrop>().spawnCrate();
 
-            if (RandwomWeaponDrop)
-            {
-                var drop = Instantiate(RandwomWeaponDrop, dropLocation.transform.position, dropLocation.transform.rotation);
-                Destroy(drop, 10);
-            }
+        //    if (RandwomWeaponDrop)
+        //    {
+        //        var drop = Instantiate(RandwomWeaponDrop, dropLocation.transform.position, dropLocation.transform.rotation);
+        //        Destroy(drop, 10);
+        //    }
 
-            yield return new WaitForSeconds(25f);
-        }
-        else if (waveNumber == 1)
-            yield return new WaitForSeconds(15f);
-        else
-        {
-            yield return new WaitForSeconds(6.5f);
-        }
+        //    yield return new WaitForSeconds(25f);
+        //}
+        //else if (waveNumber == 1)
+        //    yield return new WaitForSeconds(15f);
+        //else
+        //{
+        //    yield return new WaitForSeconds(6.5f);
+        //}
 
         WaveStart();
     }
@@ -356,37 +290,37 @@ public class OnlineSwarmManager : MonoBehaviour
     void CalculateMaxDefaultAIsForRound()
     {
         allPlayers = GetAllPlayers();
-        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
-        maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
-        maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
-        maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;
-        maxTrollsForRound = trollsLeftToSpawn = 0;
+        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + Mathf.CeilToInt(waveNumber / 2);
+        //maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
+        //maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
+        //maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;
+        //maxTrollsForRound = trollsLeftToSpawn = 0;
 
-        if (waveNumber % 5 == 0) //&& waveNumber % 10 != 0
-        {
-            int randomSound = Random.Range(0, bossMusics.Length);
-            audioSource.clip = bossMusics[randomSound];
-            audioSource.Play();
+        //if (waveNumber % 5 == 0) //&& waveNumber % 10 != 0
+        //{
+        //    int randomSound = Random.Range(0, bossMusics.Length);
+        //    audioSource.clip = bossMusics[randomSound];
+        //    audioSource.Play();
 
-            Debug.Log("Calculatin Hellhounds");
-            maxHellhoundsForRound = hellhoundsLeftToSpawn = allPlayers.Count * 5 + Mathf.CeilToInt(waveNumber / 2);
-        }
+        //    Debug.Log("Calculatin Hellhounds");
+        //    maxHellhoundsForRound = hellhoundsLeftToSpawn = allPlayers.Count * 5 + Mathf.CeilToInt(waveNumber / 2);
+        //}
 
-        if (waveNumber % 3 == 0)
-        {
-            maxTrollsForRound = (Mathf.FloorToInt(waveNumber / 3));
-            trollsLeftToSpawn = maxTrollsForRound;
-        }
+        //if (waveNumber % 3 == 0)
+        //{
+        //    maxTrollsForRound = (Mathf.FloorToInt(waveNumber / 3));
+        //    trollsLeftToSpawn = maxTrollsForRound;
+        //}
 
-        if (waveNumber % 5 == 0)
-        {
-            maxZombiesForRound = 0;
-            zombiesLeftToSpawn = 0;
-            maxSkeletonsForRound = 0;
-            skeletonsLeftToSpawn = 0;
-            maxWatchersForRound = 0;
-            watchersLeftToSpawn = 0;
-        }
+        //if (waveNumber % 5 == 0)
+        //{
+        //    maxZombiesForRound = 0;
+        //    zombiesLeftToSpawn = 0;
+        //    maxSkeletonsForRound = 0;
+        //    skeletonsLeftToSpawn = 0;
+        //    maxWatchersForRound = 0;
+        //    watchersLeftToSpawn = 0;
+        //}
 
         //if (waveNumber % 10 == 0)
         //{
@@ -432,22 +366,28 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void SpawnZombie()
     {
+        Debug.Log("RPC Call: SpawnZombie_RPC");
         nextZombieSpawnTime = totalGameTime + zombieSpawnDelay;
         if (!hasSpaceToSpawnZombie)
             return;
-
         allPlayers = GetAllPlayers();
-        Transform spawnPoint = aiSpawnManagerInstance.GetGenericSpawnpoint();
-        int a = Random.Range(0, allPlayers.Count);
+        int ran = Random.Range(0, allPlayers.Count);
+        int targetPhotonId = allPlayers[ran].PV.ViewID;
 
-        var newZombie = aiPool.GetPooledZombie().gameObject;
-        newZombie.transform.position = spawnPoint.position;
-        newZombie.transform.rotation = spawnPoint.rotation;
-        newZombie.SetActive(true);
+        Transform spawnPoint = aiSpawnManagerInstance.GetGenericSpawnpoint();
+        PV.RPC("SpawnZombie_RPC", RpcTarget.All, aiPool.GetRandomZombiePhotonId(), targetPhotonId, spawnPoint.position, spawnPoint.rotation);
+    }
+
+    [PunRPC]
+    void SpawnZombie_RPC(int AIPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
+    {
+
+
+        var newZombie = PhotonView.Find(AIPhotonId).gameObject;
+        newZombie.GetComponent<ZombieScript>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
 
         if (!newZombie.GetComponent<ZombieScript>().onlineSwarmManager)
             newZombie.GetComponent<ZombieScript>().onlineSwarmManager = this;
-        newZombie.GetComponent<ZombieScript>().target = allPlayers[a].transform;
         zombiesAlive++;
         zombiesLeftToSpawn--;
     }
@@ -571,6 +511,9 @@ public class OnlineSwarmManager : MonoBehaviour
 
     IEnumerator WaveEnd()
     {
+        allPlayerWaveCounters = GetAllPlayerWaveCounters();
+        foreach(WaveCounter wc in allPlayerWaveCounters)
+            wc.gameObject.SetActive(false);
         yield return new WaitForSeconds(newWaveDelay);
         Debug.Log("Reinforcements (Voice)");
         StartCoroutine(UpdateWaveNumber(waveNumber));
@@ -608,6 +551,8 @@ public class OnlineSwarmManager : MonoBehaviour
         foreach (PlayerProperties pp in allPlayers)
         {
             pp.GetComponent<OnlinePlayerSwarmScript>().points = 0;
+            pp.allPlayerScripts.playerUIComponents.multiplayerPoints.SetActive(false);
+            pp.allPlayerScripts.playerUIComponents.swarmPoints.SetActive(true);
             pp.allPlayerScripts.playerUIComponents.swarmPointsText.text = 0.ToString();
         }
     }
@@ -698,6 +643,29 @@ public class OnlineSwarmManager : MonoBehaviour
         return allPlayers;
     }
 
+    public List<HealthPack> GetAllHealthPacks()
+    {
+        List<HealthPack> allHealthPacks = new List<HealthPack>();
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("health_pack"))
+            allHealthPacks.Add(go.GetComponent<HealthPack>());
+
+        return allHealthPacks;
+    }
+
+    public List<WaveCounter> GetAllPlayerWaveCounters()
+    {
+        List<WaveCounter> waveCounters = new List<WaveCounter>();
+
+        allPlayers = GetAllPlayers();
+        foreach (PlayerProperties player in allPlayers)
+        {
+            if (player.GetComponent<AllPlayerScripts>().waveCounter)
+                waveCounters.Add(player.GetComponent<AllPlayerScripts>().waveCounter);
+        }
+
+        return waveCounters;
+    }
+
     public List<OnlinePlayerSwarmScript> GetAllPlayerSwarmScripts()
     {
         List<OnlinePlayerSwarmScript> allPlayerSwarmScripts = new List<OnlinePlayerSwarmScript>();
@@ -705,5 +673,38 @@ public class OnlineSwarmManager : MonoBehaviour
             allPlayerSwarmScripts.Add(go.GetComponent<OnlinePlayerSwarmScript>());
 
         return allPlayerSwarmScripts;
+    }
+
+    public void RespawnHealthPack(Vector3 hpPosition, int time)
+    {
+        PV.RPC("RespawnHealthPack_RPC", RpcTarget.All, hpPosition, time);
+    }
+
+    [PunRPC]
+    void RespawnHealthPack_RPC(Vector3 hpPosition, int time)
+    {
+        StartCoroutine(RespawnHealthPack_Coroutine(hpPosition, time));
+    }
+
+    IEnumerator RespawnHealthPack_Coroutine(Vector3 hpPosition, int time)
+    {
+        yield return new WaitForSeconds(time);
+
+        foreach (HealthPack hp in healthPacks)
+            if (hp.transform.position == hpPosition)
+                hp.gameObject.SetActive(true);
+    }
+
+    public void DisableHealthPack(Vector3 hpPosition)
+    {
+        PV.RPC("DisableHealthPack_RPC", RpcTarget.All, hpPosition);
+    }
+
+    [PunRPC]
+    void DisableHealthPack_RPC(Vector3 hpPosition)
+    {
+        foreach (HealthPack hp in healthPacks)
+            if (hp.transform.position == hpPosition)
+                hp.gameObject.SetActive(false);
     }
 }

@@ -6386,18 +6386,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65cec272d62f281449a65dcb0182a951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PV: {fileID: -3249883010246006267}
   onlineSwarmManager: {fileID: 0}
   nma: {fileID: 6407237786346386502}
   anim: {fileID: 6465815501100595880}
   swarmMode: {fileID: 0}
   hitboxes: {fileID: 4315748272142158354}
   meleeTrigger: {fileID: 4315748273606900692}
-  DefaultHealth: 50
-  Health: 50
+  DefaultHealth: 100
+  Health: 100
   points: 100
   defaultSpeed: 1
   zombieNumber: 0
-  damage: 25
+  defaultDamage: 35
   lastPlayerWhoShot: {fileID: 0}
   otherPlayerShot: 0
   targetSwitchCountdownDefault: 1
@@ -6504,7 +6505,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.75
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

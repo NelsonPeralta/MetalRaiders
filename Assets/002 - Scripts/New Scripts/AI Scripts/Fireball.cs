@@ -166,7 +166,7 @@ public class Fireball : MonoBehaviour
                     if (hit.GetComponent<AIHitbox>().aiHealth > 0)
                     {
                         float calculatedDamage = damage * (1 - (aiDistance / radius));
-                        hit.GetComponent<AIHitbox>().UpdateAIHealth(false, calculatedDamage, playerWhoThrewGrenade);
+                        hit.GetComponent<AIHitbox>().DamageAI(false, calculatedDamage, playerWhoThrewGrenade);
                     }
 
                 }

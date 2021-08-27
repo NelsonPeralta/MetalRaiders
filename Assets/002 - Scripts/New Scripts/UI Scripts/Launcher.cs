@@ -17,6 +17,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] TMP_InputField nicknameInputField;
     [SerializeField] TMP_Text errorText;
+    [SerializeField] GameObject commonRoomTexts;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
@@ -99,14 +100,17 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
+        Debug.Log(PhotonNetwork.CurrentRoom.Name);
         string roomType = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString() + "_room";
         string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
 
+        commonRoomTexts.SetActive(true);
         MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
         roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
         UpdatePlayerList();
 
+        Debug.Log($"Is Master Client: {PV.ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         if(mode == "multiplayer")
             mapSelector.SetActive(PhotonNetwork.IsMasterClient);
@@ -158,6 +162,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
+        commonRoomTexts.SetActive(false);
         PhotonNetwork.LeaveRoom();
         MenuManager.Instance.OpenMenu("loading");
     }

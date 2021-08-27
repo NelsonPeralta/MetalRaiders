@@ -6,7 +6,7 @@ public class AIMeleeTrigger : MonoBehaviour
 {
     [Header("Basic AiS")]
     public ZombieScript zombie;
-    public Skeleton skeleton;    
+    public Skeleton skeleton;
     public Troll troll;
 
     [Header("Boss AiS")]
@@ -53,6 +53,8 @@ public class AIMeleeTrigger : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if (other.gameObject.tag != "player")
+            return;
         player = other.gameObject;
         pProperties = other.gameObject.GetComponent<PlayerProperties>();
     }
@@ -77,7 +79,7 @@ public class AIMeleeTrigger : MonoBehaviour
             hellhound.IsInMeleeRange = false;
         }
 
-        if (troll!= null)
+        if (troll != null)
         {
             troll.IsInMeleeRange = false;
         }

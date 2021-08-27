@@ -74,10 +74,7 @@ public class GameObjectPool : MonoBehaviour
     {
         foreach (GameObject obj in bullets)
             if (!obj.activeSelf)
-            {
-                StartCoroutine(DisableObjectAfterTime(obj));
                 return obj;
-            }
         return null;
     }
 
@@ -111,7 +108,7 @@ public class GameObjectPool : MonoBehaviour
             if (!obj.activeSelf)
                 if (!obj.activeSelf)
                 {
-                    StartCoroutine(DisableObjectAfterTime(obj));
+                    StartCoroutine(DisableObjectAfterTime(obj, 30));
                     return obj;
                 }
         return null;

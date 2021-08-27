@@ -34,6 +34,11 @@ TagManager:
   - Muzzleflash Light
   - Muzzleflash Particles
   - Spark Particles
+  - Raycast Origin
+  - Spawn Point
+  - Spawn Manager
+  - Level Manager
+  - health_pack
   layers:
   - Default
   - TransparentFX

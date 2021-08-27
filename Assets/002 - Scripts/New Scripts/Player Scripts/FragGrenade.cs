@@ -163,7 +163,7 @@ public class FragGrenade : MonoBehaviour
                         Debug.Log(calculatedDamage);
                         Debug.Log(aiDistance);
                         if (playerWhoThrewGrenade.PV.IsMine)
-                            hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
+                            hit.GetComponent<AIHitbox>().DamageAI(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
                     }
                 }
             }

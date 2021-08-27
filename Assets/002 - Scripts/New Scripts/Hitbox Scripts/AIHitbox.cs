@@ -56,9 +56,9 @@ public class AIHitbox : MonoBehaviour
             UpdateAIHealthOnHitboxes(flameTyrant.Health);
     }
 
-    public void UpdateAIHealth(bool damageFromPlayer, float damage, GameObject playerWhoShot)
+    public void DamageAI(bool damageFromPlayer, float damage, GameObject playerWhoShot)
     {
-        if (zScript != null)
+        if (zScript)
         {
             zScript.Health = zScript.Health - damage;
             UpdateAIHealthOnHitboxes(zScript.Health);

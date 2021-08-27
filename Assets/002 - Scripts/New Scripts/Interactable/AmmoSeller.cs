@@ -38,7 +38,7 @@ public class AmmoSeller : MonoBehaviour
 
                 if (player0.gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && player0.gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
                 {
-                    player0.InformerText.text = "Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
+                    player0.InformerText.text = "Hold R to Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
                 else
                 {
@@ -52,7 +52,7 @@ public class AmmoSeller : MonoBehaviour
 
                 if (player1.gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && player1.gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
                 {
-                    player1.InformerText.text = "Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
+                    player1.InformerText.text = "Hold R to Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
                 else
                 {
@@ -66,7 +66,7 @@ public class AmmoSeller : MonoBehaviour
 
                 if (player2.gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && player2.gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
                 {
-                    player2.InformerText.text = "Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
+                    player2.InformerText.text = "Hold R to Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
                 else
                 {
@@ -80,7 +80,7 @@ public class AmmoSeller : MonoBehaviour
 
                 if (player3.gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && player3.gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
                 {
-                    player3.InformerText.text = "Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
+                    player3.InformerText.text = "Hold R to Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
                 else
                 {

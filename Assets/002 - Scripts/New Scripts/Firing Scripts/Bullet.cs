@@ -321,19 +321,19 @@ public class Bullet : MonoBehaviourPunCallbacks
 
             if (isNormalBullet) /////////////////////////////////////////////////////////////////////////////////////Normal Bullet
             {
-                aiHB.UpdateAIHealth(true, damage, playerWhoShot.gameObject);
+                aiHB.DamageAI(true, damage, playerWhoShot.gameObject);
                 //Debug.Log("Hit 1");
             }
             if (isHeadshotCapable) //////////////////////////////////////////////////////////////////////////////// Is Headshot Capable
             {
                 if (aiHB.isHead)
                 {
-                    aiHB.UpdateAIHealth(true, damage * 2, playerWhoShot.gameObject);
+                    aiHB.DamageAI(true, damage * 2, playerWhoShot.gameObject);
                     //Debug.Log("Hit 2");
                 }
                 else
                 {
-                    aiHB.UpdateAIHealth(true, damage, playerWhoShot.gameObject);
+                    aiHB.DamageAI(true, damage, playerWhoShot.gameObject);
                     //Debug.Log("Hit 3");
                 }
             }
@@ -341,18 +341,18 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 if (aiHB.isHead)
                 {
-                    aiHB.UpdateAIHealth(true, damage * 2, playerWhoShot.gameObject);
+                    aiHB.DamageAI(true, damage * 2, playerWhoShot.gameObject);
                     //Debug.Log("Hit 4");
                 }
                 else
                 {
-                    aiHB.UpdateAIHealth(true, damage, playerWhoShot.gameObject);
+                    aiHB.DamageAI(true, damage, playerWhoShot.gameObject);
                     //Debug.Log("Hit 5");
                 }
             }
             if (canBleedthroughAnything) /////////////////////////////////////////////////////////////////////////////// Can Bleedthrough Anything
             {
-                aiHB.UpdateAIHealth(true, damage, playerWhoShot.gameObject);
+                aiHB.DamageAI(true, damage, playerWhoShot.gameObject);
                 //Debug.Log("Hit 6");
             }
 

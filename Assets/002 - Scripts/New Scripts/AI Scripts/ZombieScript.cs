@@ -21,7 +21,9 @@ public class ZombieScript : MonoBehaviour
     public int points;
     public float defaultSpeed;
     public int zombieNumber;
-    public int damage;
+    public int defaultDamage;
+    int damage;
+    string movementAnimationName;
 
     [Header("Player Switching")]
     public Transform lastPlayerWhoShot;
@@ -31,7 +33,7 @@ public class ZombieScript : MonoBehaviour
     public float targetSwitchResetCountdown;
     public bool targetSwitchReady;
     public bool targetSwitchStarted;
-    
+
     public Transform target;
     public GameObject motionTrackerDot;
 
@@ -59,75 +61,86 @@ public class ZombieScript : MonoBehaviour
     public GameObject[] skins;
 
     // Start is called before the first frame update
-    void OnEnable()
+
+    private void Awake()
     {
-        ResetZombie();        
+        gameObject.transform.parent = AIPool.aIPoolInstance.transform;
+        gameObject.SetActive(false);
+    }
+    private void Start()
+    {
     }
 
     // Update is called once per frame
     void Update()
     {
-        HealthCheck();
+
         Movement();
+
+        if (!PV.IsMine)
+            return;
         Attack();
         AttackCooldown();
-        AnimationCheck();
-        TargetSwitchCountdown();
+        //TargetSwitchCountdown();
     }
 
-    void HealthCheck()
+    public void EnableThisAi(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
+        PV.RPC("EnableThisAi_RPC", RpcTarget.All, targetPhotonId, spawnPointPosition, spawnPointRotation);
+    }
+
+    [PunRPC]
+    public void EnableThisAi_RPC(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
+    {
+        gameObject.transform.position = spawnPointPosition;
+        gameObject.transform.rotation = spawnPointRotation;
+        gameObject.SetActive(true);
+        ResetZombie();
+        target = PhotonView.Find(targetPhotonId).transform;
+    }
+    void Movement()
+    {
+        AnimationCheck();
         if (Health > 0)
         {
-            if (target != null)
+            if (target)
             {
                 if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
-                {
                     nma.SetDestination(target.position);
-                }
                 else if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0)
-                {
                     target = null;
-                }
 
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
+                if (onlineSwarmManager)
+                    if (onlineSwarmManager.editMode)
                         nma.speed = 0.01f;
-                    }
-                }
             }
             else
-            {
                 LookForNewRandomPlayer();
-            }
         }
 
         if (Health <= 0 && !isDead)
         {
             nma.speed = 0;
-            StartCoroutine(Die());
+            Die();
             isDead = true;
         }
 
-    }
-
-    void Movement()
-    {
         if (!isDead)
         {
             if (!IsInMeleeRange)
             {
                 nma.speed = defaultSpeed;
-                anim.SetBool("Walk", true);
+                anim.SetBool("Walk", false);
                 anim.SetBool("Idle", false);
+                anim.SetBool("Run", false);
+                anim.SetBool(movementAnimationName, true);
             }
 
             if (IsInMeleeRange && !isReadyToAttack)
             {
                 nma.speed = 0;
                 anim.SetBool("Walk", false);
+                anim.SetBool("Run", false);
                 anim.SetBool("Idle", true);
             }
 
@@ -135,6 +148,7 @@ public class ZombieScript : MonoBehaviour
             {
                 nma.speed = 0;
                 anim.SetBool("Walk", false);
+                anim.SetBool("Run", false);
                 anim.SetBool("Idle", true);
             }
 
@@ -157,22 +171,28 @@ public class ZombieScript : MonoBehaviour
             {
                 if (!meleeTrigger.pProperties.isDead)
                 {
-                    meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
-                    target.GetComponent<PlayerController>().ScopeOut();
-                    anim.Play("Attack");
-                    nma.velocity = Vector3.zero;
-
-                    //int randomSound = Random.Range(0, attackClips.Length - 1);
-                    //audioSource.clip = audioClips[randomSound];
-                    //audioSource.Play();
-                    //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
-
-                    isReadyToAttack = false;
+                    PV.RPC("Attack_RPC", RpcTarget.All);
                 }
             }
         }
     }
 
+    [PunRPC]
+    void Attack_RPC()
+    {
+        PlayerProperties pp = target.GetComponent<PlayerProperties>();
+        pp.Damage(damage, false, 99);
+        target.GetComponent<PlayerController>().ScopeOut();
+        anim.Play("Attack");
+        nma.velocity = Vector3.zero;
+
+        //int randomSound = Random.Range(0, attackClips.Length - 1);
+        //audioSource.clip = audioClips[randomSound];
+        //audioSource.Play();
+        //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
+
+        isReadyToAttack = false;
+    }
     void AttackCooldown()
     {
         if (!isReadyToAttack)
@@ -187,33 +207,37 @@ public class ZombieScript : MonoBehaviour
         }
     }
 
-    IEnumerator Die()
+    void Die()
+    {
+        PV.RPC("Die_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void Die_RPC()
+    {
+        StartCoroutine(Die_Coroutine());
+    }
+    IEnumerator Die_Coroutine()
     {
         nma.enabled = false;
         anim.Play("Die");
 
-        if (swarmMode != null)
-        {
-            swarmMode.zombiesAlive = swarmMode.zombiesAlive - 1;
-        }
+        if (onlineSwarmManager != null)
+            onlineSwarmManager.zombiesAlive--;
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-        {
             hitbox.gameObject.SetActive(false);
-        }
 
         motionTrackerDot.SetActive(false);
-        if(lastPlayerWhoShot == null)
-        {
+        if (lastPlayerWhoShot == null)
             Debug.Log("ZOMBIE HAS NO LAST PLAYER");
-        }
+
         //lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
-        if (lastPlayerWhoShot)
-        {
-            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
-            TransferPoints();
-        }
-        DropRandomLoot();
+        //if (lastPlayerWhoShot)
+        //    lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
+        //    TransferPoints();
+
+        //DropRandomLoot();
         target = null;
 
         yield return new WaitForSeconds(5);
@@ -237,7 +261,7 @@ public class ZombieScript : MonoBehaviour
     {
         int ChanceToDrop = Random.Range(1, 11);
         GameObject loot = new GameObject();
-        
+
         if (ChanceToDrop == 1)
         {
             loot = Instantiate(powerAmmoPack, gameObject.transform.position, gameObject.transform.rotation);
@@ -252,7 +276,7 @@ public class ZombieScript : MonoBehaviour
         {
             loot = Instantiate(smallAmmoPack, gameObject.transform.position, gameObject.transform.rotation);
         }
-        
+
 
         if (ChanceToDrop >= 4 && ChanceToDrop <= 6)
         {
@@ -261,7 +285,7 @@ public class ZombieScript : MonoBehaviour
 
         if (ChanceToDrop >= 7 && ChanceToDrop <= 9)
         {
-            loot = Instantiate(extraHealth, gameObject.transform.position + new Vector3(0, 1, 0) , gameObject.transform.rotation);
+            loot = Instantiate(extraHealth, gameObject.transform.position + new Vector3(0, 1, 0), gameObject.transform.rotation);
         }
 
         Destroy(loot, 60);
@@ -273,11 +297,11 @@ public class ZombieScript : MonoBehaviour
 
         int playSound = Random.Range(0, 2);
 
-        if(playSound == 0)
+        if (playSound == 0)
         {
             int randomSound = Random.Range(0, audioClips.Length);
 
-            if (!isDead)
+            if (!isDead && gameObject.activeSelf)
             {
                 audioSource.clip = audioClips[randomSound];
                 audioSource.Play();
@@ -391,10 +415,23 @@ public class ZombieScript : MonoBehaviour
 
     void LookForNewRandomPlayer()
     {
-        if (swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
+        if (!PV.IsMine || !onlineSwarmManager)
+            return;
+        List<PlayerProperties> allPlayers = GetAllPlayers();
+        int ran = Random.Range(0, allPlayers.Count);
+        int targetPhotonId = allPlayers[ran].PV.ViewID;
+
+        PlayerProperties newTargetProperties = PhotonView.Find(targetPhotonId).GetComponent<PlayerProperties>();
+        if (newTargetProperties.isDead || newTargetProperties.isRespawning)
+            return;
+
+        PV.RPC("LookForNewPlayer_RPC", RpcTarget.All, targetPhotonId);
+    }
+
+    [PunRPC]
+    void LookForNewPlayer_RPC(int targetPhotonId)
+    {
+        target = PhotonView.Find(targetPhotonId).transform;
     }
 
     void randomSkin()
@@ -407,6 +444,8 @@ public class ZombieScript : MonoBehaviour
 
     void ResetZombie()
     {
+        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
+        movementAnimationName = "Run";
         nma.enabled = true;
         nma.speed = defaultSpeed;
         StartCoroutine(PlaySound());
@@ -414,7 +453,8 @@ public class ZombieScript : MonoBehaviour
             placeholderSkin.SetActive(false);
         randomSkin();
 
-        Health = DefaultHealth;
+        Health = DefaultHealth + (onlineSwarmManager.waveNumber * 10);
+        damage = defaultDamage + (onlineSwarmManager.waveNumber * 2);
         isDead = false;
         IsInMeleeRange = false;
         isReadyToAttack = true;
@@ -431,5 +471,14 @@ public class ZombieScript : MonoBehaviour
         otherPlayerShot = false;
         targetSwitchCountdown = targetSwitchCountdownDefault;
         targetSwitchReady = true;
+    }
+
+    public List<PlayerProperties> GetAllPlayers()
+    {
+        List<PlayerProperties> allPlayers = new List<PlayerProperties>();
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+            allPlayers.Add(go.GetComponent<PlayerProperties>());
+
+        return allPlayers;
     }
 }

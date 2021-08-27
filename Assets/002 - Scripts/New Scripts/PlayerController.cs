@@ -431,7 +431,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     isAiming = false;
                     mainCam.fieldOfView = playerProperties.defaultFov;
-                    playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
+                    camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
 
                     allPlayerScripts.aimingScript.playAimSound();
 
@@ -474,7 +474,7 @@ public class PlayerController : MonoBehaviourPun
         Debug.Log("Unscope Script");
         isAiming = false;
         mainCam.fieldOfView = playerProperties.defaultFov;
-        playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
+        camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
 
         if (isAiming)
             allPlayerScripts.aimingScript.playAimSound();

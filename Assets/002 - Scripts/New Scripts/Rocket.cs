@@ -163,7 +163,7 @@ public class Rocket : MonoBehaviour
                     {
                         float calculatedDamage = damage * (1 - (aiDistance / radius));
                         if (playerWhoThrewGrenade.PV.IsMine)
-                            hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
+                            hit.GetComponent<AIHitbox>().DamageAI(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
                     }
 
                 }

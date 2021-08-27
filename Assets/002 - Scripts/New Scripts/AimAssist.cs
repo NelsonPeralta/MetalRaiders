@@ -8,7 +8,7 @@ public class AimAssist : MonoBehaviour
     public GameObject firstRayHit;
     public MyPlayerManager pManager;
     public PlayerProperties player;
-    public bool redReticulIsOn;
+    public bool redReticuleIsOn;
 
     public int playerRewiredID;
     public Transform puCollider;
@@ -84,13 +84,13 @@ public class AimAssist : MonoBehaviour
 
     void ActivateRedReticule()
     {
-        redReticulIsOn = true;
+        redReticuleIsOn = true;
         target = hit.transform.gameObject;
         crosshairScript.ActivateRedCrosshair();
     }
     public void ResetRedReticule()
     {
-        redReticulIsOn = false;
+        redReticuleIsOn = false;
         target = null;
         crosshairScript.DeactivateRedCrosshair();
     }

@@ -41,6 +41,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             try
             {
+                Debug.Log($"Master CLient: {PhotonNetwork.MasterClient}");
                 Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["mode"]}");
                 string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
 
@@ -56,7 +57,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 if (!MultiplayerManager.multiplayerManagerInstance && mode == "multiplayer")
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineMultiplayerManager"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
                 if (!OnlineSwarmManager.onlineSwarmManagerInstance && mode == "swarm")
+                {
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineSwarmManager"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineAIPool"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
+                }
             }
             catch
             {
