@@ -11120,7 +11120,7 @@ Transform:
   - {fileID: 1386190641}
   - {fileID: 1667903378}
   m_Father: {fileID: 1057067221}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &517688529
 PrefabInstance:
@@ -19009,7 +19009,7 @@ Transform:
   - {fileID: 398549876}
   - {fileID: 118875260}
   m_Father: {fileID: 1057067221}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &976622286
 GameObject:
@@ -20564,11 +20564,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2065934398}
   - {fileID: 975805965}
+  - {fileID: 2065934398}
   - {fileID: 374501105}
-  - {fileID: 1796198439}
   - {fileID: 516517801}
+  - {fileID: 1796198439}
   - {fileID: 969528565}
   - {fileID: 736675752}
   - {fileID: 1905679765}
@@ -37338,7 +37338,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1977287526
 AudioListener:
   m_ObjectHideFlags: 0

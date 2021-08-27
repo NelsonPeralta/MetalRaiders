@@ -107,8 +107,11 @@ public class ZombieScript : MonoBehaviour
             {
                 if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
                     nma.SetDestination(target.position);
-                else if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0)
+                if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0 || target.gameObject.GetComponent<PlayerProperties>().isDead || target.gameObject.GetComponent<PlayerProperties>().isRespawning)
+                {
+                    Debug.Log("Zombie target null");
                     target = null;
+                }
 
                 if (onlineSwarmManager)
                     if (onlineSwarmManager.editMode)
@@ -182,7 +185,6 @@ public class ZombieScript : MonoBehaviour
     {
         PlayerProperties pp = target.GetComponent<PlayerProperties>();
         pp.Damage(damage, false, 99);
-        target.GetComponent<PlayerController>().ScopeOut();
         anim.Play("Attack");
         nma.velocity = Vector3.zero;
 
@@ -425,6 +427,7 @@ public class ZombieScript : MonoBehaviour
         if (newTargetProperties.isDead || newTargetProperties.isRespawning)
             return;
 
+        Debug.Log("RPC Call: LookForNewPlayer_RPC");
         PV.RPC("LookForNewPlayer_RPC", RpcTarget.All, targetPhotonId);
     }
 

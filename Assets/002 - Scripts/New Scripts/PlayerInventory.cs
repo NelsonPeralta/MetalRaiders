@@ -104,7 +104,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         AmmoManager();
 
-        if (pController.player.GetButtonDown("Switch Weapons"))
+        if (pController.player.GetButtonDown("Switch Weapons") && !pProperties.isDead)
         {
             pController.ScopeOut();
             crosshairScript.DeactivateRedCrosshair();
