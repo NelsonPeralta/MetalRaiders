@@ -50,7 +50,7 @@ public class AmmoPack : MonoBehaviour
 
     int GetRandomAmmo()
     {
-        int ranAmmo = (int)Mathf.Floor(Random.Range(1, (defaultAmmo * 0.8f)));
+        int ranAmmo = (int)Mathf.Floor(Random.Range(1, (ammoInThisPack * 0.8f)));
         return ranAmmo;
     }
 
@@ -62,6 +62,7 @@ public class AmmoPack : MonoBehaviour
     public void SetRandomAmmoAsDefault()
     {
         defaultAmmo = GetRandomAmmo();
+        ammoInThisPack = defaultAmmo;
         UpdateAmmoText();
     }
 

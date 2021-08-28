@@ -290,7 +290,7 @@ public class OnlineSwarmManager : MonoBehaviour
     void CalculateMaxDefaultAIsForRound()
     {
         allPlayers = GetAllPlayers();
-        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + Mathf.CeilToInt(waveNumber / 2);
+        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + waveNumber;
         //maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
         //maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
         //maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;
@@ -550,7 +550,7 @@ public class OnlineSwarmManager : MonoBehaviour
 
         foreach (PlayerProperties pp in allPlayers)
         {
-            pp.GetComponent<OnlinePlayerSwarmScript>().points = 0;
+            pp.GetComponent<OnlinePlayerSwarmScript>().ResetPoints();
             pp.allPlayerScripts.playerUIComponents.multiplayerPoints.SetActive(false);
             pp.allPlayerScripts.playerUIComponents.swarmPoints.SetActive(true);
             pp.allPlayerScripts.playerUIComponents.swarmPointsText.text = 0.ToString();

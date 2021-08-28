@@ -664,34 +664,26 @@ public class BlackKnight : MonoBehaviour
 
     void TransferPoints()
     {
-        if (!shieldIsActive)
+        if (lastPlayerWhoShot)
         {
-            if (lastPlayerWhoShot.gameObject != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
-                {
-                    PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                    pPoints.swarmPoints = pPoints.swarmPoints + points;
-                    pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
-                }
+                pPoints.AddPoints(this.points);
             }
         }
     }
 
     public void TransferDamageToPoints(int points)
     {
-        if (!shieldIsActive)
+        if (lastPlayerWhoShot.gameObject != null)
         {
-            if (lastPlayerWhoShot.gameObject != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
-                {
-                    PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                    pPoints.swarmPoints = pPoints.swarmPoints + points;
-                    pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
-                }
+                pPoints.AddPoints(points);
             }
         }
     }

@@ -214,11 +214,11 @@ public class WeaponPickUp : MonoBehaviourPun
         {
             if (pController.player.GetButtonShortPressDown("Reload") /*|| cScript.InteractButtonPressed*/)
             {
-                    int weaponCollidingWithInInventoryIndex = 0;
-                    for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
-                        if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
-                            weaponCollidingWithInInventoryIndex = i;
-                    int lwPId = weaponPool.GetWeaponIndex(weaponCollidingWith);
+                int weaponCollidingWithInInventoryIndex = 0;
+                for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
+                    if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
+                        weaponCollidingWithInInventoryIndex = i;
+                int lwPId = weaponPool.GetWeaponIndex(weaponCollidingWith);
                 if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
                 {
                     Debug.Log("RPC: Picking up second weapon");
@@ -239,20 +239,12 @@ public class WeaponPickUp : MonoBehaviourPun
                 else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
                 {
                     PV.RPC("ReplaceWeapon", RpcTarget.All, lwPId, weaponCollidingWithInInventoryIndex);
-                    //ReplaceWeapon(weaponCollidingWith.gameObject.GetComponent<LootableWeapon>());
-
-                    if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
-                    {
-                        //pProperties.DropActiveWeapon(weaponEquippedToDrop1);
-                        //PhotonView.Find(lwPId).gameObject.SetActive(false);
-                        Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
-                        PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPId);
-                        ResetCollider();
-                        pInventory.playDrawSound();
-                    }
+                    ResetCollider();
+                    pInventory.playDrawSound();
                 }
+                Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
+                PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPId);
             }
-
         }
 
 

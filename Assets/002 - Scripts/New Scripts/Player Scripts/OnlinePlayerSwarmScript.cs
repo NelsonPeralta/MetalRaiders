@@ -1,8 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class OnlinePlayerSwarmScript : MonoBehaviour
+public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
 {
-    public int points;
+    public PhotonView PV;
+    public AllPlayerScripts allPlayerScripts;
+    [SerializeField] int points;
+        public void AddPoints(int _points)
+    {
+        PV.RPC("AddPoints_RPC", RpcTarget.All, _points);
+    }
+
+    [PunRPC]
+    void AddPoints_RPC(int _points)
+    {
+        points += _points;
+        UpdatePointText();
+    }
+
+    public void RemovePoints(int _points)
+    {
+        PV.RPC("RemovePoints_RPC", RpcTarget.All, _points);
+    }
+
+    [PunRPC]
+    void RemovePoints_RPC(int _points)
+    {
+        points -= _points;
+        UpdatePointText();
+    }
+
+    public int GetPoints()
+    {
+        return points;
+    }
+
+    void UpdatePointText()
+    {
+        allPlayerScripts.playerUIComponents.swarmPointsText.text = points.ToString();
+    }
+
+    public void ResetPoints()
+    {
+        Debug.Log(PV);
+        PV.RPC("ResetPoints_RPC", RpcTarget.All);
+
+    }
+
+    [PunRPC]
+    void ResetPoints_RPC()
+    {
+        points = 0;
+    }
 }

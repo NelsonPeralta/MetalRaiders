@@ -168,6 +168,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         healthSlider.maxValue = maxHealth;
         healthSlider.value = maxHealth;
 
+        if (onlineSwarmManager)
+            needsHealthPack = true;
+
         if (respawnTime <= healthRegenerationDelay)
             respawnTime = healthRegenerationDelay + 0.5f; // To avoid the health regen sound going off
 

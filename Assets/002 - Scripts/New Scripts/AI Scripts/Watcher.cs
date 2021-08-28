@@ -425,18 +425,28 @@ public class Watcher : MonoBehaviour
         targetSwitchReady = true;
     }
 
+    void TransferPoints()
+    {
+        if (lastPlayerWhoShot)
+        {
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
+            {
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
+
+                pPoints.AddPoints(this.points);
+            }
+        }
+    }
+
     public void TransferDamageToPoints(int points)
     {
-        //StartCoroutine(Block());
-
         if (lastPlayerWhoShot.gameObject != null)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+                pPoints.AddPoints(points);
             }
         }
     }
@@ -508,19 +518,6 @@ public class Watcher : MonoBehaviour
         }
     }
 
-    void TransferPoints()
-    {
-        if (lastPlayerWhoShot.gameObject != null)
-        {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
-            {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
-
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
-            }
-        }
-    }
 
     void DropRandomWeapon()
     {

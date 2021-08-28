@@ -158,7 +158,7 @@ public class WatcherBackup : MonoBehaviour
         motionTrackerDot.SetActive(false);
 
         lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
-        TransferPoints();
+        //TransferPoints();
         //DropRandomAmmoPack();
         DropRandomWeapon();
     }
@@ -489,33 +489,33 @@ public class WatcherBackup : MonoBehaviour
         hasBeenMeleedRecently = false;
     }
 
-    void TransferPoints()
-    {
-        if (lastPlayerWhoShot.gameObject != null)
-        {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
-            {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+    //void TransferPoints()
+    //{
+    //    if (lastPlayerWhoShot.gameObject != null)
+    //    {
+    //        if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+    //        {
+    //            PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
-            }
-        }
-    }
+    //            pPoints.swarmPoints = pPoints.swarmPoints + points;
+    //            pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+    //        }
+    //    }
+    //}
 
-    public void TransferDamageToPoints(int points)
-    {
-        if (lastPlayerWhoShot.gameObject != null)
-        {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
-            {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+    //public void TransferDamageToPoints(int points)
+    //{
+    //    if (lastPlayerWhoShot.gameObject != null)
+    //    {
+    //        if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+    //        {
+    //            PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
-            }
-        }
-    }
+    //            pPoints.swarmPoints = pPoints.swarmPoints + points;
+    //            pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+    //        }
+    //    }
+    //}
 
     void LookForNewRandomPlayer()
     {
