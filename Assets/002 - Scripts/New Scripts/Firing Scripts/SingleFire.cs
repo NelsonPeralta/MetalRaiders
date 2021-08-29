@@ -5,6 +5,7 @@ using Photon.Pun;
 public class SingleFire : MonoBehaviour
 {
     public AllPlayerScripts allPlayerScripts;
+    public CommonFiringActions commonFiringActions;
     public PhotonView PV;
     public GameObjectPool gameObjectPool;
 
@@ -59,6 +60,7 @@ public class SingleFire : MonoBehaviour
                 bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
                 bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;
                 bullet.SetActive(true);
+                commonFiringActions.SpawnMuzzleflash();
 
             }
             else if (activeWeapon.usesGrenades)

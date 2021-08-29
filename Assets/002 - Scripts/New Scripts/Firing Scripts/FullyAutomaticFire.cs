@@ -5,7 +5,7 @@ using Photon.Pun;
 public class FullyAutomaticFire : MonoBehaviourPun
 {
     public AllPlayerScripts allPlayerScripts;
-    public CommonFiringActions CommonFiringActions;
+    public CommonFiringActions commonFiringActions;
     public PhotonView PV;
     public GameObjectPool gameObjectPool;
 
@@ -50,6 +50,7 @@ public class FullyAutomaticFire : MonoBehaviourPun
             bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;
             SetTeamToBulletScript(bullet.transform);
             bullet.SetActive(true);
+            commonFiringActions.SpawnMuzzleflash();
 
             Debug.Log("Fired Auto");
             activeWeapon.currentAmmo -= 1;
@@ -124,7 +125,7 @@ public class FullyAutomaticFire : MonoBehaviourPun
         //PV.RPC("ShootAuto", RpcTarget.All);
         //ShootAuto();
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-        CommonFiringActions.AfterShootingAction(activeWeapon);
+        commonFiringActions.AfterShootingAction(activeWeapon);
         StartFiringIntervalCooldown();
     }
 

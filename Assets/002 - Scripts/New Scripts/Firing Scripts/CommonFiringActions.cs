@@ -6,6 +6,7 @@ public class CommonFiringActions : MonoBehaviour
 {
     public PlayerController playerController;
     public ThirdPersonScript thirdPersonScript;
+    public GameObject muzzleflash;
     // Start is called before the first frame update
     void Start()
     {
@@ -76,5 +77,17 @@ public class CommonFiringActions : MonoBehaviour
     {
         thirdPersonScript.anim.Play("Fire");
         yield return new WaitForEndOfFrame();
+    }
+
+    public void SpawnMuzzleflash()
+    {
+        StartCoroutine(SpawnMuzzleflash_Coroutine());
+    }
+
+    IEnumerator SpawnMuzzleflash_Coroutine()
+    {
+        muzzleflash.SetActive(false);
+        yield return new WaitForEndOfFrame();
+        muzzleflash.SetActive(true);
     }
 }

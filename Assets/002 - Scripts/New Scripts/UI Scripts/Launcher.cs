@@ -114,12 +114,12 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         Debug.Log($"Is Master Client: {PV.ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        if(mode == "multiplayer")
+        if (mode == "multiplayer")
         {
             mapSelector = multiplayerMapSelector;
             mapSelector.SetActive(PhotonNetwork.IsMasterClient);
         }
-        if(mode == "swarm")
+        if (mode == "swarm")
         {
             mapSelector = swarmMapSelector;
             mapSelector.SetActive(PhotonNetwork.IsMasterClient);
@@ -212,8 +212,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void UpdateSelectedMap(int index)
     {
         levelToLoadIndex = index;
-        mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("PVP - ", "")}";
-        mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("Coop - ", "")}";
+        string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+
+        if (mode == "multiplayer")
+            mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("PVP - ", "")}";
+        if (mode == "swarm")
+            mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("Coop - ", "")}";
+
     }
 
 
