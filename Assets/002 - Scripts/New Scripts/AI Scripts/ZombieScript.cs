@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class ZombieScript : MonoBehaviour
+public class ZombieScript : AiAbstractClass
 {
     public PhotonView PV;
     public OnlineSwarmManager onlineSwarmManager;

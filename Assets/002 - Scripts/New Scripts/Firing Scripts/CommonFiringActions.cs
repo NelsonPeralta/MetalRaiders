@@ -81,6 +81,8 @@ public class CommonFiringActions : MonoBehaviour
 
     public void SpawnMuzzleflash()
     {
+        if (playerController.isAiming)
+            return;
         StartCoroutine(SpawnMuzzleflash_Coroutine());
     }
 
