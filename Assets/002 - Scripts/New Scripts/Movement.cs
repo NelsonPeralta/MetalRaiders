@@ -148,7 +148,7 @@ public class Movement : MonoBehaviour
             else
             {
                 Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * defaultSpeed * .75f * Time.deltaTime);
+                cController.Move(move * defaultSpeed * .5f * Time.deltaTime);
             }
         }
 

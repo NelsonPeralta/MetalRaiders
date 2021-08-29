@@ -16,7 +16,7 @@ public class WeaponPool : MonoBehaviourPun
     public GameObject timer;
 
     [Header("Weapons")]
-    public List<GameObject> allWeapons = new List<GameObject>();
+    public List<LootableWeapon> allWeapons = new List<LootableWeapon>();
     public List<GameObject> weaponPrefabs = new List<GameObject>();
 
     [Header("Ammo")]
@@ -47,7 +47,7 @@ public class WeaponPool : MonoBehaviourPun
                 //GameObject newWeap = Instantiate(weaponPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
                 newWeap.name = newWeap.name.Replace("(Clone)", "");
                 newWeap.SetActive(false);
-                allWeapons.Add(newWeap);
+                allWeapons.Add(newWeap.GetComponent<LootableWeapon>());
                 newWeap.transform.parent = gameObject.transform;
             }
 
@@ -74,8 +74,8 @@ public class WeaponPool : MonoBehaviourPun
     {
         for (int i = 0; i < allWeapons.Count; i++)
         {
-            if (allWeapons[i].name == weaponName && !allWeapons[i].activeSelf)
-                return allWeapons[i];
+            if (allWeapons[i].name == weaponName && !allWeapons[i].gameObject.activeSelf)
+                return allWeapons[i].gameObject;
         }
         return null;
     }
@@ -97,7 +97,16 @@ public class WeaponPool : MonoBehaviourPun
 
     public void DisablePooledWeapon(int index)
     {
-        allWeapons[index].SetActive(false);
+        allWeapons[index].gameObject.SetActive(false);
+    }
+
+    public void DisablePooledWeapon(Vector3 position)
+    {
+        for (int i = 0; i < allWeapons.Count; i++)
+        {
+            if (allWeapons[i].GetSpawnPointPosition() == position)
+                allWeapons[i].gameObject.SetActive(false);
+        }
     }
 
     // Ammo Pack Methods
@@ -161,5 +170,15 @@ public class WeaponPool : MonoBehaviourPun
             ap.gameObject.SetActive(true);
             ap.transform.position = spawnPointPosition;
         }
+    }
+
+    public LootableWeapon GetWeaponWithSpawnPoint(Vector3 position)
+    {
+        for (int i = 0; i < allWeapons.Count; i++)
+        {
+            if (allWeapons[i].GetSpawnPointPosition() == position)
+                return allWeapons[i];
+        }
+        return null;
     }
 }

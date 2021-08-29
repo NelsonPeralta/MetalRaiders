@@ -40,6 +40,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
             newWeap.gameObject.SetActive(true);
             newWeap.onlineWeaponSpawnPoint = this;
             weaponSpawned = newWeap;
+            weaponSpawned.SetSpawnPointPosition(transform.position);
         }
         else
             weaponSpawned.EnableWeapon();

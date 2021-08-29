@@ -274,8 +274,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4315748273606900682}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.125}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1.25}
   m_Children: []
   m_Father: {fileID: 6404454720097687818}
   m_RootOrder: 1
@@ -6398,7 +6398,7 @@ MonoBehaviour:
   points: 100
   defaultSpeed: 1
   zombieNumber: 0
-  defaultDamage: 35
+  defaultDamage: 28
   lastPlayerWhoShot: {fileID: 0}
   otherPlayerShot: 0
   targetSwitchCountdownDefault: 1

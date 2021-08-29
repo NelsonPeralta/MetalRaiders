@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LootableWeapon : MonoBehaviour
 {
+    Vector3 spawnPointPosition;
     public string weaponName;
     public bool isWallGun;
     public int ammoInThisWeapon;
@@ -62,5 +63,15 @@ public class LootableWeapon : MonoBehaviour
     {
         gameObject.SetActive(true);
         ResetAmmo();
+    }
+
+    public void SetSpawnPointPosition(Vector3 position)
+    {
+        spawnPointPosition = position;
+    }
+
+    public Vector3 GetSpawnPointPosition()
+    {
+        return spawnPointPosition;
     }
 }

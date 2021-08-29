@@ -218,32 +218,27 @@ public class WeaponPickUp : MonoBehaviourPun
                 for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
                     if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
                         weaponCollidingWithInInventoryIndex = i;
-                int lwPId = weaponPool.GetWeaponIndex(weaponCollidingWith);
+                Vector3 lwPosition = weaponCollidingWith.GetComponent<LootableWeapon>().GetSpawnPointPosition();
                 if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
                 {
                     Debug.Log("RPC: Picking up second weapon");
                     //PickupSecWeap();
-                    PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPId, weaponCollidingWithInInventoryIndex);
+                    PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
 
-                    if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
-                    {
-                        pInventory.hasSecWeap = true;
-                        pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().ammoInThisWeapon;
+                    pInventory.hasSecWeap = true;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().ammoInThisWeapon;
 
-                        Destroy(weaponCollidingWith);
-                        ResetCollider();
-                        pInventory.playDrawSound();
-                    }
-
+                    ResetCollider();
+                    pInventory.playDrawSound();
                 }
                 else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
                 {
-                    PV.RPC("ReplaceWeapon", RpcTarget.All, lwPId, weaponCollidingWithInInventoryIndex);
+                    PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
                     ResetCollider();
                     pInventory.playDrawSound();
                 }
                 Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
-                PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPId);
+                PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPosition);
             }
         }
 
@@ -285,9 +280,9 @@ public class WeaponPickUp : MonoBehaviourPun
 
 
     [PunRPC]
-    public void ReplaceWeapon(int collidingWeaponPhotonId, int weaponCollidingWithInInventoryIndex)
+    public void ReplaceWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
-        LootableWeapon lws = weaponPool.GetLootableWeaponScript(collidingWeaponPhotonId);
+        LootableWeapon lws = weaponPool.GetWeaponWithSpawnPoint(collidingWeaponPosition);
         //LootableWeapon lws = PhotonView.Find(collidingWeaponPhotonId).gameObject.GetComponent<LootableWeapon>();
         Debug.Log("Replace Weapon");
         if (pInventory.activeWeapIs == 1)
@@ -332,9 +327,9 @@ public class WeaponPickUp : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void PickupSecondWeapon(int collidingWeaponPhotonId, int weaponCollidingWithInInventoryIndex)
+    public void PickupSecondWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
-        LootableWeapon lws = weaponPool.GetLootableWeaponScript(collidingWeaponPhotonId);
+        LootableWeapon lws = weaponPool.GetWeaponWithSpawnPoint(collidingWeaponPosition);
         weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
         weaponCollidingWithInInventory.SetActive(true);
@@ -355,11 +350,10 @@ public class WeaponPickUp : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void RPC_DisableCollidingWeapon(int collidingWeaponPhotonId)
+    public void RPC_DisableCollidingWeapon(Vector3 collidingWeaponPosition)
     {
         Debug.Log("RPC: Disabling lootable weapon");
-        //weaponCollidingWith.SetActive(false);
-        weaponCollidingWith.GetComponent<LootableWeapon>().DisableWeapon();
+        weaponPool.DisablePooledWeapon(collidingWeaponPosition);
     }
 
     // TO DO: make it across all the network
