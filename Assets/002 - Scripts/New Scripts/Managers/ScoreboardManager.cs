@@ -94,7 +94,7 @@ public class ScoreboardManager : MonoBehaviour
 
                 scoreboardRows[i].playerKillsText.text = allPlayersSS[i].GetPoints().ToString();
 
-                scoreboardRows[i].playerDeathsText.text = "";
+                scoreboardRows[i].playerDeathsText.text = allPlayersSS[i].GetTotalPoints().ToString();
 
                 scoreboardRows[i].gameObject.SetActive(true);
             }

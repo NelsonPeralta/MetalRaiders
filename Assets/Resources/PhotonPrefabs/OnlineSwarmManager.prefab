@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 407597114198664401}
   - component: {fileID: 6885749541054901353}
   - component: {fileID: 4710131147709720510}
+  - component: {fileID: 3750596734575469618}
   m_Layer: 0
   m_Name: OnlineSwarmManager
   m_TagString: Untagged
@@ -76,7 +77,7 @@ MonoBehaviour:
   - {fileID: 0}
   waveNumber: 0
   waveInProgress: 0
-  newWaveDelay: 15
+  newWaveDelay: 30
   bossWaveTimer: 0
   zombiesAlive: 0
   skeletonsAlive: 0
@@ -110,9 +111,17 @@ MonoBehaviour:
   - {fileID: 0}
   RandwomWeaponDrop: {fileID: 0}
   dropLocation: {fileID: 0}
-  audioSource: {fileID: 0}
-  ambientMusics: []
+  audioSource: {fileID: 3750596734575469618}
+  ambientMusics:
+  - {fileID: 8300000, guid: d9fa9dad561ce824bbe6310d6a702b3c, type: 3}
+  - {fileID: 8300000, guid: 917155e5b0a77e34faaab28c2d70b251, type: 3}
+  - {fileID: 8300000, guid: 2feb179aa40411a4cab7a4ab8216d101, type: 3}
+  - {fileID: 8300000, guid: d8df3b84f1013b14ca9ac76a2a1b2000, type: 3}
+  - {fileID: 8300000, guid: 7bbf792d7504c7948af151454429ce37, type: 3}
+  - {fileID: 8300000, guid: 54e73de44f5a8184b99deb711665b08c, type: 3}
+  - {fileID: 8300000, guid: f4a20f6c993667f48bebe5b8bcc7fb87, type: 3}
   bossMusics: []
+  bonusPointsClip: {fileID: 8300000, guid: 2f2e448ad87728e4bb8fd6e0a7bc080c, type: 3}
   gameTime: {fileID: 0}
   gameInformerPlayer1: {fileID: 0}
   gameInformerPlayer2: {fileID: 0}
@@ -160,3 +169,99 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!82 &3750596734575469618
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5506794971816424258}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

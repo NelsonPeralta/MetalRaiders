@@ -8,6 +8,7 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
     public PhotonView PV;
     public AllPlayerScripts allPlayerScripts;
     [SerializeField] int points;
+    [SerializeField] int totalPoints;
         public void AddPoints(int _points)
     {
         PV.RPC("AddPoints_RPC", RpcTarget.All, _points);
@@ -17,6 +18,7 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
     void AddPoints_RPC(int _points)
     {
         points += _points;
+        totalPoints += _points;
         UpdatePointText();
     }
 
@@ -37,6 +39,11 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
         return points;
     }
 
+    public int GetTotalPoints()
+    {
+        return totalPoints;
+    }
+
     void UpdatePointText()
     {
         allPlayerScripts.playerUIComponents.swarmPointsText.text = points.ToString();
@@ -53,5 +60,6 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
     void ResetPoints_RPC()
     {
         points = 0;
+        totalPoints = 0;
     }
 }

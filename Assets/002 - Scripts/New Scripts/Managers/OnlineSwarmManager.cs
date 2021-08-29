@@ -110,6 +110,7 @@ public class OnlineSwarmManager : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip[] ambientMusics;
     public AudioClip[] bossMusics;
+    public AudioClip bonusPointsClip;
 
     [Header("MANUAL LINKING")]
     public GameTime gameTime;
@@ -137,7 +138,9 @@ public class OnlineSwarmManager : MonoBehaviour
     public OnlineGameTime onlineGameTimeInstance;
     public AISpawnManager aiSpawnManagerInstance;
     public AIPool aiPool;
-    float totalGameTime;
+    int totalGameTime;
+    int timeWaveStarted;
+    int timeWaveEnded;
 
     [Header("Health Packs")]
     public List<HealthPack> healthPacks = new List<HealthPack>();
@@ -173,8 +176,8 @@ public class OnlineSwarmManager : MonoBehaviour
             pp.needsHealthPack = true;
 
         ResetPoints();
-        StartCoroutine(PlayAmbientSound());
-        StartCoroutine(UpdateWaveNumber(waveNumber));
+        PlayAmbientSound();
+        StartCoroutine(IncreaseWave(waveNumber));
         UpdatePlayerLives();
     }
 
@@ -246,7 +249,7 @@ public class OnlineSwarmManager : MonoBehaviour
         }
     }
 
-    IEnumerator UpdateWaveNumber(int param1)
+    IEnumerator IncreaseWave(int param1)
     {
         waveNumber = waveNumber + 1;
         allPlayerWaveCounters = GetAllPlayerWaveCounters();
@@ -356,12 +359,16 @@ public class OnlineSwarmManager : MonoBehaviour
     {
         waveInProgress = true;
         totalGameTime = onlineGameTimeInstance.totalTime;
+        timeWaveStarted = totalGameTime;
 
         nextZombieSpawnTime = totalGameTime + zombieSpawnDelay;
         nextSkeletonSpawnTime = totalGameTime + skeletonSpawnDelay;
         nextWatcherSpawnTime = totalGameTime + watcherSpawnDelay;
         nextHellhoundSpawnTime = totalGameTime + hellhoundSpawnDelay;
         nextTrollSpawnTime = totalGameTime + trollSpawnDelay;
+
+        if (waveNumber > 1) // Already Called on Start
+            PlayAmbientSound();
     }
 
     void SpawnZombie()
@@ -512,35 +519,71 @@ public class OnlineSwarmManager : MonoBehaviour
     IEnumerator WaveEnd()
     {
         allPlayerWaveCounters = GetAllPlayerWaveCounters();
-        foreach(WaveCounter wc in allPlayerWaveCounters)
-            wc.gameObject.SetActive(false);
+        timeWaveEnded = totalGameTime;
+
+        int bonusPoints = (1000 * waveNumber) - (timeWaveEnded - timeWaveStarted);
+        if(bonusPoints > 0)
+        {
+            foreach (WaveCounter wc in allPlayerWaveCounters)
+                wc.waveText.text = $"Wave complete! Bonus points: {bonusPoints}";
+            bonusPoints = 0;
+        }
+        if (bonusPoints <= 0)
+            foreach (WaveCounter wc in allPlayerWaveCounters)
+                wc.waveText.text = $"No bonus points. Finish the wave faster";
+
+        GivePlayerBonusPoints(bonusPoints);
+
         yield return new WaitForSeconds(newWaveDelay);
         Debug.Log("Reinforcements (Voice)");
-        StartCoroutine(UpdateWaveNumber(waveNumber));
+        StartCoroutine(IncreaseWave(waveNumber));
     }
 
-    IEnumerator PlayAmbientSound()
+    void GivePlayerBonusPoints(int points)
+    {
+        PV.RPC("GivePlayerBonusPoints_RPC", RpcTarget.All, points);
+    }
+
+    [PunRPC]
+    void GivePlayerBonusPoints_RPC(int points)
+    {
+        allPlayers = GetAllPlayers();
+        foreach (PlayerProperties pp in allPlayers)
+            pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(points);
+        PlayerBonusPointsSound();
+    }
+
+    void PlayerBonusPointsSound()
+    {
+        audioSource.Stop();
+        audioSource.volume = 1;
+        audioSource.clip = bonusPointsClip;
+        audioSource.Play();
+    }
+
+    void PlayAmbientSound()
+    {
+        PV.RPC("PlayAmbientSound_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+
+    void PlayAmbientSound_RPC()
     {
         if (ambientMusics.Length > 0)
         {
-            if (waveNumber == 0)
-            {
-                int randomSound = Random.Range(0, ambientMusics.Length - 1);
-                audioSource.clip = ambientMusics[randomSound];
-                audioSource.Play();
-            }
+            audioSource.volume = 0.1f;
+            int randomSound = Random.Range(0, ambientMusics.Length - 1);
+            audioSource.clip = ambientMusics[randomSound];
+            audioSource.Play();
 
-            if (waveNumber % 5 != 0 || waveNumber % 10 != 0)
-            {
-                int randomSound = Random.Range(0, ambientMusics.Length - 1);
-                audioSource.clip = ambientMusics[randomSound];
-                audioSource.Play();
-            }
+            //if (waveNumber % 5 != 0 || waveNumber % 10 != 0)
+            //{
+            //    int randomSound = Random.Range(0, ambientMusics.Length - 1);
+            //    audioSource.clip = ambientMusics[randomSound];
+            //    audioSource.Play();
+            //}
         }
-
-        yield return new WaitForSeconds(180f);
-
-        StartCoroutine(PlayAmbientSound());
     }
 
     void ResetPoints()

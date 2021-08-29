@@ -103,6 +103,8 @@ MonoBehaviour:
   - AddPoints_RPC
   - RemovePoints_RPC
   - ResetPoints_RPC
+  - GivePlayerBonusPoints_RPC
+  - PlayAmbientSound_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

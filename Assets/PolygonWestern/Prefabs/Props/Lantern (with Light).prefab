@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33210371154860466}
   - component: {fileID: 23746671496904628}
   m_Layer: 0
-  m_Name: SM_Prop_Lantern_Lit_02
+  m_Name: Lantern (with Light)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
