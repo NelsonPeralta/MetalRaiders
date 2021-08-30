@@ -283,13 +283,13 @@ public class WeaponPickUp : MonoBehaviourPun
     public void ReplaceWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
         LootableWeapon lws = weaponPool.GetWeaponWithSpawnPoint(collidingWeaponPosition);
+        weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
         //LootableWeapon lws = PhotonView.Find(collidingWeaponPhotonId).gameObject.GetComponent<LootableWeapon>();
         Debug.Log("Replace Weapon");
         if (pInventory.activeWeapIs == 1)
         {
             weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
-            weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
             pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].SetActive(true);
             pInventory.weaponsEquiped[1].gameObject.SetActive(false);
             pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
@@ -332,6 +332,7 @@ public class WeaponPickUp : MonoBehaviourPun
         LootableWeapon lws = weaponPool.GetWeaponWithSpawnPoint(collidingWeaponPosition);
         weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
+        weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
         weaponCollidingWithInInventory.SetActive(true);
         pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
         pInventory.holsteredWeapon = pInventory.activeWeapon;

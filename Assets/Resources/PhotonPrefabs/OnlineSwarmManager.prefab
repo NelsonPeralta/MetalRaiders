@@ -95,7 +95,7 @@ MonoBehaviour:
   maxWatchersOnMap: 8
   maxHellhoundsOnMap: 24
   maxTrollsOnMap: 4
-  zombieSpawnDelay: 2
+  zombieSpawnDelay: 1
   nextZombieSpawnTime: 0
   skeletonSpawnDelay: 3
   nextSkeletonSpawnTime: 0

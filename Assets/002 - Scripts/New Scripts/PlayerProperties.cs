@@ -169,7 +169,14 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         healthSlider.value = maxHealth;
 
         if (onlineSwarmManager)
+        {
             needsHealthPack = true;
+            allPlayerScripts.playerUIComponents.swarmLivesHolder.SetActive(true);
+            allPlayerScripts.playerUIComponents.swarmLivesText.text = onlineSwarmManager.playerLives.ToString();
+            allPlayerScripts.playerUIComponents.multiplayerPoints.SetActive(false);
+            allPlayerScripts.playerUIComponents.swarmPoints.SetActive(true);
+            allPlayerScripts.playerUIComponents.swarmPointsText.text = 0.ToString();
+        }
 
         if (respawnTime <= healthRegenerationDelay)
             respawnTime = healthRegenerationDelay + 0.5f; // To avoid the health regen sound going off

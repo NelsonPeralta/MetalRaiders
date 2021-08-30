@@ -164,28 +164,30 @@ public class OnlineSwarmManager : MonoBehaviour
     {
         healthPacks = GetAllHealthPacks();
         aiPool = AIPool.aIPoolInstance;
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
-        aiSpawnManagerInstance = AISpawnManager.aISpawnManagerInstance;
         if (playerLives == 0)
             playerLives = 5;
-
+        onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
+        aiSpawnManagerInstance = AISpawnManager.aISpawnManagerInstance;
         allPlayers = GetAllPlayers();
         foreach (PlayerProperties pp in allPlayers)
             pp.needsHealthPack = true;
-
         ResetPoints();
-        PlayAmbientSound();
-        StartCoroutine(IncreaseWave(waveNumber));
         UpdatePlayerLives();
+
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        PlayAmbientSound();
+
+        if (PV.IsMine)
+            IncreaseWave(waveNumber);
     }
 
     void Update()
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!PV.IsMine)
             return;
-        if (waveInProgress && !editMode)
+        if (waveInProgress /*&& !editMode*/)
         {
             CheckMaxAIsOnMap();
             totalGameTime = onlineGameTimeInstance.totalTime;
@@ -243,18 +245,30 @@ public class OnlineSwarmManager : MonoBehaviour
                             hellhoundsLeftToSpawn == 0 && hellhoundsAlive == 0 && trollsLeftToSpawn == 0 && trollsAlive == 0 && zombiesLeftToSpawn == 0 && zombiesAlive == 0)
             {
                 waveInProgress = false;
-                StartCoroutine(WaveEnd());
+                WaveEnd(onlineGameTimeInstance.totalTime);
             }
             //}
         }
     }
 
-    IEnumerator IncreaseWave(int param1)
+    void IncreaseWave(int _currentWave)
+    {
+        PV.RPC("IncreaseWave_RPC", RpcTarget.All, _currentWave);
+    }
+
+    [PunRPC]
+    void IncreaseWave_RPC(int _currentWave)
+    {
+
+        StartCoroutine(IncreaseWave_Coroutine(_currentWave));
+    }
+
+    IEnumerator IncreaseWave_Coroutine(int param1)
     {
         waveNumber = waveNumber + 1;
         allPlayerWaveCounters = GetAllPlayerWaveCounters();
 
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(newWaveDelay);
 
         if (allPlayerWaveCounters.Count > 0)
             foreach (WaveCounter wc in allPlayerWaveCounters)
@@ -287,7 +301,8 @@ public class OnlineSwarmManager : MonoBehaviour
         //    yield return new WaitForSeconds(6.5f);
         //}
 
-        WaveStart();
+        if (PV.IsMine)
+            WaveStart(onlineGameTimeInstance.totalTime);
     }
 
     void CalculateMaxDefaultAIsForRound()
@@ -355,11 +370,19 @@ public class OnlineSwarmManager : MonoBehaviour
         }
     }
 
-    void WaveStart()
+    void WaveStart(int tgt)
     {
+        PV.RPC("WaveStart_RPC", RpcTarget.All, tgt);
+    }
+
+    [PunRPC]
+    void WaveStart_RPC(int tgt)
+    {
+        if (!onlineGameTimeInstance)
+            onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
         waveInProgress = true;
-        totalGameTime = onlineGameTimeInstance.totalTime;
-        timeWaveStarted = totalGameTime;
+        totalGameTime = tgt;
+        timeWaveStarted = tgt;
 
         nextZombieSpawnTime = totalGameTime + zombieSpawnDelay;
         nextSkeletonSpawnTime = totalGameTime + skeletonSpawnDelay;
@@ -395,6 +418,9 @@ public class OnlineSwarmManager : MonoBehaviour
 
         if (!newZombie.GetComponent<ZombieScript>().onlineSwarmManager)
             newZombie.GetComponent<ZombieScript>().onlineSwarmManager = this;
+
+        if (editMode)
+            newZombie.GetComponent<ZombieScript>().defaultSpeed = 0.01f;
         zombiesAlive++;
         zombiesLeftToSpawn--;
     }
@@ -516,27 +542,35 @@ public class OnlineSwarmManager : MonoBehaviour
         }*/
     }
 
-    IEnumerator WaveEnd()
+    void WaveEnd(int _timeWaveEnded)
+    {
+        PV.RPC("WaveEnd_RPC", RpcTarget.All, _timeWaveEnded);
+    }
+
+    [PunRPC]
+    void WaveEnd_RPC(int _timeWaveEnded)
+    {
+        StartCoroutine(WaveEnd_Coroutine(_timeWaveEnded));
+    }
+    IEnumerator WaveEnd_Coroutine(int _timeWaveEnded)
     {
         allPlayerWaveCounters = GetAllPlayerWaveCounters();
-        timeWaveEnded = totalGameTime;
+        timeWaveEnded = _timeWaveEnded;
 
-        int bonusPoints = (1000 * waveNumber) - (timeWaveEnded - timeWaveStarted);
-        if(bonusPoints > 0)
-        {
+        int bonusPoints = (1000 * waveNumber) - ((timeWaveEnded - timeWaveStarted - waveNumber) * 10);
+        if (bonusPoints > 0)
             foreach (WaveCounter wc in allPlayerWaveCounters)
                 wc.waveText.text = $"Wave complete! Bonus points: {bonusPoints}";
-            bonusPoints = 0;
-        }
-        if (bonusPoints <= 0)
+        else if (bonusPoints <= 0)
             foreach (WaveCounter wc in allPlayerWaveCounters)
                 wc.waveText.text = $"No bonus points. Finish the wave faster";
 
-        GivePlayerBonusPoints(bonusPoints);
+        if(PV.IsMine)
+            GivePlayerBonusPoints(bonusPoints);
 
         yield return new WaitForSeconds(newWaveDelay);
         Debug.Log("Reinforcements (Voice)");
-        StartCoroutine(IncreaseWave(waveNumber));
+        IncreaseWave(waveNumber);
     }
 
     void GivePlayerBonusPoints(int points)

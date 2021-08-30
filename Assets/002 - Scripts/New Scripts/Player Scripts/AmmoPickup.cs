@@ -49,6 +49,8 @@ public class AmmoPickup : MonoBehaviour
         ammoPackScript.ammoInThisPack -= ammoToRemoveFromThisPack;
         ammoPackScript.ammoText.text = ammoPackScript.ammoInThisPack.ToString();
 
+        playerProperties.allPlayerScripts.playerInventory.UpdateAllExtraAmmoHuds();
+
         PV.RPC("DisableAmmoPack", RpcTarget.All, ammoPackPosition);
     }
 

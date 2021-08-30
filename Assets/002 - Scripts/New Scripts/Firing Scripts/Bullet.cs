@@ -328,7 +328,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 if (aiHB.isHead)
                 {
-                    aiHB.DamageAI(true, damage * 2, playerWhoShot.gameObject);
+                    aiHB.DamageAI(true, damage * 1.5f, playerWhoShot.gameObject);
                     playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
                     //Debug.Log("Hit 2");
                 }
@@ -342,7 +342,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 if (aiHB.isHead)
                 {
-                    aiHB.DamageAI(true, damage * 2, playerWhoShot.gameObject);
+                    aiHB.DamageAI(true, damage * 1.5f, playerWhoShot.gameObject);
                     //Debug.Log("Hit 4");
                 }
                 else

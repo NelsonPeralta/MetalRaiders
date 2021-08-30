@@ -69,6 +69,7 @@ public class ZombieScript : AiAbstractClass
     }
     private void Start()
     {
+        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
     }
 
     // Update is called once per frame

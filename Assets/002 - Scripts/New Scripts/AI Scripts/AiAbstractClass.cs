@@ -15,4 +15,9 @@ abstract public class AiAbstractClass : MonoBehaviour
     {
 
     }
+
+    public void Test()
+    {
+        Debug.Log("This is the parent class");
+    }
 }

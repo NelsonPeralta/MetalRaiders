@@ -62,9 +62,10 @@ public class ScoreboardManager : MonoBehaviour
     public void UpdateScoreboard()
     {
         DisableAllRows();
+        multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
+        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
         if (multiplayerManager)
         {
-
             List<PlayerMultiplayerStats> allPlayersMS = new List<PlayerMultiplayerStats>();
 
             foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
@@ -83,6 +84,7 @@ public class ScoreboardManager : MonoBehaviour
         }
         else if (onlineSwarmManager)
         {
+            Debug.Log("In Swarm Scoreboard");
             List<OnlinePlayerSwarmScript> allPlayersSS = new List<OnlinePlayerSwarmScript>();
 
             foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))

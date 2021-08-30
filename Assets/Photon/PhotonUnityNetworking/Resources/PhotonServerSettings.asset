@@ -105,6 +105,9 @@ MonoBehaviour:
   - ResetPoints_RPC
   - GivePlayerBonusPoints_RPC
   - PlayAmbientSound_RPC
+  - WaveEnd_RPC
+  - IncreaseWave_RPC
+  - WaveStart_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

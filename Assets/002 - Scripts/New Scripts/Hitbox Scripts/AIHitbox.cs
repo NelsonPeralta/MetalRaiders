@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AIHitbox : MonoBehaviour
 {
+    public AiAbstractClass aiAbstractClass;
     public GameObject aiGO;
     public float aiHealth;
 
