@@ -14841,8 +14841,10 @@ MonoBehaviour:
   PV: {fileID: 0}
   weaponPool: {fileID: 0}
   onlineGameTime: {fileID: 0}
+  randomAmmo: 0
   ammoType: small
-  ammoInThisPack: 48
+  defaultAmmo: 24
+  ammoInThisPack: 24
   ammoText: {fileID: 6919308943305471757}
   spawnPoint: {fileID: 0}
   playerProperties: {fileID: 0}

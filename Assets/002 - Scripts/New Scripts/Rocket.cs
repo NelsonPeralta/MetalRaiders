@@ -129,44 +129,13 @@ public class Rocket : MonoBehaviour
                 GameObject ai;
                 ai = hit.GetComponent<AIHitbox>().aiGO;
                 float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
-
-                bool aiAlreadyHit = false;
-
-                for (int i = 0; i < AIsHit.Length; i++)
-                {
-                    if (AIsHit[i] != null)
-                    {
-                        if (ai == AIsHit[i])
-                        {
-                            aiAlreadyHit = true;
-                        }
-                    }
-                }
-
-                bool assignedAIInArray = false;
-
-                if (!aiAlreadyHit)
-                {
-                    for (int i = 0; i < AIsHit.Length; i++)
-                    {
-                        if (AIsHit[i] == null && !assignedAIInArray)
-                        {
-                            AIsHit[i] = ai;
-                            assignedAIInArray = true;
-                        }
-                    }
-                }
-
-                if (!aiAlreadyHit)
-                {
                     if (hit.GetComponent<AIHitbox>().aiHealth > 0)
                     {
                         float calculatedDamage = damage * (1 - (aiDistance / radius));
+                        Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
                         if (playerWhoThrewGrenade.PV.IsMine)
                             hit.GetComponent<AIHitbox>().DamageAI(true, calculatedDamage, playerWhoThrewGrenade.gameObject);
                     }
-
-                }
             }
         }
 

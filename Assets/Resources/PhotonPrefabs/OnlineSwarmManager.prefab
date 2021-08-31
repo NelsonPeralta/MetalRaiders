@@ -77,7 +77,7 @@ MonoBehaviour:
   - {fileID: 0}
   waveNumber: 0
   waveInProgress: 0
-  newWaveDelay: 30
+  newWaveDelay: 15
   bossWaveTimer: 0
   zombiesAlive: 0
   skeletonsAlive: 0
@@ -90,12 +90,12 @@ MonoBehaviour:
   hellhoundsLeftToSpawn: 0
   trollsLeftToSpawn: 0
   isBossWave: 0
-  maxZombiesOnMap: 12
+  maxZombiesOnMap: 24
   maxSkeletonsOnMap: 8
   maxWatchersOnMap: 8
   maxHellhoundsOnMap: 24
   maxTrollsOnMap: 4
-  zombieSpawnDelay: 1
+  zombieSpawnDelay: 1.5
   nextZombieSpawnTime: 0
   skeletonSpawnDelay: 3
   nextSkeletonSpawnTime: 0

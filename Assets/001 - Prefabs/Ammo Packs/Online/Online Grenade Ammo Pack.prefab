@@ -19778,7 +19778,9 @@ MonoBehaviour:
   PV: {fileID: 0}
   weaponPool: {fileID: 0}
   onlineGameTime: {fileID: 0}
+  randomAmmo: 0
   ammoType: grenade
+  defaultAmmo: 2
   ammoInThisPack: 2
   ammoText: {fileID: 7239459711961369259}
   spawnPoint: {fileID: 0}

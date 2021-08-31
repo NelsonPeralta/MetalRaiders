@@ -455,7 +455,7 @@ public class ZombieScript : AiAbstractClass
             placeholderSkin.SetActive(false);
         randomSkin();
 
-        Health = DefaultHealth + (onlineSwarmManager.waveNumber * 20);
+        Health = DefaultHealth + (onlineSwarmManager.waveNumber * 10);
         damage = defaultDamage + (onlineSwarmManager.waveNumber * 2);
         isDead = false;
         IsInMeleeRange = false;

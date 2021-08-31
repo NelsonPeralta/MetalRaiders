@@ -98,13 +98,13 @@ public class AmmoSeller : MonoBehaviour
 
             int ammoMissing = pInventory.maxSmallAmmo - pInventory.smallAmmo;
 
-            if (ammoMissing <= 48)
+            if (ammoMissing <= 24)
             {
                 pInventory.smallAmmo = pInventory.smallAmmo + ammoMissing;
             }
             else
             {
-                pInventory.smallAmmo = pInventory.smallAmmo + 48;
+                pInventory.smallAmmo += 24;
             }
         }
 
@@ -138,6 +138,7 @@ public class AmmoSeller : MonoBehaviour
             }
         }
 
+        pInventory.UpdateAllExtraAmmoHuds();
         anim.SetTrigger("Jump");
         audioSource.Play();
     }

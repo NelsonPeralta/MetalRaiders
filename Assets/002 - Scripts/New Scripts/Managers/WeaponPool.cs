@@ -105,7 +105,7 @@ public class WeaponPool : MonoBehaviourPun
         for (int i = 0; i < allWeapons.Count; i++)
         {
             if (allWeapons[i].GetSpawnPointPosition() == position)
-                allWeapons[i].gameObject.SetActive(false);
+                allWeapons[i].DisableWeapon();
         }
     }
 

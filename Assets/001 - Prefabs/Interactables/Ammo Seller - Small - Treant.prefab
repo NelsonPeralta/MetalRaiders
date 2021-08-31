@@ -195,7 +195,7 @@ MonoBehaviour:
   audioSource: {fileID: 2518985532907167639}
   sellingNoise: {fileID: 8300000, guid: acbf0bd1f6bcfe549a6ae0641bb7e03f, type: 3}
   ammoType: Small
-  cost: 1000
+  cost: 2500
   player0: {fileID: 0}
   player1: {fileID: 0}
   player2: {fileID: 0}

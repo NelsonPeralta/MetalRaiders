@@ -41,13 +41,10 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
             newAmmoPack.transform.rotation = transform.rotation;
             newAmmoPack.gameObject.SetActive(true);
             ammoPack = newAmmoPack;
+            if(randomAmmo)
+                ammoPack.SetRandomAmmoAsDefault();
         }else
-        {
             ammoPack.EnablePack();
-        }
-
-        if (randomAmmo)
-            ammoPack.SetRandomAmmoAsDefault();
     }
 
     public void StartRespawn()

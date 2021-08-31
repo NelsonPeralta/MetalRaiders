@@ -14,8 +14,8 @@ public class AmmoPack : MonoBehaviour
     [Header("Ammo")]
     public bool randomAmmo;
     public string ammoType;
-    int defaultAmmo;
-    public int ammoInThisPack;
+    public int defaultAmmo;
+    [SerializeField] int ammoInThisPack;
 
     [Header("Classes")]
     public TextMeshPro ammoText;
@@ -28,10 +28,7 @@ public class AmmoPack : MonoBehaviour
     {
         weaponPool = WeaponPool.weaponPoolInstance;
         onlineGameTime = OnlineGameTime.onlineGameTimeInstance;
-        if (!randomAmmo)
-            defaultAmmo = ammoInThisPack;
-        else
-            defaultAmmo = GetRandomAmmo();
+        ammoInThisPack = GetNewAmmo();
         UpdateAmmoText();
     }
 
@@ -43,15 +40,21 @@ public class AmmoPack : MonoBehaviour
 
     public void EnablePack()
     {
-        ammoInThisPack = defaultAmmo;
+        ammoInThisPack = GetNewAmmo();
         UpdateAmmoText();
         gameObject.SetActive(true);
     }
 
-    int GetRandomAmmo()
+    int GetNewAmmo()
     {
-        int ranAmmo = (int)Mathf.Floor(Random.Range(1, (ammoInThisPack * 0.8f)));
-        return ranAmmo;
+        int newAmmo = 0;
+        if (!randomAmmo)
+            newAmmo = defaultAmmo;
+        else
+            newAmmo = (int)Mathf.Floor(Random.Range(1, (defaultAmmo * 0.8f)));
+        if (newAmmo <= 0)
+            newAmmo = 1;
+        return newAmmo;
     }
 
     void UpdateAmmoText()
@@ -61,15 +64,13 @@ public class AmmoPack : MonoBehaviour
 
     public void SetRandomAmmoAsDefault()
     {
-        defaultAmmo = GetRandomAmmo();
-        ammoInThisPack = defaultAmmo;
+        randomAmmo = true;
+        ammoInThisPack = GetNewAmmo();
         UpdateAmmoText();
     }
 
-    [PunRPC]
-    public void SetRandomAmmoAsDefault_RPC()
+    public int GetAmmo()
     {
-        defaultAmmo = GetRandomAmmo();
-        UpdateAmmoText();
+        return ammoInThisPack;
     }
 }

@@ -247,9 +247,8 @@ public class PlayerController : MonoBehaviourPun
     {
         if (movement.direction == "Forward")
         {
-            if (!movement.isGrounded)
+            if (!movement.isGrounded || isReloading)
                 return;
-
             if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
             {
                 if (player.GetButton("Sprint"))

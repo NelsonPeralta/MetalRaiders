@@ -308,7 +308,7 @@ public class OnlineSwarmManager : MonoBehaviour
     void CalculateMaxDefaultAIsForRound()
     {
         allPlayers = GetAllPlayers();
-        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + waveNumber;
+        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + (waveNumber * 2);
         //maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
         //maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
         //maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;
@@ -783,5 +783,43 @@ public class OnlineSwarmManager : MonoBehaviour
         foreach (HealthPack hp in healthPacks)
             if (hp.transform.position == hpPosition)
                 hp.gameObject.SetActive(false);
+    }
+
+    public void RemovePlayerLife()
+    {
+        if (PV.IsMine)
+            PV.RPC("RemovePlayerLife_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RemovePlayerLife_RPC()
+    {
+        playerLives--;
+        UpdatePlayerLives();
+
+        if (playerLives <= 0)
+            EndGame();
+    }
+
+    void EndGame()
+    {
+        PV.RPC("EndGame_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void EndGame_RPC()
+    {
+        Debug.Log("Ending Game");
+        List<PlayerProperties> allPlayers = new List<PlayerProperties>();
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+            allPlayers.Add(go.GetComponent<PlayerProperties>());
+
+        for (int i = 0; i < allPlayers.Count; i++)
+        {
+            if (!allPlayers[i].PV.IsMine)
+                return;
+            allPlayers[i].allPlayerScripts.announcer.PlayGameOverClip();
+            allPlayers[i].LeaveRoomWithDelay();
+        }
     }
 }

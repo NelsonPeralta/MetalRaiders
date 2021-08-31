@@ -428,105 +428,105 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     public void BleedthroughDamage(float damage, bool headshot, int playerWhoKilledThisPlayer)
     {
-        Debug.Log("Bleedthrough Damage");
-        pController.ScopeOut();
-        shieldRechargeCountdown = shieldRechargeDelay;
-        healthRegenerationCountdown = healthRegenerationDelay;
+        //Debug.Log("Bleedthrough Damage");
+        //pController.ScopeOut();
+        //shieldRechargeCountdown = shieldRechargeDelay;
+        //healthRegenerationCountdown = healthRegenerationDelay;
 
-        if (!headshot)
-        {
-            if (hasShield)
-            {
-                if (Shield > 0)
-                {
-                    triggerHealthRecharge = true;
-                    armorHasBeenHit = true;
+        //if (!headshot)
+        //{
+        //    if (hasShield)
+        //    {
+        //        if (Shield > 0)
+        //        {
+        //            triggerHealthRecharge = true;
+        //            armorHasBeenHit = true;
 
-                    float damageLeft = damage - Shield;
+        //            float damageLeft = damage - Shield;
 
-                    if (damageLeft < 0)
-                    {
-                        damageLeft = 0;
-                    }
+        //            if (damageLeft < 0)
+        //            {
+        //                damageLeft = 0;
+        //            }
 
-                    Shield = Shield - damage;
-                    shieldSlider.value = Shield;
-                    PlayShieldHitSound();
+        //            Shield = Shield - damage;
+        //            shieldSlider.value = Shield;
+        //            PlayShieldHitSound();
 
-                    if (Shield < 0)
-                    {
-                        Shield = 0;
-                        shieldSlider.value = 0;
-                        PlayShieldDownSound();
-                        StartCoroutine(PlayShieldAlarmSound());
-                    }
+        //            if (Shield < 0)
+        //            {
+        //                Shield = 0;
+        //                shieldSlider.value = 0;
+        //                PlayShieldDownSound();
+        //                StartCoroutine(PlayShieldAlarmSound());
+        //            }
 
-                    if (Shield == 0)
-                    {
-                        Health = Health - damageLeft;
-                        healthSlider.value = healthSlider.value - damageLeft;
-                        PlayHurtSound();
-                    }
+        //            if (Shield == 0)
+        //            {
+        //                Health = Health - damageLeft;
+        //                healthSlider.value = healthSlider.value - damageLeft;
+        //                PlayHurtSound();
+        //            }
 
-                    if (Health <= 0)
-                    {
-                        //Death(true, playerWhoKilledThisPlayer);
-                        pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
-                        PlayDeathSound();
-                    }
-                }
-                else if (Shield <= 0)
-                {
-                    triggerHealthRecharge = true;
-                    Health = Health - damage;
-                    healthSlider.value = Health;
+        //            if (Health <= 0)
+        //            {
+        //                //Death(true, playerWhoKilledThisPlayer);
+        //                pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
+        //                PlayDeathSound();
+        //            }
+        //        }
+        //        else if (Shield <= 0)
+        //        {
+        //            triggerHealthRecharge = true;
+        //            Health = Health - damage;
+        //            healthSlider.value = Health;
 
-                    PlayHurtSound();
+        //            PlayHurtSound();
 
-                    if (Health <= 0)
-                    {
-                        //Death(true, playerWhoKilledThisPlayer);
-                        pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
-                        PlayDeathSound();
-                    }
-                }
-            }
-            else
-            {
-                triggerHealthRecharge = true;
-                Health = Health - damage;
-                healthSlider.value = Health;
+        //            if (Health <= 0)
+        //            {
+        //                //Death(true, playerWhoKilledThisPlayer);
+        //                pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
+        //                PlayDeathSound();
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        triggerHealthRecharge = true;
+        //        Health = Health - damage;
+        //        healthSlider.value = Health;
 
-                PlayHurtSound();
+        //        PlayHurtSound();
 
-                if (Health <= 0)
-                {
-                    //Death(true, playerWhoKilledThisPlayer);
-                    pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
-                    PlayDeathSound();
-                }
-            }
-        }
-        else
-        {
-            Health = Health - damage;
-            healthSlider.value = Health;
+        //        if (Health <= 0)
+        //        {
+        //            //Death(true, playerWhoKilledThisPlayer);
+        //            pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
+        //            PlayDeathSound();
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    Health = Health - damage;
+        //    healthSlider.value = Health;
 
-            Shield = 0;
-            shieldSlider.value = 0;
-            PlayShieldDownSound();
-            StartCoroutine(PlayShieldAlarmSound());
+        //    Shield = 0;
+        //    shieldSlider.value = 0;
+        //    PlayShieldDownSound();
+        //    StartCoroutine(PlayShieldAlarmSound());
 
-            triggerHealthRecharge = true;
-            armorHasBeenHit = true;
+        //    triggerHealthRecharge = true;
+        //    armorHasBeenHit = true;
 
-            if (Health <= 0)
-            {
-                //Death(true, playerWhoKilledThisPlayer);
-                pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
-                PlayDeathSound();
-            }
-        }
+        //    if (Health <= 0)
+        //    {
+        //        //Death(true, playerWhoKilledThisPlayer);
+        //        pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
+        //        PlayDeathSound();
+        //    }
+        //}
     }
 
 
@@ -600,6 +600,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             return;
         if (lastPlayerWhoDamagedThisPlayerPVID != 0 && multiplayerManager)
             multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
+        if (onlineSwarmManager)
+            onlineSwarmManager.RemovePlayerLife();
         pInventory.holsteredWeapon = null;
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");

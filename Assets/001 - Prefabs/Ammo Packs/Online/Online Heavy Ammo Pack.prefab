@@ -20123,7 +20123,9 @@ MonoBehaviour:
   PV: {fileID: 0}
   weaponPool: {fileID: 0}
   onlineGameTime: {fileID: 0}
+  randomAmmo: 0
   ammoType: heavy
+  defaultAmmo: 30
   ammoInThisPack: 30
   ammoText: {fileID: 4253537919978155509}
   spawnPoint: {fileID: 0}

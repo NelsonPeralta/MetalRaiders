@@ -34,8 +34,8 @@ public class AmmoPickup : MonoBehaviour
         else
             return;
 
-        if (ammoPackScript.ammoInThisPack <= ammoToRemoveFromThisPack)
-            ammoToRemoveFromThisPack = ammoPackScript.ammoInThisPack;
+        if (ammoPackScript.GetAmmo() <= ammoToRemoveFromThisPack)
+            ammoToRemoveFromThisPack = ammoPackScript.GetAmmo();
 
         if (ammoPackScript.ammoType == "small")
             pInventory.smallAmmo += ammoToRemoveFromThisPack;
@@ -46,8 +46,8 @@ public class AmmoPickup : MonoBehaviour
         else if (ammoPackScript.ammoType == "grenade")
             pInventory.grenades += ammoToRemoveFromThisPack;
 
-        ammoPackScript.ammoInThisPack -= ammoToRemoveFromThisPack;
-        ammoPackScript.ammoText.text = ammoPackScript.ammoInThisPack.ToString();
+        //ammoPackScript.GetAmmo() -= ammoToRemoveFromThisPack;
+        ammoPackScript.ammoText.text = ammoPackScript.GetAmmo().ToString();
 
         playerProperties.allPlayerScripts.playerInventory.UpdateAllExtraAmmoHuds();
 
