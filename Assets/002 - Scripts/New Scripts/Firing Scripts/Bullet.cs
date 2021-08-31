@@ -120,7 +120,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         hits = Physics.RaycastAll(new Ray(prePos, (transform.position - prePos).normalized), (transform.position - prePos).magnitude);//, layerMask);
 
         // Normal for loop checks farthest first; for (int i = 0; i < hits.Length; i++)
-        for (int i = hits.Length - 1; i >= 0; i--)
+        for (int i = 0; i < hits.Length; i++)
         {
             //Debug.Log(hits[i].transform.position);
             //distanceTravelled += (transform.position - prePos).magnitude;

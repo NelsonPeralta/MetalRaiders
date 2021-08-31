@@ -14915,7 +14915,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online M4 Spawn Point
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2239887969480664709, guid: eb8fff03831ad4549827cd2323e19486, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: eb8fff03831ad4549827cd2323e19486, type: 3}
 --- !u!1 &745833043
 GameObject:
