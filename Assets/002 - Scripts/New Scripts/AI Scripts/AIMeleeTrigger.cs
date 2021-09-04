@@ -13,15 +13,13 @@ public class AIMeleeTrigger : MonoBehaviour
     public Hellhound hellhound;
     public Wererat wererat;
 
-    public GameObject player;
-    public PlayerProperties pProperties;
+    public PlayerProperties player;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "player")
         {
-            player = other.gameObject;
-            pProperties = other.gameObject.GetComponent<PlayerProperties>();
+            player = other.GetComponent<PlayerProperties>();
 
             if (zombie != null)
             {
@@ -55,14 +53,12 @@ public class AIMeleeTrigger : MonoBehaviour
     {
         if (other.gameObject.tag != "player")
             return;
-        player = other.gameObject;
-        pProperties = other.gameObject.GetComponent<PlayerProperties>();
+        player = other.GetComponent<PlayerProperties>();
     }
 
     private void OnTriggerExit(Collider other)
     {
         player = null;
-        pProperties = null;
 
         if (zombie != null)
         {
@@ -88,5 +84,10 @@ public class AIMeleeTrigger : MonoBehaviour
         {
             wererat.IsInMeleeRange = false;
         }
+    }
+
+    public void ResetTrigger()
+    {
+        player = null;
     }
 }

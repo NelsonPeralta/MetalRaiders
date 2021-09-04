@@ -104,19 +104,26 @@ public class ZombieScript : AiAbstractClass
         AnimationCheck();
         if (Health > 0)
         {
+            if (onlineSwarmManager && onlineSwarmManager.editMode)
+                nma.velocity = Vector3.zero;
             if (target)
             {
                 if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
-                    nma.SetDestination(target.position);
+                    try
+                    {
+                        nma.SetDestination(target.position); // Error: "SetDestination" can only be called on an active agent that has been placed on a NavMesh.
+
+                    }
+                    catch
+                    {
+
+                    }
                 if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0 || target.gameObject.GetComponent<PlayerProperties>().isDead || target.gameObject.GetComponent<PlayerProperties>().isRespawning)
                 {
                     Debug.Log("Zombie target null");
                     target = null;
                 }
 
-                if (onlineSwarmManager)
-                    if (onlineSwarmManager.editMode)
-                        nma.speed = 0.01f;
             }
             else
                 LookForNewRandomPlayer();
@@ -170,15 +177,9 @@ public class ZombieScript : AiAbstractClass
     void Attack()
     {
         if (IsInMeleeRange && isReadyToAttack && !isDead)
-        {
-            if (meleeTrigger.pProperties != null)
-            {
-                if (!meleeTrigger.pProperties.isDead)
-                {
+            if (meleeTrigger.player)
+                if (!meleeTrigger.player.isDead)
                     PV.RPC("Attack_RPC", RpcTarget.All);
-                }
-            }
-        }
     }
 
     [PunRPC]
@@ -457,6 +458,7 @@ public class ZombieScript : AiAbstractClass
 
         Health = DefaultHealth + (onlineSwarmManager.waveNumber * 10);
         damage = defaultDamage + (onlineSwarmManager.waveNumber * 2);
+        meleeTrigger.ResetTrigger();
         isDead = false;
         IsInMeleeRange = false;
         isReadyToAttack = true;
@@ -482,5 +484,11 @@ public class ZombieScript : AiAbstractClass
             allPlayers.Add(go.GetComponent<PlayerProperties>());
 
         return allPlayers;
+    }
+
+    public void SetEditMode()
+    {
+        defaultSpeed = 0.1f;
+        nma.acceleration = 0.1f;
     }
 }

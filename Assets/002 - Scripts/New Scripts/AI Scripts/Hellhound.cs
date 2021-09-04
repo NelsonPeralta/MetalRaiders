@@ -163,29 +163,29 @@ public class Hellhound : MonoBehaviour
 
     void Attack()
     {
-        if (IsInMeleeRange && isReadyToAttack && !isDead)
-        {
-            if (meleeTrigger.pProperties != null)
-            {
-                if (!meleeTrigger.pProperties.isDead)
-                {
-                    meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
-                    int randomAnimation = Random.Range(1, 3);
-                    if (randomAnimation == 1)
-                        anim.Play("Bite Attack");
-                    else if (randomAnimation == 2)
-                        anim.Play("Claw Attack");
-                    nma.velocity = Vector3.zero;
+        //if (IsInMeleeRange && isReadyToAttack && !isDead)
+        //{
+        //    if (meleeTrigger.pProperties != null)
+        //    {
+        //        if (!meleeTrigger.pProperties.isDead)
+        //        {
+        //            meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
+        //            int randomAnimation = Random.Range(1, 3);
+        //            if (randomAnimation == 1)
+        //                anim.Play("Bite Attack");
+        //            else if (randomAnimation == 2)
+        //                anim.Play("Claw Attack");
+        //            nma.velocity = Vector3.zero;
 
-                    int randomSound = Random.Range(0, attackClips.Length - 1);
-                    audioSource.clip = audioClips[randomSound];
-                    audioSource.Play();
-                    //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
+        //            int randomSound = Random.Range(0, attackClips.Length - 1);
+        //            audioSource.clip = audioClips[randomSound];
+        //            audioSource.Play();
+        //            //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
 
-                    isReadyToAttack = false;
-                }
-            }
-        }
+        //            isReadyToAttack = false;
+        //        }
+        //    }
+        //}
     }
 
     void AttackCooldown()

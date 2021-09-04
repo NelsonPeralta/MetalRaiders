@@ -161,25 +161,25 @@ public class Troll : MonoBehaviour
 
     void Attack()
     {
-        if (IsInMeleeRange && isReadyToAttack && !isDead)
-        {
-            if (meleeTrigger.pProperties != null)
-            {
-                if (!meleeTrigger.pProperties.isDead)
-                {
-                    meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
-                    anim.Play("Attack");
-                    nma.velocity = Vector3.zero;
+        //if (IsInMeleeRange && isReadyToAttack && !isDead)
+        //{
+        //    if (meleeTrigger.pProperties != null)
+        //    {
+        //        if (!meleeTrigger.pProperties.isDead)
+        //        {
+        //            meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
+        //            anim.Play("Attack");
+        //            nma.velocity = Vector3.zero;
 
-                    int randomSound = Random.Range(0, attackClips.Length - 1);
-                    audioSource.clip = audioClips[randomSound];
-                    audioSource.Play();
-                    //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
+        //            int randomSound = Random.Range(0, attackClips.Length - 1);
+        //            audioSource.clip = audioClips[randomSound];
+        //            audioSource.Play();
+        //            //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
 
-                    isReadyToAttack = false;
-                }
-            }
-        }
+        //            isReadyToAttack = false;
+        //        }
+        //    }
+        //}
     }
 
     void AttackCooldown()
@@ -223,7 +223,7 @@ public class Troll : MonoBehaviour
         //DropRandomAmmoPack();
         DropRandomWeapon();
 
-        if(boneLookAt != null)
+        if (boneLookAt != null)
         {
             boneLookAt.disactive = true;
         }

@@ -148,30 +148,30 @@ public class SkeletonBackup : MonoBehaviour
 
     void Attack()
     {
-        if (IsInMeleeRange && isReadyToAttack && !isDead)
-        {
-            if (meleeTrigger.pProperties != null)
-            {
-                if (!meleeTrigger.pProperties.isDead)
-                {
-                    Debug.Log("Skeleton Attack");
-                    meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
-                    anim.Play("Attack");
+        //if (IsInMeleeRange && isReadyToAttack && !isDead)
+        //{
+        //    if (meleeTrigger.pProperties != null)
+        //    {
+        //        if (!meleeTrigger.pProperties.isDead)
+        //        {
+        //            Debug.Log("Skeleton Attack");
+        //            meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
+        //            anim.Play("Attack");
 
-                    int randomSound = Random.Range(0, attackClips.Length - 1);
-                    audioSource.clip = audioClips[randomSound];
-                    audioSource.Play();
-                    //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
+        //            int randomSound = Random.Range(0, attackClips.Length - 1);
+        //            audioSource.clip = audioClips[randomSound];
+        //            audioSource.Play();
+        //            //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
 
-                    isReadyToAttack = false;
-                }
-            }
-        }
-        else if(IsInMeleeRange && !isReadyToAttack && !isDead)
-        {
-            nma.speed = 0;
-            anim.SetBool("Run", false);
-        }
+        //            isReadyToAttack = false;
+        //        }
+        //    }
+        //}
+        //else if(IsInMeleeRange && !isReadyToAttack && !isDead)
+        //{
+        //    nma.speed = 0;
+        //    anim.SetBool("Run", false);
+        //}
     }
 
     void AttackCooldown()

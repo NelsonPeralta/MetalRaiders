@@ -6405,7 +6405,7 @@ MonoBehaviour:
   DefaultHealth: 100
   Health: 100
   points: 100
-  defaultSpeed: 2
+  defaultSpeed: 1.5
   zombieNumber: 0
   defaultDamage: 28
   lastPlayerWhoShot: {fileID: 0}

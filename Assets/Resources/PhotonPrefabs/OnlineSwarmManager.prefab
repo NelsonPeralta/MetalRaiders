@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PV: {fileID: 4710131147709720510}
-  editMode: 0
+  editMode: 1
   pManager: {fileID: 0}
   ssManager: {fileID: 0}
   zombiePool: {fileID: 0}
@@ -122,6 +122,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f4a20f6c993667f48bebe5b8bcc7fb87, type: 3}
   bossMusics: []
   bonusPointsClip: {fileID: 8300000, guid: 2f2e448ad87728e4bb8fd6e0a7bc080c, type: 3}
+  bonusPointsFailClip: {fileID: 8300000, guid: 0968bc925856f2543aba7ce74833742c, type: 3}
   gameTime: {fileID: 0}
   gameInformerPlayer1: {fileID: 0}
   gameInformerPlayer2: {fileID: 0}

@@ -163,39 +163,39 @@ public class Wererat : MonoBehaviour
 
     void Attack()
     {
-        if (IsInMeleeRange && isReadyToAttack && !isDead)
-        {
-            if (meleeTrigger.pProperties != null)
-            {
-                if (!meleeTrigger.pProperties.isDead)
-                {
-                    meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
+        //if (IsInMeleeRange && isReadyToAttack && !isDead)
+        //{
+        //    if (meleeTrigger.pProperties != null)
+        //    {
+        //        if (!meleeTrigger.pProperties.isDead)
+        //        {
+        //            meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
 
-                    int randomAttack = Random.Range(0, 3);
+        //            int randomAttack = Random.Range(0, 3);
 
-                    if (randomAttack == 0)
-                    {
-                        anim.Play("Attack01");
-                    }
-                    else if (randomAttack == 1)
-                    {
-                        anim.Play("Attack02");
-                    }
-                    else if (randomAttack == 2)
-                    {
-                        anim.Play("Attack02");
-                    }
+        //            if (randomAttack == 0)
+        //            {
+        //                anim.Play("Attack01");
+        //            }
+        //            else if (randomAttack == 1)
+        //            {
+        //                anim.Play("Attack02");
+        //            }
+        //            else if (randomAttack == 2)
+        //            {
+        //                anim.Play("Attack02");
+        //            }
 
-                    nma.velocity = Vector3.zero;
+        //            nma.velocity = Vector3.zero;
 
-                    int randomSound = Random.Range(0, attackClips.Length - 1);
-                    audioSource.clip = attackClips[randomSound];
-                    audioSource.Play();
+        //            int randomSound = Random.Range(0, attackClips.Length - 1);
+        //            audioSource.clip = attackClips[randomSound];
+        //            audioSource.Play();
 
-                    isReadyToAttack = false;
-                }
-            }
-        }
+        //            isReadyToAttack = false;
+        //        }
+        //    }
+        //}
     }
 
     void AttackCooldown()

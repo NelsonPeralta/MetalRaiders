@@ -111,6 +111,7 @@ public class OnlineSwarmManager : MonoBehaviour
     public AudioClip[] ambientMusics;
     public AudioClip[] bossMusics;
     public AudioClip bonusPointsClip;
+    public AudioClip bonusPointsFailClip;
 
     [Header("MANUAL LINKING")]
     public GameTime gameTime;
@@ -420,7 +421,7 @@ public class OnlineSwarmManager : MonoBehaviour
             newZombie.GetComponent<ZombieScript>().onlineSwarmManager = this;
 
         if (editMode)
-            newZombie.GetComponent<ZombieScript>().defaultSpeed = 0.01f;
+            newZombie.GetComponent<ZombieScript>().SetEditMode();
         zombiesAlive++;
         zombiesLeftToSpawn--;
     }
@@ -562,8 +563,11 @@ public class OnlineSwarmManager : MonoBehaviour
             foreach (WaveCounter wc in allPlayerWaveCounters)
                 wc.waveText.text = $"Wave complete! Bonus points: {bonusPoints}";
         else if (bonusPoints <= 0)
+        {
+            bonusPoints = 0;
             foreach (WaveCounter wc in allPlayerWaveCounters)
                 wc.waveText.text = $"No bonus points. Finish the wave faster";
+        }
 
         if(PV.IsMine)
             GivePlayerBonusPoints(bonusPoints);
@@ -584,14 +588,22 @@ public class OnlineSwarmManager : MonoBehaviour
         allPlayers = GetAllPlayers();
         foreach (PlayerProperties pp in allPlayers)
             pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(points);
-        PlayerBonusPointsSound();
+        PlayBonusPointsSound();
     }
 
-    void PlayerBonusPointsSound()
+    void PlayBonusPointsSound()
     {
         audioSource.Stop();
         audioSource.volume = 1;
         audioSource.clip = bonusPointsClip;
+        audioSource.Play();
+    }
+
+    void PlayBonusPointsFailSound()
+    {
+        audioSource.Stop();
+        audioSource.volume = 1;
+        audioSource.clip = bonusPointsFailClip;
         audioSource.Play();
     }
 
