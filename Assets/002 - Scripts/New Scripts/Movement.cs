@@ -38,6 +38,7 @@ public class Movement : MonoBehaviour
 
     public bool isGrounded;
     public bool isMovingForward;
+    public bool isOnLadder;
     bool CalculatingPlayerSpeed;
 
     public float xDirection;
@@ -142,6 +143,9 @@ public class Movement : MonoBehaviour
             }
         }
 
+        if (isOnLadder)
+            speed = defaultSpeed / 8;
+
         if (!pProperties.isDead)
         {
             if (!pController.isCrouching)
@@ -160,7 +164,7 @@ public class Movement : MonoBehaviour
             else
             {
                 Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * defaultSpeed * .5f * Time.deltaTime);
+                cController.Move(move * speed * .5f * Time.deltaTime);
             }
         }
 
@@ -451,6 +455,7 @@ public class Movement : MonoBehaviour
         cController.slopeLimit = defaultSlopeLimit;
         cController.stepOffset = defaultStepOffset;
         speed = defaultSpeed;
+        isOnLadder = false;
     }
 
     public float GetDefaultSpeed()
