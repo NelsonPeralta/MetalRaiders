@@ -61,7 +61,7 @@ public class AIGrenade : MonoBehaviour
             if (hit.GetComponent<PlayerHitbox>() != null)
             {
                 GameObject player;
-                player = hit.GetComponent<PlayerHitbox>().player;
+                player = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
 
                 int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;

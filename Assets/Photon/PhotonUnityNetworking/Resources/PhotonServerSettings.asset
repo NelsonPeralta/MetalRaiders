@@ -110,6 +110,7 @@ MonoBehaviour:
   - WaveStart_RPC
   - RemovePlayerLife_RPC
   - EndGame_RPC
+  - RemoveOneZombie_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

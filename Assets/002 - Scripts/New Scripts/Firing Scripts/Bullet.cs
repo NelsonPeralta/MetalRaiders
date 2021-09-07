@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class Bullet : MonoBehaviourPunCallbacks
 {
@@ -106,98 +107,69 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void FixedUpdate()
     {
-        //if (!PV.IsMine)
-        //    return;
-
-        //May change from FixedUpdate to Update to calculate the distrance travelled
-        //Debug.Log(damageDealt);
-        prePos = transform.position;
+        prePos = transform.position; // Previous Position
         transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
-
-
-
-
         hits = Physics.RaycastAll(new Ray(prePos, (transform.position - prePos).normalized), (transform.position - prePos).magnitude);//, layerMask);
-
-        // Normal for loop checks farthest first; for (int i = 0; i < hits.Length; i++)
         for (int i = 0; i < hits.Length; i++)
         {
-            //Debug.Log(hits[i].transform.position);
-            //distanceTravelled += (transform.position - prePos).magnitude;
-            //Debug.Log(distanceTravelled);
-            //Debug.Log(hits[i].collider.gameObject.name);
-            //Debug.Log(damageDealt);
-            if (hits[i].collider.gameObject.layer != 22) //Any object that has the Layer Ground
+            if (!damageDealt && hits[i].collider.gameObject.layer != 22)
             {
                 string hitMessage = "Unknow bullet behaviour";
-                //Debug.Log(hits[i].collider.gameObject.name);
                 GameObject hit = hits[i].collider.gameObject;
-                //Debug.Log(damageDealt);
-                if (hits[i].collider.gameObject.GetComponent<AIHitbox>() != null)
+                if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead())
                 {
-                    //Debug.Log("Has AI Script" + damageDealt);
-
+                    hitMessage = "Hit AI";
                     AIHitbox hitbox = hits[i].collider.gameObject.GetComponent<AIHitbox>();
-                    AIDamage(hitbox, hits[i]);
+                    int _damage = damage;
+                    if (hitbox.isHead && wProperties.isHeadshotCapable)
+                        _damage = (int)(wProperties.headshotMultiplier * damage);
+
+                    if (playerWhoShot.PV.IsMine)
+                        hitbox.aiAbstractClass.Damage(_damage, playerWhoShot.PV.ViewID);
+
+                    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
+                    bloodHit.transform.position = hits[i].point;
+                    bloodHit.SetActive(true);
+
+                    damageDealt = true;
                 }
-                else if (hits[i].collider.gameObject.GetComponent<PlayerHitbox>() != null && hits[i].collider.gameObject.layer != 23 && !damageDealt)
+                else if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
                 {
                     hitMessage = "Hit Player at: + " + hit.name + damageDealt;
 
                     PlayerHitbox hitbox = hits[i].collider.gameObject.GetComponent<PlayerHitbox>();
-                    //PlayerDamage(hitbox);
-                    //allPlayerScripts.playerController.PV.RPC("DamagePlayer", RpcTarget.All, hitbox);
-
                     PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
-                    if (!playerProperties.isDead)
+                    bool wasHeadshot = false;
+                    if (hitbox.isHead && wProperties.isHeadshotCapable)
                     {
-                        Debug.Log($"Player Who shot is Mine: {playerWhoShot.PV.IsMine}");
-                        if (playerWhoShot.PV.IsMine)
-                        {
-                            bool wasHeadshot = false;
-                            if (hitbox.isHead && wProperties.isHeadshotCapable)
-                            {
-                                damage = (int)(damage * wProperties.headshotMultiplier);
-                                wasHeadshot = true;
-                                playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
-                            }
-
-                            playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
-                            //if (playerProperties.Health > 0)
-                            //  playerProperties.gameObject.GetComponent<IDamageable>()?.TakeDamage(damage);
-
-                            //GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
-                            //bloodHit.transform.position = hits[i].point;
-                            //bloodHit.SetActive(true);
-
-                            damageDealt = true;
-                            Debug.Log(hitMessage);
-                        }
-                        else
-                        {
-                            if (playerWhoShot.PV.IsMine)
-                                playerWhoShot.DisableBullet(gameObject);
-                        }
+                        damage = (int)(damage * wProperties.headshotMultiplier);
+                        wasHeadshot = true;
+                        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
                     }
-                    //allPlayerScripts.playerController.PV.RPC("DamagePlayerSimple", RpcTarget.All, playerProperties);
+
+                    if (playerWhoShot.PV.IsMine)
+                        playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
+
+                    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
+                    bloodHit.transform.position = hits[i].point;
+                    bloodHit.SetActive(true);
+
+                    damageDealt = true;
                 }
                 else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>())
                 {
-                    //PV.RPC("SpawnGenericHit", RpcTarget.All, hits[i].point);
-                    //damageDealt = true;
-
-                    hitMessage = "Hit: + " + hit.name;
+                    hitMessage = $"Hit: {hit.name}";
                     GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
                     genericHit.transform.position = hits[i].point;
                     genericHit.SetActive(true);
+
+                    damageDealt = true;
                 }
-                //Debug.Log(hitMessage);
-                if (playerWhoShot.PV.IsMine)
-                    playerWhoShot.DisableBullet(gameObject);
+                Debug.Log(hitMessage);
             }
         }
-
-        Debug.DrawLine(transform.position, prePos);
+        if (damageDealt)
+            gameObject.SetActive(false);
     }
 
     [PunRPC]

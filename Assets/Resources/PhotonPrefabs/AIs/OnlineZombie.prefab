@@ -337,7 +337,6 @@ MonoBehaviour:
   hellhound: {fileID: 0}
   wererat: {fileID: 0}
   player: {fileID: 0}
-  pProperties: {fileID: 0}
 --- !u!1 &6406378544471509174
 GameObject:
   m_ObjectHideFlags: 0
@@ -6405,7 +6404,7 @@ MonoBehaviour:
   DefaultHealth: 100
   Health: 100
   points: 100
-  defaultSpeed: 1.5
+  defaultSpeed: 1
   zombieNumber: 0
   defaultDamage: 28
   lastPlayerWhoShot: {fileID: 0}
@@ -6421,7 +6420,7 @@ MonoBehaviour:
   meleeAttackCooldown: 0
   IsInMeleeRange: 0
   isReadyToAttack: 0
-  isDead: 0
+  _isDead: 0
   isRunning: 0
   hasBeenMeleedRecently: 0
   extraHealth: {fileID: 324850244380182827, guid: 080e498d1683170478b29b10cefe20a7,

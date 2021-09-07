@@ -783,9 +783,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
 
 
-        pInventory.smallAmmo = 48;
-        pInventory.heavyAmmo = 30;
-        pInventory.powerAmmo = 0;
+        pInventory.smallAmmo = 72;
+        pInventory.heavyAmmo = 60;
+        pInventory.powerAmmo = 4;
         pInventory.grenades = 2;
 
         StartCoroutine(pInventory.EquipStartingWeapon());

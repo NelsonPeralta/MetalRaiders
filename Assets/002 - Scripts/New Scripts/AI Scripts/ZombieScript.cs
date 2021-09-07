@@ -41,7 +41,7 @@ public class ZombieScript : AiAbstractClass
     public float meleeAttackCooldown;
     public bool IsInMeleeRange;
     public bool isReadyToAttack;
-    public bool isDead;
+    public bool _isDead;
     public bool isRunning;
     public bool hasBeenMeleedRecently;
 
@@ -60,7 +60,10 @@ public class ZombieScript : AiAbstractClass
     public GameObject placeholderSkin;
     public GameObject[] skins;
 
-    // Start is called before the first frame update
+    public override bool isDead()
+    {
+        return _isDead;
+    }
 
     private void Awake()
     {
@@ -83,6 +86,22 @@ public class ZombieScript : AiAbstractClass
         Attack();
         AttackCooldown();
         //TargetSwitchCountdown();
+    }
+
+    public override void Damage(int damage, int playerWhoShotPDI)
+    {
+        PV.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
+    }
+
+    [PunRPC]
+    void Damage_RPC(int damage, int playerWhoShotPDI)
+    {
+        Health -= damage;
+        PlayerProperties pp = PhotonView.Find(playerWhoShotPDI).GetComponent<PlayerProperties>();
+        pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
+
+        if (Health <= 0)
+            Die();
     }
 
     public void EnableThisAi(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
@@ -116,7 +135,7 @@ public class ZombieScript : AiAbstractClass
                     }
                     catch
                     {
-
+                        Debug.Log($"{gameObject.name} is active ({gameObject.activeSelf} on position {transform.position})");
                     }
                 if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0 || target.gameObject.GetComponent<PlayerProperties>().isDead || target.gameObject.GetComponent<PlayerProperties>().isRespawning)
                 {
@@ -129,14 +148,7 @@ public class ZombieScript : AiAbstractClass
                 LookForNewRandomPlayer();
         }
 
-        if (Health <= 0 && !isDead)
-        {
-            nma.speed = 0;
-            Die();
-            isDead = true;
-        }
-
-        if (!isDead)
+        if (!_isDead)
         {
             if (!IsInMeleeRange)
             {
@@ -176,7 +188,7 @@ public class ZombieScript : AiAbstractClass
 
     void Attack()
     {
-        if (IsInMeleeRange && isReadyToAttack && !isDead)
+        if (IsInMeleeRange && isReadyToAttack && !_isDead)
             if (meleeTrigger.player)
                 if (!meleeTrigger.player.isDead)
                     PV.RPC("Attack_RPC", RpcTarget.All);
@@ -213,21 +225,18 @@ public class ZombieScript : AiAbstractClass
 
     void Die()
     {
-        PV.RPC("Die_RPC", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void Die_RPC()
-    {
         StartCoroutine(Die_Coroutine());
     }
     IEnumerator Die_Coroutine()
     {
+        gameObject.name = $"{gameObject.name} (DEAD)";
+        _isDead = true;
+        nma.speed = 0;
         nma.enabled = false;
         anim.Play("Die");
 
-        if (onlineSwarmManager != null)
-            onlineSwarmManager.zombiesAlive--;
+        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
+        onlineSwarmManager.RemoveOneZombie();
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
             hitbox.gameObject.SetActive(false);
@@ -305,7 +314,7 @@ public class ZombieScript : AiAbstractClass
         {
             int randomSound = Random.Range(0, audioClips.Length);
 
-            if (!isDead && gameObject.activeSelf)
+            if (!_isDead && gameObject.activeSelf)
             {
                 audioSource.clip = audioClips[randomSound];
                 audioSource.Play();
@@ -447,6 +456,7 @@ public class ZombieScript : AiAbstractClass
 
     void ResetZombie()
     {
+        gameObject.name = gameObject.name.Replace("(DEAD)", "");
         onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
         movementAnimationName = "Run";
         nma.enabled = true;
@@ -459,7 +469,7 @@ public class ZombieScript : AiAbstractClass
         Health = DefaultHealth + (onlineSwarmManager.waveNumber * 10);
         damage = defaultDamage + (onlineSwarmManager.waveNumber * 2);
         meleeTrigger.ResetTrigger();
-        isDead = false;
+        _isDead = false;
         IsInMeleeRange = false;
         isReadyToAttack = true;
 

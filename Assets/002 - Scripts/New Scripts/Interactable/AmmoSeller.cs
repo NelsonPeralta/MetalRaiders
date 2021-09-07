@@ -38,7 +38,7 @@ public class AmmoSeller : MonoBehaviour
 
                 if (player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() >= cost && player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() > 0)
                 {
-                    player0.InformerText.text = "Hold R to Buy " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
+                    player0.InformerText.text = "Hold R to Refill " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
                 else
                 {
@@ -94,49 +94,13 @@ public class AmmoSeller : MonoBehaviour
     {
             pPoints.RemovePoints(cost);
         if (ammoType == "Small")
-        {
-
-            int ammoMissing = pInventory.maxSmallAmmo - pInventory.smallAmmo;
-
-            if (ammoMissing <= 24)
-            {
-                pInventory.smallAmmo = pInventory.smallAmmo + ammoMissing;
-            }
-            else
-            {
-                pInventory.smallAmmo += 24;
-            }
-        }
+                pInventory.smallAmmo = pInventory.maxSmallAmmo;
 
         if (ammoType == "Heavy")
-        {
-
-            int ammoMissing = pInventory.maxHeavyAmmo - pInventory.heavyAmmo;
-
-            if (ammoMissing <= 30)
-            {
-                pInventory.heavyAmmo = pInventory.heavyAmmo + ammoMissing;
-            }
-            else
-            {
-                pInventory.heavyAmmo = pInventory.heavyAmmo + 30;
-            }
-        }
+            pInventory.heavyAmmo = pInventory.maxHeavyAmmo;
 
         if (ammoType == "Power")
-        {
-
-            int ammoMissing = pInventory.maxPowerAmmo - pInventory.powerAmmo;
-
-            if (ammoMissing <= 1)
-            {
-                pInventory.powerAmmo = pInventory.powerAmmo + ammoMissing;
-            }
-            else
-            {
-                pInventory.powerAmmo = pInventory.powerAmmo + 4;
-            }
-        }
+            pInventory.powerAmmo = pInventory.maxPowerAmmo;
 
         pInventory.UpdateAllExtraAmmoHuds();
         anim.SetTrigger("Jump");

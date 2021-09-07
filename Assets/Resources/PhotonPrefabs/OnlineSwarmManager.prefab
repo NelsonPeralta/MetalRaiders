@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PV: {fileID: 4710131147709720510}
-  editMode: 1
+  editMode: 0
   pManager: {fileID: 0}
   ssManager: {fileID: 0}
   zombiePool: {fileID: 0}

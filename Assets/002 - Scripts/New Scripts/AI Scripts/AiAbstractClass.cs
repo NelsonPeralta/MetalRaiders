@@ -16,8 +16,6 @@ abstract public class AiAbstractClass : MonoBehaviour
 
     }
 
-    public void Test()
-    {
-        Debug.Log("This is the parent class");
-    }
+    public abstract bool isDead();
+    public abstract void Damage(int damage, int playerWhoShotPDI);
 }

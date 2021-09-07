@@ -76,7 +76,7 @@ public class Fireball : MonoBehaviour
             if (hit.GetComponent<PlayerHitbox>() != null)
             {
                 //Debug.Log("Fireball Hit Player");
-                GameObject player = hit.GetComponent<PlayerHitbox>().player;
+                GameObject player = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
 
                 int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;

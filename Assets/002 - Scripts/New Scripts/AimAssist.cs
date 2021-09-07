@@ -121,7 +121,7 @@ public class AimAssist : MonoBehaviour
             else if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null && hit.transform.gameObject.GetComponent<PlayerHitbox>().gameObject.layer == 13)
             {
 
-                target = hit.transform.gameObject.GetComponent<PlayerHitbox>().player;
+                target = hit.transform.gameObject.GetComponent<PlayerHitbox>().player.gameObject;
                 targetHitbox = hit.transform.gameObject.GetComponent<PlayerHitbox>();
                 targetDistance = hit.distance;
             }

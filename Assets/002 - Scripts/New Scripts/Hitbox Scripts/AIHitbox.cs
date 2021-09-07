@@ -59,15 +59,15 @@ public class AIHitbox : MonoBehaviour
 
     public void DamageAI(bool damageFromPlayer, float damage, GameObject playerWhoShot)
     {
-        if (zScript)
+        if (aiAbstractClass)
         {
             zScript.Health = zScript.Health - damage;
             UpdateAIHealthOnHitboxes(zScript.Health);
 
-            if (zScript.isDead)
-            {
-                AIisDead = true;
-            }
+            //if (zScript.isDead)
+            //{
+            //    AIisDead = true;
+            //}
             int damageToInt = Mathf.CeilToInt(damage);
 
             if (damageFromPlayer)
@@ -229,10 +229,10 @@ public class AIHitbox : MonoBehaviour
                 StartCoroutine(zScript.MeleeReset());
                 UpdateAIHealthOnHitboxes(zScript.Health);
 
-                if (zScript.isDead)
-                {
-                    AIisDead = true;
-                }
+                //if (zScript.isDead)
+                //{
+                //    AIisDead = true;
+                //}
             }
         }
 

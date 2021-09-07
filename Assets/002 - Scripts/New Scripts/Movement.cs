@@ -29,6 +29,7 @@ public class Movement : MonoBehaviour
     float gravity = -12f; // -9.81f
 
     public Vector3 velocity;
+    public Vector3 calulatedVelocity;
     public Vector3 lastPos;
 
     public Transform groundCheck;
@@ -50,6 +51,9 @@ public class Movement : MonoBehaviour
     [Header("Audio")]
     public AudioSource walkingSoundAS;
     public bool walkingSoundPlaying;
+
+    //Velocity variables
+    Vector3 previousPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -79,6 +83,7 @@ public class Movement : MonoBehaviour
         Vector3 direction = new Vector3(x, 0f, z).normalized;
         xDirection = direction.x;
         zDirection = direction.z;
+        CalculateVelocity();
 
         if (isGrounded && velocity.y < 0)
         {
@@ -168,6 +173,12 @@ public class Movement : MonoBehaviour
         CheckMovingForward();
         ControlAnimationSpeed();
 
+    }
+
+    void CalculateVelocity()
+    {
+        calulatedVelocity = ((transform.position - previousPosition)) / Time.deltaTime;
+        previousPosition = transform.position;
     }
 
     public void SetPlayerIDInInput()

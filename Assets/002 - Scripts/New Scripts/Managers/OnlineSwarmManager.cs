@@ -163,6 +163,8 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void Start()
     {
+        if (editMode)
+            AudioListener.volume = 0;
         healthPacks = GetAllHealthPacks();
         aiPool = AIPool.aIPoolInstance;
         if (playerLives == 0)
@@ -254,7 +256,8 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void IncreaseWave(int _currentWave)
     {
-        PV.RPC("IncreaseWave_RPC", RpcTarget.All, _currentWave);
+        if(PV.IsMine)
+            PV.RPC("IncreaseWave_RPC", RpcTarget.All, _currentWave);
     }
 
     [PunRPC]
@@ -309,7 +312,7 @@ public class OnlineSwarmManager : MonoBehaviour
     void CalculateMaxDefaultAIsForRound()
     {
         allPlayers = GetAllPlayers();
-        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + (waveNumber * 2);
+            maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + (waveNumber * 2);
         //maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
         //maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
         //maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;
@@ -833,5 +836,10 @@ public class OnlineSwarmManager : MonoBehaviour
             allPlayers[i].allPlayerScripts.announcer.PlayGameOverClip();
             allPlayers[i].LeaveRoomWithDelay();
         }
+    }
+
+    public void RemoveOneZombie()
+    {
+        zombiesAlive--;
     }
 }

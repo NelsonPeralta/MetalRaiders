@@ -6,7 +6,7 @@ public class PlayerHitbox : MonoBehaviour
 {
     public bool isHead = false;
 
-    public GameObject player;
+    public PlayerProperties player;
     public GameObject boneToFollow;
 
     private void Update()
