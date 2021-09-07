@@ -50,7 +50,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     //public ChildManager cManager;
     public PlayerController pController;
     public SwarmMode swarmMode;
-    public Movement mScript;
+    public Movement movement;
     public CrosshairScript cScript;
     public AimAssist aimAssist;
     public WeaponPickUp wPickup;
@@ -715,6 +715,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!isRespawning)
             return;
+        movement.ResetCharacterControllerProperties();
         isRespawning = false;
         respawnCoroutine = null;
         pController.ScopeOut();
@@ -907,7 +908,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
                         var weaponDropped1 = Instantiate(weaponToDrop, weaponDropSpawnPoint1.transform.position, weaponDropSpawnPoint1.transform.rotation);
                         weaponDropped1.name = weaponDropped1.name.Replace("(Clone)", "");
 
-                        if (!mScript.isMovingForward)
+                        if (!movement.isMovingForward)
                         {
                             weaponDropped1.GetComponent<Rigidbody>().AddForce(transform.forward * 250);
                         }
@@ -1116,4 +1117,5 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         gameObjectPool.bullets[index].SetActive(false);
     }
+
 }

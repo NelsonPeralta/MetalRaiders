@@ -20,7 +20,7 @@ public class Movement : MonoBehaviour
     public PlayerSFXs sfx;
     public GroundCheck groundCheckScript;
     public GroundCheck roofCheckScript;
-    public float defaultSpeed = 5f;
+    float defaultSpeed; // Default = 5
     public float speed;
     public float playerSpeed;
     public float jumpForce = 6f;
@@ -55,6 +55,10 @@ public class Movement : MonoBehaviour
     //Velocity variables
     Vector3 previousPosition;
 
+    // Characater Controller Default Properties
+    float defaultSlopeLimit;
+    float defaultStepOffset;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,6 +71,9 @@ public class Movement : MonoBehaviour
         rBody = gameObject.GetComponent<Rigidbody>();
         pController = gameObject.GetComponent<PlayerController>();
         pProperties = GetComponent<PlayerProperties>();
+        defaultSpeed = speed;
+        defaultSlopeLimit = GetComponent<CharacterController>().slopeLimit;
+        defaultStepOffset = GetComponent<CharacterController>().stepOffset;
         //StartCoroutine(CalcVelocity());
     }
 
@@ -142,12 +149,12 @@ public class Movement : MonoBehaviour
                 if (pController.isSprinting)
                 {
                     Vector3 move = transform.right * x + transform.forward * z;
-                    cController.Move(move * defaultSpeed * 1.5f * Time.deltaTime);
+                    cController.Move(move * speed * 1.5f * Time.deltaTime);
                 }
                 else
                 {
                     Vector3 move = transform.right * x + transform.forward * z;
-                    cController.Move(move * defaultSpeed * Time.deltaTime);
+                    cController.Move(move * speed * Time.deltaTime);
                 }
             }
             else
@@ -437,6 +444,18 @@ public class Movement : MonoBehaviour
     void PauseWalkingSoundRPC()
     {
         walkingSoundAS.Pause();
+    }
+
+    public void ResetCharacterControllerProperties()
+    {
+        cController.slopeLimit = defaultSlopeLimit;
+        cController.stepOffset = defaultStepOffset;
+        speed = defaultSpeed;
+    }
+
+    public float GetDefaultSpeed()
+    {
+        return defaultSpeed;
     }
 }
 
