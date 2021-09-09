@@ -122,7 +122,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                     AIHitbox hitbox = hits[i].collider.gameObject.GetComponent<AIHitbox>();
                     int _damage = damage;
                     if (hitbox.isHead && wProperties.isHeadshotCapable)
+                    {
+                        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
                         _damage = (int)(wProperties.headshotMultiplier * damage);
+                    }
 
                     if (playerWhoShot.PV.IsMine)
                         hitbox.aiAbstractClass.Damage(_damage, playerWhoShot.PV.ViewID);
