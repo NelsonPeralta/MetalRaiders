@@ -28,6 +28,7 @@ public class Movement : MonoBehaviour
     public float defaultGravity = -12f;
     float gravity = -12f; // -9.81f
 
+    public Vector3 movement;
     public Vector3 velocity;
     public Vector3 calulatedVelocity;
     public Vector3 lastPos;
@@ -148,23 +149,31 @@ public class Movement : MonoBehaviour
 
         if (!pProperties.isDead)
         {
-            if (!pController.isCrouching)
+            if (isGrounded)
             {
-                if (pController.isSprinting)
+                movement = transform.right * x + transform.forward * z;
+                if (!pController.isCrouching)
                 {
-                    Vector3 move = transform.right * x + transform.forward * z;
-                    cController.Move(move * speed * 1.5f * Time.deltaTime);
+                    if (pController.isSprinting)
+                    {
+                        Vector3 move = transform.right * x + transform.forward * z;
+                        cController.Move(move * speed * 1.5f * Time.deltaTime);
+                    }
+                    else
+                    {
+                        Vector3 move = transform.right * x + transform.forward * z;
+                        cController.Move(move * speed * Time.deltaTime);
+                    }
                 }
                 else
                 {
                     Vector3 move = transform.right * x + transform.forward * z;
-                    cController.Move(move * speed * Time.deltaTime);
+                    cController.Move(move * speed * .5f * Time.deltaTime);
                 }
             }
             else
             {
-                Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * speed * .5f * Time.deltaTime);
+                cController.Move(movement * speed * Time.deltaTime);
             }
         }
 
@@ -207,7 +216,7 @@ public class Movement : MonoBehaviour
         else if (!isGrounded && tPersonScripts.anim && !tPersonScripts.anim.GetBool("Crouch"))
         {
             tPersonScripts.anim.SetBool("Jump", true);
-            speed = defaultSpeed * 2 / 3;
+            //speed = defaultSpeed * 2 / 3;
             /*
             Vector3 move = transform.right * 0 + transform.forward * 1;
             cController.Move(move * speed * Time.deltaTime);
@@ -341,7 +350,7 @@ public class Movement : MonoBehaviour
 
         if (zValue > 0 || xValue > 0)
         {
-            if (isGrounded)
+            if (isGrounded && !pController.isCrouching)
             {
                 if (!walkingSoundPlaying)
                 {
