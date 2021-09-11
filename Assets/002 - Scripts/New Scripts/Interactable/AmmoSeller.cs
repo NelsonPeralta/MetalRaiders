@@ -38,7 +38,7 @@ public class AmmoSeller : MonoBehaviour
 
                 if (player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() >= cost && player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() > 0)
                 {
-                    player0.InformerText.text = "Hold R to Refill " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
+                    player0.InformerText.text = "Hold E to Refill " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
                 else
                 {
@@ -52,7 +52,7 @@ public class AmmoSeller : MonoBehaviour
     {
         if (player0 != null)
         {
-            if (player0.pController.player.GetButtonShortPressDown("Reload") || player0.pController.player.GetButtonDown("Interact"))
+            if (player0.pController.player.GetButtonShortPressDown("Interact"))
             {
                 if (player0.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
                 {

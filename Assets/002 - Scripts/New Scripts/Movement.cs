@@ -387,29 +387,37 @@ public class Movement : MonoBehaviour
         {
             if (pController.anim != null)
             {
-                if (pController.anim.GetBool("Walk"))
+                if (isGrounded)
                 {
-                    //Debug.Log("Here");
-                    if (!pController.isReloading && !pController.isDrawingWeapon && !pController.isThrowingGrenade &&
-                        !pController.isMeleeing && !pController.isFiring)
+
+                    if (pController.anim.GetBool("Walk"))
                     {
-                        pController.anim.speed = playerSpeed;
-                        tpLookAt.anim.speed = playerSpeed;
+                        //Debug.Log("Here");
+                        if (!pController.isReloading && !pController.isDrawingWeapon && !pController.isThrowingGrenade &&
+                            !pController.isMeleeing && !pController.isFiring)
+                        {
+                            pController.anim.speed = playerSpeed;
+                            tpLookAt.anim.speed = playerSpeed;
+                        }
+                        else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade ||
+                            pController.isMeleeing || pController.isFiring)
+                        {
+                            playerSpeed = 1;
+                            pController.anim.speed = 1;
+                            tpLookAt.anim.speed = 1;
+                        }
                     }
-                    else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade ||
-                        pController.isMeleeing || pController.isFiring)
+                    else
                     {
                         playerSpeed = 1;
                         pController.anim.speed = 1;
-                        tpLookAt.anim.speed = 1;
+                        if (tpLookAt.anim)
+                            tpLookAt.anim.speed = 1;
                     }
-                }
-                else
+                }else if(!isGrounded && pController.anim.GetBool("Run"))
                 {
-                    playerSpeed = 1;
-                    pController.anim.speed = 1;
-                    if (tpLookAt.anim)
-                        tpLookAt.anim.speed = 1;
+                    pController.anim.speed = 0.1f;
+
                 }
             }
         }

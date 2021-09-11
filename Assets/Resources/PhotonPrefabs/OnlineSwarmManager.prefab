@@ -77,7 +77,7 @@ MonoBehaviour:
   - {fileID: 0}
   waveNumber: 0
   waveInProgress: 0
-  newWaveDelay: 15
+  newWaveDelay: 20
   bossWaveTimer: 0
   zombiesAlive: 0
   skeletonsAlive: 0
