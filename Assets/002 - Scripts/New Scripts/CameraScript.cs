@@ -28,8 +28,10 @@ public class CameraScript : MonoBehaviour
     // Weapon Sway
     Quaternion defaultLocalRotation;
     float weaponSway = 3f;
-    public float targetVerticalSway;
-    public float currentVerticalSway;
+    float targetVerticalSway;
+    float currentVerticalSway;
+    float targetHorizontalSway;
+    float currentHorizontalSway;
 
     // Start is called before the first frame update
     void Start()
@@ -69,11 +71,11 @@ public class CameraScript : MonoBehaviour
         if (pController.playerProperties != null && !pController.pauseMenuOpen)
         {
 
-            mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+            mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime + HorizontalSway();
             mouseY = player.GetAxis("Mouse Y") * mouseSensitivity * 0.75f * Time.deltaTime;
 
             xRotation -= mouseY + VerticalSway();
-            yRotation -= mouseX;
+            yRotation -= mouseX + HorizontalSway();
             xRotation = Mathf.Clamp(xRotation, minXClamp, maxXClamp);
 
             transform.localRotation = Quaternion.Euler(xRotation, 0, 0f);
@@ -83,6 +85,36 @@ public class CameraScript : MonoBehaviour
         //WeaponSway();
     }
 
+    float HorizontalSway()
+    {
+        if (targetHorizontalSway == 0)
+        {
+            targetHorizontalSway = Random.Range(-weaponSway, weaponSway);
+            if (Mathf.Abs(targetHorizontalSway) <= weaponSway / 2f)
+                targetHorizontalSway = (targetHorizontalSway / Mathf.Abs(targetHorizontalSway)) * 0.5f * targetHorizontalSway;
+        }
+        else
+        {
+            float swaySpeed = 5f * Time.deltaTime;
+            float sway = (targetHorizontalSway / Mathf.Abs(targetHorizontalSway)) * swaySpeed;
+
+            currentHorizontalSway += sway;
+            if (Mathf.Abs(currentHorizontalSway) >= Mathf.Abs(targetHorizontalSway))
+            {
+                currentHorizontalSway = 0;
+                targetHorizontalSway = 0;
+            }
+
+
+            if (weaponSway - Mathf.Abs(currentHorizontalSway) < sway)
+                sway *= -1;
+
+            return sway;
+        }
+
+        return 0;
+    }
+
     float VerticalSway()
     {
         if(targetVerticalSway == 0)
@@ -90,7 +122,6 @@ public class CameraScript : MonoBehaviour
             targetVerticalSway = Random.Range(-weaponSway, weaponSway);
             if (Mathf.Abs(targetVerticalSway) <= weaponSway / 2f)
                 targetVerticalSway = (targetVerticalSway / Mathf.Abs(targetVerticalSway)) * 0.5f * targetVerticalSway;
-            Debug.Log($"Target Vertical Sway: {targetVerticalSway}");
         }
         else
         {
