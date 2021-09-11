@@ -34,6 +34,8 @@ public class WeaponProperties : MonoBehaviour
     public float aimRRR;
     public bool isHeadshotCapable;
     public float headshotMultiplier;
+    [Tooltip("In Degrees")]
+    public int weaponSway; // Weapon sway is the weapon moving all on its own while you just aim down sight.
 
     [Header("Bullet Behavior")]
     public bool isNormalBullet;

@@ -25,9 +25,16 @@ public class CameraScript : MonoBehaviour
 
     float mouseX, mouseY;
 
+    // Weapon Sway
+    Quaternion defaultLocalRotation;
+    float weaponSway = 3f;
+    public float targetVerticalSway;
+    public float currentVerticalSway;
+
     // Start is called before the first frame update
     void Start()
     {
+        defaultLocalRotation = transform.localRotation;
         mainCamDefaultLocalPosition = mainCam.transform.localPosition;
         mainCamDefaultLocalRotation = mainCam.transform.localRotation;
         Cursor.lockState = CursorLockMode.Locked;
@@ -65,7 +72,7 @@ public class CameraScript : MonoBehaviour
             mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             mouseY = player.GetAxis("Mouse Y") * mouseSensitivity * 0.75f * Time.deltaTime;
 
-            xRotation -= mouseY;
+            xRotation -= mouseY + VerticalSway();
             yRotation -= mouseX;
             xRotation = Mathf.Clamp(xRotation, minXClamp, maxXClamp);
 
@@ -73,6 +80,67 @@ public class CameraScript : MonoBehaviour
             playerBody.Rotate(Vector3.up * mouseX);
         }
 
+        //WeaponSway();
+    }
+
+    float VerticalSway()
+    {
+        if(targetVerticalSway == 0)
+        {
+            targetVerticalSway = Random.Range(-weaponSway, weaponSway);
+            if (Mathf.Abs(targetVerticalSway) <= weaponSway / 2f)
+                targetVerticalSway = (targetVerticalSway / Mathf.Abs(targetVerticalSway)) * 0.5f * targetVerticalSway;
+            Debug.Log($"Target Vertical Sway: {targetVerticalSway}");
+        }
+        else
+        {
+            float swaySpeed = 5f * Time.deltaTime;
+            float sway = (targetVerticalSway / Mathf.Abs(targetVerticalSway)) * swaySpeed;
+
+            currentVerticalSway += sway;
+            if (Mathf.Abs(currentVerticalSway) >= Mathf.Abs(targetVerticalSway))
+            {
+                currentVerticalSway = 0;
+                targetVerticalSway = 0;
+            }
+
+
+            if (weaponSway - Mathf.Abs(currentVerticalSway) < sway)
+                sway *= -1;
+
+            return sway;
+        }
+
+        return 0;
+    }
+    void WeaponSway()
+    {
+        float maxamount = weaponSway * 1.1f;
+        float factorX = (player.GetAxis("Mouse Y")) * weaponSway;
+        float factorY = -(player.GetAxis("Mouse X")) * weaponSway;
+        //float factorZ = -Input.GetAxis("Vertical") * amount;
+        float factorZ = 0 * weaponSway;
+
+            if (factorX > maxamount)
+                factorX = maxamount;
+
+            if (factorX < -maxamount)
+                factorX = -maxamount;
+
+            if (factorY > maxamount)
+                factorY = maxamount;
+
+            if (factorY < -maxamount)
+                factorY = -maxamount;
+
+            if (factorZ > maxamount)
+                factorZ = maxamount;
+
+            if (factorZ < -maxamount)
+                factorZ = -maxamount;
+
+            Quaternion Final = Quaternion.Euler(defaultLocalRotation.x + factorX, defaultLocalRotation.y + factorY, defaultLocalRotation.z + factorZ);
+            transform.localRotation = transform.localRotation * Quaternion.Slerp(transform.localRotation, Final, (Time.time * 3));
     }
 
     public void SetPlayerIDInInput()
