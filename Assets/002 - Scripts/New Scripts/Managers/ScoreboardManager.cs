@@ -64,6 +64,13 @@ public class ScoreboardManager : MonoBehaviour
         DisableAllRows();
         multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
         onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
+
+        if (!multiplayerManager)
+            multiplayerManager = FindObjectOfType<MultiplayerManager>();
+
+        if (!onlineSwarmManager)
+            onlineSwarmManager = FindObjectOfType<OnlineSwarmManager>();
+
         if (multiplayerManager)
         {
             List<PlayerMultiplayerStats> allPlayersMS = new List<PlayerMultiplayerStats>();

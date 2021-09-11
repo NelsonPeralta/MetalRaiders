@@ -10,7 +10,8 @@ public class SpawnManager : MonoBehaviour
 	{
         if(genericSpawnPoints.Count == 0)
             foreach (Transform child in transform)
-                genericSpawnPoints.Add(child.GetComponent<SpawnPoint>());
+				if(child.GetComponent<SpawnPoint>())
+					genericSpawnPoints.Add(child.GetComponent<SpawnPoint>());
 
         spawnManagerInstance = this;
 	}
