@@ -149,6 +149,7 @@ public class Movement : MonoBehaviour
 
         if (!pProperties.isDead)
         {
+            Vector3 move = transform.right * x + transform.forward * z;
             if (isGrounded)
             {
                 movement = transform.right * x + transform.forward * z;
@@ -156,24 +157,25 @@ public class Movement : MonoBehaviour
                 {
                     if (pController.isSprinting)
                     {
-                        Vector3 move = transform.right * x + transform.forward * z;
                         cController.Move(move * speed * 1.5f * Time.deltaTime);
                     }
                     else
                     {
-                        Vector3 move = transform.right * x + transform.forward * z;
                         cController.Move(move * speed * Time.deltaTime);
                     }
                 }
                 else
                 {
-                    Vector3 move = transform.right * x + transform.forward * z;
                     cController.Move(move * speed * .5f * Time.deltaTime);
                 }
             }
             else
             {
                 cController.Move(movement * speed * Time.deltaTime);
+                if (z > 0)
+                    z = 0;
+                move = transform.right * x + transform.forward * z;
+                cController.Move(move * 0.5f * speed * Time.deltaTime);
             }
         }
 
@@ -414,7 +416,8 @@ public class Movement : MonoBehaviour
                         if (tpLookAt.anim)
                             tpLookAt.anim.speed = 1;
                     }
-                }else if(!isGrounded && pController.anim.GetBool("Run"))
+                }
+                else if (!isGrounded && pController.anim.GetBool("Run"))
                 {
                     pController.anim.speed = 0.1f;
 

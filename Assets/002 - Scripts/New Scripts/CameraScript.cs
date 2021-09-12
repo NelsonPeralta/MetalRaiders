@@ -32,6 +32,7 @@ public class CameraScript : MonoBehaviour
     float currentVerticalSway;
     float targetHorizontalSway;
     float currentHorizontalSway;
+    float sway;
 
     // Start is called before the first frame update
     void Start()
@@ -74,8 +75,8 @@ public class CameraScript : MonoBehaviour
             mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime + HorizontalSway();
             mouseY = player.GetAxis("Mouse Y") * mouseSensitivity * 0.75f * Time.deltaTime;
 
-            xRotation -= mouseY + VerticalSway();
             yRotation -= mouseX + HorizontalSway();
+            xRotation -= mouseY + VerticalSway();
             xRotation = Mathf.Clamp(xRotation, minXClamp, maxXClamp);
 
             transform.localRotation = Quaternion.Euler(xRotation, 0, 0f);
@@ -87,57 +88,77 @@ public class CameraScript : MonoBehaviour
 
     float HorizontalSway()
     {
+        if (!pController.isAiming || pProperties.pInventory.activeWeapon.weaponSway <= 0)
+            return 0;
+        weaponSway = pProperties.pInventory.activeWeapon.weaponSway;
         if (targetHorizontalSway == 0)
         {
             targetHorizontalSway = Random.Range(-weaponSway, weaponSway);
             if (Mathf.Abs(targetHorizontalSway) <= weaponSway / 2f)
-                targetHorizontalSway = (targetHorizontalSway / Mathf.Abs(targetHorizontalSway)) * 0.5f * targetHorizontalSway;
+                targetHorizontalSway = (targetHorizontalSway / Mathf.Abs(targetHorizontalSway)) * 0.5f * weaponSway;
         }
         else
         {
-            float swaySpeed = 5f * Time.deltaTime;
-            float sway = (targetHorizontalSway / Mathf.Abs(targetHorizontalSway)) * swaySpeed;
+            float swaySpeed = 1f * Time.deltaTime;
+            sway = targetHorizontalSway * swaySpeed;
 
-            currentHorizontalSway += sway;
-            if (Mathf.Abs(currentHorizontalSway) >= Mathf.Abs(targetHorizontalSway))
+            if (currentHorizontalSway + sway > weaponSway || currentHorizontalSway + sway < -weaponSway)
             {
-                currentHorizontalSway = 0;
+                sway *= -1;
                 targetHorizontalSway = 0;
             }
 
+            currentHorizontalSway += sway;
+            if (targetHorizontalSway > 0)
+            {
+                if (currentHorizontalSway >= targetHorizontalSway)
+                    targetHorizontalSway = 0;
+            }
+            else
+            {
 
-            if (weaponSway - Mathf.Abs(currentHorizontalSway) < sway)
-                sway *= -1;
+                if (currentHorizontalSway <= targetHorizontalSway)
+                    targetHorizontalSway = 0;
+            }
 
             return sway;
         }
-
         return 0;
     }
 
     float VerticalSway()
     {
-        if(targetVerticalSway == 0)
+        if (!pController.isAiming || pProperties.pInventory.activeWeapon.weaponSway <= 0)
+            return 0;
+        if (targetVerticalSway == 0)
         {
             targetVerticalSway = Random.Range(-weaponSway, weaponSway);
             if (Mathf.Abs(targetVerticalSway) <= weaponSway / 2f)
-                targetVerticalSway = (targetVerticalSway / Mathf.Abs(targetVerticalSway)) * 0.5f * targetVerticalSway;
+                targetVerticalSway = (targetVerticalSway / Mathf.Abs(targetVerticalSway)) * 0.5f * weaponSway;
         }
         else
         {
-            float swaySpeed = 5f * Time.deltaTime;
-            float sway = (targetVerticalSway / Mathf.Abs(targetVerticalSway)) * swaySpeed;
+            float swaySpeed = 1f * Time.deltaTime;
+            sway = targetVerticalSway * swaySpeed;
 
-            currentVerticalSway += sway;
-            if (Mathf.Abs(currentVerticalSway) >= Mathf.Abs(targetVerticalSway))
+            if (currentVerticalSway + sway > weaponSway || currentVerticalSway + sway < -weaponSway)
             {
-                currentVerticalSway = 0;
+                sway *= -1;
                 targetVerticalSway = 0;
             }
 
+            currentVerticalSway += sway;
 
-            if (weaponSway - Mathf.Abs(currentVerticalSway) < sway)
-                sway *= -1;
+            if (targetVerticalSway > 0)
+            {
+                if (currentVerticalSway >= targetVerticalSway)
+                    targetVerticalSway = 0;
+            }
+            else
+            {
+                if (currentVerticalSway <= targetVerticalSway)
+                    targetVerticalSway = 0;
+            }
 
             return sway;
         }
@@ -152,26 +173,26 @@ public class CameraScript : MonoBehaviour
         //float factorZ = -Input.GetAxis("Vertical") * amount;
         float factorZ = 0 * weaponSway;
 
-            if (factorX > maxamount)
-                factorX = maxamount;
+        if (factorX > maxamount)
+            factorX = maxamount;
 
-            if (factorX < -maxamount)
-                factorX = -maxamount;
+        if (factorX < -maxamount)
+            factorX = -maxamount;
 
-            if (factorY > maxamount)
-                factorY = maxamount;
+        if (factorY > maxamount)
+            factorY = maxamount;
 
-            if (factorY < -maxamount)
-                factorY = -maxamount;
+        if (factorY < -maxamount)
+            factorY = -maxamount;
 
-            if (factorZ > maxamount)
-                factorZ = maxamount;
+        if (factorZ > maxamount)
+            factorZ = maxamount;
 
-            if (factorZ < -maxamount)
-                factorZ = -maxamount;
+        if (factorZ < -maxamount)
+            factorZ = -maxamount;
 
-            Quaternion Final = Quaternion.Euler(defaultLocalRotation.x + factorX, defaultLocalRotation.y + factorY, defaultLocalRotation.z + factorZ);
-            transform.localRotation = transform.localRotation * Quaternion.Slerp(transform.localRotation, Final, (Time.time * 3));
+        Quaternion Final = Quaternion.Euler(defaultLocalRotation.x + factorX, defaultLocalRotation.y + factorY, defaultLocalRotation.z + factorZ);
+        transform.localRotation = transform.localRotation * Quaternion.Slerp(transform.localRotation, Final, (Time.time * 3));
     }
 
     public void SetPlayerIDInInput()
