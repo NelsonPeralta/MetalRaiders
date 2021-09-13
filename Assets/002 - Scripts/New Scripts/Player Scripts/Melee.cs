@@ -16,7 +16,8 @@ public class Melee : MonoBehaviour
     public GameObject meleeIndicator;
     public GameObject knifeGameObject;
     public AudioSource audioSource;
-    public AudioClip knifeSound;
+    public AudioClip knifeSuccessSound;
+    public AudioClip knifeFailSound;
 
 
     private void Start()

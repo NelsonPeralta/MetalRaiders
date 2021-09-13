@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviourPun
     public GeneralWeapProperties gwProperties;
     public WeaponProperties wProperties;
     public Animator anim;
-    public AudioSource playerVoice;
     public Camera mainCam;
     public Camera gunCam;
     public CameraScript camScript;
@@ -88,6 +87,11 @@ public class PlayerController : MonoBehaviourPun
     public int ammoLeftWeaponIsMissing;
 
     public bool pauseMenuOpen;
+
+    [Header("Audio Sources")]
+    public AudioSource playerVoice;
+    public AudioSource grenadeSwitchAudioSource;
+    public AudioSource meleeAudioSource;
 
     void Awake()
     {
@@ -487,8 +491,11 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee_RPC()
     {
-        melee.audioSource.clip = melee.knifeSound;
-        melee.audioSource.Play();
+        if (melee.playersInMeleeZone.Count > 0)
+            meleeAudioSource.clip = melee.knifeSuccessSound;
+        else
+            meleeAudioSource.clip = melee.knifeFailSound;
+        meleeAudioSource.Play();
         anim.Play("Knife Attack 2", 0, 0f);
         StartCoroutine(Melee3PS());
     }
@@ -689,7 +696,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (player.GetButtonDown("Switch Grenades") && PV.IsMine)
         {
-            Debug.Log("RPC: Switching Grenades");
+            grenadeSwitchAudioSource.Play();
             PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
         }
     }
