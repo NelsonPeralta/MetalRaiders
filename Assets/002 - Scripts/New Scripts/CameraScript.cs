@@ -90,7 +90,11 @@ public class CameraScript : MonoBehaviour
     {
         if (!pController.isAiming || pProperties.pInventory.activeWeapon.weaponSway <= 0)
             return 0;
+
         weaponSway = pProperties.pInventory.activeWeapon.weaponSway;
+        if (pController.isCrouching)
+            weaponSway = pProperties.pInventory.activeWeapon.weaponSway / 2f;
+
         if (targetHorizontalSway == 0)
         {
             targetHorizontalSway = Random.Range(-weaponSway, weaponSway);
@@ -110,16 +114,13 @@ public class CameraScript : MonoBehaviour
 
             currentHorizontalSway += sway;
             if (targetHorizontalSway > 0)
-            {
                 if (currentHorizontalSway >= targetHorizontalSway)
                     targetHorizontalSway = 0;
-            }
+                else
+                    ; // Do nothing
             else
-            {
-
                 if (currentHorizontalSway <= targetHorizontalSway)
-                    targetHorizontalSway = 0;
-            }
+                targetHorizontalSway = 0;
 
             return sway;
         }
