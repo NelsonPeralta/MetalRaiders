@@ -13,6 +13,7 @@ public class WeaponProperties : MonoBehaviour
     public weaponType weaponType;
     public int storedWeaponNumber;
     public int damage = 50;
+    [SerializeField] int numberOfBulletsToShoot = 1;
     public int bulletSpeed = 250;
     public float range;
     public bool canSelectFire;
@@ -190,5 +191,26 @@ public class WeaponProperties : MonoBehaviour
     public void ResetBulletToIgnoreRecoil()
     {
         bulletsToIgnoreRecoil = defaultBulletsToIgnoreRecoil;
+    }
+
+    public Quaternion GetRandomSprayRotation()
+    {
+        float currentBulletSpray = bulletSpray;
+
+        if (pController.isCrouching)
+            currentBulletSpray /= 2;
+
+        float ranX = Random.Range(-currentBulletSpray, currentBulletSpray);
+        float ranY = Random.Range(-currentBulletSpray, currentBulletSpray);
+
+        Quaternion ranSprayRotation = new Quaternion();
+        ranSprayRotation.eulerAngles = new Vector3(ranX, ranY, 0);
+
+        return ranSprayRotation;
+    }
+
+    public int GetNumberOfBulletsToShoot()
+    {
+        return numberOfBulletsToShoot;
     }
 }

@@ -45,38 +45,40 @@ public class SingleFire : MonoBehaviour
 
         if (activeWeapon.isSingleFire && !pController.isDualWielding && !pController.isDrawingWeapon)
         {
-            //Spawns projectile from bullet spawnpoint
-            if (!activeWeapon.usesGrenades && !activeWeapon.usesRockets)
+            for (int i = 0; i < activeWeapon.GetNumberOfBulletsToShoot(); i++)
             {
-                var bullet = gameObjectPool.SpawnPooledBullet();
-                bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-                bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
+                Debug.Log(activeWeapon.GetNumberOfBulletsToShoot());
+                //Spawns projectile from bullet spawnpoint
+                if (!activeWeapon.usesGrenades && !activeWeapon.usesRockets)
+                {
+                    var bullet = gameObjectPool.SpawnPooledBullet();
+                    bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
+                    bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation * activeWeapon.GetRandomSprayRotation();
 
-                bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
-                bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
-                bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-                bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>();
-                bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-                bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
-                bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;
-                bullet.SetActive(true);
-                commonFiringActions.SpawnMuzzleflash();
+                    bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
+                    bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
+                    bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+                    bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>();
+                    bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+                    bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
+                    bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;
+                    bullet.SetActive(true);
+                    commonFiringActions.SpawnMuzzleflash();
 
+                }
+                else if (activeWeapon.usesGrenades)
+                {
+                    var grenade = Instantiate(gwProperties.grenadeLauncherProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
+                    grenade.GetComponent<Rocket>().damage = activeWeapon.damage;
+                    grenade.GetComponent<Rocket>().playerWhoThrewGrenade = pController.playerProperties;
+                }
+                else if (activeWeapon.usesRockets)
+                {
+                    var rocket = Instantiate(gwProperties.rocketProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
+                    rocket.GetComponent<Rocket>().damage = activeWeapon.damage;
+                    rocket.GetComponent<Rocket>().playerWhoThrewGrenade = pController.playerProperties;
+                }
             }
-            else if (activeWeapon.usesGrenades)
-            {
-                var grenade = Instantiate(gwProperties.grenadeLauncherProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
-                grenade.GetComponent<Rocket>().damage = activeWeapon.damage;
-                grenade.GetComponent<Rocket>().playerWhoThrewGrenade = pController.playerProperties;
-            }
-            else if (activeWeapon.usesRockets)
-            {
-                var rocket = Instantiate(gwProperties.rocketProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
-                rocket.GetComponent<Rocket>().damage = activeWeapon.damage;
-                rocket.GetComponent<Rocket>().playerWhoThrewGrenade = pController.playerProperties;
-            }
-
-            Debug.Log("Fired Single");
 
             activeWeapon.currentAmmo -= 1;
             if (pController.anim != null)
@@ -89,9 +91,6 @@ public class SingleFire : MonoBehaviour
             activeWeapon.mainAudioSource.clip = activeWeapon.Fire;
             activeWeapon.mainAudioSource.Play();
         }
-
-        /////////////////////////////////////////////////////////////////////////////////////////
-
     }
 
     public void Update()
@@ -103,7 +102,7 @@ public class SingleFire : MonoBehaviour
         {
             if (!pController.isDualWielding)
             {
-                    WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+                WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
                 if (activeWeapon)
                     nextFireInterval = activeWeapon.timeBetweenSingleBullets;
 

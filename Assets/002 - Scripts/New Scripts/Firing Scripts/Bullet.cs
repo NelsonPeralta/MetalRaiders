@@ -102,10 +102,11 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        Travel();
         Despawn();
     }
 
-    void FixedUpdate()
+    void Travel()
     {
         prePos = transform.position; // Previous Position
         transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
