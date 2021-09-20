@@ -39,7 +39,7 @@ public class FullyAutomaticFire : MonoBehaviourPun
             //Spawn bullet from bullet spawnpoint
             var bullet = gameObjectPool.SpawnPooledBullet();
             bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-            bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
+            bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation * GetRandomSprayRotation(activeWeapon);
 
             bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
             bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
@@ -179,4 +179,14 @@ public class FullyAutomaticFire : MonoBehaviourPun
             ThisisShooting = false;
     }
 
+    Quaternion GetRandomSprayRotation(WeaponProperties weaponProperties)
+    {
+        float ranX = Random.Range(-weaponProperties.bulletSpray, weaponProperties.bulletSpray);
+        float ranY = Random.Range(-weaponProperties.bulletSpray, weaponProperties.bulletSpray);
+
+        Quaternion ranSprayRotation = new Quaternion();
+        ranSprayRotation.eulerAngles = new Vector3(ranX, ranY, 0);
+
+        return ranSprayRotation;
+    }
 }

@@ -42,7 +42,8 @@ public class WeaponProperties : MonoBehaviour
     public bool canBleedthroughHeadshot;
     public bool canBleedthroughAnything;
 
-    [Header("Recoil")]
+    [Header("Recoil Behaviour")]
+    public float bulletSpray;
     public bool hasRecoil;
     public float verticalRecoil = 1;
     public float horizontalRecoil = 1f;
