@@ -181,8 +181,13 @@ public class FullyAutomaticFire : MonoBehaviourPun
 
     Quaternion GetRandomSprayRotation(WeaponProperties weaponProperties)
     {
-        float ranX = Random.Range(-weaponProperties.bulletSpray, weaponProperties.bulletSpray);
-        float ranY = Random.Range(-weaponProperties.bulletSpray, weaponProperties.bulletSpray);
+        float currentBulletSpray = weaponProperties.bulletSpray;
+
+        if (pController.isCrouching)
+            currentBulletSpray /= 2;
+
+        float ranX = Random.Range(-currentBulletSpray, currentBulletSpray);
+        float ranY = Random.Range(-currentBulletSpray, currentBulletSpray);
 
         Quaternion ranSprayRotation = new Quaternion();
         ranSprayRotation.eulerAngles = new Vector3(ranX, ranY, 0);
