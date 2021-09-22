@@ -36,9 +36,9 @@ public class StickyGrenade : MonoBehaviour
         PlaySound(throwSound);
     }
 
-
-    private void OnTriggerEnter(Collider collision)
+    private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log($"Sticky Grenade Collision: {collision.gameObject.name}");
         if (!explosionTimerStarted && !hasHitObject)
         {
             if (collision.gameObject.layer == 13)

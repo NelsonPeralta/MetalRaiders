@@ -37,9 +37,16 @@ public class FullyAutomaticFire : MonoBehaviourPun
         {
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Spawn bullet from bullet spawnpoint
+            gwProperties.ResetLocalTransform();
+            gwProperties.bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
+
             var bullet = gameObjectPool.SpawnPooledBullet();
+            if (PV.IsMine)
+                bullet.layer = 28;
+            else
+                bullet.layer = 0;
             bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-            bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation * activeWeapon.GetRandomSprayRotation();
+            bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
 
             bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
             bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
@@ -52,7 +59,6 @@ public class FullyAutomaticFire : MonoBehaviourPun
             bullet.SetActive(true);
             commonFiringActions.SpawnMuzzleflash();
 
-            Debug.Log("Fired Auto");
             activeWeapon.currentAmmo -= 1;
             if (pController.anim != null)
             {
@@ -75,7 +81,7 @@ public class FullyAutomaticFire : MonoBehaviourPun
         {
             if (!pController.isDualWielding)
             {
-                    WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+                WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
                 if (activeWeapon)
                     nextFireInterval = activeWeapon.timeBetweenFABullets;
 

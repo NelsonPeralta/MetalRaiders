@@ -51,9 +51,16 @@ public class SingleFire : MonoBehaviour
                 //Spawns projectile from bullet spawnpoint
                 if (!activeWeapon.usesGrenades && !activeWeapon.usesRockets)
                 {
+                    gwProperties.ResetLocalTransform();
+                    gwProperties.bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
+
                     var bullet = gameObjectPool.SpawnPooledBullet();
+                    if (PV.IsMine)
+                        bullet.layer = 28;
+                    else
+                        bullet.layer = 0;
                     bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-                    bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation * activeWeapon.GetRandomSprayRotation();
+                    bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
 
                     bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
                     bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;

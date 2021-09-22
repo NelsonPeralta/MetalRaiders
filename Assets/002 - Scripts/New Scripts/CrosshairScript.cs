@@ -159,7 +159,7 @@ public class CrosshairScript : MonoBehaviour
                     PistolCrosshair.SetActive(false);
                     ShotgunCrosshair.SetActive(false);
                     SniperCrosshair.SetActive(true);
-                    ActiveCrosshair = ShotgunCrosshair;
+                    ActiveCrosshair = SniperCrosshair;
                 }
                 else if (pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>().reticule == "")
                 {

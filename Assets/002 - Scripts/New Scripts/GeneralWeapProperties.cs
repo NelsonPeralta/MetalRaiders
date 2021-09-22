@@ -55,8 +55,10 @@ public class GeneralWeapProperties : MonoBehaviour
     [Header("Bullets Shot by this player")]
     public List<Bullet> bulletsShotByplayer = new List<Bullet>();
 
+    Quaternion originalBulletLocalRotation;
     void Start()
     {
+        originalBulletLocalRotation = bulletSpawnPoint.localRotation;
         defaultBulletSpawnPoint = bulletSpawnPoint.localPosition;
         if(hasFoundComponents == false)
         {
@@ -190,5 +192,10 @@ public class GeneralWeapProperties : MonoBehaviour
                 automaticFireUIGO.SetActive(false);
             }
         }
+    }
+
+    public void ResetLocalTransform()
+    {
+        bulletSpawnPoint.localRotation = originalBulletLocalRotation;
     }
 }

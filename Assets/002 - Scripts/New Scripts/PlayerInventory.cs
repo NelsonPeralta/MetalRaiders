@@ -54,7 +54,7 @@ public class PlayerInventory : MonoBehaviourPun
     public int smallAmmo = 0;
     public int heavyAmmo = 0;
     public int powerAmmo = 0;
-    
+
     [Space(10)]
     public int maxSmallAmmo = 72;
     public int maxHeavyAmmo = 60;
@@ -158,7 +158,7 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 //DisableAmmoHUDCounters();
                 weaponsEquiped[1].gameObject.SetActive(true);
-                weaponsEquiped[0].gameObject.SetActive(false);                
+                weaponsEquiped[0].gameObject.SetActive(false);
 
                 activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
                 activeWeapIs = 1;
@@ -170,7 +170,7 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 //DisableAmmoHUDCounters();
                 weaponsEquiped[1].gameObject.SetActive(false);
-                weaponsEquiped[0].gameObject.SetActive(true);                
+                weaponsEquiped[0].gameObject.SetActive(true);
 
                 activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
                 activeWeapIs = 0;
@@ -178,8 +178,7 @@ public class PlayerInventory : MonoBehaviourPun
                 changeAmmoCounter();
                 StartCoroutine(ToggleTPPistolIdle(1));
             }
-            if(PV.IsMine)
-                playDrawSound();
+            playDrawSound();
 
             string test = weaponsEquiped[0].GetComponent<WeaponProperties>().weaponType.ToString();
             //Debug.Log(test);
@@ -282,7 +281,8 @@ public class PlayerInventory : MonoBehaviourPun
             }
         }
         changeAmmoCounter();
-        playDrawSound();
+        if (PV.IsMine)
+            playDrawSound();
         gwProperties.CheckFireMode();
     }
 
@@ -320,11 +320,11 @@ public class PlayerInventory : MonoBehaviourPun
     {
         //Debug.Log("Active weapon:" + activeWeapon.name);
 
-        foreach(GameObject weap in allWeaponsInInventory)
+        foreach (GameObject weap in allWeaponsInInventory)
         {
-            if(weap.GetComponent<WeaponProperties>().thirdPersonModelEquipped)
+            if (weap.GetComponent<WeaponProperties>().thirdPersonModelEquipped)
                 weap.GetComponent<WeaponProperties>().thirdPersonModelEquipped.SetActive(false);
-            if(weap.GetComponent<WeaponProperties>().thirdPersonModelUnequipped)
+            if (weap.GetComponent<WeaponProperties>().thirdPersonModelUnequipped)
                 weap.GetComponent<WeaponProperties>().thirdPersonModelUnequipped.SetActive(false);
         }
 
@@ -438,17 +438,19 @@ public class PlayerInventory : MonoBehaviourPun
         //Debug.Log("The active weapon is:" + activeWeapon.name);
         if (!activeWeapon)
             return;
-        if(activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Small")
+        if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Small")
         {
             smallAmmoHudCounter.changeToDrawn();
             heavyAmmoHudCounter.changeToHolstered();
             powerAmmoHudCounter.changeToHolstered();
-        }else if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Heavy")
+        }
+        else if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Heavy")
         {
             smallAmmoHudCounter.changeToHolstered();
             heavyAmmoHudCounter.changeToDrawn();
             powerAmmoHudCounter.changeToHolstered();
-        }else if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Power")
+        }
+        else if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Power")
         {
             smallAmmoHudCounter.changeToHolstered();
             heavyAmmoHudCounter.changeToHolstered();

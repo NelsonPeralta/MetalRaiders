@@ -961,6 +961,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (Health <= 0)
             return;
+        for (int i = 0; i < hurtClips.Length; i++)
+            if (playerVoice.isPlaying && playerVoice.clip == hurtClips[i])
+                return;
         int randomSound = Random.Range(0, hurtClips.Length);
         playerVoice.clip = hurtClips[randomSound];
         playerVoice.Play();
@@ -969,6 +972,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     void PlayDeathSound()
     {
         Debug.Log("Playing Death Sound");
+        for (int i = 0; i < deathClips.Length; i++)
+            if (playerVoice.isPlaying && playerVoice.clip == deathClips[i])
+                return;
         int randomSound = Random.Range(0, deathClips.Length);
         playerVoice.clip = deathClips[randomSound];
         playerVoice.Play();

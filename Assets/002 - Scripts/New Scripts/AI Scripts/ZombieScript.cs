@@ -229,14 +229,14 @@ public class ZombieScript : AiAbstractClass
     }
     IEnumerator Die_Coroutine()
     {
+        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
+        onlineSwarmManager.RemoveOneZombie();
         gameObject.name = $"{gameObject.name} (DEAD)";
         _isDead = true;
         nma.speed = 0;
         nma.enabled = false;
         anim.Play("Die");
 
-        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
-        onlineSwarmManager.RemoveOneZombie();
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
             hitbox.gameObject.SetActive(false);
@@ -466,7 +466,7 @@ public class ZombieScript : AiAbstractClass
             placeholderSkin.SetActive(false);
         randomSkin();
 
-        Health = DefaultHealth + (onlineSwarmManager.waveNumber * 10);
+        Health = DefaultHealth + (onlineSwarmManager.waveNumber * 15);
         damage = defaultDamage + (onlineSwarmManager.waveNumber * 2);
         meleeTrigger.ResetTrigger();
         _isDead = false;
