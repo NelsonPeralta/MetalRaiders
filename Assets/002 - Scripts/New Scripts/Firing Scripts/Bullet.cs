@@ -55,6 +55,8 @@ public class Bullet : MonoBehaviourPunCallbacks
     public GameObject organicBlood;
     public GameObject magicBlood;
     public GameObject shieldHit;
+    
+    int hitCounter;
 
     void Awake()
     {
@@ -111,8 +113,10 @@ public class Bullet : MonoBehaviourPunCallbacks
         prePos = transform.position; // Previous Position
         transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
         hits = Physics.RaycastAll(new Ray(prePos, (transform.position - prePos).normalized), (transform.position - prePos).magnitude);//, layerMask);
+        hitCounter++;
         for (int i = 0; i < hits.Length; i++)
         {
+            Debug.Log($"Hit Counter: ${hitCounter}. Hit index: ${i}. Hit name: ${hits[i].collider.gameobject.name}");
             if (!damageDealt && hits[i].collider.gameObject.layer != 22)
             {
                 string hitMessage = "Unknow bullet behaviour";
