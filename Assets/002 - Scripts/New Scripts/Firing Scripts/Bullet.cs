@@ -47,6 +47,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public bool useUpdateVoid;
     public bool damageDealt;
 
+    Vector3 playerPosWhenBulletShot;
     Vector3 prePos;
     Vector3 originalPos;
 
@@ -55,9 +56,9 @@ public class Bullet : MonoBehaviourPunCallbacks
     public GameObject organicBlood;
     public GameObject magicBlood;
     public GameObject shieldHit;
-    
-    int frameCounter;
 
+    int frameCounter;
+    List<ObjectHit> objectsHit = new List<ObjectHit>();
     void Awake()
     {
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
@@ -65,6 +66,10 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     override public void OnEnable()
     {
+        objectsHit.Clear();
+        if (playerWhoShot)
+            playerPosWhenBulletShot = playerWhoShot.transform.position;
+        frameCounter = 0;
         distanceTravelled = 0;
         damageDealt = false;
         GetBulletInfo();
@@ -110,74 +115,191 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void Travel()
     {
+        string hitMessage = "";
         prePos = transform.position; // Previous Position
         transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
         hits = Physics.RaycastAll(new Ray(prePos, (transform.position - prePos).normalized), (transform.position - prePos).magnitude);//, layerMask);
         frameCounter++;
-        for (int i = 0; i < hits.Length; i++)
+        hitMessage += $"FRAME: {frameCounter}.";
+        for (int i = 0; i < hits.Length; i++) // wWith a normal for loop, if the player is too close to a wall, it checks what object it collided with from farthest to closest. (int i = 0; i < hits.Length; i++)
         {
-            Debug.Log($"Frame: ${frameCounter}. Hit index: ${i}. Hit name: ${hits[i].collider.gameobject.name}");
+            //hitMessage += $"\nHIT INDEX: {i}. Hit NAME: {hits[i].collider.name} HIT DISTANCE FROM PLAYER: {Vector3.Distance(playerWhoShot.transform.position, hits[i].point)}";
+            Debug.Log(hitMessage);
             if (!damageDealt && hits[i].collider.gameObject.layer != 22)
             {
-                string hitMessage = "Unknow bullet behaviour";
+                //GameObject hit = hits[i].collider.gameObject;
+                //if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead())
+                //{
+                //    //hitMessage = "Hit AI";
+                //    AIHitbox hitbox = hits[i].collider.gameObject.GetComponent<AIHitbox>();
+                //    int _damage = damage;
+                //    if (hitbox.isHead && wProperties.isHeadshotCapable)
+                //    {
+                //        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                //        _damage = (int)(wProperties.headshotMultiplier * damage);
+                //    }
+
+                //    if (playerWhoShot.PV.IsMine)
+                //        hitbox.aiAbstractClass.Damage(_damage, playerWhoShot.PV.ViewID);
+
+                //    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
+                //    bloodHit.transform.position = hits[i].point;
+                //    bloodHit.SetActive(true);
+
+                //    damageDealt = true;
+                //}
+                //else if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
+                //{
+                //    //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
+
+                //    PlayerHitbox hitbox = hits[i].collider.gameObject.GetComponent<PlayerHitbox>();
+                //    PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
+                //    bool wasHeadshot = false;
+                //    if (hitbox.isHead && wProperties.isHeadshotCapable)
+                //    {
+                //        damage = (int)(damage * wProperties.headshotMultiplier);
+                //        wasHeadshot = true;
+                //        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                //    }
+
+                //    if (playerWhoShot.PV.IsMine)
+                //        playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
+
+                //    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
+                //    bloodHit.transform.position = hits[i].point;
+                //    bloodHit.SetActive(true);
+
+                //    damageDealt = true;
+                //}
+                //else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>() && !hit.GetComponent<CharacterController>())
+                //{
+                //    hitMessage += $"\n\n---HIT---: {hit.name}";
+                //    GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
+                //    int iplus = Mathf.Clamp(i + 1, 0, hits.Length - 1); // Both inclusive
+                //    genericHit.transform.position = hits[iplus].point;
+                //    genericHit.SetActive(true);
+
+                //    damageDealt = true;
+                //}
+
+
+
+
+
+
+
                 GameObject hit = hits[i].collider.gameObject;
                 if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead())
                 {
-                    hitMessage = "Hit AI";
-                    AIHitbox hitbox = hits[i].collider.gameObject.GetComponent<AIHitbox>();
-                    int _damage = damage;
-                    if (hitbox.isHead && wProperties.isHeadshotCapable)
-                    {
-                        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
-                        _damage = (int)(wProperties.headshotMultiplier * damage);
-                    }
+                    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
+                    objectsHit.Add(newHit);
 
-                    if (playerWhoShot.PV.IsMine)
-                        hitbox.aiAbstractClass.Damage(_damage, playerWhoShot.PV.ViewID);
-
-                    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
-                    bloodHit.transform.position = hits[i].point;
-                    bloodHit.SetActive(true);
-
-                    damageDealt = true;
                 }
                 else if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
                 {
-                    hitMessage = "Hit Player at: + " + hit.name + damageDealt;
-
-                    PlayerHitbox hitbox = hits[i].collider.gameObject.GetComponent<PlayerHitbox>();
-                    PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
-                    bool wasHeadshot = false;
-                    if (hitbox.isHead && wProperties.isHeadshotCapable)
-                    {
-                        damage = (int)(damage * wProperties.headshotMultiplier);
-                        wasHeadshot = true;
-                        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
-                    }
-
-                    if (playerWhoShot.PV.IsMine)
-                        playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
-
-                    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
-                    bloodHit.transform.position = hits[i].point;
-                    bloodHit.SetActive(true);
-
-                    damageDealt = true;
+                    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
+                    objectsHit.Add(newHit);
                 }
-                else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>())
+                else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>() && !hit.GetComponent<CharacterController>())
                 {
-                    hitMessage = $"Hit: {hit.name}";
-                    GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
-                    genericHit.transform.position = hits[i].point;
-                    genericHit.SetActive(true);
-
-                    damageDealt = true;
+                    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
+                    Debug.Log(newHit.hitPoint);
+                    objectsHit.Add(newHit);
                 }
-                Debug.Log(hitMessage);
             }
+
         }
-        if (damageDealt)
+        CheckForFinalHit();
+    }
+
+    void CheckForFinalHit()
+    {
+        Debug.Log($"Hits: {objectsHit.Count}");
+        if (objectsHit.Count > 0)
+        {
+            GameObject finalHitObject = objectsHit[0].gameObject;
+            Vector3 finalHitPoint = objectsHit[0].hitPoint;
+            float finalHitDistance = objectsHit[0].distanceFromPlayer;
+            for (int i = 0; i < objectsHit.Count; i++)
+            {
+                Debug.Log($"Object Hit: {objectsHit[i].gameObject.name}. Distance: {objectsHit[i].distanceFromPlayer}. Hir point: {objectsHit[i].hitPoint}");
+                if (objectsHit[i].distanceFromPlayer < finalHitDistance)
+                {
+                    Debug.Log(objectsHit[i].hitPoint);
+                    finalHitDistance = objectsHit[i].distanceFromPlayer;
+                    finalHitPoint = objectsHit[i].hitPoint;
+                    finalHitObject = objectsHit[i].gameObject;
+                }
+            }
+
+            Debug.Log($"Final Hit: {finalHitObject.name} with a distance of: {finalHitDistance} at point: {finalHitPoint}");
+            if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead())
+            {
+                AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
+                int _damage = damage;
+                if (hitbox.isHead && wProperties.isHeadshotCapable)
+                {
+                    playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                    _damage = (int)(wProperties.headshotMultiplier * damage);
+                }
+
+                if (playerWhoShot.PV.IsMine)
+                    hitbox.aiAbstractClass.Damage(_damage, playerWhoShot.PV.ViewID);
+
+                GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
+                bloodHit.transform.position = finalHitPoint;
+                bloodHit.SetActive(true);
+
+                damageDealt = true;
+            }
+            else if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
+            {
+                //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
+
+                PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
+                PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
+                bool wasHeadshot = false;
+                if (hitbox.isHead && wProperties.isHeadshotCapable)
+                {
+                    damage = (int)(damage * wProperties.headshotMultiplier);
+                    wasHeadshot = true;
+                    playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                }
+
+                if (playerWhoShot.PV.IsMine)
+                    playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
+
+                GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
+                bloodHit.transform.position = finalHitPoint;
+                bloodHit.SetActive(true);
+
+                damageDealt = true;
+            }
+            else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
+            {
+                //hitMessage += $"\n\n---HIT---: {hit.name}";
+                GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
+                //int iplus = Mathf.Clamp(i + 1, 0, hits.Length - 1); // Both inclusive
+                genericHit.transform.position = finalHitPoint;
+                genericHit.SetActive(true);
+
+                damageDealt = true;
+            }
             gameObject.SetActive(false);
+        }
+
+    }
+    public class ObjectHit
+    {
+        public GameObject gameObject;
+        public Vector3 hitPoint;
+        public float distanceFromPlayer;
+        public ObjectHit(GameObject _gameobject, Vector3 _hitPoint, float dist)
+        {
+            gameObject = _gameobject;
+            hitPoint = _hitPoint;
+            distanceFromPlayer = dist;
+        }
     }
 
     [PunRPC]
@@ -276,6 +398,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         //    damageDealt = true; ;
         //    gameObject.SetActive(false);
         //}
+
     }
 
     [PunRPC]

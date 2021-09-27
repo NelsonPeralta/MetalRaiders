@@ -109,7 +109,7 @@ NavMeshSettings:
     agentRadius: 0.1
     agentHeight: 2
     agentSlope: 45
-    agentClimb: 1
+    agentClimb: 0.5
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
@@ -284,7 +284,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 27
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -345,6 +345,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Grenade Ammo Pack Spawn Point (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7680232494684542156, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba3a0b97a7545734a8f57b752cbdcadd, type: 3}
@@ -4574,10 +4579,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Power Ammo Pack Spawn Point (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 23
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
@@ -8899,7 +8909,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 26
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -8960,6 +8970,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Grenade Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7680232494684542156, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba3a0b97a7545734a8f57b752cbdcadd, type: 3}
@@ -10357,17 +10372,17 @@ PrefabInstance:
     - target: {fileID: 7225342963373763652, guid: 7ed2521810b6d084ca30a66d4643b05c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.251
+      value: -0.162
       objectReference: {fileID: 0}
     - target: {fileID: 7225342963373763652, guid: 7ed2521810b6d084ca30a66d4643b05c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.448
+      value: 1.068
       objectReference: {fileID: 0}
     - target: {fileID: 7225342963373763652, guid: 7ed2521810b6d084ca30a66d4643b05c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.868
+      value: -5.154
       objectReference: {fileID: 0}
     - target: {fileID: 7225342963373763652, guid: 7ed2521810b6d084ca30a66d4643b05c,
         type: 3}
@@ -12654,6 +12669,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5809209654327374216, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: randomAmmo
@@ -12662,7 +12682,7 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_RootOrder
-      value: 29
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -12836,22 +12856,22 @@ PrefabInstance:
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.51
+      value: 7.978
       objectReference: {fileID: 0}
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.65321517
+      value: 1.034
       objectReference: {fileID: 0}
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -27.16
+      value: 11.481
       objectReference: {fileID: 0}
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
@@ -12861,7 +12881,7 @@ PrefabInstance:
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
@@ -12876,7 +12896,7 @@ PrefabInstance:
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4016778142821942726, guid: 41131eb60f0475043989f723761b3ead,
         type: 3}
@@ -13760,6 +13780,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5809209654327374216, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: randomAmmo
@@ -13768,7 +13793,7 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_RootOrder
-      value: 30
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -17685,10 +17710,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Power Ammo Pack Spawn Point (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 24
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
@@ -18587,7 +18617,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 28
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -18648,6 +18678,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Grenade Ammo Pack Spawn Point (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7680232494684542156, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba3a0b97a7545734a8f57b752cbdcadd, type: 3}
@@ -18987,12 +19022,67 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4030136551982330425, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030136552299749085, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030148104098355972, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030148104104728705, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030148104289297716, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030316692381291410, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030316693305695825, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030430380984781291, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4030465291546117610, guid: ed911a5731a51124caa4629de724d72b,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4030465292975780138, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030555595491383963, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030555595866611200, guid: ed911a5731a51124caa4629de724d72b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030568439541736734, guid: ed911a5731a51124caa4629de724d72b,
         type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -29430,10 +29520,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Power Ammo Pack Spawn Point
       objectReference: {fileID: 0}
+    - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 18
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
@@ -31920,6 +32015,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5809209654327374216, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: randomAmmo
@@ -31928,7 +32028,7 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -33603,6 +33703,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531467, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: randomAmmo
@@ -33611,7 +33716,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -34934,10 +35039,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Power Ammo Pack Spawn Point (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 25
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
@@ -36064,6 +36174,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5809209654327374216, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: randomAmmo
@@ -36175,6 +36290,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531467, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: randomAmmo
@@ -36183,7 +36303,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 22
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -36417,6 +36537,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531467, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: randomAmmo
@@ -36425,7 +36550,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 21
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -36528,21 +36653,21 @@ Transform:
   - {fileID: 1781582587}
   - {fileID: 806687209}
   - {fileID: 1153504438}
-  - {fileID: 1654684899}
-  - {fileID: 2114952971}
-  - {fileID: 1516592438}
   - {fileID: 1740672715}
   - {fileID: 2138490021}
   - {fileID: 1903320871}
   - {fileID: 1892188589}
   - {fileID: 284201645}
+  - {fileID: 1516592438}
   - {fileID: 876579302}
   - {fileID: 1819834945}
+  - {fileID: 2114952971}
   - {fileID: 391175658}
   - {fileID: 9561958}
   - {fileID: 958932102}
   - {fileID: 622733810}
   - {fileID: 703193640}
+  - {fileID: 1654684899}
   - {fileID: 1883875461}
   m_Father: {fileID: 1057067221}
   m_RootOrder: 7
@@ -40615,7 +40740,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -40676,6 +40801,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Grenade Ammo Pack Spawn Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 7680232494684542156, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba3a0b97a7545734a8f57b752cbdcadd, type: 3}
@@ -41145,6 +41275,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531467, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: randomAmmo
@@ -41153,7 +41288,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 20
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -48300,7 +48435,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &906286220367422973
 GameObject:
   m_ObjectHideFlags: 0

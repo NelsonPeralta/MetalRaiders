@@ -36,7 +36,7 @@ public class StickyGrenade : MonoBehaviour
         PlaySound(throwSound);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
         Debug.Log($"Sticky Grenade Collision: {collision.gameObject.name}");
         if (!explosionTimerStarted && !hasHitObject)
@@ -45,8 +45,6 @@ public class StickyGrenade : MonoBehaviour
             {
                 if (collision.gameObject.GetComponent<PlayerHitbox>())
                 {
-                    if (collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<PlayerProperties>().playerRewiredID != playerRewiredID)
-                    {
                         gameObject.transform.parent = collision.gameObject.transform;
 
                         GetComponent<Rigidbody>().useGravity = false;
@@ -60,7 +58,6 @@ public class StickyGrenade : MonoBehaviour
                         explosionTimer = grenadeTimer;
                         explosionTimerStarted = true;
                         PlaySound(impactSound);
-                    }
                 }
                 else if (collision.gameObject.GetComponent<AIHitbox>())
                 {

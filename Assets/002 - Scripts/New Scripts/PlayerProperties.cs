@@ -12,7 +12,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
     public PlayerManager playerManager;
-    public MultiplayerManager multiplayerManager;
+    public OnlineMultiplayerManager multiplayerManager;
     public GameObjectPool gameObjectPool;
     public WeaponPool weaponPool;
     public OnlineSwarmManager onlineSwarmManager;
@@ -153,7 +153,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         spawnManager = SpawnManager.spawnManagerInstance;
         playerManager = PlayerManager.playerManagerInstance;
-        multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
+        multiplayerManager = OnlineMultiplayerManager.multiplayerManagerInstance;
         onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
         weaponPool = WeaponPool.weaponPoolInstance;
@@ -392,8 +392,16 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public bool CanBeDamaged()
+    {
+        if (Health <= 0 || isDead || isRespawning)
+            return false;
+        return true;
+    }
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
+        if (Health <= 0 || isDead || isRespawning)
+            return;
         PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
         //if (!PhotonNetwork.IsMasterClient)
@@ -1123,5 +1131,4 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         gameObjectPool.bullets[index].SetActive(false);
     }
-
 }

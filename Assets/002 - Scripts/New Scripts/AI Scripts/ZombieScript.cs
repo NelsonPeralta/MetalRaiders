@@ -103,6 +103,57 @@ public class ZombieScript : AiAbstractClass
         if (Health <= 0)
             Die();
     }
+    void Die()
+    {
+        StartCoroutine(Die_Coroutine());
+    }
+    IEnumerator Die_Coroutine()
+    {
+        try
+        {
+            onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
+            onlineSwarmManager.RemoveOneZombie();
+            gameObject.name = $"{gameObject.name} (DEAD)";
+            _isDead = true;
+            nma.speed = 0;
+            nma.enabled = false;
+            anim.Play("Die");
+
+
+            foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+                hitbox.gameObject.SetActive(false);
+
+            motionTrackerDot.SetActive(false);
+            if (lastPlayerWhoShot == null)
+                Debug.Log("ZOMBIE HAS NO LAST PLAYER");
+
+            //lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            //if (lastPlayerWhoShot)
+            //    lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
+            TransferPoints();
+
+            if(PhotonNetwork.IsMasterClient)
+                DropRandomLoot();
+            target = null;
+
+        }
+        catch(System.Exception e)
+        {
+            Debug.Log($"ERROR: {e}");
+
+            gameObject.name = $"{gameObject.name} (DEAD)";
+            _isDead = true;
+            nma.speed = 0;
+            nma.enabled = false;
+            anim.Play("Die");
+
+
+            foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+                hitbox.gameObject.SetActive(false);
+        }
+        yield return new WaitForSeconds(5);
+        gameObject.SetActive(false);
+    }
 
     public void EnableThisAi(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
@@ -223,39 +274,6 @@ public class ZombieScript : AiAbstractClass
         }
     }
 
-    void Die()
-    {
-        StartCoroutine(Die_Coroutine());
-    }
-    IEnumerator Die_Coroutine()
-    {
-        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
-        onlineSwarmManager.RemoveOneZombie();
-        gameObject.name = $"{gameObject.name} (DEAD)";
-        _isDead = true;
-        nma.speed = 0;
-        nma.enabled = false;
-        anim.Play("Die");
-
-
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-            hitbox.gameObject.SetActive(false);
-
-        motionTrackerDot.SetActive(false);
-        if (lastPlayerWhoShot == null)
-            Debug.Log("ZOMBIE HAS NO LAST PLAYER");
-
-        //lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
-        //if (lastPlayerWhoShot)
-        //    lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
-        TransferPoints();
-
-        //DropRandomLoot();
-        target = null;
-
-        yield return new WaitForSeconds(5);
-        gameObject.SetActive(false);
-    }
 
     void AnimationCheck()
     {
@@ -272,34 +290,43 @@ public class ZombieScript : AiAbstractClass
 
     void DropRandomLoot()
     {
-        int ChanceToDrop = Random.Range(1, 11);
-        GameObject loot = new GameObject();
+        int ChanceToDrop = Random.Range(1, 26);
+        string ammoType = "";
 
         if (ChanceToDrop == 1)
-        {
-            loot = Instantiate(powerAmmoPack, gameObject.transform.position, gameObject.transform.rotation);
-        }
+            ammoType = "power";
 
         if (ChanceToDrop == 2)
-        {
-            loot = Instantiate(heavyAmmoPack, gameObject.transform.position, gameObject.transform.rotation);
-        }
+            ammoType = "heavy";
 
         if (ChanceToDrop == 3)
-        {
-            loot = Instantiate(smallAmmoPack, gameObject.transform.position, gameObject.transform.rotation);
-        }
+            ammoType = "small";
 
 
         if (ChanceToDrop >= 4 && ChanceToDrop <= 6)
-        {
-            loot = Instantiate(grenadeAmmoPack, gameObject.transform.position, gameObject.transform.rotation);
-        }
+            ammoType = "grenade";
 
-        if (ChanceToDrop >= 7 && ChanceToDrop <= 9)
-        {
-            loot = Instantiate(extraHealth, gameObject.transform.position + new Vector3(0, 1, 0), gameObject.transform.rotation);
-        }
+        PV.RPC("DropRandomLoot_RPC", RpcTarget.All, ammoType, transform.position, transform.rotation);
+    }
+
+    [PunRPC]
+    void DropRandomLoot_RPC(string ammotype, Vector3 position, Quaternion rotation)
+    {
+        GameObject loot = new GameObject();
+        Quaternion rotFix = new Quaternion(0, 0, 0, 0);
+        rotFix.eulerAngles = new Vector3(0, 180, 0);
+
+        if (ammotype == "power")
+            loot = Instantiate(powerAmmoPack, position, rotation * rotFix);
+
+        if (ammotype == "heavy")
+            loot = Instantiate(heavyAmmoPack, position, rotation * rotFix);
+
+        if (ammotype == "small")
+            loot = Instantiate(smallAmmoPack, position, rotation * rotFix);
+
+        if (ammotype == "grenade")
+            loot = Instantiate(grenadeAmmoPack, position, rotation * rotFix);
 
         Destroy(loot, 60);
     }
@@ -466,7 +493,7 @@ public class ZombieScript : AiAbstractClass
             placeholderSkin.SetActive(false);
         randomSkin();
 
-        Health = DefaultHealth + (onlineSwarmManager.waveNumber * 15);
+        Health = DefaultHealth + (onlineSwarmManager.waveNumber * 10);
         damage = defaultDamage + (onlineSwarmManager.waveNumber * 2);
         meleeTrigger.ResetTrigger();
         _isDead = false;

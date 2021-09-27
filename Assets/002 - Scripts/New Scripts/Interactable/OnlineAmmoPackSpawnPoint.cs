@@ -36,7 +36,7 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
         else if (!ammoPack)
         {
             var newAmmoPack = weaponPool.GetAmmoPackFromList(ammoType).GetComponent<AmmoPack>();
-            newAmmoPack.spawnPoint = this;
+            newAmmoPack.onlineAmmoPackSpawnPoint = this;
             newAmmoPack.transform.position = transform.position;
             newAmmoPack.transform.rotation = transform.rotation;
             newAmmoPack.gameObject.SetActive(true);

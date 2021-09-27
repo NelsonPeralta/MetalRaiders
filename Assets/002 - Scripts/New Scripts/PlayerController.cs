@@ -170,10 +170,10 @@ public class PlayerController : MonoBehaviourPun
         UpdateWeaponPropertiesAndAnimator();
         if (playerProperties != null)
         {
+            StartButton();
+            BackButton();
             if (!playerProperties.isDead && !playerProperties.isRespawning)
             {
-                StartButton();
-                BackButton();
 
                 if (!pauseMenuOpen)
                 {
@@ -491,6 +491,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee_RPC()
     {
+        melee.Knife();
         if (melee.playersInMeleeZone.Count > 0)
             meleeAudioSource.clip = melee.knifeSuccessSound;
         else
@@ -1416,7 +1417,7 @@ IEnumerator Reload()
     }
     */
 
-    
+
 
     public void UpdateAimingLayers()
     {

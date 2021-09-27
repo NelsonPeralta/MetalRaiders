@@ -157,7 +157,7 @@ public class Movement : MonoBehaviour
                 {
                     if (pController.isSprinting)
                     {
-                        cController.Move(move * speed * 1.5f * Time.deltaTime);
+                        cController.Move(move * speed * 1.3f * Time.deltaTime);
                     }
                     else
                     {

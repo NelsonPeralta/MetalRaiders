@@ -566,7 +566,7 @@ public class WeaponPickUp : MonoBehaviourPun
     [PunRPC]
     void DespawnAmmoPack_RPC(int index)
     {
-        weaponPool.allAmmoPacks[index].GetComponent<AmmoPack>().spawnPoint.StartRespawn();
+        weaponPool.allAmmoPacks[index].GetComponent<AmmoPack>().onlineAmmoPackSpawnPoint.StartRespawn();
         weaponPool.allAmmoPacks[index].SetActive(false);
     }
 }

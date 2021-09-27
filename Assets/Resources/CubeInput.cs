@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Ressources/CubeInput.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Resources/CubeInput.inputactions'
 
 using System;
 using System.Collections;

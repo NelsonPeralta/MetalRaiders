@@ -54,7 +54,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineWeaponPool"), Vector3.zero + new Vector3(0, 5, 0), Quaternion.identity);
                 if (!OnlineGameTime.onlineGameTimeInstance)
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
-                if (!MultiplayerManager.multiplayerManagerInstance && mode == "multiplayer")
+                if (!OnlineMultiplayerManager.multiplayerManagerInstance && mode == "multiplayer")
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineMultiplayerManager"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
                 if (!OnlineSwarmManager.onlineSwarmManagerInstance && mode == "swarm")
                 {

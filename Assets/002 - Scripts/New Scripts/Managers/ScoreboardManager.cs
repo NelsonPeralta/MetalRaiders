@@ -9,7 +9,7 @@ public class ScoreboardManager : MonoBehaviour
     public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
     public PlayerManager playerManager;
-    public MultiplayerManager multiplayerManager;
+    public OnlineMultiplayerManager multiplayerManager;
     public OnlineSwarmManager onlineSwarmManager;
 
     [Header("Components")]
@@ -27,7 +27,7 @@ public class ScoreboardManager : MonoBehaviour
 
     private void Start()
     {
-        multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
+        multiplayerManager = OnlineMultiplayerManager.multiplayerManagerInstance;
         onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
 
         if (multiplayerManager)
@@ -62,11 +62,11 @@ public class ScoreboardManager : MonoBehaviour
     public void UpdateScoreboard()
     {
         DisableAllRows();
-        multiplayerManager = MultiplayerManager.multiplayerManagerInstance;
+        multiplayerManager = OnlineMultiplayerManager.multiplayerManagerInstance;
         onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
 
         if (!multiplayerManager)
-            multiplayerManager = FindObjectOfType<MultiplayerManager>();
+            multiplayerManager = FindObjectOfType<OnlineMultiplayerManager>();
 
         if (!onlineSwarmManager)
             onlineSwarmManager = FindObjectOfType<OnlineSwarmManager>();

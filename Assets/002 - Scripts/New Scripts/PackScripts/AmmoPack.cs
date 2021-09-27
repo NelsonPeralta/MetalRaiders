@@ -19,7 +19,7 @@ public class AmmoPack : MonoBehaviour
 
     [Header("Classes")]
     public TextMeshPro ammoText;
-    public OnlineAmmoPackSpawnPoint spawnPoint;
+    public OnlineAmmoPackSpawnPoint onlineAmmoPackSpawnPoint;
 
     [Header("Other Classes")]
     public PlayerProperties playerProperties;
@@ -51,7 +51,7 @@ public class AmmoPack : MonoBehaviour
         if (!randomAmmo)
             newAmmo = defaultAmmo;
         else
-            newAmmo = (int)Mathf.Floor(Random.Range(1, (defaultAmmo * 0.8f)));
+            newAmmo = (int)Mathf.Floor(Random.Range(1, (defaultAmmo * 0.7f)));
         if (newAmmo <= 0)
             newAmmo = 1;
         return newAmmo;

@@ -9,7 +9,8 @@ public class WeaponPool : MonoBehaviourPun
     public PhotonView PV;
     public static WeaponPool weaponPoolInstance;
     public static OnlineGameTime onlineGameTimeInstance;
-    public int amountToPool;
+    public int amountOfWeaponsToPool;
+    public int amountOfWeaponPacksToPool;
 
     [Header("Timer")]
     public GameObject timerPrefab;
@@ -40,7 +41,7 @@ public class WeaponPool : MonoBehaviourPun
         onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
 
         for (int i = 0; i < weaponPrefabs.Count; i++)
-            for (int j = 0; j < amountToPool; j++)
+            for (int j = 0; j < amountOfWeaponsToPool; j++)
             {
                 // TO DO: Spawn them using normal instantiate instead and fix LootableWeapon script according to it (Start method)
                 GameObject newWeap = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weaponPrefabs[i].name), Vector3.zero, Quaternion.identity);
@@ -52,7 +53,7 @@ public class WeaponPool : MonoBehaviourPun
             }
 
         for (int i = 0; i < ammoPackPrefabs.Count; i++)
-            for (int j = 0; j < amountToPool; j++)
+            for (int j = 0; j < amountOfWeaponPacksToPool; j++)
             {
                 //GameObject newAmmoPack = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AmmoPacks", ammoPackPrefabs[i].name), new Vector3(0 - 100, 0), Quaternion.identity);
                 GameObject newAmmoPack = Instantiate(ammoPackPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
@@ -115,7 +116,7 @@ public class WeaponPool : MonoBehaviourPun
     {
         for (int i = 0; i < allAmmoPacks.Count; i++)
         {
-            if (allAmmoPacks[i].GetComponent<AmmoPack>().ammoType == ammoType && !allAmmoPacks[i].GetComponent<AmmoPack>().spawnPoint)
+            if (allAmmoPacks[i].GetComponent<AmmoPack>().ammoType == ammoType && !allAmmoPacks[i].GetComponent<AmmoPack>().onlineAmmoPackSpawnPoint)
                 return allAmmoPacks[i];
         }
         return null;
@@ -146,9 +147,9 @@ public class WeaponPool : MonoBehaviourPun
             int ammoPackIndex = 99;
 
             for (int j = 0; j < allAmmoPacks.Count; j++)
-                if (allAmmoPacks[j].GetComponent<AmmoPack>().ammoType == ammoType && !allAmmoPacks[j].GetComponent<AmmoPack>().spawnPoint && !allAmmoPackSpawnPoints[i].ammoPack)
+                if (allAmmoPacks[j].GetComponent<AmmoPack>().ammoType == ammoType && !allAmmoPacks[j].GetComponent<AmmoPack>().onlineAmmoPackSpawnPoint && !allAmmoPackSpawnPoints[i].ammoPack)
                 {
-                    allAmmoPacks[j].GetComponent<AmmoPack>().spawnPoint = allAmmoPackSpawnPoints[i];
+                    allAmmoPacks[j].GetComponent<AmmoPack>().onlineAmmoPackSpawnPoint = allAmmoPackSpawnPoints[i];
                     ammoPackPhotonId = allAmmoPacks[j].GetComponent<PhotonView>().ViewID;
                     ammoPackIndex = j;
                 }

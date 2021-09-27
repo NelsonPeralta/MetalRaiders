@@ -24,24 +24,20 @@ public class Melee : MonoBehaviour
     {
         meleeIndicator.SetActive(false);
     }
-    private void Update()
+    public void Knife()
     {
 
-        if (pController.player.GetButtonDown("Melee") && meleeReady && pProperties.PV.IsMine)
+        if (playersInMeleeZone.Count > 0)
         {
-            StartCoroutine(DisableMelee());
-            if (playersInMeleeZone.Count > 0)
+            StartCoroutine(EnableMeleeIndicator());
+
+            for (int i = 0; i < playersInMeleeZone.Count; i++)
             {
-                StartCoroutine(EnableMeleeIndicator());
+                PlayerProperties playerToDamage = playersInMeleeZone[i];
+                if (playerToDamage.Health < pProperties.meleeDamage)
+                    RemoveCorrespondingPlayer(playerToDamage.gameObject);
 
-                for (int i = 0; i < playersInMeleeZone.Count; i++)
-                {
-                    PlayerProperties playerToDamage = playersInMeleeZone[i];
-                    if (playerToDamage.Health < pProperties.meleeDamage)
-                        RemoveCorrespondingPlayer(playerToDamage.gameObject);
-
-                    playerToDamage.Damage((int)pProperties.meleeDamage, false, pProperties.GetComponent<PhotonView>().ViewID);
-                }
+                playerToDamage.Damage((int)pProperties.meleeDamage, false, pProperties.GetComponent<PhotonView>().ViewID);
             }
         }
     }
@@ -63,9 +59,9 @@ public class Melee : MonoBehaviour
     {
         if (!playerGameObject)
             return;
-            for (int i = 0; i < playersInMeleeZone.Count; i++)
-                if (playersInMeleeZone[i].gameObject && playersInMeleeZone[i].gameObject == playerGameObject)
-                    playersInMeleeZone[i] = null;
+        for (int i = 0; i < playersInMeleeZone.Count; i++)
+            if (playersInMeleeZone[i].gameObject && playersInMeleeZone[i].gameObject == playerGameObject)
+                playersInMeleeZone[i] = null;
     }
 
     void RemoveNullIndexes()
