@@ -45,7 +45,6 @@ public class WeaponProperties : MonoBehaviour
 
     [Header("Recoil Behaviour")]
     public float bulletSpray;
-    public bool hasRecoil;
     public float verticalRecoil = 1;
     public float horizontalRecoil = 1f;
     public int defaultBulletsToIgnoreRecoil; // Only for Fully Auto
@@ -156,7 +155,7 @@ public class WeaponProperties : MonoBehaviour
     public void Recoil()
     {
         if (camScript)
-            if (hasRecoil)
+            if (horizontalRecoil > 0 || verticalRecoil > 0)
             {
                 if (bulletsToIgnoreRecoil > 0)
                 {
