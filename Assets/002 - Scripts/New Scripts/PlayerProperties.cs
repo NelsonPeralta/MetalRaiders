@@ -400,7 +400,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     }
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        if (Health <= 0 || isDead || isRespawning)
+        if (Health <= 0 || isDead || isRespawning || !PV.IsMine)
             return;
         PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);

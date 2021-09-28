@@ -461,13 +461,13 @@ public class PlayerController : MonoBehaviourPun
     }
     public void ScopeOut()
     {
+        if (!isAiming && !playerProperties.isDead)
+            return;
         Debug.Log("Unscope Script");
         isAiming = false;
         mainCam.fieldOfView = playerProperties.defaultFov;
         camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
-
-        if (isAiming)
-            allPlayerScripts.aimingScript.playAimSound();
+        allPlayerScripts.aimingScript.playAimSound();
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
         //aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
