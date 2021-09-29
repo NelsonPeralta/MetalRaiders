@@ -90,12 +90,16 @@ public class ZombieScript : AiAbstractClass
 
     public override void Damage(int damage, int playerWhoShotPDI)
     {
+        if (isDead())
+            return;
         PV.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
     }
 
     [PunRPC]
     void Damage_RPC(int damage, int playerWhoShotPDI)
     {
+        if (isDead())
+            return;
         Health -= damage;
         PlayerProperties pp = PhotonView.Find(playerWhoShotPDI).GetComponent<PlayerProperties>();
         pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
@@ -111,10 +115,10 @@ public class ZombieScript : AiAbstractClass
     {
         try
         {
+            _isDead = true;
             onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
             onlineSwarmManager.RemoveOneZombie();
             gameObject.name = $"{gameObject.name} (DEAD)";
-            _isDead = true;
             nma.speed = 0;
             nma.enabled = false;
             anim.Play("Die");
@@ -132,12 +136,12 @@ public class ZombieScript : AiAbstractClass
             //    lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
 
-            if(PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.IsMasterClient)
                 DropRandomLoot();
             target = null;
 
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             Debug.Log($"ERROR: {e}");
 
@@ -240,15 +244,14 @@ public class ZombieScript : AiAbstractClass
     void Attack()
     {
         if (IsInMeleeRange && isReadyToAttack && !_isDead)
-            if (meleeTrigger.player)
-                if (!meleeTrigger.player.isDead)
-                    PV.RPC("Attack_RPC", RpcTarget.All);
+            if (meleeTrigger.player && meleeTrigger.player.CanBeDamaged())
+                PV.RPC("Attack_RPC", RpcTarget.All, meleeTrigger.player.PV.ViewID);
     }
 
     [PunRPC]
-    void Attack_RPC()
+    void Attack_RPC(int playerPID)
     {
-        PlayerProperties pp = target.GetComponent<PlayerProperties>();
+        PlayerProperties pp = PhotonView.Find(playerPID).GetComponent<PlayerProperties>();
         pp.Damage(damage, false, 99);
         anim.Play("Attack");
         nma.velocity = Vector3.zero;

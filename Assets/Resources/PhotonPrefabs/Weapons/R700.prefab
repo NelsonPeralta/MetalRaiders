@@ -297,8 +297,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: r700
   isWallGun: 0
-  ammoInThisWeapon: 4
-  extraAmmo: 4
+  ammoInThisWeapon: 6
+  extraAmmo: 6
   isDualWieldable: 0
   weaponType: Sniper
   smallAmmo: 0

@@ -256,7 +256,7 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void IncreaseWave(int _currentWave)
     {
-        if(PV.IsMine)
+        if (PV.IsMine)
             PV.RPC("IncreaseWave_RPC", RpcTarget.All, _currentWave);
     }
 
@@ -312,7 +312,7 @@ public class OnlineSwarmManager : MonoBehaviour
     void CalculateMaxDefaultAIsForRound()
     {
         allPlayers = GetAllPlayers();
-            maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + (waveNumber * 2);
+        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + (waveNumber * 2);
         //maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
         //maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
         //maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;
@@ -572,7 +572,7 @@ public class OnlineSwarmManager : MonoBehaviour
                 wc.waveText.text = $"No bonus points. Finish the wave faster";
         }
 
-        if(PV.IsMine)
+        if (PV.IsMine)
             GivePlayerBonusPoints(bonusPoints);
 
         yield return new WaitForSeconds(newWaveDelay);
@@ -840,6 +840,10 @@ public class OnlineSwarmManager : MonoBehaviour
 
     public void RemoveOneZombie()
     {
-        zombiesAlive--;
+        int _zombiesAlive = 0;
+        foreach (ZombieScript zs in GameObject.FindObjectsOfType<ZombieScript>())
+            if (!zs.isDead())
+                _zombiesAlive++;
+        zombiesAlive = _zombiesAlive;
     }
 }
