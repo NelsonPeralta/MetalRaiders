@@ -273,6 +273,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Patriot Spawn Point (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 8428307233135478642, guid: 99b7c4da304dfe1469c212a93e2d3f2c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8428307233135478646, guid: 99b7c4da304dfe1469c212a93e2d3f2c,
         type: 3}
       propertyPath: m_RootOrder
@@ -975,17 +980,17 @@ PrefabInstance:
     - target: {fileID: 2605118516908846835, guid: 2c5392447abfe9741942104d57f5fad9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.2452755
+      value: -0.36
       objectReference: {fileID: 0}
     - target: {fileID: 2605118516908846835, guid: 2c5392447abfe9741942104d57f5fad9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.94638634
+      value: 6.993
       objectReference: {fileID: 0}
     - target: {fileID: 2605118516908846835, guid: 2c5392447abfe9741942104d57f5fad9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.9097924
+      value: -15.84
       objectReference: {fileID: 0}
     - target: {fileID: 2605118516908846835, guid: 2c5392447abfe9741942104d57f5fad9,
         type: 3}
