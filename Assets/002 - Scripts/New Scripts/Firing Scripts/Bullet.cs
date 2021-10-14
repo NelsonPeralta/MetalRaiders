@@ -255,6 +255,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             else if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
             {
                 //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
+                Debug.Log("HEEERSERE");
 
                 PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
                 PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
@@ -267,7 +268,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
 
                 if (playerWhoShot.PV.IsMine)
+                {
+                    Debug.Log("asdasdasdas");
                     playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
+                }
 
                 GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
                 bloodHit.transform.position = finalHitPoint;
