@@ -165,8 +165,17 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         Health = maxHealth;
         HealthDebuggerText.text = $"Health: {Health.ToString()}";
         networkedHealth = Health;
-        healthSlider.maxValue = maxHealth;
-        healthSlider.value = maxHealth;
+        healthSlider.maxValue = maxHealth - maxShield;
+
+        if (maxShield <= 0)
+            shieldGO.SetActive(false);
+        else
+        {
+            healthSlider.gameObject.SetActive(false);
+            shieldSlider.maxValue = maxShield;
+            healthSlider.maxValue = maxHealth - maxShield;
+        }
+        healthSlider.value = maxHealth - maxShield;
 
         if (onlineSwarmManager)
         {
@@ -345,15 +354,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             motionTrackerGO.SetActive(false);
         }
 
-        if (!hasShield)
-        {
-            shieldGO.SetActive(false);
-        }
-        else
-        {
-            shieldGO.SetActive(true);
-        }
-
         HealthAndshieldRecharge();
     }
 
@@ -382,7 +382,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             Shield = 0;
             shieldSlider.value = 0;
             PlayShieldDownSound();
-            StartCoroutine(PlayShieldAlarmSound());
+            //StartCoroutine(PlayShieldAlarmSound());
         }
         else
         {
@@ -412,13 +412,31 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    void Damage_RPC(float newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId)
+    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId)
     {
         if (PV.IsMine)
             allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
         lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
-        Health = newHealth;
-        healthSlider.value = Health;
+        Health = _newHealth;
+
+        float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+        float newShield = 0;
+
+
+
+        if (newHealth >= (maxHealth - maxShield))
+        {
+            newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
+        }
+
+        if (newShield <= 0 && maxShield > 0)
+        {
+            PlayShieldAlarmSound();
+        }
+
+        shieldSlider.value = newShield;
+        healthSlider.value = newHealth;
+        Debug.Log($"Health: {Health}. New Shield: {newShield}. New Health: {newHealth}");
 
         GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
         bloodHit.transform.position = gameObject.transform.position + new Vector3(0, -0.4f, 0);
@@ -586,15 +604,36 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
 
-        if (healthRegenerationAllowed && healthSlider.value < maxHealth)
+        if (healthRegenerationAllowed && Health < maxHealth)
         {
-            healthSlider.value = healthSlider.value + (healthRegenerationRate * 0.01f);
-            Health = healthSlider.value;
+            Health += healthRegenerationRate * 0.01f;
+
+            float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+            float newShield = 0;
+
+            if (Health >= (maxHealth - maxShield))
+            {
+                newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
+            }
+
+
+            healthSlider.value = newHealth;
+            shieldSlider.value = newShield;
+
 
             if (!healthRegenerating)
             {
-                PlayHealthRechargeSound();
-                healthRegenerating = true;
+                if (maxShield > 0 && newShield > 0)
+                {
+                    StopShieldAlarmSound();
+                    PlayHealthRechargeSound();
+                    healthRegenerating = true;
+                }
+                else if (maxShield <= 0)
+                {
+                    PlayHealthRechargeSound();
+                    healthRegenerating = true;
+                }
             }
         }
 
@@ -616,6 +655,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
         pController.DisableCrouch();
+        StopShieldAlarmSound();
         PlayDeathSound();
         allPlayerScripts.playerUIComponents.scoreboard.CloseScoreboard();
         respawnCoroutine = StartCoroutine(Respawn_Coroutine());
@@ -898,9 +938,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         Health = maxHealth;
         Shield = maxShield;
 
-        healthSlider.value = maxHealth;
+        healthSlider.value = maxHealth - maxShield;
         shieldSlider.value = maxShield;
-        healthSlider.maxValue = maxHealth;
+        healthSlider.maxValue = maxHealth - maxShield;
         shieldSlider.maxValue = maxShield;
     }
 
@@ -1056,24 +1096,19 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         playerVoice.Play();
     }
 
-    IEnumerator PlayShieldAlarmSound()
+    void PlayShieldAlarmSound()
     {
-        yield return new WaitForSeconds(0.25f);
-
-        if (hasShield)
+        if (!shieldAlarmAudioSource.isPlaying)
         {
-            if (Shield <= 0)
-            {
-                if (!shieldAlarmAudioSource.isPlaying)
-                {
-                    shieldAlarmAudioSource.clip = shieldAlarmClip;
-                    shieldAlarmAudioSource.Play();
-                }
-            }
+            shieldAlarmAudioSource.clip = shieldAlarmClip;
+            shieldAlarmAudioSource.Play();
         }
     }
 
-
+    void StopShieldAlarmSound()
+    {
+        shieldAlarmAudioSource.Stop();
+    }
     void UpdateMPPoints(int playerWhoDied, int playerWhoKilled)
     {
         //if (allPlayerScripts.playerMPProperties)
