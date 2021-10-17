@@ -128,6 +128,7 @@ MonoBehaviour:
   - {fileID: 8589383476621182990, guid: 925ac30203b8e74458a86fb75b6c4a1d, type: 3}
   - {fileID: 6590350620525510199, guid: 695351ec79d320f4db79ff0dd95e737e, type: 3}
   - {fileID: 8356340305447340586, guid: 85c0d4ee3e60a3244be49c3e13faf0ab, type: 3}
+  - {fileID: 3146684691462308589, guid: 823dd5995a5be7b40b8deae36ce5ce68, type: 3}
   allAmmoPackSpawnPoints: []
   allAmmoPacks: []
   ammoPackPrefabs:

@@ -491,11 +491,14 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee_RPC()
     {
-        melee.Knife();
-        if (melee.playersInMeleeZone.Count > 0)
-            meleeAudioSource.clip = melee.knifeSuccessSound;
-        else
-            meleeAudioSource.clip = melee.knifeFailSound;
+        if (PV.IsMine)
+        {
+            melee.Knife();
+            if (melee.playersInMeleeZone.Count > 0)
+                meleeAudioSource.clip = melee.knifeSuccessSound;
+            else
+                meleeAudioSource.clip = melee.knifeFailSound;
+        }
         meleeAudioSource.Play();
         anim.Play("Knife Attack 2", 0, 0f);
         StartCoroutine(Melee3PS());

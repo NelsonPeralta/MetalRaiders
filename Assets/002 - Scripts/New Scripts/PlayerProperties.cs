@@ -20,6 +20,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     [Header("Models")]
     public GameObject firstPersonModels;
     public GameObject thirdPersonModels;
+    public GameObject shieldThirdPersonModel;
+    public GameObject shieldElectricityThirdPersonModel;
+    public GameObject shieldRechargeThirdPersonModel;
 
     [Header("Player Info")]
     public int maxHealth;
@@ -248,13 +251,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         //StartCoroutine(SlightlyIncreaseHealth());
     }
 
-
-    private void Update()
-    {
-        UpdateLagDistance();
-    }
-
-    void UpdateLagDistance()
+        void UpdateLagDistance()
     {
         if (PV.IsMine)
             return;
@@ -267,8 +264,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         //    lagDistance = Vector3.zero;
         //}
     }
-    private void FixedUpdate()
+    private void Update()
     {
+        UpdateLagDistance();
         fragGrenadeText.text = pInventory.grenades.ToString();
 
         if (!pController.isDualWielding)
@@ -431,20 +429,29 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
         if (newShield <= 0 && maxShield > 0)
         {
+            ShowThirdPersionShieldElectricityModel();
             PlayShieldAlarmSound();
+        }
+        else if (newShield > 0)
+        {
+            ShowThirdPersonShieldModel();
         }
 
         shieldSlider.value = newShield;
         healthSlider.value = newHealth;
         Debug.Log($"Health: {Health}. New Shield: {newShield}. New Health: {newHealth}");
 
-        GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
-        bloodHit.transform.position = gameObject.transform.position + new Vector3(0, -0.4f, 0);
-        bloodHit.SetActive(true);
 
         triggerHealthRecharge = true;
         healthRegenerationCountdown = healthRegenerationDelay;
-        PlayHurtSound();
+        if (newHealth < maxHealth - maxShield)
+        {
+
+            GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
+            bloodHit.transform.position = gameObject.transform.position + new Vector3(0, -0.4f, 0);
+            bloodHit.SetActive(true);
+            PlayHurtSound();
+        }
         UpdateHealthTextDebugger();
         pController.ScopeOut();
 
@@ -452,6 +459,41 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             isDead = true;
 
         Die(wasHeadshot);
+    }
+
+    void ShowThirdPersionShieldElectricityModel()
+    {
+        if (!shieldElectricityThirdPersonModel.activeSelf)
+            shieldElectricityThirdPersonModel.SetActive(true);
+    }
+
+    void HideThirdPersionShieldElectricityModel()
+    {
+        if (shieldElectricityThirdPersonModel.activeSelf)
+            shieldElectricityThirdPersonModel.SetActive(false);
+    }
+    void ShowThirdPersonShieldModel()
+    {
+        StartCoroutine(ShowThirdPersonShieldModel_Coroutine());
+    }
+
+    IEnumerator ShowThirdPersonShieldModel_Coroutine()
+    {
+        shieldThirdPersonModel.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        shieldThirdPersonModel.SetActive(false);
+    }
+
+    void ShowThirdPersonShieldRechargeModel()
+    {
+        StartCoroutine(ShowThirdPersonShieldRechargeModel_Coroutine());
+    }
+
+    IEnumerator ShowThirdPersonShieldRechargeModel_Coroutine()
+    {
+        shieldRechargeThirdPersonModel.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        shieldRechargeThirdPersonModel.SetActive(false);
     }
 
     public void BleedthroughDamage(float damage, bool headshot, int playerWhoKilledThisPlayer)
@@ -626,6 +668,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
                 if (maxShield > 0 && newShield > 0)
                 {
                     StopShieldAlarmSound();
+                    HideThirdPersionShieldElectricityModel();
+                    ShowThirdPersonShieldRechargeModel();
                     PlayHealthRechargeSound();
                     healthRegenerating = true;
                 }
@@ -656,6 +700,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
         pController.DisableCrouch();
         StopShieldAlarmSound();
+        HideThirdPersionShieldElectricityModel();
         PlayDeathSound();
         allPlayerScripts.playerUIComponents.scoreboard.CloseScoreboard();
         respawnCoroutine = StartCoroutine(Respawn_Coroutine());
@@ -772,13 +817,14 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         Health = maxHealth;
         healthSlider.value = maxHealth;
 
+        float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+        float newShield = 0;
 
-        if (hasShield)
-        {
-            Shield = maxShield;
-            shieldSlider.value = maxShield;
-        }
+        if (newHealth >= (maxHealth - maxShield))
+            newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
 
+        shieldSlider.value = newShield;
+        healthSlider.value = newHealth;
 
         mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
@@ -1098,7 +1144,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     void PlayShieldAlarmSound()
     {
-        if (!shieldAlarmAudioSource.isPlaying)
+        if (!shieldAlarmAudioSource.isPlaying && shieldAlarmAudioSource.gameObject.activeSelf)
         {
             shieldAlarmAudioSource.clip = shieldAlarmClip;
             shieldAlarmAudioSource.Play();

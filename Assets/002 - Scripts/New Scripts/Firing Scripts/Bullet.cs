@@ -255,27 +255,32 @@ public class Bullet : MonoBehaviourPunCallbacks
             else if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
             {
                 //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
-                Debug.Log("HEEERSERE");
 
                 PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
                 PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
                 bool wasHeadshot = false;
                 if (hitbox.isHead && wProperties.isHeadshotCapable)
                 {
-                    damage = (int)(damage * wProperties.headshotMultiplier);
-                    wasHeadshot = true;
-                    playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                    if (playerProperties.maxShield <= 0)
+                    {
+                        damage = (int)(damage * wProperties.headshotMultiplier);
+                        wasHeadshot = true;
+                        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                    }
+                    else if (playerProperties.maxShield > 0 && (playerProperties.Health < playerProperties.maxHealth - playerProperties.maxShield))
+                    {
+                        damage = (int)(damage * 999);
+                        wasHeadshot = true;
+                        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                    }
                 }
 
+                Debug.Log($"Bullet Damage: {damage}");
                 if (playerWhoShot.PV.IsMine)
                 {
                     Debug.Log("asdasdasdas");
                     playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
                 }
-
-                GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
-                bloodHit.transform.position = finalHitPoint;
-                bloodHit.SetActive(true);
 
                 damageDealt = true;
             }
