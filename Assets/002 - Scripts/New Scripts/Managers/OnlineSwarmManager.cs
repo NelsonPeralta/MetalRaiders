@@ -184,6 +184,15 @@ public class OnlineSwarmManager : MonoBehaviour
 
         if (PV.IsMine)
             IncreaseWave(waveNumber);
+        DisablePlayerShields();
+    }
+
+    void DisablePlayerShields()
+    {
+        foreach(PlayerProperties pp in FindObjectsOfType<PlayerProperties>())
+        {
+            pp.DisableShield();
+        }
     }
 
     void Update()

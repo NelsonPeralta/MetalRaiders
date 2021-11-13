@@ -171,10 +171,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         healthSlider.maxValue = maxHealth - maxShield;
 
         if (maxShield <= 0)
-            shieldGO.SetActive(false);
+            HideShieldBar();
         else
         {
-            healthSlider.gameObject.SetActive(false);
+            ShowShieldBar();
             shieldSlider.maxValue = maxShield;
             healthSlider.maxValue = maxHealth - maxShield;
         }
@@ -249,6 +249,24 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
         //StartCoroutine(SlightlyIncreaseHealth());
+    }
+
+    public void DisableShield()
+    {
+        maxShield = 0;
+        HideShieldBar();
+    }
+
+    void ShowShieldBar()
+    {
+        shieldGO.SetActive(true);
+        healthSlider.gameObject.SetActive(false);
+    }
+
+    void HideShieldBar()
+    {
+        shieldGO.SetActive(false);
+        healthSlider.gameObject.SetActive(true);
     }
 
         void UpdateLagDistance()

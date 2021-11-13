@@ -7,7 +7,7 @@ onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
-	"last_search.83F126EB" = "head"
+	"last_search.83F126EB" = "generic"
 	"InspectorPreview.83F126EB" = "0"
 	"currentGroup.83F126EB" = "asset"
 }
@@ -49,6 +49,7 @@ providers = {
 	}
 }
 recentSearches = [
+	"generic"
 	"head"
 	"tunnel"
 	"finish"
