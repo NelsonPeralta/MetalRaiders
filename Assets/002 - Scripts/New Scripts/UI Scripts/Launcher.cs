@@ -17,6 +17,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] TMP_InputField nicknameInputField;
     [SerializeField] TMP_Text errorText;
+    [SerializeField] TMP_Text infoText;
     [SerializeField] GameObject commonRoomTexts;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
@@ -24,6 +25,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] Transform playerListContent;
     [SerializeField] GameObject PlayerListItemPrefab;
     [SerializeField] TMP_Text mapSelectedText;
+
+    [SerializeField] TMP_Text loginUsernameText;
+    [SerializeField] TMP_Text registerUsernameText;
+    [SerializeField] TMP_Text loginPasswordText;
+    [SerializeField] TMP_Text registerPasswordText;
 
     [Header("Master Client Only")]
     [SerializeField] GameObject startGameButton;
@@ -57,7 +63,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        MenuManager.Instance.OpenMenu("title");
+        MenuManager.Instance.OpenMenu("offline title");
         Debug.Log("Joined Lobby");
         if (PhotonNetwork.NickName == "")
             PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
@@ -161,6 +167,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("error");
     }
 
+    public void ShowPlayerMessage(string message)
+    {
+        infoText.text = message;
+        MenuManager.Instance.OpenMenu("info");
+    }
+
     public void StartGame()
     {
         PhotonNetwork.LoadLevel(levelToLoadIndex);
@@ -181,7 +193,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        MenuManager.Instance.OpenMenu("title");
+        MenuManager.Instance.OpenMenu("offline title");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -232,5 +244,15 @@ public class Launcher : MonoBehaviourPunCallbacks
         string name = path.Substring(slash + 1);
         int dot = name.LastIndexOf('.');
         return name.Substring(0, dot);
+    }
+
+    public void Register()
+    {
+        WebManager.webManagerInstance.Register(registerUsernameText.text ,registerPasswordText.text);
+    }
+
+    public void Login()
+    {
+        WebManager.webManagerInstance.Login(loginUsernameText.text, loginPasswordText.text);
     }
 }
