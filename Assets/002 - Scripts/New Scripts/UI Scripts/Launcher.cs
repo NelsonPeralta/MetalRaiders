@@ -149,9 +149,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    public void UpdateNickname()
+    public void UpdateNickname() // Deprecated. Used to be used when changing username with a text field and button
     {
-        PhotonNetwork.NickName = nicknameInputField.text;
+        //PhotonNetwork.NickName = nicknameInputField.text;
         PV.RPC("UpdatePlayerList", RpcTarget.All);
     }
 

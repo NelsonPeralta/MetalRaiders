@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System;
+using Photon.Pun;
 
 public class WebManager : MonoBehaviour
 {
@@ -87,10 +88,9 @@ public class WebManager : MonoBehaviour
                 try
                 {
                     PlayerDatabaseAdaptor.PlayerData pd = PlayerDatabaseAdaptor.PlayerData.CreateFromJSON(jsonarray);
-                    Debug.Log(playerDatabaseAdaptor.PlayerDataIsSet());
                     playerDatabaseAdaptor.SetPlayerData(pd);
-                    Debug.Log(playerDatabaseAdaptor.PlayerDataIsSet());
                     Launcher.launcherInstance.ShowPlayerMessage("Logged in successfully!");
+                    PhotonNetwork.NickName = playerDatabaseAdaptor.GetUsername();
                 }
                 catch (Exception e)
                 {
