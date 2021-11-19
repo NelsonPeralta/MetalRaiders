@@ -18,6 +18,6 @@ public class MyPlayerInfo : MonoBehaviour
 
     public void LoadPlayer()
     {
-        PlayerData data = SaveSystem.LoadPlayer(playerID, characterID, this);
+        PlayerLocalSaveData data = SaveSystem.LoadPlayer(playerID, characterID, this);
     }
 }

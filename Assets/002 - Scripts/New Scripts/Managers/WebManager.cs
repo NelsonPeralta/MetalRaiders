@@ -38,7 +38,7 @@ public class WebManager : MonoBehaviour
         form.AddField("username", username);
         form.AddField("password", password);
 
-        using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/unity/testdb.php", form))
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
             yield return www.SendWebRequest();
 
@@ -70,7 +70,7 @@ public class WebManager : MonoBehaviour
         form.AddField("username", username);
         form.AddField("password", password);
 
-        using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/unity/testdb.php", form))
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
             yield return www.SendWebRequest();
 
@@ -87,7 +87,7 @@ public class WebManager : MonoBehaviour
 
                 try
                 {
-                    PlayerDatabaseAdaptor.PlayerData pd = PlayerDatabaseAdaptor.PlayerData.CreateFromJSON(jsonarray);
+                    PlayerDatabaseAdaptor.PlayerUserData pd = PlayerDatabaseAdaptor.PlayerUserData.CreateFromJSON(jsonarray);
                     playerDatabaseAdaptor.SetPlayerData(pd);
                     Launcher.launcherInstance.ShowPlayerMessage("Logged in successfully!");
                     PhotonNetwork.NickName = playerDatabaseAdaptor.GetUsername();

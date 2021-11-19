@@ -54,6 +54,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         ChangeLevelToLoadWithIndex(levelToLoadIndex);
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        Debug.Log($"Disconnected: {cause}");
+    }
+
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected to Master");

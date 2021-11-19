@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerDatabaseAdaptor
 {
-    PlayerData playerData;
-    public void SetPlayerData(PlayerData playerData)
+    PlayerUserData playerData;
+    public void SetPlayerData(PlayerUserData playerData)
     {
         if (this.playerData == null)
         {
@@ -20,15 +20,15 @@ public class PlayerDatabaseAdaptor
     public bool PlayerDataIsSet() { return playerData != null; }
 
     [System.Serializable]
-    public class PlayerData
+    public class PlayerUserData
     {
 
         public int id;
         public string username;
 
-        public static PlayerData CreateFromJSON(string jsonString)
+        public static PlayerUserData CreateFromJSON(string jsonString)
         {
-            return JsonUtility.FromJson<PlayerData>(jsonString);
+            return JsonUtility.FromJson<PlayerUserData>(jsonString);
         }
 
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class PlayerData
+public class PlayerLocalSaveData
 {
     public int playerID;
 
@@ -11,7 +11,7 @@ public class PlayerData
     public int kills;
     public int deaths;
 
-    public PlayerData (MyPlayerInfo player)
+    public PlayerLocalSaveData (MyPlayerInfo player)
     {
         playerID = player.playerID;
 
