@@ -38,6 +38,7 @@ public class WebManager : MonoBehaviour
         form.AddField("username", username);
         form.AddField("password", password);
 
+        //using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/unity/database.php", form))
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
             yield return www.SendWebRequest();
@@ -70,6 +71,7 @@ public class WebManager : MonoBehaviour
         form.AddField("username", username);
         form.AddField("password", password);
 
+        //using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/unity/database.php", form))
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
             yield return www.SendWebRequest();
