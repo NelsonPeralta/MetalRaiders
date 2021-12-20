@@ -59,6 +59,9 @@ public class Announcer : MonoBehaviour
     public float killionaireTimeStamp;
     public bool killionaireHasTimeStamp;
 
+    [Header("Other")]
+    public AudioClip gameOverClip;
+
 
     private void Start()
     {
@@ -71,6 +74,12 @@ public class Announcer : MonoBehaviour
             ResetMultikill();
             CheckForTimeStamps();
         }
+    }
+
+    public void PlayGameOverClip()
+    {
+        announcerAudioSource.clip = gameOverClip;
+        announcerAudioSource.Play();
     }
 
     public void AddToMultiKill()

@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Rocket : MonoBehaviour
 {
-    public GameObject playerWhoThrewGrenade;
+    public PlayerProperties playerWhoThrewGrenade;
 
     [Header("Settings")]
     public float damage; // Determined in Weapon Properties Script
@@ -15,11 +16,7 @@ public class Rocket : MonoBehaviour
     public bool useConstantForce;
 
     [Header("Prefabs")]
-    public Transform explosionPrefab;    
-
-    GameObject[] playersHit = new GameObject[4];
-    GameObject[] AIsHit = new GameObject[20];
-
+    public Transform explosionPrefab;
     private void Start()
     {
         //If not using constant force (grenade launcher projectile)
@@ -46,7 +43,7 @@ public class Rocket : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collision with rocket: " + collision.gameObject.name);
-        if(collision.gameObject.layer != 9)
+        if (collision.gameObject.layer != 9)
             Explosion();
     }
 
@@ -54,7 +51,7 @@ public class Rocket : MonoBehaviour
 
     void Explosion()
     {
-        if(!useConstantForce)
+        if (!useConstantForce)
             Instantiate(explosionPrefab, transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
         else
             Instantiate(explosionPrefab, transform.position, transform.rotation);
@@ -63,113 +60,53 @@ public class Rocket : MonoBehaviour
         Vector3 explosionPos = transform.position;
         //Use overlapshere to check for nearby colliders
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
-        foreach (Collider hit in colliders)
+        string hitsDebugMessage = "Rocket Hits: ";
+
+        List<GameObject> objectsHit = new List<GameObject>();
+        for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
         {
+            Collider hit = colliders[i];
+            hitsDebugMessage += $"({i}) {hit.name}, ";
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             //Add force to nearby rigidbodies
             if (rb != null)
                 rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
 
-            if (hit.GetComponent<PlayerHitbox>() != null)
+            if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
             {
-                //Debug.Log("Fireball Hit Player");
-                GameObject player = hit.GetComponent<PlayerHitbox>().player;
-                float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
-
-                int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;
-
-                bool playerAlreadyHit = false;
-
-                for (int i = 0; i < playersHit.Length; i++)
+                GameObject playerHit = hit.GetComponent<PlayerHitbox>().player.gameObject;
+                if (!objectsHit.Contains(playerHit))
                 {
-                    if (playersHit[i] != null)
-                    {
-                        if (playersHit[i] == player)
-                        {
-                            //Debug.Log("Here");
-                            playerAlreadyHit = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Not yet hit");
-                        }
-                    }
-                }
-
-                bool assignedPlayerInArray = false;
-
-                if (!playerAlreadyHit)
-                {
-                    for (int i = 0; i < playersHit.Length; i++)
-                    {
-                        if (playersHit[i] == null && !assignedPlayerInArray)
-                        {
-                            playersHit[i] = player;
-                            assignedPlayerInArray = true;
-                        }
-                    }
-                }
-
-                if (!playerAlreadyHit)
-                {
-                    if (!player.GetComponent<PlayerProperties>().isDead)
-                    {
-                        float calculatedDamage = damage * (1 - (playerDistance / radius));
-                        Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
-                        player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                    }
+                    objectsHit.Add(playerHit);
+                    float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
+                    float calculatedDamage = damage * (1 - (playerDistance / radius));
+                    Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
+                    //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
+                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
+                        playerHit.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
                 }
             }
-            if (hit.GetComponent<AIHitbox>() != null)
+            if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead())
             {
-                Debug.Log("Hit AI");
-                GameObject ai;
-                ai = hit.GetComponent<AIHitbox>().aiGO;
-                float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
-
-                bool aiAlreadyHit = false;
-
-                for (int i = 0; i < AIsHit.Length; i++)
+                GameObject aiHit = hit.GetComponent<AIHitbox>().aiAbstractClass.gameObject;
+                if (!objectsHit.Contains(aiHit))
                 {
-                    if (AIsHit[i] != null)
-                    {
-                        if (ai == AIsHit[i])
-                        {
-                            aiAlreadyHit = true;
-                        }
-                    }
-                }
-
-                bool assignedAIInArray = false;
-
-                if (!aiAlreadyHit)
-                {
-                    for (int i = 0; i < AIsHit.Length; i++)
-                    {
-                        if (AIsHit[i] == null && !assignedAIInArray)
-                        {
-                            AIsHit[i] = ai;
-                            assignedAIInArray = true;
-                        }
-                    }
-                }
-
-                if (!aiAlreadyHit)
-                {
-                    if (hit.GetComponent<AIHitbox>().aiHealth > 0)
-                    {
-                        float calculatedDamage = damage * (1 - (aiDistance / radius));
-                        hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade);
-                    }
-
+                    objectsHit.Add(aiHit);
+                    Debug.Log("Hit AI");
+                    AIHitbox hitbox = hit.GetComponent<AIHitbox>();
+                    float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
+                    float calculatedDamage = damage * (1 - (aiDistance / radius));
+                    Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
+                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
+                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID);
                 }
             }
         }
-
+        Debug.Log(hitsDebugMessage);
         //Destroy the grenade object on explosion
         Destroy(gameObject);
     }
 
-    
+
 }

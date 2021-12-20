@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Hurtzone : MonoBehaviour
 {
@@ -18,42 +19,22 @@ public class Hurtzone : MonoBehaviour
     public bool instantKillzone;
 
     [Header("Players in Range")]
-    public PlayerProperties player0;
-    public PlayerProperties player1;
-    public PlayerProperties player2;
-    public PlayerProperties player3;
+    public List<PlayerProperties> playersInRange = new List<PlayerProperties>();
 
     private void Start()
     {
-        //exitTriggerRadius = gameObject.GetComponent<SphereCollider>().radius;
+        if (instantKillzone)
+            damage = 9999;
+        StartCoroutine(DamagePlayersInRange_Coroutine());
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<PlayerProperties>() != null)
         {
-            PlayerProperties player = other.gameObject.GetComponent<PlayerProperties>();
-            other.GetComponent<ScreenEffects>().orangeScreen.SetActive(true);
-
-            if (player.playerRewiredID == 0)
-            {
-                player0 = player;
-            }
-
-            if (player.playerRewiredID == 1)
-            {
-                player1 = player;
-            }
-
-            if (player.playerRewiredID == 2)
-            {
-                player2 = player;
-            }
-
-            if (player.playerRewiredID == 3)
-            {
-                player3 = player;
-            }
+            playersInRange.Add(other.GetComponent<PlayerProperties>());
+            if (!instantKillzone)
+                other.GetComponent<ScreenEffects>().orangeScreen.SetActive(true);
         }
     }
 
@@ -61,223 +42,30 @@ public class Hurtzone : MonoBehaviour
     {
         if (other.gameObject.GetComponent<PlayerProperties>() != null)
         {
-            PlayerProperties player = other.gameObject.GetComponent<PlayerProperties>();
             other.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
-
-            if (player.playerRewiredID == 0)
-            {
-                player0 = null;
-            }
-
-            if (player.playerRewiredID == 1)
-            {
-                player1 = null;
-            }
-
-            if (player.playerRewiredID == 2)
-            {
-                player2 = null;
-            }
-
-            if (player.playerRewiredID == 3)
-            {
-                player3 = null;
-            }
+            RemovePlayerFromRange(other.GetComponent<PlayerProperties>());
         }
     }
 
-    private void Update()
+    IEnumerator DamagePlayersInRange_Coroutine()
     {
-        if (player0 != null && !player0.isDead)
-        {
-            if (instantKillzone)
-            {
-                player0.BleedthroughDamage(999, false, 99);
-                player0 = null;
-            }            
+        yield return new WaitForSeconds(damageDelay);
 
-            if(damageOverTime)
+        if (playersInRange.Count > 0)
+            for (int i = 0; i < playersInRange.Count; i++)
             {
-                if(!playersReceivingDamage)
-                {
-                    damageCountdown = damageDelay;
-                    playersReceivingDamage = true;
-                }
-
-                DamageOverTime(player0);
+                playersInRange[i].Damage(damage, false, 99);
+                if (instantKillzone)
+                    RemovePlayerFromRange(playersInRange[i]);
             }
-
-            if (player0.Health <= 0)
-                player0 = null;
-
-            //checkPlayerDistance0();
-        }
-
-        if (player1 != null && !player1.isDead)
-        {         
-            if (damageOverTime)
-            {
-                if (!playersReceivingDamage)
-                {
-                    damageCountdown = damageDelay;
-                    playersReceivingDamage = true;
-                }
-
-                DamageOverTime(player1);
-            }
-
-            if (instantKillzone)
-            {
-                player1.BleedthroughDamage(999, false, 99);
-                player1 = null;
-            }
-
-            if (player1.Health <= 0)
-                player1 = null;
-
-            //checkPlayerDistance1();
-        }
-
-        if (player2 != null && !player2.isDead)
-        {
-            if (damageOverTime)
-            {
-                if (!playersReceivingDamage)
-                {
-                    damageCountdown = damageDelay;
-                    playersReceivingDamage = true;
-                }
-
-                DamageOverTime(player2);
-            }
-
-            if (instantKillzone)
-            {
-                player2.BleedthroughDamage(999, false, 99);
-                player2 = null;
-            }
-
-            if (player2.Health <= 0)
-                player2 = null;
-
-            //checkPlayerDistance2();
-        }
-
-        if (player3 != null && !player3.isDead)
-        {
-            if (damageOverTime)
-            {
-                if (!playersReceivingDamage)
-                {
-                    damageCountdown = damageDelay;
-                    playersReceivingDamage = true;
-                }
-
-                DamageOverTime(player3);
-            }
-
-            if (instantKillzone)
-            {
-                player3.BleedthroughDamage(999, false, 99);
-                player3 = null;
-            }
-
-            if (player3.Health <= 0)
-                player3 = null;
-
-            //checkPlayerDistance3();
-        }
+        StartCoroutine(DamagePlayersInRange_Coroutine());
     }
-
-    void DamageOverTime(PlayerProperties player)
+    void RemovePlayerFromRange(PlayerProperties pp)
     {
-        if (playersReceivingDamage)
+        for (int i = 0; i < playersInRange.Count; i++)
         {
-            damageCountdown -= Time.deltaTime;
-
-            if (damageCountdown <= 0)
-            {
-                if (player != null)
-                {
-                    if (!player.isDead)
-                    {
-                        if (player.hasShield) //If Player has Shields
-                        {
-                            if (player.Shield > 0)
-                            {
-                                player.SetShield(damage);
-                            }
-                            else
-                            {
-                                player.SetHealth(damage, false, 99);
-                            }
-                        }
-                        else // If Player does not have Armor
-                        {
-                            player.SetHealth(damage, false, 99);
-                        }
-                    }
-                }
-
-                playersReceivingDamage = false;
-                damageCountdown = damageDelay;
-            }
-        }
-    }
-
-    void checkPlayerDistance0()
-    {
-        if (player0 != null)
-        {
-            float playerDistance = Vector3.Distance(player0.gameObject.transform.position, gameObject.transform.position);
-
-            if (playerDistance > exitTriggerRadius * 1.5f)
-            {
-                player0.InformerText.text = "";
-                player0 = null;
-            }
-        }
-    }
-
-    void checkPlayerDistance1()
-    {
-        if (player1 != null)
-        {
-            float playerDistance = Vector3.Distance(player1.gameObject.transform.position, gameObject.transform.position);
-
-            if (playerDistance > exitTriggerRadius * 1.5)
-            {
-                player1.InformerText.text = "";
-                player1 = null;
-            }
-        }
-    }
-
-    void checkPlayerDistance2()
-    {
-        if (player2 != null)
-        {
-            float playerDistance = Vector3.Distance(player2.gameObject.transform.position, gameObject.transform.position);
-
-            if (playerDistance > exitTriggerRadius * 1.5f)
-            {
-                player2.InformerText.text = "";
-                player2 = null;
-            }
-        }
-    }
-
-    void checkPlayerDistance3()
-    {
-        if (player3 != null)
-        {
-            float playerDistance = Vector3.Distance(player3.gameObject.transform.position, gameObject.transform.position);
-
-            if (playerDistance > exitTriggerRadius * 1.5f)
-            {
-                player3.InformerText.text = "";
-                player3 = null;
-            }
+            if (pp == playersInRange[i])
+                playersInRange.RemoveAt(i);
         }
     }
 }

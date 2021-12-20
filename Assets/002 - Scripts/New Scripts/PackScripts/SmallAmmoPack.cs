@@ -13,6 +13,7 @@ public class SmallAmmoPack : MonoBehaviour
     public TextMeshPro ammoText;
 
     [Header("Ammo")]
+    int defaultAmmo;
     public int ammoInThisPack = 48;
     public float spawnTime = 60;
     public bool canRespawn = false;
@@ -22,67 +23,86 @@ public class SmallAmmoPack : MonoBehaviour
 
     public void Start()
     {
-        if (randomAmount)
-            RandomAmmo();
-        ammoText.text = ammoInThisPack.ToString();
-        if (!spawnsAtStart)
-            StartCoroutine(Respawn(spawnTime));
+        defaultAmmo = ammoInThisPack;
+        disablePack();
+
+        if (randomAmount && spawnsAtStart)
+            enablePack(RandomAmmo());
+        else if (!randomAmount && spawnsAtStart)
+            enablePack(defaultAmmo);
+
+        StartCoroutine(Respawn(spawnTime));
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (sphereCollider.enabled)
+        if (sphereCollider.enabled && other.gameObject.tag == "player")
         {
-            if (other.gameObject.tag == "Player")
+            pInventory = other.gameObject.GetComponent<PlayerProperties>().pInventory;
+            aSource = other.gameObject.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
+
+            ammoAllowedToRemoveFromThisPack = pInventory.maxSmallAmmo - pInventory.smallAmmo;
+
+            if (pInventory.smallAmmo != pInventory.maxSmallAmmo)
+                aSource.Play();
+
+
+            if (ammoInThisPack <= ammoAllowedToRemoveFromThisPack)
             {
-                pInventory = other.gameObject.GetComponent<PlayerProperties>().pInventory;
-                aSource = other.gameObject.GetComponent<AllPlayerScripts>().playerSFXs.ammoPickupAudioSource;
+                pInventory.smallAmmo = pInventory.smallAmmo + ammoInThisPack;
+                ammoInThisPack = 0;
+            }
+            else if (ammoInThisPack > ammoAllowedToRemoveFromThisPack)
+            {
+                pInventory.smallAmmo = pInventory.smallAmmo + ammoAllowedToRemoveFromThisPack;
+                ammoInThisPack = ammoInThisPack - ammoAllowedToRemoveFromThisPack;
 
-                ammoAllowedToRemoveFromThisPack = pInventory.maxSmallAmmo - pInventory.smallAmmo;
+                ammoText.text = ammoInThisPack.ToString();
+            }
 
-                if (pInventory.smallAmmo != pInventory.maxSmallAmmo)
-                    aSource.Play();
+            if (ammoInThisPack <= 0)
+            {
+                allChildren.SetActive(false);
+                sphereCollider.enabled = false;
 
-
-                if (ammoInThisPack <= ammoAllowedToRemoveFromThisPack)
-                {
-                    pInventory.smallAmmo = pInventory.smallAmmo + ammoInThisPack;
-                    ammoInThisPack = 0;
-                }
-                else if (ammoInThisPack > ammoAllowedToRemoveFromThisPack)
-                {
-                    pInventory.smallAmmo = pInventory.smallAmmo + ammoAllowedToRemoveFromThisPack;
-                    ammoInThisPack = ammoInThisPack - ammoAllowedToRemoveFromThisPack;
-
-                    ammoText.text = ammoInThisPack.ToString();
-                }
-
-                if (ammoInThisPack == 0)
-                {
-                    if (canRespawn)
-                        StartCoroutine(Respawn(spawnTime));
-                    else
-                        Destroy(this.gameObject);
-                }
+                if (!canRespawn)
+                    Destroy(this.gameObject);
             }
         }
     }
 
     IEnumerator Respawn(float respawnTime)
     {
-        allChildren.SetActive(false);
-        sphereCollider.enabled = false;
-
         yield return new WaitForSeconds(respawnTime);
 
+        if (!randomAmount)
+            enablePack(defaultAmmo);
+        else
+            enablePack(RandomAmmo());
+
+        if (canRespawn)
+            StartCoroutine(Respawn(respawnTime));
+    }
+
+    int RandomAmmo()
+    {
+        int ranAmmo = (int)Mathf.Floor(Random.Range(1, (48 * 0.7f)));
+        return ranAmmo;
+    }
+
+    void enablePack(int ammoCount)
+    {
         allChildren.SetActive(true);
         sphereCollider.enabled = true;
-        ammoInThisPack = 48;
-        if (randomAmount)
-            RandomAmmo();
-
+        ammoInThisPack = ammoCount;
         ammoText.text = ammoInThisPack.ToString();
     }
 
-    void RandomAmmo(){ammoInThisPack = (int) Mathf.Floor(Random.Range(1, (48 * 0.7f)));}
+    void disablePack()
+    {
+        allChildren.SetActive(false);
+        sphereCollider.enabled = false;
+        ammoInThisPack = 0;
+        ammoText.text = "";
+    }
 }

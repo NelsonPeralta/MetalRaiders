@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using UnityEngine.SceneManagement;
+using System.IO;
 
-public class RagdollSpawn : MonoBehaviour
+public class RagdollSpawn : MonoBehaviourPunCallbacks
 {
     public GameObject ragdollPrefab;
     public GameObject ragdollSpawnPoint;
+    public PhotonView PV;
     [Space(20)]
     public Transform Head;
     public Transform Chest;
@@ -23,9 +27,16 @@ public class RagdollSpawn : MonoBehaviour
     public Transform LowerLegLeft;
     public Transform LowerLegRight;
 
+    //public void StartRagdollSpawn()
+    //{
+    //    PV.RPC("SpawnRagdoll", RpcTarget.All);
+    //}
+
+    //[PunRPC]
     public void SpawnRagdoll()
     {
-        var ragdoll = Instantiate(ragdollPrefab, ragdollSpawnPoint.transform.position, ragdollSpawnPoint.transform.rotation);
+        //var ragdoll = Instantiate(ragdollPrefab, ragdollSpawnPoint.transform.position, ragdollSpawnPoint.transform.rotation);
+        var ragdoll = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlinePlayerRagdoll"), Vector3.zero, Quaternion.identity);
 
         ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position = Head.position;
         ragdoll.GetComponent<RagdollPrefab>().ragdollChest.position = Chest.position;

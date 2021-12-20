@@ -15,6 +15,7 @@ public class Troll : MonoBehaviour
     public GameObject motionTrackerDot;
 
     [Header("Troll Settings")]
+    public float DefaultHealth;
     public float Health = 500;
     public bool isDead;
     public int points;
@@ -68,10 +69,9 @@ public class Troll : MonoBehaviour
     public BoneLookAt boneLookAt;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        nma.speed = defaultSpeed;
-        StartCoroutine(PlaySound());
+        ResetTroll();
     }
 
     // Update is called once per frame
@@ -118,7 +118,7 @@ public class Troll : MonoBehaviour
         if (Health <= 0 && !isDead)
         {
             nma.speed = 0;
-            Die();
+            StartCoroutine(Die());
             isDead = true;
         }
     }
@@ -161,25 +161,25 @@ public class Troll : MonoBehaviour
 
     void Attack()
     {
-        if (IsInMeleeRange && isReadyToAttack && !isDead)
-        {
-            if (meleeTrigger.pProperties != null)
-            {
-                if (!meleeTrigger.pProperties.isDead)
-                {
-                    meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
-                    anim.Play("Attack");
-                    nma.velocity = Vector3.zero;
+        //if (IsInMeleeRange && isReadyToAttack && !isDead)
+        //{
+        //    if (meleeTrigger.pProperties != null)
+        //    {
+        //        if (!meleeTrigger.pProperties.isDead)
+        //        {
+        //            meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
+        //            anim.Play("Attack");
+        //            nma.velocity = Vector3.zero;
 
-                    int randomSound = Random.Range(0, attackClips.Length - 1);
-                    audioSource.clip = audioClips[randomSound];
-                    audioSource.Play();
-                    //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
+        //            int randomSound = Random.Range(0, attackClips.Length - 1);
+        //            audioSource.clip = audioClips[randomSound];
+        //            audioSource.Play();
+        //            //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
 
-                    isReadyToAttack = false;
-                }
-            }
-        }
+        //            isReadyToAttack = false;
+        //        }
+        //    }
+        //}
     }
 
     void AttackCooldown()
@@ -196,9 +196,8 @@ public class Troll : MonoBehaviour
         }
     }
 
-    void Die()
+    IEnumerator Die()
     {
-        Destroy(gameObject, 5f);
         nma.enabled = false;
         anim.Play("Die");
 
@@ -213,21 +212,26 @@ public class Troll : MonoBehaviour
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
-            hitbox.gameObject.layer = 23; //Ground
+            //hitbox.gameObject.layer = 23; //Ground
             hitbox.gameObject.SetActive(false);
         }
 
         motionTrackerDot.SetActive(false);
 
-        lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+        lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
         TransferPoints();
         //DropRandomAmmoPack();
         DropRandomWeapon();
 
-        if(boneLookAt != null)
+        if (boneLookAt != null)
         {
             boneLookAt.disactive = true;
         }
+
+        target = null;
+
+        yield return new WaitForSeconds(5);
+        gameObject.SetActive(false);
     }
 
     void AnimationCheck()
@@ -295,6 +299,7 @@ public class Troll : MonoBehaviour
         {
             int randomInt = Random.Range(0, droppableWeapons.Length - 1);
             GameObject weapon = Instantiate(droppableWeapons[randomInt], gameObject.transform.position + new Vector3(0, 0.5f, 0), gameObject.transform.rotation);
+            weapon.GetComponent<LootableWeapon>().RandomAmmo();
             weapon.gameObject.name = weapon.name.Replace("(Clone)", "");
 
             Destroy(weapon, 60);
@@ -395,14 +400,13 @@ public class Troll : MonoBehaviour
 
     void TransferPoints()
     {
-        if (lastPlayerWhoShot.gameObject != null)
+        if (lastPlayerWhoShot)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+                pPoints.AddPoints(this.points);
             }
         }
     }
@@ -411,19 +415,18 @@ public class Troll : MonoBehaviour
     {
         if (lastPlayerWhoShot.gameObject != null)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+                pPoints.AddPoints(points);
             }
         }
     }
 
     void SimpleTargetChange()
     {
-        if (swarmMode != null)
+        if (swarmMode != null && !isDead)
         {
             int activePlayers = swarmMode.ssManager.numberOfPlayers;
             int randomActivePlayer = Random.Range(0, activePlayers);
@@ -438,5 +441,28 @@ public class Troll : MonoBehaviour
         {
             target = swarmMode.NewTargetFromSwarmScript();
         }
+    }
+
+    void ResetTroll()
+    {
+        nma.enabled = true;
+        nma.speed = defaultSpeed;
+        StartCoroutine(PlaySound());
+
+        Health = DefaultHealth;
+        isDead = false;
+        IsInMeleeRange = false;
+        isReadyToAttack = true;
+
+        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+            hitbox.gameObject.SetActive(true);
+
+        motionTrackerDot.SetActive(true);
+
+        meleeAttackCooldown = 0;
+        lastPlayerWhoShot = null;
+        otherPlayerShot = false;
+        targetSwitchCountdown = targetSwitchCountdownDefault;
+        targetSwitchReady = true;
     }
 }

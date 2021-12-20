@@ -45,14 +45,14 @@ public class RadarPulse : MonoBehaviour
     {
         if(pProperties.playerRewiredID == 0)
         {
-            Debug.Log("Gave Player 0 good minimap");
+            //Debug.Log("Gave Player 0 good minimap");
             minimapCamera.targetTexture = player0RT;
             rawImage.texture = player0RT;
         }
 
         if (pProperties.playerRewiredID == 1)
         {
-            Debug.Log("Gave Player 1 good minimap");
+            //Debug.Log("Gave Player 1 good minimap");
             minimapCamera.targetTexture = player1RT;
             rawImage.texture = player1RT;
         }

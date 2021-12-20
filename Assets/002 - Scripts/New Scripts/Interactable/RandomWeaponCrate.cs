@@ -165,30 +165,30 @@ public class RandomWeaponCrate : MonoBehaviour
 
     void AddPlayerInArray(PlayerProperties player)
     {
-        if (player.playerRewiredID == 0)
-        {
-            players[0] = player;
+        //if (player.playerRewiredID == 0)
+        //{
+        //    players[0] = player;
 
-            UpdatePlayerUIOnEnter();
-        }
-        if (player.playerRewiredID == 1)
-        {
-            players[1] = player;
+        //    UpdatePlayerUIOnEnter();
+        //}
+        //if (player.playerRewiredID == 1)
+        //{
+        //    players[1] = player;
 
-            UpdatePlayerUIOnEnter();
-        }
-        if (player.playerRewiredID == 2)
-        {
-            players[2] = player;
+        //    UpdatePlayerUIOnEnter();
+        //}
+        //if (player.playerRewiredID == 2)
+        //{
+        //    players[2] = player;
 
-            UpdatePlayerUIOnEnter();
-        }
-        if (player.playerRewiredID == 3)
-        {
-            players[3] = player;
+        //    UpdatePlayerUIOnEnter();
+        //}
+        //if (player.playerRewiredID == 3)
+        //{
+        //    players[3] = player;
 
-            UpdatePlayerUIOnEnter();
-        }
+        //    UpdatePlayerUIOnEnter();
+        //}
     }
 
     void RemovePlayerFromArray(PlayerProperties player)
@@ -239,7 +239,7 @@ public class RandomWeaponCrate : MonoBehaviour
         if (lidAnim != null)
         {
             ResetPlayerWeaponInPickupCollider();
-            UpdatePlayerUIOnEnter();
+            //UpdatePlayerUIOnEnter();
             lidAnim.Play("Close Crate");
             audioSource.clip = closeCrate;
             audioSource.Play();
@@ -259,51 +259,51 @@ public class RandomWeaponCrate : MonoBehaviour
         }
     }
 
-    void UpdatePlayerUIOnEnter()
-    {
-        if (players[0] != null)
-        {
-            if (players[0].gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && players[0].gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
-            {
-                players[0].InformerText.text = "Buy RANDOM WEAPON for: " + cost.ToString() + " Points";
-            }
-            else
-            {
-                players[0].InformerText.text = "Not enough Points (" + cost.ToString() + ")";
-            }
-        }
-        if (players[1] != null)
-        {
-            if (players[1].gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && players[1].gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
-            {
-                players[1].InformerText.text = "Buy RANDOM WEAPON for: " + cost.ToString() + " Points";
-            }
-            else
-            {
-                players[1].InformerText.text = "Not enough Points (" + cost.ToString() + ")";
-            }
-        }
-        if (players[2] != null)
-        {
-            if (players[2].gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && players[2].gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
-            {
-                players[2].InformerText.text = "Buy RANDOM WEAPON for: " + cost.ToString() + " Points";
-            }
-            else
-            {
-                players[2].InformerText.text = "Not enough Points (" + cost.ToString() + ")";
-            }
-        }
-        if (players[3] != null)
-        {
-            if (players[3].gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && players[3].gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
-            {
-                players[3].InformerText.text = "Buy RANDOM WEAPON for: " + cost.ToString() + " Points";
-            }
-            else
-            {
-                players[3].InformerText.text = "Not enough Points (" + cost.ToString() + ")";
-            }
-        }
-    }
+    //void UpdatePlayerUIOnEnter()
+    //{
+    //    if (players[0] != null)
+    //    {
+    //        if (players[0].gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && players[0].gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
+    //        {
+    //            players[0].InformerText.text = "Buy RANDOM WEAPON for: " + cost.ToString() + " Points";
+    //        }
+    //        else
+    //        {
+    //            players[0].InformerText.text = "Not enough Points (" + cost.ToString() + ")";
+    //        }
+    //    }
+    //    if (players[1] != null)
+    //    {
+    //        if (players[1].gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && players[1].gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
+    //        {
+    //            players[1].InformerText.text = "Buy RANDOM WEAPON for: " + cost.ToString() + " Points";
+    //        }
+    //        else
+    //        {
+    //            players[1].InformerText.text = "Not enough Points (" + cost.ToString() + ")";
+    //        }
+    //    }
+    //    if (players[2] != null)
+    //    {
+    //        if (players[2].gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && players[2].gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
+    //        {
+    //            players[2].InformerText.text = "Buy RANDOM WEAPON for: " + cost.ToString() + " Points";
+    //        }
+    //        else
+    //        {
+    //            players[2].InformerText.text = "Not enough Points (" + cost.ToString() + ")";
+    //        }
+    //    }
+    //    if (players[3] != null)
+    //    {
+    //        if (players[3].gameObject.GetComponent<PlayerPoints>().swarmPoints >= cost && players[3].gameObject.GetComponent<PlayerPoints>().swarmPoints > 0)
+    //        {
+    //            players[3].InformerText.text = "Buy RANDOM WEAPON for: " + cost.ToString() + " Points";
+    //        }
+    //        else
+    //        {
+    //            players[3].InformerText.text = "Not enough Points (" + cost.ToString() + ")";
+    //        }
+    //    }
+    //}
 }

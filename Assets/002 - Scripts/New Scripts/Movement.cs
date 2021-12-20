@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
+using Photon.Pun;
 
 public class Movement : MonoBehaviour
 {
+    public PhotonView PV;
+    public AllPlayerScripts allPlayerScripts;
     public CharacterController cController;
     public Rigidbody rBody;
     public PlayerController pController;
@@ -15,14 +18,19 @@ public class Movement : MonoBehaviour
     public ThirdPersonLookAt tpLookAt;
     public PlayerProperties pProperties;
     public PlayerSFXs sfx;
-    public float defaultSpeed = 5f;
+    public GroundCheck groundCheckScript;
+    public GroundCheck roofCheckScript;
+    float defaultSpeed; // Default = 5
     public float speed;
     public float playerSpeed;
     public float jumpForce = 6f;
 
-    float gravity = -9.81f;
+    public float defaultGravity = -12f;
+    float gravity = -12f; // -9.81f
 
+    public Vector3 movement;
     public Vector3 velocity;
+    public Vector3 calulatedVelocity;
     public Vector3 lastPos;
 
     public Transform groundCheck;
@@ -31,6 +39,7 @@ public class Movement : MonoBehaviour
 
     public bool isGrounded;
     public bool isMovingForward;
+    public bool isOnLadder;
     bool CalculatingPlayerSpeed;
 
     public float xDirection;
@@ -42,12 +51,20 @@ public class Movement : MonoBehaviour
     public int playerRewiredID;
 
     [Header("Audio")]
-    public AudioSource walkingSound;
+    public AudioSource walkingSoundAS;
     public bool walkingSoundPlaying;
+
+    //Velocity variables
+    Vector3 previousPosition;
+
+    // Characater Controller Default Properties
+    float defaultSlopeLimit;
+    float defaultStepOffset;
 
     // Start is called before the first frame update
     void Start()
     {
+        gravity = defaultGravity;
         SetPlayerIDInInput();
         cManager = gameObject.GetComponent<ChildManager>();
         //tPersonScripts = cManager.FindChildWithTagScript("Third Person GO").GetComponent<ThirdPersonScript>();
@@ -56,18 +73,26 @@ public class Movement : MonoBehaviour
         rBody = gameObject.GetComponent<Rigidbody>();
         pController = gameObject.GetComponent<PlayerController>();
         pProperties = GetComponent<PlayerProperties>();
+        defaultSpeed = speed;
+        defaultSlopeLimit = GetComponent<CharacterController>().slopeLimit;
+        defaultStepOffset = GetComponent<CharacterController>().stepOffset;
         //StartCoroutine(CalcVelocity());
     }
 
     // Update is called once per frame
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        if (!pController.PV.IsMine || pController.pauseMenuOpen)
+            return;
+
+        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = groundCheckScript.isGrounded;
         float x = player.GetAxis("Move Horizontal");
         float z = player.GetAxis("Move Vertical");
         Vector3 direction = new Vector3(x, 0f, z).normalized;
         xDirection = direction.x;
         zDirection = direction.z;
+        CalculateVelocity();
 
         if (isGrounded && velocity.y < 0)
         {
@@ -78,14 +103,14 @@ public class Movement : MonoBehaviour
         {
             if (isGrounded)
             {
-                if(pController.anim)
+                if (pController.anim)
                     pController.anim.SetBool("Walk", true);
 
                 if (pController.isDualWielding)
                 {
-                    if(pController.animDWRight != null)
+                    if (pController.animDWRight != null)
                         pController.animDWRight.SetBool("Walk", true);
-                    if(pController.animDWLeft != null)
+                    if (pController.animDWLeft != null)
                         pController.animDWLeft.SetBool("Walk", true);
                 }
             }
@@ -119,17 +144,38 @@ public class Movement : MonoBehaviour
             }
         }
 
+        if (isOnLadder)
+            speed = defaultSpeed / 8;
+
         if (!pProperties.isDead)
         {
-            if (!pController.isCrouching)
+            Vector3 move = transform.right * x + transform.forward * z;
+            if (isGrounded)
             {
-                Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * defaultSpeed * Time.deltaTime);
+                movement = transform.right * x + transform.forward * z;
+                if (!pController.isCrouching)
+                {
+                    if (pController.isSprinting)
+                    {
+                        cController.Move(move * speed * 1.3f * Time.deltaTime);
+                    }
+                    else
+                    {
+                        cController.Move(move * speed * Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    cController.Move(move * speed * .5f * Time.deltaTime);
+                }
             }
             else
             {
-                Vector3 move = transform.right * x + transform.forward * z;
-                cController.Move(move * defaultSpeed * .5f * Time.deltaTime);
+                cController.Move(movement * speed * Time.deltaTime);
+                if (z > 0)
+                    z = 0;
+                move = transform.right * x + transform.forward * z;
+                cController.Move(move * 0.5f * speed * Time.deltaTime);
             }
         }
 
@@ -139,7 +185,8 @@ public class Movement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
 
-        cController.Move(velocity * Time.deltaTime);
+        if (cController.gameObject.activeSelf)
+            cController.Move(velocity * Time.deltaTime);
 
         if (!CalculatingPlayerSpeed)
             StartCoroutine(CalculatePlayerSpeed());
@@ -147,6 +194,13 @@ public class Movement : MonoBehaviour
         Jump();
         CheckMovingForward();
         ControlAnimationSpeed();
+
+    }
+
+    void CalculateVelocity()
+    {
+        calulatedVelocity = ((transform.position - previousPosition)) / Time.deltaTime;
+        previousPosition = transform.position;
     }
 
     public void SetPlayerIDInInput()
@@ -161,10 +215,10 @@ public class Movement : MonoBehaviour
             tPersonScripts.anim.SetBool("Jump", false);
             speed = defaultSpeed;
         }
-        else
+        else if (!isGrounded && tPersonScripts.anim && !tPersonScripts.anim.GetBool("Crouch"))
         {
             tPersonScripts.anim.SetBool("Jump", true);
-            speed = defaultSpeed * 2 / 3;
+            //speed = defaultSpeed * 2 / 3;
             /*
             Vector3 move = transform.right * 0 + transform.forward * 1;
             cController.Move(move * speed * Time.deltaTime);
@@ -177,6 +231,11 @@ public class Movement : MonoBehaviour
 
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+
+        if (roofCheckScript.isGrounded)
+            gravity = defaultGravity * 10;
+        else
+            gravity = defaultGravity;
     }
 
     int CheckDirection(float xValue, float zValue)
@@ -287,23 +346,23 @@ public class Movement : MonoBehaviour
         {
             directionIndicator = 0;
             direction = "Idle";
-            walkingSound.Pause();
+            PauseWalkingSound();
             walkingSoundPlaying = false;
         }
 
         if (zValue > 0 || xValue > 0)
         {
-            if (isGrounded)
+            if (isGrounded && !pController.isCrouching)
             {
                 if (!walkingSoundPlaying)
                 {
-                    walkingSound.Play();
+                    PlayWalkingSound();
                     walkingSoundPlaying = true; ;
                 }
             }
             else
             {
-                walkingSound.Pause();
+                PauseWalkingSound();
                 walkingSoundPlaying = false;
             }
         }
@@ -330,28 +389,38 @@ public class Movement : MonoBehaviour
         {
             if (pController.anim != null)
             {
-                if (pController.anim.GetBool("Walk"))
+                if (isGrounded)
                 {
-                    //Debug.Log("Here");
-                    if (!pController.isReloading && !pController.isDrawingWeapon && !pController.isThrowingGrenade && 
-                        !pController.isMeleeing && !pController.isFiring)
+
+                    if (pController.anim.GetBool("Walk"))
                     {
-                        pController.anim.speed = playerSpeed;
-                        tpLookAt.anim.speed = playerSpeed;
+                        //Debug.Log("Here");
+                        if (!pController.isReloading && !pController.isDrawingWeapon && !pController.isThrowingGrenade &&
+                            !pController.isMeleeing && !pController.isFiring)
+                        {
+                            pController.anim.speed = playerSpeed;
+                            tpLookAt.anim.speed = playerSpeed;
+                        }
+                        else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade ||
+                            pController.isMeleeing || pController.isFiring)
+                        {
+                            playerSpeed = 1;
+                            pController.anim.speed = 1;
+                            tpLookAt.anim.speed = 1;
+                        }
                     }
-                    else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade || 
-                        pController.isMeleeing || pController.isFiring)
+                    else
                     {
                         playerSpeed = 1;
                         pController.anim.speed = 1;
-                        tpLookAt.anim.speed = 1;
+                        if (tpLookAt.anim)
+                            tpLookAt.anim.speed = 1;
                     }
                 }
-                else
+                else if (!isGrounded && pController.anim.GetBool("Run"))
                 {
-                    playerSpeed = 1;
-                    pController.anim.speed = 1;
-                    tpLookAt.anim.speed = 1;
+                    pController.anim.speed = 0.1f;
+
                 }
             }
         }
@@ -377,6 +446,41 @@ public class Movement : MonoBehaviour
                 playerSpeed = 1;
         }
         CalculatingPlayerSpeed = false;
+    }
+
+    void PlayWalkingSound()
+    {
+        PV.RPC("PlayWalkingSound_RPC", RpcTarget.All);
+    }
+
+    void PauseWalkingSound()
+    {
+        PV.RPC("PauseWalkingSoundRPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void PlayWalkingSound_RPC()
+    {
+        walkingSoundAS.Play();
+    }
+
+    [PunRPC]
+    void PauseWalkingSoundRPC()
+    {
+        walkingSoundAS.Pause();
+    }
+
+    public void ResetCharacterControllerProperties()
+    {
+        cController.slopeLimit = defaultSlopeLimit;
+        cController.stepOffset = defaultStepOffset;
+        speed = defaultSpeed;
+        isOnLadder = false;
+    }
+
+    public float GetDefaultSpeed()
+    {
+        return defaultSpeed;
     }
 }
 

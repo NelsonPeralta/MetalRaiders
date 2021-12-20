@@ -2,51 +2,67 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
-public class PlayerProperties : MonoBehaviour
+public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 {
+    [Header("Singletons")]
+    public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
+    public PlayerManager playerManager;
+    public OnlineMultiplayerManager multiplayerManager;
+    public GameObjectPool gameObjectPool;
+    public WeaponPool weaponPool;
+    public OnlineSwarmManager onlineSwarmManager;
 
     [Header("Models")]
     public GameObject firstPersonModels;
     public GameObject thirdPersonModels;
+    public GameObject shieldThirdPersonModel;
+    public GameObject shieldElectricityThirdPersonModel;
+    public GameObject shieldRechargeThirdPersonModel;
 
     [Header("Player Info")]
-    public int maxHealth = 100;
-    public int maxShield = 150;
-    public float Health = 100;
-    public float Shield = 150;
-    public float meleeDamage = 150;
-    public bool isDead = false;
+    public int maxHealth;
+    public int maxShield;
+    public float Health;
+    public float Shield;
+    public float meleeDamage; // default: 150
+    public bool isDead;
+    public bool isRespawning;
+    public Coroutine respawnCoroutine;
     public float respawnTime = 5;
     public int playerRewiredID;
-    public float respawnCountdown;
-    public bool respawnStarted;
-    public int playerWhoKilledThisPlayerID; // Revenge Medal
-
+    public int lastPlayerWhoDamagedThisPlayerPVID; // Revenge Medal
     public bool hasShield = false;
     public bool needsHealthPack = false;
     public bool needsShieldPack = false;
     public bool hasMotionTracker = false;
+
+    [Header("Networked Variables")]
+    public float networkedHealth;
+    public Vector3 networkedPosition;
+    public Vector3 lagDistance;
+    public float lagDistanceMagnitude;
 
     [Header("Other Scripts")]
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
     //public ChildManager cManager;
     public PlayerController pController;
-    public MultiplayerManager multiplayerManager;
     public SwarmMode swarmMode;
-    public Movement mScript;
+    public Movement movement;
     public CrosshairScript cScript;
+    public AimAssist aimAssist;
     public WeaponPickUp wPickup;
-    public RaycastScript raycastScript;
+    public AimAssist raycastScript;
     public PlayerSurroundings pSurroundings;
 
     [Header("Camera Options")]
     [Tooltip("Default value for camera field of view (40 is recommended).")]
     public float defaultFov = 60.0f;
-    public float defaultSensitivity = 150f;
-    public float activeSensitivity;
 
     [Header("UI Components Text")]
     public Text currentAmmoText;
@@ -56,6 +72,8 @@ public class PlayerProperties : MonoBehaviour
     public Text fragGrenadeText;
     public Text InformerText;
     public Text playerLivesText;
+    public Text HealthDebuggerText;
+    public Text readHealthDebuggerText;
 
     [Header("UI Components Game Objects")]
     public GameObject GrenadeInfo;
@@ -75,7 +93,7 @@ public class PlayerProperties : MonoBehaviour
     public bool shieldRechargeAllowed;
     public bool healthRegenerationAllowed;
     public bool armorHasBeenHit = false;
-    public bool healthHasBeenHit = false;
+    public bool triggerHealthRecharge = false;
 
     public float shieldRechargeCountdown;
     public float healthRegenerationCountdown;
@@ -112,6 +130,7 @@ public class PlayerProperties : MonoBehaviour
 
     [Header("Player Voice")]
     public AudioSource playerVoice;
+    public AudioClip sprintingClip;
     public AudioClip[] meleeClips;
     public AudioClip[] hurtClips;
     public AudioClip[] deathClips;
@@ -125,9 +144,54 @@ public class PlayerProperties : MonoBehaviour
     public AudioClip shieldHitClip;
     public AudioClip shieldAlarmClip;
 
+    public PhotonView PV;
+
+    public void UpdateHealthTextDebugger()
+    {
+        HealthDebuggerText.text = Health.ToString();
+        readHealthDebuggerText.text = networkedHealth.ToString();
+    }
+
     private void Start()
     {
-        activeSensitivity = defaultSensitivity;
+        spawnManager = SpawnManager.spawnManagerInstance;
+        playerManager = PlayerManager.playerManagerInstance;
+        multiplayerManager = OnlineMultiplayerManager.multiplayerManagerInstance;
+        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
+        gameObjectPool = GameObjectPool.gameObjectPoolInstance;
+        weaponPool = WeaponPool.weaponPoolInstance;
+        playerManager.allPlayers.Add(this);
+        PV = GetComponent<PhotonView>();
+        gameObject.name = $"Player ({PV.Owner.NickName})";
+        //PhotonNetwork.SendRate = 100;
+        //PhotonNetwork.SerializationRate = 50;
+        Health = maxHealth;
+        HealthDebuggerText.text = $"Health: {Health.ToString()}";
+        networkedHealth = Health;
+        healthSlider.maxValue = maxHealth - maxShield;
+
+        if (maxShield <= 0)
+            HideShieldBar();
+        else
+        {
+            ShowShieldBar();
+            shieldSlider.maxValue = maxShield;
+            healthSlider.maxValue = maxHealth - maxShield;
+        }
+        healthSlider.value = maxHealth - maxShield;
+
+        if (onlineSwarmManager)
+        {
+            needsHealthPack = true;
+            allPlayerScripts.playerUIComponents.swarmLivesHolder.SetActive(true);
+            allPlayerScripts.playerUIComponents.swarmLivesText.text = onlineSwarmManager.playerLives.ToString();
+            allPlayerScripts.playerUIComponents.multiplayerPoints.SetActive(false);
+            allPlayerScripts.playerUIComponents.swarmPoints.SetActive(true);
+            allPlayerScripts.playerUIComponents.swarmPointsText.text = 0.ToString();
+        }
+
+        if (respawnTime <= healthRegenerationDelay)
+            respawnTime = healthRegenerationDelay + 0.5f; // To avoid the health regen sound going off
 
         if (!hasFoundComponents)
         {
@@ -163,16 +227,70 @@ public class PlayerProperties : MonoBehaviour
             playerLivesText.text = swarmMode.playerLives.ToString();
         }
 
+        if (pController.PV.IsMine)
+        {
+
+        }
+        else
+        {
+            firstPersonModels.layer = 23; // 24 = P1 FPS
+            thirdPersonModels.layer = 0; // 0 = Default
+
+            ChildManager childManager = firstPersonModels.GetComponent<ChildManager>();
+            for (int i = 0; i < childManager.allChildren.Count; i++)
+            {
+                childManager.allChildren[i].layer = 23;
+            }
+
+            childManager = thirdPersonModels.GetComponent<ChildManager>();
+            for (int i = 0; i < childManager.allChildren.Count; i++)
+            {
+                childManager.allChildren[i].layer = 0;
+            }
+        }
+        //StartCoroutine(SlightlyIncreaseHealth());
     }
 
-    private void FixedUpdate()
+    public void DisableShield()
     {
+        maxShield = 0;
+        HideShieldBar();
+    }
+
+    void ShowShieldBar()
+    {
+        shieldGO.SetActive(true);
+        healthSlider.gameObject.SetActive(false);
+    }
+
+    void HideShieldBar()
+    {
+        shieldGO.SetActive(false);
+        healthSlider.gameObject.SetActive(true);
+    }
+
+        void UpdateLagDistance()
+    {
+        if (PV.IsMine)
+            return;
+        lagDistance = networkedPosition - transform.position;
+        lagDistanceMagnitude = lagDistance.magnitude;
+
+        //if(lagDistance.magnitude > 0.001f)
+        //{
+        //    transform.position = networkedPosition;
+        //    lagDistance = Vector3.zero;
+        //}
+    }
+    private void Update()
+    {
+        UpdateLagDistance();
         fragGrenadeText.text = pInventory.grenades.ToString();
 
         if (!pController.isDualWielding)
         {
 
-            currentAmmoText.text = pInventory.currentAmmo.ToString();
+            //currentAmmoText.text = pInventory.currentAmmo.ToString();
 
             if (pInventory.activeWeapIs == 0)
             {
@@ -180,7 +298,7 @@ public class PlayerProperties : MonoBehaviour
                 {
                     wProperties = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
 
-
+                    /*
                     if (wProperties.smallAmmo)
                     {
                         totalAmmoText.text = pInventory.smallAmmo.ToString();
@@ -194,7 +312,7 @@ public class PlayerProperties : MonoBehaviour
                     else if (wProperties.powerAmmo)
                     {
                         totalAmmoText.text = pInventory.powerAmmo.ToString();
-                    }
+                    }*/
                 }
             }
 
@@ -202,6 +320,7 @@ public class PlayerProperties : MonoBehaviour
             {
                 wProperties = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
 
+                /*
                 if (wProperties.smallAmmo)
                 {
                     totalAmmoText.text = pInventory.smallAmmo.ToString();
@@ -216,6 +335,7 @@ public class PlayerProperties : MonoBehaviour
                 {
                     totalAmmoText.text = pInventory.powerAmmo.ToString();
                 }
+                */
             }
         }
 
@@ -250,23 +370,7 @@ public class PlayerProperties : MonoBehaviour
             motionTrackerGO.SetActive(false);
         }
 
-        if (!hasShield)
-        {
-            shieldGO.SetActive(false);
-        }
-        else
-        {
-            shieldGO.SetActive(true);
-        }
-
         HealthAndshieldRecharge();
-
-        if (respawnStarted)
-        {
-            RespawnCountdown();
-        }
-
-        CheckRRIsOn();
     }
 
     /// <summary>
@@ -281,7 +385,7 @@ public class PlayerProperties : MonoBehaviour
     */
     public void SetShield(int shieldDamage)
     {
-        pController.Unscope();
+        pController.ScopeOut();
         armorHasBeenHit = true;
 
         shieldRechargeCountdown = shieldRechargeDelay;
@@ -294,7 +398,7 @@ public class PlayerProperties : MonoBehaviour
             Shield = 0;
             shieldSlider.value = 0;
             PlayShieldDownSound();
-            StartCoroutine(PlayShieldAlarmSound());
+            //StartCoroutine(PlayShieldAlarmSound());
         }
         else
         {
@@ -304,142 +408,213 @@ public class PlayerProperties : MonoBehaviour
         }
     }
 
-
-    /// <summary>
-    /// /////////////////////////////////////////////////////////////////////////////////// Health Slider Voids
-    /// </summary>
-
-    public void SetHealth(int healthDamage, bool headshot, int playerWhoShotThisPlayer)
+    public bool CanBeDamaged()
     {
-        pController.Unscope();
-        healthHasBeenHit = true;
+        if (Health <= 0 || isDead || isRespawning)
+            return false;
+        return true;
+    }
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
+    {
+        if (Health <= 0 || isDead || isRespawning)
+            return;
+        Debug.Log("9pasjdij");
 
-        shieldRechargeCountdown = shieldRechargeDelay;
-        healthRegenerationCountdown = healthRegenerationDelay;
+        PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
+        //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
+        //if (!PhotonNetwork.IsMasterClient)
+        //    return;
 
-        if (healthSlider.value < healthDamage || headshot)
+    }
+
+    [PunRPC]
+    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId)
+    {
+        if (PV.IsMine)
+            allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
+        lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
+        Health = _newHealth;
+
+        float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+        float newShield = 0;
+
+
+
+        if (newHealth >= (maxHealth - maxShield))
         {
-            Health = 0;
-            healthSlider.value = 0;
+            newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
         }
-        else
+
+        if (newShield <= 0 && maxShield > 0)
         {
-            Health = Health - healthDamage;
-            healthSlider.value = healthSlider.value - healthDamage;
+            ShowThirdPersionShieldElectricityModel();
+            PlayShieldAlarmSound();
+        }
+        else if (newShield > 0)
+        {
+            ShowThirdPersonShieldModel();
+        }
+
+        shieldSlider.value = newShield;
+        healthSlider.value = newHealth;
+        Debug.Log($"Health: {Health}. New Shield: {newShield}. New Health: {newHealth}");
+
+
+        triggerHealthRecharge = true;
+        healthRegenerationCountdown = healthRegenerationDelay;
+        if (newHealth < maxHealth - maxShield)
+        {
+
+            GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
+            bloodHit.transform.position = gameObject.transform.position + new Vector3(0, -0.4f, 0);
+            bloodHit.SetActive(true);
             PlayHurtSound();
         }
+        UpdateHealthTextDebugger();
+        pController.ScopeOut();
 
         if (Health <= 0)
-        {
-            if (!headshot)
-            {
-                Death(false, playerWhoShotThisPlayer);
-                PlayDeathSound();
-            }
-            else
-            {
-                Death(true, playerWhoShotThisPlayer);
-                PlayDeathSound();
-            }
-        }
+            isDead = true;
+
+        Die(wasHeadshot);
+    }
+
+    void ShowThirdPersionShieldElectricityModel()
+    {
+        if (!shieldElectricityThirdPersonModel.activeSelf)
+            shieldElectricityThirdPersonModel.SetActive(true);
+    }
+
+    void HideThirdPersionShieldElectricityModel()
+    {
+        if (shieldElectricityThirdPersonModel.activeSelf)
+            shieldElectricityThirdPersonModel.SetActive(false);
+    }
+    void ShowThirdPersonShieldModel()
+    {
+        StartCoroutine(ShowThirdPersonShieldModel_Coroutine());
+    }
+
+    IEnumerator ShowThirdPersonShieldModel_Coroutine()
+    {
+        shieldThirdPersonModel.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        shieldThirdPersonModel.SetActive(false);
+    }
+
+    void ShowThirdPersonShieldRechargeModel()
+    {
+        StartCoroutine(ShowThirdPersonShieldRechargeModel_Coroutine());
+    }
+
+    IEnumerator ShowThirdPersonShieldRechargeModel_Coroutine()
+    {
+        shieldRechargeThirdPersonModel.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        shieldRechargeThirdPersonModel.SetActive(false);
     }
 
     public void BleedthroughDamage(float damage, bool headshot, int playerWhoKilledThisPlayer)
     {
-        pController.Unscope();
-        shieldRechargeCountdown = shieldRechargeDelay;
-        healthRegenerationCountdown = healthRegenerationDelay;
+        //Debug.Log("Bleedthrough Damage");
+        //pController.ScopeOut();
+        //shieldRechargeCountdown = shieldRechargeDelay;
+        //healthRegenerationCountdown = healthRegenerationDelay;
 
-        if (!headshot)
-        {
-            if (hasShield)
-            {
-                if (Shield > 0)
-                {
-                    healthHasBeenHit = true;
-                    armorHasBeenHit = true;
+        //if (!headshot)
+        //{
+        //    if (hasShield)
+        //    {
+        //        if (Shield > 0)
+        //        {
+        //            triggerHealthRecharge = true;
+        //            armorHasBeenHit = true;
 
-                    float damageLeft = damage - Shield;
+        //            float damageLeft = damage - Shield;
 
-                    if (damageLeft < 0)
-                    {
-                        damageLeft = 0;
-                    }
+        //            if (damageLeft < 0)
+        //            {
+        //                damageLeft = 0;
+        //            }
 
-                    Shield = Shield - damage;
-                    shieldSlider.value = Shield;
-                    PlayShieldHitSound();
+        //            Shield = Shield - damage;
+        //            shieldSlider.value = Shield;
+        //            PlayShieldHitSound();
 
-                    if (Shield < 0)
-                    {
-                        Shield = 0;
-                        shieldSlider.value = 0;
-                        PlayShieldDownSound();
-                        StartCoroutine(PlayShieldAlarmSound());
-                    }
+        //            if (Shield < 0)
+        //            {
+        //                Shield = 0;
+        //                shieldSlider.value = 0;
+        //                PlayShieldDownSound();
+        //                StartCoroutine(PlayShieldAlarmSound());
+        //            }
 
-                    if (Shield == 0)
-                    {
-                        Health = Health - damageLeft;
-                        healthSlider.value = healthSlider.value - damageLeft;
-                        PlayHurtSound();
-                    }
+        //            if (Shield == 0)
+        //            {
+        //                Health = Health - damageLeft;
+        //                healthSlider.value = healthSlider.value - damageLeft;
+        //                PlayHurtSound();
+        //            }
 
-                    if (Health <= 0)
-                    {
-                        Death(true, playerWhoKilledThisPlayer);
-                        PlayDeathSound();
-                    }
-                }
-                else if (Shield <= 0)
-                {
-                    healthHasBeenHit = true;
-                    Health = Health - damage;
-                    healthSlider.value = Health;
+        //            if (Health <= 0)
+        //            {
+        //                //Death(true, playerWhoKilledThisPlayer);
+        //                pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
+        //                PlayDeathSound();
+        //            }
+        //        }
+        //        else if (Shield <= 0)
+        //        {
+        //            triggerHealthRecharge = true;
+        //            Health = Health - damage;
+        //            healthSlider.value = Health;
 
-                    PlayHurtSound();
+        //            PlayHurtSound();
 
-                    if (Health <= 0)
-                    {
-                        Death(true, playerWhoKilledThisPlayer);
-                        PlayDeathSound();
-                    }
-                }
-            }
-            else
-            {
-                healthHasBeenHit = true;
-                Health = Health - damage;
-                healthSlider.value = Health;
+        //            if (Health <= 0)
+        //            {
+        //                //Death(true, playerWhoKilledThisPlayer);
+        //                pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
+        //                PlayDeathSound();
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        triggerHealthRecharge = true;
+        //        Health = Health - damage;
+        //        healthSlider.value = Health;
 
-                PlayHurtSound();
+        //        PlayHurtSound();
 
-                if (Health <= 0)
-                {
-                    Death(true, playerWhoKilledThisPlayer);
-                    PlayDeathSound();
-                }
-            }
-        }
-        else
-        {
-            Health = Health - damage;
-            healthSlider.value = Health;
+        //        if (Health <= 0)
+        //        {
+        //            //Death(true, playerWhoKilledThisPlayer);
+        //            pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
+        //            PlayDeathSound();
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    Health = Health - damage;
+        //    healthSlider.value = Health;
 
-            Shield = 0;
-            shieldSlider.value = 0;
-            PlayShieldDownSound();
-            StartCoroutine(PlayShieldAlarmSound());
+        //    Shield = 0;
+        //    shieldSlider.value = 0;
+        //    PlayShieldDownSound();
+        //    StartCoroutine(PlayShieldAlarmSound());
 
-            healthHasBeenHit = true;
-            armorHasBeenHit = true;
+        //    triggerHealthRecharge = true;
+        //    armorHasBeenHit = true;
 
-            if (Health <= 0)
-            {
-                Death(true, playerWhoKilledThisPlayer);
-                PlayDeathSound();
-            }
-        }
+        //    if (Health <= 0)
+        //    {
+        //        //Death(true, playerWhoKilledThisPlayer);
+        //        pController.PV.RPC("Die", RpcTarget.All, true, playerWhoKilledThisPlayer);
+        //        PlayDeathSound();
+        //    }
+        //}
     }
 
 
@@ -460,7 +635,7 @@ public class PlayerProperties : MonoBehaviour
             }
         }
 
-        if (healthHasBeenHit)
+        if (triggerHealthRecharge)
         {
             healthRegenerationAllowed = false;
             healthRegenerationCountdown -= Time.deltaTime;
@@ -468,12 +643,12 @@ public class PlayerProperties : MonoBehaviour
             if (healthRegenerationCountdown < 0 && !needsHealthPack)
             {
                 healthRegenerationAllowed = true;
-                healthHasBeenHit = false;
+                triggerHealthRecharge = false;
             }
             else if (healthRegenerationCountdown < 0 && !hasShield && !needsHealthPack)
             {
                 healthRegenerationAllowed = true;
-                healthHasBeenHit = false;
+                triggerHealthRecharge = false;
             }
         }
 
@@ -489,15 +664,38 @@ public class PlayerProperties : MonoBehaviour
             }
         }
 
-        if (healthRegenerationAllowed && healthSlider.value < maxHealth)
+        if (healthRegenerationAllowed && Health < maxHealth)
         {
-            healthSlider.value = healthSlider.value + (healthRegenerationRate * 0.01f);
-            Health = healthSlider.value;
+            Health += healthRegenerationRate * 0.01f;
+
+            float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+            float newShield = 0;
+
+            if (Health >= (maxHealth - maxShield))
+            {
+                newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
+            }
+
+
+            healthSlider.value = newHealth;
+            shieldSlider.value = newShield;
+
 
             if (!healthRegenerating)
             {
-                PlayHealthStartSound();
-                healthRegenerating = true;
+                if (maxShield > 0 && newShield > 0)
+                {
+                    StopShieldAlarmSound();
+                    HideThirdPersionShieldElectricityModel();
+                    ShowThirdPersonShieldRechargeModel();
+                    PlayHealthRechargeSound();
+                    healthRegenerating = true;
+                }
+                else if (maxShield <= 0)
+                {
+                    PlayHealthRechargeSound();
+                    healthRegenerating = true;
+                }
             }
         }
 
@@ -507,134 +705,150 @@ public class PlayerProperties : MonoBehaviour
         }
     }
 
-    void Death(bool headshot, int playerWhoKilledThisPlayer)
+    void Die(bool wasHeadshot)
     {
-        UpdateMPPoints(playerRewiredID, playerWhoKilledThisPlayer);
-        Debug.Log("Player Death Script"); 
-        pController.Unscope();
+        if (!isDead || respawnCoroutine != null || isRespawning)
+            return;
+        if (lastPlayerWhoDamagedThisPlayerPVID != 0 && multiplayerManager)
+            multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
+        if (onlineSwarmManager)
+        {
+            onlineSwarmManager.RemovePlayerLife();
+            GetComponent<OnlinePlayerSwarmScript>().deaths++;
+        }
+        pInventory.holsteredWeapon = null;
+        isRespawning = true;
+        Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
+        pController.DisableCrouch();
+        StopShieldAlarmSound();
+        HideThirdPersionShieldElectricityModel();
+        PlayDeathSound();
+        allPlayerScripts.playerUIComponents.scoreboard.CloseScoreboard();
+        respawnCoroutine = StartCoroutine(Respawn_Coroutine());
+        StartCoroutine(MidRespawnAction());
+    }
+
+    IEnumerator MidRespawnAction()
+    {
+        yield return new WaitForSeconds(respawnTime / 2);
+        Health = maxHealth;
+        networkedHealth = Health;
+        Transform spawnPoint = spawnManager.GetGenericSpawnpoint();
+        transform.position = spawnPoint.position + new Vector3(0, 2, 0);
+        transform.rotation = spawnPoint.rotation;
+        isDead = false;
+    }
+
+    void SpawnRagdoll()
+    {
+        var ragdoll = pController.objectPool.SpawnPooledPlayerRagdoll();
+
+        // LAG with the Head and Chest, unknown cause
+        //////////////////////////////
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position = ragdollScript.Head.position;
+        //Debug.Log("Player Head Pos: " + ragdollScript.Head.position + "; Ragdoll head position: " + ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position);
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.position = ragdollScript.Chest.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = ragdollScript.Hips.position;
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.rotation = ragdollScript.Head.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.rotation = ragdollScript.Chest.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = ragdollScript.Hips.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = ragdollScript.UpperArmLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = ragdollScript.UpperArmRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = ragdollScript.UpperArmLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = ragdollScript.UpperArmRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = ragdollScript.LowerArmLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = ragdollScript.LowerArmRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = ragdollScript.LowerArmLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = ragdollScript.LowerArmRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = ragdollScript.UpperLegLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = ragdollScript.UpperLegRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = ragdollScript.UpperLegLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = ragdollScript.UpperLegRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = ragdollScript.LowerLegLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = ragdollScript.LowerLegRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = ragdollScript.LowerLegLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = ragdollScript.LowerLegRight.rotation;
+
+        ragdoll.SetActive(true);
+    }
+
+    IEnumerator Respawn_Coroutine()
+    {
         gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
-        isDead = true;
 
         pController.isShooting = false;
-
-        playerWhoKilledThisPlayerID = playerWhoKilledThisPlayer;
-
-        if (multiplayerManager != null)
-        {
-            multiplayerManager.AddToScore(playerWhoKilledThisPlayerID);
-        }
-
-        int ogThirdPersonLayer = thirdPersonGO.layer;
-
-        float rotationX = mainCamera.gameObject.GetComponent<Transform>().transform.rotation.x;
-        float rotationY = mainCamera.gameObject.GetComponent<Transform>().transform.rotation.y;
-        float rotationZ = mainCamera.gameObject.GetComponent<Transform>().transform.rotation.z;
-
-        float positionX = mainCamera.gameObject.GetComponent<Transform>().transform.position.x;
-        float positionY = mainCamera.gameObject.GetComponent<Transform>().transform.position.y;
-        float positionZ = mainCamera.gameObject.GetComponent<Transform>().transform.position.z;
 
         mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
 
-        if (playerRewiredID == 0)
-        {
-            //mainCamera.cullingMask |= (1 << 28);
-            gunCamera.cullingMask &= ~(1 << 24);
-            Debug.Log("Turned Off Gun Layers");
-            //Debug.Log("Player 1 Camera2");
-        }
-        else if (playerRewiredID == 1)
-        {
-            //Debug.Log("Player 2 Camera1");
-            //mainCamera.cullingMask |= (1 << 29);
-            gunCamera.cullingMask &= ~(1 << 25);
-            //Debug.Log("Player 2 Camera2");
-        }
-        else if (playerRewiredID == 2)
-        {
-            //mainCamera.cullingMask |= (1 << 30);
-            gunCamera.cullingMask &= ~(1 << 26);
-        }
-        else if (playerRewiredID == 3)
-        {
-            //mainCamera.cullingMask |= (1 << 31);
-            gunCamera.cullingMask &= ~(1 << 27);
-        }
+        gunCamera.cullingMask &= ~(1 << 24);
 
         foreach (GameObject go in hitboxes)
-        {
             if (go != null)
             {
                 go.layer = 23;
                 go.SetActive(false);
 
                 if (go.GetComponent<BoxCollider>() != null)
-                {
                     go.GetComponent<BoxCollider>().enabled = false;
-                }
 
                 if (go.GetComponent<SphereCollider>() != null)
-                {
                     go.GetComponent<SphereCollider>().enabled = false;
-                }
 
                 characterController.enabled = false;
             }
-        }
 
         foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
-        {
             if (go != null)
-            {
                 go.layer = 23;
-            }
-        }
 
-        DropAllOnDeath();
-        ragdollScript.SpawnRagdoll();
-
-        //var go1 = Instantiate(thirsPersonDeathGO, thirdPersonDeathSpawnPoint.transform.position, thirdPersonDeathSpawnPoint.transform.rotation);
-
-        respawnCountdown = respawnTime;
-        respawnStarted = true;
-
-        shieldAlarmAudioSource.Stop();
-        shieldAudioSource.Stop();
-    }
-
-    void RespawnCountdown()
-    {
-        if (respawnStarted)
-        {
-            respawnCountdown -= Time.deltaTime;
-        }
-
-        if (respawnCountdown <= 0)
-        {
-            if (swarmMode != null)
-            {
-                if (swarmMode.playerLives > 0)
-                {
-                    Respawn();
-                    respawnStarted = false;
-                    respawnCountdown = 0;
-                }
-            }
-            else
-            {
-                Respawn();
-                respawnStarted = false;
-                respawnCountdown = 0;
-            }
-        }
+        SpawnRagdoll();
+        respawnCoroutine = null;
+        Health = maxHealth;
+        yield return new WaitForSeconds(respawnTime);
+        Respawn();
     }
 
     void Respawn()
     {
-        isDead = false;
-        mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(-30, 0, 0);
-        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, mainOriginalCameraPosition.y, mainOriginalCameraPosition.z);
+        if (!isRespawning)
+            return;
+        movement.ResetCharacterControllerProperties();
+        isRespawning = false;
+        respawnCoroutine = null;
+        pController.ScopeOut();
+        Health = maxHealth;
+        healthSlider.value = maxHealth;
+
+        float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+        float newShield = 0;
+
+        if (newHealth >= (maxHealth - maxShield))
+            newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
+
+        shieldSlider.value = newShield;
+        healthSlider.value = newHealth;
+
+        mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
+        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
 
         if (playerRewiredID == 0)
         {
@@ -657,44 +871,39 @@ public class PlayerProperties : MonoBehaviour
             gunCamera.cullingMask |= (1 << 27);
         }
 
+        StartCoroutine(MakeThirdPersonModelVisible());
+        //foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
+        //{
+        //    if (go != null)
+        //    {
+
+        //        if (playerRewiredID == 0)
+        //        {
+        //            if (pController.PV.IsMine)
+        //                go.layer = 28;
+        //            else
+        //                go.layer = 29;
+        //        }
+        //        else if (playerRewiredID == 1)
+        //        {
+        //            go.layer = 29;
+        //        }
+        //        else if (playerRewiredID == 2)
+        //        {
+        //            go.layer = 30;
+        //        }
+        //        else if (playerRewiredID == 3)
+        //        {
+        //            go.layer = 31;
+        //        }
+        //    }
+        //}
 
 
-        foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
-        {
-            if (go != null)
-            {
 
-                if (playerRewiredID == 0)
-                {
-                    go.layer = 28;
-                }
-                else if (playerRewiredID == 1)
-                {
-                    go.layer = 29;
-                }
-                else if (playerRewiredID == 2)
-                {
-                    go.layer = 30;
-                }
-                else if (playerRewiredID == 3)
-                {
-                    go.layer = 31;
-                }
-            }
-        }
-
-        Health = maxHealth;
-        healthSlider.value = maxHealth;
-
-        if (hasShield)
-        {
-            Shield = maxShield;
-            shieldSlider.value = maxShield;
-        }
-
-        pInventory.smallAmmo = 48;
-        pInventory.heavyAmmo = 30;
-        pInventory.powerAmmo = 0;
+        pInventory.smallAmmo = 72;
+        pInventory.heavyAmmo = 60;
+        pInventory.powerAmmo = 4;
         pInventory.grenades = 2;
 
         StartCoroutine(pInventory.EquipStartingWeapon());
@@ -707,19 +916,19 @@ public class PlayerProperties : MonoBehaviour
         }
         pInventory.weaponsEquiped[1] = null;
 
-        if (multiplayerManager != null)
-        {
-            int randomSpawn = Random.Range(0, multiplayerManager.GenericSpawns.Length + 1);
+        //if (multiplayerManager != null)
+        //{
+        //    int randomSpawn = Random.Range(0, multiplayerManager.GenericSpawns.Length + 1);
 
-            Debug.Log("Number of spawns = " + multiplayerManager.GenericSpawns.Length);
-            Debug.Log("Randwom spawn is = " + multiplayerManager.GenericSpawns[randomSpawn].gameObject.name);
+        //    Debug.Log("Number of spawns = " + multiplayerManager.GenericSpawns.Length);
+        //    Debug.Log("Randwom spawn is = " + multiplayerManager.GenericSpawns[randomSpawn].gameObject.name);
 
-            gameObject.transform.position = new Vector3(multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.x,
-                multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.y + 2,
-                multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.z);
+        //    gameObject.transform.position = new Vector3(multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.x,
+        //        multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.y + 2,
+        //        multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.position.z);
 
-            gameObject.transform.rotation = multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.rotation;
-        }
+        //    gameObject.transform.rotation = multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.rotation;
+        //}
 
         if (swarmMode != null)
         {
@@ -737,6 +946,8 @@ public class PlayerProperties : MonoBehaviour
             swarmMode.playerLives = swarmMode.playerLives - 1;
             swarmMode.UpdatePlayerLives();
         }
+
+
 
         foreach (GameObject go in hitboxes)
         {
@@ -760,14 +971,43 @@ public class PlayerProperties : MonoBehaviour
         }
     }
 
+    IEnumerator MakeThirdPersonModelVisible()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        foreach (GameObject go in hitboxes)
+            if (go != null)
+            {
+                go.SetActive(true);
+                go.layer = 13;
+
+                if (go.GetComponent<BoxCollider>() != null)
+                    go.GetComponent<BoxCollider>().enabled = true;
+
+                if (go.GetComponent<SphereCollider>() != null)
+                    go.GetComponent<SphereCollider>().enabled = true;
+
+                characterController.enabled = true;
+            }
+
+        foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
+            if (go != null)
+                if (playerRewiredID == 0)
+                    if (pController.PV.IsMine)
+                        go.layer = 28;
+                    else
+                        go.layer = 29;
+
+    }
+
     void SetHealthAndShieldValues()
     {
         Health = maxHealth;
         Shield = maxShield;
 
-        healthSlider.value = maxHealth;
+        healthSlider.value = maxHealth - maxShield;
         shieldSlider.value = maxShield;
-        healthSlider.maxValue = maxHealth;
+        healthSlider.maxValue = maxHealth - maxShield;
         shieldSlider.maxValue = maxShield;
     }
 
@@ -785,7 +1025,7 @@ public class PlayerProperties : MonoBehaviour
                         var weaponDropped1 = Instantiate(weaponToDrop, weaponDropSpawnPoint1.transform.position, weaponDropSpawnPoint1.transform.rotation);
                         weaponDropped1.name = weaponDropped1.name.Replace("(Clone)", "");
 
-                        if (!mScript.isMovingForward)
+                        if (!movement.isMovingForward)
                         {
                             weaponDropped1.GetComponent<Rigidbody>().AddForce(transform.forward * 250);
                         }
@@ -836,6 +1076,11 @@ public class PlayerProperties : MonoBehaviour
 
     void PlayHurtSound()
     {
+        if (Health <= 0)
+            return;
+        for (int i = 0; i < hurtClips.Length; i++)
+            if (playerVoice.isPlaying && playerVoice.clip == hurtClips[i])
+                return;
         int randomSound = Random.Range(0, hurtClips.Length);
         playerVoice.clip = hurtClips[randomSound];
         playerVoice.Play();
@@ -843,11 +1088,43 @@ public class PlayerProperties : MonoBehaviour
 
     void PlayDeathSound()
     {
+        Debug.Log("Playing Death Sound");
+        for (int i = 0; i < deathClips.Length; i++)
+            if (playerVoice.isPlaying && playerVoice.clip == deathClips[i])
+                return;
         int randomSound = Random.Range(0, deathClips.Length);
         playerVoice.clip = deathClips[randomSound];
         playerVoice.Play();
     }
 
+    public void PlaySprintingSound()
+    {
+        PV.RPC("PlaySprintingSound_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void PlaySprintingSound_RPC()
+    {
+        if (playerVoice.isPlaying)
+            return;
+        playerVoice.loop = true;
+        playerVoice.volume = 0.05f;
+        playerVoice.clip = sprintingClip;
+        playerVoice.Play();
+    }
+
+    public void StopPlayingPlayerVoice()
+    {
+        PV.RPC("StopPlayingPlayerVoice_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void StopPlayingPlayerVoice_RPC()
+    {
+        playerVoice.loop = false;
+        playerVoice.volume = 0.5f;
+        playerVoice.Stop();
+    }
     void PlayShieldHitSound()
     {
         shieldAudioSource.clip = shieldHitClip;
@@ -866,8 +1143,11 @@ public class PlayerProperties : MonoBehaviour
         shieldAudioSource.Play();
     }
 
-    void PlayHealthStartSound()
+    public void PlayHealthRechargeSound()
     {
+        Debug.Log("Health Reachrge Sound");
+        if (isDead || isRespawning)
+            return;
         if (shieldAudioSource.isPlaying)
         {
             shieldAudioSource.Stop();
@@ -883,44 +1163,76 @@ public class PlayerProperties : MonoBehaviour
         playerVoice.Play();
     }
 
-    IEnumerator PlayShieldAlarmSound()
+    void PlayShieldAlarmSound()
     {
-        yield return new WaitForSeconds(0.25f);
-
-        if (hasShield)
+        if (!shieldAlarmAudioSource.isPlaying && shieldAlarmAudioSource.gameObject.activeSelf)
         {
-            if (Shield <= 0)
-            {
-                if (!shieldAlarmAudioSource.isPlaying)
-                {
-                    shieldAlarmAudioSource.clip = shieldAlarmClip;
-                    shieldAlarmAudioSource.Play();
-                }
-            }
+            shieldAlarmAudioSource.clip = shieldAlarmClip;
+            shieldAlarmAudioSource.Play();
         }
     }
 
-    void CheckRRIsOn()
+    void StopShieldAlarmSound()
     {
-        if (cScript != null)
-        {
-            if (!pController.isAiming)
-            {
-                if (cScript.RRisActive)
-                {
-                    activeSensitivity = defaultSensitivity / 5;
-                }
-                else
-                {
-                    activeSensitivity = defaultSensitivity;
-                }
-            }
-        }
+        shieldAlarmAudioSource.Stop();
     }
-
     void UpdateMPPoints(int playerWhoDied, int playerWhoKilled)
     {
-        if (allPlayerScripts.playerMPProperties)
-            allPlayerScripts.playerMPProperties.UpdatePoints(playerWhoDied, playerWhoKilled);
+        //if (allPlayerScripts.playerMPProperties)
+        //    allPlayerScripts.playerMPProperties.UpdatePoints(playerWhoDied, playerWhoKilled);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            //Debug.Log("Writing Health");
+            stream.SendNext(Health);
+            stream.SendNext(transform.position);
+        }
+        else
+        {
+            networkedHealth = (float)stream.ReceiveNext();
+            networkedPosition = (Vector3)stream.ReceiveNext();
+            //Debug.Log($"Reading Health: {readHealth}. Health: + {Health}. NEW Reading Health{readHealth}");// has just respawned not being counted
+            //if (newReadHealth != readHealth)
+            //{
+            //    Health = Mathf.Min(newReadHealth, readHealth);
+            //    readHealth = Mathf.Min(newReadHealth, readHealth);
+            //    if (PhotonNetwork.IsMasterClient)
+            //        PV.RPC("FixHealth", RpcTarget.All, Health);
+            //}
+
+
+            //UpdateHealthTextDebugger();
+        }
+    }
+
+    public void LeaveRoomWithDelay()
+    {
+        StartCoroutine(LeaveRoomWithDelay_Coroutine());
+    }
+
+    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 10)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Cursor.visible = true;
+        PhotonNetwork.LeaveRoom();
+        //SceneManager.LoadScene("Main Menu");
+        PhotonNetwork.LoadLevel(0);
+    }
+
+    public void DisableBullet(GameObject bulletGO)
+    {
+        for (int i = 0; i < gameObjectPool.bullets.Count; i++)
+            if (bulletGO == gameObjectPool.bullets[i])
+                PV.RPC("DiableBullet_RPC", RpcTarget.All, i);
+    }
+
+    [PunRPC]
+    void DiableBullet_RPC(int index)
+    {
+        gameObjectPool.bullets[index].SetActive(false);
     }
 }

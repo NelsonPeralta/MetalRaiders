@@ -8,6 +8,10 @@ public class Aiming : MonoBehaviour
     public PlayerController pController;
     public GameObject aimingBG;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip aim;
+
     private bool hasFoundComponents = false;
     
 
@@ -24,5 +28,9 @@ public class Aiming : MonoBehaviour
         }
     }
 
-
+    public void playAimSound()
+    {
+        audioSource.clip = aim;
+        audioSource.Play();
+    }
 }

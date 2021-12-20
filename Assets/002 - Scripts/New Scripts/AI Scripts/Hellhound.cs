@@ -17,6 +17,7 @@ public class Hellhound : MonoBehaviour
     //public AIFieldOfVision fov;
 
     [Header("Hellhound Settings")]
+    public float DefaultHealth;
     public float Health = 100;
     public int points;
     public float defaultSpeed;
@@ -46,6 +47,7 @@ public class Hellhound : MonoBehaviour
     public GameObject grenadeAmmoPack;
 
     [Header("Weapons")]
+    public GameObject maxAmmoPrefab;
     public GameObject[] droppableWeapons;
 
     [Header("Attack FX")]
@@ -73,11 +75,9 @@ public class Hellhound : MonoBehaviour
     public GameObject smoke;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        nma.speed = defaultSpeed;
-
-        StartCoroutine(PlaySound());
+        ResetHellhound();
     }
 
     // Update is called once per frame
@@ -123,7 +123,7 @@ public class Hellhound : MonoBehaviour
         if (Health <= 0 && !isDead)
         {
             nma.speed = 0;
-            Die();
+            StartCoroutine(Die());
             isDead = true;
         }
     }
@@ -163,29 +163,29 @@ public class Hellhound : MonoBehaviour
 
     void Attack()
     {
-        if (IsInMeleeRange && isReadyToAttack && !isDead)
-        {
-            if (meleeTrigger.pProperties != null)
-            {
-                if (!meleeTrigger.pProperties.isDead)
-                {
-                    meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
-                    int randomAnimation = Random.Range(1, 3);
-                    if (randomAnimation == 1)
-                        anim.Play("Bite Attack");
-                    else if (randomAnimation == 2)
-                        anim.Play("Claw Attack");
-                    nma.velocity = Vector3.zero;
+        //if (IsInMeleeRange && isReadyToAttack && !isDead)
+        //{
+        //    if (meleeTrigger.pProperties != null)
+        //    {
+        //        if (!meleeTrigger.pProperties.isDead)
+        //        {
+        //            meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
+        //            int randomAnimation = Random.Range(1, 3);
+        //            if (randomAnimation == 1)
+        //                anim.Play("Bite Attack");
+        //            else if (randomAnimation == 2)
+        //                anim.Play("Claw Attack");
+        //            nma.velocity = Vector3.zero;
 
-                    int randomSound = Random.Range(0, attackClips.Length - 1);
-                    audioSource.clip = audioClips[randomSound];
-                    audioSource.Play();
-                    //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
+        //            int randomSound = Random.Range(0, attackClips.Length - 1);
+        //            audioSource.clip = audioClips[randomSound];
+        //            audioSource.Play();
+        //            //var fireBird = Instantiate(fireAttack, gameObject.transform.position + new Vector3(0, 1f, 0), gameObject.transform.rotation);
 
-                    isReadyToAttack = false;
-                }
-            }
-        }
+        //            isReadyToAttack = false;
+        //        }
+        //    }
+        //}
     }
 
     void AttackCooldown()
@@ -202,9 +202,8 @@ public class Hellhound : MonoBehaviour
         }
     }
 
-    void Die()
+    IEnumerator Die()
     {
-        Destroy(gameObject, 0.5f);
         nma.enabled = false;
         anim.Play("Take Damage");
         StartCoroutine(SpawnSmoke());
@@ -220,7 +219,7 @@ public class Hellhound : MonoBehaviour
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
-            hitbox.gameObject.layer = 23; //Ground
+            //hitbox.gameObject.layer = 23; //Ground
             hitbox.gameObject.SetActive(false);
         }
 
@@ -228,11 +227,16 @@ public class Hellhound : MonoBehaviour
 
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
         }
-        DropRandomAmmoPack();
+        DropLoot();
         //DropRandomWeapon();
+
+        target = null;
+
+        yield return new WaitForSeconds(0.5f);
+        gameObject.SetActive(false);
     }
 
     void AnimationCheck()
@@ -258,8 +262,15 @@ public class Hellhound : MonoBehaviour
     }
 
 
-    void DropRandomAmmoPack()
+    void DropLoot()
     {
+        if (swarmMode)
+            if (swarmMode.hellhoundsAlive == 0)
+            {
+                var maxAmmo = Instantiate(maxAmmoPrefab, gameObject.transform.position + new Vector3(0, 1, 0), gameObject.transform.rotation);
+                Destroy(maxAmmo, 30);
+            }
+        /*
         int ChanceToDrop = Random.Range(1, 11);
 
         if (ChanceToDrop <= 6)
@@ -270,7 +281,7 @@ public class Hellhound : MonoBehaviour
         if (ChanceToDrop >= 7)
         {
             Instantiate(heavyAmmoPack, gameObject.transform.position, gameObject.transform.rotation);
-        }
+        }*/
     }
 
     void DropRandomWeapon()
@@ -281,6 +292,7 @@ public class Hellhound : MonoBehaviour
         {
             int randomInt = Random.Range(0, droppableWeapons.Length - 1);
             GameObject weapon = Instantiate(droppableWeapons[randomInt], gameObject.transform.position + new Vector3(0, 0.5f, 0), gameObject.transform.rotation);
+            weapon.GetComponent<LootableWeapon>().RandomAmmo();
             weapon.gameObject.name = weapon.name.Replace("(Clone)", "");
 
             Destroy(weapon, 60);
@@ -382,14 +394,13 @@ public class Hellhound : MonoBehaviour
 
     void TransferPoints()
     {
-        if (lastPlayerWhoShot.gameObject != null)
+        if (lastPlayerWhoShot)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+                pPoints.AddPoints(this.points);
             }
         }
     }
@@ -398,12 +409,11 @@ public class Hellhound : MonoBehaviour
     {
         if (lastPlayerWhoShot.gameObject != null)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+                pPoints.AddPoints(points);
             }
         }
     }
@@ -414,5 +424,28 @@ public class Hellhound : MonoBehaviour
         {
             target = swarmMode.NewTargetFromSwarmScript();
         }
+    }
+
+    void ResetHellhound()
+    {
+        nma.enabled = true;
+        nma.speed = defaultSpeed;
+        StartCoroutine(PlaySound());
+
+        Health = DefaultHealth;
+        isDead = false;
+        IsInMeleeRange = false;
+        isReadyToAttack = true;
+
+        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+            hitbox.gameObject.SetActive(true);
+
+        motionTrackerDot.SetActive(true);
+
+        meleeAttackCooldown = 0;
+        lastPlayerWhoShot = null;
+        otherPlayerShot = false;
+        targetSwitchCountdown = targetSwitchCountdownDefault;
+        targetSwitchReady = true;
     }
 }

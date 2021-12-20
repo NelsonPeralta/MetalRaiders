@@ -8,11 +8,26 @@ public class FPSCounter : MonoBehaviour
     public int avgFrameRate;
     public Text display_Text;
 
-    public void Update()
+    private void Start()
+    {
+        StartCoroutine(UpdateFPSText());
+    }
+    IEnumerator UpdateFPSText()
     {
         float current = 0;
-        current = Time.frameCount / Time.time;
+        current = (int)(1f / Time.unscaledDeltaTime);
         avgFrameRate = (int)current;
         display_Text.text = "FPS: " + avgFrameRate.ToString();
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(UpdateFPSText());
     }
+    //public void Update()
+    //{
+    //    float current = 0;
+    //    current = (int)(1f / Time.unscaledDeltaTime);
+    //    //current = Time.frameCount / Time.time;
+    //    avgFrameRate = (int)current;
+    //    display_Text.text = "FPS: " + avgFrameRate.ToString();
+    //}
 }

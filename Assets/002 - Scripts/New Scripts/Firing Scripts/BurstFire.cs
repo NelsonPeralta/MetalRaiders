@@ -90,7 +90,7 @@ public class BurstFire : MonoBehaviour
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Spawn bullet from bullet spawnpoint
-            var bullet = allPlayerScripts.playerBulletPool.SpawnPooledGameObject();
+            var bullet = allPlayerScripts.playerController.objectPool.SpawnPooledBullet();
             bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
             bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
 
@@ -98,7 +98,7 @@ public class BurstFire : MonoBehaviour
             bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
             //var bullet = (Transform)Instantiate(gwProperties.bulletPrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
             bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
+            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = wProperties.gameObject.GetComponent<PlayerProperties>();
             bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
             bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
             bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;

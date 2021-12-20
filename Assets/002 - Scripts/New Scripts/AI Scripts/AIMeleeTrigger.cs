@@ -6,22 +6,20 @@ public class AIMeleeTrigger : MonoBehaviour
 {
     [Header("Basic AiS")]
     public ZombieScript zombie;
-    public Skeleton skeleton;    
+    public Skeleton skeleton;
     public Troll troll;
 
     [Header("Boss AiS")]
     public Hellhound hellhound;
     public Wererat wererat;
 
-    public GameObject player;
-    public PlayerProperties pProperties;
+    public PlayerProperties player;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "player")
         {
-            player = other.gameObject;
-            pProperties = other.gameObject.GetComponent<PlayerProperties>();
+            player = other.GetComponent<PlayerProperties>();
 
             if (zombie != null)
             {
@@ -53,14 +51,14 @@ public class AIMeleeTrigger : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        player = other.gameObject;
-        pProperties = other.gameObject.GetComponent<PlayerProperties>();
+        if (other.gameObject.tag != "player")
+            return;
+        player = other.GetComponent<PlayerProperties>();
     }
 
     private void OnTriggerExit(Collider other)
     {
         player = null;
-        pProperties = null;
 
         if (zombie != null)
         {
@@ -77,7 +75,7 @@ public class AIMeleeTrigger : MonoBehaviour
             hellhound.IsInMeleeRange = false;
         }
 
-        if (troll!= null)
+        if (troll != null)
         {
             troll.IsInMeleeRange = false;
         }
@@ -86,5 +84,10 @@ public class AIMeleeTrigger : MonoBehaviour
         {
             wererat.IsInMeleeRange = false;
         }
+    }
+
+    public void ResetTrigger()
+    {
+        player = null;
     }
 }

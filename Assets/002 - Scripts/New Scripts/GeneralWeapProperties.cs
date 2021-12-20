@@ -43,6 +43,7 @@ public class GeneralWeapProperties : MonoBehaviour
 
     [Header("Spawnpoints")]
     public Transform casingSpawnPoint;
+    public Vector3 defaultBulletSpawnPoint;
     public Transform bulletSpawnPoint;
     public Transform grenadeSpawnPoint;
 
@@ -51,11 +52,14 @@ public class GeneralWeapProperties : MonoBehaviour
     public GameObject burstFireUIGO;
     public GameObject automaticFireUIGO;
 
+    [Header("Bullets Shot by this player")]
+    public List<Bullet> bulletsShotByplayer = new List<Bullet>();
 
-
+    Quaternion originalBulletLocalRotation;
     void Start()
     {
-
+        originalBulletLocalRotation = bulletSpawnPoint.localRotation;
+        defaultBulletSpawnPoint = bulletSpawnPoint.localPosition;
         if(hasFoundComponents == false)
         {
             cManager = GetComponent<ChildManager>();
@@ -188,5 +192,10 @@ public class GeneralWeapProperties : MonoBehaviour
                 automaticFireUIGO.SetActive(false);
             }
         }
+    }
+
+    public void ResetLocalTransform()
+    {
+        bulletSpawnPoint.localRotation = originalBulletLocalRotation;
     }
 }

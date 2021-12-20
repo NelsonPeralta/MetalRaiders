@@ -26,7 +26,10 @@ public class AIStickyGrenade : MonoBehaviour
     GameObject[] AIsHit = new GameObject[20];
 
     [Header("Audio")]
-    public AudioSource impactSound;
+    public AudioSource audioSource;
+    public AudioClip throwSound;
+    public AudioClip impactSound;
+    public AudioClip explosionSound;
 
     private void Start()
     {
@@ -67,6 +70,7 @@ public class AIStickyGrenade : MonoBehaviour
                         hasHitObject = true;
                         explosionTimer = grenadeTimer;
                         explosionTimerStarted = true;
+                        PlaySound(impactSound);
                     }
                 }
                 else if (collision.gameObject.GetComponent<AIHitbox>())
@@ -80,6 +84,7 @@ public class AIStickyGrenade : MonoBehaviour
                     hasHitObject = true;
                     explosionTimer = grenadeTimer;
                     explosionTimerStarted = true;
+                    PlaySound(impactSound);
                 }
             }
             else
@@ -97,7 +102,7 @@ public class AIStickyGrenade : MonoBehaviour
                     hasHitObject = true;
                     explosionTimer = grenadeTimer;
                     explosionTimerStarted = true;
-
+                    PlaySound(impactSound);
                 }
             }
         }
@@ -130,6 +135,8 @@ public class AIStickyGrenade : MonoBehaviour
     {
         var explosionGO = Instantiate(explosionPrefab, transform.position, transform.rotation);
         Destroy(explosionGO.gameObject, 3f);
+        explosionGO.GetComponent<AudioSource>().clip = explosionSound;
+        explosionGO.GetComponent<AudioSource>().Play();
 
         //Explosion force
         Vector3 explosionPos = transform.position;
@@ -146,7 +153,7 @@ public class AIStickyGrenade : MonoBehaviour
             if (hit.GetComponent<PlayerHitbox>() != null)
             {
                 GameObject player;
-                player = hit.GetComponent<PlayerHitbox>().player;
+                player = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
 
                 int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;
@@ -229,10 +236,16 @@ public class AIStickyGrenade : MonoBehaviour
                         Debug.Log(hit.GetComponent<AIHitbox>().aiGO.name);
                         Debug.Log(calculatedDamage);
                         Debug.Log(aiDistance);
-                        hit.GetComponent<AIHitbox>().UpdateAIHealth(false, calculatedDamage, playerWhoThrewGrenade);
+                        hit.GetComponent<AIHitbox>().DamageAI(false, calculatedDamage, playerWhoThrewGrenade);
                     }
                 }
             }
         }
+    }
+
+    void PlaySound(AudioClip ac)
+    {
+        audioSource.clip = ac;
+        audioSource.Play();
     }
 }

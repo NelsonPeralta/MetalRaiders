@@ -76,7 +76,7 @@ public class Fireball : MonoBehaviour
             if (hit.GetComponent<PlayerHitbox>() != null)
             {
                 //Debug.Log("Fireball Hit Player");
-                GameObject player = hit.GetComponent<PlayerHitbox>().player;
+                GameObject player = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
 
                 int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;
@@ -120,7 +120,7 @@ public class Fireball : MonoBehaviour
                         if (playerDistance < radius)
                         {
                             float calculatedDamage = damage * (1 - (playerDistance / radius));
-                            Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
+                            //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
                             player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                             
                         }
@@ -129,7 +129,7 @@ public class Fireball : MonoBehaviour
             }
             if (hit.GetComponent<AIHitbox>() != null)
             {
-                Debug.Log("Hit AI");
+                //Debug.Log("Hit AI");
                 GameObject ai;
                 ai = hit.GetComponent<AIHitbox>().aiGO;
                 float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
@@ -166,7 +166,7 @@ public class Fireball : MonoBehaviour
                     if (hit.GetComponent<AIHitbox>().aiHealth > 0)
                     {
                         float calculatedDamage = damage * (1 - (aiDistance / radius));
-                        hit.GetComponent<AIHitbox>().UpdateAIHealth(false, calculatedDamage, playerWhoThrewGrenade);
+                        hit.GetComponent<AIHitbox>().DamageAI(false, calculatedDamage, playerWhoThrewGrenade);
                     }
 
                 }

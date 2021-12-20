@@ -6,19 +6,26 @@ public class AllPlayerScripts : MonoBehaviour
 {
     [Header("General")]
     public PlayerProperties playerProperties;
+    public PlayerController playerController;
     [Header("Inventory")]
     public PlayerInventory playerInventory;
-    public GameObjectPool playerBulletPool;    
+    public WeaponPickUp weaponPickUp;
     [Header("UI Components")]
+    public CameraScript cameraScript;
     public CrosshairScript crosshairScript;
-    public RaycastScript raycastScript;
+    public AimAssist aimAssist;
     public PlayerUIComponents playerUIComponents;
+    public Aiming aimingScript;
+    public WaveCounter waveCounter;
+    public ScoreboardManager scoreboardManager;
+    public KillFeedManager killFeedManager;
+    public DamageIndicatorManager damageIndicatorManager;
     [Header("Sounds")]
     public PlayerSFXs playerSFXs;
+    public Announcer announcer;
     [Header("Multiplayer Scripts")]
-    public PlayerMPProperties playerMPProperties;
+    public PlayerMultiplayerStats playerMultiplayerStats;
     [Header("Pools")]
-    public GameObjectPool playerGenericHitPool;
     public GameObjectPool playerFirstMuzzleFlash;
     public GameObjectPool playerThirdMuzzleFlash;
 }

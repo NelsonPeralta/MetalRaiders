@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerScriptsManager : MonoBehaviour
 {
     [Header("Aiming Scripts")]
-    public RaycastScript raycastScript;
+    public AimAssist raycastScript;
 
     [Header("UI Scripts")]
     public CrosshairScript crosshairScript;

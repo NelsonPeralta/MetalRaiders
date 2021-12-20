@@ -69,7 +69,7 @@ public class FullyAutomaticFireLeft : MonoBehaviour
             //Spawn bullet from bullet spawnpoint
             var bullet = (Transform)Instantiate(gwProperties.bulletPrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
             bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
+            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>();
             if(pController.isDualWielding)
                 bullet.gameObject.GetComponent<Bullet>().wProperties = dwLeftWP;
             bullet.gameObject.GetComponent<Bullet>().crosshairScript = pController.gameObject.GetComponent<PlayerProperties>().cScript;

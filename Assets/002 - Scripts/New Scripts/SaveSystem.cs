@@ -11,13 +11,13 @@ public static class SaveSystem
         Debug.Log(path);
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        PlayerData data = new PlayerData(player);
+        PlayerLocalSaveData data = new PlayerLocalSaveData(player);
 
         formatter.Serialize(stream, data);
         stream.Close();
     }
 
-    public static PlayerData LoadPlayer(int playerID, int characterID, MyPlayerInfo player)
+    public static PlayerLocalSaveData LoadPlayer(int playerID, int characterID, MyPlayerInfo player)
     {
         string path = Application.persistentDataPath + "/player" + playerID + "character" + characterID + ".nut";
         if(File.Exists(path))
@@ -25,7 +25,7 @@ public static class SaveSystem
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            PlayerData data = formatter.Deserialize(stream) as PlayerData;
+            PlayerLocalSaveData data = formatter.Deserialize(stream) as PlayerLocalSaveData;
             stream.Close();
 
             return data;

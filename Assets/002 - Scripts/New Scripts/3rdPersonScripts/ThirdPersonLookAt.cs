@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class ThirdPersonLookAt : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class ThirdPersonLookAt : MonoBehaviour
     public Transform lookAtGO;
     public Transform chest;
     public Movement movement;
+    //public PhotonView photonView;
 
     public int directionIndicator;
 
@@ -24,22 +26,56 @@ public class ThirdPersonLookAt : MonoBehaviour
     public Vector3 BackwardsOffset;
     public Vector3 LeftBackwardsOffset;
 
-    private void Start()
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+    //    //Debug.Log("In OPSV");
+    //    anim = GetComponent<Animator>();
+    //    chest = anim.GetBoneTransform(HumanBodyBones.Chest);
+    //    if (stream.IsWriting) // If I am the owner
+    //    {
+    //        //Debug.Log("Writing: " + lookAtGO.position);
+    //        stream.SendNext(lookAtGO.position);
+    //    }
+    //    else if (stream.IsReading) // If I am a client
+    //    {
+    //        //Debug.Log("In Reading: " + stream.ReceiveNext());
+    //        //if (chest)
+    //        //{
+    //        //    Debug.Log("There is a chest");
+    //        //    chest.LookAt((Vector3)stream.ReceiveNext());
+    //        //}
+    //        //else
+    //        //{
+    //        //    Debug.Log("There is no chest");
+    //        //}
+    //    }
+    //}
+
+    private void Awake()
     {
         anim = GetComponent<Animator>();
-        if(!chest)
+        //photonView = GetComponent<PhotonView>();
+        if (!chest)
             chest = anim.GetBoneTransform(HumanBodyBones.Chest);
         currentOffset = iddleOffset;
     }
 
     private void LateUpdate()
     {
-        //UpdateOffset(movement.directionIndicator);
+        UpdateOffset(movement.directionIndicator);
+        PlayerChestRotation();
+        //photonView.RPC("UpdateOffset", RpcTarget.All, movement.directionIndicator);
+        //photonView.RPC("PlayerChestRotation", RpcTarget.All);
+    }
+    
+    void PlayerChestRotation()
+    {
+        //Debug.Log(lookAtGO.position);
         chest.LookAt(lookAtGO.position);
         chest.rotation = chest.rotation * Quaternion.Euler(currentOffset);
     }
-
-    public void UpdateOffset(int directionIndicator)
+    
+    void UpdateOffset(int directionIndicator)
     {
         if (directionIndicator == 0) // Idle
         {
@@ -79,22 +115,4 @@ public class ThirdPersonLookAt : MonoBehaviour
         }
     }
 
-    /*
-    // Update is called once per frame
-    void Update()
-    {
-        anim.SetLookAtPosition(lookAtGO.transform.position);
-        gameObject.transform.LookAt(lookAtGO.transform);
-
-    }
-
-    private void OnAnimatorIK(int layerIndex)
-    {
-        Transform head = anim.GetBoneTransform(HumanBodyBones.Head);
-        Vector3 forward = (lookAtGO.transform.position - head.position).normalized;
-        Vector3 up = Vector3.Cross(forward, transform.right);
-        Quaternion rotation = Quaternion.Inverse(transform.rotation) * Quaternion.LookRotation(forward, up);
-        anim.SetBoneLocalRotation(HumanBodyBones.Head, rotation);
-    }
-    */
 }

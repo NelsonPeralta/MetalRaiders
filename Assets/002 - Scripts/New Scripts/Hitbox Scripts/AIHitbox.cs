@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AIHitbox : MonoBehaviour
 {
+    public AiAbstractClass aiAbstractClass;
     public GameObject aiGO;
     public float aiHealth;
 
@@ -56,17 +57,17 @@ public class AIHitbox : MonoBehaviour
             UpdateAIHealthOnHitboxes(flameTyrant.Health);
     }
 
-    public void UpdateAIHealth(bool damageFromPlayer, float damage, GameObject playerWhoShot)
+    public void DamageAI(bool damageFromPlayer, float damage, GameObject playerWhoShot)
     {
-        if (zScript != null)
+        if (aiAbstractClass)
         {
             zScript.Health = zScript.Health - damage;
             UpdateAIHealthOnHitboxes(zScript.Health);
 
-            if (zScript.isDead)
-            {
-                AIisDead = true;
-            }
+            //if (zScript.isDead)
+            //{
+            //    AIisDead = true;
+            //}
             int damageToInt = Mathf.CeilToInt(damage);
 
             if (damageFromPlayer)
@@ -228,10 +229,10 @@ public class AIHitbox : MonoBehaviour
                 StartCoroutine(zScript.MeleeReset());
                 UpdateAIHealthOnHitboxes(zScript.Health);
 
-                if (zScript.isDead)
-                {
-                    AIisDead = true;
-                }
+                //if (zScript.isDead)
+                //{
+                //    AIisDead = true;
+                //}
             }
         }
 

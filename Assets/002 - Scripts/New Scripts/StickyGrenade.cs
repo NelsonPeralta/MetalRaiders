@@ -13,7 +13,7 @@ public class StickyGrenade : MonoBehaviour
     public Transform explosionPrefab;
 
     [Header("Background Info")]
-    public GameObject playerWhoThrewGrenade;
+    public PlayerProperties playerWhoThrewGrenade;
     public int playerRewiredID;
     public string team;
     bool hasHitObject;
@@ -36,17 +36,15 @@ public class StickyGrenade : MonoBehaviour
         PlaySound(throwSound);
     }
 
-
     private void OnTriggerEnter(Collider collision)
     {
+        Debug.Log($"Sticky Grenade Collision: {collision.gameObject.name}");
         if (!explosionTimerStarted && !hasHitObject)
         {
             if (collision.gameObject.layer == 13)
             {
                 if (collision.gameObject.GetComponent<PlayerHitbox>())
                 {
-                    if (collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<PlayerProperties>().playerRewiredID != playerRewiredID)
-                    {
                         gameObject.transform.parent = collision.gameObject.transform;
 
                         GetComponent<Rigidbody>().useGravity = false;
@@ -60,7 +58,6 @@ public class StickyGrenade : MonoBehaviour
                         explosionTimer = grenadeTimer;
                         explosionTimerStarted = true;
                         PlaySound(impactSound);
-                    }
                 }
                 else if (collision.gameObject.GetComponent<AIHitbox>())
                 {
@@ -79,7 +76,7 @@ public class StickyGrenade : MonoBehaviour
             else
             {
                 if (collision.gameObject.GetComponent<PlayerController>() == null
-                    && collision.gameObject.layer != 22)
+                    && collision.gameObject.layer != 22 && collision.transform.root.gameObject != playerWhoThrewGrenade.gameObject)
                 {
                     Debug.Log("Collision = " + collision.gameObject.name + " GO Layer: " + collision.gameObject.layer
                         + " Root GO : " + collision.gameObject.transform.root.gameObject.name);
@@ -131,102 +128,43 @@ public class StickyGrenade : MonoBehaviour
         Vector3 explosionPos = transform.position;
         //Use overlapshere to check for nearby colliders
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
-        foreach (Collider hit in colliders)
+        List<GameObject> objectsHit = new List<GameObject>();
+        for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
         {
+            Collider hit = colliders[i];
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             //Add force to nearby rigidbodies
             if (rb != null)
                 rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
 
-            if (hit.GetComponent<PlayerHitbox>() != null)
+            if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
             {
-                GameObject player;
-                player = hit.GetComponent<PlayerHitbox>().player;
-                float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
-
-                int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;
-
-                bool playerAlreadyHit = false;
-
-                for (int i = 0; i < playersHit.Length; i++)
+                GameObject playerHit = hit.GetComponent<PlayerHitbox>().player.gameObject;
+                if (!objectsHit.Contains(playerHit))
                 {
-                    if (playersHit[i] != null)
-                    {
-                        if (playerHitID == playersHit[i].GetComponent<PlayerProperties>().playerRewiredID)
-                        {
-                            playerAlreadyHit = true;
-                        }
-                    }
-                }
-
-                bool assignedPlayerInArray = false;
-
-                if (!playerAlreadyHit)
-                {
-                    for (int i = 0; i < playersHit.Length; i++)
-                    {
-                        if (playersHit[i] == null && !assignedPlayerInArray)
-                        {
-                            playersHit[i] = player;
-                            assignedPlayerInArray = true;
-                        }
-                    }
-                }
-
-                if (!playerAlreadyHit)
-                {
-                    if (!player.GetComponent<PlayerProperties>().isDead)
-                    {
-                        float calculatedDamage = damage * (1 - (playerDistance / radius));
-                        player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                    }
+                    objectsHit.Add(playerHit);
+                    float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
+                    float calculatedDamage = damage * (1 - (playerDistance / radius));
+                    Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
+                    //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
+                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
+                        playerHit.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
                 }
             }
-
-            if (hit.GetComponent<AIHitbox>() != null)
+            if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead())
             {
-                GameObject ai;
-                ai = hit.GetComponent<AIHitbox>().aiGO;
-                float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
-
-                bool aiAlreadyHit = false;
-
-                for (int i = 0; i < AIsHit.Length; i++)
+                GameObject aiHit = hit.GetComponent<AIHitbox>().aiAbstractClass.gameObject;
+                if (!objectsHit.Contains(aiHit))
                 {
-                    if (AIsHit[i] != null)
-                    {
-                        if (ai == AIsHit[i])
-                        {
-                            aiAlreadyHit = true;
-                        }
-                    }
-                }
-
-                bool assignedAIInArray = false;
-
-                if (!aiAlreadyHit)
-                {
-                    for (int i = 0; i < AIsHit.Length; i++)
-                    {
-                        if (AIsHit[i] == null && !assignedAIInArray)
-                        {
-                            AIsHit[i] = ai;
-                            assignedAIInArray = true;
-                        }
-                    }
-                }
-
-                if (!aiAlreadyHit)
-                {
-                    if (hit.GetComponent<AIHitbox>().aiHealth > 0)
-                    {
-                        float calculatedDamage = damage * (1 - (aiDistance / radius));
-                        Debug.Log(hit.GetComponent<AIHitbox>().aiGO.name);
-                        Debug.Log(calculatedDamage);
-                        Debug.Log(aiDistance);
-                        hit.GetComponent<AIHitbox>().UpdateAIHealth(true, calculatedDamage, playerWhoThrewGrenade);
-                    }
+                    objectsHit.Add(aiHit);
+                    Debug.Log("Hit AI");
+                    AIHitbox hitbox = hit.GetComponent<AIHitbox>();
+                    float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
+                    float calculatedDamage = damage * (1 - (aiDistance / radius));
+                    Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
+                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
+                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID);
                 }
             }
         }

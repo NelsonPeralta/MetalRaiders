@@ -307,8 +307,9 @@ public class Skeleton : MonoBehaviour
         motionTrackerDot.SetActive(false);
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
+            lastPlayerWhoShot.GetComponent<OnlinePlayerSwarmScript>().kills++;
         }
         DropRandomWeapon();
         target = null;
@@ -392,6 +393,7 @@ public class Skeleton : MonoBehaviour
         {
             int randomInt = Random.Range(0, droppableWeapons.Length - 1);
             GameObject weapon = Instantiate(droppableWeapons[randomInt], gameObject.transform.position + new Vector3(0, 0.5f, 0), gameObject.transform.rotation);
+            weapon.GetComponent<LootableWeapon>().RandomAmmo();
             weapon.gameObject.name = weapon.name.Replace("(Clone)", "");
 
             Destroy(weapon, 60);
@@ -478,30 +480,26 @@ public class Skeleton : MonoBehaviour
 
     void TransferPoints()
     {
-        if (lastPlayerWhoShot.gameObject != null)
+        if (lastPlayerWhoShot)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+                pPoints.AddPoints(this.points);
             }
         }
     }
 
     public void TransferDamageToPoints(int points)
     {
-        //StartCoroutine(Block());
-
         if (lastPlayerWhoShot.gameObject != null)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+                pPoints.AddPoints(points);
             }
         }
     }
@@ -566,19 +564,19 @@ public class Skeleton : MonoBehaviour
     {
         nma.speed = defaultSpeed;
         anim.SetBool("Run", true);
-        anim.SetBool("Idle", false);
+        //anim.SetBool("Idle", false);
     }
 
     void Idle()
     {
         nma.speed = 0;
         anim.SetBool("Run", false);
-        anim.SetBool("Idle", true);
+        //anim.SetBool("Idle", true);
     }
 
     IEnumerator PlaySound()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(8f);
 
         int playSound = Random.Range(0, 2);
 

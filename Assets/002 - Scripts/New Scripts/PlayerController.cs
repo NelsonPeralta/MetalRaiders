@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
+using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPun
 {
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
-    public PlayerSFXs sfxManager;
     public WeaponSounds weapSounds;
     public PlayerProperties playerProperties;
     public PlayerInventory pInventory;
@@ -23,7 +24,6 @@ public class PlayerController : MonoBehaviour
     public BurstFire burstFire;
     public SingleFire singleFire;
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
-    public ChildManager childManager;
     public Rewired.Player player;
     public int playerRewiredID;
     public CrosshairScript crosshairScript;
@@ -35,8 +35,11 @@ public class PlayerController : MonoBehaviour
     public ThirdPersonScript tPersonController;
     public ControllerType lastControllerType;
 
+    public PhotonView PV;
+    public PlayerManager playerManager;
+    public GameObjectPool objectPool;
+
     Quaternion savedCamRotation;
-    GameObject camChild;
 
     [HideInInspector]
     public bool hasBeenHolstered = false, holstered, isRunning, isWalking;
@@ -44,7 +47,7 @@ public class PlayerController : MonoBehaviour
     public bool isInspecting, isShooting, aimSoundHasPlayed = false, hasFoundComponents = false;
 
     public bool isReloading, reloadAnimationStarted, reloadWasCanceled, isFiring,
-        isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isMeleeing;
+        isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isMeleeing, isSprinting;
 
     //Used for fire rate
     private float lastFired;
@@ -83,15 +86,43 @@ public class PlayerController : MonoBehaviour
     public int ammoRightWeaponIsMissing;
     public int ammoLeftWeaponIsMissing;
 
+    public bool pauseMenuOpen;
+
+    [Header("Audio Sources")]
+    public AudioSource playerVoice;
+    public AudioSource grenadeSwitchAudioSource;
+    public AudioSource meleeAudioSource;
+
+    void Awake()
+    {
+        PV = GetComponent<PhotonView>();
+
+        playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+    }
+
+
     public void Start()
     {
         if (hasFoundComponents == false)
         {
+            objectPool = GameObjectPool.gameObjectPoolInstance;
             SetPlayerIDInInput();
-            childManager = gameObject.GetComponent<ChildManager>();
             StartCoroutine(FindComponents());
             ReferenceCameraToSpherecast();
         }
+
+        if (PV.IsMine)
+        {
+
+        }
+        else
+        {
+            gunCam.gameObject.SetActive(false);
+            mainCam.gameObject.SetActive(false);
+            allPlayerScripts.playerUIComponents.gameObject.SetActive(false);
+        }
+
+
 
     }
 
@@ -107,8 +138,8 @@ public class PlayerController : MonoBehaviour
 
         //pInventory = GameObject.FindGameObjectWithTag("Player Inventory").GetComponent<PlayerInventoryManager>();
 
-        playerProperties = GetComponent<PlayerProperties>();
-        gwProperties = GetComponent<GeneralWeapProperties>();
+        //playerProperties = GetComponent<PlayerProperties>();
+        //gwProperties = GetComponent<GeneralWeapProperties>();
         //wProperties = childManager.FindChildWithTag("Weapon").GetComponent<WeaponProperties>();
 
         //fullyAutomaticFire = childManager.FindChildWithTagScript("Shooting Scripts").GetComponent<FullyAutomaticFire>();
@@ -119,7 +150,6 @@ public class PlayerController : MonoBehaviour
         notMyFPSController = gameObject.GetComponent<FPSControllerLPFP.FpsControllerLPFP>();
         savedCamRotation = mainCam.transform.localRotation;
 
-        camChild = mainCam.gameObject.transform.GetChild(0).gameObject;
     }
 
     public void SetPlayerIDInInput()
@@ -129,33 +159,51 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (!PV.IsMine)
+            return;
+
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    PV.RPC("RPC_Shoot_Projectile_Test", RpcTarget.All);
+        //}
+
         UpdateWeaponPropertiesAndAnimator();
         if (playerProperties != null)
         {
-            if (!playerProperties.isDead)
+            StartButton();
+            BackButton();
+            if (!playerProperties.isDead && !playerProperties.isRespawning)
             {
-                Shooting();
-                CheckReloadButton();
-                CheckAmmoForAutoReload();
-                Aiming();
-                Melee();
-                Crouch();
-                Grenade();
-                SelectFire();
-                SwitchGrenades();
-                //AutoReloadVoid();
-                HolsterAndInspect();
-                StartButton();
-                CheckDrawingWeapon();
+
+                if (!pauseMenuOpen)
+                {
+                    Sprint();
+                    SwitchGrenades();
+                    if (isSprinting)
+                        return;
+                    Shooting();
+                    CheckReloadButton();
+                    CheckAmmoForAutoReload();
+                    Aiming();
+                    //PV.RPC("Melee", RpcTarget.All);
+                    Melee();
+                    Crouch();
+                    Grenade(); //TO DO: Spawn Grenades the same way as bullets
+                    SelectFire();
+                    //AutoReloadVoid();
+                    HolsterAndInspect();
+                    CheckDrawingWeapon();
+                }
             }
         }
 
         AnimationCheck();
 
         //Debug.Log(wProperties.outOfAmmo);
-        StartCoroutine(TestButton());
+        TestButton();
         if (ReInput.controllers != null)
             lastControllerType = ReInput.controllers.GetLastActiveControllerType();
+
     }
 
 
@@ -199,41 +247,146 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void Sprint()
+    {
+        if (movement.direction == "Forward")
+        {
+            if (!movement.isGrounded || isReloading)
+                return;
+            if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
+            {
+                if (player.GetButton("Sprint"))
+                    EnableSprint();
+                else if (player.GetButtonUp("Sprint"))
+                    DisableSprint();
+            }
+            else if (lastControllerType == ControllerType.Joystick)
+                if (player.GetButtonDown("Sprint"))
+                    EnableSprint();
+        }
+        else
+            DisableSprint();
+    }
+
+    public void EnableSprint()
+    {
+        PV.RPC("EnableSprint_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void EnableSprint_RPC()
+    {
+        if (isSprinting)
+            return;
+        isSprinting = true;
+        anim.SetBool("Run", true);
+        tPersonController.anim.SetBool("Sprint", true);
+        tPersonController.anim.SetBool("Idle Rifle", false);
+        tPersonController.anim.SetBool("Idle Pistol", false);
+        playerProperties.playerVoice.volume = 0.1f;
+        playerProperties.PlaySprintingSound();
+    }
+
+    void DisableSprint()
+    {
+        PV.RPC("DisableSprint_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void DisableSprint_RPC()
+    {
+        if (!isSprinting)
+            return;
+        isSprinting = false;
+        anim.SetBool("Run", false);
+        tPersonController.anim.SetBool("Sprint", false);
+
+        if (pInventory.activeWeapon.GetComponent<WeaponProperties>().pistolIdle)
+        {
+            tPersonController.anim.SetBool("Idle Pistol", true);
+            tPersonController.anim.SetBool("Idle Rifle", false);
+        }
+        else
+        {
+            tPersonController.anim.SetBool("Idle Rifle", true);
+            tPersonController.anim.SetBool("Idle Pistol", false);
+        }
+
+        playerProperties.StopPlayingPlayerVoice();
+    }
+
     void Shooting()
     {
-        if (!playerProperties.isDead)
+        if (playerProperties.isDead || isSprinting)
+            return;
+
+        if (!isDualWielding)
         {
-            if (!isDualWielding)
+            if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
             {
-                if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting)
-                {
-                    isShooting = true;
-                }
-                else
-                {
-                    isShooting = false;
-                }
-            }
+                isShooting = true;
 
-            if (isDualWielding)
+            }
+            else
             {
-                if (player.GetButton("Shoot") && !dwRightWP.outOfAmmo && !isReloadingRight && !isShootingRight)
-                {
-                    Debug.Log("Is Shooting Right");
-                    isShootingRight = true;
-                }
-                else
-                {
-                    isShootingRight = false;
-                }
+                isShooting = false;
             }
-
-            /*
-            if (wProperties)
-                if (wProperties.projectileToHide != null && wProperties.outOfAmmo)
-                    wProperties.projectileToHide.SetActive(false);*/
         }
+
+        if (isDualWielding)
+        {
+            if (player.GetButton("Shoot") && !dwRightWP.outOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
+            {
+                Debug.Log("Is Shooting Right");
+                isShootingRight = true;
+            }
+            else
+            {
+                isShootingRight = false;
+            }
+        }
+
+        /*
+        if (wProperties)
+            if (wProperties.projectileToHide != null && wProperties.outOfAmmo)
+                wProperties.projectileToHide.SetActive(false);*/
     }
+
+    //[PunRPC]
+    //void RPC_Shoot_Projectile_Test()
+    //{
+    //    GameObject bullet = objectPool.SpawnPooledBullet();
+
+    //    bullet.transform.position = gameObject.transform.position;
+    //    bullet.transform.rotation = gameObject.transform.rotation;
+    //    bullet.SetActive(true);
+    //}
+
+    //[PunRPC]
+    //public void ShootAutoTest()
+    //{
+    //    if (!PV.IsMine)
+    //        return;
+    //    if (wProperties.isFullyAutomatic && !isDualWielding && !isDrawingWeapon)
+    //    {
+    //        Debug.Log("Spawned Bullet and player is : " + wProperties.pController.name);
+    //        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //        //Spawn bullet from bullet spawnpoint
+    //        var bullet = objectPool.SpawnPooledBullet();
+    //        bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
+    //        bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
+
+    //        bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
+    //        bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
+    //        bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+    //        bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
+    //        bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+    //        bullet.gameObject.GetComponent<Bullet>().raycastScript = playerProperties.raycastScript;
+    //        bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerProperties.cScript;
+    //        //SetTeamToBulletScript(bullet.transform);
+    //        bullet.SetActive(true);
+    //    }
+    //}
 
     void Aiming()
     {
@@ -260,41 +413,7 @@ public class PlayerController : MonoBehaviour
                     isAiming = true;
                     mainCam.fieldOfView = wProperties.aimFOV;
 
-                    sfxManager.mainAudioSource.clip = sfxManager.aimingSound;
-                    sfxManager.mainAudioSource.Play();
-
-                    if (wProperties.aimFOV == 30)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(9f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(3.5f, 0, 0);
-                    }
-
-                    if (wProperties.aimFOV == 45)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(8.25f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(5.5f, 0, 0);
-                    }
-
-                    if (wProperties.aimFOV == 40)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(2.75f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(4.82f, 0, 0);
-                        playerProperties.activeSensitivity = 100f;
-                    }
-
-                    if (wProperties.aimFOV == 20)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(5.25f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(2.34f, 0, 0);
-                        playerProperties.activeSensitivity = 50f;
-                    }
-
-                    /*
-                    else if (wProperties.aimFOV == 60)
-                    {
-                        cam.transform.localRotation = Quaternion.Euler(5.5f, 0, 0);
-                        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
-                    }*/
+                    allPlayerScripts.aimingScript.playAimSound();
 
                     UpdateAimingLayers();
                 }
@@ -302,94 +421,132 @@ public class PlayerController : MonoBehaviour
                 {
                     isAiming = false;
                     mainCam.fieldOfView = playerProperties.defaultFov;
-                    playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
+                    camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
 
-                    sfxManager.mainAudioSource.clip = sfxManager.aimingSound;
-                    sfxManager.mainAudioSource.Play();
+                    allPlayerScripts.aimingScript.playAimSound();
 
-                    mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                    aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
 
                     UpdateAimingLayers();
                 }
 
 
 
-
-
-                //StartCoroutine(ChangeCamRotation());
-                /*
-                cam.transform.localRotation = Quaternion.Euler(-4.8f, 0, 0);
-                Debug.Log(savedCamRotation);
-                camChild.transform.localRotation = Quaternion.Euler(4.8f, 0, 0);
-                */
-
             }
 
         }
-        /*
-        else if (player.GetButtonUp("Aim") && !isReloading && !isRunning && !isInspecting)
-        {
 
-            isAiming = false;
+        //if (movement.direction == "Forward")
+        //{
+        //    if (!movement.isGrounded)
+        //        return;
 
-            cam.fieldOfView = 60;
-            cam.transform.localRotation = savedCamRotation;
-            camChild.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
-
-            //anim.SetBool("Aim", false);
-
-            sfxManager.mainAudioSource.clip = sfxManager.aimingSound;
-            sfxManager.mainAudioSource.Play();
-
-            cam.fieldOfView = 60;
-
-
-        
-        }*/
+        //    if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
+        //    {
+        //        if (player.GetButton("Sprint"))
+        //            EnableSprint();
+        //        else if (player.GetButtonUp("Sprint"))
+        //            DisableSprint();
+        //    }
+        //    else if (lastControllerType == ControllerType.Joystick)
+        //        if (player.GetButtonDown("Sprint"))
+        //            EnableSprint();
+        //}
+        //else
+        //    DisableSprint();
     }
 
+    public void ScopeIn()
+    {
+
+    }
+    public void ScopeOut()
+    {
+        if (!isAiming && !playerProperties.isDead)
+            return;
+        Debug.Log("Unscope Script");
+        isAiming = false;
+        mainCam.fieldOfView = playerProperties.defaultFov;
+        camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
+        allPlayerScripts.aimingScript.playAimSound();
+
+        mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        //aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
+
+        UpdateAimingLayers();
+    }
+
+    [PunRPC]
     void Melee()
     {
         if (!playerProperties.isDead)
         {
-            if (player.GetButtonDown("Melee") && !isMeleeing /* && !isInspecting */)
+            if (player.GetButtonDown("Melee") && !isMeleeing && !isShooting && !isThrowingGrenade && !isSprinting)
             {
-                anim.Play("Knife Attack 2", 0, 0f);
-                StartCoroutine(Melee3PS());
-                melee.PlayMeleeSound();
+                Debug.Log("RPC Call: Melee");
+                PV.RPC("Melee_RPC", RpcTarget.All);
             }
         }
+    }
+
+    [PunRPC]
+    void Melee_RPC()
+    {
+        if (PV.IsMine)
+        {
+            melee.Knife();
+            if (melee.playersInMeleeZone.Count > 0)
+                meleeAudioSource.clip = melee.knifeSuccessSound;
+            else
+                meleeAudioSource.clip = melee.knifeFailSound;
+        }
+        meleeAudioSource.Play();
+        anim.Play("Knife Attack 2", 0, 0f);
+        StartCoroutine(Melee3PS());
     }
 
     void Crouch()
     {
         if (player.GetButtonDown("Crouch"))
-        {
-            Debug.Log("Crouching");
-            movement.tPersonScripts.anim.SetBool("Crouch", true);
-            isCrouching = true;
-            mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);
-        }
+            EnableCrouch();
         else if (player.GetButtonUp("Crouch"))
-        {
-            movement.tPersonScripts.anim.SetBool("Crouch", false);
-            isCrouching = false;
-            mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);
-        }
+            DisableCrouch();
+    }
+
+    void EnableCrouch()
+    {
+        Debug.Log("Crouching");
+        movement.tPersonScripts.anim.SetBool("Jump", false);
+        movement.tPersonScripts.anim.SetBool("Crouch", true);
+        isCrouching = true;
+        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);
+        gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.35f, 0);
+        GetComponent<CharacterController>().height = 1.25f;
+        GetComponent<CharacterController>().center = new Vector3(0, -0.7f, 0);
+    }
+
+    public void DisableCrouch()
+    {
+        movement.tPersonScripts.anim.SetBool("Crouch", false);
+        isCrouching = false;
+        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);
+        gwProperties.bulletSpawnPoint.localPosition = gwProperties.defaultBulletSpawnPoint;
+
+        GetComponent<CharacterController>().height = 1.7f; // Default values on the prefab
+        GetComponent<CharacterController>().center = new Vector3(0, -0.5f, 0); // Default values on the prefab
     }
 
     void Grenade()
     {
-        if (player.GetButtonDown("Throw Grenade") && !isDualWielding /* && !isInspecting */)
+        if (player.GetButtonDown("Throw Grenade") && !isDualWielding && !isShooting && !isMeleeing && !isSprinting /* && !isInspecting */)
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {
-                StartCoroutine(GrenadeSpawnDelay());
+                ScopeOut();
                 pInventory.grenades = pInventory.grenades - 1;
-                //Play grenade throw animation
                 anim.Play("GrenadeThrow", 0, 0.0f);
-                StartCoroutine(ThrowGrenade3PS());
+                PV.RPC("ThrowGrenade_RPC", RpcTarget.All);
+                //StartCoroutine(GrenadeSpawnDelay());
+                //StartCoroutine(ThrowGrenade3PS());
             }
         }
 
@@ -541,24 +698,31 @@ public class PlayerController : MonoBehaviour
 
     void SwitchGrenades()
     {
-        if (player.GetButtonDown("Switch Grenades"))
+        if (player.GetButtonDown("Switch Grenades") && PV.IsMine)
         {
-            if (fragGrenadesActive)
-            {
-                fragGrenadesActive = false;
-                stickyGrenadesActive = true;
+            grenadeSwitchAudioSource.Play();
+            PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
+        }
+    }
 
-                allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(false);
-                allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(true);
-            }
-            else if (stickyGrenadesActive)
-            {
-                fragGrenadesActive = true;
-                stickyGrenadesActive = false;
+    [PunRPC]
+    void SwitchGrenades_RPC()
+    {
+        if (fragGrenadesActive)
+        {
+            fragGrenadesActive = false;
+            stickyGrenadesActive = true;
 
-                allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(true);
-                allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(false);
-            }
+            allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(false);
+            allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(true);
+        }
+        else if (stickyGrenadesActive)
+        {
+            fragGrenadesActive = true;
+            stickyGrenadesActive = false;
+
+            allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(true);
+            allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(false);
         }
     }
 
@@ -568,8 +732,8 @@ public class PlayerController : MonoBehaviour
         {
             holstered = true;
 
-            sfxManager.mainAudioSource.clip = weapSounds.holsterSound;
-            sfxManager.mainAudioSource.Play();
+            //sfxManager.mainAudioSource.clip = weapSounds.holsterSound;
+            //sfxManager.mainAudioSource.Play();
 
             hasBeenHolstered = true;
         }
@@ -577,8 +741,8 @@ public class PlayerController : MonoBehaviour
         {
             holstered = false;
 
-            sfxManager.mainAudioSource.clip = weapSounds.drawWeaponSound;
-            sfxManager.mainAudioSource.Play();
+            //sfxManager.mainAudioSource.clip = weapSounds.drawWeaponSound;
+            //sfxManager.mainAudioSource.Play();
 
             hasBeenHolstered = false;
         }
@@ -744,6 +908,18 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
+    public void Player3PReloadAnimation()
+    {
+        if (PV.IsMine)
+            PV.RPC("Player3PReloadAnimation_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void Player3PReloadAnimation_RPC()
+    {
+        StartCoroutine(Reload3PS());
+    }
+
     public IEnumerator Reload3PS()
     {
         tPersonController.anim.Play("Reload");
@@ -753,10 +929,16 @@ public class PlayerController : MonoBehaviour
     IEnumerator Melee3PS()
     {
         tPersonController.anim.Play("Melee");
+        StartCoroutine(ShowMeleeKnife());
         yield return new WaitForEndOfFrame();
     }
 
-
+    IEnumerator ShowMeleeKnife()
+    {
+        melee.knifeGameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        melee.knifeGameObject.SetActive(false);
+    }
 
 
 
@@ -786,6 +968,14 @@ public class PlayerController : MonoBehaviour
     /// /////////////////////////////////////////////////////////////////////////////////// Coroutines ////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
     /// <returns></returns>
+    /// 
+
+    [PunRPC]
+    public void ThrowGrenade_RPC()
+    {
+        StartCoroutine(GrenadeSpawnDelay());
+        StartCoroutine(ThrowGrenade3PS());
+    }
 
     private IEnumerator GrenadeSpawnDelay()
     {
@@ -794,33 +984,33 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(pInventory.grenadeSpawnDelay);
         //Spawn grenade prefab at spawnpoint
 
+        var grenade = Instantiate(pInventory.grenadePrefab);
+        Destroy(grenade.gameObject);
+
         if (fragGrenadesActive)
         {
-            var grenade = Instantiate(pInventory.grenadePrefab,
-                gwProperties.grenadeSpawnPoint.transform.position,
-                gwProperties.grenadeSpawnPoint.transform.rotation);
-
-            grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
-
-            grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = gameObject;
+            grenade = Instantiate(pInventory.grenadePrefab,
+               gwProperties.grenadeSpawnPoint.transform.position,
+               gwProperties.grenadeSpawnPoint.transform.rotation);
+            grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = playerProperties;
             grenade.GetComponent<FragGrenade>().playerRewiredID = playerRewiredID;
-            grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
-
-            Destroy(grenade, 10);
+            //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
-
-        if (stickyGrenadesActive)
+        else if (stickyGrenadesActive)
         {
-            var grenade = Instantiate(pInventory.stickyGrenadePrefab,
-                gwProperties.grenadeSpawnPoint.transform.position,
-                gwProperties.grenadeSpawnPoint.transform.rotation);
-
-            grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
-
-            grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = gameObject;
+            grenade = Instantiate(pInventory.stickyGrenadePrefab,
+               gwProperties.grenadeSpawnPoint.transform.position,
+               gwProperties.grenadeSpawnPoint.transform.rotation);
+            grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = playerProperties;
             grenade.GetComponent<StickyGrenade>().playerRewiredID = playerRewiredID;
-            grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
+            //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
+
+        foreach (GameObject hb in playerProperties.hitboxes)
+            Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+
+        grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
+        Destroy(grenade.gameObject, 10);
     }
 
     //Reload
@@ -1071,7 +1261,7 @@ IEnumerator Reload()
                 }
             }
         }
-
+        pInventory.activeWeapon.GetComponent<WeaponProperties>().ResetBulletToIgnoreRecoil();
     }
 
     public void TransferAmmoDW(bool reloadedRight, bool reloadedLeft)
@@ -1135,50 +1325,11 @@ IEnumerator Reload()
     }
     */
 
-    IEnumerator TestButton()
+    void TestButton()
     {
-        if (player.GetButtonDown("Test Button"))
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            if (wProperties.usesShells)
-            {
-                int ammoNeededToReload = wProperties.maxAmmoInWeapon - wProperties.currentAmmo;
-                int ammoToReload = 0;
-
-                Debug.Log("Ammo needed = " + ammoNeededToReload);
-
-                if (ammoNeededToReload > pInventory.currentExtraAmmo)
-                {
-                    ammoToReload = pInventory.currentExtraAmmo;
-                    Debug.Log("Ammo to Reload = " + ammoToReload);
-                }
-                else if (ammoNeededToReload <= pInventory.currentExtraAmmo)
-                {
-                    ammoToReload = ammoNeededToReload;
-                    Debug.Log("Ammo to Reload = " + ammoToReload);
-                }
-
-                for (int i = 0; i < ammoToReload; i++)
-                {
-                    anim.Play("Reload Open Test", 0, 0f);
-                    yield return new WaitForSeconds(2f);
-                    Debug.Log("Played Animation");
-                }
-
-                /*
-                while (ammoToReload > 0)
-                {
-                    if (!isReloading)
-                    {
-                        anim.Play("Reload Open", 0, 0f);
-                        reloadAnimationStarted = true;
-                    }
-                    else
-                    {
-                        ammoToReload = ammoToReload - 1;
-                    }
-                }
-                */
-            }
+            OnlineMultiplayerManager.multiplayerManagerInstance.EndGame();
         }
     }
 
@@ -1230,20 +1381,7 @@ IEnumerator Reload()
     }
     */
 
-    public void Unscope()
-    {
-        isAiming = false;
-        mainCam.fieldOfView = playerProperties.defaultFov;
-        playerProperties.activeSensitivity = playerProperties.defaultSensitivity;
 
-        sfxManager.mainAudioSource.clip = sfxManager.aimingSound;
-        sfxManager.mainAudioSource.Play();
-
-        mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
-
-        UpdateAimingLayers();
-    }
 
     public void UpdateAimingLayers()
     {
@@ -1308,44 +1446,75 @@ IEnumerator Reload()
         if (player.GetButtonDown("Start") || player.GetButtonDown("Escape"))
         {
             Debug.Log($"Pausing game");
-            PauseGame();
+            TogglePauseGame();
         }
     }
 
-    public void PauseGame()
+    void BackButton()
     {
-        if (Time.timeScale != 0)
+        if (player.GetButtonDown("Back"))
         {
-            Debug.Log($"Number of player: {StaticVariables.numberOfPlayers}");
-            Time.timeScale = 0;
-            if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
-                if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
-                {
-                    Debug.Log("Pause MaK");
-                    Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
-                    allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(true);
-                }
-                else
-                    allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
-            else
-                allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
+            allPlayerScripts.scoreboardManager.OpenScoreboard();
+        }
+        else if (player.GetButtonUp("Back"))
+        {
+            allPlayerScripts.scoreboardManager.CloseScoreboard();
+        }
+    }
+
+    public void TogglePauseGame()
+    {
+        Debug.Log("Toggling Pause Menu");
+        if (!pauseMenuOpen)
+        {
+            Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
+            Cursor.visible = true;
+            allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(true);
+            pauseMenuOpen = true;
         }
         else
         {
-            Time.timeScale = 1;
-            if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
-                Cursor.lockState = CursorLockMode.Locked;
-            allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked; // Must Unlock Cursor so it can detect buttons
+            Cursor.visible = false;
             allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(false);
-            allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
+            pauseMenuOpen = false;
         }
+        //if (Time.timeScale != 0)
+        //{
+        //    Debug.Log($"Number of player: {StaticVariables.numberOfPlayers}");
+        //    Time.timeScale = 0;
+        //    if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
+        //        if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
+        //        {
+        //            Debug.Log("Pause MaK");
+        //            Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
+        //            allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(true);
+        //        }
+        //        else
+        //            allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
+        //    else
+        //        allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
+        //}
+        //else
+        //{
+        //    Time.timeScale = 1;
+        //    if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
+        //        Cursor.lockState = CursorLockMode.Locked;
+        //    allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
+        //    allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(false);
+        //    allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
+        //}
     }
 
     public void ReturnToMainMenu()
     {
+        Debug.Log("Returning to Main Menu");
         //Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 1;
-        SceneManager.LoadScene("000 - Main Menu");
+        //Time.timeScale = 1;
+        //SceneManager.LoadScene("000 - Main Menu");
+
+        PhotonNetwork.LoadLevel(0);
+        PhotonNetwork.LeaveRoom();
     }
 }
 

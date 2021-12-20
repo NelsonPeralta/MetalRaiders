@@ -1,43 +1,76 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using Photon.Pun;
 
 public class AmmoPack : MonoBehaviour
 {
-    public ChildManager cManager;
-    public PlayerInventory pInventory;
+    public PhotonView PV;
 
-    int ammoAllowedToRemoveFromThisPack;
+    [Header("Single")]
+    public WeaponPool weaponPool;
+    public OnlineGameTime onlineGameTime;
 
-    public AudioSource aSource;
-    
+    [Header("Ammo")]
+    public bool randomAmmo;
+    public string ammoType;
+    public int defaultAmmo;
+    [SerializeField] int ammoInThisPack;
+
+    [Header("Classes")]
+    public TextMeshPro ammoText;
+    public OnlineAmmoPackSpawnPoint onlineAmmoPackSpawnPoint;
+
+    [Header("Other Classes")]
+    public PlayerProperties playerProperties;
+
+    private void Start()
+    {
+        weaponPool = WeaponPool.weaponPoolInstance;
+        onlineGameTime = OnlineGameTime.onlineGameTimeInstance;
+        ammoInThisPack = GetNewAmmo();
+        UpdateAmmoText();
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
-        {
-            cManager = GetComponent<ChildManager>();
 
-            pInventory = other.gameObject.GetComponent<ChildManager>().FindChildWithTag("Player Inventory").GetComponent<PlayerInventory>();
-
-            if(pInventory.smallAmmo < pInventory.maxSmallAmmo || pInventory.heavyAmmo < pInventory.maxHeavyAmmo || pInventory.powerAmmo < pInventory.maxPowerAmmo)
-            {
-                StartCoroutine(GiveAmmo());
-            }
-        }
     }
 
-    IEnumerator GiveAmmo()
+    public void EnablePack()
     {
-        pInventory.smallAmmo = pInventory.maxSmallAmmo;
-        pInventory.heavyAmmo = pInventory.maxHeavyAmmo;
-        pInventory.powerAmmo = pInventory.maxPowerAmmo;
+        ammoInThisPack = GetNewAmmo();
+        UpdateAmmoText();
+        gameObject.SetActive(true);
+    }
 
-        cManager.FindChildWithTagScript("Pack FX").SetActive(false);
-        cManager.FindChildWithTagScript("Motion Tracker Icon").SetActive(false);
+    int GetNewAmmo()
+    {
+        int newAmmo = 0;
+        if (!randomAmmo)
+            newAmmo = defaultAmmo;
+        else
+            newAmmo = (int)Mathf.Floor(Random.Range(1, (defaultAmmo * 0.7f)));
+        if (newAmmo <= 0)
+            newAmmo = 1;
+        return newAmmo;
+    }
 
-        yield return new WaitForSeconds(5);
+    void UpdateAmmoText()
+    {
+        ammoText.text = ammoInThisPack.ToString();
+    }
 
-        Destroy(this.gameObject);
+    public void SetRandomAmmoAsDefault()
+    {
+        randomAmmo = true;
+        ammoInThisPack = GetNewAmmo();
+        UpdateAmmoText();
+    }
+
+    public int GetAmmo()
+    {
+        return ammoInThisPack;
     }
 }

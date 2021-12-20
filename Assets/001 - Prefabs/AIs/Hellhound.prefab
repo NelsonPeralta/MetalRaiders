@@ -2862,9 +2862,9 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 180
+  m_AngularSpeed: 1000
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -2893,6 +2893,7 @@ MonoBehaviour:
   simpleLOS: {fileID: 0}
   shield: {fileID: 0}
   motionTrackerDot: {fileID: 2526179230621561660}
+  DefaultHealth: 75
   Health: 75
   points: 75
   defaultSpeed: 10
@@ -2916,6 +2917,8 @@ MonoBehaviour:
   powerAmmoPack: {fileID: 2352401233832416907, guid: 612a1e2136c98db4cb728f4957e81ef6,
     type: 3}
   grenadeAmmoPack: {fileID: 1937134780927942671, guid: 64f85ca88ae00674792ea857fc460356,
+    type: 3}
+  maxAmmoPrefab: {fileID: 6216787332192456009, guid: 9c2eb4aef64e177479e9201e7104317d,
     type: 3}
   droppableWeapons:
   - {fileID: 6055085170543161295, guid: 0127b600be5606c438d3b7a73726813b, type: 3}

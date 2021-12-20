@@ -1,51 +1,86 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Melee : MonoBehaviour
 {
     public PlayerController pController;
     public PlayerProperties pProperties;
 
-    [Header("Audio")]
+    [Header("Players in Melee Zone")]
+    public List<PlayerProperties> playersInMeleeZone;
+
+    [Header("Components")]
+    bool meleeReady = true;
+    public GameObject meleeIndicator;
+    public GameObject knifeGameObject;
     public AudioSource audioSource;
-    public AudioClip knifeSound;
+    public AudioClip knifeSuccessSound;
+    public AudioClip knifeFailSound;
 
-    private void Update()
+
+    private void Start()
     {
-        Collider[] colliders = Physics.OverlapBox(gameObject.transform.position, transform.localScale);
+        meleeIndicator.SetActive(false);
+    }
+    public void Knife()
+    {
 
-        foreach (Collider hit in colliders)
+        if (playersInMeleeZone.Count > 0)
         {
-            if(hit.gameObject.GetComponent<AIHitbox>() != null)
+            StartCoroutine(EnableMeleeIndicator());
+
+            for (int i = 0; i < playersInMeleeZone.Count; i++)
             {
-                var AIHitbox = hit.gameObject.GetComponent<AIHitbox>();
+                PlayerProperties playerToDamage = playersInMeleeZone[i];
+                if (playerToDamage.Health < pProperties.meleeDamage)
+                    RemoveCorrespondingPlayer(playerToDamage.gameObject);
 
-                if (pController.player.GetButtonDown("Melee") && !pController.isMeleeing)
-                {
-                    AIHitbox.UpdateAIHealthMelee(pProperties.meleeDamage, pProperties.gameObject);
-                }
+                playerToDamage.Damage((int)pProperties.meleeDamage, false, pProperties.GetComponent<PhotonView>().ViewID);
             }
-
-            /*
-
-            if (hit.gameObject.GetComponent<PlayerHitbox>() != null)
-            {
-                var playerHitbox = hit.gameObject.GetComponent<PlayerHitbox>();
-                var playerInZone = playerHitbox.player.GetComponent<PlayerProperties>()
-
-                if (pController.player.GetButtonDown("Melee"))
-                {
-                    playerHitbox.player.GetComponent<PlayerProperties>().BleedthroughDamage(pProperties.meleeDamage, false, pProperties.playerRewiredID);
-                }
-            }
-            */
         }
     }
 
-    public void PlayMeleeSound()
+    private void OnTriggerEnter(Collider other)
     {
-        audioSource.clip = knifeSound;
-        audioSource.Play();
+        RemoveNullIndexes();
+        if (other.GetComponent<PlayerProperties>() && other.gameObject != pProperties.gameObject)
+            playersInMeleeZone.Add(other.GetComponent<PlayerProperties>());
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        RemoveCorrespondingPlayer(other.gameObject);
+        RemoveNullIndexes();
+    }
+
+    void RemoveCorrespondingPlayer(GameObject playerGameObject)
+    {
+        if (!playerGameObject)
+            return;
+        for (int i = 0; i < playersInMeleeZone.Count; i++)
+            if (playersInMeleeZone[i].gameObject && playersInMeleeZone[i].gameObject == playerGameObject)
+                playersInMeleeZone[i] = null;
+    }
+
+    void RemoveNullIndexes()
+    {
+        for (int i = 0; i < playersInMeleeZone.Count; i++)
+            if (!playersInMeleeZone[i])
+                playersInMeleeZone.RemoveAt(i);
+    }
+
+    IEnumerator EnableMeleeIndicator()
+    {
+        meleeIndicator.SetActive(true);
+        yield return new WaitForSeconds(0.25f);
+        meleeIndicator.SetActive(false);
+    }
+    IEnumerator DisableMelee()
+    {
+        meleeReady = false;
+        yield return new WaitForSeconds(0.5f);
+        meleeReady = true;
     }
 }

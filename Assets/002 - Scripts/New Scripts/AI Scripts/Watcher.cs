@@ -9,7 +9,7 @@ public class Watcher : MonoBehaviour
     public NavMeshAgent nma;
     public AudioSource aSource;
     public SwarmMode swarmMode;
-    public PlayerManager pManager;
+    public MyPlayerManager pManager;
     public Hitboxes hitboxes;
 
     [Header("Properties")]
@@ -66,6 +66,9 @@ public class Watcher : MonoBehaviour
     public GameObject meteor;
     public GameObject wall;
     public GameObject deathSmoke;
+
+    [Header("Sounds")]
+    public AudioClip summonWall;
 
     [Header("Shield")]
     public ParticleSystem shield;
@@ -234,33 +237,48 @@ public class Watcher : MonoBehaviour
                 }
                 else if (nextAction == "Wall")
                 {
+                    bool spawnWall = true;
                     var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
                     var mov = target.GetComponent<Movement>();
+                    var wal = Instantiate(wall);
                     if (mov.direction == "Backwards")
                     {
                         animator.Play("Summon");
-                        var wal = Instantiate(wall, pSurro.back.transform.position, pSurro.back.transform.rotation);
+                        wal.transform.position = pSurro.back.transform.position;
+                        wal.transform.rotation = pSurro.back.transform.rotation;
+                        //var wal = Instantiate(wall, pSurro.back.transform.position, pSurro.back.transform.rotation);
                         wal.transform.Rotate(-90, 0, 0);
                     }
                     else if (mov.direction == "Left")
                     {
                         animator.Play("Summon");
-                        var wal = Instantiate(wall, pSurro.left.transform.position, pSurro.left.transform.rotation);
+                        wal.transform.position = pSurro.back.transform.position;
+                        wal.transform.rotation = pSurro.back.transform.rotation;
+                        //var wal = Instantiate(wall, pSurro.left.transform.position, pSurro.left.transform.rotation);
                         wal.transform.Rotate(-90, 90, 0);
                     }
                     else if (mov.direction == "Right")
                     {
                         animator.Play("Summon");
-                        var wal = Instantiate(wall, pSurro.right.transform.position, pSurro.right.transform.rotation);
+                        wal.transform.position = pSurro.back.transform.position;
+                        wal.transform.rotation = pSurro.back.transform.rotation;
+                        //var wal = Instantiate(wall, pSurro.right.transform.position, pSurro.right.transform.rotation);
                         wal.transform.Rotate(-90, 90, 0);
                     }
                     else
                     {
+                        Destroy(wal);
                         animator.Play("Projectile");
                         var proj = Instantiate(projectile, projectileSpawnPoint.transform.position, projectileSpawnPoint.transform.rotation);
                         proj.GetComponent<Fireball>().damage = projectileDamage;
                         proj.GetComponent<Fireball>().force = projectileSpeed;
                         Destroy(proj, 5);
+                        spawnWall = false;
+                    }
+                    if (spawnWall)
+                    {
+                        wal.GetComponent<AudioSource>().clip = summonWall;
+                        wal.GetComponent<AudioSource>().Play();
                     }
                     nextAction = "";
                     isReadyToAttack = false;
@@ -309,14 +327,14 @@ public class Watcher : MonoBehaviour
     {
         nma.speed = defaultSpeed;
         animator.SetBool("Fly Forward", true);
-        animator.SetBool("Idle", false);
+        //animator.SetBool("Idle", false);
     }
 
     void Idle()
     {
         nma.speed = 0;
         animator.SetBool("Fly Forward", false);
-        animator.SetBool("Idle", true);
+        //animator.SetBool("Idle", true);
         if (target)
         {
             Vector3 targetPostition = new Vector3(target.position.x,
@@ -361,7 +379,7 @@ public class Watcher : MonoBehaviour
 
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
         }
         DropRandomWeapon();
@@ -407,18 +425,28 @@ public class Watcher : MonoBehaviour
         targetSwitchReady = true;
     }
 
+    void TransferPoints()
+    {
+        if (lastPlayerWhoShot)
+        {
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
+            {
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
+
+                pPoints.AddPoints(this.points);
+            }
+        }
+    }
+
     public void TransferDamageToPoints(int points)
     {
-        //StartCoroutine(Block());
-
         if (lastPlayerWhoShot.gameObject != null)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
             {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
+                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
 
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
+                pPoints.AddPoints(points);
             }
         }
     }
@@ -490,28 +518,16 @@ public class Watcher : MonoBehaviour
         }
     }
 
-    void TransferPoints()
-    {
-        if (lastPlayerWhoShot.gameObject != null)
-        {
-            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>() != null)
-            {
-                PlayerPoints pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerPoints>();
-
-                pPoints.swarmPoints = pPoints.swarmPoints + points;
-                pPoints.swarmPointsText.text = pPoints.swarmPoints.ToString();
-            }
-        }
-    }
 
     void DropRandomWeapon()
     {
         int ChanceToDrop = Random.Range(0, 10);
 
-        if (ChanceToDrop <= 3)
+        if (ChanceToDrop <= 3) // Debug: 3 nomrally
         {
             int randomInt = Random.Range(0, droppableWeapons.Length - 1);
             GameObject weapon = Instantiate(droppableWeapons[randomInt], gameObject.transform.position + new Vector3(0, 0.5f, 0), gameObject.transform.rotation);
+            weapon.GetComponent<LootableWeapon>().RandomAmmo();
             weapon.gameObject.name = weapon.name.Replace("(Clone)", "");
 
             Destroy(weapon, 60);

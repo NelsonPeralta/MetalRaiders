@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SlayerManager : MonoBehaviour
 {
+    public bool EditMode;
     public GameSettings gameSettings;
     public bool useThisGameMode;
 
@@ -21,7 +22,7 @@ public class SlayerManager : MonoBehaviour
     {
         if (GameObject.Find("Game Settings") != null)
             gameSettings = GameObject.FindGameObjectWithTag("Game Settings").gameObject.GetComponent<GameSettings>();
-        if (gameSettings && gameSettings.loadSlayer)
+        if (gameSettings && gameSettings.loadSlayer || EditMode)
             GivePlayersThis();
         ConfigureUIPoints();
     }
@@ -33,17 +34,17 @@ public class SlayerManager : MonoBehaviour
 
         foreach (GameObject player in players)
         {
-            if (player.GetComponent<PlayerProperties>().playerRewiredID == playerWhoKilled)
-                player.GetComponent<AllPlayerScripts>().playerMPProperties.AddKill(true);
+            //if (player.GetComponent<PlayerProperties>().playerRewiredID == playerWhoKilled)
+            //    player.GetComponent<AllPlayerScripts>().playerMPProperties.AddKill(true);
 
-            if (player.GetComponent<AllPlayerScripts>().playerMPProperties.kills > secondPlaceKills)
-                secondPlaceKills = player.GetComponent<AllPlayerScripts>().playerMPProperties.kills;
+            //if (player.GetComponent<AllPlayerScripts>().playerMPProperties.kills > secondPlaceKills)
+            //    secondPlaceKills = player.GetComponent<AllPlayerScripts>().playerMPProperties.kills;
 
-            if (player.GetComponent<PlayerProperties>().playerRewiredID != playerWhoKilled)
-                player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsBlue.text = secondPlaceKills.ToString();
+            //if (player.GetComponent<PlayerProperties>().playerRewiredID != playerWhoKilled)
+            //    player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsBlue.text = secondPlaceKills.ToString();
 
-            if (player.GetComponent<AllPlayerScripts>().playerMPProperties.kills >= killsToWin)
-                EndGame();
+            //if (player.GetComponent<AllPlayerScripts>().playerMPProperties.kills >= killsToWin)
+            //    EndGame();
         }
     }
 
@@ -60,7 +61,7 @@ public class SlayerManager : MonoBehaviour
             {
                 if (player)
                 {
-                    player.GetComponent<AllPlayerScripts>().playerMPProperties.slayerManager = this;
+                    //player.GetComponent<AllPlayerScripts>().playerMPProperties.slayerManager = this;
                 }
             }
         }
@@ -78,6 +79,17 @@ public class SlayerManager : MonoBehaviour
                     player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsBlue.text = 0.ToString();
                     player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsRed.text = 0.ToString();
                 }
+            }
+        }
+    }
+
+    void ConfigureTeams()
+    {
+        if (players.Length > 0)
+        {
+            foreach (GameObject player in players)
+            {
+                
             }
         }
     }
