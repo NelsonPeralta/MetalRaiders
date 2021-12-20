@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class PlayerUIComponents : MonoBehaviour
 {
+    [Header("Scripts")]
+    public OnlinePlayerSwarmScript onlinePlayerSwarmScript;
     [Header("Singletons")]
     public OnlineGameTime onlineGameTimeInstance;
     public PhotonView PV;
@@ -57,6 +59,13 @@ public class PlayerUIComponents : MonoBehaviour
         onlineGameTimeInstance.playerTimerTexts.Add(Timer);
 
         headshotIndicator.SetActive(false);
+
+        OnSwarmKillsChanged(onlinePlayerSwarmScript);
+    }
+
+    void OnSwarmKillsChanged(OnlinePlayerSwarmScript onlinePlayerSwarmScript)
+    {
+        // Change the ui using onlinePlayerSwarmScript.kills
     }
 
     public void ShowHeadshotIndicator()

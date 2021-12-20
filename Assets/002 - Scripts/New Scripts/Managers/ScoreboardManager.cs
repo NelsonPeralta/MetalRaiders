@@ -81,10 +81,13 @@ public class ScoreboardManager : MonoBehaviour
             for (int i = 0; i < allPlayersMS.Count; i++)
             {
                 scoreboardRows[i].playerNameText.text = allPlayersMS[i].playerName;
-
                 scoreboardRows[i].playerKillsText.text = allPlayersMS[i].kills.ToString();
-
                 scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
+                scoreboardRows[i].playerHeadshotsText.text = allPlayersMS[i].headshots.ToString();
+                if(allPlayersMS[i].deaths > 0)
+                    scoreboardRows[i].playerCurrentPointsText.text = (allPlayersMS[i].kills / (float)allPlayersMS[i].deaths).ToString();
+                else
+                    scoreboardRows[i].playerCurrentPointsText.text = "0";
 
                 scoreboardRows[i].gameObject.SetActive(true);
             }
@@ -100,10 +103,10 @@ public class ScoreboardManager : MonoBehaviour
             for (int i = 0; i < allPlayersSS.Count; i++)
             {
                 scoreboardRows[i].playerNameText.text = allPlayersSS[i].GetComponent<PhotonView>().Owner.NickName;
-
-                scoreboardRows[i].playerKillsText.text = allPlayersSS[i].GetPoints().ToString();
-
-                scoreboardRows[i].playerDeathsText.text = allPlayersSS[i].GetTotalPoints().ToString();
+                scoreboardRows[i].playerKillsText.text = allPlayersSS[i].kills.ToString();
+                scoreboardRows[i].playerDeathsText.text = allPlayersSS[i].deaths.ToString();
+                scoreboardRows[i].playerHeadshotsText.text = allPlayersSS[i].headshots.ToString();
+                scoreboardRows[i].playerCurrentPointsText.text = allPlayersSS[i].GetPoints().ToString();
 
                 scoreboardRows[i].gameObject.SetActive(true);
             }

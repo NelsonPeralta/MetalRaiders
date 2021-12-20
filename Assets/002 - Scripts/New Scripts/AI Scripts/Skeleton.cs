@@ -309,6 +309,7 @@ public class Skeleton : MonoBehaviour
         {
             lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
+            lastPlayerWhoShot.GetComponent<OnlinePlayerSwarmScript>().kills++;
         }
         DropRandomWeapon();
         target = null;

@@ -105,7 +105,10 @@ public class ZombieScript : AiAbstractClass
         pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
 
         if (Health <= 0)
+        {
+            PhotonView.Find(playerWhoShotPDI).GetComponent<OnlinePlayerSwarmScript>().kills++;
             Die();
+        }
     }
     void Die()
     {
@@ -530,5 +533,10 @@ public class ZombieScript : AiAbstractClass
     {
         defaultSpeed = 0.1f;
         nma.acceleration = 0.1f;
+    }
+
+    public override int GetHealth()
+    {
+        return (int)Health;
     }
 }

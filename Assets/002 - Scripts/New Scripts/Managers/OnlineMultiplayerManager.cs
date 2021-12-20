@@ -77,11 +77,11 @@ public class OnlineMultiplayerManager : MonoBehaviourPunCallbacks
 
     public void AddToScore(int playerPhotonIdWhoGotTheKill, int playerWhoDiedPVID, bool wasHeadshot)
     {
-            List<PlayerProperties> allPlayers = new List<PlayerProperties>();
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
-                allPlayers.Add(go.GetComponent<PlayerProperties>());
+        List<PlayerProperties> allPlayers = new List<PlayerProperties>();
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+            allPlayers.Add(go.GetComponent<PlayerProperties>());
 
-            PlayerMultiplayerStats playerWhoGotKilledMS = PhotonView.Find(playerWhoDiedPVID).GetComponent<PlayerMultiplayerStats>();
+        PlayerMultiplayerStats playerWhoGotKilledMS = PhotonView.Find(playerWhoDiedPVID).GetComponent<PlayerMultiplayerStats>();
         if (playerPhotonIdWhoGotTheKill != 99)
         {
             PlayerMultiplayerStats playerWhoGotTheKillMS = PhotonView.Find(playerPhotonIdWhoGotTheKill).GetComponent<PlayerMultiplayerStats>();
@@ -113,7 +113,7 @@ public class OnlineMultiplayerManager : MonoBehaviourPunCallbacks
             {
                 foreach (PlayerProperties pp in allPlayers)
                     if (pp.PV.IsMine && pp)
-                        pp.allPlayerScripts.killFeedManager.EnterNewFeed(playerWhoGotKilledMS.playerName);
+                        pp.allPlayerScripts.killFeedManager.EnterNewFeed($"{playerWhoGotKilledMS.playerName} committed suicide");
             }
 
             CheckForEndGame(playerWhoGotTheKillMS.playerName);
@@ -248,7 +248,7 @@ public class OnlineMultiplayerManager : MonoBehaviourPunCallbacks
             }
     }
 
-    void EndGame()
+    public void EndGame()
     {
         Debug.Log("Ending Game");
         List<PlayerProperties> allPlayers = new List<PlayerProperties>();
@@ -259,8 +259,12 @@ public class OnlineMultiplayerManager : MonoBehaviourPunCallbacks
         {
             if (!allPlayers[i].PV.IsMine)
                 return;
-                allPlayers[i].allPlayerScripts.announcer.PlayGameOverClip();
-                allPlayers[i].LeaveRoomWithDelay();
+            PlayerProperties myPlayer = allPlayers[i];
+            WebManager.webManagerInstance.SaveMultiplayerStats(myPlayer.GetComponent<PlayerMultiplayerStats>());
+
+            allPlayers[i].allPlayerScripts.announcer.PlayGameOverClip();
+            allPlayers[i].LeaveRoomWithDelay();
+            myPlayer.allPlayerScripts.killFeedManager.EnterNewFeed("GAME OVER!");
         }
     }
 

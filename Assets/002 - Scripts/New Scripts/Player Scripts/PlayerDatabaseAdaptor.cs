@@ -21,29 +21,28 @@ public class PlayerDatabaseAdaptor
 
     public void SetPlayerBasicPvPStats(PlayerBasicPvPStats playerData)
     {
-        if (this.playerBasicPvPStats == null)
-        {
-            this.playerBasicPvPStats = playerData;
-            Debug.Log($"Player basic pvp stats are set. Kills: {this.playerBasicPvPStats.kills}. Deaths: {this.playerBasicPvPStats.deaths}. Headshots: {this.playerBasicPvPStats.headshots}");
-        }
-        else
-            Debug.LogError("PlayerData already set");
+        this.playerBasicPvPStats = playerData;
+        Debug.Log($"Player basic pvp stats are set. Kills: {this.playerBasicPvPStats.kills}. Deaths: {this.playerBasicPvPStats.deaths}. Headshots: {this.playerBasicPvPStats.headshots}");
     }
 
     public void SetPlayerBasicPvEStats(PlayerBasicPvEStats playerData)
     {
-        if (this.playerBasicPvEStats == null)
-        {
-            this.playerBasicPvEStats = playerData;
-            Debug.Log($"Player basic pve stats are set. Kills: {this.playerBasicPvEStats.kills}. Deaths: {this.playerBasicPvEStats.deaths}. Headshots: {this.playerBasicPvEStats.headshots}");
-        }
-        else
-            Debug.LogError("PlayerData already set");
+        this.playerBasicPvEStats = playerData;
+        Debug.Log($"Player basic pve stats are set. Kills: {this.playerBasicPvEStats.kills}. Deaths: {this.playerBasicPvEStats.deaths}. Headshots: {this.playerBasicPvEStats.headshots}");
     }
 
     // ********** GETTERS **********
-    public string GetUsername() { return this.playerData.username; }
-    public int GetKills() { return this.playerBasicPvEStats.kills; }
+    public int GetId() { return playerData.id; }
+    public string GetUsername() { return playerData.username; }
+    // Multiplayer
+    public int GetPvPKills() { return playerBasicPvPStats.kills; }
+    public int GetPvPDeaths() { return playerBasicPvPStats.deaths; }
+    public int GetPvPHeadshots() { return playerBasicPvPStats.headshots; }
+    // PvE
+    public int GetPvEKills() { return playerBasicPvEStats.kills; }
+    public int GetPvEDeaths() { return playerBasicPvEStats.deaths; }
+    public int GetPvEHeadshots() { return playerBasicPvEStats.headshots; }
+    public int GetPvETotalPoints() { return playerBasicPvEStats.total_points; }
     public bool PlayerDataIsSet() { return playerData != null; }
 
 
@@ -78,7 +77,7 @@ public class PlayerDatabaseAdaptor
     public class PlayerBasicPvEStats
     {
         int player_id;
-        public int kills, deaths, headshots;
+        public int kills, deaths, headshots, total_points;
 
         public static PlayerBasicPvEStats CreateFromJSON(string jsonString)
         {

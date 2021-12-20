@@ -58,7 +58,7 @@ MonoBehaviour:
   flameTyrantPrefab: {fileID: 0}
   allPlayers: []
   allPlayerSwarmScripts: []
-  playerLives: 0
+  playerLives: 2
   ZombieSpawns: []
   skeletonSpawns: []
   watcherSpawns: []

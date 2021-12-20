@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviourPun
         AnimationCheck();
 
         //Debug.Log(wProperties.outOfAmmo);
-        StartCoroutine(TestButton());
+        TestButton();
         if (ReInput.controllers != null)
             lastControllerType = ReInput.controllers.GetLastActiveControllerType();
 
@@ -1325,50 +1325,11 @@ IEnumerator Reload()
     }
     */
 
-    IEnumerator TestButton()
+    void TestButton()
     {
-        if (player.GetButtonDown("Test Button"))
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            if (wProperties.usesShells)
-            {
-                int ammoNeededToReload = wProperties.maxAmmoInWeapon - wProperties.currentAmmo;
-                int ammoToReload = 0;
-
-                Debug.Log("Ammo needed = " + ammoNeededToReload);
-
-                if (ammoNeededToReload > pInventory.currentExtraAmmo)
-                {
-                    ammoToReload = pInventory.currentExtraAmmo;
-                    Debug.Log("Ammo to Reload = " + ammoToReload);
-                }
-                else if (ammoNeededToReload <= pInventory.currentExtraAmmo)
-                {
-                    ammoToReload = ammoNeededToReload;
-                    Debug.Log("Ammo to Reload = " + ammoToReload);
-                }
-
-                for (int i = 0; i < ammoToReload; i++)
-                {
-                    anim.Play("Reload Open Test", 0, 0f);
-                    yield return new WaitForSeconds(2f);
-                    Debug.Log("Played Animation");
-                }
-
-                /*
-                while (ammoToReload > 0)
-                {
-                    if (!isReloading)
-                    {
-                        anim.Play("Reload Open", 0, 0f);
-                        reloadAnimationStarted = true;
-                    }
-                    else
-                    {
-                        ammoToReload = ammoToReload - 1;
-                    }
-                }
-                */
-            }
+            OnlineMultiplayerManager.multiplayerManagerInstance.EndGame();
         }
     }
 

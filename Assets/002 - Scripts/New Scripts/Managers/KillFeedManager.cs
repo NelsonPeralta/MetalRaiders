@@ -25,9 +25,9 @@ public class KillFeedManager : MonoBehaviour
         StartCoroutine(SpawnNewFeed_Coroutine(playerWhoGotKillName, playerWhoWasKilledName, wasHeadshot));
     }
 
-    public void EnterNewFeed(string playerWhoCommitedSuicideName)
+    public void EnterNewFeed(string feed)
     {
-        StartCoroutine(SpawnNewFeed_Coroutine(playerWhoCommitedSuicideName));
+        StartCoroutine(SpawnNewFeed_Coroutine(feed));
     }
 
     IEnumerator SpawnNewFeed_Coroutine(string playerWhoGotKillName, string playerWhoWasKilledName, bool wasHeadshot)
@@ -41,10 +41,10 @@ public class KillFeedManager : MonoBehaviour
         Destroy(nkf);
     }
 
-    IEnumerator SpawnNewFeed_Coroutine(string playerWhoCommitedSuicideName)
+    IEnumerator SpawnNewFeed_Coroutine(string feed)
     {
         var nkf = Instantiate(killFeedItemPrefab, gridLayout.transform);
-        nkf.GetComponent<TMP_Text>().text = $"{playerWhoCommitedSuicideName} commited suicide";
+        nkf.GetComponent<TMP_Text>().text = $"{feed}";
         yield return new WaitForSeconds(5);
         Destroy(nkf);
     }

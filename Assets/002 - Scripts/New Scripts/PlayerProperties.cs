@@ -712,7 +712,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         if (lastPlayerWhoDamagedThisPlayerPVID != 0 && multiplayerManager)
             multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
         if (onlineSwarmManager)
+        {
             onlineSwarmManager.RemovePlayerLife();
+            GetComponent<OnlinePlayerSwarmScript>().deaths++;
+        }
         pInventory.holsteredWeapon = null;
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
@@ -1210,9 +1213,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         StartCoroutine(LeaveRoomWithDelay_Coroutine());
     }
 
-    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)
+    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 10)
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(delay);
 
         Cursor.visible = true;
         PhotonNetwork.LeaveRoom();

@@ -26,10 +26,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerListItemPrefab;
     [SerializeField] TMP_Text mapSelectedText;
 
-    [SerializeField] TMP_Text loginUsernameText;
-    [SerializeField] TMP_Text registerUsernameText;
-    [SerializeField] TMP_Text loginPasswordText;
-    [SerializeField] TMP_Text registerPasswordText;
+    [SerializeField] TMP_InputField loginUsernameText;
+    [SerializeField] TMP_InputField registerUsernameText;
+    [SerializeField] TMP_InputField loginPasswordText;
+    [SerializeField] TMP_InputField registerPasswordText;
 
     [Header("Master Client Only")]
     [SerializeField] GameObject startGameButton;
@@ -69,7 +69,17 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        MenuManager.Instance.OpenMenu("offline title");
+        if (WebManager.webManagerInstance)
+        {
+            if (WebManager.webManagerInstance.playerDatabaseAdaptor.PlayerDataIsSet())
+                MenuManager.Instance.OpenMenu("online title");
+            else
+                MenuManager.Instance.OpenMenu("offline title");
+        }
+        else
+        {
+            MenuManager.Instance.OpenMenu("offline title");
+        }
         Debug.Log("Joined Lobby");
         if (PhotonNetwork.NickName == "")
             PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
@@ -254,7 +264,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void Register()
     {
-        WebManager.webManagerInstance.Register(registerUsernameText.text ,registerPasswordText.text);
+        WebManager.webManagerInstance.Register(registerUsernameText.text, registerPasswordText.text);
     }
 
     public void Login()

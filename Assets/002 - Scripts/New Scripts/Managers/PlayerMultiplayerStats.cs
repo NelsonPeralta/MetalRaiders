@@ -6,11 +6,52 @@ using Photon.Realtime;
 
 public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
 {
+    public delegate void PlayerMultiplayerStatsEvent(PlayerMultiplayerStats playerMultiplayerStats);
+    // Events
+    public PlayerMultiplayerStatsEvent OnKillsChanged;
+    public PlayerMultiplayerStatsEvent OnDeathsChanged;
+    public PlayerMultiplayerStatsEvent OnHeadshotsChanged;
+    public PlayerMultiplayerStatsEvent OnKDRatioChanged;
+
     public PlayerProperties player;
     public int PVID;
     public string playerName;
     public int kills;
     public int deaths;
+    int _headshots;
+    float _kd;
+
+    public int headshots
+    {
+        get { return _headshots; }
+        set
+        {
+            var previous = _headshots;
+
+            _headshots = Mathf.Clamp(value, 0, 999);
+
+            if (_headshots != previous)
+            {
+                OnHeadshotsChanged?.Invoke(this);
+            }
+        }
+    }
+
+    public float kd
+    {
+        get { return _kd; }
+        set
+        {
+            var previous = _kd;
+
+            _kd = Mathf.Clamp(value, 0, 999);
+
+            if (_kd != previous)
+            {
+                OnKDRatioChanged?.Invoke(this);
+            }
+        }
+    }
 
     ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
     private void Start()
@@ -20,6 +61,14 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
             PVID = player.PV.ViewID;
             playerName = player.PV.Owner.NickName;
         }
+
+        this.OnKillsChanged += this.OnKillsChange;
+    }
+
+    void OnKillsChange(PlayerMultiplayerStats playerMultiplayerStats)
+    {
+        if(deaths > 0)
+            _kd = (kills / deaths);
     }
 
     public PlayerMultiplayerStats(PlayerProperties pp)
@@ -75,12 +124,16 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
             Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
             kills = (int)changedProps[$"{playerName}_kills"];
             player.allPlayerScripts.playerUIComponents.multiplayerPointsRed.text = $"{kills}";
+
+            OnKillsChanged?.Invoke(this);
         }
 
         if (changedProps.ContainsKey($"{playerName}_deaths"))
         {
             Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
             deaths = (int)changedProps[$"{playerName}_deaths"];
+
+            OnDeathsChanged?.Invoke(this);
         }
     }
 }

@@ -842,8 +842,11 @@ public class OnlineSwarmManager : MonoBehaviour
         {
             if (!allPlayers[i].PV.IsMine)
                 return;
-            allPlayers[i].allPlayerScripts.announcer.PlayGameOverClip();
-            allPlayers[i].LeaveRoomWithDelay();
+            PlayerProperties myPlayer = allPlayers[i];
+            myPlayer.allPlayerScripts.announcer.PlayGameOverClip();
+            myPlayer.LeaveRoomWithDelay();
+
+            WebManager.webManagerInstance.SaveSwarmStats(myPlayer.GetComponent<OnlinePlayerSwarmScript>());
         }
     }
 

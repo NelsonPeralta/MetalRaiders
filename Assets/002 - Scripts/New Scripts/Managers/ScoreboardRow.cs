@@ -9,4 +9,7 @@ public class ScoreboardRow : MonoBehaviour
     public TextMeshProUGUI playerNameText;
     public TextMeshProUGUI playerKillsText;
     public TextMeshProUGUI playerDeathsText;
+    public TextMeshProUGUI playerHeadshotsText;
+    public TextMeshProUGUI playerCurrentPointsText;
+    public TextMeshProUGUI playerTotalPointsText;
 }

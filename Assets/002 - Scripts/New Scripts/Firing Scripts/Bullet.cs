@@ -236,15 +236,18 @@ public class Bullet : MonoBehaviourPunCallbacks
             if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead())
             {
                 AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
-                int _damage = damage;
+                int finalDamage = damage;
                 if (hitbox.isHead && wProperties.isHeadshotCapable)
                 {
                     playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
-                    _damage = (int)(wProperties.headshotMultiplier * damage);
+                    finalDamage = (int)(wProperties.headshotMultiplier * damage);
+
+                    if (hitbox.aiAbstractClass.GetHealth() <= finalDamage)
+                        playerWhoShot.GetComponent<OnlinePlayerSwarmScript>().headshots++;
                 }
 
                 if (playerWhoShot.PV.IsMine)
-                    hitbox.aiAbstractClass.Damage(_damage, playerWhoShot.PV.ViewID);
+                    hitbox.aiAbstractClass.Damage(finalDamage, playerWhoShot.PV.ViewID);
 
                 GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
                 bloodHit.transform.position = finalHitPoint;
@@ -266,6 +269,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         damage = (int)(damage * wProperties.headshotMultiplier);
                         wasHeadshot = true;
                         playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+
                     }
                     else if (playerProperties.maxShield > 0 && (playerProperties.Health < playerProperties.maxHealth - playerProperties.maxShield))
                     {
@@ -273,12 +277,15 @@ public class Bullet : MonoBehaviourPunCallbacks
                         wasHeadshot = true;
                         playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
                     }
+
+                    if (wasHeadshot && playerProperties.Health < damage)
+                    {
+                        playerWhoShot.GetComponent<PlayerMultiplayerStats>().headshots++;
+                    }
                 }
 
-                Debug.Log($"Bullet Damage: {damage}");
                 if (playerWhoShot.PV.IsMine)
                 {
-                    Debug.Log("asdasdasdas");
                     playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
                 }
 
