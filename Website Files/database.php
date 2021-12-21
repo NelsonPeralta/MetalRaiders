@@ -10,11 +10,7 @@
 
 
         $username = $_POST["username"];
-        $username =substr_replace($username ,"",-3);
-        //$password = hash('sha512', $_POST["password"]);
-        $password = hash('sha512', substr_replace($_POST["password"], "", -3));
-        //$password = $_POST["password"];
-        //$password = substr_replace($_POST["password"], "", -3);
+        $password = hash('sha512', $_POST["password"]);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
@@ -61,11 +57,7 @@
 
 
         $username = $_POST["username"];
-        $username =substr_replace($username ,"",-3);
-        //$password = hash('sha512', $_POST["password"]);
-        $password = hash('sha512', substr_replace($_POST["password"], "", -3));
-        //$password = $_POST["password"];
-        //$password = substr_replace($_POST["password"], "", -3);
+        $password = hash('sha512', $_POST["password"]);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
@@ -85,21 +77,8 @@
             }
             // Make sure no other echo or unity will read the json string and otther merges as a single string
             echo json_encode($rows[0]);
-
-
-            // while($row = $result->fetch_assoc()){
-            //     if($row["password"] == $password){
-            //         echo "login success";
-            //     }else{
-            //         echo "wrong credentials";
-            //     }
-            // }
-
-
-
         }else{
             echo "wrong credentials";
-            // echo "Username does not exist";
         }
 
         $conn->close();
@@ -110,14 +89,13 @@
     if($_POST["service"] == "getBasicPvPStats"){
 
 
-        $username = $_POST["username"];
-        $username =substr_replace($username ,"",-3);
+        $playerId = $_POST["playerId"];
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
         }
         
-        $sql = "SELECT player_id, kills, deaths, headshots FROM player_basic_pvp_stats WHERE player_id=(SELECT id FROM users WHERE username='$username')";
+        $sql = "SELECT player_id, kills, deaths, headshots FROM player_basic_pvp_stats WHERE player_id='$playerId'";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0){
@@ -130,7 +108,7 @@
             echo json_encode($rows[0]);
 
         }else{
-            echo "Could not fetch pvp stats";
+            echo "Could not fetch pvp stats. SQL request: '$sql'";
         }
 
         $conn->close();
@@ -141,14 +119,13 @@
     if($_POST["service"] == "getBasicPvEStats"){
 
 
-        $username = $_POST["username"];
-        $username =substr_replace($username ,"",-3);
+        $playerId = $_POST["playerId"];
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
         }
         
-        $sql = "SELECT player_id, kills, deaths, headshots FROM player_basic_pve_stats WHERE player_id=(SELECT id FROM users WHERE username='$username')";
+        $sql = "SELECT player_id, kills, deaths, headshots, total_points FROM player_basic_pve_stats WHERE player_id='$playerId'";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0){
@@ -161,7 +138,61 @@
             echo json_encode($rows[0]);
 
         }else{
-            echo "Could not fetch pve stats";
+            echo "Could not fetch pve stats. SQL request: '$sql'";
+        }
+
+        $conn->close();
+    }
+    
+    
+    
+    if($_POST["service"] == "SaveSwarmStats"){
+
+
+        $playerId = $_POST["playerId"];
+        $username = $_POST["username"];
+        $newKills = $_POST["newKills"];
+        $newDeaths = $_POST["newDeaths"];
+        $newHeadshots = $_POST["newHeadshots"];
+        $newTotalPoints = $_POST["newTotalPoints"];
+        
+        
+        if($conn->connect_error){
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        try{
+            $sql = "UPDATE player_basic_pve_stats SET kills='$newKills', deaths='$newDeaths', headshots='$newHeadshots', total_points='$newTotalPoints' WHERE player_id='$playerId'";
+            $result = $conn->query($sql);
+            echo "Swarm stats saved successfully";
+        }catch(Exception $e){
+            echo "Could not save swarm stats. SQL request: '$sql'";
+        }
+
+        $conn->close();
+    }
+    
+    
+    if($_POST["service"] == "SaveMultiplayerStats"){
+
+
+        $playerId = $_POST["playerId"];
+        $username = $_POST["username"];
+        $newKills = $_POST["newKills"];
+        $newDeaths = $_POST["newDeaths"];
+        $newHeadshots = $_POST["newHeadshots"];
+        
+        
+        if($conn->connect_error){
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        try{
+            $sql = "UPDATE player_basic_pvp_stats SET kills='$newKills', deaths='$newDeaths', headshots='$newHeadshots' WHERE player_id='$playerId'";
+            $result = $conn->query($sql);
+            echo "Swarm stats saved successfully";
+        }catch(Exception $e){
+            echo "Could not save multiplayer stats. SQL request: '$sql'";
         }
 
         $conn->close();

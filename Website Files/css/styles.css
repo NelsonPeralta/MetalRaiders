@@ -1,0 +1,27 @@
+body{
+    margin: 0;
+    padding: 0;
+
+    height: 100vh;
+}
+
+.align-horizontally{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    height: 100%;
+    background-color: rgb(139, 139, 139);
+}
+
+h1{
+    font-size: 8rem;
+    margin: 0;
+}
+
+h1, p{
+    color: rgb(0, 0, 0);
+    font-family:Arial, Helvetica, sans-serif;
+}
