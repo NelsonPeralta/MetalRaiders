@@ -1329,7 +1329,24 @@ IEnumerator Reload()
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            OnlineMultiplayerManager.multiplayerManagerInstance.EndGame();
+            try
+            {
+                OnlineMultiplayerManager.multiplayerManagerInstance.EndGame();
+
+            }catch(System.Exception e)
+            {
+                Debug.Log(e);
+            }
+
+            try
+            {
+                OnlineSwarmManager.onlineSwarmManagerInstance.EndGame();
+
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log(e);
+            }
         }
     }
 

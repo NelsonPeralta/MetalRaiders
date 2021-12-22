@@ -825,7 +825,7 @@ public class OnlineSwarmManager : MonoBehaviour
             EndGame();
     }
 
-    void EndGame()
+    public void EndGame()
     {
         PV.RPC("EndGame_RPC", RpcTarget.All);
     }
@@ -845,6 +845,7 @@ public class OnlineSwarmManager : MonoBehaviour
             PlayerProperties myPlayer = allPlayers[i];
             myPlayer.allPlayerScripts.announcer.PlayGameOverClip();
             myPlayer.LeaveRoomWithDelay();
+            myPlayer.allPlayerScripts.killFeedManager.EnterNewFeed("GAME OVER!");
 
             WebManager.webManagerInstance.SaveSwarmStats(myPlayer.GetComponent<OnlinePlayerSwarmScript>());
         }

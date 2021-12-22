@@ -1213,7 +1213,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         StartCoroutine(LeaveRoomWithDelay_Coroutine());
     }
 
-    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 10)
+    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)
     {
         yield return new WaitForSeconds(delay);
 

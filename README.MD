@@ -12,7 +12,7 @@ as a team against ennemy AIs in a gamemode called "Swarm".
 
 Simply install the game through the link in the official website.
 
-## Bonus (can include contact)
+## Bonus
 Contact: nelsonperalta.prog@gmail.com
 
 
