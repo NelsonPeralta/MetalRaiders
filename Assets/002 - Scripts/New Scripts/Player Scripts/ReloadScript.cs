@@ -5,6 +5,11 @@ using Photon.Pun;
 
 public class ReloadScript : MonoBehaviourPun
 {
+    public delegate void ReloadScriptEvent(ReloadScript reloadScript);
+    public ReloadScriptEvent OnReloadStart;
+    public ReloadScriptEvent OnReloadEnd;
+
+
     [Header("MANUAL LINKING")]
     public PlayerController pController;
     public PhotonView PV;
@@ -55,6 +60,7 @@ public class ReloadScript : MonoBehaviourPun
                         pController.TransferAmmo();
                         reloadingMagInProgress = false;
                         reloadCountdownMags = 0;
+                        OnReloadEnd?.Invoke(this);
                     }
 
                     if (reloadIsCanceled)
@@ -81,6 +87,9 @@ public class ReloadScript : MonoBehaviourPun
                         openingWeaponForShells = false;
                         insertingShellInProgress = true;
                         reloadOpenCountdown = 0;
+
+                        OnReloadEnd?.Invoke(this);
+
                     }
                     if (reloadIsCanceled)
                     {
@@ -114,6 +123,9 @@ public class ReloadScript : MonoBehaviourPun
                             pController.TransferAmmo();
 
                             reloadInsertCountdown = shellsInsertTime;
+
+                            OnReloadEnd?.Invoke(this);
+
                         }
                         if (reloadIsCanceled)
                         {
@@ -153,6 +165,9 @@ public class ReloadScript : MonoBehaviourPun
                         pController.TransferAmmo();
                         reloadingSingleInProgress = false;
                         reloadSingleCountdown = 0;
+
+                        OnReloadEnd?.Invoke(this);
+
                     }
 
                     if (reloadIsCanceled)

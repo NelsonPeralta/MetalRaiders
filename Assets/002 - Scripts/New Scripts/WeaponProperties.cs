@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum weaponType { Assault_Rifle, DMR, Pistol, SMG, Shotgun, Sniper };
 
 public class WeaponProperties : MonoBehaviour
 {
+    //Enums
+    public enum WeaponType { AssaultRifle, DMR, Pistol, SMG, Shotgun, Sniper }
+    public enum WeaponReticule{AssaultRifle, DMR, Pistol, SMG, Shotgun, Sniper, None}
+    public enum IdleHandlingAnimationType { Rifle, Pistol} // TODO: Remove variable "pistolIdle" and fix dependencies
+
     [Header("Weapon Info")]
     public string weaponName;
-    public bool hasReticule;
-    public string reticule;
-    public weaponType weaponType;
-    public int storedWeaponNumber;
+    public string weaponUiName;
+    public WeaponType weaponType;
+    public WeaponReticule weaponReticule;
     public int damage = 50;
-    [SerializeField] int numberOfBulletsToShoot = 1;
+    public int numberOfBulletsToShoot = 1;
     public int bulletSpeed = 250;
     public float range;
-    public bool canSelectFire;
     public bool pistolIdle;
 
     [Header("Inventory")]

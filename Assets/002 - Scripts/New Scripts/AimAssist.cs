@@ -12,7 +12,7 @@ public class AimAssist : MonoBehaviour
 
     public int playerRewiredID;
     public Transform puCollider;
-    public CrosshairScript crosshairScript;
+    public CrosshairManager crosshairScript;
     public GameObject target;
     public AIHitbox aiHitbox;
     public PlayerHitbox targetHitbox;

@@ -8,6 +8,12 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviourPun
 {
+    // Events
+    public delegate void PlayerControllerEvent(PlayerController playerController);
+    public PlayerControllerEvent OnPlayerSwitchWeapons;
+    public PlayerControllerEvent OnPlayerLongInteract;
+    public PlayerControllerEvent OnPlayerFire;
+
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public WeaponSounds weapSounds;
@@ -26,7 +32,7 @@ public class PlayerController : MonoBehaviourPun
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
     public Rewired.Player player;
     public int playerRewiredID;
-    public CrosshairScript crosshairScript;
+    public CrosshairManager crosshairScript;
     public ReloadScript rScript;
     public WeaponPickUp wPickup;
     public DualWieldingReload dwReload;
@@ -123,7 +129,7 @@ public class PlayerController : MonoBehaviourPun
         }
 
 
-
+        OnPlayerSwitchWeapons?.Invoke(this);
     }
 
     private IEnumerator FindComponents()
@@ -174,11 +180,12 @@ public class PlayerController : MonoBehaviourPun
             BackButton();
             if (!playerProperties.isDead && !playerProperties.isRespawning)
             {
-
                 if (!pauseMenuOpen)
                 {
                     Sprint();
                     SwitchGrenades();
+                    SwitchWeapons();
+                    LongInteract();
                     if (isSprinting)
                         return;
                     Shooting();
@@ -189,7 +196,6 @@ public class PlayerController : MonoBehaviourPun
                     Melee();
                     Crouch();
                     Grenade(); //TO DO: Spawn Grenades the same way as bullets
-                    SelectFire();
                     //AutoReloadVoid();
                     HolsterAndInspect();
                     CheckDrawingWeapon();
@@ -244,6 +250,14 @@ public class PlayerController : MonoBehaviourPun
 
             animDWRight = pInventory.rightWeapon.GetComponent<Animator>();
             animDWLeft = pInventory.leftWeapon.GetComponent<Animator>();
+        }
+    }
+
+    void LongInteract()
+    {
+        if (player.GetButtonShortPressDown("Interact"))
+        {
+            OnPlayerLongInteract?.Invoke(this);
         }
     }
 
@@ -325,6 +339,7 @@ public class PlayerController : MonoBehaviourPun
             if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
             {
                 isShooting = true;
+                OnPlayerFire?.Invoke(this);
 
             }
             else
@@ -662,40 +677,13 @@ public class PlayerController : MonoBehaviourPun
                 isDrawingWeapon = false;
     }
 
-    void SelectFire()
+    void SwitchWeapons()
     {
-        if (player.GetButtonDown("Select Fire"))
+        if (player.GetButtonDown("Switch Weapons"))
         {
-            if (wProperties.canSelectFire)
-            {
-                if (wProperties.isFullyAutomatic) // Become Burst
-                {
-                    wProperties.isBurstWeapon = true;
-                    wProperties.isFullyAutomatic = false;
-
-                    wProperties.isNormalBullet = false;
-                    wProperties.isHeadshotCapable = true;
-                }
-                else if (wProperties.isBurstWeapon) // Become Single Fire
-                {
-                    wProperties.isSingleFire = true;
-                    wProperties.isBurstWeapon = false;
-
-                    wProperties.isNormalBullet = false;
-                    wProperties.isHeadshotCapable = true;
-                }
-                else if (wProperties.isSingleFire) // Become Full Auto
-                {
-                    wProperties.isFullyAutomatic = true;
-                    wProperties.isSingleFire = false;
-
-                    wProperties.isNormalBullet = true;
-                    wProperties.isHeadshotCapable = false;
-                }
-            }
+            OnPlayerSwitchWeapons?.Invoke(this);
         }
     }
-
     void SwitchGrenades()
     {
         if (player.GetButtonDown("Switch Grenades") && PV.IsMine)

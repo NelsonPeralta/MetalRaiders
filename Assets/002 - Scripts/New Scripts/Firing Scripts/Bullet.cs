@@ -16,7 +16,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public WeaponProperties wProperties;
     public ZombieScript zScript;
     public AimAssist raycastScript;
-    public CrosshairScript crosshairScript;
+    public CrosshairManager crosshairScript;
     public GameObjectPool gameObjectPool;
 
     public GameObject collision;
