@@ -206,9 +206,6 @@ public class PlayerInventory : MonoBehaviourPun
             }
             playDrawSound();
             crosshairScript.UpdateReticule();
-
-            string test = weaponsEquiped[0].GetComponent<WeaponProperties>().weaponType.ToString();
-            //Debug.Log(test);
         }
     }
 
@@ -419,7 +416,6 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!activeWeapon)
             return;
-        Debug.Log("The active weapon is:" + activeWeapon.name);
         if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
         {
             smallAmmoHudCounter.changeToDrawn();

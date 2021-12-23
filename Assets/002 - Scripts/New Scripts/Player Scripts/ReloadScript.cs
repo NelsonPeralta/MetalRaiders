@@ -247,8 +247,8 @@ public class ReloadScript : MonoBehaviourPun
             }
 
             shellsToInsert = ammoToReload;
-            Reload(0, DEFAULT_RELOAD_TIME / pController.wProperties.defaultReloadTime,
-                DEFAULT_RELOAD_TIME / pController.wProperties.defaultReloadTime, 0);
+            Reload(0, DEFAULT_RELOAD_TIME / 1f,
+                DEFAULT_RELOAD_TIME / 1f, 0);
             pController.anim.Play("Reload Open", 0, 0f);
             pController.ScopeOut();
 

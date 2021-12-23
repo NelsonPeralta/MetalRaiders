@@ -7,24 +7,23 @@ using UnityEngine;
 public class WeaponProperties : MonoBehaviour
 {
     //Enums
-    public enum WeaponType { AssaultRifle, DMR, Pistol, SMG, Shotgun, Sniper }
     public enum ReticuleType { AssaultRifle, DMR, Pistol, SMG, Shotgun, Sniper, None }
     public enum FiringMode { Auto, Burst, Single }
-    public enum AmmoType { Power, Heavy, Light }
+    public enum AmmoType { Heavy, Light, Power }
     public enum AmmoReloadType { Magazine, Shell, Single }
     public enum AmmoProjectileType { Bullet, Grenade, Rocket }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
     [Header("Weapon Info")]
-    public string weaponName;
-    public string weaponUiName;
-    public WeaponType weaponType;
+    public string weaponIdentity; // Used for scripting purposes
+    public string weaponName; // Used for UI purposes
     public ReticuleType reticuleType;
     public FiringMode firingMode;
     public int damage = 50;
     public int numberOfPellets = 1;
     public int bulletSpeed = 250;
     public float range;
+    public bool isShotgun;
 
     [Header("Ammo")]
     public AmmoType ammoType;
@@ -64,7 +63,6 @@ public class WeaponProperties : MonoBehaviour
 
     [Header("Reload Properties")]
     public ReloadScript reloadScript;
-    public float defaultReloadTime;
 
     [Header("Components")]
     public AudioSource mainAudioSource;
@@ -90,7 +88,7 @@ public class WeaponProperties : MonoBehaviour
     private void Start()
     {
         if (fireRate <= 0)
-            fireRate = 10;
+            fireRate = 600;
         //delayBetweenBullets = 1f / fireRate;
         //Debug.Log($"Delay Between Bullets: {delayBetweenBullets}");
 
@@ -157,23 +155,29 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Info", EditorStyles.boldLabel);
+        wp.weaponIdentity = EditorGUILayout.TextField("Weapon Identity:", wp.weaponIdentity);
         wp.weaponName = EditorGUILayout.TextField("Weapon Name:", wp.weaponName);
-        wp.weaponUiName = EditorGUILayout.TextField("Weapon UI Name:", wp.weaponUiName);
-        wp.weaponType = (WeaponProperties.WeaponType)EditorGUILayout.EnumPopup("Weapon Type", wp.weaponType);
+        wp.fireRate = EditorGUILayout.IntField("Fire Rate:", wp.fireRate);
         wp.reticuleType = (WeaponProperties.ReticuleType)EditorGUILayout.EnumPopup("Reticule Type", wp.reticuleType);
-        if (wp.weaponType == WeaponProperties.WeaponType.Shotgun)
+        wp.firingMode = (WeaponProperties.FiringMode)EditorGUILayout.EnumPopup("Firing mode", wp.firingMode);
+        wp.isShotgun = GUILayout.Toggle(wp.isShotgun, "Is shotgun");
+        if (wp.isHeadshotCapable)
+            wp.headshotMultiplier = EditorGUILayout.FloatField("I field:", wp.headshotMultiplier);
+        if (wp.isShotgun)
         {
             wp.numberOfPellets = EditorGUILayout.IntField("Pellets:", wp.numberOfPellets);
         }
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Ammo", EditorStyles.boldLabel);
+        wp.ammoType = (WeaponProperties.AmmoType)EditorGUILayout.EnumPopup("Ammo type", wp.ammoType);
+        wp.ammoReloadType = (WeaponProperties.AmmoReloadType)EditorGUILayout.EnumPopup("Ammo reload type", wp.ammoReloadType);
+        wp.ammoProjectileType = (WeaponProperties.AmmoProjectileType)EditorGUILayout.EnumPopup("Ammo projectile type", wp.ammoProjectileType);
         wp.damage = EditorGUILayout.IntField("Bullet damage:", wp.damage);
         wp.bulletSpeed = EditorGUILayout.IntField("Bullet speed:", wp.bulletSpeed);
         wp.range = EditorGUILayout.FloatField("Bullet range:", wp.range);
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);
         wp.isHeadshotCapable = GUILayout.Toggle(wp.isHeadshotCapable, "Is Headshot Capable");
-        wp.defaultReloadTime = EditorGUILayout.FloatField("Reload Time:", wp.defaultReloadTime);
         if (wp.isHeadshotCapable)
             wp.headshotMultiplier = EditorGUILayout.FloatField("I field:", wp.headshotMultiplier);
 
@@ -197,7 +201,10 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Model", EditorStyles.boldLabel);
+        wp.idleHandlingAnimationType = (WeaponProperties.IdleHandlingAnimationType)EditorGUILayout.EnumPopup("Idle Handling Type", wp.idleHandlingAnimationType);
         wp.thirdPersonModelEquipped = EditorGUILayout.ObjectField(wp.thirdPersonModelEquipped, typeof(GameObject), false) as GameObject;
         wp.thirdPersonModelUnequipped = EditorGUILayout.ObjectField(wp.thirdPersonModelEquipped, typeof(GameObject), false) as GameObject;
+
+        EditorUtility.SetDirty(wp);
     }
 }

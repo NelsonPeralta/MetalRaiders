@@ -18,7 +18,7 @@ public class FullyAutomaticFire : MonoBehaviourPun
     public GeneralWeapProperties gwProperties;
 
     public float nextFireInterval;
-    float fireInterval = 0;
+    public float fireInterval = 0;
 
     private bool ThisisShooting = false;
     private bool hasButtonDown = false;
@@ -82,7 +82,8 @@ public class FullyAutomaticFire : MonoBehaviourPun
             if (!pController.isDualWielding)
             {
                 WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-                float timeBetweenBullets = 1 / (float)(activeWeapon.fireRate / 60);
+                Debug.Log(activeWeapon.fireRate);
+                float timeBetweenBullets = 1 / (activeWeapon.fireRate / 60f);
                 if (activeWeapon)
                     nextFireInterval = timeBetweenBullets;
 
