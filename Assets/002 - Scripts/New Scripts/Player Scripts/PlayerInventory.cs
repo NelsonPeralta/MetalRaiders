@@ -265,7 +265,7 @@ public class PlayerInventory : MonoBehaviourPun
             playDrawSound();
     }
 
-    void AmmoManager()
+    public void AmmoManager()
     {
         if (activeWeapon != null)
         {

@@ -26,6 +26,8 @@ public class SingleFire : MonoBehaviour
     public float nextFireInterval;
     float fireInterval = 0;
 
+    float defaultBurstInterval = 0.1f;
+
     private bool ThisisShooting = false;
     private bool hasButtonDown = false;
 
@@ -43,7 +45,7 @@ public class SingleFire : MonoBehaviour
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
-        if (activeWeapon.firingMode == WeaponProperties.FiringMode.Single && !pController.isDualWielding && !pController.isDrawingWeapon)
+        if (!pProperties.isDead && !pController.isDualWielding && !pController.isDrawingWeapon)
         {
             for (int i = 0; i < activeWeapon.GetNumberOfBulletsToShoot(); i++)
             {
@@ -88,6 +90,7 @@ public class SingleFire : MonoBehaviour
             }
 
             activeWeapon.currentAmmo -= 1;
+            pInventory.AmmoManager();
             if (pController.anim != null)
             {
                 pController.anim.Play("Fire", 0, 0f);
@@ -111,7 +114,11 @@ public class SingleFire : MonoBehaviour
             {
                 WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
                 if (activeWeapon)
+                {
                     nextFireInterval = 1 / (activeWeapon.fireRate / 60f);
+                    if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
+                        nextFireInterval = defaultBurstInterval * 5;
+                }
 
                 if (pController.isShooting && !ThisisShooting && !hasButtonDown)
                 {
@@ -119,6 +126,12 @@ public class SingleFire : MonoBehaviour
                     if (activeWeapon.firingMode == WeaponProperties.FiringMode.Single)
                     {
                         PV.RPC("ShootSingle", RpcTarget.All, false, false);
+                        hasButtonDown = true;
+                        StartFiringIntervalCooldown();
+                    }
+                    else if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
+                    {
+                        ShootBurst();
                         hasButtonDown = true;
                         StartFiringIntervalCooldown();
                     }
@@ -141,8 +154,20 @@ public class SingleFire : MonoBehaviour
         FireIntervalCooldown();
     }
 
+    void ShootBurst()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            StartCoroutine(ShootBurst_Coroutine(defaultBurstInterval * i));
+        }
+    }
 
+    IEnumerator ShootBurst_Coroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
+        PV.RPC("ShootSingle", RpcTarget.All, false, false);
+    }
 
 
     [PunRPC]
