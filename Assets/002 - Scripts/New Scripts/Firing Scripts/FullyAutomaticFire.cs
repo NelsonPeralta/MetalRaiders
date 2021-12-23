@@ -33,7 +33,7 @@ public class FullyAutomaticFire : MonoBehaviourPun
     {
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
-        if (activeWeapon.isFullyAutomatic && !pController.isDualWielding && !pController.isDrawingWeapon)
+        if (activeWeapon.firingMode == WeaponProperties.FiringMode.Auto && !pController.isDualWielding && !pController.isDrawingWeapon)
         {
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Spawn bullet from bullet spawnpoint
@@ -82,12 +82,13 @@ public class FullyAutomaticFire : MonoBehaviourPun
             if (!pController.isDualWielding)
             {
                 WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+                float timeBetweenBullets = 1 / (float)(activeWeapon.fireRate / 60);
                 if (activeWeapon)
-                    nextFireInterval = activeWeapon.timeBetweenFABullets;
+                    nextFireInterval = timeBetweenBullets;
 
                 if (!ThisisShooting)
                 {
-                    if (pController.isShooting && activeWeapon.isFullyAutomatic)
+                    if (pController.isShooting && activeWeapon.firingMode == WeaponProperties.FiringMode.Auto)
                     {
                         BulletSpawnPoint bsp = gwProperties.bulletSpawnPoint.GetComponent<BulletSpawnPoint>();
 

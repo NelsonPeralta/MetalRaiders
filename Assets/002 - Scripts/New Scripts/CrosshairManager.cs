@@ -47,7 +47,7 @@ public class CrosshairManager : MonoBehaviour
     {
         foreach(Crosshair c in crosshairList)
         {
-            if (c.weaponReticule != pInventory.activeWeapon.weaponReticule)
+            if (c.weaponReticule != pInventory.activeWeapon.reticuleType)
                 c.gameObject.SetActive(false);
             else
                 c.gameObject.SetActive(true);

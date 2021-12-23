@@ -275,17 +275,17 @@ public class PlayerInventory : MonoBehaviourPun
             currentAmmo = activeWeapon.gameObject.GetComponent<WeaponProperties>().currentAmmo;
             //Debug.Log($"Active Weapon: {activeWeapon}\nAmmo: {activeWeapon.gameObject.GetComponent<WeaponProperties>().currentAmmo}");
 
-            if (activeWeapon.GetComponent<WeaponProperties>().smallAmmo)
+            if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
             {
                 currentExtraAmmo = smallAmmo;
             }
 
-            else if (activeWeapon.GetComponent<WeaponProperties>().heavyAmmo)
+            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
             {
                 currentExtraAmmo = heavyAmmo;
             }
 
-            else if (activeWeapon.GetComponent<WeaponProperties>().powerAmmo)
+            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
             {
                 currentExtraAmmo = powerAmmo;
             }
@@ -390,7 +390,7 @@ public class PlayerInventory : MonoBehaviourPun
         SwapGunsOnCharacter(secondaryWeapon);
         yield return new WaitForEndOfFrame();
 
-        if (activeWeapon.GetComponent<WeaponProperties>().pistolIdle)
+        if (activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
             pController.tPersonController.anim.SetBool("Idle Pistol", true);
             pController.tPersonController.anim.SetBool("Idle Rifle", false);
@@ -420,19 +420,19 @@ public class PlayerInventory : MonoBehaviourPun
         if (!activeWeapon)
             return;
         Debug.Log("The active weapon is:" + activeWeapon.name);
-        if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Small")
+        if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
         {
             smallAmmoHudCounter.changeToDrawn();
             heavyAmmoHudCounter.changeToHolstered();
             powerAmmoHudCounter.changeToHolstered();
         }
-        else if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Heavy")
+        else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
         {
             smallAmmoHudCounter.changeToHolstered();
             heavyAmmoHudCounter.changeToDrawn();
             powerAmmoHudCounter.changeToHolstered();
         }
-        else if (activeWeapon.GetComponent<WeaponProperties>().getAmmoType() == "Power")
+        else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
         {
             smallAmmoHudCounter.changeToHolstered();
             heavyAmmoHudCounter.changeToHolstered();

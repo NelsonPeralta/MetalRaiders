@@ -43,13 +43,13 @@ public class SingleFire : MonoBehaviour
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
-        if (activeWeapon.isSingleFire && !pController.isDualWielding && !pController.isDrawingWeapon)
+        if (activeWeapon.firingMode == WeaponProperties.FiringMode.Single && !pController.isDualWielding && !pController.isDrawingWeapon)
         {
             for (int i = 0; i < activeWeapon.GetNumberOfBulletsToShoot(); i++)
             {
                 Debug.Log(activeWeapon.GetNumberOfBulletsToShoot());
                 //Spawns projectile from bullet spawnpoint
-                if (!activeWeapon.usesGrenades && !activeWeapon.usesRockets)
+                if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
                 {
                     gwProperties.ResetLocalTransform();
                     gwProperties.bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
@@ -73,13 +73,13 @@ public class SingleFire : MonoBehaviour
                     commonFiringActions.SpawnMuzzleflash();
 
                 }
-                else if (activeWeapon.usesGrenades)
+                else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
                 {
                     var grenade = Instantiate(gwProperties.grenadeLauncherProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
                     grenade.GetComponent<Rocket>().damage = activeWeapon.damage;
                     grenade.GetComponent<Rocket>().playerWhoThrewGrenade = pController.playerProperties;
                 }
-                else if (activeWeapon.usesRockets)
+                else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
                 {
                     var rocket = Instantiate(gwProperties.rocketProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
                     rocket.GetComponent<Rocket>().damage = activeWeapon.damage;
@@ -111,12 +111,12 @@ public class SingleFire : MonoBehaviour
             {
                 WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
                 if (activeWeapon)
-                    nextFireInterval = activeWeapon.timeBetweenSingleBullets;
+                    nextFireInterval = 1 / (activeWeapon.fireRate / 60f);
 
                 if (pController.isShooting && !ThisisShooting && !hasButtonDown)
                 {
 
-                    if (activeWeapon.isSingleFire)
+                    if (activeWeapon.firingMode == WeaponProperties.FiringMode.Single)
                     {
                         PV.RPC("ShootSingle", RpcTarget.All, false, false);
                         hasButtonDown = true;

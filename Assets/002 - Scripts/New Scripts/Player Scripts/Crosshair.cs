@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Crosshair : MonoBehaviour
 {
-    public WeaponProperties.WeaponReticule weaponReticule;
+    public WeaponProperties.ReticuleType weaponReticule;
     public GameObject redReticuleVersion;
 }

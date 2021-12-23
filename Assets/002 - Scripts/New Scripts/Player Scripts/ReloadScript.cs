@@ -49,7 +49,7 @@ public class ReloadScript : MonoBehaviourPun
     {
         if (pController.wProperties != null)
         {
-            if (pController.wProperties.usesMags)
+            if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
             {
                 if (reloadingMagInProgress)
                 {
@@ -71,7 +71,7 @@ public class ReloadScript : MonoBehaviourPun
                 }
             }
 
-            if (pController.wProperties.usesShells) ///////For Shotgun
+            if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell) ///////For Shotgun
             {
                 if (openingWeaponForShells)
                 {
@@ -154,7 +154,7 @@ public class ReloadScript : MonoBehaviourPun
                 }
             }
 
-            if (pController.wProperties.usesSingleAmmo)
+            if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
             {
                 if (reloadingSingleInProgress)
                 {
@@ -182,21 +182,21 @@ public class ReloadScript : MonoBehaviourPun
 
     public void CheckAmmoTypeType(bool isOutOfAmmo)
     {
-        if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().smallAmmo && pController.pInventory.smallAmmo != 0 /* && !isInspecting */)
+        if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light && pController.pInventory.smallAmmo != 0 /* && !isInspecting */)
         {
             if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
             {
                 ReloadAnimation(isOutOfAmmo);
             }
         }
-        else if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().heavyAmmo && pController.pInventory.heavyAmmo != 0 /* && !isInspecting */)
+        else if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy && pController.pInventory.heavyAmmo != 0 /* && !isInspecting */)
         {
             if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
             {
                 ReloadAnimation(isOutOfAmmo);
             }
         }
-        else if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().powerAmmo && pController.pInventory.powerAmmo != 0 /* && !isInspecting */)
+        else if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power && pController.pInventory.powerAmmo != 0 /* && !isInspecting */)
         {
             if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
             {
@@ -208,7 +208,7 @@ public class ReloadScript : MonoBehaviourPun
 
     public void ReloadAnimation(bool isOutOfAmmo)
     {
-        if (pController.wProperties.usesMags)
+        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
         {
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
@@ -232,7 +232,7 @@ public class ReloadScript : MonoBehaviourPun
             Reload(magsAmmoLeft, 0, 0, 0);
         }
 
-        if (pController.wProperties.usesShells)
+        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
             int ammoNeededToReload = pController.wProperties.maxAmmoInWeapon - pController.wProperties.currentAmmo;
             int ammoToReload = 0;
@@ -247,14 +247,14 @@ public class ReloadScript : MonoBehaviourPun
             }
 
             shellsToInsert = ammoToReload;
-            Reload(0, DEFAULT_RELOAD_TIME / pController.wProperties.defaultReloadSpeed,
-                DEFAULT_RELOAD_TIME / pController.wProperties.defaultReloadSpeed, 0);
+            Reload(0, DEFAULT_RELOAD_TIME / pController.wProperties.defaultReloadTime,
+                DEFAULT_RELOAD_TIME / pController.wProperties.defaultReloadTime, 0);
             pController.anim.Play("Reload Open", 0, 0f);
             pController.ScopeOut();
 
 
         }
-        if (pController.wProperties.usesSingleAmmo)
+        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
         {
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
@@ -273,14 +273,14 @@ public class ReloadScript : MonoBehaviourPun
 
     public void Reload(float countdownTime, float shellOpenTime, float shellInsertTime, float singleAmmoTime)
     {
-        if (pController.wProperties.usesMags)
+        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
         {
             reloadingMagInProgress = true;
             reloadIsCanceled = false;
             reloadCountdownMags = countdownTime;
         }
 
-        if (pController.wProperties.usesShells)
+        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
             openingWeaponForShells = true;
             reloadIsCanceled = false;
@@ -290,7 +290,7 @@ public class ReloadScript : MonoBehaviourPun
             shellsInsertTime = shellInsertTime;
         }
 
-        if (pController.wProperties.usesSingleAmmo)
+        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
         {
             reloadingSingleInProgress = true;
             reloadIsCanceled = false;

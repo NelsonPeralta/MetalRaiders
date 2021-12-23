@@ -255,7 +255,7 @@ public class PlayerController : MonoBehaviourPun
         anim.SetBool("Run", false);
         tPersonController.anim.SetBool("Sprint", false);
 
-        if (pInventory.activeWeapon.GetComponent<WeaponProperties>().pistolIdle)
+        if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
             tPersonController.anim.SetBool("Idle Pistol", true);
             tPersonController.anim.SetBool("Idle Rifle", false);
@@ -276,7 +276,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (!isDualWielding)
         {
-            if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            if (player.GetButton("Shoot") && !wProperties.isOutOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
             {
                 isShooting = true;
                 OnPlayerFire?.Invoke(this);
@@ -290,7 +290,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (player.GetButton("Shoot") && !dwRightWP.outOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
+            if (player.GetButton("Shoot") && !dwRightWP.isOutOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
                 Debug.Log("Is Shooting Right");
                 isShootingRight = true;
@@ -310,26 +310,26 @@ public class PlayerController : MonoBehaviourPun
     {
         if (isAiming)
         {
-            wProperties.RedReticuleRange = wProperties.aimRRR;
+            wProperties.currentRedReticuleRange = wProperties.scopeRRR;
         }
         else
         {
             if (wProperties)
-                if (wProperties.DefaultRedReticuleRange > 0)
+                if (wProperties.defaultRedReticuleRange > 0)
                 {
-                    wProperties.RedReticuleRange = wProperties.DefaultRedReticuleRange;
+                    wProperties.currentRedReticuleRange = wProperties.defaultRedReticuleRange;
                 }
         }
 
 
         if (player.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
         {
-            if (wProperties.canAim)
+            if (wProperties.canScopeIn)
             {
                 if (isAiming == false)
                 {
                     isAiming = true;
-                    mainCam.fieldOfView = wProperties.aimFOV;
+                    mainCam.fieldOfView = wProperties.scopeFov;
 
                     allPlayerScripts.aimingScript.playAimSound();
 
@@ -445,7 +445,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (player.GetButton("Throw Grenade") && !dwLeftWP.outOfAmmo && !isReloadingLeft && !isShootingLeft)
+            if (player.GetButton("Throw Grenade") && !dwLeftWP.isOutOfAmmo && !isReloadingLeft && !isShootingLeft)
             {
                 Debug.Log("Is Shooting Left");
                 isShootingLeft = true;
@@ -476,12 +476,10 @@ public class PlayerController : MonoBehaviourPun
             {
                 if (wProperties.currentAmmo <= 0)
                 {
-                    wProperties.outOfAmmo = true;
                     rScript.CheckAmmoTypeType(true);
                 }
                 else
                 {
-                    wProperties.outOfAmmo = false;
                 }
             }
         }
@@ -491,23 +489,19 @@ public class PlayerController : MonoBehaviourPun
             if (pInventory.rightWeaponCurrentAmmo <= 0)
             {
                 pInventory.rightWeaponCurrentAmmo = 0;
-                dwRightWP.outOfAmmo = true;
-                dwReload.CheckAmmoTypeType(true, false);
+                //dwReload.CheckAmmoTypeType(true, false);
             }
             else
             {
-                dwRightWP.outOfAmmo = false;
             }
 
             if (pInventory.leftWeaponCurrentAmmo <= 0)
             {
                 pInventory.leftWeaponCurrentAmmo = 0;
-                dwLeftWP.outOfAmmo = true;
-                dwReload.CheckAmmoTypeType(false, true);
+                //dwReload.CheckAmmoTypeType(false, true);
             }
             else
             {
-                dwLeftWP.outOfAmmo = false;
             }
         }
     }
@@ -612,7 +606,7 @@ public class PlayerController : MonoBehaviourPun
                 else
                     isFiring = false;
 
-                if (wProperties.usesMags)
+                if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
                 {
                     //Check if reloading
                     //Check both animations
@@ -627,7 +621,7 @@ public class PlayerController : MonoBehaviourPun
                     }
                 }
 
-                if (wProperties.usesShells)
+                if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
                 {
                     //Check if reloading
                     //Check both animations
@@ -653,7 +647,7 @@ public class PlayerController : MonoBehaviourPun
                     }
                 }
 
-                if (wProperties.usesRockets || wProperties.usesGrenades)
+                if (wProperties.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || wProperties.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
                 {
                     if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
                     {
@@ -674,40 +668,40 @@ public class PlayerController : MonoBehaviourPun
             }
         }
 
-        if (isDualWielding)
-        {
-            if (dwRightWP.usesMags)
-            {
-                //Check if reloading
-                //Check both animations
-                if (animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
-                    animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
-                    animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
-                {
-                    isReloadingRight = true;
-                }
-                else
-                {
-                    isReloadingRight = false;
-                }
-            }
+        //if (isDualWielding)
+        //{
+        //    if (dwRightWP.usesMags)
+        //    {
+        //        //Check if reloading
+        //        //Check both animations
+        //        if (animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
+        //            animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
+        //            animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
+        //        {
+        //            isReloadingRight = true;
+        //        }
+        //        else
+        //        {
+        //            isReloadingRight = false;
+        //        }
+        //    }
 
-            if (dwLeftWP.usesMags)
-            {
-                //Check if reloading
-                //Check both animations
-                if (animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
-                    animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
-                    animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
-                {
-                    isReloadingLeft = true;
-                }
-                else
-                {
-                    isReloadingLeft = false;
-                }
-            }
-        }
+        //    if (dwLeftWP.usesMags)
+        //    {
+        //        //Check if reloading
+        //        //Check both animations
+        //        if (animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
+        //            animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
+        //            animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
+        //        {
+        //            isReloadingLeft = true;
+        //        }
+        //        else
+        //        {
+        //            isReloadingLeft = false;
+        //        }
+        //    }
+        //}
 
         if (anim != null)
         {
@@ -847,9 +841,9 @@ public class PlayerController : MonoBehaviourPun
     public void TransferAmmo()
     {
 
-        if (wProperties.smallAmmo)
+        if (wProperties.ammoType == WeaponProperties.AmmoType.Light)
         {
-            if (wProperties.usesShells)
+            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.smallAmmo = pInventory.smallAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
@@ -874,9 +868,9 @@ public class PlayerController : MonoBehaviourPun
 
         }
 
-        else if (wProperties.heavyAmmo)
+        else if (wProperties.ammoType == WeaponProperties.AmmoType.Heavy)
         {
-            if (wProperties.usesShells)
+            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.heavyAmmo = pInventory.heavyAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
@@ -898,10 +892,10 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
         }
-        else if (wProperties.powerAmmo)
+        else if (wProperties.ammoType == WeaponProperties.AmmoType.Power)
         {
 
-            if (wProperties.usesShells)
+            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.powerAmmo = pInventory.powerAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
@@ -923,7 +917,6 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
         }
-        pInventory.activeWeapon.GetComponent<WeaponProperties>().ResetBulletToIgnoreRecoil();
     }
 
     public void TransferAmmoDW(bool reloadedRight, bool reloadedLeft)
