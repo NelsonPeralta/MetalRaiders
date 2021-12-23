@@ -30,7 +30,7 @@ public class WeaponProperties : MonoBehaviour
     public AmmoProjectileType ammoProjectileType;
     public AmmoReloadType ammoReloadType;
     public int currentAmmo;
-    public int maxAmmoInWeapon;
+    public int ammoCapacity;
     public float bulletSpray;
 
     [Header("Range")]
@@ -47,8 +47,8 @@ public class WeaponProperties : MonoBehaviour
     public int scopeSway; // Weapon sway is the weapon moving all on its own while you just aim down sight.
 
     [Header("Recoil Behaviour")]
-    public float yRecoil = 1;
-    public float xRecoil = 1f;
+    public float yRecoil;
+    public float xRecoil;
     public CameraScript camScript;
 
     [Header("Sounds")]
@@ -161,8 +161,6 @@ public class WeaponPropertiesEditor : Editor
         wp.reticuleType = (WeaponProperties.ReticuleType)EditorGUILayout.EnumPopup("Reticule Type", wp.reticuleType);
         wp.firingMode = (WeaponProperties.FiringMode)EditorGUILayout.EnumPopup("Firing mode", wp.firingMode);
         wp.isShotgun = GUILayout.Toggle(wp.isShotgun, "Is shotgun");
-        if (wp.isHeadshotCapable)
-            wp.headshotMultiplier = EditorGUILayout.FloatField("I field:", wp.headshotMultiplier);
         if (wp.isShotgun)
         {
             wp.numberOfPellets = EditorGUILayout.IntField("Pellets:", wp.numberOfPellets);
@@ -173,13 +171,15 @@ public class WeaponPropertiesEditor : Editor
         wp.ammoType = (WeaponProperties.AmmoType)EditorGUILayout.EnumPopup("Ammo type", wp.ammoType);
         wp.ammoReloadType = (WeaponProperties.AmmoReloadType)EditorGUILayout.EnumPopup("Ammo reload type", wp.ammoReloadType);
         wp.ammoProjectileType = (WeaponProperties.AmmoProjectileType)EditorGUILayout.EnumPopup("Ammo projectile type", wp.ammoProjectileType);
+        wp.currentAmmo = EditorGUILayout.IntField("Ammo:", wp.currentAmmo);
+        wp.ammoCapacity = EditorGUILayout.IntField("Ammo Capacity:", wp.ammoCapacity);
         wp.damage = EditorGUILayout.IntField("Bullet damage:", wp.damage);
         wp.bulletSpeed = EditorGUILayout.IntField("Bullet speed:", wp.bulletSpeed);
         wp.range = EditorGUILayout.FloatField("Bullet range:", wp.range);
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);
         wp.isHeadshotCapable = GUILayout.Toggle(wp.isHeadshotCapable, "Is Headshot Capable");
         if (wp.isHeadshotCapable)
-            wp.headshotMultiplier = EditorGUILayout.FloatField("I field:", wp.headshotMultiplier);
+            wp.headshotMultiplier = EditorGUILayout.FloatField("Headshot Multiplier:", wp.headshotMultiplier);
 
 
         EditorGUILayout.Space();

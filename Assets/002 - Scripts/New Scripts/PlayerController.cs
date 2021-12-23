@@ -852,12 +852,12 @@ public class PlayerController : MonoBehaviourPun
 
             else
             {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
 
                 if (pInventory.smallAmmo >= ammoWeaponIsMissing)
                 {
                     pInventory.smallAmmo = pInventory.smallAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                 }
                 else if (pInventory.smallAmmo < ammoWeaponIsMissing)
                 {
@@ -878,12 +878,12 @@ public class PlayerController : MonoBehaviourPun
 
             else
             {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
 
                 if (pInventory.heavyAmmo >= ammoWeaponIsMissing)
                 {
                     pInventory.heavyAmmo = pInventory.heavyAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                 }
                 else if (pInventory.heavyAmmo < ammoWeaponIsMissing)
                 {
@@ -903,12 +903,12 @@ public class PlayerController : MonoBehaviourPun
 
             else
             {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
 
                 if (pInventory.powerAmmo >= ammoWeaponIsMissing)
                 {
                     pInventory.powerAmmo = pInventory.powerAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                 }
                 else if (pInventory.powerAmmo < ammoWeaponIsMissing)
                 {
@@ -923,12 +923,12 @@ public class PlayerController : MonoBehaviourPun
     {
         if (reloadedRight)
         {
-            ammoRightWeaponIsMissing = pInventory.rightWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.rightWeaponCurrentAmmo;
+            ammoRightWeaponIsMissing = pInventory.rightWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.rightWeaponCurrentAmmo;
 
             if (pInventory.smallAmmo >= ammoRightWeaponIsMissing)
             {
                 pInventory.smallAmmo = pInventory.smallAmmo - ammoRightWeaponIsMissing;
-                pInventory.rightWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.rightWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                pInventory.rightWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.rightWeapon.GetComponent<WeaponProperties>().ammoCapacity;
             }
             else if (pInventory.smallAmmo < ammoRightWeaponIsMissing)
             {
@@ -939,12 +939,12 @@ public class PlayerController : MonoBehaviourPun
 
         if (reloadedLeft)
         {
-            ammoLeftWeaponIsMissing = pInventory.leftWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.leftWeaponCurrentAmmo;
+            ammoLeftWeaponIsMissing = pInventory.leftWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.leftWeaponCurrentAmmo;
 
             if (pInventory.smallAmmo >= ammoLeftWeaponIsMissing)
             {
                 pInventory.smallAmmo = pInventory.smallAmmo - ammoLeftWeaponIsMissing;
-                pInventory.leftWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.leftWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                pInventory.leftWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.leftWeapon.GetComponent<WeaponProperties>().ammoCapacity;
             }
             else if (pInventory.smallAmmo < ammoLeftWeaponIsMissing)
             {

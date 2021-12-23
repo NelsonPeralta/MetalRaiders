@@ -242,7 +242,7 @@ public class PlayerInventory : MonoBehaviourPun
                     activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
                     weaponsEquiped[0] = activeWeapon.gameObject;
                     activeWeapIs = 0;
-                    activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                     allWeaponsInInventory[i].gameObject.SetActive(true);
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
@@ -250,7 +250,7 @@ public class PlayerInventory : MonoBehaviourPun
                 {
                     allWeaponsInInventory[i].gameObject.SetActive(false);
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
-                    weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
                     //Debug.Log("Check 1");
                     hasSecWeap = true;
                 }
@@ -450,7 +450,7 @@ public class PlayerInventory : MonoBehaviourPun
             lowAmmoIndicator.SetActive(false);
             noAmmoIndicator.SetActive(true);
         }
-        else if (currentAmmo < activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon * 0.4f && currentExtraAmmo >= 0)
+        else if (currentAmmo < activeWeapon.GetComponent<WeaponProperties>().ammoCapacity * 0.4f && currentExtraAmmo >= 0)
         {
             lowAmmoIndicator.SetActive(true);
             noAmmoIndicator.SetActive(false);

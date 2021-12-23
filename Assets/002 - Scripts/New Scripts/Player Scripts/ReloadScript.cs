@@ -184,21 +184,21 @@ public class ReloadScript : MonoBehaviourPun
     {
         if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light && pController.pInventory.smallAmmo != 0 /* && !isInspecting */)
         {
-            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
+            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity)
             {
                 ReloadAnimation(isOutOfAmmo);
             }
         }
         else if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy && pController.pInventory.heavyAmmo != 0 /* && !isInspecting */)
         {
-            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
+            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity)
             {
                 ReloadAnimation(isOutOfAmmo);
             }
         }
         else if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power && pController.pInventory.powerAmmo != 0 /* && !isInspecting */)
         {
-            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
+            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity)
             {
                 ReloadAnimation(isOutOfAmmo);
             }
@@ -234,7 +234,7 @@ public class ReloadScript : MonoBehaviourPun
 
         if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
-            int ammoNeededToReload = pController.wProperties.maxAmmoInWeapon - pController.wProperties.currentAmmo;
+            int ammoNeededToReload = pController.wProperties.ammoCapacity - pController.wProperties.currentAmmo;
             int ammoToReload = 0;
 
             if (ammoNeededToReload > pController.pInventory.currentExtraAmmo)
