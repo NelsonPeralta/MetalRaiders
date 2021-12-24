@@ -119,16 +119,24 @@ public class CrosshairManager : MonoBehaviour
 
     public void ActivateRedCrosshair()
     {
-        if (ActiveCrosshair)
-            if (ActiveCrosshair.GetComponent<Crosshair>())
-                ActiveCrosshair.GetComponent<Crosshair>().redReticuleVersion.SetActive(true);
+        foreach(Crosshair c in crosshairList)
+        {
+            if(pInventory.activeWeapon.reticuleType == c.weaponReticule)
+            {
+                c.redReticuleVersion.SetActive(true);
+            }
+        }
     }
 
     public void DeactivateRedCrosshair()
     {
-        if (ActiveCrosshair)
-            if (ActiveCrosshair.GetComponent<Crosshair>())
-                ActiveCrosshair.GetComponent<Crosshair>().redReticuleVersion.SetActive(false);
+        foreach (Crosshair c in crosshairList)
+        {
+            if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
+            {
+                c.redReticuleVersion.SetActive(false);
+            }
+        }
     }
     public void FindComponents()
     {
