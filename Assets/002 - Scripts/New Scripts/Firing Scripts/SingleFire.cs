@@ -49,6 +49,8 @@ public class SingleFire : MonoBehaviour
         {
             for (int i = 0; i < activeWeapon.GetNumberOfBulletsToShoot(); i++)
             {
+                if (activeWeapon.currentAmmo <= 0)
+                    return;
                 Debug.Log(activeWeapon.GetNumberOfBulletsToShoot());
                 //Spawns projectile from bullet spawnpoint
                 if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)

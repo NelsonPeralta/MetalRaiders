@@ -202,8 +202,12 @@ public class WeaponPropertiesEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Model", EditorStyles.boldLabel);
         wp.idleHandlingAnimationType = (WeaponProperties.IdleHandlingAnimationType)EditorGUILayout.EnumPopup("Idle Handling Type", wp.idleHandlingAnimationType);
-        wp.thirdPersonModelEquipped = EditorGUILayout.ObjectField(wp.thirdPersonModelEquipped, typeof(GameObject), false) as GameObject;
-        wp.thirdPersonModelUnequipped = EditorGUILayout.ObjectField(wp.thirdPersonModelEquipped, typeof(GameObject), false) as GameObject;
+        wp.thirdPersonModelEquipped = EditorGUILayout.ObjectField("Equipped model", wp.thirdPersonModelEquipped, typeof(GameObject), true) as GameObject;
+        wp.thirdPersonModelUnequipped = EditorGUILayout.ObjectField("Unequipped model", wp.thirdPersonModelUnequipped, typeof(GameObject), true) as GameObject;
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
+        wp.Fire = EditorGUILayout.ObjectField("Fire", wp.Fire, typeof(AudioClip), true) as AudioClip;
 
         EditorUtility.SetDirty(wp);
     }
