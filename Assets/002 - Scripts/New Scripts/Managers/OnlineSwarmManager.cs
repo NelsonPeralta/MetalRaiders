@@ -163,6 +163,8 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void Start()
     {
+
+        newWaveDelay = FindObjectsOfType<PlayerProperties>().Length * 10;
         if (editMode)
             AudioListener.volume = 0;
         healthPacks = GetAllHealthPacks();
