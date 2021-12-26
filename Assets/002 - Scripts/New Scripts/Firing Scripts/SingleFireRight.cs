@@ -68,7 +68,7 @@ public class SingleFireRight : MonoBehaviour
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Spawns projectile from bullet spawnpoint
-            if (!dwRightWP.usesGrenades && !dwRightWP.usesRockets)
+            if (dwRightWP.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
             {
 
                 var bullet = (Transform)Instantiate(gwProperties.bulletPrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
@@ -99,9 +99,9 @@ public class SingleFireRight : MonoBehaviour
 
     public void Update()
     {
-        if (pController.isDualWielding && pInventory.rightWeapon.GetComponent<WeaponProperties>().isSingleFire)
+        if (pController.isDualWielding && pInventory.rightWeapon.GetComponent<WeaponProperties>().firingMode == WeaponProperties.FiringMode.Single)
         {
-            nextFireInterval = pInventory.rightWeapon.GetComponent<WeaponProperties>().timeBetweenSingleBullets;
+            nextFireInterval = 1 / (pInventory.rightWeapon.GetComponent<WeaponProperties>().fireRate / 60f);
 
             dwRightWP = pController.dwRightWP;
 

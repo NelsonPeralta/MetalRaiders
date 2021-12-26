@@ -94,24 +94,24 @@ public class FullyAutomaticFireLeft : MonoBehaviour
     public void Update()
     {
 
-        if (pController.isDualWielding && pInventory.leftWeapon.GetComponent<WeaponProperties>().isFullyAutomatic)
-        {
-            nextFireInterval = pInventory.leftWeapon.GetComponent<WeaponProperties>().timeBetweenFABullets;
-            //Debug.Log(nextFireInterval);
-            dwLeftWP = pController.dwLeftWP;
+        //if (pController.isDualWielding && pInventory.leftWeapon.GetComponent<WeaponProperties>().isFullyAutomatic)
+        //{
+        //    nextFireInterval = pInventory.leftWeapon.GetComponent<WeaponProperties>().timeBetweenFABullets;
+        //    //Debug.Log(nextFireInterval);
+        //    dwLeftWP = pController.dwLeftWP;
 
-            if (pController.isShootingLeft && !ThisIsShootingLeft)
-            {
-                StartCoroutine(Fire(false, true));
-                hasLeftButtonDown = true;
-            }
+        //    if (pController.isShootingLeft && !ThisIsShootingLeft)
+        //    {
+        //        StartCoroutine(Fire(false, true));
+        //        hasLeftButtonDown = true;
+        //    }
 
-            if (pController.player.GetButtonUp("Throw Grenade"))
-            {
-                hasLeftButtonDown = false;
-            }
+        //    if (pController.player.GetButtonUp("Throw Grenade"))
+        //    {
+        //        hasLeftButtonDown = false;
+        //    }
 
-        }
+        //}
     }
 
 

@@ -16,7 +16,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public WeaponProperties wProperties;
     public ZombieScript zScript;
     public AimAssist raycastScript;
-    public CrosshairScript crosshairScript;
+    public CrosshairManager crosshairScript;
     public GameObjectPool gameObjectPool;
 
     public GameObject collision;
@@ -498,33 +498,16 @@ public class Bullet : MonoBehaviourPunCallbacks
             //Debug.Log(wProperties.damage);
             //Debug.Log(wProperties.bulletSpeed);
 
-            if (wProperties.isNormalBullet)
-            {
-                isNormalBullet = true;
-                isHeadshotCapable = false;
-                canBleedthroughHeadshot = false;
-                canBleedthroughAnything = false;
-            }
-            else if (wProperties.isHeadshotCapable)
+            isNormalBullet = true;
+            isHeadshotCapable = false;
+            canBleedthroughHeadshot = false;
+            canBleedthroughAnything = false;
+            if (wProperties.isHeadshotCapable)
             {
                 isNormalBullet = false;
                 isHeadshotCapable = true;
                 canBleedthroughHeadshot = false;
                 canBleedthroughAnything = false;
-            }
-            else if (wProperties.canBleedthroughHeadshot)
-            {
-                isNormalBullet = false;
-                isHeadshotCapable = false;
-                canBleedthroughHeadshot = true;
-                canBleedthroughAnything = false;
-            }
-            else if (wProperties.canBleedthroughAnything)
-            {
-                isNormalBullet = false;
-                isHeadshotCapable = false;
-                canBleedthroughHeadshot = false;
-                canBleedthroughAnything = true;
             }
         }
     }

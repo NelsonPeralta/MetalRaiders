@@ -54,7 +54,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public PlayerController pController;
     public SwarmMode swarmMode;
     public Movement movement;
-    public CrosshairScript cScript;
+    public CrosshairManager cScript;
     public AimAssist aimAssist;
     public WeaponPickUp wPickup;
     public AimAssist raycastScript;

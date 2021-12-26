@@ -6,6 +6,10 @@ using Photon.Pun;
 
 public class WeaponPickUp : MonoBehaviourPun
 {
+    // Events
+    public delegate void WeaponPickUpEvents(WeaponPickUp weaponPickUp);
+    public WeaponPickUpEvents OnWeaponPickup;
+
     [Header("Singletons")]
     WeaponPool weaponPool;
 
@@ -45,11 +49,48 @@ public class WeaponPickUp : MonoBehaviourPun
     private void Start()
     {
         weaponPool = WeaponPool.weaponPoolInstance;
-        //pInventory = GameObject.FindGameObjectWithTag("Player Inventory").GetComponent<PlayerInventoryManager>();
-        //pController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        //pickupText = GameObject.FindGameObjectWithTag("Player Informer").GetComponent<Text>();
 
-        //cScript = GameObject.FindGameObjectWithTag("Player").GetComponent<ControllerScript>();
+        pController.OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
+    }
+
+    void OnPlayerLongInteract_Delegate(PlayerController playerController)
+    {
+        if (!PV.IsMine)
+            return;
+
+        Debug.Log("Om Player Long Interact Delegate");
+
+        if (isOnTrigger == true && canPickup == true)
+        {
+            int weaponCollidingWithInInventoryIndex = 0;
+            for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
+                if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
+                    weaponCollidingWithInInventoryIndex = i;
+            Vector3 lwPosition = weaponCollidingWith.GetComponent<LootableWeapon>().GetSpawnPointPosition();
+            if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
+            {
+                Debug.Log("RPC: Picking up second weapon");
+                //PickupSecWeap();
+                PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                OnWeaponPickup?.Invoke(this);
+
+                pInventory.hasSecWeap = true;
+                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().ammoInThisWeapon;
+
+                ResetCollider();
+                pInventory.playDrawSound();
+            }
+            else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
+            {
+                PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                OnWeaponPickup?.Invoke(this);
+
+                ResetCollider();
+                pInventory.playDrawSound();
+            }
+            Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
+            PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPosition);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -209,39 +250,6 @@ public class WeaponPickUp : MonoBehaviourPun
     {
         if (!PV.IsMine)
             return;
-
-        if (isOnTrigger == true && canPickup == true)
-        {
-            if (pController.player.GetButtonShortPressDown("Interact") /*|| cScript.InteractButtonPressed*/)
-            {
-                int weaponCollidingWithInInventoryIndex = 0;
-                for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
-                    if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
-                        weaponCollidingWithInInventoryIndex = i;
-                Vector3 lwPosition = weaponCollidingWith.GetComponent<LootableWeapon>().GetSpawnPointPosition();
-                if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
-                {
-                    Debug.Log("RPC: Picking up second weapon");
-                    //PickupSecWeap();
-                    PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
-
-                    pInventory.hasSecWeap = true;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().ammoInThisWeapon;
-
-                    ResetCollider();
-                    pInventory.playDrawSound();
-                }
-                else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
-                {
-                    PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
-                    ResetCollider();
-                    pInventory.playDrawSound();
-                }
-                Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
-                PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPosition);
-            }
-        }
-
 
         if (isOnTrigger == true && canPickupDW == true)
         {

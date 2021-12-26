@@ -122,7 +122,7 @@ public class ControllerScript : MonoBehaviour
 
     void Fire()
     {
-        if (!wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting /*&& !isRunning && burstEnabler*/)
+        if (!wProperties.isOutOfAmmo && !isReloading && !isShooting && !isInspecting /*&& !isRunning && burstEnabler*/)
         {
             Debug.Log("Right Trigger pushed");
             isShooting = true;

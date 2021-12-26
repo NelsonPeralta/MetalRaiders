@@ -8,6 +8,12 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviourPun
 {
+    // Events
+    public delegate void PlayerControllerEvent(PlayerController playerController);
+    public PlayerControllerEvent OnPlayerSwitchWeapons;
+    public PlayerControllerEvent OnPlayerLongInteract;
+    public PlayerControllerEvent OnPlayerFire;
+
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public WeaponSounds weapSounds;
@@ -26,7 +32,7 @@ public class PlayerController : MonoBehaviourPun
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
     public Rewired.Player player;
     public int playerRewiredID;
-    public CrosshairScript crosshairScript;
+    public CrosshairManager crosshairScript;
     public ReloadScript rScript;
     public WeaponPickUp wPickup;
     public DualWieldingReload dwReload;
@@ -44,7 +50,7 @@ public class PlayerController : MonoBehaviourPun
     [HideInInspector]
     public bool hasBeenHolstered = false, holstered, isRunning, isWalking;
     [HideInInspector]
-    public bool isInspecting, isShooting, aimSoundHasPlayed = false, hasFoundComponents = false;
+    public bool isInspecting, isShooting, aimSoundHasPlayed = false;
 
     public bool isReloading, reloadAnimationStarted, reloadWasCanceled, isFiring,
         isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isMeleeing, isSprinting;
@@ -96,76 +102,26 @@ public class PlayerController : MonoBehaviourPun
     void Awake()
     {
         PV = GetComponent<PhotonView>();
-
         playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
     }
-
-
     public void Start()
     {
-        if (hasFoundComponents == false)
-        {
-            objectPool = GameObjectPool.gameObjectPoolInstance;
-            SetPlayerIDInInput();
-            StartCoroutine(FindComponents());
-            ReferenceCameraToSpherecast();
-        }
+        objectPool = GameObjectPool.gameObjectPoolInstance;
+        player = ReInput.players.GetPlayer(playerRewiredID);
 
-        if (PV.IsMine)
-        {
-
-        }
-        else
+        if (!PV.IsMine)
         {
             gunCam.gameObject.SetActive(false);
             mainCam.gameObject.SetActive(false);
             allPlayerScripts.playerUIComponents.gameObject.SetActive(false);
         }
-
-
-
-    }
-
-    private IEnumerator FindComponents()
-    {
-        yield return new WaitForEndOfFrame();
-
-        //aimingScript = childManager.FindChildWithTag("Scope BG").GetComponent<Aiming>();
-        //sfxManager = childManager.FindChildWithTag("SFX").GetComponent<SFXManager>();
-        //weapSounds = childManager.FindChildWithTag("Weapon Sounds").GetComponent<WeaponSounds>();
-
-        //pInventory = childManager.FindChildWithTag("Player Inventory").GetComponent<PlayerInventory>();
-
-        //pInventory = GameObject.FindGameObjectWithTag("Player Inventory").GetComponent<PlayerInventoryManager>();
-
-        //playerProperties = GetComponent<PlayerProperties>();
-        //gwProperties = GetComponent<GeneralWeapProperties>();
-        //wProperties = childManager.FindChildWithTag("Weapon").GetComponent<WeaponProperties>();
-
-        //fullyAutomaticFire = childManager.FindChildWithTagScript("Shooting Scripts").GetComponent<FullyAutomaticFire>();
-        //burstFire = childManager.FindChildWithTagScript("Shooting Scripts").GetComponent<BurstFire>();
-        //singleFire = childManager.FindChildWithTagScript("Shooting Scripts").GetComponent<SingleFire>();
-        //playerProperties.SetTeamToFiringScripts();
-
-        notMyFPSController = gameObject.GetComponent<FPSControllerLPFP.FpsControllerLPFP>();
-        savedCamRotation = mainCam.transform.localRotation;
-
-    }
-
-    public void SetPlayerIDInInput()
-    {
-        player = ReInput.players.GetPlayer(playerRewiredID);
+        OnPlayerSwitchWeapons?.Invoke(this);
     }
 
     private void Update()
     {
         if (!PV.IsMine)
             return;
-
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    PV.RPC("RPC_Shoot_Projectile_Test", RpcTarget.All);
-        //}
 
         UpdateWeaponPropertiesAndAnimator();
         if (playerProperties != null)
@@ -174,23 +130,21 @@ public class PlayerController : MonoBehaviourPun
             BackButton();
             if (!playerProperties.isDead && !playerProperties.isRespawning)
             {
-
                 if (!pauseMenuOpen)
                 {
                     Sprint();
                     SwitchGrenades();
+                    SwitchWeapons();
+                    LongInteract();
                     if (isSprinting)
                         return;
                     Shooting();
                     CheckReloadButton();
                     CheckAmmoForAutoReload();
                     Aiming();
-                    //PV.RPC("Melee", RpcTarget.All);
                     Melee();
                     Crouch();
                     Grenade(); //TO DO: Spawn Grenades the same way as bullets
-                    SelectFire();
-                    //AutoReloadVoid();
                     HolsterAndInspect();
                     CheckDrawingWeapon();
                 }
@@ -198,19 +152,11 @@ public class PlayerController : MonoBehaviourPun
         }
 
         AnimationCheck();
-
-        //Debug.Log(wProperties.outOfAmmo);
         TestButton();
         if (ReInput.controllers != null)
             lastControllerType = ReInput.controllers.GetLastActiveControllerType();
 
     }
-
-
-    /// <summary>
-    /// ////////////////////////////////Updated Voids
-    /// </summary>
-
     void UpdateWeaponPropertiesAndAnimator()
     {
         if (!isDualWielding)
@@ -244,6 +190,14 @@ public class PlayerController : MonoBehaviourPun
 
             animDWRight = pInventory.rightWeapon.GetComponent<Animator>();
             animDWLeft = pInventory.leftWeapon.GetComponent<Animator>();
+        }
+    }
+
+    void LongInteract()
+    {
+        if (player.GetButtonShortPressDown("Interact"))
+        {
+            OnPlayerLongInteract?.Invoke(this);
         }
     }
 
@@ -301,7 +255,7 @@ public class PlayerController : MonoBehaviourPun
         anim.SetBool("Run", false);
         tPersonController.anim.SetBool("Sprint", false);
 
-        if (pInventory.activeWeapon.GetComponent<WeaponProperties>().pistolIdle)
+        if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
             tPersonController.anim.SetBool("Idle Pistol", true);
             tPersonController.anim.SetBool("Idle Rifle", false);
@@ -322,9 +276,10 @@ public class PlayerController : MonoBehaviourPun
 
         if (!isDualWielding)
         {
-            if (player.GetButton("Shoot") && !wProperties.outOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            if (player.GetButton("Shoot") && !wProperties.isOutOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
             {
                 isShooting = true;
+                OnPlayerFire?.Invoke(this);
 
             }
             else
@@ -335,7 +290,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (player.GetButton("Shoot") && !dwRightWP.outOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
+            if (player.GetButton("Shoot") && !dwRightWP.isOutOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
                 Debug.Log("Is Shooting Right");
                 isShootingRight = true;
@@ -351,67 +306,30 @@ public class PlayerController : MonoBehaviourPun
             if (wProperties.projectileToHide != null && wProperties.outOfAmmo)
                 wProperties.projectileToHide.SetActive(false);*/
     }
-
-    //[PunRPC]
-    //void RPC_Shoot_Projectile_Test()
-    //{
-    //    GameObject bullet = objectPool.SpawnPooledBullet();
-
-    //    bullet.transform.position = gameObject.transform.position;
-    //    bullet.transform.rotation = gameObject.transform.rotation;
-    //    bullet.SetActive(true);
-    //}
-
-    //[PunRPC]
-    //public void ShootAutoTest()
-    //{
-    //    if (!PV.IsMine)
-    //        return;
-    //    if (wProperties.isFullyAutomatic && !isDualWielding && !isDrawingWeapon)
-    //    {
-    //        Debug.Log("Spawned Bullet and player is : " + wProperties.pController.name);
-    //        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //        //Spawn bullet from bullet spawnpoint
-    //        var bullet = objectPool.SpawnPooledBullet();
-    //        bullet.transform.position = gwProperties.bulletSpawnPoint.transform.position;
-    //        bullet.transform.rotation = gwProperties.bulletSpawnPoint.transform.rotation;
-
-    //        bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
-    //        bullet.gameObject.GetComponent<Bullet>().range = wProperties.range;
-    //        bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-    //        bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>().gameObject;
-    //        bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-    //        bullet.gameObject.GetComponent<Bullet>().raycastScript = playerProperties.raycastScript;
-    //        bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerProperties.cScript;
-    //        //SetTeamToBulletScript(bullet.transform);
-    //        bullet.SetActive(true);
-    //    }
-    //}
-
     void Aiming()
     {
         if (isAiming)
         {
-            wProperties.RedReticuleRange = wProperties.aimRRR;
+            wProperties.currentRedReticuleRange = wProperties.scopeRRR;
         }
         else
         {
             if (wProperties)
-                if (wProperties.DefaultRedReticuleRange > 0)
+                if (wProperties.defaultRedReticuleRange > 0)
                 {
-                    wProperties.RedReticuleRange = wProperties.DefaultRedReticuleRange;
+                    wProperties.currentRedReticuleRange = wProperties.defaultRedReticuleRange;
                 }
         }
 
 
         if (player.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
         {
-            if (wProperties.canAim)
+            if (wProperties.canScopeIn)
             {
                 if (isAiming == false)
                 {
                     isAiming = true;
-                    mainCam.fieldOfView = wProperties.aimFOV;
+                    mainCam.fieldOfView = wProperties.scopeFov;
 
                     allPlayerScripts.aimingScript.playAimSound();
 
@@ -434,30 +352,6 @@ public class PlayerController : MonoBehaviourPun
             }
 
         }
-
-        //if (movement.direction == "Forward")
-        //{
-        //    if (!movement.isGrounded)
-        //        return;
-
-        //    if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
-        //    {
-        //        if (player.GetButton("Sprint"))
-        //            EnableSprint();
-        //        else if (player.GetButtonUp("Sprint"))
-        //            DisableSprint();
-        //    }
-        //    else if (lastControllerType == ControllerType.Joystick)
-        //        if (player.GetButtonDown("Sprint"))
-        //            EnableSprint();
-        //}
-        //else
-        //    DisableSprint();
-    }
-
-    public void ScopeIn()
-    {
-
     }
     public void ScopeOut()
     {
@@ -470,7 +364,6 @@ public class PlayerController : MonoBehaviourPun
         allPlayerScripts.aimingScript.playAimSound();
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        //aimingComponentsPivot.transform.localRotation = Quaternion.Euler(7.5f, 0, 0);
 
         UpdateAimingLayers();
     }
@@ -552,7 +445,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (player.GetButton("Throw Grenade") && !dwLeftWP.outOfAmmo && !isReloadingLeft && !isShootingLeft)
+            if (player.GetButton("Throw Grenade") && !dwLeftWP.isOutOfAmmo && !isReloadingLeft && !isShootingLeft)
             {
                 Debug.Log("Is Shooting Left");
                 isShootingLeft = true;
@@ -583,12 +476,10 @@ public class PlayerController : MonoBehaviourPun
             {
                 if (wProperties.currentAmmo <= 0)
                 {
-                    wProperties.outOfAmmo = true;
                     rScript.CheckAmmoTypeType(true);
                 }
                 else
                 {
-                    wProperties.outOfAmmo = false;
                 }
             }
         }
@@ -598,57 +489,19 @@ public class PlayerController : MonoBehaviourPun
             if (pInventory.rightWeaponCurrentAmmo <= 0)
             {
                 pInventory.rightWeaponCurrentAmmo = 0;
-                dwRightWP.outOfAmmo = true;
-                dwReload.CheckAmmoTypeType(true, false);
+                //dwReload.CheckAmmoTypeType(true, false);
             }
             else
             {
-                dwRightWP.outOfAmmo = false;
             }
 
             if (pInventory.leftWeaponCurrentAmmo <= 0)
             {
                 pInventory.leftWeaponCurrentAmmo = 0;
-                dwLeftWP.outOfAmmo = true;
-                dwReload.CheckAmmoTypeType(false, true);
+                //dwReload.CheckAmmoTypeType(false, true);
             }
             else
             {
-                dwLeftWP.outOfAmmo = false;
-            }
-        }
-    }
-
-    void ReloadVoid()
-    {
-        if (player.GetButtonDown("Reload"))
-        {
-            reloadWasCanceled = false;
-
-            if (!isReloading && pInventory.activeWeapon.GetComponent<WeaponProperties>().smallAmmo && pInventory.smallAmmo != 0 /* && !isInspecting */)
-            {
-                if (pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
-                {
-
-                    //Reload
-                    //StartCoroutine(Reload());
-                }
-            }
-            else if (!isReloading && pInventory.activeWeapon.GetComponent<WeaponProperties>().heavyAmmo && pInventory.heavyAmmo != 0 /* && !isInspecting */)
-            {
-                if (pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
-                {
-                    //Reload
-                    //StartCoroutine(Reload());
-                }
-            }
-            else if (!isReloading && pInventory.activeWeapon.GetComponent<WeaponProperties>().powerAmmo && pInventory.powerAmmo != 0 /* && !isInspecting */)
-            {
-                if (pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
-                {
-                    //Reload
-                    //StartCoroutine(Reload());
-                }
             }
         }
     }
@@ -662,40 +515,13 @@ public class PlayerController : MonoBehaviourPun
                 isDrawingWeapon = false;
     }
 
-    void SelectFire()
+    void SwitchWeapons()
     {
-        if (player.GetButtonDown("Select Fire"))
+        if (player.GetButtonDown("Switch Weapons"))
         {
-            if (wProperties.canSelectFire)
-            {
-                if (wProperties.isFullyAutomatic) // Become Burst
-                {
-                    wProperties.isBurstWeapon = true;
-                    wProperties.isFullyAutomatic = false;
-
-                    wProperties.isNormalBullet = false;
-                    wProperties.isHeadshotCapable = true;
-                }
-                else if (wProperties.isBurstWeapon) // Become Single Fire
-                {
-                    wProperties.isSingleFire = true;
-                    wProperties.isBurstWeapon = false;
-
-                    wProperties.isNormalBullet = false;
-                    wProperties.isHeadshotCapable = true;
-                }
-                else if (wProperties.isSingleFire) // Become Full Auto
-                {
-                    wProperties.isFullyAutomatic = true;
-                    wProperties.isSingleFire = false;
-
-                    wProperties.isNormalBullet = true;
-                    wProperties.isHeadshotCapable = false;
-                }
-            }
+            OnPlayerSwitchWeapons?.Invoke(this);
         }
     }
-
     void SwitchGrenades()
     {
         if (player.GetButtonDown("Switch Grenades") && PV.IsMine)
@@ -780,7 +606,7 @@ public class PlayerController : MonoBehaviourPun
                 else
                     isFiring = false;
 
-                if (wProperties.usesMags)
+                if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
                 {
                     //Check if reloading
                     //Check both animations
@@ -795,7 +621,7 @@ public class PlayerController : MonoBehaviourPun
                     }
                 }
 
-                if (wProperties.usesShells)
+                if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
                 {
                     //Check if reloading
                     //Check both animations
@@ -821,7 +647,7 @@ public class PlayerController : MonoBehaviourPun
                     }
                 }
 
-                if (wProperties.usesRockets || wProperties.usesGrenades)
+                if (wProperties.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || wProperties.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
                 {
                     if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
                     {
@@ -842,40 +668,40 @@ public class PlayerController : MonoBehaviourPun
             }
         }
 
-        if (isDualWielding)
-        {
-            if (dwRightWP.usesMags)
-            {
-                //Check if reloading
-                //Check both animations
-                if (animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
-                    animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
-                    animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
-                {
-                    isReloadingRight = true;
-                }
-                else
-                {
-                    isReloadingRight = false;
-                }
-            }
+        //if (isDualWielding)
+        //{
+        //    if (dwRightWP.usesMags)
+        //    {
+        //        //Check if reloading
+        //        //Check both animations
+        //        if (animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
+        //            animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
+        //            animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
+        //        {
+        //            isReloadingRight = true;
+        //        }
+        //        else
+        //        {
+        //            isReloadingRight = false;
+        //        }
+        //    }
 
-            if (dwLeftWP.usesMags)
-            {
-                //Check if reloading
-                //Check both animations
-                if (animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
-                    animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
-                    animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
-                {
-                    isReloadingLeft = true;
-                }
-                else
-                {
-                    isReloadingLeft = false;
-                }
-            }
-        }
+        //    if (dwLeftWP.usesMags)
+        //    {
+        //        //Check if reloading
+        //        //Check both animations
+        //        if (animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
+        //            animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
+        //            animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
+        //        {
+        //            isReloadingLeft = true;
+        //        }
+        //        else
+        //        {
+        //            isReloadingLeft = false;
+        //        }
+        //    }
+        //}
 
         if (anim != null)
         {
@@ -1012,182 +838,12 @@ public class PlayerController : MonoBehaviourPun
         grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
         Destroy(grenade.gameObject, 10);
     }
-
-    //Reload
-
-    /*
-IEnumerator Reload()
-{
-    if (wProperties.usesMags)
-    {
-        wProperties.mainAudioSource.clip = wProperties.Reload_1;
-        wProperties.mainAudioSource.Play();
-
-        //Play diff anim if ammo left
-        anim.Play("Reload Ammo Left", 0, 0f);
-
-        sfxManager.mainAudioSource.clip = weapSounds.reloadSoundAmmoLeft;
-        sfxManager.mainAudioSource.Play();
-
-        //If reloading when ammo left, show bullet in mag
-        //Do not show if bullet renderer is not assigned in inspector
-        if (gwProperties.bulletInMagRenderer != null)
-        {
-            gwProperties.bulletInMagRenderer.GetComponent
-            <SkinnedMeshRenderer>().enabled = true;
-        }
-
-        //Restore ammo when reloading
-
-        yield return new WaitForSeconds(2);
-
-        StartCoroutine(TransferAmmo());
-
-
-
-        /*wProperties.currentAmmo = wProperties.ammo;
-        wProperties.ammo = 1;*/
-
-    /*
-
-        if (wProperties.usesShells)
-        {
-            if (wProperties.currentAmmo == 1)
-            {
-                anim.Play("Reload Open (7 Case)", 0, 0f);
-                yield return new WaitForSeconds(7f);
-                StartCoroutine(TransferAmmo());
-            }
-            else if (wProperties.currentAmmo == 2)
-            {
-                anim.Play("Reload Open (6 Case)", 0, 0f);
-                yield return new WaitForSeconds(6f);
-                StartCoroutine(TransferAmmo());
-            }
-            else if (wProperties.currentAmmo == 3)
-            {
-                anim.Play("Reload Open (5 Case)", 0, 0f);
-                yield return new WaitForSeconds(5f);
-                StartCoroutine(TransferAmmo());
-            }
-            else if (wProperties.currentAmmo == 4)
-            {
-                anim.Play("Reload Open (4 Case)", 0, 0f);
-                yield return new WaitForSeconds(4f);
-                StartCoroutine(TransferAmmo());
-            }
-            else if (wProperties.currentAmmo == 5)
-            {
-                anim.Play("Reload Open (3 Case)", 0, 0f);
-                yield return new WaitForSeconds(3f);
-                StartCoroutine(TransferAmmo());
-            }
-            else if (wProperties.currentAmmo == 6)
-            {
-                anim.Play("Reload Open (2 Case)", 0, 0f);
-                yield return new WaitForSeconds(2f);
-                StartCoroutine(TransferAmmo());
-            }
-            else if (wProperties.currentAmmo == 7)
-            {
-                anim.Play("Reload Open (1 Case)", 0, 0f);
-                yield return new WaitForSeconds(1f);
-                StartCoroutine(TransferAmmo());
-            }
-            //Restore ammo when reloading
-            //wProperties.currentAmmo = wProperties.ammo;
-        }
-    }
-    */
-    /*
-    private IEnumerator AutoReload()
-    {
-        //Wait set amount of time
-        // return new WaitForSeconds(autoReloadDelay); This Line Causes lag with animation when starting
-
-        if (wProperties.usesMags)
-        {
-
-            //Play diff anim if out of ammo
-            anim.Play("Reload Out Of Ammo", 0, 0f);
-
-            wProperties.mainAudioSource.clip = wProperties.Reload_2;
-            wProperties.mainAudioSource.Play();
-
-            //If out of ammo, hide the bullet renderer in the mag
-            //Do not show if bullet renderer is not assigned in inspector
-            if (gwProperties.bulletInMagRenderer != null)
-            {
-                gwProperties.bulletInMagRenderer.GetComponent
-                <SkinnedMeshRenderer>().enabled = false;
-                //Start show bullet delay
-                //StartCoroutine(gwProperties.ShowBulletInMag());
-            }
-
-            //Restore ammo when reloading
-            //yield return new WaitForSeconds(4);
-            //wProperties.currentAmmo = wProperties.ammo;
-            //wProperties.outOfAmmo = false;
-
-            yield return new WaitForSeconds(2f);
-            StartCoroutine(TransferAmmo());
-        }
-
-        if (wProperties.usesShells && wProperties.outOfAmmo == true)
-        {
-            anim.Play("Reload Open", 0, 0f);
-            yield return new WaitForSeconds(6.5f);
-            StartCoroutine(TransferAmmo());
-
-        }
-
-        if (wProperties.usesGrenades && wProperties.outOfAmmo == true)
-        {
-            anim.Play("Reload", 0, 0f);
-            //yield return new WaitForSeconds(2f);
-            StartCoroutine(TransferAmmo());
-
-        }
-
-        if (wProperties.usesRockets && wProperties.outOfAmmo == true)
-        {
-            anim.Play("Reload", 0, 0f);
-            //yield return new WaitForSeconds(2f);
-            StartCoroutine(TransferAmmo());
-
-        }
-        /*
-    if(wProperties.usesSingleAmmo)
-    {
-        if (wProperties.outOfAmmo == true)
-        {
-            //Play diff anim if out of ammo
-            anim.Play("Reload", 0, 0f);
-
-
-        }
-        //Restore ammo when reloading
-        wProperties.currentAmmo = wProperties.ammo;
-    }*/
-
-
-
-
-
-
-    IEnumerator ChangeCamRotation()
-    {
-        yield return new WaitForEndOfFrame();
-
-        //cam.gameObject.transform.localRotation = Quaternion.Euler(-4.8f, 0, 0);
-    }
-
     public void TransferAmmo()
     {
 
-        if (wProperties.smallAmmo)
+        if (wProperties.ammoType == WeaponProperties.AmmoType.Light)
         {
-            if (wProperties.usesShells)
+            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.smallAmmo = pInventory.smallAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
@@ -1196,12 +852,12 @@ IEnumerator Reload()
 
             else
             {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
 
                 if (pInventory.smallAmmo >= ammoWeaponIsMissing)
                 {
                     pInventory.smallAmmo = pInventory.smallAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                 }
                 else if (pInventory.smallAmmo < ammoWeaponIsMissing)
                 {
@@ -1212,9 +868,9 @@ IEnumerator Reload()
 
         }
 
-        else if (wProperties.heavyAmmo)
+        else if (wProperties.ammoType == WeaponProperties.AmmoType.Heavy)
         {
-            if (wProperties.usesShells)
+            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.heavyAmmo = pInventory.heavyAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
@@ -1222,12 +878,12 @@ IEnumerator Reload()
 
             else
             {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
 
                 if (pInventory.heavyAmmo >= ammoWeaponIsMissing)
                 {
                     pInventory.heavyAmmo = pInventory.heavyAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                 }
                 else if (pInventory.heavyAmmo < ammoWeaponIsMissing)
                 {
@@ -1236,10 +892,10 @@ IEnumerator Reload()
                 }
             }
         }
-        else if (wProperties.powerAmmo)
+        else if (wProperties.ammoType == WeaponProperties.AmmoType.Power)
         {
 
-            if (wProperties.usesShells)
+            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.powerAmmo = pInventory.powerAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
@@ -1247,12 +903,12 @@ IEnumerator Reload()
 
             else
             {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
 
                 if (pInventory.powerAmmo >= ammoWeaponIsMissing)
                 {
                     pInventory.powerAmmo = pInventory.powerAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                 }
                 else if (pInventory.powerAmmo < ammoWeaponIsMissing)
                 {
@@ -1261,19 +917,18 @@ IEnumerator Reload()
                 }
             }
         }
-        pInventory.activeWeapon.GetComponent<WeaponProperties>().ResetBulletToIgnoreRecoil();
     }
 
     public void TransferAmmoDW(bool reloadedRight, bool reloadedLeft)
     {
         if (reloadedRight)
         {
-            ammoRightWeaponIsMissing = pInventory.rightWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.rightWeaponCurrentAmmo;
+            ammoRightWeaponIsMissing = pInventory.rightWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.rightWeaponCurrentAmmo;
 
             if (pInventory.smallAmmo >= ammoRightWeaponIsMissing)
             {
                 pInventory.smallAmmo = pInventory.smallAmmo - ammoRightWeaponIsMissing;
-                pInventory.rightWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.rightWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                pInventory.rightWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.rightWeapon.GetComponent<WeaponProperties>().ammoCapacity;
             }
             else if (pInventory.smallAmmo < ammoRightWeaponIsMissing)
             {
@@ -1284,12 +939,12 @@ IEnumerator Reload()
 
         if (reloadedLeft)
         {
-            ammoLeftWeaponIsMissing = pInventory.leftWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon - pInventory.leftWeaponCurrentAmmo;
+            ammoLeftWeaponIsMissing = pInventory.leftWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.leftWeaponCurrentAmmo;
 
             if (pInventory.smallAmmo >= ammoLeftWeaponIsMissing)
             {
                 pInventory.smallAmmo = pInventory.smallAmmo - ammoLeftWeaponIsMissing;
-                pInventory.leftWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.leftWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon;
+                pInventory.leftWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.leftWeapon.GetComponent<WeaponProperties>().ammoCapacity;
             }
             else if (pInventory.smallAmmo < ammoLeftWeaponIsMissing)
             {
@@ -1298,33 +953,6 @@ IEnumerator Reload()
             }
         }
     }
-
-    void ReferenceCameraToSpherecast()
-    {
-        //childManager.FindChildWithTagScript("Crosshairs").GetComponent<CrosshairScript>().cameraScript = childManager.FindChildWithTagScript("Player Inventory").GetComponent<CameraScript>();
-        //childManager.FindChildWithTagScript("Crosshairs").GetComponent<CrosshairScript>().initialMouSensitivity = childManager.FindChildWithTagScript("Player Inventory").GetComponent<CameraScript>().mouseSensitivity;
-    }
-
-    /*
-    //Enable bullet in mag renderer after set amount of time
-    private IEnumerator ShowBulletInMag()
-    {
-
-        //Wait set amount of time before showing bullet in mag
-        yield return new WaitForSeconds(gwProperties.showBulletInMagDelay);
-        gwProperties.bulletInMagRenderer.GetComponent<SkinnedMeshRenderer>().enabled = true;
-    }
-
-    //Show light when shooting, then disable after set amount of time
-    private IEnumerator MuzzleFlashLight()
-    {
-
-        gwProperties.muzzleflashLight.enabled = true;
-        yield return new WaitForSeconds(gwProperties.lightDuration);
-        gwProperties.muzzleflashLight.enabled = false;
-    }
-    */
-
     void TestButton()
     {
         if (Input.GetKeyDown(KeyCode.T))
@@ -1333,7 +961,8 @@ IEnumerator Reload()
             {
                 OnlineMultiplayerManager.multiplayerManagerInstance.EndGame();
 
-            }catch(System.Exception e)
+            }
+            catch (System.Exception e)
             {
                 Debug.Log(e);
             }
@@ -1349,57 +978,6 @@ IEnumerator Reload()
             }
         }
     }
-
-    /*
-    IEnumerator ShellReload()
-    {
-        if (wProperties.currentAmmo == 1)
-        {
-            anim.Play("Reload Open (7 Case)", 0, 0f);
-            yield return new WaitForSeconds(7f);
-            StartCoroutine(TransferAmmo());
-        }
-        else if (wProperties.currentAmmo == 2)
-        {
-            anim.Play("Reload Open (6 Case)", 0, 0f);
-            yield return new WaitForSeconds(6f);
-            StartCoroutine(TransferAmmo());
-        }
-        else if (wProperties.currentAmmo == 3)
-        {
-            anim.Play("Reload Open (5 Case)", 0, 0f);
-            yield return new WaitForSeconds(5f);
-            StartCoroutine(TransferAmmo());
-        }
-        else if (wProperties.currentAmmo == 4)
-        {
-            anim.Play("Reload Open (4 Case)", 0, 0f);
-            yield return new WaitForSeconds(4f);
-            StartCoroutine(TransferAmmo());
-        }
-        else if (wProperties.currentAmmo == 5)
-        {
-            anim.Play("Reload Open (3 Case)", 0, 0f);
-            yield return new WaitForSeconds(3f);
-            StartCoroutine(TransferAmmo());
-        }
-        else if (wProperties.currentAmmo == 6)
-        {
-            anim.Play("Reload Open (2 Case)", 0, 0f);
-            yield return new WaitForSeconds(2f);
-            StartCoroutine(TransferAmmo());
-        }
-        else if (wProperties.currentAmmo == 7)
-        {
-            anim.Play("Reload Open (1 Case)", 0, 0f);
-            yield return new WaitForSeconds(1f);
-            StartCoroutine(TransferAmmo());
-        }
-    }
-    */
-
-
-
     public void UpdateAimingLayers()
     {
         if (isAiming)
@@ -1496,42 +1074,19 @@ IEnumerator Reload()
             allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(false);
             pauseMenuOpen = false;
         }
-        //if (Time.timeScale != 0)
-        //{
-        //    Debug.Log($"Number of player: {StaticVariables.numberOfPlayers}");
-        //    Time.timeScale = 0;
-        //    if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
-        //        if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
-        //        {
-        //            Debug.Log("Pause MaK");
-        //            Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
-        //            allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(true);
-        //        }
-        //        else
-        //            allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
-        //    else
-        //        allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(true);
-        //}
-        //else
-        //{
-        //    Time.timeScale = 1;
-        //    if (StaticVariables.numberOfPlayers == 1 || StaticVariables.numberOfPlayers == 0)
-        //        Cursor.lockState = CursorLockMode.Locked;
-        //    allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
-        //    allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(false);
-        //    allPlayerScripts.playerUIComponents.splitScreenPauseMenu.gameObject.SetActive(false);
-        //}
     }
 
     public void ReturnToMainMenu()
     {
         Debug.Log("Returning to Main Menu");
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Time.timeScale = 1;
-        //SceneManager.LoadScene("000 - Main Menu");
 
         PhotonNetwork.LoadLevel(0);
         PhotonNetwork.LeaveRoom();
+    }
+
+    public void SetPlayerIDInInput()
+    {
+        player = ReInput.players.GetPlayer(playerRewiredID);
     }
 }
 

@@ -12,7 +12,7 @@ public class AllPlayerScripts : MonoBehaviour
     public WeaponPickUp weaponPickUp;
     [Header("UI Components")]
     public CameraScript cameraScript;
-    public CrosshairScript crosshairScript;
+    public CrosshairManager crosshairScript;
     public AimAssist aimAssist;
     public PlayerUIComponents playerUIComponents;
     public Aiming aimingScript;
