@@ -119,6 +119,7 @@ public class PlayerShooting : MonoBehaviourPun
         activeWeapon.mainAudioSource.clip = activeWeapon.Fire;
         activeWeapon.mainAudioSource.Play();
         activeWeapon.Recoil();
+        OnBulletSpawned?.Invoke(this);
     }
 
     public void Update()

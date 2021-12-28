@@ -19,6 +19,7 @@ public class PlayerInventory : MonoBehaviourPun
     public DualWielding dWielding;
     public PhotonView PV;
     public PlayerWeaponSwapping playerWeaponSwapping;
+    public PlayerShooting playerShooting;
 
     [Space(20)]
     [Header("Data")]
@@ -98,6 +99,7 @@ public class PlayerInventory : MonoBehaviourPun
         playerWeaponSwapping.OnWeaponPickup += OnPlayerWeaponSwapping_Delegate;
 
         OnPlayerSwitchWeapons_Delegate(pController);
+        playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
     }
 
     void OnPlayerWeaponSwapping_Delegate(PlayerWeaponSwapping playerWeaponSwapping)
@@ -169,6 +171,12 @@ public class PlayerInventory : MonoBehaviourPun
     {
         yield return new WaitForEndOfFrame();
         UpdateActiveWeapon();
+        AmmoManager();
+        changeAmmoCounter();
+    }
+
+    void OnBulletSpawned_Delegate(PlayerShooting playerShooting)
+    {
         AmmoManager();
         changeAmmoCounter();
     }
