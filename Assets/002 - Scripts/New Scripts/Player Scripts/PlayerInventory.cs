@@ -94,7 +94,6 @@ public class PlayerInventory : MonoBehaviourPun
 
         pController.OnPlayerSwitchWeapons += OnPlayerSwitchWeapons_Delegate;
         pController.OnPlayerLongInteract += OnPlayerSwitchWeapons_Delegate;
-        pController.OnPlayerFire += OnPlayerFire_Delegate;
         rScript.OnReloadEnd += OnReloadEnd_Delegate;
         playerWeaponSwapping.OnWeaponPickup += OnPlayerWeaponSwapping_Delegate;
 
@@ -105,6 +104,7 @@ public class PlayerInventory : MonoBehaviourPun
     void OnPlayerWeaponSwapping_Delegate(PlayerWeaponSwapping playerWeaponSwapping)
     {
         AmmoManager();
+        CheckIfLowAmmo();
     }
 
     void OnPlayerSwitchWeapons_Delegate(PlayerController playerController)
@@ -160,25 +160,12 @@ public class PlayerInventory : MonoBehaviourPun
 
         CheckIfLowAmmo();
     }
-
-    void OnPlayerFire_Delegate(PlayerController playerController)
+    void OnBulletSpawned_Delegate(PlayerShooting playerShooting)
     {
-        // TODO: Merge the 2 firing scripts (FullyAutomaticFire and SingleFire) into a single script. Create and Event in that script that will trigger this function after the bullet is spawned. The Coroutine will then no longer be necessary.
-        StartCoroutine(OnPlayerFire_Coroutine());
-    }
-
-    IEnumerator OnPlayerFire_Coroutine()
-    {
-        yield return new WaitForEndOfFrame();
         UpdateActiveWeapon();
         AmmoManager();
         changeAmmoCounter();
-    }
-
-    void OnBulletSpawned_Delegate(PlayerShooting playerShooting)
-    {
-        AmmoManager();
-        changeAmmoCounter();
+        CheckIfLowAmmo();
     }
 
     void OnReloadEnd_Delegate(ReloadScript reloadScript)
