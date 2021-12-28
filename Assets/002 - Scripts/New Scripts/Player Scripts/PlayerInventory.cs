@@ -5,6 +5,8 @@ using Photon.Pun;
 
 public class PlayerInventory : MonoBehaviourPun
 {
+    public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
+    public PlayerInventoryEvent OnWeaponsSwitched;
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
@@ -16,6 +18,7 @@ public class PlayerInventory : MonoBehaviourPun
     public ReloadScript rScript;
     public DualWielding dWielding;
     public PhotonView PV;
+    public PlayerWeaponSwapping playerWeaponSwapping;
 
     [Space(20)]
     [Header("Data")]
@@ -92,8 +95,14 @@ public class PlayerInventory : MonoBehaviourPun
         pController.OnPlayerLongInteract += OnPlayerSwitchWeapons_Delegate;
         pController.OnPlayerFire += OnPlayerFire_Delegate;
         rScript.OnReloadEnd += OnReloadEnd_Delegate;
+        playerWeaponSwapping.OnWeaponPickup += OnPlayerWeaponSwapping_Delegate;
 
         OnPlayerSwitchWeapons_Delegate(pController);
+    }
+
+    void OnPlayerWeaponSwapping_Delegate(PlayerWeaponSwapping playerWeaponSwapping)
+    {
+        AmmoManager();
     }
 
     void OnPlayerSwitchWeapons_Delegate(PlayerController playerController)
@@ -260,6 +269,7 @@ public class PlayerInventory : MonoBehaviourPun
                 }
             }
         }
+        AmmoManager();
         changeAmmoCounter();
         if (PV.IsMine)
             playDrawSound();

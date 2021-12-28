@@ -56,7 +56,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public Movement movement;
     public CrosshairManager cScript;
     public AimAssist aimAssist;
-    public WeaponPickUp wPickup;
+    public PlayerWeaponSwapping wPickup;
     public AimAssist raycastScript;
     public PlayerSurroundings pSurroundings;
 

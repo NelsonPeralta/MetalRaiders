@@ -7,7 +7,7 @@ public class CrosshairManager : MonoBehaviour
 {
     [Header("Other Scripts")]
     public PlayerInventory pInventory;
-    public WeaponPickUp weaponPickUp;
+    public PlayerWeaponSwapping weaponPickUp;
     public WeaponProperties wProperties;
     public GameObject ActiveCrosshair;
     public CameraScript cameraScript;
@@ -39,7 +39,7 @@ public class CrosshairManager : MonoBehaviour
         UpdateReticule();
     }
 
-    void UpdateReticule_Delegate(WeaponPickUp weaponPickUp)
+    void UpdateReticule_Delegate(PlayerWeaponSwapping weaponPickUp)
     {
         UpdateReticule();
     }
