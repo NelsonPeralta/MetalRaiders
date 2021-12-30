@@ -99,6 +99,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         OnPlayerSwitchWeapons_Delegate(pController);
         playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
+        pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
     }
 
     void OnPlayerWeaponSwapping_Delegate(PlayerWeaponSwapping playerWeaponSwapping)
@@ -173,6 +174,7 @@ public class PlayerInventory : MonoBehaviourPun
         UpdateActiveWeapon();
         AmmoManager();
         changeAmmoCounter();
+        CheckIfLowAmmo();
     }
 
     [PunRPC]
