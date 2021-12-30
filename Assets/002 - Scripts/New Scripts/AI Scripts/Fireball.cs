@@ -19,7 +19,6 @@ public class Fireball : MonoBehaviour
     [Header("Prefabs")]
     public Transform explosionPrefab;
 
-    GameObject[] playersHit = new GameObject[4];
     GameObject[] AIsHit = new GameObject[20];
 
     private void Start()
@@ -81,49 +80,15 @@ public class Fireball : MonoBehaviour
 
                 int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;
 
-                bool playerAlreadyHit = false;
 
-                for (int i = 0; i < playersHit.Length; i++)
+                if (!player.GetComponent<PlayerProperties>().isDead)
                 {
-                    if (playersHit[i] != null)
+                    if (playerDistance < radius)
                     {
-                        if (playersHit[i] == player)
-                        {
-                            //Debug.Log("Here");
-                            playerAlreadyHit = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Not yet hit");
-                        }
-                    }
-                }
+                        float calculatedDamage = damage * (1 - (playerDistance / radius));
+                        //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
+                        player.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, 99);
 
-                bool assignedPlayerInArray = false;
-
-                if (!playerAlreadyHit)
-                {
-                    for (int i = 0; i < playersHit.Length; i++)
-                    {
-                        if (playersHit[i] == null && !assignedPlayerInArray)
-                        {
-                            playersHit[i] = player;
-                            assignedPlayerInArray = true;
-                        }
-                    }
-                }
-
-                if (!playerAlreadyHit)
-                {
-                    if (!player.GetComponent<PlayerProperties>().isDead)
-                    {
-                        if (playerDistance < radius)
-                        {
-                            float calculatedDamage = damage * (1 - (playerDistance / radius));
-                            //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
-                            player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                            
-                        }
                     }
                 }
             }

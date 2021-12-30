@@ -189,7 +189,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 
                 GameObject hit = hits[i].collider.gameObject;
-                if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead())
+                if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.IsDead())
                 {
                     ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
                     objectsHit.Add(newHit);
@@ -233,7 +233,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             }
 
             Debug.Log($"Final Hit: {finalHitObject.name} with a distance of: {finalHitDistance} at point: {finalHitPoint}");
-            if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead())
+            if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.IsDead())
             {
                 AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
                 int finalDamage = damage;

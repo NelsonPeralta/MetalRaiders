@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon.Pun;
 
-public class Watcher : MonoBehaviour
+public class Watcher : AiAbstractClass
 {
+    public PhotonView PV;
     public Animator animator;
     public NavMeshAgent nma;
     public AudioSource aSource;
@@ -150,12 +152,6 @@ public class Watcher : MonoBehaviour
             {
                 LookForNewRandomPlayer();
             }
-        }
-        if (Health <= 0 && !isDead)
-        {
-            nma.speed = 0;
-            StartCoroutine(Die());
-            isDead = true;
         }
 
 
@@ -353,41 +349,94 @@ public class Watcher : MonoBehaviour
         }
     }
 
-    IEnumerator Die()
+    void Die()
     {
-        var ds = Instantiate(deathSmoke, transform.position + new Vector3(0, 1, 0), transform.rotation);
-        Destroy(ds, 5);
-        //Destroy(gameObject, 0.5f);
-        nma.enabled = false;
-        animator.Play("Take Damage");
-        isDead = true;
+        StartCoroutine(Die_Coroutine());
+    }
 
-        //int randomSound = Random.Range(0, deathClips.Length - 1);
-        //audioSource.clip = deathClips[randomSound];
-        //audioSource.Play();
-
-        if (swarmMode != null)
-            swarmMode.watchersAlive = swarmMode.watchersAlive - 1;
-
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+    IEnumerator Die_Coroutine()
+    {
+        try
         {
-            //hitbox.gameObject.layer = 23; //Ground
-            hitbox.gameObject.SetActive(false);
-        }
+            isDead = true;
+            onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
+            onlineSwarmManager.RemoveOneWatcher();
+            gameObject.name = $"{gameObject.name} (DEAD)";
+            nma.speed = 0;
+            nma.enabled = false;
+            animator.Play("Die");
 
-        motionTrackerDot.SetActive(false);
 
-        if (lastPlayerWhoShot)
-        {
-            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
+            foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+                hitbox.gameObject.SetActive(false);
+
+            motionTrackerDot.SetActive(false);
+            if (lastPlayerWhoShot == null)
+                Debug.Log("ZOMBIE HAS NO LAST PLAYER");
+
+            //lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
+            //if (lastPlayerWhoShot)
+            //    lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
-        }
-        DropRandomWeapon();
-        target = null;
 
-        yield return new WaitForSeconds(0.5f);
+            //if (PhotonNetwork.IsMasterClient)
+            //    DropRandomLoot();
+            target = null;
+
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log($"ERROR: {e}");
+
+            gameObject.name = $"{gameObject.name} (DEAD)";
+            isDead = true;
+            nma.speed = 0;
+            nma.enabled = false;
+            animator.Play("Die");
+
+
+            foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+                hitbox.gameObject.SetActive(false);
+        }
+        yield return new WaitForSeconds(5);
         gameObject.SetActive(false);
     }
+
+    //IEnumerator Die()
+    //{
+    //    var ds = Instantiate(deathSmoke, transform.position + new Vector3(0, 1, 0), transform.rotation);
+    //    Destroy(ds, 5);
+    //    //Destroy(gameObject, 0.5f);
+    //    nma.enabled = false;
+    //    animator.Play("Take Damage");
+    //    isDead = true;
+
+    //    //int randomSound = Random.Range(0, deathClips.Length - 1);
+    //    //audioSource.clip = deathClips[randomSound];
+    //    //audioSource.Play();
+
+    //    if (swarmMode != null)
+    //        swarmMode.watchersAlive = swarmMode.watchersAlive - 1;
+
+    //    foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+    //    {
+    //        //hitbox.gameObject.layer = 23; //Ground
+    //        hitbox.gameObject.SetActive(false);
+    //    }
+
+    //    motionTrackerDot.SetActive(false);
+
+    //    if (lastPlayerWhoShot)
+    //    {
+    //        lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
+    //        TransferPoints();
+    //    }
+    //    DropRandomWeapon();
+    //    target = null;
+
+    //    yield return new WaitForSeconds(0.5f);
+    //    gameObject.SetActive(false);
+    //}
 
     void LookForNewRandomPlayer()
     {
@@ -590,4 +639,80 @@ public class Watcher : MonoBehaviour
         targetSwitchCountdown = targetSwitchCountdownDefault;
         targetSwitchReady = true;
     }
+
+    public void EnableThisAi(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
+    {
+        PV.RPC("EnableThisAi_RPC", RpcTarget.All, targetPhotonId, spawnPointPosition, spawnPointRotation);
+    }
+
+    [PunRPC]
+    public void EnableThisAi_RPC(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
+    {
+        gameObject.transform.position = spawnPointPosition;
+        gameObject.transform.rotation = spawnPointRotation;
+        gameObject.SetActive(true);
+        ResetZombie();
+        target = PhotonView.Find(targetPhotonId).transform;
+    }
+
+    void ResetZombie()
+    {
+        gameObject.name = gameObject.name.Replace("(DEAD)", "");
+        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
+        nma.enabled = true;
+        nma.speed = defaultSpeed;
+
+        Health = defaultHealth + (onlineSwarmManager.waveNumber * 10);
+        //damage = defaultDamage + (onlineSwarmManager.waveNumber * 2);
+        isInMeleeRange = false;
+        isInRange = false;
+        isReadyToAttack = true;
+
+        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        {
+            hitbox.gameObject.SetActive(true);
+        }
+
+        motionTrackerDot.SetActive(true);
+
+        lastPlayerWhoShot = null;
+        otherPlayerShot = false;
+        targetSwitchCountdown = targetSwitchCountdownDefault;
+        targetSwitchReady = true;
+    }
+
+    public override bool IsDead()
+    {
+        return isDead;
+    }
+
+    public override void Damage(int damage, int playerWhoShotPDI)
+    {
+        if (IsDead())
+            return;
+        PV.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
+    }
+
+    [PunRPC]
+    void Damage_RPC(int damage, int playerWhoShotPDI)
+    {
+        if (IsDead())
+            return;
+        Health -= damage;
+        PlayerProperties pp = PhotonView.Find(playerWhoShotPDI).GetComponent<PlayerProperties>();
+        pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
+
+        if (Health <= 0)
+        {
+            PhotonView.Find(playerWhoShotPDI).GetComponent<OnlinePlayerSwarmScript>().kills++;
+            Die();
+        }
+    }
+
+    public override int GetHealth()
+    {
+        return (int)Health;
+    }
+
+    public OnlineSwarmManager onlineSwarmManager;
 }

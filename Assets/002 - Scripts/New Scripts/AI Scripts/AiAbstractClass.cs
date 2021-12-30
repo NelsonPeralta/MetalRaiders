@@ -16,7 +16,7 @@ abstract public class AiAbstractClass : MonoBehaviour
 
     }
 
-    public abstract bool isDead();
+    public abstract bool IsDead();
     public abstract void Damage(int damage, int playerWhoShotPDI);
     public abstract int GetHealth();
 }
