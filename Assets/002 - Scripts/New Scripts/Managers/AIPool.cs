@@ -46,7 +46,7 @@ public class AIPool : MonoBehaviour
                 obj.transform.parent = gameObject.transform;
 
                 obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", watcherPrefab.name), Vector3.zero, Quaternion.identity);
-                obj.gameObject.SetActive(false);
+                obj.SetActive(false);
                 watchers.Add(obj.GetComponent<Watcher>());
                 obj.transform.parent = gameObject.transform;
             }

@@ -177,6 +177,7 @@ public class OnlineSwarmManager : MonoBehaviour
         ResetPoints();
         UpdatePlayerLives();
 
+        DisablePlayerShields();
         if (!PhotonNetwork.IsMasterClient)
             return;
 
@@ -184,7 +185,6 @@ public class OnlineSwarmManager : MonoBehaviour
 
         if (PV.IsMine)
             IncreaseWave(waveNumber);
-        DisablePlayerShields();
     }
 
     void DisablePlayerShields()
@@ -317,7 +317,7 @@ public class OnlineSwarmManager : MonoBehaviour
     void CalculateMaxDefaultAIsForRound()
     {
         allPlayers = GetAllPlayers();
-        //maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + (waveNumber * 2);
+        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count + (waveNumber * 2);
         //maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
         maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
         //maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;

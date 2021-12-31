@@ -76,12 +76,16 @@ public class Watcher : AiAbstractClass
     public ParticleSystem shield;
     public SphereCollider shieldCollider;
 
-    private void OnEnable()
-    {
-        ResetWatcher();
-        ActionManager();
-    }
+    //private void OnEnable()
+    //{
+    //    ResetWatcher();
+    //    ActionManager();
+    //}
 
+    private void Start()
+    {
+        nma.enabled = false;
+    }
     private void Update()
     {
         Attack();
@@ -131,6 +135,8 @@ public class Watcher : AiAbstractClass
         {
             if (target != null)
             {
+                if (!nma.enabled)
+                    nma.enabled = true;
                 if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
                 {
                     nma.SetDestination(target.position);
@@ -652,6 +658,7 @@ public class Watcher : AiAbstractClass
         gameObject.transform.rotation = spawnPointRotation;
         gameObject.SetActive(true);
         ResetZombie();
+        nma.enabled = true;
         target = PhotonView.Find(targetPhotonId).transform;
     }
 
