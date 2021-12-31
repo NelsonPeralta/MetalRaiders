@@ -179,6 +179,7 @@ public class OnlineSwarmManager : MonoBehaviour
         ResetPoints();
         UpdatePlayerLives();
 
+        DisablePlayerShields();
         if (!PhotonNetwork.IsMasterClient)
             return;
 
@@ -186,7 +187,6 @@ public class OnlineSwarmManager : MonoBehaviour
 
         if (PV.IsMine)
             IncreaseWave(waveNumber);
-        DisablePlayerShields();
     }
 
     void DisablePlayerShields()
