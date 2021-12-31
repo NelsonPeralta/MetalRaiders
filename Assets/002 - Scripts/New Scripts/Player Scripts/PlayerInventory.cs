@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class PlayerInventory : MonoBehaviourPun
 {
@@ -106,6 +107,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         AmmoManager();
         CheckIfLowAmmo();
+        UpdateThirdPersonGunModelsOnCharacter();
     }
 
     void OnPlayerSwitchWeapons_Delegate(PlayerController playerController)
@@ -213,6 +215,7 @@ public class PlayerInventory : MonoBehaviourPun
             playDrawSound();
             crosshairScript.UpdateReticule();
         }
+        UpdateThirdPersonGunModelsOnCharacter();
     }
 
     public void UpdateActiveWeapon()
@@ -266,6 +269,7 @@ public class PlayerInventory : MonoBehaviourPun
                 }
             }
         }
+        UpdateThirdPersonGunModelsOnCharacter();
         AmmoManager();
         changeAmmoCounter();
         if (PV.IsMine)
@@ -300,6 +304,64 @@ public class PlayerInventory : MonoBehaviourPun
     {
         rightWeaponCurrentAmmo = rightWeapon.GetComponent<WeaponProperties>().currentAmmo;
         leftWeaponCurrentAmmo = leftWeapon.GetComponent<WeaponProperties>().currentAmmo;
+    }
+
+    void UpdateThirdPersonGunModelsOnCharacter()
+    {
+        foreach (GameObject awgo in allWeaponsInInventory)
+        {
+            WeaponProperties wp = awgo.GetComponent<WeaponProperties>();
+            try
+            {
+                wp.thirdPersonModelEquipped.SetActive(false);
+
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
+            }
+
+            try
+            {
+                wp.thirdPersonModelUnequipped.SetActive(false);
+
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
+            }
+        }
+
+        foreach (GameObject wego in weaponsEquiped)
+        {
+            WeaponProperties wp = wego.GetComponent<WeaponProperties>();
+
+            if (wp == activeWeapon)
+            {
+                try
+                {
+                    wp.thirdPersonModelEquipped.SetActive(true);
+
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
+
+                }
+            }
+            else
+            {
+                try
+                {
+                    wp.thirdPersonModelUnequipped.SetActive(true);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
+
+                }
+            }
+        }
     }
 
     public void SwapGunsOnCharacter(int secondaryWeapon)
