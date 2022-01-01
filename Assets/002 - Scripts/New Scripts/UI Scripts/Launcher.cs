@@ -12,6 +12,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Events
     public delegate void LauncherEvent(Launcher launcher);
     public LauncherEvent OnCreateSwarmRoomButton;
+    public LauncherEvent OnCreateMultiplayerRoomButton;
 
     public static Launcher launcherInstance; // Singleton of the Photon Launcher
     public PhotonView PV;
@@ -105,6 +106,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("loading"); // Show the loading menu/message
 
         // When creating a room is done, OnJoinedRoom() will automatically trigger
+        OnCreateMultiplayerRoomButton?.Invoke(this);
     }
 
     public void CreateSwarmRoom()

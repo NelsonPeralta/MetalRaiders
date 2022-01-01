@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameMode: 2
+  multiplayerMode: 1
+  swarmMode: 1
 --- !u!114 &1016061319836381599
 MonoBehaviour:
   m_ObjectHideFlags: 0
