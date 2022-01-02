@@ -8,6 +8,9 @@ using Photon.Realtime;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    // Events
+    public delegate void GameManagerEvent();
+    public GameManagerEvent OnSceneLoadedEvent;
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum MultiplayerMode { Deathmatch, Unassgined}
@@ -36,6 +39,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
         Launcher.launcherInstance.OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
+        Launcher.launcherInstance.OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
     }
 
     void OnCreateSwarmRoomButton_Delegate(Launcher launcher)
@@ -52,7 +56,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-
+        OnSceneLoadedEvent?.Invoke();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
