@@ -690,38 +690,5 @@ public class Watcher : AiAbstractClass
         targetSwitchReady = true;
     }
 
-    public override bool IsDead()
-    {
-        return isDead;
-    }
-
-    public override void Damage(int damage, int playerWhoShotPDI)
-    {
-        if (IsDead())
-            return;
-        PV.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
-    }
-
-    [PunRPC]
-    void Damage_RPC(int damage, int playerWhoShotPDI)
-    {
-        if (IsDead())
-            return;
-        Health -= damage;
-        PlayerProperties pp = PhotonView.Find(playerWhoShotPDI).GetComponent<PlayerProperties>();
-        pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
-
-        if (Health <= 0)
-        {
-            PhotonView.Find(playerWhoShotPDI).GetComponent<OnlinePlayerSwarmScript>().kills++;
-            Die();
-        }
-    }
-
-    public override int GetHealth()
-    {
-        return (int)Health;
-    }
-
     public OnlineSwarmManager onlineSwarmManager;
 }
