@@ -224,10 +224,21 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void AiLeftHitZero()
     {
-        if (watchersLeft <= 0)
+        int watchersAlive = 0;
+        foreach (Watcher w in watcherPool)
+            if (w.gameObject.activeSelf && !w.isDead)
+                watchersAlive++;
+
+        Debug.Log($"Watchers Left: {watchersLeft}. Watchers alive: {watchersAlive}");
+        if (watchersLeft <= 0 && watchersAlive <= 0)
             EndWave();
     }
 
+    public void OnAiDeath()
+    {
+        Debug.Log("Swarm Manager OnAiDeath");
+        AiLeftHitZero();
+    }
     void EndWave()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -240,5 +251,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void EndWave_RPC()
     {
         Debug.Log("Wave End");
+        IncreaseWave();
     }
 }

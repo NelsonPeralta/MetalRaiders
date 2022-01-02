@@ -4,19 +4,38 @@ using UnityEngine;
 
 abstract public class AiAbstractClass : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public delegate void AiEvent(AiAbstractClass aiAbstractClass);
+    public AiEvent OnHealthChange, OnDeath;
+
+    // private variables
+    int _health;
+
+    // public variables
+    public int health
+    {
+        get
+        {
+            return _health;
+        }
+
+        set
+        {
+            health = value;
+            OnHealthChange?.Invoke(this);
+        }
+    }
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        OnDeath += Death;
     }
 
     public abstract bool IsDead();
     public abstract void Damage(int damage, int playerWhoShotPDI);
     public abstract int GetHealth();
+
+    void Death(AiAbstractClass aiAbstractClass)
+    {
+        Debug.Log("OnDeath from abstract class");
+        SwarmManager.instance.OnAiDeath();
+    }
 }

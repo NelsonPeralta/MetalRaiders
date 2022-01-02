@@ -358,6 +358,7 @@ public class Watcher : AiAbstractClass
     void Die()
     {
         StartCoroutine(Die_Coroutine());
+
     }
 
     IEnumerator Die_Coroutine()
@@ -404,6 +405,7 @@ public class Watcher : AiAbstractClass
             foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
                 hitbox.gameObject.SetActive(false);
         }
+        SwarmManager.instance.OnAiDeath();
         yield return new WaitForSeconds(5);
         gameObject.SetActive(false);
     }

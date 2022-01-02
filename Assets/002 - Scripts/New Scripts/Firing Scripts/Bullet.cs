@@ -115,79 +115,15 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void Travel()
     {
-        string hitMessage = "";
         prePos = transform.position; // Previous Position
         transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
         hits = Physics.RaycastAll(new Ray(prePos, (transform.position - prePos).normalized), (transform.position - prePos).magnitude);//, layerMask);
         frameCounter++;
-        hitMessage += $"FRAME: {frameCounter}.";
         for (int i = 0; i < hits.Length; i++) // wWith a normal for loop, if the player is too close to a wall, it checks what object it collided with from farthest to closest. (int i = 0; i < hits.Length; i++)
         {
             //hitMessage += $"\nHIT INDEX: {i}. Hit NAME: {hits[i].collider.name} HIT DISTANCE FROM PLAYER: {Vector3.Distance(playerWhoShot.transform.position, hits[i].point)}";
-            Debug.Log(hitMessage);
             if (!damageDealt && hits[i].collider.gameObject.layer != 22)
             {
-                //GameObject hit = hits[i].collider.gameObject;
-                //if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead())
-                //{
-                //    //hitMessage = "Hit AI";
-                //    AIHitbox hitbox = hits[i].collider.gameObject.GetComponent<AIHitbox>();
-                //    int _damage = damage;
-                //    if (hitbox.isHead && wProperties.isHeadshotCapable)
-                //    {
-                //        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
-                //        _damage = (int)(wProperties.headshotMultiplier * damage);
-                //    }
-
-                //    if (playerWhoShot.PV.IsMine)
-                //        hitbox.aiAbstractClass.Damage(_damage, playerWhoShot.PV.ViewID);
-
-                //    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
-                //    bloodHit.transform.position = hits[i].point;
-                //    bloodHit.SetActive(true);
-
-                //    damageDealt = true;
-                //}
-                //else if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
-                //{
-                //    //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
-
-                //    PlayerHitbox hitbox = hits[i].collider.gameObject.GetComponent<PlayerHitbox>();
-                //    PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
-                //    bool wasHeadshot = false;
-                //    if (hitbox.isHead && wProperties.isHeadshotCapable)
-                //    {
-                //        damage = (int)(damage * wProperties.headshotMultiplier);
-                //        wasHeadshot = true;
-                //        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
-                //    }
-
-                //    if (playerWhoShot.PV.IsMine)
-                //        playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
-
-                //    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
-                //    bloodHit.transform.position = hits[i].point;
-                //    bloodHit.SetActive(true);
-
-                //    damageDealt = true;
-                //}
-                //else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>() && !hit.GetComponent<CharacterController>())
-                //{
-                //    hitMessage += $"\n\n---HIT---: {hit.name}";
-                //    GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
-                //    int iplus = Mathf.Clamp(i + 1, 0, hits.Length - 1); // Both inclusive
-                //    genericHit.transform.position = hits[iplus].point;
-                //    genericHit.SetActive(true);
-
-                //    damageDealt = true;
-                //}
-
-
-
-
-
-
-
                 GameObject hit = hits[i].collider.gameObject;
                 if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.IsDead())
                 {
@@ -203,7 +139,6 @@ public class Bullet : MonoBehaviourPunCallbacks
                 else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>() && !hit.GetComponent<CharacterController>())
                 {
                     ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
-                    Debug.Log(newHit.hitPoint);
                     objectsHit.Add(newHit);
                 }
             }
@@ -214,7 +149,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void CheckForFinalHit()
     {
-        Debug.Log($"Hits: {objectsHit.Count}");
         if (objectsHit.Count > 0)
         {
             GameObject finalHitObject = objectsHit[0].gameObject;
@@ -222,7 +156,6 @@ public class Bullet : MonoBehaviourPunCallbacks
             float finalHitDistance = objectsHit[0].distanceFromPlayer;
             for (int i = 0; i < objectsHit.Count; i++)
             {
-                Debug.Log($"Object Hit: {objectsHit[i].gameObject.name}. Distance: {objectsHit[i].distanceFromPlayer}. Hir point: {objectsHit[i].hitPoint}");
                 if (objectsHit[i].distanceFromPlayer < finalHitDistance)
                 {
                     Debug.Log(objectsHit[i].hitPoint);
@@ -232,7 +165,6 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
-            Debug.Log($"Final Hit: {finalHitObject.name} with a distance of: {finalHitDistance} at point: {finalHitPoint}");
             if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.IsDead())
             {
                 AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();

@@ -115,7 +115,6 @@ public class PlayerInventory : MonoBehaviourPun
         if (!PV.IsMine)
             return;
 
-        Debug.Log("On Player Switch Weapons Delegate");
         AmmoManager();
 
         if (pController.player.GetButtonDown("Switch Weapons") && !pProperties.isDead)
