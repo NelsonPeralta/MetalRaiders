@@ -32,19 +32,23 @@ public class KillFeedManager : MonoBehaviour
 
     IEnumerator SpawnNewFeed_Coroutine(string playerWhoGotKillName, string playerWhoWasKilledName, bool wasHeadshot)
     {
-        var nkf = Instantiate(killFeedItemPrefab, gridLayout.transform);
+        var nkf = Instantiate(killFeedItemPrefab);
         var headshotFeed = $"";
         if(wasHeadshot)
             headshotFeed = $"with a headshot!";
         nkf.GetComponent<TMP_Text>().text = $"{playerWhoGotKillName} Killed {playerWhoWasKilledName} {headshotFeed}";
+        nkf.transform.SetParent(gridLayout.transform);
+        nkf.transform.SetAsFirstSibling();
         yield return new WaitForSeconds(5);
         Destroy(nkf);
     }
 
     IEnumerator SpawnNewFeed_Coroutine(string feed)
     {
-        var nkf = Instantiate(killFeedItemPrefab, gridLayout.transform);
+        var nkf = Instantiate(killFeedItemPrefab);
         nkf.GetComponent<TMP_Text>().text = $"{feed}";
+        nkf.transform.SetParent(gridLayout.transform);
+        nkf.transform.SetAsFirstSibling();
         yield return new WaitForSeconds(5);
         Destroy(nkf);
     }

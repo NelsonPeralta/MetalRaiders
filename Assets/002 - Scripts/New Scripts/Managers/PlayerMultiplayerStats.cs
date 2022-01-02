@@ -102,6 +102,11 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
     }
 
+    public void AddKill()
+    {
+        kills++;
+    }
+
     public void AddDeath()
     {
         if (!PhotonNetwork.IsMasterClient)

@@ -23064,12 +23064,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2025271071}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1ba50c8c802e2c4eb8f795085b5e293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreToWin: 0
+  scoreToWin: 1
 --- !u!1 &2038314131
 GameObject:
   m_ObjectHideFlags: 0

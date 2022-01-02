@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         SceneManager.sceneLoaded += OnSceneLoaded;
         Launcher.launcherInstance.OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
         Launcher.launcherInstance.OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
+
+        OnSceneLoadedEvent?.Invoke(); // First call when starting the game
     }
 
     void OnCreateSwarmRoomButton_Delegate(Launcher launcher)
@@ -86,12 +88,28 @@ public class GameManager : MonoBehaviourPunCallbacks
         try
         {
             instance.gameMode = (GameMode)System.Enum.Parse(typeof(GameMode), roomParams["gamemode"]);
-            instance.multiplayerMode = (MultiplayerMode)System.Enum.Parse(typeof(GameMode), roomParams["multiplayermode"]);
-            instance.swarmMode = (SwarmMode)System.Enum.Parse(typeof(GameMode), roomParams["swarmmode"]);
+            instance.multiplayerMode = (MultiplayerMode)System.Enum.Parse(typeof(MultiplayerMode), roomParams["multiplayermode"]);
+            instance.swarmMode = (SwarmMode)System.Enum.Parse(typeof(SwarmMode), roomParams["swarmmode"]);
         }
         catch (Exception e)
         {
             Debug.LogWarning($"No such gamemode. {e}");
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public PlayerProperties GetPlayerWithPhotonViewId(int pid)
+    {
+        return PhotonView.Find(pid).GetComponent<PlayerProperties>();
     }
 }
