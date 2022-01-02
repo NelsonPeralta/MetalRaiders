@@ -35,7 +35,6 @@ public class GroundCheck : MonoBehaviour
     {
         if (other.transform.root.gameObject != player.gameObject)
         {
-            Debug.Log(other.name);
             isGrounded = true;
         }
     }

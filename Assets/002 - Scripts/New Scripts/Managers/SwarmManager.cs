@@ -82,7 +82,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void CreateAIPool()
     {
-        // Watcher GameObject must be active in order to be found
+        // Watcher GameObject must be active in order to be found with FindObjectsOfType
         watcherPool = FindObjectsOfType<Watcher>();
         foreach (Watcher w in watcherPool)
             w.gameObject.SetActive(false);

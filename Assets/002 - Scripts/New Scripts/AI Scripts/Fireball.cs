@@ -75,7 +75,7 @@ public class Fireball : MonoBehaviour
             if (rb != null)
                 rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
 
-            if (hit.GetComponent<PlayerHitbox>() && !playersHit.Contains(hit.GetComponent<PlayerProperties>()))
+            if (hit.GetComponent<PlayerHitbox>() && !playersHit.Contains(hit.GetComponent<PlayerHitbox>().player))
             {
                 GameObject player = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
