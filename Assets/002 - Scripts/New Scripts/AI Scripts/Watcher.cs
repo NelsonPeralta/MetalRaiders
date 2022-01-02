@@ -129,7 +129,7 @@ public class Watcher : MonoBehaviour
         {
             if (target != null)
             {
-                if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
+                if (target.gameObject.GetComponent<PlayerProperties>().Health > 0 && nma.enabled)
                 {
                     nma.SetDestination(target.position);
                 }

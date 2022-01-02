@@ -274,7 +274,6 @@ public class OnlineSwarmManager : MonoBehaviour
     [PunRPC]
     void IncreaseWave_RPC(int _currentWave)
     {
-
         StartCoroutine(IncreaseWave_Coroutine(_currentWave));
     }
 
