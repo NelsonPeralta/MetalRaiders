@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -672,6 +673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -777,6 +779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -878,6 +881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -6088,6 +6092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -6253,6 +6258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -11693,6 +11699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -12021,6 +12028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91ce31d811055448bb01510c7eb9c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PV: {fileID: 6935810237272833537}
   animator: {fileID: 1613300282229901588}
   nma: {fileID: 1673082705397814769}
   aSource: {fileID: 3278221380015015532}
@@ -12077,6 +12085,7 @@ MonoBehaviour:
   summonWall: {fileID: 8300000, guid: 5adff5ae5fe483f43a5c96a6cb85c08f, type: 3}
   shield: {fileID: 5843345374036704207}
   shieldCollider: {fileID: 0}
+  onlineSwarmManager: {fileID: 0}
 --- !u!114 &6935810237272833537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12218,6 +12227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -12571,6 +12581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}
@@ -12672,6 +12683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
   zScript: {fileID: 0}

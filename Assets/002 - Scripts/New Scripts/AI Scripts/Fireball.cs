@@ -19,7 +19,7 @@ public class Fireball : MonoBehaviour
     [Header("Prefabs")]
     public Transform explosionPrefab;
 
-    GameObject[] playersHit = new GameObject[4];
+    List<PlayerProperties> playersHit = new List<PlayerProperties>();
     GameObject[] AIsHit = new GameObject[20];
 
     private void Start()
@@ -68,63 +68,25 @@ public class Fireball : MonoBehaviour
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
+            float hitDistance = Vector3.Distance(hit.transform.position, transform.position);
+            float calculatedDamage = damage * (1 - (hitDistance / radius));
 
             //Add force to nearby rigidbodies
             if (rb != null)
                 rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
 
-            if (hit.GetComponent<PlayerHitbox>() != null)
+            if (hit.GetComponent<PlayerHitbox>() && !playersHit.Contains(hit.GetComponent<PlayerProperties>()))
             {
-                //Debug.Log("Fireball Hit Player");
                 GameObject player = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
-
                 int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;
 
-                bool playerAlreadyHit = false;
 
-                for (int i = 0; i < playersHit.Length; i++)
+                if (playerDistance < radius)
                 {
-                    if (playersHit[i] != null)
-                    {
-                        if (playersHit[i] == player)
-                        {
-                            //Debug.Log("Here");
-                            playerAlreadyHit = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Not yet hit");
-                        }
-                    }
-                }
-
-                bool assignedPlayerInArray = false;
-
-                if (!playerAlreadyHit)
-                {
-                    for (int i = 0; i < playersHit.Length; i++)
-                    {
-                        if (playersHit[i] == null && !assignedPlayerInArray)
-                        {
-                            playersHit[i] = player;
-                            assignedPlayerInArray = true;
-                        }
-                    }
-                }
-
-                if (!playerAlreadyHit)
-                {
-                    if (!player.GetComponent<PlayerProperties>().isDead)
-                    {
-                        if (playerDistance < radius)
-                        {
-                            float calculatedDamage = damage * (1 - (playerDistance / radius));
-                            //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
-                            player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                            
-                        }
-                    }
+                    //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
+                    player.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, 99);
+                    playersHit.Add(player.GetComponent<PlayerProperties>());
                 }
             }
             if (hit.GetComponent<AIHitbox>() != null)
@@ -165,7 +127,6 @@ public class Fireball : MonoBehaviour
                 {
                     if (hit.GetComponent<AIHitbox>().aiHealth > 0)
                     {
-                        float calculatedDamage = damage * (1 - (aiDistance / radius));
                         hit.GetComponent<AIHitbox>().DamageAI(false, calculatedDamage, playerWhoThrewGrenade);
                     }
 

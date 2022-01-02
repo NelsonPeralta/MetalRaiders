@@ -8,13 +8,17 @@ public class AIPool : MonoBehaviour
 {
     public PhotonView PV;
     public static AIPool aIPoolInstance;
-
-    [Header("AIs")]
     public int amountToPool;
-    public List<Skeleton> skeletons = new List<Skeleton>();
+
+    [Header("AI Prefabs")]
     public GameObject skeletonPrefab;
-    public List<ZombieScript> zombies = new List<ZombieScript>();
     public GameObject zombiePrefab;
+    public Transform watcherPrefab;
+
+    [Header("AI Lists")]
+    public List<Skeleton> skeletons = new List<Skeleton>();
+    public List<ZombieScript> zombies = new List<ZombieScript>();
+    public List<Watcher> watchers = new List<Watcher>();
 
     private void Awake()
     {
@@ -40,6 +44,11 @@ public class AIPool : MonoBehaviour
                 obj.gameObject.SetActive(false);
                 zombies.Add(obj.GetComponent<ZombieScript>());
                 obj.transform.parent = gameObject.transform;
+
+                obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", watcherPrefab.name), Vector3.zero, Quaternion.identity);
+                obj.SetActive(false);
+                watchers.Add(obj.GetComponent<Watcher>());
+                obj.transform.parent = gameObject.transform;
             }
     }
     public int GetRandomZombiePhotonId()
@@ -49,18 +58,26 @@ public class AIPool : MonoBehaviour
                 return obj.PV.ViewID;
         return 0;
     }
-    public Skeleton GetPooledSkeleton()
-    {
-        foreach (Skeleton obj in skeletons)
-            if (!obj.gameObject.activeSelf)
-                return obj;
-        return null;
-    }
 
+    public int GetRandomWatcherPhotonId()
+    {
+        foreach (Watcher obj in watchers)
+            if (!obj.gameObject.activeSelf)
+                return obj.PV.ViewID;
+        return 0;
+    }
     public ZombieScript GetPooledZombie(int PhotonId)
     {
         foreach (ZombieScript obj in zombies)
             if (obj.PV.ViewID == PhotonId)
+                return obj;
+        return null;
+    }
+
+    public Watcher GetPooledWatcher(int photonViewId)
+    {
+        foreach (Watcher obj in watchers)
+            if (obj.PV.ViewID == photonViewId)
                 return obj;
         return null;
     }

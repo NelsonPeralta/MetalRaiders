@@ -60,7 +60,7 @@ public class ZombieScript : AiAbstractClass
     public GameObject placeholderSkin;
     public GameObject[] skins;
 
-    public override bool isDead()
+    public override bool IsDead()
     {
         return _isDead;
     }
@@ -90,7 +90,7 @@ public class ZombieScript : AiAbstractClass
 
     public override void Damage(int damage, int playerWhoShotPDI)
     {
-        if (isDead())
+        if (IsDead())
             return;
         PV.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
     }
@@ -98,7 +98,7 @@ public class ZombieScript : AiAbstractClass
     [PunRPC]
     void Damage_RPC(int damage, int playerWhoShotPDI)
     {
-        if (isDead())
+        if (IsDead())
             return;
         Health -= damage;
         PlayerProperties pp = PhotonView.Find(playerWhoShotPDI).GetComponent<PlayerProperties>();
