@@ -7,6 +7,7 @@ using System.IO;
 
 public class SwarmManager : MonoBehaviourPunCallbacks
 {
+    public bool editMode;
     // Events 
     public delegate void SwarmManagerEvent();
     public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiLeftZero;
@@ -127,6 +128,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void CalculateNumberOfAIsForNextWave()
     {
         watchersLeft = FindObjectsOfType<PlayerProperties>().Length * 2 + (currentWave * 2);
+        if (editMode)
+            watchersLeft = 1;
         Debug.Log($"Watchers Left: {watchersLeft}");
     }
 

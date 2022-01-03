@@ -81,6 +81,11 @@ public class ZombieScript : AiAbstractClass
         throw new System.NotImplementedException();
     }
 
+    public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
+    {
+        throw new System.NotImplementedException();
+    }
+
     //public override bool IsDead()
     //{
     //    return _isDead;

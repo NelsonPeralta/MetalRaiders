@@ -19,16 +19,6 @@ public class Watcher : AiAbstractClass
     public GameObject projectileSpawnPoint;
     public GameObject motionTrackerDot;
 
-    [Header("Line Of Sight")]
-    public bool targetInLOS;
-    public GameObject LOSSpawn;
-    public GameObject objectInLOS;
-    public LayerMask layerMask;
-    Vector3 raySpawn;
-    public RaycastHit hit;
-    bool resettingTargetInLOS;
-
-
     [Header("Prefabs")]
     public GameObject projectile;
     public GameObject meteor;
@@ -44,24 +34,49 @@ public class Watcher : AiAbstractClass
 
 
     public enum WatcherActions { Defend, Fireball, Meteor, Seek }
-    public WatcherActions watcherAction;
+    WatcherActions _watcherAction;
+
+    public WatcherActions watcherAction
+    {
+        get { return _watcherAction; }
+        set
+        {
+            if(_watcherAction != value)
+            {
+                _watcherAction = value;
+                Debug.Log($"Watcher action change: {_watcherAction}");
+                InvokeOnActionChanged();
+            }
+        }
+    }
     private void Start()
     {
         shieldModel.SetActive(false);
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
+        WatcherActions previousAction = watcherAction;
+
+        if (targetInLineOfSight)
+        {
+            if (aiAbstractClass.playerRange == PlayerRange.Medium)
+                previousAction = WatcherActions.Fireball;
+            else if (aiAbstractClass.playerRange == PlayerRange.Long)
+                previousAction = WatcherActions.Meteor;
+            else if (aiAbstractClass.playerRange == PlayerRange.Out)
+                previousAction = WatcherActions.Seek;
+        }
+        else
+        {
+            previousAction = WatcherActions.Seek;
+        }
 
         if (aiAbstractClass.playerRange == PlayerRange.Close)
-            watcherAction = WatcherActions.Defend;
-        else if (aiAbstractClass.playerRange == PlayerRange.Medium)
-            watcherAction = WatcherActions.Fireball;
-        else if (aiAbstractClass.playerRange == PlayerRange.Long)
-            watcherAction = WatcherActions.Meteor;
+            previousAction = WatcherActions.Defend;
         else if (aiAbstractClass.playerRange == PlayerRange.Out)
-            watcherAction = WatcherActions.Seek;
+            previousAction = WatcherActions.Seek;
 
-        InvokeOnActionChanged();
+        watcherAction = previousAction;
     }
 
     public override void DoAction()
@@ -69,11 +84,15 @@ public class Watcher : AiAbstractClass
         if (isDead)
             return;
 
-        Debug.Log("Do Action");
         if (watcherAction != WatcherActions.Defend)
         {
             animator.SetBool("Defend", false);
             shieldModel.SetActive(false);
+        }
+
+        if(watcherAction != WatcherActions.Seek)
+        {
+            seek = false;
         }
 
 
@@ -87,9 +106,6 @@ public class Watcher : AiAbstractClass
         }
         else if (watcherAction == WatcherActions.Fireball)
         {
-            seek = false;
-            nma.velocity = Vector3.zero;
-
             if (canDoAction)
             {
                 animator.Play("Projectile");
@@ -126,6 +142,7 @@ public class Watcher : AiAbstractClass
         {
             seek = true;
         }
+        Debug.Log($"Do Watcher action: {watcherAction}");
     }
 
     public override void ChildUpdate()
@@ -160,6 +177,19 @@ public class Watcher : AiAbstractClass
         {
             pp.GetComponent<OnlinePlayerSwarmScript>().kills++;
             pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(defaultHealth);
+        }
+    }
+
+    public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
+    {
+        if (!targetInLineOfSight)
+            watcherAction = WatcherActions.Seek;
+        else
+        {
+            if (playerRange == PlayerRange.Medium)
+                watcherAction = WatcherActions.Fireball;
+            else if (playerRange == PlayerRange.Long)
+                watcherAction = WatcherActions.Meteor;
         }
     }
 }

@@ -8,12 +8,13 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 {
     // events
     public delegate void AiEvent(AiAbstractClass aiAbstractClass);
-    public AiEvent OnHealthChange, OnDeath, OnPlayerRangeChange, OnActionChanged, OnNextActionReset, OnNextActionReady;
+    public AiEvent OnHealthChange, OnDeath, OnPlayerRangeChange, OnActionChange, OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange;
 
     // enums
     public enum PlayerRange { Out, Close, Medium, Long }
 
     // private variables
+    PlayerRange _playerRange;
     PhotonView PV;
     int _health;
     float newTargetSwitchingDelay;
@@ -24,7 +25,6 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     bool _isDead;
 
     // public variables
-    public PlayerRange playerRange;
     public Hitboxes hitboxes;
     public NavMeshAgent nma;
 
@@ -40,6 +40,30 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     [Header("Player Switching")]
     public int newTargetPhotonId;
+
+    [Header("Line Of Sight")]
+    int maxRangeDistance = 15;
+    bool _targetInLineOfSight;
+    public GameObject LOSSpawn;
+    public GameObject objectInLineOfSight;
+    public LayerMask layerMask;
+    Vector3 raySpawn;
+    public RaycastHit hit;
+    bool resettingTargetInLOS;
+
+    public PlayerRange playerRange
+    {
+        get { return _playerRange; }
+        set
+        {
+            if (_playerRange != value)
+            {
+                _playerRange = value;
+                Debug.Log($"Player range change: {playerRange}");
+                OnPlayerRangeChange?.Invoke(this);
+            }
+        }
+    }
 
     public int health
     {
@@ -73,7 +97,14 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             _seek = value;
 
             if (!seek)
+            {
+                nma.speed = 0;
                 nma.velocity = Vector3.zero;
+            }
+            else
+            {
+                nma.speed = speed;
+            }
         }
     }
     public bool canSeek
@@ -87,6 +118,20 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         set { _nextActionCooldown = value; if (nextActionCooldown > 0) canDoAction = false; }
     }
     public bool canDoAction { get { return _canDoAction; } set { _canDoAction = value; if (_canDoAction) OnNextActionReady?.Invoke(this); } }
+
+    public bool targetInLineOfSight
+    {
+        get { return _targetInLineOfSight; }
+        set
+        {
+            if (value != _targetInLineOfSight)
+            {
+                _targetInLineOfSight = value;
+                Debug.Log($"Target in line of sight change: {_targetInLineOfSight}");
+                OnTargeInLineOfSightChange?.Invoke(this);
+            }
+        }
+    }
     void Awake()
     {
         PV = GetComponent<PhotonView>();
@@ -101,7 +146,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
         }
 
-        OnActionChanged += OnActionChanged_Delegate;
+        OnActionChange += OnActionChanged_Delegate;
         OnPlayerRangeChange += OnPlayerRangeChange_Delegate;
         OnNextActionReady += OnNextActionReady_Delegate;
         OnDeath += OnDeath_Delegate;
@@ -159,6 +204,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        ShootLineOfSightRay();
         Movement();
         NextActionCooldown();
         ChildUpdate();
@@ -178,31 +224,56 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             if (!canDoAction)
                 canDoAction = true;
     }
-    void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider)
+
+    void ShootLineOfSightRay()
     {
-        if (playerRange == aiRangeCollider.range)
+        if (!target)
             return;
 
+        raySpawn = LOSSpawn.transform.position + new Vector3(0, 0f, 0);
+        //Debug.DrawRay(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, Color.green);
+
+        // Need a Raycast Range Overload to work with LayerMask
+        if (Physics.Raycast(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, out hit, maxRangeDistance, layerMask))
+        {
+            if (hit.transform.gameObject.GetComponent<PlayerHitbox>())
+            {
+                objectInLineOfSight = hit.transform.gameObject;
+                PlayerProperties playerInLOS = objectInLineOfSight.GetComponent<PlayerHitbox>().player;
+
+                if (playerInLOS == target.GetComponent<PlayerProperties>())
+                    targetInLineOfSight = true;
+            }
+        }
+        else
+        {
+            targetInLineOfSight = false;
+            objectInLineOfSight = null;
+        }
+    }
+    void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider)
+    {
         playerRange = aiRangeCollider.range;
-        OnPlayerRangeChange?.Invoke(this);
     }
 
     void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider)
     {
-        if (aiRangeCollider.range == PlayerRange.Close)
-            playerRange = PlayerRange.Medium;
-        else if (aiRangeCollider.range == PlayerRange.Medium)
-            playerRange = PlayerRange.Long;
-        else if (aiRangeCollider.range == PlayerRange.Long)
-            playerRange = PlayerRange.Out;
+        PlayerRange newPlayerRange = playerRange;
 
-        OnPlayerRangeChange?.Invoke(this);
+        if (aiRangeCollider.range == PlayerRange.Close)
+            newPlayerRange = PlayerRange.Medium;
+        else if (aiRangeCollider.range == PlayerRange.Medium)
+            newPlayerRange = PlayerRange.Long;
+        else if (aiRangeCollider.range == PlayerRange.Long)
+            newPlayerRange = PlayerRange.Out;
+
+        playerRange = newPlayerRange;
     }
 
     public void InvokeOnActionChanged()
     {
         Debug.Log("On Action Changed");
-        OnActionChanged?.Invoke(this);
+        OnActionChange?.Invoke(this);
     }
     void OnActionChanged_Delegate(AiAbstractClass aiAbstractClass)
     {
@@ -220,7 +291,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public abstract void Damage(int damage, int playerWhoShotPDI);
     public abstract void Damage_RPC(int damage, int playerWhoShotPDI);
     public abstract void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass);
+    public abstract void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void DoAction();
-
     public abstract void ChildUpdate();
 }
