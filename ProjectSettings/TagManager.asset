@@ -52,7 +52,7 @@ TagManager:
   - First Person
   - Player
   - FPS Bullet
-  - sticky_grenade
+  - Shield
   - Hitbox
   - Roof
   - Motion Tracker
