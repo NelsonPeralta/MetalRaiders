@@ -235,7 +235,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         if (targetOutOfSightCountdown > 0 && targetOutOfSight)
             targetOutOfSightCountdown -= Time.deltaTime;
-        Debug.Log($"Target ouf of sight countdown: {targetOutOfSightCountdown}");
+        //Debug.Log($"Target ouf of sight countdown: {targetOutOfSightCountdown}");
         if (targetOutOfSightCountdown <= 0 && targetInLineOfSight)
             targetInLineOfSight = false;
     }
