@@ -53,32 +53,32 @@ public class AIPool : MonoBehaviour
     }
     public int GetRandomZombiePhotonId()
     {
-        foreach (ZombieScript obj in zombies)
-            if (!obj.gameObject.activeSelf)
-                return obj.PV.ViewID;
+        //foreach (ZombieScript obj in zombies)
+        //    if (!obj.gameObject.activeSelf)
+        //        return obj.PV.ViewID;
         return 0;
     }
 
     public int GetRandomWatcherPhotonId()
     {
-        foreach (Watcher obj in watchers)
-            if (!obj.gameObject.activeSelf)
-                return obj.PV.ViewID;
+        //foreach (Watcher obj in watchers)
+        //    if (!obj.gameObject.activeSelf)
+        //        return obj.PV.ViewID;
         return 0;
     }
     public ZombieScript GetPooledZombie(int PhotonId)
     {
-        foreach (ZombieScript obj in zombies)
-            if (obj.PV.ViewID == PhotonId)
-                return obj;
+        //foreach (ZombieScript obj in zombies)
+        //    if (obj.PV.ViewID == PhotonId)
+        //        return obj;
         return null;
     }
 
     public Watcher GetPooledWatcher(int photonViewId)
     {
-        foreach (Watcher obj in watchers)
-            if (obj.PV.ViewID == photonViewId)
-                return obj;
+        //foreach (Watcher obj in watchers)
+        //    if (obj.PV.ViewID == photonViewId)
+        //        return obj;
         return null;
     }
 }

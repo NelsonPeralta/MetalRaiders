@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 649235498421910280}
   - component: {fileID: 851169941267244826}
   - component: {fileID: 848966261776337298}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4887,7 +4887,7 @@ GameObject:
   - component: {fileID: 656564993235809274}
   - component: {fileID: 681553263722292656}
   - component: {fileID: 675263448473601708}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4968,7 +4968,7 @@ GameObject:
   m_Component:
   - component: {fileID: 649578663404891542}
   - component: {fileID: 608803795875109292}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5064,7 +5064,7 @@ GameObject:
   - component: {fileID: 8296780355355819029}
   - component: {fileID: 2532398821212697507}
   - component: {fileID: -7070887923857533340}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: OnlinePlayerBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5292,7 +5292,7 @@ GameObject:
   - component: {fileID: 3411189599923184954}
   - component: {fileID: 7170534511993164371}
   - component: {fileID: 6742029545489378011}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

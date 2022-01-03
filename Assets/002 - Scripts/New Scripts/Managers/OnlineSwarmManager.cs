@@ -424,13 +424,13 @@ public class OnlineSwarmManager : MonoBehaviour
 
 
         var newZombie = PhotonView.Find(AIPhotonId).gameObject;
-        newZombie.GetComponent<ZombieScript>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
+        //newZombie.GetComponent<ZombieScript>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
 
         if (!newZombie.GetComponent<ZombieScript>().onlineSwarmManager)
             newZombie.GetComponent<ZombieScript>().onlineSwarmManager = this;
 
-        if (editMode)
-            newZombie.GetComponent<ZombieScript>().SetEditMode();
+        //if (editMode)
+        //    newZombie.GetComponent<ZombieScript>().SetEditMode();
         zombiesAlive++;
         zombiesLeftToSpawn--;
     }
@@ -475,11 +475,11 @@ public class OnlineSwarmManager : MonoBehaviour
     {
 
 
-        var newWacther = PhotonView.Find(AIPhotonId).gameObject;
-        newWacther.GetComponent<Watcher>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
+        //var newWacther = PhotonView.Find(AIPhotonId).gameObject;
+        //newWacther.GetComponent<Watcher>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
 
-        if (!newWacther.GetComponent<Watcher>().onlineSwarmManager)
-            newWacther.GetComponent<Watcher>().onlineSwarmManager = this;
+        //if (!newWacther.GetComponent<Watcher>().onlineSwarmManager)
+        //    newWacther.GetComponent<Watcher>().onlineSwarmManager = this;
 
         watchersAlive++;
         watchersLeftToSpawn--;
@@ -860,7 +860,7 @@ public class OnlineSwarmManager : MonoBehaviour
     {
         int _zombiesAlive = 0;
         foreach (ZombieScript zs in GameObject.FindObjectsOfType<ZombieScript>())
-            if (!zs.IsDead())
+            if (!zs.isDead)
                 _zombiesAlive++;
         zombiesAlive = _zombiesAlive;
     }
@@ -869,7 +869,7 @@ public class OnlineSwarmManager : MonoBehaviour
     {
         int _watchersAlive = 0;
         foreach (ZombieScript zs in GameObject.FindObjectsOfType<ZombieScript>())
-            if (!zs.IsDead())
+            if (!zs.isDead)
                 _watchersAlive++;
         watchersAlive = _watchersAlive;
     }

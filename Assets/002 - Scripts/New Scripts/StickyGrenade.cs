@@ -152,7 +152,7 @@ public class StickyGrenade : MonoBehaviour
                         playerHit.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
                 }
             }
-            if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.IsDead())
+            if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
             {
                 GameObject aiHit = hit.GetComponent<AIHitbox>().aiAbstractClass.gameObject;
                 if (!objectsHit.Contains(aiHit))

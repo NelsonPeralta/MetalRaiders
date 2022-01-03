@@ -170,7 +170,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         //    return;
         //}
 
-        if(watchersLeft <= 0)
+        if (watchersLeft <= 0)
         {
             OnAiLeftZero?.Invoke();
             return;
@@ -226,9 +226,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         int watchersAlive = 0;
         foreach (Watcher w in watcherPool)
+        {
+            Debug.Log($"{w.name} is active: {w.gameObject.activeSelf} and is dead: { w.isDead}");
             if (w.gameObject.activeSelf && !w.isDead)
+            {
                 watchersAlive++;
 
+            }
+        }
         Debug.Log($"Watchers Left: {watchersLeft}. Watchers alive: {watchersAlive}");
         if (watchersLeft <= 0 && watchersAlive <= 0)
             EndWave();

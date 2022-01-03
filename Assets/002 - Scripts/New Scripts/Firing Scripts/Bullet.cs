@@ -113,6 +113,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         Despawn();
     }
 
+    List<int> bulletLayers = new List<int> { 0, 13 };
     void Travel()
     {
         prePos = transform.position; // Previous Position
@@ -122,10 +123,10 @@ public class Bullet : MonoBehaviourPunCallbacks
         for (int i = 0; i < hits.Length; i++) // wWith a normal for loop, if the player is too close to a wall, it checks what object it collided with from farthest to closest. (int i = 0; i < hits.Length; i++)
         {
             //hitMessage += $"\nHIT INDEX: {i}. Hit NAME: {hits[i].collider.name} HIT DISTANCE FROM PLAYER: {Vector3.Distance(playerWhoShot.transform.position, hits[i].point)}";
-            if (!damageDealt && hits[i].collider.gameObject.layer != 22)
+            if (!damageDealt && bulletLayers.Contains(hits[i].collider.gameObject.layer))
             {
                 GameObject hit = hits[i].collider.gameObject;
-                if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.IsDead())
+                if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
                 {
                     ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
                     objectsHit.Add(newHit);
@@ -165,7 +166,8 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
-            if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.IsDead())
+            Debug.Log($"Bullet final hit: {finalHitObject.name}");
+            if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead)
             {
                 AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
                 int finalDamage = damage;
@@ -174,7 +176,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
                     finalDamage = (int)(wProperties.headshotMultiplier * damage);
 
-                    if (hitbox.aiAbstractClass.GetHealth() <= finalDamage)
+                    if (hitbox.aiAbstractClass.health <= finalDamage)
                         playerWhoShot.GetComponent<OnlinePlayerSwarmScript>().headshots++;
                 }
 
