@@ -10,9 +10,7 @@ public class PlayerController : MonoBehaviourPun
 {
     // Events
     public delegate void PlayerControllerEvent(PlayerController playerController);
-    public PlayerControllerEvent OnPlayerSwitchWeapons;
-    public PlayerControllerEvent OnPlayerLongInteract;
-    public PlayerControllerEvent OnPlayerFire;
+    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerFire, OnPlayerFireUp;
 
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -34,7 +32,7 @@ public class PlayerController : MonoBehaviourPun
     public int playerRewiredID;
     public CrosshairManager crosshairScript;
     public ReloadScript rScript;
-    public WeaponPickUp wPickup;
+    public PlayerWeaponSwapping wPickup;
     public DualWieldingReload dwReload;
     public Movement movement;
     public Melee melee;
@@ -285,6 +283,11 @@ public class PlayerController : MonoBehaviourPun
             else
             {
                 isShooting = false;
+            }
+
+            if (player.GetButtonUp("Shoot"))
+            {
+                OnPlayerFireUp?.Invoke(this);
             }
         }
 

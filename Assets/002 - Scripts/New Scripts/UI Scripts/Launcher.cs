@@ -9,6 +9,11 @@ using UnityEngine.SceneManagement;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+    // Events
+    public delegate void LauncherEvent(Launcher launcher);
+    public LauncherEvent OnCreateSwarmRoomButton;
+    public LauncherEvent OnCreateMultiplayerRoomButton;
+
     public static Launcher launcherInstance; // Singleton of the Photon Launcher
     public PhotonView PV;
     public int levelToLoadIndex;
@@ -101,6 +106,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("loading"); // Show the loading menu/message
 
         // When creating a room is done, OnJoinedRoom() will automatically trigger
+        OnCreateMultiplayerRoomButton?.Invoke(this);
     }
 
     public void CreateSwarmRoom()
@@ -119,6 +125,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("loading"); // Show the loading menu/message
 
         // When creating a room is done, OnJoinedRoom() will automatically trigger
+
+        OnCreateSwarmRoomButton?.Invoke(this);
     }
 
     public override void OnJoinedRoom()

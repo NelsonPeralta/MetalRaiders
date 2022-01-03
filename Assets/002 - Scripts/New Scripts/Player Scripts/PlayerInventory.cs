@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class PlayerInventory : MonoBehaviourPun
 {
+    public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
+    public PlayerInventoryEvent OnWeaponsSwitched;
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
@@ -16,6 +19,8 @@ public class PlayerInventory : MonoBehaviourPun
     public ReloadScript rScript;
     public DualWielding dWielding;
     public PhotonView PV;
+    public PlayerWeaponSwapping playerWeaponSwapping;
+    public PlayerShooting playerShooting;
 
     [Space(20)]
     [Header("Data")]
@@ -90,10 +95,19 @@ public class PlayerInventory : MonoBehaviourPun
 
         pController.OnPlayerSwitchWeapons += OnPlayerSwitchWeapons_Delegate;
         pController.OnPlayerLongInteract += OnPlayerSwitchWeapons_Delegate;
-        pController.OnPlayerFire += OnPlayerFire_Delegate;
         rScript.OnReloadEnd += OnReloadEnd_Delegate;
+        playerWeaponSwapping.OnWeaponPickup += OnPlayerWeaponSwapping_Delegate;
 
         OnPlayerSwitchWeapons_Delegate(pController);
+        playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
+        pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
+    }
+
+    void OnPlayerWeaponSwapping_Delegate(PlayerWeaponSwapping playerWeaponSwapping)
+    {
+        AmmoManager();
+        CheckIfLowAmmo();
+        UpdateThirdPersonGunModelsOnCharacter();
     }
 
     void OnPlayerSwitchWeapons_Delegate(PlayerController playerController)
@@ -101,7 +115,6 @@ public class PlayerInventory : MonoBehaviourPun
         if (!PV.IsMine)
             return;
 
-        Debug.Log("On Player Switch Weapons Delegate");
         AmmoManager();
 
         if (pController.player.GetButtonDown("Switch Weapons") && !pProperties.isDead)
@@ -149,19 +162,12 @@ public class PlayerInventory : MonoBehaviourPun
 
         CheckIfLowAmmo();
     }
-
-    void OnPlayerFire_Delegate(PlayerController playerController)
+    void OnBulletSpawned_Delegate(PlayerShooting playerShooting)
     {
-        // TODO: Merge the 2 firing scripts (FullyAutomaticFire and SingleFire) into a single script. Create and Event in that script that will trigger this function after the bullet is spawned. The Coroutine will then no longer be necessary.
-        StartCoroutine(OnPlayerFire_Coroutine());
-    }
-
-    IEnumerator OnPlayerFire_Coroutine()
-    {
-        yield return new WaitForEndOfFrame();
         UpdateActiveWeapon();
         AmmoManager();
         changeAmmoCounter();
+        CheckIfLowAmmo();
     }
 
     void OnReloadEnd_Delegate(ReloadScript reloadScript)
@@ -169,6 +175,7 @@ public class PlayerInventory : MonoBehaviourPun
         UpdateActiveWeapon();
         AmmoManager();
         changeAmmoCounter();
+        CheckIfLowAmmo();
     }
 
     [PunRPC]
@@ -207,6 +214,7 @@ public class PlayerInventory : MonoBehaviourPun
             playDrawSound();
             crosshairScript.UpdateReticule();
         }
+        UpdateThirdPersonGunModelsOnCharacter();
     }
 
     public void UpdateActiveWeapon()
@@ -260,6 +268,8 @@ public class PlayerInventory : MonoBehaviourPun
                 }
             }
         }
+        UpdateThirdPersonGunModelsOnCharacter();
+        AmmoManager();
         changeAmmoCounter();
         if (PV.IsMine)
             playDrawSound();
@@ -293,6 +303,64 @@ public class PlayerInventory : MonoBehaviourPun
     {
         rightWeaponCurrentAmmo = rightWeapon.GetComponent<WeaponProperties>().currentAmmo;
         leftWeaponCurrentAmmo = leftWeapon.GetComponent<WeaponProperties>().currentAmmo;
+    }
+
+    void UpdateThirdPersonGunModelsOnCharacter()
+    {
+        foreach (GameObject awgo in allWeaponsInInventory)
+        {
+            WeaponProperties wp = awgo.GetComponent<WeaponProperties>();
+            try
+            {
+                wp.thirdPersonModelEquipped.SetActive(false);
+
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
+            }
+
+            try
+            {
+                wp.thirdPersonModelUnequipped.SetActive(false);
+
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
+            }
+        }
+
+        foreach (GameObject wego in weaponsEquiped)
+        {
+            WeaponProperties wp = wego.GetComponent<WeaponProperties>();
+
+            if (wp == activeWeapon)
+            {
+                try
+                {
+                    wp.thirdPersonModelEquipped.SetActive(true);
+
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
+
+                }
+            }
+            else
+            {
+                try
+                {
+                    wp.thirdPersonModelUnequipped.SetActive(true);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
+
+                }
+            }
+        }
     }
 
     public void SwapGunsOnCharacter(int secondaryWeapon)

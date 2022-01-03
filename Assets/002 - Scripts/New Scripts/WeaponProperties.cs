@@ -138,6 +138,7 @@ public class WeaponProperties : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR // Reference: https://answers.unity.com/questions/1169764/type-or-namespace-unityeditor-could-not-be-found-w.html
 
 [CustomEditor(typeof(WeaponProperties))]
 public class WeaponPropertiesEditor : Editor
@@ -212,3 +213,4 @@ public class WeaponPropertiesEditor : Editor
         EditorUtility.SetDirty(wp);
     }
 }
+#endif

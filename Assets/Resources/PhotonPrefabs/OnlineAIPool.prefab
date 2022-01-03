@@ -46,12 +46,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PV: {fileID: 0}
   amountToPool: 25
-  skeletons: []
   skeletonPrefab: {fileID: 6258186488468177427, guid: d52f18b9470c8d64891513152f25bb30,
     type: 3}
-  zombies: []
   zombiePrefab: {fileID: 6407237786346386500, guid: 87f9942042fad7b42bed70a1db7051d1,
     type: 3}
+  watcherPrefab: {fileID: 1668431522888940168, guid: ec2959b1034837848a16e3e91776201f,
+    type: 3}
+  skeletons: []
+  zombies: []
+  watchers: []
 --- !u!114 &3670423125687662073
 MonoBehaviour:
   m_ObjectHideFlags: 0

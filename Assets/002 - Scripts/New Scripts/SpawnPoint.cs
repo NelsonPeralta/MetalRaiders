@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpawnPoint : MonoBehaviour
 {
+    public enum SpawnPointType { Player, Computer}
+    public SpawnPointType spawnPointType;
+
     public int spawnNumber;
 
     [Header("Type of Spawn")]

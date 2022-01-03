@@ -9,7 +9,7 @@ public class AllPlayerScripts : MonoBehaviour
     public PlayerController playerController;
     [Header("Inventory")]
     public PlayerInventory playerInventory;
-    public WeaponPickUp weaponPickUp;
+    public PlayerWeaponSwapping weaponPickUp;
     [Header("UI Components")]
     public CameraScript cameraScript;
     public CrosshairManager crosshairScript;
