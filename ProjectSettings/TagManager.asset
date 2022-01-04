@@ -54,8 +54,8 @@ TagManager:
   - FPS Bullet
   - Shield
   - Hitbox
-  - Roof
-  - Motion Tracker
+  - GroundCheck
+  - Interactable
   - Obstacle
   - 17
   - 18
