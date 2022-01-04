@@ -2989,6 +2989,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPointType: 1
   spawnNumber: 0
   player: 0
   normalZombie: 0
@@ -3376,6 +3377,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 3499092335951545319, guid: aaaede398921b454880ed4d833d30075,
+        type: 3}
+      propertyPath: spawnPointType
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aaaede398921b454880ed4d833d30075, type: 3}
@@ -10973,6 +10979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPointType: 1
   spawnNumber: 0
   player: 0
   normalZombie: 0
@@ -21551,6 +21558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPointType: 1
   spawnNumber: 0
   player: 0
   normalZombie: 0
@@ -33497,6 +33505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPointType: 1
   spawnNumber: 0
   player: 0
   normalZombie: 0
@@ -34404,6 +34413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPointType: 1
   spawnNumber: 0
   player: 0
   normalZombie: 0
@@ -34510,6 +34520,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPointType: 1
   spawnNumber: 0
   player: 0
   normalZombie: 0
@@ -40475,7 +40486,7 @@ PrefabInstance:
     - target: {fileID: 8010828169617120701, guid: abb160fb77d42b6458fe47524d6b2ac0,
         type: 3}
       propertyPath: sceneViewId
-      value: 1
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8388261715954714168, guid: abb160fb77d42b6458fe47524d6b2ac0,
         type: 3}
