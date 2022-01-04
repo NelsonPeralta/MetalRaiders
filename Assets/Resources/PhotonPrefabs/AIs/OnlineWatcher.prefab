@@ -12683,7 +12683,7 @@ GameObject:
   - component: {fileID: 1673082704842895620}
   - component: {fileID: 1673082704842895626}
   - component: {fileID: 1673082704842895621}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: Motion Tracker Dot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

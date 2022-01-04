@@ -56,7 +56,7 @@ TagManager:
   - Hitbox
   - GroundCheck
   - Interactable
-  - 16
+  - Motion Tracker Dots
   - 17
   - 18
   - 19
