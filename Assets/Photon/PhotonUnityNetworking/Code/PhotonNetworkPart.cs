@@ -852,7 +852,7 @@ namespace Photon.Pun
             {
                 Debug.Log("Network destroy Instantiated GO: " + go.name);
             }
-            
+
             foundPVs.Clear();           // as foundPVs is re-used, clean it to avoid lingering references
 
             go.SetActive(false);        // PUN 2 disables objects before the return to the pool
@@ -1014,8 +1014,15 @@ namespace Photon.Pun
                 //RemoveInstantiatedGO(listedView.gameObject, true);
             }
 
-            // Debug.Log("adding view to known list: " + netView);
-            photonViewList.Add(netView.ViewID, netView);
+            try
+            {
+                photonViewList.Add(netView.ViewID, netView);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Failed adding view to known list: " + netView);
+                Debug.LogError(e);
+            }
 
             //Debug.LogError("view being added. " + netView);	// Exit Games internal log
 
@@ -2371,7 +2378,7 @@ namespace Photon.Pun
                             {
                                 Player prevOwner = requestedView.Owner;
 
-                                requestedView.OwnerActorNr= newOwnerId;
+                                requestedView.OwnerActorNr = newOwnerId;
                                 requestedView.ControllerActorNr = newOwnerId;
 
                                 if (PhotonNetwork.OnOwnershipTransferedEv != null)
@@ -2415,7 +2422,7 @@ namespace Photon.Pun
                             Player prevOwner = view.Owner;
                             Player newOwner = CurrentRoom.GetPlayer(newOwnerId, true);
 
-                            view.OwnerActorNr= newOwnerId;
+                            view.OwnerActorNr = newOwnerId;
                             view.ControllerActorNr = newOwnerId;
 
                             reusablePVHashset.Add(view);

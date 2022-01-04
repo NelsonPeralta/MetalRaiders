@@ -48,8 +48,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public GameObject objectInLineOfSight;
     public LayerMask layerMask;
     Vector3 raySpawn;
-    public RaycastHit hit;
-    bool resettingTargetInLOS;
+    RaycastHit hit;
 
     bool _targetOutOfSight;
     float targetOutOfSightDefaultCountdown;
@@ -78,11 +77,17 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         set
         {
-            _health = value;
-            OnHealthChange?.Invoke(this);
+            if (_health != value)
+            {
+                _health = value;
+                OnHealthChange?.Invoke(this);
+            }
 
             if (_health <= 0)
                 isDead = true;
+
+            if (value > 0)
+                isDead = false;
         }
     }
 
@@ -153,7 +158,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 Debug.Log("Target is out of sight");
                 _targetOutOfSight = true;
                 targetOutOfSightCountdown = targetOutOfSightDefaultCountdown;
-            }else if (!value)
+            }
+            else if (!value && _targetOutOfSight)
             {
                 Debug.Log("Target found");
                 targetOutOfSightCountdown = 999;
@@ -163,16 +169,29 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void Awake()
     {
+        targetOutOfSightDefaultCountdown = defaultNextActionCooldown * 2.5f;
+        Prepare();
+    }
+
+    void Prepare()
+    {
         PV = GetComponent<PhotonView>();
         nma = GetComponent<NavMeshAgent>();
         health = defaultHealth;
         nma.speed = speed;
-        targetOutOfSightDefaultCountdown = nextActionCooldown * 2.5f;
+        objectInLineOfSight = null;
+        targetInLineOfSight = false;
+        targetOutOfSight = false;
+
+        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+            hitbox.gameObject.SetActive(true);
 
         foreach (AiRangeTrigger arc in rangeColliders)
         {
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
+
+            arc.playersInRange.Clear();
         }
 
         OnActionChange += OnActionChanged_Delegate;
@@ -181,9 +200,15 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         OnDeath += OnDeath_Delegate;
         OnTargeInLineOfSightChange += OnTargetInLineOfSightChanged_Delegate;
     }
-
-    private void OnEnable()
+    public void Spawn(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
+        Prepare();
+
+        transform.position = spawnPointPosition;
+        transform.rotation = spawnPointRotation;
+        target = PhotonView.Find(targetPhotonId).transform;
+        gameObject.SetActive(true);
+
         OnPlayerRangeChange?.Invoke(this);
     }
     void OnDeath_Delegate(AiAbstractClass aiAbstractClass)
@@ -273,21 +298,25 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider)
     {
-        playerRange = aiRangeCollider.range;
+        if (aiRangeCollider.playersInRange.Contains(target.GetComponent<PlayerProperties>()))
+            playerRange = aiRangeCollider.range;
     }
 
     void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider)
     {
-        PlayerRange newPlayerRange = playerRange;
+        if (aiRangeCollider.playersInRange.Contains(target.GetComponent<PlayerProperties>()))
+        {
+            PlayerRange newPlayerRange = playerRange;
 
-        if (aiRangeCollider.range == PlayerRange.Close)
-            newPlayerRange = PlayerRange.Medium;
-        else if (aiRangeCollider.range == PlayerRange.Medium)
-            newPlayerRange = PlayerRange.Long;
-        else if (aiRangeCollider.range == PlayerRange.Long)
-            newPlayerRange = PlayerRange.Out;
+            if (aiRangeCollider.range == PlayerRange.Close)
+                newPlayerRange = PlayerRange.Medium;
+            else if (aiRangeCollider.range == PlayerRange.Medium)
+                newPlayerRange = PlayerRange.Long;
+            else if (aiRangeCollider.range == PlayerRange.Long)
+                newPlayerRange = PlayerRange.Out;
 
-        playerRange = newPlayerRange;
+            playerRange = newPlayerRange;
+        }
     }
 
     public void InvokeOnActionChanged()

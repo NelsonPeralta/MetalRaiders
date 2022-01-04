@@ -8,7 +8,7 @@ public class AiRangeTrigger : MonoBehaviour
     public RangeEvent OnRangeTriggerEnter, OnRangeTriggerExit;
     public AiAbstractClass.PlayerRange range;
 
-    List<PlayerProperties> playersInRange = new List<PlayerProperties>();
+    public List<PlayerProperties> playersInRange = new List<PlayerProperties>();
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<PlayerProperties>() && !playersInRange.Contains(other.GetComponent<PlayerProperties>()))

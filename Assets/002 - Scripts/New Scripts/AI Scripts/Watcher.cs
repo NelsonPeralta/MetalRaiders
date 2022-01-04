@@ -186,6 +186,7 @@ public class Watcher : AiAbstractClass
             watcherAction = WatcherActions.Seek;
         else
         {
+            Debug.Log($"Target in line of sight. Player range: {playerRange}");
             if (playerRange == PlayerRange.Medium)
                 watcherAction = WatcherActions.Fireball;
             else if (playerRange == PlayerRange.Long)

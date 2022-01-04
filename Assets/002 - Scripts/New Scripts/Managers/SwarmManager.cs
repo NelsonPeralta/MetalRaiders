@@ -9,13 +9,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 {
     public bool editMode;
     // Events 
-    public delegate void SwarmManagerEvent();
+    public delegate void SwarmManagerEvent(SwarmManager swarmManager);
     public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiLeftZero;
 
     // public variables
     public static SwarmManager instance;
 
     public int currentWave;
+    public int nextWaveDelay;
 
     [Header("AI Prefabs")]
     public Transform watcherPrefab;
@@ -39,6 +40,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
+        nextWaveDelay = 5;
         if (instance)
         {
             Destroy(gameObject);
@@ -56,6 +58,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         OnWaveStart += SpawnAIs;
         OnAiLeftZero += AiLeftHitZero;
+        OnWaveEnd += OnWaveEnd_Delegate;
 
         CreateAIPool();
     }
@@ -121,7 +124,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         Debug.Log("Wave Increased");
 
 
-        OnWaveIncrease?.Invoke();
+        OnWaveIncrease?.Invoke(this);
         StartNewWave();
     }
 
@@ -151,10 +154,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int delay = FindObjectsOfType<PlayerProperties>().Length * 3;
         yield return new WaitForSeconds(delay);
 
-        OnWaveStart?.Invoke();
+        OnWaveStart?.Invoke(this);
     }
 
-    void SpawnAIs()
+    void SpawnAIs(SwarmManager swarmManager)
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
@@ -175,7 +178,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (watchersLeft <= 0)
         {
-            OnAiLeftZero?.Invoke();
+            OnAiLeftZero?.Invoke(this);
             return;
         }
         PlayerProperties[] allPlayers = FindObjectsOfType<PlayerProperties>();
@@ -209,11 +212,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(WATCHER_SPAWN_DELAY);
 
         var newWatcher = PhotonView.Find(aiPhotonId).gameObject;
-
-        newWatcher.transform.position = spawnPointPosition;
-        newWatcher.transform.rotation = spawnPointRotation;
-        newWatcher.GetComponent<Watcher>().target = PhotonView.Find(targetPhotonId).transform;
-        newWatcher.SetActive(true);
+        newWatcher.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+        
         watchersLeft--;
 
         SpawnWatcher();
@@ -225,7 +225,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         SpawnWatcher();
     }
 
-    void AiLeftHitZero()
+    void AiLeftHitZero(SwarmManager swarmManager)
     {
         int watchersAlive = 0;
         foreach (Watcher w in watcherPool)
@@ -245,7 +245,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void OnAiDeath()
     {
         Debug.Log("Swarm Manager OnAiDeath");
-        AiLeftHitZero();
+        AiLeftHitZero(this);
     }
     void EndWave()
     {
@@ -259,6 +259,18 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void EndWave_RPC()
     {
         Debug.Log("Wave End");
+        StartCoroutine(EndWave_Coroutine());
+    }
+
+    IEnumerator EndWave_Coroutine()
+    {
+        nextWaveDelay = FindObjectsOfType<PlayerProperties>().Length * 10;
+        yield return new WaitForSeconds(nextWaveDelay);
+        OnWaveEnd?.Invoke(this);
+    }
+
+    void OnWaveEnd_Delegate(SwarmManager swarmManager)
+    {
         IncreaseWave();
     }
 }
