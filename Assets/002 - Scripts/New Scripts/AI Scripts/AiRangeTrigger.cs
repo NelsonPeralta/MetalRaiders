@@ -23,8 +23,8 @@ public class AiRangeTrigger : MonoBehaviour
         if (other.GetComponent<PlayerProperties>() && playersInRange.Contains(other.GetComponent<PlayerProperties>()))
         {
 
-            playersInRange.Remove(other.GetComponent<PlayerProperties>());
             OnRangeTriggerExit?.Invoke(this);
+            playersInRange.Remove(other.GetComponent<PlayerProperties>());
         }
     }
 }

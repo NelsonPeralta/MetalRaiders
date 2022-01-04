@@ -131,6 +131,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void CalculateNumberOfAIsForNextWave()
     {
         watchersLeft = FindObjectsOfType<PlayerProperties>().Length * 2 + (currentWave * 2);
+        if (watchersLeft > watcherPool.Length)
+            watchersLeft = watcherPool.Length;
         if (editMode)
             watchersLeft = 1;
         Debug.Log($"Watchers Left: {watchersLeft}");

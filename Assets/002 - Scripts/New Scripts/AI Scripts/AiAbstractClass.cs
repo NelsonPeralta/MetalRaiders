@@ -140,7 +140,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             if (value != _targetInLineOfSight)
             {
                 _targetInLineOfSight = value;
-                Debug.Log($"Target in line of sight change: {_targetInLineOfSight}");
+                //Debug.Log($"Target in line of sight change: {_targetInLineOfSight}");
                 OnTargeInLineOfSightChange?.Invoke(this);
             }
         }
@@ -155,13 +155,13 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
             if (value && !_targetOutOfSight)
             {
-                Debug.Log("Target is out of sight");
+                //Debug.Log("Target is out of sight");
                 _targetOutOfSight = true;
                 targetOutOfSightCountdown = targetOutOfSightDefaultCountdown;
             }
             else if (!value && _targetOutOfSight)
             {
-                Debug.Log("Target found");
+                //Debug.Log("Target found");
                 targetOutOfSightCountdown = 999;
                 _targetOutOfSight = false;
             }
@@ -298,21 +298,22 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider)
     {
-        if (aiRangeCollider.playersInRange.Contains(target.GetComponent<PlayerProperties>()))
+        if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<PlayerProperties>()))
             playerRange = aiRangeCollider.range;
     }
 
     void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider)
     {
-        if (aiRangeCollider.playersInRange.Contains(target.GetComponent<PlayerProperties>()))
+        if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<PlayerProperties>()))
         {
+            PlayerRange exitingRange = aiRangeCollider.range;
             PlayerRange newPlayerRange = playerRange;
 
-            if (aiRangeCollider.range == PlayerRange.Close)
+            if (exitingRange == PlayerRange.Close)
                 newPlayerRange = PlayerRange.Medium;
-            else if (aiRangeCollider.range == PlayerRange.Medium)
+            else if (exitingRange == PlayerRange.Medium)
                 newPlayerRange = PlayerRange.Long;
-            else if (aiRangeCollider.range == PlayerRange.Long)
+            else if (exitingRange == PlayerRange.Long)
                 newPlayerRange = PlayerRange.Out;
 
             playerRange = newPlayerRange;
