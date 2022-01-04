@@ -183,9 +183,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             OnAiLeftZero?.Invoke(this);
             return;
         }
-        PlayerProperties[] allPlayers = FindObjectsOfType<PlayerProperties>();
-        int ran = Random.Range(0, allPlayers.Length);
-        int targetPhotonId = allPlayers[ran].PV.ViewID;
+
+        int targetPhotonId = GetRandomPlayerPhotonId();
 
         List<SpawnPoint> aiSpawnPoints = new List<SpawnPoint>();
         foreach (SpawnPoint sp in FindObjectsOfType<SpawnPoint>())
@@ -274,5 +273,18 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void OnWaveEnd_Delegate(SwarmManager swarmManager)
     {
         IncreaseWave();
+    }
+
+    int GetRandomPlayerPhotonId()
+    {
+        PlayerProperties[] allPlayers = FindObjectsOfType<PlayerProperties>();
+        int ran = Random.Range(0, allPlayers.Length);
+        int targetPhotonId = allPlayers[ran].PV.ViewID;
+        return targetPhotonId;
+    }
+
+    public Transform GetRandomPlayerTransform()
+    {
+        return PhotonView.Find(GetRandomPlayerPhotonId()).transform;
     }
 }

@@ -33,7 +33,7 @@ public class Watcher : AiAbstractClass
     public SphereCollider shieldCollider;
 
 
-    public enum WatcherActions { Defend, Fireball, Meteor, Seek }
+    public enum WatcherActions { Defend, Fireball, Meteor, Seek, Idle }
     WatcherActions _watcherAction;
 
     public WatcherActions watcherAction
@@ -81,68 +81,73 @@ public class Watcher : AiAbstractClass
 
     public override void DoAction()
     {
-        if (isDead)
-            return;
-
-        if (watcherAction != WatcherActions.Defend)
+        if (!isDead && target)
         {
-            animator.SetBool("Defend", false);
-            shieldModel.SetActive(false);
-        }
 
-        if(watcherAction != WatcherActions.Seek)
-        {
-            seek = false;
-        }
-
-
-        if (watcherAction == WatcherActions.Defend)
-        {
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Defend"))
+            if (watcherAction != WatcherActions.Defend && watcherAction != WatcherActions.Idle)
             {
-                animator.SetBool("Defend", true);
-                shieldModel.SetActive(true);
+                animator.SetBool("Defend", false);
+                shieldModel.SetActive(false);
             }
-        }
-        else if (watcherAction == WatcherActions.Fireball)
-        {
-            if (canDoAction)
+
+            if (watcherAction != WatcherActions.Seek)
             {
-                animator.Play("Projectile");
-
-                var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
-                    , projectileSpawnPoint.transform.rotation);
-                proj.GetComponent<Fireball>().damage = projectileDamage;
-                proj.GetComponent<Fireball>().force = projectileSpeed;
-                proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-                Destroy(proj, 5);
-
-                nextActionCooldown = defaultNextActionCooldown;
+                seek = false;
             }
-        }
-        else if (watcherAction == WatcherActions.Meteor)
-        {
-            if (canDoAction)
+
+
+            if (watcherAction == WatcherActions.Defend)
             {
-                animator.Play("Summon");
-
-                var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
-                var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
-                meteo.GetComponent<Fireball>().radius = 3;
-                meteo.GetComponent<Fireball>().damage = meteorDamage;
-                meteo.GetComponent<Fireball>().force = meteorSpeed;
-                meteo.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-                meteo.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-                meteo.transform.Rotate(180, 0, 0);
-
-                nextActionCooldown = defaultNextActionCooldown;
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Defend"))
+                {
+                    animator.SetBool("Defend", true);
+                    shieldModel.SetActive(true);
+                }
             }
-        }
-        else if (watcherAction == WatcherActions.Seek)
+            else if (watcherAction == WatcherActions.Fireball)
+            {
+                if (canDoAction)
+                {
+                    animator.Play("Projectile");
+
+                    var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
+                        , projectileSpawnPoint.transform.rotation);
+                    proj.GetComponent<Fireball>().damage = projectileDamage;
+                    proj.GetComponent<Fireball>().force = projectileSpeed;
+                    proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                    Destroy(proj, 5);
+
+                    nextActionCooldown = defaultNextActionCooldown;
+                }
+            }
+            else if (watcherAction == WatcherActions.Meteor)
+            {
+                if (canDoAction)
+                {
+                    animator.Play("Summon");
+
+                    var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
+                    var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
+                    meteo.GetComponent<Fireball>().radius = 5;
+                    meteo.GetComponent<Fireball>().damage = meteorDamage;
+                    meteo.GetComponent<Fireball>().force = meteorSpeed;
+                    meteo.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                    meteo.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                    meteo.transform.Rotate(180, 0, 0);
+
+                    nextActionCooldown = defaultNextActionCooldown;
+                }
+            }
+            else if (watcherAction == WatcherActions.Seek)
+            {
+                seek = true;
+            }
+        }else if(!isDead && !target)
         {
-            seek = true;
+            watcherAction = WatcherActions.Idle;
+            animator.SetBool("Idle", true);
         }
-        Debug.Log($"Do Watcher action: {watcherAction}");
+        Debug.Log($"Do Watcher action: {watcherAction}. Target: {target}");
     }
 
     public override void ChildUpdate()

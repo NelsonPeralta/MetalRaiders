@@ -51,12 +51,12 @@ TagManager:
   - Third Person Model
   - First Person
   - Player
-  - FPS Bullet
+  - Bullet
   - Shield
   - Hitbox
   - GroundCheck
   - Interactable
-  - Obstacle
+  - 16
   - 17
   - 18
   - 19

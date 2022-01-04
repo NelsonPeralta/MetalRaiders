@@ -8,6 +8,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 {
+    public delegate void PlayerEvent(PlayerProperties playerProperties);
+    public PlayerEvent OnDeath;
+
     [Header("Singletons")]
     public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
@@ -474,7 +477,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         pController.ScopeOut();
 
         if (Health <= 0)
+        {
             isDead = true;
+            OnDeath?.Invoke(this);
+        }
 
         Die(wasHeadshot);
     }
@@ -711,9 +717,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             return;
         //if (lastPlayerWhoDamagedThisPlayerPVID != 0 && multiplayerManager)
         //    multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
-        if (lastPlayerWhoDamagedThisPlayerPVID != 0)
+        if (lastPlayerWhoDamagedThisPlayerPVID != 0 && GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot));
-        if (onlineSwarmManager)
+        if (onlineSwarmManager && GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             onlineSwarmManager.RemovePlayerLife();
             GetComponent<OnlinePlayerSwarmScript>().deaths++;
@@ -1236,5 +1242,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     void DiableBullet_RPC(int index)
     {
         gameObjectPool.bullets[index].SetActive(false);
+    }
+
+    void OnPlayerDeath_Delegate(PlayerProperties playerProperties)
+    {
+
     }
 }

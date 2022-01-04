@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.AI;
+using System;
 
 abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 {
     // events
     public delegate void AiEvent(AiAbstractClass aiAbstractClass);
-    public AiEvent OnHealthChange, OnDeath, OnPlayerRangeChange, OnActionChange, OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange;
+    public AiEvent OnHealthChange, OnDeath, OnPlayerRangeChange, OnActionChange, OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange, OnTargetDeath;
 
     // enums
     public enum PlayerRange { Out, Close, Medium, Long }
@@ -16,6 +17,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     // private variables
     PlayerRange _playerRange;
     PhotonView PV;
+    Transform _target;
     int _health;
     float newTargetSwitchingDelay;
     float _nextActionCooldown;
@@ -34,7 +36,6 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public int speed;
 
     [Header("Combat")]
-    public Transform target;
     public List<AiRangeTrigger> rangeColliders = new List<AiRangeTrigger>();
     public float defaultNextActionCooldown;
 
@@ -68,6 +69,37 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         }
     }
 
+    public Transform target
+    {
+        get { return _target; }
+        set
+        {
+            if (value)
+            {
+                if (value.GetComponent<PlayerProperties>().isDead || value.GetComponent<PlayerProperties>().isRespawning)
+                    target = null;
+                else
+                {
+                    _target = value;
+                    _target.GetComponent<PlayerProperties>().OnDeath += OnTargetDeath_Delegate;
+                }
+            }
+            else
+            {
+                _target = null;
+
+                try
+                {
+                    GetNewTarget();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                    _target = null;
+                }
+            }
+        }
+    }
     public int health
     {
         get
@@ -336,6 +368,21 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     void OnNextActionReady_Delegate(AiAbstractClass aiAbstractClass)
     {
         DoAction();
+    }
+    void OnTargetDeath_Delegate(PlayerProperties playerProperties)
+    {
+        Debug.Log("On target death delegate");
+        target = null;
+    }
+
+    void GetNewTarget()
+    {
+        StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
+    }
+    IEnumerator GetRandomPlayerTransformSlow_Coroutine()
+    {
+        yield return new WaitForSeconds(1);
+        target = SwarmManager.instance.GetRandomPlayerTransform();
     }
 
     public abstract void Damage(int damage, int playerWhoShotPDI);
