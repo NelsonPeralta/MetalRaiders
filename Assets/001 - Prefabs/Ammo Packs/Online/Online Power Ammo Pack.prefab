@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 639178691086886071}
   - component: {fileID: 724863432924919343}
   - component: {fileID: 724327813505791507}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4941,7 +4941,7 @@ GameObject:
   - component: {fileID: 639451432764409193}
   - component: {fileID: 723996631827623473}
   - component: {fileID: 722862694870433841}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9826,7 +9826,7 @@ GameObject:
   - component: {fileID: 630780602128959327}
   - component: {fileID: 724935499121804941}
   - component: {fileID: 722955039746847507}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: VerticalGlowWidening
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14702,7 +14702,7 @@ GameObject:
   - component: {fileID: 630786274675851587}
   - component: {fileID: 752578315017547903}
   - component: {fileID: 723503430235524303}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: LootRayPurple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19581,7 +19581,7 @@ GameObject:
   - component: {fileID: 634533159889457934}
   - component: {fileID: 634533159888655150}
   - component: {fileID: 634533159887688174}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: grenade_launcher_01_projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19663,7 +19663,7 @@ GameObject:
   - component: {fileID: 634533160243751886}
   - component: {fileID: 634533160247143406}
   - component: {fileID: 634533160246176046}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: shellcasing_empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19745,7 +19745,7 @@ GameObject:
   - component: {fileID: 634533160477570371}
   - component: {fileID: 634533160474703203}
   - component: {fileID: 634533160475801507}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: sniper_03_mag_empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19827,7 +19827,7 @@ GameObject:
   - component: {fileID: 634533161607622650}
   - component: {fileID: 634533161608916954}
   - component: {fileID: 634533161609915674}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: rocket_launcher_01_projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19910,7 +19910,7 @@ GameObject:
   - component: {fileID: 8558709816140163064}
   - component: {fileID: 2113546865190409756}
   - component: {fileID: 6315304384730974867}
-  m_Layer: 22
+  m_Layer: 15
   m_Name: Online Power Ammo Pack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19991,7 +19991,7 @@ MonoBehaviour:
   defaultAmmo: 4
   ammoInThisPack: 4
   ammoText: {fileID: 4304395879446467948}
-  spawnPoint: {fileID: 0}
+  onlineAmmoPackSpawnPoint: {fileID: 0}
   playerProperties: {fileID: 0}
 --- !u!1 &5611799222534803605
 GameObject:
@@ -20002,7 +20002,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1767087161283838692}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20041,7 +20041,7 @@ GameObject:
   - component: {fileID: 1972961399406708421}
   - component: {fileID: 2597185179929526852}
   - component: {fileID: 4304395879446467948}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

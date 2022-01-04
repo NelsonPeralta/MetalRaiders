@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1807502567698646067}
   - component: {fileID: 1385578577155458976}
   - component: {fileID: 4253537919978155509}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5632142796511389627}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 2251848278795001311}
   - component: {fileID: 2129403745773419861}
   - component: {fileID: 2129224983253228343}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: LootRayBlue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5106,7 +5106,7 @@ GameObject:
   - component: {fileID: 2260785434387333517}
   - component: {fileID: 2129790302585797393}
   - component: {fileID: 2128524888867579563}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9992,7 +9992,7 @@ GameObject:
   - component: {fileID: 2251823511036543779}
   - component: {fileID: 2130108103907539947}
   - component: {fileID: 2128725905801550391}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14923,7 +14923,7 @@ GameObject:
   - component: {fileID: 2260531762657978597}
   - component: {fileID: 2129667622725337015}
   - component: {fileID: 2128541289797753523}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: VerticalGlowWidening
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19800,7 +19800,7 @@ GameObject:
   - component: {fileID: 2256227485381647736}
   - component: {fileID: 2256227485380320600}
   - component: {fileID: 2256227485379223448}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: assault_rifle_03_mag_empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19882,7 +19882,7 @@ GameObject:
   - component: {fileID: 2256227485586370474}
   - component: {fileID: 2256227485587697546}
   - component: {fileID: 2256227485588663626}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: assault_rifle_02_mag_empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19964,7 +19964,7 @@ GameObject:
   - component: {fileID: 2256227486034713247}
   - component: {fileID: 2256227486036007615}
   - component: {fileID: 2256227486037137535}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: assault_rifle_01_mag_empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20047,7 +20047,7 @@ GameObject:
   - component: {fileID: 2044708889268190650}
   - component: {fileID: 2289922330748587195}
   - component: {fileID: 1660378414476650215}
-  m_Layer: 22
+  m_Layer: 15
   m_Name: Online Heavy Ammo Pack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20128,5 +20128,5 @@ MonoBehaviour:
   defaultAmmo: 30
   ammoInThisPack: 30
   ammoText: {fileID: 4253537919978155509}
-  spawnPoint: {fileID: 0}
+  onlineAmmoPackSpawnPoint: {fileID: 0}
   playerProperties: {fileID: 0}

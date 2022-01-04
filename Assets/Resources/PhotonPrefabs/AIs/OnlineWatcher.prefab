@@ -12032,7 +12032,6 @@ MonoBehaviour:
   nma: {fileID: 0}
   _defaultHealth: 150
   speed: 6
-  target: {fileID: 0}
   rangeColliders:
   - {fileID: 2883373899656101094}
   - {fileID: 4421428383704479029}
@@ -12048,14 +12047,14 @@ MonoBehaviour:
   aSource: {fileID: 3278221380015015532}
   swarmMode: {fileID: 0}
   pManager: {fileID: 0}
-  projectileDamage: 14
+  projectileDamage: 32
   projectileSpeed: 150
-  meteorDamage: 28
+  meteorDamage: 56
   meteorSpeed: 15
   projectileSpawnPoint: {fileID: 6041454011544342895}
   motionTrackerDot: {fileID: 1673082704842895623}
   projectile: {fileID: 1006269644436722, guid: 5ba8aa092f5c7c54c94ba93b89b0e4ea, type: 3}
-  meteor: {fileID: 3885397476374691508, guid: a713223d8a7b911448b0ba37a21fb1dc, type: 3}
+  meteor: {fileID: 3885397476374691508, guid: a257ce09aee74b94a90f54f6c65aea66, type: 3}
   wall: {fileID: 5039441736292490731, guid: f0474ae2bee30ba4280a07c258f22bf8, type: 3}
   deathSmoke: {fileID: 1126160920730200, guid: 7ae1d86c2db118940a3a5a8f8e59a43d, type: 3}
   summonWall: {fileID: 8300000, guid: 5adff5ae5fe483f43a5c96a6cb85c08f, type: 3}
@@ -12684,7 +12683,7 @@ GameObject:
   - component: {fileID: 1673082704842895620}
   - component: {fileID: 1673082704842895626}
   - component: {fileID: 1673082704842895621}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: Motion Tracker Dot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

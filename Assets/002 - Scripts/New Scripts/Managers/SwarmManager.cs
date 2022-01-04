@@ -183,9 +183,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             OnAiLeftZero?.Invoke(this);
             return;
         }
-        PlayerProperties[] allPlayers = FindObjectsOfType<PlayerProperties>();
-        int ran = Random.Range(0, allPlayers.Length);
-        int targetPhotonId = allPlayers[ran].PV.ViewID;
+
+        int targetPhotonId = GetRandomPlayerPhotonId();
 
         List<SpawnPoint> aiSpawnPoints = new List<SpawnPoint>();
         foreach (SpawnPoint sp in FindObjectsOfType<SpawnPoint>())
@@ -232,14 +231,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int watchersAlive = 0;
         foreach (Watcher w in watcherPool)
         {
-            Debug.Log($"{w.name} is active: {w.gameObject.activeSelf} and is dead: { w.isDead}");
             if (w.gameObject.activeSelf && !w.isDead)
             {
                 watchersAlive++;
 
             }
         }
-        Debug.Log($"Watchers Left: {watchersLeft}. Watchers alive: {watchersAlive}");
         if (watchersLeft <= 0 && watchersAlive <= 0)
             EndWave();
     }
@@ -274,5 +271,18 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void OnWaveEnd_Delegate(SwarmManager swarmManager)
     {
         IncreaseWave();
+    }
+
+    int GetRandomPlayerPhotonId()
+    {
+        PlayerProperties[] allPlayers = FindObjectsOfType<PlayerProperties>();
+        int ran = Random.Range(0, allPlayers.Length);
+        int targetPhotonId = allPlayers[ran].PV.ViewID;
+        return targetPhotonId;
+    }
+
+    public Transform GetRandomPlayerTransform()
+    {
+        return PhotonView.Find(GetRandomPlayerPhotonId()).transform;
     }
 }
