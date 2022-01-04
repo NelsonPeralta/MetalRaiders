@@ -2,22 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon.Pun;
 
-public class Watcher : MonoBehaviour
+public class Watcher : AiAbstractClass
 {
     public Animator animator;
-    public NavMeshAgent nma;
     public AudioSource aSource;
     public SwarmMode swarmMode;
     public MyPlayerManager pManager;
-    public Hitboxes hitboxes;
-
-    [Header("Properties")]
-    public float defaultHealth;
-    public float Health;
-    public int points;
-    public bool isDead;
-    public int defaultSpeed;
 
     [Header("Combat")]
     public int projectileDamage;
@@ -26,40 +18,6 @@ public class Watcher : MonoBehaviour
     public int meteorSpeed;
     public GameObject projectileSpawnPoint;
     public GameObject motionTrackerDot;
-
-    [Header("Target Management")]
-    public Transform target;
-    public float maxMeleeDistance;
-    public float maxRangeDistance;
-    public bool isInMeleeRange;
-    public bool isInRange;
-
-    [Header("Action Management")]
-    public bool isReadyToAttack;
-    public string nextAction;
-    public float nextActionCooldown;
-
-    [Header("Player Switching")]
-    public Transform lastPlayerWhoShot;
-    public bool otherPlayerShot;
-    public float targetSwitchCountdownDefault;
-    public float targetSwitchCountdown;
-    public float targetSwitchResetCountdown;
-    public bool targetSwitchReady;
-    public bool targetSwitchStarted;
-    public bool hasBeenMeleedRecently;
-
-    [Header("Line Of Sight")]
-    public bool targetInLOS;
-    public GameObject LOSSpawn;
-    public GameObject objectInLOS;
-    public LayerMask layerMask;
-    Vector3 raySpawn;
-    public RaycastHit hit;
-    bool resettingTargetInLOS;
-
-    [Header("Loot")]
-    public GameObject[] droppableWeapons;
 
     [Header("Prefabs")]
     public GameObject projectile;
@@ -71,523 +29,168 @@ public class Watcher : MonoBehaviour
     public AudioClip summonWall;
 
     [Header("Shield")]
-    public ParticleSystem shield;
+    public GameObject shieldModel;
     public SphereCollider shieldCollider;
 
-    private void OnEnable()
-    {
-        ResetWatcher();
-        ActionManager();
-    }
 
-    private void Update()
-    {
-        Attack();
-        Block();
-        Movement();
-        TargetSwitchCountdown();
-        ShootLOSRay();
-        ProjectileSpawnLookAtTarget();
-    }
+    public enum WatcherActions { Defend, Fireball, Meteor, Seek }
+    WatcherActions _watcherAction;
 
-    void ActionManager()
+    public WatcherActions watcherAction
     {
-        if (target != null)
+        get { return _watcherAction; }
+        set
         {
-            if (!isInMeleeRange && isInRange)
+            if(_watcherAction != value)
             {
-                animator.SetBool("Defend", false);
-                int randomInt = Random.Range(1, 101);
-
-                if (randomInt >= 1 && randomInt <= 40)
-                {
-                    nextAction = "Projectile";
-                }
-                if (randomInt >= 41 && randomInt <= 70)
-                {
-                    var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
-                    if (!pSurro.objectOverPlayerHead)
-                        nextAction = "Meteor";
-                    else
-                        nextAction = "Projectile";
-                }
-                if (randomInt >= 71 && randomInt <= 100)
-                {
-                    var mov = target.GetComponent<Movement>();
-                    if (mov.direction == "Backwards" || mov.direction == "Left" || mov.direction == "Right")
-                        nextAction = "Wall";
-                    else
-                        nextAction = "Projectile";
-                }
+                _watcherAction = value;
+                Debug.Log($"Watcher action change: {_watcherAction}");
+                InvokeOnActionChanged();
             }
         }
     }
-
-    void Movement()
+    private void Start()
     {
-        if (Health > 0)
-        {
-            if (target != null)
-            {
-                if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
-                {
-                    nma.SetDestination(target.position);
-                }
-                else if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0)
-                {
-                    target = null;
-                }
-
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
-                        nma.speed = 0.01f;
-                    }
-                }
-            }
-            else
-            {
-                LookForNewRandomPlayer();
-            }
-        }
-        if (Health <= 0 && !isDead)
-        {
-            nma.speed = 0;
-            StartCoroutine(Die());
-            isDead = true;
-        }
-
-
-        if (!isDead)
-        {
-            if (target != null)
-            {
-                if (targetInLOS)
-                {
-                    if (!isInMeleeRange && !isInRange)
-                    {
-                        ChasePlayer();
-                    }
-                    else if (isInMeleeRange || isInRange || !isReadyToAttack)
-                    {
-                        Idle();
-                    }
-                }
-                else
-                {
-                    ChasePlayer();
-                }
-            }
-            if (target == null)
-            {
-                Idle();
-            }
-
-            if (animator.GetCurrentAnimatorStateInfo(0).IsName("FlyForward"))
-            {
-                motionTrackerDot.SetActive(true);
-            }
-            else
-            {
-                if (motionTrackerDot.activeSelf)
-                {
-                    motionTrackerDot.SetActive(false);
-                }
-            }
-        }
+        shieldModel.SetActive(false);
     }
-
-    void Attack()
+    public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
-        if (isReadyToAttack && !isDead && target && targetInLOS)
-        {
-            if (!isInMeleeRange && isInRange)
-            {
-                if (nextAction == "Projectile")
-                {
-                    animator.Play("Projectile");
-                    var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
-                        , projectileSpawnPoint.transform.rotation);
-                    //Debug.Log("Watcher Projectile Destination: " + projectileSpawnPoint.transform.position + " " + projectileSpawnPoint.transform.rotation.eulerAngles);
-                    proj.GetComponent<Fireball>().damage = projectileDamage;
-                    proj.GetComponent<Fireball>().force = projectileSpeed;
-                    proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-                    Destroy(proj, 5);
-                    nextAction = "";
-                    isReadyToAttack = false;
-                    StartCoroutine(ActionCooldown(nextActionCooldown));
-                    ActionManager();
-                }
-                else if (nextAction == "Meteor")
-                {
-                    animator.Play("Summon");
-                    var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
-                    var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
-                    meteo.GetComponent<Fireball>().radius = 3;
-                    meteo.GetComponent<Fireball>().damage = meteorDamage;
-                    meteo.GetComponent<Fireball>().force = meteorSpeed;
-                    meteo.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-                    meteo.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-                    meteo.transform.Rotate(180, 0, 0);
-                    nextAction = "";
-                    isReadyToAttack = false;
-                    StartCoroutine(ActionCooldown(nextActionCooldown));
-                    ActionManager();
-                }
-                else if (nextAction == "Wall")
-                {
-                    bool spawnWall = true;
-                    var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
-                    var mov = target.GetComponent<Movement>();
-                    var wal = Instantiate(wall);
-                    if (mov.direction == "Backwards")
-                    {
-                        animator.Play("Summon");
-                        wal.transform.position = pSurro.back.transform.position;
-                        wal.transform.rotation = pSurro.back.transform.rotation;
-                        //var wal = Instantiate(wall, pSurro.back.transform.position, pSurro.back.transform.rotation);
-                        wal.transform.Rotate(-90, 0, 0);
-                    }
-                    else if (mov.direction == "Left")
-                    {
-                        animator.Play("Summon");
-                        wal.transform.position = pSurro.back.transform.position;
-                        wal.transform.rotation = pSurro.back.transform.rotation;
-                        //var wal = Instantiate(wall, pSurro.left.transform.position, pSurro.left.transform.rotation);
-                        wal.transform.Rotate(-90, 90, 0);
-                    }
-                    else if (mov.direction == "Right")
-                    {
-                        animator.Play("Summon");
-                        wal.transform.position = pSurro.back.transform.position;
-                        wal.transform.rotation = pSurro.back.transform.rotation;
-                        //var wal = Instantiate(wall, pSurro.right.transform.position, pSurro.right.transform.rotation);
-                        wal.transform.Rotate(-90, 90, 0);
-                    }
-                    else
-                    {
-                        Destroy(wal);
-                        animator.Play("Projectile");
-                        var proj = Instantiate(projectile, projectileSpawnPoint.transform.position, projectileSpawnPoint.transform.rotation);
-                        proj.GetComponent<Fireball>().damage = projectileDamage;
-                        proj.GetComponent<Fireball>().force = projectileSpeed;
-                        Destroy(proj, 5);
-                        spawnWall = false;
-                    }
-                    if (spawnWall)
-                    {
-                        wal.GetComponent<AudioSource>().clip = summonWall;
-                        wal.GetComponent<AudioSource>().Play();
-                    }
-                    nextAction = "";
-                    isReadyToAttack = false;
-                    StartCoroutine(ActionCooldown(nextActionCooldown / 2));
-                    ActionManager();
-                }
-            }
-        }
-    }
+        WatcherActions previousAction = watcherAction;
 
-    void Block()
-    {
-        if (isInMeleeRange && target)
+        if (targetInLineOfSight)
         {
-            animator.SetBool("Defend", true);
-            if (nextAction != "")
-                nextAction = "";
+            if (aiAbstractClass.playerRange == PlayerRange.Medium)
+                previousAction = WatcherActions.Fireball;
+            else if (aiAbstractClass.playerRange == PlayerRange.Long)
+                previousAction = WatcherActions.Meteor;
+            else if (aiAbstractClass.playerRange == PlayerRange.Out)
+                previousAction = WatcherActions.Seek;
         }
         else
+        {
+            previousAction = WatcherActions.Seek;
+        }
+
+        if (aiAbstractClass.playerRange == PlayerRange.Close)
+            previousAction = WatcherActions.Defend;
+        else if (aiAbstractClass.playerRange == PlayerRange.Out)
+            previousAction = WatcherActions.Seek;
+
+        watcherAction = previousAction;
+    }
+
+    public override void DoAction()
+    {
+        if (isDead)
+            return;
+
+        if (watcherAction != WatcherActions.Defend)
         {
             animator.SetBool("Defend", false);
-
-            if (nextAction == "")
-                ActionManager();
+            shieldModel.SetActive(false);
         }
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Defend"))
+        if(watcherAction != WatcherActions.Seek)
         {
-            if (shield)
+            seek = false;
+        }
+
+
+        if (watcherAction == WatcherActions.Defend)
+        {
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Defend"))
             {
-                if (!shield.isPlaying)
-                    shield.gameObject.SetActive(true);
+                animator.SetBool("Defend", true);
+                shieldModel.SetActive(true);
             }
         }
-        else
+        else if (watcherAction == WatcherActions.Fireball)
         {
-            if (shield)
+            if (canDoAction)
             {
-                if (shield.isPlaying)
-                    shield.gameObject.SetActive(false);
+                animator.Play("Projectile");
+
+                var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
+                    , projectileSpawnPoint.transform.rotation);
+                proj.GetComponent<Fireball>().damage = projectileDamage;
+                proj.GetComponent<Fireball>().force = projectileSpeed;
+                proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                Destroy(proj, 5);
+
+                nextActionCooldown = defaultNextActionCooldown;
             }
         }
-    }
-
-    void ChasePlayer()
-    {
-        nma.speed = defaultSpeed;
-        animator.SetBool("Fly Forward", true);
-        //animator.SetBool("Idle", false);
-    }
-
-    void Idle()
-    {
-        nma.speed = 0;
-        animator.SetBool("Fly Forward", false);
-        //animator.SetBool("Idle", true);
-        if (target)
+        else if (watcherAction == WatcherActions.Meteor)
         {
-            Vector3 targetPostition = new Vector3(target.position.x,
+            if (canDoAction)
+            {
+                animator.Play("Summon");
+
+                var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
+                var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
+                meteo.GetComponent<Fireball>().radius = 3;
+                meteo.GetComponent<Fireball>().damage = meteorDamage;
+                meteo.GetComponent<Fireball>().force = meteorSpeed;
+                meteo.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                meteo.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                meteo.transform.Rotate(180, 0, 0);
+
+                nextActionCooldown = defaultNextActionCooldown;
+            }
+        }
+        else if (watcherAction == WatcherActions.Seek)
+        {
+            seek = true;
+        }
+        Debug.Log($"Do Watcher action: {watcherAction}");
+    }
+
+    public override void ChildUpdate()
+    {
+        if (!target)
+            return;
+
+        Vector3 targetPostition = new Vector3(target.position.x,
                                         this.transform.position.y,
                                         target.position.z);
-            this.transform.LookAt(targetPostition);
+        this.transform.LookAt(targetPostition);
+    }
+
+    public override void Damage(int damage, int playerWhoShotPDI)
+    {
+        if (isDead)
+            return;
+        GetComponent<PhotonView>().RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
+    }
+
+    [PunRPC]
+    public override void Damage_RPC(int damage, int playerWhoShotPDI)
+    {
+        if (isDead)
+            return;
+
+        PlayerProperties pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
+
+        health -= damage;
+        if (isDead)
+        {
+            pp.GetComponent<OnlinePlayerSwarmScript>().kills++;
+            pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(defaultHealth);
         }
     }
 
-    void ProjectileSpawnLookAtTarget()
+    public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
     {
-        if (target)
-        {
-            projectileSpawnPoint.transform.LookAt(target);
-            //Debug.Log("Watcher Porjectile Look At: " + target.transform.position + " " + target.transform.rotation.eulerAngles);
-        }
-    }
-
-    IEnumerator Die()
-    {
-        var ds = Instantiate(deathSmoke, transform.position + new Vector3(0, 1, 0), transform.rotation);
-        Destroy(ds, 5);
-        //Destroy(gameObject, 0.5f);
-        nma.enabled = false;
-        animator.Play("Take Damage");
-        isDead = true;
-
-        //int randomSound = Random.Range(0, deathClips.Length - 1);
-        //audioSource.clip = deathClips[randomSound];
-        //audioSource.Play();
-
-        if (swarmMode != null)
-            swarmMode.watchersAlive = swarmMode.watchersAlive - 1;
-
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-        {
-            //hitbox.gameObject.layer = 23; //Ground
-            hitbox.gameObject.SetActive(false);
-        }
-
-        motionTrackerDot.SetActive(false);
-
-        if (lastPlayerWhoShot)
-        {
-            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
-            TransferPoints();
-        }
-        DropRandomWeapon();
-        target = null;
-
-        yield return new WaitForSeconds(0.5f);
-        gameObject.SetActive(false);
-    }
-
-    void LookForNewRandomPlayer()
-    {
-        if (swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
-    }
-    void TargetSwitchCountdown()
-    {
-        if (otherPlayerShot)
-        {
-            targetSwitchCountdown -= Time.deltaTime;
-
-            if (targetSwitchCountdown <= 0)
-            {
-                if (targetSwitchReady)
-                {
-                    targetSwitchReady = false;
-                    target = lastPlayerWhoShot.transform;
-                    nma.SetDestination(target.position);
-                    targetSwitchCountdown = targetSwitchCountdownDefault;
-                    StartCoroutine(TargetSwitchReset());
-                }
-                otherPlayerShot = false;
-                targetSwitchStarted = false;
-            }
-        }
-    }
-
-    IEnumerator TargetSwitchReset()
-    {
-        yield return new WaitForSeconds(targetSwitchCountdown);
-
-        targetSwitchReady = true;
-    }
-
-    void TransferPoints()
-    {
-        if (lastPlayerWhoShot)
-        {
-            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
-            {
-                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
-
-                pPoints.AddPoints(this.points);
-            }
-        }
-    }
-
-    public void TransferDamageToPoints(int points)
-    {
-        if (lastPlayerWhoShot.gameObject != null)
-        {
-            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
-            {
-                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
-
-                pPoints.AddPoints(points);
-            }
-        }
-    }
-
-    public void TargetSwitch(GameObject playerWhoShotLast)
-    {
-        if (target != null)
-        {
-            if (playerWhoShotLast != null)
-            {
-                if (playerWhoShotLast.name != target.gameObject.name)
-                {
-                    if (lastPlayerWhoShot != playerWhoShotLast)
-                    {
-                        targetSwitchCountdown = targetSwitchCountdownDefault;
-                        otherPlayerShot = true;
-                        lastPlayerWhoShot = playerWhoShotLast.transform;
-                    }
-                }
-                else if (playerWhoShotLast.name == target.gameObject.name)
-                {
-                    targetSwitchCountdown = targetSwitchCountdownDefault;
-                    otherPlayerShot = false;
-                    lastPlayerWhoShot = playerWhoShotLast.transform;
-                }
-            }
-        }
+        if (!targetInLineOfSight)
+            watcherAction = WatcherActions.Seek;
         else
         {
-            if (playerWhoShotLast != null)
-            {
-                target = playerWhoShotLast.gameObject.transform;
-                nma.SetDestination(target.position);
-                lastPlayerWhoShot = playerWhoShotLast.transform;
-            }
+            Debug.Log($"Target in line of sight. Player range: {playerRange}");
+            if (playerRange == PlayerRange.Medium)
+                watcherAction = WatcherActions.Fireball;
+            else if (playerRange == PlayerRange.Long)
+                watcherAction = WatcherActions.Meteor;
         }
-    }
-
-    void ShootLOSRay()
-    {
-        raySpawn = LOSSpawn.transform.position + new Vector3(0, 0f, 0);
-        Debug.DrawRay(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, Color.green);
-
-        if (Physics.Raycast(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, out hit, maxRangeDistance, layerMask)) // Need a Raycast Range Overload to work with LayerMask
-        {
-            objectInLOS = hit.transform.gameObject;
-
-            if (objectInLOS.GetComponent<PlayerHitbox>())
-            {
-                GameObject playerInLOS = objectInLOS.GetComponent<PlayerHitbox>().player.gameObject;
-
-                if (target && playerInLOS)
-                    if (playerInLOS == target.gameObject)
-                    {
-                        targetInLOS = true;
-                    }
-                    else
-                    {
-                        if (!resettingTargetInLOS)
-                            StartCoroutine(ResetTargetInLOS());
-                    }
-            }
-        }
-        else
-        {
-            objectInLOS = null;
-            if (!resettingTargetInLOS)
-                StartCoroutine(ResetTargetInLOS());
-        }
-    }
-
-
-    void DropRandomWeapon()
-    {
-        int ChanceToDrop = Random.Range(0, 10);
-
-        if (ChanceToDrop <= 3) // Debug: 3 nomrally
-        {
-            int randomInt = Random.Range(0, droppableWeapons.Length - 1);
-            GameObject weapon = Instantiate(droppableWeapons[randomInt], gameObject.transform.position + new Vector3(0, 0.5f, 0), gameObject.transform.rotation);
-            weapon.GetComponent<LootableWeapon>().RandomAmmo();
-            weapon.gameObject.name = weapon.name.Replace("(Clone)", "");
-
-            Destroy(weapon, 60);
-        }
-    }
-
-    IEnumerator ActionCooldown(float cooldown)
-    {
-        if (!isReadyToAttack)
-        {
-            yield return new WaitForSeconds(cooldown);
-            isReadyToAttack = true;
-        }
-    }
-
-    public IEnumerator MeleeReset()
-    {
-        yield return new WaitForEndOfFrame();
-
-        hasBeenMeleedRecently = false;
-    }
-
-    IEnumerator ResetTargetInLOS()
-    {
-        resettingTargetInLOS = true;
-        yield return new WaitForSeconds(5f);
-
-        targetInLOS = false;
-        resettingTargetInLOS = false;
-    }
-
-    void ResetWatcher()
-    {
-        nma.enabled = true;
-        nma.speed = defaultSpeed;
-
-        //StartCoroutine(PlaySound());
-        //if (placeholderSkin)
-        //    placeholderSkin.SetActive(false);
-        //randomSkin();
-
-        Health = defaultHealth;
-        isDead = false;
-        isInRange = false;
-        isInMeleeRange = false;
-        targetInLOS = false;
-        isReadyToAttack = true;
-
-
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-        {
-            hitbox.gameObject.SetActive(true);
-        }
-
-        motionTrackerDot.SetActive(true);
-
-        nextActionCooldown = 2;
-        lastPlayerWhoShot = null;
-        otherPlayerShot = false;
-        targetSwitchCountdown = targetSwitchCountdownDefault;
-        targetSwitchReady = true;
     }
 }

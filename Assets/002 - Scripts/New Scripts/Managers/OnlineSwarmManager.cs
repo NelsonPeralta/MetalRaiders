@@ -163,6 +163,8 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void Start()
     {
+
+        newWaveDelay = FindObjectsOfType<PlayerProperties>().Length * 10;
         if (editMode)
             AudioListener.volume = 0;
         healthPacks = GetAllHealthPacks();
@@ -177,6 +179,7 @@ public class OnlineSwarmManager : MonoBehaviour
         ResetPoints();
         UpdatePlayerLives();
 
+        DisablePlayerShields();
         if (!PhotonNetwork.IsMasterClient)
             return;
 
@@ -184,7 +187,6 @@ public class OnlineSwarmManager : MonoBehaviour
 
         if (PV.IsMine)
             IncreaseWave(waveNumber);
-        DisablePlayerShields();
     }
 
     void DisablePlayerShields()
@@ -217,13 +219,9 @@ public class OnlineSwarmManager : MonoBehaviour
             //    }
             //}
 
-            //if (watchersLeftToSpawn > 0)
-            //{
-            //    if (totalGameTime > nextWatcherSpawnTime)
-            //    {
-            //        SpawnWatcher();
-            //    }
-            //}
+            if (watchersLeftToSpawn > 0)
+                if (totalGameTime > nextWatcherSpawnTime)
+                    SpawnWatcher();
 
             //if (hellhoundsLeftToSpawn > 0)
             //{
@@ -272,7 +270,6 @@ public class OnlineSwarmManager : MonoBehaviour
     [PunRPC]
     void IncreaseWave_RPC(int _currentWave)
     {
-
         StartCoroutine(IncreaseWave_Coroutine(_currentWave));
     }
 
@@ -321,9 +318,9 @@ public class OnlineSwarmManager : MonoBehaviour
     void CalculateMaxDefaultAIsForRound()
     {
         allPlayers = GetAllPlayers();
-        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count * 5 + (waveNumber * 2);
+        maxZombiesForRound = zombiesLeftToSpawn = allPlayers.Count + (waveNumber * 2);
         //maxSkeletonsForRound = skeletonsLeftToSpawn = allPlayers.Count * 4 + Mathf.CeilToInt(waveNumber / 2);
-        //maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
+        maxWatchersForRound = watchersLeftToSpawn = allPlayers.Count * 3 + Mathf.CeilToInt(waveNumber / 2);
         //maxHellhoundsForRound = hellhoundsLeftToSpawn = 0;
         //maxTrollsForRound = trollsLeftToSpawn = 0;
 
@@ -427,13 +424,13 @@ public class OnlineSwarmManager : MonoBehaviour
 
 
         var newZombie = PhotonView.Find(AIPhotonId).gameObject;
-        newZombie.GetComponent<ZombieScript>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
+        //newZombie.GetComponent<ZombieScript>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
 
         if (!newZombie.GetComponent<ZombieScript>().onlineSwarmManager)
             newZombie.GetComponent<ZombieScript>().onlineSwarmManager = this;
 
-        if (editMode)
-            newZombie.GetComponent<ZombieScript>().SetEditMode();
+        //if (editMode)
+        //    newZombie.GetComponent<ZombieScript>().SetEditMode();
         zombiesAlive++;
         zombiesLeftToSpawn--;
     }
@@ -461,23 +458,31 @@ public class OnlineSwarmManager : MonoBehaviour
 
     void SpawnWatcher()
     {
-        if (hasSpaceToSpawnWatcher)
-        {
-            //int i = Random.Range(0, watcherSpawns.Length);
-            //int b = Random.Range(0, pManager.GetComponent<SplitScreenManager>().numberOfPlayers);
+        Debug.Log("RPC Call: SpawnWatcher_RPC");
+        nextWatcherSpawnTime = totalGameTime + watcherSpawnDelay;
+        if (!hasSpaceToSpawnWatcher)
+            return;
+        allPlayers = GetAllPlayers();
+        int ran = Random.Range(0, allPlayers.Count);
+        int targetPhotonId = allPlayers[ran].PV.ViewID;
 
-            //var newWatcher = watcherPool.SpawnPooledGameObject();
-            //newWatcher.transform.position = watcherSpawns[i].transform.position;
-            //newWatcher.transform.rotation = watcherSpawns[i].transform.rotation;
-            //newWatcher.SetActive(true);
-            //if (!newWatcher.GetComponent<Watcher>().swarmMode)
-            //    newWatcher.GetComponent<Watcher>().swarmMode = this;
-            //newWatcher.GetComponent<Watcher>().target = pManager.allPlayers[b].transform;
-            //watchersAlive++;
-            //watchersLeftToSpawn--;
-        }
+        Transform spawnPoint = aiSpawnManagerInstance.GetGenericSpawnpoint();
+        PV.RPC("SpawnWatcher_RPC", RpcTarget.All, aiPool.GetRandomWatcherPhotonId(), targetPhotonId, spawnPoint.position, spawnPoint.rotation);
+    }
 
-        nextWatcherSpawnTime = gameTime.totalGameTime + watcherSpawnDelay;
+    [PunRPC]
+    void SpawnWatcher_RPC(int AIPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
+    {
+
+
+        //var newWacther = PhotonView.Find(AIPhotonId).gameObject;
+        //newWacther.GetComponent<Watcher>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
+
+        //if (!newWacther.GetComponent<Watcher>().onlineSwarmManager)
+        //    newWacther.GetComponent<Watcher>().onlineSwarmManager = this;
+
+        watchersAlive++;
+        watchersLeftToSpawn--;
     }
 
     void SpawnHellhound()
@@ -855,8 +860,17 @@ public class OnlineSwarmManager : MonoBehaviour
     {
         int _zombiesAlive = 0;
         foreach (ZombieScript zs in GameObject.FindObjectsOfType<ZombieScript>())
-            if (!zs.isDead())
+            if (!zs.isDead)
                 _zombiesAlive++;
         zombiesAlive = _zombiesAlive;
+    }
+
+    public void RemoveOneWatcher()
+    {
+        int _watchersAlive = 0;
+        foreach (ZombieScript zs in GameObject.FindObjectsOfType<ZombieScript>())
+            if (!zs.isDead)
+                _watchersAlive++;
+        watchersAlive = _watchersAlive;
     }
 }

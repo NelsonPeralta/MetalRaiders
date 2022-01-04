@@ -88,12 +88,12 @@ public class CameraScript : MonoBehaviour
 
     float HorizontalSway()
     {
-        if (!pController.isAiming || pProperties.pInventory.activeWeapon.weaponSway <= 0)
+        if (!pController.isAiming || pProperties.pInventory.activeWeapon.scopeSway <= 0)
             return 0;
 
-        weaponSway = pProperties.pInventory.activeWeapon.weaponSway;
+        weaponSway = pProperties.pInventory.activeWeapon.scopeSway;
         if (pController.isCrouching)
-            weaponSway = pProperties.pInventory.activeWeapon.weaponSway / 2f;
+            weaponSway = pProperties.pInventory.activeWeapon.scopeSway / 2f;
 
         if (targetHorizontalSway == 0)
         {
@@ -129,7 +129,7 @@ public class CameraScript : MonoBehaviour
 
     float VerticalSway()
     {
-        if (!pController.isAiming || pProperties.pInventory.activeWeapon.weaponSway <= 0)
+        if (!pController.isAiming || pProperties.pInventory.activeWeapon.scopeSway <= 0)
             return 0;
         if (targetVerticalSway == 0)
         {

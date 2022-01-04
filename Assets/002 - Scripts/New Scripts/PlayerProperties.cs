@@ -54,9 +54,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public PlayerController pController;
     public SwarmMode swarmMode;
     public Movement movement;
-    public CrosshairScript cScript;
+    public CrosshairManager cScript;
     public AimAssist aimAssist;
-    public WeaponPickUp wPickup;
+    public PlayerWeaponSwapping wPickup;
     public AimAssist raycastScript;
     public PlayerSurroundings pSurroundings;
 
@@ -269,7 +269,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         healthSlider.gameObject.SetActive(true);
     }
 
-        void UpdateLagDistance()
+    void UpdateLagDistance()
     {
         if (PV.IsMine)
             return;
@@ -709,8 +709,10 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!isDead || respawnCoroutine != null || isRespawning)
             return;
-        if (lastPlayerWhoDamagedThisPlayerPVID != 0 && multiplayerManager)
-            multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
+        //if (lastPlayerWhoDamagedThisPlayerPVID != 0 && multiplayerManager)
+        //    multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
+        if (lastPlayerWhoDamagedThisPlayerPVID != 0)
+            MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot));
         if (onlineSwarmManager)
         {
             onlineSwarmManager.RemovePlayerLife();

@@ -12,7 +12,7 @@ public class AimAssist : MonoBehaviour
 
     public int playerRewiredID;
     public Transform puCollider;
-    public CrosshairScript crosshairScript;
+    public CrosshairManager crosshairScript;
     public GameObject target;
     public AIHitbox aiHitbox;
     public PlayerHitbox targetHitbox;
@@ -61,7 +61,7 @@ public class AimAssist : MonoBehaviour
         {
             targetDistance = Vector3.Distance(hit.transform.position, player.transform.position);
             firstRayHit = hit.transform.gameObject;
-            float gunRRR = player.allPlayerScripts.playerInventory.activeWeapon.GetComponent<WeaponProperties>().RedReticuleRange;
+            float gunRRR = player.allPlayerScripts.playerInventory.activeWeapon.GetComponent<WeaponProperties>().currentRedReticuleRange;
 
             if (!hit.transform.gameObject.GetComponent<PlayerHitbox>() && !hit.transform.gameObject.GetComponent<AIHitbox>())
             {
@@ -138,7 +138,7 @@ public class AimAssist : MonoBehaviour
                 targetDistance = hit.distance;
                 //Debug.Log("Detecting Player Hitbox. Target distance: " + targetDistance + ". RRR: + " + wProperties.RedReticuleRange);
 
-                if (targetDistance <= wProperties.RedReticuleRange && target != null)
+                if (targetDistance <= wProperties.currentRedReticuleRange && target != null)
                 {
                     //Debug.Log("Toggling RRR to TRUE");
                     crosshairScript.RRisActive = true;
@@ -151,7 +151,7 @@ public class AimAssist : MonoBehaviour
                     //    crosshairScript.RRisActive = true;
                     //}
                 }
-                else if (targetDistance > wProperties.RedReticuleRange && target != null)
+                else if (targetDistance > wProperties.currentRedReticuleRange && target != null)
                 {
                     crosshairScript.RRisActive = false;
                     crosshairScript.friendlyRRisActive = false;
@@ -167,7 +167,7 @@ public class AimAssist : MonoBehaviour
 
                 if (wProperties != null)
                 {
-                    if (targetDistance <= wProperties.RedReticuleRange && target != null)
+                    if (targetDistance <= wProperties.currentRedReticuleRange && target != null)
                     {
                         //Debug.Log("Here 2");
                         //if (string.Equals(hit.transform.gameObject.GetComponent<AIHitbox>().team.Trim(), playerMPProperties.team.Trim()))
@@ -183,7 +183,7 @@ public class AimAssist : MonoBehaviour
                         //}
                         crosshairScript.RRisActive = true;
                     }
-                    else if (targetDistance > wProperties.RedReticuleRange && target != null)
+                    else if (targetDistance > wProperties.currentRedReticuleRange && target != null)
                     {
                         //Debug.Log("Here 5");
                         crosshairScript.RRisActive = false;

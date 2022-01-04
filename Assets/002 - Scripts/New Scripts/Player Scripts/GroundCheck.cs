@@ -35,7 +35,6 @@ public class GroundCheck : MonoBehaviour
     {
         if (other.transform.root.gameObject != player.gameObject)
         {
-            //objectsCollidingWith.Add(other.gameObject);
             isGrounded = true;
         }
     }

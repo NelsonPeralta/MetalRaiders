@@ -13,13 +13,46 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
     public PlayerMultiplayerStatsEvent OnHeadshotsChanged;
     public PlayerMultiplayerStatsEvent OnKDRatioChanged;
 
+    // private variables
+    int _kills;
+    int _deaths;
+    int _headshots;
+    float _kd;
+
+    //public variables
     public PlayerProperties player;
     public int PVID;
     public string playerName;
-    public int kills;
-    public int deaths;
-    int _headshots;
-    float _kd;
+    public int kills
+    {
+        get { return _kills; }
+        set
+        {
+            var previous = _kills;
+
+            _kills = Mathf.Clamp(value, 0, 999);
+
+            if (_kills != previous)
+            {
+                OnKillsChanged?.Invoke(this);
+            }
+        }
+    }
+    public int deaths
+    {
+        get { return _deaths; }
+        set
+        {
+            var previous = _deaths;
+
+            _deaths = Mathf.Clamp(value, 0, 999);
+
+            if (_deaths != previous)
+            {
+                OnDeathsChanged?.Invoke(this);
+            }
+        }
+    }
 
     public int headshots
     {
@@ -100,6 +133,11 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
             customProperties.Add($"points_to_win", 1000);
         customProperties[$"{playerName}_kills"] = (int)customProperties[$"{playerName}_kills"] + 1;
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
+    }
+
+    public void AddKill()
+    {
+        kills++;
     }
 
     public void AddDeath()

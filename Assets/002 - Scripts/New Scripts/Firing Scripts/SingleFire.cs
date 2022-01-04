@@ -26,6 +26,8 @@ public class SingleFire : MonoBehaviour
     public float nextFireInterval;
     float fireInterval = 0;
 
+    float defaultBurstInterval = 0.1f;
+
     private bool ThisisShooting = false;
     private bool hasButtonDown = false;
 
@@ -43,13 +45,15 @@ public class SingleFire : MonoBehaviour
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
-        if (activeWeapon.isSingleFire && !pController.isDualWielding && !pController.isDrawingWeapon)
+        if (!pProperties.isDead && !pController.isDualWielding && !pController.isDrawingWeapon)
         {
             for (int i = 0; i < activeWeapon.GetNumberOfBulletsToShoot(); i++)
             {
+                if (activeWeapon.currentAmmo <= 0)
+                    return;
                 Debug.Log(activeWeapon.GetNumberOfBulletsToShoot());
                 //Spawns projectile from bullet spawnpoint
-                if (!activeWeapon.usesGrenades && !activeWeapon.usesRockets)
+                if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
                 {
                     gwProperties.ResetLocalTransform();
                     gwProperties.bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
@@ -73,13 +77,13 @@ public class SingleFire : MonoBehaviour
                     commonFiringActions.SpawnMuzzleflash();
 
                 }
-                else if (activeWeapon.usesGrenades)
+                else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
                 {
                     var grenade = Instantiate(gwProperties.grenadeLauncherProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
                     grenade.GetComponent<Rocket>().damage = activeWeapon.damage;
                     grenade.GetComponent<Rocket>().playerWhoThrewGrenade = pController.playerProperties;
                 }
-                else if (activeWeapon.usesRockets)
+                else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
                 {
                     var rocket = Instantiate(gwProperties.rocketProjectilePrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
                     rocket.GetComponent<Rocket>().damage = activeWeapon.damage;
@@ -88,6 +92,7 @@ public class SingleFire : MonoBehaviour
             }
 
             activeWeapon.currentAmmo -= 1;
+            pInventory.AmmoManager();
             if (pController.anim != null)
             {
                 pController.anim.Play("Fire", 0, 0f);
@@ -111,14 +116,24 @@ public class SingleFire : MonoBehaviour
             {
                 WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
                 if (activeWeapon)
-                    nextFireInterval = activeWeapon.timeBetweenSingleBullets;
+                {
+                    nextFireInterval = 1 / (activeWeapon.fireRate / 60f);
+                    if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
+                        nextFireInterval = defaultBurstInterval * 5;
+                }
 
                 if (pController.isShooting && !ThisisShooting && !hasButtonDown)
                 {
 
-                    if (activeWeapon.isSingleFire)
+                    if (activeWeapon.firingMode == WeaponProperties.FiringMode.Single)
                     {
                         PV.RPC("ShootSingle", RpcTarget.All, false, false);
+                        hasButtonDown = true;
+                        StartFiringIntervalCooldown();
+                    }
+                    else if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
+                    {
+                        ShootBurst();
                         hasButtonDown = true;
                         StartFiringIntervalCooldown();
                     }
@@ -141,8 +156,20 @@ public class SingleFire : MonoBehaviour
         FireIntervalCooldown();
     }
 
+    void ShootBurst()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            StartCoroutine(ShootBurst_Coroutine(defaultBurstInterval * i));
+        }
+    }
 
+    IEnumerator ShootBurst_Coroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
+        PV.RPC("ShootSingle", RpcTarget.All, false, false);
+    }
 
 
     [PunRPC]

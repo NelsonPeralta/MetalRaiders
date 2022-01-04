@@ -113,6 +113,12 @@ MonoBehaviour:
   - RemoveOneZombie_RPC
   - DestroyAmmoPack
   - DropRandomLoot_RPC
+  - SpawnWatcher_RPC
+  - UpdateRoomSettings_RPC
+  - Begin_RPC
+  - EndWave_RPC
+  - SpawnAi_RPC
+  - StartNewWave_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

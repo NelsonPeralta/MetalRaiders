@@ -8,5 +8,5 @@ public class PlayerScriptsManager : MonoBehaviour
     public AimAssist raycastScript;
 
     [Header("UI Scripts")]
-    public CrosshairScript crosshairScript;
+    public CrosshairManager crosshairScript;
 }
