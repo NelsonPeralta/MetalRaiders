@@ -1020,8 +1020,8 @@ namespace Photon.Pun
             }
             catch (Exception e)
             {
-                Debug.LogError("Failed adding view to known list: " + netView);
-                Debug.LogError(e);
+                Debug.LogWarning("Failed adding view to known list: " + netView);
+                Debug.LogWarning(e);
             }
 
             //Debug.LogError("view being added. " + netView);	// Exit Games internal log
