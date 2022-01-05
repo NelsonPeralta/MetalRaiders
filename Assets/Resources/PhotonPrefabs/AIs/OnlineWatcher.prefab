@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 1673423615665985648}
   - component: {fileID: 1671191101279367303}
   - component: {fileID: 1671191101279367300}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigLArmPalmGizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -627,7 +627,7 @@ GameObject:
   - component: {fileID: 1668569000504158662}
   - component: {fileID: 1671421848046099057}
   - component: {fileID: 1671421848046099062}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigRArm1Gizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -733,7 +733,7 @@ GameObject:
   - component: {fileID: 1668375938335671782}
   - component: {fileID: 1671438883889183783}
   - component: {fileID: 1671438883889183780}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigRArm2Gizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -835,7 +835,7 @@ GameObject:
   - component: {fileID: 1673249440425206128}
   - component: {fileID: 1671447070142442503}
   - component: {fileID: 1671447070142442500}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigRArmPalmGizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6046,7 +6046,7 @@ GameObject:
   - component: {fileID: 1668269622201732722}
   - component: {fileID: 1671581638487200389}
   - component: {fileID: 1671581638487200394}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigLArm2Gizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6211,7 +6211,7 @@ GameObject:
   - component: {fileID: 1668227106734803524}
   - component: {fileID: 1671627643463145329}
   - component: {fileID: 1671627643463145334}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigBottom2Gizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11652,7 +11652,7 @@ GameObject:
   - component: {fileID: 1673098895657579120}
   - component: {fileID: 1671823742918068627}
   - component: {fileID: 1671823742918068624}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigBottom1Gizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12028,6 +12028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91ce31d811055448bb01510c7eb9c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 1613300282229901588}
   hitboxes: {fileID: 1673082706048369688}
   nma: {fileID: 0}
   _defaultHealth: 150
@@ -12042,14 +12043,10 @@ MonoBehaviour:
   objectInLineOfSight: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 8193
-  animator: {fileID: 1613300282229901588}
-  aSource: {fileID: 3278221380015015532}
-  swarmMode: {fileID: 0}
-  pManager: {fileID: 0}
-  projectileDamage: 32
+    m_Bits: 129
+  projectileDamage: 48
   projectileSpeed: 150
-  meteorDamage: 56
+  meteorDamage: 72
   meteorSpeed: 15
   projectileSpawnPoint: {fileID: 6041454011544342895}
   motionTrackerDot: {fileID: 1673082704842895623}
@@ -12155,7 +12152,7 @@ GameObject:
   - component: {fileID: 1668274076784071062}
   - component: {fileID: 1671904467796848903}
   - component: {fileID: 1671904467796848900}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigHeadGizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12508,7 +12505,7 @@ GameObject:
   - component: {fileID: 1668538927878831350}
   - component: {fileID: 1672048450922610573}
   - component: {fileID: 1672048450922610578}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigBottom3Gizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12611,7 +12608,7 @@ GameObject:
   - component: {fileID: 1668465769046736704}
   - component: {fileID: 1672082441656982169}
   - component: {fileID: 1672082441656982174}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: RigLArm1Gizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12683,13 +12680,13 @@ GameObject:
   - component: {fileID: 1673082704842895620}
   - component: {fileID: 1673082704842895626}
   - component: {fileID: 1673082704842895621}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: Motion Tracker Dot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1673082704842895620
 Transform:
   m_ObjectHideFlags: 0
@@ -12937,7 +12934,7 @@ GameObject:
   - component: {fileID: 8790545156260112745}
   - component: {fileID: 3475667589618604866}
   - component: {fileID: 1092701628866678714}
-  m_Layer: 6
+  m_Layer: 17
   m_Name: Long Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13102,7 +13099,7 @@ GameObject:
   - component: {fileID: 6041454012333686041}
   - component: {fileID: 6041454012333686047}
   - component: {fileID: 2883373899656101094}
-  m_Layer: 6
+  m_Layer: 17
   m_Name: Close Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13161,7 +13158,7 @@ GameObject:
   - component: {fileID: 6041454012577507067}
   - component: {fileID: 6041454012577507065}
   - component: {fileID: 4421428383704479029}
-  m_Layer: 6
+  m_Layer: 17
   m_Name: Medium Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18050,7 +18047,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: be228499b18f1344caf9d8104b8bcd99, type: 2}
-  - {fileID: 2100000, guid: be228499b18f1344caf9d8104b8bcd99, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22936,7 +22932,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10c02046d37107f44b69c4f1a46b785f, type: 2}
-  - {fileID: 2100000, guid: 46c46885d5e9e194ba96e80d167e7a05, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22995,19 +22990,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1595313205893126, guid: 618a53c1e230d58438e92ac811489c49, type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1722531117785062, guid: 618a53c1e230d58438e92ac811489c49, type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1754489842926212, guid: 618a53c1e230d58438e92ac811489c49, type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1856289625473312, guid: 618a53c1e230d58438e92ac811489c49, type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 4626192683681860, guid: 618a53c1e230d58438e92ac811489c49, type: 3}
       propertyPath: m_RootOrder

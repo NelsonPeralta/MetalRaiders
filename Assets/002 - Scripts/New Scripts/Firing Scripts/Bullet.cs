@@ -113,7 +113,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         Despawn();
     }
 
-    List<int> bulletLayers = new List<int> { 0, 13 };
+    List<int> bulletLayers = new List<int> { 0, 7, 12 };
     void Travel()
     {
         prePos = transform.position; // Previous Position

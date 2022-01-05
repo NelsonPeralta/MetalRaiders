@@ -16,6 +16,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     // private variables
     PlayerRange _playerRange;
+    public Animator animator;
     PhotonView PV;
     Transform _target;
     int _health;
@@ -141,10 +142,12 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             {
                 nma.speed = 0;
                 nma.velocity = Vector3.zero;
+                animator.SetBool("Run", false);
             }
             else
             {
                 nma.speed = speed;
+                animator.SetBool("Run", true);
             }
         }
     }
@@ -201,6 +204,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void Awake()
     {
+        animator = GetComponent<Animator>();
         targetOutOfSightDefaultCountdown = defaultNextActionCooldown * 2.5f;
         Prepare();
     }
@@ -214,12 +218,14 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         objectInLineOfSight = null;
         targetInLineOfSight = false;
         targetOutOfSight = false;
+        playerRange = PlayerRange.Out;
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
             hitbox.gameObject.SetActive(true);
 
         foreach (AiRangeTrigger arc in rangeColliders)
         {
+            Debug.Log($"{name} range trigger delegeta");
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
 
@@ -352,10 +358,16 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         }
     }
 
-    public void InvokeOnActionChanged()
+    protected void InvokeOnActionChanged()
     {
         Debug.Log("On Action Changed");
         OnActionChange?.Invoke(this);
+    }
+
+    protected void InvokeOnRangeChanged()
+    {
+        if(canDoAction)
+            OnPlayerRangeChange?.Invoke(this);
     }
     void OnActionChanged_Delegate(AiAbstractClass aiAbstractClass)
     {

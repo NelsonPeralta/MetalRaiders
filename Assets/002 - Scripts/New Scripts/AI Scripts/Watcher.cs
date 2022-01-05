@@ -6,11 +6,6 @@ using Photon.Pun;
 
 public class Watcher : AiAbstractClass
 {
-    public Animator animator;
-    public AudioSource aSource;
-    public SwarmMode swarmMode;
-    public MyPlayerManager pManager;
-
     [Header("Combat")]
     public int projectileDamage;
     public int projectileSpeed;
@@ -53,6 +48,11 @@ public class Watcher : AiAbstractClass
     {
         shieldModel.SetActive(false);
     }
+
+    public override void OnEnable()
+    {
+        watcherAction  = WatcherActions.Seek;
+    }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
         WatcherActions previousAction = watcherAction;
@@ -60,9 +60,9 @@ public class Watcher : AiAbstractClass
         if (targetInLineOfSight)
         {
             if (aiAbstractClass.playerRange == PlayerRange.Medium)
-                previousAction = WatcherActions.Fireball;
-            else if (aiAbstractClass.playerRange == PlayerRange.Long)
                 previousAction = WatcherActions.Meteor;
+            else if (aiAbstractClass.playerRange == PlayerRange.Long)
+                previousAction = WatcherActions.Fireball;
             else if (aiAbstractClass.playerRange == PlayerRange.Out)
                 previousAction = WatcherActions.Seek;
         }
@@ -147,7 +147,6 @@ public class Watcher : AiAbstractClass
             watcherAction = WatcherActions.Idle;
             animator.SetBool("Idle", true);
         }
-        Debug.Log($"Do Watcher action: {watcherAction}. Target: {target}");
     }
 
     public override void ChildUpdate()

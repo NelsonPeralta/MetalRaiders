@@ -14,15 +14,18 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     // public variables
     public static SwarmManager instance;
+    public enum AiType { Watcher, Knight }
 
     public int currentWave;
     public int nextWaveDelay;
 
     [Header("AI Prefabs")]
     public Transform watcherPrefab;
+    public Transform knightPrefab;
 
     [Header("AI Pools")]
     public Watcher[] watcherPool;
+    public Knight[] knightPool;
 
     // private variables
     PhotonView PV;
@@ -31,12 +34,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     int watchersLeft;
+    int knightsLeft;
 
     int maxWatchersOnMap = 2;
 
 
     // constants
     const int WATCHER_SPAWN_DELAY = 5;
+    const int KNIGHT_SPAWN_DELAY = 6;
 
     private void Awake()
     {
@@ -91,7 +96,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         foreach (Watcher w in watcherPool)
             w.gameObject.SetActive(false);
 
-
+        knightPool = FindObjectsOfType<Knight>();
+        foreach (Knight w in knightPool)
+            w.gameObject.SetActive(false);
     }
     void Begin()
     {
@@ -135,7 +142,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             watchersLeft = watcherPool.Length;
         if (editMode)
             watchersLeft = 1;
-        Debug.Log($"Watchers Left: {watchersLeft}");
+
+        knightsLeft = FindObjectsOfType<PlayerProperties>().Length * 1 + (currentWave * 2);
+        if (knightsLeft > knightPool.Length)
+            knightsLeft = knightPool.Length;
+        if (editMode)
+            knightsLeft = 1;
+
+
+        Debug.Log($"Watchers Left: {watchersLeft}. Knights left: {knightsLeft}");
     }
 
     void StartNewWave()
@@ -164,25 +179,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
             return;
         Debug.Log("Spawning Ais");
-        SpawnWatcher();
+        SpawnAi(AiType.Watcher);
+        SpawnAi(AiType.Knight);
     }
-
-    void SpawnWatcher()
+    void SpawnAi(AiType aiType)
     {
+        Debug.Log($"Spawning type of ai: {aiType}");
         if (!PhotonNetwork.IsMasterClient)
             return;
-
-        //if(FindObjectsOfType<Watcher>().Length >= maxWatchersOnMap)
-        //{
-        //    StartCoroutine(SpawnWatcher_Coroutine());
-        //    return;
-        //}
-
-        if (watchersLeft <= 0)
-        {
-            OnAiLeftZero?.Invoke(this);
-            return;
-        }
 
         int targetPhotonId = GetRandomPlayerPhotonId();
 
@@ -190,54 +194,84 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         foreach (SpawnPoint sp in FindObjectsOfType<SpawnPoint>())
             if (sp.spawnPointType == SpawnPoint.SpawnPointType.Computer)
                 aiSpawnPoints.Add(sp);
-
         int aiPhotonId = -1;
-
-        foreach (Watcher w in watcherPool)
-            if (!w.gameObject.activeSelf)
-                aiPhotonId = w.GetComponent<PhotonView>().ViewID;
-
         Transform spawnPoint = aiSpawnPoints[Random.Range(0, aiSpawnPoints.Count)].transform;
 
-        PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation);
+        if (aiType == AiType.Watcher)
+        {
+            if (watchersLeft <= 0)
+            {
+                OnAiLeftZero?.Invoke(this);
+                return;
+            }
+
+            foreach (Watcher w in watcherPool)
+                if (!w.gameObject.activeSelf)
+                    aiPhotonId = w.GetComponent<PhotonView>().ViewID;
+
+            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Watcher.ToString());
+        }
+        else if (aiType == AiType.Knight)
+        {
+            if (knightsLeft <= 0)
+            {
+                OnAiLeftZero?.Invoke(this);
+                return;
+            }
+
+            foreach (Knight w in knightPool)
+                if (!w.gameObject.activeSelf)
+                    aiPhotonId = w.GetComponent<PhotonView>().ViewID;
+
+            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Knight.ToString());
+        }
     }
 
+    // https://docs.microsoft.com/en-us/dotnet/api/system.func-2?view=net-6.0
+    // https://docs.microsoft.com/en-us/dotnet/api/system.action-1?view=net-6.0
     [PunRPC]
-    void SpawnAi_RPC(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
+    void SpawnAi_RPC(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType)
     {
         Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
-        StartCoroutine(SpawnWatcher_Coroutine(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation));
+        StartCoroutine(SpawnWatcher_Coroutine(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation, aiType));
     }
-    IEnumerator SpawnWatcher_Coroutine(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
+    IEnumerator SpawnWatcher_Coroutine(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType)
     {
-        yield return new WaitForSeconds(WATCHER_SPAWN_DELAY);
+        AiType aiTypeEnum = (AiType)System.Enum.Parse(typeof(AiType), aiType);
+        int delay = 10;
 
-        var newWatcher = PhotonView.Find(aiPhotonId).gameObject;
-        newWatcher.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+        if (aiTypeEnum == AiType.Watcher)
+        {
+            delay = WATCHER_SPAWN_DELAY;
+        }
+        else if (aiTypeEnum == AiType.Knight)
+            delay = KNIGHT_SPAWN_DELAY;
         
-        watchersLeft--;
+        yield return new WaitForSeconds(delay);
 
-        SpawnWatcher();
+        var newAiObj = PhotonView.Find(aiPhotonId).gameObject;
+        newAiObj.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+
+        if (aiTypeEnum == AiType.Watcher)
+            watchersLeft--;
+        else if (aiTypeEnum == AiType.Knight)
+            knightsLeft--;
+        SpawnAi(aiTypeEnum);
     }
-
-    IEnumerator SpawnWatcher_Coroutine()
-    {
-        yield return new WaitForSeconds(WATCHER_SPAWN_DELAY);
-        SpawnWatcher();
-    }
-
     void AiLeftHitZero(SwarmManager swarmManager)
     {
         int watchersAlive = 0;
+        int knightsAlive = 0;
         foreach (Watcher w in watcherPool)
-        {
             if (w.gameObject.activeSelf && !w.isDead)
-            {
                 watchersAlive++;
 
-            }
-        }
-        if (watchersLeft <= 0 && watchersAlive <= 0)
+        foreach (Knight w in knightPool)
+            if (w.gameObject.activeSelf && !w.isDead)
+                knightsAlive++;
+
+        Debug.Log($"AI CHECK. Watchers left: {watchersLeft}. Watchers alive: {watchersAlive}. Knights left: {knightsLeft}. Knights alive: {knightsAlive}");
+        if (watchersLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0)
             EndWave();
     }
 

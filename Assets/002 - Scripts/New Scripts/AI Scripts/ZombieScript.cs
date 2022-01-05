@@ -8,7 +8,6 @@ using Photon.Pun;
 public class ZombieScript : AiAbstractClass
 {
     public OnlineSwarmManager onlineSwarmManager;
-    public Animator anim;
     public SwarmMode swarmMode;
     public AIMeleeTrigger meleeTrigger;
 
