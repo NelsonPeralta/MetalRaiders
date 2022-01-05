@@ -373,7 +373,6 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     protected void InvokeOnActionChanged()
     {
-        Debug.Log("On Action Changed");
         OnActionChange?.Invoke(this);
     }
 
@@ -402,6 +401,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     void GetNewTarget()
     {
+        if (gameObject.activeSelf)
+            return;
         StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
     }
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()

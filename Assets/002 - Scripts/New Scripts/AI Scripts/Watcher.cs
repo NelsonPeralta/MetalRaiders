@@ -38,7 +38,6 @@ public class Watcher : AiAbstractClass
             if(_watcherAction != value)
             {
                 _watcherAction = value;
-                Debug.Log($"Watcher action change: {_watcherAction}");
                 InvokeOnActionChanged();
             }
         }

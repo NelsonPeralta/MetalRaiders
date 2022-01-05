@@ -22,7 +22,6 @@ public class Hellhound : AiAbstractClass
             if (_hellhoundAction != value)
             {
                 _hellhoundAction = value;
-                Debug.Log($"{name} action change: {_hellhoundAction}");
                 InvokeOnActionChanged();
             }
         }

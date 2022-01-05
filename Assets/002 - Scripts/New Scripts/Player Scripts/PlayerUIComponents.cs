@@ -61,6 +61,9 @@ public class PlayerUIComponents : MonoBehaviour
         headshotIndicator.SetActive(false);
 
         OnSwarmKillsChanged(onlinePlayerSwarmScript);
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            EnableSwarmUIComponents();
     }
 
     void OnSwarmKillsChanged(OnlinePlayerSwarmScript onlinePlayerSwarmScript)
@@ -101,4 +104,11 @@ public class PlayerUIComponents : MonoBehaviour
         headshotIndicator.SetActive(false);
     }
 
+
+    void EnableSwarmUIComponents()
+    {
+        multiplayerPoints.SetActive(false);
+        swarmPoints.SetActive(true);
+        swarmPointsText.text = "0";
+    }
 }
