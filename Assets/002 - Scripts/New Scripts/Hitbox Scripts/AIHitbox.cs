@@ -44,8 +44,8 @@ public class AIHitbox : MonoBehaviour
 
         ///////////////////////////////////////////// Bosses
 
-        if (hellhound != null)
-            UpdateAIHealthOnHitboxes(hellhound.Health);
+        //if (hellhound != null)
+        //    UpdateAIHealthOnHitboxes(hellhound.Health);
 
         if (wererat != null)
             UpdateAIHealthOnHitboxes(wererat.Health);

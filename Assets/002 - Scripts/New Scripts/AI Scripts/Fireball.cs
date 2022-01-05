@@ -68,7 +68,7 @@ public class Fireball : MonoBehaviour
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
-            Debug.Log($"{name} explosion on {hit.transform.name}");
+            //Debug.Log($"{name} explosion on {hit.transform.name}");
             float hitDistance = Vector3.Distance(hit.transform.position, transform.position);
             float calculatedDamage = damage * (1 - (hitDistance / radius));
 

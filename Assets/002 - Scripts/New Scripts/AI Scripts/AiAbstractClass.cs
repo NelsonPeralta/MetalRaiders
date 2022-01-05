@@ -16,6 +16,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     // private variables
     PlayerRange _playerRange;
+    PlayerRange _previousPlayerRange;
     public Animator animator;
     PhotonView PV;
     Transform _target;
@@ -30,6 +31,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     // public variables
     public Hitboxes hitboxes;
     public NavMeshAgent nma;
+    public Transform projectileSpawnPoint;
+    public GameObject motionTrackerDot;
 
     [Header("Properties")]
     [SerializeField]
@@ -63,6 +66,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         {
             if (_playerRange != value)
             {
+                _previousPlayerRange = playerRange;
                 _playerRange = value;
                 Debug.Log($"Player range change: {playerRange}");
                 OnPlayerRangeChange?.Invoke(this);
@@ -70,6 +74,14 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         }
     }
 
+    public PlayerRange previousPlayerRange
+    {
+        get { return _previousPlayerRange; }
+        set
+        {
+            _previousPlayerRange = value;
+        }
+    }
     public Transform target
     {
         get { return _target; }
@@ -215,17 +227,18 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         nma = GetComponent<NavMeshAgent>();
         health = defaultHealth;
         nma.speed = speed;
+        seek = true;
         objectInLineOfSight = null;
         targetInLineOfSight = false;
         targetOutOfSight = false;
         playerRange = PlayerRange.Out;
+        previousPlayerRange = PlayerRange.Out;
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
             hitbox.gameObject.SetActive(true);
 
         foreach (AiRangeTrigger arc in rangeColliders)
         {
-            Debug.Log($"{name} range trigger delegeta");
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
 
@@ -366,7 +379,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     protected void InvokeOnRangeChanged()
     {
-        if(canDoAction)
+        if (canDoAction)
             OnPlayerRangeChange?.Invoke(this);
     }
     void OnActionChanged_Delegate(AiAbstractClass aiAbstractClass)

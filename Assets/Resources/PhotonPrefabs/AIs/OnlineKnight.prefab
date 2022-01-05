@@ -5037,7 +5037,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5115658607557624769
 MonoBehaviour:
@@ -14944,7 +14944,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 6
+  m_Radius: 12
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2238946081727377362
 MonoBehaviour:
@@ -15003,7 +15003,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 3
+  m_Radius: 8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &266174738417384940
 MonoBehaviour:
@@ -23830,6 +23830,8 @@ MonoBehaviour:
   animator: {fileID: 6258186488477401711}
   hitboxes: {fileID: 6555730529516905528}
   nma: {fileID: 6258186488468177425}
+  projectileSpawnPoint: {fileID: 696158255811907977}
+  motionTrackerDot: {fileID: 6555730529384900433}
   _defaultHealth: 250
   speed: 8
   rangeColliders:
@@ -23846,9 +23848,7 @@ MonoBehaviour:
   projectileDamage: 36
   projectileSpeed: 100
   grenadeDamage: 64
-  grenadeRadius: 5
-  projectileSpawnPoint: {fileID: 696158255811907977}
-  motionTrackerDot: {fileID: 6555730529384900433}
+  grenadeRadius: 7
   projectile: {fileID: 5091089392186072086, guid: 5ba8aa092f5c7c54c94ba93b89b0e4ea,
     type: 3}
   grenade: {fileID: 6543794610344578356, guid: 89159a4a59767304ba9a1d35dd162fdc, type: 3}

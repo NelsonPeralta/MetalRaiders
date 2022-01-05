@@ -14,7 +14,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     // public variables
     public static SwarmManager instance;
-    public enum AiType { Watcher, Knight }
+    public enum AiType { Watcher, Knight, Hellhound }
 
     public int currentWave;
     public int nextWaveDelay;
@@ -22,10 +22,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     [Header("AI Prefabs")]
     public Transform watcherPrefab;
     public Transform knightPrefab;
+    public Transform hellhoundPrefab;
 
     [Header("AI Pools")]
     public Watcher[] watcherPool;
     public Knight[] knightPool;
+    public Hellhound[] hellhoundPool;
 
     // private variables
     PhotonView PV;
@@ -35,13 +37,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     int watchersLeft;
     int knightsLeft;
+    int hellhoundsLeft;
 
     int maxWatchersOnMap = 2;
 
 
     // constants
-    const int WATCHER_SPAWN_DELAY = 5;
-    const int KNIGHT_SPAWN_DELAY = 6;
+    const int WATCHER_SPAWN_DELAY = 6;
+    const int KNIGHT_SPAWN_DELAY = 8;
+    const int HELLHOUND_SPAWN_DELAY = 4;
 
     private void Awake()
     {
@@ -99,6 +103,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         knightPool = FindObjectsOfType<Knight>();
         foreach (Knight w in knightPool)
             w.gameObject.SetActive(false);
+
+        hellhoundPool = FindObjectsOfType<Hellhound>();
+        foreach (Hellhound w in hellhoundPool)
+            w.gameObject.SetActive(false);
     }
     void Begin()
     {
@@ -137,20 +145,27 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void CalculateNumberOfAIsForNextWave()
     {
-        watchersLeft = FindObjectsOfType<PlayerProperties>().Length * 2 + (currentWave * 2);
+        watchersLeft = FindObjectsOfType<PlayerProperties>().Length * 2 + (currentWave * 3);
         if (watchersLeft > watcherPool.Length)
             watchersLeft = watcherPool.Length;
-        if (editMode)
-            watchersLeft = 1;
 
         knightsLeft = FindObjectsOfType<PlayerProperties>().Length * 1 + (currentWave * 2);
         if (knightsLeft > knightPool.Length)
             knightsLeft = knightPool.Length;
+
+        hellhoundsLeft = FindObjectsOfType<PlayerProperties>().Length * 3 + (currentWave * 4);
+        if (hellhoundsLeft > hellhoundPool.Length)
+            hellhoundsLeft = hellhoundPool.Length;
+
         if (editMode)
+        {
             knightsLeft = 1;
+            hellhoundsLeft = 1;
+            watchersLeft = 1;
+        }
 
 
-        Debug.Log($"Watchers Left: {watchersLeft}. Knights left: {knightsLeft}");
+        Debug.Log($"Watchers Left: {watchersLeft}. Knights left: {knightsLeft}. Hellhounds left: {hellhoundsLeft}");
     }
 
     void StartNewWave()
@@ -181,6 +196,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         Debug.Log("Spawning Ais");
         SpawnAi(AiType.Watcher);
         SpawnAi(AiType.Knight);
+        SpawnAi(AiType.Hellhound);
     }
     void SpawnAi(AiType aiType)
     {
@@ -225,6 +241,20 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Knight.ToString());
         }
+        else if (aiType == AiType.Hellhound)
+        {
+            if (hellhoundsLeft <= 0)
+            {
+                OnAiLeftZero?.Invoke(this);
+                return;
+            }
+
+            foreach (Hellhound w in hellhoundPool)
+                if (!w.gameObject.activeSelf)
+                    aiPhotonId = w.GetComponent<PhotonView>().ViewID;
+
+            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Hellhound.ToString());
+        }
     }
 
     // https://docs.microsoft.com/en-us/dotnet/api/system.func-2?view=net-6.0
@@ -241,12 +271,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int delay = 10;
 
         if (aiTypeEnum == AiType.Watcher)
-        {
             delay = WATCHER_SPAWN_DELAY;
-        }
         else if (aiTypeEnum == AiType.Knight)
             delay = KNIGHT_SPAWN_DELAY;
-        
+        else if (aiTypeEnum == AiType.Hellhound)
+            delay = HELLHOUND_SPAWN_DELAY;
+
         yield return new WaitForSeconds(delay);
 
         var newAiObj = PhotonView.Find(aiPhotonId).gameObject;
@@ -256,12 +286,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             watchersLeft--;
         else if (aiTypeEnum == AiType.Knight)
             knightsLeft--;
+        else if (aiTypeEnum == AiType.Hellhound)
+            hellhoundsLeft--;
         SpawnAi(aiTypeEnum);
     }
     void AiLeftHitZero(SwarmManager swarmManager)
     {
         int watchersAlive = 0;
         int knightsAlive = 0;
+        int hellhoundsAlive = 0;
+
         foreach (Watcher w in watcherPool)
             if (w.gameObject.activeSelf && !w.isDead)
                 watchersAlive++;
@@ -270,8 +304,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (w.gameObject.activeSelf && !w.isDead)
                 knightsAlive++;
 
-        Debug.Log($"AI CHECK. Watchers left: {watchersLeft}. Watchers alive: {watchersAlive}. Knights left: {knightsLeft}. Knights alive: {knightsAlive}");
-        if (watchersLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0)
+        foreach (Hellhound w in hellhoundPool)
+            if (w.gameObject.activeSelf && !w.isDead)
+                hellhoundsAlive++;
+
+        Debug.Log($"AI CHECK. Watchers left: {watchersLeft}. Watchers alive: {watchersAlive}. Knights left: {knightsLeft}. Knights alive: {knightsAlive}. Hellhounds left: {hellhoundsAlive}. Hellhounds left: {hellhoundsLeft}");
+
+        if (watchersLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0)
             EndWave();
     }
 

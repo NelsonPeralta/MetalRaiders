@@ -34,7 +34,7 @@ public class AIMeleeTrigger : MonoBehaviour
 
             if (hellhound != null)
             {
-                hellhound.IsInMeleeRange = true;
+                //hellhound.IsInMeleeRange = true;
             }
 
             if (troll != null)
@@ -72,7 +72,7 @@ public class AIMeleeTrigger : MonoBehaviour
 
         if (hellhound != null)
         {
-            hellhound.IsInMeleeRange = false;
+            //hellhound.IsInMeleeRange = false;
         }
 
         if (troll != null)

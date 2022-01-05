@@ -8,8 +8,6 @@ public class Knight : AiAbstractClass
     public int projectileSpeed;
     public int grenadeDamage;
     public int grenadeRadius;
-    public Transform projectileSpawnPoint;
-    public GameObject motionTrackerDot;
 
     [Header("Prefabs")]
     public Fireball projectile;
@@ -42,21 +40,21 @@ public class Knight : AiAbstractClass
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
+        PlayerRange newPlayerRange = aiAbstractClass.playerRange;
+        PlayerRange previousPlayerRange = aiAbstractClass.previousPlayerRange;
         KnightActions previousAction = knightAction;
         int ran = Random.Range(0, 3);
 
         if (targetInLineOfSight)
         {
-            if (aiAbstractClass.playerRange == PlayerRange.Long)
+            if (newPlayerRange == PlayerRange.Medium && (previousPlayerRange == PlayerRange.Close || previousPlayerRange == PlayerRange.Long))
             {
                 if (ran == 0)
                     previousAction = KnightActions.Grenade;
                 else
                     previousAction = KnightActions.Fireball;
             }
-            else if (aiAbstractClass.playerRange == PlayerRange.Medium)
-                previousAction = KnightActions.Fireball;
-            else if (aiAbstractClass.playerRange == PlayerRange.Out)
+            else if (newPlayerRange == PlayerRange.Out)
                 previousAction = KnightActions.Seek;
         }
         else
@@ -64,9 +62,9 @@ public class Knight : AiAbstractClass
             previousAction = KnightActions.Seek;
         }
 
-        if (aiAbstractClass.playerRange == PlayerRange.Close)
+        if (newPlayerRange == PlayerRange.Close)
             previousAction = KnightActions.Defend;
-        else if (aiAbstractClass.playerRange == PlayerRange.Out)
+        else if (newPlayerRange == PlayerRange.Out)
             previousAction = KnightActions.Seek;
 
         knightAction = previousAction;
@@ -77,7 +75,7 @@ public class Knight : AiAbstractClass
         int ran = Random.Range(0, 3);
         KnightActions previousKnightAction = knightAction;
 
-        if (playerRange == PlayerRange.Long)
+        if (playerRange == PlayerRange.Medium || playerRange == PlayerRange.Long)
         {
             if (ran == 0)
                 previousKnightAction = KnightActions.Grenade;
@@ -137,6 +135,8 @@ public class Knight : AiAbstractClass
 
                     potionBomb.GetComponent<Rigidbody>().AddForce(projectileSpawnPoint.transform.forward * 300);
 
+                    potionBomb.GetComponent<AIGrenade>().radius = grenadeRadius;
+                    potionBomb.GetComponent<AIGrenade>().damage = grenadeDamage;
                     potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
                     potionBomb.GetComponent<AIGrenade>().playerRewiredID = 99;
                     potionBomb.GetComponent<AIGrenade>().team = hitboxes.AIHitboxes[0].team;

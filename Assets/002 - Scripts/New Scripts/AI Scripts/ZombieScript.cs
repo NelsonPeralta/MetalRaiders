@@ -30,7 +30,6 @@ public class ZombieScript : AiAbstractClass
     public bool targetSwitchReady;
     public bool targetSwitchStarted;
 
-    public GameObject motionTrackerDot;
 
     public float defaultAttackCooldown;
     public float meleeAttackCooldown;

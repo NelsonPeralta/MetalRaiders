@@ -421,7 +421,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (Health <= 0 || isDead || isRespawning)
             return;
-        Debug.Log("9pasjdij");
 
         PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
@@ -460,7 +459,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
         shieldSlider.value = newShield;
         healthSlider.value = newHealth;
-        Debug.Log($"Health: {Health}. New Shield: {newShield}. New Health: {newHealth}");
+        //Debug.Log($"Health: {Health}. New Shield: {newShield}. New Health: {newHealth}");
 
 
         triggerHealthRecharge = true;

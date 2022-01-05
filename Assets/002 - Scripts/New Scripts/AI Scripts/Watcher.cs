@@ -11,8 +11,7 @@ public class Watcher : AiAbstractClass
     public int projectileSpeed;
     public int meteorDamage;
     public int meteorSpeed;
-    public GameObject projectileSpawnPoint;
-    public GameObject motionTrackerDot;
+    public int meteorRadius;
 
     [Header("Prefabs")]
     public GameObject projectile;
@@ -55,15 +54,21 @@ public class Watcher : AiAbstractClass
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
+        PlayerRange newPlayerRange = aiAbstractClass.playerRange;
+        PlayerRange previousPlayerRange = aiAbstractClass.previousPlayerRange;
         WatcherActions previousAction = watcherAction;
+        int ran = Random.Range(0, 3);
 
         if (targetInLineOfSight)
         {
-            if (aiAbstractClass.playerRange == PlayerRange.Medium)
-                previousAction = WatcherActions.Meteor;
-            else if (aiAbstractClass.playerRange == PlayerRange.Long)
-                previousAction = WatcherActions.Fireball;
-            else if (aiAbstractClass.playerRange == PlayerRange.Out)
+            if (newPlayerRange == PlayerRange.Medium && (previousPlayerRange == PlayerRange.Close || previousPlayerRange == PlayerRange.Long))
+            {
+                if (ran == 0)
+                    previousAction = WatcherActions.Meteor;
+                else
+                    previousAction = WatcherActions.Fireball;
+            }
+            else if (newPlayerRange == PlayerRange.Out)
                 previousAction = WatcherActions.Seek;
         }
         else
@@ -71,9 +76,9 @@ public class Watcher : AiAbstractClass
             previousAction = WatcherActions.Seek;
         }
 
-        if (aiAbstractClass.playerRange == PlayerRange.Close)
+        if (newPlayerRange == PlayerRange.Close)
             previousAction = WatcherActions.Defend;
-        else if (aiAbstractClass.playerRange == PlayerRange.Out)
+        else if (newPlayerRange == PlayerRange.Out)
             previousAction = WatcherActions.Seek;
 
         watcherAction = previousAction;
@@ -81,22 +86,33 @@ public class Watcher : AiAbstractClass
 
     public override void DoAction()
     {
+        int ran = Random.Range(0, 3);
+        WatcherActions previousKnightAction = watcherAction;
+
+        if (playerRange == PlayerRange.Medium || playerRange == PlayerRange.Long)
+        {
+            if (ran == 0)
+                previousKnightAction = WatcherActions.Meteor;
+            else
+                previousKnightAction = WatcherActions.Fireball;
+        }
+
         if (!isDead && target)
         {
 
-            if (watcherAction != WatcherActions.Defend && watcherAction != WatcherActions.Idle)
+            if (previousKnightAction != WatcherActions.Defend && previousKnightAction != WatcherActions.Idle)
             {
                 animator.SetBool("Defend", false);
                 shieldModel.SetActive(false);
             }
 
-            if (watcherAction != WatcherActions.Seek)
+            if (previousKnightAction != WatcherActions.Seek)
             {
                 seek = false;
             }
 
 
-            if (watcherAction == WatcherActions.Defend)
+            if (previousKnightAction == WatcherActions.Defend)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Defend"))
                 {
@@ -104,7 +120,7 @@ public class Watcher : AiAbstractClass
                     shieldModel.SetActive(true);
                 }
             }
-            else if (watcherAction == WatcherActions.Fireball)
+            else if (previousKnightAction == WatcherActions.Fireball)
             {
                 if (canDoAction)
                 {
@@ -120,7 +136,7 @@ public class Watcher : AiAbstractClass
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
-            else if (watcherAction == WatcherActions.Meteor)
+            else if (previousKnightAction == WatcherActions.Meteor)
             {
                 if (canDoAction)
                 {
@@ -128,7 +144,7 @@ public class Watcher : AiAbstractClass
 
                     var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
                     var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
-                    meteo.GetComponent<Fireball>().radius = 5;
+                    meteo.GetComponent<Fireball>().radius = meteorRadius;
                     meteo.GetComponent<Fireball>().damage = meteorDamage;
                     meteo.GetComponent<Fireball>().force = meteorSpeed;
                     meteo.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
@@ -138,7 +154,7 @@ public class Watcher : AiAbstractClass
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
-            else if (watcherAction == WatcherActions.Seek)
+            else if (previousKnightAction == WatcherActions.Seek)
             {
                 seek = true;
             }
