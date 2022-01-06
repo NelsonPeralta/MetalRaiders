@@ -200,7 +200,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     void SpawnAi(AiType aiType)
     {
-        Debug.Log($"Spawning type of ai: {aiType}");
+        //Debug.Log($"Spawning type of ai: {aiType}");
         if (!PhotonNetwork.IsMasterClient)
             return;
 

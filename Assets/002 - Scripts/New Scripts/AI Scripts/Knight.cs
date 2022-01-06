@@ -28,7 +28,7 @@ public class Knight : AiAbstractClass
             if (_knightAction != value)
             {
                 _knightAction = value;
-                Debug.Log($"{name} action change: {_knightAction}");
+                //Debug.Log($"{name} action change: {_knightAction}");
                 InvokeOnActionChanged();
             }
         }

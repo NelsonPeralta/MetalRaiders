@@ -68,7 +68,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             {
                 _previousPlayerRange = playerRange;
                 _playerRange = value;
-                Debug.Log($"Player range change: {playerRange}");
+                //Debug.Log($"Player range change: {playerRange}");
                 OnPlayerRangeChange?.Invoke(this);
             }
         }
@@ -107,7 +107,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
+                    //Debug.Log(e);
                     _target = null;
                 }
             }
@@ -397,7 +397,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnTargetDeath_Delegate(PlayerProperties playerProperties)
     {
-        Debug.Log("On target death delegate");
+        //Debug.Log("On target death delegate");
         target = null;
     }
 

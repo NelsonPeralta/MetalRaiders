@@ -33,7 +33,6 @@ public class AIGrenade : MonoBehaviour
     {
         if (collision.gameObject.layer != 22 && !hasHitObject) // Non-Interactable Layer
         {
-            Debug.Log($"AI Grenade collision {collision.gameObject.name}");
             StartCoroutine(ExplosionCountdown());
         }
     }

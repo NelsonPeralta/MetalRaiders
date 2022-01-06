@@ -74,7 +74,7 @@ public class Hellhound : AiAbstractClass
             else
                 seek = true;
 
-            Debug.Log($"Hellhound do action: {hellhoundAction}");
+            //Debug.Log($"Hellhound do action: {hellhoundAction}");
         }
         else if (!isDead && !target)
         {

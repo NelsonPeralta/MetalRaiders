@@ -166,7 +166,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
-            Debug.Log($"Bullet final hit: {finalHitObject.name}");
+            //Debug.Log($"Bullet final hit: {finalHitObject.name}");
             if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead)
             {
                 AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
