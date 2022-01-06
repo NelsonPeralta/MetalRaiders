@@ -8,6 +8,7 @@ public class ThirdPersonScript : MonoBehaviour {
     public Movement movement;
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
     public int playerRewiredID;
+    public List<SkinnedMeshRenderer> meshes = new List<SkinnedMeshRenderer>();
 
 
 	private void Update () 
@@ -64,4 +65,15 @@ public class ThirdPersonScript : MonoBehaviour {
 
         }*/
 	}
+
+    public void EnableSkinnedMeshes()
+    {
+        foreach (SkinnedMeshRenderer smr in meshes)
+            smr.enabled = true;
+    }
+    public void DisableSkinnedMeshes()
+    {
+        foreach (SkinnedMeshRenderer smr in meshes)
+            smr.enabled = false;
+    }
 }

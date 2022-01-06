@@ -425,7 +425,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     protected void ChangeAction(string actionString)
     {
-        if (!PV.IsMine)
+        if (!target || !target.GetComponent<PlayerProperties>().PV.IsMine)
             return;
 
         PV.RPC("ChangeAction_RPC", RpcTarget.All, actionString);

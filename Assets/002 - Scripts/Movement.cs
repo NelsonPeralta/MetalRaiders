@@ -60,7 +60,25 @@ public class Movement : MonoBehaviour
     float defaultSlopeLimit;
     float defaultStepOffset;
 
-    // Start is called before the first frame update
+    [Header("Third Person Models")]
+    public ThirdPersonScript noArmorThirdPersonScript;
+    public ThirdPersonScript armorThirdPersonScript;
+
+    private void Awake()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
+            tPersonScripts = armorThirdPersonScript;
+            armorThirdPersonScript.EnableSkinnedMeshes();
+            noArmorThirdPersonScript.DisableSkinnedMeshes();
+        }
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            tPersonScripts = noArmorThirdPersonScript;
+            armorThirdPersonScript.DisableSkinnedMeshes();
+            noArmorThirdPersonScript.EnableSkinnedMeshes();
+        }
+    }
     void Start()
     {
         gravity = defaultGravity;

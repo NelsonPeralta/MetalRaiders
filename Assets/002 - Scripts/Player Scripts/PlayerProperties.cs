@@ -152,6 +152,23 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         readHealthDebuggerText.text = networkedHealth.ToString();
     }
 
+    private void Awake()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
+            motionTrackerGO.SetActive(true);
+        }else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            playerLivesIcon.SetActive(true);
+            playerLivesText.gameObject.SetActive(true);
+            playerLivesText.text = SwarmManager.instance.livesLeft.ToString();
+            maxShield = 0;
+            Shield = 0;
+            needsHealthPack = true;
+            shieldGO.SetActive(false);
+            healthSlider.gameObject.SetActive(true);
+        }
+    }
     private void Start()
     {
         spawnManager = SpawnManager.spawnManagerInstance;
@@ -167,18 +184,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         HealthDebuggerText.text = $"Health: {Health.ToString()}";
         networkedHealth = Health;
         healthSlider.maxValue = maxHealth - maxShield;
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        {
-            playerLivesIcon.SetActive(true);
-            playerLivesText.gameObject.SetActive(true);
-            playerLivesText.text = SwarmManager.instance.livesLeft.ToString();
-            maxShield = 0;
-            Shield = 0;
-            needsHealthPack = true;
-            shieldGO.SetActive(false);
-            healthSlider.gameObject.SetActive(true);
-        }
 
         if (maxShield <= 0)
             HideShieldBar();
@@ -338,19 +343,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         {
             AmmoInfo2.SetActive(false);
             GrenadeInfo.SetActive(true);
-        }
-
-
-        ////////////////////////////////////////////////////////////////////////////// Health and shield
-        ///
-
-        if (hasMotionTracker)
-        {
-            motionTrackerGO.SetActive(true);
-        }
-        else
-        {
-            motionTrackerGO.SetActive(false);
         }
 
         HealthAndshieldRecharge();

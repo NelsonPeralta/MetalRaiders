@@ -199,6 +199,7 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    //TODO Make the player controller handle the third person script and models instead of the movement script
     void Sprint()
     {
         if (movement.direction == "Forward")
@@ -232,9 +233,9 @@ public class PlayerController : MonoBehaviourPun
             return;
         isSprinting = true;
         anim.SetBool("Run", true);
-        tPersonController.anim.SetBool("Sprint", true);
-        tPersonController.anim.SetBool("Idle Rifle", false);
-        tPersonController.anim.SetBool("Idle Pistol", false);
+        movement.tPersonScripts.anim.SetBool("Sprint", true);
+        movement.tPersonScripts.anim.SetBool("Idle Rifle", false);
+        movement.tPersonScripts.anim.SetBool("Idle Pistol", false);
         playerProperties.playerVoice.volume = 0.1f;
         playerProperties.PlaySprintingSound();
     }
@@ -251,17 +252,17 @@ public class PlayerController : MonoBehaviourPun
             return;
         isSprinting = false;
         anim.SetBool("Run", false);
-        tPersonController.anim.SetBool("Sprint", false);
+        movement.tPersonScripts.anim.SetBool("Sprint", false);
 
         if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
-            tPersonController.anim.SetBool("Idle Pistol", true);
-            tPersonController.anim.SetBool("Idle Rifle", false);
+            movement.tPersonScripts.anim.SetBool("Idle Pistol", true);
+            movement.tPersonScripts.anim.SetBool("Idle Rifle", false);
         }
         else
         {
-            tPersonController.anim.SetBool("Idle Rifle", true);
-            tPersonController.anim.SetBool("Idle Pistol", false);
+            movement.tPersonScripts.anim.SetBool("Idle Rifle", true);
+            movement.tPersonScripts.anim.SetBool("Idle Pistol", false);
         }
 
         playerProperties.StopPlayingPlayerVoice();
@@ -747,7 +748,7 @@ public class PlayerController : MonoBehaviourPun
 
     public IEnumerator Reload3PS()
     {
-        tPersonController.anim.Play("Reload");
+        movement.tPersonScripts.anim.Play("Reload");
         yield return new WaitForEndOfFrame();
     }
 
