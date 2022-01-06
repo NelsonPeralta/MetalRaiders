@@ -96,11 +96,10 @@ public class FragGrenade : MonoBehaviour
                 if (!objectsHit.Contains(aiHit))
                 {
                     objectsHit.Add(aiHit);
-                    Debug.Log("Hit AI");
                     AIHitbox hitbox = hit.GetComponent<AIHitbox>();
                     float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
-                    Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
+                    Debug.Log($"Frag grenade Damage on AI: {calculatedDamage}");
                     if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
                         hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID);
                 }
