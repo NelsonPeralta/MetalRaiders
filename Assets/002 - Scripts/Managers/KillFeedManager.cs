@@ -6,9 +6,6 @@ using TMPro;
 
 public class KillFeedManager : MonoBehaviour
 {
-    [Header("Singletons")]
-    public OnlineMultiplayerManager multiplayerManager;
-
     [Header("Components")]
     public GridLayoutGroup gridLayout;
 
@@ -17,7 +14,6 @@ public class KillFeedManager : MonoBehaviour
 
     private void Start()
     {
-       multiplayerManager= OnlineMultiplayerManager.multiplayerManagerInstance;
     }
 
     public void EnterNewFeed(string playerWhoGotKillName, string playerWhoWasKilledName, bool wasHeadshot)

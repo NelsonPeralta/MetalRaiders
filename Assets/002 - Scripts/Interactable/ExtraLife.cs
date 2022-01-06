@@ -15,23 +15,23 @@ public class ExtraLife : MonoBehaviour
 
             if (!player.isDead)
             {
-                if (player.swarmMode != null)
-                {
-                    if (player.swarmMode.playerLives < 9)
-                    {
-                        player.swarmMode.playerLives = player.swarmMode.playerLives + numberOfLives;
+                //if (player.swarmMode != null)
+                //{
+                //    if (player.swarmMode.playerLives < 9)
+                //    {
+                //        player.swarmMode.playerLives = player.swarmMode.playerLives + numberOfLives;
 
-                        if(player.swarmMode.playerLives > 9)
-                        {
-                            player.swarmMode.playerLives = 9;
-                        }
+                //        if(player.swarmMode.playerLives > 9)
+                //        {
+                //            player.swarmMode.playerLives = 9;
+                //        }
 
-                        player.swarmMode.UpdatePlayerLives();
-                        audioSource.Play();
-                        gameObject.layer = 23;
-                        Destroy(gameObject, 1);
-                    }
-                }
+                //        player.swarmMode.UpdatePlayerLives();
+                //        audioSource.Play();
+                //        gameObject.layer = 23;
+                //        Destroy(gameObject, 1);
+                //    }
+                //}
             }
         }
     }

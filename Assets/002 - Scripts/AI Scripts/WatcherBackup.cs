@@ -7,7 +7,6 @@ public class WatcherBackup : MonoBehaviour
 {
     public NavMeshAgent nma;
     public Animator anim;
-    public SwarmMode swarmMode;
     public Hitboxes hitboxes;
     public GameObject motionTrackerDot;
     public AIFieldOfVision fov;
@@ -112,13 +111,13 @@ public class WatcherBackup : MonoBehaviour
                     target = null;
                 }
 
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
-                        nma.speed = 0.01f;
-                    }
-                }
+                //if (swarmMode != null)
+                //{
+                //    if (swarmMode.editMode)
+                //    {
+                //        nma.speed = 0.01f;
+                //    }
+                //}
             }
             else
             {
@@ -144,10 +143,10 @@ public class WatcherBackup : MonoBehaviour
         audioSource.clip = deathClips[randomSound];
         audioSource.Play();
 
-        if (swarmMode != null)
-        {
-            swarmMode.watchersAlive = swarmMode.watchersAlive - 1;
-        }
+        //if (swarmMode != null)
+        //{
+        //    swarmMode.watchersAlive = swarmMode.watchersAlive - 1;
+        //}
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
@@ -519,9 +518,9 @@ public class WatcherBackup : MonoBehaviour
 
     void LookForNewRandomPlayer()
     {
-        if (swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
+        //if (swarmMode != null)
+        //{
+        //    target = swarmMode.NewTargetFromSwarmScript();
+        //}
     }
 }

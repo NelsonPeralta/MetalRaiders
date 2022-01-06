@@ -7,7 +7,6 @@ public class Wererat : MonoBehaviour
 {
     public NavMeshAgent nma;
     public Animator anim;
-    public SwarmMode swarmMode;
     public Hitboxes hitboxes;
     public AIMeleeTrigger meleeTrigger;
     public SimpleAILineOfSight simpleLOS;
@@ -106,13 +105,13 @@ public class Wererat : MonoBehaviour
                     target = null;
                 }
 
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
-                        nma.speed = 0.01f;
-                    }
-                }
+                //if (swarmMode != null)
+                //{
+                //    if (swarmMode.editMode)
+                //    {
+                //        nma.speed = 0.01f;
+                //    }
+                //}
             }
             else
             {
@@ -223,10 +222,10 @@ public class Wererat : MonoBehaviour
         audioSource.clip = deathClips[randomSound];
         audioSource.Play();
 
-        if (swarmMode != null)
-        {
-            swarmMode.hellhoundsAlive = swarmMode.hellhoundsAlive - 1;
-        }
+        //if (swarmMode != null)
+        //{
+        //    swarmMode.hellhoundsAlive = swarmMode.hellhoundsAlive - 1;
+        //}
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
@@ -449,20 +448,20 @@ public class Wererat : MonoBehaviour
 
     void SimpleTargetChange()
     {
-        if (swarmMode != null)
-        {
-            int activePlayers = swarmMode.ssManager.numberOfPlayers;
-            int randomActivePlayer = Random.Range(0, activePlayers);
+        //if (swarmMode != null)
+        //{
+        //    int activePlayers = swarmMode.ssManager.numberOfPlayers;
+        //    int randomActivePlayer = Random.Range(0, activePlayers);
 
-            target = swarmMode.players[randomActivePlayer].transform;
-        }
+        //    target = swarmMode.players[randomActivePlayer].transform;
+        //}
     }
 
     void LookForNewRandomPlayer()
     {
-        if (swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
+        //if (swarmMode != null)
+        //{
+        //    target = swarmMode.NewTargetFromSwarmScript();
+        //}
     }
 }

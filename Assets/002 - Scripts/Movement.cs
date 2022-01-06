@@ -14,7 +14,6 @@ public class Movement : MonoBehaviour
     public ThirdPersonScript tPersonScripts;
     public GameObject thirdPersonRoot;
     public GameObject thirdPersonModels;
-    public ChildManager cManager;
     public ThirdPersonLookAt tpLookAt;
     public PlayerProperties pProperties;
     public PlayerSFXs sfx;
@@ -66,7 +65,6 @@ public class Movement : MonoBehaviour
     {
         gravity = defaultGravity;
         SetPlayerIDInInput();
-        cManager = gameObject.GetComponent<ChildManager>();
         //tPersonScripts = cManager.FindChildWithTagScript("Third Person GO").GetComponent<ThirdPersonScript>();
         tPersonScripts.movement = gameObject.GetComponent<Movement>();
         cController = gameObject.GetComponent<CharacterController>();

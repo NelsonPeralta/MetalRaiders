@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class AimAssist : MonoBehaviour
 {
     public GameObject firstRayHit;
-    public MyPlayerManager pManager;
     public PlayerProperties player;
     public bool redReticuleIsOn;
 
@@ -22,7 +21,6 @@ public class AimAssist : MonoBehaviour
     public PlayerProperties pProperties;
     public WeaponProperties wProperties;
     public PlayerController pController;
-    public TeamInfo tInfo;
 
     public float raycastRange = 1000;
     public float targetDistance;

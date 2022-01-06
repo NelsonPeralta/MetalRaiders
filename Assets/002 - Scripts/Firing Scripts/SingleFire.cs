@@ -20,7 +20,6 @@ public class SingleFire : MonoBehaviour
     public ThirdPersonScript thirdPersonScript;
     public PlayerInventory pInventory;
     public GeneralWeapProperties gwProperties;
-    public ChildManager cManager;
     public AudioSource shootingAudioSource;
 
     public float nextFireInterval;

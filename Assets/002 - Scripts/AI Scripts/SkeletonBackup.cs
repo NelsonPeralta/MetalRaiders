@@ -8,7 +8,6 @@ public class SkeletonBackup : MonoBehaviour
 {
     public NavMeshAgent nma;
     public Animator anim;
-    public SwarmMode swarmMode;
     public Hitboxes hitboxes;
     public AIMeleeTrigger meleeTrigger;
     public SimpleAILineOfSight simpleLOS;
@@ -121,13 +120,13 @@ public class SkeletonBackup : MonoBehaviour
                     target = null;
                 }
 
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
-                        nma.speed = 0.01f;
-                    }
-                }
+                //if (swarmMode != null)
+                //{
+                //    if (swarmMode.editMode)
+                //    {
+                //        nma.speed = 0.01f;
+                //    }
+                //}
             }
             else
             {
@@ -195,10 +194,10 @@ public class SkeletonBackup : MonoBehaviour
         nma.enabled = false;
         anim.Play("Die");
 
-        if (swarmMode != null)
-        {
-            swarmMode.skeletonsAlive = swarmMode.skeletonsAlive - 1;
-        }
+        //if (swarmMode != null)
+        //{
+        //    swarmMode.skeletonsAlive = swarmMode.skeletonsAlive - 1;
+        //}
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
@@ -441,9 +440,9 @@ public class SkeletonBackup : MonoBehaviour
 
     void LookForNewRandomPlayer()
     {
-        if (swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
+        //if (swarmMode != null)
+        //{
+        //    target = swarmMode.NewTargetFromSwarmScript();
+        //}
     }
 }

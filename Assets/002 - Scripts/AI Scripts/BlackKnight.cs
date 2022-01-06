@@ -8,7 +8,6 @@ public class BlackKnight : MonoBehaviour
 {
     public NavMeshAgent nma;
     public Animator anim;
-    public SwarmMode swarmMode;
     public Hitboxes hitboxes;
     public AIMeleeTrigger meleeTrigger;
     public SimpleAILineOfSight simpleLOS;
@@ -204,13 +203,13 @@ public class BlackKnight : MonoBehaviour
                     target = null;
                 }
 
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
-                        nma.speed = 0.01f;
-                    }
-                }
+                //if (swarmMode != null)
+                //{
+                //    if (swarmMode.editMode)
+                //    {
+                //        nma.speed = 0.01f;
+                //    }
+                //}
             }
             else
             {
@@ -399,10 +398,10 @@ public class BlackKnight : MonoBehaviour
         audioSource.clip = deathClips[randomSound];
         audioSource.Play();
 
-        if (swarmMode != null)
-        {
-            swarmMode.blackKnightsAlive = swarmMode.blackKnightsAlive - 1;
-        }
+        //if (swarmMode != null)
+        //{
+        //    swarmMode.blackKnightsAlive = swarmMode.blackKnightsAlive - 1;
+        //}
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
@@ -732,9 +731,9 @@ public class BlackKnight : MonoBehaviour
 
     void LookForNewRandomPlayer()
     {
-        if (swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
+        //if (swarmMode != null)
+        //{
+        //    target = swarmMode.NewTargetFromSwarmScript();
+        //}
     }
 }

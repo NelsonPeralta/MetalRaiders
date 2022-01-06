@@ -10,7 +10,6 @@ public class Bullet : MonoBehaviourPunCallbacks
     [Header("Other Scripts")]
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
-    public MyPlayerManager pManager;
     public PlayerProperties playerWhoShot;
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;

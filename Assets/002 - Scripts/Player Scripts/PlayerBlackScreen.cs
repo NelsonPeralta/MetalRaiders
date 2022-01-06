@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class PlayerBlackScreen : MonoBehaviour
 {
     public Image Blackscreen;
-    public SwarmMode swarmMode;
 
     [Header("Blackscreen Fade-out")]
     public bool useFade;

@@ -8,7 +8,6 @@ public class Troll : MonoBehaviour
 
     public NavMeshAgent nma;
     public Animator anim;
-    public SwarmMode swarmMode;
     public Hitboxes hitboxes;
     public AIMeleeTrigger meleeTrigger;
     public DestroyableObject shield;
@@ -101,13 +100,13 @@ public class Troll : MonoBehaviour
                     target = null;
                 }
 
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
-                        nma.speed = 0.01f;
-                    }
-                }
+                //if (swarmMode != null)
+                //{
+                //    if (swarmMode.editMode)
+                //    {
+                //        nma.speed = 0.01f;
+                //    }
+                //}
             }
             else
             {
@@ -205,10 +204,10 @@ public class Troll : MonoBehaviour
         audioSource.clip = deathClips[randomSound];
         audioSource.Play();
 
-        if (swarmMode != null)
-        {
-            swarmMode.trollsAlive = swarmMode.trollsAlive - 1;
-        }
+        //if (swarmMode != null)
+        //{
+        //    swarmMode.trollsAlive = swarmMode.trollsAlive - 1;
+        //}
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
@@ -426,21 +425,21 @@ public class Troll : MonoBehaviour
 
     void SimpleTargetChange()
     {
-        if (swarmMode != null && !isDead)
-        {
-            int activePlayers = swarmMode.ssManager.numberOfPlayers;
-            int randomActivePlayer = Random.Range(0, activePlayers);
+        //if (swarmMode != null && !isDead)
+        //{
+        //    int activePlayers = swarmMode.ssManager.numberOfPlayers;
+        //    int randomActivePlayer = Random.Range(0, activePlayers);
 
-            target = swarmMode.players[randomActivePlayer].transform;
-        }
+        //    target = swarmMode.players[randomActivePlayer].transform;
+        //}
     }
 
     void LookForNewRandomPlayer()
     {
-        if (swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
+        //    if (swarmMode != null)
+        //    {
+        //        target = swarmMode.NewTargetFromSwarmScript();
+        //    }
     }
 
     void ResetTroll()

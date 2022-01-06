@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class ShieldPack : MonoBehaviour
 {
-    public ChildManager cManager;
     PlayerProperties pProperties;
     public GameObject packFX;
 
     private void Start()
     {
-        cManager = GetComponent<ChildManager>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -18,7 +16,6 @@ public class ShieldPack : MonoBehaviour
         if (other.gameObject.tag == "player")
         {
             pProperties = other.gameObject.GetComponent<PlayerProperties>();
-            packFX = cManager.FindChildWithTagScript("Pack FX");
 
             if (pProperties.hasShield && pProperties.shieldSlider.value < pProperties.maxShield && pProperties.needsShieldPack)
             {
@@ -31,7 +28,6 @@ public class ShieldPack : MonoBehaviour
     {
         pProperties.needsShieldPack = false;
         packFX.SetActive(false);
-        cManager.FindChildWithTagScript("Motion Tracker Icon").SetActive(false);
 
         yield return new WaitForSeconds(5);
 

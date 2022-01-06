@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class AmmoSeller : MonoBehaviour
 {
-    public SwarmMode swarmMode;
     public Animator anim;
     public AudioSource audioSource;
     public AudioClip sellingNoise;

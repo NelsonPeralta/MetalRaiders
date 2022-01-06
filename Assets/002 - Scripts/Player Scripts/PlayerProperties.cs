@@ -15,10 +15,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
     public PlayerManager playerManager;
-    public OnlineMultiplayerManager multiplayerManager;
     public GameObjectPool gameObjectPool;
     public WeaponPool weaponPool;
-    public OnlineSwarmManager onlineSwarmManager;
 
     [Header("Models")]
     public GameObject firstPersonModels;
@@ -55,7 +53,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     public WeaponProperties wProperties;
     //public ChildManager cManager;
     public PlayerController pController;
-    public SwarmMode swarmMode;
     public Movement movement;
     public CrosshairManager cScript;
     public AimAssist aimAssist;
@@ -159,8 +156,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     {
         spawnManager = SpawnManager.spawnManagerInstance;
         playerManager = PlayerManager.playerManagerInstance;
-        multiplayerManager = OnlineMultiplayerManager.multiplayerManagerInstance;
-        onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
         weaponPool = WeaponPool.weaponPoolInstance;
         playerManager.allPlayers.Add(this);
@@ -183,15 +178,15 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         }
         healthSlider.value = maxHealth - maxShield;
 
-        if (onlineSwarmManager)
-        {
-            needsHealthPack = true;
-            allPlayerScripts.playerUIComponents.swarmLivesHolder.SetActive(true);
-            allPlayerScripts.playerUIComponents.swarmLivesText.text = onlineSwarmManager.playerLives.ToString();
-            allPlayerScripts.playerUIComponents.multiplayerPoints.SetActive(false);
-            allPlayerScripts.playerUIComponents.swarmPoints.SetActive(true);
-            allPlayerScripts.playerUIComponents.swarmPointsText.text = 0.ToString();
-        }
+        //if (onlineSwarmManager)
+        //{
+        //    needsHealthPack = true;
+        //    allPlayerScripts.playerUIComponents.swarmLivesHolder.SetActive(true);
+        //    allPlayerScripts.playerUIComponents.swarmLivesText.text = onlineSwarmManager.playerLives.ToString();
+        //    allPlayerScripts.playerUIComponents.multiplayerPoints.SetActive(false);
+        //    allPlayerScripts.playerUIComponents.swarmPoints.SetActive(true);
+        //    allPlayerScripts.playerUIComponents.swarmPointsText.text = 0.ToString();
+        //}
 
         if (respawnTime <= healthRegenerationDelay)
             respawnTime = healthRegenerationDelay + 0.5f; // To avoid the health regen sound going off
@@ -223,12 +218,12 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         mainOriginalCameraPosition = new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, mainCamera.transform.localPosition.z);
         thirdPersonGOLayer = thirdPersonGO.layer;
 
-        if (swarmMode != null)
-        {
-            playerLivesIcon.SetActive(true);
-            playerLivesText.gameObject.SetActive(true);
-            playerLivesText.text = swarmMode.playerLives.ToString();
-        }
+        //if (swarmMode != null)
+        //{
+        //    playerLivesIcon.SetActive(true);
+        //    playerLivesText.gameObject.SetActive(true);
+        //    playerLivesText.text = swarmMode.playerLives.ToString();
+        //}
 
         if (pController.PV.IsMine)
         {
@@ -238,18 +233,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         {
             firstPersonModels.layer = 23; // 24 = P1 FPS
             thirdPersonModels.layer = 0; // 0 = Default
-
-            ChildManager childManager = firstPersonModels.GetComponent<ChildManager>();
-            for (int i = 0; i < childManager.allChildren.Count; i++)
-            {
-                childManager.allChildren[i].layer = 23;
-            }
-
-            childManager = thirdPersonModels.GetComponent<ChildManager>();
-            for (int i = 0; i < childManager.allChildren.Count; i++)
-            {
-                childManager.allChildren[i].layer = 0;
-            }
         }
         //StartCoroutine(SlightlyIncreaseHealth());
     }
@@ -718,11 +701,11 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         //    multiplayerManager.AddToScore(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot);
         if (lastPlayerWhoDamagedThisPlayerPVID != 0 && GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lastPlayerWhoDamagedThisPlayerPVID, PV.ViewID, wasHeadshot));
-        if (onlineSwarmManager && GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        {
-            onlineSwarmManager.RemovePlayerLife();
-            GetComponent<OnlinePlayerSwarmScript>().deaths++;
-        }
+        //if (onlineSwarmManager && GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        //{
+        //    onlineSwarmManager.RemovePlayerLife();
+        //    GetComponent<OnlinePlayerSwarmScript>().deaths++;
+        //}
         pInventory.holsteredWeapon = null;
         isRespawning = true;
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName} died");
@@ -822,10 +805,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
                 characterController.enabled = false;
             }
-
-        foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
-            if (go != null)
-                go.layer = 23;
 
         SpawnRagdoll();
         respawnCoroutine = null;
@@ -938,22 +917,22 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         //    gameObject.transform.rotation = multiplayerManager.GenericSpawns[randomSpawn].gameObject.transform.rotation;
         //}
 
-        if (swarmMode != null)
-        {
-            int randomSpawn = Random.Range(0, swarmMode.GenericSpawns.Length);
+        //if (swarmMode != null)
+        //{
+        //    int randomSpawn = Random.Range(0, swarmMode.GenericSpawns.Length);
 
-            Debug.Log("Number of spawns = " + swarmMode.GenericSpawns.Length);
-            Debug.Log("Randwom spawn is = " + swarmMode.GenericSpawns[randomSpawn].gameObject.name);
+        //    Debug.Log("Number of spawns = " + swarmMode.GenericSpawns.Length);
+        //    Debug.Log("Randwom spawn is = " + swarmMode.GenericSpawns[randomSpawn].gameObject.name);
 
-            gameObject.transform.position = new Vector3(swarmMode.GenericSpawns[randomSpawn].gameObject.transform.position.x,
-                swarmMode.GenericSpawns[randomSpawn].gameObject.transform.position.y + 2,
-                swarmMode.GenericSpawns[randomSpawn].gameObject.transform.position.z);
+        //    gameObject.transform.position = new Vector3(swarmMode.GenericSpawns[randomSpawn].gameObject.transform.position.x,
+        //        swarmMode.GenericSpawns[randomSpawn].gameObject.transform.position.y + 2,
+        //        swarmMode.GenericSpawns[randomSpawn].gameObject.transform.position.z);
 
-            gameObject.transform.rotation = swarmMode.GenericSpawns[randomSpawn].gameObject.transform.rotation;
+        //    gameObject.transform.rotation = swarmMode.GenericSpawns[randomSpawn].gameObject.transform.rotation;
 
-            swarmMode.playerLives = swarmMode.playerLives - 1;
-            swarmMode.UpdatePlayerLives();
-        }
+        //    swarmMode.playerLives = swarmMode.playerLives - 1;
+        //    swarmMode.UpdatePlayerLives();
+        //}
 
 
 
@@ -997,15 +976,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
                 characterController.enabled = true;
             }
-
-        foreach (GameObject go in thirdPersonGO.GetComponent<ChildManager>().allChildren)
-            if (go != null)
-                if (playerRewiredID == 0)
-                    if (pController.PV.IsMine)
-                        go.layer = 28;
-                    else
-                        go.layer = 29;
-
     }
 
     void SetHealthAndShieldValues()

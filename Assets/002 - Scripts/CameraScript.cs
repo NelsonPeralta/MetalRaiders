@@ -19,7 +19,6 @@ public class CameraScript : MonoBehaviour
     public PlayerProperties pProperties;
     public Camera mainCam;
     public Camera gunCam;
-    public MyPlayerManager pManager;
     public Vector3 mainCamDefaultLocalPosition;
     public Quaternion mainCamDefaultLocalRotation;
 
@@ -41,13 +40,6 @@ public class CameraScript : MonoBehaviour
         mainCamDefaultLocalPosition = mainCam.transform.localPosition;
         mainCamDefaultLocalRotation = mainCam.transform.localRotation;
         Cursor.lockState = CursorLockMode.Locked;
-
-        if (pManager == null)
-        {
-            player = ReInput.players.GetPlayer(pProperties.playerRewiredID);
-            //mainCam.cullingMask &= ~(1 << 28);
-            //gunCam.cullingMask |= (1 << 24);
-        }
     }
 
     // Update is called once per frame

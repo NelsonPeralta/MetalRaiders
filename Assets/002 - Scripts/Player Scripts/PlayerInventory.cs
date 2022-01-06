@@ -14,7 +14,6 @@ public class PlayerInventory : MonoBehaviourPun
     public CrosshairManager crosshairScript;
     public PlayerController pController;
     public PlayerProperties pProperties;
-    public ChildManager cManager;
     public GeneralWeapProperties gwProperties;
     public ReloadScript rScript;
     public DualWielding dWielding;
@@ -89,7 +88,6 @@ public class PlayerInventory : MonoBehaviourPun
     public void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        cManager = GetComponent<ChildManager>();
 
         StartCoroutine(EquipStartingWeapon());
 

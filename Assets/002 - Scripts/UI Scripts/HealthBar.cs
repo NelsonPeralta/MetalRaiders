@@ -5,15 +5,12 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    ChildManager cManager;
     public GameObject healthSliderGO;
     public Slider healthSlider;
 
     // Start is called before the first frame update
     void Start()
     {
-        cManager = GetComponent<ChildManager>();
-        healthSliderGO = cManager.FindChildWithTagScript("Health Bar Fill").gameObject;
         healthSlider = GetComponent<Slider>();
     }
 

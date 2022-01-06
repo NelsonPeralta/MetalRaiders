@@ -5,7 +5,6 @@ using UnityEngine;
 public class GeneralWeapProperties : MonoBehaviour
 {
     [Header("Other Scripts")]
-    public ChildManager cManager;
     public PlayerInventory pInventory;
     public PlayerController pController;
 
@@ -62,7 +61,6 @@ public class GeneralWeapProperties : MonoBehaviour
         defaultBulletSpawnPoint = bulletSpawnPoint.localPosition;
         if(hasFoundComponents == false)
         {
-            cManager = GetComponent<ChildManager>();
             //pInventory = cManager.FindChildWithTagScript("Player Inventory").GetComponent<PlayerInventory>();
             pInventory.gwProperties = this;
 

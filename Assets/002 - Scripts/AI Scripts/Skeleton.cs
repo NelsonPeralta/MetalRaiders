@@ -8,7 +8,6 @@ public class Skeleton : MonoBehaviour
     [Header("Other Scripts")]
     public NavMeshAgent nma;
     public Animator anim;
-    public SwarmMode swarmMode;
     public Hitboxes hitboxes;
     public AIMeleeTrigger meleeTrigger;
     public SimpleAILineOfSight simpleLOS;
@@ -131,13 +130,13 @@ public class Skeleton : MonoBehaviour
                     target = null;
                 }
 
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
-                        nma.speed = 0.01f;
-                    }
-                }
+                //if (swarmMode != null)
+                //{
+                //    if (swarmMode.editMode)
+                //    {
+                //        nma.speed = 0.01f;
+                //    }
+                //}
             }
             else
             {
@@ -295,8 +294,8 @@ public class Skeleton : MonoBehaviour
         audioSource.clip = deathClips[randomSound];
         audioSource.Play();
 
-        if (swarmMode != null)
-            swarmMode.skeletonsAlive = swarmMode.skeletonsAlive - 1;
+        //if (swarmMode != null)
+        //    swarmMode.skeletonsAlive = swarmMode.skeletonsAlive - 1;
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
@@ -402,10 +401,10 @@ public class Skeleton : MonoBehaviour
 
     void LookForNewRandomPlayer()
     {
-        if (swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
+        //if (swarmMode != null)
+        //{
+        //    target = swarmMode.NewTargetFromSwarmScript();
+        //}
     }
 
     public void TargetSwitch(GameObject playerWhoShotLast)

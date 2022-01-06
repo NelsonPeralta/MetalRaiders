@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class HealthPack : MonoBehaviour
 {
-    public OnlineSwarmManager onlineSwarmManagerInstance;
-    public ChildManager cManager;
     PlayerProperties pProperties;
     public GameObject packFX;
     public GameObject motionTrackerIcon;
@@ -16,7 +14,6 @@ public class HealthPack : MonoBehaviour
 
     private void Start()
     {
-        onlineSwarmManagerInstance = OnlineSwarmManager.onlineSwarmManagerInstance;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,8 +27,8 @@ public class HealthPack : MonoBehaviour
                 pProperties.Health = pProperties.maxHealth;
                 pProperties.healthSlider.value = pProperties.Health;
                 pProperties.PlayHealthRechargeSound();
-                onlineSwarmManagerInstance.RespawnHealthPack(transform.position, spawnTime);
-                onlineSwarmManagerInstance.DisableHealthPack(transform.position);
+                //onlineSwarmManagerInstance.RespawnHealthPack(transform.position, spawnTime);
+                //onlineSwarmManagerInstance.DisableHealthPack(transform.position);
             }
         }
     }

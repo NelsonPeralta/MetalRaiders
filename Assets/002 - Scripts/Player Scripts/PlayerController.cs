@@ -956,25 +956,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            try
-            {
-                OnlineMultiplayerManager.multiplayerManagerInstance.EndGame();
-
-            }
-            catch (System.Exception e)
-            {
-                Debug.Log(e);
-            }
-
-            try
-            {
-                OnlineSwarmManager.onlineSwarmManagerInstance.EndGame();
-
-            }
-            catch (System.Exception e)
-            {
-                Debug.Log(e);
-            }
+            
         }
     }
     void StartButton()

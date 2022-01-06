@@ -7,7 +7,6 @@ public class FlameTyrant : MonoBehaviour
 {
     public NavMeshAgent nma;
     public Animator anim;
-    public SwarmMode swarmMode;
     public Hitboxes hitboxes;
     public AIMeleeTrigger meleeTrigger;
     public SimpleAILineOfSight simpleLOS;
@@ -206,13 +205,13 @@ public class FlameTyrant : MonoBehaviour
                     target = null;
                 }
 
-                if (swarmMode != null)
-                {
-                    if (swarmMode.editMode)
-                    {
-                        nma.speed = 0.01f;
-                    }
-                }
+                //if (swarmMode != null)
+                //{
+                //    if (swarmMode.editMode)
+                //    {
+                //        nma.speed = 0.01f;
+                //    }
+                //}
             }
             else
             {
@@ -398,10 +397,10 @@ public class FlameTyrant : MonoBehaviour
         audioSource.clip = deathClips[randomSound];
         audioSource.Play();
 
-        if (swarmMode != null)
-        {
-            swarmMode.flameTyrantsAlive = swarmMode.flameTyrantsAlive - 1;
-        }
+        //if (swarmMode != null)
+        //{
+        //    swarmMode.flameTyrantsAlive = swarmMode.flameTyrantsAlive - 1;
+        //}
 
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
         {
@@ -554,10 +553,10 @@ public class FlameTyrant : MonoBehaviour
 
     void LookForNewRandomPlayer()
     {
-        if(swarmMode != null)
-        {
-            target = swarmMode.NewTargetFromSwarmScript();
-        }
+        //if(swarmMode != null)
+        //{
+        //    target = swarmMode.NewTargetFromSwarmScript();
+        //}
     }
 
     public void TargetSwitch(GameObject playerWhoShotLast)

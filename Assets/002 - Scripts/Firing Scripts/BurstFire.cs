@@ -18,7 +18,6 @@ public class BurstFire : MonoBehaviour
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
     public GeneralWeapProperties gwProperties;
-    public ChildManager cManager;
 
     private int burstCounter = 3;
     public float bulletInterval = 0.05f;
