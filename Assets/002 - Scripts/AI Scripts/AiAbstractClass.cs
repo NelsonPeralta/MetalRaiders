@@ -419,14 +419,11 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         if (chanceToDrop == 0)
             ammoType = "power";
-
-        if (chanceToDrop == 1)
+        else if (chanceToDrop == 1)
             ammoType = "grenade";
-
-        if (chanceToDrop == 2 && chanceToDrop == 3)
+        else if (chanceToDrop == 2 && chanceToDrop == 3)
             ammoType = "heavy";
-
-        if (chanceToDrop >= 4 && chanceToDrop <= 6)
+        else if (chanceToDrop >= 4 && chanceToDrop <= 6)
             ammoType = "small";
 
 
