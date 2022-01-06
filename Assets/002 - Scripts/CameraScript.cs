@@ -36,6 +36,7 @@ public class CameraScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = ReInput.players.GetPlayer(playerRewiredID);
         defaultLocalRotation = transform.localRotation;
         mainCamDefaultLocalPosition = mainCam.transform.localPosition;
         mainCamDefaultLocalRotation = mainCam.transform.localRotation;
