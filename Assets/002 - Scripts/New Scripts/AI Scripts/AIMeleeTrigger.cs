@@ -23,7 +23,7 @@ public class AIMeleeTrigger : MonoBehaviour
 
             if (zombie != null)
             {
-                zombie.IsInMeleeRange = true;
+                //zombie.IsInMeleeRange = true;
                 Debug.Log("Zombie In Melee Range");
             }
 
@@ -62,7 +62,7 @@ public class AIMeleeTrigger : MonoBehaviour
 
         if (zombie != null)
         {
-            zombie.IsInMeleeRange = false;
+            //zombie.IsInMeleeRange = false;
         }
 
         if (skeleton != null)

@@ -24,6 +24,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public MultiplayerMode multiplayerMode;
     public SwarmMode swarmMode;
 
+    [Header("Ammo Packs")]
+    public Transform grenadeAmmoPack;
+    public Transform lightAmmoPack;
+    public Transform heavyAmmoPack;
+    public Transform powerAmmoPack;
     void Awake()
     {
         if (instance)

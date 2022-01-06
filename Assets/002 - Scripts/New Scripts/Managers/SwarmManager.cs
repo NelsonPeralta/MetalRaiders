@@ -43,9 +43,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     // constants
-    const int WATCHER_SPAWN_DELAY = 6;
-    const int KNIGHT_SPAWN_DELAY = 8;
-    const int HELLHOUND_SPAWN_DELAY = 4;
+    const int WATCHER_SPAWN_DELAY = 8;
+    const int KNIGHT_SPAWN_DELAY = 10;
+    const int HELLHOUND_SPAWN_DELAY = 5;
 
     private void Awake()
     {

@@ -7,52 +7,52 @@ using Photon.Pun;
 
 public class ZombieScript : AiAbstractClass
 {
-    public OnlineSwarmManager onlineSwarmManager;
-    public SwarmMode swarmMode;
-    public AIMeleeTrigger meleeTrigger;
+    //public OnlineSwarmManager onlineSwarmManager;
+    //public SwarmMode swarmMode;
+    //public AIMeleeTrigger meleeTrigger;
 
-    [Header("Zombie Settings")]
-    public float DefaultHealth;
-    public float Health = 50;
-    public int points;
-    public float defaultSpeed;
-    public int zombieNumber;
-    public int defaultDamage;
-    int damage;
-    string movementAnimationName;
+    //[Header("Zombie Settings")]
+    //public float DefaultHealth;
+    //public float Health = 50;
+    //public int points;
+    //public float defaultSpeed;
+    //public int zombieNumber;
+    //public int defaultDamage;
+    //int damage;
+    //string movementAnimationName;
 
-    [Header("Player Switching")]
-    public Transform lastPlayerWhoShot;
-    public bool otherPlayerShot;
-    public float targetSwitchCountdownDefault;
-    public float targetSwitchCountdown;
-    public float targetSwitchResetCountdown;
-    public bool targetSwitchReady;
-    public bool targetSwitchStarted;
+    //[Header("Player Switching")]
+    //public Transform lastPlayerWhoShot;
+    //public bool otherPlayerShot;
+    //public float targetSwitchCountdownDefault;
+    //public float targetSwitchCountdown;
+    //public float targetSwitchResetCountdown;
+    //public bool targetSwitchReady;
+    //public bool targetSwitchStarted;
 
 
-    public float defaultAttackCooldown;
-    public float meleeAttackCooldown;
-    public bool IsInMeleeRange;
-    public bool isReadyToAttack;
-    public bool _isDead;
-    public bool isRunning;
-    public bool hasBeenMeleedRecently;
+    //public float defaultAttackCooldown;
+    //public float meleeAttackCooldown;
+    //public bool IsInMeleeRange;
+    //public bool isReadyToAttack;
+    //public bool _isDead;
+    //public bool isRunning;
+    //public bool hasBeenMeleedRecently;
 
-    [Header("Drops")]
-    public GameObject extraHealth;
-    public GameObject smallAmmoPack;
-    public GameObject heavyAmmoPack;
-    public GameObject powerAmmoPack;
-    public GameObject grenadeAmmoPack;
+    //[Header("Drops")]
+    //public GameObject extraHealth;
+    //public GameObject smallAmmoPack;
+    //public GameObject heavyAmmoPack;
+    //public GameObject powerAmmoPack;
+    //public GameObject grenadeAmmoPack;
 
-    [Header("Audio")]
-    public AudioSource audioSource;
-    public AudioClip[] audioClips;
+    //[Header("Audio")]
+    //public AudioSource audioSource;
+    //public AudioClip[] audioClips;
 
-    [Header("Skins")]
-    public GameObject placeholderSkin;
-    public GameObject[] skins;
+    //[Header("Skins")]
+    //public GameObject placeholderSkin;
+    //public GameObject[] skins;
 
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {

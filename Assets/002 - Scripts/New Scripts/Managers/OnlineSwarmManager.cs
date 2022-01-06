@@ -426,8 +426,8 @@ public class OnlineSwarmManager : MonoBehaviour
         var newZombie = PhotonView.Find(AIPhotonId).gameObject;
         //newZombie.GetComponent<ZombieScript>().EnableThisAi(targetPhotonId, spawnPointPosition, spawnPointRotation);
 
-        if (!newZombie.GetComponent<ZombieScript>().onlineSwarmManager)
-            newZombie.GetComponent<ZombieScript>().onlineSwarmManager = this;
+        //if (!newZombie.GetComponent<ZombieScript>().onlineSwarmManager)
+        //    newZombie.GetComponent<ZombieScript>().onlineSwarmManager = this;
 
         //if (editMode)
         //    newZombie.GetComponent<ZombieScript>().SetEditMode();

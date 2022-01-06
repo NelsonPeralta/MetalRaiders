@@ -333,21 +333,18 @@ public class PlayerController : MonoBehaviourPun
                 {
                     isAiming = true;
                     mainCam.fieldOfView = wProperties.scopeFov;
+                    gunCam.enabled = false;
 
                     allPlayerScripts.aimingScript.playAimSound();
-
-                    UpdateAimingLayers();
                 }
                 else
                 {
                     isAiming = false;
                     mainCam.fieldOfView = playerProperties.defaultFov;
                     camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
+                    gunCam.enabled = true;
 
                     allPlayerScripts.aimingScript.playAimSound();
-
-
-                    UpdateAimingLayers();
                 }
 
 
@@ -367,8 +364,7 @@ public class PlayerController : MonoBehaviourPun
         allPlayerScripts.aimingScript.playAimSound();
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-
-        UpdateAimingLayers();
+        gunCam.enabled = true;
     }
 
     [PunRPC]
@@ -981,64 +977,6 @@ public class PlayerController : MonoBehaviourPun
             }
         }
     }
-    public void UpdateAimingLayers()
-    {
-        if (isAiming)
-        {
-            if (playerRewiredID == 0)
-            {
-                gunCam.cullingMask &= ~(1 << 24);
-            }
-            if (playerRewiredID == 1)
-            {
-                gunCam.cullingMask &= ~(1 << 25);
-            }
-            if (playerRewiredID == 2)
-            {
-                gunCam.cullingMask &= ~(1 << 26);
-            }
-            if (playerRewiredID == 3)
-            {
-                gunCam.cullingMask &= ~(1 << 27);
-            }
-        }
-
-        else if (!isAiming)
-        {
-            if (playerRewiredID == 0)
-            {
-                gunCam.cullingMask |= (1 << 24);
-            }
-            if (playerRewiredID == 1)
-            {
-                gunCam.cullingMask |= (1 << 25);
-            }
-            if (playerRewiredID == 2)
-            {
-                gunCam.cullingMask |= (1 << 26);
-            }
-            if (playerRewiredID == 3)
-            {
-                gunCam.cullingMask |= (1 << 27);
-            }
-        }
-
-        ///Player Layers
-        /// 5 = UI
-        /// 
-        /// 24 = P1 FPS
-        /// 25 = P2 FPS
-        /// 26 = P3 FPS
-        /// 27 = P4 FPS
-        /// 
-        /// 28 = P1 3PS
-        /// 29 = P2 3PS
-        /// 30 = P3 3PS
-        /// 31 = P4 3PS
-        /// cam.cullingMask &= ~(1 << 24); //Disable Layer 24
-        /// gunCam.cullingMask |= (1 << 24); //Enable Layer 24
-    }
-
     void StartButton()
     {
         if (player.GetButtonDown("Start") || player.GetButtonDown("Escape"))

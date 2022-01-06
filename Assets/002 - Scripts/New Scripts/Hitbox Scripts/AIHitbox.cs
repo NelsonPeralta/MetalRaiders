@@ -30,8 +30,8 @@ public class AIHitbox : MonoBehaviour
 
     private void Start()
     {
-        if (zScript != null)
-            UpdateAIHealthOnHitboxes(zScript.Health);
+        //if (zScript != null)
+        //    UpdateAIHealthOnHitboxes(zScript.Health);
 
         if (skeleton != null)
             UpdateAIHealthOnHitboxes(skeleton.Health);

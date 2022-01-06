@@ -278,6 +278,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             hitbox.gameObject.SetActive(false);
 
         SwarmManager.instance.OnAiDeath();
+
+        DropRandomLoot();
         yield return new WaitForSeconds(5);
         gameObject.SetActive(false);
     }
@@ -402,13 +404,55 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     void GetNewTarget()
     {
         if (gameObject.activeSelf)
-            return;
-        StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
+            StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
     }
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()
     {
         yield return new WaitForSeconds(1);
         target = SwarmManager.instance.GetRandomPlayerTransform();
+    }
+
+    protected void DropRandomLoot()
+    {
+        int chanceToDrop = UnityEngine.Random.Range(0, 25);
+        string ammoType = "";
+
+        if (chanceToDrop == 0)
+            ammoType = "power";
+
+        if (chanceToDrop == 1)
+            ammoType = "grenade";
+
+        if (chanceToDrop == 2 && chanceToDrop == 3)
+            ammoType = "heavy";
+
+        if (chanceToDrop >= 4 && chanceToDrop <= 6)
+            ammoType = "small";
+
+
+        PV.RPC("DropRandomLoot_RPC", RpcTarget.All, ammoType, transform.position, transform.rotation);
+    }
+
+    [PunRPC]
+    protected void DropRandomLoot_RPC(string ammotype, Vector3 position, Quaternion rotation)
+    {
+        GameObject loot = new GameObject();
+        Quaternion rotFix = new Quaternion(0, 0, 0, 0);
+        rotFix.eulerAngles = new Vector3(0, 180, 0);
+
+        if (ammotype == "power")
+            loot = Instantiate(GameManager.instance.powerAmmoPack.gameObject, position, rotation * rotFix);
+
+        if (ammotype == "heavy")
+            loot = Instantiate(GameManager.instance.heavyAmmoPack.gameObject, position, rotation * rotFix);
+
+        if (ammotype == "small")
+            loot = Instantiate(GameManager.instance.lightAmmoPack.gameObject, position, rotation * rotFix);
+
+        if (ammotype == "grenade")
+            loot = Instantiate(GameManager.instance.grenadeAmmoPack.gameObject, position, rotation * rotFix);
+
+        Destroy(loot, 60);
     }
 
     public abstract void Damage(int damage, int playerWhoShotPDI);

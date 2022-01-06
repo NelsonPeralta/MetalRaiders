@@ -19831,7 +19831,7 @@ GameObject:
   - component: {fileID: 7836838264510941338}
   - component: {fileID: 114891591478536618}
   - component: {fileID: 4698307268747878511}
-  m_Layer: 22
+  m_Layer: 16
   m_Name: 01 - SmallAmmoPack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19912,7 +19912,7 @@ MonoBehaviour:
   defaultAmmo: 24
   ammoInThisPack: 24
   ammoText: {fileID: 6092435409628036586}
-  spawnPoint: {fileID: 0}
+  onlineAmmoPackSpawnPoint: {fileID: 0}
   playerProperties: {fileID: 0}
 --- !u!1 &7421505056932240114
 GameObject:

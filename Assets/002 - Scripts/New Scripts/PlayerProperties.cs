@@ -806,7 +806,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
 
-        gunCamera.cullingMask &= ~(1 << 24);
+        gunCamera.enabled = false;
 
         foreach (GameObject go in hitboxes)
             if (go != null)
@@ -856,6 +856,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
         mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
+        gunCamera.enabled = true;
 
         if (playerRewiredID == 0)
         {
