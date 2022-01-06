@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PickupArmor : MonoBehaviour
 {
-    public SwarmMode swarmMode;
     public AudioSource audioSource;
     public AudioClip sellingNoise;
     public GameObject armorGO;
