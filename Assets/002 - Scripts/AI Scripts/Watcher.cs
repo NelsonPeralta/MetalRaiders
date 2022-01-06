@@ -80,7 +80,7 @@ public class Watcher : AiAbstractClass
         else if (newPlayerRange == PlayerRange.Out)
             previousAction = WatcherActions.Seek;
 
-        watcherAction = previousAction;
+        ChangeAction(previousAction.ToString());
     }
 
     public override void DoAction()
@@ -211,5 +211,11 @@ public class Watcher : AiAbstractClass
             else if (playerRange == PlayerRange.Long)
                 watcherAction = WatcherActions.Meteor;
         }
+    }
+
+    [PunRPC]
+    public override void ChangeAction_RPC(string actionString)
+    {
+        watcherAction = (WatcherActions)System.Enum.Parse(typeof(WatcherActions), actionString);
     }
 }

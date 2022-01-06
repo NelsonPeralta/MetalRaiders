@@ -18,7 +18,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     PlayerRange _playerRange;
     PlayerRange _previousPlayerRange;
     public Animator animator;
-    PhotonView PV;
+    protected PhotonView PV;
     Transform _target;
     int _health;
     float newTargetSwitchingDelay;
@@ -422,6 +422,15 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(1);
         target = SwarmManager.instance.GetRandomPlayerTransform();
     }
+
+    protected void ChangeAction(string actionString)
+    {
+        if (!PV.IsMine)
+            return;
+
+        PV.RPC("ChangeAction_RPC", RpcTarget.All, actionString);
+    }
+    public abstract void ChangeAction_RPC(string actionString);
     public abstract void Damage(int damage, int playerWhoShotPDI);
     public abstract void Damage_RPC(int damage, int playerWhoShotPDI);
     public abstract void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass);

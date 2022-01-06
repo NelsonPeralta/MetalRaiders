@@ -129,4 +129,10 @@ public class Hellhound : AiAbstractClass
                 hellhoundAction = HellhoundActions.Bite;
         }
     }
+
+    [PunRPC]
+    public override void ChangeAction_RPC(string actionString)
+    {
+        throw new System.NotImplementedException();
+    }
 }

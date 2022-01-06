@@ -67,7 +67,7 @@ public class Knight : AiAbstractClass
         else if (newPlayerRange == PlayerRange.Out)
             previousAction = KnightActions.Seek;
 
-        knightAction = previousAction;
+        ChangeAction(previousAction.ToString());
     }
 
     public override void DoAction()
@@ -203,5 +203,12 @@ public class Knight : AiAbstractClass
             else if (playerRange == PlayerRange.Long)
                 knightAction = KnightActions.Grenade;
         }
+    }
+
+
+    [PunRPC]
+    public override void ChangeAction_RPC(string actionString)
+    {
+        knightAction = (KnightActions)System.Enum.Parse(typeof(KnightActions), actionString);
     }
 }
