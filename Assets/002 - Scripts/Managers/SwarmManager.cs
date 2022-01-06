@@ -32,7 +32,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     // private variables
     PhotonView PV;
     int maxWave;
-    int livesLeft = 4;
+    int _livesLeft = 4;
 
 
     int watchersLeft;
@@ -41,12 +41,19 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     int maxWatchersOnMap = 2;
 
+    List<HealthPack> healthPacks = new List<HealthPack>();
+
 
     // constants
     const int WATCHER_SPAWN_DELAY = 8;
     const int KNIGHT_SPAWN_DELAY = 10;
     const int HELLHOUND_SPAWN_DELAY = 5;
 
+    public int livesLeft
+    {
+        get { return _livesLeft; }
+        set { _livesLeft = value; }
+    }
     private void Awake()
     {
         nextWaveDelay = 5;
@@ -83,6 +90,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (GameManager.instance.swarmMode == GameManager.SwarmMode.Survival)
                 maxWave = 999999;
+
+            foreach (HealthPack h in FindObjectsOfType<HealthPack>())
+                healthPacks.Add(h);
         }
         else // We are in the menu
         {
@@ -343,9 +353,25 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void OnWaveEnd_Delegate(SwarmManager swarmManager)
     {
+        RespawnHealthPacks();
         IncreaseWave();
     }
 
+    void RespawnHealthPacks()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        PV.RPC("RespawnHealthPacks_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RespawnHealthPacks_RPC()
+    {
+        if (currentWave % 2 == 0)
+            foreach (HealthPack hp in healthPacks)
+                if (!hp.gameObject.activeSelf)
+                    hp.gameObject.SetActive(true);
+    }
     int GetRandomPlayerPhotonId()
     {
         PlayerProperties[] allPlayers = FindObjectsOfType<PlayerProperties>();
@@ -357,5 +383,78 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public Transform GetRandomPlayerTransform()
     {
         return PhotonView.Find(GetRandomPlayerPhotonId()).transform;
+    }
+
+    public void RespawnHealthPack(Vector3 hpPosition, int time)
+    {
+        PV.RPC("RespawnHealthPack_RPC", RpcTarget.All, hpPosition, time);
+    }
+
+    [PunRPC]
+    void RespawnHealthPack_RPC(Vector3 hpPosition, int time)
+    {
+        StartCoroutine(RespawnHealthPack_Coroutine(hpPosition, time));
+    }
+
+    IEnumerator RespawnHealthPack_Coroutine(Vector3 hpPosition, int time)
+    {
+        yield return new WaitForSeconds(time);
+
+        foreach (HealthPack hp in healthPacks)
+            if (hp.transform.position == hpPosition)
+                hp.gameObject.SetActive(true);
+    }
+
+    public void DisableHealthPack(Vector3 hpPosition)
+    {
+        PV.RPC("DisableHealthPack_RPC", RpcTarget.All, hpPosition);
+    }
+
+    [PunRPC]
+    void DisableHealthPack_RPC(Vector3 hpPosition)
+    {
+        foreach (HealthPack hp in healthPacks)
+            if (hp.transform.position == hpPosition)
+                hp.gameObject.SetActive(false);
+    }
+
+    public void DropRandomLoot(Vector3 position, Quaternion rotation)
+    {
+        int chanceToDrop = UnityEngine.Random.Range(0, 35);
+        string ammoType = "";
+
+        if (chanceToDrop == 0)
+            ammoType = "power";
+        else if (chanceToDrop == 1)
+            ammoType = "grenade";
+        else if (chanceToDrop == 2 || chanceToDrop == 3)
+            ammoType = "heavy";
+        else if (chanceToDrop >= 4 && chanceToDrop <= 6)
+            ammoType = "small";
+
+
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        PV.RPC("DropRandomLoot_RPC", RpcTarget.All, ammoType, position, rotation);
+    }
+
+    [PunRPC]
+    void DropRandomLoot_RPC(string ammotype, Vector3 position, Quaternion rotation)
+    {
+        Debug.Log($"{name} spawned random loot {ammotype}");
+        GameObject loot = new GameObject();
+        Quaternion rotFix = new Quaternion(0, 0, 0, 0);
+        rotFix.eulerAngles = new Vector3(0, 180, 0);
+
+        if (ammotype == "power")
+            loot = Instantiate(GameManager.instance.powerAmmoPack.gameObject, position, rotation * rotFix);
+        else if (ammotype == "heavy")
+            loot = Instantiate(GameManager.instance.heavyAmmoPack.gameObject, position, rotation * rotFix);
+        else if (ammotype == "small")
+            loot = Instantiate(GameManager.instance.lightAmmoPack.gameObject, position, rotation * rotFix);
+        else if (ammotype == "grenade")
+            loot = Instantiate(GameManager.instance.grenadeAmmoPack.gameObject, position, rotation * rotFix);
+
+        Destroy(loot, 60);
     }
 }

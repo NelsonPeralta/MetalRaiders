@@ -10,7 +10,7 @@ public class HealthPack : MonoBehaviour
 
     [Header("Respawn Settings")]
     public SphereCollider sCollider;
-    public int spawnTime = 180;
+    int spawnTime = 180;
 
     private void Start()
     {
@@ -27,8 +27,7 @@ public class HealthPack : MonoBehaviour
                 pProperties.Health = pProperties.maxHealth;
                 pProperties.healthSlider.value = pProperties.Health;
                 pProperties.PlayHealthRechargeSound();
-                //onlineSwarmManagerInstance.RespawnHealthPack(transform.position, spawnTime);
-                //onlineSwarmManagerInstance.DisableHealthPack(transform.position);
+                SwarmManager.instance.DisableHealthPack(transform.position);
             }
         }
     }

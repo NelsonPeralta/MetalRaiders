@@ -168,25 +168,28 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         networkedHealth = Health;
         healthSlider.maxValue = maxHealth - maxShield;
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            playerLivesIcon.SetActive(true);
+            playerLivesText.gameObject.SetActive(true);
+            playerLivesText.text = SwarmManager.instance.livesLeft.ToString();
+            maxShield = 0;
+            Shield = 0;
+            needsHealthPack = true;
+            shieldGO.SetActive(false);
+            healthSlider.gameObject.SetActive(true);
+        }
+
         if (maxShield <= 0)
             HideShieldBar();
         else
         {
             ShowShieldBar();
             shieldSlider.maxValue = maxShield;
-            healthSlider.maxValue = maxHealth - maxShield;
         }
+        healthSlider.maxValue = maxHealth - maxShield;
         healthSlider.value = maxHealth - maxShield;
 
-        //if (onlineSwarmManager)
-        //{
-        //    needsHealthPack = true;
-        //    allPlayerScripts.playerUIComponents.swarmLivesHolder.SetActive(true);
-        //    allPlayerScripts.playerUIComponents.swarmLivesText.text = onlineSwarmManager.playerLives.ToString();
-        //    allPlayerScripts.playerUIComponents.multiplayerPoints.SetActive(false);
-        //    allPlayerScripts.playerUIComponents.swarmPoints.SetActive(true);
-        //    allPlayerScripts.playerUIComponents.swarmPointsText.text = 0.ToString();
-        //}
 
         if (respawnTime <= healthRegenerationDelay)
             respawnTime = healthRegenerationDelay + 0.5f; // To avoid the health regen sound going off
@@ -218,12 +221,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         mainOriginalCameraPosition = new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, mainCamera.transform.localPosition.z);
         thirdPersonGOLayer = thirdPersonGO.layer;
 
-        //if (swarmMode != null)
-        //{
-        //    playerLivesIcon.SetActive(true);
-        //    playerLivesText.gameObject.SetActive(true);
-        //    playerLivesText.text = swarmMode.playerLives.ToString();
-        //}
 
         if (pController.PV.IsMine)
         {

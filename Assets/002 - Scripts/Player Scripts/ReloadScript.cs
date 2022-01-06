@@ -301,7 +301,9 @@ public class ReloadScript : MonoBehaviourPun
     [PunRPC]
     void PlayReloadSound_RPC(int activeWeaponIndex)
     {
-        reloadAudioSource.clip = pController.pInventory.allWeaponsInInventory[activeWeaponIndex].GetComponent<WeaponProperties>().Reload_1;
+        reloadAudioSource.clip = pController.pInventory.allWeaponsInInventory[activeWeaponIndex].GetComponent<WeaponProperties>().ReloadShort;
+        if (pController.pInventory.activeWeapon.ReloadShort)
+            reloadAudioSource.clip = pController.pInventory.activeWeapon.ReloadShort;
         reloadAudioSource.Play();
     }
 }

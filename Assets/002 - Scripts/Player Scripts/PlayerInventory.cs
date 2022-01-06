@@ -504,6 +504,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     public void UpdateAllExtraAmmoHuds()
     {
+        AmmoManager();
         smallAmmoHudCounter.UpdateExtraAmmo();
         heavyAmmoHudCounter.UpdateExtraAmmo();
         powerAmmoHudCounter.UpdateExtraAmmo();

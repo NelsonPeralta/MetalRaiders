@@ -54,8 +54,8 @@ public class WeaponProperties : MonoBehaviour
     [Header("Sounds")]
     public AudioClip draw;
     public AudioClip Fire;
-    public AudioClip Reload_1;
-    public AudioClip Reload_2;
+    public AudioClip ReloadShort;
+    public AudioClip ReloadLong;
     public AudioClip holster;
 
     [Header("Firing Mode")]
@@ -209,6 +209,7 @@ public class WeaponPropertiesEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
         wp.Fire = EditorGUILayout.ObjectField("Fire", wp.Fire, typeof(AudioClip), true) as AudioClip;
+        wp.ReloadShort = EditorGUILayout.ObjectField("Reload short", wp.ReloadShort, typeof(AudioClip), true) as AudioClip;
 
         EditorUtility.SetDirty(wp);
     }
