@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMinimap : MonoBehaviour
 {
     public PlayerProperties playerProperties;
+    public Camera minimapCamera;
     public GameObject friendlyDot;
     public GameObject ennemyDot;
     private void Awake()
@@ -18,6 +19,7 @@ public class PlayerMinimap : MonoBehaviour
             }
             else
             {
+                minimapCamera.enabled = false;
                 friendlyDot.SetActive(false);
                 ennemyDot.SetActive(true);
             }

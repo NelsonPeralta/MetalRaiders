@@ -81,10 +81,21 @@ public class PlayerInventory : MonoBehaviourPun
 
     AudioSource audioSource;
 
+    public GameObject allThirdPersonEquippedWeaponsHolder;
+
     /// <summary>
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
 
+    private void Awake()
+    {
+        if (!PV.IsMine)
+        {
+            allThirdPersonEquippedWeaponsHolder.SetActive(true);
+            foreach (GameObject w in allWeaponsInInventory)
+                w.gameObject.SetActive(false);
+        }
+    }
     public void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -184,7 +195,8 @@ public class PlayerInventory : MonoBehaviourPun
             if (weaponsEquiped[0].gameObject.activeSelf)
             {
                 //DisableAmmoHUDCounters();
-                weaponsEquiped[1].gameObject.SetActive(true);
+                if (PV.IsMine)
+                    weaponsEquiped[1].gameObject.SetActive(true);
                 weaponsEquiped[0].gameObject.SetActive(false);
 
                 activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
@@ -199,7 +211,8 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 //DisableAmmoHUDCounters();
                 weaponsEquiped[1].gameObject.SetActive(false);
-                weaponsEquiped[0].gameObject.SetActive(true);
+                if (PV.IsMine)
+                    weaponsEquiped[0].gameObject.SetActive(true);
 
                 activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
                 activeWeapIs = 0;
@@ -249,7 +262,8 @@ public class PlayerInventory : MonoBehaviourPun
                     weaponsEquiped[0] = activeWeapon.gameObject;
                     activeWeapIs = 0;
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-                    allWeaponsInInventory[i].gameObject.SetActive(true);
+                    if (PV.IsMine)
+                        allWeaponsInInventory[i].gameObject.SetActive(true);
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
                 else if (allWeaponsInInventory[i].name == StartingWeapon2)

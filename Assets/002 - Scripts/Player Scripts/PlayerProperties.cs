@@ -177,7 +177,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         weaponPool = WeaponPool.weaponPoolInstance;
         playerManager.allPlayers.Add(this);
         PV = GetComponent<PhotonView>();
-        gameObject.name = $"Player ({PV.Owner.NickName})";
+        gameObject.name = $"Player ({PV.Owner.NickName}. Is mine: {PV.IsMine})";
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
         Health = maxHealth;

@@ -71,6 +71,12 @@ public class Movement : MonoBehaviour
             tPersonScripts = armorThirdPersonScript;
             armorThirdPersonScript.EnableSkinnedMeshes();
             noArmorThirdPersonScript.DisableSkinnedMeshes();
+            if (!PV.IsMine)
+            {
+                tPersonScripts.gameObject.layer = 0;
+                foreach (SkinnedMeshRenderer s in tPersonScripts.meshes)
+                    s.gameObject.layer = 0;
+            }
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
