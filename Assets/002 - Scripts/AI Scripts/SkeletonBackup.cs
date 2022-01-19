@@ -101,7 +101,7 @@ public class SkeletonBackup : MonoBehaviour
         {
             if (target != null)
             {
-                if (target.gameObject.GetComponent<PlayerProperties>().Health > 0)
+                if (target.gameObject.GetComponent<PlayerProperties>().health > 0)
                 {
                     nma.SetDestination(target.position);
                     anim.SetBool("Run", true);
@@ -115,7 +115,7 @@ public class SkeletonBackup : MonoBehaviour
                         motionTrackerDot.SetActive(false);
                     }
                 }
-                else if (target.gameObject.GetComponent<PlayerProperties>().Health <= 0)
+                else if (target.gameObject.GetComponent<PlayerProperties>().health <= 0)
                 {
                     target = null;
                 }

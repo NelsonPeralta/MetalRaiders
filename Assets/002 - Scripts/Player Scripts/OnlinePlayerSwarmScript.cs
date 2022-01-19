@@ -7,17 +7,25 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
 {
     public PhotonView PV;
     public AllPlayerScripts allPlayerScripts;
-    [SerializeField] int points;
+    [SerializeField] int _points;
     [SerializeField] int totalPoints;
 
     public delegate void PlayerSwarmEvent(OnlinePlayerSwarmScript onlinePlayerSwarmScript);
-    public PlayerSwarmEvent OnKillsChanged;
-    public PlayerSwarmEvent OnDeathsChanged;
-    public PlayerSwarmEvent OnHeadshotsChanged;
+    public PlayerSwarmEvent OnPointsChanged, OnKillsChanged, OnDeathsChanged, OnHeadshotsChanged;
     [SerializeField] int _kills;
     [SerializeField] int _deaths;
     [SerializeField] int _headshots;
 
+    public int points
+    {
+        get { return _points; }
+        set
+        {
+            if (_points != value)
+                OnPointsChanged?.Invoke(this);
+            _points = value;
+        }
+    }
     public int kills
     {
         get { return _kills; }

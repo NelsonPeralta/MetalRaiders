@@ -24,8 +24,8 @@ public class HealthPack : MonoBehaviour
 
             if(pProperties.healthSlider.value < pProperties.maxHealth && pProperties.needsHealthPack)
             {
-                pProperties.Health = pProperties.maxHealth;
-                pProperties.healthSlider.value = pProperties.Health;
+                pProperties.health = pProperties.maxHealth;
+                pProperties.healthSlider.value = pProperties.health;
                 pProperties.PlayHealthRechargeSound();
                 SwarmManager.instance.DisableHealthPack(transform.position);
             }

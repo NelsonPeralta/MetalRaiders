@@ -204,14 +204,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                         playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
 
                     }
-                    else if (playerProperties.maxShield > 0 && (playerProperties.Health < playerProperties.maxHealth - playerProperties.maxShield))
+                    else if (playerProperties.maxShield > 0 && (playerProperties.health < playerProperties.maxHealth - playerProperties.maxShield))
                     {
                         damage = (int)(damage * 999);
                         wasHeadshot = true;
                         playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
                     }
 
-                    if (wasHeadshot && playerProperties.Health < damage)
+                    if (wasHeadshot && playerProperties.health < damage)
                     {
                         playerWhoShot.GetComponent<PlayerMultiplayerStats>().headshots++;
                     }

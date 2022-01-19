@@ -28,7 +28,7 @@ public class PlayerShooting : MonoBehaviourPun
     private void Start()
     {
         playerController.OnPlayerFire += OnPlayerControllerFire_Delegate;
-        playerController.OnPlayerFireUp += OnPlayerControllerFireUp_Delegate;
+        playerController.OnPlayerFireButtonUp += OnPlayerControllerFireUp_Delegate;
     }
 
     void OnPlayerControllerFireUp_Delegate(PlayerController playerController)

@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 {
     public delegate void PlayerEvent(PlayerProperties playerProperties);
-    public PlayerEvent OnDeath;
+    public PlayerEvent OnDeath, OnHealthChange;
 
     [Header("Singletons")]
     public SpawnManager spawnManager;
@@ -28,7 +28,6 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     [Header("Player Info")]
     public int maxHealth;
     public int maxShield;
-    public float Health;
     public float Shield;
     public float meleeDamage; // default: 150
     public bool isDead;
@@ -146,9 +145,21 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     public PhotonView PV;
 
+
+    float _health;
+    public float health
+    {
+        get { return _health; }
+        set
+        {
+            if (_health != value)
+                OnHealthChange?.Invoke(this);
+            _health = value;
+        }
+    }
     public void UpdateHealthTextDebugger()
     {
-        HealthDebuggerText.text = Health.ToString();
+        HealthDebuggerText.text = health.ToString();
         readHealthDebuggerText.text = networkedHealth.ToString();
     }
 
@@ -157,7 +168,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             motionTrackerGO.SetActive(true);
-        }else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        }
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             playerLivesIcon.SetActive(true);
             playerLivesText.gameObject.SetActive(true);
@@ -180,9 +192,9 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         gameObject.name = $"Player ({PV.Owner.NickName}. Is mine: {PV.IsMine})";
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
-        Health = maxHealth;
-        HealthDebuggerText.text = $"Health: {Health.ToString()}";
-        networkedHealth = Health;
+        health = maxHealth;
+        HealthDebuggerText.text = $"Health: {health.ToString()}";
+        networkedHealth = health;
         healthSlider.maxValue = maxHealth - maxShield;
 
         if (maxShield <= 0)
@@ -385,16 +397,16 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool CanBeDamaged()
     {
-        if (Health <= 0 || isDead || isRespawning)
+        if (health <= 0 || isDead || isRespawning)
             return false;
         return true;
     }
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        if (Health <= 0 || isDead || isRespawning)
+        if (health <= 0 || isDead || isRespawning)
             return;
 
-        PV.RPC("Damage_RPC", RpcTarget.All, Health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
+        PV.RPC("Damage_RPC", RpcTarget.All, health - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
         //if (!PhotonNetwork.IsMasterClient)
         //    return;
@@ -407,16 +419,16 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         if (PV.IsMine)
             allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
         lastPlayerWhoDamagedThisPlayerPVID = playerWhoShotThisPlayerPhotonId;
-        Health = _newHealth;
+        health = _newHealth;
 
-        float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+        float newHealth = Mathf.Clamp(health, 0f, (float)(maxHealth - maxShield));
         float newShield = 0;
 
 
 
         if (newHealth >= (maxHealth - maxShield))
         {
-            newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
+            newShield = Mathf.Clamp(health - (maxHealth - maxShield), 0f, (float)maxShield);
         }
 
         if (newShield <= 0 && maxShield > 0)
@@ -447,7 +459,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         UpdateHealthTextDebugger();
         pController.ScopeOut();
 
-        if (Health <= 0)
+        if (health <= 0)
         {
             isDead = true;
             OnDeath?.Invoke(this);
@@ -641,16 +653,16 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
 
-        if (healthRegenerationAllowed && Health < maxHealth)
+        if (healthRegenerationAllowed && health < maxHealth)
         {
-            Health += healthRegenerationRate * 0.01f;
+            health += healthRegenerationRate * 0.01f;
 
-            float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+            float newHealth = Mathf.Clamp(health, 0f, (float)(maxHealth - maxShield));
             float newShield = 0;
 
-            if (Health >= (maxHealth - maxShield))
+            if (health >= (maxHealth - maxShield))
             {
-                newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
+                newShield = Mathf.Clamp(health - (maxHealth - maxShield), 0f, (float)maxShield);
             }
 
 
@@ -676,7 +688,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
 
-        if (Health == maxHealth)
+        if (health == maxHealth)
         {
             healthRegenerating = false;
         }
@@ -710,8 +722,8 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator MidRespawnAction()
     {
         yield return new WaitForSeconds(respawnTime / 2);
-        Health = maxHealth;
-        networkedHealth = Health;
+        health = maxHealth;
+        networkedHealth = health;
         Transform spawnPoint = spawnManager.GetGenericSpawnpoint();
         transform.position = spawnPoint.position + new Vector3(0, 2, 0);
         transform.rotation = spawnPoint.rotation;
@@ -797,7 +809,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
         SpawnRagdoll();
         respawnCoroutine = null;
-        Health = maxHealth;
+        health = maxHealth;
         yield return new WaitForSeconds(respawnTime);
         Respawn();
     }
@@ -810,14 +822,14 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         isRespawning = false;
         respawnCoroutine = null;
         pController.ScopeOut();
-        Health = maxHealth;
+        health = maxHealth;
         healthSlider.value = maxHealth;
 
-        float newHealth = Mathf.Clamp(Health, 0f, (float)(maxHealth - maxShield));
+        float newHealth = Mathf.Clamp(health, 0f, (float)(maxHealth - maxShield));
         float newShield = 0;
 
         if (newHealth >= (maxHealth - maxShield))
-            newShield = Mathf.Clamp(Health - (maxHealth - maxShield), 0f, (float)maxShield);
+            newShield = Mathf.Clamp(health - (maxHealth - maxShield), 0f, (float)maxShield);
 
         shieldSlider.value = newShield;
         healthSlider.value = newHealth;
@@ -969,7 +981,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     void SetHealthAndShieldValues()
     {
-        Health = maxHealth;
+        health = maxHealth;
         Shield = maxShield;
 
         healthSlider.value = maxHealth - maxShield;
@@ -1043,7 +1055,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
 
     void PlayHurtSound()
     {
-        if (Health <= 0)
+        if (health <= 0)
             return;
         for (int i = 0; i < hurtClips.Length; i++)
             if (playerVoice.isPlaying && playerVoice.clip == hurtClips[i])
@@ -1154,7 +1166,7 @@ public class PlayerProperties : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             //Debug.Log("Writing Health");
-            stream.SendNext(Health);
+            stream.SendNext(health);
             stream.SendNext(transform.position);
         }
         else

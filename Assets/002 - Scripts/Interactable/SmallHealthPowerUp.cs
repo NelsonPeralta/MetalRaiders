@@ -19,12 +19,12 @@ public class SmallHealthPowerUp : MonoBehaviour
                 if (pProperties.healthSlider.value < pProperties.maxHealth && pProperties.needsHealthPack)
                 {
                     pProperties.healthSlider.value = pProperties.healthSlider.value + healthToGive;
-                    pProperties.Health = pProperties.healthSlider.value;
+                    pProperties.health = pProperties.healthSlider.value;
 
-                    if (pProperties.healthSlider.value > 100 || pProperties.Health > 100)
+                    if (pProperties.healthSlider.value > 100 || pProperties.health > 100)
                     {
                         pProperties.healthSlider.value = 100;
-                        pProperties.Health = 100;                        
+                        pProperties.health = 100;                        
                     }
 
                     audioSource.Play();

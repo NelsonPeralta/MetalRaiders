@@ -34,7 +34,7 @@ public class Melee : MonoBehaviour
             for (int i = 0; i < playersInMeleeZone.Count; i++)
             {
                 PlayerProperties playerToDamage = playersInMeleeZone[i];
-                if (playerToDamage.Health < pProperties.meleeDamage)
+                if (playerToDamage.health < pProperties.meleeDamage)
                     RemoveCorrespondingPlayer(playerToDamage.gameObject);
 
                 playerToDamage.Damage((int)pProperties.meleeDamage, false, pProperties.GetComponent<PhotonView>().ViewID);

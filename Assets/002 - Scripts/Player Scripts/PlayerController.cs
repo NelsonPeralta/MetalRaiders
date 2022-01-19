@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviourPun
 {
     // Events
     public delegate void PlayerControllerEvent(PlayerController playerController);
-    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerFire, OnPlayerFireUp;
+    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerFire, OnPlayerFireButtonUp;
 
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -288,7 +288,7 @@ public class PlayerController : MonoBehaviourPun
 
             if (player.GetButtonUp("Shoot"))
             {
-                OnPlayerFireUp?.Invoke(this);
+                OnPlayerFireButtonUp?.Invoke(this);
             }
         }
 

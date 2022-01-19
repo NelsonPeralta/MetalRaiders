@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class PlayerUIComponents : MonoBehaviour
+public class PlayerUI : MonoBehaviour
 {
     [Header("Scripts")]
     public OnlinePlayerSwarmScript onlinePlayerSwarmScript;
@@ -25,6 +25,8 @@ public class PlayerUIComponents : MonoBehaviour
 
     [Header("Top Middle", order = 2)]
     public Transform topMiddle;
+    public GameObject healthBar;
+    public GameObject shieldBar;
 
     [Header("Top Right", order = 3)]
     public Transform topRight;
@@ -38,6 +40,7 @@ public class PlayerUIComponents : MonoBehaviour
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;
+    public GameObject motionTrackerUi;
 
     [Header("Bottom Right", order = 6)]
     public Text Timer;
@@ -91,7 +94,8 @@ public class PlayerUIComponents : MonoBehaviour
             headshotIndicator.SetActive(false);
             yield return new WaitForSeconds(0.1f);
             StartCoroutine(ShowHeadshotIndicator_Coroutine());
-        }else
+        }
+        else
             StartCoroutine(ShowHeadshotIndicator_Coroutine());
     }
     IEnumerator ShowHeadshotIndicator_Coroutine()
@@ -104,11 +108,35 @@ public class PlayerUIComponents : MonoBehaviour
         headshotIndicator.SetActive(false);
     }
 
-
     void EnableSwarmUIComponents()
     {
-        multiplayerPoints.SetActive(false);
+        DisableMultiplayerUIComponents();
+
         swarmPoints.SetActive(true);
         swarmPointsText.text = "0";
+        healthBar.SetActive(true);
+        swarmLivesText.text = SwarmManager.instance.livesLeft.ToString();
+    }
+
+    void DisableSwarmUIComponents()
+    {
+        swarmPoints.SetActive(false);
+        swarmPointsText.gameObject.SetActive(false);
+
+        swarmLivesHolder.SetActive(false);
+        swarmLivesText.gameObject.SetActive(false);
+        healthBar.SetActive(false);
+    }
+
+    void EnableMultiplayerUIComponents()
+    {
+
+    }
+
+    void DisableMultiplayerUIComponents()
+    {
+        shieldBar.SetActive(false);
+        multiplayerPoints.SetActive(false);
+
     }
 }
