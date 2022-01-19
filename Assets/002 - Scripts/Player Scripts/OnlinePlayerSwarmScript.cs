@@ -73,6 +73,11 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    private void Start()
+    {
+        OnPointsChanged += OnPointsChanged_Delegate;
+    }
     public void AddPoints(int _points)
     {
         PV.RPC("AddPoints_RPC", RpcTarget.All, _points);
@@ -83,7 +88,6 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
     {
         points += _points;
         totalPoints += _points;
-        UpdatePointText();
     }
 
     public void RemovePoints(int _points)
@@ -95,7 +99,6 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
     void RemovePoints_RPC(int _points)
     {
         points -= _points;
-        UpdatePointText();
     }
 
     public int GetPoints()
@@ -108,9 +111,9 @@ public class OnlinePlayerSwarmScript : MonoBehaviourPunCallbacks
         return totalPoints;
     }
 
-    void UpdatePointText()
+    void OnPointsChanged_Delegate(OnlinePlayerSwarmScript onlinePlayerSwarmScript)
     {
-        allPlayerScripts.playerUIComponents.swarmPointsText.text = points.ToString();
+        GetComponent<PlayerUI>().swarmPointsText.text = points.ToString();
     }
 
     public void ResetPoints()

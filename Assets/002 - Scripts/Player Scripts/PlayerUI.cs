@@ -40,7 +40,7 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;
-    public GameObject motionTrackerUi;
+    public GameObject motionTracker;
 
     [Header("Bottom Right", order = 6)]
     public Text Timer;
@@ -110,6 +110,7 @@ public class PlayerUI : MonoBehaviour
 
     void EnableSwarmUIComponents()
     {
+        Debug.Log("Enables Swarm UI");
         DisableMultiplayerUIComponents();
 
         swarmPoints.SetActive(true);
@@ -137,6 +138,6 @@ public class PlayerUI : MonoBehaviour
     {
         shieldBar.SetActive(false);
         multiplayerPoints.SetActive(false);
-
+        motionTracker.SetActive(false);
     }
 }
