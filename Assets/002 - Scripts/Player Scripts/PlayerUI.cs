@@ -45,10 +45,10 @@ public class PlayerUI : MonoBehaviour
     [Header("Bottom Right", order = 6)]
     public Text Timer;
     public Transform bottomRight;
-    public GameObject multiplayerPoints;
+    public GameObject multiplayerPointsHolder;
     public Text multiplayerPointsRed;
     public Text multiplayerPointsBlue;
-    public GameObject swarmPoints;
+    public GameObject swarmPointsHolder;
     public Text swarmPointsText;
 
     [Header("General", order = 7)]
@@ -67,6 +67,8 @@ public class PlayerUI : MonoBehaviour
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             EnableSwarmUIComponents();
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            EnableMultiplayerUIComponents();
     }
 
     void OnSwarmKillsChanged(OnlinePlayerSwarmScript onlinePlayerSwarmScript)
@@ -110,34 +112,34 @@ public class PlayerUI : MonoBehaviour
 
     void EnableSwarmUIComponents()
     {
-        Debug.Log("Enables Swarm UI");
-        DisableMultiplayerUIComponents();
-
-        swarmPoints.SetActive(true);
+        swarmPointsHolder.SetActive(true);
         swarmPointsText.text = "0";
-        healthBar.SetActive(true);
+
+        swarmLivesHolder.SetActive(true);
         swarmLivesText.text = SwarmManager.instance.livesLeft.ToString();
+
+        DisableMultiplayerUIComponents();
     }
 
     void DisableSwarmUIComponents()
     {
-        swarmPoints.SetActive(false);
-        swarmPointsText.gameObject.SetActive(false);
-
+        swarmPointsHolder.SetActive(false);
         swarmLivesHolder.SetActive(false);
-        swarmLivesText.gameObject.SetActive(false);
-        healthBar.SetActive(false);
     }
 
     void EnableMultiplayerUIComponents()
     {
+        shieldBar.SetActive(true);
+        multiplayerPointsHolder.SetActive(true);
+        motionTracker.SetActive(true);
 
+        DisableSwarmUIComponents();
     }
 
     void DisableMultiplayerUIComponents()
     {
         shieldBar.SetActive(false);
-        multiplayerPoints.SetActive(false);
+        multiplayerPointsHolder.SetActive(false);
         motionTracker.SetActive(false);
     }
 }

@@ -74,8 +74,8 @@ public class SlayerManager : MonoBehaviour
             {
                 if (player)
                 {
-                    player.GetComponent<AllPlayerScripts>().playerUIComponents.swarmPoints.SetActive(false);
-                    player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPoints.SetActive(true);
+                    player.GetComponent<AllPlayerScripts>().playerUIComponents.swarmPointsHolder.SetActive(false);
+                    player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsHolder.SetActive(true);
                     player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsBlue.text = 0.ToString();
                     player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsRed.text = 0.ToString();
                 }

@@ -172,7 +172,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 int finalDamage = damage;
                 if (hitbox.isHead && wProperties.isHeadshotCapable)
                 {
-                    playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                     finalDamage = (int)(wProperties.headshotMultiplier * damage);
 
                     if (hitbox.aiAbstractClass.health <= finalDamage)
@@ -201,14 +201,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                     {
                         damage = (int)(damage * wProperties.headshotMultiplier);
                         wasHeadshot = true;
-                        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
 
                     }
                     else if (playerProperties.maxShield > 0 && (playerProperties.health < playerProperties.maxHealth - playerProperties.maxShield))
                     {
                         damage = (int)(damage * 999);
                         wasHeadshot = true;
-                        playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                     }
 
                     if (wasHeadshot && playerProperties.health < damage)
@@ -381,7 +381,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 if (aiHB.isHead)
                 {
                     aiHB.DamageAI(true, damage * 1.5f, playerWhoShot.gameObject);
-                    playerWhoShot.allPlayerScripts.playerUIComponents.ShowHeadshotIndicator();
+                    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                     //Debug.Log("Hit 2");
                 }
                 else
