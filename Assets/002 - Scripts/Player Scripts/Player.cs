@@ -54,7 +54,7 @@ public class Player : MonoBehaviourPunCallbacks
     public AudioClip[] deathClips;
 
     public PhotonView PV;
-    
+
     [Header("Player Info")]
     public int playerRewiredID;
     public bool needsHealthPack;
@@ -78,7 +78,7 @@ public class Player : MonoBehaviourPunCallbacks
         set
         {
             float previousValue = _hitPoints;
-            _hitPoints = Mathf.Ceil(value);
+            _hitPoints = Mathf.Clamp(value, 0, _maxHitPoints);
 
             if (previousValue > value)
                 OnPlayerDamaged?.Invoke(this);
@@ -250,14 +250,17 @@ public class Player : MonoBehaviourPunCallbacks
     }
     void HitPointsRecharge()
     {
-        if(healingCountdown > 0)
+        if (healingCountdown > 0)
         {
             healingCountdown -= Time.deltaTime;
         }
 
-        if(healingCountdown <= 0 && hitPoints < maxHitPoints)
+        if (healingCountdown <= 0 && hitPoints < maxHitPoints)
         {
-            hitPoints += (Time.deltaTime);
+            if (hitPoints < 100)
+                hitPoints += (Time.deltaTime * 150);
+            else
+                hitPoints += (Time.deltaTime * 100);
         }
         //if (armorHasBeenHit && hasShield)
         //{
