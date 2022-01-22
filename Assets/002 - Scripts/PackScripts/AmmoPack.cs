@@ -22,7 +22,7 @@ public class AmmoPack : MonoBehaviour
     public OnlineAmmoPackSpawnPoint onlineAmmoPackSpawnPoint;
 
     [Header("Other Classes")]
-    public PlayerProperties playerProperties;
+    public Player playerProperties;
 
     private void Start()
     {

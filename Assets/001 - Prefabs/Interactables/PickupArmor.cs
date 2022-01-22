@@ -15,10 +15,10 @@ public class PickupArmor : MonoBehaviour
     public string armorName;
 
     [Header("Players in Range")]
-    public PlayerProperties player0;
-    public PlayerProperties player1;
-    public PlayerProperties player2;
-    public PlayerProperties player3;
+    public Player player0;
+    public Player player1;
+    public Player player2;
+    public Player player3;
 
     private void Start()
     {

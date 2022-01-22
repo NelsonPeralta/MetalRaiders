@@ -13,10 +13,10 @@ public class CameraScript : MonoBehaviour
     float minXClamp = -90;
     float maxXClamp = 90;
 
-    public Player player;
+    public Rewired.Player player;
     public int playerRewiredID;
     public PlayerController pController;
-    public PlayerProperties pProperties;
+    public Player pProperties;
     public Camera mainCam;
     public Camera gunCam;
     public Vector3 mainCamDefaultLocalPosition;

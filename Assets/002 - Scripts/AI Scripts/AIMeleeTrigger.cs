@@ -13,13 +13,13 @@ public class AIMeleeTrigger : MonoBehaviour
     public Hellhound hellhound;
     public Wererat wererat;
 
-    public PlayerProperties player;
+    public Player player;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "player")
         {
-            player = other.GetComponent<PlayerProperties>();
+            player = other.GetComponent<Player>();
 
             if (zombie != null)
             {
@@ -53,7 +53,7 @@ public class AIMeleeTrigger : MonoBehaviour
     {
         if (other.gameObject.tag != "player")
             return;
-        player = other.GetComponent<PlayerProperties>();
+        player = other.GetComponent<Player>();
     }
 
     private void OnTriggerExit(Collider other)

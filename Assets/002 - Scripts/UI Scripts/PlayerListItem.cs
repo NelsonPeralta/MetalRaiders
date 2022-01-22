@@ -8,15 +8,15 @@ using UnityEngine;
 public class PlayerListItem : MonoBehaviourPunCallbacks
 {
 	public TMP_Text text;
-	Player player;
+    Photon.Realtime.Player player;
 
-	public void SetUp(Player _player)
+	public void SetUp(Photon.Realtime.Player _player)
 	{
 		player = _player;
 		text.text = _player.NickName;
 	}
 
-	public override void OnPlayerLeftRoom(Player otherPlayer)
+	public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
 	{
 		if(player == otherPlayer)
 		{

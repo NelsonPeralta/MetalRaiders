@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class AimAssist : MonoBehaviour
 {
     public GameObject firstRayHit;
-    public PlayerProperties player;
+    public Player player;
     public bool redReticuleIsOn;
 
     public int playerRewiredID;
@@ -18,7 +18,7 @@ public class AimAssist : MonoBehaviour
     public LayerMask layerMask;
 
     public PlayerInventory pInventory;
-    public PlayerProperties pProperties;
+    public Player pProperties;
     public WeaponProperties wProperties;
     public PlayerController pController;
 
@@ -29,7 +29,7 @@ public class AimAssist : MonoBehaviour
     RaycastHit hit;
 
     [Header("MANUAL LINKING")]
-    public PlayerProperties thisPlayer;
+    public Player thisPlayer;
 
     public Camera mainCam;
 
@@ -67,7 +67,7 @@ public class AimAssist : MonoBehaviour
                 return;
             }
 
-            if (hit.transform.root.GetComponent<PlayerProperties>() || hit.transform.GetComponent<AIHitbox>())
+            if (hit.transform.root.GetComponent<Player>() || hit.transform.GetComponent<AIHitbox>())
                 if (hit.transform.root.gameObject != player.gameObject && targetDistance <= gunRRR)
                     ActivateRedReticule();
                 else

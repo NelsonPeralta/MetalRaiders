@@ -6,7 +6,7 @@ using Photon.Pun;
 public class AmmoPickup : MonoBehaviour
 {
     public PhotonView PV;
-    public PlayerProperties playerProperties;
+    public Player playerProperties;
     private void OnTriggerEnter(Collider other)
     {
         if (!playerProperties.PV.IsMine || !other.GetComponent<AmmoPack>())

@@ -10,12 +10,12 @@ public class PlayerController : MonoBehaviourPun
 {
     // Events
     public delegate void PlayerControllerEvent(PlayerController playerController);
-    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerFire, OnPlayerFireButtonUp;
+    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton;
 
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public WeaponSounds weapSounds;
-    public PlayerProperties playerProperties;
+    public Player playerProperties;
     public PlayerInventory pInventory;
     public GeneralWeapProperties gwProperties;
     public WeaponProperties wProperties;
@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviourPun
     {
         PV = GetComponent<PhotonView>();
         playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+        OnPlayerTestButton += OnTestButton_Delegate;
     }
     public void Start()
     {
@@ -956,7 +957,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            
+            OnPlayerTestButton?.Invoke(this);
         }
     }
     void StartButton()
@@ -1010,6 +1011,11 @@ public class PlayerController : MonoBehaviourPun
     public void SetPlayerIDInInput()
     {
         player = ReInput.players.GetPlayer(playerRewiredID);
+    }
+
+    void OnTestButton_Delegate(PlayerController playerController)
+    {
+        playerProperties.Damage(10, false, 0);
     }
 }
 

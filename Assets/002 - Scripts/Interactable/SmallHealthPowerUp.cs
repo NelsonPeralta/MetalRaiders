@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class SmallHealthPowerUp : MonoBehaviour
 {
-    PlayerProperties pProperties;
+    Player pProperties;
     public int healthToGive;
     public AudioSource audioSource;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<PlayerProperties>())
+        if (other.gameObject.GetComponent<Player>())
         {
-            if (!other.gameObject.GetComponent<PlayerProperties>().isDead)
+            if (!other.gameObject.GetComponent<Player>().isDead)
             {
-                pProperties = other.gameObject.GetComponent<PlayerProperties>();
+                pProperties = other.gameObject.GetComponent<Player>();
 
-                if (pProperties.healthSlider.value < pProperties.maxHealth && pProperties.needsHealthPack)
-                {
-                    pProperties.healthSlider.value = pProperties.healthSlider.value + healthToGive;
-                    pProperties.health = pProperties.healthSlider.value;
+                //if (pProperties.healthSlider.value < pProperties.maxHitPoints && pProperties.needsHealthPack)
+                //{
+                //    pProperties.healthSlider.value = pProperties.healthSlider.value + healthToGive;
+                //    pProperties.hitPoints = pProperties.healthSlider.value;
 
-                    if (pProperties.healthSlider.value > 100 || pProperties.health > 100)
-                    {
-                        pProperties.healthSlider.value = 100;
-                        pProperties.health = 100;                        
-                    }
+                //    if (pProperties.healthSlider.value > 100 || pProperties.hitPoints > 100)
+                //    {
+                //        pProperties.healthSlider.value = 100;
+                //        pProperties.hitPoints = 100;                        
+                //    }
 
-                    audioSource.Play();
-                    gameObject.layer = 23;
-                    Destroy(gameObject, 1);
-                }
+                //    audioSource.Play();
+                //    gameObject.layer = 23;
+                //    Destroy(gameObject, 1);
+                //}
             }
         }
     }

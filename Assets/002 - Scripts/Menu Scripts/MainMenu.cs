@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
     public int selectedButtonNumber;
 
     [Header("Players")]
-    public Player player;
+    public Rewired.Player player;
     public int playerRID;    
 
     [Header("Swarm Menu")]    

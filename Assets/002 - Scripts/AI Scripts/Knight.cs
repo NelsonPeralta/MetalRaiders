@@ -180,7 +180,7 @@ public class Knight : AiAbstractClass
         if (isDead)
             return;
 
-        PlayerProperties pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
 
         health -= damage;

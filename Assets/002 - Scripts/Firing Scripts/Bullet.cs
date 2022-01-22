@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     [Header("Other Scripts")]
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
-    public PlayerProperties playerWhoShot;
+    public Player playerWhoShot;
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
     public ZombieScript zScript;
@@ -193,7 +193,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
 
                 PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
-                PlayerProperties playerProperties = hitbox.player.GetComponent<PlayerProperties>();
+                Player playerProperties = hitbox.player.GetComponent<Player>();
                 bool wasHeadshot = false;
                 if (hitbox.isHead && wProperties.isHeadshotCapable)
                 {
@@ -204,14 +204,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                         playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
 
                     }
-                    else if (playerProperties.maxShield > 0 && (playerProperties.health < playerProperties.maxHealth - playerProperties.maxShield))
+                    else if (playerProperties.maxShield > 0 && (playerProperties.hitPoints < playerProperties.maxHitPoints - playerProperties.maxShield))
                     {
                         damage = (int)(damage * 999);
                         wasHeadshot = true;
                         playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                     }
 
-                    if (wasHeadshot && playerProperties.health < damage)
+                    if (wasHeadshot && playerProperties.hitPoints < damage)
                     {
                         playerWhoShot.GetComponent<PlayerMultiplayerStats>().headshots++;
                     }

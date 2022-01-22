@@ -6,10 +6,10 @@ using Photon.Pun;
 public class Melee : MonoBehaviour
 {
     public PlayerController pController;
-    public PlayerProperties pProperties;
+    public Player pProperties;
 
     [Header("Players in Melee Zone")]
-    public List<PlayerProperties> playersInMeleeZone;
+    public List<Player> playersInMeleeZone;
 
     [Header("Components")]
     bool meleeReady = true;
@@ -33,8 +33,8 @@ public class Melee : MonoBehaviour
 
             for (int i = 0; i < playersInMeleeZone.Count; i++)
             {
-                PlayerProperties playerToDamage = playersInMeleeZone[i];
-                if (playerToDamage.health < pProperties.meleeDamage)
+                Player playerToDamage = playersInMeleeZone[i];
+                if (playerToDamage.hitPoints < pProperties.meleeDamage)
                     RemoveCorrespondingPlayer(playerToDamage.gameObject);
 
                 playerToDamage.Damage((int)pProperties.meleeDamage, false, pProperties.GetComponent<PhotonView>().ViewID);
@@ -45,8 +45,8 @@ public class Melee : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         RemoveNullIndexes();
-        if (other.GetComponent<PlayerProperties>() && other.gameObject != pProperties.gameObject)
-            playersInMeleeZone.Add(other.GetComponent<PlayerProperties>());
+        if (other.GetComponent<Player>() && other.gameObject != pProperties.gameObject)
+            playersInMeleeZone.Add(other.GetComponent<Player>());
     }
 
     private void OnTriggerExit(Collider other)

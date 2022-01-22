@@ -13,7 +13,7 @@ public class StickyGrenade : MonoBehaviour
     public Transform explosionPrefab;
 
     [Header("Background Info")]
-    public PlayerProperties playerWhoThrewGrenade;
+    public Player playerWhoThrewGrenade;
     public int playerRewiredID;
     public string team;
     bool hasHitObject;
@@ -50,7 +50,7 @@ public class StickyGrenade : MonoBehaviour
                         GetComponent<Rigidbody>().useGravity = false;
                         GetComponent<Rigidbody>().isKinematic = true;
 
-                        stuckPlayerID = collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<PlayerProperties>().playerRewiredID;
+                        stuckPlayerID = collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<Player>().playerRewiredID;
                         Debug.Log("Stuck Player");
 
                         playerStuck = true; // Without this line player stuck is always 0 so player 0 always die even when not stuck
@@ -149,7 +149,7 @@ public class StickyGrenade : MonoBehaviour
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)

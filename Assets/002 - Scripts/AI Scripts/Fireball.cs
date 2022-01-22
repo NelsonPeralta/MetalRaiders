@@ -19,7 +19,7 @@ public class Fireball : MonoBehaviour
     [Header("Prefabs")]
     public Transform explosionPrefab;
 
-    List<PlayerProperties> playersHit = new List<PlayerProperties>();
+    List<Player> playersHit = new List<Player>();
     GameObject[] AIsHit = new GameObject[20];
 
     private void Start()
@@ -80,14 +80,14 @@ public class Fireball : MonoBehaviour
             {
                 GameObject player = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
-                int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;
+                int playerHitID = player.GetComponent<Player>().playerRewiredID;
 
 
                 if (playerDistance < radius)
                 {
                     //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
-                    player.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, 99);
-                    playersHit.Add(player.GetComponent<PlayerProperties>());
+                    player.GetComponent<Player>().Damage((int)calculatedDamage, false, 99);
+                    playersHit.Add(player.GetComponent<Player>());
                 }
             }
             if (hit.GetComponent<AIHitbox>() != null)

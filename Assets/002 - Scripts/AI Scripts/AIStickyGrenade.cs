@@ -56,14 +56,14 @@ public class AIStickyGrenade : MonoBehaviour
             {
                 if (collision.gameObject.GetComponent<PlayerHitbox>())
                 {
-                    if (collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<PlayerProperties>().playerRewiredID != playerRewiredID)
+                    if (collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<Player>().playerRewiredID != playerRewiredID)
                     {
                         gameObject.transform.parent = collision.gameObject.transform;
 
                         GetComponent<Rigidbody>().useGravity = false;
                         GetComponent<Rigidbody>().isKinematic = true;
 
-                        stuckPlayerID = collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<PlayerProperties>().playerRewiredID;
+                        stuckPlayerID = collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<Player>().playerRewiredID;
                         Debug.Log("Stuck Player");
 
                         playerStuck = true; // Without this line player stuck is always 0 so player 0 always die even when not stuck
@@ -156,7 +156,7 @@ public class AIStickyGrenade : MonoBehaviour
                 player = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
 
-                int playerHitID = player.GetComponent<PlayerProperties>().playerRewiredID;
+                int playerHitID = player.GetComponent<Player>().playerRewiredID;
 
                 bool playerAlreadyHit = false;
 
@@ -164,7 +164,7 @@ public class AIStickyGrenade : MonoBehaviour
                 {
                     if (playersHit[i] != null)
                     {
-                        if (playerHitID == playersHit[i].GetComponent<PlayerProperties>().playerRewiredID)
+                        if (playerHitID == playersHit[i].GetComponent<Player>().playerRewiredID)
                         {
                             playerAlreadyHit = true;
                         }
@@ -187,7 +187,7 @@ public class AIStickyGrenade : MonoBehaviour
 
                 if (!playerAlreadyHit)
                 {
-                    if (!player.GetComponent<PlayerProperties>().isDead)
+                    if (!player.GetComponent<Player>().isDead)
                     {
                         float calculatedDamage = damage * (1 - (playerDistance / radius));
                     }

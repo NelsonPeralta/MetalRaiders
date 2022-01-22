@@ -40,13 +40,13 @@ public class CarePackagePlane : MonoBehaviour
                 var heavyCrate = Instantiate(heavyWeaponCrate, heavyWeaponCrateSpawnPoint.transform.position, heavyWeaponCrateSpawnPoint.transform.rotation);
                 var powerCrate = Instantiate(powerWeaponCrate, powerWeaponCrateSpawnPoint.transform.position, powerWeaponCrateSpawnPoint.transform.rotation);
 
-                smallCrate.GetComponent<RandomWeaponCrate>().skySpawnPoint = smallWeaponCrateSpawnPoint;
-                heavyCrate.GetComponent<RandomWeaponCrate>().skySpawnPoint = heavyWeaponCrateSpawnPoint;
-                powerCrate.GetComponent<RandomWeaponCrate>().skySpawnPoint = powerWeaponCrateSpawnPoint;
+                //smallCrate.GetComponent<RandomWeaponCrate>().skySpawnPoint = smallWeaponCrateSpawnPoint;
+                //heavyCrate.GetComponent<RandomWeaponCrate>().skySpawnPoint = heavyWeaponCrateSpawnPoint;
+                //powerCrate.GetComponent<RandomWeaponCrate>().skySpawnPoint = powerWeaponCrateSpawnPoint;
 
-                smallCrate.GetComponent<RandomWeaponCrate>().destination = smallWeaponCrateDestinationPoint;
-                heavyCrate.GetComponent<RandomWeaponCrate>().destination = heavyWeaponCrateDestinationPoint;
-                powerCrate.GetComponent<RandomWeaponCrate>().destination = powerWeaponCrateDestinationPoint;
+                //smallCrate.GetComponent<RandomWeaponCrate>().destination = smallWeaponCrateDestinationPoint;
+                //heavyCrate.GetComponent<RandomWeaponCrate>().destination = heavyWeaponCrateDestinationPoint;
+                //powerCrate.GetComponent<RandomWeaponCrate>().destination = powerWeaponCrateDestinationPoint;
 
                 droppedWeaponCrates = true;
 

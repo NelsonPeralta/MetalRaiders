@@ -14,10 +14,10 @@ public class AmmoSeller : MonoBehaviour
     public int cost;
 
     [Header("Players in Range")]
-    public PlayerProperties player0;
-    public PlayerProperties player1;
-    public PlayerProperties player2;
-    public PlayerProperties player3;
+    public Player player0;
+    public Player player1;
+    public Player player2;
+    public Player player3;
 
     private void Start()
     {
@@ -27,9 +27,9 @@ public class AmmoSeller : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<PlayerProperties>() != null)
+        if (other.gameObject.GetComponent<Player>() != null)
         {
-            PlayerProperties player = other.gameObject.GetComponent<PlayerProperties>();
+            Player player = other.gameObject.GetComponent<Player>();
 
             if (player.playerRewiredID == 0)
             {
@@ -37,11 +37,11 @@ public class AmmoSeller : MonoBehaviour
 
                 if (player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() >= cost && player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() > 0)
                 {
-                    player0.InformerText.text = "Hold E to Refill " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
+                    //player0.InformerText.text = "Hold E to Refill " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
                 else
                 {
-                    player0.InformerText.text = "Not enough Points (" + cost.ToString() + ")";
+                    //player0.InformerText.text = "Not enough Points (" + cost.ToString() + ")";
                 }
             }
         }
@@ -114,7 +114,7 @@ public class AmmoSeller : MonoBehaviour
 
             if (playerDistance > exitTriggerRadius * 1.5f)
             {
-                player0.InformerText.text = "";
+                //player0.InformerText.text = "";
                 player0 = null;
             }
         }

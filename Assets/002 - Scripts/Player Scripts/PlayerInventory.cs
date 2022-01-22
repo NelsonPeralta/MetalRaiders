@@ -13,7 +13,7 @@ public class PlayerInventory : MonoBehaviourPun
     public PlayerSFXs sfxManager;
     public CrosshairManager crosshairScript;
     public PlayerController pController;
-    public PlayerProperties pProperties;
+    public Player pProperties;
     public GeneralWeapProperties gwProperties;
     public ReloadScript rScript;
     public DualWielding dWielding;
@@ -156,7 +156,7 @@ public class PlayerInventory : MonoBehaviourPun
             if (pController.player.GetButtonDown("Switch Weapons"))
             {
                 pController.isDualWielding = false;
-                pProperties.DropActiveWeapon(leftWeapon);
+                //pProperties.DropActiveWeapon(leftWeapon);
 
                 activeWeapon.GetComponent<WeaponProperties>().currentAmmo = rightWeapon.GetComponent<WeaponProperties>().currentAmmo;
                 activeWeapon.gameObject.SetActive(true);

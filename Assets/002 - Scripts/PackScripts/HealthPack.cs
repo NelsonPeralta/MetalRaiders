@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HealthPack : MonoBehaviour
 {
-    PlayerProperties pProperties;
+    Player pProperties;
     public GameObject packFX;
     public GameObject motionTrackerIcon;
 
@@ -20,15 +20,15 @@ public class HealthPack : MonoBehaviour
     {
         if (other.gameObject.tag == "player")
         {
-            pProperties = other.gameObject.GetComponent<PlayerProperties>();
+            pProperties = other.gameObject.GetComponent<Player>();
 
-            if(pProperties.healthSlider.value < pProperties.maxHealth && pProperties.needsHealthPack)
-            {
-                pProperties.health = pProperties.maxHealth;
-                pProperties.healthSlider.value = pProperties.health;
-                pProperties.PlayHealthRechargeSound();
-                SwarmManager.instance.DisableHealthPack(transform.position);
-            }
+            //if(pProperties.healthSlider.value < pProperties.maxHitPoints && pProperties.needsHealthPack)
+            //{
+            //    pProperties.hitPoints = pProperties.maxHitPoints;
+            //    pProperties.healthSlider.value = pProperties.hitPoints;
+            //    pProperties.PlayHealthRechargeSound();
+            //    SwarmManager.instance.DisableHealthPack(transform.position);
+            //}
         }
     }
 }

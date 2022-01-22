@@ -20,7 +20,7 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
     float _kd;
 
     //public variables
-    public PlayerProperties player;
+    public Player player;
     public int PVID;
     public string playerName;
     public int kills
@@ -104,7 +104,7 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
             _kd = (kills / deaths);
     }
 
-    public PlayerMultiplayerStats(PlayerProperties pp)
+    public PlayerMultiplayerStats(Player pp)
     {
         player = pp;
         PVID = pp.GetComponent<PhotonView>().ViewID;
@@ -154,7 +154,7 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
         if (changedProps.ContainsKey($"{playerName}_kills"))

@@ -14,7 +14,7 @@ public class FragGrenade : MonoBehaviour
     float velocityOnCollision = 5f;
 
     [Header("Background Info")]
-    public PlayerProperties playerWhoThrewGrenade;
+    public Player playerWhoThrewGrenade;
     public int playerRewiredID;
     public string team;
     bool hasHitObject;
@@ -87,7 +87,7 @@ public class FragGrenade : MonoBehaviour
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)

@@ -39,7 +39,7 @@ public class PowerAmmoPack : MonoBehaviour
     {
         if (sphereCollider.enabled && other.gameObject.tag == "player")
         {
-            pInventory = other.gameObject.GetComponent<PlayerProperties>().pInventory;
+            pInventory = other.gameObject.GetComponent<Player>().pInventory;
             aSource = other.gameObject.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
 
             ammoAllowedToRemoveFromThisPack = pInventory.maxPowerAmmo - pInventory.powerAmmo;

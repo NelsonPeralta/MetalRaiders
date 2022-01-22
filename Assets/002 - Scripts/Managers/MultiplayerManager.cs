@@ -59,8 +59,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         PlayerMultiplayerStats losingPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerStats>();
 
 
-        List<PlayerProperties> allPlayers = new List<PlayerProperties>();
-        foreach (PlayerProperties pp in FindObjectsOfType<PlayerProperties>())
+        List<Player> allPlayers = new List<Player>();
+        foreach (Player pp in FindObjectsOfType<Player>())
             allPlayers.Add(pp);
 
 
@@ -68,13 +68,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         if (winningPlayerMS != losingPlayerMS)
         {
             winningPlayerMS.AddKill();
-            foreach (PlayerProperties pp in allPlayers)
+            foreach (Player pp in allPlayers)
                 if (pp.PV.IsMine && pp)
                     pp.allPlayerScripts.killFeedManager.EnterNewFeed(winningPlayerMS.playerName, losingPlayerMS.playerName, struc.headshot);
         }
         else
         {
-            foreach (PlayerProperties pp in allPlayers)
+            foreach (Player pp in allPlayers)
                 if (pp.PV.IsMine && pp)
                     pp.allPlayerScripts.killFeedManager.EnterNewFeed($"{losingPlayerMS.playerName} committed suicide");
         }
@@ -91,7 +91,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public void EndGame()
     {
         string winningEntity = "";
-        foreach (PlayerProperties pp in FindObjectsOfType<PlayerProperties>())
+        foreach (Player pp in FindObjectsOfType<Player>())
         {
             if (pp.GetComponent<PlayerMultiplayerStats>().kills >= scoreToWin && GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
                 winningEntity = pp.PV.Owner.NickName;

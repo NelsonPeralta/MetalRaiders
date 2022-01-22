@@ -30,7 +30,7 @@ public class LocalMpMapChooser : MonoBehaviour
     public Text mapInfo;
 
     [Header("Players")]
-    public Player player;
+    public Rewired.Player player;
     public int playerRID;
 
     [Header("Audio")]

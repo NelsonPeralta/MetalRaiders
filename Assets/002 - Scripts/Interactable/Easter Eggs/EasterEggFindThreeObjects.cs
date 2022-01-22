@@ -24,7 +24,7 @@ public class EasterEggFindThreeObjects : MonoBehaviour
         {
             if(go == fo.gameObject)
             {
-                fo.isActivated = true;
+                //fo.isActivated = true;
             }            
         }
 
@@ -32,11 +32,11 @@ public class EasterEggFindThreeObjects : MonoBehaviour
 
         for (int i = 0; i < objects.Length; i++)
         {
-            if(objects[i].GetComponent<FindableObject>().isActivated)
-            {
-                numberOfActiavtedObjects = numberOfActiavtedObjects + 1;
-                Debug.Log("Number of Activated objects = " + numberOfActiavtedObjects + " and Total Objects = " + totalObjects);
-            }
+            //if(objects[i].GetComponent<FindableObject>().isActivated)
+            //{
+            //    numberOfActiavtedObjects = numberOfActiavtedObjects + 1;
+            //    Debug.Log("Number of Activated objects = " + numberOfActiavtedObjects + " and Total Objects = " + totalObjects);
+            //}
         }
 
         if(numberOfActiavtedObjects == totalObjects)

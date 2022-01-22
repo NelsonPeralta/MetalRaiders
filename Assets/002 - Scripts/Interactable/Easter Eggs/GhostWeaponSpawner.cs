@@ -88,13 +88,13 @@ public class GhostWeaponSpawner : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<PlayerProperties>() && character.activeSelf)
+        if (other.gameObject.GetComponent<Player>() && character.activeSelf)
             StartCoroutine(DespawnCharacter());
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.GetComponent<PlayerProperties>() && !DespawningCharacter)
+        if (other.gameObject.GetComponent<Player>() && !DespawningCharacter)
             StartCoroutine(DespawnCharacter());
     }
 }

@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         OnSceneLoadedEvent?.Invoke();
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         if (PhotonNetwork.IsMasterClient)
             UpdateRoomSettings();
@@ -113,8 +113,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public PlayerProperties GetPlayerWithPhotonViewId(int pid)
+    public Player GetPlayerWithPhotonViewId(int pid)
     {
-        return PhotonView.Find(pid).GetComponent<PlayerProperties>();
+        return PhotonView.Find(pid).GetComponent<Player>();
     }
 }

@@ -71,7 +71,7 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
         timerCoroutine = StartCoroutine(Timer(newDelay));
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
         //Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");

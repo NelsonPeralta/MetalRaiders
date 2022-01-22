@@ -89,12 +89,12 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         {
             if (value)
             {
-                if (value.GetComponent<PlayerProperties>().isDead || value.GetComponent<PlayerProperties>().isRespawning)
+                if (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning)
                     target = null;
                 else
                 {
                     _target = value;
-                    _target.GetComponent<PlayerProperties>().OnPlayerDeath += OnTargetDeath_Delegate;
+                    _target.GetComponent<Player>().OnPlayerDeath += OnTargetDeath_Delegate;
                 }
             }
             else
@@ -342,9 +342,9 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             objectInLineOfSight = hit.transform.gameObject;
             if (hit.transform.gameObject.GetComponent<PlayerHitbox>())
             {
-                PlayerProperties playerInLOS = objectInLineOfSight.GetComponent<PlayerHitbox>().player;
+                Player playerInLOS = objectInLineOfSight.GetComponent<PlayerHitbox>().player;
 
-                if (playerInLOS == target.GetComponent<PlayerProperties>())
+                if (playerInLOS == target.GetComponent<Player>())
                     targetInLineOfSight = true;
                 else
                     targetOutOfSight = true;
@@ -362,13 +362,13 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider)
     {
-        if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<PlayerProperties>()))
+        if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<Player>()))
             playerRange = aiRangeCollider.range;
     }
 
     void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider)
     {
-        if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<PlayerProperties>()))
+        if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<Player>()))
         {
             PlayerRange exitingRange = aiRangeCollider.range;
             PlayerRange newPlayerRange = playerRange;
@@ -406,7 +406,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         DoAction();
     }
-    void OnTargetDeath_Delegate(PlayerProperties playerProperties)
+    void OnTargetDeath_Delegate(Player playerProperties)
     {
         //Debug.Log("On target death delegate");
         target = null;
@@ -425,7 +425,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     protected void ChangeAction(string actionString)
     {
-        if (!target || !target.GetComponent<PlayerProperties>().PV.IsMine)
+        if (!target || !target.GetComponent<Player>().PV.IsMine)
             return;
 
         PV.RPC("ChangeAction_RPC", RpcTarget.All, actionString);

@@ -110,10 +110,10 @@ public class PlayerShooting : MonoBehaviourPun
             bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>();
             bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
             bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<PlayerProperties>();
+            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
             bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-            bullet.gameObject.GetComponent<Bullet>().raycastScript = playerController.GetComponent<PlayerProperties>().raycastScript;
-            bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<PlayerProperties>().cScript;
+            bullet.gameObject.GetComponent<Bullet>().raycastScript = playerController.GetComponent<Player>().raycastScript;
+            bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript;
             bullet.SetActive(true);
             GetComponent<CommonFiringActions>().SpawnMuzzleflash();
         }

@@ -12,7 +12,7 @@ public class BurstFire : MonoBehaviour
     public bool blueTeam = false;
     public bool yellowTeam = false;
     public bool greenTeam = false;
-    public PlayerProperties pProperties;
+    public Player pProperties;
     public PlayerController pController;
     public ThirdPersonScript thirdPersonScript;
     public PlayerInventory pInventory;

@@ -11,7 +11,7 @@ public class FullyAutomaticFire : MonoBehaviourPun
 
     [Header("Other Scripts")]
     public int playerRewiredID;
-    public PlayerProperties pProperties;
+    public Player pProperties;
     public PlayerController pController;
     public ThirdPersonScript tPersonController;
     public PlayerInventory pInventory;
@@ -51,7 +51,7 @@ public class FullyAutomaticFire : MonoBehaviourPun
             bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
             bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
             bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.GetComponent<PlayerProperties>();
+            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.GetComponent<Player>();
             bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
             bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
             bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;

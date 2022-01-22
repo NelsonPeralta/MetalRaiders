@@ -6,6 +6,9 @@ using Photon.Pun;
 
 public class Movement : MonoBehaviour
 {
+    public delegate void PlayerMovementEvent(Movement movement);
+    public PlayerMovementEvent OnPlayerStartedMoving, OnPlayerStoppedMoving;
+
     public PhotonView PV;
     public AllPlayerScripts allPlayerScripts;
     public CharacterController cController;
@@ -15,7 +18,7 @@ public class Movement : MonoBehaviour
     public GameObject thirdPersonRoot;
     public GameObject thirdPersonModels;
     public ThirdPersonLookAt tpLookAt;
-    public PlayerProperties pProperties;
+    public Player pProperties;
     public PlayerSFXs sfx;
     public GroundCheck groundCheckScript;
     public GroundCheck roofCheckScript;
@@ -29,7 +32,7 @@ public class Movement : MonoBehaviour
 
     public Vector3 movement;
     public Vector3 velocity;
-    public Vector3 calulatedVelocity;
+    Vector3 calulatedVelocity;
     public Vector3 lastPos;
 
     public Transform groundCheck;
@@ -46,7 +49,7 @@ public class Movement : MonoBehaviour
     public string direction;
     public int directionIndicator;
 
-    public Player player;
+    public Rewired.Player player;
     public int playerRewiredID;
 
     [Header("Audio")]
@@ -64,6 +67,22 @@ public class Movement : MonoBehaviour
     public ThirdPersonScript noArmorThirdPersonScript;
     public ThirdPersonScript armorThirdPersonScript;
 
+    bool _isMoving;
+    bool isMoving
+    {
+        set
+        {
+            if(value && !_isMoving)
+            {
+                _isMoving = true;
+                OnPlayerStartedMoving?.Invoke(this);
+            }else if(!value && _isMoving)
+            {
+                _isMoving = false;
+                OnPlayerStoppedMoving?.Invoke(this);
+            }
+        }
+    }
     private void Awake()
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
@@ -94,7 +113,7 @@ public class Movement : MonoBehaviour
         cController = gameObject.GetComponent<CharacterController>();
         rBody = gameObject.GetComponent<Rigidbody>();
         pController = gameObject.GetComponent<PlayerController>();
-        pProperties = GetComponent<PlayerProperties>();
+        pProperties = GetComponent<Player>();
         defaultSpeed = speed;
         defaultSlopeLimit = GetComponent<CharacterController>().slopeLimit;
         defaultStepOffset = GetComponent<CharacterController>().stepOffset;
@@ -223,6 +242,11 @@ public class Movement : MonoBehaviour
     {
         calulatedVelocity = ((transform.position - previousPosition)) / Time.deltaTime;
         previousPosition = transform.position;
+
+        if (calulatedVelocity.magnitude > 0f)
+            isMoving = true;
+        else
+            isMoving = false;
     }
 
     public void SetPlayerIDInInput()

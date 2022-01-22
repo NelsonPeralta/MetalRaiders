@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class DamageIndicatorManager : MonoBehaviour
 {
-    public PlayerProperties player;
+    public Player player;
     public GameObject damageIndicatorPrefab;
     public int damageIndicatorLifeTime;
     public void SpawnNewDamageIndicator(int playerWhoShotPID)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
 {
-    public PlayerProperties player;
+    public Player player;
     public bool isGrounded;
 
     //public List<GameObject> objectsCollidingWith = new List<GameObject>();

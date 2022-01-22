@@ -14,7 +14,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     WeaponPool weaponPool;
 
     [Header("Other Scripts")]
-    public PlayerProperties pProperties;
+    public Player pProperties;
     public PlayerInventory pInventory;
     public DualWielding dWielding;
     public PlayerController pController;

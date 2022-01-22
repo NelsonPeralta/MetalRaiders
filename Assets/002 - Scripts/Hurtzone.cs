@@ -19,7 +19,7 @@ public class Hurtzone : MonoBehaviour
     public bool instantKillzone;
 
     [Header("Players in Range")]
-    public List<PlayerProperties> playersInRange = new List<PlayerProperties>();
+    public List<Player> playersInRange = new List<Player>();
 
     private void Start()
     {
@@ -30,9 +30,9 @@ public class Hurtzone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<PlayerProperties>() != null)
+        if (other.gameObject.GetComponent<Player>() != null)
         {
-            playersInRange.Add(other.GetComponent<PlayerProperties>());
+            playersInRange.Add(other.GetComponent<Player>());
             if (!instantKillzone)
                 other.GetComponent<ScreenEffects>().orangeScreen.SetActive(true);
         }
@@ -40,10 +40,10 @@ public class Hurtzone : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.GetComponent<PlayerProperties>() != null)
+        if (other.gameObject.GetComponent<Player>() != null)
         {
             other.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
-            RemovePlayerFromRange(other.GetComponent<PlayerProperties>());
+            RemovePlayerFromRange(other.GetComponent<Player>());
         }
     }
 
@@ -60,7 +60,7 @@ public class Hurtzone : MonoBehaviour
             }
         StartCoroutine(DamagePlayersInRange_Coroutine());
     }
-    void RemovePlayerFromRange(PlayerProperties pp)
+    void RemovePlayerFromRange(Player pp)
     {
         for (int i = 0; i < playersInRange.Count; i++)
         {

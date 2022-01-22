@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShieldPack : MonoBehaviour
 {
-    PlayerProperties pProperties;
+    Player pProperties;
     public GameObject packFX;
 
     private void Start()
@@ -15,12 +15,12 @@ public class ShieldPack : MonoBehaviour
     {
         if (other.gameObject.tag == "player")
         {
-            pProperties = other.gameObject.GetComponent<PlayerProperties>();
+            pProperties = other.gameObject.GetComponent<Player>();
 
-            if (pProperties.hasShield && pProperties.shieldSlider.value < pProperties.maxShield && pProperties.needsShieldPack)
-            {
-                StartCoroutine(AllowShieldRecharge());
-            }
+            //if (pProperties.hasShield && pProperties.shieldSlider.value < pProperties.maxShield && pProperties.needsShieldPack)
+            //{
+            //    StartCoroutine(AllowShieldRecharge());
+            //}
         }
     }
 

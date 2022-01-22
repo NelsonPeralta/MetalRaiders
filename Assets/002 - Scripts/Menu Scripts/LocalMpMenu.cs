@@ -25,7 +25,7 @@ public class LocalMpMenu : MonoBehaviour
     public bool mapChosen;
 
     [Header("Players")]
-    public Player player;
+    public Rewired.Player player;
     public int playerRID;
 
     [Header("UI Components")]

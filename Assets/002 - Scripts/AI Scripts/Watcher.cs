@@ -141,7 +141,7 @@ public class Watcher : AiAbstractClass
                 {
                     animator.Play("Summon");
 
-                    var pSurro = target.GetComponent<PlayerProperties>().pSurroundings;
+                    var pSurro = target.GetComponent<Player>().pSurroundings;
                     var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
                     meteo.GetComponent<Fireball>().radius = meteorRadius;
                     meteo.GetComponent<Fireball>().damage = meteorDamage;
@@ -188,7 +188,7 @@ public class Watcher : AiAbstractClass
         if (isDead)
             return;
 
-        PlayerProperties pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
 
         health -= damage;

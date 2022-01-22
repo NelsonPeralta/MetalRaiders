@@ -21,7 +21,7 @@ public class PlayerPauseMenu : MonoBehaviour
     public bool playerQuitMenuOpen;
 
     [Header("Players")]
-    public Player player;
+    public Rewired.Player player;
     public int playerRID;
 
     [Header("UI Components")]

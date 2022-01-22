@@ -9,7 +9,7 @@ using System.IO;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager playerManagerInstance;
-    public List<PlayerProperties> allPlayers = new List<PlayerProperties>();
+    public List<Player> allPlayers = new List<Player>();
 	public PhotonView PV;
 	GameObject controller;
 
@@ -47,7 +47,7 @@ public class PlayerManager : MonoBehaviour
 		CreateController();
 	}
 
-    public PlayerProperties GetPlayerWithGivenPhotonId(int id)
+    public Player GetPlayerWithGivenPhotonId(int id)
     {
         for (int i = 0; i < allPlayers.Count; i++)
             if (allPlayers[i].GetComponent<PhotonView>().ViewID == id)

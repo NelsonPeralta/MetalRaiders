@@ -74,7 +74,7 @@ public class AIGrenade : MonoBehaviour
                     //Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (playerWhoThrewGrenade.GetComponent<PhotonView>().IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<PlayerProperties>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.GetComponent<PhotonView>().ViewID);
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.GetComponent<PhotonView>().ViewID);
                 }
             }
         }

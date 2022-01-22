@@ -155,15 +155,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void CalculateNumberOfAIsForNextWave()
     {
-        watchersLeft = FindObjectsOfType<PlayerProperties>().Length * 2 + (currentWave * 3);
+        watchersLeft = FindObjectsOfType<Player>().Length * 2 + (currentWave * 3);
         if (watchersLeft > watcherPool.Length)
             watchersLeft = watcherPool.Length;
 
-        knightsLeft = FindObjectsOfType<PlayerProperties>().Length * 1 + (currentWave * 2);
+        knightsLeft = FindObjectsOfType<Player>().Length * 1 + (currentWave * 2);
         if (knightsLeft > knightPool.Length)
             knightsLeft = knightPool.Length;
 
-        hellhoundsLeft = FindObjectsOfType<PlayerProperties>().Length * 3 + (currentWave * 4);
+        hellhoundsLeft = FindObjectsOfType<Player>().Length * 3 + (currentWave * 4);
         if (hellhoundsLeft > hellhoundPool.Length)
             hellhoundsLeft = hellhoundPool.Length;
 
@@ -193,7 +193,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     IEnumerator StartNewWave_Coroutine()
     {
-        int delay = FindObjectsOfType<PlayerProperties>().Length * 3;
+        int delay = FindObjectsOfType<Player>().Length * 3;
         yield return new WaitForSeconds(delay);
 
         OnWaveStart?.Invoke(this);
@@ -346,7 +346,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     IEnumerator EndWave_Coroutine()
     {
-        nextWaveDelay = FindObjectsOfType<PlayerProperties>().Length * 10;
+        nextWaveDelay = FindObjectsOfType<Player>().Length * 10;
         yield return new WaitForSeconds(nextWaveDelay);
         OnWaveEnd?.Invoke(this);
     }
@@ -374,7 +374,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     int GetRandomPlayerPhotonId()
     {
-        PlayerProperties[] allPlayers = FindObjectsOfType<PlayerProperties>();
+        Player[] allPlayers = FindObjectsOfType<Player>();
         int ran = Random.Range(0, allPlayers.Length);
         int targetPhotonId = allPlayers[ran].PV.ViewID;
         return targetPhotonId;

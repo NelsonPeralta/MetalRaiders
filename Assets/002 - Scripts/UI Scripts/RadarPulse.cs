@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class RadarPulse : MonoBehaviour
 {
     public Transform pulseTransform;
-    public PlayerProperties pProperties;
+    public Player pProperties;
     private float range;
     public float maxRange;
     public float rangeSpeed;

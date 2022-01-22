@@ -9,7 +9,7 @@ public class PlayerCoopSlot : MonoBehaviour
 {
     [Header("Scripts")]
     public MainMenu mainMenu;
-    public Player player;
+    public Rewired.Player player;
     public Text joinButtonText;
 
     [Header("Swarm")]

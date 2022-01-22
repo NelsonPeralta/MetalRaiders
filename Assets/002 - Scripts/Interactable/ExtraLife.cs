@@ -9,9 +9,9 @@ public class ExtraLife : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<PlayerProperties>() != null)
+        if (other.GetComponent<Player>() != null)
         {
-            PlayerProperties player = other.GetComponent<PlayerProperties>();
+            Player player = other.GetComponent<Player>();
 
             if (!player.isDead)
             {

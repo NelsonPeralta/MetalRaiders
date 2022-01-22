@@ -5,7 +5,7 @@ using UnityEngine;
 public class AllPlayerScripts : MonoBehaviour
 {
     [Header("General")]
-    public PlayerProperties playerProperties;
+    public Player playerProperties;
     public PlayerController playerController;
     [Header("Inventory")]
     public PlayerInventory playerInventory;

@@ -102,11 +102,11 @@ public class WatcherBackup : MonoBehaviour
         {
             if (target != null)
             {
-                if (target.gameObject.GetComponent<PlayerProperties>().health > 0)
+                if (target.gameObject.GetComponent<Player>().hitPoints > 0)
                 {
                     nma.SetDestination(target.position);
                 }
-                else if (target.gameObject.GetComponent<PlayerProperties>().health <= 0)
+                else if (target.gameObject.GetComponent<Player>().hitPoints <= 0)
                 {
                     target = null;
                 }

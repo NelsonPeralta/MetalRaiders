@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class MyLibrary : MonoBehaviour
 {
-    public PlayerProperties GetMyOnlinePlayer()
+    public Player GetMyOnlinePlayer()
     {
-        foreach(PlayerProperties pp in FindObjectsOfType<PlayerProperties>())
+        foreach(Player pp in FindObjectsOfType<Player>())
         {
             if (pp.PV.IsMine)
                 return pp;

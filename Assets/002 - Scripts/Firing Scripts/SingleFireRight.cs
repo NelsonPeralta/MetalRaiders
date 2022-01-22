@@ -73,13 +73,13 @@ public class SingleFireRight : MonoBehaviour
 
                 var bullet = (Transform)Instantiate(gwProperties.bulletPrefab, gwProperties.bulletSpawnPoint.transform.position, gwProperties.bulletSpawnPoint.transform.rotation);
                 bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-                bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>();
+                bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<Player>();
                 if (pController.isDualWielding)
                     bullet.gameObject.GetComponent<Bullet>().wProperties = dwRightWP;
-                bullet.gameObject.GetComponent<Bullet>().crosshairScript = pController.gameObject.GetComponent<PlayerProperties>().cScript;
+                bullet.gameObject.GetComponent<Bullet>().crosshairScript = pController.gameObject.GetComponent<Player>().cScript;
                 bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-                bullet.gameObject.GetComponent<Bullet>().raycastScript = pController.gameObject.GetComponent<PlayerProperties>().raycastScript;
-                bullet.gameObject.GetComponent<Bullet>().crosshairScript = pController.gameObject.GetComponent<PlayerProperties>().cScript;
+                bullet.gameObject.GetComponent<Bullet>().raycastScript = pController.gameObject.GetComponent<Player>().raycastScript;
+                bullet.gameObject.GetComponent<Bullet>().crosshairScript = pController.gameObject.GetComponent<Player>().cScript;
 
                 SetTeamToBulletScript(bullet);
 

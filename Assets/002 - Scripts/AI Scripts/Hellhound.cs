@@ -67,7 +67,7 @@ public class Hellhound : AiAbstractClass
                 if (canDoAction)
                 {
                     animator.Play("Bite");
-                    target.GetComponent<PlayerProperties>().Damage(meleeDamage, false, 99);
+                    target.GetComponent<Player>().Damage(meleeDamage, false, 99);
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
@@ -107,7 +107,7 @@ public class Hellhound : AiAbstractClass
         if (isDead)
             return;
 
-        PlayerProperties pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
 
         health -= damage;

@@ -15,7 +15,7 @@ public class SingleFire : MonoBehaviour
     public bool blueTeam = false;
     public bool yellowTeam = false;
     public bool greenTeam = false;
-    public PlayerProperties pProperties;
+    public Player pProperties;
     public PlayerController pController;
     public ThirdPersonScript thirdPersonScript;
     public PlayerInventory pInventory;
@@ -68,7 +68,7 @@ public class SingleFire : MonoBehaviour
                     bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = this.allPlayerScripts;
                     bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
                     bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-                    bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<PlayerProperties>();
+                    bullet.gameObject.GetComponent<Bullet>().playerWhoShot = gwProperties.gameObject.GetComponent<Player>();
                     bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
                     bullet.gameObject.GetComponent<Bullet>().raycastScript = pProperties.raycastScript;
                     bullet.gameObject.GetComponent<Bullet>().crosshairScript = pProperties.cScript;

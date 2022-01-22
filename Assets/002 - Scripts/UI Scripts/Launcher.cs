@@ -159,7 +159,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdatePlayerList()
     {
-        Player[] players = PhotonNetwork.PlayerList;
+        Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
 
         foreach (Transform child in playerListContent)
         {
@@ -179,7 +179,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         PV.RPC("UpdatePlayerList", RpcTarget.All);
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
     {
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
@@ -235,7 +235,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
