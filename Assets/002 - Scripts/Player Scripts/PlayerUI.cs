@@ -6,6 +6,7 @@ using Photon.Pun;
 
 public class PlayerUI : MonoBehaviour
 {
+    public Canvas canvas;
     [Header("Scripts")]
     public OnlinePlayerSwarmScript onlinePlayerSwarmScript;
     [Header("Singletons")]
@@ -64,6 +65,12 @@ public class PlayerUI : MonoBehaviour
         headshotIndicator.SetActive(false);
 
         OnSwarmKillsChanged(onlinePlayerSwarmScript);
+
+        if (!PV.IsMine)
+        {
+            canvas.gameObject.SetActive(false);
+            return;
+        }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             EnableSwarmUIComponents();

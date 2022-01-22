@@ -161,7 +161,7 @@ public class PlayerMultiplayerStats : MonoBehaviourPunCallbacks
         {
             Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
             kills = (int)changedProps[$"{playerName}_kills"];
-            player.allPlayerScripts.playerUIComponents.multiplayerPointsRed.text = $"{kills}";
+            player.GetComponent<PlayerUI>().multiplayerPointsRed.text = $"{kills}";
 
             OnKillsChanged?.Invoke(this);
         }

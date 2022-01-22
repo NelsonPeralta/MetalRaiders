@@ -74,10 +74,10 @@ public class SlayerManager : MonoBehaviour
             {
                 if (player)
                 {
-                    player.GetComponent<AllPlayerScripts>().playerUIComponents.swarmPointsHolder.SetActive(false);
-                    player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsHolder.SetActive(true);
-                    player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsBlue.text = 0.ToString();
-                    player.GetComponent<AllPlayerScripts>().playerUIComponents.multiplayerPointsRed.text = 0.ToString();
+                    player.GetComponent<PlayerUI>().swarmPointsHolder.SetActive(false);
+                    player.GetComponent<PlayerUI>().multiplayerPointsHolder.SetActive(true);
+                    player.GetComponent<PlayerUI>().multiplayerPointsBlue.text = 0.ToString();
+                    player.GetComponent<PlayerUI>().multiplayerPointsRed.text = 0.ToString();
                 }
             }
         }

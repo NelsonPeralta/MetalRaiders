@@ -94,7 +94,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 else
                 {
                     _target = value;
-                    _target.GetComponent<PlayerProperties>().OnDeath += OnTargetDeath_Delegate;
+                    _target.GetComponent<PlayerProperties>().OnPlayerDeath += OnTargetDeath_Delegate;
                 }
             }
             else

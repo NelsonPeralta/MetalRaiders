@@ -111,7 +111,6 @@ public class PlayerController : MonoBehaviourPun
         {
             gunCam.gameObject.SetActive(false);
             mainCam.gameObject.SetActive(false);
-            allPlayerScripts.playerUIComponents.gameObject.SetActive(false);
         }
         OnPlayerSwitchWeapons?.Invoke(this);
     }
@@ -539,16 +538,16 @@ public class PlayerController : MonoBehaviourPun
             fragGrenadesActive = false;
             stickyGrenadesActive = true;
 
-            allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(false);
-            allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(true);
+            GetComponent<PlayerUI>().fragGrenadeIcon.SetActive(false);
+            GetComponent<PlayerUI>().stickyGrenadeIcon.SetActive(true);
         }
         else if (stickyGrenadesActive)
         {
             fragGrenadesActive = true;
             stickyGrenadesActive = false;
 
-            allPlayerScripts.playerUIComponents.fragGrenadeIcon.SetActive(true);
-            allPlayerScripts.playerUIComponents.stickyGrenadeIcon.SetActive(false);
+            GetComponent<PlayerUI>().fragGrenadeIcon.SetActive(true);
+            GetComponent<PlayerUI>().stickyGrenadeIcon.SetActive(false);
         }
     }
 
@@ -988,14 +987,14 @@ public class PlayerController : MonoBehaviourPun
         {
             Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
             Cursor.visible = true;
-            allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(true);
+            GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(true);
             pauseMenuOpen = true;
         }
         else
         {
             Cursor.lockState = CursorLockMode.Locked; // Must Unlock Cursor so it can detect buttons
             Cursor.visible = false;
-            allPlayerScripts.playerUIComponents.singlePlayerPauseMenu.gameObject.SetActive(false);
+            GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(false);
             pauseMenuOpen = false;
         }
     }

@@ -243,7 +243,6 @@ public class Skeleton : MonoBehaviour
                         audioSource.Play();
 
                         Debug.Log("Skeleton Melee Attack");
-                        target.GetComponent<PlayerProperties>().BleedthroughDamage(damage, false, 99);
                     }
                 }
 

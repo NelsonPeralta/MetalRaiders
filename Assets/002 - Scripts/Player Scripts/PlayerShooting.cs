@@ -124,8 +124,8 @@ public class PlayerShooting : MonoBehaviourPun
             playerController.anim.Play("Fire", 0, 0f);
             StartCoroutine(Player3PSFiringAnimation());
         }
-        activeWeapon.mainAudioSource.clip = activeWeapon.Fire;
-        activeWeapon.mainAudioSource.Play();
+        GetComponent<AudioSource>().clip = activeWeapon.Fire;
+        GetComponent<AudioSource>().Play();
         activeWeapon.Recoil();
         OnBulletSpawned?.Invoke(this);
     }

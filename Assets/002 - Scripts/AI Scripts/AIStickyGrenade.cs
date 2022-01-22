@@ -190,7 +190,6 @@ public class AIStickyGrenade : MonoBehaviour
                     if (!player.GetComponent<PlayerProperties>().isDead)
                     {
                         float calculatedDamage = damage * (1 - (playerDistance / radius));
-                        player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     }
                 }
             }

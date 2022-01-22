@@ -14,7 +14,6 @@ public class AllPlayerScripts : MonoBehaviour
     public CameraScript cameraScript;
     public CrosshairManager crosshairScript;
     public AimAssist aimAssist;
-    public PlayerUI playerUIComponents;
     public Aiming aimingScript;
     public WaveCounter waveCounter;
     public ScoreboardManager scoreboardManager;
