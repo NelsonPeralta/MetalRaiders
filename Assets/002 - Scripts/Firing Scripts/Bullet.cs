@@ -14,7 +14,6 @@ public class Bullet : MonoBehaviourPunCallbacks
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
     public ZombieScript zScript;
-    public AimAssist raycastScript;
     public CrosshairManager crosshairScript;
     public GameObjectPool gameObjectPool;
 
@@ -197,19 +196,19 @@ public class Bullet : MonoBehaviourPunCallbacks
                 bool wasHeadshot = false;
                 if (hitbox.isHead && wProperties.isHeadshotCapable)
                 {
-                    if (playerProperties.maxShield <= 0)
-                    {
-                        damage = (int)(damage * wProperties.headshotMultiplier);
-                        wasHeadshot = true;
-                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
+                    //if (playerProperties.maxShield <= 0)
+                    //{
+                    //    damage = (int)(damage * wProperties.headshotMultiplier);
+                    //    wasHeadshot = true;
+                    //    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
 
-                    }
-                    else if (playerProperties.maxShield > 0 && (playerProperties.hitPoints < playerProperties.maxHitPoints - playerProperties.maxShield))
-                    {
-                        damage = (int)(damage * 999);
-                        wasHeadshot = true;
-                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
-                    }
+                    //}
+                    //else if (playerProperties.maxShield > 0 && (playerProperties.hitPoints < playerProperties.maxHitPoints - playerProperties.maxShield))
+                    //{
+                    //    damage = (int)(damage * 999);
+                    //    wasHeadshot = true;
+                    //    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
+                    //}
 
                     if (wasHeadshot && playerProperties.hitPoints < damage)
                     {

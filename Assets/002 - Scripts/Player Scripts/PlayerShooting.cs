@@ -112,7 +112,6 @@ public class PlayerShooting : MonoBehaviourPun
             bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
             bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
             bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-            bullet.gameObject.GetComponent<Bullet>().raycastScript = playerController.GetComponent<Player>().raycastScript;
             bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript;
             bullet.SetActive(true);
             GetComponent<CommonFiringActions>().SpawnMuzzleflash();

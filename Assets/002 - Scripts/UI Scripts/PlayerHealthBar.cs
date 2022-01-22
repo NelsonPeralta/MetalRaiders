@@ -6,25 +6,25 @@ using UnityEngine.UI;
 public class PlayerHealthBar : PlayerBar
 {
     public GameObject healthSliderGO;
-    public Slider healthSlider;
 
-    public override void OnPlayerDamaged_Delegate(Player player)
+    private void Start()
     {
+        GetComponent<Slider>().maxValue = 100;
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            holder.SetActive(true);
+        else
+            holder.SetActive(false);
     }
-
-    // Start is called before the first frame update
-    void Start()
+    public override void OnPlayerHitPointsChanged_Delegate(Player player)
     {
-        healthSlider = GetComponent<Slider>();
+        GetComponent<Slider>().value = Mathf.Clamp(player.hitPoints, 0, 100);
     }
-
-    // Update is called once per frame
     void Update()
     {
-        if (healthSlider.value >= (healthSlider.maxValue * 0.6f))
+        if (GetComponent<Slider>().value >= (GetComponent<Slider>().maxValue * 0.6f))
             healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(0, 255, 0, 255); // Green
-        else if (healthSlider.value <= (healthSlider.maxValue * 0.25f))
+        else if (GetComponent<Slider>().value <= (GetComponent<Slider>().maxValue * 0.25f))
             healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 0, 0, 255); // Red
         else
             healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 255, 0, 255); // Yellow

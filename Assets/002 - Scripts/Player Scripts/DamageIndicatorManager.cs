@@ -12,7 +12,14 @@ public class DamageIndicatorManager : MonoBehaviour
     {
         if (playerWhoShotPID == 99) // Guardians
             return;
-        StartCoroutine(SpawnNewDamageIndicator_Coroutine(playerWhoShotPID));
+        try
+        {
+            StartCoroutine(SpawnNewDamageIndicator_Coroutine(playerWhoShotPID));
+        }
+        catch (System.Exception e)
+        {
+
+        }
     }
 
     IEnumerator SpawnNewDamageIndicator_Coroutine(int playerWhoShotPID)

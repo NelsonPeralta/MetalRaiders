@@ -62,7 +62,7 @@ public class CameraScript : MonoBehaviour
         if (pProperties.aimAssist.redReticuleIsOn)
             mouseSensitivity = mouseSensitivity / 3;
 
-        if (pController.playerProperties != null && !pController.pauseMenuOpen)
+        if (!pController.pauseMenuOpen)
         {
 
             mouseX = player.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime + HorizontalSway();

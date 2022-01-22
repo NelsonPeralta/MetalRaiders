@@ -6,7 +6,12 @@ public class PlayerShield : MonoBehaviour
 {
     public delegate void PlayerShieldEvent(PlayerShield playerShield);
     public PlayerShieldEvent OnPlayerShieldDamaged, OnPlayerShieldChanged;
+
+    [Header("Models")]
     public GameObject shieldModel;
+    public GameObject shieldThirdPersonModel;
+    public GameObject shieldElectricityThirdPersonModel;
+    public GameObject shieldRechargeThirdPersonModel;
 
     [Header("Shield Sounds")]
     public AudioSource shieldAudioSource;
@@ -45,7 +50,7 @@ public class PlayerShield : MonoBehaviour
     }
     private void Awake()
     {
-        shield = (float)GetComponent<Player>().maxShield;
+        //shield = (float)GetComponent<Player>().maxShield;
 
         GetComponent<PlayerController>().OnPlayerTestButton += OnPlayerTestButton_Delegate;
     }
@@ -86,4 +91,40 @@ public class PlayerShield : MonoBehaviour
     {
         shieldAlarmAudioSource.Stop();
     }
+
+    void ShowThirdPersionShieldElectricityModel()
+    {
+        if (!shieldElectricityThirdPersonModel.activeSelf)
+            shieldElectricityThirdPersonModel.SetActive(true);
+    }
+
+    void HideThirdPersionShieldElectricityModel()
+    {
+        if (shieldElectricityThirdPersonModel.activeSelf)
+            shieldElectricityThirdPersonModel.SetActive(false);
+    }
+    void ShowThirdPersonShieldModel()
+    {
+        StartCoroutine(ShowThirdPersonShieldModel_Coroutine());
+    }
+
+    IEnumerator ShowThirdPersonShieldModel_Coroutine()
+    {
+        shieldThirdPersonModel.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        shieldThirdPersonModel.SetActive(false);
+    }
+
+    void ShowThirdPersonShieldRechargeModel()
+    {
+        StartCoroutine(ShowThirdPersonShieldRechargeModel_Coroutine());
+    }
+
+    IEnumerator ShowThirdPersonShieldRechargeModel_Coroutine()
+    {
+        shieldRechargeThirdPersonModel.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        shieldRechargeThirdPersonModel.SetActive(false);
+    }
+
 }

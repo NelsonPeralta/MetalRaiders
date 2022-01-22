@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviourPun
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public WeaponSounds weapSounds;
-    public Player playerProperties;
     public PlayerInventory pInventory;
     public GeneralWeapProperties gwProperties;
     public WeaponProperties wProperties;
@@ -23,10 +22,6 @@ public class PlayerController : MonoBehaviourPun
     public Camera mainCam;
     public Camera gunCam;
     public CameraScript camScript;
-    public FullyAutomaticFire fullyAutomaticFire;
-    public FullyAutomaticFireLeft fullyAutomaticFireLeft;
-    public BurstFire burstFire;
-    public SingleFire singleFire;
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
     public Rewired.Player player;
     public int playerRewiredID;
@@ -122,11 +117,10 @@ public class PlayerController : MonoBehaviourPun
             return;
 
         UpdateWeaponPropertiesAndAnimator();
-        if (playerProperties != null)
         {
             StartButton();
             BackButton();
-            if (!playerProperties.isDead && !playerProperties.isRespawning)
+            if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning)
             {
                 if (!pauseMenuOpen)
                 {
@@ -236,8 +230,8 @@ public class PlayerController : MonoBehaviourPun
         movement.tPersonScripts.anim.SetBool("Sprint", true);
         movement.tPersonScripts.anim.SetBool("Idle Rifle", false);
         movement.tPersonScripts.anim.SetBool("Idle Pistol", false);
-        playerProperties.playerVoice.volume = 0.1f;
-        playerProperties.PlaySprintingSound();
+        GetComponent<Player>().playerVoice.volume = 0.1f;
+        GetComponent<Player>().PlaySprintingSound();
     }
 
     void DisableSprint()
@@ -265,12 +259,12 @@ public class PlayerController : MonoBehaviourPun
             movement.tPersonScripts.anim.SetBool("Idle Pistol", false);
         }
 
-        playerProperties.StopPlayingPlayerVoice();
+        GetComponent<Player>().StopPlayingPlayerVoice();
     }
 
     void Shooting()
     {
-        if (playerProperties.isDead || isSprinting)
+        if (GetComponent<Player>().isDead || isSprinting)
             return;
 
         if (!isDualWielding)
@@ -341,7 +335,7 @@ public class PlayerController : MonoBehaviourPun
                 else
                 {
                     isAiming = false;
-                    mainCam.fieldOfView = playerProperties.defaultFov;
+                    mainCam.fieldOfView = GetComponent<Player>().defaultFov;
                     camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
                     gunCam.enabled = true;
 
@@ -356,11 +350,11 @@ public class PlayerController : MonoBehaviourPun
     }
     public void ScopeOut()
     {
-        if (!isAiming && !playerProperties.isDead)
+        if (!isAiming && !GetComponent<Player>().isDead)
             return;
         Debug.Log("Unscope Script");
         isAiming = false;
-        mainCam.fieldOfView = playerProperties.defaultFov;
+        mainCam.fieldOfView = GetComponent<Player>().defaultFov;
         camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
         allPlayerScripts.aimingScript.playAimSound();
 
@@ -371,7 +365,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee()
     {
-        if (!playerProperties.isDead)
+        if (!GetComponent<Player>().isDead)
         {
             if (player.GetButtonDown("Melee") && !isMeleeing && !isShooting && !isThrowingGrenade && !isSprinting)
             {
@@ -459,7 +453,7 @@ public class PlayerController : MonoBehaviourPun
 
     void CheckReloadButton()
     {
-        if (!playerProperties.isDead)
+        if (!GetComponent<Player>().isDead)
         {
             if (player.GetButtonDown("Reload") && !isReloading && !wPickup.canPickupDW && !isDualWielding)
             {
@@ -818,7 +812,7 @@ public class PlayerController : MonoBehaviourPun
             grenade = Instantiate(pInventory.grenadePrefab,
                gwProperties.grenadeSpawnPoint.transform.position,
                gwProperties.grenadeSpawnPoint.transform.rotation);
-            grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = playerProperties;
+            grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = GetComponent<Player>();
             grenade.GetComponent<FragGrenade>().playerRewiredID = playerRewiredID;
             //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
@@ -827,12 +821,12 @@ public class PlayerController : MonoBehaviourPun
             grenade = Instantiate(pInventory.stickyGrenadePrefab,
                gwProperties.grenadeSpawnPoint.transform.position,
                gwProperties.grenadeSpawnPoint.transform.rotation);
-            grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = playerProperties;
+            grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = GetComponent<Player>();
             grenade.GetComponent<StickyGrenade>().playerRewiredID = playerRewiredID;
             //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
 
-        foreach (GameObject hb in playerProperties.hitboxes)
+        foreach (GameObject hb in GetComponent<Player>().hitboxes)
             Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
 
         grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
@@ -1015,7 +1009,7 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        playerProperties.Damage(10, false, 0);
+        GetComponent<Player>().Damage(10, false, GetComponent<PhotonView>().ViewID);
     }
 }
 

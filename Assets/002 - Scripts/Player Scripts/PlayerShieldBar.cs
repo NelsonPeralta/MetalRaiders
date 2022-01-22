@@ -1,23 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerShieldBar : PlayerBar
 {
-    public override void OnPlayerDamaged_Delegate(Player player)
+    private void Start()
     {
+        GetComponent<Slider>().maxValue = 150;
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            holder.SetActive(true);
+        else
+            holder.SetActive(false);
     }
-
-    // Start is called before the first frame update
-    void Start()
+    public override void OnPlayerHitPointsChanged_Delegate(Player player)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (player.hitPoints >= 100)
+            GetComponent<Slider>().value = player.hitPoints - 100;
     }
 }

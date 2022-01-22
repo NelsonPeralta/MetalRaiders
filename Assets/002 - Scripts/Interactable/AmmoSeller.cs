@@ -51,7 +51,7 @@ public class AmmoSeller : MonoBehaviour
     {
         if (player0 != null)
         {
-            if (player0.pController.player.GetButtonShortPressDown("Interact"))
+            if (player0.GetComponent<PlayerController>().player.GetButtonShortPressDown("Interact"))
             {
                 if (player0.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
                 {

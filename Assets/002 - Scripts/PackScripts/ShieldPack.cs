@@ -26,12 +26,12 @@ public class ShieldPack : MonoBehaviour
 
     IEnumerator AllowShieldRecharge()
     {
-        pProperties.needsShieldPack = false;
+        //pProperties.needsShieldPack = false;
         packFX.SetActive(false);
 
         yield return new WaitForSeconds(5);
 
-        pProperties.needsShieldPack = true;
+        //pProperties.needsShieldPack = true;
         Destroy(this.gameObject);
     }
 }
