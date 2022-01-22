@@ -23845,9 +23845,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 129
-  projectileDamage: 36
+  projectileDamage: 24
   projectileSpeed: 100
-  grenadeDamage: 64
+  grenadeDamage: 36
   grenadeRadius: 7
   projectile: {fileID: 5091089392186072086, guid: 5ba8aa092f5c7c54c94ba93b89b0e4ea,
     type: 3}
@@ -25298,14 +25298,13 @@ GameObject:
   m_Component:
   - component: {fileID: 6555730529384900432}
   - component: {fileID: 6555730529384900438}
-  - component: {fileID: 6555730529384900439}
   m_Layer: 15
   m_Name: Motion Tracker Dot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6555730529384900432
 Transform:
   m_ObjectHideFlags: 0
@@ -25372,32 +25371,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6555730529384900439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6555730529384900433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89b86c1753353344884fd40429370dbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tags:
-  - Motion Tracker Dot
-  - 
-  - 
-  - 
-  - 
-  isPlayer: 0
-  isAI: 0
-  isHitbox: 0
-  isAlive: 0
-  redTeam: 0
-  blueTeam: 0
-  yellowTeam: 0
-  greenTeam: 0
 --- !u!65 &6117847145697713515
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45521,15 +45494,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a3460fac6eccf446a920db0922d6fae, type: 3}
---- !u!4 &6555730529479960935 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 438816, guid: 9a3460fac6eccf446a920db0922d6fae,
-    type: 3}
-  m_PrefabInstance: {fileID: 6555730529479596871}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6555730529479726909 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 134266, guid: 9a3460fac6eccf446a920db0922d6fae,
+    type: 3}
+  m_PrefabInstance: {fileID: 6555730529479596871}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6555730529479960935 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 438816, guid: 9a3460fac6eccf446a920db0922d6fae,
     type: 3}
   m_PrefabInstance: {fileID: 6555730529479596871}
   m_PrefabAsset: {fileID: 0}

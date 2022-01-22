@@ -12046,9 +12046,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 129
-  projectileDamage: 48
+  projectileDamage: 32
   projectileSpeed: 150
-  meteorDamage: 72
+  meteorDamage: 36
   meteorSpeed: 15
   meteorRadius: 8
   projectile: {fileID: 1006269644436722, guid: 5ba8aa092f5c7c54c94ba93b89b0e4ea, type: 3}
