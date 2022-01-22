@@ -12,7 +12,7 @@ public class Hellhound : AiAbstractClass
     public Fireball projectile;
 
     public enum HellhoundActions { Bite, Seek, Idle }
-    HellhoundActions _hellhoundAction;
+    [SerializeField] HellhoundActions _hellhoundAction;
 
     public HellhoundActions hellhoundAction
     {
@@ -30,6 +30,7 @@ public class Hellhound : AiAbstractClass
     public override void OnEnable()
     {
         hellhoundAction = HellhoundActions.Seek;
+        seek = true;
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
@@ -79,7 +80,6 @@ public class Hellhound : AiAbstractClass
         else if (!isDead && !target)
         {
             hellhoundAction = HellhoundActions.Idle;
-            animator.SetBool("Idle", true);
         }
     }
 
@@ -108,13 +108,13 @@ public class Hellhound : AiAbstractClass
             return;
 
         Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
-        pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
+        pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         health -= damage;
         if (isDead)
         {
-            pp.GetComponent<OnlinePlayerSwarmScript>().kills++;
-            pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(defaultHealth);
+            pp.GetComponent<PlayerSwarmMatchStats>().kills++;
+            pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
         }
     }
 

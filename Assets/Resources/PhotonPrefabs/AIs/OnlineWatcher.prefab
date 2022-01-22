@@ -12680,7 +12680,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1673082704842895620}
   - component: {fileID: 1673082704842895626}
-  - component: {fileID: 1673082704842895621}
   m_Layer: 0
   m_Name: Motion Tracker Dot
   m_TagString: Untagged
@@ -12754,32 +12753,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1673082704842895621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1673082704842895623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89b86c1753353344884fd40429370dbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tags:
-  - Motion Tracker Dot
-  - 
-  - 
-  - 
-  - 
-  isPlayer: 0
-  isAI: 0
-  isHitbox: 0
-  isAlive: 0
-  redTeam: 0
-  blueTeam: 0
-  yellowTeam: 0
-  greenTeam: 0
 --- !u!1 &1673082705350187954
 GameObject:
   m_ObjectHideFlags: 0
@@ -13036,7 +13009,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6041454011642030886}
   m_Layer: 0
-  m_Name: LOS Spawn Point
+  m_Name: 'LOS Spawn Point '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

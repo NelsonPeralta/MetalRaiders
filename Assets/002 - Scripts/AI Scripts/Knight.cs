@@ -37,6 +37,7 @@ public class Knight : AiAbstractClass
     public override void OnEnable()
     {
         knightAction = KnightActions.Seek;
+        seek = true;
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
@@ -181,13 +182,13 @@ public class Knight : AiAbstractClass
             return;
 
         Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
-        pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
+        pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         health -= damage;
         if (isDead)
         {
-            pp.GetComponent<OnlinePlayerSwarmScript>().kills++;
-            pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(defaultHealth);
+            pp.GetComponent<PlayerSwarmMatchStats>().kills++;
+            pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
         }
     }
 

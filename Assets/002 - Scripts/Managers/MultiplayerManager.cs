@@ -55,8 +55,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void AddPlayerKill(AddPlayerKillStruct struc)
     {
-        PlayerMultiplayerStats winningPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerStats>();
-        PlayerMultiplayerStats losingPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerStats>();
+        PlayerMultiplayerMatchStats winningPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
+        PlayerMultiplayerMatchStats losingPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
 
 
         List<Player> allPlayers = new List<Player>();
@@ -84,7 +84,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void CheckForEndGame()
     {
-        foreach (PlayerMultiplayerStats pms in FindObjectsOfType<PlayerMultiplayerStats>())
+        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
             if (pms.kills >= scoreToWin)
                 EndGame();
     }
@@ -93,14 +93,14 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         string winningEntity = "";
         foreach (Player pp in FindObjectsOfType<Player>())
         {
-            if (pp.GetComponent<PlayerMultiplayerStats>().kills >= scoreToWin && GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
+            if (pp.GetComponent<PlayerMultiplayerMatchStats>().kills >= scoreToWin && GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
                 winningEntity = pp.PV.Owner.NickName;
 
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
             // return will stop this method, break will stop the loop, continue will stop the current iteration
             if (!pp.PV.IsMine)
                 continue;
-            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerStats>());
+            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
 
             pp.allPlayerScripts.announcer.PlayGameOverClip();
             pp.LeaveRoomWithDelay();

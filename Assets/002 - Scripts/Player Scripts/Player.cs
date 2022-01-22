@@ -26,7 +26,7 @@ public class Player : MonoBehaviourPunCallbacks
     public PlayerInventory pInventory;
     public CrosshairManager cScript;
     public AimAssist aimAssist;
-    public PlayerSurroundings pSurroundings;
+    public PlayerSurroundings playerSurroundings;
 
     [Header("Camera Options")]
     [Tooltip("Default value for camera field of view (40 is recommended).")]
@@ -40,11 +40,7 @@ public class Player : MonoBehaviourPunCallbacks
     public Vector3 mainOriginalCameraPosition;
 
     [Header("Hitboxes")]
-    public GameObject[] hitboxes = new GameObject[10];
-    public CharacterController characterController;
-
-    [Header("Ragdoll")]
-    public RagdollSpawn ragdollScript;
+    public List<GameObject> hitboxes = new List<GameObject>();
 
     [Header("Player Voice")]
     public AudioSource playerVoice;
@@ -112,10 +108,11 @@ public class Player : MonoBehaviourPunCallbacks
                 if (go.GetComponent<SphereCollider>() != null)
                     go.GetComponent<SphereCollider>().enabled = value;
 
-                characterController.enabled = value;
+                GetComponent<CharacterController>().enabled = value;
             }
         }
     }
+
     public bool isRespawning
     {
         get { return _isRespawning; }
@@ -127,8 +124,10 @@ public class Player : MonoBehaviourPunCallbacks
         get { return _isDead; }
         set
         {
+            bool previousValue = _isDead;
             _isDead = value;
-            if (_isDead)
+
+            if (value && !previousValue)
                 OnPlayerDeath?.Invoke(this);
         }
     }
@@ -136,7 +135,10 @@ public class Player : MonoBehaviourPunCallbacks
     public float healingCountdown
     {
         get { return _healingCountdown; }
-        private set { _healingCountdown = value; }
+        private set
+        {
+            _healingCountdown = Mathf.Clamp(value, 0, _defaultHealingCountdown);
+        }
     }
     private void Awake()
     {
@@ -245,7 +247,10 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (isDead)
         {
-            MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoShotThisPlayerPhotonId, PV.ViewID, wasHeadshot));
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoShotThisPlayerPhotonId, PV.ViewID, wasHeadshot));
+            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                GetComponent<PlayerSwarmMatchStats>().deaths++;
         }
     }
     void HitPointsRecharge()
@@ -255,7 +260,7 @@ public class Player : MonoBehaviourPunCallbacks
             healingCountdown -= Time.deltaTime;
         }
 
-        if (healingCountdown <= 0 && hitPoints < maxHitPoints)
+        if (healingCountdown <= 0 && hitPoints < maxHitPoints && GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             if (hitPoints < 100)
                 hitPoints += (Time.deltaTime * 150);
@@ -364,43 +369,43 @@ public class Player : MonoBehaviourPunCallbacks
         //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position = ragdollScript.Head.position;
         //Debug.Log("Player Head Pos: " + ragdollScript.Head.position + "; Ragdoll head position: " + ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position);
         //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.position = ragdollScript.Chest.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = ragdollScript.Hips.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = GetComponent<RagdollSpawn>().Hips.position;
 
         //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.rotation = ragdollScript.Head.rotation;
         //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.rotation = ragdollScript.Chest.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = ragdollScript.Hips.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = GetComponent<RagdollSpawn>().Hips.rotation;
 
 
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = ragdollScript.UpperArmLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = ragdollScript.UpperArmRight.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = GetComponent<RagdollSpawn>().UpperArmLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = GetComponent<RagdollSpawn>().UpperArmRight.position;
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = ragdollScript.UpperArmLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = ragdollScript.UpperArmRight.rotation;
-
-
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = ragdollScript.LowerArmLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = ragdollScript.LowerArmRight.position;
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = ragdollScript.LowerArmLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = ragdollScript.LowerArmRight.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = GetComponent<RagdollSpawn>().UpperArmLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = GetComponent<RagdollSpawn>().UpperArmRight.rotation;
 
 
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = ragdollScript.UpperLegLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = ragdollScript.UpperLegRight.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = GetComponent<RagdollSpawn>().LowerArmLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = GetComponent<RagdollSpawn>().LowerArmRight.position;
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = ragdollScript.UpperLegLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = ragdollScript.UpperLegRight.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = GetComponent<RagdollSpawn>().LowerArmLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = GetComponent<RagdollSpawn>().LowerArmRight.rotation;
 
 
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = ragdollScript.LowerLegLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = ragdollScript.LowerLegRight.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = GetComponent<RagdollSpawn>().UpperLegLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = GetComponent<RagdollSpawn>().UpperLegRight.position;
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = ragdollScript.LowerLegLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = ragdollScript.LowerLegRight.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = GetComponent<RagdollSpawn>().UpperLegLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = GetComponent<RagdollSpawn>().UpperLegRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = GetComponent<RagdollSpawn>().LowerLegLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = GetComponent<RagdollSpawn>().LowerLegRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = GetComponent<RagdollSpawn>().LowerLegLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = GetComponent<RagdollSpawn>().LowerLegRight.rotation;
 
         ragdoll.SetActive(true);
     }
@@ -416,20 +421,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         gunCamera.enabled = false;
 
-        foreach (GameObject go in hitboxes)
-            if (go != null)
-            {
-                go.layer = 23;
-                go.SetActive(false);
-
-                if (go.GetComponent<BoxCollider>() != null)
-                    go.GetComponent<BoxCollider>().enabled = false;
-
-                if (go.GetComponent<SphereCollider>() != null)
-                    go.GetComponent<SphereCollider>().enabled = false;
-
-                characterController.enabled = false;
-            }
+        hitboxesEnabled = false;
 
         SpawnRagdoll();
         hitPoints = maxHitPoints;
@@ -497,20 +489,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(0.1f);
 
-        foreach (GameObject go in hitboxes)
-            if (go != null)
-            {
-                go.SetActive(true);
-                go.layer = 13;
-
-                if (go.GetComponent<BoxCollider>() != null)
-                    go.GetComponent<BoxCollider>().enabled = true;
-
-                if (go.GetComponent<SphereCollider>() != null)
-                    go.GetComponent<SphereCollider>().enabled = true;
-
-                characterController.enabled = true;
-            }
+        hitboxesEnabled = true;
     }
     void PlayHurtSound()
     {
@@ -526,7 +505,6 @@ public class Player : MonoBehaviourPunCallbacks
 
     void PlayDeathSound()
     {
-        Debug.Log("Playing Death Sound");
         for (int i = 0; i < deathClips.Length; i++)
             if (playerVoice.isPlaying && playerVoice.clip == deathClips[i])
                 return;
@@ -587,12 +565,11 @@ public class Player : MonoBehaviourPunCallbacks
 
     void OnPlayerDamaged_Delegate(Player player)
     {
-        healingCountdown = (float)_defaultHealingCountdown;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            healingCountdown = (float)_defaultHealingCountdown;
     }
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
-        if (!isDead || isRespawning)
-            return;
         isRespawning = true;
 
         thirdPersonModels.SetActive(false);
@@ -603,6 +580,7 @@ public class Player : MonoBehaviourPunCallbacks
         //StopShieldAlarmSound();
         PlayDeathSound();
         GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
+        StartCoroutine(Respawn_Coroutine());
         StartCoroutine(MidRespawnAction());
     }
 }

@@ -49,7 +49,7 @@ public class Fireball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log("Fireball collided with: " + collision.gameObject.name);
+        Debug.Log("Fireball collided with: " + collision.gameObject.name);
         StartCoroutine(Despawn());
         Explosion();
     }

@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviourPun
     public Movement movement;
     public Melee melee;
     public ThirdPersonScript tPersonController;
-    public ControllerType lastControllerType;
+    public ControllerType activeControllerType;
 
     public PhotonView PV;
     public PlayerManager playerManager;
@@ -146,7 +146,7 @@ public class PlayerController : MonoBehaviourPun
         AnimationCheck();
         TestButton();
         if (ReInput.controllers != null)
-            lastControllerType = ReInput.controllers.GetLastActiveControllerType();
+            activeControllerType = ReInput.controllers.GetLastActiveControllerType();
 
     }
     void UpdateWeaponPropertiesAndAnimator()
@@ -200,14 +200,14 @@ public class PlayerController : MonoBehaviourPun
         {
             if (!movement.isGrounded || isReloading)
                 return;
-            if (lastControllerType == ControllerType.Keyboard || lastControllerType == ControllerType.Mouse)
+            if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
             {
                 if (player.GetButton("Sprint"))
                     EnableSprint();
                 else if (player.GetButtonUp("Sprint"))
                     DisableSprint();
             }
-            else if (lastControllerType == ControllerType.Joystick)
+            else if (activeControllerType == ControllerType.Joystick)
                 if (player.GetButtonDown("Sprint"))
                     EnableSprint();
         }

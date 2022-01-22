@@ -32,19 +32,19 @@ public class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine(username, password));
     }
 
-    public void SaveSwarmStats(OnlinePlayerSwarmScript onlinePlayerSwarmScript)
+    public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
         StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
 
     }
 
-    public void SaveMultiplayerStats(PlayerMultiplayerStats playerMultiplayerStats)
+    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
         StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
 
     }
 
-    IEnumerator SaveSwarmStats_Coroutine(OnlinePlayerSwarmScript onlinePlayerSwarmScript)
+    IEnumerator SaveSwarmStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
         int playerId = playerDatabaseAdaptor.GetId();
         int newKills = playerDatabaseAdaptor.GetPvEKills() + onlinePlayerSwarmScript.kills;
@@ -88,7 +88,7 @@ public class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
 
-    IEnumerator SaveMultiplayerStats_Coroutine(PlayerMultiplayerStats playerMultiplayerStats)
+    IEnumerator SaveMultiplayerStats_Coroutine(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
         int playerId = playerDatabaseAdaptor.GetId();
         int newKills = playerDatabaseAdaptor.GetPvPKills() + playerMultiplayerStats.kills;

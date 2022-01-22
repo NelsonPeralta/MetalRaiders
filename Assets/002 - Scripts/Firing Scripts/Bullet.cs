@@ -175,7 +175,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     finalDamage = (int)(wProperties.headshotMultiplier * damage);
 
                     if (hitbox.aiAbstractClass.health <= finalDamage)
-                        playerWhoShot.GetComponent<OnlinePlayerSwarmScript>().headshots++;
+                        playerWhoShot.GetComponent<PlayerSwarmMatchStats>().headshots++;
                 }
 
                 if (playerWhoShot.PV.IsMine)
@@ -212,7 +212,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                     if (wasHeadshot && playerProperties.hitPoints < damage)
                     {
-                        playerWhoShot.GetComponent<PlayerMultiplayerStats>().headshots++;
+                        playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
                     }
                 }
 

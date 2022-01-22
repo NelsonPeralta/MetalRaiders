@@ -49,9 +49,9 @@ public class CameraScript : MonoBehaviour
         if (!pController.PV.IsMine)
             return;
 
-        if (pController.lastControllerType.ToString() != "Keyboard" && pController.lastControllerType.ToString() != "Mouse")
+        if (pController.activeControllerType.ToString() != "Keyboard" && pController.activeControllerType.ToString() != "Mouse")
             mouseSensitivity = defaultMouseSensitivy;
-        else if (pController.lastControllerType.ToString() == "Keyboard" || pController.lastControllerType.ToString() == "Mouse")
+        else if (pController.activeControllerType.ToString() == "Keyboard" || pController.activeControllerType.ToString() == "Mouse")
         {
             mouseSensitivity = defaultMouseSensitivy / 25;
         }
@@ -59,7 +59,7 @@ public class CameraScript : MonoBehaviour
         if (pController.isAiming)
             mouseSensitivity = mouseSensitivity / 2;
 
-        if (pProperties.aimAssist.redReticuleIsOn)
+        if (pProperties.aimAssist.redReticuleIsOn && (pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Custom || pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
             mouseSensitivity = mouseSensitivity / 3;
 
         if (!pController.pauseMenuOpen)

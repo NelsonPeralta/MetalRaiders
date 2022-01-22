@@ -23,7 +23,7 @@ public class AllPlayerScripts : MonoBehaviour
     public PlayerSFXs playerSFXs;
     public Announcer announcer;
     [Header("Multiplayer Scripts")]
-    public PlayerMultiplayerStats playerMultiplayerStats;
+    public PlayerMultiplayerMatchStats playerMultiplayerStats;
     [Header("Pools")]
     public GameObjectPool playerFirstMuzzleFlash;
     public GameObjectPool playerThirdMuzzleFlash;

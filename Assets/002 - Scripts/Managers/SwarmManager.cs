@@ -33,6 +33,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     PhotonView PV;
     int maxWave;
     int _livesLeft = 4;
+    float _newWaveCountdown;
 
 
     int watchersLeft;
@@ -79,6 +80,21 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         CreateAIPool();
     }
 
+    private void Update()
+    {
+        NewWaveCountdown();
+    }
+
+    void NewWaveCountdown()
+    {
+        if(_newWaveCountdown > 0)
+        {
+            _newWaveCountdown -= Time.deltaTime;
+
+            if (_newWaveCountdown <= 0)
+                IncreaseWave();
+        }
+    }
     void OnSceneLoaded()
     {
         Scene currentScene = SceneManager.GetActiveScene();
@@ -341,25 +357,24 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void EndWave_RPC()
     {
         Debug.Log("Wave End");
-        StartCoroutine(EndWave_Coroutine());
-    }
-
-    IEnumerator EndWave_Coroutine()
-    {
         nextWaveDelay = FindObjectsOfType<Player>().Length * 10;
-        yield return new WaitForSeconds(nextWaveDelay);
         OnWaveEnd?.Invoke(this);
+        _newWaveCountdown = nextWaveDelay;
+
+        //Note: Avoid starting coroutine through RPCs. If bugs: a coroutine could be called multiple times. With countdowns, it is only reset instead of starting a coroutine alongside with the older one.
     }
 
     void OnWaveEnd_Delegate(SwarmManager swarmManager)
     {
+        int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
+        foreach(Player p in FindObjectsOfType<Player>())
+            p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
         RespawnHealthPacks();
-        IncreaseWave();
     }
 
     void RespawnHealthPacks()
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient && currentWave % 5 == 0)
             return;
         PV.RPC("RespawnHealthPacks_RPC", RpcTarget.All);
     }

@@ -35,7 +35,7 @@ public class AmmoSeller : MonoBehaviour
             {
                 player0 = player;
 
-                if (player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() >= cost && player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() > 0)
+                if (player0.gameObject.GetComponent<PlayerSwarmMatchStats>().GetPoints() >= cost && player0.gameObject.GetComponent<PlayerSwarmMatchStats>().GetPoints() > 0)
                 {
                     //player0.InformerText.text = "Hold E to Refill " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
@@ -53,15 +53,15 @@ public class AmmoSeller : MonoBehaviour
         {
             if (player0.GetComponent<PlayerController>().player.GetButtonShortPressDown("Interact"))
             {
-                if (player0.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
+                if (player0.gameObject.GetComponent<PlayerSwarmMatchStats>() != null)
                 {
-                    if (player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() >= cost && player0.gameObject.GetComponent<OnlinePlayerSwarmScript>().GetPoints() > 0)
+                    if (player0.gameObject.GetComponent<PlayerSwarmMatchStats>().GetPoints() >= cost && player0.gameObject.GetComponent<PlayerSwarmMatchStats>().GetPoints() > 0)
                     {
                         if (ammoType == "Small")
                         {
                             if (player0.pInventory.smallAmmo < player0.pInventory.maxSmallAmmo)
                             {
-                                sellAmmo("Small", player0.gameObject.GetComponent<OnlinePlayerSwarmScript>(), player0.pInventory);
+                                sellAmmo("Small", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.pInventory);
                             }
                         }
 
@@ -70,7 +70,7 @@ public class AmmoSeller : MonoBehaviour
 
                             if (player0.pInventory.heavyAmmo < player0.pInventory.maxHeavyAmmo)
                             {
-                                sellAmmo("Heavy", player0.gameObject.GetComponent<OnlinePlayerSwarmScript>(), player0.pInventory);
+                                sellAmmo("Heavy", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.pInventory);
                             }
                         }
 
@@ -78,7 +78,7 @@ public class AmmoSeller : MonoBehaviour
                         {
                             if (player0.pInventory.powerAmmo < player0.pInventory.maxPowerAmmo)
                             {
-                                sellAmmo("Power", player0.gameObject.GetComponent<OnlinePlayerSwarmScript>(), player0.pInventory);
+                                sellAmmo("Power", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.pInventory);
                             }
                         }
                     }
@@ -89,7 +89,7 @@ public class AmmoSeller : MonoBehaviour
         }
     }
 
-    void sellAmmo(string ammoType, OnlinePlayerSwarmScript pPoints, PlayerInventory pInventory)
+    void sellAmmo(string ammoType, PlayerSwarmMatchStats pPoints, PlayerInventory pInventory)
     {
             pPoints.RemovePoints(cost);
         if (ammoType == "Small")

@@ -8,7 +8,7 @@ public class PlayerUI : MonoBehaviour
 {
     public Canvas canvas;
     [Header("Scripts")]
-    public OnlinePlayerSwarmScript onlinePlayerSwarmScript;
+    public PlayerSwarmMatchStats onlinePlayerSwarmScript;
     [Header("Singletons")]
     public OnlineGameTime onlineGameTimeInstance;
     public PhotonView PV;
@@ -24,10 +24,11 @@ public class PlayerUI : MonoBehaviour
     public GameObject swarmLivesHolder;
     public Text swarmLivesText;
 
-    [Header("Top Middle", order = 2)]
+    [Header("Top Center", order = 2)]
     public Transform topMiddle;
     public GameObject healthBar;
     public GameObject shieldBar;
+    [SerializeField] Text objectiveInformerText;
 
     [Header("Top Right", order = 3)]
     public Transform topRight;
@@ -38,6 +39,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject headshotIndicator;
     Coroutine showHeadshotIndicatorCoroutine;
     Coroutine hideHeadshotIndicatorCoroutine;
+    [SerializeField] Text weaponInformerText;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;
@@ -76,9 +78,12 @@ public class PlayerUI : MonoBehaviour
             EnableSwarmUIComponents();
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             EnableMultiplayerUIComponents();
+
+
+        SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
     }
 
-    void OnSwarmKillsChanged(OnlinePlayerSwarmScript onlinePlayerSwarmScript)
+    void OnSwarmKillsChanged(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
         // Change the ui using onlinePlayerSwarmScript.kills
     }
@@ -148,5 +153,20 @@ public class PlayerUI : MonoBehaviour
         shieldBar.SetActive(false);
         multiplayerPointsHolder.SetActive(false);
         motionTracker.SetActive(false);
+    }
+
+    public void AddInformerText(string message)
+    {
+        StartCoroutine(AddInformerText_Coroutine(message));
+    }
+
+    IEnumerator AddInformerText_Coroutine(string message)
+    {
+        objectiveInformerText.text = $"{message}";
+        yield return new WaitForSeconds(3);
+    }
+    void OnNewWave_Delegate(SwarmManager swarmManager)
+    {
+        AddInformerText($"Wave {swarmManager.currentWave}");
     }
 }

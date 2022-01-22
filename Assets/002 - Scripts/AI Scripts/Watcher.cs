@@ -50,6 +50,7 @@ public class Watcher : AiAbstractClass
     public override void OnEnable()
     {
         watcherAction  = WatcherActions.Seek;
+        seek = true;
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
@@ -141,7 +142,7 @@ public class Watcher : AiAbstractClass
                 {
                     animator.Play("Summon");
 
-                    var pSurro = target.GetComponent<Player>().pSurroundings;
+                    var pSurro = target.GetComponent<Player>().playerSurroundings;
                     var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
                     meteo.GetComponent<Fireball>().radius = meteorRadius;
                     meteo.GetComponent<Fireball>().damage = meteorDamage;
@@ -189,13 +190,13 @@ public class Watcher : AiAbstractClass
             return;
 
         Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
-        pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(damage);
+        pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         health -= damage;
         if (isDead)
         {
-            pp.GetComponent<OnlinePlayerSwarmScript>().kills++;
-            pp.GetComponent<OnlinePlayerSwarmScript>().AddPoints(defaultHealth);
+            pp.GetComponent<PlayerSwarmMatchStats>().kills++;
+            pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
         }
     }
 

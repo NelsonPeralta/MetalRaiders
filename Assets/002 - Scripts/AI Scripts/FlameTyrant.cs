@@ -654,9 +654,9 @@ public class FlameTyrant : MonoBehaviour
     {
         if (lastPlayerWhoShot)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerSwarmMatchStats>() != null)
             {
-                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
+                PlayerSwarmMatchStats pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerSwarmMatchStats>();
 
                 pPoints.AddPoints(this.points);
             }
@@ -667,9 +667,9 @@ public class FlameTyrant : MonoBehaviour
     {
         if (lastPlayerWhoShot.gameObject != null)
         {
-            if (lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>() != null)
+            if (lastPlayerWhoShot.gameObject.GetComponent<PlayerSwarmMatchStats>() != null)
             {
-                OnlinePlayerSwarmScript pPoints = lastPlayerWhoShot.gameObject.GetComponent<OnlinePlayerSwarmScript>();
+                PlayerSwarmMatchStats pPoints = lastPlayerWhoShot.gameObject.GetComponent<PlayerSwarmMatchStats>();
 
                 pPoints.AddPoints(points);
             }

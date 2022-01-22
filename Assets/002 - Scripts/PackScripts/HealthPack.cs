@@ -22,13 +22,8 @@ public class HealthPack : MonoBehaviour
         {
             pProperties = other.gameObject.GetComponent<Player>();
 
-            //if(pProperties.healthSlider.value < pProperties.maxHitPoints && pProperties.needsHealthPack)
-            //{
-            //    pProperties.hitPoints = pProperties.maxHitPoints;
-            //    pProperties.healthSlider.value = pProperties.hitPoints;
-            //    pProperties.PlayHealthRechargeSound();
-            //    SwarmManager.instance.DisableHealthPack(transform.position);
-            //}
+            pProperties.hitPoints = pProperties.maxHitPoints;
+            SwarmManager.instance.DisableHealthPack(transform.position);
         }
     }
 }
