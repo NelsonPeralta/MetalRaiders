@@ -59,6 +59,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     float targetOutOfSightDefaultCountdown;
     float targetOutOfSightCountdown;
 
+    [SerializeField] float _newTargetCountdown;
     public PlayerRange playerRange
     {
         get { return _playerRange; }
@@ -87,6 +88,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         get { return _target; }
         set
         {
+            Debug.Log($"New AI Target: {value}");
             if (value)
             {
                 if (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning)
@@ -100,19 +102,22 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             }
             else
             {
+                Debug.Log($"New AI Target is NULL");
                 _target = null;
                 seek = false;
                 playerRange = PlayerRange.Out;
+                _newTargetCountdown = 1;
 
-                try
-                {
-                    GetNewTarget();
-                }
-                catch (Exception e)
-                {
-                    //Debug.Log(e);
-                    _target = null;
-                }
+                //try
+                //{
+                //    GetNewTarget();
+                //}
+                //catch (Exception e)
+                //{
+                //    Debug.Log($"ERROR while trying to get new target for AI");
+                //    Debug.LogWarning(e);
+                //    _target = null;
+                //}
             }
         }
     }
@@ -306,6 +311,22 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         Movement();
         NextActionCooldown();
         ChildUpdate();
+        NewTargetCountdown();
+    }
+
+    void NewTargetCountdown()
+    {
+        if (!gameObject.activeSelf || isDead)
+            return;
+        if (_newTargetCountdown > 0)
+        {
+            _newTargetCountdown -= Time.deltaTime;
+
+            if (_newTargetCountdown <= 0)
+            {
+                GetNewTarget();
+            }
+        }
     }
     public void Movement()
     {
@@ -436,8 +457,9 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     void GetNewTarget()
     {
-        if (gameObject.activeSelf)
-            StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
+        //if (gameObject.activeSelf)
+        //    StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
+            target = SwarmManager.instance.GetRandomPlayerTransform();
     }
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()
     {

@@ -20,6 +20,7 @@ public class PlayerUI : MonoBehaviour
     [Header("Top Left", order = 1)]
     public Transform topLeft;
     public GameObject fragGrenadeIcon;
+    public Text grenadeText;
     public GameObject stickyGrenadeIcon;
     public GameObject swarmLivesHolder;
     public Text swarmLivesText;
@@ -81,6 +82,8 @@ public class PlayerUI : MonoBehaviour
 
 
         SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
+        GetComponent<PlayerController>().OnPLayerThrewGrenade += OnPlayerThrewGrenade_Delegate;
+        SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
     }
 
     void OnSwarmKillsChanged(PlayerSwarmMatchStats onlinePlayerSwarmScript)
@@ -168,5 +171,14 @@ public class PlayerUI : MonoBehaviour
     void OnNewWave_Delegate(SwarmManager swarmManager)
     {
         AddInformerText($"Wave {swarmManager.currentWave}");
+    }
+
+    void OnPlayerLivesChanged_Delegate(SwarmManager swarmManager)
+    {
+        swarmLivesText.text = swarmManager.livesLeft.ToString();
+    }
+    void OnPlayerThrewGrenade_Delegate(PlayerController playerController)
+    {
+        grenadeText.text = GetComponent<Player>().pInventory.grenades.ToString();
     }
 }

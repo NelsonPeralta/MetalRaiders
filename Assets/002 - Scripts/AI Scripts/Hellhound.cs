@@ -80,6 +80,7 @@ public class Hellhound : AiAbstractClass
         else if (!isDead && !target)
         {
             hellhoundAction = HellhoundActions.Idle;
+            seek = false;
         }
     }
 

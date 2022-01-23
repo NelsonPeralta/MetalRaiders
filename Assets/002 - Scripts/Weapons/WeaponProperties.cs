@@ -20,6 +20,7 @@ public class WeaponProperties : MonoBehaviour
     public ReticuleType reticuleType;
     public FiringMode firingMode;
     public int damage = 50;
+    public int bulletSize;
     public int numberOfPellets = 1;
     public int bulletSpeed = 250;
     public float range;
@@ -175,6 +176,8 @@ public class WeaponPropertiesEditor : Editor
         wp.currentAmmo = EditorGUILayout.IntField("Ammo:", wp.currentAmmo);
         wp.ammoCapacity = EditorGUILayout.IntField("Ammo Capacity:", wp.ammoCapacity);
         wp.damage = EditorGUILayout.IntField("Bullet damage:", wp.damage);
+        if (wp.bulletSize <= 0) wp.bulletSize = 1;
+        wp.bulletSize = EditorGUILayout.IntField("Bullet size:", wp.bulletSize);
         wp.bulletSpeed = EditorGUILayout.IntField("Bullet speed:", wp.bulletSpeed);
         wp.range = EditorGUILayout.FloatField("Bullet range:", wp.range);
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);

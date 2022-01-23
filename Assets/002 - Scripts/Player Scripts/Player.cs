@@ -575,6 +575,9 @@ public class Player : MonoBehaviourPunCallbacks
         thirdPersonModels.SetActive(false);
         hitboxesEnabled = false;
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            SwarmManager.instance.livesLeft--;
+
         pInventory.holsteredWeapon = null;
         GetComponent<PlayerController>().DisableCrouch();
         //StopShieldAlarmSound();

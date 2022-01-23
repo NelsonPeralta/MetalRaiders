@@ -101,7 +101,7 @@ public class PlayerShooting : MonoBehaviourPun
 
             var bullet = gameObjectPool.SpawnPooledBullet();
             if (PV.IsMine)
-                bullet.layer = 28;
+                bullet.layer = 8;
             else
                 bullet.layer = 0;
             bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;

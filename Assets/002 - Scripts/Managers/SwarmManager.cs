@@ -10,7 +10,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public bool editMode;
     // Events 
     public delegate void SwarmManagerEvent(SwarmManager swarmManager);
-    public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiLeftZero;
+    public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiLeftZero, OnPlayerLivesChanged;
 
     // public variables
     public static SwarmManager instance;
@@ -47,13 +47,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     // constants
     const int WATCHER_SPAWN_DELAY = 8;
-    const int KNIGHT_SPAWN_DELAY = 10;
+    const int KNIGHT_SPAWN_DELAY = 12;
     const int HELLHOUND_SPAWN_DELAY = 5;
 
     public int livesLeft
     {
         get { return _livesLeft; }
-        set { _livesLeft = value; }
+        set
+        {
+            _livesLeft = value;
+            OnPlayerLivesChanged?.Invoke(this);
+        }
     }
     private void Awake()
     {
@@ -87,7 +91,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void NewWaveCountdown()
     {
-        if(_newWaveCountdown > 0)
+        if (_newWaveCountdown > 0)
         {
             _newWaveCountdown -= Time.deltaTime;
 
@@ -171,23 +175,23 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void CalculateNumberOfAIsForNextWave()
     {
-        watchersLeft = FindObjectsOfType<Player>().Length * 2 + (currentWave * 3);
+        watchersLeft = FindObjectsOfType<Player>().Length * 2 + (currentWave * 2);
         if (watchersLeft > watcherPool.Length)
             watchersLeft = watcherPool.Length;
 
-        knightsLeft = FindObjectsOfType<Player>().Length * 1 + (currentWave * 2);
+        knightsLeft = FindObjectsOfType<Player>().Length * 1 + (currentWave);
         if (knightsLeft > knightPool.Length)
             knightsLeft = knightPool.Length;
 
-        hellhoundsLeft = FindObjectsOfType<Player>().Length * 3 + (currentWave * 4);
+        hellhoundsLeft = FindObjectsOfType<Player>().Length * 3 + (currentWave * 3);
         if (hellhoundsLeft > hellhoundPool.Length)
             hellhoundsLeft = hellhoundPool.Length;
 
         if (editMode)
         {
-            knightsLeft = 1;
+            knightsLeft = 0;
             hellhoundsLeft = 1;
-            watchersLeft = 1;
+            watchersLeft = 0;
         }
 
 
@@ -367,14 +371,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void OnWaveEnd_Delegate(SwarmManager swarmManager)
     {
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
-        foreach(Player p in FindObjectsOfType<Player>())
+        foreach (Player p in FindObjectsOfType<Player>())
             p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
         RespawnHealthPacks();
     }
 
     void RespawnHealthPacks()
     {
-        if (!PhotonNetwork.IsMasterClient && currentWave % 5 == 0)
+        if (!PhotonNetwork.IsMasterClient)
             return;
         PV.RPC("RespawnHealthPacks_RPC", RpcTarget.All);
     }
@@ -382,7 +386,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void RespawnHealthPacks_RPC()
     {
-        if (currentWave % 2 == 0)
+        if (currentWave % 5 == 0)
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)
                     hp.gameObject.SetActive(true);

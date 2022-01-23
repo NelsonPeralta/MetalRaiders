@@ -17116,7 +17116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df999505c655d44e9a8a1f82efdbdb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  editMode: 1
+  editMode: 0
   currentWave: 0
   nextWaveDelay: 0
   watcherPrefab: {fileID: 1668431522888940168, guid: ec2959b1034837848a16e3e91776201f,

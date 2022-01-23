@@ -153,7 +153,7 @@ public class Knight : AiAbstractClass
         else if (!isDead && !target)
         {
             knightAction = KnightActions.Idle;
-            animator.SetBool("Idle", true);
+            seek = false;
         }
     }
 

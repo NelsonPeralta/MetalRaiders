@@ -161,7 +161,7 @@ public class Watcher : AiAbstractClass
         }else if(!isDead && !target)
         {
             watcherAction = WatcherActions.Idle;
-            animator.SetBool("Idle", true);
+            seek = false;
         }
     }
 

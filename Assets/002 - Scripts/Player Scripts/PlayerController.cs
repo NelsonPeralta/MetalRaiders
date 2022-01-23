@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviourPun
 {
     // Events
     public delegate void PlayerControllerEvent(PlayerController playerController);
-    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton;
+    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade;
 
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -432,6 +432,7 @@ public class PlayerController : MonoBehaviourPun
                 pInventory.grenades = pInventory.grenades - 1;
                 anim.Play("GrenadeThrow", 0, 0.0f);
                 PV.RPC("ThrowGrenade_RPC", RpcTarget.All);
+                OnPLayerThrewGrenade?.Invoke(this);
                 //StartCoroutine(GrenadeSpawnDelay());
                 //StartCoroutine(ThrowGrenade3PS());
             }
