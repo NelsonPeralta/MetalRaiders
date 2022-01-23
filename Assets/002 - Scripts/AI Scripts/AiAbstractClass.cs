@@ -15,11 +15,11 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public enum PlayerRange { Out, Close, Medium, Long }
 
     // private variables
-    PlayerRange _playerRange;
+    [SerializeField] Transform _target;
+    [SerializeField] PlayerRange _playerRange;
     PlayerRange _previousPlayerRange;
     public Animator animator;
     protected PhotonView PV;
-    Transform _target;
     int _health;
     float newTargetSwitchingDelay;
     float _nextActionCooldown;
@@ -95,11 +95,14 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 {
                     _target = value;
                     _target.GetComponent<Player>().OnPlayerDeath += OnTargetDeath_Delegate;
+                    DoAction();
                 }
             }
             else
             {
                 _target = null;
+                seek = false;
+                playerRange = PlayerRange.Out;
 
                 try
                 {
@@ -363,7 +366,15 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider)
     {
         if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<Player>()))
+        {
             playerRange = aiRangeCollider.range;
+
+            //foreach(AiRangeTrigger rt in rangeColliders)
+            //{
+            //    if (rt != aiRangeCollider)
+            //        rt.playersInRange.Remove(target.GetComponent<Player>());
+            //}
+        }
     }
 
     void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider)
@@ -408,7 +419,18 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnTargetDeath_Delegate(Player playerProperties)
     {
-        //Debug.Log("On target death delegate");
+        foreach (AiRangeTrigger rt in rangeColliders)
+        {
+            try
+            {
+                if (rt.playersInRange.Contains(target.GetComponent<Player>()))
+                    rt.playersInRange.Remove(target.GetComponent<Player>());
+            }
+            catch (System.Exception e)
+            {
+
+            }
+        }
         target = null;
     }
 
