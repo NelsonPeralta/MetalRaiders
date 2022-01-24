@@ -299,7 +299,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
             hitbox.gameObject.SetActive(false);
 
-        SwarmManager.instance.OnAiDeath();
+        SwarmManager.instance.Invoke_OnAiDeath();
 
         yield return new WaitForSeconds(5);
         gameObject.SetActive(false);

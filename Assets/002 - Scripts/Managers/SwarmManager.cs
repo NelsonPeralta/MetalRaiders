@@ -10,7 +10,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public bool editMode;
     // Events 
     public delegate void SwarmManagerEvent(SwarmManager swarmManager);
-    public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiLeftZero, OnPlayerLivesChanged;
+    public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiDeath, OnPlayerLivesChanged, OnAiSpawn;
 
     // public variables
     public static SwarmManager instance;
@@ -36,9 +36,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     float _newWaveCountdown;
 
 
-    int watchersLeft;
-    int knightsLeft;
-    int hellhoundsLeft;
+    int _watchersLeft;
+    int _knightsLeft;
+    int _hellhoundsLeft;
+
+    int _watchersAlive;
+    int _knightsAlive;
+    int _hellhoundsAlive;
 
     int maxWatchersOnMap = 2;
 
@@ -50,6 +54,77 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     const int KNIGHT_SPAWN_DELAY = 12;
     const int HELLHOUND_SPAWN_DELAY = 5;
 
+    public int hellhoundsLeft
+    {
+        get { return _hellhoundsLeft; }
+        private set
+        {
+            int previousValue = _hellhoundsLeft;
+            _hellhoundsLeft = value;
+
+            if (previousValue > value)
+                _hellhoundsAlive++;
+
+            //hellhoundsAlive = 0;
+            //foreach (Hellhound h in hellhoundPool)
+            //    if (h.gameObject.activeSelf && !h.isDead)
+            //        hellhoundsAlive++;
+        }
+    }
+    public int watchersLeft
+    {
+        get { return _watchersLeft; }
+        private set
+        {
+            int previousValue = _watchersLeft;
+            _watchersLeft = value;
+
+            if (previousValue > value)
+                _watchersAlive++;
+
+            //watchersAlive = 0;
+            //foreach (Watcher w in watcherPool)
+            //    if (w.gameObject.activeSelf && !w.isDead)
+            //        watchersAlive++;
+        }
+    }
+
+    public int knightsLeft
+    {
+        get { return _knightsLeft; }
+        private set
+        {
+            int previousValue = _knightsLeft;
+            _knightsLeft = value;
+
+            if (previousValue > value)
+                _knightsAlive++;
+
+            //knightsAlive = 0;
+            //foreach (Knight k in knightPool)
+            //    if (k.gameObject.activeSelf && !k.isDead)
+            //        knightsAlive++;
+        }
+    }
+
+
+    public int hellhoundsAlive
+    {
+        get { return _hellhoundsAlive; }
+        private set { _hellhoundsAlive = value; }
+    }
+
+    public int watchersAlive
+    {
+        get { return _watchersAlive; }
+        private set { _watchersAlive = value; }
+    }
+
+    public int knightsAlive
+    {
+        get { return _knightsAlive; }
+        private set { _knightsAlive = value; }
+    }
     public int livesLeft
     {
         get { return _livesLeft; }
@@ -78,7 +153,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
 
         OnWaveStart += SpawnAIs_Delegate;
-        OnAiLeftZero += AiLeftHitZero_Delegate;
+        OnAiDeath += OnAiDeath_Delegate;
         OnWaveEnd += OnWaveEnd_Delegate;
 
         CreateAIPool();
@@ -195,7 +270,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
 
 
-        Debug.Log($"Watchers Left: {watchersLeft}. Knights left: {knightsLeft}. Hellhounds left: {hellhoundsLeft}");
+        Debug.Log($"Watchers Left: {_watchersLeft}. Knights left: {_knightsLeft}. Hellhounds left: {_hellhoundsLeft}");
     }
 
     void StartNewWave()
@@ -247,7 +322,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             if (watchersLeft <= 0)
             {
-                OnAiLeftZero?.Invoke(this);
+                OnAiDeath?.Invoke(this);
                 return;
             }
 
@@ -261,7 +336,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             if (knightsLeft <= 0)
             {
-                OnAiLeftZero?.Invoke(this);
+                OnAiDeath?.Invoke(this);
                 return;
             }
 
@@ -275,7 +350,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             if (hellhoundsLeft <= 0)
             {
-                OnAiLeftZero?.Invoke(this);
+                OnAiDeath?.Invoke(this);
                 return;
             }
 
@@ -319,24 +394,30 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         else if (aiTypeEnum == AiType.Hellhound)
             hellhoundsLeft--;
         SpawnAi(aiTypeEnum);
+
+        OnAiSpawn?.Invoke(this);
     }
-    void AiLeftHitZero_Delegate(SwarmManager swarmManager)
+    void OnAiDeath_Delegate(SwarmManager swarmManager)
     {
-        int watchersAlive = 0;
-        int knightsAlive = 0;
-        int hellhoundsAlive = 0;
+        int __watchersAlive = 0;
+        int __knightsAlive = 0;
+        int __hellhoundsAlive = 0;
 
         foreach (Watcher w in watcherPool)
             if (w.gameObject.activeSelf && !w.isDead)
-                watchersAlive++;
+                __watchersAlive++;
 
         foreach (Knight w in knightPool)
             if (w.gameObject.activeSelf && !w.isDead)
-                knightsAlive++;
+                __knightsAlive++;
 
         foreach (Hellhound w in hellhoundPool)
             if (w.gameObject.activeSelf && !w.isDead)
-                hellhoundsAlive++;
+                __hellhoundsAlive++;
+
+        hellhoundsAlive = __hellhoundsAlive;
+        watchersAlive = __watchersAlive;
+        knightsAlive = __knightsAlive;
 
         Debug.Log($"AI CHECK. Watchers left: {watchersLeft}. Watchers alive: {watchersAlive}. Knights left: {knightsLeft}. Knights alive: {knightsAlive}. Hellhounds alive: {hellhoundsAlive}. Hellhounds left: {hellhoundsLeft}");
 
@@ -344,10 +425,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             EndWave();
     }
 
-    public void OnAiDeath() // Called multiple times on an ai death. TODO: Find independant solution
+    public void Invoke_OnAiDeath() // Called multiple times on an ai death. TODO: Find independant solution
     {
         Debug.Log("Swarm Manager OnAiDeath");
-        AiLeftHitZero_Delegate(this);
+        OnAiDeath?.Invoke(this);
     }
     void EndWave()
     {

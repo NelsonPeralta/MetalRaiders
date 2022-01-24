@@ -30,6 +30,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject healthBar;
     public GameObject shieldBar;
     [SerializeField] Text objectiveInformerText;
+    [SerializeField] Text swarmAisLeftText;
 
     [Header("Top Right", order = 3)]
     public Transform topRight;
@@ -59,6 +60,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject singlePlayerPauseMenu;
     public GameObject splitScreenPauseMenu;
     public KillFeedManager killFeedManager;
+    public PlayerDebuggerOnUI PlayerDebuggerOnUI;
 
     private void Start()
     {
@@ -81,10 +83,13 @@ public class PlayerUI : MonoBehaviour
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             EnableMultiplayerUIComponents();
 
+        swarmAisLeftText.text = "";
 
         SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
         GetComponent<PlayerController>().OnPLayerThrewGrenade += OnPlayerThrewGrenade_Delegate;
         SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
+        SwarmManager.instance.OnAiSpawn += OnSwarmAiDeathOrSpawn;
+        SwarmManager.instance.OnAiDeath += OnSwarmAiDeathOrSpawn;
     }
 
     void OnSwarmKillsChanged(PlayerSwarmMatchStats onlinePlayerSwarmScript)
@@ -181,5 +186,10 @@ public class PlayerUI : MonoBehaviour
     void OnPlayerThrewGrenade_Delegate(PlayerController playerController)
     {
         grenadeText.text = GetComponent<Player>().pInventory.grenades.ToString();
+    }
+
+    void OnSwarmAiDeathOrSpawn(SwarmManager swarmManager)
+    {
+        swarmAisLeftText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} Knights: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerEvent(Player playerProperties);
-    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged;
+    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken;
 
     [Header("Singletons")]
     public SpawnManager spawnManager;
@@ -57,6 +57,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     // Private Variables
     int _maxHitPoints = 250;
+    int _maxHealthPoints = 100;
+    int _maxShieldPoints = 150;
     float _hitPoints = 250;
     int _meleeDamage = 150;
     bool _isRespawning;
@@ -66,7 +68,11 @@ public class Player : MonoBehaviourPunCallbacks
     int _defaultRespawnTime = 4;
 
     int _defaultHealingCountdown = 4;
-    float _healingCountdown;
+    [SerializeField] float _healingCountdown;
+    [SerializeField] float _shieldRechargeCountdown;
+
+    float _healthHealingIncrement = (100 * 2);
+    float _shieldHealingIncrement = (150 * 0.5f);
     public float hitPoints
     {
         get { return _hitPoints; }
@@ -82,12 +88,33 @@ public class Player : MonoBehaviourPunCallbacks
             if (previousValue != value)
                 OnPlayerHitPointsChanged?.Invoke(this);
 
+            if (maxHitPoints == 250)
+            {
+                if (value >= maxHealthPoints && value < previousValue)
+                    OnPlayerShieldDamaged?.Invoke(this);
+
+                if (value <= maxHealthPoints && previousValue > maxHealthPoints)
+                    OnPlayerShieldBroken?.Invoke(this);
+            }
+
+
             if (_hitPoints <= 0)
                 isDead = true;
         }
     }
 
     public int maxHitPoints { get { return _maxHitPoints; } set { _maxHitPoints = value; } }
+
+    public int maxHealthPoints
+    {
+        get { return _maxHealthPoints; }
+        private set { _maxHealthPoints = value; }
+    }
+    public int maxShieldPoints
+    {
+        get { return _maxShieldPoints; }
+        private set { _maxShieldPoints = value; }
+    }
     public int meleeDamage { get { return _meleeDamage; } }
     bool hitboxesEnabled
     {
@@ -132,6 +159,10 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    public float healthHealingIncrement
+    {
+        get { return _healthHealingIncrement; }
+    }
     public float healingCountdown
     {
         get { return _healingCountdown; }
@@ -139,6 +170,19 @@ public class Player : MonoBehaviourPunCallbacks
         {
             _healingCountdown = Mathf.Clamp(value, 0, _defaultHealingCountdown);
         }
+    }
+
+    public float shieldRechargeCountdown
+    {
+        get { return _shieldRechargeCountdown; }
+        private set
+        {
+            _shieldRechargeCountdown = Mathf.Clamp(value, 0, _defaultHealingCountdown + (maxHealthPoints / _healthHealingIncrement));
+        }
+    }
+    public float defaultHealingCountdown
+    {
+        get { return _defaultHealingCountdown; }
     }
     private void Awake()
     {
@@ -262,10 +306,15 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (healingCountdown <= 0 && hitPoints < maxHitPoints && GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
-            if (hitPoints < 100)
-                hitPoints += (Time.deltaTime * 150);
+            if (hitPoints < maxHealthPoints)
+                hitPoints += (Time.deltaTime * _healthHealingIncrement);
             else
-                hitPoints += (Time.deltaTime * 100);
+                hitPoints += (Time.deltaTime * _shieldHealingIncrement);
+        }
+
+        if (shieldRechargeCountdown > 0)
+        {
+            shieldRechargeCountdown -= Time.deltaTime;
         }
         //if (armorHasBeenHit && hasShield)
         //{
@@ -566,7 +615,12 @@ public class Player : MonoBehaviourPunCallbacks
     void OnPlayerDamaged_Delegate(Player player)
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            healingCountdown = (float)_defaultHealingCountdown;
+        {
+            healingCountdown = _defaultHealingCountdown;
+            shieldRechargeCountdown = _defaultHealingCountdown;
+            if (hitPoints <= maxHealthPoints)
+                shieldRechargeCountdown = _defaultHealingCountdown + ((maxHealthPoints - hitPoints) / _healthHealingIncrement);
+        }
     }
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
