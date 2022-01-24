@@ -77,8 +77,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
 
-        OnWaveStart += SpawnAIs;
-        OnAiLeftZero += AiLeftHitZero;
+        OnWaveStart += SpawnAIs_Delegate;
+        OnAiLeftZero += AiLeftHitZero_Delegate;
         OnWaveEnd += OnWaveEnd_Delegate;
 
         CreateAIPool();
@@ -219,7 +219,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         OnWaveStart?.Invoke(this);
     }
 
-    void SpawnAIs(SwarmManager swarmManager)
+    void SpawnAIs_Delegate(SwarmManager swarmManager)
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
@@ -320,7 +320,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             hellhoundsLeft--;
         SpawnAi(aiTypeEnum);
     }
-    void AiLeftHitZero(SwarmManager swarmManager)
+    void AiLeftHitZero_Delegate(SwarmManager swarmManager)
     {
         int watchersAlive = 0;
         int knightsAlive = 0;
@@ -338,16 +338,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (w.gameObject.activeSelf && !w.isDead)
                 hellhoundsAlive++;
 
-        Debug.Log($"AI CHECK. Watchers left: {watchersLeft}. Watchers alive: {watchersAlive}. Knights left: {knightsLeft}. Knights alive: {knightsAlive}. Hellhounds left: {hellhoundsAlive}. Hellhounds left: {hellhoundsLeft}");
+        Debug.Log($"AI CHECK. Watchers left: {watchersLeft}. Watchers alive: {watchersAlive}. Knights left: {knightsLeft}. Knights alive: {knightsAlive}. Hellhounds alive: {hellhoundsAlive}. Hellhounds left: {hellhoundsLeft}");
 
         if (watchersLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0)
             EndWave();
     }
 
-    public void OnAiDeath()
+    public void OnAiDeath() // Called multiple times on an ai death. TODO: Find independant solution
     {
         Debug.Log("Swarm Manager OnAiDeath");
-        AiLeftHitZero(this);
+        AiLeftHitZero_Delegate(this);
     }
     void EndWave()
     {
@@ -378,18 +378,25 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void RespawnHealthPacks()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        PV.RPC("RespawnHealthPacks_RPC", RpcTarget.All);
+        if (PhotonNetwork.IsMasterClient)
+            PV.RPC("RespawnHealthPacks_RPC", RpcTarget.All);
     }
 
     [PunRPC]
     void RespawnHealthPacks_RPC()
     {
-        if (currentWave % 5 == 0)
+        Debug.Log("Respawn Health Packs RPC");
+        if (currentWave % 2 == 0)
+        {
+            foreach (PlayerUI p in FindObjectsOfType<PlayerUI>())
+            {
+                Debug.Log($"Player UI: {p.name}");
+                p.killFeedManager.EnterNewFeed("Health Packs Spawned");
+            }
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)
                     hp.gameObject.SetActive(true);
+        }
     }
     int GetRandomPlayerPhotonId()
     {

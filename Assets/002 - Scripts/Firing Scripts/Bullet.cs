@@ -188,7 +188,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
 
                 if (playerWhoShot.PV.IsMine)
+                {
+                    Debug.Log($"AI is dead: {hitbox.aiAbstractClass.isDead}");
                     hitbox.aiAbstractClass.Damage(finalDamage, playerWhoShot.PV.ViewID);
+                }
 
                 GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
                 bloodHit.transform.position = finalHitPoint;

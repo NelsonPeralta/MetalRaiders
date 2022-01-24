@@ -87,32 +87,35 @@ public class Watcher : AiAbstractClass
     public override void DoAction()
     {
         int ran = Random.Range(0, 3);
-        WatcherActions previousKnightAction = watcherAction;
+        WatcherActions previousWatcherAction = watcherAction;
 
         if (playerRange == PlayerRange.Medium || playerRange == PlayerRange.Long)
         {
             if (ran == 0)
-                previousKnightAction = WatcherActions.Meteor;
+                previousWatcherAction = WatcherActions.Meteor;
             else
-                previousKnightAction = WatcherActions.Fireball;
+                previousWatcherAction = WatcherActions.Fireball;
         }
+
+        if (playerRange == PlayerRange.Out)
+            previousWatcherAction = WatcherActions.Seek;
 
         if (!isDead && target)
         {
 
-            if (previousKnightAction != WatcherActions.Defend && previousKnightAction != WatcherActions.Idle)
+            if (previousWatcherAction != WatcherActions.Defend && previousWatcherAction != WatcherActions.Idle)
             {
                 animator.SetBool("Defend", false);
                 shieldModel.SetActive(false);
             }
 
-            if (previousKnightAction != WatcherActions.Seek)
+            if (previousWatcherAction != WatcherActions.Seek)
             {
                 seek = false;
             }
 
 
-            if (previousKnightAction == WatcherActions.Defend)
+            if (previousWatcherAction == WatcherActions.Defend)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Defend"))
                 {
@@ -120,7 +123,7 @@ public class Watcher : AiAbstractClass
                     shieldModel.SetActive(true);
                 }
             }
-            else if (previousKnightAction == WatcherActions.Fireball)
+            else if (previousWatcherAction == WatcherActions.Fireball)
             {
                 if (canDoAction)
                 {
@@ -136,7 +139,7 @@ public class Watcher : AiAbstractClass
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
-            else if (previousKnightAction == WatcherActions.Meteor)
+            else if (previousWatcherAction == WatcherActions.Meteor)
             {
                 if (canDoAction)
                 {
@@ -154,7 +157,7 @@ public class Watcher : AiAbstractClass
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
-            else if (previousKnightAction == WatcherActions.Seek)
+            else if (previousWatcherAction == WatcherActions.Seek)
             {
                 seek = true;
             }

@@ -63,6 +63,9 @@ public class Hellhound : AiAbstractClass
             else
                 seek = true;
 
+            if (playerRange == PlayerRange.Out)
+                previousHellhoundAction = HellhoundActions.Seek;
+
             if (previousHellhoundAction == HellhoundActions.Bite)
             {
                 if (canDoAction)

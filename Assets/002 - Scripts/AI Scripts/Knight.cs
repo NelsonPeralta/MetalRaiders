@@ -84,6 +84,9 @@ public class Knight : AiAbstractClass
                 previousKnightAction = KnightActions.Fireball;
         }
 
+        if (playerRange == PlayerRange.Out)
+            previousKnightAction = KnightActions.Seek;
+
         if (!isDead && target)
         {
             if (previousKnightAction != KnightActions.Defend)

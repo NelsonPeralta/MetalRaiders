@@ -26,7 +26,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     bool _seek;
     bool _canSeek;
     bool _canDoAction;
-    bool _isDead;
+    [SerializeField] bool _isDead;
 
     // public variables
     public Hitboxes hitboxes;
@@ -96,6 +96,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 else
                 {
                     _target = value;
+                    _target.GetComponent<Player>().OnPlayerDeath -= OnTargetDeath_Delegate;
                     _target.GetComponent<Player>().OnPlayerDeath += OnTargetDeath_Delegate;
                     DoAction();
                 }
@@ -238,6 +239,17 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         animator = GetComponent<Animator>();
         targetOutOfSightDefaultCountdown = defaultNextActionCooldown * 2.5f;
         Prepare();
+
+        OnActionChange += OnActionChanged_Delegate;
+        OnPlayerRangeChange += OnPlayerRangeChange_Delegate;
+        OnNextActionReady += OnNextActionReady_Delegate;
+        OnDeath += OnDeath_Delegate;
+        OnTargeInLineOfSightChange += OnTargetInLineOfSightChanged_Delegate;
+        foreach (AiRangeTrigger arc in rangeColliders)
+        {
+            arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
+            arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
+        }
     }
 
     void Prepare()
@@ -257,18 +269,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             hitbox.gameObject.SetActive(true);
 
         foreach (AiRangeTrigger arc in rangeColliders)
-        {
-            arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
-            arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
-
             arc.playersInRange.Clear();
-        }
-
-        OnActionChange += OnActionChanged_Delegate;
-        OnPlayerRangeChange += OnPlayerRangeChange_Delegate;
-        OnNextActionReady += OnNextActionReady_Delegate;
-        OnDeath += OnDeath_Delegate;
-        OnTargeInLineOfSightChange += OnTargetInLineOfSightChanged_Delegate;
     }
     public void Spawn(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
@@ -281,8 +282,9 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         OnPlayerRangeChange?.Invoke(this);
     }
-    void OnDeath_Delegate(AiAbstractClass aiAbstractClass)
+    void OnDeath_Delegate(AiAbstractClass aiAbstractClass) // Bug: Event called twice
     {
+        Debug.Log($"AI on death delegate. Is dead: {isDead}");
         SwarmManager.instance.DropRandomLoot(transform.position, transform.rotation);
         StartCoroutine(Die_Coroutine());
     }
