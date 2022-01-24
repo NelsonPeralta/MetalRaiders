@@ -9,7 +9,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 {
     // events
     public delegate void AiEvent(AiAbstractClass aiAbstractClass);
-    public AiEvent OnHealthChange, OnDeath, OnPlayerRangeChange, OnActionChange, OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange, OnTargetDeath;
+    public AiEvent OnHealthChange, OnDeath, OnDeathEnd, OnPlayerRangeChange, OnActionChange, OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange, OnTargetDeath;
 
     // enums
     public enum PlayerRange { Out, Close, Medium, Long }
@@ -20,13 +20,14 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     PlayerRange _previousPlayerRange;
     public Animator animator;
     protected PhotonView PV;
-    int _health;
+    [SerializeField] int _health;
     float newTargetSwitchingDelay;
     float _nextActionCooldown;
-    bool _seek;
+    [SerializeField] bool _seek;
     bool _canSeek;
     bool _canDoAction;
     [SerializeField] bool _isDead;
+    [SerializeField] int _deathDespawnTime = 5;
 
     // public variables
     public Hitboxes hitboxes;
@@ -245,6 +246,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         OnNextActionReady += OnNextActionReady_Delegate;
         OnDeath += OnDeath_Delegate;
         OnTargeInLineOfSightChange += OnTargetInLineOfSightChanged_Delegate;
+        OnDeathEnd += OnDeathEnd_Delegate;
         foreach (AiRangeTrigger arc in rangeColliders)
         {
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
@@ -301,8 +303,17 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         SwarmManager.instance.Invoke_OnAiDeath();
 
-        yield return new WaitForSeconds(5);
-        gameObject.SetActive(false);
+        yield return new WaitForSeconds(_deathDespawnTime);
+        OnDeathEnd?.Invoke(this);
+
+        try
+        {
+            gameObject.SetActive(false);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"Error while trying to destroy game object: {e}");
+        }
     }
 
 
@@ -461,7 +472,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         //if (gameObject.activeSelf)
         //    StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
-            target = SwarmManager.instance.GetRandomPlayerTransform();
+        target = SwarmManager.instance.GetRandomPlayerTransform();
     }
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()
     {
@@ -481,6 +492,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public abstract void Damage_RPC(int damage, int playerWhoShotPDI);
     public abstract void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass);
+    public abstract void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void DoAction();
     public abstract void ChildUpdate();
 }

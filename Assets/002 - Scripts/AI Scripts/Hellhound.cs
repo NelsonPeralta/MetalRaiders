@@ -139,4 +139,9 @@ public class Hellhound : AiAbstractClass
     {
         throw new System.NotImplementedException();
     }
+
+    public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
+    {
+
+    }
 }

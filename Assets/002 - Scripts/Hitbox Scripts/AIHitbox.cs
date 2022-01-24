@@ -18,7 +18,7 @@ public class AIHitbox : MonoBehaviour
     public Hellhound hellhound;
     public Wererat wererat;
     public BlackKnight blackKnight;
-    public FlameTyrant flameTyrant;
+    public Tyrant flameTyrant;
 
     public string team;
     public bool AIisDead = false;
@@ -54,7 +54,7 @@ public class AIHitbox : MonoBehaviour
             UpdateAIHealthOnHitboxes(blackKnight.Health);
 
         if (flameTyrant != null)
-            UpdateAIHealthOnHitboxes(flameTyrant.Health);
+            UpdateAIHealthOnHitboxes(flameTyrant.health);
     }
 
     public void DamageAI(bool damageFromPlayer, float damage, GameObject playerWhoShot)

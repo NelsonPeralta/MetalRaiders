@@ -190,6 +190,6 @@ public class PlayerUI : MonoBehaviour
 
     void OnSwarmAiDeathOrSpawn(SwarmManager swarmManager)
     {
-        swarmAisLeftText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} Knights: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
+        swarmAisLeftText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} K: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
     }
 }

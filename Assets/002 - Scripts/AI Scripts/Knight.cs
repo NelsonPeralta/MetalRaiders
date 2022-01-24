@@ -18,7 +18,7 @@ public class Knight : AiAbstractClass
 
 
     public enum KnightActions { Defend, Fireball, Grenade, Seek, Idle }
-    KnightActions _knightAction;
+    [SerializeField] KnightActions _knightAction;
 
     public KnightActions knightAction
     {
@@ -214,5 +214,10 @@ public class Knight : AiAbstractClass
     public override void ChangeAction_RPC(string actionString)
     {
         knightAction = (KnightActions)System.Enum.Parse(typeof(KnightActions), actionString);
+    }
+
+    public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
+    {
+
     }
 }

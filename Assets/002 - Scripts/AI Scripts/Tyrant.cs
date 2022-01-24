@@ -4,82 +4,73 @@ using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
 
-public class Watcher : AiAbstractClass
+public class Tyrant : AiAbstractClass
 {
     [Header("Combat")]
     public int projectileDamage;
     public int projectileSpeed;
-    public int meteorDamage;
-    public int meteorSpeed;
-    public int meteorRadius;
+    public List<Transform> minionSpawnPoints = new List<Transform>();
 
     [Header("Prefabs")]
     public GameObject projectile;
-    public GameObject meteor;
-    public GameObject wall;
-    public GameObject deathSmoke;
+    public GameObject explosion;
 
-    [Header("Sounds")]
-    public AudioClip summonWall;
+    public enum TyrantActions { Block, Fireball, Summon, Seek, Idle }
+    [SerializeField] TyrantActions _tyrantAction;
 
-    [Header("Shield")]
-    public GameObject shieldModel;
-    public SphereCollider shieldCollider;
-
-
-    public enum WatcherActions { Defend, Fireball, Meteor, Seek, Idle }
-    [SerializeField] WatcherActions _watcherAction;
-
-    public WatcherActions watcherAction
+    int _minionsToSpawn;
+    public TyrantActions tyrantAction
     {
-        get { return _watcherAction; }
+        get { return _tyrantAction; }
         set
         {
-            if(_watcherAction != value)
+            if (_tyrantAction != value)
             {
-                _watcherAction = value;
+                _tyrantAction = value;
                 InvokeOnActionChanged();
             }
         }
     }
     private void Start()
     {
-        shieldModel.SetActive(false);
+
     }
 
     public override void OnEnable()
     {
-        watcherAction  = WatcherActions.Seek;
+        tyrantAction = TyrantActions.Seek;
         seek = true;
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
         PlayerRange newPlayerRange = aiAbstractClass.playerRange;
         PlayerRange previousPlayerRange = aiAbstractClass.previousPlayerRange;
-        WatcherActions previousAction = watcherAction;
+        TyrantActions previousAction = tyrantAction;
         int ran = Random.Range(0, 3);
 
         if (targetInLineOfSight)
         {
+            if (newPlayerRange == PlayerRange.Medium)
+                seek = false;
             if (newPlayerRange == PlayerRange.Medium && (previousPlayerRange == PlayerRange.Close || previousPlayerRange == PlayerRange.Long))
             {
                 if (ran == 0)
-                    previousAction = WatcherActions.Meteor;
+                    previousAction = TyrantActions.Summon;
                 else
-                    previousAction = WatcherActions.Fireball;
+                    previousAction = TyrantActions.Fireball;
             }
             else if (newPlayerRange == PlayerRange.Out)
-                previousAction = WatcherActions.Seek;
+                previousAction = TyrantActions.Seek;
         }
         else
         {
-            previousAction = WatcherActions.Seek;
+            previousAction = TyrantActions.Seek;
         }
 
         if (newPlayerRange == PlayerRange.Close)
-            previousAction = WatcherActions.Defend;
+            previousAction = TyrantActions.Block;
         else if (newPlayerRange == PlayerRange.Out)
-            previousAction = WatcherActions.Seek;
+            previousAction = TyrantActions.Seek;
 
         ChangeAction(previousAction.ToString());
     }
@@ -87,43 +78,42 @@ public class Watcher : AiAbstractClass
     public override void DoAction()
     {
         int ran = Random.Range(0, 3);
-        WatcherActions previousWatcherAction = watcherAction;
+        TyrantActions previousWatcherAction = tyrantAction;
 
         if (playerRange == PlayerRange.Medium || playerRange == PlayerRange.Long)
         {
+            seek = false;
             if (ran == 0)
-                previousWatcherAction = WatcherActions.Meteor;
+                previousWatcherAction = TyrantActions.Summon;
             else
-                previousWatcherAction = WatcherActions.Fireball;
+                previousWatcherAction = TyrantActions.Fireball;
         }
 
         if (playerRange == PlayerRange.Out)
-            previousWatcherAction = WatcherActions.Seek;
+            previousWatcherAction = TyrantActions.Seek;
 
         if (!isDead && target)
         {
 
-            if (previousWatcherAction != WatcherActions.Defend && previousWatcherAction != WatcherActions.Idle)
+            if (previousWatcherAction != TyrantActions.Block && previousWatcherAction != TyrantActions.Idle)
             {
-                animator.SetBool("Defend", false);
-                shieldModel.SetActive(false);
+                animator.SetBool("Block", false);
             }
 
-            if (previousWatcherAction != WatcherActions.Seek)
+            if (previousWatcherAction != TyrantActions.Seek)
             {
                 seek = false;
             }
 
 
-            if (previousWatcherAction == WatcherActions.Defend)
+            if (previousWatcherAction == TyrantActions.Block)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Defend"))
                 {
-                    animator.SetBool("Defend", true);
-                    shieldModel.SetActive(true);
+                    animator.SetBool("Block", true);
                 }
             }
-            else if (previousWatcherAction == WatcherActions.Fireball)
+            else if (previousWatcherAction == TyrantActions.Fireball)
             {
                 if (canDoAction)
                 {
@@ -139,31 +129,25 @@ public class Watcher : AiAbstractClass
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
-            else if (previousWatcherAction == WatcherActions.Meteor)
+            else if (previousWatcherAction == TyrantActions.Summon)
             {
                 if (canDoAction)
                 {
                     animator.Play("Summon");
 
-                    var pSurro = target.GetComponent<Player>().playerSurroundings;
-                    var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
-                    meteo.GetComponent<Fireball>().radius = meteorRadius;
-                    meteo.GetComponent<Fireball>().damage = meteorDamage;
-                    meteo.GetComponent<Fireball>().force = meteorSpeed;
-                    meteo.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-                    meteo.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-                    meteo.transform.Rotate(180, 0, 0);
-
+                    _minionsToSpawn = minionSpawnPoints.Count;
+                    StartCoroutine(SpawnHellhound_Coroutine());
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
-            else if (previousWatcherAction == WatcherActions.Seek)
+            else if (previousWatcherAction == TyrantActions.Seek)
             {
                 seek = true;
             }
-        }else if(!isDead && !target)
+        }
+        else if (!isDead && !target)
         {
-            watcherAction = WatcherActions.Idle;
+            tyrantAction = TyrantActions.Idle;
             seek = false;
         }
     }
@@ -206,25 +190,36 @@ public class Watcher : AiAbstractClass
     public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
     {
         if (!targetInLineOfSight)
-            watcherAction = WatcherActions.Seek;
+            tyrantAction = TyrantActions.Seek;
         else
         {
             Debug.Log($"Target in line of sight. Player range: {playerRange}");
             if (playerRange == PlayerRange.Medium)
-                watcherAction = WatcherActions.Fireball;
+                tyrantAction = TyrantActions.Fireball;
             else if (playerRange == PlayerRange.Long)
-                watcherAction = WatcherActions.Meteor;
+                tyrantAction = TyrantActions.Summon;
         }
     }
 
     [PunRPC]
     public override void ChangeAction_RPC(string actionString)
     {
-        watcherAction = (WatcherActions)System.Enum.Parse(typeof(WatcherActions), actionString);
+        tyrantAction = (TyrantActions)System.Enum.Parse(typeof(TyrantActions), actionString);
+    }
+
+    IEnumerator SpawnHellhound_Coroutine()
+    {
+        Debug.Log(_minionsToSpawn);
+        SwarmManager.instance.SpawnAi(SwarmManager.AiType.Hellhound, minionSpawnPoints[_minionsToSpawn - 1]);
+        _minionsToSpawn--;
+        yield return new WaitForSeconds(0.1f);
+        if (_minionsToSpawn > 0)
+            StartCoroutine(SpawnHellhound_Coroutine());
     }
 
     public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
     {
-
+        GameObject ex = Instantiate(explosion, transform.position + new Vector3(0, 0.75f, 0), transform.rotation);
+        Destroy(ex, 2);
     }
 }
