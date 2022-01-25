@@ -10,16 +10,31 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public bool editMode;
     // Events 
     public delegate void SwarmManagerEvent(SwarmManager swarmManager);
-    public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiDeath, OnPlayerLivesChanged, OnAiSpawn;
+    public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiDeath, OnPlayerLivesChanged, OnAiSpawn, OnAIsCalculated;
 
     // public variables
     public static SwarmManager instance;
-    public enum AiType { Watcher, Knight, Hellhound, Tyrant }
+    public enum AiType { Zombie, Watcher, Knight, Hellhound, Tyrant }
 
-    public int currentWave;
+    [SerializeField] int _currentWave;
+    public int currentWave
+    {
+        get { return _currentWave; }
+        private set
+        {
+            int previousValue = _currentWave;
+            _currentWave = value;
+
+            if(previousValue < value)
+            {
+                waveEnded = false;
+            }
+        }
+    }
     public int nextWaveDelay;
 
     [Header("AI Pools")]
+    public Zombie[] zombiePool;
     public Watcher[] watcherPool;
     public Knight[] knightPool;
     public Hellhound[] hellhoundPool;
@@ -30,13 +45,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     int maxWave;
     int _livesLeft = 4;
     float _newWaveCountdown;
+    bool _waveEnded;
 
 
+    int _zombiesLeft;
     int _watchersLeft;
     int _knightsLeft;
     int _hellhoundsLeft;
     int _tyrantsLeft;
 
+    int _zombiesAlive;
     int _watchersAlive;
     int _knightsAlive;
     int _hellhoundsAlive;
@@ -46,12 +64,24 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     // constants
+    const int ZOMBIE_SPAWN_DELAY = 5;
     const int WATCHER_SPAWN_DELAY = 8;
     const int KNIGHT_SPAWN_DELAY = 12;
     const int HELLHOUND_SPAWN_DELAY = 5;
-    //const int TYRANT_SPAWN_DELAY = 30;
-    const int TYRANT_SPAWN_DELAY = 2;
+    const int TYRANT_SPAWN_DELAY = 30;
 
+    public int zombiesLeft
+    {
+        get { return _zombiesLeft; }
+        private set
+        {
+            int previousValue = _zombiesLeft;
+            _zombiesLeft = value;
+
+            if (previousValue > value)
+                _zombiesAlive++;
+        }
+    }
     public int hellhoundsLeft
     {
         get { return _hellhoundsLeft; }
@@ -62,11 +92,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (previousValue > value)
                 _hellhoundsAlive++;
-
-            //hellhoundsAlive = 0;
-            //foreach (Hellhound h in hellhoundPool)
-            //    if (h.gameObject.activeSelf && !h.isDead)
-            //        hellhoundsAlive++;
         }
     }
     public int watchersLeft
@@ -79,11 +104,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (previousValue > value)
                 _watchersAlive++;
-
-            //watchersAlive = 0;
-            //foreach (Watcher w in watcherPool)
-            //    if (w.gameObject.activeSelf && !w.isDead)
-            //        watchersAlive++;
         }
     }
 
@@ -97,11 +117,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (previousValue > value)
                 _knightsAlive++;
-
-            //knightsAlive = 0;
-            //foreach (Knight k in knightPool)
-            //    if (k.gameObject.activeSelf && !k.isDead)
-            //        knightsAlive++;
         }
     }
 
@@ -116,6 +131,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (previousValue > value)
                 _tyrantsAlive++;
         }
+    }
+
+    public int zombiesAlive
+    {
+        get { return _zombiesAlive; }
+        private set { _zombiesAlive = value; }
     }
     public int hellhoundsAlive
     {
@@ -147,6 +168,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             _livesLeft = value;
             OnPlayerLivesChanged?.Invoke(this);
+        }
+    }
+
+    public bool waveEnded
+    {
+        get { return _waveEnded; }
+        set
+        {
+            _waveEnded = value;
         }
     }
     private void Awake()
@@ -215,6 +245,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void CreateAIPool()
     {
+        zombiePool = FindObjectsOfType<Zombie>();
+        foreach (Zombie w in zombiePool)
+            w.gameObject.SetActive(false);
+
         // Watcher GameObject must be active in order to be found with FindObjectsOfType
         watcherPool = FindObjectsOfType<Watcher>();
         foreach (Watcher w in watcherPool)
@@ -271,6 +305,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if (currentWave % 5 != 0)
         {
+            zombiesLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
+            if (zombiesLeft > zombiePool.Length)
+                zombiesLeft = zombiePool.Length;
 
             watchersLeft = FindObjectsOfType<Player>().Length * 2 + (currentWave * 2);
             if (watchersLeft > watcherPool.Length)
@@ -280,9 +317,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (knightsLeft > knightPool.Length)
                 knightsLeft = knightPool.Length;
 
-            hellhoundsLeft = FindObjectsOfType<Player>().Length * 3 + (currentWave * 3);
-            if (hellhoundsLeft > hellhoundPool.Length)
-                hellhoundsLeft = hellhoundPool.Length;
+            //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
+            //if (hellhoundsLeft > hellhoundPool.Length)
+            //    hellhoundsLeft = hellhoundPool.Length;
         }
         else
         {
@@ -294,14 +331,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (editMode)
         {
+            zombiesLeft = 1;
             knightsLeft = 0;
-            hellhoundsLeft = 1;
+            hellhoundsLeft = 0;
             watchersLeft = 0;
             tyrantsLeft = 0;
         }
 
-
-        Debug.Log($"Watchers Left: {_watchersLeft}. Knights left: {_knightsLeft}. Hellhounds left: {_hellhoundsLeft}");
+        OnAIsCalculated?.Invoke(this);
     }
 
     void StartNewWave()
@@ -330,6 +367,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
             return;
         Debug.Log("Spawning Ais");
+        SpawnAi(AiType.Zombie);
         SpawnAi(AiType.Watcher);
         SpawnAi(AiType.Knight);
         SpawnAi(AiType.Hellhound);
@@ -356,7 +394,21 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             pdelay = 0;
         }
 
-        if (aiType == AiType.Watcher)
+        if (aiType == AiType.Zombie)
+        {
+            if (zombiesLeft <= 0)
+            {
+                OnAiDeath?.Invoke(this);
+                return;
+            }
+
+            foreach (Zombie w in zombiePool)
+                if (!w.gameObject.activeSelf)
+                    aiPhotonId = w.GetComponent<PhotonView>().ViewID;
+
+            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Zombie.ToString(), pdelay);
+        }
+        else if (aiType == AiType.Watcher)
         {
             if (watchersLeft <= 0)
             {
@@ -428,7 +480,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         AiType aiTypeEnum = (AiType)System.Enum.Parse(typeof(AiType), aiType);
         int delay = 10;
 
-        if (aiTypeEnum == AiType.Watcher)
+        if (aiTypeEnum == AiType.Zombie)
+            delay = ZOMBIE_SPAWN_DELAY;
+        else if (aiTypeEnum == AiType.Watcher)
             delay = WATCHER_SPAWN_DELAY;
         else if (aiTypeEnum == AiType.Knight)
             delay = KNIGHT_SPAWN_DELAY;
@@ -447,7 +501,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (pdelay < 0)
         {
-            if (aiTypeEnum == AiType.Watcher)
+            if (aiTypeEnum == AiType.Zombie)
+                zombiesLeft--;
+            else if (aiTypeEnum == AiType.Watcher)
                 watchersLeft--;
             else if (aiTypeEnum == AiType.Knight)
                 knightsLeft--;
@@ -462,9 +518,18 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     void OnAiDeath_Delegate(SwarmManager swarmManager)
     {
+        Debug.Log("OnAiDeath_Delegate");
+
+        int __zombiesAlive = 0;
         int __watchersAlive = 0;
         int __knightsAlive = 0;
         int __hellhoundsAlive = 0;
+        int __tyrantsAlive = 0;
+
+
+        foreach (Zombie w in zombiePool)
+            if (w.gameObject.activeSelf && !w.isDead)
+                __zombiesAlive++;
 
         foreach (Watcher w in watcherPool)
             if (w.gameObject.activeSelf && !w.isDead)
@@ -478,13 +543,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (w.gameObject.activeSelf && !w.isDead)
                 __hellhoundsAlive++;
 
+        foreach (Tyrant w in tyrantPool)
+            if (w.gameObject.activeSelf && !w.isDead)
+                __tyrantsAlive++;
+
+        zombiesAlive = __zombiesAlive;
         hellhoundsAlive = __hellhoundsAlive;
         watchersAlive = __watchersAlive;
         knightsAlive = __knightsAlive;
+        tyrantsAlive = __tyrantsAlive;
 
-        Debug.Log($"AI CHECK. Watchers left: {watchersLeft}. Watchers alive: {watchersAlive}. Knights left: {knightsLeft}. Knights alive: {knightsAlive}. Hellhounds alive: {hellhoundsAlive}. Hellhounds left: {hellhoundsLeft}");
-
-        if (watchersLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0 && tyrantsLeft <= 0 && tyrantsAlive <= 0)
+        if (watchersLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0 && tyrantsLeft <= 0 && tyrantsAlive <= 0 && zombiesLeft <= 0 && zombiesAlive <= 0)
             EndWave();
     }
 
@@ -497,14 +566,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
-
+        Debug.Log("Swarm Manager EndWave");
         PV.RPC("EndWave_RPC", RpcTarget.All);
     }
 
     [PunRPC]
     void EndWave_RPC()
     {
-        Debug.Log("Wave End");
+        Debug.Log("EndWave_RPC");
         nextWaveDelay = FindObjectsOfType<Player>().Length * 10;
         OnWaveEnd?.Invoke(this);
         _newWaveCountdown = nextWaveDelay;

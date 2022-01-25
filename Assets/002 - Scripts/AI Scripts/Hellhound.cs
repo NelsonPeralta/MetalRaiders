@@ -137,7 +137,7 @@ public class Hellhound : AiAbstractClass
     [PunRPC]
     public override void ChangeAction_RPC(string actionString)
     {
-        throw new System.NotImplementedException();
+        hellhoundAction = (HellhoundActions)System.Enum.Parse(typeof(HellhoundActions), actionString);
     }
 
     public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)

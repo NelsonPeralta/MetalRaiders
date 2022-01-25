@@ -5,7 +5,7 @@ using UnityEngine;
 public class AIMeleeTrigger : MonoBehaviour
 {
     [Header("Basic AiS")]
-    public ZombieScript zombie;
+    public Zombie zombie;
     public Skeleton skeleton;
     public Troll troll;
 

@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public Player playerWhoShot;
     public PlayerInventory pInventory;
     public WeaponProperties wProperties;
-    public ZombieScript zScript;
+    public Zombie zScript;
     public CrosshairManager crosshairScript;
     public GameObjectPool gameObjectPool;
 
