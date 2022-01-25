@@ -9,7 +9,7 @@ public class AIHitbox : MonoBehaviour
     public float aiHealth;
 
     [Header("AI Scripts")]
-    public ZombieScript zScript;
+    public Zombie zScript;
     public Skeleton skeleton;
     public Watcher watcher;
     public Troll troll;

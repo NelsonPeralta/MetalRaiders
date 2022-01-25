@@ -17,7 +17,7 @@ public class AIPool : MonoBehaviour
 
     [Header("AI Lists")]
     public List<Skeleton> skeletons = new List<Skeleton>();
-    public List<ZombieScript> zombies = new List<ZombieScript>();
+    public List<Zombie> zombies = new List<Zombie>();
     public List<Watcher> watchers = new List<Watcher>();
 
     private void Awake()
@@ -42,7 +42,7 @@ public class AIPool : MonoBehaviour
             {
                 GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
                 obj.gameObject.SetActive(false);
-                zombies.Add(obj.GetComponent<ZombieScript>());
+                zombies.Add(obj.GetComponent<Zombie>());
                 obj.transform.parent = gameObject.transform;
 
                 obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", watcherPrefab.name), Vector3.zero, Quaternion.identity);
@@ -66,7 +66,7 @@ public class AIPool : MonoBehaviour
         //        return obj.PV.ViewID;
         return 0;
     }
-    public ZombieScript GetPooledZombie(int PhotonId)
+    public Zombie GetPooledZombie(int PhotonId)
     {
         //foreach (ZombieScript obj in zombies)
         //    if (obj.PV.ViewID == PhotonId)
