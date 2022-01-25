@@ -25379,19 +25379,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &6117847145697713515
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6555730529479726909}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.6561267, y: 0.9995206, z: 0.18902333}
-  m_Center: {x: 0.0000014043774, y: -0.055797264, z: 0.047830954}
 --- !u!114 &6555730529048173464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25415,6 +25402,20 @@ MonoBehaviour:
   fireEffect: {fileID: 0}
   playerWhoShotLast: {fileID: 0}
   lootPrefab: {fileID: 0}
+--- !u!64 &5126377461936070126
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6555730529479726909}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 0541f2578014ebc4ebdb69a05651ab52, type: 3}
 --- !u!1 &6555730529516905530
 GameObject:
   m_ObjectHideFlags: 0
@@ -45454,7 +45455,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 438816, guid: 9a3460fac6eccf446a920db0922d6fae, type: 3}
       propertyPath: m_LocalScale.y
-      value: 100
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 438816, guid: 9a3460fac6eccf446a920db0922d6fae, type: 3}
       propertyPath: m_LocalScale.z

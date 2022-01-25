@@ -149,6 +149,7 @@ public class PlayerUI : MonoBehaviour
     {
         swarmPointsHolder.SetActive(false);
         swarmLivesHolder.SetActive(false);
+        swarmAisLeftText.gameObject.SetActive(false);
     }
 
     void EnableMultiplayerUIComponents()

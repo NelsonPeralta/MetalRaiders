@@ -51,7 +51,7 @@ public class PlayerShooting : MonoBehaviourPun
             fireButtonDown = true;
             BulletSpawnPoint bsp = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.GetComponent<BulletSpawnPoint>();
             if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
-                ShootBurst();
+                ShootBurst(activeWeapon);
             else
                 PV.RPC("Shoot", RpcTarget.All);
         }
@@ -67,11 +67,12 @@ public class PlayerShooting : MonoBehaviourPun
         return ((activeWeapon.firingMode == WeaponProperties.FiringMode.Single || activeWeapon.firingMode == WeaponProperties.FiringMode.Burst) && !fireButtonDown);
     }
 
-    void ShootBurst()
+    void ShootBurst(WeaponProperties activeWeapon)
     {
         for (int i = 0; i < 3; i++)
         {
-            StartCoroutine(ShootBurst_Coroutine(defaultBurstInterval * i));
+            if (activeWeapon.currentAmmo > 0)
+                StartCoroutine(ShootBurst_Coroutine(defaultBurstInterval * i));
         }
     }
 
@@ -88,6 +89,8 @@ public class PlayerShooting : MonoBehaviourPun
     {
         int counter = 1;
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        if (activeWeapon.currentAmmo <= 0)
+            return;
 
         if (activeWeapon.isShotgun)
             counter = activeWeapon.numberOfPellets;
