@@ -79,7 +79,10 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
     public void AddPoints(int _points, bool isBonusPoints = false)
     {
         if (isBonusPoints)
+        {
+            Debug.Log("Bonus points");
             GetComponent<PlayerUI>().AddInformerText($"Wave End! Bonus Points: {_points}");
+        }
         GetComponent<PhotonView>().RPC("AddPoints_RPC", RpcTarget.All, _points);
     }
 

@@ -41,7 +41,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject headshotIndicator;
     Coroutine showHeadshotIndicatorCoroutine;
     Coroutine hideHeadshotIndicatorCoroutine;
-    [SerializeField] Text weaponInformerText;
+    public Text weaponInformerText;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;
@@ -79,17 +79,20 @@ public class PlayerUI : MonoBehaviour
         }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
             EnableSwarmUIComponents();
+            swarmAisLeftText.text = "";
+
+            GetComponent<PlayerController>().OnPLayerThrewGrenade += OnPlayerThrewGrenade_Delegate;
+            SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
+            SwarmManager.instance.OnAiSpawn += OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnAiDeath += OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnAisCalculated += OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
+        }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             EnableMultiplayerUIComponents();
 
-        swarmAisLeftText.text = "";
-
-        SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
-        GetComponent<PlayerController>().OnPLayerThrewGrenade += OnPlayerThrewGrenade_Delegate;
-        SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
-        SwarmManager.instance.OnAiSpawn += OnSwarmAiDeathOrSpawn;
-        SwarmManager.instance.OnAiDeath += OnSwarmAiDeathOrSpawn;
     }
 
     void OnSwarmKillsChanged(PlayerSwarmMatchStats onlinePlayerSwarmScript)
@@ -190,6 +193,10 @@ public class PlayerUI : MonoBehaviour
 
     void OnSwarmAiDeathOrSpawn(SwarmManager swarmManager)
     {
-        swarmAisLeftText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} K: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
+        //swarmAisLeftText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} K: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
+
+        Debug.Log("Here");
+        if (!swarmManager.waveEnded)
+            objectiveInformerText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} K: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
     }
 }

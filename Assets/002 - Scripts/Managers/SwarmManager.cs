@@ -10,13 +10,27 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public bool editMode;
     // Events 
     public delegate void SwarmManagerEvent(SwarmManager swarmManager);
-    public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiDeath, OnPlayerLivesChanged, OnAiSpawn;
+    public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiDeath, OnPlayerLivesChanged, OnAiSpawn, OnAisCalculated;
 
     // public variables
     public static SwarmManager instance;
     public enum AiType { Watcher, Knight, Hellhound, Tyrant }
 
-    public int currentWave;
+    int _currentWave;
+    public int currentWave
+    {
+        get { return _currentWave; }
+        private set
+        {
+            int previousValue = _currentWave;
+            _currentWave = value;
+
+            if(previousValue < value)
+            {
+                waveEnded = false;
+            }
+        }
+    }
     public int nextWaveDelay;
 
     [Header("AI Pools")]
@@ -30,7 +44,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     int maxWave;
     int _livesLeft = 4;
     float _newWaveCountdown;
-
+    bool _waveEnded;
 
     int _watchersLeft;
     int _knightsLeft;
@@ -148,6 +162,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             _livesLeft = value;
             OnPlayerLivesChanged?.Invoke(this);
         }
+    }
+
+    public bool waveEnded // PlayerUI detects OnAiDeath after OnWaveEnd, overwriting the bonus points message at the end of a wave. This bool is used to check if it is the end of a wave to handle that bug
+    {
+        get { return _waveEnded; }
+        private set { _waveEnded = value; }
     }
     private void Awake()
     {
@@ -272,21 +292,21 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (currentWave % 5 != 0)
         {
 
-            watchersLeft = FindObjectsOfType<Player>().Length * 2 + (currentWave * 2);
+            watchersLeft = FindObjectsOfType<Player>().Length + (currentWave * 2);
             if (watchersLeft > watcherPool.Length)
                 watchersLeft = watcherPool.Length;
 
-            knightsLeft = FindObjectsOfType<Player>().Length * 1 + (currentWave);
+            knightsLeft = FindObjectsOfType<Player>().Length + (currentWave);
             if (knightsLeft > knightPool.Length)
                 knightsLeft = knightPool.Length;
 
-            hellhoundsLeft = FindObjectsOfType<Player>().Length * 3 + (currentWave * 3);
+            hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             if (hellhoundsLeft > hellhoundPool.Length)
                 hellhoundsLeft = hellhoundPool.Length;
         }
         else
         {
-            tyrantsLeft = FindObjectsOfType<Player>().Length + currentWave;
+            tyrantsLeft = FindObjectsOfType<Player>().Length * 2;
             if (tyrantsLeft > tyrantPool.Length)
                 tyrantsLeft = tyrantPool.Length;
         }
@@ -300,7 +320,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             tyrantsLeft = 0;
         }
 
-
+        OnAisCalculated?.Invoke(this);
         Debug.Log($"Watchers Left: {_watchersLeft}. Knights left: {_knightsLeft}. Hellhounds left: {_hellhoundsLeft}");
     }
 
@@ -402,6 +422,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             if (tyrantsLeft <= 0)
             {
+                foreach (Hellhound h in FindObjectsOfType<Hellhound>())
+                    h.Damage(999, 0);
                 OnAiDeath?.Invoke(this);
                 return;
             }
@@ -514,6 +536,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void OnWaveEnd_Delegate(SwarmManager swarmManager)
     {
+        waveEnded = true;
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
         foreach (Player p in FindObjectsOfType<Player>())
             p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
@@ -530,7 +553,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void RespawnHealthPacks_RPC()
     {
         Debug.Log("Respawn Health Packs RPC");
-        if (currentWave % 2 == 0)
+        if (currentWave % 5 == 0)
         {
             livesLeft += FindObjectsOfType<Player>().Length;
             foreach (PlayerUI p in FindObjectsOfType<PlayerUI>())

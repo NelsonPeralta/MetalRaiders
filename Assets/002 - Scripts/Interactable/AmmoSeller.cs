@@ -37,11 +37,11 @@ public class AmmoSeller : MonoBehaviour
 
                 if (player0.gameObject.GetComponent<PlayerSwarmMatchStats>().GetPoints() >= cost && player0.gameObject.GetComponent<PlayerSwarmMatchStats>().GetPoints() > 0)
                 {
-                    //player0.InformerText.text = "Hold E to Refill " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
+                    player0.GetComponent<PlayerUI>().weaponInformerText.text = "Hold E to Refill " + ammoType.ToString() + " Ammo for: " + cost.ToString() + " Points";
                 }
                 else
                 {
-                    //player0.InformerText.text = "Not enough Points (" + cost.ToString() + ")";
+                    player0.GetComponent<PlayerUI>().weaponInformerText.text = "Not enough Points (" + cost.ToString() + ")";
                 }
             }
         }
@@ -114,7 +114,7 @@ public class AmmoSeller : MonoBehaviour
 
             if (playerDistance > exitTriggerRadius * 1.5f)
             {
-                //player0.InformerText.text = "";
+                player0.GetComponent<PlayerUI>().weaponInformerText.text = "";
                 player0 = null;
             }
         }
