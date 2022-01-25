@@ -22760,7 +22760,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6258186488468227667
 Transform:
   m_ObjectHideFlags: 0
@@ -23827,7 +23827,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e59409fc663529e419fefe65b8139326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _target: {fileID: 0}
+  _playerRange: 0
   animator: {fileID: 6258186488477401711}
+  _health: 0
+  _seek: 0
+  _isDead: 0
+  _deathDespawnTime: 5
   hitboxes: {fileID: 6555730529516905528}
   nma: {fileID: 6258186488468177425}
   projectileSpawnPoint: {fileID: 696158255811907977}
@@ -23845,14 +23851,16 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 129
-  projectileDamage: 24
+  _newTargetCountdown: 0
+  projectileDamage: 12
   projectileSpeed: 100
-  grenadeDamage: 36
-  grenadeRadius: 7
+  grenadeDamage: 18
+  grenadeRadius: 6
   projectile: {fileID: 5091089392186072086, guid: 5ba8aa092f5c7c54c94ba93b89b0e4ea,
     type: 3}
   grenade: {fileID: 6543794610344578356, guid: 89159a4a59767304ba9a1d35dd162fdc, type: 3}
   shieldModel: {fileID: 5164115638747929254}
+  _knightAction: 0
 --- !u!114 &5865159591326762059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24648,7 +24656,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6258186488468230161
 Transform:
   m_ObjectHideFlags: 0

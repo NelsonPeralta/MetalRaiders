@@ -19,9 +19,10 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
         get { return _points; }
         private set
         {
-            if (_points != value)
-                OnPointsChanged?.Invoke(this);
+            int previousValue = _points;
             _points = value;
+            if (previousValue != value)
+                OnPointsChanged?.Invoke(this);
         }
     }
     public int kills

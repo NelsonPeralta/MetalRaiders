@@ -475,7 +475,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     IEnumerator SpawnAI_Coroutine(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
-        Debug.Log($"SpawnAI_Coroutine. AI pdi: {aiPhotonId}");
+        Debug.Log($"BEFORE DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
         AiType aiTypeEnum = (AiType)System.Enum.Parse(typeof(AiType), aiType);
         int delay = 10;
 
@@ -495,6 +495,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         yield return new WaitForSeconds(delay);
 
+        Debug.Log($"AFTER DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
         var newAiObj = PhotonView.Find(aiPhotonId).gameObject;
         newAiObj.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
 

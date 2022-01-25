@@ -87,7 +87,7 @@ public class PlayerUI : MonoBehaviour
             SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
             SwarmManager.instance.OnAiSpawn += OnSwarmAiDeathOrSpawn;
             SwarmManager.instance.OnAiDeath += OnSwarmAiDeathOrSpawn;
-            SwarmManager.instance.OnAisCalculated += OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnAIsCalculated += OnSwarmAiDeathOrSpawn;
             SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
@@ -197,6 +197,6 @@ public class PlayerUI : MonoBehaviour
 
         Debug.Log("Here");
         if (!swarmManager.waveEnded)
-            objectiveInformerText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} K: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
+            objectiveInformerText.text = $"Z: {swarmManager.zombiesLeft + swarmManager.zombiesAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} S: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
     }
 }

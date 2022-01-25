@@ -12,6 +12,8 @@ public class Zombie : AiAbstractClass
     public enum ZombieActions { Melee, Seek, Idle }
     [SerializeField] ZombieActions _zombieAction;
 
+    public List<GameObject> skins = new List<GameObject>();
+
     public ZombieActions zombieAction
     {
         get { return _zombieAction; }
@@ -29,6 +31,11 @@ public class Zombie : AiAbstractClass
     {
         zombieAction = ZombieActions.Seek;
         seek = true;
+
+
+        int ran = Random.Range(0, skins.Count - 1);
+        skins[0].SetActive(false);
+        skins[ran].SetActive(true);
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
