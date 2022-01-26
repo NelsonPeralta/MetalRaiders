@@ -7,7 +7,7 @@ using System;
 public class PlayerInventory : MonoBehaviourPun
 {
     public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
-    public PlayerInventoryEvent OnWeaponsSwitched;
+    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged;
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
@@ -37,7 +37,7 @@ public class PlayerInventory : MonoBehaviourPun
     public int currentExtraAmmo = 0;
 
     [Header("Grenades")]
-    public int grenades = 0;
+    int _grenades;
     public int maxGrenades = 4;
     public Transform grenadePrefab;
     public Transform stickyGrenadePrefab;
@@ -86,6 +86,17 @@ public class PlayerInventory : MonoBehaviourPun
     /// <summary>
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
+    /// 
+
+    public int grenades
+    {
+        get { return _grenades; }
+        set
+        {
+            _grenades = value;
+            OnGrenadeChanged?.Invoke(this);
+        }
+    }
 
     private void Awake()
     {
@@ -110,6 +121,20 @@ public class PlayerInventory : MonoBehaviourPun
         OnPlayerSwitchWeapons_Delegate(pController);
         playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
         pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
+
+        if(GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            smallAmmo = maxSmallAmmo;
+            heavyAmmo = maxHeavyAmmo;
+            powerAmmo = maxPowerAmmo;
+            grenades = maxGrenades;
+        }else if(GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
+            smallAmmo = 72;
+            heavyAmmo = 60;
+            powerAmmo = 8;
+            grenades = 2;
+        }
     }
 
     void OnPlayerWeaponSwapping_Delegate(PlayerWeaponSwapping playerWeaponSwapping)

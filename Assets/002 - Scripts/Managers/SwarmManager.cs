@@ -784,7 +784,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void DropRandomLoot_RPC(string ammotype, Vector3 position, Quaternion rotation)
     {
         Debug.Log($"{name} spawned random loot {ammotype}");
-        GameObject loot = new GameObject();
+        GameObject loot = GameManager.instance.lightAmmoPack.gameObject;
         Quaternion rotFix = new Quaternion(0, 0, 0, 0);
         rotFix.eulerAngles = new Vector3(0, 180, 0);
 
@@ -796,6 +796,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             loot = Instantiate(GameManager.instance.lightAmmoPack.gameObject, position, rotation * rotFix);
         else if (ammotype == "grenade")
             loot = Instantiate(GameManager.instance.grenadeAmmoPack.gameObject, position, rotation * rotFix);
+        else
+            return;
 
         Destroy(loot, 60);
     }

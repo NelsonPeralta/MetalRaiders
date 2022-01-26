@@ -78,12 +78,12 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
+        GetComponent<Player>().pInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             EnableSwarmUIComponents();
             swarmAisLeftText.text = "";
 
-            GetComponent<PlayerController>().OnPLayerThrewGrenade += OnPlayerThrewGrenade_Delegate;
             SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
             SwarmManager.instance.OnAiSpawn += OnSwarmAiDeathOrSpawn;
             SwarmManager.instance.OnAiDeath += OnSwarmAiDeathOrSpawn;
@@ -93,6 +93,7 @@ public class PlayerUI : MonoBehaviour
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             EnableMultiplayerUIComponents();
 
+        OnGrenadeChanged_Delegate(GetComponent<Player>().pInventory);
     }
 
     void OnSwarmKillsChanged(PlayerSwarmMatchStats onlinePlayerSwarmScript)
@@ -187,9 +188,9 @@ public class PlayerUI : MonoBehaviour
     {
         swarmLivesText.text = swarmManager.livesLeft.ToString();
     }
-    void OnPlayerThrewGrenade_Delegate(PlayerController playerController)
+    void OnGrenadeChanged_Delegate(PlayerInventory playerInventory)
     {
-        grenadeText.text = GetComponent<Player>().pInventory.grenades.ToString();
+        grenadeText.text = playerInventory.grenades.ToString();
     }
 
     void OnSwarmAiDeathOrSpawn(SwarmManager swarmManager)
@@ -198,6 +199,13 @@ public class PlayerUI : MonoBehaviour
 
         Debug.Log("Here");
         if (!swarmManager.waveEnded)
+        {
             objectiveInformerText.text = $"Z: {swarmManager.zombiesLeft + swarmManager.zombiesAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} S: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
+
+            if (swarmManager.currentWave % 5 == 0)
+            {
+                objectiveInformerText.text = $"Tyrants: {swarmManager.tyrantsLeft + swarmManager.tyrantsAlive}";
+            }
+        }
     }
 }
