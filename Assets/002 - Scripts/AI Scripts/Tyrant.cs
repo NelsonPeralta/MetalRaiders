@@ -31,11 +31,6 @@ public class Tyrant : AiAbstractClass
             }
         }
     }
-    private void Start()
-    {
-
-    }
-
     public override void OnEnable()
     {
         tyrantAction = TyrantActions.Seek;

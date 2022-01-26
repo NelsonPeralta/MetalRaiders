@@ -110,29 +110,21 @@ public class Hellhound : AiAbstractClass
     {
         if (isDead)
             return;
+        health -= damage;
 
-        Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         try
         {
+            Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
             pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
-        }
-        catch (System.Exception e)
-        {
-
-        }
-
-        health -= damage;
-        if (isDead)
-        {
-            try
+            if (isDead)
             {
                 pp.GetComponent<PlayerSwarmMatchStats>().kills++;
                 pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
             }
-            catch (System.Exception e)
-            {
+        }
+        catch (System.Exception e)
+        {
 
-            }
         }
     }
 

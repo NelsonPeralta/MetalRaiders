@@ -19,7 +19,6 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     [SerializeField] PlayerRange _playerRange;
     PlayerRange _previousPlayerRange;
     public Animator animator;
-    protected PhotonView PV;
     [SerializeField] int _health;
     float newTargetSwitchingDelay;
     float _nextActionCooldown;
@@ -235,7 +234,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             }
         }
     }
-    void Awake()
+    void Start()
     {
         animator = GetComponent<Animator>();
         targetOutOfSightDefaultCountdown = defaultNextActionCooldown * 2.5f;
@@ -256,7 +255,6 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     void Prepare()
     {
-        PV = GetComponent<PhotonView>();
         nma = GetComponent<NavMeshAgent>();
         health = defaultHealth;
         nma.speed = speed;
@@ -369,6 +367,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         if (!target)
             return;
+
+        LOSSpawn.transform.LookAt(target);
+        if (projectileSpawnPoint)
+            projectileSpawnPoint.transform.LookAt(target);
 
         raySpawn = LOSSpawn.transform.position + new Vector3(0, 0f, 0);
         //Debug.DrawRay(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, Color.green);
@@ -485,7 +487,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         if (!target || !target.GetComponent<Player>().PV.IsMine)
             return;
 
-        PV.RPC("ChangeAction_RPC", RpcTarget.All, actionString);
+        photonView.RPC("ChangeAction_RPC", RpcTarget.All, actionString);
     }
     public abstract void ChangeAction_RPC(string actionString);
     public abstract void Damage(int damage, int playerWhoShotPDI);

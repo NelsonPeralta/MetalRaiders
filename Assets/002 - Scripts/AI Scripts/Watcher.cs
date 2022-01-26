@@ -42,11 +42,6 @@ public class Watcher : AiAbstractClass
             }
         }
     }
-    private void Start()
-    {
-        shieldModel.SetActive(false);
-    }
-
     public override void OnEnable()
     {
         watcherAction  = WatcherActions.Seek;
@@ -183,7 +178,7 @@ public class Watcher : AiAbstractClass
     {
         if (isDead)
             return;
-        GetComponent<PhotonView>().RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
+        photonView.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
     }
 
     [PunRPC]

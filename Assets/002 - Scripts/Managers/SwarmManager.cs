@@ -25,7 +25,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             int previousValue = _currentWave;
             _currentWave = value;
 
-            if(previousValue < value)
+            if (previousValue < value)
             {
                 waveEnded = false;
             }
@@ -328,10 +328,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (editMode)
         {
-            zombiesLeft = 1;
+            zombiesLeft = 0;
             knightsLeft = 0;
             hellhoundsLeft = 0;
-            watchersLeft = 0;
+            watchersLeft = 1;
             tyrantsLeft = 0;
         }
 
@@ -480,15 +480,25 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int delay = 10;
 
         if (aiTypeEnum == AiType.Zombie)
+        {
             delay = ZOMBIE_SPAWN_DELAY;
+        }
         else if (aiTypeEnum == AiType.Watcher)
+        {
             delay = WATCHER_SPAWN_DELAY;
+        }
         else if (aiTypeEnum == AiType.Knight)
+        {
             delay = KNIGHT_SPAWN_DELAY;
+        }
         else if (aiTypeEnum == AiType.Hellhound)
+        {
             delay = HELLHOUND_SPAWN_DELAY;
+        }
         else if (aiTypeEnum == AiType.Tyrant)
+        {
             delay = TYRANT_SPAWN_DELAY;
+        }
 
         if (pdelay >= 0)
             delay = pdelay;
@@ -496,25 +506,115 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(delay);
 
         Debug.Log($"AFTER DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
-        var newAiObj = PhotonView.Find(aiPhotonId).gameObject;
-        newAiObj.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
-
-        if (pdelay < 0)
+        try
         {
-            if (aiTypeEnum == AiType.Zombie)
-                zombiesLeft--;
-            else if (aiTypeEnum == AiType.Watcher)
-                watchersLeft--;
-            else if (aiTypeEnum == AiType.Knight)
-                knightsLeft--;
-            else if (aiTypeEnum == AiType.Hellhound)
-                hellhoundsLeft--;
-            else if (aiTypeEnum == AiType.Tyrant)
-                tyrantsLeft--;
-            SpawnAi(aiTypeEnum);
-        }
+            var newAiObj = PhotonView.Find(aiPhotonId).gameObject;
+            newAiObj.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
 
-        OnAiSpawn?.Invoke(this);
+            if (pdelay < 0)
+            {
+                if (aiTypeEnum == AiType.Zombie)
+                    zombiesLeft--;
+                else if (aiTypeEnum == AiType.Watcher)
+                    watchersLeft--;
+                else if (aiTypeEnum == AiType.Knight)
+                    knightsLeft--;
+                else if (aiTypeEnum == AiType.Hellhound)
+                    hellhoundsLeft--;
+                else if (aiTypeEnum == AiType.Tyrant)
+                    tyrantsLeft--;
+                SpawnAi(aiTypeEnum);
+            }
+
+            OnAiSpawn?.Invoke(this);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"ERROR SpawnAI_Coroutine {e}");
+
+            if (aiTypeEnum == AiType.Zombie)
+            {
+                foreach (Zombie w in zombiePool)
+                {
+                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+                    {
+                        Debug.Log("Found");
+                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+                    }
+                }
+            }
+            else if (aiTypeEnum == AiType.Watcher)
+            {
+                foreach (Watcher w in watcherPool)
+                {
+                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+                    {
+                        Debug.Log("Found");
+
+                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+                    }
+                }
+
+            }
+            else if (aiTypeEnum == AiType.Knight)
+            {
+                foreach (Knight w in knightPool)
+                {
+                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+                    {
+                        Debug.Log("Found");
+
+                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+                    }
+                }
+            }
+            else if (aiTypeEnum == AiType.Hellhound)
+            {
+                foreach (Hellhound w in hellhoundPool)
+                {
+                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+                    {
+                        Debug.Log("Found");
+
+                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+                    }
+                }
+            }
+            else if (aiTypeEnum == AiType.Tyrant)
+            {
+                foreach (Tyrant w in tyrantPool)
+                {
+                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+                    {
+                        Debug.Log("Found");
+
+                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+                    }
+                }
+            }
+
+            if (pdelay < 0)
+            {
+                if (aiTypeEnum == AiType.Zombie)
+                    zombiesLeft--;
+                else if (aiTypeEnum == AiType.Watcher)
+                    watchersLeft--;
+                else if (aiTypeEnum == AiType.Knight)
+                    knightsLeft--;
+                else if (aiTypeEnum == AiType.Hellhound)
+                    hellhoundsLeft--;
+                else if (aiTypeEnum == AiType.Tyrant)
+                    tyrantsLeft--;
+                SpawnAi(aiTypeEnum);
+            }
+
+            OnAiSpawn?.Invoke(this);
+        }
     }
     void OnAiDeath_Delegate(SwarmManager swarmManager)
     {
