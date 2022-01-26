@@ -55,6 +55,12 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     Vector3 raySpawn;
     RaycastHit hit;
 
+    [Header("Sound")]
+    protected AudioSource _voice;
+    [SerializeField] protected AudioClip _laughClip;
+    [SerializeField] protected AudioClip _attackClip;
+    [SerializeField] protected AudioClip _dieClip;
+
     bool _targetOutOfSight;
     float targetOutOfSightDefaultCountdown;
     float targetOutOfSightCountdown;
@@ -236,6 +242,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void Start()
     {
+        _voice = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         targetOutOfSightDefaultCountdown = defaultNextActionCooldown * 2.5f;
         Prepare();
@@ -286,6 +293,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         Debug.Log($"AI on death delegate. Is dead: {isDead}");
         SwarmManager.instance.DropRandomLoot(transform.position, transform.rotation);
+        _voice.clip = _dieClip;
+        _voice.Play();
         StartCoroutine(Die_Coroutine());
     }
 

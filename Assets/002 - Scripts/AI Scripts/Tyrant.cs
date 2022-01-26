@@ -112,6 +112,8 @@ public class Tyrant : AiAbstractClass
             {
                 if (canDoAction)
                 {
+                    _voice.clip = _attackClip;
+                    _voice.Play();
                     animator.Play("Projectile");
 
                     var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
@@ -128,6 +130,8 @@ public class Tyrant : AiAbstractClass
             {
                 if (canDoAction)
                 {
+                    _voice.clip = _attackClip;
+                    _voice.Play();
                     animator.Play("Summon");
 
                     _minionsToSpawn = minionSpawnPoints.Count;

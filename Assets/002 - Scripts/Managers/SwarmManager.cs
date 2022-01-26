@@ -62,6 +62,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     List<HealthPack> healthPacks = new List<HealthPack>();
 
+    [SerializeField] AudioSource _ambianceNoises;
+
 
     // constants
     const int ZOMBIE_SPAWN_DELAY = 5;

@@ -2986,7 +2986,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce713fb7a7293f44185984bd96fcd3b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _target: {fileID: 0}
+  _playerRange: 0
   animator: {fileID: 2526179230594302861}
+  _health: 0
+  _seek: 0
+  _isDead: 0
+  _deathDespawnTime: 5
   hitboxes: {fileID: 2526179229868913679}
   nma: {fileID: 2526179230586925564}
   projectileSpawnPoint: {fileID: 0}
@@ -3004,6 +3010,10 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 129
+  _laughClip: {fileID: 0}
+  _attackClip: {fileID: 8300000, guid: 5efd42fa3e58a3e4984b3bad2586a754, type: 3}
+  _dieClip: {fileID: 8300000, guid: 0a08b7fd07b2f31449e19325e97c1470, type: 3}
+  _newTargetCountdown: 0
   meleeDamage: 12
   projectileDamage: 0
   projectileSpeed: 0
@@ -3065,7 +3075,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.6
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

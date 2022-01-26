@@ -23775,7 +23775,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.75
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -23851,6 +23851,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 129
+  _laughClip: {fileID: 0}
+  _attackClip: {fileID: 8300000, guid: f2350706efe6ac14d8484a2a3d88aea7, type: 3}
+  _dieClip: {fileID: 8300000, guid: cd6a399cf21af214ebcaa9d5132927b4, type: 3}
   _newTargetCountdown: 0
   projectileDamage: 12
   projectileSpeed: 100
@@ -25379,6 +25382,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!64 &5126377461936070126
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6555730529479726909}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 0541f2578014ebc4ebdb69a05651ab52, type: 3}
 --- !u!114 &6555730529048173464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25402,20 +25419,6 @@ MonoBehaviour:
   fireEffect: {fileID: 0}
   playerWhoShotLast: {fileID: 0}
   lootPrefab: {fileID: 0}
---- !u!64 &5126377461936070126
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6555730529479726909}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 0541f2578014ebc4ebdb69a05651ab52, type: 3}
 --- !u!1 &6555730529516905530
 GameObject:
   m_ObjectHideFlags: 0

@@ -122,6 +122,8 @@ public class Watcher : AiAbstractClass
             {
                 if (canDoAction)
                 {
+                    _voice.clip = _attackClip;
+                    _voice.Play();
                     animator.Play("Projectile");
 
                     var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
@@ -138,6 +140,8 @@ public class Watcher : AiAbstractClass
             {
                 if (canDoAction)
                 {
+                    _voice.clip = _attackClip;
+                    _voice.Play();
                     animator.Play("Summon");
 
                     var pSurro = target.GetComponent<Player>().playerSurroundings;

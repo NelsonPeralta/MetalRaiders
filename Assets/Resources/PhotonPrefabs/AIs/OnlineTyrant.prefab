@@ -1413,6 +1413,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 129
+  _laughClip: {fileID: 0}
+  _attackClip: {fileID: 8300000, guid: 205b3d2d7b6f63b48aaa14ffff125125, type: 3}
+  _dieClip: {fileID: 8300000, guid: b979c8b17b61fe041bf88ab821639874, type: 3}
   _newTargetCountdown: 0
   projectileDamage: 32
   projectileSpeed: 50
@@ -1478,7 +1481,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.5
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

@@ -75,6 +75,8 @@ public class Zombie : AiAbstractClass
             {
                 if (canDoAction)
                 {
+                    _voice.clip = _attackClip;
+                    _voice.Play();
                     animator.Play("Attack");
                     target.GetComponent<Player>().Damage(meleeDamage, false, 99);
                     nextActionCooldown = defaultNextActionCooldown;

@@ -70,6 +70,8 @@ public class Hellhound : AiAbstractClass
             {
                 if (canDoAction)
                 {
+                    _voice.clip = _attackClip;
+                    _voice.Play();
                     animator.Play("Bite");
                     target.GetComponent<Player>().Damage(meleeDamage, false, 99);
                     nextActionCooldown = defaultNextActionCooldown;

@@ -113,6 +113,8 @@ public class Knight : AiAbstractClass
             {
                 if (canDoAction)
                 {
+                    _voice.clip = _attackClip;
+                    _voice.Play();
                     animator.Play("Projectile");
 
                     var proj = Instantiate(projectile.gameObject, projectileSpawnPoint.transform.position
@@ -131,6 +133,8 @@ public class Knight : AiAbstractClass
             {
                 if (canDoAction)
                 {
+                    _voice.clip = _attackClip;
+                    _voice.Play();
                     animator.Play("Throw");
 
                     var potionBomb = Instantiate(grenade.gameObject, projectileSpawnPoint.transform.position, projectileSpawnPoint.transform.rotation);
