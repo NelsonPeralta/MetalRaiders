@@ -62,7 +62,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     List<HealthPack> healthPacks = new List<HealthPack>();
 
-    [SerializeField] AudioSource _ambianceNoises;
+    [SerializeField] AudioClip _ambiantMusic;
+    [SerializeField] AudioClip _waveSuccessClip;
 
 
     // constants
@@ -358,6 +359,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int delay = FindObjectsOfType<Player>().Length * 3;
         yield return new WaitForSeconds(delay);
 
+        GetComponent<AudioSource>().clip = _ambiantMusic;
+        GetComponent<AudioSource>().Play();
         OnWaveStart?.Invoke(this);
     }
 
@@ -685,6 +688,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void OnWaveEnd_Delegate(SwarmManager swarmManager)
     {
+        GetComponent<AudioSource>().clip = _waveSuccessClip;
+        GetComponent<AudioSource>().Play();
         waveEnded = true;
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
         foreach (Player p in FindObjectsOfType<Player>())
