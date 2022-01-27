@@ -15,8 +15,8 @@ public class WeaponProperties : MonoBehaviour
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
     [Header("Weapon Info")]
-    public string weaponIdentity; // Used for scripting purposes
-    public string weaponName; // Used for UI purposes
+    public string weaponName; // Used for scripting purposes
+    public string weaponCleanName; // Used for UI purposes
     public ReticuleType reticuleType;
     public FiringMode firingMode;
     public int damage = 50;
@@ -157,8 +157,8 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Info", EditorStyles.boldLabel);
-        wp.weaponIdentity = EditorGUILayout.TextField("Weapon Identity:", wp.weaponIdentity);
-        wp.weaponName = EditorGUILayout.TextField("Weapon Name:", wp.weaponName);
+        wp.weaponName = EditorGUILayout.TextField("Weapon Identity:", wp.weaponName);
+        wp.weaponCleanName = EditorGUILayout.TextField("Weapon Name:", wp.weaponCleanName);
         wp.fireRate = EditorGUILayout.IntField("Fire Rate:", wp.fireRate);
         wp.reticuleType = (WeaponProperties.ReticuleType)EditorGUILayout.EnumPopup("Reticule Type", wp.reticuleType);
         wp.firingMode = (WeaponProperties.FiringMode)EditorGUILayout.EnumPopup("Firing mode", wp.firingMode);
@@ -213,6 +213,7 @@ public class WeaponPropertiesEditor : Editor
         EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
         wp.Fire = EditorGUILayout.ObjectField("Fire", wp.Fire, typeof(AudioClip), true) as AudioClip;
         wp.ReloadShort = EditorGUILayout.ObjectField("Reload short", wp.ReloadShort, typeof(AudioClip), true) as AudioClip;
+        wp.draw = EditorGUILayout.ObjectField("Draw", wp.draw, typeof(AudioClip), true) as AudioClip;
 
         EditorUtility.SetDirty(wp);
     }

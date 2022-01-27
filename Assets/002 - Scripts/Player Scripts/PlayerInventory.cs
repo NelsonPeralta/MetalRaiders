@@ -59,10 +59,9 @@ public class PlayerInventory : MonoBehaviourPun
     public int heavyAmmo = 0;
     public int powerAmmo = 0;
 
-    [Space(10)]
-    public int maxSmallAmmo = 72;
-    public int maxHeavyAmmo = 60;
-    public int maxPowerAmmo = 8;
+    [SerializeField] int _maxSmallAmmo = 144;
+    [SerializeField] int _maxHeavyAmmo = 120;
+    [SerializeField] int _maxPowerAmmo = 8;
 
     [Header("HUD Components")]
     public AmmoHUDCounter smallAmmoHudCounter;
@@ -82,6 +81,51 @@ public class PlayerInventory : MonoBehaviourPun
     AudioSource audioSource;
 
     public GameObject allThirdPersonEquippedWeaponsHolder;
+
+    bool _hasAmmoUpgrade;
+    public bool hasAmmoUpgrade
+    {
+        get { return _hasAmmoUpgrade; }
+        set
+        {
+            bool previousValue = _hasAmmoUpgrade;
+            _hasAmmoUpgrade = value;
+
+            if(value && !previousValue)
+            {
+                maxSmallAmmo *= 2;
+                maxHeavyAmmo *= 2;
+                maxPowerAmmo *= 2;
+
+                smallAmmo = maxSmallAmmo;
+                heavyAmmo = maxHeavyAmmo;
+                powerAmmo = maxPowerAmmo;
+
+                smallAmmoHudCounter.extraAmmoText.text = smallAmmo.ToString();
+                heavyAmmoHudCounter.extraAmmoText.text = heavyAmmo.ToString();
+                powerAmmoHudCounter.extraAmmoText.text = powerAmmo.ToString();
+
+                AmmoManager();
+            }
+        }
+    }
+    public int maxSmallAmmo
+    {
+        get { return _maxSmallAmmo; }
+        private set { _maxSmallAmmo = value; }
+    }
+
+    public int maxHeavyAmmo
+    {
+        get { return _maxHeavyAmmo; }
+        private set { _maxHeavyAmmo = value; }
+    }
+
+    public int maxPowerAmmo
+    {
+        get { return _maxPowerAmmo; }
+        private set { _maxPowerAmmo = value; }
+    }
 
     /// <summary>
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,13 +166,14 @@ public class PlayerInventory : MonoBehaviourPun
         playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
         pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
 
-        if(GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             smallAmmo = maxSmallAmmo;
             heavyAmmo = maxHeavyAmmo;
             powerAmmo = maxPowerAmmo;
             grenades = maxGrenades;
-        }else if(GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        }
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             smallAmmo = 72;
             heavyAmmo = 60;
