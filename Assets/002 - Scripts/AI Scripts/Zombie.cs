@@ -29,6 +29,7 @@ public class Zombie : AiAbstractClass
 
     public override void OnEnable()
     {
+        meleeDamage += SwarmManager.instance.currentWave * 2;
         zombieAction = ZombieActions.Seek;
         seek = true;
 

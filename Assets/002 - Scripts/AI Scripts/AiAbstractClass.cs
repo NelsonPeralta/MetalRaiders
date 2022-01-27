@@ -263,7 +263,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     void Prepare()
     {
         nma = GetComponent<NavMeshAgent>();
-        health = defaultHealth;
+        health = defaultHealth + SwarmManager.instance.currentWave * 2;
         nma.speed = speed;
         seek = true;
         objectInLineOfSight = null;

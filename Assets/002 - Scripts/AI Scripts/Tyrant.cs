@@ -33,6 +33,7 @@ public class Tyrant : AiAbstractClass
     }
     public override void OnEnable()
     {
+        projectileDamage += SwarmManager.instance.currentWave * 2;
         tyrantAction = TyrantActions.Seek;
         seek = true;
     }
