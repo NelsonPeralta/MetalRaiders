@@ -11,11 +11,6 @@ public class PlayerShieldBar : PlayerBar
         healingSlider.maxValue = player.defaultHealingCountdown + ((player.maxHealthPoints - player.hitPoints) / player.healthHealingIncrement);
         GetComponent<Slider>().maxValue = player.maxShieldPoints;
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            holder.SetActive(true);
-        else
-            holder.SetActive(false);
-
         player.OnPlayerShieldDamaged += OnShieldDamaged_Delegate;
         player.OnPlayerShieldBroken += OnShieldBroken_Delegate;
     }

@@ -73,6 +73,25 @@ public class Player : MonoBehaviourPunCallbacks
 
     float _healthHealingIncrement = (100 * 2);
     float _shieldHealingIncrement = (150 * 0.5f);
+
+    bool _hasArmor;
+    public bool hasArmor // Used to handle armor seller for Swarm Mode
+    {
+        get { return _hasArmor; }
+        set
+        {
+            if (value)
+            {
+                _hasArmor = true;
+                maxHitPoints = 250;
+                hitPoints = 250;
+
+                needsHealthPack = false;
+
+                GetComponent<PlayerUI>().EnableArmorUI();
+            }
+        }
+    }
     public float hitPoints
     {
         get { return _hitPoints; }
@@ -188,8 +207,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
-            maxHitPoints = 250;
-            hitPoints = maxHitPoints;
+            hasArmor = true;
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
@@ -304,7 +322,7 @@ public class Player : MonoBehaviourPunCallbacks
             healingCountdown -= Time.deltaTime;
         }
 
-        if (healingCountdown <= 0 && hitPoints < maxHitPoints && GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        if (healingCountdown <= 0 && hitPoints < maxHitPoints && !needsHealthPack)
         {
             if (hitPoints < maxHealthPoints)
                 hitPoints += (Time.deltaTime * _healthHealingIncrement);
@@ -614,7 +632,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void OnPlayerDamaged_Delegate(Player player)
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        if (!needsHealthPack)
         {
             healingCountdown = _defaultHealingCountdown;
             shieldRechargeCountdown = _defaultHealingCountdown;

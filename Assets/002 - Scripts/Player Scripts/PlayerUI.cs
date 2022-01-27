@@ -169,6 +169,12 @@ public class PlayerUI : MonoBehaviour
         motionTracker.SetActive(false);
     }
 
+    public void EnableArmorUI()
+    {
+        shieldBar.SetActive(true);
+        healthBar.SetActive(false);
+        motionTracker.SetActive(true);
+    }
     public void AddInformerText(string message)
     {
         StartCoroutine(AddInformerText_Coroutine(message));
