@@ -1417,8 +1417,8 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: 205b3d2d7b6f63b48aaa14ffff125125, type: 3}
   _dieClip: {fileID: 8300000, guid: b979c8b17b61fe041bf88ab821639874, type: 3}
   _newTargetCountdown: 0
-  projectileDamage: 32
-  projectileSpeed: 50
+  projectileDamage: 24
+  projectileSpeed: 100
   minionSpawnPoints:
   - {fileID: 3687535165126002603}
   - {fileID: 360714974715981519}

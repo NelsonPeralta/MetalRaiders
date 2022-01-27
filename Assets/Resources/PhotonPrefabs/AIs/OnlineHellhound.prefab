@@ -3014,7 +3014,7 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: 5efd42fa3e58a3e4984b3bad2586a754, type: 3}
   _dieClip: {fileID: 8300000, guid: 0a08b7fd07b2f31449e19325e97c1470, type: 3}
   _newTargetCountdown: 0
-  meleeDamage: 12
+  meleeDamage: 6
   projectileDamage: 0
   projectileSpeed: 0
   projectile: {fileID: 0}

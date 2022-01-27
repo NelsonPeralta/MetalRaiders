@@ -12056,11 +12056,11 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: 4e2ef30ccdee4a24a996216fee662b40, type: 3}
   _dieClip: {fileID: 8300000, guid: 979a267a51e714b40b074d04b88a6b43, type: 3}
   _newTargetCountdown: 0
-  projectileDamage: 16
+  projectileDamage: 8
   projectileSpeed: 150
-  meteorDamage: 18
+  meteorDamage: 4
   meteorSpeed: 15
-  meteorRadius: 7
+  meteorRadius: 5
   projectile: {fileID: 1006269644436722, guid: 5ba8aa092f5c7c54c94ba93b89b0e4ea, type: 3}
   meteor: {fileID: 3885397476374691508, guid: a257ce09aee74b94a90f54f6c65aea66, type: 3}
   wall: {fileID: 5039441736292490731, guid: f0474ae2bee30ba4280a07c258f22bf8, type: 3}

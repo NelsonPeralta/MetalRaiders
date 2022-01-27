@@ -23855,9 +23855,9 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: f2350706efe6ac14d8484a2a3d88aea7, type: 3}
   _dieClip: {fileID: 8300000, guid: cd6a399cf21af214ebcaa9d5132927b4, type: 3}
   _newTargetCountdown: 0
-  projectileDamage: 12
+  projectileDamage: 6
   projectileSpeed: 100
-  grenadeDamage: 18
+  grenadeDamage: 9
   grenadeRadius: 6
   projectile: {fileID: 5091089392186072086, guid: 5ba8aa092f5c7c54c94ba93b89b0e4ea,
     type: 3}

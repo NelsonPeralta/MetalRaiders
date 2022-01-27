@@ -709,11 +709,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         Debug.Log("Respawn Health Packs RPC");
         if (currentWave % 5 == 0)
         {
-            livesLeft += FindObjectsOfType<Player>().Length;
+            int livesToAdd = FindObjectsOfType<Player>().Length;
+            livesLeft += livesToAdd;
             foreach (PlayerUI p in FindObjectsOfType<PlayerUI>())
             {
-                p.killFeedManager.EnterNewFeed("Lives added");
-                p.killFeedManager.EnterNewFeed("Health Packs Spawned");
+                p.killFeedManager.EnterNewFeed($"Lives added ({livesToAdd})");
+                p.killFeedManager.EnterNewFeed("Health Packs Respawned");
             }
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)
