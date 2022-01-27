@@ -11,7 +11,6 @@ public class FindableObject : MonoBehaviour
     public List<Player> playersInRange = new List<Player>();
 
     [SerializeField] bool _found;
-
     public bool found
     {
         get { return _found; }
@@ -21,7 +20,9 @@ public class FindableObject : MonoBehaviour
             _found = value;
 
             if (value && !previousValue)
+            {
                 OnFound?.Invoke(this);
+            }
         }
     }
     private void OnTriggerStay(Collider other)

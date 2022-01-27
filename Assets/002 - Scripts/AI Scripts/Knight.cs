@@ -36,8 +36,6 @@ public class Knight : AiAbstractClass
 
     public override void OnEnable()
     {
-        grenadeDamage += SwarmManager.instance.currentWave * 2;
-        projectileDamage += SwarmManager.instance.currentWave * 2;
         knightAction = KnightActions.Seek;
         seek = true;
     }
@@ -225,5 +223,11 @@ public class Knight : AiAbstractClass
     public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
     {
 
+    }
+
+    public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
+    {
+        grenadeDamage += SwarmManager.instance.currentWave * 2;
+        projectileDamage += SwarmManager.instance.currentWave * 2;
     }
 }

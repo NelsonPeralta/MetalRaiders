@@ -29,7 +29,6 @@ public class Hellhound : AiAbstractClass
 
     public override void OnEnable()
     {
-        projectileDamage += SwarmManager.instance.currentWave * 2;
         hellhoundAction = HellhoundActions.Seek;
         seek = true;
     }
@@ -152,5 +151,10 @@ public class Hellhound : AiAbstractClass
     public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
     {
 
+    }
+
+    public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
+    {
+        projectileDamage += SwarmManager.instance.currentWave * 2;
     }
 }

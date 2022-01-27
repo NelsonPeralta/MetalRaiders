@@ -9,7 +9,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 {
     // events
     public delegate void AiEvent(AiAbstractClass aiAbstractClass);
-    public AiEvent OnHealthChange, OnDeath, OnDeathEnd, OnPlayerRangeChange, OnActionChange, OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange, OnTargetDeath;
+    public AiEvent OnHealthChange, OnDeath, OnDeathEnd, OnPlayerRangeChange, OnActionChange, OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange, OnTargetDeath, OnPrepareEnd;
 
     // enums
     public enum PlayerRange { Out, Close, Medium, Long }
@@ -258,6 +258,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
         }
+
+        OnPrepareEnd?.Invoke(this);
     }
 
     void Prepare()
@@ -504,6 +506,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public abstract void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass);
+    public abstract void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void DoAction();
     public abstract void ChildUpdate();
 }

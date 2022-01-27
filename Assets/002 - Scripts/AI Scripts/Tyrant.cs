@@ -33,7 +33,6 @@ public class Tyrant : AiAbstractClass
     }
     public override void OnEnable()
     {
-        projectileDamage += SwarmManager.instance.currentWave * 2;
         tyrantAction = TyrantActions.Seek;
         seek = true;
     }
@@ -221,5 +220,10 @@ public class Tyrant : AiAbstractClass
     {
         GameObject ex = Instantiate(explosion, transform.position + new Vector3(0, 0.75f, 0), transform.rotation);
         Destroy(ex, 2);
+    }
+
+    public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
+    {
+        projectileDamage += SwarmManager.instance.currentWave * 2;
     }
 }

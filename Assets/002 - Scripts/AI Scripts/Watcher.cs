@@ -44,8 +44,6 @@ public class Watcher : AiAbstractClass
     }
     public override void OnEnable()
     {
-        meteorDamage += SwarmManager.instance.currentWave * 2;
-        projectileDamage += SwarmManager.instance.currentWave * 2;
         watcherAction  = WatcherActions.Seek;
         seek = true;
     }
@@ -227,5 +225,11 @@ public class Watcher : AiAbstractClass
     public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
     {
 
+    }
+
+    public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
+    {
+        meteorDamage += SwarmManager.instance.currentWave * 2;
+        projectileDamage += SwarmManager.instance.currentWave * 2;
     }
 }

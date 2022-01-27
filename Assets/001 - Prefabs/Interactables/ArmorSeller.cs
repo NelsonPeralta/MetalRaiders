@@ -16,6 +16,8 @@ public class ArmorSeller : MonoBehaviour
     [SerializeField] List<FindableObject> _findableObjects = new List<FindableObject>();
 
     [SerializeField] bool _allFindableObjectsFound;
+    [SerializeField] AudioClip _findableObjectsFoundClip;
+    [SerializeField] AudioClip _allFindableObjectsFoundClip;
     public bool allFindableObjectsFound
     {
         get { return _allFindableObjectsFound; }
@@ -26,6 +28,8 @@ public class ArmorSeller : MonoBehaviour
             if (value)
             {
                 armorModel.SetActive(true);
+                GetComponent<AudioSource>().clip = _allFindableObjectsFoundClip;
+                GetComponent<AudioSource>().Play();
             }
         }
     }
@@ -51,10 +55,10 @@ public class ArmorSeller : MonoBehaviour
                 {
                     other.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
                     other.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Buy armor";
+                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Buy armor for {cost} points";
                 }
                 else
-                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points";
+                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({cost})";
             }
             else
                 other.GetComponent<PlayerUI>().weaponInformerText.text = $"You already have an armor";
@@ -89,6 +93,12 @@ public class ArmorSeller : MonoBehaviour
         foreach (FindableObject fo in _findableObjects)
             if (!fo.found)
                 _allFound = false;
+
+        if (!_allFound)
+        {
+            GetComponent<AudioSource>().clip = _findableObjectsFoundClip;
+            GetComponent<AudioSource>().Play();
+        }
 
         allFindableObjectsFound = _allFound;
     }
