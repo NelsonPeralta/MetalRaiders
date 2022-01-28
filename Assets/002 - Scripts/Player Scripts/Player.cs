@@ -92,6 +92,20 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    bool _hasMeleeUpgrade;
+    public bool hasMeleeUpgrade
+    {
+        get { return _hasMeleeUpgrade; }
+        set
+        {
+            bool previousValue = _hasMeleeUpgrade;
+            _hasMeleeUpgrade = value;
+
+            if (value && !_hasMeleeUpgrade)
+                _meleeDamage *= 3;
+        }
+    }
     public float hitPoints
     {
         get { return _hitPoints; }
@@ -134,7 +148,10 @@ public class Player : MonoBehaviourPunCallbacks
         get { return _maxShieldPoints; }
         private set { _maxShieldPoints = value; }
     }
-    public int meleeDamage { get { return _meleeDamage; } }
+    public int meleeDamage
+    {
+        get { return _meleeDamage; }
+    }
     bool hitboxesEnabled
     {
         set
