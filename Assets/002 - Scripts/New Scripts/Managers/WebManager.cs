@@ -32,7 +32,12 @@ public class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine(username, password));
     }
 
-    public void SaveSwarmStats(OnlinePlayerSwarmScript onlinePlayerSwarmScript)
+    public void SaveGlobalStats(PlayerSwarmMatchStats onlinePlayerSwarmScript)
+    {
+        StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
+
+    }
+    public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
         StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
 
@@ -193,6 +198,7 @@ public class WebManager : MonoBehaviour
                     playerDatabaseAdaptor.SetPlayerData(pd);
                     PhotonNetwork.NickName = playerDatabaseAdaptor.GetUsername();
 
+                    StartCoroutine(Login_Coroutine_Set_Global_Basic_Data(playerDatabaseAdaptor.GetId()));
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(playerDatabaseAdaptor.GetId()));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerDatabaseAdaptor.GetId()));
 
@@ -210,6 +216,44 @@ public class WebManager : MonoBehaviour
         }
     }
 
+    // TODO
+    IEnumerator Login_Coroutine_Set_Global_Basic_Data(int playerId)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("service", "getBasicGlobalData");
+        form.AddField("playerId", playerId);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                //Debug.Log(www.result);
+                //Debug.Log(www.downloadHandler.text);
+
+                string jsonarray = www.downloadHandler.text;
+
+                try
+                {
+                    PlayerDatabaseAdaptor.PlayerBasicGlobalData pd = PlayerDatabaseAdaptor.PlayerBasicGlobalData.CreateFromJSON(jsonarray);
+                    playerDatabaseAdaptor.SetPlayerBasicGlobalData(pd);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                    if (www.downloadHandler.text.Contains("Could not fetch basic global data"))
+                    {
+                        Launcher.launcherInstance.OnCreateRoomFailed(0, "Could not fetch basic global data");
+                    }
+                }
+            }
+        }
+    }
     IEnumerator Login_Coroutine_Set_PvP_Stats(int playerId)
     {
         WWWForm form = new WWWForm();
