@@ -19699,7 +19699,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3343678446776650480}
-  - component: {fileID: 6937745079582127412}
   - component: {fileID: 9067899134917446177}
   - component: {fileID: 9062402170995111746}
   - component: {fileID: -8430470570293042278}
@@ -19725,32 +19724,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6937745079582127412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3163091665644265888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89b86c1753353344884fd40429370dbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tags:
-  - Look At Player
-  - 
-  - 
-  - 
-  - 
-  isPlayer: 0
-  isAI: 0
-  isHitbox: 0
-  isAlive: 0
-  redTeam: 0
-  blueTeam: 0
-  yellowTeam: 0
-  greenTeam: 0
 --- !u!135 &9067899134917446177
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -19779,10 +19752,12 @@ MonoBehaviour:
   PV: {fileID: -8430470570293042278}
   weaponPool: {fileID: 0}
   onlineGameTime: {fileID: 0}
+  randomAmmo: 0
   ammoType: grenade
+  defaultAmmo: 0
   ammoInThisPack: 2
   ammoText: {fileID: 7239459711961369259}
-  spawnPoint: {fileID: 0}
+  onlineAmmoPackSpawnPoint: {fileID: 0}
   playerProperties: {fileID: 0}
 --- !u!114 &-8430470570293042278
 MonoBehaviour:

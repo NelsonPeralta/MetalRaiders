@@ -119,6 +119,8 @@ MonoBehaviour:
   - EndWave_RPC
   - SpawnAi_RPC
   - StartNewWave_RPC
+  - RespawnHealthPacks_RPC
+  - ChangeAction_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

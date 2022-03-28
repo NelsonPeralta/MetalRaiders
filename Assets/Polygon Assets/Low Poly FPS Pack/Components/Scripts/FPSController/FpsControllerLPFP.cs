@@ -472,7 +472,7 @@ namespace FPSControllerLPFP
             public string jump = "Jump";
 
             public int playerID ;
-            public Player player;
+            public Rewired.Player player;
 
             
 

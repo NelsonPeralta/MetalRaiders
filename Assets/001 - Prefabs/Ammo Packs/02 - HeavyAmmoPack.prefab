@@ -19964,7 +19964,7 @@ GameObject:
   - component: {fileID: 4390517542131663730}
   - component: {fileID: 4390517542131663731}
   - component: {fileID: 3613580435682931165}
-  m_Layer: 22
+  m_Layer: 16
   m_Name: 02 - HeavyAmmoPack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20019,7 +20019,7 @@ MonoBehaviour:
   defaultAmmo: 30
   ammoInThisPack: 30
   ammoText: {fileID: 1776213425502084827}
-  spawnPoint: {fileID: 0}
+  onlineAmmoPackSpawnPoint: {fileID: 0}
   playerProperties: {fileID: 0}
 --- !u!1 &4390517542338344337
 GameObject:

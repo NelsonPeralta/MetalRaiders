@@ -643,7 +643,7 @@ namespace Photon.Pun
         /// <param name="methodName">The name of a fitting method that was has the RPC attribute.</param>
         /// <param name="targetPlayer">The group of targets and the way the RPC gets sent.</param>
         /// <param name="parameters">The parameters that the RPC method has (must fit this call!).</param>
-        public void RPC(string methodName, Player targetPlayer, params object[] parameters)
+        public void RPC(string methodName, RpcTarget all, int aiPhotonId, Player targetPlayer, params object[] parameters)
         {
             PhotonNetwork.RPC(this, methodName, targetPlayer, false, parameters);
         }

@@ -15033,7 +15033,7 @@ GameObject:
   - component: {fileID: 2352401233832416904}
   - component: {fileID: 2352401233832416905}
   - component: {fileID: 2708463030400311073}
-  m_Layer: 22
+  m_Layer: 16
   m_Name: 03 - PowerAmmoPack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15088,7 +15088,7 @@ MonoBehaviour:
   defaultAmmo: 4
   ammoInThisPack: 4
   ammoText: {fileID: 1429736503779214968}
-  spawnPoint: {fileID: 0}
+  onlineAmmoPackSpawnPoint: {fileID: 0}
   playerProperties: {fileID: 0}
 --- !u!1 &2352835839467226603
 GameObject:

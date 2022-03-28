@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1530324465210836351}
   - component: {fileID: 3652923032588212757}
   - component: {fileID: 5091089392186072086}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: Watcher Fireball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4911,7 +4911,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!135 &3652923032588212757
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4957,7 +4957,7 @@ GameObject:
   - component: {fileID: 4161723552746866}
   - component: {fileID: 198660992331051742}
   - component: {fileID: 199634485192772984}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: SparkTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9833,7 +9833,7 @@ GameObject:
   - component: {fileID: 4513803471108484}
   - component: {fileID: 198907740042409842}
   - component: {fileID: 199460593314475044}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: SmokeTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14718,7 +14718,7 @@ GameObject:
   - component: {fileID: 4638806428922356}
   - component: {fileID: 198807149916876708}
   - component: {fileID: 199693865085524354}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: FireTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

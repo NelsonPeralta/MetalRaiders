@@ -7,9 +7,12 @@ onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
-	"last_search.83F126EB" = "generic"
+	"last_search.83F126EB" = ""
 	"InspectorPreview.83F126EB" = "0"
-	"currentGroup.83F126EB" = "asset"
+	"currentGroup.83F126EB" = "all"
+	"last_search.7F95D817" = "cScript"
+	"InspectorPreview.7F95D817" = "0"
+	"currentGroup.7F95D817" = "scene"
 }
 providers = {
 	asset = {
@@ -49,7 +52,10 @@ providers = {
 	}
 }
 recentSearches = [
+	"minigun seller"
+	"table t:Prefab"
 	"generic"
+	"cScript"
 	"head"
 	"tunnel"
 	"finish"
