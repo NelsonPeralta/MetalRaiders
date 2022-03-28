@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerDatabaseAdaptor
 {
     PlayerUserData playerData;
+    PlayerBasicGlobalData playerBasicGlobalData;
     PlayerBasicPvPStats playerBasicPvPStats;
     PlayerBasicPvEStats playerBasicPvEStats;
 
@@ -19,6 +20,16 @@ public class PlayerDatabaseAdaptor
             Debug.LogError("PlayerData already set");
     }
 
+    public void SetPlayerBasicGlobalData(PlayerBasicGlobalData playerBasicGlobalData)
+    {
+        if (this.playerBasicGlobalData == null)
+        {
+            this.playerBasicGlobalData = playerBasicGlobalData;
+            Debug.Log(GetLevel());
+        }
+        else
+            Debug.LogError("playerBasicGlobalData already set");
+    }
     public void SetPlayerBasicPvPStats(PlayerBasicPvPStats playerData)
     {
         this.playerBasicPvPStats = playerData;
@@ -34,6 +45,8 @@ public class PlayerDatabaseAdaptor
     // ********** GETTERS **********
     public int GetId() { return playerData.id; }
     public string GetUsername() { return playerData.username; }
+
+    public int GetLevel() { return playerBasicGlobalData.level; }
     // Multiplayer
     public int GetPvPKills() { return playerBasicPvPStats.kills; }
     public int GetPvPDeaths() { return playerBasicPvPStats.deaths; }
@@ -57,6 +70,20 @@ public class PlayerDatabaseAdaptor
         public static PlayerUserData CreateFromJSON(string jsonString)
         {
             return JsonUtility.FromJson<PlayerUserData>(jsonString);
+        }
+
+    }
+
+    [System.Serializable]
+    public class PlayerBasicGlobalData
+    {
+
+        int _player_id;
+        public int level, xp, cr;
+
+        public static PlayerBasicGlobalData CreateFromJSON(string jsonString)
+        {
+            return JsonUtility.FromJson<PlayerBasicGlobalData>(jsonString);
         }
 
     }

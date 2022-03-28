@@ -10,7 +10,11 @@
 
 
         $username = $_POST["username"];
+        //$username = substr_replace($username ,"",-3);
         $password = hash('sha512', $_POST["password"]);
+        //$password = hash('sha512', substr_replace($_POST["password"], "", -3));
+        //$password = $_POST["password"];
+        //$password = substr_replace($_POST["password"], "", -3);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
@@ -57,7 +61,11 @@
 
 
         $username = $_POST["username"];
+        //$username =substr_replace($username ,"",-3);
         $password = hash('sha512', $_POST["password"]);
+        //$password = hash('sha512', substr_replace($_POST["password"], "", -3));
+        //$password = $_POST["password"];
+        //$password = substr_replace($_POST["password"], "", -3);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
@@ -77,8 +85,52 @@
             }
             // Make sure no other echo or unity will read the json string and otther merges as a single string
             echo json_encode($rows[0]);
+
+
+            // while($row = $result->fetch_assoc()){
+            //     if($row["password"] == $password){
+            //         echo "login success";
+            //     }else{
+            //         echo "wrong credentials";
+            //     }
+            // }
+
+
+
         }else{
             echo "wrong credentials";
+            // echo "Username does not exist";
+        }
+
+        $conn->close();
+    }
+    
+    
+    
+    if($_POST["service"] == "getBasicGlobalData"){
+
+
+        $playerId = $_POST["playerId"];
+        //$username =substr_replace($username ,"",-3);
+        
+        if($conn->connect_error){
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        $sql = "SELECT player_id, level, xp, cr FROM player_basic_global_data WHERE player_id='$playerId'";
+        $result = $conn->query($sql);
+
+        if($result->num_rows > 0){
+            $row = array();
+
+            while($row = $result->fetch_assoc()){
+                $rows[] = $row;
+            }
+            // Make sure no other echo or unity will read the json string and otther merges as a single string
+            echo json_encode($rows[0]);
+
+        }else{
+            echo "Could not fetch basic global data. SQL request: '$sql'";
         }
 
         $conn->close();
@@ -90,6 +142,7 @@
 
 
         $playerId = $_POST["playerId"];
+        //$username =substr_replace($username ,"",-3);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
@@ -120,6 +173,7 @@
 
 
         $playerId = $_POST["playerId"];
+        //$username =substr_replace($username ,"",-3);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);

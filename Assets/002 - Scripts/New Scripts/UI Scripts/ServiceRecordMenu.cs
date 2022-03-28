@@ -5,6 +5,7 @@ using TMPro;
 
 public class ServiceRecordMenu : MonoBehaviour
 {
+    public TMP_Text levelText;
     public TMP_Text multiplayerStatsText;
     public TMP_Text swarmStatsText;
 
@@ -18,6 +19,8 @@ public class ServiceRecordMenu : MonoBehaviour
         {
             kd = pda.GetPvPKills() / (float)pda.GetPvPDeaths();
         }
+        levelText.text = $"Level: {pda.GetLevel()}";
+
         Debug.Log($"Initializing Service Record Menu. PvE Kills {pda.GetPvEKills()}");
         multiplayerStatsText.text = $"MULTIPLAYER\n----------\n\nKills: {pda.GetPvPKills()}\nDeaths: {pda.GetPvPDeaths()}\nHeadshots: {pda.GetPvPHeadshots()}\nK/D: {kd}";
         swarmStatsText.text = $"SWARM\n-----\n\nKills: {pda.GetPvEKills()}\nDeaths: {pda.GetPvEDeaths()}\nHeadshots: {pda.GetPvEHeadshots()}\nTotal Points: {pda.GetPvETotalPoints()}";
