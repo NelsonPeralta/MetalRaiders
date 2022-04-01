@@ -358,9 +358,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         int delay = FindObjectsOfType<Player>().Length * 3;
         yield return new WaitForSeconds(delay);
+        try
+        {
+            GetComponent<AudioSource>().clip = _ambiantMusic;
+            GetComponent<AudioSource>().Play();
 
-        GetComponent<AudioSource>().clip = _ambiantMusic;
-        GetComponent<AudioSource>().Play();
+        }
+        catch (System.Exception ex)
+        {
+
+        }
+
         OnWaveStart?.Invoke(this);
     }
 
@@ -688,8 +696,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void OnWaveEnd_Delegate(SwarmManager swarmManager)
     {
-        GetComponent<AudioSource>().clip = _waveSuccessClip;
-        GetComponent<AudioSource>().Play();
+        try
+        {
+            GetComponent<AudioSource>().clip = _waveSuccessClip;
+            GetComponent<AudioSource>().Play();
+        }
+        catch (System.Exception ex)
+        {
+
+        }
         waveEnded = true;
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
         foreach (Player p in FindObjectsOfType<Player>())
