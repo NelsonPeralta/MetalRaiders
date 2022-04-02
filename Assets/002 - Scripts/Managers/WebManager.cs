@@ -4,6 +4,7 @@ using System;
 using Photon.Pun;
 using System.Collections.Generic;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class WebManager : MonoBehaviour
 {
@@ -44,14 +45,61 @@ public class WebManager : MonoBehaviour
 
     }
 
+    IEnumerator SaveBasicOnlineStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
+    {
+        int xpAndCreditGain = Random.Range(800, 1200);
+
+        int playerId = playerDatabaseAdaptor.GetId();
+        int newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level;
+        int newXp = playerDatabaseAdaptor.playerBasicOnlineStats.xp + xpAndCreditGain;
+        int newCredits = playerDatabaseAdaptor.playerBasicOnlineStats.credits + xpAndCreditGain;
+
+
+        WWWForm form = new WWWForm();
+        form.AddField("service", "SaveBasicOnlineStats");
+
+        form.AddField("playerId", playerId);
+        form.AddField("newLevel", newLevel);
+        form.AddField("newXp", newXp);
+        form.AddField("newCredits", newCredits);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                if (www.downloadHandler.text.Contains("Could not save swarm stats"))
+                {
+                    Debug.LogError("Could not save swarm stats");
+
+                }
+                else if (www.downloadHandler.text.Contains("Swarm stats saved"))
+                {
+                    Debug.Log("Swarm stats saved successfully");
+                }
+            }
+        }
+        StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
+    }
+
     IEnumerator SaveSwarmStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
         int playerId = playerDatabaseAdaptor.GetId();
         int newKills = playerDatabaseAdaptor.GetPvEKills() + onlinePlayerSwarmScript.kills;
         int newDeaths = playerDatabaseAdaptor.GetPvEDeaths() + onlinePlayerSwarmScript.deaths;
         int newHeadshots = playerDatabaseAdaptor.GetPvEHeadshots() + onlinePlayerSwarmScript.headshots;
-        int newTotalPoints = playerDatabaseAdaptor.GetPvETotalPoints() + onlinePlayerSwarmScript.GetTotalPoints();
-        Debug.Log(playerDatabaseAdaptor.GetPvETotalPoints() + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newTotalPoints);
+        int newHighestScore = playerDatabaseAdaptor.GetPvEHighestPoints();
+        if(onlinePlayerSwarmScript.GetTotalPoints() > newHighestScore)
+            newHighestScore = onlinePlayerSwarmScript.GetTotalPoints();
+        Debug.Log("bababooey " + playerDatabaseAdaptor.GetPvEHighestPoints() + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore);
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveSwarmStats");
@@ -59,7 +107,7 @@ public class WebManager : MonoBehaviour
         form.AddField("newKills", newKills);
         form.AddField("newDeaths", newDeaths);
         form.AddField("newHeadshots", newHeadshots);
-        form.AddField("newTotalPoints", newTotalPoints);
+        form.AddField("newHighestPoints", newHighestScore);
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -84,6 +132,14 @@ public class WebManager : MonoBehaviour
                     Debug.Log("Swarm stats saved successfully");
                 }
             }
+        }
+
+        try
+        {
+            StartCoroutine(SaveBasicOnlineStats_Coroutine(onlinePlayerSwarmScript));
+        }catch (Exception ex)
+        {
+
         }
         StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
@@ -193,6 +249,7 @@ public class WebManager : MonoBehaviour
                     playerDatabaseAdaptor.SetPlayerData(pd);
                     PhotonNetwork.NickName = playerDatabaseAdaptor.GetUsername();
 
+                    StartCoroutine(Login_Coroutine_Set_Online_Stats(playerDatabaseAdaptor.GetId()));
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(playerDatabaseAdaptor.GetId()));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerDatabaseAdaptor.GetId()));
 
@@ -204,6 +261,44 @@ public class WebManager : MonoBehaviour
                     if (www.downloadHandler.text.Contains("wrong credentials"))
                     {
                         Launcher.launcherInstance.OnCreateRoomFailed(0, "Wrong credentials");
+                    }
+                }
+            }
+        }
+    }
+
+    IEnumerator Login_Coroutine_Set_Online_Stats(int playerId)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("service", "getBasicOnlineData");
+        form.AddField("playerId", playerId);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                //Debug.Log(www.result);
+                //Debug.Log(www.downloadHandler.text);
+
+                string jsonarray = www.downloadHandler.text;
+
+                try
+                {
+                    PlayerDatabaseAdaptor.PlayerBasicOnlineStats pd = PlayerDatabaseAdaptor.PlayerBasicOnlineStats.CreateFromJSON(jsonarray);
+                    playerDatabaseAdaptor.playerBasicOnlineStats = pd;
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                    if (www.downloadHandler.text.Contains("Could not fetch pvp stats"))
+                    {
+                        Launcher.launcherInstance.OnCreateRoomFailed(0, "Could not fetch pvp stats");
                     }
                 }
             }

@@ -111,7 +111,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-
+    public Player GetMyPlayer()
+    {
+        foreach(Player p in FindObjectsOfType<Player>())
+            if(p.GetComponent<PhotonView>().IsMine)
+                return p;
+        return null;
+    }
 
     public Player GetPlayerWithPhotonViewId(int pid)
     {

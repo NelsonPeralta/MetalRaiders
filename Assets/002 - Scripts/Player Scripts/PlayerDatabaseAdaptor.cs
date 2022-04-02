@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerDatabaseAdaptor
 {
     PlayerUserData playerData;
+    PlayerBasicOnlineStats _playerBasicOnlineStats;
     PlayerBasicPvPStats playerBasicPvPStats;
     PlayerBasicPvEStats playerBasicPvEStats;
 
@@ -18,6 +19,8 @@ public class PlayerDatabaseAdaptor
         else
             Debug.LogError("PlayerData already set");
     }
+
+
 
     public void SetPlayerBasicPvPStats(PlayerBasicPvPStats playerData)
     {
@@ -42,9 +45,37 @@ public class PlayerDatabaseAdaptor
     public int GetPvEKills() { return playerBasicPvEStats.kills; }
     public int GetPvEDeaths() { return playerBasicPvEStats.deaths; }
     public int GetPvEHeadshots() { return playerBasicPvEStats.headshots; }
-    public int GetPvETotalPoints() { return playerBasicPvEStats.total_points; }
+    public int GetPvEHighestPoints() { return playerBasicPvEStats.highest_points; }
     public bool PlayerDataIsSet() { return playerData != null; }
 
+
+    // **************** Properties **************** //
+    public int level
+    {
+        get { return _playerBasicOnlineStats.level; }
+    }
+
+    public int xp
+    {
+        get { return _playerBasicOnlineStats.xp; }
+    }
+
+    public int credits
+    {
+        get { return playerBasicOnlineStats.credits; }
+    }
+
+    public PlayerBasicOnlineStats playerBasicOnlineStats
+    {
+        get { return _playerBasicOnlineStats; }
+        set
+        {
+            if(_playerBasicOnlineStats == null)
+                _playerBasicOnlineStats = value;
+            else
+                Debug.LogError("PlayerBasicOnlineStats already set");
+        }
+    }
 
     // ********* INNER CLASSES *********
     [System.Serializable]
@@ -57,6 +88,20 @@ public class PlayerDatabaseAdaptor
         public static PlayerUserData CreateFromJSON(string jsonString)
         {
             return JsonUtility.FromJson<PlayerUserData>(jsonString);
+        }
+
+    }
+
+    [System.Serializable]
+    public class PlayerBasicOnlineStats
+    {
+
+        int _id;
+        public int level, xp, credits;
+
+        public static PlayerBasicOnlineStats CreateFromJSON(string jsonString)
+        {
+            return JsonUtility.FromJson<PlayerBasicOnlineStats>(jsonString);
         }
 
     }
@@ -77,7 +122,7 @@ public class PlayerDatabaseAdaptor
     public class PlayerBasicPvEStats
     {
         int player_id;
-        public int kills, deaths, headshots, total_points;
+        public int kills, deaths, headshots, highest_points;
 
         public static PlayerBasicPvEStats CreateFromJSON(string jsonString)
         {
