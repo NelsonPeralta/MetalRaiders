@@ -47,12 +47,17 @@ public class WebManager : MonoBehaviour
 
     IEnumerator SaveBasicOnlineStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
-        int xpAndCreditGain = Random.Range(800, 1200);
+        int xpAndCreditGain = Random.Range(160, 240);
 
         int playerId = playerDatabaseAdaptor.GetId();
         int newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level;
         int newXp = playerDatabaseAdaptor.playerBasicOnlineStats.xp + xpAndCreditGain;
         int newCredits = playerDatabaseAdaptor.playerBasicOnlineStats.credits + xpAndCreditGain;
+
+        int dbXpToLevel = PlayerProgressionManager.instance.playerLevelToXpDic[playerDatabaseAdaptor.playerBasicOnlineStats.level];
+
+        if(dbXpToLevel > playerDatabaseAdaptor.playerBasicOnlineStats.level)
+            newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level + 1;
 
 
         WWWForm form = new WWWForm();
@@ -99,7 +104,8 @@ public class WebManager : MonoBehaviour
         int newHighestScore = playerDatabaseAdaptor.GetPvEHighestPoints();
         if(onlinePlayerSwarmScript.GetTotalPoints() > newHighestScore)
             newHighestScore = onlinePlayerSwarmScript.GetTotalPoints();
-        Debug.Log("bababooey " + playerDatabaseAdaptor.GetPvEHighestPoints() + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore);
+
+        Debug.Log("bababooey " + playerDatabaseAdaptor.GetPvEHighestPoints() + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore +"\nXp to Level: ");
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveSwarmStats");
