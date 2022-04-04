@@ -159,6 +159,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdatePlayerList()
     {
+        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
         Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
 
         foreach (Transform child in playerListContent)
@@ -169,7 +170,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         for (int i = 0; i < players.Count(); i++)
         {
             Debug.Log(players[i].NickName);
-            Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
+            GameObject plt = Instantiate(PlayerListItemPrefab, playerListContent);
+            plt.GetComponent<PlayerListItem>().SetUp(players[i]);
+            plt.GetComponent<PlayerListItem>().levelText.text = pda.playerBasicOnlineStats.level.ToString();
         }
     }
 

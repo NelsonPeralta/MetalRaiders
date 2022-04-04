@@ -8,7 +8,8 @@ using UnityEngine;
 public class PlayerListItem : MonoBehaviourPunCallbacks
 {
 	public TMP_Text text;
-    Photon.Realtime.Player player;
+	public TMP_Text levelText;
+	Photon.Realtime.Player player;
 
 	public void SetUp(Photon.Realtime.Player _player)
 	{
