@@ -42,7 +42,61 @@ public class WebManager : MonoBehaviour
     public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
         StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
+    }
 
+    public void SaveArmorData(string newDataString)
+    {
+
+    }
+
+    IEnumerator SaveArmorData_Coroutine(string newDataString)
+    {
+        int xpAndCreditGain = Random.Range(160, 240);
+
+        int playerId = playerDatabaseAdaptor.GetId();
+        int newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level;
+        int newXp = playerDatabaseAdaptor.playerBasicOnlineStats.xp + xpAndCreditGain;
+        int newCredits = playerDatabaseAdaptor.playerBasicOnlineStats.credits + xpAndCreditGain;
+
+        int dbXpToLevel = PlayerProgressionManager.instance.playerLevelToXpDic[playerDatabaseAdaptor.playerBasicOnlineStats.level];
+
+        if (dbXpToLevel > playerDatabaseAdaptor.playerBasicOnlineStats.level)
+            newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level + 1;
+
+
+        WWWForm form = new WWWForm();
+        form.AddField("service", "SaveBasicOnlineStats");
+
+        form.AddField("playerId", playerId);
+        form.AddField("newLevel", newLevel);
+        form.AddField("newXp", newXp);
+        form.AddField("newCredits", newCredits);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                if (www.downloadHandler.text.Contains("Could not save swarm stats"))
+                {
+                    Debug.LogError("Could not save swarm stats");
+
+                }
+                else if (www.downloadHandler.text.Contains("Swarm stats saved"))
+                {
+                    Debug.Log("Swarm stats saved successfully");
+                }
+            }
+        }
+        StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
 
     IEnumerator SaveBasicOnlineStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)

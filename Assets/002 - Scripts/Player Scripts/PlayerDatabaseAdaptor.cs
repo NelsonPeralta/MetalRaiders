@@ -65,6 +65,16 @@ public class PlayerDatabaseAdaptor
         get { return playerBasicOnlineStats.credits; }
     }
 
+    public string armorDataString
+    {
+        get { return playerBasicOnlineStats.armor_data_string; }
+    }
+
+    public string unlockedArmorDataString
+    {
+        get { return playerBasicOnlineStats.unlocked_armor_data_string; }
+    }
+
     public PlayerBasicOnlineStats playerBasicOnlineStats
     {
         get { return _playerBasicOnlineStats; }
@@ -98,6 +108,7 @@ public class PlayerDatabaseAdaptor
 
         int _id;
         public int level, xp, credits;
+        public string armor_data_string, unlocked_armor_data_string;
 
         public static PlayerBasicOnlineStats CreateFromJSON(string jsonString)
         {

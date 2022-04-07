@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerArmorPiece : MonoBehaviour
+{
+    public enum PieceType
+    {
+        Helmet,
+        Chest,
+
+        LeftShoulder,
+        RightShoulder,
+
+        LeftBicep,
+        RightBicep,
+
+        LeftForearm,
+        RightForearm,
+
+        LeftPalm,
+        RightPalm,
+
+        COD,
+
+        LeftThigh,
+        RightThigh,
+
+        LeftKnee,
+        RightKnee,
+
+        LeftShin,
+        RightShin,
+
+        Feet
+    }
+    public enum PieceSubType
+    {
+        Core,
+        Attachment
+    }
+
+    public PieceType pieceType;
+    public PieceSubType pieceSubType;
+
+    public string entity;
+}
