@@ -44,4 +44,7 @@ public class PlayerArmorPiece : MonoBehaviour
     public PieceSubType pieceSubType;
 
     public string entity;
+    public string uiName;
+
+    public int cost;
 }
