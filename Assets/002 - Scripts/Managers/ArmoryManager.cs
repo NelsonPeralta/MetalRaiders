@@ -5,9 +5,12 @@ using TMPro;
 
 public class ArmoryManager : MonoBehaviour
 {
+    public static ArmoryManager instance;
+
     public GameObject playerModel;
     public Transform scrollMenuContainer;
 
+    public TMP_Text creditsText;
     public TMP_Text armorDataString;
     public TMP_Text newArmorDataString;
     public TMP_Text unlockedArmorDataString;
@@ -15,11 +18,22 @@ public class ArmoryManager : MonoBehaviour
     public ArmorPieceListing armorPieceListingPrefab;
     public List<ArmorPieceListing> armorPieceListingList = new List<ArmorPieceListing>();
 
+    void Awake()
+    {
+        if (instance)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+        instance = this;
+    }
     private void OnEnable()
     {
         playerModel.SetActive(true);
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
 
+        creditsText.text = $"{pda.playerBasicOnlineStats.credits}cr";
         armorDataString.text = $"ADS: {pda.armorDataString.ToString()}";
         newArmorDataString.text = $"NADS: {pda.armorDataString.ToString()}";
         unlockedArmorDataString.text = $"UADS: {pda.unlockedArmorDataString.ToString()}";

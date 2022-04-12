@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEditor.UI;
+using UnityEngine.UI;
 
 public class ArmorPieceListing : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class ArmorPieceListing : MonoBehaviour
         get { return _playerArmorPiece; }
         set
         {
+            buyButton.onClick.AddListener(BuyArmorPiece);
+
             if (_playerArmorPiece != null)
                 return;
             PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
@@ -32,13 +35,31 @@ public class ArmorPieceListing : MonoBehaviour
 
             armorPieceNameText.text = playerArmorPiece.entity;
 
-            if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost)
+            if (pda.playerBasicOnlineStats.unlocked_armor_data_string.Contains(playerArmorPiece.entity))
+            {
                 equipButton.gameObject.SetActive(true);
+                return;
+            }
+
+
+            if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost)
+            {
+                buyButton.gameObject.SetActive(true);
+                buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
+            }
+
             else
             {
-                notEnoughCreditsText.text = $"Not enough credits (${playerArmorPiece.cost})";
+                notEnoughCreditsText.gameObject.SetActive(true);
+                notEnoughCreditsText.text = $"{playerArmorPiece.cost}cr";
             }
 
         }
+    }
+
+    void BuyArmorPiece()
+    {
+        buyButton.gameObject.SetActive(false);
+        equipButton.gameObject.SetActive(true);
     }
 }

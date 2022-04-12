@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1037953725547708670
 Transform:
   m_ObjectHideFlags: 0
@@ -10078,6 +10078,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: helmet2
+  uiName: 
+  cost: 10000
 --- !u!1 &1037953725575295094
 GameObject:
   m_ObjectHideFlags: 0
@@ -11645,6 +11647,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: lbicep_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953725763064584
 GameObject:
   m_ObjectHideFlags: 0
@@ -16297,6 +16301,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: rforearm_attach_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953725807768251
 GameObject:
   m_ObjectHideFlags: 0
@@ -17531,6 +17537,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: palm2
+  uiName: 
+  cost: 0
 --- !u!1 &1037953725846291508
 GameObject:
   m_ObjectHideFlags: 0
@@ -22183,6 +22191,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: lforearm_attach_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953725875366573
 GameObject:
   m_ObjectHideFlags: 0
@@ -26768,6 +26778,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: chest_attach_backpack
+  uiName: 
+  cost: 0
 --- !u!1 &1037953725900505468
 GameObject:
   m_ObjectHideFlags: 0
@@ -32377,6 +32389,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: palm1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953726012055245
 GameObject:
   m_ObjectHideFlags: 0
@@ -58031,6 +58045,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: lforearm_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953726214304571
 GameObject:
   m_ObjectHideFlags: 0
@@ -74025,6 +74041,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: rshoulder_2
+  uiName: 
+  cost: 0
 --- !u!1 &1037953726790182680
 GameObject:
   m_ObjectHideFlags: 0
@@ -83056,6 +83074,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: chest_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953726891103477
 GameObject:
   m_ObjectHideFlags: 0
@@ -88436,6 +88456,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: 
+  uiName: 
+  cost: 0
 --- !u!1 &1037953726980989471
 GameObject:
   m_ObjectHideFlags: 0
@@ -91026,6 +91048,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: lshoulder_2
+  uiName: 
+  cost: 0
 --- !u!1 &1037953727059800650
 GameObject:
   m_ObjectHideFlags: 0
@@ -93785,6 +93809,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: lshoulder_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953727068513242
 GameObject:
   m_ObjectHideFlags: 0
@@ -96092,6 +96118,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: rforearm_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953727101100904
 GameObject:
   m_ObjectHideFlags: 0
@@ -98851,6 +98879,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: rshoulder_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953727158271570
 GameObject:
   m_ObjectHideFlags: 0
@@ -102675,6 +102705,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: rbicep_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953727249382049
 GameObject:
   m_ObjectHideFlags: 0
@@ -103267,6 +103299,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: rpalm_1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953727296688745
 GameObject:
   m_ObjectHideFlags: 0
@@ -109374,6 +109408,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: chest_attach_collar
+  uiName: 
+  cost: 0
 --- !u!1 &1037953727575882488
 GameObject:
   m_ObjectHideFlags: 0
@@ -109394,7 +109430,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1037953727575882487
 Transform:
   m_ObjectHideFlags: 0
@@ -121112,6 +121148,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: helmet1
+  uiName: 
+  cost: 0
 --- !u!1 &1037953727579415135
 GameObject:
   m_ObjectHideFlags: 0
@@ -126784,6 +126822,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: chest_attach_1
+  uiName: 
+  cost: 100
 --- !u!1 &1037953727648845594
 GameObject:
   m_ObjectHideFlags: 0
@@ -131387,25 +131427,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerArmorPieces:
-  - {fileID: 529187542865744270}
   - {fileID: 1821224851542655426}
-  - {fileID: 8599757317851926630}
   - {fileID: 191320413243059474}
   - {fileID: 1111393918559779543}
   - {fileID: 1068416807696239898}
-  - {fileID: 5841068307106269350}
   - {fileID: 5484258190184314120}
   - {fileID: 6692817987983471168}
-  - {fileID: 7792597101856725299}
   - {fileID: 7039562976136017686}
   - {fileID: 8534098185240533517}
-  - {fileID: 267753424129506986}
   - {fileID: 4628346225114475450}
-  - {fileID: 1809262334164994909}
   - {fileID: 737055902801590920}
-  - {fileID: 6051422257399921366}
   - {fileID: 4638861020430961758}
-  - {fileID: 2547637957814166150}
   - {fileID: 363872570558610004}
 --- !u!1 &4409369946286560932
 GameObject:
@@ -134251,6 +134283,8 @@ MonoBehaviour:
   pieceType: 0
   pieceSubType: 0
   entity: rpalm_2
+  uiName: 
+  cost: 0
 --- !u!1001 &1037953727130603983
 PrefabInstance:
   m_ObjectHideFlags: 0
