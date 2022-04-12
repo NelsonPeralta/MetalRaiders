@@ -59,6 +59,13 @@ public class ArmorPieceListing : MonoBehaviour
 
     void BuyArmorPiece()
     {
+        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+
+        string newUnlockedArmorDataString = pda.unlockedArmorDataString + playerArmorPiece.entity;
+
+        StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(newUnlockedArmorDataString));
+
+
         buyButton.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);
     }

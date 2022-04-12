@@ -440,4 +440,42 @@ public class WebManager : MonoBehaviour
             }
         }
     }
+
+    // Armory
+    public IEnumerator SaveUnlockedArmorStringData_Coroutine(string newUnlockedArmorStringData)
+    {
+        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+
+        WWWForm form = new WWWForm();
+        form.AddField("service", "SaveUnlockedArmorStringData");
+        form.AddField("newUnlockedArmorStringData", newUnlockedArmorStringData);
+        form.AddField("playerId", pda.GetId());
+
+        Debug.Log($"service: SaveUnlockedArmorStringData\nnewUnlockedArmorStringData: {newUnlockedArmorStringData}\nplayerId: {pda.GetId()}");
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                if (www.downloadHandler.text.Contains("Could not save UnlockedArmorStringData"))
+                {
+                    Debug.LogError("Could not save UnlockedArmorStringData");
+
+                }
+                else if (www.downloadHandler.text.Contains("UnlockedArmorStringData saved successfully"))
+                {
+                    Debug.Log("UnlockedArmorStringData saved successfully");
+                }
+            }
+        }
+    }
 }
