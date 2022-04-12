@@ -26779,7 +26779,7 @@ MonoBehaviour:
   pieceSubType: 0
   entity: chest_attach_backpack
   uiName: 
-  cost: 0
+  cost: 800
 --- !u!1 &1037953725900505468
 GameObject:
   m_ObjectHideFlags: 0
@@ -109409,7 +109409,7 @@ MonoBehaviour:
   pieceSubType: 0
   entity: chest_attach_collar
   uiName: 
-  cost: 0
+  cost: 500
 --- !u!1 &1037953727575882488
 GameObject:
   m_ObjectHideFlags: 0
@@ -126823,7 +126823,7 @@ MonoBehaviour:
   pieceSubType: 0
   entity: chest_attach_1
   uiName: 
-  cost: 100
+  cost: 1000
 --- !u!1 &1037953727648845594
 GameObject:
   m_ObjectHideFlags: 0

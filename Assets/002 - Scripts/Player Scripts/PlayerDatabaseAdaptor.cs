@@ -62,6 +62,7 @@ public class PlayerDatabaseAdaptor
 
     public int credits
     {
+        set { _playerBasicOnlineStats.credits = value; }
         get { return playerBasicOnlineStats.credits; }
     }
 
@@ -72,6 +73,7 @@ public class PlayerDatabaseAdaptor
 
     public string unlockedArmorDataString
     {
+        set { playerBasicOnlineStats.unlocked_armor_data_string = value; }
         get { return playerBasicOnlineStats.unlocked_armor_data_string; }
     }
 

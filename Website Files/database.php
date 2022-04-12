@@ -117,7 +117,7 @@
             die("Connection failed: " . $conn->connect_error);
         }
         
-        $sql = "SELECT player_id, level, xp, credits FROM player_basic_global_data WHERE player_id='$playerId'";
+        $sql = "SELECT player_id, level, xp, credits, armor_data_string, armor_data_string, unlocked_armor_data_string FROM player_basic_global_data WHERE player_id='$playerId'";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0){
@@ -275,6 +275,44 @@
             echo "Swarm stats saved successfully";
         }catch(Exception $e){
             echo "Could not save multiplayer stats. SQL request: '$sql'";
+        }
+
+        $conn->close();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    if($_POST["service"] == "SaveUnlockedArmorStringData"){
+
+        $playerId = $_POST["playerId"];
+        $newUnlockedArmorStringData = $_POST["newUnlockedArmorStringData"];
+        $newPlayerCredits = $_POST["newPlayerCredits"];
+        
+        
+        if($conn->connect_error){
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        try{
+            $sql = "UPDATE player_basic_global_data SET unlocked_armor_data_string='$newUnlockedArmorStringData', credits='$newPlayerCredits' WHERE player_id='$playerId'";
+            $result = $conn->query($sql);
+            echo "UnlockedArmorStringData saved successfully";
+        }catch(Exception $e){
+            echo "Could not save UnlockedArmorStringData. SQL request: '$sql'";
         }
 
         $conn->close();

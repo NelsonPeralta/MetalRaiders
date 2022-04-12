@@ -26,10 +26,9 @@ public class ArmorPieceListing : MonoBehaviour
         get { return _playerArmorPiece; }
         set
         {
+            buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(BuyArmorPiece);
 
-            if (_playerArmorPiece != null)
-                return;
             PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
             _playerArmorPiece = value;
 
@@ -50,6 +49,10 @@ public class ArmorPieceListing : MonoBehaviour
 
             else
             {
+                buyButton.gameObject.SetActive(false);
+                equipButton.gameObject.SetActive(false);
+
+
                 notEnoughCreditsText.gameObject.SetActive(true);
                 notEnoughCreditsText.text = $"{playerArmorPiece.cost}cr";
             }
@@ -59,13 +62,10 @@ public class ArmorPieceListing : MonoBehaviour
 
     void BuyArmorPiece()
     {
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+        StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(playerArmorPiece));
 
-        string newUnlockedArmorDataString = pda.unlockedArmorDataString + playerArmorPiece.entity;
-
-        StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(newUnlockedArmorDataString));
-
-
+        ArmoryManager.instance.creditsText.text = $"{WebManager.webManagerInstance.playerDatabaseAdaptor.playerBasicOnlineStats.credits.ToString()}cr";
+        ArmoryManager.instance.OnArmorBuy_Delegate();
         buyButton.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);
     }

@@ -53,5 +53,13 @@ public class ArmoryManager : MonoBehaviour
 
         foreach(ArmorPieceListing armorPieceListing in armorPieceListingList)
             Destroy(armorPieceListing.gameObject);
+        armorPieceListingList.Clear();
+    }
+
+    public void OnArmorBuy_Delegate()
+    {
+        foreach (ArmorPieceListing armorPieceListing in armorPieceListingList)
+            armorPieceListing.playerArmorPiece = armorPieceListing.playerArmorPiece;
+
     }
 }
