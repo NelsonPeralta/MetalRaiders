@@ -4,14 +4,18 @@ using UnityEngine;
 using TMPro;
 using UnityEditor.UI;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ArmorPieceListing : MonoBehaviour
 {
+    public GameObject model;
+
     public TMP_Text armorPieceNameText;
-    public TMP_Text notEnoughCreditsText;
 
     public UnityEngine.UI.Button buyButton;
     public UnityEngine.UI.Button equipButton;
+    public UnityEngine.UI.Button unequipButton;
+    public UnityEngine.UI.Button notEnoughCreditsButton;
 
     public ArmorPieceListing(PlayerArmorPiece p_playerArmorPiece)
     {
@@ -26,17 +30,27 @@ public class ArmorPieceListing : MonoBehaviour
         get { return _playerArmorPiece; }
         set
         {
+            equipButton.onClick.RemoveAllListeners();
+            unequipButton.onClick.RemoveAllListeners();
             buyButton.onClick.RemoveAllListeners();
+
+            equipButton.onClick.AddListener(EquipArmorPiece);
+            unequipButton.onClick.AddListener(UnequipArmorPiece);
             buyButton.onClick.AddListener(BuyArmorPiece);
 
-            PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+
+                PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
             _playerArmorPiece = value;
+            model = playerArmorPiece.gameObject;
 
             armorPieceNameText.text = playerArmorPiece.entity;
 
             if (pda.playerBasicOnlineStats.unlocked_armor_data_string.Contains(playerArmorPiece.entity))
             {
-                equipButton.gameObject.SetActive(true);
+                if(!pda.armorDataString.Contains(playerArmorPiece.entity))
+                    equipButton.gameObject.SetActive(true);
+                else
+                    unequipButton.gameObject.SetActive(true);
                 return;
             }
 
@@ -53,8 +67,8 @@ public class ArmorPieceListing : MonoBehaviour
                 equipButton.gameObject.SetActive(false);
 
 
-                notEnoughCreditsText.gameObject.SetActive(true);
-                notEnoughCreditsText.text = $"{playerArmorPiece.cost}cr";
+                notEnoughCreditsButton.gameObject.SetActive(true);
+                notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
             }
 
         }
@@ -68,5 +82,40 @@ public class ArmorPieceListing : MonoBehaviour
         ArmoryManager.instance.OnArmorBuy_Delegate();
         buyButton.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);
+    }
+
+    void EquipArmorPiece()
+    {
+        WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString += $"\n{playerArmorPiece.entity}";
+        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString));
+
+        model.gameObject.SetActive(true);
+        equipButton.gameObject.SetActive(false);
+        unequipButton.gameObject.SetActive(true);
+    }
+
+    void UnequipArmorPiece()
+    {
+        string newData = WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString.Replace(playerArmorPiece.entity, "");
+        WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString = newData;
+        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString));
+
+        model.gameObject.SetActive(false);
+        equipButton.gameObject.SetActive(true);
+        unequipButton.gameObject.SetActive(false);
+    }
+
+    public void OnButtonMouseEnter()
+    {
+        Debug.Log("OnButtonMouseEnter");
+        Debug.Log(model.name);
+        model.SetActive(true);
+    }
+
+    public void OnButtonMouseExit()
+    {
+        Debug.Log("OnButtonMouseExit");
+        Debug.Log(model.name);
+        model.SetActive(false);
     }
 }

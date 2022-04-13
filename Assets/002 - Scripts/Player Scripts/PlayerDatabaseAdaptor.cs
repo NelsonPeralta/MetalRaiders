@@ -68,6 +68,7 @@ public class PlayerDatabaseAdaptor
 
     public string armorDataString
     {
+        set { playerBasicOnlineStats.armor_data_string = value; }
         get { return playerBasicOnlineStats.armor_data_string; }
     }
 

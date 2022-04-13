@@ -441,6 +441,16 @@ public class WebManager : MonoBehaviour
         }
     }
 
+
+
+
+
+
+
+
+
+
+
     // Armory
     public IEnumerator SaveUnlockedArmorStringData_Coroutine(PlayerArmorPiece playerArmorPiece)
     {
@@ -479,6 +489,40 @@ public class WebManager : MonoBehaviour
             }
 
             ArmoryManager.instance.OnArmorBuy_Delegate();
+        }
+    }
+
+    public IEnumerator SaveEquippedArmorStringData_Coroutine(string data)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("service", "SaveEquippedArmorDataString");
+        form.AddField("playerId", playerDatabaseAdaptor.GetId());
+
+        form.AddField("newEquippedArmorStringData", data);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                if (www.downloadHandler.text.Contains("Could not save SaveEquippedArmorDataString"))
+                {
+                    Debug.LogError("Could not save SaveEquippedArmorDataString");
+
+                }
+                else if (www.downloadHandler.text.Contains("SaveEquippedArmorDataString saved successfully"))
+                {
+                    Debug.Log("SaveEquippedArmorDataString saved successfully");
+                }
+            }
         }
     }
 }
