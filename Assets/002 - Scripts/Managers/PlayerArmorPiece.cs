@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerArmorPiece : MonoBehaviour
 {
-    public enum PieceType
+    public enum BodyPart
     {
         Helmet,
         Chest,
@@ -34,14 +34,14 @@ public class PlayerArmorPiece : MonoBehaviour
 
         Feet
     }
-    public enum PieceSubType
+    public enum PieceType
     {
         Core,
         Attachment
     }
 
     public PieceType pieceType;
-    public PieceSubType pieceSubType;
+    public BodyPart bodyPart;
 
     public string entity;
     public string uiName;

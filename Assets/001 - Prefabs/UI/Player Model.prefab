@@ -10076,7 +10076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 0
   entity: helmet2
   uiName: 
   cost: 10000
@@ -11645,7 +11645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 0
   entity: lbicep_1
   uiName: 
   cost: 0
@@ -11664,7 +11664,7 @@ GameObject:
   - component: {fileID: 1037953725763064582}
   - component: {fileID: 737055902801590920}
   m_Layer: 0
-  m_Name: Attach - Forearm (1)
+  m_Name: Attach - Right Forearm 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16298,11 +16298,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11fa72df3926d243810a793b5d84043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 0
-  pieceSubType: 0
+  pieceType: 1
+  bodyPart: 7
   entity: rforearm_attach_1
   uiName: 
-  cost: 0
+  cost: 400
 --- !u!1 &1037953725807768251
 GameObject:
   m_ObjectHideFlags: 0
@@ -16318,12 +16318,12 @@ GameObject:
   - component: {fileID: 1037953725807768249}
   - component: {fileID: 4638861020430961758}
   m_Layer: 0
-  m_Name: Palm 2
+  m_Name: Left Palm 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1037953725807768250
 Transform:
   m_ObjectHideFlags: 0
@@ -17535,10 +17535,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 8
   entity: palm2
   uiName: 
-  cost: 0
+  cost: 200
 --- !u!1 &1037953725846291508
 GameObject:
   m_ObjectHideFlags: 0
@@ -17554,7 +17554,7 @@ GameObject:
   - component: {fileID: 1037953725846291506}
   - component: {fileID: 4628346225114475450}
   m_Layer: 0
-  m_Name: Attach - Forearm
+  m_Name: Attach - Left Forearm 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22188,11 +22188,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11fa72df3926d243810a793b5d84043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 0
-  pieceSubType: 0
+  pieceType: 1
+  bodyPart: 6
   entity: lforearm_attach_1
   uiName: 
-  cost: 0
+  cost: 400
 --- !u!1 &1037953725875366573
 GameObject:
   m_ObjectHideFlags: 0
@@ -22208,7 +22208,7 @@ GameObject:
   - component: {fileID: 1037953725875366571}
   - component: {fileID: 1068416807696239898}
   m_Layer: 0
-  m_Name: Backpack
+  m_Name: Attach - Backpack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26775,8 +26775,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11fa72df3926d243810a793b5d84043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 0
-  pieceSubType: 0
+  pieceType: 1
+  bodyPart: 1
   entity: chest_attach_backpack
   uiName: 
   cost: 800
@@ -26808,10 +26808,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037953725900505468}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.15, y: 0.064, z: 0.679}
+  m_LocalPosition: {x: -0.15000011, y: 0.06400013, z: 0.6790003}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1037953726972338279}
+  m_Father: {fileID: 7674597883676718626}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1037953725900505463
@@ -31811,12 +31811,12 @@ GameObject:
   - component: {fileID: 1037953725965719282}
   - component: {fileID: 6051422257399921366}
   m_Layer: 0
-  m_Name: Palm 1
+  m_Name: Left Palm 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1037953725965719283
 Transform:
   m_ObjectHideFlags: 0
@@ -32387,7 +32387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 8
   entity: palm1
   uiName: 
   cost: 0
@@ -40286,10 +40286,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037953726022463996}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.121, y: 0.064, z: 0.679}
+  m_LocalPosition: {x: -0.12100006, y: 0.06400013, z: 0.6790003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1037953726972338279}
+  m_Father: {fileID: 7674597883676718626}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1037953726022463991
@@ -52891,7 +52891,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1037953726972338279}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1037953726164455951
 MeshFilter:
@@ -58043,7 +58043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 0
   entity: lforearm_1
   uiName: 
   cost: 0
@@ -61886,7 +61886,7 @@ Transform:
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1037953726972338279}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1037953726388836849
 MeshFilter:
@@ -71807,7 +71807,7 @@ GameObject:
   - component: {fileID: 1037953726692894882}
   - component: {fileID: 8534098185240533517}
   m_Layer: 0
-  m_Name: Shoulder 2 (1)
+  m_Name: Right Shoulder 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74039,10 +74039,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 3
   entity: rshoulder_2
   uiName: 
-  cost: 0
+  cost: 1200
 --- !u!1 &1037953726790182680
 GameObject:
   m_ObjectHideFlags: 0
@@ -74078,6 +74078,7 @@ Transform:
   - {fileID: 1037953727579415134}
   - {fileID: 1037953727519461417}
   - {fileID: 1037953725875366572}
+  - {fileID: 6842880604734275408}
   m_Father: {fileID: 4405271343488383408}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -83072,7 +83073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 0
   entity: chest_1
   uiName: 
   cost: 0
@@ -85753,7 +85754,6 @@ GameObject:
   - component: {fileID: 1037953726972338276}
   - component: {fileID: 1037953726972338277}
   - component: {fileID: 1037953726972338278}
-  - component: {fileID: 8724361628538182595}
   m_Layer: 0
   m_Name: COD
   m_TagString: Untagged
@@ -85772,11 +85772,10 @@ Transform:
   m_LocalPosition: {x: 0.9896, y: 0.5918, z: 0.135}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1037953726022463995}
-  - {fileID: 1037953725900505467}
   - {fileID: 1037953726164455987}
   - {fileID: 1037953726388836853}
   - {fileID: 1037953727648845593}
+  - {fileID: 7674597883676718626}
   m_Father: {fileID: 4405291036969567008}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -88441,23 +88440,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!114 &8724361628538182595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037953726972338280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b11fa72df3926d243810a793b5d84043, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pieceType: 0
-  pieceSubType: 0
-  entity: 
-  uiName: 
-  cost: 0
 --- !u!1 &1037953726980989471
 GameObject:
   m_ObjectHideFlags: 0
@@ -88814,7 +88796,7 @@ GameObject:
   - component: {fileID: 1037953727044665929}
   - component: {fileID: 6692817987983471168}
   m_Layer: 0
-  m_Name: Shoulder 2
+  m_Name: Left Shoulder 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91046,10 +91028,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 2
   entity: lshoulder_2
   uiName: 
-  cost: 0
+  cost: 1200
 --- !u!1 &1037953727059800650
 GameObject:
   m_ObjectHideFlags: 0
@@ -91065,7 +91047,7 @@ GameObject:
   - component: {fileID: 1037953727059800648}
   - component: {fileID: 5484258190184314120}
   m_Layer: 0
-  m_Name: Shoulder
+  m_Name: Left Shoulder 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93807,10 +93789,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 2
   entity: lshoulder_1
   uiName: 
-  cost: 0
+  cost: 600
 --- !u!1 &1037953727068513242
 GameObject:
   m_ObjectHideFlags: 0
@@ -96116,7 +96098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 0
   entity: rforearm_1
   uiName: 
   cost: 0
@@ -96135,7 +96117,7 @@ GameObject:
   - component: {fileID: 1037953727101100902}
   - component: {fileID: 7039562976136017686}
   m_Layer: 0
-  m_Name: Shoulder (1)
+  m_Name: Right Shoulder 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98877,10 +98859,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 3
   entity: rshoulder_1
   uiName: 
-  cost: 0
+  cost: 600
 --- !u!1 &1037953727158271570
 GameObject:
   m_ObjectHideFlags: 0
@@ -102703,7 +102685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 0
   entity: rbicep_1
   uiName: 
   cost: 0
@@ -102722,12 +102704,12 @@ GameObject:
   - component: {fileID: 1037953727249382079}
   - component: {fileID: 2547637957814166150}
   m_Layer: 0
-  m_Name: Palm 1 (1)
+  m_Name: Right Palm 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1037953727249382048
 Transform:
   m_ObjectHideFlags: 0
@@ -103297,7 +103279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 9
   entity: rpalm_1
   uiName: 
   cost: 0
@@ -107728,7 +107710,7 @@ GameObject:
   - component: {fileID: 1037953727519461416}
   - component: {fileID: 1111393918559779543}
   m_Layer: 0
-  m_Name: Collar
+  m_Name: Attach - Collar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109405,8 +109387,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11fa72df3926d243810a793b5d84043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 0
-  pieceSubType: 0
+  pieceType: 1
+  bodyPart: 1
   entity: chest_attach_collar
   uiName: 
   cost: 500
@@ -121146,7 +121128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 0
   entity: helmet1
   uiName: 
   cost: 0
@@ -126819,8 +126801,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11fa72df3926d243810a793b5d84043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 0
-  pieceSubType: 0
+  pieceType: 1
+  bodyPart: 1
   entity: chest_attach_1
   uiName: 
   cost: 1000
@@ -126856,7 +126838,7 @@ Transform:
   m_LocalScale: {x: 0.95, y: 0.95, z: 0.95}
   m_Children: []
   m_Father: {fileID: 1037953726972338279}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1037953727648845589
 MeshFilter:
@@ -131133,6 +131115,87 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &1665107504427892225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7674597883676718626}
+  - component: {fileID: 4675256483641202155}
+  m_Layer: 0
+  m_Name: Attach - COD 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7674597883676718626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665107504427892225}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1037953726022463995}
+  - {fileID: 1037953725900505467}
+  m_Father: {fileID: 1037953726972338279}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4675256483641202155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665107504427892225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b11fa72df3926d243810a793b5d84043, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pieceType: 1
+  bodyPart: 10
+  entity: cod_attach_1
+  uiName: 
+  cost: 650
+--- !u!1 &3859835755970692624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6842880604734275408}
+  m_Layer: 0
+  m_Name: Attach - Pouches 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6842880604734275408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3859835755970692624}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4189390122655108505}
+  m_Father: {fileID: 1037953726790182679}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4175183138589034214
 GameObject:
   m_ObjectHideFlags: 0
@@ -131427,6 +131490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerArmorPieces:
+  - {fileID: 529187542865744270}
   - {fileID: 1821224851542655426}
   - {fileID: 191320413243059474}
   - {fileID: 1111393918559779543}
@@ -131439,6 +131503,7 @@ MonoBehaviour:
   - {fileID: 737055902801590920}
   - {fileID: 4638861020430961758}
   - {fileID: 363872570558610004}
+  - {fileID: 4675256483641202155}
 --- !u!1 &4409369946286560932
 GameObject:
   m_ObjectHideFlags: 0
@@ -133065,12 +133130,12 @@ GameObject:
   - component: {fileID: 6181946986438970273}
   - component: {fileID: 363872570558610004}
   m_Layer: 0
-  m_Name: Palm 2 (1)
+  m_Name: Right Palm 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6112863470126496088
 Transform:
   m_ObjectHideFlags: 0
@@ -134281,10 +134346,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
-  pieceSubType: 0
+  bodyPart: 9
   entity: rpalm_2
   uiName: 
-  cost: 0
+  cost: 200
 --- !u!1001 &1037953727130603983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -134359,4 +134424,67 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 276393848149338268, guid: fb390731cd0b7f648ba470da145d9ff7,
     type: 3}
   m_PrefabInstance: {fileID: 1037953727130603983}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &4193469635024642643
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6842880604734275408}
+    m_Modifications:
+    - target: {fileID: 1994559652667252, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_Name
+      value: SM_Chr_Attach_Pouch_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.734
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.229
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.976
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f2ada9e080b6d3f41a383cd77168b476, type: 3}
+--- !u!4 &4189390122655108505 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4932909566046154, guid: f2ada9e080b6d3f41a383cd77168b476,
+    type: 3}
+  m_PrefabInstance: {fileID: 4193469635024642643}
   m_PrefabAsset: {fileID: 0}

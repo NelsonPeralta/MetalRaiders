@@ -454,7 +454,8 @@ public class WebManager : MonoBehaviour
     // Armory
     public IEnumerator SaveUnlockedArmorStringData_Coroutine(PlayerArmorPiece playerArmorPiece)
     {
-        playerDatabaseAdaptor.unlockedArmorDataString += $"\n{playerArmorPiece.entity}";
+        playerDatabaseAdaptor.unlockedArmorDataString += $"{playerArmorPiece.entity}\n";
+        playerDatabaseAdaptor.unlockedArmorDataString.Replace("\n\n", "\n");
         playerDatabaseAdaptor.credits -= playerArmorPiece.cost;
 
         WWWForm form = new WWWForm();

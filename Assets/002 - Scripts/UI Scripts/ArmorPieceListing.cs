@@ -39,7 +39,7 @@ public class ArmorPieceListing : MonoBehaviour
             buyButton.onClick.AddListener(BuyArmorPiece);
 
 
-                PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+            PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
             _playerArmorPiece = value;
             model = playerArmorPiece.gameObject;
 
@@ -47,10 +47,16 @@ public class ArmorPieceListing : MonoBehaviour
 
             if (pda.playerBasicOnlineStats.unlocked_armor_data_string.Contains(playerArmorPiece.entity))
             {
-                if(!pda.armorDataString.Contains(playerArmorPiece.entity))
+                if (!pda.armorDataString.Contains(playerArmorPiece.entity))
+                {
+
                     equipButton.gameObject.SetActive(true);
+                }
                 else
-                    unequipButton.gameObject.SetActive(true);
+                {
+                    if (playerArmorPiece.pieceType != PlayerArmorPiece.PieceType.Core)
+                        unequipButton.gameObject.SetActive(true);
+                }
                 return;
             }
 
@@ -86,17 +92,38 @@ public class ArmorPieceListing : MonoBehaviour
 
     void EquipArmorPiece()
     {
-        WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString += $"\n{playerArmorPiece.entity}";
+        foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
+            if (armorPieceListing != this)
+                if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && this.playerArmorPiece.bodyPart == armorPieceListing.playerArmorPiece.bodyPart)
+                {
+                    if (WebManager.webManagerInstance.playerDatabaseAdaptor.unlockedArmorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
+                        armorPieceListing.UnequipArmorPiece();
+                }
+
+        WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString += $"{playerArmorPiece.entity}\n";
+        WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString.Replace("\n\n", "\n");
         StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString));
+
+        //if (this.playerArmorPiece.pieceType == PlayerArmorPiece.PieceType.Core)
+        //    foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
+        //        if (armorPieceListing != this)
+        //            if (armorPieceListing.playerArmorPiece.pieceType == PlayerArmorPiece.PieceType.Core)
+        //                if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && armorPieceListing.model.gameObject.activeSelf)
+        //                {
+        //                    armorPieceListing.equipButton.gameObject.SetActive(true);
+        //                }
+
 
         model.gameObject.SetActive(true);
         equipButton.gameObject.SetActive(false);
-        unequipButton.gameObject.SetActive(true);
+        if (playerArmorPiece.pieceType == PlayerArmorPiece.PieceType.Attachment)
+            unequipButton.gameObject.SetActive(true);
     }
 
-    void UnequipArmorPiece()
+    public void UnequipArmorPiece()
     {
         string newData = WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString.Replace(playerArmorPiece.entity, "");
+        newData.Replace("\n\n", "\n");
         WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString = newData;
         StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString));
 
@@ -109,6 +136,14 @@ public class ArmorPieceListing : MonoBehaviour
     {
         Debug.Log("OnButtonMouseEnter");
         Debug.Log(model.name);
+
+        foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
+            if (armorPieceListing != this)
+                if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && this.playerArmorPiece.bodyPart == armorPieceListing.playerArmorPiece.bodyPart && armorPieceListing.model.gameObject.activeSelf)
+                {
+                    armorPieceListing.model.SetActive(false);
+                }
+
         model.SetActive(true);
     }
 
@@ -116,6 +151,15 @@ public class ArmorPieceListing : MonoBehaviour
     {
         Debug.Log("OnButtonMouseExit");
         Debug.Log(model.name);
+
+        foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
+            if (armorPieceListing != this)
+                if (WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
+                {
+                    armorPieceListing.model.SetActive(true);
+                }
+
+
         model.SetActive(false);
     }
 }
