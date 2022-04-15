@@ -88,6 +88,7 @@ public class Movement : MonoBehaviour
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             tPersonScripts = armorThirdPersonScript;
+            armorThirdPersonScript.gameObject.SetActive(true);
             armorThirdPersonScript.EnableSkinnedMeshes();
             noArmorThirdPersonScript.DisableSkinnedMeshes();
             if (!PV.IsMine)
