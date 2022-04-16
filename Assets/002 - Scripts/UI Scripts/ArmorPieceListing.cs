@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEditor.UI;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -12,10 +11,10 @@ public class ArmorPieceListing : MonoBehaviour
 
     public TMP_Text armorPieceNameText;
 
-    public UnityEngine.UI.Button buyButton;
-    public UnityEngine.UI.Button equipButton;
-    public UnityEngine.UI.Button unequipButton;
-    public UnityEngine.UI.Button notEnoughCreditsButton;
+    public Button buyButton;
+    public Button equipButton;
+    public Button unequipButton;
+    public Button notEnoughCreditsButton;
 
     public ArmorPieceListing(PlayerArmorPiece p_playerArmorPiece)
     {

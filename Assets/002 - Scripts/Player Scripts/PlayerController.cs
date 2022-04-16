@@ -1010,7 +1010,7 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        GetComponent<Player>().Damage(10, false, GetComponent<PhotonView>().ViewID);
+        GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID);
     }
 }
 

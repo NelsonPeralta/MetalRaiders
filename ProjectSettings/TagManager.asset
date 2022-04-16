@@ -50,7 +50,7 @@ TagManager:
   - Player Hitbox
   - Player Bullet
   - Player Ground Check
-  - 10
+  - Player Feet
   - AI
   - AI Hitbox
   - AI Attack

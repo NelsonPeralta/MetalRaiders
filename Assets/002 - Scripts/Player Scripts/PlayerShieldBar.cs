@@ -23,6 +23,8 @@ public class PlayerShieldBar : PlayerBar
     {
         if (player.hitPoints >= 100)
             GetComponent<Slider>().value = player.hitPoints - 100;
+        else
+            GetComponent<Slider>().value = 0;
     }
     void OnShieldDamaged_Delegate(Player player)
     {

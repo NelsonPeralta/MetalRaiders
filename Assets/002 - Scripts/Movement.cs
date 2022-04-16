@@ -35,6 +35,9 @@ public class Movement : MonoBehaviour
     Vector3 calulatedVelocity;
     public Vector3 lastPos;
 
+    [SerializeField]
+    Vector3 jumpMovementCorrector;
+
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
@@ -191,7 +194,7 @@ public class Movement : MonoBehaviour
 
         if (!pProperties.isDead)
         {
-            Vector3 move = transform.right * x + transform.forward * z;
+            Vector3 currentMovementInput = transform.right * x + transform.forward * z;
             if (isGrounded)
             {
                 movement = transform.right * x + transform.forward * z;
@@ -199,25 +202,33 @@ public class Movement : MonoBehaviour
                 {
                     if (pController.isSprinting)
                     {
-                        cController.Move(move * (speed + 2f) * Time.deltaTime);
+                        cController.Move(currentMovementInput * (speed + 2f) * Time.deltaTime);
                     }
                     else
                     {
-                        cController.Move(move * speed * Time.deltaTime);
+                        cController.Move(currentMovementInput * speed * Time.deltaTime);
                     }
                 }
                 else
                 {
-                    cController.Move(move * speed * .5f * Time.deltaTime);
+                    cController.Move(currentMovementInput * speed * .5f * Time.deltaTime);
                 }
             }
             else
             {
+
+                currentMovementInput = transform.right * x + transform.forward * z;
+
+                if (Mathf.Sign(movement.x) == Mathf.Sign(currentMovementInput.x))
+                    currentMovementInput.x = 0;
+                if (Mathf.Sign(movement.z) == Mathf.Sign(currentMovementInput.z))
+                    currentMovementInput.z = 0;
+
+
                 cController.Move(movement * speed * Time.deltaTime);
-                if (z > 0)
-                    z = 0;
-                move = transform.right * x + transform.forward * z;
-                cController.Move(move * 0.5f * speed * Time.deltaTime);
+                cController.Move(currentMovementInput * 0.5f * speed * Time.deltaTime);
+
+                Debug.Log($"JUMP: Movement: {movement}\nInput: {currentMovementInput}");
             }
         }
 
@@ -508,13 +519,13 @@ public class Movement : MonoBehaviour
     [PunRPC]
     void PlayWalkingSound_RPC()
     {
-        walkingSoundAS.Play();
+        //walkingSoundAS.Play();
     }
 
     [PunRPC]
     void PauseWalkingSoundRPC()
     {
-        walkingSoundAS.Pause();
+        //walkingSoundAS.Pause();
     }
 
     public void ResetCharacterControllerProperties()
