@@ -230,7 +230,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                 if (playerWhoShot.PV.IsMine)
                 {
-                    playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID);
+                    playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint);
                 }
 
                 damageDealt = true;

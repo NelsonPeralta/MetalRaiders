@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerArmorManager : MonoBehaviour
 {
@@ -24,6 +25,5 @@ public class PlayerArmorManager : MonoBehaviour
 
         foreach (PlayerArmorPiece piece in playerArmorPieces)
             piece.gameObject.SetActive(pda.playerBasicOnlineStats.armor_data_string.Contains(piece.entity));
-        Debug.Log("here");
     }
 }

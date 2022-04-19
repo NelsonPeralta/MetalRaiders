@@ -123,4 +123,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         return PhotonView.Find(pid).GetComponent<Player>();
     }
+
+    public static void SetLayerRecursively(GameObject go, int layerNumber)
+    {
+        // Reference: https://forum.unity.com/threads/change-gameobject-layer-at-run-time-wont-apply-to-child.10091/
+
+        foreach (Transform trans in go.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = layerNumber;
+        }
+    }
 }

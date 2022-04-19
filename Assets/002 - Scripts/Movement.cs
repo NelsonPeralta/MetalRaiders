@@ -227,8 +227,6 @@ public class Movement : MonoBehaviour
 
                 cController.Move(movement * speed * Time.deltaTime);
                 cController.Move(currentMovementInput * 0.5f * speed * Time.deltaTime);
-
-                Debug.Log($"JUMP: Movement: {movement}\nInput: {currentMovementInput}");
             }
         }
 

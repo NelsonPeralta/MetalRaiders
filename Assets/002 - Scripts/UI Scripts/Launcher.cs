@@ -57,6 +57,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         Cursor.lockState = CursorLockMode.None;
 
         ChangeLevelToLoadWithIndex(levelToLoadIndex);
+
+        GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -281,5 +283,15 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void Login()
     {
         WebManager.webManagerInstance.Login(loginUsernameText.text, loginPasswordText.text);
+    }
+
+    void OnSceneLoaded()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        if (currentScene.buildIndex > 0) // We are not in the menu
+        {
+            commonRoomTexts.gameObject.SetActive(false);
+        }
     }
 }

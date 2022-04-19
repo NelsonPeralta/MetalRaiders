@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerEvent(Player playerProperties);
-    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken;
+    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken;
 
     [Header("Singletons")]
     public SpawnManager spawnManager;
@@ -75,6 +75,9 @@ public class Player : MonoBehaviourPunCallbacks
     float _shieldHealingIncrement = (150 * 0.5f);
 
     bool _hasArmor;
+
+    public GameObject bloodImpact;
+    Vector3 _impactPos;
     public bool hasArmor // Used to handle armor seller for Swarm Mode
     {
         get { return _hasArmor; }
@@ -124,15 +127,24 @@ public class Player : MonoBehaviourPunCallbacks
             if (maxHitPoints == 250)
             {
                 if (value >= maxHealthPoints && value < previousValue)
+                {
+                    Debug.Log("OnPlayerShieldDamaged");
                     OnPlayerShieldDamaged?.Invoke(this);
+                }
 
                 if (value <= maxHealthPoints && previousValue > maxHealthPoints)
                     OnPlayerShieldBroken?.Invoke(this);
             }
 
+            if (value < maxHealthPoints && previousValue <= maxHealthPoints)
+                OnPlayerHealthDamage?.Invoke(this);
+
+
 
             if (_hitPoints <= 0)
                 isDead = true;
+
+            impactPos = null;
         }
     }
 
@@ -220,6 +232,19 @@ public class Player : MonoBehaviourPunCallbacks
     {
         get { return _defaultHealingCountdown; }
     }
+
+    public Vector3? impactPos
+    {
+        protected set
+        {
+            try
+            {
+                _impactPos = (Vector3)value;
+            }
+            catch { }
+        }
+        get { return _impactPos; }
+    }
     private void Awake()
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
@@ -261,6 +286,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         OnPlayerDeath += OnPlayerDeath_Delegate;
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
+        OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
     }
     private void Update()
     {
@@ -285,12 +311,12 @@ public class Player : MonoBehaviourPunCallbacks
             return false;
         return true;
     }
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null)
     {
         if (hitPoints <= 0 || isDead || isRespawning)
             return;
 
-        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId);
+        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
         //if (!PhotonNetwork.IsMasterClient)
         //    return;
@@ -298,10 +324,16 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId)
+    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null)
     {
         if (PV.IsMine)
             allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
+        try
+        {
+            this.impactPos = (Vector3)impactPos;
+        }
+        catch (System.Exception e) { }
+
         hitPoints = _newHealth;
 
         ////float newHealth = Mathf.Clamp(hitPoints, 0f, (float)(maxHitPoints - maxShield));
@@ -656,6 +688,12 @@ public class Player : MonoBehaviourPunCallbacks
             if (hitPoints <= maxHealthPoints)
                 shieldRechargeCountdown = _defaultHealingCountdown + ((maxHealthPoints - hitPoints) / _healthHealingIncrement);
         }
+    }
+
+    void OnPlayerHealthDamaged_Delegate(Player player)
+    {
+        var a = Instantiate(bloodImpact, _impactPos, Quaternion.identity);
+        Destroy(a, 1);
     }
     void OnPlayerDeath_Delegate(Player playerProperties)
     {

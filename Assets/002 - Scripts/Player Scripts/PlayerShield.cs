@@ -10,6 +10,7 @@ public class PlayerShield : MonoBehaviour
     [Header("Models")]
     public GameObject shieldModel;
     public GameObject shieldThirdPersonModel;
+    public GameObject shieldImpactPrefab;
     public GameObject shieldElectricityThirdPersonModel;
     public GameObject shieldRechargeThirdPersonModel;
 
@@ -55,28 +56,52 @@ public class PlayerShield : MonoBehaviour
         GetComponent<PlayerController>().OnPlayerTestButton += OnPlayerTestButton_Delegate;
     }
 
+    private void Start()
+    {
+        GetComponent<Player>().OnPlayerShieldDamaged += OnPlayerShieldDamaged_Delegate;
+        GetComponent<Player>().OnPlayerShieldDamaged += PlayShieldHitSound;
+        GetComponent<Player>().OnPlayerShieldRechargeStarted += PlayShieldStartSound;
+        GetComponent<Player>().OnPlayerShieldBroken += PlayShieldDownSound;
+    }
+
+    void OnPlayerShieldDamaged_Delegate(Player player)
+    {
+        try
+        {
+            var a = Instantiate(shieldImpactPrefab, (Vector3)player.impactPos, Quaternion.identity);
+            Destroy(a, 0.5f);
+        }catch { }
+    }
+
+
     void OnPlayerTestButton_Delegate(PlayerController playerController)
     {
 
     }
 
     // Sounds
-    void PlayShieldHitSound()
+    void PlayShieldHitSound(Player player)
     {
         shieldAudioSource.clip = shieldHitClip;
         shieldAudioSource.Play();
     }
 
-    void PlayShieldStartSound()
+    void PlayShieldStartSound(Player player)
     {
         shieldAudioSource.clip = shieldStartClip;
         shieldAudioSource.Play();
+
+        StopShieldAlarmSound();
+        HideThirdPersionShieldElectricityModel();
     }
 
-    void PlayShieldDownSound()
+    void PlayShieldDownSound(Player player)
     {
         shieldAudioSource.clip = shieldDownClip;
         shieldAudioSource.Play();
+
+        PlayShieldAlarmSound();
+        ShowThirdPersionShieldElectricityModel();
     }
     void PlayShieldAlarmSound()
     {
@@ -103,28 +128,4 @@ public class PlayerShield : MonoBehaviour
         if (shieldElectricityThirdPersonModel.activeSelf)
             shieldElectricityThirdPersonModel.SetActive(false);
     }
-    void ShowThirdPersonShieldModel()
-    {
-        StartCoroutine(ShowThirdPersonShieldModel_Coroutine());
-    }
-
-    IEnumerator ShowThirdPersonShieldModel_Coroutine()
-    {
-        shieldThirdPersonModel.SetActive(true);
-        yield return new WaitForSeconds(0.1f);
-        shieldThirdPersonModel.SetActive(false);
-    }
-
-    void ShowThirdPersonShieldRechargeModel()
-    {
-        StartCoroutine(ShowThirdPersonShieldRechargeModel_Coroutine());
-    }
-
-    IEnumerator ShowThirdPersonShieldRechargeModel_Coroutine()
-    {
-        shieldRechargeThirdPersonModel.SetActive(true);
-        yield return new WaitForSeconds(2f);
-        shieldRechargeThirdPersonModel.SetActive(false);
-    }
-
 }

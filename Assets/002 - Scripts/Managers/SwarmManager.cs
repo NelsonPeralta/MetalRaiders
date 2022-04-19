@@ -710,8 +710,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         foreach (Player p in FindObjectsOfType<Player>())
             p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
         RespawnHealthPacks();
-
-        WebManager.webManagerInstance.SaveSwarmStats(GameManager.instance.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
     }
 
     void RespawnHealthPacks()
@@ -737,6 +735,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 if (!hp.gameObject.activeSelf)
                     hp.gameObject.SetActive(true);
 
+            WebManager.webManagerInstance.SaveSwarmStats(GameManager.instance.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
         }
     }
     int GetRandomPlayerPhotonId()

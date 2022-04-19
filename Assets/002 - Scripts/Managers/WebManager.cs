@@ -35,8 +35,8 @@ public class WebManager : MonoBehaviour
 
     public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
+        GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed("Saving stats");
         StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
-
     }
 
     public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats)
@@ -101,7 +101,7 @@ public class WebManager : MonoBehaviour
 
     IEnumerator SaveBasicOnlineStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
-        int xpAndCreditGain = Random.Range(160, 240);
+        int xpAndCreditGain = Random.Range(160, 240) + (SwarmManager.instance.currentWave * Random.Range(8, 12));
 
         int playerId = playerDatabaseAdaptor.GetId();
         int newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level;
@@ -113,6 +113,8 @@ public class WebManager : MonoBehaviour
         if(dbXpToLevel > playerDatabaseAdaptor.playerBasicOnlineStats.level)
             newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level + 1;
 
+        GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"Player Id: {playerId}. New Xp: {newXp}. New Credits: {newCredits}");
+        GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"Gained {xpAndCreditGain} Xp and Credits");
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveBasicOnlineStats");
@@ -134,6 +136,8 @@ public class WebManager : MonoBehaviour
             {
                 Debug.Log(www.result);
                 Debug.Log(www.downloadHandler.text);
+                GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"{www.downloadHandler.text}");
+
 
                 if (www.downloadHandler.text.Contains("Could not save swarm stats"))
                 {
@@ -160,6 +164,9 @@ public class WebManager : MonoBehaviour
             newHighestScore = onlinePlayerSwarmScript.GetTotalPoints();
 
         Debug.Log("bababooey " + playerDatabaseAdaptor.GetPvEHighestPoints() + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore +"\nXp to Level: ");
+
+        //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed("Saving");
+
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveSwarmStats");

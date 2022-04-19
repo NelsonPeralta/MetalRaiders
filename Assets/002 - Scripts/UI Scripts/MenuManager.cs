@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class MenuManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
+        GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
     }
 
     public void OpenMenu(string menuName) // Open a menu GO using the name from its Menu script
@@ -70,6 +76,17 @@ public class MenuManager : MonoBehaviour
             {
                 CloseMenu(menus[i]);
             }
+        }
+    }
+
+    void OnSceneLoaded()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        if (currentScene.buildIndex > 0) // We are not in the menu
+        {
+            foreach(Menu menu in menus)
+                menu.gameObject.SetActive(false);
         }
     }
 }

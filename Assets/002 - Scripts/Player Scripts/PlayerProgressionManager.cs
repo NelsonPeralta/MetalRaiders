@@ -24,7 +24,16 @@ public class PlayerProgressionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public int baseXpGainPerMatch
+    {
+        get
+        {
+            int r = Random.Range(160, 240); // Reach Credits divided by 5
+            return r;
+        }
     }
 
     public Dictionary<int, int> playerLevelToXpDic = new Dictionary<int, int>()
