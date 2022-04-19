@@ -35,7 +35,6 @@ public class WebManager : MonoBehaviour
 
     public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
-        GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed("Saving stats");
         StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
     }
 
@@ -113,7 +112,7 @@ public class WebManager : MonoBehaviour
         if(dbXpToLevel > playerDatabaseAdaptor.playerBasicOnlineStats.level)
             newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level + 1;
 
-        GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"Player Id: {playerId}. New Xp: {newXp}. New Credits: {newCredits}");
+        //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"Player Id: {playerId}. New Xp: {newXp}. New Credits: {newCredits}");
         GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"Gained {xpAndCreditGain} Xp and Credits");
 
         WWWForm form = new WWWForm();
@@ -136,7 +135,7 @@ public class WebManager : MonoBehaviour
             {
                 Debug.Log(www.result);
                 Debug.Log(www.downloadHandler.text);
-                GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"{www.downloadHandler.text}");
+                //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"{www.downloadHandler.text}");
 
 
                 if (www.downloadHandler.text.Contains("Could not save swarm stats"))

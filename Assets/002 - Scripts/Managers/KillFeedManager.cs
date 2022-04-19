@@ -35,7 +35,7 @@ public class KillFeedManager : MonoBehaviour
         nkf.GetComponent<TMP_Text>().text = $"{playerWhoGotKillName} Killed {playerWhoWasKilledName} {headshotFeed}";
         nkf.transform.SetParent(gridLayout.transform);
         nkf.transform.SetAsFirstSibling();
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(8);
         Destroy(nkf);
     }
 
