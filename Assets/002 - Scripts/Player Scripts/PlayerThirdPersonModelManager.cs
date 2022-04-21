@@ -7,6 +7,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 {
     public Player player;
     public List<GameObject> models = new List<GameObject>();
+    public List<GameObject> feet = new List<GameObject>();
 
     private void Start()
     {
@@ -21,7 +22,8 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                 Debug.Log("PlayerArmorManager OnSceneLoaded");
 
                 foreach (GameObject model in models)
-                    GameManager.SetLayerRecursively(model, 31);
+                    if(!feet.Contains(model))
+                        GameManager.SetLayerRecursively(model, 31);
             }
             catch (System.Exception e) { Debug.Log(e); }
         }

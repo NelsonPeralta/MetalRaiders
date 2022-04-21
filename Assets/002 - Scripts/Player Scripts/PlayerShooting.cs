@@ -19,7 +19,7 @@ public class PlayerShooting : MonoBehaviourPun
     int playerRewiredID;
     float fireInterval = 0;
     bool fireButtonDown = false;
-    float defaultBurstInterval = 0.1f;
+    float defaultBurstInterval = 0.08f;
 
     void Awake()
     {

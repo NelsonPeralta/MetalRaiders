@@ -87,6 +87,9 @@ public class MenuManager : MonoBehaviour
         {
             foreach(Menu menu in menus)
                 menu.gameObject.SetActive(false);
+        }else
+        {
+            OpenMainMenu();
         }
     }
 }
