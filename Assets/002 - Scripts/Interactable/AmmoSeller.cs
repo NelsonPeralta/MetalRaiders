@@ -59,26 +59,26 @@ public class AmmoSeller : MonoBehaviour
                     {
                         if (ammoType == "Small")
                         {
-                            if (player0.pInventory.smallAmmo < player0.pInventory.maxSmallAmmo)
+                            if (player0.playerInventory.smallAmmo < player0.playerInventory.maxSmallAmmo)
                             {
-                                sellAmmo("Small", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.pInventory);
+                                sellAmmo("Small", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.playerInventory);
                             }
                         }
 
                         if (ammoType == "Heavy")
                         {
 
-                            if (player0.pInventory.heavyAmmo < player0.pInventory.maxHeavyAmmo)
+                            if (player0.playerInventory.heavyAmmo < player0.playerInventory.maxHeavyAmmo)
                             {
-                                sellAmmo("Heavy", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.pInventory);
+                                sellAmmo("Heavy", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.playerInventory);
                             }
                         }
 
                         if (ammoType == "Power")
                         {
-                            if (player0.pInventory.powerAmmo < player0.pInventory.maxPowerAmmo)
+                            if (player0.playerInventory.powerAmmo < player0.playerInventory.maxPowerAmmo)
                             {
-                                sellAmmo("Power", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.pInventory);
+                                sellAmmo("Power", player0.gameObject.GetComponent<PlayerSwarmMatchStats>(), player0.playerInventory);
                             }
                         }
                     }

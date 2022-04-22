@@ -99,7 +99,8 @@ public class PlayerShooting : MonoBehaviourPun
         {
 
             //Spawn bullet from bullet spawnpoint
-            playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
+            if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
+                playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
             playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
 
             var bullet = gameObjectPool.SpawnPooledBullet();

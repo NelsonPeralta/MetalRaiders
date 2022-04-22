@@ -8,7 +8,7 @@ public class AmmoUpgradeSeller : PerkSeller
 {
     protected override void OnTriggerStay_Abstract(Player player)
     {
-        if (!player.pInventory.hasAmmoUpgrade)
+        if (!player.playerInventory.hasAmmoUpgrade)
         {
             if (player.GetComponent<PlayerSwarmMatchStats>().points >= cost)
             {
@@ -24,7 +24,7 @@ public class AmmoUpgradeSeller : PerkSeller
     }
     protected override void OnPlayerLongInteract_Abstract(Player player)
     {
-        player.pInventory.hasAmmoUpgrade = true;
+        player.playerInventory.hasAmmoUpgrade = true;
 
         playersInRange.Remove(player);
         player.GetComponent<PlayerUI>().weaponInformerText.text = $"";

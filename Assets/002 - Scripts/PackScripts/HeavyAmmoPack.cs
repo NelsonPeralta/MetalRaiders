@@ -40,7 +40,7 @@ public class HeavyAmmoPack : MonoBehaviour
     {
         if (sphereCollider.enabled && other.gameObject.tag == "player")
         {
-            pInventory = other.gameObject.GetComponent<Player>().pInventory;
+            pInventory = other.gameObject.GetComponent<Player>().playerInventory;
             aSource = other.gameObject.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
 
             ammoAllowedToRemoveFromThisPack = pInventory.maxHeavyAmmo - pInventory.heavyAmmo;

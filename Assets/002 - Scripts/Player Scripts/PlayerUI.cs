@@ -78,7 +78,7 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
-        GetComponent<Player>().pInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
+        GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             EnableSwarmUIComponents();
@@ -93,7 +93,7 @@ public class PlayerUI : MonoBehaviour
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             EnableMultiplayerUIComponents();
 
-        OnGrenadeChanged_Delegate(GetComponent<Player>().pInventory);
+        OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);
     }
 
     void OnSwarmKillsChanged(PlayerSwarmMatchStats onlinePlayerSwarmScript)

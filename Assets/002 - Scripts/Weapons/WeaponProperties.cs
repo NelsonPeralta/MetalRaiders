@@ -25,6 +25,7 @@ public class WeaponProperties : MonoBehaviour
     public int bulletSpeed = 250;
     public float range;
     public bool isShotgun;
+    public float redReticuleHint;
 
     [Header("Ammo")]
     public AmmoType ammoType;
@@ -167,6 +168,7 @@ public class WeaponPropertiesEditor : Editor
         {
             wp.numberOfPellets = EditorGUILayout.IntField("Pellets:", wp.numberOfPellets);
         }
+        wp.redReticuleHint = EditorGUILayout.FloatField("Red reticule redius:", wp.redReticuleHint);
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Ammo", EditorStyles.boldLabel);

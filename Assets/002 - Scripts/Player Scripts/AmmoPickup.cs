@@ -16,7 +16,7 @@ public class AmmoPickup : MonoBehaviour
 
     void LootAmmo(Vector3 ammoPackPosition, AmmoPack ammoPackScript)
     {
-        PlayerInventory pInventory = playerProperties.pInventory;
+        PlayerInventory pInventory = playerProperties.playerInventory;
         AudioSource aSource = playerProperties.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
 
         int ammoToRemoveFromThisPack = 0;

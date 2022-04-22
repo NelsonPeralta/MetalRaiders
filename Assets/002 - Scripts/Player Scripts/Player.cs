@@ -1,10 +1,7 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using Photon.Pun;
-using Photon.Realtime;
-using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -23,7 +20,7 @@ public class Player : MonoBehaviourPunCallbacks
     public GameObject thirdPersonModels;
 
     [Header("Other Scripts")]
-    public PlayerInventory pInventory;
+    public PlayerInventory playerInventory;
     public CrosshairManager cScript;
     public AimAssist aimAssist;
     public PlayerSurroundings playerSurroundings;
@@ -590,13 +587,13 @@ public class Player : MonoBehaviourPunCallbacks
 
         StartCoroutine(MakeThirdPersonModelVisible());
 
-        pInventory.smallAmmo = 72;
-        pInventory.heavyAmmo = 60;
-        pInventory.powerAmmo = 4;
-        pInventory.grenades = 2;
+        playerInventory.smallAmmo = 72;
+        playerInventory.heavyAmmo = 60;
+        playerInventory.powerAmmo = 4;
+        playerInventory.grenades = 2;
 
-        StartCoroutine(pInventory.EquipStartingWeapon());
-        pInventory.weaponsEquiped[1] = null;
+        StartCoroutine(playerInventory.EquipStartingWeapon());
+        playerInventory.weaponsEquiped[1] = null;
 
         hitboxesEnabled = true;
     }
@@ -705,7 +702,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             SwarmManager.instance.livesLeft--;
 
-        pInventory.holsteredWeapon = null;
+        playerInventory.holsteredWeapon = null;
         GetComponent<PlayerController>().DisableCrouch();
         //StopShieldAlarmSound();
         PlayDeathSound();

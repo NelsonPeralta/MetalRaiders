@@ -305,7 +305,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if (currentWave % 5 != 0)
         {
-            zombiesLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
+            zombiesLeft = FindObjectsOfType<Player>().Length + (int)Mathf.Floor((currentWave / 2));
             if (zombiesLeft > zombiePool.Length)
                 zombiesLeft = zombiePool.Length;
 
@@ -494,23 +494,23 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (aiTypeEnum == AiType.Zombie)
         {
-            delay = ZOMBIE_SPAWN_DELAY;
+            delay = ZOMBIE_SPAWN_DELAY + currentWave;
         }
         else if (aiTypeEnum == AiType.Watcher)
         {
-            delay = WATCHER_SPAWN_DELAY;
+            delay = WATCHER_SPAWN_DELAY + currentWave;
         }
         else if (aiTypeEnum == AiType.Knight)
         {
-            delay = KNIGHT_SPAWN_DELAY;
+            delay = KNIGHT_SPAWN_DELAY + currentWave;
         }
         else if (aiTypeEnum == AiType.Hellhound)
         {
-            delay = HELLHOUND_SPAWN_DELAY;
+            delay = HELLHOUND_SPAWN_DELAY + currentWave;
         }
         else if (aiTypeEnum == AiType.Tyrant)
         {
-            delay = TYRANT_SPAWN_DELAY;
+            delay = TYRANT_SPAWN_DELAY + currentWave;
         }
 
         if (pdelay >= 0)
@@ -786,7 +786,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void DropRandomLoot(Vector3 position, Quaternion rotation)
     {
-        int chanceToDrop = UnityEngine.Random.Range(0, 35);
+        int chanceToDrop = UnityEngine.Random.Range(0, 30);
         string ammoType = "";
 
         if (chanceToDrop == 0)
