@@ -490,27 +490,28 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         Debug.Log($"BEFORE DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
         AiType aiTypeEnum = (AiType)System.Enum.Parse(typeof(AiType), aiType);
-        int delay = 10;
+        float delay = 10;
+        float waveSpawnDelay = (currentWave / 5);
 
         if (aiTypeEnum == AiType.Zombie)
         {
-            delay = ZOMBIE_SPAWN_DELAY + currentWave;
+            delay = ZOMBIE_SPAWN_DELAY + waveSpawnDelay;
         }
         else if (aiTypeEnum == AiType.Watcher)
         {
-            delay = WATCHER_SPAWN_DELAY + currentWave;
+            delay = WATCHER_SPAWN_DELAY + waveSpawnDelay;
         }
         else if (aiTypeEnum == AiType.Knight)
         {
-            delay = KNIGHT_SPAWN_DELAY + currentWave;
+            delay = KNIGHT_SPAWN_DELAY + waveSpawnDelay;
         }
         else if (aiTypeEnum == AiType.Hellhound)
         {
-            delay = HELLHOUND_SPAWN_DELAY + currentWave;
+            delay = HELLHOUND_SPAWN_DELAY + waveSpawnDelay;
         }
         else if (aiTypeEnum == AiType.Tyrant)
         {
-            delay = TYRANT_SPAWN_DELAY + currentWave;
+            delay = TYRANT_SPAWN_DELAY + waveSpawnDelay;
         }
 
         if (pdelay >= 0)

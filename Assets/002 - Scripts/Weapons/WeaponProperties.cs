@@ -168,7 +168,7 @@ public class WeaponPropertiesEditor : Editor
         {
             wp.numberOfPellets = EditorGUILayout.IntField("Pellets:", wp.numberOfPellets);
         }
-        wp.redReticuleHint = EditorGUILayout.FloatField("Red reticule redius:", wp.redReticuleHint);
+        wp.redReticuleHint = EditorGUILayout.FloatField("Red reticule hint:", wp.redReticuleHint);
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Ammo", EditorStyles.boldLabel);

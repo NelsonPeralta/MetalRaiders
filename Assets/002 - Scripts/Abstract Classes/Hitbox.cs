@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract class Hitbox : MonoBehaviour
+public abstract class Hitbox : MonoBehaviour
 {
-
+    public bool isHead = false;
 }

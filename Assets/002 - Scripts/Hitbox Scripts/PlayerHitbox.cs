@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHitbox : MonoBehaviour
+public class PlayerHitbox : Hitbox
 {
-    public bool isHead = false;
-
     public Player player;
     public GameObject boneToFollow;
 
     private void Update()
     {
-        if (boneToFollow != null)
+        try
         {
-            gameObject.transform.position = boneToFollow.transform.position;
-            gameObject.transform.rotation = boneToFollow.transform.rotation;
+            if (boneToFollow != null)
+            {
+                gameObject.transform.position = boneToFollow.transform.position;
+                gameObject.transform.rotation = boneToFollow.transform.rotation;
+            }
         }
+        catch (System.Exception) { }
     }
 }

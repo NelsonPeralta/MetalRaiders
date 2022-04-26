@@ -61,36 +61,36 @@ public class AimAssist : MonoBehaviour
 
     void RedReticule()
     {
-        if (!player.allPlayerScripts.playerInventory.activeWeapon)
-            return;
-        if (Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out hit, raycastRange, layerMask))
-        {
-            if (hit.transform.root.gameObject != player.gameObject)
-            {
-                targetDistance = Vector3.Distance(hit.transform.position, player.transform.position);
-                firstRayHit = hit.transform.gameObject;
-                float gunRRR = player.allPlayerScripts.playerInventory.activeWeapon.GetComponent<WeaponProperties>().currentRedReticuleRange;
+        //if (!player.allPlayerScripts.playerInventory.activeWeapon)
+        //    return;
+        //if (Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out hit, raycastRange, layerMask))
+        //{
+        //    if (hit.transform.root.gameObject != player.gameObject)
+        //    {
+        //        targetDistance = Vector3.Distance(hit.transform.position, player.transform.position);
+        //        firstRayHit = hit.transform.gameObject;
+        //        float gunRRR = player.allPlayerScripts.playerInventory.activeWeapon.GetComponent<WeaponProperties>().currentRedReticuleRange;
 
-                if (!hit.transform.gameObject.GetComponent<PlayerHitbox>() && !hit.transform.gameObject.GetComponent<AIHitbox>())
-                {
-                    ResetRedReticule();
-                    return;
-                }
+        //        if (!hit.transform.gameObject.GetComponent<PlayerHitbox>() && !hit.transform.gameObject.GetComponent<AIHitbox>())
+        //        {
+        //            ResetRedReticule();
+        //            return;
+        //        }
 
-                if (hit.transform.root.GetComponent<Player>() || hit.transform.GetComponent<AIHitbox>())
-                    if (player.gameObject && targetDistance <= gunRRR)
-                        ActivateRedReticule();
-                    else
-                        ResetRedReticule();
-            }
-            else
-                ResetRedReticule();
-        }
-        else
-        {
-            ResetRedReticule();
-        }
-        Debug.DrawRay(mainCam.transform.position, mainCam.transform.forward * 100, Color.green);
+        //        if (hit.transform.root.GetComponent<Player>() || hit.transform.GetComponent<AIHitbox>())
+        //            if (player.gameObject && targetDistance <= gunRRR)
+        //                ActivateRedReticule();
+        //            else
+        //                ResetRedReticule();
+        //    }
+        //    else
+        //        ResetRedReticule();
+        //}
+        //else
+        //{
+        //    ResetRedReticule();
+        //}
+        //Debug.DrawRay(mainCam.transform.position, mainCam.transform.forward * 100, Color.green);
     }
 
     public void ActivateRedReticule()

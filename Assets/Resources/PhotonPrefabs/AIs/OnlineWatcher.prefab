@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -287,7 +288,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1671196793383937220
 GameObject:
@@ -340,7 +340,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
@@ -673,6 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -686,7 +686,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1671427106006095170
 GameObject:
@@ -779,6 +778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -792,7 +792,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1671438946584151194
 GameObject:
@@ -881,6 +880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -894,7 +894,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1671447430837432142
 GameObject:
@@ -1243,19 +1242,19 @@ ParticleSystem:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671549847142358392}
-  serializedVersion: 8
+  serializedVersion: 7
   lengthInSec: 0.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
-  emitterVelocityMode: 0
   looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
+  useRigidbodyForVelocity: 1
   startDelay:
     serializedVersion: 2
     minMaxState: 0
@@ -1787,7 +1786,6 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     maxNumParticles: 20
-    customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -5949,7 +5947,6 @@ ParticleSystemRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
@@ -6092,6 +6089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -6105,7 +6103,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1671621139250299392
 GameObject:
@@ -6258,6 +6255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -6271,7 +6269,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1671640106826543942
 GameObject:
@@ -6434,19 +6431,19 @@ ParticleSystem:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671665850292059084}
-  serializedVersion: 8
+  serializedVersion: 7
   lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
-  emitterVelocityMode: 0
   looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
+  useRigidbodyForVelocity: 1
   startDelay:
     serializedVersion: 2
     minMaxState: 0
@@ -6960,7 +6957,6 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     maxNumParticles: 5
-    customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -11122,7 +11118,6 @@ ParticleSystemRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
@@ -11219,7 +11214,6 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
@@ -11686,7 +11680,7 @@ CapsuleCollider:
   m_Radius: 0.2
   m_Height: 0.5
   m_Direction: 2
-  m_Center: {x: 0.39, y: 0, z: 0}
+  m_Center: {x: 0.25, y: 0, z: 0}
 --- !u!114 &1671823742918068624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11699,6 +11693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -11712,7 +11707,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1671857504886896404
 GameObject:
@@ -12210,6 +12204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 1
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -12223,7 +12218,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 1
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1671908577755227154
 GameObject:
@@ -12564,6 +12558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -12577,7 +12572,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1672072736761519148
 GameObject:
@@ -12666,6 +12660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHead: 0
   aiAbstractClass: {fileID: 1671896910684375177}
   aiGO: {fileID: 1671896910684375178}
   aiHealth: 0
@@ -12679,7 +12674,6 @@ MonoBehaviour:
   flameTyrant: {fileID: 0}
   team: Ennemi AI
   AIisDead: 0
-  isHead: 0
   otherHitboxes: {fileID: 1673082706048369688}
 --- !u!1 &1673082704842895623
 GameObject:
@@ -12723,7 +12717,6 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -12967,19 +12960,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 3
   playersInRange: []
---- !u!135 &6041454013043439738
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6039930215780441219}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.9
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6041454011544342895
 GameObject:
   m_ObjectHideFlags: 0
@@ -13243,7 +13223,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -13314,19 +13293,19 @@ ParticleSystem:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7827565037461942228}
-  serializedVersion: 8
+  serializedVersion: 7
   lengthInSec: 2.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
-  emitterVelocityMode: 1
   looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
+  useRigidbodyForVelocity: 1
   startDelay:
     serializedVersion: 2
     minMaxState: 0
@@ -13876,7 +13855,6 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     maxNumParticles: 1000
-    customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -18105,7 +18083,6 @@ ParticleSystemRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
@@ -18199,19 +18176,19 @@ ParticleSystem:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7828505450401726340}
-  serializedVersion: 8
+  serializedVersion: 7
   lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
-  emitterVelocityMode: 1
   looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
+  useRigidbodyForVelocity: 1
   startDelay:
     serializedVersion: 2
     minMaxState: 0
@@ -18761,7 +18738,6 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     maxNumParticles: 1000
-    customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -22990,7 +22966,6 @@ ParticleSystemRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
@@ -23150,3 +23125,16 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6041454011315160197}
   m_PrefabAsset: {fileID: 0}
+--- !u!135 &6041454013043439738
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6039930215780441219}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.9
+  m_Center: {x: 0, y: 0, z: 0}

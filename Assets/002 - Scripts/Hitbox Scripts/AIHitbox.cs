@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIHitbox : MonoBehaviour
+public class AIHitbox : Hitbox
 {
     public AiAbstractClass aiAbstractClass;
     public GameObject aiGO;
@@ -22,8 +22,6 @@ public class AIHitbox : MonoBehaviour
 
     public string team;
     public bool AIisDead = false;
-
-    public bool isHead = false;
 
     [Header("Other Hitboxes")]
     public Hitboxes otherHitboxes;
