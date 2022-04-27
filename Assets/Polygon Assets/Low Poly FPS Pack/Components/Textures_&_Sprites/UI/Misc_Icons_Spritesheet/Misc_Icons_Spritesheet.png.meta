@@ -83,6 +83,8 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -91,12 +93,12 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
-    mipBias: -100
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
     wrapU: 1
-    wrapV: -1
-    wrapW: -1
+    wrapV: 0
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -114,9 +116,12 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
   applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
@@ -576,6 +581,27 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      silencer_icon: 21300038
+      scope_03_icon: 21300034
+      rocket_launcher_projectile: 21300026
+      hand_grenade_1_icon: 21300002
+      flashbang_icon: 21300000
+      rail_attachment_icon: 21300028
+      small_bullet_icon: 21300014
+      grenade_launcher_shellcasing_icon: 21300024
+      hand_grenade_3_icon: 21300006
+      smoke_grenade_icon: 21300008
+      big_bullet_icon: 21300010
+      hand_grenade_2_icon: 21300004
+      grenade_launcher_projectile_icon: 21300020
+      scope_02_icon: 21300032
+      small_casing_icon: 21300016
+      big_casing_icon: 21300012
+      scope_04_icon: 21300036
+      shellcasing_icon: 21300018
+      grenade_launcher_casing_icon: 21300022
+      scope_01_icon: 21300030
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

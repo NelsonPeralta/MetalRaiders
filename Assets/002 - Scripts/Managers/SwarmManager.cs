@@ -483,12 +483,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void SpawnAi_RPC(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
-        Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
+        //Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
         StartCoroutine(SpawnAI_Coroutine(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation, aiType, pdelay));
     }
     IEnumerator SpawnAI_Coroutine(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
-        Debug.Log($"BEFORE DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
+        //Debug.Log($"BEFORE DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
         AiType aiTypeEnum = (AiType)System.Enum.Parse(typeof(AiType), aiType);
         float delay = 10;
         float waveSpawnDelay = (currentWave / 5);

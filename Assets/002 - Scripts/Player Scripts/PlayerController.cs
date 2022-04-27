@@ -267,6 +267,10 @@ public class PlayerController : MonoBehaviourPun
         if (GetComponent<Player>().isDead || isSprinting)
             return;
 
+        if (player.GetButtonUp("Shoot"))
+        {
+            OnPlayerFireButtonUp?.Invoke(this);
+        }
         if (!isDualWielding)
         {
             if (player.GetButton("Shoot") && !wProperties.isOutOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
@@ -280,17 +284,12 @@ public class PlayerController : MonoBehaviourPun
                 isShooting = false;
             }
 
-            if (player.GetButtonUp("Shoot"))
-            {
-                OnPlayerFireButtonUp?.Invoke(this);
-            }
         }
 
         if (isDualWielding)
         {
             if (player.GetButton("Shoot") && !dwRightWP.isOutOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
-                Debug.Log("Is Shooting Right");
                 isShootingRight = true;
             }
             else
@@ -1010,7 +1009,7 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1,2,1));
+        GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1, 2, 1));
     }
 }
 

@@ -173,14 +173,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
-            Debug.Log($"Bullet final hit: {finalHitObject.name}");
+            //Debug.Log($"Bullet final hit: {finalHitObject.name}");
             if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead)
             {
                 AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
                 int finalDamage = damage;
                 if (hitbox.isHead && wProperties.isHeadshotCapable)
                 {
-                    Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
+                    //Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
                     playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                     finalDamage = (int)(wProperties.headshotMultiplier * damage);
 
@@ -190,7 +190,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                 if (playerWhoShot.PV.IsMine)
                 {
-                    Debug.Log($"AI is dead: {hitbox.aiAbstractClass.isDead}");
+                    //Debug.Log($"AI is dead: {hitbox.aiAbstractClass.isDead}");
                     hitbox.aiAbstractClass.Damage(finalDamage, playerWhoShot.PV.ViewID);
                 }
 

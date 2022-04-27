@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 public class AimAssistCapsule : MonoBehaviour
 {
@@ -50,7 +51,19 @@ public class AimAssistCapsule : MonoBehaviour
 
     private void Update()
     {
+        if (player.GetComponent<PlayerController>().player.GetButtonUp("Shoot"))
+        {
+            Debug.Log("AimAssistCapsule OnPlayerFireButtonUp");
+            player.GetComponent<PlayerController>().OnPlayerFireButtonUp?.Invoke(player.GetComponent<PlayerController>());
+        }
+
         Ray();
+
+        if (collidingHitboxes.Count > 0)
+            for (int i = 0; i < collidingHitboxes.Count; i++)
+                if (!collidingHitboxes[i].gameObject.activeSelf)
+                    collidingHitboxes.Remove(collidingHitboxes[i]);
+
         if (collidingHitbox && !collidingHitbox.activeSelf)
         {
             collidingHitboxes.Remove(collidingHitbox);
@@ -65,23 +78,11 @@ public class AimAssistCapsule : MonoBehaviour
 
             GetComponent<CapsuleCollider>().radius = activeWeapon.redReticuleHint / 10;
         }
-        catch (System.Exception e)
-        {
-
-        }
+        catch (System.Exception e) { }
 
 
-        //GetComponent<CapsuleCollider>().radius = activeWeapon.redReticuleRadius;
-        //GetComponent<CapsuleCollider>().radius = activeWeapon.redReticuleRadius;
-    }
-    private void OnTriggerStay(Collider other)
-    {
-        for(int i = 0; i < collidingHitboxes.Count; i++)
-            if (!collidingHitboxes[i].gameObject.activeSelf)
-                collidingHitboxes.Remove(collidingHitboxes[i]);
 
-        if (!collidingHitboxes.Contains(other.gameObject))
-            collidingHitboxes.Add(other.gameObject);
+        //////////
 
         bool obstruction = false;
         GameObject chb = null;
@@ -101,15 +102,16 @@ public class AimAssistCapsule : MonoBehaviour
         {
             if (firstRayHit.layer == 0)
             {
-                if (Vector3.Distance(firstRayHit.transform.position, player.mainCamera.transform.position) < Vector3.Distance(chb.transform.position, player.mainCamera.transform.position))
-                    obstruction = true;
+                if (collidingHitboxes.Count > 0)
+                    if (Vector3.Distance(firstRayHit.transform.position, player.mainCamera.transform.position) < Vector3.Distance(chb.transform.position, player.mainCamera.transform.position))
+                        obstruction = true;
             }
             else
                 chb = firstRayHit;
         }
 
         collidingHitbox = chb;
-        if (!obstruction)
+        if (!obstruction && collidingHitbox)
         {
             aimAssist.target = collidingHitbox;
             aimAssist.redReticuleIsOn = true;
@@ -119,6 +121,12 @@ public class AimAssistCapsule : MonoBehaviour
         {
             aimAssist.ResetRedReticule();
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+            collidingHitboxes.Add(other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)
@@ -139,7 +147,7 @@ public class AimAssistCapsule : MonoBehaviour
     void Ray()
     {
         try
-        { raycastRange = player.playerInventory.activeWeapon.range; }
+        { raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange; }
         catch (System.Exception) { }
 
         if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, raycastRange, layerMask))
