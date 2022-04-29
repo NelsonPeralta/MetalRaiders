@@ -33,6 +33,8 @@ public class CameraScript : MonoBehaviour
     float currentHorizontalSway;
     float sway;
 
+    public AimAssistCapsule aimAssistCapsule;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,11 +58,14 @@ public class CameraScript : MonoBehaviour
             mouseSensitivity = defaultMouseSensitivy / 25;
         }
 
-        if (pController.isAiming)
-            mouseSensitivity = mouseSensitivity / 2;
+        if (aimAssistCapsule.reticuleFriction)
+            mouseSensitivity /= 3;
 
-        if (pProperties.aimAssist.redReticuleIsOn && (pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Custom || pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
-            mouseSensitivity = mouseSensitivity / 3;
+        if (pController.isAiming)
+            mouseSensitivity /= 3;
+
+        //if (pProperties.aimAssist.redReticuleIsOn && (pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Custom || pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
+        //    mouseSensitivity /= 3;
 
         if (!pController.pauseMenuOpen)
         {

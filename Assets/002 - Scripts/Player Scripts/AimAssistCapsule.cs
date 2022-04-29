@@ -5,14 +5,26 @@ using Rewired;
 
 public class AimAssistCapsule : MonoBehaviour
 {
+    public delegate void AimAssistCapsuleEvent(AimAssistCapsule aimAssistCapsule);
+    public AimAssistCapsuleEvent OnReticuleFrictionEnabled, OnReticuleFrictionDisabled;
+
     public Player player;
     public GameObject _collidingHitbox;
     public List<GameObject> collidingHitboxes;
+    public List<GameObject> frictionColliders;
     public AimAssist aimAssist;
     RaycastHit hit;
     public LayerMask layerMask;
     public float raycastRange = 1000;
     [SerializeField] GameObject _firstRayHit;
+
+    bool _reticuleFriction;
+
+    public bool reticuleFriction
+    {
+        get { return _reticuleFriction; }
+        set { _reticuleFriction = value; }
+    }
 
     public GameObject collidingHitbox
     {
@@ -51,6 +63,16 @@ public class AimAssistCapsule : MonoBehaviour
 
     private void Update()
     {
+        if (frictionColliders.Count > 0)
+            for (int i = 0; i < frictionColliders.Count; i++)
+                if (!frictionColliders[i].gameObject.activeSelf)
+                    frictionColliders.Remove(frictionColliders[i]);
+
+        if (frictionColliders.Count == 0)
+            reticuleFriction = false;
+        else
+            reticuleFriction = true;
+
         if (player.GetComponent<PlayerController>().player.GetButtonUp("Shoot"))
         {
             Debug.Log("AimAssistCapsule OnPlayerFireButtonUp");
@@ -125,8 +147,14 @@ public class AimAssistCapsule : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
-            collidingHitboxes.Add(other.gameObject);
+        if (other.gameObject.layer != 21)
+            if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+                collidingHitboxes.Add(other.gameObject);
+
+        if (other.gameObject.layer == 21)
+            if (!frictionColliders.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+                frictionColliders.Add(other.gameObject);
+
     }
 
     private void OnTriggerExit(Collider other)
@@ -139,6 +167,8 @@ public class AimAssistCapsule : MonoBehaviour
 
         if (collidingHitboxes.Contains(other.gameObject))
             collidingHitboxes.Remove(other.gameObject);
+        if (frictionColliders.Contains(other.gameObject))
+            frictionColliders.Remove(other.gameObject);
 
         if (collidingHitboxes.Count == 0)
             aimAssist.ResetRedReticule();
