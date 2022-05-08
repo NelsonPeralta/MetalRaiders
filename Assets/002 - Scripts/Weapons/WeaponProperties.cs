@@ -7,7 +7,7 @@ using UnityEngine;
 public class WeaponProperties : MonoBehaviour
 {
     //Enums
-    public enum ReticuleType { AssaultRifle, DMR, Pistol, SMG, Shotgun, Sniper, None }
+    public enum ReticuleType { AR, DMR, Pistol, SMG, Shotgun, Sniper, None }
     public enum FiringMode { Auto, Burst, Single }
     public enum AmmoType { Heavy, Light, Power }
     public enum AmmoReloadType { Magazine, Shell, Single }
@@ -51,7 +51,7 @@ public class WeaponProperties : MonoBehaviour
     [Header("Recoil Behaviour")]
     public float yRecoil;
     public float xRecoil;
-    public CameraScript camScript;
+    public PlayerCamera camScript;
 
     [Header("Sounds")]
     public AudioClip draw;
@@ -154,7 +154,7 @@ public class WeaponPropertiesEditor : Editor
         EditorGUILayout.LabelField("Other Scripts", EditorStyles.boldLabel);
         wp.pController = EditorGUILayout.ObjectField(wp.pController, typeof(PlayerController), false) as PlayerController;
         wp.reloadScript = EditorGUILayout.ObjectField(wp.reloadScript, typeof(ReloadScript), false) as ReloadScript;
-        wp.camScript = EditorGUILayout.ObjectField(wp.camScript, typeof(CameraScript), false) as CameraScript;
+        wp.camScript = EditorGUILayout.ObjectField(wp.camScript, typeof(PlayerCamera), false) as PlayerCamera;
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Info", EditorStyles.boldLabel);

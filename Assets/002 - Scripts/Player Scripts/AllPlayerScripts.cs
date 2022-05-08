@@ -11,7 +11,7 @@ public class AllPlayerScripts : MonoBehaviour
     public PlayerInventory playerInventory;
     public PlayerWeaponSwapping weaponPickUp;
     [Header("UI Components")]
-    public CameraScript cameraScript;
+    public PlayerCamera cameraScript;
     public CrosshairManager crosshairScript;
     public AimAssist aimAssist;
     public Aiming aimingScript;

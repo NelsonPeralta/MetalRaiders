@@ -10,7 +10,7 @@ public class CrosshairManager : MonoBehaviour
     public PlayerWeaponSwapping weaponPickUp;
     public WeaponProperties wProperties;
     public GameObject ActiveCrosshair;
-    public CameraScript cameraScript;
+    public PlayerCamera cameraScript;
 
     [Space(20)]
     [Header("Crosshairs")]

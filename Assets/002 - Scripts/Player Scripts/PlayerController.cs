@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviourPun
     public Animator anim;
     public Camera mainCam;
     public Camera gunCam;
-    public CameraScript camScript;
+    public PlayerCamera camScript;
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
     public Rewired.Player player;
     public int playerRewiredID;

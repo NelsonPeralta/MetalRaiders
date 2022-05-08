@@ -279,6 +279,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         foreach (AiRangeTrigger arc in rangeColliders)
             arc.playersInRange.Clear();
+
+        OnPrepareEnd?.Invoke(this);
     }
     public void Spawn(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
