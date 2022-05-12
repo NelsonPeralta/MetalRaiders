@@ -62,6 +62,9 @@ public class PlayerShield : MonoBehaviour
         GetComponent<Player>().OnPlayerShieldDamaged += PlayShieldHitSound;
         GetComponent<Player>().OnPlayerShieldRechargeStarted += PlayShieldStartSound;
         GetComponent<Player>().OnPlayerShieldBroken += PlayShieldDownSound;
+
+        GetComponent<Player>().OnPlayerDeath += OnPlayerDeath_Delegate;
+        GetComponent<Player>().OnPlayerRespawned += OnPlayerRespawned_Delegate;
     }
 
     void OnPlayerShieldDamaged_Delegate(Player player)
@@ -80,6 +83,19 @@ public class PlayerShield : MonoBehaviour
     }
 
     // Sounds
+
+    void OnPlayerDeath_Delegate(Player player)
+    {
+        player.GetComponent<PlayerUI>().shieldBar.SetActive(false);
+        StopShieldAlarmSound();
+        HideThirdPersionShieldElectricityModel();
+    }
+
+    void OnPlayerRespawned_Delegate(Player player)
+    {
+        player.GetComponent<PlayerUI>().shieldBar.SetActive(true);
+    }
+
     void PlayShieldHitSound(Player player)
     {
         shieldAudioSource.clip = shieldHitClip;

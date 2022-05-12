@@ -67,11 +67,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     // constants
-    const int ZOMBIE_SPAWN_DELAY = 5;
-    const int WATCHER_SPAWN_DELAY = 8;
-    const int KNIGHT_SPAWN_DELAY = 12;
+    const int ZOMBIE_SPAWN_DELAY = 4;
+    const int WATCHER_SPAWN_DELAY = 7;
+    const int KNIGHT_SPAWN_DELAY = 10;
     const int HELLHOUND_SPAWN_DELAY = 5;
-    const int TYRANT_SPAWN_DELAY = 30;
+    const int TYRANT_SPAWN_DELAY = 20;
 
     public int zombiesLeft
     {
@@ -309,11 +309,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (zombiesLeft > zombiePool.Length)
                 zombiesLeft = zombiePool.Length;
 
-            watchersLeft = FindObjectsOfType<Player>().Length + (currentWave * 2);
+            watchersLeft = FindObjectsOfType<Player>().Length * 3 + (currentWave * 2);
             if (watchersLeft > watcherPool.Length)
                 watchersLeft = watcherPool.Length;
 
-            knightsLeft = FindObjectsOfType<Player>().Length + (currentWave);
+            knightsLeft = FindObjectsOfType<Player>().Length * 2 + (currentWave);
             if (knightsLeft > knightPool.Length)
                 knightsLeft = knightPool.Length;
 
