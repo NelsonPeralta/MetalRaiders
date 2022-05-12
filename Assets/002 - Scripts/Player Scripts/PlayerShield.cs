@@ -121,11 +121,13 @@ public class PlayerShield : MonoBehaviour
     {
         if (!shieldElectricityThirdPersonModel.activeSelf)
             shieldElectricityThirdPersonModel.SetActive(true);
+        shieldRechargeThirdPersonModel.SetActive(false);
     }
 
     void HideThirdPersionShieldElectricityModel()
     {
         if (shieldElectricityThirdPersonModel.activeSelf)
             shieldElectricityThirdPersonModel.SetActive(false);
+        shieldRechargeThirdPersonModel.SetActive(true);
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerEvent(Player playerProperties);
-    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken;
+    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken, OnPlayerRespawned;
 
     [Header("Singletons")]
     public SpawnManager spawnManager;
@@ -59,7 +59,7 @@ public class Player : MonoBehaviourPunCallbacks
     float _hitPoints = 250;
     int _meleeDamage = 150;
     bool _isRespawning;
-    bool _isDead;
+    bool _isDead, _isHealing;
     int _respawnTime = 5;
 
     int _defaultRespawnTime = 4;
@@ -133,7 +133,7 @@ public class Player : MonoBehaviourPunCallbacks
                     OnPlayerShieldBroken?.Invoke(this);
             }
 
-            if (value < maxHealthPoints && previousValue <= maxHealthPoints)
+            if (value < maxHealthPoints && previousValue <= maxHealthPoints && previousValue > value)
                 OnPlayerHealthDamage?.Invoke(this);
 
 
@@ -370,10 +370,17 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (healingCountdown <= 0 && hitPoints < maxHitPoints && !needsHealthPack)
         {
+            if (!_isHealing)
+                OnPlayerShieldRechargeStarted?.Invoke(this);
+
+            _isHealing = true;
             if (hitPoints < maxHealthPoints)
                 hitPoints += (Time.deltaTime * _healthHealingIncrement);
             else
                 hitPoints += (Time.deltaTime * _shieldHealingIncrement);
+
+            if (hitPoints == maxHitPoints)
+                _isHealing = false;
         }
 
         if (shieldRechargeCountdown > 0)
@@ -596,6 +603,8 @@ public class Player : MonoBehaviourPunCallbacks
         playerInventory.weaponsEquiped[1] = null;
 
         hitboxesEnabled = true;
+
+        OnPlayerRespawned?.Invoke(this);
     }
 
     IEnumerator MakeThirdPersonModelVisible()
@@ -678,6 +687,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void OnPlayerDamaged_Delegate(Player player)
     {
+        _isHealing = false;
         if (!needsHealthPack)
         {
             healingCountdown = _defaultHealingCountdown;

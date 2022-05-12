@@ -17,6 +17,15 @@ public class ReticuleFriction : MonoBehaviour
             ai.OnPrepareEnd -= OnAiPrepare;
             ai.OnPrepareEnd += OnAiPrepare;
         }
+
+        if (player)
+        {
+            player.OnPlayerDeath -= OnPlayerRespawn;
+            player.OnPlayerDeath += OnPlayerRespawn;
+
+            player.OnPlayerRespawned -= OnPlayerRespawn;
+            player.OnPlayerRespawned += OnPlayerRespawn;
+        }
     }
 
     void OnAiDeath(AiAbstractClass aiAbstractClass)
@@ -25,6 +34,16 @@ public class ReticuleFriction : MonoBehaviour
     }
 
     void OnAiPrepare(AiAbstractClass aiAbstractClass)
+    {
+        gameObject.SetActive(true);
+    }
+
+    void OnPlayerDeath(Player player)
+    {
+        gameObject.SetActive(false);
+    }
+
+    void OnPlayerRespawn(Player player)
     {
         gameObject.SetActive(true);
     }

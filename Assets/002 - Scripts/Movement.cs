@@ -517,13 +517,13 @@ public class Movement : MonoBehaviour
     [PunRPC]
     void PlayWalkingSound_RPC()
     {
-        //walkingSoundAS.Play();
+        walkingSoundAS.Play();
     }
 
     [PunRPC]
     void PauseWalkingSoundRPC()
     {
-        //walkingSoundAS.Pause();
+        walkingSoundAS.Pause();
     }
 
     public void ResetCharacterControllerProperties()
