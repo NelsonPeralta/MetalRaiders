@@ -46,6 +46,7 @@ public class PlayerUI : MonoBehaviour
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;
     public GameObject motionTracker;
+    public Text isMineText;
 
     [Header("Bottom Right", order = 6)]
     public Text Timer;

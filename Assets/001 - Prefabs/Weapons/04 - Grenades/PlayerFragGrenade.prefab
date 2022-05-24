@@ -25168,7 +25168,7 @@ MonoBehaviour:
   radius: 8
   damage: 300
   power: 100
-  grenadeTimer: 0.5
+  grenadeTimer: 0.75
   throwForce: 625
   explosionPrefab: {fileID: 2064435946878792721, guid: 9c90c1d7343cb464698144039aff5a88,
     type: 3}

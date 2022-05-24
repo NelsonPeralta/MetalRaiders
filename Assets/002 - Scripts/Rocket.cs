@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Rocket : MonoBehaviour
 {
-    public Player playerWhoThrewGrenade;
+    public Player player;
 
     [Header("Settings")]
     public float damage; // Determined in Weapon Properties Script
@@ -83,8 +83,8 @@ public class Rocket : MonoBehaviour
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
+                    if (player.PV.IsMine && calculatedDamage > 0)
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID);
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
@@ -98,8 +98,8 @@ public class Rocket : MonoBehaviour
                     float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
                     Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
-                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID);
+                    if (player.PV.IsMine && calculatedDamage > 0)
+                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, player.PV.ViewID);
                 }
             }
         }

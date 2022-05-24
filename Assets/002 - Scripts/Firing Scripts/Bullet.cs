@@ -205,33 +205,31 @@ public class Bullet : MonoBehaviourPunCallbacks
                 //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
 
                 PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
-                Player playerProperties = hitbox.player.GetComponent<Player>();
+                Player player = hitbox.player.GetComponent<Player>();
                 bool wasHeadshot = false;
                 if (hitbox.isHead && wProperties.isHeadshotCapable)
                 {
-                    //if (playerProperties.maxShield <= 0)
-                    //{
-                    //    damage = (int)(damage * wProperties.headshotMultiplier);
-                    //    wasHeadshot = true;
-                    //    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
+                    int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
-                    //}
-                    //else if (playerProperties.maxShield > 0 && (playerProperties.hitPoints < playerProperties.maxHitPoints - playerProperties.maxShield))
-                    //{
-                    //    damage = (int)(damage * 999);
-                    //    wasHeadshot = true;
-                    //    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
-                    //}
+                    if (maxShieldPoints <= 0)
+                        damage = (int)(damage * wProperties.headshotMultiplier);
+                    else if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
+                        damage = (int)(damage * 999);
 
-                    if (wasHeadshot && playerProperties.hitPoints < damage)
+                    wasHeadshot = true;
+                    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
+
+                    if (wasHeadshot && player.hitPoints < damage)
                     {
+                        wasHeadshot = true;
+                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                         playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
                     }
                 }
 
                 if (playerWhoShot.PV.IsMine)
                 {
-                    playerProperties.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint);
+                    player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint);
                 }
 
                 damageDealt = true;

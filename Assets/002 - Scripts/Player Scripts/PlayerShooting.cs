@@ -96,30 +96,43 @@ public class PlayerShooting : MonoBehaviourPun
             counter = activeWeapon.numberOfPellets;
 
         for (int i = 0; i < counter; i++)
-        {
+            if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
+            {
+                if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
+                    playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
+                playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
 
-            //Spawn bullet from bullet spawnpoint
-            if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
-                playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
-            playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
+                var bullet = gameObjectPool.SpawnPooledBullet();
+                if (PV.IsMine)
+                    bullet.layer = 8;
+                else
+                    bullet.layer = 0;
+                bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
 
-            var bullet = gameObjectPool.SpawnPooledBullet();
-            if (PV.IsMine)
-                bullet.layer = 8;
-            else
-                bullet.layer = 0;
-            bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-            bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+                bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>();
+                bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
+                bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+                bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
+                bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+                bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript;
+                bullet.SetActive(true);
+                GetComponent<CommonFiringActions>().SpawnMuzzleflash();
+            }
+            else if(activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+            {
+                var rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).gameObject;
 
-            bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>();
-            bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
-            bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-            bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
-            bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-            bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript;
-            bullet.SetActive(true);
-            GetComponent<CommonFiringActions>().SpawnMuzzleflash();
-        }
+                if (PV.IsMine)
+                    rocket.layer = 8;
+                else
+                    rocket.layer = 0;
+                rocket.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+
+                rocket.gameObject.GetComponent<Rocket>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
+                GetComponent<CommonFiringActions>().SpawnMuzzleflash();
+            }
 
         activeWeapon.currentAmmo -= 1;
         if (playerController.anim != null)

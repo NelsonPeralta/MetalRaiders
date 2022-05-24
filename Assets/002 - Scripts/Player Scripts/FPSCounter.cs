@@ -5,29 +5,27 @@ using UnityEngine.UI;
 
 public class FPSCounter : MonoBehaviour
 {
-    public int avgFrameRate;
-    public Text display_Text;
+    //https://answers.unity.com/questions/64331/accurate-frames-per-second-count.html
 
-    private void Start()
-    {
-        StartCoroutine(UpdateFPSText());
-    }
-    IEnumerator UpdateFPSText()
-    {
-        float current = 0;
-        current = (int)(1f / Time.unscaledDeltaTime);
-        avgFrameRate = (int)current;
-        display_Text.text = "FPS: " + avgFrameRate.ToString();
-        yield return new WaitForSeconds(0.5f);
+    public string formatedString = "{value} FPS";
+    public Text txtFps;
 
-        StartCoroutine(UpdateFPSText());
+    public float updateRateSeconds = 4.0F;
+
+    int frameCount = 0;
+    float dt = 0.0F;
+    float fps = 0.0F;
+
+    void Update()
+    {
+        frameCount++;
+        dt += Time.unscaledDeltaTime;
+        if (dt > 1.0 / updateRateSeconds)
+        {
+            fps = frameCount / dt;
+            frameCount = 0;
+            dt -= 1.0F / updateRateSeconds;
+        }
+        txtFps.text = formatedString.Replace("{value}", System.Math.Round(fps, 1).ToString("0.0"));
     }
-    //public void Update()
-    //{
-    //    float current = 0;
-    //    current = (int)(1f / Time.unscaledDeltaTime);
-    //    //current = Time.frameCount / Time.time;
-    //    avgFrameRate = (int)current;
-    //    display_Text.text = "FPS: " + avgFrameRate.ToString();
-    //}
 }

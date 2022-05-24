@@ -300,6 +300,11 @@ namespace Photon.Pun
                     Debug.LogWarning("Changing a ViewID while it's in use is not possible (except setting it to 0 (not being used). Current ViewID: " + this.viewIdField);
                     return;
                 }
+                
+                if (value == 0 && this.viewIdField != 0)
+                {
+                    PhotonNetwork.LocalCleanPhotonView(this);
+                }
 
                 this.viewIdField = value;
                 this.CreatorActorNr = value / PhotonNetwork.MAX_VIEW_IDS;   // the creator can be derived from the viewId. this is also the initial owner and creator.
@@ -643,7 +648,7 @@ namespace Photon.Pun
         /// <param name="methodName">The name of a fitting method that was has the RPC attribute.</param>
         /// <param name="targetPlayer">The group of targets and the way the RPC gets sent.</param>
         /// <param name="parameters">The parameters that the RPC method has (must fit this call!).</param>
-        public void RPC(string methodName, RpcTarget all, int aiPhotonId, Player targetPlayer, params object[] parameters)
+        public void RPC(string methodName, Player targetPlayer, params object[] parameters)
         {
             PhotonNetwork.RPC(this, methodName, targetPlayer, false, parameters);
         }

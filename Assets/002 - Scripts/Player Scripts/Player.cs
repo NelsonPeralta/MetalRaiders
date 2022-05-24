@@ -263,7 +263,8 @@ public class Player : MonoBehaviourPunCallbacks
         weaponPool = WeaponPool.weaponPoolInstance;
         playerManager.allPlayers.Add(this);
         PV = GetComponent<PhotonView>();
-        gameObject.name = $"Player ({PV.Owner.NickName}. Is mine: {PV.IsMine})";
+        GetComponent<PlayerUI>().isMineText.text = $"IM: {PV.IsMine}";
+        gameObject.name = $"Player ({PV.Owner.NickName}. IM: {PV.IsMine})";
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
 

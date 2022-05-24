@@ -998,8 +998,9 @@ public class PlayerController : MonoBehaviourPun
     {
         Debug.Log("Returning to Main Menu");
 
-        PhotonNetwork.LoadLevel(0);
-        PhotonNetwork.LeaveRoom();
+        FindObjectOfType<Launcher>().LeaveRoom();
+        //PhotonNetwork.LeaveRoom();
+        //PhotonNetwork.LoadLevel(0);
     }
 
     public void SetPlayerIDInInput()

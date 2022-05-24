@@ -61,7 +61,7 @@ public class PlayerCamera : MonoBehaviour
         else if (pController.activeControllerType.ToString() == "Keyboard" || pController.activeControllerType.ToString() == "Mouse")
         {
             controllerType = "m&k";
-            mouseSensitivity = defaultMouseSensitivy / 25;
+            mouseSensitivity = defaultMouseSensitivy / 10;
         }
 
         if (aimAssistCapsule.reticuleFriction)

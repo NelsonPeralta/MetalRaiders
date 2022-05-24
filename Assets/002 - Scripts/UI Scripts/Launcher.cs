@@ -6,6 +6,8 @@ using TMPro;
 using Photon.Realtime;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.IO;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -27,13 +29,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
-    [SerializeField] Transform playerListContent;
-    [SerializeField] GameObject PlayerListItemPrefab;
-    [SerializeField] TMP_Text mapSelectedText;
+    [SerializeField] Transform _playerListContent;
+    [SerializeField] GameObject _playerListItemPrefab;
+    [SerializeField] TMP_Text _mapSelectedText;
 
-    [SerializeField] TMP_InputField loginUsernameText;
+    [SerializeField] TMP_InputField _loginUsernameText;
     [SerializeField] TMP_InputField registerUsernameText;
-    [SerializeField] TMP_InputField loginPasswordText;
+    [SerializeField] TMP_InputField _loginPasswordText;
     [SerializeField] TMP_InputField registerPasswordText;
 
     [Header("Master Client Only")]
@@ -42,16 +44,49 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject multiplayerMapSelector;
     [SerializeField] GameObject swarmMapSelector;
 
+    public TMP_InputField loginUsernameText
+    {
+        get { return _loginUsernameText; }
+    }
+
+    public TMP_InputField loginPasswordText
+    {
+        get { return _loginPasswordText; }
+    }
+
+    public Transform playerListContent
+    {
+        get { return _playerListContent; }
+    }
+
+    public GameObject playerListItemPrefab
+    {
+        get { return _playerListItemPrefab;}
+    }
     void Awake()
     {
         launcherInstance = this;
+    }
+
+    public TMP_Text mapSelectedText
+    {
+        get { return _mapSelectedText; }
     }
 
     void Start()
     {
         if (levelToLoadIndex == 0)
             levelToLoadIndex = 1;
+
+        ConnectToPhotonMasterServer();
+
+        GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
+    }
+
+    public void ConnectToPhotonMasterServer()
+    {
         Debug.Log("Connecting to Master");
+
         PhotonNetwork.ConnectUsingSettings();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -142,7 +177,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
         roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
-        UpdatePlayerList();
+        FindObjectOfType<MainMenuCommunicator>().UpdatePlayerList();
 
         Debug.Log($"Is Master Client: {PV.ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
@@ -157,31 +192,38 @@ public class Launcher : MonoBehaviourPunCallbacks
             mapSelector.SetActive(PhotonNetwork.IsMasterClient);
         }
     }
-
-    [PunRPC]
-    public void UpdatePlayerList()
-    {
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
-        Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
-
-        foreach (Transform child in playerListContent)
-        {
             Destroy(child.gameObject);
         }
 
         for (int i = 0; i < players.Count(); i++)
-        {
-            Debug.Log(players[i].NickName);
-            GameObject plt = Instantiate(PlayerListItemPrefab, playerListContent);
-            plt.GetComponent<PlayerListItem>().SetUp(players[i]);
-            plt.GetComponent<PlayerListItem>().levelText.text = pda.playerBasicOnlineStats.level.ToString();
-        }
-    }
+    //[PunRPC]
+    //public void UpdatePlayerList()
+    //{
+    //    PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+    //    Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
+    //public void UpdatePlayerList()
+    //{
+    //    PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+    //    Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
+
+    ////    foreach (Transform child in _playerListContent)
+    ////    for (int i = 0; i < players.Count(); i++)
+    ////    {
+    ////        Debug.Log(players[i].NickName);
+    ////        GameObject plt = Instantiate(_playerListItemPrefab, _playerListContent);
+    ////        plt.GetComponent<PlayerListItem>().SetUp(players[i]);
+    ////        plt.GetComponent<PlayerListItem>().levelText.text = pda.playerBasicOnlineStats.level.ToString();
+    ////    }
+    ////}
+    //        plt.GetComponent<PlayerListItem>().SetUp(players[i]);
+    //        plt.GetComponent<PlayerListItem>().levelText.text = pda.playerBasicOnlineStats.level.ToString();
+    //    }
+    //}
 
     public void UpdateNickname() // Deprecated. Used to be used when changing username with a text field and button
     {
         //PhotonNetwork.NickName = nicknameInputField.text;
-        PV.RPC("UpdatePlayerList", RpcTarget.All);
+        FindObjectOfType<MainMenuCommunicator>().GetComponent<PhotonView>().RPC("UpdatePlayerList", RpcTarget.All);
     }
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
@@ -204,6 +246,10 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+
+        startGameButton.SetActive(false);
         PhotonNetwork.LoadLevel(levelToLoadIndex);
     }
 
@@ -242,31 +288,31 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        Instantiate(PlayerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+        Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
-        PV.RPC("UpdateSelectedMap", RpcTarget.All, index);
+        FindObjectOfType<MainMenuCommunicator>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
     }
 
-    [PunRPC]
-    public void UpdateSelectedMap(int index)
-    {
-        levelToLoadIndex = index;
-        string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+    //[PunRPC]
+    //public void UpdateSelectedMap(int index)
+    //{
+    //    levelToLoadIndex = index;
+    //    string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
 
-        if (mode == "multiplayer")
-            mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("PVP - ", "")}";
-        if (mode == "swarm")
-            mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("Coop - ", "")}";
+    //    if (mode == "multiplayer")
+    //        _mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("PVP - ", "")}";
+    //    if (mode == "swarm")
+    //        _mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("Coop - ", "")}";
 
-    }
+    //}
 
 
     // By JimmyCushnie
     // Reference: https://answers.unity.com/questions/1262342/how-to-get-scene-name-at-certain-buildindex.html
-    private static string NameFromIndex(int BuildIndex)
+    public static string NameFromIndex(int BuildIndex)
     {
         string path = SceneUtility.GetScenePathByBuildIndex(BuildIndex);
         int slash = path.LastIndexOf('/');
@@ -282,7 +328,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void Login()
     {
-        WebManager.webManagerInstance.Login(loginUsernameText.text, loginPasswordText.text);
+        WebManager.webManagerInstance.Login(loginUsernameText.text, _loginPasswordText.text);
     }
 
     void OnSceneLoaded()

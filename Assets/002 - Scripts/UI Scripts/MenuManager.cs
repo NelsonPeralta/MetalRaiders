@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
+using System.IO;
 
 public class MenuManager : MonoBehaviour
 {
@@ -87,8 +89,11 @@ public class MenuManager : MonoBehaviour
         {
             foreach(Menu menu in menus)
                 menu.gameObject.SetActive(false);
+            //gameObject.SetActive(false);
         }else
         {
+            Launcher.launcherInstance.ConnectToPhotonMasterServer();
+            gameObject.SetActive(true);
             OpenMainMenu();
         }
     }
