@@ -13,6 +13,9 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     public PlayerMultiplayerStatsEvent OnHeadshotsChanged;
     public PlayerMultiplayerStatsEvent OnKDRatioChanged;
 
+    // public variables
+    int Kills, Deaths, Headshots;
+
     // private variables
     int _kills;
     int _deaths;
@@ -36,6 +39,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnKillsChanged?.Invoke(this);
             }
+            Kills = kills;
         }
     }
     public int deaths
@@ -51,6 +55,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnDeathsChanged?.Invoke(this);
             }
+            Deaths = deaths;
         }
     }
 
@@ -67,6 +72,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnHeadshotsChanged?.Invoke(this);
             }
+            Headshots = headshots;
         }
     }
 
@@ -96,6 +102,9 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         }
 
         this.OnKillsChanged += this.OnKillsChange;
+        kills = 0;
+        deaths = 0;
+        headshots = 0;
     }
 
     void OnKillsChange(PlayerMultiplayerMatchStats playerMultiplayerStats)

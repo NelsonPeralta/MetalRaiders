@@ -25,7 +25,7 @@ public class ScoreboardManager : MonoBehaviour
 
     private void Start()
     {
-        
+
         scoreboardUIGO.SetActive(false);
     }
 
@@ -36,6 +36,11 @@ public class ScoreboardManager : MonoBehaviour
         {
             scoreboardUIGO.SetActive(true);
             scoreboardOpen = true;
+
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                swarmScoreboard.SetActive(false);
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                multiplayerScoreboard.SetActive(false);
         }
     }
 
@@ -48,36 +53,36 @@ public class ScoreboardManager : MonoBehaviour
     public void UpdateScoreboard()
     {
         DisableAllRows();
-        //multiplayerManager = OnlineMultiplayerManager.multiplayerManagerInstance;
+        MultiplayerManager multiplayerManager = MultiplayerManager.instance;
         //onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
 
-        //if (!multiplayerManager)
-        //    multiplayerManager = FindObjectOfType<OnlineMultiplayerManager>();
+        if (!multiplayerManager)
+            multiplayerManager = FindObjectOfType<MultiplayerManager>();
 
         //if (!onlineSwarmManager)
         //    onlineSwarmManager = FindObjectOfType<OnlineSwarmManager>();
 
-        //if (multiplayerManager)
-        //{
-        //    List<PlayerMultiplayerStats> allPlayersMS = new List<PlayerMultiplayerStats>();
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
+            List<PlayerMultiplayerMatchStats> allPlayersMS = new List<PlayerMultiplayerMatchStats>();
 
-        //    foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
-        //        allPlayersMS.Add(go.GetComponent<PlayerMultiplayerStats>());
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+                allPlayersMS.Add(go.GetComponent<PlayerMultiplayerMatchStats>());
 
-        //    for (int i = 0; i < allPlayersMS.Count; i++)
-        //    {
-        //        scoreboardRows[i].playerNameText.text = allPlayersMS[i].playerName;
-        //        scoreboardRows[i].playerKillsText.text = allPlayersMS[i].kills.ToString();
-        //        scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
-        //        scoreboardRows[i].playerHeadshotsText.text = allPlayersMS[i].headshots.ToString();
-        //        if(allPlayersMS[i].deaths > 0)
-        //            scoreboardRows[i].playerCurrentPointsText.text = (allPlayersMS[i].kills / (float)allPlayersMS[i].deaths).ToString();
-        //        else
-        //            scoreboardRows[i].playerCurrentPointsText.text = "0";
+            for (int i = 0; i < allPlayersMS.Count; i++)
+            {
+                scoreboardRows[i].playerNameText.text = allPlayersMS[i].playerName;
+                scoreboardRows[i].playerKillsText.text = allPlayersMS[i].kills.ToString();
+                scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
+                scoreboardRows[i].playerHeadshotsText.text = allPlayersMS[i].headshots.ToString();
+                if (allPlayersMS[i].deaths > 0)
+                    scoreboardRows[i].playerCurrentPointsText.text = (allPlayersMS[i].kills / (float)allPlayersMS[i].deaths).ToString();
+                else
+                    scoreboardRows[i].playerCurrentPointsText.text = "0";
 
-        //        scoreboardRows[i].gameObject.SetActive(true);
-        //    }
-        //}
+                scoreboardRows[i].gameObject.SetActive(true);
+            }
+        }
         //else if (onlineSwarmManager)
         //{
         //    Debug.Log("In Swarm Scoreboard");

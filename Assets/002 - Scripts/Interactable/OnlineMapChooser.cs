@@ -12,7 +12,7 @@ public class OnlineMapChooser : MonoBehaviour
     {
         if (levelIndex == 0)
             levelIndex = 1;
-        launcherInstance = Launcher.launcherInstance;
+        launcherInstance = Launcher.instance;
     }
 
     public void ChooseThisMap()

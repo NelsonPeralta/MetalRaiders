@@ -275,11 +275,11 @@ public class WebManager : MonoBehaviour
 
                 if (www.downloadHandler.text.Contains("Duplicate"))
                 {
-                    Launcher.launcherInstance.OnCreateRoomFailed(0, "That username already exists");
+                    Launcher.instance.OnCreateRoomFailed(0, "That username already exists");
                 }
                 else
                 {
-                    Launcher.launcherInstance.ShowPlayerMessage("Registered successfully!");
+                    Launcher.instance.ShowPlayerMessage("Registered successfully!");
                 }
             }
         }
@@ -319,14 +319,14 @@ public class WebManager : MonoBehaviour
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(playerDatabaseAdaptor.GetId()));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerDatabaseAdaptor.GetId()));
 
-                    Launcher.launcherInstance.ShowPlayerMessage("Logged in successfully!");
+                    Launcher.instance.ShowPlayerMessage("Logged in successfully!");
                 }
                 catch (Exception e)
                 {
                     Debug.Log(e);
                     if (www.downloadHandler.text.Contains("wrong credentials"))
                     {
-                        Launcher.launcherInstance.OnCreateRoomFailed(0, "Wrong credentials");
+                        Launcher.instance.OnCreateRoomFailed(0, "Wrong credentials");
                     }
                 }
             }
@@ -364,7 +364,7 @@ public class WebManager : MonoBehaviour
                     Debug.Log(e);
                     if (www.downloadHandler.text.Contains("Could not fetch pvp stats"))
                     {
-                        Launcher.launcherInstance.OnCreateRoomFailed(0, "Could not fetch pvp stats");
+                        Launcher.instance.OnCreateRoomFailed(0, "Could not fetch pvp stats");
                     }
                 }
             }
@@ -402,7 +402,7 @@ public class WebManager : MonoBehaviour
                     Debug.Log(e);
                     if (www.downloadHandler.text.Contains("Could not fetch pvp stats"))
                     {
-                        Launcher.launcherInstance.OnCreateRoomFailed(0, "Could not fetch pvp stats");
+                        Launcher.instance.OnCreateRoomFailed(0, "Could not fetch pvp stats");
                     }
                 }
             }
@@ -440,7 +440,7 @@ public class WebManager : MonoBehaviour
                     Debug.Log(e);
                     if (www.downloadHandler.text.Contains("Could not fetch pve stats"))
                     {
-                        Launcher.launcherInstance.OnCreateRoomFailed(0, "Could not fetch pve stats");
+                        Launcher.instance.OnCreateRoomFailed(0, "Could not fetch pve stats");
                     }
                 }
             }

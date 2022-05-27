@@ -43,8 +43,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        Launcher.launcherInstance.OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
-        Launcher.launcherInstance.OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
+        Launcher.instance.OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
+        Launcher.instance.OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
 
         OnSceneLoadedEvent?.Invoke(); // First call when starting the game
     }

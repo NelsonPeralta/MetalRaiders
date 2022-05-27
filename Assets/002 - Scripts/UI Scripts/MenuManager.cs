@@ -13,11 +13,19 @@ public class MenuManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instance)
+        {
+            Debug.Log("There is a MenuManager Instance");
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
         Instance = this;
     }
 
     private void Start()
     {
+        GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
     }
 
@@ -27,10 +35,12 @@ public class MenuManager : MonoBehaviour
         {
             if (menus[i].menuName == menuName)
             {
+                Debug.Log($"Opem {menuName}");
                 menus[i].Open();
             }
             else if (menus[i].open)
             {
+                Debug.Log($"Closing {menuName}");
                 CloseMenu(menus[i]);
             }
         }
@@ -92,7 +102,7 @@ public class MenuManager : MonoBehaviour
             //gameObject.SetActive(false);
         }else
         {
-            Launcher.launcherInstance.ConnectToPhotonMasterServer();
+            Launcher.instance.ConnectToPhotonMasterServer();
             gameObject.SetActive(true);
             OpenMainMenu();
         }

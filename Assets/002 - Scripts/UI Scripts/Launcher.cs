@@ -16,7 +16,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public LauncherEvent OnCreateSwarmRoomButton;
     public LauncherEvent OnCreateMultiplayerRoomButton;
 
-    public static Launcher launcherInstance; // Singleton of the Photon Launcher
+    public static Launcher instance; // Singleton of the Photon Launcher
     public PhotonView PV;
     public int levelToLoadIndex;
 
@@ -61,11 +61,18 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public GameObject playerListItemPrefab
     {
-        get { return _playerListItemPrefab;}
+        get { return _playerListItemPrefab; }
     }
     void Awake()
     {
-        launcherInstance = this;
+        if (instance)
+        {
+            Debug.Log("There is a MenuManager Instance");
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+        instance = this;
     }
 
     public TMP_Text mapSelectedText
@@ -80,6 +87,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         ConnectToPhotonMasterServer();
 
+        GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
     }
 
@@ -111,6 +119,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        if (currentScene.buildIndex > 0) // We are not in the menu
+        {
+            PhotonNetwork.LoadLevel(0);
+        }
+
         if (WebManager.webManagerInstance)
         {
             if (WebManager.webManagerInstance.playerDatabaseAdaptor.PlayerDataIsSet())
@@ -168,6 +183,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
         Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
         Debug.Log(PhotonNetwork.CurrentRoom.Name);
         string roomType = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString() + "_room";
@@ -177,7 +193,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
         roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
-        FindObjectOfType<MainMenuCommunicator>().UpdatePlayerList();
+        FindObjectOfType<MainMenuCaller>().UpdatePlayerList();
 
         Debug.Log($"Is Master Client: {PV.ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
@@ -192,10 +208,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             mapSelector.SetActive(PhotonNetwork.IsMasterClient);
         }
     }
-            Destroy(child.gameObject);
-        }
-
-        for (int i = 0; i < players.Count(); i++)
     //[PunRPC]
     //public void UpdatePlayerList()
     //{
@@ -223,7 +235,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void UpdateNickname() // Deprecated. Used to be used when changing username with a text field and button
     {
         //PhotonNetwork.NickName = nicknameInputField.text;
-        FindObjectOfType<MainMenuCommunicator>().GetComponent<PhotonView>().RPC("UpdatePlayerList", RpcTarget.All);
+        FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdatePlayerList", RpcTarget.All);
     }
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
@@ -257,7 +269,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         commonRoomTexts.SetActive(false);
         PhotonNetwork.LeaveRoom();
-        MenuManager.Instance.OpenMenu("loading");
+        //MenuManager.Instance.OpenMenu("loading");
     }
 
     public void JoinRoom(RoomInfo info)
@@ -293,7 +305,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
-        FindObjectOfType<MainMenuCommunicator>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
+        FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
     }
 
     //[PunRPC]

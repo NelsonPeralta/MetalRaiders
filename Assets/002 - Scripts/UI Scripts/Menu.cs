@@ -15,7 +15,7 @@ public class Menu : MonoBehaviour
 
     private void Start()
     {
-        launcher = Launcher.launcherInstance;
+        launcher = Launcher.instance;
     }
 
     public void Open()
