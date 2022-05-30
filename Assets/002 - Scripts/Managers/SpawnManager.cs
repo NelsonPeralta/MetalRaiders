@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-	public static SpawnManager spawnManagerInstance;
-	public List<SpawnPoint> genericSpawnPoints;
-	void Awake()
-	{
-        if(genericSpawnPoints.Count == 0)
-            foreach (Transform child in transform)
-				if(child.GetComponent<SpawnPoint>())
-					genericSpawnPoints.Add(child.GetComponent<SpawnPoint>());
+    public static SpawnManager spawnManagerInstance;
+    public List<SpawnPoint> genericSpawnPoints;
+    void Awake()
+    {
+        if (genericSpawnPoints.Count == 0)
+
+            foreach (SpawnPoint sp in FindObjectsOfType<SpawnPoint>())
+                genericSpawnPoints.Add(sp);
 
         spawnManagerInstance = this;
-	}
+    }
 
-	public Transform GetGenericSpawnpoint()
-	{
-		return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
-	}
+    public Transform GetGenericSpawnpoint()
+    {
+        return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
+    }
 }

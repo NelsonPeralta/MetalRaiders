@@ -42,7 +42,7 @@ public class PlayerShooting : MonoBehaviourPun
             return;
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
         if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
-            fireInterval = defaultBurstInterval * 5;
+            fireInterval = defaultBurstInterval * 5.5f;
         else
             fireInterval = 1 / (activeWeapon.fireRate / 60f);
 
