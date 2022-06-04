@@ -65,9 +65,16 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-        onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
+        try
+        {
+            onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
+            onlineGameTimeInstance.playerTimerTexts.Add(Timer);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"{name}: {e}");
+        }
 
-        onlineGameTimeInstance.playerTimerTexts.Add(Timer);
 
         headshotIndicator.SetActive(false);
 
