@@ -183,7 +183,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
+        if (!FindObjectOfType<MainMenuCaller>())
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
         Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
         Debug.Log(PhotonNetwork.CurrentRoom.Name);
         string roomType = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString() + "_room";
@@ -195,7 +196,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         FindObjectOfType<MainMenuCaller>().UpdatePlayerList();
 
-        Debug.Log($"Is Master Client: {PV.ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
+        Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         if (mode == "multiplayer")
         {
