@@ -148,7 +148,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             allThirdPersonEquippedWeaponsHolder.SetActive(true);
             foreach (GameObject w in allWeaponsInInventory)
-                w.gameObject.layer = 31;
+                GameManager.SetLayerRecursively(w, 31);
         }
     }
     public void Start()

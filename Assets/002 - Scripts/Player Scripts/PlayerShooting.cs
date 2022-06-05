@@ -13,7 +13,6 @@ public class PlayerShooting : MonoBehaviourPun
     public PlayerController playerController;
     public PlayerInventory pInventory;
     public ThirdPersonScript tPersonController;
-    public GameObjectPool gameObjectPool;
 
     // Private variables
     int playerRewiredID;
@@ -21,10 +20,6 @@ public class PlayerShooting : MonoBehaviourPun
     bool fireButtonDown = false;
     float defaultBurstInterval = 0.08f;
 
-    void Awake()
-    {
-        gameObjectPool = GameObjectPool.gameObjectPoolInstance;
-    }
     private void Start()
     {
         playerController.OnPlayerFire += OnPlayerControllerFire_Delegate;
@@ -102,7 +97,7 @@ public class PlayerShooting : MonoBehaviourPun
                     playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
                 playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
 
-                var bullet = gameObjectPool.SpawnPooledBullet();
+                var bullet = GameObjectPool.gameObjectPoolInstance.SpawnPooledBullet();
                 if (PV.IsMine)
                     bullet.layer = 8;
                 else

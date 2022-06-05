@@ -10,6 +10,13 @@ using UnityEngine.UI;
 
 public class MainMenuCaller : MonoBehaviour
 {
+    public delegate void MainMenuCallerEvent(MainMenuCaller mainMenuCaller);
+    public MainMenuCallerEvent mainMenuCallerCreated;
+    private void Start()
+    {
+        Debug.Log("MainMenuCaller created");
+    }
+
     [PunRPC]
     public void UpdatePlayerList()
     {
