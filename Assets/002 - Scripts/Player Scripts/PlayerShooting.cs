@@ -97,7 +97,7 @@ public class PlayerShooting : MonoBehaviourPun
                     playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
                 playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
 
-                var bullet = GameObjectPool.gameObjectPoolInstance.SpawnPooledBullet();
+                var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
                 if (PV.IsMine)
                     bullet.layer = 8;
                 else

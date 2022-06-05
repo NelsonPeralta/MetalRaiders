@@ -183,6 +183,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        Debug.Log("Joined room");
         if (PhotonNetwork.IsMasterClient)
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
         Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
@@ -193,8 +194,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         commonRoomTexts.SetActive(true);
         MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
         roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
-
-        FindObjectOfType<MainMenuCaller>().UpdatePlayerList();
 
         Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);

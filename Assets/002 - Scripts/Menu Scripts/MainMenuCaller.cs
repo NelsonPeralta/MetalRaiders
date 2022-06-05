@@ -14,7 +14,7 @@ public class MainMenuCaller : MonoBehaviour
     public MainMenuCallerEvent mainMenuCallerCreated;
     private void Start()
     {
-        Debug.Log("MainMenuCaller created");
+        UpdatePlayerList();
     }
 
     [PunRPC]
