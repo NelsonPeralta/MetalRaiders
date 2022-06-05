@@ -42,4 +42,19 @@ public class MainMenuCaller : MonoBehaviour
             Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(index).Replace("Coop - ", "")}";
 
     }
+
+    [PunRPC]
+    void UpdateRoomSettings_RPC(Dictionary<string, string> roomParams)
+    {
+        try
+        {
+            GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), roomParams["gamemode"]);
+            GameManager.instance.multiplayerMode = (GameManager.MultiplayerMode)System.Enum.Parse(typeof(GameManager.MultiplayerMode), roomParams["multiplayermode"]);
+            GameManager.instance.swarmMode = (GameManager.SwarmMode)System.Enum.Parse(typeof(GameManager.SwarmMode), roomParams["swarmmode"]);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"No such gamemode. {e}");
+        }
+    }
 }

@@ -84,32 +84,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         roomParams.Add("multiplayermode", multiplayerMode.ToString());
         roomParams.Add("swarmmode", swarmMode.ToString());
 
-        GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
+        GetComponent<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
     }
-
-    [PunRPC]
-    void UpdateRoomSettings_RPC(Dictionary<string, string> roomParams)
-    {
-        try
-        {
-            instance.gameMode = (GameMode)System.Enum.Parse(typeof(GameMode), roomParams["gamemode"]);
-            instance.multiplayerMode = (MultiplayerMode)System.Enum.Parse(typeof(MultiplayerMode), roomParams["multiplayermode"]);
-            instance.swarmMode = (SwarmMode)System.Enum.Parse(typeof(SwarmMode), roomParams["swarmmode"]);
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning($"No such gamemode. {e}");
-        }
-    }
-
-
-
-
-
-
-
-
-
 
     public Player GetMyPlayer()
     {
