@@ -45,7 +45,7 @@ public class CrosshairManager : MonoBehaviour
     }
     public void UpdateReticule()
     {
-        foreach(Crosshair c in crosshairList)
+        foreach (Crosshair c in crosshairList)
         {
             if (c.weaponReticule != pInventory.activeWeapon.reticuleType)
                 c.gameObject.SetActive(false);
@@ -119,9 +119,9 @@ public class CrosshairManager : MonoBehaviour
 
     public void ActivateRedCrosshair()
     {
-        foreach(Crosshair c in crosshairList)
+        foreach (Crosshair c in crosshairList)
         {
-            if(pInventory.activeWeapon.reticuleType == c.weaponReticule)
+            if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
             {
                 c.redReticuleVersion.SetActive(true);
             }
@@ -132,10 +132,12 @@ public class CrosshairManager : MonoBehaviour
     {
         foreach (Crosshair c in crosshairList)
         {
-            if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
+            try
             {
-                c.redReticuleVersion.SetActive(false);
+                if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
+                    c.redReticuleVersion.SetActive(false);
             }
+            catch { }
         }
     }
     public void FindComponents()

@@ -258,10 +258,8 @@ public class Player : MonoBehaviourPunCallbacks
     private void Start()
     {
         spawnManager = SpawnManager.spawnManagerInstance;
-        playerManager = PlayerManager.playerManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
         weaponPool = WeaponPool.weaponPoolInstance;
-        playerManager.allPlayers.Add(this);
         PV = GetComponent<PhotonView>();
         GetComponent<PlayerUI>().isMineText.text = $"IM: {PV.IsMine}";
         gameObject.name = $"Player ({PV.Owner.NickName}. IM: {PV.IsMine})";

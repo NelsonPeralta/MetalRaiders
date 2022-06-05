@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviourPun
     public ControllerType activeControllerType;
 
     public PhotonView PV;
-    public PlayerManager playerManager;
     public GameObjectPool objectPool;
 
     Quaternion savedCamRotation;
@@ -95,7 +94,6 @@ public class PlayerController : MonoBehaviourPun
     void Awake()
     {
         PV = GetComponent<PhotonView>();
-        playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         OnPlayerTestButton += OnTestButton_Delegate;
     }
     public void Start()
