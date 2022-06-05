@@ -29,10 +29,11 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.5443087, y: 1.07, z: 12.222367}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1925019362958318911}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1566207872658531464
 MeshFilter:
@@ -96,9 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e07e980db0b66d4ea1fbcec10f1fe21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 0}
   weaponPool: {fileID: 0}
   onlineGameTime: {fileID: 0}
+  randomAmmo: 0
   ammoType: small
   Placeholder: {fileID: 1925019362958318910}
   ammoPack: {fileID: 0}
@@ -108,6 +109,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 1566207872658531471}
     m_Modifications:
     - target: {fileID: 5941519958152811868, guid: ceeee44a0fded01489eb0d30486002ba,
@@ -170,7 +172,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8760314604244312847, guid: ceeee44a0fded01489eb0d30486002ba,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6361604448482558589, guid: ceeee44a0fded01489eb0d30486002ba, type: 3}
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ceeee44a0fded01489eb0d30486002ba, type: 3}
 --- !u!1 &1925019362958318910 stripped
 GameObject:
