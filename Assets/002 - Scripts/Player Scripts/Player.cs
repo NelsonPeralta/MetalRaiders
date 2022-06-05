@@ -480,7 +480,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void SpawnRagdoll()
     {
-        var ragdoll = GetComponent<PlayerController>().objectPool.SpawnPooledPlayerRagdoll();
+        var ragdoll = FindObjectOfType<GameObjectPool>().SpawnPooledPlayerRagdoll();
 
         // LAG with the Head and Chest, unknown cause
         //////////////////////////////

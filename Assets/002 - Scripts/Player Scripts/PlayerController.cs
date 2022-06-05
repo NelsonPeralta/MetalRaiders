@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviourPun
     public ControllerType activeControllerType;
 
     public PhotonView PV;
-    public GameObjectPool objectPool;
 
     Quaternion savedCamRotation;
 
@@ -98,7 +97,6 @@ public class PlayerController : MonoBehaviourPun
     }
     public void Start()
     {
-        objectPool = GameObjectPool.gameObjectPoolInstance;
         player = ReInput.players.GetPlayer(playerRewiredID);
 
         if (!PV.IsMine)

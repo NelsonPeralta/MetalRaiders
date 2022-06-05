@@ -237,7 +237,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
             {
                 //hitMessage += $"\n\n---HIT---: {hit.name}";
-                GameObject genericHit = allPlayerScripts.playerController.objectPool.SpawnPooledGenericHit();
+                GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
                 //int iplus = Mathf.Clamp(i + 1, 0, hits.Length - 1); // Both inclusive
                 genericHit.transform.position = finalHitPoint;
                 genericHit.SetActive(true);

@@ -305,7 +305,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
-        FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
+        try
+        {
+            FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
+        }
+        catch { }
     }
 
     //[PunRPC]
