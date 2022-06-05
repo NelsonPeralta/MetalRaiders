@@ -91,7 +91,7 @@ public class PlayerInventory : MonoBehaviourPun
             bool previousValue = _hasAmmoUpgrade;
             _hasAmmoUpgrade = value;
 
-            if(value && !previousValue)
+            if (value && !previousValue)
             {
                 maxSmallAmmo *= 2;
                 maxHeavyAmmo *= 2;
@@ -265,8 +265,7 @@ public class PlayerInventory : MonoBehaviourPun
             if (weaponsEquiped[0].gameObject.activeSelf)
             {
                 //DisableAmmoHUDCounters();
-                if (PV.IsMine)
-                    weaponsEquiped[1].gameObject.SetActive(true);
+                weaponsEquiped[1].gameObject.SetActive(true);
                 weaponsEquiped[0].gameObject.SetActive(false);
 
                 activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
@@ -281,8 +280,7 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 //DisableAmmoHUDCounters();
                 weaponsEquiped[1].gameObject.SetActive(false);
-                if (PV.IsMine)
-                    weaponsEquiped[0].gameObject.SetActive(true);
+                weaponsEquiped[0].gameObject.SetActive(true);
 
                 activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
                 activeWeapIs = 0;
@@ -332,8 +330,7 @@ public class PlayerInventory : MonoBehaviourPun
                     weaponsEquiped[0] = activeWeapon.gameObject;
                     activeWeapIs = 0;
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-                    if (PV.IsMine)
-                        allWeaponsInInventory[i].gameObject.SetActive(true);
+                    allWeaponsInInventory[i].gameObject.SetActive(true);
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
                 else if (allWeaponsInInventory[i].name == StartingWeapon2)

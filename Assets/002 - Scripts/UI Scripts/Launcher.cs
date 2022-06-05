@@ -195,7 +195,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
         roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
-        Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
+        //Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         if (mode == "multiplayer")
         {
