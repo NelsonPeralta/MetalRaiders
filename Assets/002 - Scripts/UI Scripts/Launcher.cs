@@ -183,7 +183,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if (!FindObjectOfType<MainMenuCaller>())
+        if (PhotonNetwork.IsMasterClient)
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
         Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
         Debug.Log(PhotonNetwork.CurrentRoom.Name);

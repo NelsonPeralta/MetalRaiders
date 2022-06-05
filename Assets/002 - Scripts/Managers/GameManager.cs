@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         roomParams.Add("multiplayermode", multiplayerMode.ToString());
         roomParams.Add("swarmmode", swarmMode.ToString());
 
-        GetComponent<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
+        FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
     }
 
     public Player GetMyPlayer()

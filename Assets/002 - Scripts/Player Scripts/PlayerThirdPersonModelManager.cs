@@ -6,8 +6,26 @@ using UnityEngine.SceneManagement;
 public class PlayerThirdPersonModelManager : MonoBehaviour
 {
     public Player player;
+    public ThirdPersonScript humanModel;
+    public ThirdPersonScript spartanModel;
     public List<GameObject> models = new List<GameObject>();
     public List<GameObject> feet = new List<GameObject>();
+
+    private void Awake()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
+            humanModel.gameObject.SetActive(false);
+            spartanModel.EnableSkinnedMeshes();
+            humanModel.DisableSkinnedMeshes();
+        }
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            spartanModel.gameObject.SetActive(false);
+            spartanModel.DisableSkinnedMeshes();
+            humanModel.EnableSkinnedMeshes();
+        }
+    }
 
     private void Start()
     {
