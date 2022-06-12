@@ -71,15 +71,17 @@ public class Movement : MonoBehaviour
     public ThirdPersonScript armorThirdPersonScript;
 
     bool _isMoving;
-    bool isMoving
+    public bool isMoving
     {
-        set
+        get { return _isMoving; }
+        private set
         {
-            if(value && !_isMoving)
+            if (value && !_isMoving)
             {
                 _isMoving = true;
                 OnPlayerStartedMoving?.Invoke(this);
-            }else if(!value && _isMoving)
+            }
+            else if (!value && _isMoving)
             {
                 _isMoving = false;
                 OnPlayerStoppedMoving?.Invoke(this);

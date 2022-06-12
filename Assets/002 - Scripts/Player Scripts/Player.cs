@@ -255,12 +255,20 @@ public class Player : MonoBehaviourPunCallbacks
             needsHealthPack = true;
         }
     }
+
+    string _nickName;
+    public string nickName
+    {
+        get { return _nickName; }
+        private protected set { _nickName = value; }
+    }
     private void Start()
     {
         spawnManager = SpawnManager.spawnManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
         weaponPool = WeaponPool.weaponPoolInstance;
         PV = GetComponent<PhotonView>();
+        _nickName = PV.Owner.NickName;
         GetComponent<PlayerUI>().isMineText.text = $"IM: {PV.IsMine}";
         gameObject.name = $"Player ({PV.Owner.NickName}. IM: {PV.IsMine})";
         //PhotonNetwork.SendRate = 100;

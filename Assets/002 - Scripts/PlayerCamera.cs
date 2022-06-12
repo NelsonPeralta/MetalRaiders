@@ -38,6 +38,20 @@ public class PlayerCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        try
+        {
+            defaultMouseSensitivy = GameManager.instance.camSens;
+            GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
+            GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
+        }
+        catch { }
+
+        try
+        {
+            defaultMouseSensitivy = GameManager.instance.camSens;
+        }
+        catch { }
+
         player = ReInput.players.GetPlayer(playerRewiredID);
         defaultLocalRotation = transform.localRotation;
         mainCamDefaultLocalPosition = mainCam.transform.localPosition;
@@ -68,7 +82,7 @@ public class PlayerCamera : MonoBehaviour
             mouseSensitivity /= 2;
 
         if (pController.isAiming)
-            mouseSensitivity /= 3;
+            mouseSensitivity /= 2;
 
         //if (pProperties.aimAssist.redReticuleIsOn && (pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Custom || pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
         //    mouseSensitivity /= 3;
@@ -227,5 +241,10 @@ public class PlayerCamera : MonoBehaviour
     public void RotateCameraBy(float rotationAmount)
     {
         playerBody.Rotate(Vector3.up * rotationAmount);
+    }
+
+    void OnCameraSensitivityChanged()
+    {
+        defaultMouseSensitivy = GameManager.instance.camSens;
     }
 }

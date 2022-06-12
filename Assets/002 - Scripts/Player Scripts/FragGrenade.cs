@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FragGrenade : MonoBehaviour
 {
+    public float velocity;
+
     [Header("Settings")]
     public float radius = 5.0F;
     public int damage = 100;
@@ -37,20 +39,45 @@ public class FragGrenade : MonoBehaviour
         PlaySound(throwSound);
     }
 
+    private void Update()
+    {
+        try
+        {
+            velocity = GetComponent<Rigidbody>().velocity.magnitude;
+            //Debug.Log(velocity);
+
+            if(hasHitObject)
+                if(GetComponent<Rigidbody>().velocity.magnitude != 10)
+                {
+                    Vector3 dir = GetComponent<Rigidbody>().velocity;
+                    dir.Normalize();
+                    //GetComponent<Rigidbody>().velocity.Normalize();
+                    GetComponent<Rigidbody>().velocity = dir * 10;
+                }
+        }
+        catch
+        {
+
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer != 22 && !hasHitObject) // Non-Interactable Layer
         {
+            hasHitObject = true;
             Debug.Log($"Grenade Collided with: {collision.gameObject.name}");
-            Debug.Log(GetComponent<Rigidbody>().velocity);
+            Debug.Log(GetComponent<Rigidbody>().velocity.magnitude);
             StartCoroutine(ExplosionCountdown());
             PlaySound(impactSound);
+
+            //GetComponent<Rigidbody>().velocity.Normalize();
+            //GetComponent<Rigidbody>().velocity *= 0.5f;
         }
     }
 
     IEnumerator ExplosionCountdown()
     {
-        hasHitObject = true;
         yield return new WaitForSeconds(grenadeTimer);        
         Explosion();
     }

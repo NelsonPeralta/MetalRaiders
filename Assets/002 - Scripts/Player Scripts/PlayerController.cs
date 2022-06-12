@@ -10,7 +10,9 @@ public class PlayerController : MonoBehaviourPun
 {
     // Events
     public delegate void PlayerControllerEvent(PlayerController playerController);
-    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade;
+    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract,
+        OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade,
+        OnCrouchUp, OnCrouchDown;
 
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -397,6 +399,7 @@ public class PlayerController : MonoBehaviourPun
     void EnableCrouch()
     {
         Debug.Log("Crouching");
+        OnCrouchDown?.Invoke(this);
         movement.tPersonScripts.anim.SetBool("Jump", false);
         movement.tPersonScripts.anim.SetBool("Crouch", true);
         isCrouching = true;
@@ -408,6 +411,8 @@ public class PlayerController : MonoBehaviourPun
 
     public void DisableCrouch()
     {
+        OnCrouchUp?.Invoke(this);
+
         movement.tPersonScripts.anim.SetBool("Crouch", false);
         isCrouching = false;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);

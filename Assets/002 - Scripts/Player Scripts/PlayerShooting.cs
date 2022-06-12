@@ -126,6 +126,7 @@ public class PlayerShooting : MonoBehaviourPun
                 rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
 
                 rocket.gameObject.GetComponent<Rocket>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
+                rocket.GetComponent<Rocket>().damage = activeWeapon.damage;
                 GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }
 

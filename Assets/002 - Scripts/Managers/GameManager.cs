@@ -10,11 +10,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     // Events
     public delegate void GameManagerEvent();
-    public GameManagerEvent OnSceneLoadedEvent;
+    public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
-    public enum MultiplayerMode { Deathmatch, Unassgined}
-    public enum SwarmMode { Survival, Unassigned}
+    public enum MultiplayerMode { Deathmatch, Unassgined }
+    public enum SwarmMode { Survival, Unassigned }
 
     // Intances
     public static GameManager instance;
@@ -29,6 +29,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform lightAmmoPack;
     public Transform heavyAmmoPack;
     public Transform powerAmmoPack;
+
+    int _camSens = 100;
+    public int camSens
+    {
+        get { return instance._camSens; }
+        set
+        {
+            int previousValue = instance._camSens;
+
+            if (previousValue != value)
+            {
+                instance._camSens = value;
+                OnCameraSensitivityChanged?.Invoke();
+            }
+        }
+    }
     void Awake()
     {
         if (instance)
@@ -47,6 +63,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         Launcher.instance.OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
 
         OnSceneLoadedEvent?.Invoke(); // First call when starting the game
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            camSens -= 10;
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            camSens += 10;
     }
 
     void OnCreateSwarmRoomButton_Delegate(Launcher launcher)
@@ -89,8 +113,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Player GetMyPlayer()
     {
-        foreach(Player p in FindObjectsOfType<Player>())
-            if(p.GetComponent<PhotonView>().IsMine)
+        foreach (Player p in FindObjectsOfType<Player>())
+            if (p.GetComponent<PhotonView>().IsMine)
                 return p;
         return null;
     }

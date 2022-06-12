@@ -47,6 +47,7 @@ public class PlayerUI : MonoBehaviour
     public Transform bottomLeft;
     public GameObject motionTracker;
     public Text isMineText;
+    public Text camSensWitnessText;
 
     [Header("Bottom Right", order = 6)]
     public Text Timer;
@@ -65,6 +66,13 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        try
+        {
+            camSensWitnessText.text = $"Sens: {GameManager.instance.camSens.ToString()}";
+            GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
+            GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
+        }
+        catch { }
         try
         {
             onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
@@ -107,6 +115,11 @@ public class PlayerUI : MonoBehaviour
     void OnSwarmKillsChanged(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
         // Change the ui using onlinePlayerSwarmScript.kills
+    }
+
+    void OnCameraSensitivityChanged()
+    {
+        camSensWitnessText.text = $"Sens: {GameManager.instance.camSens.ToString()}";
     }
 
     public void ShowHeadshotIndicator()
