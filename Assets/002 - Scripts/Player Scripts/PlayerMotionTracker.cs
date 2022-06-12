@@ -79,7 +79,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
     [PunRPC]
     void HideDot_RPC()
     {
-        friendlyDot.SetActive(true);
-        ennemyDot.SetActive(true);
+        friendlyDot.SetActive(false);
+        ennemyDot.SetActive(false);
     }
 }
