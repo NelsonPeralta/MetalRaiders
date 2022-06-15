@@ -216,13 +216,15 @@ public class Bullet : MonoBehaviourPunCallbacks
                     else if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
                         damage = (int)(damage * 999);
 
+                    if (wProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                        damage = (int)(damage * wProperties.headshotMultiplier);
+
                     wasHeadshot = true;
                     playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
 
                     if (wasHeadshot && player.hitPoints < damage)
                     {
                         wasHeadshot = true;
-                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                         playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
                     }
                 }

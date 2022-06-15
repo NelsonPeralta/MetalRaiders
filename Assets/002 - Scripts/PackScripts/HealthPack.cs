@@ -23,7 +23,7 @@ public class HealthPack : MonoBehaviour
             pProperties = other.gameObject.GetComponent<Player>();
 
             pProperties.hitPoints = pProperties.maxHitPoints;
-            SwarmManager.instance.DisableHealthPack(transform.position);
+            SwarmManager.instance.DisableHealthPack_MasterCall(transform.position);
         }
     }
 }

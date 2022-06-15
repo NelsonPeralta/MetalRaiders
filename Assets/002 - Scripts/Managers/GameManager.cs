@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using System;
 using Photon.Realtime;
+using System.IO;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -87,6 +88,30 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+
+        if (scene.buildIndex > 0) // We're in the game scene
+        {
+            try
+            {
+                Debug.Log($"Master CLient: {PhotonNetwork.MasterClient}");
+                Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["mode"]}");
+                string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+
+                Debug.Log($"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
+                if (!PlayerManager.playerManagerInstance)
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
+                if (!GameObjectPool.gameObjectPoolInstance)
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
+                if (!WeaponPool.weaponPoolInstance)
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineWeaponPool"), Vector3.zero + new Vector3(0, 5, 0), Quaternion.identity);
+                if (!OnlineGameTime.onlineGameTimeInstance)
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
+            }
+            catch
+            {
+
+            }
+        }
         OnSceneLoadedEvent?.Invoke();
     }
 

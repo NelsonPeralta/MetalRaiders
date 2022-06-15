@@ -43,7 +43,7 @@ public class KillFeedManager : MonoBehaviour
     {
         var nkf = Instantiate(killFeedItemPrefab);
         nkf.GetComponent<TMP_Text>().text = $"{feed}";
-        nkf.transform.SetParent(gridLayout.transform);
+        nkf.transform.SetParent(gridLayout.transform, false);
         nkf.transform.SetAsFirstSibling();
         yield return new WaitForSeconds(5);
         Destroy(nkf);

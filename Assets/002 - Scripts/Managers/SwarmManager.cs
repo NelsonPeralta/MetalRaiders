@@ -60,7 +60,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     int _hellhoundsAlive;
     int _tyrantsAlive;
 
-    List<HealthPack> healthPacks = new List<HealthPack>();
+    public List<HealthPack> healthPacks = new List<HealthPack>();
 
     [SerializeField] AudioClip _ambiantMusic;
     [SerializeField] AudioClip _waveSuccessClip;
@@ -191,10 +191,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
     }
 
+    NetworkSwarmManager _networkSwarmManager;
+
     private void Start()
     {
-        PV = GetComponent<PhotonView>();
-
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
 
         OnWaveStart += SpawnAIs_Delegate;
@@ -227,6 +227,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
                 return;
+
+            _networkSwarmManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkSwarmManager"), Vector3.zero, Quaternion.identity).GetComponent<NetworkSwarmManager>();
+            PV = _networkSwarmManager.GetComponent<PhotonView>();
 
             if (GameManager.instance.swarmMode == GameManager.SwarmMode.Survival)
                 maxWave = 999999;
@@ -266,31 +269,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         foreach (Tyrant w in tyrantPool)
             w.gameObject.SetActive(false);
     }
+
     void Begin()
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
-        PV.RPC("Begin_RPC", RpcTarget.All);
+        _networkSwarmManager.GetComponent<PhotonView>().RPC("IncreaseWave_RPC", RpcTarget.All);
     }
 
-    [PunRPC]
-    void Begin_RPC()
-    {
-        Debug.Log("Begin_RPC");
-        // eg: Disable player shields
-
-        IncreaseWave();
-    }
-
-    void IncreaseWave()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        PV.RPC("IncreaseWave_RPC", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void IncreaseWave_RPC()
+    public void IncreaseWave()
     {
         currentWave++;
         CalculateNumberOfAIsForNextWave();
@@ -298,7 +285,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
         OnWaveIncrease?.Invoke(this);
-        StartNewWave();
+        if (PhotonNetwork.IsMasterClient)
+            _networkSwarmManager.GetComponent<PhotonView>().RPC("StartNewWave_RPC", RpcTarget.All);
     }
 
     void CalculateNumberOfAIsForNextWave()
@@ -341,15 +329,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         OnAIsCalculated?.Invoke(this);
     }
 
-    void StartNewWave()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        PV.RPC("StartNewWave_RPC", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void StartNewWave_RPC()
+    public void StartNewWave()
     {
         Debug.Log($"StartNewWave_RPC");
         StartCoroutine(StartNewWave_Coroutine());
@@ -474,14 +454,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 if (!w.gameObject.activeSelf)
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
 
-            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Tyrant.ToString(), pdelay);
+            FindObjectOfType<NetworkSwarmManager>().GetComponent<PhotonView>().RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Tyrant.ToString(), pdelay);
         }
     }
 
     // https://docs.microsoft.com/en-us/dotnet/api/system.func-2?view=net-6.0
     // https://docs.microsoft.com/en-us/dotnet/api/system.action-1?view=net-6.0
-    [PunRPC]
-    void SpawnAi_RPC(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
+    public void SpawnAi(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
         //Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
         StartCoroutine(SpawnAI_Coroutine(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation, aiType, pdelay));
@@ -668,7 +647,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         tyrantsAlive = __tyrantsAlive;
 
         if (watchersLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0 && tyrantsLeft <= 0 && tyrantsAlive <= 0 && zombiesLeft <= 0 && zombiesAlive <= 0)
-            EndWave();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                Debug.Log("Swarm Manager EndWave");
+                _networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
+            }
     }
 
     public void Invoke_OnAiDeath() // Called multiple times on an ai death. TODO: Find independant solution
@@ -676,16 +659,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         Debug.Log("Swarm Manager OnAiDeath");
         OnAiDeath?.Invoke(this);
     }
-    void EndWave()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        Debug.Log("Swarm Manager EndWave");
-        PV.RPC("EndWave_RPC", RpcTarget.All);
-    }
 
-    [PunRPC]
-    void EndWave_RPC()
+    public void EndWave()
     {
         Debug.Log("EndWave_RPC");
         nextWaveDelay = FindObjectsOfType<Player>().Length * 10;
@@ -710,17 +685,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
         foreach (Player p in FindObjectsOfType<Player>())
             p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
-        RespawnHealthPacks();
+        RespawnHealthPacks_MasterCall();
     }
 
-    void RespawnHealthPacks()
+    void RespawnHealthPacks_MasterCall()
     {
         if (PhotonNetwork.IsMasterClient)
-            PV.RPC("RespawnHealthPacks_RPC", RpcTarget.All);
+            _networkSwarmManager.GetComponent<PhotonView>().RPC("RespawnHealthPacks_RPC", RpcTarget.All);
     }
 
-    [PunRPC]
-    void RespawnHealthPacks_RPC()
+    public void RespawnHealthPacks()
     {
         Debug.Log("Respawn Health Packs RPC");
         if (currentWave % 5 == 0)
@@ -752,13 +726,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         return PhotonView.Find(GetRandomPlayerPhotonId()).transform;
     }
 
-    public void RespawnHealthPack(Vector3 hpPosition, int time)
+    public void RespawnHealthPack_MasterCall(Vector3 hpPosition, int time)
     {
-        PV.RPC("RespawnHealthPack_RPC", RpcTarget.All, hpPosition, time);
+        _networkSwarmManager.GetComponent<PhotonView>().RPC("RespawnHealthPack_RPC", RpcTarget.All, hpPosition, time);
     }
 
-    [PunRPC]
-    void RespawnHealthPack_RPC(Vector3 hpPosition, int time)
+    public void RespawnHealthPack(Vector3 hpPosition, int time)
     {
         StartCoroutine(RespawnHealthPack_Coroutine(hpPosition, time));
     }
@@ -772,13 +745,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 hp.gameObject.SetActive(true);
     }
 
-    public void DisableHealthPack(Vector3 hpPosition)
+    public void DisableHealthPack_MasterCall(Vector3 hpPosition)
     {
-        PV.RPC("DisableHealthPack_RPC", RpcTarget.All, hpPosition);
+        _networkSwarmManager.GetComponent<PhotonView>().RPC("DisableHealthPack_RPC", RpcTarget.All, hpPosition);
     }
 
-    [PunRPC]
-    void DisableHealthPack_RPC(Vector3 hpPosition)
+    public void DisableHealthPack(Vector3 hpPosition)
     {
         foreach (HealthPack hp in healthPacks)
             if (hp.transform.position == hpPosition)
@@ -802,11 +774,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.IsMasterClient)
             return;
-        PV.RPC("DropRandomLoot_RPC", RpcTarget.All, ammoType, position, rotation);
+        _networkSwarmManager.GetComponent<PhotonView>().RPC("DropRandomLoot_RPC", RpcTarget.All, ammoType, position, rotation);
     }
 
-    [PunRPC]
-    void DropRandomLoot_RPC(string ammotype, Vector3 position, Quaternion rotation)
+    public void DropRandomLoot(string ammotype, Vector3 position, Quaternion rotation)
     {
         Debug.Log($"{name} spawned random loot {ammotype}");
         GameObject loot = GameManager.instance.lightAmmoPack.gameObject;

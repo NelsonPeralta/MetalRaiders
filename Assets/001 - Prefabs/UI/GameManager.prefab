@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1016061319836381584}
   - component: {fileID: 2837782313116000565}
-  - component: {fileID: 1016061319836381599}
   - component: {fileID: 5826279401363352821}
   m_Layer: 0
   m_Name: GameManager
@@ -57,18 +56,6 @@ MonoBehaviour:
     type: 3}
   powerAmmoPack: {fileID: 2352401233832416904, guid: c663879745f57484fa4eb19b0bf1b8eb,
     type: 3}
---- !u!114 &1016061319836381599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1016061319836381598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 647e8b511d2c95b45bf0c9487b1c340e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5826279401363352821
 MonoBehaviour:
   m_ObjectHideFlags: 0
