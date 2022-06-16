@@ -33,7 +33,7 @@ public class NetworkSwarmManager : MonoBehaviourPun
     [PunRPC]
     void SpawnAi_RPC(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
-        //Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
+        Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
         swarmManager.SpawnAi(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation, aiType, pdelay);
     }
 

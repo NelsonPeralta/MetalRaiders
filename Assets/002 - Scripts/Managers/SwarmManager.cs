@@ -191,18 +191,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
     }
 
-    NetworkSwarmManager _networkSwarmManager;
-
     private void Start()
     {
+        GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
-
-        OnWaveStart += SpawnAIs_Delegate;
-        OnAiDeath += OnAiDeath_Delegate;
-        OnWaveEnd += OnWaveEnd_Delegate;
-
-        CreateAIPool();
     }
+
+    NetworkSwarmManager _networkSwarmManager;
 
     private void Update()
     {
@@ -236,6 +231,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             foreach (HealthPack h in FindObjectsOfType<HealthPack>())
                 healthPacks.Add(h);
+
+            OnWaveStart -= SpawnAIs_Delegate;
+            OnWaveStart += SpawnAIs_Delegate;
+            OnAiDeath -= OnAiDeath_Delegate;
+            OnAiDeath += OnAiDeath_Delegate;
+            OnWaveEnd -= OnWaveEnd_Delegate;
+            OnWaveEnd += OnWaveEnd_Delegate;
+
+            CreateAIPool();
         }
         else // We are in the menu
         {
@@ -248,6 +252,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void CreateAIPool()
     {
+        Debug.Log("Creating AI Pool");
         zombiePool = FindObjectsOfType<Zombie>();
         foreach (Zombie w in zombiePool)
             w.gameObject.SetActive(false);
