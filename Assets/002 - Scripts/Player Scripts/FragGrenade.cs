@@ -46,8 +46,8 @@ public class FragGrenade : MonoBehaviour
             velocity = GetComponent<Rigidbody>().velocity.magnitude;
             //Debug.Log(velocity);
 
-            if(hasHitObject)
-                if(GetComponent<Rigidbody>().velocity.magnitude != 10)
+            if (hasHitObject)
+                if (GetComponent<Rigidbody>().velocity.magnitude != 10)
                 {
                     Vector3 dir = GetComponent<Rigidbody>().velocity;
                     dir.Normalize();
@@ -78,7 +78,7 @@ public class FragGrenade : MonoBehaviour
 
     IEnumerator ExplosionCountdown()
     {
-        yield return new WaitForSeconds(grenadeTimer);        
+        yield return new WaitForSeconds(grenadeTimer);
         Explosion();
     }
 
@@ -108,13 +108,15 @@ public class FragGrenade : MonoBehaviour
                 GameObject playerHit = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 if (!objectsHit.Contains(playerHit))
                 {
+                    Player player = hit.GetComponent<PlayerHitbox>().player;
                     objectsHit.Add(playerHit);
                     float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
+
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID, damageSource : "fraggrenade");
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)

@@ -706,10 +706,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             int livesToAdd = FindObjectsOfType<Player>().Length;
             livesLeft += livesToAdd;
-            foreach (PlayerUI p in FindObjectsOfType<PlayerUI>())
+            foreach (KillFeedManager p in FindObjectsOfType<KillFeedManager>())
             {
-                p.killFeedManager.EnterNewFeed($"Lives added: {livesToAdd}");
-                p.killFeedManager.EnterNewFeed("Health Packs Respawned");
+                p.EnterNewFeed($"Lives added: {livesToAdd}");
+                p.EnterNewFeed("Health Packs Respawned");
             }
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)

@@ -315,12 +315,12 @@ public class Player : MonoBehaviourPunCallbacks
             return false;
         return true;
     }
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null)
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null)
     {
         if (hitPoints <= 0 || isDead || isRespawning)
             return;
 
-        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos);
+        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
         //if (!PhotonNetwork.IsMasterClient)
         //    return;
@@ -328,10 +328,23 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null)
+    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null)
     {
+        int damage = (int)(hitPoints - _newHealth);
         if (PV.IsMine)
+        {
             allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
+
+            if (damageSource != null && damageSource.Contains("grenade"))
+            {
+                KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
+                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
+
+                killFeedManager.EnterNewFeed($"You took {damage} <sprite={damageSourceSpriteCode} color={colorCode}> damage");
+            }
+
+        }
         try
         {
             this.impactPos = (Vector3)impactPos;
@@ -366,6 +379,76 @@ public class Player : MonoBehaviourPunCallbacks
                 MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoShotThisPlayerPhotonId, PV.ViewID, wasHeadshot));
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
+
+            string sourcePlayerName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).nickName;
+
+            int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
+            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+            {
+                if (sourcePlayerName != nickName)
+                {
+                    string feed = $"{sourcePlayerName} killed";
+                    if (kfm.GetComponent<Player>() != this)
+                    {
+                        if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
+                        {
+                            try
+                            {
+                                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                                feed = $"You <sprite={damageSourceSpriteCode}>";
+                                if (wasHeadshot)
+                                    feed += $"<sprite={hsCode}>";
+                                feed += $" <color=\"red\">{nickName}";
+                                kfm.EnterNewFeed(feed);
+                            }
+                            catch
+                            {
+                                kfm.EnterNewFeed($"You killed {sourcePlayerName}");
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                                feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+                                if(wasHeadshot)
+                                    feed += $"<sprite={hsCode}>";
+
+                                feed += $" <color=\"red\">{nickName}";
+                                kfm.EnterNewFeed(feed);
+                            }
+                            catch
+                            {
+                                kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                            feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+                            if (wasHeadshot)
+                                feed += $"<sprite={hsCode}>";
+
+                            feed += $" you";
+                            kfm.EnterNewFeed(feed);
+                        }
+                        catch
+                        {
+                            kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed you");
+                        }
+                    }
+                }
+                else
+                {
+                    kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+                }
+            }
         }
     }
     void HitPointsRecharge()

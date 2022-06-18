@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public AllPlayerScripts allPlayerScripts;
     public Player playerWhoShot;
     public PlayerInventory pInventory;
-    public WeaponProperties wProperties;
+    public WeaponProperties weaponProperties;
     public Zombie zScript;
     public CrosshairManager crosshairScript;
     public GameObjectPool gameObjectPool;
@@ -73,7 +73,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         damageDealt = false;
         GetBulletInfo();
 
-        if (crosshairScript && wProperties)
+        if (crosshairScript && weaponProperties)
             if (!crosshairScript.RRisActive)
             {
                 //if (wProperties.weaponType == "Shotgun")
@@ -178,11 +178,11 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
                 int finalDamage = damage;
-                if (hitbox.isHead && wProperties.isHeadshotCapable)
+                if (hitbox.isHead && weaponProperties.isHeadshotCapable)
                 {
                     //Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
                     playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
-                    finalDamage = (int)(wProperties.headshotMultiplier * damage);
+                    finalDamage = (int)(weaponProperties.headshotMultiplier * damage);
 
                     if (hitbox.aiAbstractClass.health <= finalDamage)
                         playerWhoShot.GetComponent<PlayerSwarmMatchStats>().headshots++;
@@ -207,17 +207,17 @@ public class Bullet : MonoBehaviourPunCallbacks
                 PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
                 Player player = hitbox.player.GetComponent<Player>();
                 bool wasHeadshot = false;
-                if (hitbox.isHead && wProperties.isHeadshotCapable)
+                if (hitbox.isHead && weaponProperties.isHeadshotCapable)
                 {
                     int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
                     if (maxShieldPoints <= 0)
-                        damage = (int)(damage * wProperties.headshotMultiplier);
+                        damage = (int)(damage * weaponProperties.headshotMultiplier);
                     else if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
                         damage = (int)(damage * 999);
 
-                    if (wProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
-                        damage = (int)(damage * wProperties.headshotMultiplier);
+                    if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                        damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                     wasHeadshot = true;
                     playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
@@ -231,7 +231,12 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                 if (playerWhoShot.PV.IsMine)
                 {
-                    player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint);
+                    if (weaponProperties.codeName != null)
+                    {
+                        player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName);
+                    }
+                    else
+                        player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint);
                 }
 
                 damageDealt = true;
@@ -266,12 +271,12 @@ public class Bullet : MonoBehaviourPunCallbacks
     {
         if (playerWhoShot)
             if (!playerWhoShot.GetComponent<PlayerController>().isDualWielding)
-                wProperties = pInventory.activeWeapon.gameObject.GetComponent<WeaponProperties>();
-        if (wProperties)
+                weaponProperties = pInventory.activeWeapon.gameObject.GetComponent<WeaponProperties>();
+        if (weaponProperties)
         {
-            damage = wProperties.damage;
-            size = wProperties.bulletSize;
-            bulletSpeed = wProperties.bulletSpeed;
+            damage = weaponProperties.damage;
+            size = weaponProperties.bulletSize;
+            bulletSpeed = weaponProperties.bulletSpeed;
             //Debug.Log(wProperties.gameObject.name);
             //Debug.Log(wProperties.damage);
             //Debug.Log(wProperties.bulletSpeed);
@@ -280,7 +285,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             isHeadshotCapable = false;
             canBleedthroughHeadshot = false;
             canBleedthroughAnything = false;
-            if (wProperties.isHeadshotCapable)
+            if (weaponProperties.isHeadshotCapable)
             {
                 isNormalBullet = false;
                 isHeadshotCapable = true;

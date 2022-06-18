@@ -61,7 +61,6 @@ public class PlayerUI : MonoBehaviour
     [Header("General", order = 7)]
     public GameObject singlePlayerPauseMenu;
     public GameObject splitScreenPauseMenu;
-    public KillFeedManager killFeedManager;
     public PlayerDebuggerOnUI PlayerDebuggerOnUI;
 
     private void Start()

@@ -68,15 +68,21 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         if (winningPlayerMS != losingPlayerMS)
         {
             winningPlayerMS.AddKill();
-            foreach (Player pp in allPlayers)
-                if (pp.PV.IsMine && pp)
-                    pp.allPlayerScripts.killFeedManager.EnterNewFeed(winningPlayerMS.playerName, losingPlayerMS.playerName, struc.headshot);
+            //foreach (Player pp in allPlayers)
+            //    if (pp.PV.IsMine && pp)
+            //    {
+            //        KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
+            //        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+            //        string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
+
+            //        killFeedManager.EnterNewFeed($"You took {damage} <sprite={damageSourceSpriteCode} color={colorCode}> damage");
+            //    }
         }
         else
         {
-            foreach (Player pp in allPlayers)
-                if (pp.PV.IsMine && pp)
-                    pp.allPlayerScripts.killFeedManager.EnterNewFeed($"{losingPlayerMS.playerName} committed suicide");
+            //foreach (Player pp in allPlayers)
+            //    if (pp.PV.IsMine && pp)
+            //        pp.allPlayerScripts.killFeedManager.EnterNewFeed($"{losingPlayerMS.playerName} committed suicide");
         }
         losingPlayerMS.AddDeath();
 

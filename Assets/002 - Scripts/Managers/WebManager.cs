@@ -113,7 +113,7 @@ public class WebManager : MonoBehaviour
             newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level + 1;
 
         //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"Player Id: {playerId}. New Xp: {newXp}. New Credits: {newCredits}");
-        GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"Gained {xpAndCreditGain} Xp and Credits");
+        GameManager.instance.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Gained {xpAndCreditGain} Xp and Credits");
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveBasicOnlineStats");

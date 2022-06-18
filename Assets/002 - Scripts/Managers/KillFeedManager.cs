@@ -6,6 +6,10 @@ using TMPro;
 
 public class KillFeedManager : MonoBehaviour
 {
+    public static Dictionary<string, string> killFeedColorCodeDict = new Dictionary<string, string>();
+    public static Dictionary<string, int> killFeedWeaponCodeDict = new Dictionary<string, int>();
+    public static Dictionary<string, int> killFeedSpecialCodeDict = new Dictionary<string, int>();
+
     [Header("Components")]
     public GridLayoutGroup gridLayout;
 
@@ -14,11 +18,42 @@ public class KillFeedManager : MonoBehaviour
 
     private void Start()
     {
-    }
+        killFeedColorCodeDict.Add("green", "#06FF00");
+        killFeedColorCodeDict.Add("blue", "#00B0FF");
+        killFeedColorCodeDict.Add("purple", "#FF00B0");
+        killFeedColorCodeDict.Add("orange", "#FF9000");
+        killFeedColorCodeDict.Add("red", "#FF0000");
+        killFeedColorCodeDict.Add("yellow", "#FFFB00");
 
-    public void EnterNewFeed(string playerWhoGotKillName, string playerWhoWasKilledName, bool wasHeadshot)
-    {
-        StartCoroutine(SpawnNewFeed_Coroutine(playerWhoGotKillName, playerWhoWasKilledName, wasHeadshot));
+
+        killFeedWeaponCodeDict.Add("m1911", 8);
+        killFeedWeaponCodeDict.Add("colt", 20);
+        killFeedWeaponCodeDict.Add("mp5", 13);
+
+        killFeedWeaponCodeDict.Add("m4", 4);
+        killFeedWeaponCodeDict.Add("ak47", 3);
+        killFeedWeaponCodeDict.Add("m16", 21);
+        killFeedWeaponCodeDict.Add("scar", 8);
+        killFeedWeaponCodeDict.Add("patriot", 19);
+        killFeedWeaponCodeDict.Add("m249", 15);
+
+        killFeedWeaponCodeDict.Add("m1100", 6);
+        killFeedWeaponCodeDict.Add("r700", 17);
+        killFeedWeaponCodeDict.Add("barrett50cal", 18);
+        killFeedWeaponCodeDict.Add("rpg", 5);
+
+        killFeedWeaponCodeDict.Add("fraggrenade", 24);
+        killFeedWeaponCodeDict.Add("stickygrenade", 28);
+
+
+
+        killFeedSpecialCodeDict.Add("melee", 22);
+        killFeedSpecialCodeDict.Add("headshot", 23);
+
+
+
+        GetComponent<PlayerController>().OnPlayerTestButton -= OnTestButton_Delegate;
+        GetComponent<PlayerController>().OnPlayerTestButton += OnTestButton_Delegate;
     }
 
     public void EnterNewFeed(string feed)
@@ -47,5 +82,10 @@ public class KillFeedManager : MonoBehaviour
         nkf.transform.SetAsFirstSibling();
         yield return new WaitForSeconds(5);
         Destroy(nkf);
+    }
+
+    void OnTestButton_Delegate(PlayerController playerController)
+    {
+        EnterNewFeed($"Player 123 Killed Player 123 <sprite=0 color=#FF00B0>");
     }
 }

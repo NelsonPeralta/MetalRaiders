@@ -16,8 +16,8 @@ public class WeaponProperties : MonoBehaviour
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
     [Header("Weapon Info")]
-    public string weaponName; // Used for scripting purposes
-    public string weaponCleanName; // Used for UI purposes
+    public string codeName; // Used for scripting purposes
+    public string cleanName; // Used for UI purposes
     public ReticuleType reticuleType;
     public FiringMode firingMode;
     public int damage = 50;
@@ -159,8 +159,8 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Info", EditorStyles.boldLabel);
-        wp.weaponName = EditorGUILayout.TextField("Weapon Identity:", wp.weaponName);
-        wp.weaponCleanName = EditorGUILayout.TextField("Weapon Name:", wp.weaponCleanName);
+        wp.codeName = EditorGUILayout.TextField("Code Name:", wp.codeName);
+        wp.cleanName = EditorGUILayout.TextField("Clean Name:", wp.cleanName);
         wp.fireRate = EditorGUILayout.IntField("Fire Rate:", wp.fireRate);
         wp.reticuleType = (WeaponProperties.ReticuleType)EditorGUILayout.EnumPopup("Reticule Type", wp.reticuleType);
         wp.firingMode = (WeaponProperties.FiringMode)EditorGUILayout.EnumPopup("Firing mode", wp.firingMode);
