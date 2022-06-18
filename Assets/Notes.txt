@@ -1,0 +1,4 @@
+TMP Rich Text: http://digitalnativestudios.com/textmeshpro/docs/rich-text/#sprite
+Player 123 Killed Player 123 <sprite=0 color=#FF00B0>
+
+GetComponentsInChildren
