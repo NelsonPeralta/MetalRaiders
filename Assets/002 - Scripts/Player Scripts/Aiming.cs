@@ -13,13 +13,14 @@ public class Aiming : MonoBehaviour
     public AudioClip aim;
 
     private bool hasFoundComponents = false;
-    
+
 
     public void Update()
     {
         if (pController.isAiming == true)
         {
-            aimingBG.SetActive(true);
+            if (pController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
+                aimingBG.SetActive(true);
         }
 
         if (pController.isAiming == false)

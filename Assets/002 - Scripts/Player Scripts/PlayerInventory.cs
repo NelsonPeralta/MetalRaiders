@@ -168,6 +168,11 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
+            maxSmallAmmo *= 2;
+            maxHeavyAmmo *= 2;
+            maxPowerAmmo *= 2;
+            maxGrenades *= 2;
+
             smallAmmo = maxSmallAmmo;
             heavyAmmo = maxHeavyAmmo;
             powerAmmo = maxPowerAmmo;

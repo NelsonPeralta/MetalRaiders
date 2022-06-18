@@ -12,6 +12,7 @@ public class WeaponProperties : MonoBehaviour
     public enum AmmoType { Heavy, Light, Power }
     public enum AmmoReloadType { Magazine, Shell, Single }
     public enum AmmoProjectileType { Bullet, Grenade, Rocket }
+    public enum AimingMechanic { None, Zoom, Scope}
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
     [Header("Weapon Info")]
@@ -40,7 +41,7 @@ public class WeaponProperties : MonoBehaviour
     public float currentRedReticuleRange;
 
     [Header("Aiming")]
-    public bool canScopeIn;
+    public AimingMechanic aimingMechanic;
     public float scopeFov;
     public float scopeRRR;
     public bool isHeadshotCapable;
@@ -191,9 +192,9 @@ public class WeaponPropertiesEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Aiming", EditorStyles.boldLabel);
         wp.defaultRedReticuleRange = EditorGUILayout.FloatField("Default RRR:", wp.defaultRedReticuleRange);
-        wp.canScopeIn = GUILayout.Toggle(wp.canScopeIn, "Can scope in");
+        wp.aimingMechanic = (WeaponProperties.AimingMechanic)EditorGUILayout.EnumPopup("Aiming mechanic", wp.aimingMechanic);
 
-        if (wp.canScopeIn)
+        if (wp.aimingMechanic != WeaponProperties.AimingMechanic.None)
         {
             wp.scopeFov = EditorGUILayout.FloatField("Scope FOV:", wp.scopeFov);
             wp.scopeRRR = EditorGUILayout.FloatField("Scope RRR:", wp.scopeRRR);

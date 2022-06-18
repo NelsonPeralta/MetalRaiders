@@ -319,13 +319,16 @@ public class PlayerController : MonoBehaviourPun
 
         if (player.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
         {
-            if (wProperties.canScopeIn)
+            if (wProperties.aimingMechanic != WeaponProperties.AimingMechanic.None)
             {
                 if (isAiming == false)
                 {
                     isAiming = true;
                     mainCam.fieldOfView = wProperties.scopeFov;
-                    gunCam.enabled = false;
+                    if (wProperties.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
+                        gunCam.enabled = false;
+                    else
+                        gunCam.fieldOfView = wProperties.scopeFov;
 
                     allPlayerScripts.aimingScript.playAimSound();
                 }
@@ -335,14 +338,11 @@ public class PlayerController : MonoBehaviourPun
                     mainCam.fieldOfView = GetComponent<Player>().defaultFov;
                     camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
                     gunCam.enabled = true;
+                    gunCam.fieldOfView = 60;
 
                     allPlayerScripts.aimingScript.playAimSound();
                 }
-
-
-
             }
-
         }
     }
     public void ScopeOut()
@@ -352,6 +352,7 @@ public class PlayerController : MonoBehaviourPun
         Debug.Log("Unscope Script");
         isAiming = false;
         mainCam.fieldOfView = GetComponent<Player>().defaultFov;
+        gunCam.fieldOfView = 60;
         camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
         allPlayerScripts.aimingScript.playAimSound();
 

@@ -81,7 +81,7 @@ public class CommonFiringActions : MonoBehaviour
 
     public void SpawnMuzzleflash()
     {
-        if (playerController.isAiming)
+        if (playerController.isAiming && playerController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
             return;
         StartCoroutine(SpawnMuzzleflash_Coroutine());
     }

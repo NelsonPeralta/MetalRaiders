@@ -10,7 +10,7 @@ public class SpawnManager : MonoBehaviour
     {
         if (genericSpawnPoints.Count == 0)
 
-            foreach (SpawnPoint sp in FindObjectsOfType<SpawnPoint>())
+            foreach (SpawnPoint sp in GetComponentsInChildren<SpawnPoint>())
                 genericSpawnPoints.Add(sp);
 
         spawnManagerInstance = this;
