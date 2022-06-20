@@ -44,10 +44,8 @@ public class KillFeedManager : MonoBehaviour
 
         killFeedWeaponCodeDict.Add("fraggrenade", 24);
         killFeedWeaponCodeDict.Add("stickygrenade", 28);
+        killFeedWeaponCodeDict.Add("melee", 22);
 
-
-
-        killFeedSpecialCodeDict.Add("melee", 22);
         killFeedSpecialCodeDict.Add("headshot", 23);
 
 

@@ -178,7 +178,8 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
                 int finalDamage = damage;
-                if (hitbox.isHead && weaponProperties.isHeadshotCapable)
+                bool isHeadshot = hitbox.isHead && weaponProperties.isHeadshotCapable;
+                if (isHeadshot)
                 {
                     //Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
                     playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
@@ -191,7 +192,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 if (playerWhoShot.PV.IsMine)
                 {
                     //Debug.Log($"AI is dead: {hitbox.aiAbstractClass.isDead}");
-                    hitbox.aiAbstractClass.Damage(finalDamage, playerWhoShot.PV.ViewID);
+                    hitbox.aiAbstractClass.Damage(finalDamage, playerWhoShot.PV.ViewID, isHeadshot: isHeadshot, damageSource: weaponProperties.codeName);
                 }
 
                 GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();

@@ -502,9 +502,68 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         photonView.RPC("ChangeAction_RPC", RpcTarget.All, actionString);
     }
+
+    protected void SpawnKillFeed(string className, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    {
+        Player player = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        string nickName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI).nickName;
+
+        int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
+        string weaponColorCode = player.playerInventory.activeWeapon.ammoType.ToString().ToLower();
+
+        string colorCode = "";
+
+        if (className == "Watcher")
+            colorCode = KillFeedManager.killFeedColorCodeDict["green"];
+        if (className == "Knight")
+            colorCode = KillFeedManager.killFeedColorCodeDict["blue"];
+        if (className == "Tyant")
+            colorCode = KillFeedManager.killFeedColorCodeDict["purple"];
+
+        foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+        {
+            string feed = $"{nickName} killed";
+            if (kfm.GetComponent<Player>() == this)
+            {
+                try
+                {
+                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                    feed = $"You <sprite={damageSourceSpriteCode}>";
+
+                    if (isHeadshot)
+                        feed += $"<sprite={hsCode}>";
+
+                    feed += $" <color={colorCode}>{className}";
+                    kfm.EnterNewFeed(feed);
+                }
+                catch
+                {
+                    kfm.EnterNewFeed($"You killed a <color={colorCode}>{className}");
+                }
+            }
+            else
+            {
+                try
+                {
+                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                    feed = $"{nickName} <sprite={damageSourceSpriteCode}>";
+
+                    if (isHeadshot)
+                        feed += $"<sprite={hsCode}>";
+
+                    feed += $" <color={colorCode}>{className}";
+                    kfm.EnterNewFeed(feed);
+                }
+                catch
+                {
+                    kfm.EnterNewFeed($"{nickName} killed a <color={colorCode}>{className}");
+                }
+            }
+        }
+    }
     public abstract void ChangeAction_RPC(string actionString);
-    public abstract void Damage(int damage, int playerWhoShotPDI);
-    public abstract void Damage_RPC(int damage, int playerWhoShotPDI);
+    public abstract void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
+    public abstract void Damage_RPC(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
     public abstract void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass);

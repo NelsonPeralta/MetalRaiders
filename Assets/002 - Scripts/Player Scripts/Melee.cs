@@ -6,7 +6,7 @@ using Photon.Pun;
 public class Melee : MonoBehaviour
 {
     public PlayerController pController;
-    public Player pProperties;
+    public Player player;
 
     [Header("Players in Melee Zone")]
     public List<Player> playersInMeleeZone;
@@ -22,8 +22,32 @@ public class Melee : MonoBehaviour
 
     private void Start()
     {
+        player.OnPlayerDeath -= OnPlayerDeadth_Delegate;
+        player.OnPlayerDeath += OnPlayerDeadth_Delegate;
+
         meleeIndicator.SetActive(false);
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (!other.GetComponent<Player>() || this.player.isDead || this.player.isRespawning)
+            return;
+
+        Player player = (Player)other.GetComponent<Player>();
+
+        if (!playersInMeleeZone.Contains(player) && player != this.player)
+            playersInMeleeZone.Add(player);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        try
+        {
+            playersInMeleeZone.Remove(other.GetComponent<Player>());
+        }
+        catch { }
+    }
+
     public void Knife()
     {
 
@@ -34,41 +58,17 @@ public class Melee : MonoBehaviour
             for (int i = 0; i < playersInMeleeZone.Count; i++)
             {
                 Player playerToDamage = playersInMeleeZone[i];
-                if (playerToDamage.hitPoints < pProperties.meleeDamage)
-                    RemoveCorrespondingPlayer(playerToDamage.gameObject);
+                if (playerToDamage.hitPoints < player.meleeDamage)
+                    playersInMeleeZone.Remove(playerToDamage);
 
-                playerToDamage.Damage((int)pProperties.meleeDamage, false, pProperties.GetComponent<PhotonView>().ViewID);
+                playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee");
             }
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnPlayerDeadth_Delegate(Player player)
     {
-        RemoveNullIndexes();
-        if (other.GetComponent<Player>() && other.gameObject != pProperties.gameObject)
-            playersInMeleeZone.Add(other.GetComponent<Player>());
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        RemoveCorrespondingPlayer(other.gameObject);
-        RemoveNullIndexes();
-    }
-
-    void RemoveCorrespondingPlayer(GameObject playerGameObject)
-    {
-        if (!playerGameObject)
-            return;
-        for (int i = 0; i < playersInMeleeZone.Count; i++)
-            if (playersInMeleeZone[i].gameObject && playersInMeleeZone[i].gameObject == playerGameObject)
-                playersInMeleeZone[i] = null;
-    }
-
-    void RemoveNullIndexes()
-    {
-        for (int i = 0; i < playersInMeleeZone.Count; i++)
-            if (!playersInMeleeZone[i])
-                playersInMeleeZone.RemoveAt(i);
+        playersInMeleeZone.Clear();
     }
 
     IEnumerator EnableMeleeIndicator()

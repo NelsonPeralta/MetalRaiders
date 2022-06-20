@@ -335,15 +335,23 @@ public class Player : MonoBehaviourPunCallbacks
         {
             allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
 
-            if (damageSource != null && damageSource.Contains("grenade"))
+            try
             {
                 KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
                 int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
 
-                killFeedManager.EnterNewFeed($"You took {damage} <sprite={damageSourceSpriteCode} color={colorCode}> damage");
+                if (damageSource.Contains("grenade"))
+                {
+                    string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
+                    killFeedManager.EnterNewFeed($"You took {damage} <sprite={damageSourceSpriteCode} color={colorCode}> damage");
+                }
+                else if (damageSource.Contains("melee"))
+                {
+                    string colorCode = KillFeedManager.killFeedColorCodeDict["yellow"];
+                    killFeedManager.EnterNewFeed($"You took {meleeDamage} <sprite={damageSourceSpriteCode} color={colorCode}> damage");
+                }
             }
-
+            catch { }
         }
         try
         {
@@ -383,6 +391,8 @@ public class Player : MonoBehaviourPunCallbacks
             string sourcePlayerName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).nickName;
 
             int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
+            string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
+
             foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
             {
                 if (sourcePlayerName != nickName)
@@ -396,8 +406,10 @@ public class Player : MonoBehaviourPunCallbacks
                             {
                                 int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
                                 feed = $"You <sprite={damageSourceSpriteCode}>";
+
                                 if (wasHeadshot)
                                     feed += $"<sprite={hsCode}>";
+
                                 feed += $" <color=\"red\">{nickName}";
                                 kfm.EnterNewFeed(feed);
                             }
@@ -413,7 +425,7 @@ public class Player : MonoBehaviourPunCallbacks
                                 int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
                                 feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
-                                if(wasHeadshot)
+                                if (wasHeadshot)
                                     feed += $"<sprite={hsCode}>";
 
                                 feed += $" <color=\"red\">{nickName}";

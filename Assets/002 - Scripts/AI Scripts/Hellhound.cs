@@ -100,15 +100,15 @@ public class Hellhound : AiAbstractClass
         this.transform.LookAt(targetPostition);
     }
 
-    public override void Damage(int damage, int playerWhoShotPDI)
+    public override void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
         if (isDead)
             return;
-        photonView.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI);
+        photonView.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot);
     }
 
     [PunRPC]
-    public override void Damage_RPC(int damage, int playerWhoShotPDI)
+    public override void Damage_RPC(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
         if (isDead)
             return;

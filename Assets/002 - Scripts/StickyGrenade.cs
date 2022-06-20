@@ -164,7 +164,7 @@ public class StickyGrenade : MonoBehaviour
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
                     Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
                     if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID);
+                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID, damageSource: "stickygrenade");
                 }
             }
         }

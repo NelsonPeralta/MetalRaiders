@@ -98,7 +98,7 @@ public class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
 
-    IEnumerator SaveBasicOnlineStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
+    IEnumerator SaveBasicOnlineStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null)
     {
         int xpAndCreditGain = Random.Range(160, 240) + (SwarmManager.instance.currentWave * Random.Range(8, 12));
 
@@ -248,6 +248,16 @@ public class WebManager : MonoBehaviour
                 }
             }
         }
+
+        try
+        {
+            StartCoroutine(SaveBasicOnlineStats_Coroutine(playerMultiplayerStats: playerMultiplayerStats));
+        }
+        catch (Exception ex)
+        {
+
+        }
+
         StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
 
