@@ -11,13 +11,11 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
     public int timeToSpawn;
     //public bool spawnAtStart;
 
-    public WeaponPool weaponPool;
     public OnlineGameTime onlineGameTime;
 
 
     private void Start()
     {
-        weaponPool = WeaponPool.weaponPoolInstance;
         onlineGameTime = OnlineGameTime.onlineGameTimeInstance;
 
         if (weaponPlaceHolder)
@@ -29,12 +27,12 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
     IEnumerator SpawnNewWeaponFromWeaponPool(float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (weaponPool.allWeapons.Count <= 0)
+        if (FindObjectOfType<WeaponPool>().allWeapons.Count <= 0)
             StartCoroutine(SpawnNewWeaponFromWeaponPool(0.1f));
         if (!weaponSpawned)
         {
             //Debug.Log("Spawning New Weapon");
-            var newWeap = weaponPool.GetWeaponFromList(weapon).GetComponent<LootableWeapon>();
+            var newWeap = FindObjectOfType<WeaponPool>().GetWeaponFromList(weapon).GetComponent<LootableWeapon>();
             newWeap.transform.position = transform.position;
             newWeap.transform.rotation = transform.rotation;
             newWeap.gameObject.SetActive(true);

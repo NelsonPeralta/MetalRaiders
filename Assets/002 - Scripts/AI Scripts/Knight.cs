@@ -197,7 +197,7 @@ public class Knight : AiAbstractClass
             pp.GetComponent<PlayerSwarmMatchStats>().kills++;
             pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
 
-            SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
+            //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
         }
     }
 

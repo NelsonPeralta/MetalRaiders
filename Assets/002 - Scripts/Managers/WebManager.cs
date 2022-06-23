@@ -41,6 +41,10 @@ public class WebManager : MonoBehaviour
     public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
         StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
+        StartCoroutine(SaveBasicOnlineStats_Coroutine(playerMultiplayerStats: playerMultiplayerStats));
+
+        StartCoroutine(Login_Coroutine_Set_Online_Stats(playerDatabaseAdaptor.GetId()));
+        StartCoroutine(Login_Coroutine_Set_PvP_Stats(playerDatabaseAdaptor.GetId()));
     }
 
     public void SaveArmorData(string newDataString)
@@ -57,9 +61,9 @@ public class WebManager : MonoBehaviour
         int newXp = playerDatabaseAdaptor.playerBasicOnlineStats.xp + xpAndCreditGain;
         int newCredits = playerDatabaseAdaptor.playerBasicOnlineStats.credits + xpAndCreditGain;
 
-        int dbXpToLevel = PlayerProgressionManager.instance.playerLevelToXpDic[playerDatabaseAdaptor.playerBasicOnlineStats.level];
+        int dbXpToLevel = PlayerProgressionManager.instance.playerLevelToXpDic[playerDatabaseAdaptor.playerBasicOnlineStats.level + 1];
 
-        if (dbXpToLevel > playerDatabaseAdaptor.playerBasicOnlineStats.level)
+        if (dbXpToLevel < newXp)
             newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level + 1;
 
 
@@ -100,20 +104,26 @@ public class WebManager : MonoBehaviour
 
     IEnumerator SaveBasicOnlineStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null)
     {
-        int xpAndCreditGain = Random.Range(160, 240) + (SwarmManager.instance.currentWave * Random.Range(8, 12));
+        //int xpAndCreditGain = Random.Range(160, 240) + (SwarmManager.instance.currentWave * Random.Range(8, 12));
+        int xpAndCreditGain = Random.Range(160, 240);
+
+        Debug.Log("SaveBasicOnlineStats_Coroutine");
+        Debug.Log(playerDatabaseAdaptor.playerBasicOnlineStats.xp);
+        Debug.Log(playerDatabaseAdaptor.playerBasicOnlineStats.credits);
 
         int playerId = playerDatabaseAdaptor.GetId();
         int newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level;
         int newXp = playerDatabaseAdaptor.playerBasicOnlineStats.xp + xpAndCreditGain;
         int newCredits = playerDatabaseAdaptor.playerBasicOnlineStats.credits + xpAndCreditGain;
 
-        int dbXpToLevel = PlayerProgressionManager.instance.playerLevelToXpDic[playerDatabaseAdaptor.playerBasicOnlineStats.level];
+        int dbXpToLevel = PlayerProgressionManager.instance.playerLevelToXpDic[playerDatabaseAdaptor.playerBasicOnlineStats.level + 1];
 
-        if(dbXpToLevel > playerDatabaseAdaptor.playerBasicOnlineStats.level)
+        Debug.Log($"XP to level: {dbXpToLevel}. New XP: {newXp}");
+        if (dbXpToLevel < newXp)
+        {
+            Debug.Log("LEVEL UP");
             newLevel = playerDatabaseAdaptor.playerBasicOnlineStats.level + 1;
-
-        //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"Player Id: {playerId}. New Xp: {newXp}. New Credits: {newCredits}");
-        GameManager.instance.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Gained {xpAndCreditGain} Xp and Credits");
+        }
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveBasicOnlineStats");
@@ -133,9 +143,16 @@ public class WebManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("SaveBasicOnlineStats_Coroutine");
                 Debug.Log(www.result);
                 Debug.Log(www.downloadHandler.text);
-                //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed($"{www.downloadHandler.text}");
+
+                if (www.result.ToString().Contains("Success"))
+                    GameManager.instance.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Credits");
+                if (dbXpToLevel < newXp)
+                {
+                    GameManager.instance.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
+                }
 
 
                 if (www.downloadHandler.text.Contains("Could not save swarm stats"))
@@ -149,7 +166,10 @@ public class WebManager : MonoBehaviour
                 }
             }
         }
+        StartCoroutine(Login_Coroutine_Set_Online_Stats(playerId));
+
         StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
+        StartCoroutine(Login_Coroutine_Set_PvP_Stats(playerId));
     }
 
     IEnumerator SaveSwarmStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
@@ -159,10 +179,10 @@ public class WebManager : MonoBehaviour
         int newDeaths = playerDatabaseAdaptor.GetPvEDeaths() + onlinePlayerSwarmScript.deaths;
         int newHeadshots = playerDatabaseAdaptor.GetPvEHeadshots() + onlinePlayerSwarmScript.headshots;
         int newHighestScore = playerDatabaseAdaptor.GetPvEHighestPoints();
-        if(onlinePlayerSwarmScript.GetTotalPoints() > newHighestScore)
+        if (onlinePlayerSwarmScript.GetTotalPoints() > newHighestScore)
             newHighestScore = onlinePlayerSwarmScript.GetTotalPoints();
 
-        Debug.Log("bababooey " + playerDatabaseAdaptor.GetPvEHighestPoints() + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore +"\nXp to Level: ");
+        Debug.Log("bababooey " + playerDatabaseAdaptor.GetPvEHighestPoints() + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore + "\nXp to Level: ");
 
         //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed("Saving");
 
@@ -193,7 +213,7 @@ public class WebManager : MonoBehaviour
                     Debug.LogError("Could not save swarm stats");
 
                 }
-                else if(www.downloadHandler.text.Contains("Swarm stats saved"))
+                else if (www.downloadHandler.text.Contains("Swarm stats saved"))
                 {
                     Debug.Log("Swarm stats saved successfully");
                 }
@@ -202,8 +222,10 @@ public class WebManager : MonoBehaviour
 
         try
         {
-            StartCoroutine(SaveBasicOnlineStats_Coroutine(onlinePlayerSwarmScript));
-        }catch (Exception ex)
+            StartCoroutine(SaveBasicOnlineStats_Coroutine());
+            StartCoroutine(Login_Coroutine_Set_Online_Stats(playerDatabaseAdaptor.GetId()));
+        }
+        catch (Exception ex)
         {
 
         }
@@ -248,17 +270,6 @@ public class WebManager : MonoBehaviour
                 }
             }
         }
-
-        try
-        {
-            StartCoroutine(SaveBasicOnlineStats_Coroutine(playerMultiplayerStats: playerMultiplayerStats));
-        }
-        catch (Exception ex)
-        {
-
-        }
-
-        StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
 
 
@@ -364,10 +375,18 @@ public class WebManager : MonoBehaviour
 
                 string jsonarray = www.downloadHandler.text;
 
+
+
                 try
                 {
                     PlayerDatabaseAdaptor.PlayerBasicOnlineStats pd = PlayerDatabaseAdaptor.PlayerBasicOnlineStats.CreateFromJSON(jsonarray);
                     playerDatabaseAdaptor.playerBasicOnlineStats = pd;
+
+                    if (www.result.ToString().Contains("Success"))
+                    {
+                        Debug.Log("Login_Coroutine_Set_Online_Stats SUCCESS");
+                        Debug.Log(playerDatabaseAdaptor.playerBasicOnlineStats.xp);
+                    }
                 }
                 catch (Exception e)
                 {

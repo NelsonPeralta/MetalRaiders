@@ -106,11 +106,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             // return will stop this method, break will stop the loop, continue will stop the current iteration
             if (!pp.PV.IsMine)
                 continue;
-            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
 
             pp.allPlayerScripts.announcer.PlayGameOverClip();
+            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {winningEntity} wins.");
+
+            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
+
             pp.LeaveRoomWithDelay();
-            pp.allPlayerScripts.killFeedManager.EnterNewFeed($"GAME OVER! {winningEntity} wins.");
 
         }
     }

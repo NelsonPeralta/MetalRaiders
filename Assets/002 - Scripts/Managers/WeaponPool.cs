@@ -7,7 +7,6 @@ using System.Collections;
 public class WeaponPool : MonoBehaviourPun
 {
     public PhotonView PV;
-    public static WeaponPool weaponPoolInstance;
     public static OnlineGameTime onlineGameTimeInstance;
     public int amountOfWeaponsToPool;
     public int amountOfWeaponPacksToPool;
@@ -27,13 +26,7 @@ public class WeaponPool : MonoBehaviourPun
 
     private void Awake()
     {
-        if (weaponPoolInstance)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
-        weaponPoolInstance = this;
+        
     }
 
     private void Start()
@@ -134,7 +127,7 @@ public class WeaponPool : MonoBehaviourPun
 
     private void OnDestroy()
     {
-        weaponPoolInstance = null;
+
     }
 
     IEnumerator GiveAmmoPackSpawnPointAnAmmoPack()

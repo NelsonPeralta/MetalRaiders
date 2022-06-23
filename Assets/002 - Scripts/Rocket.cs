@@ -84,7 +84,7 @@ public class Rocket : MonoBehaviour
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (player.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID);
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID, damageSource: "rpg");
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
@@ -99,7 +99,7 @@ public class Rocket : MonoBehaviour
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
                     Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
                     if (player.PV.IsMine && calculatedDamage > 0)
-                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, player.PV.ViewID);
+                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, player.PV.ViewID, damageSource: "rpg");
                 }
             }
         }

@@ -8,23 +8,28 @@ using Photon.Realtime;
 
 public class OnlineGameTime : MonoBehaviourPunCallbacks
 {
-    [Header("Singleton")]
     public static OnlineGameTime onlineGameTimeInstance;
-    public static WeaponPool weaponPoolInstance;
 
-    [Header("Info")]
-    public PhotonView PV;
-    public int totalTime = 0;
     public List<Text> playerTimerTexts;
-    Coroutine timerCoroutine;
-    ExitGames.Client.Photon.Hashtable timerCustomProperties = new ExitGames.Client.Photon.Hashtable();
+    public int totalTime
+    {
+        get { return _totalTime; }
+        set
+        {
+            if (_totalTime != value)
+            {
+                _totalTime = value;
+                UpdateTimerTexts();
+            }
+        }
+    }
 
-    [Header("Spawn Times")]
-    public List<int> ammoPackSpawnTimes = new List<int>();
-
+    int _totalTime = 0;
+    float secondCountdown = 1f;
 
     private void Awake()
     {
+        Debug.Log("OnlineGameTime Awake");
         if (onlineGameTimeInstance)
         {
             Destroy(gameObject);
@@ -34,58 +39,36 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
         onlineGameTimeInstance = this;
     }
 
+    private void OnEnable()
+    {
+        Debug.Log("OnEnable Awake");
+
+    }
     private void Start()
     {
-        weaponPoolInstance = WeaponPool.weaponPoolInstance;
-        if(PhotonNetwork.IsMasterClient)
-            timerCoroutine = StartCoroutine(Timer());
+
     }
 
-    IEnumerator Timer(float delay = 1)
+    private void Update()
     {
-        float newDelay = 1;
-        yield return new WaitForSeconds(delay);
-        //if (PhotonNetwork.IsMasterClient)
-        //{
-            totalTime++;
-            if (timerCustomProperties.ContainsKey("totaltime"))
-                timerCustomProperties.Remove("totaltime");
-            timerCustomProperties.Add("totaltime", totalTime);
-            PhotonNetwork.SetPlayerCustomProperties(timerCustomProperties);
-            //PhotonNetwork.CurrentRoom.SetCustomProperties(timerCustomProperties);
-        //}
-        //else
-        //{
-        //    //if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("totaltime"))
-        //    //{
-        //    //    totalTime = (int)PhotonNetwork.CurrentRoom.CustomProperties["totaltime"];
-        //    //    newDelay = 0.1f;
-        //    //}
-        //    //else Debug.Log("No Custom Properties");
-        //}
+        if (GameManager.instance.sceneIndex <= 0)
+            return;
+        secondCountdown -= Time.deltaTime;
 
-        
-        //if (totalTime % 30 == 0)
-        //    RespawnAmmoPacks();
-
-        timerCoroutine = StartCoroutine(Timer(newDelay));
-    }
-
-    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
-    {
-        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-        //Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
-        if (changedProps.ContainsKey("totaltime"))
-            totalTime = (int)changedProps["totaltime"];
-
-        UpdateTimerTexts();
+        if (secondCountdown < 0)
+        {
+            if (PhotonNetwork.IsMasterClient)
+                FindObjectOfType<NetworkGameTime>().GetComponent<PhotonView>().RPC("AddSecond_RPC", RpcTarget.All);
+            secondCountdown = 1;
+        }
     }
 
     void UpdateTimerTexts()
     {
-        if (playerTimerTexts.Count > 0)
-            foreach (Text text in playerTimerTexts)
-                text.text = $"{(totalTime / 60).ToString("00")}:{(totalTime % 60).ToString("00")}";
+        var playerUIs = FindObjectsOfType<PlayerUI>(true);
+
+        foreach (PlayerUI ui in playerUIs)
+            ui.Timer.text = $"{(totalTime / 60).ToString("00")}:{(totalTime % 60).ToString("00")}";
     }
 
     private void OnDestroy()

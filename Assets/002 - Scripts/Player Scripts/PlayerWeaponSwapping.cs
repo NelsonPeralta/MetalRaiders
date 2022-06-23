@@ -48,7 +48,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
     private void Start()
     {
-        weaponPool = WeaponPool.weaponPoolInstance;
+        weaponPool = FindObjectOfType<WeaponPool>();
 
         pController.OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
     }

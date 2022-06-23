@@ -26,7 +26,7 @@ public class AmmoPack : MonoBehaviour
 
     private void Start()
     {
-        weaponPool = WeaponPool.weaponPoolInstance;
+        weaponPool = FindObjectOfType<WeaponPool>();
         onlineGameTime = OnlineGameTime.onlineGameTimeInstance;
         ammoInThisPack = GetNewAmmo();
         UpdateAmmoText();

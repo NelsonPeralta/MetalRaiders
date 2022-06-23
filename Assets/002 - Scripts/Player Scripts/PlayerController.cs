@@ -1013,6 +1013,12 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
+        try
+        {
+            //WebManager.webManagerInstance.SaveMultiplayerStats(GetComponent<PlayerMultiplayerMatchStats>());
+            FindObjectOfType<MultiplayerManager>().EndGame();
+        }
+        catch(System.Exception e) { Debug.Log(e); }
         GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1, 2, 1));
     }
 }

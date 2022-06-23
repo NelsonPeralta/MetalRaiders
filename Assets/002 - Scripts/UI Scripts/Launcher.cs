@@ -71,8 +71,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         instance = this;
+
+        FindObjectOfType<GameManager>().OnSceneLoadedEvent -= OnSceneLoaded;
+        FindObjectOfType<GameManager>().OnSceneLoadedEvent += OnSceneLoaded;
     }
 
     public TMP_Text mapSelectedText
@@ -86,9 +89,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             levelToLoadIndex = 1;
 
         ConnectToPhotonMasterServer();
-
-        GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
-        GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
+        GetComponent<MenuManager>().OpenMainMenu();
     }
 
     public void ConnectToPhotonMasterServer()
@@ -100,14 +101,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         Cursor.lockState = CursorLockMode.None;
 
         ChangeLevelToLoadWithIndex(levelToLoadIndex);
-
-        GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
         Debug.Log($"Disconnected: {cause}");
+        GetComponent<MenuManager>().OpenMenu("loading");
+        ConnectToPhotonMasterServer();
     }
 
     public override void OnConnectedToMaster()
@@ -115,6 +116,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("Connected to Master");
         PhotonNetwork.JoinLobby();
         PhotonNetwork.AutomaticallySyncScene = true;
+        GetComponent<MenuManager>().OpenMainMenu();
+
     }
 
     public override void OnJoinedLobby()
@@ -144,6 +147,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void CreateMultiplayerRoom()
     {
+        Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
         RoomOptions options = new RoomOptions();
         options.BroadcastPropsChangeToAll = true;
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
@@ -151,6 +155,17 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
         {
             return; // Do nothing
+        }
+
+        if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer)
+        {
+            //PhotonNetwork.JoinRandomRoom();
+
+            // Can Join Room
+        }
+        else
+        {
+            //Debug.LogError("Can't join random room now, client is not ready");
         }
 
         // else
@@ -345,15 +360,33 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void Login()
     {
         WebManager.webManagerInstance.Login(loginUsernameText.text, _loginPasswordText.text);
+
+        Debug.Log(PhotonNetwork.NetworkClientState);
+        //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
+        //    ConnectToPhotonMasterServer();
     }
 
     void OnSceneLoaded()
     {
+        Debug.Log($"PhotonNetwork.NetworkClientState: {PhotonNetwork.NetworkClientState}");
         Scene currentScene = SceneManager.GetActiveScene();
+
+        if (currentScene.buildIndex == 0)
+        {
+            if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer)
+            {
+                // Can Join Room
+                //PhotonNetwork.JoinRandomRoom();
+            }
+            else
+            {
+                //Debug.LogWarning("Can't join random room now, client is not ready");
+            }
+        }
 
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
-            commonRoomTexts.gameObject.SetActive(false);
+            //commonRoomTexts.gameObject.SetActive(false);
         }
     }
 }

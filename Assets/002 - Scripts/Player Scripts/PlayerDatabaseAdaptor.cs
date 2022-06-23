@@ -83,10 +83,12 @@ public class PlayerDatabaseAdaptor
         get { return _playerBasicOnlineStats; }
         set
         {
-            if(_playerBasicOnlineStats == null)
-                _playerBasicOnlineStats = value;
-            else
-                Debug.LogError("PlayerBasicOnlineStats already set");
+            _playerBasicOnlineStats = value;
+
+            //if(_playerBasicOnlineStats == null)
+            //    _playerBasicOnlineStats = value;
+            //else
+            //    Debug.LogError("PlayerBasicOnlineStats already set");
         }
     }
 

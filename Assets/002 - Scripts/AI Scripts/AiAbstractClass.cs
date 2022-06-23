@@ -507,12 +507,14 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         Player player = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         string nickName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI).nickName;
+        string teamColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
+
 
         int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
         string weaponColorCode = player.playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
         string colorCode = "";
-
+        
         if (className == "Watcher")
             colorCode = KillFeedManager.killFeedColorCodeDict["green"];
         if (className == "Knight")
@@ -528,7 +530,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 try
                 {
                     int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                    feed = $"You <sprite={damageSourceSpriteCode}>";
+                    feed = $"<color={teamColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
                     if (isHeadshot)
                         feed += $"<sprite={hsCode}>";
@@ -538,7 +540,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 }
                 catch
                 {
-                    kfm.EnterNewFeed($"You killed a <color={colorCode}>{className}");
+                    kfm.EnterNewFeed($"<color={teamColorCode}>You <color=\"white\">killed a <color={colorCode}>{className}");
                 }
             }
             else
@@ -546,7 +548,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 try
                 {
                     int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                    feed = $"{nickName} <sprite={damageSourceSpriteCode}>";
+                    feed = $"<color={teamColorCode}>{nickName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
                     if (isHeadshot)
                         feed += $"<sprite={hsCode}>";
@@ -556,7 +558,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 }
                 catch
                 {
-                    kfm.EnterNewFeed($"{nickName} killed a <color={colorCode}>{className}");
+                    kfm.EnterNewFeed($"<color={teamColorCode}>{nickName} <color=\"white\">killed a <color={colorCode}>{className}");
                 }
             }
         }

@@ -126,6 +126,7 @@ MonoBehaviour:
   - OnPlayerStoppedMoving_Delegate_RPC
   - HideDot_RPC
   - ShowDot_RPC
+  - AddSecond_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

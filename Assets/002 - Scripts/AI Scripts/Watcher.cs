@@ -197,7 +197,7 @@ public class Watcher : AiAbstractClass
         health -= damage;
         if (isDead)
         {
-            SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
+            //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
 
             pp.GetComponent<PlayerSwarmMatchStats>().kills++;
             pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);

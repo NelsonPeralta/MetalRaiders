@@ -19,14 +19,24 @@ public class MenuManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        Debug.Log("MenuManager OnEnable");
+        this.menus = GetComponentsInChildren<Menu>(true);
+
+        //GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
+        //GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
     }
 
     private void Start()
     {
-        GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
-        GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
+        //GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
+        //GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
+        //OnSceneLoaded();
     }
 
     public void OpenMenu(string menuName) // Open a menu GO using the name from its Menu script
@@ -78,6 +88,7 @@ public class MenuManager : MonoBehaviour
         else
             menuname += "offline ";
         menuname += "title";
+        Debug.Log($"MenuManager menuname: {menuname}");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName == menuname)
@@ -91,19 +102,28 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    void OnSceneLoaded()
+    public void OnSceneLoaded()
     {
         Scene currentScene = SceneManager.GetActiveScene();
 
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
-            foreach(Menu menu in menus)
-                menu.gameObject.SetActive(false);
-            //gameObject.SetActive(false);
-        }else
+            try
+            {
+                foreach (Menu menu in menus)
+                    menu.gameObject.SetActive(false); // Error here when changing scenes
+            }
+            catch { }
+        }
+        else
         {
+            Debug.Log("Heressssssssssrsrsr");
+            try
+            {
+                gameObject.SetActive(true);
+            }
+            catch { }
             Launcher.instance.ConnectToPhotonMasterServer();
-            gameObject.SetActive(true);
             OpenMainMenu();
         }
     }

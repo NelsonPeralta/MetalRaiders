@@ -65,6 +65,8 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("PlayerUI Start");
+
         try
         {
             camSensWitnessText.text = $"Sens: {GameManager.instance.camSens.ToString()}";
@@ -74,8 +76,8 @@ public class PlayerUI : MonoBehaviour
         catch { }
         try
         {
-            onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
-            onlineGameTimeInstance.playerTimerTexts.Add(Timer);
+            //onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
+            //onlineGameTimeInstance.playerTimerTexts.Add(Timer);
         }
         catch (System.Exception e)
         {
