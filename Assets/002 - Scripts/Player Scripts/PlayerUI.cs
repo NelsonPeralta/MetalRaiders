@@ -63,6 +63,48 @@ public class PlayerUI : MonoBehaviour
     public GameObject splitScreenPauseMenu;
     public PlayerDebuggerOnUI PlayerDebuggerOnUI;
 
+    private void OnEnable()
+    {
+        try
+        {
+            //GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
+            GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
+        }
+        catch { }
+
+        //GetComponent<Player>().playerInventory.OnGrenadeChanged -= OnGrenadeChanged_Delegate;
+        GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            //SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
+            //SwarmManager.instance.OnAiSpawn -= OnSwarmAiDeathOrSpawn;
+            //SwarmManager.instance.OnAiDeath -= OnSwarmAiDeathOrSpawn;
+            //SwarmManager.instance.OnAIsCalculated -= OnSwarmAiDeathOrSpawn;
+            //SwarmManager.instance.OnWaveIncrease -= OnNewWave_Delegate;
+
+            SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
+            SwarmManager.instance.OnAiSpawn += OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnAiDeath += OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnAIsCalculated += OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
+        }
+    }
+
+    private void OnDisable()
+    {
+        GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
+
+        GetComponent<Player>().playerInventory.OnGrenadeChanged -= OnGrenadeChanged_Delegate;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
+            SwarmManager.instance.OnAiSpawn -= OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnAiDeath -= OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnAIsCalculated -= OnSwarmAiDeathOrSpawn;
+            SwarmManager.instance.OnWaveIncrease -= OnNewWave_Delegate;
+        }
+    }
+
     private void Start()
     {
         Debug.Log("PlayerUI Start");
@@ -70,8 +112,8 @@ public class PlayerUI : MonoBehaviour
         try
         {
             camSensWitnessText.text = $"Sens: {GameManager.instance.camSens.ToString()}";
-            GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
-            GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
+            //GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
+            //GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
         }
         catch { }
         try
@@ -95,17 +137,17 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
-        GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
+        //GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             EnableSwarmUIComponents();
             swarmAisLeftText.text = "";
 
-            SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
-            SwarmManager.instance.OnAiSpawn += OnSwarmAiDeathOrSpawn;
-            SwarmManager.instance.OnAiDeath += OnSwarmAiDeathOrSpawn;
-            SwarmManager.instance.OnAIsCalculated += OnSwarmAiDeathOrSpawn;
-            SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
+            //SwarmManager.instance.OnPlayerLivesChanged += OnPlayerLivesChanged_Delegate;
+            //SwarmManager.instance.OnAiSpawn += OnSwarmAiDeathOrSpawn;
+            //SwarmManager.instance.OnAiDeath += OnSwarmAiDeathOrSpawn;
+            //SwarmManager.instance.OnAIsCalculated += OnSwarmAiDeathOrSpawn;
+            //SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             EnableMultiplayerUIComponents();
@@ -228,11 +270,24 @@ public class PlayerUI : MonoBehaviour
         Debug.Log("Here");
         if (!swarmManager.waveEnded)
         {
-            objectiveInformerText.text = $"Z: {swarmManager.zombiesLeft + swarmManager.zombiesAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} S: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
-
-            if (swarmManager.currentWave % 5 == 0)
+            try
             {
-                objectiveInformerText.text = $"Tyrants: {swarmManager.tyrantsLeft + swarmManager.tyrantsAlive}";
+                objectiveInformerText.text = $"Z: {swarmManager.zombiesLeft + swarmManager.zombiesAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} S: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
+
+                if (swarmManager.currentWave % 5 == 0)
+                    objectiveInformerText.text = $"Tyrants: {swarmManager.tyrantsLeft + swarmManager.tyrantsAlive}";
+            }
+            catch
+            {
+                GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
+                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                {
+                    SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
+                    SwarmManager.instance.OnAiSpawn -= OnSwarmAiDeathOrSpawn;
+                    SwarmManager.instance.OnAiDeath -= OnSwarmAiDeathOrSpawn;
+                    SwarmManager.instance.OnAIsCalculated -= OnSwarmAiDeathOrSpawn;
+                    SwarmManager.instance.OnWaveIncrease -= OnNewWave_Delegate;
+                }
             }
         }
     }

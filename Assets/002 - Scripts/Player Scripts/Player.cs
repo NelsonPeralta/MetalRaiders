@@ -780,6 +780,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)
     {
+        Debug.Log("LeaveRoomWithDelay_Coroutine");
         yield return new WaitForSeconds(delay);
 
         Cursor.visible = true;

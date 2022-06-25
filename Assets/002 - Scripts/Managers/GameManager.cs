@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called zero
     void Awake()
     {
+        // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         Debug.Log("GameManager Awake");
         if (instance)
         {
@@ -76,6 +77,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         Debug.Log("GameManager OnSceneLoaded called");
+        instance = this;
         sceneIndex = scene.buildIndex;
 
         if (scene.buildIndex > 0) // We're in the game scene

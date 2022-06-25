@@ -40,10 +40,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
             if (GameManager.instance.gameMode != GameManager.GameMode.Multiplayer)
-            {
-                //enabled = false;
                 return;
-            }
+
+            instance = this;
 
             if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
                 scoreToWin = 10;
@@ -94,7 +93,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (pms.kills >= scoreToWin)
                 EndGame();
     }
-    public void EndGame()
+    public void EndGame(bool saveXp = true)
     {
         string winningEntity = "";
         foreach (Player pp in FindObjectsOfType<Player>())
@@ -110,7 +109,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             pp.allPlayerScripts.announcer.PlayGameOverClip();
             pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {winningEntity} wins.");
 
-            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
+            if (saveXp)
+                WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
 
             pp.LeaveRoomWithDelay();
 

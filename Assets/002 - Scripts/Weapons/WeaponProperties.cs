@@ -124,7 +124,7 @@ public class WeaponProperties : MonoBehaviour
         float currentBulletSpray = bulletSpray;
 
         if (pController.isCrouching)
-            currentBulletSpray /= 2;
+            currentBulletSpray *= 0.75f;
 
         float ranX = Random.Range(-currentBulletSpray, currentBulletSpray);
         float ranY = Random.Range(-currentBulletSpray, currentBulletSpray);

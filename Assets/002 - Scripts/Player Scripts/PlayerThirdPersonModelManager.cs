@@ -11,17 +11,22 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     public List<GameObject> models = new List<GameObject>();
     public List<GameObject> feet = new List<GameObject>();
 
-    private void Awake()
+    private void OnEnable()
     {
+        Debug.Log($"PlayerThirdPersonModelManager game mode: {GameManager.instance.gameMode}");
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             humanModel.gameObject.SetActive(false);
+            spartanModel.gameObject.SetActive(true);
+
             spartanModel.EnableSkinnedMeshes();
             humanModel.DisableSkinnedMeshes();
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
+            humanModel.gameObject.SetActive(true);
             spartanModel.gameObject.SetActive(false);
+
             spartanModel.DisableSkinnedMeshes();
             humanModel.EnableSkinnedMeshes();
         }

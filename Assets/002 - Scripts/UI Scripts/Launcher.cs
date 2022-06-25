@@ -19,12 +19,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     public static Launcher instance; // Singleton of the Photon Launcher
     public PhotonView PV;
     public int levelToLoadIndex;
+    public GameObject loginButton;
 
     // SerializeField makes private variables visible in the inspector
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] TMP_InputField nicknameInputField;
     [SerializeField] TMP_Text errorText;
-    [SerializeField] TMP_Text infoText;
+    [SerializeField] TMP_Text messageText;
     [SerializeField] GameObject commonRoomTexts;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
@@ -89,12 +90,13 @@ public class Launcher : MonoBehaviourPunCallbacks
             levelToLoadIndex = 1;
 
         ConnectToPhotonMasterServer();
-        GetComponent<MenuManager>().OpenMainMenu();
+        //GetComponent<MenuManager>().OpenMainMenu();
     }
 
-    public void ConnectToPhotonMasterServer()
+    public void ConnectToPhotonMasterServer(bool showMessage = true)
     {
-        Debug.Log("Connecting to Master");
+        Debug.Log($"ConnectToPhotonMasterServer");
+        GetComponent<MenuManager>().OpenLoadingMenu("Connecting To Server...");
 
         PhotonNetwork.ConnectUsingSettings();
         Cursor.visible = true;
@@ -107,13 +109,14 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         base.OnDisconnected(cause);
         Debug.Log($"Disconnected: {cause}");
-        GetComponent<MenuManager>().OpenMenu("loading");
-        ConnectToPhotonMasterServer();
+        //ShowPlayerMessage($"Disconnected from Server: {cause}.\nReconnecting...");
+        ConnectToPhotonMasterServer(false);
     }
 
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected to Master");
+        //ShowPlayerMessage("Conneected To Master Server!");
         PhotonNetwork.JoinLobby();
         PhotonNetwork.AutomaticallySyncScene = true;
         GetComponent<MenuManager>().OpenMainMenu();
@@ -131,7 +134,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (WebManager.webManagerInstance)
         {
-            if (WebManager.webManagerInstance.playerDatabaseAdaptor.PlayerDataIsSet())
+            if (WebManager.webManagerInstance.pda.PlayerDataIsSet())
                 MenuManager.Instance.OpenMenu("online title");
             else
                 MenuManager.Instance.OpenMenu("offline title");
@@ -170,7 +173,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         // else
         PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
-        MenuManager.Instance.OpenMenu("loading"); // Show the loading menu/message
+        MenuManager.Instance.OpenLoadingMenu("Creating Multiplayer Room..."); // Show the loading menu/message
 
         // When creating a room is done, OnJoinedRoom() will automatically trigger
         OnCreateMultiplayerRoomButton?.Invoke(this);
@@ -189,7 +192,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         // else
         PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
-        MenuManager.Instance.OpenMenu("loading"); // Show the loading menu/message
+        MenuManager.Instance.OpenLoadingMenu("Creating Coop Room..."); // Show the loading menu/message
 
         // When creating a room is done, OnJoinedRoom() will automatically trigger
 
@@ -267,7 +270,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ShowPlayerMessage(string message)
     {
-        infoText.text = message;
+        messageText.text = message;
         MenuManager.Instance.OpenMenu("info");
     }
 
@@ -290,7 +293,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void JoinRoom(RoomInfo info)
     {
         PhotonNetwork.JoinRoom(info.Name);
-        MenuManager.Instance.OpenMenu("loading");
+        MenuManager.Instance.OpenLoadingMenu("Joining Room...");
     }
 
     public override void OnLeftRoom()
@@ -364,6 +367,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log(PhotonNetwork.NetworkClientState);
         //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
         //    ConnectToPhotonMasterServer();
+
+        MenuManager.Instance.OpenLoadingMenu();
+        //loginButton.SetActive(false);
     }
 
     void OnSceneLoaded()

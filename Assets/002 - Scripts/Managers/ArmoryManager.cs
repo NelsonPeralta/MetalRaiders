@@ -31,7 +31,7 @@ public class ArmoryManager : MonoBehaviour
     private void OnEnable()
     {
         playerModel.SetActive(true);
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
         creditsText.text = $"{pda.playerBasicOnlineStats.credits}cr";
         armorDataString.text = $"ADS: {pda.armorDataString.ToString()}";

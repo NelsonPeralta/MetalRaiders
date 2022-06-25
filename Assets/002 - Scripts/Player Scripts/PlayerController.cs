@@ -996,14 +996,14 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
-    public void ReturnToMainMenu()
+    public void QuitMatch()
     {
         Debug.Log("Returning to Main Menu");
 
-        FindObjectOfType<Launcher>().LeaveRoom();
-        //PhotonNetwork.LoadLevel(0);
-        //PhotonNetwork.LeaveRoom();
-        //MenuManager.Instance.OpenMenu("loading");
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            FindObjectOfType<MultiplayerManager>().EndGame(false);
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            FindObjectOfType<SwarmManager>().EndGame(false);
     }
 
     public void SetPlayerIDInInput()
@@ -1016,9 +1016,12 @@ public class PlayerController : MonoBehaviourPun
         try
         {
             //WebManager.webManagerInstance.SaveMultiplayerStats(GetComponent<PlayerMultiplayerMatchStats>());
-            FindObjectOfType<MultiplayerManager>().EndGame();
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                FindObjectOfType<MultiplayerManager>().EndGame();
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                FindObjectOfType<SwarmManager>().EndGame();
         }
-        catch(System.Exception e) { Debug.Log(e); }
+        catch (System.Exception e) { Debug.Log(e); }
         GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1, 2, 1));
     }
 }

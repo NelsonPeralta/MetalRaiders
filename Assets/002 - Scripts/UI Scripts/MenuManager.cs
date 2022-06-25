@@ -4,10 +4,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using System.IO;
+using UnityEngine.UI;
+using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance;
+
+    public TMP_Text loadingMenuText;
 
     [SerializeField] Menu[] menus;
 
@@ -58,6 +62,8 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(Menu menu) // Open a menu GO using the Menu script itself
     {
+        ResetLoadingMenu();
+
         // Close all menus first
         for (int i = 0; i < menus.Length; i++)
         {
@@ -81,9 +87,8 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMainMenu()
     {
-        Debug.Log(WebManager.webManagerInstance.playerDatabaseAdaptor.PlayerDataIsSet());
         string menuname = "";
-        if (WebManager.webManagerInstance.playerDatabaseAdaptor.PlayerDataIsSet())
+        if (WebManager.webManagerInstance.pda.PlayerDataIsSet())
             menuname += "online ";
         else
             menuname += "offline ";
@@ -100,6 +105,18 @@ public class MenuManager : MonoBehaviour
                 CloseMenu(menus[i]);
             }
         }
+    }
+
+    public void OpenLoadingMenu(string message = "Loading...")
+    {
+       loadingMenuText.text = message;
+
+        OpenMenu("loading");
+    }
+
+    void ResetLoadingMenu()
+    {
+        loadingMenuText.text = "Loading...";
     }
 
     public void OnSceneLoaded()

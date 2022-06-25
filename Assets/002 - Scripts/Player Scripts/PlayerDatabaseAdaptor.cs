@@ -4,65 +4,94 @@ using UnityEngine;
 
 public class PlayerDatabaseAdaptor
 {
-    PlayerUserData playerData;
-    PlayerBasicOnlineStats _playerBasicOnlineStats;
-    PlayerBasicPvPStats playerBasicPvPStats;
-    PlayerBasicPvEStats playerBasicPvEStats;
+    public delegate void OnAnyPlayerDataChanged(string log);
 
-    // ********* SETTERS **********
-    public void SetPlayerData(PlayerUserData playerData)
+    PlayerLoginData _playerLoginData;
+    PlayerCommonData _playerCommonData;
+    PlayerBasicPvPStats _playerBasicPvPStats;
+    PlayerBasicPvEStats _playerBasicPvEStats;
+
+    public PlayerLoginData playerLoginData
     {
-        if (this.playerData == null)
+        get { return this._playerLoginData; }
+        set
         {
-            this.playerData = playerData;
+            if (this._playerLoginData == null)
+                this._playerLoginData = value;
+            else
+                Debug.LogError("PlayerData already set");
         }
-        else
-            Debug.LogError("PlayerData already set");
     }
-
 
 
     public void SetPlayerBasicPvPStats(PlayerBasicPvPStats playerData)
     {
-        this.playerBasicPvPStats = playerData;
-        Debug.Log($"Player basic pvp stats are set. Kills: {this.playerBasicPvPStats.kills}. Deaths: {this.playerBasicPvPStats.deaths}. Headshots: {this.playerBasicPvPStats.headshots}");
+        this._playerBasicPvPStats = playerData;
+        Debug.Log($"Player basic pvp stats are set. Kills: {this._playerBasicPvPStats.kills}. Deaths: {this._playerBasicPvPStats.deaths}. Headshots: {this._playerBasicPvPStats.headshots}");
     }
 
     public void SetPlayerBasicPvEStats(PlayerBasicPvEStats playerData)
     {
-        this.playerBasicPvEStats = playerData;
-        Debug.Log($"Player basic pve stats are set. Kills: {this.playerBasicPvEStats.kills}. Deaths: {this.playerBasicPvEStats.deaths}. Headshots: {this.playerBasicPvEStats.headshots}");
+        this._playerBasicPvEStats = playerData;
+        Debug.Log($"Player basic pve stats are set. Kills: {this._playerBasicPvEStats.kills}. Deaths: {this._playerBasicPvEStats.deaths}. Headshots: {this._playerBasicPvEStats.headshots}");
     }
 
+    //public int id
+    //{
+    //    get { return playerData.id; }
+    //    set
+    //    {
+    //        if(playerData.id != value)
+    //        {
+
+    //        }
+    //        playerData.id = value;
+    //    }
+    //}
+
     // ********** GETTERS **********
-    public int GetId() { return playerData.id; }
-    public string GetUsername() { return playerData.username; }
+    public int id
+    {
+        get
+        {
+            try { return _playerLoginData.id; }
+            catch { return 0; }
+        }
+    }
+    public string username
+    {
+        get
+        {
+            try { return _playerLoginData.username; }
+            catch { return ""; }
+        }
+    }
     // Multiplayer
-    public int GetPvPKills() { return playerBasicPvPStats.kills; }
-    public int GetPvPDeaths() { return playerBasicPvPStats.deaths; }
-    public int GetPvPHeadshots() { return playerBasicPvPStats.headshots; }
+    public int GetPvPKills() { return _playerBasicPvPStats.kills; }
+    public int GetPvPDeaths() { return _playerBasicPvPStats.deaths; }
+    public int GetPvPHeadshots() { return _playerBasicPvPStats.headshots; }
     // PvE
-    public int GetPvEKills() { return playerBasicPvEStats.kills; }
-    public int GetPvEDeaths() { return playerBasicPvEStats.deaths; }
-    public int GetPvEHeadshots() { return playerBasicPvEStats.headshots; }
-    public int GetPvEHighestPoints() { return playerBasicPvEStats.highest_points; }
-    public bool PlayerDataIsSet() { return playerData != null; }
+    public int GetPvEKills() { return _playerBasicPvEStats.kills; }
+    public int GetPvEDeaths() { return _playerBasicPvEStats.deaths; }
+    public int GetPvEHeadshots() { return _playerBasicPvEStats.headshots; }
+    public int GetPvEHighestPoints() { return _playerBasicPvEStats.highest_points; }
+    public bool PlayerDataIsSet() { return _playerLoginData != null; }
 
 
     // **************** Properties **************** //
     public int level
     {
-        get { return _playerBasicOnlineStats.level; }
+        get { return _playerCommonData.level; }
     }
 
     public int xp
     {
-        get { return _playerBasicOnlineStats.xp; }
+        get { return _playerCommonData.xp; }
     }
 
     public int credits
     {
-        set { _playerBasicOnlineStats.credits = value; }
+        set { _playerCommonData.credits = value; }
         get { return playerBasicOnlineStats.credits; }
     }
 
@@ -78,12 +107,12 @@ public class PlayerDatabaseAdaptor
         get { return playerBasicOnlineStats.unlocked_armor_data_string; }
     }
 
-    public PlayerBasicOnlineStats playerBasicOnlineStats
+    public PlayerCommonData playerBasicOnlineStats
     {
-        get { return _playerBasicOnlineStats; }
+        get { return _playerCommonData; }
         set
         {
-            _playerBasicOnlineStats = value;
+            _playerCommonData = value;
 
             //if(_playerBasicOnlineStats == null)
             //    _playerBasicOnlineStats = value;
@@ -94,30 +123,30 @@ public class PlayerDatabaseAdaptor
 
     // ********* INNER CLASSES *********
     [System.Serializable]
-    public class PlayerUserData
+    public class PlayerLoginData
     {
 
         public int id;
         public string username;
 
-        public static PlayerUserData CreateFromJSON(string jsonString)
+        public static PlayerLoginData CreateFromJSON(string jsonString)
         {
-            return JsonUtility.FromJson<PlayerUserData>(jsonString);
+            return JsonUtility.FromJson<PlayerLoginData>(jsonString);
         }
 
     }
 
     [System.Serializable]
-    public class PlayerBasicOnlineStats
+    public class PlayerCommonData
     {
 
         int _id;
         public int level, xp, credits;
         public string armor_data_string, unlocked_armor_data_string;
 
-        public static PlayerBasicOnlineStats CreateFromJSON(string jsonString)
+        public static PlayerCommonData CreateFromJSON(string jsonString)
         {
-            return JsonUtility.FromJson<PlayerBasicOnlineStats>(jsonString);
+            return JsonUtility.FromJson<PlayerCommonData>(jsonString);
         }
 
     }

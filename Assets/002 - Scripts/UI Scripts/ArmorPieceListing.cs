@@ -38,7 +38,7 @@ public class ArmorPieceListing : MonoBehaviour
             buyButton.onClick.AddListener(BuyArmorPiece);
 
 
-            PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+            PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
             _playerArmorPiece = value;
             model = playerArmorPiece.gameObject;
 
@@ -83,7 +83,7 @@ public class ArmorPieceListing : MonoBehaviour
     {
         StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(playerArmorPiece));
 
-        ArmoryManager.instance.creditsText.text = $"{WebManager.webManagerInstance.playerDatabaseAdaptor.playerBasicOnlineStats.credits.ToString()}cr";
+        ArmoryManager.instance.creditsText.text = $"{WebManager.webManagerInstance.pda.playerBasicOnlineStats.credits.ToString()}cr";
         ArmoryManager.instance.OnArmorBuy_Delegate();
         buyButton.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);
@@ -95,13 +95,13 @@ public class ArmorPieceListing : MonoBehaviour
             if (armorPieceListing != this)
                 if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && this.playerArmorPiece.bodyPart == armorPieceListing.playerArmorPiece.bodyPart)
                 {
-                    if (WebManager.webManagerInstance.playerDatabaseAdaptor.unlockedArmorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
+                    if (WebManager.webManagerInstance.pda.unlockedArmorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
                         armorPieceListing.UnequipArmorPiece();
                 }
 
-        WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString += $"{playerArmorPiece.entity}\n";
-        WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString.Replace("\n\n", "\n");
-        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString));
+        WebManager.webManagerInstance.pda.armorDataString += $"{playerArmorPiece.entity}\n";
+        WebManager.webManagerInstance.pda.armorDataString.Replace("\n\n", "\n");
+        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
 
         //if (this.playerArmorPiece.pieceType == PlayerArmorPiece.PieceType.Core)
         //    foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
@@ -121,10 +121,10 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void UnequipArmorPiece()
     {
-        string newData = WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString.Replace(playerArmorPiece.entity, "");
+        string newData = WebManager.webManagerInstance.pda.armorDataString.Replace(playerArmorPiece.entity, "");
         newData.Replace("\n\n", "\n");
-        WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString = newData;
-        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString));
+        WebManager.webManagerInstance.pda.armorDataString = newData;
+        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
 
         model.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);
@@ -153,7 +153,7 @@ public class ArmorPieceListing : MonoBehaviour
 
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
-                if (WebManager.webManagerInstance.playerDatabaseAdaptor.armorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
+                if (WebManager.webManagerInstance.pda.armorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
                 {
                     armorPieceListing.model.SetActive(true);
                 }

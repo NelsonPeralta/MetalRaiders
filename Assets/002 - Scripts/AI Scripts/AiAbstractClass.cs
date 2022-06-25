@@ -519,7 +519,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             colorCode = KillFeedManager.killFeedColorCodeDict["green"];
         if (className == "Knight")
             colorCode = KillFeedManager.killFeedColorCodeDict["blue"];
-        if (className == "Tyant")
+        if (className == "Tyrant")
             colorCode = KillFeedManager.killFeedColorCodeDict["purple"];
 
         foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())

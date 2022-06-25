@@ -20,7 +20,7 @@ public class MainMenuCaller : MonoBehaviour
     [PunRPC]
     public void UpdatePlayerList()
     {
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
         Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
 
         foreach (Transform child in Launcher.instance.playerListContent)

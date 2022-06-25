@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 using System.IO;
+using UnityEngine.Events;
 
 public class SwarmManager : MonoBehaviourPunCallbacks
 {
@@ -179,8 +180,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         get { return _waveEnded; }
         private set { _waveEnded = value; }
     }
+
+    private void OnEnable()
+    {
+        currentWave = 0;
+        nextWaveDelay = 5;
+    }
     private void Awake()
     {
+        currentWave = 0;
         nextWaveDelay = 5;
         if (instance)
         {
@@ -222,6 +230,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
                 return;
+
+            instance = this;
 
             _networkSwarmManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkSwarmManager"), Vector3.zero, Quaternion.identity).GetComponent<NetworkSwarmManager>();
             PV = _networkSwarmManager.GetComponent<PhotonView>();
@@ -298,18 +308,28 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if (currentWave % 5 != 0)
         {
-            zombiesLeft = FindObjectsOfType<Player>().Length + (int)Mathf.Floor((currentWave / 2));
+            int nbPlayers = FindObjectsOfType<Player>().Length;
+            if (nbPlayers <= 0)
+                nbPlayers = 1;
+
+            zombiesLeft = nbPlayers + (int)Mathf.Floor((currentWave / 2));
             if (zombiesLeft > zombiePool.Length)
                 zombiesLeft = zombiePool.Length;
 
-            watchersLeft = FindObjectsOfType<Player>().Length * 3 + (currentWave * 2);
+            watchersLeft = nbPlayers * 3 + (currentWave * 2);
             if (watchersLeft > watcherPool.Length)
                 watchersLeft = watcherPool.Length;
 
-            knightsLeft = FindObjectsOfType<Player>().Length * 2 + (currentWave);
+            knightsLeft = nbPlayers * 2 + (currentWave);
             if (knightsLeft > knightPool.Length)
                 knightsLeft = knightPool.Length;
 
+            //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
+            //if (hellhoundsLeft > hellhoundPool.Length)
+            //    hellhoundsLeft = hellhoundPool.Length;
+        }
+        else if (currentWave % 10 == 0)
+        {
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)
             //    hellhoundsLeft = hellhoundPool.Length;
@@ -328,7 +348,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             knightsLeft = 0;
             hellhoundsLeft = 0;
             watchersLeft = 1;
-            tyrantsLeft = 0;
+            tyrantsLeft = 1;
         }
 
         OnAIsCalculated?.Invoke(this);
@@ -472,6 +492,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     IEnumerator SpawnAI_Coroutine(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
+        if (SceneManager.GetActiveScene().buildIndex <= 0)
+        {
+            Debug.LogWarning("Trying to spawn AI in Menu");
+            yield return new WaitForSeconds(1);
+        }
+
         //Debug.Log($"BEFORE DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
         AiType aiTypeEnum = (AiType)System.Enum.Parse(typeof(AiType), aiType);
         float delay = 10;
@@ -691,6 +717,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         foreach (Player p in FindObjectsOfType<Player>())
             p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
         RespawnHealthPacks_MasterCall();
+        if (editMode)
+            EndGame();
     }
 
     void RespawnHealthPacks_MasterCall()
@@ -716,6 +744,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     hp.gameObject.SetActive(true);
 
             WebManager.webManagerInstance.SaveSwarmStats(GameManager.instance.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
+        }
+        else if (currentWave % 10 == 0)
+        {
+            EndGame();
         }
     }
     int GetRandomPlayerPhotonId()
@@ -801,5 +833,25 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             return;
 
         Destroy(loot, 60);
+    }
+
+    public void EndGame(bool saveXp = true)
+    {
+        foreach (Player pp in FindObjectsOfType<Player>())
+        {
+            // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
+            // return will stop this method, break will stop the loop, continue will stop the current iteration
+            if (!pp.PV.IsMine)
+                continue;
+
+            pp.allPlayerScripts.announcer.PlayGameOverClip();
+            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER!");
+
+            if (saveXp)
+                WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>());
+
+            pp.LeaveRoomWithDelay();
+
+        }
     }
 }

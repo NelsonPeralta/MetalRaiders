@@ -17,7 +17,7 @@ public class ServiceRecordMenu : MonoBehaviour
     private void OnEnable()
     {
         playerModel.SetActive(true);
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
         float kd = 0;
 

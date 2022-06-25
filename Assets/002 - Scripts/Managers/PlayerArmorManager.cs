@@ -21,7 +21,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     void EnableAllArmorsInDataString()
     {
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
+        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
         foreach (PlayerArmorPiece piece in playerArmorPieces)
             piece.gameObject.SetActive(pda.playerBasicOnlineStats.armor_data_string.Contains(piece.entity));
