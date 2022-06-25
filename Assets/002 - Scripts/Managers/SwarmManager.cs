@@ -844,13 +844,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (!pp.PV.IsMine)
                 continue;
 
-            pp.allPlayerScripts.announcer.PlayGameOverClip();
-            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER!");
 
             if (saveXp)
+            {
+                pp.allPlayerScripts.announcer.PlayGameOverClip();
+                pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER!");
                 WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>());
+                pp.LeaveRoomWithDelay();
+            }
+            else
+                GameManager.instance.LeaveRoom();
 
-            pp.LeaveRoomWithDelay();
 
         }
     }

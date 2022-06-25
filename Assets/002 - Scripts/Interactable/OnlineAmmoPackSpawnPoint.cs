@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class OnlineAmmoPackSpawnPoint : MonoBehaviour
 {
-    [Header("Singleton")]
-    public OnlineGameTime onlineGameTime;
-
     [Header("Info")]
     public bool randomAmmo;
     public string ammoType;
@@ -18,8 +15,6 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
 
     private void Start()
     {
-        onlineGameTime = OnlineGameTime.onlineGameTimeInstance;
-
         if (Placeholder)
             Placeholder.gameObject.SetActive(false);
 
@@ -47,9 +42,9 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
 
     public void StartRespawn()
     {
-        int timeWeaponWasGrabbed = onlineGameTime.totalTime;
+        int timeWeaponWasGrabbed = FindObjectOfType<OnlineGameTime>().totalTime;
         int newSpawnTime = timeToSpawn - (timeWeaponWasGrabbed % timeToSpawn);
-        Debug.Log($"Time Ammo Pack grabbed: {onlineGameTime.totalTime}. New Spawn Time: {newSpawnTime}");
+        Debug.Log($"Time Ammo Pack grabbed: {FindObjectOfType<OnlineGameTime>().totalTime}. New Spawn Time: {newSpawnTime}");
         StartCoroutine(SpawnNewAmmoPackFromWeaponPool(newSpawnTime));
     }
 }

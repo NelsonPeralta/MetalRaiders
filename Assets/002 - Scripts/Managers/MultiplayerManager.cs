@@ -106,13 +106,18 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (!pp.PV.IsMine)
                 continue;
 
-            pp.allPlayerScripts.announcer.PlayGameOverClip();
-            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {winningEntity} wins.");
 
             if (saveXp)
+            {
+                pp.allPlayerScripts.announcer.PlayGameOverClip();
+                pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {winningEntity} wins.");
                 WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
+                pp.LeaveRoomWithDelay();
 
-            pp.LeaveRoomWithDelay();
+            }
+            else
+                GameManager.instance.LeaveRoom();
+
 
         }
     }

@@ -102,6 +102,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             }
         }
+        else
+        {
+            FindObjectOfType<Launcher>().OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
+            FindObjectOfType<Launcher>().OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
+        }
         OnSceneLoadedEvent?.Invoke();
     }
 
@@ -110,8 +115,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("GameManager Start called");
         //SceneManager.sceneLoaded += OnSceneLoaded;
-        Launcher.instance.OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
-        Launcher.instance.OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
+        
     }
 
     // called when the game is terminated
@@ -185,5 +189,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             trans.gameObject.layer = layerNumber;
         }
+    }
+
+    public void LeaveRoom()
+    {
+        Cursor.visible = true;
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel(0);
     }
 }
