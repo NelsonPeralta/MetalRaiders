@@ -33,7 +33,7 @@ public class KillFeedManager : MonoBehaviour
         killFeedWeaponCodeDict.Add("m4", 4);
         killFeedWeaponCodeDict.Add("ak47", 3);
         killFeedWeaponCodeDict.Add("m16", 21);
-        killFeedWeaponCodeDict.Add("scar", 8);
+        killFeedWeaponCodeDict.Add("scar", 0);
         killFeedWeaponCodeDict.Add("patriot", 19);
         killFeedWeaponCodeDict.Add("m249", 15);
 

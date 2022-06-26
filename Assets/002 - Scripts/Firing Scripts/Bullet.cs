@@ -182,11 +182,13 @@ public class Bullet : MonoBehaviourPunCallbacks
                 if (isHeadshot)
                 {
                     //Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
-                    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                     finalDamage = (int)(weaponProperties.headshotMultiplier * damage);
+                    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
 
                     if (hitbox.aiAbstractClass.health <= finalDamage)
+                    {
                         playerWhoShot.GetComponent<PlayerSwarmMatchStats>().headshots++;
+                    }
                 }
 
                 if (playerWhoShot.PV.IsMine)
@@ -212,19 +214,17 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
-                    if (maxShieldPoints <= 0)
-                        damage = (int)(damage * weaponProperties.headshotMultiplier);
-                    else if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
-                        damage = (int)(damage * 999);
+                    if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
+                        damage = player.maxHealthPoints;
 
                     if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
                         damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                     wasHeadshot = true;
-                    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
 
                     if (wasHeadshot && player.hitPoints < damage)
                     {
+                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                         wasHeadshot = true;
                         playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
                     }

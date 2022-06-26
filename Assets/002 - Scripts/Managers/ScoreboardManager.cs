@@ -83,25 +83,24 @@ public class ScoreboardManager : MonoBehaviour
                 scoreboardRows[i].gameObject.SetActive(true);
             }
         }
-        //else if (onlineSwarmManager)
-        //{
-        //    Debug.Log("In Swarm Scoreboard");
-        //    List<OnlinePlayerSwarmScript> allPlayersSS = new List<OnlinePlayerSwarmScript>();
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            List<PlayerSwarmMatchStats> allPlayersMS = new List<PlayerSwarmMatchStats>();
 
-        //    foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
-        //        allPlayersSS.Add(go.GetComponent<OnlinePlayerSwarmScript>());
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+                allPlayersMS.Add(go.GetComponent<PlayerSwarmMatchStats>());
 
-        //    for (int i = 0; i < allPlayersSS.Count; i++)
-        //    {
-        //        scoreboardRows[i].playerNameText.text = allPlayersSS[i].GetComponent<PhotonView>().Owner.NickName;
-        //        scoreboardRows[i].playerKillsText.text = allPlayersSS[i].kills.ToString();
-        //        scoreboardRows[i].playerDeathsText.text = allPlayersSS[i].deaths.ToString();
-        //        scoreboardRows[i].playerHeadshotsText.text = allPlayersSS[i].headshots.ToString();
-        //        scoreboardRows[i].playerCurrentPointsText.text = allPlayersSS[i].GetPoints().ToString();
+            for (int i = 0; i < allPlayersMS.Count; i++)
+            {
+                scoreboardRows[i].playerNameText.text = allPlayersMS[i].GetComponent<Player>().nickName;
+                scoreboardRows[i].playerKillsText.text = allPlayersMS[i].kills.ToString();
+                scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
+                scoreboardRows[i].playerHeadshotsText.text = allPlayersMS[i].headshots.ToString();
+                scoreboardRows[i].playerCurrentPointsText.text = allPlayersMS[i].points.ToString();
 
-        //        scoreboardRows[i].gameObject.SetActive(true);
-        //    }
-        //}
+                scoreboardRows[i].gameObject.SetActive(true);
+            }
+        }
     }
 
     void DisableAllRows()

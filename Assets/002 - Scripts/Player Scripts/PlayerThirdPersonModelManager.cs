@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerThirdPersonModelManager : MonoBehaviour
 {
+    public delegate void PlayerModelManagerEvent(PlayerThirdPersonModelManager playerThirdPersonModelManager);
+    public PlayerModelManagerEvent OnModelAssigned;
+
     public Player player;
     public ThirdPersonScript humanModel;
     public ThirdPersonScript spartanModel;
@@ -13,6 +16,8 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     private void OnEnable()
     {
+        OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
+
         Debug.Log($"PlayerThirdPersonModelManager game mode: {GameManager.instance.gameMode}");
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
@@ -30,6 +35,8 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
             spartanModel.DisableSkinnedMeshes();
             humanModel.EnableSkinnedMeshes();
         }
+
+        OnModelAssigned?.Invoke(this);
     }
 
     private void Start()

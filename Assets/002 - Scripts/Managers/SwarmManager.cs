@@ -226,6 +226,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         Scene currentScene = SceneManager.GetActiveScene();
 
+        currentWave = 0;
+        nextWaveDelay = 5; 
+
+        if (editMode)
+            currentWave = 9;
+
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
             if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
@@ -324,12 +330,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (knightsLeft > knightPool.Length)
                 knightsLeft = knightPool.Length;
 
-            //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
-            //if (hellhoundsLeft > hellhoundPool.Length)
-            //    hellhoundsLeft = hellhoundPool.Length;
-        }
-        else if (currentWave % 10 == 0)
-        {
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)
             //    hellhoundsLeft = hellhoundPool.Length;
@@ -717,8 +717,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         foreach (Player p in FindObjectsOfType<Player>())
             p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
         RespawnHealthPacks_MasterCall();
-        if (editMode)
-            EndGame();
     }
 
     void RespawnHealthPacks_MasterCall()
@@ -730,7 +728,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void RespawnHealthPacks()
     {
         Debug.Log("Respawn Health Packs RPC");
-        if (currentWave % 5 == 0)
+        if (currentWave % 10 == 0)
+        {
+            EndGame();
+        }else if (currentWave % 5 == 0)
         {
             int livesToAdd = FindObjectsOfType<Player>().Length;
             livesLeft += livesToAdd;
@@ -744,10 +745,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     hp.gameObject.SetActive(true);
 
             WebManager.webManagerInstance.SaveSwarmStats(GameManager.instance.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
-        }
-        else if (currentWave % 10 == 0)
-        {
-            EndGame();
         }
     }
     int GetRandomPlayerPhotonId()
@@ -854,8 +851,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             }
             else
                 GameManager.instance.LeaveRoom();
-
-
         }
     }
 }

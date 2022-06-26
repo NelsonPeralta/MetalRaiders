@@ -1452,7 +1452,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3851432918533758526}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.993252, y: -5.7299995, z: -7.69026}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1552,8 +1552,8 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: 205b3d2d7b6f63b48aaa14ffff125125, type: 3}
   _dieClip: {fileID: 8300000, guid: b979c8b17b61fe041bf88ab821639874, type: 3}
   _newTargetCountdown: 0
-  projectileDamage: 24
-  projectileSpeed: 100
+  projectileDamage: 22
+  projectileSpeed: 150
   minionSpawnPoints:
   - {fileID: 3687535165126002603}
   - {fileID: 360714974715981519}
@@ -3603,6 +3603,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 1
@@ -7084,6 +7085,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -8513,6 +8515,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -11963,6 +11966,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -12796,6 +12800,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 3848103609664031516}
     m_Modifications:
     - target: {fileID: 1656800383899460, guid: 1073dae5433dbfe4aadc180f9b9f8ca6, type: 3}
@@ -12874,6 +12879,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 1073dae5433dbfe4aadc180f9b9f8ca6, type: 3}
 --- !u!4 &7754739279119403850 stripped
 Transform:

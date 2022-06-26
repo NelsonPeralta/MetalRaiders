@@ -1819,6 +1819,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 20
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -5215,6 +5216,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -7008,6 +7010,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 5
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -10404,6 +10407,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -12130,11 +12134,11 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: 4e2ef30ccdee4a24a996216fee662b40, type: 3}
   _dieClip: {fileID: 8300000, guid: 979a267a51e714b40b074d04b88a6b43, type: 3}
   _newTargetCountdown: 0
-  projectileDamage: 8
-  projectileSpeed: 150
-  meteorDamage: 4
+  projectileDamage: 6
+  projectileSpeed: 200
+  meteorDamage: 14
   meteorSpeed: 15
-  meteorRadius: 5
+  meteorRadius: 7
   projectile: {fileID: 1006269644436722, guid: 5ba8aa092f5c7c54c94ba93b89b0e4ea, type: 3}
   meteor: {fileID: 3885397476374691508, guid: a257ce09aee74b94a90f54f6c65aea66, type: 3}
   wall: {fileID: 5039441736292490731, guid: f0474ae2bee30ba4280a07c258f22bf8, type: 3}
@@ -13129,7 +13133,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 20
+  m_Radius: 22
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1092701628866678714
 MonoBehaviour:
@@ -13286,7 +13290,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 3
+  m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2883373899656101094
 MonoBehaviour:
@@ -13346,7 +13350,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 12
+  m_Radius: 14
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4421428383704479029
 MonoBehaviour:
@@ -14047,6 +14051,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -17510,6 +17515,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -18938,6 +18944,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -22401,6 +22408,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.05
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 1
@@ -23345,6 +23353,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 1668431522888940168}
     m_Modifications:
     - target: {fileID: 1595313205893126, guid: 618a53c1e230d58438e92ac811489c49, type: 3}
@@ -23432,6 +23441,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 618a53c1e230d58438e92ac811489c49, type: 3}
 --- !u!4 &6037041307516292289 stripped
 Transform:
