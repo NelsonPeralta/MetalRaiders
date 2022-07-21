@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LootableWeapon : MonoBehaviour
 {
+    [SerializeField]
     Vector3 spawnPointPosition;
     public string weaponName;
     public bool isWallGun;

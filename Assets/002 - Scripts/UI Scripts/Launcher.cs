@@ -318,7 +318,18 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
+        Debug.Log("OnPlayerEnteredRoom");
         Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Dictionary<string, string> roomParams = new Dictionary<string, string>();
+            roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
+            roomParams["multiplayermode"] = GameManager.instance.multiplayerMode.ToString();
+            roomParams["swarmmode"] = GameManager.instance.swarmMode.ToString();
+
+            FindObjectOfType<MainMenuCaller>().UpdateRoomSettings(roomParams);
+        }
     }
 
     public void ChangeLevelToLoadWithIndex(int index)

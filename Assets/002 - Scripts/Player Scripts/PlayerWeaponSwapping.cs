@@ -305,6 +305,8 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
             pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
 
+            Debug.Log($"ReplaceWeapon ${weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo}");
+            Debug.Log($"ReplaceWeapon ${lws.ammoInThisWeapon}");
             weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
             //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
 
@@ -349,6 +351,8 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         pInventory.activeWeapIs = 1;
         pInventory.hasSecWeap = true;
 
+        Debug.Log($"ReplaceWeapon ${weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo}");
+        Debug.Log($"ReplaceWeapon ${lws.ammoInThisWeapon}");
         weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
         //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
 

@@ -50,6 +50,11 @@ public class MainMenuCaller : MonoBehaviour
 
     }
 
+    public void UpdateRoomSettings(Dictionary<string, string> roomParams)
+    {
+        GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All,  roomParams);
+    }
+
     [PunRPC]
     void UpdateRoomSettings_RPC(Dictionary<string, string> roomParams)
     {
