@@ -315,12 +315,12 @@ public class Player : MonoBehaviourPunCallbacks
             return false;
         return true;
     }
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null)
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
         if (hitPoints <= 0 || isDead || isRespawning)
             return;
 
-        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource);
+        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource, isGroin);
         //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
         //if (!PhotonNetwork.IsMasterClient)
         //    return;
@@ -328,7 +328,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null)
+    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
         int damage = (int)(hitPoints - _newHealth);
         if (PV.IsMine)
@@ -386,6 +386,7 @@ public class Player : MonoBehaviourPunCallbacks
             string sourcePlayerName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).nickName;
 
             int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
+            int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
             string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
             string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
@@ -405,6 +406,9 @@ public class Player : MonoBehaviourPunCallbacks
 
                                 if (wasHeadshot)
                                     feed += $"<sprite={hsCode}>";
+
+                                if(isGroin)
+                                    feed += $"<sprite={nsCode}>";
 
                                 feed += $" <color=\"red\">{nickName}";
                                 kfm.EnterNewFeed(feed);

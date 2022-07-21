@@ -850,16 +850,16 @@ MonoBehaviour:
     sprite: {fileID: -1031388844, guid: 92675ada2529e4d46b7f74e2f3c8e74b, type: 3}
   - m_Index: 34
     m_Metrics:
-      m_Width: 142.90576
-      m_Height: 18.944
-      m_HorizontalBearingX: -71.45288
-      m_HorizontalBearingY: 9.472
-      m_HorizontalAdvance: 142.90576
+      m_Width: 82
+      m_Height: 102
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 83
+      m_HorizontalAdvance: 83
     m_GlyphRect:
-      m_X: 872
-      m_Y: 280
-      m_Width: 142
-      m_Height: 18
+      m_X: 432
+      m_Y: 879
+      m_Width: 130
+      m_Height: 130
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0

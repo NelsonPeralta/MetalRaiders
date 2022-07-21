@@ -131316,6 +131316,7 @@ GameObject:
   - component: {fileID: 3713069403334642112}
   - component: {fileID: 4117967989188665137}
   - component: {fileID: 8092317767613406178}
+  - component: {fileID: 3629912448412264795}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -131402,6 +131403,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3629912448412264795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820761358730726846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 1
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &2628952488416317862
 GameObject:
   m_ObjectHideFlags: 0
@@ -131414,6 +131430,7 @@ GameObject:
   - component: {fileID: 725577152527337046}
   - component: {fileID: 4044601011527210328}
   - component: {fileID: 5977022584095088865}
+  - component: {fileID: 7614157734634159095}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -131500,6 +131517,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7614157734634159095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2628952488416317862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &3153285448877127442
 GameObject:
   m_ObjectHideFlags: 0
@@ -131512,6 +131544,7 @@ GameObject:
   - component: {fileID: 2201361557700798536}
   - component: {fileID: 304066928776514188}
   - component: {fileID: 4983877555009309822}
+  - component: {fileID: 6168732787751964253}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -131598,6 +131631,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6168732787751964253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3153285448877127442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &3613078337403701699
 GameObject:
   m_ObjectHideFlags: 0
@@ -131610,6 +131658,7 @@ GameObject:
   - component: {fileID: 7953686509451780835}
   - component: {fileID: 785885679739861283}
   - component: {fileID: 4732740613049817071}
+  - component: {fileID: 6127760020016299470}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -131696,6 +131745,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6127760020016299470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3613078337403701699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &3859835755970692624
 GameObject:
   m_ObjectHideFlags: 0
@@ -131740,6 +131804,7 @@ GameObject:
   - component: {fileID: 4734072509816293799}
   - component: {fileID: 8394947794577484617}
   - component: {fileID: 2609445412120538646}
+  - component: {fileID: 114113693383872065}
   m_Layer: 0
   m_Name: Hitbox (1)
   m_TagString: Untagged
@@ -131826,6 +131891,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114113693383872065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3975006622006164793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &4006458467404295094
 GameObject:
   m_ObjectHideFlags: 0
@@ -131838,6 +131918,7 @@ GameObject:
   - component: {fileID: 8860547599355337067}
   - component: {fileID: 8746515426108228588}
   - component: {fileID: 3383589519231918217}
+  - component: {fileID: 6261125092389090754}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -131924,6 +132005,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6261125092389090754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4006458467404295094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &4175183138589034214
 GameObject:
   m_ObjectHideFlags: 0
@@ -133924,6 +134020,7 @@ GameObject:
   - component: {fileID: 6323768196457936926}
   - component: {fileID: 2861489673665321300}
   - component: {fileID: 4938574978442464769}
+  - component: {fileID: 6001045364294883081}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -134010,6 +134107,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6001045364294883081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4664389614287564885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &5284194941389503916
 GameObject:
   m_ObjectHideFlags: 0
@@ -135260,6 +135372,7 @@ GameObject:
   - component: {fileID: 5025631928265346383}
   - component: {fileID: 7197004847532426499}
   - component: {fileID: 4030077506895323620}
+  - component: {fileID: 854576413219591852}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -135346,6 +135459,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &854576413219591852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5623241585048799621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &5878107295597124878
 GameObject:
   m_ObjectHideFlags: 0
@@ -135358,6 +135486,7 @@ GameObject:
   - component: {fileID: 4063786629925472455}
   - component: {fileID: 4859562671242219509}
   - component: {fileID: 905648218972673444}
+  - component: {fileID: 6312908726191054243}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -135444,6 +135573,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6312908726191054243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5878107295597124878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &7561654091480658436
 GameObject:
   m_ObjectHideFlags: 0
@@ -135456,6 +135600,7 @@ GameObject:
   - component: {fileID: 2688508962601714519}
   - component: {fileID: 7530678537656853435}
   - component: {fileID: 5414007922419418957}
+  - component: {fileID: 8152744945087777134}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -135542,6 +135687,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8152744945087777134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7561654091480658436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &7823149256327172850
 GameObject:
   m_ObjectHideFlags: 0
@@ -135554,6 +135714,7 @@ GameObject:
   - component: {fileID: 5474032644418083233}
   - component: {fileID: 3437395663055987144}
   - component: {fileID: 5636201784526234719}
+  - component: {fileID: 4656683923830627456}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -135640,6 +135801,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4656683923830627456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7823149256327172850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1 &8752187788928149264
 GameObject:
   m_ObjectHideFlags: 0
@@ -135652,6 +135828,7 @@ GameObject:
   - component: {fileID: 1652214600031410118}
   - component: {fileID: 1044413536174561012}
   - component: {fileID: 2746593145050546379}
+  - component: {fileID: 3045346790952018254}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -135737,6 +135914,21 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3045346790952018254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8752187788928149264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 1
+  player: {fileID: 0}
 --- !u!1 &9125264494836125333
 GameObject:
   m_ObjectHideFlags: 0
@@ -135749,6 +135941,7 @@ GameObject:
   - component: {fileID: 5231256809591587450}
   - component: {fileID: 5106628123913606471}
   - component: {fileID: 8987471099895245734}
+  - component: {fileID: 5609839548638499461}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -135835,6 +136028,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5609839548638499461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125264494836125333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc973fe89ed2538449c0409f5bdba613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHead: 0
+  isGroin: 0
+  player: {fileID: 0}
 --- !u!1001 &1037953727130603983
 PrefabInstance:
   m_ObjectHideFlags: 0

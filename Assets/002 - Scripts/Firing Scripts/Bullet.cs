@@ -210,6 +210,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
                 Player player = hitbox.player.GetComponent<Player>();
                 bool wasHeadshot = false;
+                bool wasNuthsot = false;
                 if (hitbox.isHead && weaponProperties.isHeadshotCapable)
                 {
                     int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
@@ -228,16 +229,27 @@ public class Bullet : MonoBehaviourPunCallbacks
                         wasHeadshot = true;
                         playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
                     }
+                }else if (hitbox.isGroin)
+                {
+                    wasNuthsot = true;
+
+                    int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
+
+                    if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
+                        damage = player.maxHealthPoints;
+
+                    if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                        damage = (int)(damage * weaponProperties.headshotMultiplier);
                 }
 
                 if (playerWhoShot.PV.IsMine)
                 {
                     if (weaponProperties.codeName != null)
                     {
-                        player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName);
+                        player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNuthsot);
                     }
                     else
-                        player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint);
+                        player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNuthsot);
                 }
 
                 damageDealt = true;

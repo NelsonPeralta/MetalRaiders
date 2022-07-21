@@ -47,6 +47,7 @@ public class KillFeedManager : MonoBehaviour
         killFeedWeaponCodeDict.Add("melee", 22);
 
         killFeedSpecialCodeDict.Add("headshot", 23);
+        killFeedSpecialCodeDict.Add("nutshot", 34);
 
 
 
