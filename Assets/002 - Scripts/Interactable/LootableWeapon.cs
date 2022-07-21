@@ -68,7 +68,7 @@ public class LootableWeapon : MonoBehaviour
 
     public void SetSpawnPointPosition(Vector3 position)
     {
-        spawnPointPosition = position;
+        spawnPointPosition = new Vector3((float)System.Math.Round(position.x, 1), (float)System.Math.Round(position.y, 1), (float)System.Math.Round(position.z, 1));
     }
 
     public Vector3 GetSpawnPointPosition()

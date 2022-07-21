@@ -339,7 +339,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     [PunRPC]
     public void PickupSecondWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
-        LootableWeapon lws = weaponPool.GetWeaponWithSpawnPoint(collidingWeaponPosition);
+        LootableWeapon lws = FindObjectOfType<WeaponPool>().GetWeaponWithSpawnPoint(collidingWeaponPosition);
         weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
         weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
@@ -352,6 +352,8 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         pInventory.hasSecWeap = true;
 
         Debug.Log($"ReplaceWeapon ${weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo}");
+        Debug.Log($"ReplaceWeapon ${collidingWeaponPosition}");
+        Debug.Log($"ReplaceWeapon ${lws}");
         Debug.Log($"ReplaceWeapon ${lws.ammoInThisWeapon}");
         weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
         //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
