@@ -96,11 +96,11 @@ public class WeaponPool : MonoBehaviourPun
 
     public void DisablePooledWeapon(Vector3 position)
     {
-        for (int i = 0; i < allWeapons.Count; i++)
-        {
-            if (allWeapons[i].GetSpawnPointPosition() == position)
-                allWeapons[i].DisableWeapon();
-        }
+        //for (int i = 0; i < allWeapons.Count; i++)
+        //{
+        //    if (allWeapons[i].GetSpawnPointPosition() == position)
+        //        allWeapons[i].DisableWeapon();
+        //}
     }
 
     // Ammo Pack Methods
@@ -166,13 +166,13 @@ public class WeaponPool : MonoBehaviourPun
         }
     }
 
-    public LootableWeapon GetWeaponWithSpawnPoint(Vector3 position)
-    {
-        for (int i = 0; i < allWeapons.Count; i++)
-        {
-            if (allWeapons[i].GetSpawnPointPosition() == position)
-                return allWeapons[i];
-        }
-        return null;
-    }
+    //public LootableWeapon GetWeaponWithSpawnPoint(Vector3 position)
+    //{
+    //    for (int i = 0; i < allWeapons.Count; i++)
+    //    {
+    //        if (allWeapons[i].GetSpawnPointPosition() == position)
+    //            return allWeapons[i];
+    //    }
+    //    return null;
+    //}
 }

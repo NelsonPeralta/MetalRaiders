@@ -66,7 +66,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
                 if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
                     weaponCollidingWithInInventoryIndex = i;
-            Vector3 lwPosition = weaponCollidingWith.GetComponent<LootableWeapon>().GetSpawnPointPosition();
+            Vector3 lwPosition = weaponCollidingWith.GetComponent<LootableWeapon>().spawnPointPosition;
             if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
             {
                 Debug.Log("RPC: Picking up second weapon");
@@ -290,10 +290,13 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     [PunRPC]
     public void ReplaceWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
-        LootableWeapon lws = weaponPool.GetWeaponWithSpawnPoint(collidingWeaponPosition);
+        LootableWeapon lws = null;
+        LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
+        foreach (LootableWeapon lw in weapons)
+            if (lw.spawnPointPosition == collidingWeaponPosition)
+                lws = lw;
+
         weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
-        //LootableWeapon lws = PhotonView.Find(collidingWeaponPhotonId).gameObject.GetComponent<LootableWeapon>();
-        Debug.Log("Replace Weapon");
         if (pInventory.activeWeapIs == 1)
         {
             weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
@@ -339,7 +342,14 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     [PunRPC]
     public void PickupSecondWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
-        LootableWeapon lws = FindObjectOfType<WeaponPool>().GetWeaponWithSpawnPoint(collidingWeaponPosition);
+
+
+        LootableWeapon lws = null;
+        LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
+        foreach (LootableWeapon lw in weapons)
+            if (lw.spawnPointPosition == collidingWeaponPosition)
+                lws = lw;
+
         weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
         weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
@@ -368,7 +378,12 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     public void RPC_DisableCollidingWeapon(Vector3 collidingWeaponPosition)
     {
         Debug.Log("RPC: Disabling lootable weapon");
-        weaponPool.DisablePooledWeapon(collidingWeaponPosition);
+        //weaponPool.DisablePooledWeapon(collidingWeaponPosition);
+
+        LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
+        foreach (LootableWeapon lw in weapons)
+            if (lw.spawnPointPosition == collidingWeaponPosition)
+                lw.DisableWeapon();
     }
 
     // TO DO: make it across all the network

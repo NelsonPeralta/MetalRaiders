@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class LootableWeapon : MonoBehaviour
 {
-    [SerializeField]
-    Vector3 spawnPointPosition;
+    Vector3 _spawnPointPosition;
     public string weaponName;
     public bool isWallGun;
     public int ammoInThisWeapon;
@@ -24,6 +23,12 @@ public class LootableWeapon : MonoBehaviour
 
     public OnlineWeaponSpawnPoint onlineWeaponSpawnPoint;
 
+    public Vector3 spawnPointPosition
+    {
+        get { return _spawnPointPosition; }
+        set { _spawnPointPosition = value; }
+    }
+
     private void Start()
     {
         defaultAmmo = ammoInThisWeapon;
@@ -37,6 +42,8 @@ public class LootableWeapon : MonoBehaviour
         }
         else
             Destroy(gameObject);
+
+        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
     }
 
     public void ResetAmmo()
@@ -64,15 +71,5 @@ public class LootableWeapon : MonoBehaviour
     {
         gameObject.SetActive(true);
         ResetAmmo();
-    }
-
-    public void SetSpawnPointPosition(Vector3 position)
-    {
-        spawnPointPosition = new Vector3((float)System.Math.Round(position.x, 1), (float)System.Math.Round(position.y, 1), (float)System.Math.Round(position.z, 1));
-    }
-
-    public Vector3 GetSpawnPointPosition()
-    {
-        return spawnPointPosition;
     }
 }
