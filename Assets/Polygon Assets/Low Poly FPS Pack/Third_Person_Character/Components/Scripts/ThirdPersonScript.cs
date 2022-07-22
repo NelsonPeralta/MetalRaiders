@@ -9,7 +9,7 @@ public class ThirdPersonScript : MonoBehaviour {
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
     public int playerRewiredID;
     public List<SkinnedMeshRenderer> meshes = new List<SkinnedMeshRenderer>();
-
+    public Transform handBone;
 
 	private void Update () 
 	{

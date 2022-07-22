@@ -12,7 +12,7 @@ public class WeaponProperties : MonoBehaviour
     public enum AmmoType { Heavy, Light, Power }
     public enum AmmoReloadType { Magazine, Shell, Single }
     public enum AmmoProjectileType { Bullet, Grenade, Rocket }
-    public enum AimingMechanic { None, Zoom, Scope}
+    public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
     [Header("Weapon Info")]
@@ -73,6 +73,7 @@ public class WeaponProperties : MonoBehaviour
 
     [Header("Animation")]
     public IdleHandlingAnimationType idleHandlingAnimationType;
+    public Transform weaponModel;
     public GameObject thirdPersonModelEquipped;
     public GameObject thirdPersonModelUnequipped;
 
@@ -138,6 +139,48 @@ public class WeaponProperties : MonoBehaviour
     public int GetNumberOfBulletsToShoot()
     {
         return numberOfPellets;
+    }
+
+    private void OnEnable()
+    {
+        PlayerThirdPersonModelManager ptpmm = pController.GetComponent<PlayerThirdPersonModelManager>();
+
+        if (ptpmm.humanModel.gameObject.activeSelf)
+        {
+
+        }
+        else if (ptpmm.spartanModel.gameObject.activeSelf)
+        {
+            try
+            {
+                //foreach (Transform t in weaponModel.transform)
+                //    if (t.name.Contains("Grip"))
+                //        t.parent = ptpmm.spartanModel.handBone;
+
+                weaponModel.parent = ptpmm.spartanModel.handBone;
+                weaponModel.gameObject.SetActive(true);
+            }
+            catch (System.Exception e)
+            {
+
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        try
+        {
+            weaponModel.gameObject.SetActive(false);
+
+        }
+        catch
+        {
+
+        }
+
+        thirdPersonModelEquipped.SetActive(false);
+        thirdPersonModelUnequipped.SetActive(false);
     }
 }
 
@@ -209,6 +252,7 @@ public class WeaponPropertiesEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Model", EditorStyles.boldLabel);
         wp.idleHandlingAnimationType = (WeaponProperties.IdleHandlingAnimationType)EditorGUILayout.EnumPopup("Idle Handling Type", wp.idleHandlingAnimationType);
+        wp.weaponModel = EditorGUILayout.ObjectField("Weapon Model", wp.weaponModel, typeof(Transform), true) as Transform;
         wp.thirdPersonModelEquipped = EditorGUILayout.ObjectField("Equipped model", wp.thirdPersonModelEquipped, typeof(GameObject), true) as GameObject;
         wp.thirdPersonModelUnequipped = EditorGUILayout.ObjectField("Unequipped model", wp.thirdPersonModelUnequipped, typeof(GameObject), true) as GameObject;
 
