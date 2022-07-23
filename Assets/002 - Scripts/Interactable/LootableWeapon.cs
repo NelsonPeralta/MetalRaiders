@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class LootableWeapon : MonoBehaviourPun
+public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 {
     Vector3 _spawnPointPosition;
     public string cleanName;
@@ -137,4 +137,19 @@ public class LootableWeapon : MonoBehaviourPun
         if (param.ContainsKey("ttl"))
             _ttl = int.Parse(param["ttl"]);
     }
+
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+    //    Debug.Log("OnPhotonSerializeView");
+    //    if (stream.IsWriting)
+    //    {
+    //        stream.SendNext(transform.position);
+    //        stream.SendNext(transform.rotation);
+    //    }
+    //    else if (stream.IsReading)
+    //    {
+    //        transform.position = (Vector3)stream.ReceiveNext();
+    //        transform.rotation = (Quaternion)stream.ReceiveNext();
+    //    }
+    //}
 }

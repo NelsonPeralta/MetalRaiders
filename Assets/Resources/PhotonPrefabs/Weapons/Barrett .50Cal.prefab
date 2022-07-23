@@ -596,7 +596,7 @@ GameObject:
   - component: {fileID: 7738143648539804061}
   - component: {fileID: 7368614592611344181}
   - component: {fileID: 6136547517360919246}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Barrett .50Cal
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -729,7 +729,7 @@ MonoBehaviour:
   heavyAmmo: 0
   powerAmmo: 1
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &6136547517360919246
 MonoBehaviour:
   m_ObjectHideFlags: 0

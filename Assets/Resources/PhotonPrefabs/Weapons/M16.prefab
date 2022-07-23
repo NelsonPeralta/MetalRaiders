@@ -630,7 +630,7 @@ GameObject:
   - component: {fileID: 823490276701922318}
   - component: {fileID: 8147363241831886368}
   - component: {fileID: 5475654205409238296}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: M16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -708,7 +708,7 @@ MonoBehaviour:
   heavyAmmo: 1
   powerAmmo: 0
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &5475654205409238296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,7 +727,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 0}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 288371628012197186}
   - component: {fileID: 1439370327776292833}
   - component: {fileID: 2336910426173594846}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: AK-47
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ MonoBehaviour:
   heavyAmmo: 1
   powerAmmo: 0
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &2336910426173594846
 MonoBehaviour:
   m_ObjectHideFlags: 0

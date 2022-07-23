@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 2449659924544914771}
   - component: {fileID: 8931483522755077858}
   - component: {fileID: 2332715956438352494}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: M1911
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -393,7 +393,7 @@ MonoBehaviour:
   heavyAmmo: 0
   powerAmmo: 0
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &2332715956438352494
 MonoBehaviour:
   m_ObjectHideFlags: 0

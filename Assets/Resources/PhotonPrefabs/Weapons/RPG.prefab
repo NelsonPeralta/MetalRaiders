@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 390231688873399648}
   - component: {fileID: 2711562721274824091}
   - component: {fileID: 4695287854121063512}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: RPG
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ MonoBehaviour:
   heavyAmmo: 0
   powerAmmo: 1
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &4695287854121063512
 MonoBehaviour:
   m_ObjectHideFlags: 0

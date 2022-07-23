@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 6834772606342741686}
   - component: {fileID: 3936941750136344839}
   - component: {fileID: 4379058569712835386}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: M4
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ MonoBehaviour:
   heavyAmmo: 1
   powerAmmo: 0
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &4379058569712835386
 MonoBehaviour:
   m_ObjectHideFlags: 0

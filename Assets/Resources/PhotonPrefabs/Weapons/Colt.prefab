@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 4213060019384168117}
   - component: {fileID: 4213060019384168115}
   - component: {fileID: 4214886941747597611}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Colt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -377,7 +377,7 @@ MonoBehaviour:
   heavyAmmo: 0
   powerAmmo: 1
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!54 &4213060019384168115
 Rigidbody:
   m_ObjectHideFlags: 0

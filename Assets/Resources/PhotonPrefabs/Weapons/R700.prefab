@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 552796238838542409}
   - component: {fileID: 3537047690651699159}
   - component: {fileID: 8253055556358932939}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: R700
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ MonoBehaviour:
   heavyAmmo: 0
   powerAmmo: 1
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &8253055556358932939
 MonoBehaviour:
   m_ObjectHideFlags: 0

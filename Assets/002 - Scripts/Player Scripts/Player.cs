@@ -852,9 +852,10 @@ public class Player : MonoBehaviourPunCallbacks
         {
             Debug.Log("DropWeapon_RPC");
             GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position, Quaternion.identity);
-            //wo.name = wo.name.Replace("(Clone)", "");
+            wo.name = wo.name.Replace("(Clone)", "");
             wo.GetComponent<LootableWeapon>().ammoInThisWeapon = wp.currentAmmo;
             wo.GetComponent<LootableWeapon>().ttl = 60;
+            wo.GetComponent<Rigidbody>().AddForce(weaponDropPoint.transform.forward * 200);
         }
         catch (System.Exception e)
         {

@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 2014980408808694998}
   - component: {fileID: 5406913902717158425}
   - component: {fileID: 1500470692903090416}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Minigun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ MonoBehaviour:
   heavyAmmo: 0
   powerAmmo: 1
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &1500470692903090416
 MonoBehaviour:
   m_ObjectHideFlags: 0

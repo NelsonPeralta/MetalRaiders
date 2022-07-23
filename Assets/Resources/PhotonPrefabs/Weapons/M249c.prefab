@@ -430,7 +430,7 @@ GameObject:
   - component: {fileID: 7291944246082082972}
   - component: {fileID: 1305468975565810727}
   - component: {fileID: 2562790906294140497}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: M249c
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -532,7 +532,7 @@ MonoBehaviour:
   heavyAmmo: 1
   powerAmmo: 0
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &7291944246082082972
 MonoBehaviour:
   m_ObjectHideFlags: 0

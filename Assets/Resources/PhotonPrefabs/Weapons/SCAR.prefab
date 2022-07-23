@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 549855107005330412}
   - component: {fileID: 8951400907426846433}
   - component: {fileID: 223960435701437633}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: SCAR
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -394,7 +394,7 @@ MonoBehaviour:
   heavyAmmo: 1
   powerAmmo: 0
   _onlineWeaponSpawnPoint: {fileID: 0}
-  ttl: 0
+  _ttl: 0
 --- !u!114 &223960435701437633
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -228,7 +228,7 @@ public class Movement : MonoBehaviour
 
 
                 cController.Move(movement * speed * Time.deltaTime);
-                cController.Move(currentMovementInput * 0.6f * speed * Time.deltaTime);
+                cController.Move(currentMovementInput * 0.65f * speed * Time.deltaTime);
             }
         }
 
