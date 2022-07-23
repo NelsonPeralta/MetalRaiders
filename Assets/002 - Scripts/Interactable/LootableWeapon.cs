@@ -1,18 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class LootableWeapon : MonoBehaviour
+public class LootableWeapon : MonoBehaviourPun
 {
     Vector3 _spawnPointPosition;
-    public string weaponName;
+    public string cleanName;
+    public string codeName;
     public bool isWallGun;
-    public int ammoInThisWeapon;
+
+    public int _ammoInThisWeapon;
+
+    public int ammoInThisWeapon
+    {
+        get { return _ammoInThisWeapon; }
+        set
+        {
+            _ammoInThisWeapon = value;
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            param["ammo"] = ammoInThisWeapon.ToString();
+            GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
+        }
+    }
     public int extraAmmo;
     public bool isDualWieldable;
 
-    int defaultAmmo;
-    int defaultExtraAmmo;
+    [SerializeField] int defaultAmmo;
+    [SerializeField] int defaultExtraAmmo;
 
     public string weaponType;
 
@@ -20,8 +36,12 @@ public class LootableWeapon : MonoBehaviour
     public bool heavyAmmo;
     public bool powerAmmo;
 
-
-    public OnlineWeaponSpawnPoint onlineWeaponSpawnPoint;
+    [SerializeField] OnlineWeaponSpawnPoint _onlineWeaponSpawnPoint;
+    public OnlineWeaponSpawnPoint onlineWeaponSpawnPoint
+    {
+        get { return _onlineWeaponSpawnPoint; }
+        set { _onlineWeaponSpawnPoint = value; }
+    }
 
     public Vector3 spawnPointPosition
     {
@@ -29,21 +49,38 @@ public class LootableWeapon : MonoBehaviour
         set { _spawnPointPosition = value; }
     }
 
+
+    [SerializeField] float ttl;
+
+    private void Awake()
+    {
+        ttl = 10;
+    }
     private void Start()
     {
         defaultAmmo = ammoInThisWeapon;
         defaultExtraAmmo = extraAmmo;
         //Debug.Log("Lootable Weapon Root: " + transform.parent);
-        if (transform.parent)
-        {
-            string parentName = transform.parent.name;
-            if (!parentName.Contains("WeaponPool"))
-                Destroy(gameObject);
-        }
-        else
-            Destroy(gameObject);
+        //if (transform.parent)
+        //{
+        //    string parentName = transform.parent.name;
+        //    if (!parentName.Contains("WeaponPool"))
+        //        Destroy(gameObject);
+        //}
+        //else
+        //    Destroy(gameObject);
 
         spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
+    }
+
+    private void Update()
+    {
+        if (onlineWeaponSpawnPoint)
+            return;
+        ttl -= Time.deltaTime;
+
+        if (!onlineWeaponSpawnPoint && ttl <= 0)
+            Destroy(gameObject);
     }
 
     public void ResetAmmo()
@@ -52,7 +89,8 @@ public class LootableWeapon : MonoBehaviour
         extraAmmo = defaultExtraAmmo;
     }
 
-    public void RandomAmmo() {
+    public void RandomAmmo()
+    {
         ammoInThisWeapon = (int)Mathf.Ceil(Random.Range(0, ammoInThisWeapon));
         extraAmmo = (int)Mathf.Ceil(Random.Range(0, extraAmmo));
 
@@ -63,13 +101,25 @@ public class LootableWeapon : MonoBehaviour
     public void DisableWeapon()
     {
         //onlineWeaponSpawnPoint.StartCoroutine(onlineWeaponSpawnPoint.RespawnWeapon());
-        onlineWeaponSpawnPoint.StartRespawn();
-        gameObject.SetActive(false);
+        if (onlineWeaponSpawnPoint)
+        {
+            onlineWeaponSpawnPoint.StartRespawn();
+            gameObject.SetActive(false);
+        }
+        else
+            Destroy(gameObject);
     }
 
     public void EnableWeapon()
     {
         gameObject.SetActive(true);
         ResetAmmo();
+    }
+
+    [PunRPC]
+    void UpdateData(Dictionary<string, string> param)
+    {
+        if (param.ContainsKey("ammo"))
+            _ammoInThisWeapon = int.Parse(param["ammo"]);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Player : MonoBehaviourPunCallbacks
@@ -75,6 +76,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public GameObject bloodImpact;
     Vector3 _impactPos;
+    public Transform weaponDropPoint;
     public bool hasArmor // Used to handle armor seller for Swarm Mode
     {
         get { return _hasArmor; }
@@ -827,5 +829,37 @@ public class Player : MonoBehaviourPunCallbacks
         GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
         StartCoroutine(Respawn_Coroutine());
         StartCoroutine(MidRespawnAction());
+        DropWeapon(playerInventory.activeWeapon);
+    }
+
+    public void DropWeapon(WeaponProperties weapon)
+    {
+        PV.RPC("DropWeapon_RPC", RpcTarget.All, weapon.codeName);
+    }
+
+    [PunRPC]
+    void DropWeapon_RPC(string weaponCodename)
+    {
+        Debug.Log($"DropWeapon_RPC {weaponCodename}");
+        WeaponProperties wp = null;
+
+        if (weaponCodename == null)
+            return;
+
+        foreach(GameObject w in playerInventory.allWeaponsInInventory)
+            if(w.GetComponent<WeaponProperties>().codeName == weaponCodename)
+                wp = w.GetComponent<WeaponProperties>();
+
+        try
+        {
+            Debug.Log("DropWeapon_RPC");
+            GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position, Quaternion.identity);
+            wo.name = wo.name.Replace("(Clone)", "");
+            wo.GetComponent<LootableWeapon>().ammoInThisWeapon = wp.currentAmmo;
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogWarning(e);
+        }
     }
 }

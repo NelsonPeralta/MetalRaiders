@@ -14,7 +14,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     WeaponPool weaponPool;
 
     [Header("Other Scripts")]
-    public Player pProperties;
+    public Player player;
     public PlayerInventory pInventory;
     public DualWielding dWielding;
     public PlayerController pController;
@@ -82,6 +82,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             }
             else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
             {
+                player.DropWeapon(pInventory.activeWeapon);
                 PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
                 OnWeaponPickup?.Invoke(this);
 

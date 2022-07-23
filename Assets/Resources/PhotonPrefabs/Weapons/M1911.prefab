@@ -380,16 +380,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: m1911
+  cleanName: M1911
+  codeName: m1911
   isWallGun: 0
-  ammoInThisWeapon: 12
+  _ammoInThisWeapon: 12
   extraAmmo: 24
   isDualWieldable: 0
+  defaultAmmo: 12
+  defaultExtraAmmo: 0
   weaponType: Pistol
   smallAmmo: 1
   heavyAmmo: 0
   powerAmmo: 0
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  ttl: 0
 --- !u!114 &2332715956438352494
 MonoBehaviour:
   m_ObjectHideFlags: 0

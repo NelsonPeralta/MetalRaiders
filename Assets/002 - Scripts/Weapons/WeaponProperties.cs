@@ -86,6 +86,8 @@ public class WeaponProperties : MonoBehaviour
 
     public GameObject equippedModelB;
 
+    public GameObject weaponRessource;
+
     // Properties
     public bool isOutOfAmmo
     {
@@ -235,6 +237,7 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Model", EditorStyles.boldLabel);
+        wp.weaponRessource = EditorGUILayout.ObjectField("Ressource", wp.weaponRessource, typeof(GameObject), true) as GameObject;
         wp.idleHandlingAnimationType = (WeaponProperties.IdleHandlingAnimationType)EditorGUILayout.EnumPopup("Idle Handling Type", wp.idleHandlingAnimationType);
         wp.equippedModelA = EditorGUILayout.ObjectField("Equipped model A", wp.equippedModelA, typeof(GameObject), true) as GameObject;
         wp.unequippedModelA = EditorGUILayout.ObjectField("Unequipped model A", wp.unequippedModelA, typeof(GameObject), true) as GameObject;

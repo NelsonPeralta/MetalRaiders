@@ -298,16 +298,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: m4
+  cleanName: M4
+  codeName: m4
   isWallGun: 0
-  ammoInThisWeapon: 30
+  _ammoInThisWeapon: 30
   extraAmmo: 30
   isDualWieldable: 0
+  defaultAmmo: 30
+  defaultExtraAmmo: 0
   weaponType: Assault Rifle
   smallAmmo: 0
   heavyAmmo: 1
   powerAmmo: 0
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  ttl: 0
 --- !u!114 &4379058569712835386
 MonoBehaviour:
   m_ObjectHideFlags: 0

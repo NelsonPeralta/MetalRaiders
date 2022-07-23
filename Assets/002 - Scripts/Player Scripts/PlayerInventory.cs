@@ -343,6 +343,7 @@ public class PlayerInventory : MonoBehaviourPun
                     allWeaponsInInventory[i].gameObject.SetActive(false);
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
                     weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
+                    holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
                     //Debug.Log("Check 1");
                     hasSecWeap = true;
                 }

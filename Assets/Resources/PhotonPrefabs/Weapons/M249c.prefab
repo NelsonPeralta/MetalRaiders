@@ -519,16 +519,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: m249c
+  cleanName: M249c
+  codeName: m249c
   isWallGun: 0
-  ammoInThisWeapon: 100
+  _ammoInThisWeapon: 100
   extraAmmo: 100
   isDualWieldable: 0
+  defaultAmmo: 100
+  defaultExtraAmmo: 0
   weaponType: Assault Rifle
   smallAmmo: 0
   heavyAmmo: 1
   powerAmmo: 0
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  ttl: 0
 --- !u!114 &7291944246082082972
 MonoBehaviour:
   m_ObjectHideFlags: 0

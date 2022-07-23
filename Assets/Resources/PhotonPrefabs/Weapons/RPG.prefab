@@ -130,16 +130,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: rpg
+  cleanName: RPG
+  codeName: rpg
   isWallGun: 0
-  ammoInThisWeapon: 1
+  _ammoInThisWeapon: 1
   extraAmmo: 3
   isDualWieldable: 0
+  defaultAmmo: 1
+  defaultExtraAmmo: 0
   weaponType: RPG
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  ttl: 0
 --- !u!114 &4695287854121063512
 MonoBehaviour:
   m_ObjectHideFlags: 0

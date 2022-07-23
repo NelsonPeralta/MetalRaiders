@@ -127,6 +127,10 @@ MonoBehaviour:
   - HideDot_RPC
   - ShowDot_RPC
   - AddSecond_RPC
+  - DropWeapons_RPC
+  - Destroy_RPC
+  - UpdateData
+  - DropWeapon_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
