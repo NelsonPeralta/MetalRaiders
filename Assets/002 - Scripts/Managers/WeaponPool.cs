@@ -26,46 +26,41 @@ public class WeaponPool : MonoBehaviourPun
 
     private void Awake()
     {
-
+        
     }
 
     private void Start()
     {
         onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
 
-        if (!PV.IsMine)
-            return;
+        for (int i = 0; i < weaponPrefabs.Count; i++)
+            for (int j = 0; j < amountOfWeaponsToPool; j++)
+            {
+                // TO DO: Spawn them using normal instantiate instead and fix LootableWeapon script according to it (Start method)
+                GameObject newWeap = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weaponPrefabs[i].name), Vector3.zero, Quaternion.identity);
+                //GameObject newWeap = Instantiate(weaponPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
+                newWeap.name = newWeap.name.Replace("(Clone)", "");
+                newWeap.SetActive(false);
+                allWeapons.Add(newWeap.GetComponent<LootableWeapon>());
+                newWeap.transform.parent = gameObject.transform;
+            }
 
-        if (PV.IsMine)
-        {
-            for (int i = 0; i < weaponPrefabs.Count; i++)
-                for (int j = 0; j < amountOfWeaponsToPool; j++)
-                {
-                    // TO DO: Spawn them using normal instantiate instead and fix LootableWeapon script according to it (Start method)
-                    GameObject newWeap = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weaponPrefabs[i].name), Vector3.zero, Quaternion.identity);
-                    //GameObject newWeap = Instantiate(weaponPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
-                    newWeap.name = newWeap.name.Replace("(Clone)", "");
-                    newWeap.SetActive(false);
-                    allWeapons.Add(newWeap.GetComponent<LootableWeapon>());
-                    newWeap.transform.parent = gameObject.transform;
-                }
+        for (int i = 0; i < ammoPackPrefabs.Count; i++)
+            for (int j = 0; j < amountOfWeaponPacksToPool; j++)
+            {
+                //GameObject newAmmoPack = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AmmoPacks", ammoPackPrefabs[i].name), new Vector3(0 - 100, 0), Quaternion.identity);
+                GameObject newAmmoPack = Instantiate(ammoPackPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
+                newAmmoPack.GetComponent<AmmoPack>().weaponPool = this;
+                newAmmoPack.SetActive(false);
+                allAmmoPacks.Add(newAmmoPack);
+                newAmmoPack.transform.parent = gameObject.transform;
 
-            for (int i = 0; i < ammoPackPrefabs.Count; i++)
-                for (int j = 0; j < amountOfWeaponPacksToPool; j++)
-                {
-                    //GameObject newAmmoPack = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AmmoPacks", ammoPackPrefabs[i].name), new Vector3(0 - 100, 0), Quaternion.identity);
-                    GameObject newAmmoPack = Instantiate(ammoPackPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
-                    newAmmoPack.GetComponent<AmmoPack>().weaponPool = this;
-                    newAmmoPack.SetActive(false);
-                    allAmmoPacks.Add(newAmmoPack);
-                    newAmmoPack.transform.parent = gameObject.transform;
+                //int spawnTime = newAmmoPack.GetComponent<AmmoPack>().spawnTime;
+            }
 
-                    //int spawnTime = newAmmoPack.GetComponent<AmmoPack>().spawnTime;
-                }
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("ammo_pack_spawn_point"))
+            allAmmoPackSpawnPoints.Add(go.GetComponent<OnlineAmmoPackSpawnPoint>());
 
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("ammo_pack_spawn_point"))
-                allAmmoPackSpawnPoints.Add(go.GetComponent<OnlineAmmoPackSpawnPoint>());
-        }
         //StartCoroutine(GiveAmmoPackSpawnPointAnAmmoPack());
     }
 

@@ -50,11 +50,23 @@ public class LootableWeapon : MonoBehaviourPun
     }
 
 
-    [SerializeField] float ttl;
+    [SerializeField] float _ttl;
+    public float ttl
+    {
+        get { return _ttl; }
+        set
+        {
+            _ttl = value;
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            param["ttl"] = ttl.ToString();
+            GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
+        }
+    }
 
     private void Awake()
     {
-        ttl = 10;
+        _ttl = 1;
     }
     private void Start()
     {
@@ -77,9 +89,9 @@ public class LootableWeapon : MonoBehaviourPun
     {
         if (onlineWeaponSpawnPoint)
             return;
-        ttl -= Time.deltaTime;
+        _ttl -= Time.deltaTime;
 
-        if (!onlineWeaponSpawnPoint && ttl <= 0)
+        if (!onlineWeaponSpawnPoint && _ttl <= 0)
             Destroy(gameObject);
     }
 
@@ -121,5 +133,8 @@ public class LootableWeapon : MonoBehaviourPun
     {
         if (param.ContainsKey("ammo"))
             _ammoInThisWeapon = int.Parse(param["ammo"]);
+
+        if (param.ContainsKey("ttl"))
+            _ttl = int.Parse(param["ttl"]);
     }
 }
