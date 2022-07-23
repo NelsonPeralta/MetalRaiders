@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviourPun
     public delegate void PlayerControllerEvent(PlayerController playerController);
     public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract,
         OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade,
-        OnCrouchUp, OnCrouchDown;
+        OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop;
 
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -224,6 +224,8 @@ public class PlayerController : MonoBehaviourPun
         if (isSprinting)
             return;
         isSprinting = true;
+        OnSprintStart?.Invoke(this);
+        ScopeOut();
         anim.SetBool("Run", true);
         movement.tPersonScripts.anim.SetBool("Sprint", true);
         movement.tPersonScripts.anim.SetBool("Idle Rifle", false);

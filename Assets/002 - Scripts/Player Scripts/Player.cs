@@ -835,7 +835,7 @@ public class Player : MonoBehaviourPunCallbacks
     public void DropWeapon(WeaponProperties weapon)
     {
         Debug.Log($"DropWeapon {name}");
-        if (!GetComponent<PhotonView>().IsMine)
+        if (!GetComponent<PhotonView>().IsMine || weapon.currentAmmo <= 0)
             return;
 
         Debug.Log($"DropWeapon_RPC {weapon.codeName}");

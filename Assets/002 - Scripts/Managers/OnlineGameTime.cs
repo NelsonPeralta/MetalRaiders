@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class OnlineGameTime : MonoBehaviourPunCallbacks
 {
@@ -74,5 +75,10 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
     private void OnDestroy()
     {
         onlineGameTimeInstance = null;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        totalTime = 0;
     }
 }

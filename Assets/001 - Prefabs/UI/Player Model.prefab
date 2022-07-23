@@ -131416,7 +131416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 1
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &2628952488416317862
 GameObject:
@@ -131530,7 +131530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &3153285448877127442
 GameObject:
@@ -131644,7 +131644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &3613078337403701699
 GameObject:
@@ -131758,7 +131758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &3859835755970692624
 GameObject:
@@ -131904,7 +131904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &4006458467404295094
 GameObject:
@@ -132018,7 +132018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &4175183138589034214
 GameObject:
@@ -132286,7 +132286,7 @@ Transform:
   - {fileID: 4412484652583925062}
   - {fileID: 4405340682420599814}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4351432977652017282
 Animator:
@@ -134120,7 +134120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &5284194941389503916
 GameObject:
@@ -135472,7 +135472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &5878107295597124878
 GameObject:
@@ -135586,7 +135586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &7561654091480658436
 GameObject:
@@ -135700,7 +135700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &7823149256327172850
 GameObject:
@@ -135814,7 +135814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1 &8752187788928149264
 GameObject:
@@ -135830,7 +135830,7 @@ GameObject:
   - component: {fileID: 2746593145050546379}
   - component: {fileID: 3045346790952018254}
   m_Layer: 0
-  m_Name: Hitbox
+  m_Name: Nuts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135927,7 +135927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 1
+  isNuts: 1
   player: {fileID: 0}
 --- !u!1 &9125264494836125333
 GameObject:
@@ -136041,7 +136041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
-  isGroin: 0
+  isNuts: 0
   player: {fileID: 0}
 --- !u!1001 &1037953727130603983
 PrefabInstance:
