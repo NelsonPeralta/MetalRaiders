@@ -409,7 +409,7 @@ public class Player : MonoBehaviourPunCallbacks
                                 if (wasHeadshot)
                                     feed += $"<sprite={hsCode}>";
 
-                                if(isGroin)
+                                if (isGroin)
                                     feed += $"<sprite={nsCode}>";
 
                                 feed += $" <color=\"red\">{nickName}";
@@ -834,7 +834,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     public void DropWeapon(WeaponProperties weapon)
     {
-        PV.RPC("DropWeapon_RPC", RpcTarget.All, weapon.codeName);
+        if (GetComponent<PhotonView>().IsMine)
+            PV.RPC("DropWeapon_RPC", RpcTarget.All, weapon.codeName);
     }
 
     [PunRPC]
@@ -846,8 +847,8 @@ public class Player : MonoBehaviourPunCallbacks
         if (weaponCodename == null)
             return;
 
-        foreach(GameObject w in playerInventory.allWeaponsInInventory)
-            if(w.GetComponent<WeaponProperties>().codeName == weaponCodename)
+        foreach (GameObject w in playerInventory.allWeaponsInInventory)
+            if (w.GetComponent<WeaponProperties>().codeName == weaponCodename)
                 wp = w.GetComponent<WeaponProperties>();
 
         try
@@ -857,7 +858,7 @@ public class Player : MonoBehaviourPunCallbacks
             wo.name = wo.name.Replace("(Clone)", "");
             wo.GetComponent<LootableWeapon>().ammoInThisWeapon = wp.currentAmmo;
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             Debug.LogWarning(e);
         }
