@@ -66,7 +66,7 @@ public class LootableWeapon : MonoBehaviourPun
 
     private void Awake()
     {
-        _ttl = 1;
+        _ttl = 0;
     }
     private void Start()
     {

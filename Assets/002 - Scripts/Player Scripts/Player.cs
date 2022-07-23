@@ -834,6 +834,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public void DropWeapon(WeaponProperties weapon)
     {
+        Debug.Log($"DropWeapon {name}");
         if (GetComponent<PhotonView>().IsMine)
             PV.RPC("DropWeapon_RPC", RpcTarget.All, weapon.codeName);
     }
