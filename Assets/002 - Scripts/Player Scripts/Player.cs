@@ -835,28 +835,24 @@ public class Player : MonoBehaviourPunCallbacks
     public void DropWeapon(WeaponProperties weapon)
     {
         Debug.Log($"DropWeapon {name}");
-        if (GetComponent<PhotonView>().IsMine)
-            PV.RPC("DropWeapon_RPC", RpcTarget.All, weapon.codeName);
-    }
+        if (!GetComponent<PhotonView>().IsMine)
+            return;
 
-    [PunRPC]
-    void DropWeapon_RPC(string weaponCodename)
-    {
-        Debug.Log($"DropWeapon_RPC {weaponCodename}");
+        Debug.Log($"DropWeapon_RPC {weapon.codeName}");
         WeaponProperties wp = null;
 
-        if (weaponCodename == null)
+        if (weapon.codeName == null)
             return;
 
         foreach (GameObject w in playerInventory.allWeaponsInInventory)
-            if (w.GetComponent<WeaponProperties>().codeName == weaponCodename)
+            if (w.GetComponent<WeaponProperties>().codeName == weapon.codeName)
                 wp = w.GetComponent<WeaponProperties>();
 
         try
         {
             Debug.Log("DropWeapon_RPC");
             GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position, Quaternion.identity);
-            wo.name = wo.name.Replace("(Clone)", "");
+            //wo.name = wo.name.Replace("(Clone)", "");
             wo.GetComponent<LootableWeapon>().ammoInThisWeapon = wp.currentAmmo;
             wo.GetComponent<LootableWeapon>().ttl = 60;
         }
