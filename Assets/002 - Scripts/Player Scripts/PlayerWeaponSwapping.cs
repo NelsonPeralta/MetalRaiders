@@ -82,7 +82,8 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             }
             else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
             {
-                player.DropWeapon(pInventory.activeWeapon);
+                if (player.GetComponent<PhotonView>().IsMine)
+                    player.DropWeapon(pInventory.activeWeapon);
                 PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
                 OnWeaponPickup?.Invoke(this);
 

@@ -5,5 +5,5 @@ using UnityEngine;
 public abstract class Hitbox : MonoBehaviour
 {
     public bool isHead = false;
-    public bool isGroin = false;
+    public bool isNuts = false;
 }
