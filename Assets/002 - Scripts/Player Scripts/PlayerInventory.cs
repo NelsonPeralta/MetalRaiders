@@ -396,7 +396,7 @@ public class PlayerInventory : MonoBehaviourPun
             WeaponProperties wp = awgo.GetComponent<WeaponProperties>();
             try
             {
-                wp.thirdPersonModelEquipped.SetActive(false);
+                wp.equippedModelA.SetActive(false);
 
             }
             catch (Exception e)
@@ -406,7 +406,7 @@ public class PlayerInventory : MonoBehaviourPun
 
             try
             {
-                wp.thirdPersonModelUnequipped.SetActive(false);
+                wp.unequippedModelA.SetActive(false);
 
             }
             catch (Exception e)
@@ -423,7 +423,7 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 try
                 {
-                    wp.thirdPersonModelEquipped.SetActive(true);
+                    wp.equippedModelA.SetActive(true);
 
                 }
                 catch (Exception e)
@@ -436,7 +436,7 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 try
                 {
-                    wp.thirdPersonModelUnequipped.SetActive(true);
+                    wp.unequippedModelA.SetActive(true);
                 }
                 catch (Exception e)
                 {
@@ -453,26 +453,26 @@ public class PlayerInventory : MonoBehaviourPun
 
         foreach (GameObject weap in allWeaponsInInventory)
         {
-            if (weap.GetComponent<WeaponProperties>().thirdPersonModelEquipped)
-                weap.GetComponent<WeaponProperties>().thirdPersonModelEquipped.SetActive(false);
-            if (weap.GetComponent<WeaponProperties>().thirdPersonModelUnequipped)
-                weap.GetComponent<WeaponProperties>().thirdPersonModelUnequipped.SetActive(false);
+            if (weap.GetComponent<WeaponProperties>().equippedModelA)
+                weap.GetComponent<WeaponProperties>().equippedModelA.SetActive(false);
+            if (weap.GetComponent<WeaponProperties>().unequippedModelA)
+                weap.GetComponent<WeaponProperties>().unequippedModelA.SetActive(false);
         }
 
-        if (activeWeapon.GetComponent<WeaponProperties>().thirdPersonModelEquipped &&
-            activeWeapon.GetComponent<WeaponProperties>().thirdPersonModelUnequipped)
+        if (activeWeapon.GetComponent<WeaponProperties>().equippedModelA &&
+            activeWeapon.GetComponent<WeaponProperties>().unequippedModelA)
         {
-            activeWeapon.GetComponent<WeaponProperties>().thirdPersonModelEquipped.SetActive(true);
-            activeWeapon.GetComponent<WeaponProperties>().thirdPersonModelUnequipped.SetActive(false);
+            activeWeapon.GetComponent<WeaponProperties>().equippedModelA.SetActive(true);
+            activeWeapon.GetComponent<WeaponProperties>().unequippedModelA.SetActive(false);
         }
 
         if (weaponsEquiped[1])
         {
-            if (weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().thirdPersonModelEquipped &&
-                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().thirdPersonModelUnequipped)
+            if (weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().equippedModelA &&
+                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().unequippedModelA)
             {
-                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().thirdPersonModelEquipped.SetActive(false);
-                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().thirdPersonModelUnequipped.SetActive(true);
+                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().equippedModelA.SetActive(false);
+                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().unequippedModelA.SetActive(true);
             }
         }
 
@@ -539,15 +539,37 @@ public class PlayerInventory : MonoBehaviourPun
         SwapGunsOnCharacter(secondaryWeapon);
         yield return new WaitForEndOfFrame();
 
+        Debug.Log($"ToggleTPPistolIdle {activeWeapon.name}");
         if (activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
-            pController.tPersonController.anim.SetBool("Idle Pistol", true);
-            pController.tPersonController.anim.SetBool("Idle Rifle", false);
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            {
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.anim.SetBool("Idle Pistol", true);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.anim.SetBool("Idle Rifle", false);
+            }
+            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            {
+                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Pistol", true);
+                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Rifle", false);
+            }
+            //pController.tPersonController.anim.SetBool("Idle Pistol", true);
+            //pController.tPersonController.anim.SetBool("Idle Rifle", false);
         }
         else
         {
-            pController.tPersonController.anim.SetBool("Idle Rifle", true);
-            pController.tPersonController.anim.SetBool("Idle Pistol", false);
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            {
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.anim.SetBool("Idle Pistol", false);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.anim.SetBool("Idle Rifle", true);
+            }
+            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            {
+                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Pistol", false);
+                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Rifle", true);
+            }
+
+            //pController.tPersonController.anim.SetBool("Idle Rifle", true);
+            //pController.tPersonController.anim.SetBool("Idle Pistol", false);
         }
     }
 

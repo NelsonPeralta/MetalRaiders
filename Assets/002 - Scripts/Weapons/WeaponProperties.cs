@@ -73,9 +73,8 @@ public class WeaponProperties : MonoBehaviour
 
     [Header("Animation")]
     public IdleHandlingAnimationType idleHandlingAnimationType;
-    public Transform weaponModel;
-    public GameObject thirdPersonModelEquipped;
-    public GameObject thirdPersonModelUnequipped;
+    public GameObject equippedModelA;
+    public GameObject unequippedModelA;
 
     [Header("Dual Wielding")]
     public GameObject rightHandGO;
@@ -83,6 +82,9 @@ public class WeaponProperties : MonoBehaviour
     public bool isDualWieldable;
     public bool isRightWeapon;
     public bool isLeftWeapon;
+
+
+    public GameObject equippedModelB;
 
     // Properties
     public bool isOutOfAmmo
@@ -143,27 +145,13 @@ public class WeaponProperties : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerThirdPersonModelManager ptpmm = pController.GetComponent<PlayerThirdPersonModelManager>();
-
-        if (ptpmm.humanModel.gameObject.activeSelf)
+        try
         {
-
+            equippedModelB.SetActive(true);
         }
-        else if (ptpmm.spartanModel.gameObject.activeSelf)
+        catch
         {
-            try
-            {
-                //foreach (Transform t in weaponModel.transform)
-                //    if (t.name.Contains("Grip"))
-                //        t.parent = ptpmm.spartanModel.handBone;
 
-                weaponModel.parent = ptpmm.spartanModel.handBone;
-                weaponModel.gameObject.SetActive(true);
-            }
-            catch (System.Exception e)
-            {
-
-            }
         }
     }
 
@@ -171,16 +159,12 @@ public class WeaponProperties : MonoBehaviour
     {
         try
         {
-            weaponModel.gameObject.SetActive(false);
-
+            equippedModelB.SetActive(false);
         }
         catch
         {
 
         }
-
-        thirdPersonModelEquipped.SetActive(false);
-        thirdPersonModelUnequipped.SetActive(false);
     }
 }
 
@@ -252,9 +236,9 @@ public class WeaponPropertiesEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Model", EditorStyles.boldLabel);
         wp.idleHandlingAnimationType = (WeaponProperties.IdleHandlingAnimationType)EditorGUILayout.EnumPopup("Idle Handling Type", wp.idleHandlingAnimationType);
-        wp.weaponModel = EditorGUILayout.ObjectField("Weapon Model", wp.weaponModel, typeof(Transform), true) as Transform;
-        wp.thirdPersonModelEquipped = EditorGUILayout.ObjectField("Equipped model", wp.thirdPersonModelEquipped, typeof(GameObject), true) as GameObject;
-        wp.thirdPersonModelUnequipped = EditorGUILayout.ObjectField("Unequipped model", wp.thirdPersonModelUnequipped, typeof(GameObject), true) as GameObject;
+        wp.equippedModelA = EditorGUILayout.ObjectField("Equipped model A", wp.equippedModelA, typeof(GameObject), true) as GameObject;
+        wp.unequippedModelA = EditorGUILayout.ObjectField("Unequipped model A", wp.unequippedModelA, typeof(GameObject), true) as GameObject;
+        wp.equippedModelB = EditorGUILayout.ObjectField("Equipped model B", wp.equippedModelB, typeof(GameObject), true) as GameObject;
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
