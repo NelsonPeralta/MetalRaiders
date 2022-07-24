@@ -150,8 +150,8 @@ public class Movement : MonoBehaviour
         {
             if (isGrounded)
             {
-                if (pController.anim)
-                    pController.anim.SetBool("Walk", true);
+                if (pController.weaponAnimator)
+                    pController.weaponAnimator.SetBool("Walk", true);
 
                 if (pController.isDualWielding)
                 {
@@ -163,9 +163,9 @@ public class Movement : MonoBehaviour
             }
             else
             {
-                if (pController.anim != null)
+                if (pController.weaponAnimator != null)
                 {
-                    pController.anim.SetBool("Walk", false);
+                    pController.weaponAnimator.SetBool("Walk", false);
                 }
 
                 if (pController.isDualWielding)
@@ -177,9 +177,9 @@ public class Movement : MonoBehaviour
         }
         else
         {
-            if (pController.anim != null)
+            if (pController.weaponAnimator != null)
             {
-                pController.anim.SetBool("Walk", false);
+                pController.weaponAnimator.SetBool("Walk", false);
             }
 
             if (pController.isDualWielding)
@@ -445,39 +445,39 @@ public class Movement : MonoBehaviour
     {
         if (pController != null)
         {
-            if (pController.anim != null)
+            if (pController.weaponAnimator != null)
             {
                 if (isGrounded)
                 {
 
-                    if (pController.anim.GetBool("Walk"))
+                    if (pController.weaponAnimator.GetBool("Walk"))
                     {
                         //Debug.Log("Here");
                         if (!pController.isReloading && !pController.isDrawingWeapon && !pController.isThrowingGrenade &&
                             !pController.isMeleeing && !pController.isFiring)
                         {
-                            pController.anim.speed = playerSpeed;
+                            pController.weaponAnimator.speed = playerSpeed;
                             tpLookAt.anim.speed = playerSpeed;
                         }
                         else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade ||
                             pController.isMeleeing || pController.isFiring)
                         {
                             playerSpeed = 1;
-                            pController.anim.speed = 1;
+                            pController.weaponAnimator.speed = 1;
                             tpLookAt.anim.speed = 1;
                         }
                     }
                     else
                     {
                         playerSpeed = 1;
-                        pController.anim.speed = 1;
+                        pController.weaponAnimator.speed = 1;
                         if (tpLookAt.anim)
                             tpLookAt.anim.speed = 1;
                     }
                 }
-                else if (!isGrounded && pController.anim.GetBool("Run"))
+                else if (!isGrounded && pController.weaponAnimator.GetBool("Run"))
                 {
-                    pController.anim.speed = 0.1f;
+                    pController.weaponAnimator.speed = 0.1f;
 
                 }
             }

@@ -5,6 +5,9 @@ using Photon.Pun;
 
 public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 {
+    public delegate void LootableWeaponEvent(LootableWeapon lootableWeapon);
+    public LootableWeaponEvent OnLooted;
+
     Vector3 _spawnPointPosition;
     public string cleanName;
     public string codeName;
@@ -113,6 +116,8 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public void DisableWeapon()
     {
         //onlineWeaponSpawnPoint.StartCoroutine(onlineWeaponSpawnPoint.RespawnWeapon());
+
+        OnLooted?.Invoke(this);
         if (onlineWeaponSpawnPoint)
         {
             onlineWeaponSpawnPoint.StartRespawn();

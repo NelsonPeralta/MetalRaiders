@@ -27,7 +27,7 @@ public class CommonFiringActions : MonoBehaviour
         weaponProperties.mainAudioSource.clip = weaponProperties.Fire;
         weaponProperties.mainAudioSource.Play();
 
-        playerController.anim.Play("Fire", 0, 0f);
+        playerController.weaponAnimator.Play("Fire", 0, 0f);
         StartCoroutine(Player3PSFiringAnimation());
     }
 

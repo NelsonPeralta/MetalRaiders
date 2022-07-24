@@ -47,9 +47,9 @@ public class ReloadScript : MonoBehaviourPun
 
     private void Update()
     {
-        if (pController.wProperties != null)
+        if (pController.pInventory.activeWeapon != null)
         {
-            if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+            if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
             {
                 if (reloadingMagInProgress)
                 {
@@ -71,7 +71,7 @@ public class ReloadScript : MonoBehaviourPun
                 }
             }
 
-            if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell) ///////For Shotgun
+            if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell) ///////For Shotgun
             {
                 if (openingWeaponForShells)
                 {
@@ -80,7 +80,7 @@ public class ReloadScript : MonoBehaviourPun
                     if (reloadOpenCountdown <= 0)
                     {
                         Debug.Log("Inserting Shell");
-                        pController.anim.Play("Insert Shell", 0, 0f);
+                        pController.weaponAnimator.Play("Insert Shell", 0, 0f);
                         shellsToInsert = shellsToInsert - 1;
                         pController.TransferAmmo();
 
@@ -114,11 +114,11 @@ public class ReloadScript : MonoBehaviourPun
                             insertingShellInProgress = false;
                             reloadInsertCountdown = 0;
 
-                            pController.anim.Play("Reload Close", 0, 0f);
+                            pController.weaponAnimator.Play("Reload Close", 0, 0f);
                         }
                         else
                         {
-                            pController.anim.Play("Insert Shell", 0, 0f);
+                            pController.weaponAnimator.Play("Insert Shell", 0, 0f);
                             shellsToInsert = shellsToInsert - 1;
                             pController.TransferAmmo();
 
@@ -154,7 +154,7 @@ public class ReloadScript : MonoBehaviourPun
                 }
             }
 
-            if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
+            if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
             {
                 if (reloadingSingleInProgress)
                 {
@@ -208,19 +208,19 @@ public class ReloadScript : MonoBehaviourPun
 
     public void ReloadAnimation(bool isOutOfAmmo)
     {
-        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+        if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
         {
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
-                    if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.wProperties.gameObject)
+                    if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.pInventory.activeWeapon.gameObject)
                         PV.RPC("PlayReloadSound_RPC", RpcTarget.All, i);
             //reloadAudioSource.clip = pController.wProperties.Reload_1;
             //reloadAudioSource.Play();
 
             if (!isOutOfAmmo)
-                pController.anim.Play("Reload Ammo Left", 0, 0f);
+                pController.weaponAnimator.Play("Reload Ammo Left", 0, 0f);
             else
-                pController.anim.Play("Reload Out Of Ammo", 0, 0f);
+                pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
             pController.ScopeOut();
 
             if (pController.gwProperties.bulletInMagRenderer != null)
@@ -232,9 +232,9 @@ public class ReloadScript : MonoBehaviourPun
             Reload(magsAmmoLeft, 0, 0, 0);
         }
 
-        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+        if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
-            int ammoNeededToReload = pController.wProperties.ammoCapacity - pController.wProperties.currentAmmo;
+            int ammoNeededToReload = pController.pInventory.activeWeapon.ammoCapacity - pController.pInventory.activeWeapon.currentAmmo;
             int ammoToReload = 0;
 
             if (ammoNeededToReload > pController.pInventory.currentExtraAmmo)
@@ -249,20 +249,20 @@ public class ReloadScript : MonoBehaviourPun
             shellsToInsert = ammoToReload;
             Reload(0, DEFAULT_RELOAD_TIME / (3/2f),
                 DEFAULT_RELOAD_TIME / (3/2f), 0);
-            pController.anim.Play("Reload Open", 0, 0f);
+            pController.weaponAnimator.Play("Reload Open", 0, 0f);
             pController.ScopeOut();
 
 
         }
-        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
+        if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
         {
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
-                    if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.wProperties.gameObject)
+                    if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.pInventory.activeWeapon.gameObject)
                         PV.RPC("PlayReloadSound_RPC", RpcTarget.All, i);
             //reloadAudioSource.clip = pController.wProperties.Reload_1;
             //reloadAudioSource.Play();
-            pController.anim.Play("Reload", 0, 0f);
+            pController.weaponAnimator.Play("Reload", 0, 0f);
             pController.ScopeOut();
 
             Reload(0, 0, 0, singleReloadTime);
@@ -273,14 +273,14 @@ public class ReloadScript : MonoBehaviourPun
 
     public void Reload(float countdownTime, float shellOpenTime, float shellInsertTime, float singleAmmoTime)
     {
-        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+        if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
         {
             reloadingMagInProgress = true;
             reloadIsCanceled = false;
             reloadCountdownMags = countdownTime;
         }
 
-        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+        if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
             openingWeaponForShells = true;
             reloadIsCanceled = false;
@@ -290,7 +290,7 @@ public class ReloadScript : MonoBehaviourPun
             shellsInsertTime = shellInsertTime;
         }
 
-        if (pController.wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
+        if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
         {
             reloadingSingleInProgress = true;
             reloadIsCanceled = false;

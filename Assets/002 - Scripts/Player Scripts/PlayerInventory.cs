@@ -26,8 +26,27 @@ public class PlayerInventory : MonoBehaviourPun
     public string StartingWeapon;
     public string StartingWeapon2;
     public int activeWeapIs = 0;
-    public WeaponProperties activeWeapon;
-    public WeaponProperties holsteredWeapon;
+    [SerializeField] WeaponProperties _activeWeapon;
+    [SerializeField] WeaponProperties _holsteredWeapon;
+    public WeaponProperties activeWeapon
+    {
+        get { return _activeWeapon; }
+        set
+        {
+            _activeWeapon = value;
+            _activeWeapon.gameObject.SetActive(true);
+            pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
+        }
+    }
+    public WeaponProperties holsteredWeapon
+    {
+        get { return _holsteredWeapon; }
+        set
+        {
+            _holsteredWeapon = value;
+            _holsteredWeapon.gameObject.SetActive(false);
+        }
+    }
     public bool hasSecWeap = false;
 
     [Space(20)]
@@ -158,11 +177,11 @@ public class PlayerInventory : MonoBehaviourPun
         StartCoroutine(EquipStartingWeapon());
 
         pController.OnPlayerSwitchWeapons += OnPlayerSwitchWeapons_Delegate;
-        pController.OnPlayerLongInteract += OnPlayerSwitchWeapons_Delegate;
+        //pController.OnPlayerLongInteract += OnPlayerSwitchWeapons_Delegate;
         rScript.OnReloadEnd += OnReloadEnd_Delegate;
         playerWeaponSwapping.OnWeaponPickup += OnPlayerWeaponSwapping_Delegate;
 
-        OnPlayerSwitchWeapons_Delegate(pController);
+        //OnPlayerSwitchWeapons_Delegate(pController);
         playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
         pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
 
@@ -199,56 +218,39 @@ public class PlayerInventory : MonoBehaviourPun
         if (!PV.IsMine)
             return;
 
+        //WeaponProperties previousActiveWeapon = activeWeapon;
+        //WeaponProperties newActiveWeapon = holsteredWeapon;
+
+        //activeWeapon = newActiveWeapon;
+        //holsteredWeapon = previousActiveWeapon;
+
         AmmoManager();
 
-        if (pController.player.GetButtonDown("Switch Weapons") && !pProperties.isDead)
+        pController.ScopeOut();
+        crosshairScript.DeactivateRedCrosshair();
+        allPlayerScripts.aimAssist.ResetRedReticule();
+
+        if (pController.isReloading && pController.pInventory.weaponsEquiped[1] != null)
         {
-            pController.ScopeOut();
-            crosshairScript.DeactivateRedCrosshair();
-            allPlayerScripts.aimAssist.ResetRedReticule();
+            rScript.reloadIsCanceled = true;
 
-            if (pController.isReloading && pController.pInventory.weaponsEquiped[1] != null)
-            {
-                rScript.reloadIsCanceled = true;
-
-            }
-
-            if (pController.pInventory.weaponsEquiped[1] != null && !pProperties.isDead && !pProperties.isRespawning)
-            {
-                PV.RPC("SwitchWeapons", RpcTarget.All);
-            }
-            crosshairScript.UpdateReticule();
         }
 
-        UpdateActiveWeapon();
+        if (pController.pInventory.weaponsEquiped[1] != null && !pProperties.isDead && !pProperties.isRespawning)
+        {
+            PV.RPC("SwitchWeapons", RpcTarget.All);
+        }
+        crosshairScript.UpdateReticule();
+
+        //UpdateActiveWeapon();
         AmmoManager();
         changeAmmoCounter();
-
-        if (pController.isDualWielding)
-        {
-            UpdateDualWieldedWeaponAmmo();
-
-            if (pController.player.GetButtonDown("Switch Weapons"))
-            {
-                pController.isDualWielding = false;
-                //pProperties.DropActiveWeapon(leftWeapon);
-
-                activeWeapon.GetComponent<WeaponProperties>().currentAmmo = rightWeapon.GetComponent<WeaponProperties>().currentAmmo;
-                activeWeapon.gameObject.SetActive(true);
-
-                rightWeapon.SetActive(false);
-                leftWeapon.SetActive(false);
-
-                rightWeapon = null;
-                leftWeapon = null;
-            }
-        }
 
         CheckIfLowAmmo();
     }
     void OnBulletSpawned_Delegate(PlayerShooting playerShooting)
     {
-        UpdateActiveWeapon();
+        //UpdateActiveWeapon();
         AmmoManager();
         changeAmmoCounter();
         CheckIfLowAmmo();
@@ -256,7 +258,6 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnReloadEnd_Delegate(ReloadScript reloadScript)
     {
-        UpdateActiveWeapon();
         AmmoManager();
         changeAmmoCounter();
         CheckIfLowAmmo();
@@ -265,58 +266,49 @@ public class PlayerInventory : MonoBehaviourPun
     [PunRPC]
     public void SwitchWeapons()
     {
+        WeaponProperties previousActiveWeapon = activeWeapon;
+        WeaponProperties newActiveWeapon = holsteredWeapon;
+
+        activeWeapon = newActiveWeapon;
+        holsteredWeapon = previousActiveWeapon;
+
+        Debug.Log($"SwitchWeapons active: {newActiveWeapon.name}");
+        Debug.Log($"SwitchWeapons previous active: {previousActiveWeapon.name}");
+
         if (hasSecWeap == true)
         {
-            if (weaponsEquiped[0].gameObject.activeSelf)
-            {
-                //DisableAmmoHUDCounters();
-                weaponsEquiped[1].gameObject.SetActive(true);
-                weaponsEquiped[0].gameObject.SetActive(false);
+            //if (weaponsEquiped[0].gameObject.activeSelf)
+            //{
+            //    //DisableAmmoHUDCounters();
+            //    weaponsEquiped[1].gameObject.SetActive(true);
+            //    weaponsEquiped[0].gameObject.SetActive(false);
 
-                activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
-                activeWeapIs = 1;
+            //    activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
+            //    activeWeapIs = 1;
 
-                UpdateActiveWeapon();
-                AmmoManager();
-                changeAmmoCounter();
-                StartCoroutine(ToggleTPPistolIdle(0));
-            }
-            else if (weaponsEquiped[1].gameObject.activeSelf)
-            {
-                //DisableAmmoHUDCounters();
-                weaponsEquiped[1].gameObject.SetActive(false);
-                weaponsEquiped[0].gameObject.SetActive(true);
+            //    UpdateActiveWeapon();
+            //    AmmoManager();
+            //    changeAmmoCounter();
+            //    StartCoroutine(ToggleTPPistolIdle(0));
+            //}
+            //else if (weaponsEquiped[1].gameObject.activeSelf)
+            //{
+            //    //DisableAmmoHUDCounters();
+            //    weaponsEquiped[1].gameObject.SetActive(false);
+            //    weaponsEquiped[0].gameObject.SetActive(true);
 
-                activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
-                activeWeapIs = 0;
+            //    activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
+            //    activeWeapIs = 0;
 
-                UpdateActiveWeapon();
-                AmmoManager();
-                changeAmmoCounter();
-                StartCoroutine(ToggleTPPistolIdle(1));
-            }
+            //    UpdateActiveWeapon();
+            //    AmmoManager();
+            //    changeAmmoCounter();
+            //    StartCoroutine(ToggleTPPistolIdle(1));
+            //}
             playDrawSound();
             crosshairScript.UpdateReticule();
         }
         UpdateThirdPersonGunModelsOnCharacter();
-    }
-
-    public void UpdateActiveWeapon()
-    {
-        if (activeWeapIs == 0)
-        {
-            if (weaponsEquiped[0] != null)
-            {
-                activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
-            }
-        }
-        else if (activeWeapIs == 1)
-        {
-            if (weaponsEquiped[1] != null)
-            {
-                activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
-            }
-        }
     }
     public IEnumerator EquipStartingWeapon()
     {

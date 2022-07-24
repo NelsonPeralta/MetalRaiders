@@ -19,8 +19,7 @@ public class PlayerController : MonoBehaviourPun
     public WeaponSounds weapSounds;
     public PlayerInventory pInventory;
     public GeneralWeapProperties gwProperties;
-    public WeaponProperties wProperties;
-    public Animator anim;
+    public Animator weaponAnimator;
     public Camera mainCam;
     public Camera gunCam;
     public PlayerCamera camScript;
@@ -114,7 +113,7 @@ public class PlayerController : MonoBehaviourPun
         if (!PV.IsMine)
             return;
 
-        UpdateWeaponPropertiesAndAnimator();
+        //UpdateWeaponPropertiesAndAnimator();
         {
             StartButton();
             BackButton();
@@ -157,8 +156,8 @@ public class PlayerController : MonoBehaviourPun
                 {
                     if (pInventory.weaponsEquiped[0] != null)
                     {
-                        wProperties = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
-                        anim = pInventory.weaponsEquiped[0].gameObject.GetComponent<Animator>();
+                        pInventory.activeWeapon = pInventory.weaponsEquiped[0].gameObject.GetComponent<WeaponProperties>();
+                        weaponAnimator = pInventory.weaponsEquiped[0].gameObject.GetComponent<Animator>();
                     }
                 }
 
@@ -166,8 +165,8 @@ public class PlayerController : MonoBehaviourPun
                 {
                     if (pInventory.weaponsEquiped[1] != null)
                     {
-                        wProperties = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
-                        anim = pInventory.weaponsEquiped[1].gameObject.GetComponent<Animator>();
+                        pInventory.activeWeapon = pInventory.weaponsEquiped[1].gameObject.GetComponent<WeaponProperties>();
+                        weaponAnimator = pInventory.weaponsEquiped[1].gameObject.GetComponent<Animator>();
                     }
                 }
             }
@@ -226,7 +225,7 @@ public class PlayerController : MonoBehaviourPun
         isSprinting = true;
         OnSprintStart?.Invoke(this);
         ScopeOut();
-        anim.SetBool("Run", true);
+        weaponAnimator.SetBool("Run", true);
         movement.tPersonScripts.anim.SetBool("Sprint", true);
         movement.tPersonScripts.anim.SetBool("Idle Rifle", false);
         movement.tPersonScripts.anim.SetBool("Idle Pistol", false);
@@ -245,7 +244,7 @@ public class PlayerController : MonoBehaviourPun
         if (!isSprinting)
             return;
         isSprinting = false;
-        anim.SetBool("Run", false);
+        weaponAnimator.SetBool("Run", false);
         movement.tPersonScripts.anim.SetBool("Sprint", false);
 
         if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
@@ -273,7 +272,7 @@ public class PlayerController : MonoBehaviourPun
         }
         if (!isDualWielding)
         {
-            if (player.GetButton("Shoot") && !wProperties.isOutOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            if (player.GetButton("Shoot") && !pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
             {
                 isShooting = true;
                 OnPlayerFire?.Invoke(this);
@@ -307,30 +306,30 @@ public class PlayerController : MonoBehaviourPun
     {
         if (isAiming)
         {
-            wProperties.currentRedReticuleRange = wProperties.scopeRRR;
+            pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.scopeRRR;
         }
         else
         {
-            if (wProperties)
-                if (wProperties.defaultRedReticuleRange > 0)
+            if (pInventory.activeWeapon)
+                if (pInventory.activeWeapon.defaultRedReticuleRange > 0)
                 {
-                    wProperties.currentRedReticuleRange = wProperties.defaultRedReticuleRange;
+                    pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.defaultRedReticuleRange;
                 }
         }
 
 
         if (player.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
         {
-            if (wProperties.aimingMechanic != WeaponProperties.AimingMechanic.None)
+            if (pInventory.activeWeapon.aimingMechanic != WeaponProperties.AimingMechanic.None)
             {
                 if (isAiming == false)
                 {
                     isAiming = true;
-                    mainCam.fieldOfView = wProperties.scopeFov;
-                    if (wProperties.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
+                    mainCam.fieldOfView = pInventory.activeWeapon.scopeFov;
+                    if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
                         gunCam.enabled = false;
                     else
-                        gunCam.fieldOfView = wProperties.scopeFov;
+                        gunCam.fieldOfView = pInventory.activeWeapon.scopeFov;
 
                     allPlayerScripts.aimingScript.playAimSound();
                 }
@@ -387,7 +386,7 @@ public class PlayerController : MonoBehaviourPun
                 meleeAudioSource.clip = melee.knifeFailSound;
         }
         meleeAudioSource.Play();
-        anim.Play("Knife Attack 2", 0, 0f);
+        weaponAnimator.Play("Knife Attack 2", 0, 0f);
         StartCoroutine(Melee3PS());
     }
 
@@ -433,7 +432,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 ScopeOut();
                 pInventory.grenades = pInventory.grenades - 1;
-                anim.Play("GrenadeThrow", 0, 0.0f);
+                weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
                 PV.RPC("ThrowGrenade_RPC", RpcTarget.All);
                 OnPLayerThrewGrenade?.Invoke(this);
                 //StartCoroutine(GrenadeSpawnDelay());
@@ -470,9 +469,9 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!isDualWielding)
         {
-            if (wProperties)
+            if (pInventory.activeWeapon)
             {
-                if (wProperties.currentAmmo <= 0)
+                if (pInventory.activeWeapon.currentAmmo <= 0)
                 {
                     rScript.CheckAmmoTypeType(true);
                 }
@@ -506,8 +505,8 @@ public class PlayerController : MonoBehaviourPun
 
     void CheckDrawingWeapon()
     {
-        if (anim)
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
+        if (weaponAnimator)
+            if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
                 isDrawingWeapon = true;
             else
                 isDrawingWeapon = false;
@@ -574,13 +573,13 @@ public class PlayerController : MonoBehaviourPun
         //Holster anim toggle
         if (holstered == true)
         {
-            if (anim)
-                anim.SetBool("Holster", true);
+            if (weaponAnimator)
+                weaponAnimator.SetBool("Holster", true);
         }
         else
         {
-            if (anim)
-                anim.SetBool("Holster", false);
+            if (weaponAnimator)
+                weaponAnimator.SetBool("Holster", false);
         }
 
 
@@ -588,7 +587,7 @@ public class PlayerController : MonoBehaviourPun
         ///////////////////////////////////////
         if (Input.GetKeyDown(KeyCode.T))
         {
-            anim.Play("Reload Open", 0, 0f);
+            weaponAnimator.Play("Reload Open", 0, 0f);
             //anim.SetTrigger("Inspect");
         }
     }
@@ -597,19 +596,19 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!isDualWielding)
         {
-            if (wProperties != null)
+            if (pInventory.activeWeapon != null)
             {
-                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
+                if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
                     isFiring = true;
                 else
                     isFiring = false;
 
-                if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+                if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
                 {
                     //Check if reloading
                     //Check both animations
-                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
-                        anim.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left"))
+                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
+                        weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left"))
                     {
                         isReloading = true;
                     }
@@ -619,13 +618,13 @@ public class PlayerController : MonoBehaviourPun
                     }
                 }
 
-                if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+                if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
                 {
                     //Check if reloading
                     //Check both animations
-                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload Open") ||
-                        anim.GetCurrentAnimatorStateInfo(0).IsName("Insert Shell") ||
-                        anim.GetCurrentAnimatorStateInfo(0).IsName("Reload Close"))
+                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Open") ||
+                        weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Insert Shell") ||
+                        weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Close"))
                     {
                         isReloading = true;
                     }
@@ -635,7 +634,7 @@ public class PlayerController : MonoBehaviourPun
                     }
 
                     //Check if inspecting weapon
-                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Inspect"))
+                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Inspect"))
                     {
                         isInspecting = true;
                     }
@@ -645,9 +644,9 @@ public class PlayerController : MonoBehaviourPun
                     }
                 }
 
-                if (wProperties.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || wProperties.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+                if (pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
                 {
-                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
+                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
                     {
                         isReloading = true;
 
@@ -701,9 +700,9 @@ public class PlayerController : MonoBehaviourPun
         //    }
         //}
 
-        if (anim != null)
+        if (weaponAnimator != null)
         {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("GrenadeThrow"))
+            if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("GrenadeThrow"))
             {
                 isThrowingGrenade = true;
             }
@@ -713,9 +712,9 @@ public class PlayerController : MonoBehaviourPun
             }
         }
 
-        if (anim != null)
+        if (weaponAnimator != null)
         {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Knife Attack 2"))
+            if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Knife Attack 2"))
             {
                 isMeleeing = true;
             }
@@ -839,9 +838,9 @@ public class PlayerController : MonoBehaviourPun
     public void TransferAmmo()
     {
 
-        if (wProperties.ammoType == WeaponProperties.AmmoType.Light)
+        if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Light)
         {
-            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+            if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.smallAmmo = pInventory.smallAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
@@ -866,9 +865,9 @@ public class PlayerController : MonoBehaviourPun
 
         }
 
-        else if (wProperties.ammoType == WeaponProperties.AmmoType.Heavy)
+        else if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Heavy)
         {
-            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+            if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.heavyAmmo = pInventory.heavyAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
@@ -890,10 +889,10 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
         }
-        else if (wProperties.ammoType == WeaponProperties.AmmoType.Power)
+        else if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Power)
         {
 
-            if (wProperties.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+            if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
             {
                 pInventory.powerAmmo = pInventory.powerAmmo - 1;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;

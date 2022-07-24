@@ -12,7 +12,7 @@ public class FPSHandLookAt : MonoBehaviour
 
     private void LateUpdate()
     {
-        anim = pController.anim;
+        anim = pController.weaponAnimator;
         hand = anim.GetBoneTransform(HumanBodyBones.LeftHand);
 
         //UpdateOffset(movement.directionIndicator);

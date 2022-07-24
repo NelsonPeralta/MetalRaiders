@@ -132,9 +132,9 @@ public class PlayerShooting : MonoBehaviourPun
 
         if (PV.IsMine)
             activeWeapon.currentAmmo -= 1;
-        if (playerController.anim != null)
+        if (playerController.weaponAnimator != null)
         {
-            playerController.anim.Play("Fire", 0, 0f);
+            playerController.weaponAnimator.Play("Fire", 0, 0f);
             StartCoroutine(Player3PSFiringAnimation());
         }
         GetComponent<AudioSource>().clip = activeWeapon.Fire;

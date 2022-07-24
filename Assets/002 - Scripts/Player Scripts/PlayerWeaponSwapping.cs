@@ -25,7 +25,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     //public ControllerScript cScript;
 
     public GameObject weaponCollidingWithInInventory; // Stores weapon in order to use Update void without "other"
-    public GameObject weaponCollidingWith;
     public string weaponName;
     public int puWeapStoredNumber;
     public int equippedWeapStoredNum;
@@ -35,10 +34,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     public GameObject leftArmWeaponInInventory;
     public bool canPickupDW;
 
-    [Header("Items to Drop")]
-    public GameObject weaponEquippedToDrop1;
-    public GameObject weaponEquippedToDrop2;
-
     KeyCode pickup = KeyCode.E;
 
     private bool isOnTrigger = false;
@@ -46,13 +41,72 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     bool InSameAmmoType;
     bool weaponHasMoreAmmoThanCurrent;
 
+    public LootableWeapon _closestLootableWeapon;
+
+    public LootableWeapon closestLootableWeapon
+    {
+        get { return _closestLootableWeapon; }
+        set
+        {
+            _closestLootableWeapon = value;
+            if (value)
+                pickupText.text = "Hold E to pick up " + closestLootableWeapon.name;
+            else
+                pickupText.text = "";
+        }
+    }
+    public List<LootableWeapon> weaponsInRange = new List<LootableWeapon>();
     private void Start()
     {
+        player.OnPlayerDeath -= OnPLayerDeath;
+        player.OnPlayerDeath += OnPLayerDeath;
+
         weaponPool = FindObjectOfType<WeaponPool>();
 
         pController.OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if (player.isDead)
+            return;
 
+        if (other.gameObject.activeSelf && other.GetComponent<LootableWeapon>())
+        {
+            if (!weaponsInRange.Contains(other.GetComponent<LootableWeapon>()))
+            {
+                other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
+                other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
+
+                weaponsInRange.Add(other.GetComponent<LootableWeapon>());
+            }
+
+        }
+
+        float smallestDistance = 100;
+        for (int i = 0; i < weaponsInRange.Count; i++)
+            if (Vector3.Distance(weaponsInRange[i].transform.position, transform.position) < smallestDistance)
+            {
+                smallestDistance = Vector3.Distance(weaponsInRange[i].transform.position, transform.position);
+                closestLootableWeapon = weaponsInRange[i];
+            }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.GetComponent<LootableWeapon>() && weaponsInRange.Contains(other.GetComponent<LootableWeapon>()))
+        {
+            other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
+
+            weaponsInRange.Remove(other.GetComponent<LootableWeapon>());
+
+            if (weaponsInRange.Count <= 0)
+                closestLootableWeapon = null;
+        }
+    }
+
+    void OnPLayerDeath(Player p)
+    {
+        weaponsInRange.Clear();
+    }
     void OnPlayerLongInteract_Delegate(PlayerController playerController)
     {
         if (!PV.IsMine)
@@ -60,13 +114,13 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
         Debug.Log("Om Player Long Interact Delegate");
 
-        if (isOnTrigger == true && canPickup == true)
+        if (closestLootableWeapon)
         {
             int weaponCollidingWithInInventoryIndex = 0;
             for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++)
                 if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
                     weaponCollidingWithInInventoryIndex = i;
-            Vector3 lwPosition = weaponCollidingWith.GetComponent<LootableWeapon>().spawnPointPosition;
+            Vector3 lwPosition = closestLootableWeapon.GetComponent<LootableWeapon>().spawnPointPosition;
             if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
             {
                 Debug.Log("RPC: Picking up second weapon");
@@ -75,12 +129,12 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 OnWeaponPickup?.Invoke(this);
 
                 pInventory.hasSecWeap = true;
-                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().ammoInThisWeapon;
+                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = closestLootableWeapon.ammoInThisWeapon;
 
                 ResetCollider();
                 pInventory.playDrawSound();
             }
-            else if (pInventory.weaponsEquiped[1] != null && weaponCollidingWith.gameObject.GetComponent<LootableWeapon>() != null) // Replace Equipped weapon
+            else if (pInventory.holsteredWeapon)
             {
                 if (player.GetComponent<PhotonView>().IsMine)
                 {
@@ -98,158 +152,164 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnWeaponLooted(LootableWeapon lw)
     {
-        isOnTrigger = true;
-
-        if (isOnTrigger == true)
-        {
-
-            if (other.gameObject.GetComponent<LootableWeapon>() != null) //Check if weapon on maps have the Pickable Tag
+        for (int i = 0; i < weaponsInRange.Count; i++)
+            if (weaponsInRange[i] == lw)
             {
-                if (!WeaponAlreadyInInventory(other.gameObject))
-                {
-                    weaponCollidingWith = other.gameObject;
-
-                    for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++) //Looks for a weapon in the Unequipped Array for the Gameobject with the same name
-                    {
-                        if (pInventory.allWeaponsInInventory[i] != null)
-                        {
-                            if (other.gameObject.name == pInventory.allWeaponsInInventory[i].gameObject.name)
-                            {
-                                if (pInventory.weaponsEquiped[1] == null)
-                                {
-                                    if (other.gameObject.name != pInventory.weaponsEquiped[0].gameObject.name)
-                                    {
-                                        //Debug.Log("Here");
-                                        weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
-                                        pickupText.text = "Hold E to pick up " + weaponCollidingWithInInventory.name;
-                                        canPickup = true;
-                                    }
-                                    else
-                                    {
-                                        PickupAmmoFromWeapon(other.gameObject);
-                                    }
-                                }
-                                else
-                                {
-                                    /*
-                                    if (other.gameObject.GetComponent<LootableWeapon>().weaponType == pInventory.weaponsEquiped[0].GetComponent<WeaponProperties>().weaponType ||
-                                        other.gameObject.GetComponent<LootableWeapon>().weaponType == pInventory.weaponsEquiped[1].GetComponent<WeaponProperties>().weaponType)
-                                    {
-                                        PickupAmmoFromWeapon(other.gameObject);
-                                    }
-                                    Debug.Log("Small Weapon has more Ammo");
-                                    Debug.Log("Weapon type is = " + other.gameObject.GetComponent<LootableWeapon>().ammoInThisWeapon);
-                                    weaponCollidingWithInInventory = pInventory.Unequipped[i].gameObject; // Adds the weapon in "pickupWeap"
-                                    pickupText.text = "Pick up: " + weaponCollidingWithInInventory.name;
-                                    canPickup = true;
-                                    weaponHasMoreAmmoThanCurrent = true;
-                                    */
-                                    if (pInventory.activeWeapIs == 0)
-                                    {
-                                        if (other.gameObject.name != pInventory.weaponsEquiped[0].gameObject.name)
-                                        {
-                                            //Debug.Log("Here");
-                                            weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
-                                            pickupText.text = "Hold E to pick up " + weaponCollidingWithInInventory.name;
-                                            canPickup = true;
-                                        }
-                                        else
-                                        {
-                                            //PickupAmmoFromWeapon(other.gameObject);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (other.gameObject.name != pInventory.weaponsEquiped[1].gameObject.name)
-                                        {
-                                            //Debug.Log("Here");
-                                            weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
-                                            pickupText.text = "Hold E to pick up " + weaponCollidingWithInInventory.name;
-                                            canPickup = true;
-                                        }
-                                        else
-                                        {
-                                            //PickupAmmoFromWeapon(other.gameObject);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    //PickupAmmoFromWeapon(other.gameObject);
-                }
+                weaponsInRange[i].GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
+                weaponsInRange.Remove(weaponsInRange[i]);
             }
-
-
-            if (other.gameObject.GetComponent<LootableWeapon>() != null && other.gameObject.GetComponent<LootableWeapon>().isDualWieldable &&
-                        pInventory.activeWeapon.GetComponent<WeaponProperties>().isDualWieldable)
-            {
-                Debug.Log("In script");
-                weaponCollidingWith = other.gameObject;
-
-                for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++) //Looks for a weapon in the Unequipped Array for the Gameobject with the same name
-                {
-                    if (pInventory.allWeaponsInInventory[i] != null)
-                    {
-                        if (other.gameObject.name == pInventory.allWeaponsInInventory[i].gameObject.name)
-                        {
-                            if (weaponHasMoreAmmoThanCurrent)
-                            {
-                                weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
-
-                                canPickup = true;
-                            }
-
-                        }
-
-                    }
-                }
-
-                for (int i = 0; i < dWielding.dualWiledableWeaponsRighArm.Length; i++) // Looks for the Righ Arm Only version of the weapon
-                {
-                    if (pInventory.activeWeapon.gameObject.name == dWielding.dualWiledableWeaponsRighArm[i].gameObject.name)
-                    {
-                        rightArmWeaponInInventory = dWielding.dualWiledableWeaponsRighArm[i].gameObject;
-                        canPickupDW = true;
-
-                    }
-
-
-
-                }
-
-                for (int i = 0; i < dWielding.dualWiledableWeaponsLeftArm.Length; i++) // Looks for the Righ Arm Only version of the weapon
-                {
-                    if (other.gameObject.name == dWielding.dualWiledableWeaponsLeftArm[i].gameObject.name)
-                    {
-                        leftArmWeaponInInventory = dWielding.dualWiledableWeaponsLeftArm[i].gameObject;
-                        canPickupDW = true;
-
-                    }
-
-
-
-                }
-
-                if (canPickupDW && weaponCollidingWith != null)
-                {
-                    pickupText.text = "Hold E to pick up " + other.gameObject.name + " or press Reload to Dual Wield";
-                }
-            }
-
-
-        }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        ResetCollider();
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    isOnTrigger = true;
+
+    //    if (isOnTrigger == true)
+    //    {
+
+    //        if (other.gameObject.GetComponent<LootableWeapon>() != null) //Check if weapon on maps have the Pickable Tag
+    //        {
+    //            if (!WeaponAlreadyInInventory(other.gameObject))
+    //            {
+    //                weaponCollidingWith = other.gameObject;
+
+    //                for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++) //Looks for a weapon in the Unequipped Array for the Gameobject with the same name
+    //                {
+    //                    if (pInventory.allWeaponsInInventory[i] != null)
+    //                    {
+    //                        if (other.gameObject.name == pInventory.allWeaponsInInventory[i].gameObject.name)
+    //                        {
+    //                            if (pInventory.weaponsEquiped[1] == null)
+    //                            {
+    //                                if (other.gameObject.name != pInventory.weaponsEquiped[0].gameObject.name)
+    //                                {
+    //                                    //Debug.Log("Here");
+    //                                    weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
+    //                                    pickupText.text = "Hold E to pick up " + weaponCollidingWithInInventory.name;
+    //                                    canPickup = true;
+    //                                }
+    //                                else
+    //                                {
+    //                                    PickupAmmoFromWeapon(other.gameObject);
+    //                                }
+    //                            }
+    //                            else
+    //                            {
+    //                                /*
+    //                                if (other.gameObject.GetComponent<LootableWeapon>().weaponType == pInventory.weaponsEquiped[0].GetComponent<WeaponProperties>().weaponType ||
+    //                                    other.gameObject.GetComponent<LootableWeapon>().weaponType == pInventory.weaponsEquiped[1].GetComponent<WeaponProperties>().weaponType)
+    //                                {
+    //                                    PickupAmmoFromWeapon(other.gameObject);
+    //                                }
+    //                                Debug.Log("Small Weapon has more Ammo");
+    //                                Debug.Log("Weapon type is = " + other.gameObject.GetComponent<LootableWeapon>().ammoInThisWeapon);
+    //                                weaponCollidingWithInInventory = pInventory.Unequipped[i].gameObject; // Adds the weapon in "pickupWeap"
+    //                                pickupText.text = "Pick up: " + weaponCollidingWithInInventory.name;
+    //                                canPickup = true;
+    //                                weaponHasMoreAmmoThanCurrent = true;
+    //                                */
+    //                                if (pInventory.activeWeapIs == 0)
+    //                                {
+    //                                    if (other.gameObject.name != pInventory.weaponsEquiped[0].gameObject.name)
+    //                                    {
+    //                                        //Debug.Log("Here");
+    //                                        weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
+    //                                        pickupText.text = "Hold E to pick up " + weaponCollidingWithInInventory.name;
+    //                                        canPickup = true;
+    //                                    }
+    //                                    else
+    //                                    {
+    //                                        //PickupAmmoFromWeapon(other.gameObject);
+    //                                    }
+    //                                }
+    //                                else
+    //                                {
+    //                                    if (other.gameObject.name != pInventory.weaponsEquiped[1].gameObject.name)
+    //                                    {
+    //                                        //Debug.Log("Here");
+    //                                        weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
+    //                                        pickupText.text = "Hold E to pick up " + weaponCollidingWithInInventory.name;
+    //                                        canPickup = true;
+    //                                    }
+    //                                    else
+    //                                    {
+    //                                        //PickupAmmoFromWeapon(other.gameObject);
+    //                                    }
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //            else
+    //            {
+    //                //PickupAmmoFromWeapon(other.gameObject);
+    //            }
+    //        }
+
+
+    //        if (other.gameObject.GetComponent<LootableWeapon>() != null && other.gameObject.GetComponent<LootableWeapon>().isDualWieldable &&
+    //                    pInventory.activeWeapon.GetComponent<WeaponProperties>().isDualWieldable)
+    //        {
+    //            Debug.Log("In script");
+    //            weaponCollidingWith = other.gameObject;
+
+    //            for (int i = 0; i < pInventory.allWeaponsInInventory.Length; i++) //Looks for a weapon in the Unequipped Array for the Gameobject with the same name
+    //            {
+    //                if (pInventory.allWeaponsInInventory[i] != null)
+    //                {
+    //                    if (other.gameObject.name == pInventory.allWeaponsInInventory[i].gameObject.name)
+    //                    {
+    //                        if (weaponHasMoreAmmoThanCurrent)
+    //                        {
+    //                            weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[i].gameObject; // Adds the weapon in "pickupWeap"
+
+    //                            canPickup = true;
+    //                        }
+
+    //                    }
+
+    //                }
+    //            }
+
+    //            for (int i = 0; i < dWielding.dualWiledableWeaponsRighArm.Length; i++) // Looks for the Righ Arm Only version of the weapon
+    //            {
+    //                if (pInventory.activeWeapon.gameObject.name == dWielding.dualWiledableWeaponsRighArm[i].gameObject.name)
+    //                {
+    //                    rightArmWeaponInInventory = dWielding.dualWiledableWeaponsRighArm[i].gameObject;
+    //                    canPickupDW = true;
+
+    //                }
+
+
+
+    //            }
+
+    //            for (int i = 0; i < dWielding.dualWiledableWeaponsLeftArm.Length; i++) // Looks for the Righ Arm Only version of the weapon
+    //            {
+    //                if (other.gameObject.name == dWielding.dualWiledableWeaponsLeftArm[i].gameObject.name)
+    //                {
+    //                    leftArmWeaponInInventory = dWielding.dualWiledableWeaponsLeftArm[i].gameObject;
+    //                    canPickupDW = true;
+
+    //                }
+
+
+
+    //            }
+
+    //            if (canPickupDW && weaponCollidingWith != null)
+    //            {
+    //                pickupText.text = "Hold E to pick up " + other.gameObject.name + " or press Reload to Dual Wield";
+    //            }
+    //        }
+
+
+    //    }
+    //}
+
 
     private void Update()
     {
@@ -260,7 +320,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         {
             if (pController.player.GetButtonShortPressDown("Switch Grenades") /*|| cScript.InteractButtonPressed*/)
             {
-                pInventory.leftWeaponCurrentAmmo = weaponCollidingWith.GetComponent<LootableWeapon>().ammoInThisWeapon;
+                pInventory.leftWeaponCurrentAmmo = closestLootableWeapon.ammoInThisWeapon;
 
                 pInventory.activeWeapon.gameObject.SetActive(false);
 
@@ -275,11 +335,11 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 pController.isDualWielding = true;
 
 
-                if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
-                {
-                    Destroy(weaponCollidingWith);
-                    ResetCollider();
-                }
+                //if (!weaponCollidingWith.gameObject.GetComponent<LootableWeapon>().isWallGun)
+                //{
+                //    Destroy(weaponCollidingWith);
+                //    ResetCollider();
+                //}
 
             }
 
@@ -295,53 +355,30 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     [PunRPC]
     public void ReplaceWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
-        LootableWeapon lws = null;
+        LootableWeapon lw = null;
         LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
-        foreach (LootableWeapon lw in weapons)
-            if (lw.spawnPointPosition == collidingWeaponPosition)
-                lws = lw;
+        foreach (LootableWeapon w in weapons)
+            if (w.spawnPointPosition == collidingWeaponPosition)
+                lw = w;
 
-        weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
-        if (pInventory.activeWeapIs == 1)
-        {
-            weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
 
-            pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].SetActive(true);
-            pInventory.weaponsEquiped[1].gameObject.SetActive(false);
-            pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
-            pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
+        WeaponProperties previousActiveWeapon = pInventory.activeWeapon;
+        WeaponProperties newActiveWeapon = null;
+        foreach (GameObject w in pInventory.allWeaponsInInventory)
+            if (w.GetComponent<WeaponProperties>().codeName == lw.codeName)
+                newActiveWeapon = w.GetComponent<WeaponProperties>();
 
-            pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
+        Debug.Log($"New Active weapon: {newActiveWeapon.name}");
+        newActiveWeapon.gameObject.SetActive(true);
+        previousActiveWeapon.gameObject.SetActive(false);
 
-            Debug.Log($"ReplaceWeapon ${weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo}");
-            Debug.Log($"ReplaceWeapon ${lws.ammoInThisWeapon}");
-            weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
-            //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
+        //newActiveWeapon.currentAmmo = lw.ammoInThisWeapon;
 
-            Debug.Log("Replace Weapon 1");
+        pInventory.activeWeapon = newActiveWeapon;
+        //pInventory.holsteredWeapon = previousActiveWeapon;
 
-            StartCoroutine(pInventory.ToggleTPPistolIdle(0));
-        }
-
-        if (pInventory.activeWeapIs == 0)
-        {
-            weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
-
-            weaponCollidingWithInInventory.SetActive(true);
-            pInventory.weaponsEquiped[0].gameObject.SetActive(false);
-            pInventory.weaponsEquiped[0] = weaponCollidingWithInInventory;
-            pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
-
-            pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
-
-            weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
-            //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
-
-            Debug.Log("Replace Weapon 1");
-
-            StartCoroutine(pInventory.ToggleTPPistolIdle(1));
-        }
-        pInventory.changeAmmoCounter();
+        //StartCoroutine(pInventory.ToggleTPPistolIdle(1));
+        //pInventory.changeAmmoCounter();
     }
 
     [PunRPC]
@@ -355,23 +392,21 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             if (lw.spawnPointPosition == collidingWeaponPosition)
                 lws = lw;
 
-        weaponEquippedToDrop1 = pInventory.activeWeapon.gameObject;
+        WeaponProperties previousActiveWeapon = pInventory.activeWeapon;
+        WeaponProperties newActiveWeapon = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].GetComponent<WeaponProperties>();
+        newActiveWeapon.gameObject.SetActive(true);
+        previousActiveWeapon.gameObject.SetActive(false);
 
-        weaponCollidingWithInInventory = pInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex];
-        weaponCollidingWithInInventory.SetActive(true);
-        pInventory.weaponsEquiped[1] = weaponCollidingWithInInventory;
-        pInventory.holsteredWeapon = pInventory.activeWeapon;
-        pInventory.activeWeapon.gameObject.SetActive(false);
+
+        pInventory.holsteredWeapon = previousActiveWeapon;
+        pInventory.activeWeapon = newActiveWeapon;
+
         pInventory.activeWeapon = weaponCollidingWithInInventory.GetComponent<WeaponProperties>();
         pInventory.activeWeapIs = 1;
         pInventory.hasSecWeap = true;
 
-        Debug.Log($"ReplaceWeapon ${weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo}");
-        Debug.Log($"ReplaceWeapon ${collidingWeaponPosition}");
-        Debug.Log($"ReplaceWeapon ${lws}");
-        Debug.Log($"ReplaceWeapon ${lws.ammoInThisWeapon}");
         weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
-        //pickupExtraAmmoFromWeapon(weaponCollidingWith.GetComponent<LootableWeapon>());
+        //pickupExtraAmmoFromWeapon(closestLootableWeapon);
 
         Debug.Log("Replace Weapon 1");
 
@@ -506,7 +541,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     void ResetCollider()
     {
         //Debug.Log("Reset Collider");
-        weaponCollidingWith = null;
+        //weaponCollidingWith = null;
         weaponCollidingWithInInventory = null;
 
         pickupText.text = "";
@@ -523,7 +558,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         yield return new WaitForEndOfFrame();
 
         Debug.Log("Reset Collider Late");
-        weaponCollidingWith = null;
+        //weaponCollidingWith = null;
         weaponCollidingWithInInventory = null;
 
         pickupText.text = "";
