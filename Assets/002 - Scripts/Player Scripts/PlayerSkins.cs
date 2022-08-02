@@ -13,8 +13,8 @@ public class PlayerSkins : MonoBehaviour
         {
             if (skin.name == armorName)
             {
-                player.GetComponent<PlayerController>().tPersonController = skin.GetComponent<ThirdPersonScript>();
-                player.GetComponent<Movement>().tPersonScripts = skin.GetComponent<ThirdPersonScript>();
+                //player.GetComponent<PlayerController>().tPersonController = skin.GetComponent<ThirdPersonScript>();
+                //player.GetComponent<Movement>().tPersonScripts = skin.GetComponent<ThirdPersonScript>();
                 playerDefaultSkin.SetActive(false);
                 skin.SetActive(true);
             }

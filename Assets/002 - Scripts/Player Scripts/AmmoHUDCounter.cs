@@ -24,16 +24,7 @@ public class AmmoHUDCounter : MonoBehaviour
         extraAmmoText.text = ".";
     }
 
-    private void Update()
-    {
-        if (useThisCounter)
-        {
-            ammoTextDrawn.text = playerInventory.currentAmmo.ToString();
-            extraAmmoText.text = playerInventory.currentExtraAmmo.ToString();
-        }
-    }
-
-    public void changeToHolstered()
+    public void ChangeToHolstered()
     {
         ammoTextHolstered.text = ammoTextDrawn.text;
         ammoTextDrawn.gameObject.SetActive(false);
@@ -41,7 +32,7 @@ public class AmmoHUDCounter : MonoBehaviour
         useThisCounter = false;
     }
 
-    public void changeToDrawn()
+    public void ChangeToDrawn()
     {
         ammoTextDrawn.gameObject.SetActive(true);
         ammoTextHolstered.gameObject.SetActive(false);
@@ -51,16 +42,10 @@ public class AmmoHUDCounter : MonoBehaviour
     public void UpdateExtraAmmo()
     {
         if (this == playerInventory.smallAmmoHudCounter)
-        {
             extraAmmoText.text = playerInventory.smallAmmo.ToString();
-        }
         else if (this == playerInventory.heavyAmmoHudCounter)
-        {
             extraAmmoText.text = playerInventory.heavyAmmo.ToString();
-        }
         else if (this == playerInventory.powerAmmoHudCounter)
-        {
             extraAmmoText.text = playerInventory.powerAmmo.ToString();
-        }
     }
 }

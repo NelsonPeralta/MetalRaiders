@@ -551,6 +551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 1
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -763,6 +764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -838,6 +840,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -1581,6 +1584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -2093,6 +2097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -4108,6 +4113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -5596,6 +5602,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -5837,6 +5844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -6141,6 +6149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -6640,7 +6649,7 @@ MonoBehaviour:
   objectInLineOfSight: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 65
   _laughClip: {fileID: 0}
   _attackClip: {fileID: 8300000, guid: db58b211023bfee43a364a82d5c9e340, type: 3}
   _dieClip: {fileID: 8300000, guid: aeac8b2a755723240ad121f9075b7445, type: 3}
@@ -7513,6 +7522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -7622,6 +7632,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0
@@ -8865,6 +8876,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 6407237786346386501}
   aiGO: {fileID: 6407237786346386500}
   aiHealth: 0

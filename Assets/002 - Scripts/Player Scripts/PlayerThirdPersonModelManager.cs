@@ -9,6 +9,17 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     public PlayerModelManagerEvent OnModelAssigned;
 
     public Player player;
+    public PlayerInventory playerInventory;
+    public ThirdPersonScript thirdPersonScript
+    {
+        get {
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                return spartanModel;
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                return humanModel;
+            return null;
+        }
+    }
     public ThirdPersonScript humanModel;
     public ThirdPersonScript spartanModel;
     public List<GameObject> models = new List<GameObject>();
@@ -16,29 +27,14 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     private void OnEnable()
     {
-        OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
 
-        Debug.Log($"PlayerThirdPersonModelManager game mode: {GameManager.instance.gameMode}");
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-        {
-            humanModel.gameObject.SetActive(false);
-            spartanModel.gameObject.SetActive(true);
-
-            spartanModel.EnableSkinnedMeshes();
-            humanModel.DisableSkinnedMeshes();
-        }
-        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        {
-            humanModel.gameObject.SetActive(true);
-            spartanModel.gameObject.SetActive(false);
-
-            spartanModel.DisableSkinnedMeshes();
-            humanModel.EnableSkinnedMeshes();
-        }
-
-        OnModelAssigned?.Invoke(this);
     }
 
+    private void Awake()
+    {
+        playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_Delegate;
+        playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
+    }
     private void Start()
     {
         Scene currentScene = SceneManager.GetActiveScene();
@@ -46,16 +42,47 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         {
             try
             {
+                OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
+
+                Debug.Log($"PlayerThirdPersonModelManager game mode: {GameManager.instance.gameMode}");
+                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                {
+                    humanModel.gameObject.SetActive(false);
+                    spartanModel.gameObject.SetActive(true);
+
+                    spartanModel.EnableSkinnedMeshes();
+                    humanModel.DisableSkinnedMeshes();
+                }
+                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                {
+                    humanModel.gameObject.SetActive(true);
+                    spartanModel.gameObject.SetActive(false);
+
+                    spartanModel.DisableSkinnedMeshes();
+                    humanModel.EnableSkinnedMeshes();
+                }
+
                 if (!player.photonView.IsMine)
                     return;
 
                 Debug.Log("PlayerArmorManager OnSceneLoaded");
 
                 foreach (GameObject model in models)
-                    if(!feet.Contains(model))
+                    if (!feet.Contains(model))
                         GameManager.SetLayerRecursively(model, 31);
+
+                OnModelAssigned?.Invoke(this);
+
             }
             catch (System.Exception e) { Debug.Log(e); }
         }
+    }
+
+    void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
+    {
+        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Rifle", false);
+        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
+
+        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
     }
 }

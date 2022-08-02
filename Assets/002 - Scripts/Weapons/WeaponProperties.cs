@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class WeaponProperties : MonoBehaviour
 {
+    public delegate void WeaponPropertiesEvent(WeaponProperties weaponProperties);
+    public WeaponPropertiesEvent OnCurrentAmmoChanged;
+
     //Enums
     public enum ReticuleType { AR, DMR, Pistol, SMG, Shotgun, Sniper, None }
     public enum FiringMode { Auto, Burst, Single }
@@ -32,7 +35,7 @@ public class WeaponProperties : MonoBehaviour
     public AmmoType ammoType;
     public AmmoProjectileType ammoProjectileType;
     public AmmoReloadType ammoReloadType;
-    public int currentAmmo;
+    [SerializeField] int _currentAmmo;
     public int ammoCapacity;
     public float bulletSpray;
 
@@ -87,6 +90,12 @@ public class WeaponProperties : MonoBehaviour
     public GameObject equippedModelB;
 
     public GameObject weaponRessource;
+
+    public int currentAmmo
+    {
+        get { return _currentAmmo; }
+        set { _currentAmmo = value; OnCurrentAmmoChanged?.Invoke(this); }
+    }
 
     // Properties
     public bool isOutOfAmmo

@@ -35,7 +35,7 @@ public class Watcher : AiAbstractClass
         get { return _watcherAction; }
         set
         {
-            if(_watcherAction != value)
+            if (_watcherAction != value)
             {
                 _watcherAction = value;
                 InvokeOnActionChanged();
@@ -44,11 +44,12 @@ public class Watcher : AiAbstractClass
     }
     public override void OnEnable()
     {
-        watcherAction  = WatcherActions.Seek;
+        watcherAction = WatcherActions.Seek;
         seek = true;
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
+        Debug.Log("OnPlayerRangeChange_Delegate ");
         PlayerRange newPlayerRange = aiAbstractClass.playerRange;
         PlayerRange previousPlayerRange = aiAbstractClass.previousPlayerRange;
         WatcherActions previousAction = watcherAction;
@@ -56,6 +57,8 @@ public class Watcher : AiAbstractClass
 
         if (targetInLineOfSight)
         {
+            Debug.Log("OnPlayerRangeChange_Delegate targetInLineOfSight");
+
             if (newPlayerRange == PlayerRange.Medium && (previousPlayerRange == PlayerRange.Close || previousPlayerRange == PlayerRange.Long))
             {
                 if (ran == 0)
@@ -68,6 +71,8 @@ public class Watcher : AiAbstractClass
         }
         else
         {
+            Debug.Log("OnPlayerRangeChange_Delegate ELSE targetInLineOfSight");
+
             previousAction = WatcherActions.Seek;
         }
 
@@ -75,6 +80,9 @@ public class Watcher : AiAbstractClass
             previousAction = WatcherActions.Defend;
         else if (newPlayerRange == PlayerRange.Out)
             previousAction = WatcherActions.Seek;
+
+        Debug.Log($"OnPlayerRangeChange_Delegate ELSE {previousAction}");
+
 
         ChangeAction(previousAction.ToString());
     }
@@ -160,7 +168,8 @@ public class Watcher : AiAbstractClass
             {
                 seek = true;
             }
-        }else if(!isDead && !target)
+        }
+        else if (!isDead && !target)
         {
             watcherAction = WatcherActions.Idle;
             seek = false;
@@ -206,6 +215,7 @@ public class Watcher : AiAbstractClass
 
     public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
     {
+        Debug.Log($"Target in line of sight. Player range");
         if (!targetInLineOfSight)
             watcherAction = WatcherActions.Seek;
         else

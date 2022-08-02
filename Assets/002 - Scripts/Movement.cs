@@ -14,7 +14,6 @@ public class Movement : MonoBehaviour
     public CharacterController cController;
     public Rigidbody rBody;
     public PlayerController pController;
-    public ThirdPersonScript tPersonScripts;
     public GameObject thirdPersonRoot;
     public GameObject thirdPersonModels;
     public ThirdPersonLookAt tpLookAt;
@@ -92,20 +91,19 @@ public class Movement : MonoBehaviour
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
-            tPersonScripts = armorThirdPersonScript;
             armorThirdPersonScript.gameObject.SetActive(true);
             armorThirdPersonScript.EnableSkinnedMeshes();
             noArmorThirdPersonScript.DisableSkinnedMeshes();
             if (!PV.IsMine)
             {
-                tPersonScripts.gameObject.layer = 0;
-                foreach (SkinnedMeshRenderer s in tPersonScripts.meshes)
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.gameObject.layer = 0;
+
+                foreach (SkinnedMeshRenderer s in pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.meshes)
                     s.gameObject.layer = 0;
             }
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
-            tPersonScripts = noArmorThirdPersonScript;
             armorThirdPersonScript.DisableSkinnedMeshes();
             noArmorThirdPersonScript.EnableSkinnedMeshes();
         }
@@ -115,7 +113,6 @@ public class Movement : MonoBehaviour
         gravity = defaultGravity;
         SetPlayerIDInInput();
         //tPersonScripts = cManager.FindChildWithTagScript("Third Person GO").GetComponent<ThirdPersonScript>();
-        tPersonScripts.movement = gameObject.GetComponent<Movement>();
         cController = gameObject.GetComponent<CharacterController>();
         rBody = gameObject.GetComponent<Rigidbody>();
         pController = gameObject.GetComponent<PlayerController>();
@@ -268,14 +265,20 @@ public class Movement : MonoBehaviour
 
     void Jump()
     {
+        ThirdPersonScript thirdPersonScript = null;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().humanModel;
+
         if (isGrounded)
         {
-            tPersonScripts.anim.SetBool("Jump", false);
+            thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
             speed = defaultSpeed;
         }
-        else if (!isGrounded && tPersonScripts.anim && !tPersonScripts.anim.GetBool("Crouch"))
+        else if (!isGrounded && thirdPersonScript.GetComponent<Animator>() && !thirdPersonScript.GetComponent<Animator>().GetBool("Crouch"))
         {
-            tPersonScripts.anim.SetBool("Jump", true);
+            thirdPersonScript.GetComponent<Animator>().SetBool("Jump", true);
             //speed = defaultSpeed * 2 / 3;
             /*
             Vector3 move = transform.right * 0 + transform.forward * 1;

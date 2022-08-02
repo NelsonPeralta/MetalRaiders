@@ -32,7 +32,6 @@ public class PlayerController : MonoBehaviourPun
     public DualWieldingReload dwReload;
     public Movement movement;
     public Melee melee;
-    public ThirdPersonScript tPersonController;
     public ControllerType activeControllerType;
 
     public PhotonView PV;
@@ -226,9 +225,9 @@ public class PlayerController : MonoBehaviourPun
         OnSprintStart?.Invoke(this);
         ScopeOut();
         weaponAnimator.SetBool("Run", true);
-        movement.tPersonScripts.anim.SetBool("Sprint", true);
-        movement.tPersonScripts.anim.SetBool("Idle Rifle", false);
-        movement.tPersonScripts.anim.SetBool("Idle Pistol", false);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Sprint", true);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Idle Rifle", false);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Idle Pistol", false);
         GetComponent<Player>().playerVoice.volume = 0.1f;
         GetComponent<Player>().PlaySprintingSound();
     }
@@ -245,17 +244,17 @@ public class PlayerController : MonoBehaviourPun
             return;
         isSprinting = false;
         weaponAnimator.SetBool("Run", false);
-        movement.tPersonScripts.anim.SetBool("Sprint", false);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Sprint", false);
 
         if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
-            movement.tPersonScripts.anim.SetBool("Idle Pistol", true);
-            movement.tPersonScripts.anim.SetBool("Idle Rifle", false);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Idle Pistol", true);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Idle Rifle", false);
         }
         else
         {
-            movement.tPersonScripts.anim.SetBool("Idle Rifle", true);
-            movement.tPersonScripts.anim.SetBool("Idle Pistol", false);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Idle Rifle", true);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Idle Pistol", false);
         }
 
         GetComponent<Player>().StopPlayingPlayerVoice();
@@ -402,8 +401,8 @@ public class PlayerController : MonoBehaviourPun
     {
         Debug.Log("Crouching");
         OnCrouchDown?.Invoke(this);
-        movement.tPersonScripts.anim.SetBool("Jump", false);
-        movement.tPersonScripts.anim.SetBool("Crouch", true);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Jump", false);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Crouch", true);
         isCrouching = true;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);
         gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.35f, 0);
@@ -415,7 +414,7 @@ public class PlayerController : MonoBehaviourPun
     {
         OnCrouchUp?.Invoke(this);
 
-        movement.tPersonScripts.anim.SetBool("Crouch", false);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.SetBool("Crouch", false);
         isCrouching = false;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);
         gwProperties.bulletSpawnPoint.localPosition = gwProperties.defaultBulletSpawnPoint;
@@ -458,7 +457,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead)
         {
-            if (player.GetButtonDown("Reload") && !isReloading && !wPickup.canPickupDW && !isDualWielding)
+            if (player.GetButtonDown("Reload") && !isReloading && !isDualWielding)
             {
                 rScript.CheckAmmoTypeType(false);
             }
@@ -727,7 +726,7 @@ public class PlayerController : MonoBehaviourPun
 
     IEnumerator ThrowGrenade3PS()
     {
-        tPersonController.anim.Play("Throw Grenade");
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.Play("Throw Grenade");
         yield return new WaitForEndOfFrame();
     }
 
@@ -745,13 +744,13 @@ public class PlayerController : MonoBehaviourPun
 
     public IEnumerator Reload3PS()
     {
-        movement.tPersonScripts.anim.Play("Reload");
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.Play("Reload");
         yield return new WaitForEndOfFrame();
     }
 
     IEnumerator Melee3PS()
     {
-        tPersonController.anim.Play("Melee");
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.anim.Play("Melee");
         StartCoroutine(ShowMeleeKnife());
         yield return new WaitForEndOfFrame();
     }

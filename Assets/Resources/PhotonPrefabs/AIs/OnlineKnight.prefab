@@ -20419,6 +20419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 1
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -21423,6 +21424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -21988,6 +21990,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -22095,6 +22098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -22752,6 +22756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -23553,6 +23558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -23700,6 +23706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -24045,7 +24052,7 @@ MonoBehaviour:
   objectInLineOfSight: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 65
   _laughClip: {fileID: 0}
   _attackClip: {fileID: 8300000, guid: f2350706efe6ac14d8484a2a3d88aea7, type: 3}
   _dieClip: {fileID: 8300000, guid: cd6a399cf21af214ebcaa9d5132927b4, type: 3}
@@ -24142,6 +24149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -24249,6 +24257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -24325,6 +24334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100
@@ -24400,6 +24410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 211952823286194687}
   aiGO: {fileID: 6258186488468177427}
   aiHealth: 100

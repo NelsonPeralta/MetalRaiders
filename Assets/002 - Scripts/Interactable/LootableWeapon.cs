@@ -13,7 +13,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public string codeName;
     public bool isWallGun;
 
-    public int _ammoInThisWeapon;
+    [SerializeField] int _ammoInThisWeapon;
 
     public int ammoInThisWeapon
     {

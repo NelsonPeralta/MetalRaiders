@@ -6,6 +6,7 @@ using Photon.Pun;
 using System;
 using Photon.Realtime;
 using System.IO;
+using System.Linq;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -115,7 +116,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("GameManager Start called");
         //SceneManager.sceneLoaded += OnSceneLoaded;
-        
+
     }
 
     // called when the game is terminated
@@ -196,5 +197,91 @@ public class GameManager : MonoBehaviourPunCallbacks
         Cursor.visible = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(0);
+    }
+
+    // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/indexers/
+    // https://docs.microsoft.com/en-us/dotnet/api/system.collections.ilist.remove?view=net-6.0#system-collections-ilist-remove(system-object)
+    [Serializable]
+    public class CustomList<T>
+    {
+        // Declare an array to store the data elements.
+        public T[] arr = new T[10];
+        protected int nextIndex = 0;
+        protected int _count = 0;
+
+        // Define the indexer to allow client code to use [] notation.
+        public T this[int i]
+        {
+            get => arr[i];
+            set => arr[i] = value;
+        }
+
+        public int Add(T value)
+        {
+            if (_count < arr.Length)
+            {
+                arr[_count] = value;
+                _count++;
+
+                return (_count - 1);
+            }
+
+            return -1;
+        }
+
+        public void Add(T value, CustomList<T> customList)
+        {
+            Add(value);
+            Debug.Log("ser");
+            CustomList<T> cl = new CustomList<T>();
+            cl = this;
+            customList = cl;
+        }
+
+        public int IndexOf(T value)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (EqualityComparer<T>.Default.Equals(arr[i], value))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public void Remove(T value, CustomList<T> customList)
+        {
+            RemoveAt(IndexOf(value));
+            customList = this;
+        }
+
+        public void RemoveAt(int index)
+        {
+            if ((index >= 0) && (index < Count))
+            {
+                for (int i = index; i < Count - 1; i++)
+                {
+                    arr[i] = arr[i + 1];
+                }
+                _count--;
+            }
+        }
+
+        public bool Contains(T value)
+        {
+            foreach (T item in arr)
+                if (EqualityComparer<T>.Default.Equals(item, value))
+                    return true;
+            return false;
+        }
+
+        public void Clear(CustomList<T> customList)
+        {
+            arr = null;
+            _count = 0;
+            customList = this;
+        }
+        public int Count => arr.Length;
     }
 }

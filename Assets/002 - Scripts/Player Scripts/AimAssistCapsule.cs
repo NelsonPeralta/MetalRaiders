@@ -78,7 +78,6 @@ public class AimAssistCapsule : MonoBehaviour
 
         if (player.GetComponent<PlayerController>().player.GetButtonUp("Shoot"))
         {
-            Debug.Log("AimAssistCapsule OnPlayerFireButtonUp");
             player.GetComponent<PlayerController>().OnPlayerFireButtonUp?.Invoke(player.GetComponent<PlayerController>());
         }
 

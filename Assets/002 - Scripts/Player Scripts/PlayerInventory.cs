@@ -7,7 +7,7 @@ using System;
 public class PlayerInventory : MonoBehaviourPun
 {
     public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
-    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged;
+    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged;
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
@@ -28,14 +28,54 @@ public class PlayerInventory : MonoBehaviourPun
     public int activeWeapIs = 0;
     [SerializeField] WeaponProperties _activeWeapon;
     [SerializeField] WeaponProperties _holsteredWeapon;
+    [SerializeField] AmmoHUDCounter _activeAmmoHUDCounter;
+
+    public AmmoHUDCounter activeAmmoHUDCounter
+    {
+        get { return _activeAmmoHUDCounter; }
+        set
+        {
+            smallAmmoHudCounter.ChangeToHolstered();
+            powerAmmoHudCounter.ChangeToHolstered();
+            heavyAmmoHudCounter.ChangeToHolstered();
+
+            _activeAmmoHUDCounter = value;
+            activeAmmoHUDCounter.ChangeToDrawn();
+            activeAmmoHUDCounter.ammoTextDrawn.text = activeWeapon.currentAmmo.ToString();
+        }
+    }
     public WeaponProperties activeWeapon
     {
         get { return _activeWeapon; }
         set
         {
             _activeWeapon = value;
+            OnActiveWeaponChanged.Invoke(this);
             _activeWeapon.gameObject.SetActive(true);
             pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
+
+            activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
+            activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
+
+
+
+            if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
+                currentExtraAmmo = smallAmmo;
+            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
+                currentExtraAmmo = heavyAmmo;
+            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
+                currentExtraAmmo = powerAmmo;
+
+            if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
+                activeAmmoHUDCounter = smallAmmoHudCounter;
+            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
+                activeAmmoHUDCounter = heavyAmmoHudCounter;
+            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
+                activeAmmoHUDCounter = powerAmmoHudCounter;
+
+            PlayDrawSound();
+            CheckLowAmmoIndicator();
+            UpdateAllExtraAmmoHuds();
         }
     }
     public WeaponProperties holsteredWeapon
@@ -52,7 +92,6 @@ public class PlayerInventory : MonoBehaviourPun
     [Space(20)]
     [Header("Equipped Weapons")]
     public GameObject[] weaponsEquiped = new GameObject[2];
-    public int currentAmmo = 0;
     public int currentExtraAmmo = 0;
 
     [Header("Grenades")]
@@ -124,7 +163,8 @@ public class PlayerInventory : MonoBehaviourPun
                 heavyAmmoHudCounter.extraAmmoText.text = heavyAmmo.ToString();
                 powerAmmoHudCounter.extraAmmoText.text = powerAmmo.ToString();
 
-                AmmoManager();
+                //AmmoManager();
+                ChangeActiveAmmoCounter();
             }
         }
     }
@@ -206,10 +246,32 @@ public class PlayerInventory : MonoBehaviourPun
         }
     }
 
+    void OnActiveWeaponAmmoChanged(WeaponProperties weaponProperties)
+    {
+        activeAmmoHUDCounter.ammoTextDrawn.text = activeWeapon.currentAmmo.ToString();
+        CheckLowAmmoIndicator();
+    }
+
+    void CheckLowAmmoIndicator()
+    {
+        lowAmmoIndicator.SetActive(false);
+        noAmmoIndicator.SetActive(false);
+
+        if (activeWeapon.currentAmmo == 0 && currentExtraAmmo == 0)
+        {
+            lowAmmoIndicator.SetActive(false);
+            noAmmoIndicator.SetActive(true);
+        }
+        else if (activeWeapon.currentAmmo < activeWeapon.GetComponent<WeaponProperties>().ammoCapacity * 0.4f && currentExtraAmmo >= 0)
+        {
+            lowAmmoIndicator.SetActive(true);
+            noAmmoIndicator.SetActive(false);
+        }
+    }
+
     void OnPlayerWeaponSwapping_Delegate(PlayerWeaponSwapping playerWeaponSwapping)
     {
-        AmmoManager();
-        CheckIfLowAmmo();
+        //AmmoManager();
         UpdateThirdPersonGunModelsOnCharacter();
     }
 
@@ -217,14 +279,6 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!PV.IsMine)
             return;
-
-        //WeaponProperties previousActiveWeapon = activeWeapon;
-        //WeaponProperties newActiveWeapon = holsteredWeapon;
-
-        //activeWeapon = newActiveWeapon;
-        //holsteredWeapon = previousActiveWeapon;
-
-        AmmoManager();
 
         pController.ScopeOut();
         crosshairScript.DeactivateRedCrosshair();
@@ -242,25 +296,16 @@ public class PlayerInventory : MonoBehaviourPun
         }
         crosshairScript.UpdateReticule();
 
-        //UpdateActiveWeapon();
-        AmmoManager();
-        changeAmmoCounter();
-
-        CheckIfLowAmmo();
+        ChangeActiveAmmoCounter();
     }
     void OnBulletSpawned_Delegate(PlayerShooting playerShooting)
     {
-        //UpdateActiveWeapon();
-        AmmoManager();
-        changeAmmoCounter();
-        CheckIfLowAmmo();
+        CheckLowAmmoIndicator();
     }
 
     void OnReloadEnd_Delegate(ReloadScript reloadScript)
     {
-        AmmoManager();
-        changeAmmoCounter();
-        CheckIfLowAmmo();
+        UpdateAllExtraAmmoHuds();
     }
 
     [PunRPC]
@@ -271,43 +316,6 @@ public class PlayerInventory : MonoBehaviourPun
 
         activeWeapon = newActiveWeapon;
         holsteredWeapon = previousActiveWeapon;
-
-        Debug.Log($"SwitchWeapons active: {newActiveWeapon.name}");
-        Debug.Log($"SwitchWeapons previous active: {previousActiveWeapon.name}");
-
-        if (hasSecWeap == true)
-        {
-            //if (weaponsEquiped[0].gameObject.activeSelf)
-            //{
-            //    //DisableAmmoHUDCounters();
-            //    weaponsEquiped[1].gameObject.SetActive(true);
-            //    weaponsEquiped[0].gameObject.SetActive(false);
-
-            //    activeWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
-            //    activeWeapIs = 1;
-
-            //    UpdateActiveWeapon();
-            //    AmmoManager();
-            //    changeAmmoCounter();
-            //    StartCoroutine(ToggleTPPistolIdle(0));
-            //}
-            //else if (weaponsEquiped[1].gameObject.activeSelf)
-            //{
-            //    //DisableAmmoHUDCounters();
-            //    weaponsEquiped[1].gameObject.SetActive(false);
-            //    weaponsEquiped[0].gameObject.SetActive(true);
-
-            //    activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
-            //    activeWeapIs = 0;
-
-            //    UpdateActiveWeapon();
-            //    AmmoManager();
-            //    changeAmmoCounter();
-            //    StartCoroutine(ToggleTPPistolIdle(1));
-            //}
-            playDrawSound();
-            crosshairScript.UpdateReticule();
-        }
         UpdateThirdPersonGunModelsOnCharacter();
     }
     public IEnumerator EquipStartingWeapon()
@@ -336,7 +344,6 @@ public class PlayerInventory : MonoBehaviourPun
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
                     weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
                     holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
-                    //Debug.Log("Check 1");
                     hasSecWeap = true;
                 }
                 else if (allWeaponsInInventory[i].name != StartingWeapon)
@@ -346,34 +353,9 @@ public class PlayerInventory : MonoBehaviourPun
             }
         }
         UpdateThirdPersonGunModelsOnCharacter();
-        AmmoManager();
-        changeAmmoCounter();
+        ChangeActiveAmmoCounter();
         if (PV.IsMine)
-            playDrawSound();
-    }
-
-    public void AmmoManager()
-    {
-        if (activeWeapon != null)
-        {
-            currentAmmo = activeWeapon.gameObject.GetComponent<WeaponProperties>().currentAmmo;
-            //Debug.Log($"Active Weapon: {activeWeapon}\nAmmo: {activeWeapon.gameObject.GetComponent<WeaponProperties>().currentAmmo}");
-
-            if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
-            {
-                currentExtraAmmo = smallAmmo;
-            }
-
-            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
-            {
-                currentExtraAmmo = heavyAmmo;
-            }
-
-            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
-            {
-                currentExtraAmmo = powerAmmo;
-            }
-        }
+            PlayDrawSound();
     }
 
     void UpdateDualWieldedWeaponAmmo()
@@ -468,63 +450,6 @@ public class PlayerInventory : MonoBehaviourPun
                 weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().unequippedModelA.SetActive(true);
             }
         }
-
-        /*
-        Debug.Log("Active weapon:" + activeWeapon.name);
-        this.weaponMesh1.SetActive(false);
-        this.weaponMesh2.SetActive(false);
-        this.weaponMesh1Location2.SetActive(false);
-        this.weaponMesh2Location2.SetActive(false);
-
-        Mesh weaponMesh1 = activeWeapon.GetComponent<WeaponProperties>().weaponMesh;
-        Material weaponMaterial1 = activeWeapon.GetComponent<WeaponProperties>().weaponMaterial;
-
-        if (!activeWeapon.GetComponent<WeaponProperties>().location2 && !activeWeapon.GetComponent<WeaponProperties>().location3)
-        {
-            this.weaponMesh1.SetActive(true);
-
-            this.weaponMesh1.GetComponent<MeshFilter>().mesh = weaponMesh1;
-            this.weaponMesh1.GetComponent<MeshRenderer>().material = weaponMaterial1;
-        }
-        else if (activeWeapon.GetComponent<WeaponProperties>().location2)
-        {
-            this.weaponMesh1Location2.SetActive(true);
-
-            this.weaponMesh1Location2.GetComponent<MeshFilter>().mesh = weaponMesh1;
-            this.weaponMesh1Location2.GetComponent<MeshRenderer>().material = weaponMaterial1;
-        }
-        else if (activeWeapon.GetComponent<WeaponProperties>().location3)
-        {
-            this.weaponMesh1Location3.GetComponent<MeshFilter>().mesh = weaponMesh1;
-            this.weaponMesh1Location3.GetComponent<MeshRenderer>().material = weaponMaterial1;
-        }
-
-        if (weaponsEquiped[1])
-        {
-            Mesh weaponMesh2 = weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().weaponMesh;
-            Material weaponMaterial2 = weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().weaponMaterial;
-
-            if (!weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().location2 &&
-                !weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().location3)
-            {
-                this.weaponMesh2.SetActive(true);
-
-                this.weaponMesh2.GetComponent<MeshFilter>().mesh = weaponMesh2;
-                this.weaponMesh2.GetComponent<MeshRenderer>().material = weaponMaterial2;
-            }
-            else if (weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().location2)
-            {
-                this.weaponMesh2Location2.SetActive(true);
-
-                this.weaponMesh2Location2.GetComponent<MeshFilter>().mesh = weaponMesh2;
-                this.weaponMesh2Location2.GetComponent<MeshRenderer>().material = weaponMaterial2;
-            }
-            else if (weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().location3)
-            {
-                this.weaponMesh2Location3.GetComponent<MeshFilter>().mesh = weaponMesh2;
-                this.weaponMesh2Location3.GetComponent<MeshRenderer>().material = weaponMaterial2;
-            }
-        }*/
     }
 
     public IEnumerator ToggleTPPistolIdle(int secondaryWeapon)
@@ -532,7 +457,6 @@ public class PlayerInventory : MonoBehaviourPun
         SwapGunsOnCharacter(secondaryWeapon);
         yield return new WaitForEndOfFrame();
 
-        Debug.Log($"ToggleTPPistolIdle {activeWeapon.name}");
         if (activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
@@ -545,8 +469,6 @@ public class PlayerInventory : MonoBehaviourPun
                 pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Pistol", true);
                 pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Rifle", false);
             }
-            //pController.tPersonController.anim.SetBool("Idle Pistol", true);
-            //pController.tPersonController.anim.SetBool("Idle Rifle", false);
         }
         else
         {
@@ -560,73 +482,44 @@ public class PlayerInventory : MonoBehaviourPun
                 pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Pistol", false);
                 pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Rifle", true);
             }
-
-            //pController.tPersonController.anim.SetBool("Idle Rifle", true);
-            //pController.tPersonController.anim.SetBool("Idle Pistol", false);
         }
     }
 
-    public void playDrawSound()
+    public void PlayDrawSound()
     {
         audioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
         audioSource.Play();
     }
 
-    void DisableAmmoHUDCounters()
-    {
-        smallAmmoHudCounter.changeToHolstered();
-        heavyAmmoHudCounter.changeToHolstered();
-        powerAmmoHudCounter.changeToHolstered();
-    }
-
-    public void changeAmmoCounter()
+    public void ChangeActiveAmmoCounter()
     {
         if (!activeWeapon)
             return;
         if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
         {
-            smallAmmoHudCounter.changeToDrawn();
-            heavyAmmoHudCounter.changeToHolstered();
-            powerAmmoHudCounter.changeToHolstered();
+            smallAmmoHudCounter.ChangeToDrawn();
+            heavyAmmoHudCounter.ChangeToHolstered();
+            powerAmmoHudCounter.ChangeToHolstered();
         }
         else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
         {
-            smallAmmoHudCounter.changeToHolstered();
-            heavyAmmoHudCounter.changeToDrawn();
-            powerAmmoHudCounter.changeToHolstered();
+            smallAmmoHudCounter.ChangeToHolstered();
+            heavyAmmoHudCounter.ChangeToDrawn();
+            powerAmmoHudCounter.ChangeToHolstered();
         }
         else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
         {
-            smallAmmoHudCounter.changeToHolstered();
-            heavyAmmoHudCounter.changeToHolstered();
-            powerAmmoHudCounter.changeToDrawn();
+            smallAmmoHudCounter.ChangeToHolstered();
+            heavyAmmoHudCounter.ChangeToHolstered();
+            powerAmmoHudCounter.ChangeToDrawn();
         }
     }
 
     public void UpdateAllExtraAmmoHuds()
     {
-        AmmoManager();
+        //AmmoManager();
         smallAmmoHudCounter.UpdateExtraAmmo();
         heavyAmmoHudCounter.UpdateExtraAmmo();
         powerAmmoHudCounter.UpdateExtraAmmo();
-    }
-
-    public void CheckIfLowAmmo()
-    {
-        if (currentAmmo == 0 && currentExtraAmmo == 0)
-        {
-            lowAmmoIndicator.SetActive(false);
-            noAmmoIndicator.SetActive(true);
-        }
-        else if (currentAmmo < activeWeapon.GetComponent<WeaponProperties>().ammoCapacity * 0.4f && currentExtraAmmo >= 0)
-        {
-            lowAmmoIndicator.SetActive(true);
-            noAmmoIndicator.SetActive(false);
-        }
-        else
-        {
-            lowAmmoIndicator.SetActive(false);
-            noAmmoIndicator.SetActive(false);
-        }
     }
 }

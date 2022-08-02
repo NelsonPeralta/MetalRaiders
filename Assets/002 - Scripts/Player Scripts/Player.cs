@@ -298,19 +298,6 @@ public class Player : MonoBehaviourPunCallbacks
     {
         HitPointsRecharge();
     }
-
-    /// <summary>
-    /// /////////////////////////////////////////////////////////////////////////////////////// shield Slider Voids
-    /// </summary>
-    /*
-    void SetSliders()
-    {
-        shieldSlider = cManager.FindChildWithTagScript("Shield Slider").GetComponent<Slider>();
-        healthSlider = cManager.FindChildWithTagScript("Health Slider").GetComponent<Slider>();
-    }
-    */
-
-
     public bool CanBeDamaged()
     {
         if (hitPoints <= 0 || isDead || isRespawning)
@@ -323,10 +310,6 @@ public class Player : MonoBehaviourPunCallbacks
             return;
 
         PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource, isGroin);
-        //Damage_RPC(Health - healthDamage, playerWhoShotThisPlayerPhotonId);
-        //if (!PhotonNetwork.IsMasterClient)
-        //    return;
-
     }
 
     [PunRPC]
@@ -362,26 +345,6 @@ public class Player : MonoBehaviourPunCallbacks
         catch (System.Exception e) { }
 
         hitPoints = _newHealth;
-
-        ////float newHealth = Mathf.Clamp(hitPoints, 0f, (float)(maxHitPoints - maxShield));
-        //float newShield = 0;
-
-
-
-        //if (newHealth >= (maxHitPoints - maxShield))
-        //{
-        //    newShield = Mathf.Clamp(hitPoints - (maxHitPoints - maxShield), 0f, (float)maxShield);
-        //}
-
-        //if (newHealth < maxHitPoints - maxShield)
-        //{
-
-        //    GameObject bloodHit = allPlayerScripts.playerController.objectPool.SpawnPooledBloodHit();
-        //    bloodHit.transform.position = gameObject.transform.position + new Vector3(0, -0.4f, 0);
-        //    bloodHit.SetActive(true);
-        //    PlayHurtSound();
-        //}
-        //pController.ScopeOut();
 
         if (isDead)
         {
@@ -496,87 +459,6 @@ public class Player : MonoBehaviourPunCallbacks
         {
             shieldRechargeCountdown -= Time.deltaTime;
         }
-        //if (armorHasBeenHit && hasShield)
-        //{
-        //    shieldRechargeAllowed = false;
-        //    shieldRechargeCountdown -= Time.deltaTime;
-
-        //    if (shieldRechargeCountdown < 0 && hasShield && !needsShieldPack)
-        //    {
-        //        shieldRechargeAllowed = true;
-        //        armorHasBeenHit = false;
-
-        //    }
-        //}
-
-        //if (triggerHealthRecharge)
-        //{
-        //    healthRegenerationAllowed = false;
-        //    healthRegenerationCountdown -= Time.deltaTime;
-
-        //    if (healthRegenerationCountdown < 0 && !needsHealthPack)
-        //    {
-        //        healthRegenerationAllowed = true;
-        //        triggerHealthRecharge = false;
-        //    }
-        //    else if (healthRegenerationCountdown < 0 && !hasShield && !needsHealthPack)
-        //    {
-        //        healthRegenerationAllowed = true;
-        //        triggerHealthRecharge = false;
-        //    }
-        //}
-
-        //if (shieldRechargeAllowed && shieldSlider.value < maxShield)
-        //{
-        //    shieldSlider.value = shieldSlider.value + (shieldRechargeRate * 0.01f);
-        //    Shield = shieldSlider.value;
-
-        //    if (!shieldAudioSource.isPlaying)
-        //    {
-        //        PlayShieldStartSound();
-        //        shieldAlarmAudioSource.Stop();
-        //    }
-        //}
-
-        //if (healthRegenerationAllowed && hitPoints < maxHitPoints)
-        //{
-        //    hitPoints += healthRegenerationRate * 0.01f;
-
-        //    float newHealth = Mathf.Clamp(hitPoints, 0f, (float)(maxHitPoints - maxShield));
-        //    float newShield = 0;
-
-        //    if (hitPoints >= (maxHitPoints - maxShield))
-        //    {
-        //        newShield = Mathf.Clamp(hitPoints - (maxHitPoints - maxShield), 0f, (float)maxShield);
-        //    }
-
-
-        //    healthSlider.value = newHealth;
-        //    shieldSlider.value = newShield;
-
-
-        //    if (!healthRegenerating)
-        //    {
-        //        if (maxShield > 0 && newShield > 0)
-        //        {
-        //            StopShieldAlarmSound();
-        //            HideThirdPersionShieldElectricityModel();
-        //            ShowThirdPersonShieldRechargeModel();
-        //            PlayHealthRechargeSound();
-        //            healthRegenerating = true;
-        //        }
-        //        else if (maxShield <= 0)
-        //        {
-        //            PlayHealthRechargeSound();
-        //            healthRegenerating = true;
-        //        }
-        //    }
-        //}
-
-        //if (hitPoints == maxHitPoints)
-        //{
-        //    healthRegenerating = false;
-        //}
     }
     IEnumerator MidRespawnAction()
     {
@@ -666,15 +548,6 @@ public class Player : MonoBehaviourPunCallbacks
         isRespawning = false;
         GetComponent<PlayerController>().ScopeOut();
         hitPoints = maxHitPoints;
-
-        //float newHealth = Mathf.Clamp(hitPoints, 0f, (float)(maxHitPoints - maxShield));
-        //float newShield = 0;
-
-        //if (newHealth >= (maxHitPoints - maxShield))
-        //    newShield = Mathf.Clamp(hitPoints - (maxHitPoints - maxShield), 0f, (float)maxShield);
-
-        //shieldSlider.value = newShield;
-        //healthSlider.value = newHealth;
 
         mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
@@ -834,11 +707,9 @@ public class Player : MonoBehaviourPunCallbacks
 
     public void DropWeapon(WeaponProperties weapon)
     {
-        Debug.Log($"DropWeapon {name}");
         if (!GetComponent<PhotonView>().IsMine || weapon.currentAmmo <= 0)
             return;
 
-        Debug.Log($"DropWeapon_RPC {weapon.codeName}");
         WeaponProperties wp = null;
 
         if (weapon.codeName == null)
@@ -850,7 +721,6 @@ public class Player : MonoBehaviourPunCallbacks
 
         try
         {
-            Debug.Log("DropWeapon_RPC");
             GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position, Quaternion.identity);
             wo.name = wo.name.Replace("(Clone)", "");
             wo.GetComponent<LootableWeapon>().ammoInThisWeapon = wp.currentAmmo;

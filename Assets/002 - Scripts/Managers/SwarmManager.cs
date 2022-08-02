@@ -348,7 +348,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             knightsLeft = 0;
             hellhoundsLeft = 0;
             watchersLeft = 1;
-            tyrantsLeft = 1;
+            tyrantsLeft = 0;
         }
 
         OnAIsCalculated?.Invoke(this);

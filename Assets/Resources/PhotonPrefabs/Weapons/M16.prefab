@@ -698,10 +698,10 @@ MonoBehaviour:
   cleanName: M16
   codeName: m16
   isWallGun: 0
-  _ammoInThisWeapon: 24
-  extraAmmo: 24
+  _ammoInThisWeapon: 36
+  extraAmmo: 36
   isDualWieldable: 0
-  defaultAmmo: 24
+  defaultAmmo: 36
   defaultExtraAmmo: 0
   weaponType: Assault Rifle
   smallAmmo: 0

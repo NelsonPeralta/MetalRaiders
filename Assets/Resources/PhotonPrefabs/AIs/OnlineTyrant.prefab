@@ -633,6 +633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 3851432918533758524}
   aiGO: {fileID: 3851432918533758526}
   aiHealth: 0
@@ -1547,7 +1548,7 @@ MonoBehaviour:
   objectInLineOfSight: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 65
   _laughClip: {fileID: 0}
   _attackClip: {fileID: 8300000, guid: 205b3d2d7b6f63b48aaa14ffff125125, type: 3}
   _dieClip: {fileID: 8300000, guid: b979c8b17b61fe041bf88ab821639874, type: 3}
@@ -2747,6 +2748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
+  isNuts: 0
   aiAbstractClass: {fileID: 3851432918533758524}
   aiGO: {fileID: 3851432918533758526}
   aiHealth: 0

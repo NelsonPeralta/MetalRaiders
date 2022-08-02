@@ -16,9 +16,12 @@ public class PlayerHitboxes : MonoBehaviour
 
         foreach (PlayerHitbox playerHitbox in playerHitboxes)
         {
+            Debug.Log(playerHitboxes.Length);
+
             playerHitbox.GetComponent<MeshRenderer>().enabled = false;
             playerHitbox.player = GetComponent<Player>();
             playerHitbox.gameObject.layer = 7;
+            Debug.Log(playerHitbox.gameObject.layer);
         }
     }
 

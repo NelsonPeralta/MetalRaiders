@@ -392,9 +392,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         if (Physics.Raycast(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, out hit, maxRangeDistance, layerMask))
         {
             objectInLineOfSight = hit.transform.gameObject;
-            if (hit.transform.gameObject.GetComponent<PlayerHitbox>())
-            {
-                Player playerInLOS = objectInLineOfSight.GetComponent<PlayerHitbox>().player;
+            //if (hit.transform.gameObject.GetComponent<PlayerHitbox>())
+            if (hit.transform.gameObject.GetComponent<Player>())
+                {
+                Player playerInLOS = objectInLineOfSight.GetComponent<Player>();
 
                 if (playerInLOS == target.GetComponent<Player>())
                     targetInLineOfSight = true;
