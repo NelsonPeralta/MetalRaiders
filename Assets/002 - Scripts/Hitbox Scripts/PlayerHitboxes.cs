@@ -11,13 +11,11 @@ public class PlayerHitboxes : MonoBehaviour
 
     public void OnModelAssigned(PlayerThirdPersonModelManager playerThirdPersonModelManager)
     {
-        Debug.Log("PlayerHitboxes OnModelAssigned");
+        Debug.Log($"PlayerHitboxes OnModelAssigned {GetComponent<Player>().nickName}");
         playerHitboxes = GetComponentsInChildren<PlayerHitbox>();
 
         foreach (PlayerHitbox playerHitbox in playerHitboxes)
         {
-            Debug.Log(playerHitboxes.Length);
-
             playerHitbox.GetComponent<MeshRenderer>().enabled = false;
             playerHitbox.player = GetComponent<Player>();
             playerHitbox.gameObject.layer = 7;

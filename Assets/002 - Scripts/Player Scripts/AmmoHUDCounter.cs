@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,9 @@ public class AmmoHUDCounter : MonoBehaviour
 
     public void UpdateExtraAmmo()
     {
+        if (!allPlayerScripts.GetComponent<PhotonView>().IsMine)
+            return;
+
         if (this == playerInventory.smallAmmoHudCounter)
             extraAmmoText.text = playerInventory.smallAmmo.ToString();
         else if (this == playerInventory.heavyAmmoHudCounter)
