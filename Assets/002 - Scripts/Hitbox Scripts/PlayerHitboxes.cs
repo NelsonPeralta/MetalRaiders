@@ -19,7 +19,6 @@ public class PlayerHitboxes : MonoBehaviour
             playerHitbox.GetComponent<MeshRenderer>().enabled = false;
             playerHitbox.player = GetComponent<Player>();
             playerHitbox.gameObject.layer = 7;
-            Debug.Log(playerHitbox.gameObject.layer);
         }
     }
 

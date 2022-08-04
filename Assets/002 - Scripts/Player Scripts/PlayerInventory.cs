@@ -326,7 +326,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (allWeaponsInInventory[i] != null)
             {
-                if (allWeaponsInInventory[i].name == StartingWeapon)
+                if (allWeaponsInInventory[i].GetComponent <WeaponProperties>().codeName == StartingWeapon)
                 {
                     //DisableAmmoHUDCounters();
                     weaponsEquiped[0] = allWeaponsInInventory[i].gameObject;
@@ -338,7 +338,7 @@ public class PlayerInventory : MonoBehaviourPun
                     allWeaponsInInventory[i].gameObject.SetActive(true);
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
-                else if (allWeaponsInInventory[i].name == StartingWeapon2)
+                else if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon2)
                 {
                     allWeaponsInInventory[i].gameObject.SetActive(false);
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;

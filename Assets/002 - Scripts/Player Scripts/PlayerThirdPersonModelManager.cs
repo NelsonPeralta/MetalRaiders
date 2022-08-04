@@ -12,7 +12,8 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     public PlayerInventory playerInventory;
     public ThirdPersonScript thirdPersonScript
     {
-        get {
+        get
+        {
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 return spartanModel;
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
@@ -32,6 +33,8 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     private void Awake()
     {
+        OnModelAssigned -= GetComponent<PlayerHitboxes>().OnModelAssigned;
+        OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
         playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_Delegate;
         playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
     }
@@ -42,7 +45,6 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         {
             try
             {
-                OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
 
                 Debug.Log($"PlayerThirdPersonModelManager game mode: {GameManager.instance.gameMode}");
                 if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
@@ -62,16 +64,14 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                     humanModel.EnableSkinnedMeshes();
                 }
 
+                OnModelAssigned?.Invoke(this);
                 if (!player.photonView.IsMine)
                     return;
-
-                Debug.Log("PlayerArmorManager OnSceneLoaded");
 
                 foreach (GameObject model in models)
                     if (!feet.Contains(model))
                         GameManager.SetLayerRecursively(model, 31);
 
-                OnModelAssigned?.Invoke(this);
 
             }
             catch (System.Exception e) { Debug.Log(e); }

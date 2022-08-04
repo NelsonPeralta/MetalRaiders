@@ -695,7 +695,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             SwarmManager.instance.livesLeft--;
 
-        playerInventory.holsteredWeapon = null;
+        //playerInventory.holsteredWeapon = null;
         GetComponent<PlayerController>().DisableCrouch();
         //StopShieldAlarmSound();
         PlayDeathSound();
