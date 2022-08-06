@@ -318,6 +318,7 @@ public class Player : MonoBehaviourPunCallbacks
         int damage = (int)(hitPoints - _newHealth);
         if (PV.IsMine)
         {
+            GetComponent<PlayerController>().ScopeOut();
             allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
 
             try
@@ -552,27 +553,6 @@ public class Player : MonoBehaviourPunCallbacks
         mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
         gunCamera.enabled = true;
-
-        if (playerRewiredID == 0)
-        {
-            mainCamera.cullingMask &= ~(1 << 28);
-            gunCamera.cullingMask |= (1 << 24);
-        }
-        else if (playerRewiredID == 1)
-        {
-            mainCamera.cullingMask &= ~(1 << 29);
-            gunCamera.cullingMask |= (1 << 25);
-        }
-        else if (playerRewiredID == 2)
-        {
-            mainCamera.cullingMask |= (1 << 30);
-            gunCamera.cullingMask |= (1 << 26);
-        }
-        else if (playerRewiredID == 3)
-        {
-            //mainCamera.cullingMask |= (1 << 31);
-            gunCamera.cullingMask |= (1 << 27);
-        }
 
         StartCoroutine(MakeThirdPersonModelVisible());
 

@@ -14,7 +14,15 @@ public class DamageIndicatorManager : MonoBehaviour
             return;
         try
         {
-            StartCoroutine(SpawnNewDamageIndicator_Coroutine(playerWhoShotPID));
+            Transform playerWhoDamagedThisPlayer = PhotonView.Find(playerWhoShotPID).transform;
+            if (playerWhoDamagedThisPlayer.GetComponent<Player>() == player)
+                return;
+
+            var ndi = Instantiate(damageIndicatorPrefab, transform);
+            ndi.GetComponent<DamageIndicator>().player = player;
+            ndi.GetComponent<DamageIndicator>().targetTransform = playerWhoDamagedThisPlayer;
+
+            //StartCoroutine(SpawnNewDamageIndicator_Coroutine(playerWhoShotPID));
         }
         catch (System.Exception e)
         {
@@ -24,9 +32,12 @@ public class DamageIndicatorManager : MonoBehaviour
 
     IEnumerator SpawnNewDamageIndicator_Coroutine(int playerWhoShotPID)
     {
-        var ndi = Instantiate(damageIndicatorPrefab, transform);
-
         Transform playerWhoDamagedThisPlayer = PhotonView.Find(playerWhoShotPID).transform;
+
+        var ndi = Instantiate(damageIndicatorPrefab, transform);
+        ndi.GetComponent<DamageIndicator>().player = player;
+        ndi.GetComponent<DamageIndicator>().targetTransform = playerWhoDamagedThisPlayer;
+
 
         Vector3 tPos = playerWhoDamagedThisPlayer.position;
         Vector3 direction = player.transform.position - tPos;
