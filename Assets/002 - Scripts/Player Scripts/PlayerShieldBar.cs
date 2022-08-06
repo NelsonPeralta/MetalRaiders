@@ -39,13 +39,16 @@ public class PlayerShieldBar : PlayerBar
                 redAlertBar.SetActive(false);
                 redAlertBarCountdown = 1;
             }
-                
+
         }
     }
     public override void OnPlayerHitPointsChanged_Delegate(Player player)
     {
         if (player.hitPoints >= 100)
+        {
             GetComponent<Slider>().value = player.hitPoints - 100;
+            redAlertBarCountdown = 1;
+        }
         else
             GetComponent<Slider>().value = 0;
     }
