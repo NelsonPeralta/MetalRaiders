@@ -16,8 +16,34 @@ public class SpawnManager : MonoBehaviour
         spawnManagerInstance = this;
     }
 
-    public Transform GetGenericSpawnpoint()
+    Transform GetRandomSpawnpoint()
     {
         return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
+    }
+
+    public Transform GetRandomSafeSpawnPoint()
+    {
+        List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
+
+        foreach (SpawnPoint sp in genericSpawnPoints)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
+                    if (sp.players.Count == 0)
+                        availableSpawnPoints.Add(sp);
+
+        if (availableSpawnPoints.Count > 0)
+        {
+            int ran = Random.Range(0, availableSpawnPoints.Count);
+
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
+                    if (availableSpawnPoints[ran].players.Count == 0)
+                    {
+                        Debug.Log($"Returning Safe Spawn Point: {availableSpawnPoints[ran].transform}");
+                        return availableSpawnPoints[ran].transform;
+                    }
+        }
+
+        return GetRandomSpawnpoint();
     }
 }

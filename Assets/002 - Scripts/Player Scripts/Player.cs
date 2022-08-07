@@ -465,7 +465,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(_defaultRespawnTime / 2);
         hitPoints = maxHitPoints;
-        Transform spawnPoint = spawnManager.GetGenericSpawnpoint();
+        Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint();
         transform.position = spawnPoint.position + new Vector3(0, 2, 0);
         transform.rotation = spawnPoint.rotation;
         isDead = false;
