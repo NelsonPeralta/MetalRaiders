@@ -6,7 +6,15 @@ using UnityEngine;
 public class DamageIndicator : MonoBehaviour
 {
     public Player player;
-    public Transform targetTransform;
+
+    Transform _targetTransform;
+    public Transform targetTransform
+    {
+        get { return _targetTransform; }
+        set { _targetTransform = value; _targetPosition = targetTransform.position; }
+    }
+
+    Vector3 _targetPosition;
 
     [SerializeField] float ttl = 2;
 
@@ -19,8 +27,7 @@ public class DamageIndicator : MonoBehaviour
         if (ttl <= 0)
             Destroy(gameObject);
 
-        Vector3 tPos = targetTransform.position;
-        Vector3 direction = player.transform.position - tPos;
+        Vector3 direction = player.transform.position - _targetPosition;
 
         Quaternion tRot = Quaternion.LookRotation(direction);
         tRot.z = -tRot.y;

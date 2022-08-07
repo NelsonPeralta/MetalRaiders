@@ -8,7 +8,13 @@ public class PlayerShieldBar : PlayerBar
     public Slider healingSlider;
     [SerializeField] GameObject redAlertBar;
 
-    float redAlertBarCountdown = 1;
+    float redAlertInterval = 0.25f;
+    float _redAlertBarCountdown = 1;
+    float redAlertBarCountdown
+    {
+        get { return _redAlertBarCountdown; }
+        set { _redAlertBarCountdown = value; if (value > redAlertInterval) { redAlertBar.SetActive(false); } }
+    }
     private void Start()
     {
         healingSlider.maxValue = player.defaultHealingCountdown + ((player.maxHealthPoints - player.hitPoints) / player.healthHealingIncrement);
@@ -24,22 +30,16 @@ public class PlayerShieldBar : PlayerBar
     {
         healingSlider.value = player.shieldRechargeCountdown;
 
-        if (redAlertBarCountdown <= 0.25f)
+        if (redAlertBarCountdown <= redAlertInterval)
         {
             redAlertBarCountdown -= Time.deltaTime;
 
-            if (redAlertBarCountdown < 0.25f && redAlertBarCountdown >= 0 && !redAlertBar.activeSelf)
+            if (redAlertBarCountdown < redAlertInterval && redAlertBarCountdown >= 0 && !redAlertBar.activeSelf)
                 redAlertBar.SetActive(true);
             else if (redAlertBarCountdown < 0 && redAlertBar.activeSelf)
                 redAlertBar.SetActive(false);
-            else if (redAlertBarCountdown < -0.25f && player.hitPoints <= 100)
-                redAlertBarCountdown = 0.25f;
-            else if (player.hitPoints > 100)
-            {
-                redAlertBar.SetActive(false);
-                redAlertBarCountdown = 1;
-            }
-
+            else if (redAlertBarCountdown < -redAlertInterval && player.hitPoints <= 100)
+                redAlertBarCountdown = redAlertInterval;
         }
     }
     public override void OnPlayerHitPointsChanged_Delegate(Player player)
@@ -61,6 +61,6 @@ public class PlayerShieldBar : PlayerBar
     {
         Debug.Log("OnShieldBroken_Delegate");
         healingSlider.maxValue = player.defaultHealingCountdown + ((player.maxHealthPoints - player.hitPoints) / player.healthHealingIncrement);
-        redAlertBarCountdown = 0.25f;
+        redAlertBarCountdown = redAlertInterval;
     }
 }
