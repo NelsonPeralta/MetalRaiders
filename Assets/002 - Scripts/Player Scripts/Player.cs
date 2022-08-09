@@ -683,9 +683,11 @@ public class Player : MonoBehaviourPunCallbacks
         StartCoroutine(Respawn_Coroutine());
         StartCoroutine(MidRespawnAction());
         DropWeapon(playerInventory.activeWeapon);
+        DropWeapon(playerInventory.holsteredWeapon, offset : new Vector3(0.5f, 0.5f, 0));
     }
 
-    public void DropWeapon(WeaponProperties weapon)
+    // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter
+    public void DropWeapon(WeaponProperties weapon, Vector3? offset = null)
     {
         if (!GetComponent<PhotonView>().IsMine || weapon.currentAmmo <= 0)
             return;
@@ -695,17 +697,21 @@ public class Player : MonoBehaviourPunCallbacks
         if (weapon.codeName == null)
             return;
 
+        if (offset == null)
+            offset = new Vector3(0, 0, 0);
+
         foreach (GameObject w in playerInventory.allWeaponsInInventory)
             if (w.GetComponent<WeaponProperties>().codeName == weapon.codeName)
                 wp = w.GetComponent<WeaponProperties>();
 
         try
         {
-            GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position, Quaternion.identity);
+            GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
             wo.name = wo.name.Replace("(Clone)", "");
             wo.GetComponent<LootableWeapon>().ammoInThisWeapon = wp.currentAmmo;
             wo.GetComponent<LootableWeapon>().ttl = 60;
             wo.GetComponent<Rigidbody>().AddForce(weaponDropPoint.transform.forward * 200);
+            Debug.Log($"Spawned {wo.name}");
         }
         catch (System.Exception e)
         {
