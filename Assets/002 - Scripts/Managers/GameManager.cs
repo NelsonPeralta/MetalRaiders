@@ -182,13 +182,16 @@ public class GameManager : MonoBehaviourPunCallbacks
         return PhotonView.Find(pid).GetComponent<Player>();
     }
 
-    public static void SetLayerRecursively(GameObject go, int layerNumber)
+    public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null)
     {
+        if (ignoreList == null)
+            ignoreList = new List<int>();
         // Reference: https://forum.unity.com/threads/change-gameobject-layer-at-run-time-wont-apply-to-child.10091/
 
         foreach (Transform trans in go.GetComponentsInChildren<Transform>(true))
         {
-            trans.gameObject.layer = layerNumber;
+            if (!ignoreList.Contains(trans.gameObject.layer))
+                trans.gameObject.layer = layerNumber;
         }
     }
 

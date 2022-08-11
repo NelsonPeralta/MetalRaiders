@@ -29,17 +29,10 @@ public class CrosshairManager : MonoBehaviour
             FindComponents();
             hasFoundComponents = true;
         }
-        weaponPickUp.OnWeaponPickup += UpdateReticule_Delegate;
-        StartCoroutine(LateStart_Coroutine());
+        pInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
     }
 
-    IEnumerator LateStart_Coroutine()
-    {
-        yield return new WaitForEndOfFrame();
-        UpdateReticule();
-    }
-
-    void UpdateReticule_Delegate(PlayerWeaponSwapping weaponPickUp)
+    void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
     {
         UpdateReticule();
     }

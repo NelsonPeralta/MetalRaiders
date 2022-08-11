@@ -60,7 +60,7 @@ public class AIGrenade : MonoBehaviour
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             //Add force to nearby rigidbodies
-            if (rb != null)
+            if (rb != null && rb.gameObject.layer != gameObject.layer)
                 rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
