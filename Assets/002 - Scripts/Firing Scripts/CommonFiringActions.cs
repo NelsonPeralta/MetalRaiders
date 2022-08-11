@@ -75,7 +75,7 @@ public class CommonFiringActions : MonoBehaviour
 
     IEnumerator Player3PSFiringAnimation()
     {
-        thirdPersonScript.anim.Play("Fire");
+        thirdPersonScript.GetComponent<Animator>().Play("Fire");
         yield return new WaitForEndOfFrame();
     }
 

@@ -8,17 +8,16 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     public delegate void PlayerModelManagerEvent(PlayerThirdPersonModelManager playerThirdPersonModelManager);
     public PlayerModelManagerEvent OnModelAssigned;
 
+    [SerializeField] ThirdPersonScript _thidPersonScript;
+
     public Player player;
     public PlayerInventory playerInventory;
     public ThirdPersonScript thirdPersonScript
     {
+        set { _thidPersonScript = value; }
         get
         {
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                return spartanModel;
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                return humanModel;
-            return null;
+            return _thidPersonScript;
         }
     }
     public ThirdPersonScript humanModel;
@@ -37,6 +36,11 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
         playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_Delegate;
         playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            thirdPersonScript = spartanModel;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            thirdPersonScript = humanModel;
     }
     private void Start()
     {

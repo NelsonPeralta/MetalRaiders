@@ -461,26 +461,26 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             {
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.anim.SetBool("Idle Pistol", true);
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.anim.SetBool("Idle Rifle", false);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", true);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
             }
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             {
-                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Pistol", true);
-                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Rifle", false);
+                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.GetComponent<Animator>().SetBool("Idle Pistol", true);
+                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
             }
         }
         else
         {
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             {
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.anim.SetBool("Idle Pistol", false);
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.anim.SetBool("Idle Rifle", true);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", true);
             }
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             {
-                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Pistol", false);
-                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.anim.SetBool("Idle Rifle", true);
+                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
+                pController.GetComponent<PlayerThirdPersonModelManager>().humanModel.GetComponent<Animator>().SetBool("Idle Rifle", true);
             }
         }
     }

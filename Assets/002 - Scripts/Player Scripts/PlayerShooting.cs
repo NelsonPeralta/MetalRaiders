@@ -152,7 +152,7 @@ public class PlayerShooting : MonoBehaviourPun
     }
     IEnumerator Player3PSFiringAnimation()
     {
-        tPersonController.anim.Play("Fire");
+        tPersonController.GetComponent<Animator>().Play("Fire");
         yield return new WaitForEndOfFrame();
     }
     void FireCooldown()
