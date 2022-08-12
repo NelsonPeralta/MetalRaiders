@@ -70,11 +70,15 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
                 OnModelAssigned?.Invoke(this);
 
-                List<int> ignoreList = new List<int>();
-                ignoreList.Add(7); // 7 = Player Hitbox
-                foreach (GameObject model in models)
-                    if (!feet.Contains(model))
-                        GameManager.SetLayerRecursively(model, 31, ignoreList);
+                if (player.PV.IsMine)
+                {
+                    List<int> ignoreList = new List<int>();
+                    ignoreList.Add(7); // 7 = Player Hitbox
+                    foreach (GameObject model in models)
+                        if (!feet.Contains(model))
+                            GameManager.SetLayerRecursively(model, 31, ignoreList);
+                }
+
             }
             catch (System.Exception e) { Debug.Log(e); }
         }
