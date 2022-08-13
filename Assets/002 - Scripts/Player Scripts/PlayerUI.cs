@@ -63,6 +63,12 @@ public class PlayerUI : MonoBehaviour
     public GameObject splitScreenPauseMenu;
     public PlayerDebuggerOnUI PlayerDebuggerOnUI;
 
+    [Header("Hit Markers", order = 8)]
+    public Transform hitMarkerSpawnPoint;
+    public Transform hitMarker;
+    public Transform headshotMarker;
+    public Transform killMarker;
+    public Transform headshotKill;
     private void OnEnable()
     {
         try
@@ -165,16 +171,16 @@ public class PlayerUI : MonoBehaviour
         camSensWitnessText.text = $"Sens: {GameManager.instance.camSens.ToString()}";
     }
 
-    public void ShowHeadshotIndicator()
-    {
-        if (hideHeadshotIndicatorCoroutine != null)
-            StopCoroutine(hideHeadshotIndicatorCoroutine);
-        if (showHeadshotIndicatorCoroutine != null)
-            StopCoroutine(showHeadshotIndicatorCoroutine);
+    //public void ShowHeadshotIndicator()
+    //{
+    //    if (hideHeadshotIndicatorCoroutine != null)
+    //        StopCoroutine(hideHeadshotIndicatorCoroutine);
+    //    if (showHeadshotIndicatorCoroutine != null)
+    //        StopCoroutine(showHeadshotIndicatorCoroutine);
 
-        hideHeadshotIndicatorCoroutine = StartCoroutine(HideHeadshotIndicator_Coroutine());
-        showHeadshotIndicatorCoroutine = StartCoroutine(ShowHeadshotIndicator_Coroutine());
-    }
+    //    hideHeadshotIndicatorCoroutine = StartCoroutine(HideHeadshotIndicator_Coroutine());
+    //    showHeadshotIndicatorCoroutine = StartCoroutine(ShowHeadshotIndicator_Coroutine());
+    //}
 
     IEnumerator HideHeadshotIndicator_Coroutine()
     {
@@ -290,5 +296,27 @@ public class PlayerUI : MonoBehaviour
                 }
             }
         }
+    }
+
+    public enum HitMarkerType { Hit, Headshot, Kill, HeadshotKill };
+    public void SpawnHitMarker(HitMarkerType hitMarkerType = HitMarkerType.Hit)
+    {
+        if (!GetComponent<PhotonView>().IsMine)
+            return;
+        Transform hm = null;
+        if (hitMarkerType == HitMarkerType.Hit)
+            hm = Instantiate(hitMarker, hitMarkerSpawnPoint.transform);
+        else if (hitMarkerType == HitMarkerType.Headshot)
+            hm = Instantiate(headshotMarker, hitMarkerSpawnPoint.transform);
+        else if (hitMarkerType == HitMarkerType.Kill)
+            hm = Instantiate(killMarker, hitMarkerSpawnPoint.transform);
+        else if (hitMarkerType == HitMarkerType.HeadshotKill)
+            hm = Instantiate(headshotKill, hitMarkerSpawnPoint.transform);
+
+        try
+        {
+            Destroy(hm.gameObject, 0.5f);
+        }
+        catch { }
     }
 }

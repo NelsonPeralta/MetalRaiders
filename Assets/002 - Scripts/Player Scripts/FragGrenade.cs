@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class FragGrenade : MonoBehaviour
 {
@@ -34,9 +35,13 @@ public class FragGrenade : MonoBehaviour
     public AudioClip impactSound;
     public AudioClip explosionSound;
 
+    Transform[] ignore;
+
     private void Start()
     {
         PlaySound(throwSound);
+
+        ignore = playerWhoThrewGrenade.GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponentsInChildren<Transform>();
     }
 
     private void Update()
@@ -63,7 +68,7 @@ public class FragGrenade : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer != 22 && !hasHitObject) // Non-Interactable Layer
+        if (collision.gameObject.layer != 22 && !hasHitObject && !ignore.Contains(collision.transform)) // Non-Interactable Layer
         {
             hasHitObject = true;
             Debug.Log($"Grenade Collided with: {collision.gameObject.name}");

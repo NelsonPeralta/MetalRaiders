@@ -69,10 +69,13 @@ public class AimAssistCapsule : MonoBehaviour
                 if (!frictionColliders[i].gameObject.activeSelf || !frictionColliders[i].gameObject.activeInHierarchy)
                     frictionColliders.Remove(frictionColliders[i]);
 
-        if (frictionColliders.Count == 0)
-            reticuleFriction = false;
-        else
-            reticuleFriction = true;
+        if (player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
+        {
+            if (frictionColliders.Count == 0)
+                reticuleFriction = false;
+            else
+                reticuleFriction = true;
+        }
 
         ReticuleFriction = reticuleFriction;
 
@@ -149,7 +152,7 @@ public class AimAssistCapsule : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
+        if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
             return;
 
         if (other.gameObject.layer != 21)

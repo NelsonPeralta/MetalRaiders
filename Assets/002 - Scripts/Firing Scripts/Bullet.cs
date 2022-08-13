@@ -183,13 +183,23 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     //Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
                     finalDamage = (int)(weaponProperties.headshotMultiplier * damage);
-                    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
 
                     if (hitbox.aiAbstractClass.health <= finalDamage)
                     {
+                        playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
                         playerWhoShot.GetComponent<PlayerSwarmMatchStats>().headshots++;
                     }
+                    else
+                        playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
                 }
+                else
+                {
+                    if (hitbox.aiAbstractClass.health <= finalDamage)
+                        playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+                    else
+                        playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker();
+                }
+
 
                 if (playerWhoShot.PV.IsMine)
                 {
@@ -225,9 +235,21 @@ public class Bullet : MonoBehaviourPunCallbacks
                     wasNutshot = hitbox.isNuts;
 
                     if (wasHeadshot && player.hitPoints < damage)
-                    {
-                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                         playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
+
+                    if (wasHeadshot)
+                    {
+                        if (player.hitPoints < damage)
+                            playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
+                        else
+                            playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
+                    }
+                    else
+                    {
+                        if (player.hitPoints < damage)
+                            playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+                        else
+                            playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker();
                     }
                 }/*else if (hitbox.isNuts)*/
                 //{

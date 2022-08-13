@@ -109,7 +109,12 @@ public partial class WebManager
     IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null)
     {
         //int xpAndCreditGain = Random.Range(160, 240) + (SwarmManager.instance.currentWave * Random.Range(8, 12));
-        int xpAndCreditGain = Random.Range(160, 240);
+        int xpAndCreditGain = 0;
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            xpAndCreditGain = Random.Range(160, 240);
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            xpAndCreditGain = Random.Range(80, 120);
 
         Debug.Log("SaveBasicOnlineStats_Coroutine");
         Debug.Log(pda.playerBasicOnlineStats.xp);

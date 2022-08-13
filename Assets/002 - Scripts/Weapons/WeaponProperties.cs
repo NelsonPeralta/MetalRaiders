@@ -40,6 +40,7 @@ public class WeaponProperties : MonoBehaviour
     public float bulletSpray;
 
     [Header("Range")]
+    public bool fakeRRR;
     public float defaultRedReticuleRange;
     public float currentRedReticuleRange;
 
@@ -229,6 +230,7 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Aiming", EditorStyles.boldLabel);
+        wp.fakeRRR = GUILayout.Toggle(wp.fakeRRR, "Fake RRR");
         wp.defaultRedReticuleRange = EditorGUILayout.FloatField("Default RRR:", wp.defaultRedReticuleRange);
         wp.aimingMechanic = (WeaponProperties.AimingMechanic)EditorGUILayout.EnumPopup("Aiming mechanic", wp.aimingMechanic);
 
