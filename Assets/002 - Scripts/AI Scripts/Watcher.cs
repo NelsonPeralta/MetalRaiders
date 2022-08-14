@@ -187,7 +187,7 @@ public class Watcher : AiAbstractClass
         this.transform.LookAt(targetPostition);
     }
 
-    public override void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    protected override void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
         if (isDead)
             return;
@@ -200,7 +200,7 @@ public class Watcher : AiAbstractClass
         if (isDead)
             return;
 
-        Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         health -= damage;

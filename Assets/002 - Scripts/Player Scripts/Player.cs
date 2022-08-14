@@ -108,6 +108,11 @@ public class Player : MonoBehaviourPunCallbacks
                 _meleeDamage *= 3;
         }
     }
+
+    public float healthPoints
+    {
+        get { return (hitPoints - maxShieldPoints); }
+    }
     public float hitPoints
     {
         get { return _hitPoints; }
@@ -309,6 +314,27 @@ public class Player : MonoBehaviourPunCallbacks
         if (hitPoints <= 0 || isDead || isRespawning)
             return;
 
+        try
+        { // Hit Marker Handling
+            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
+
+            if (headshot)
+            {
+                if (healthPoints <= healthDamage)
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
+                else
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
+            }
+            else
+            {
+                if (healthPoints <= healthDamage)
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+                else
+                    p.GetComponent<PlayerUI>().SpawnHitMarker();
+            }
+        }
+        catch { }
+
         PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource, isGroin);
     }
 
@@ -349,7 +375,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (isDead)
         {
-            string sourcePlayerName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).nickName;
+            string sourcePlayerName = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).nickName;
 
             int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
             int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];

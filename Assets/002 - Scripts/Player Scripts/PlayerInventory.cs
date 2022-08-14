@@ -376,7 +376,7 @@ public class PlayerInventory : MonoBehaviourPun
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
+                //Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
             }
 
             try
@@ -386,7 +386,7 @@ public class PlayerInventory : MonoBehaviourPun
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
+                //Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
             }
         }
 
@@ -403,7 +403,7 @@ public class PlayerInventory : MonoBehaviourPun
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
+                    //Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
 
                 }
             }
@@ -415,7 +415,7 @@ public class PlayerInventory : MonoBehaviourPun
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
+                    //Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
 
                 }
             }

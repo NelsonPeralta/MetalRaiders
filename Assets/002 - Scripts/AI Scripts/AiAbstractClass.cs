@@ -506,8 +506,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     protected void SpawnKillFeed(string className, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
-        Player player = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
-        string nickName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI).nickName;
+        Player player = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        string nickName = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI).nickName;
         string teamColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
 
 
@@ -565,7 +565,31 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         }
     }
     public abstract void ChangeAction_RPC(string actionString);
-    public abstract void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
+
+    public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    {
+        { // Hit Marker Handling
+            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+
+            if (isHeadshot)
+            {
+                if (health <= damage)
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
+                else
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
+            }
+            else
+            {
+                if (health <= damage)
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+                else
+                    p.GetComponent<PlayerUI>().SpawnHitMarker();
+            }
+        }
+
+        Damage_Abstract(damage, playerWhoShotPDI, damageSource, isHeadshot);
+    }
+    protected abstract void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
     public abstract void Damage_RPC(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
     public abstract void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass);

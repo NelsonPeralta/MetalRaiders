@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         return null;
     }
 
-    public Player GetPlayerWithPhotonViewId(int pid)
+    public static Player GetPlayerWithPhotonViewId(int pid)
     {
         return PhotonView.Find(pid).GetComponent<Player>();
     }

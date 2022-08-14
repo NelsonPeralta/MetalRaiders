@@ -186,19 +186,10 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                     if (hitbox.aiAbstractClass.health <= finalDamage)
                     {
-                        playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
                         playerWhoShot.GetComponent<PlayerSwarmMatchStats>().headshots++;
                     }
-                    else
-                        playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
                 }
-                else
-                {
-                    if (hitbox.aiAbstractClass.health <= finalDamage)
-                        playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-                    else
-                        playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker();
-                }
+
 
 
                 if (playerWhoShot.PV.IsMine)
@@ -237,32 +228,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     if (wasHeadshot && player.hitPoints < damage)
                         playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
 
-                    if (wasHeadshot)
-                    {
-                        if (player.hitPoints < damage)
-                            playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
-                        else
-                            playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
-                    }
-                    else
-                    {
-                        if (player.hitPoints < damage)
-                            playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-                        else
-                            playerWhoShot.GetComponent<PlayerUI>().SpawnHitMarker();
-                    }
-                }/*else if (hitbox.isNuts)*/
-                //{
-                //    wasNuthsot = true;
-
-                //    int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
-
-                //    if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
-                //        damage = player.maxHealthPoints;
-
-                //    if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
-                //        damage = (int)(damage * weaponProperties.headshotMultiplier);
-                //}
+                }
 
                 if (playerWhoShot.PV.IsMine)
                 {

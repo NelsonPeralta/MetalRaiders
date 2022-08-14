@@ -8,24 +8,14 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerMultiplayerStatsEvent(PlayerMultiplayerMatchStats playerMultiplayerStats);
     // Events
-    public PlayerMultiplayerStatsEvent OnKillsChanged;
-    public PlayerMultiplayerStatsEvent OnDeathsChanged;
-    public PlayerMultiplayerStatsEvent OnHeadshotsChanged;
-    public PlayerMultiplayerStatsEvent OnKDRatioChanged;
-
-    // public variables
-    int Kills, Deaths, Headshots;
+    public PlayerMultiplayerStatsEvent OnKillsChanged, OnDeathsChanged, OnHeadshotsChanged, OnKDRatioChanged;
 
     // private variables
-    int _kills;
-    int _deaths;
-    int _headshots;
-    float _kd;
+    [SerializeField] int _kills;
+    [SerializeField] int _deaths;
+    [SerializeField] int _headshots;
+    [SerializeField] float _kd;
 
-    //public variables
-    public Player player;
-    public int PVID;
-    public string playerName;
     public int kills
     {
         get { return _kills; }
@@ -39,7 +29,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnKillsChanged?.Invoke(this);
             }
-            Kills = kills;
+            _kills = kills;
         }
     }
     public int deaths
@@ -55,7 +45,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnDeathsChanged?.Invoke(this);
             }
-            Deaths = deaths;
+            _deaths = deaths;
         }
     }
 
@@ -72,7 +62,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnHeadshotsChanged?.Invoke(this);
             }
-            Headshots = headshots;
+            _headshots = headshots;
         }
     }
 
@@ -92,15 +82,8 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         }
     }
 
-    ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
     private void Start()
     {
-        if (player)
-        {
-            PVID = player.PV.ViewID;
-            playerName = player.PV.Owner.NickName;
-        }
-
         this.OnKillsChanged += this.OnKillsChange;
         kills = 0;
         deaths = 0;
@@ -111,76 +94,5 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     {
         if(deaths > 0)
             _kd = (kills / deaths);
-    }
-
-    public PlayerMultiplayerMatchStats(Player pp)
-    {
-        player = pp;
-        PVID = pp.GetComponent<PhotonView>().ViewID;
-        playerName = pp.GetComponent<PhotonView>().Owner.NickName;
-    }
-
-    public PlayerMultiplayerMatchStats(int pvid, string pName, int k, int d)
-    {
-        PVID = pvid;
-        playerName = pName;
-        kills = k;
-        deaths = d;
-    }
-
-    public void AddKill(int pointsToWin)
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        if (customProperties == null)
-            customProperties = new ExitGames.Client.Photon.Hashtable();
-        Debug.Log("here");
-
-        if (!customProperties.ContainsKey($"{playerName}_kills"))
-            customProperties.Add($"{playerName}_kills", 0);
-        if (!customProperties.ContainsKey($"points_to_win"))
-            customProperties.Add($"points_to_win", 1000);
-        customProperties[$"{playerName}_kills"] = (int)customProperties[$"{playerName}_kills"] + 1;
-        PhotonNetwork.SetPlayerCustomProperties(customProperties);
-    }
-
-    public void AddKill()
-    {
-        kills++;
-    }
-
-    public void AddDeath()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        if (customProperties == null)
-            customProperties = new ExitGames.Client.Photon.Hashtable();
-        Debug.Log("here");
-
-        if (!customProperties.ContainsKey($"{playerName}_deaths"))
-            customProperties.Add($"{playerName}_deaths", 0);
-        customProperties[$"{playerName}_deaths"] = (int)customProperties[$"{playerName}_deaths"] + 1;
-        PhotonNetwork.SetPlayerCustomProperties(customProperties);
-    }
-
-    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
-    {
-        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-        if (changedProps.ContainsKey($"{playerName}_kills"))
-        {
-            Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
-            kills = (int)changedProps[$"{playerName}_kills"];
-            player.GetComponent<PlayerUI>().multiplayerPointsRed.text = $"{kills}";
-
-            OnKillsChanged?.Invoke(this);
-        }
-
-        if (changedProps.ContainsKey($"{playerName}_deaths"))
-        {
-            Debug.Log($"On Properties Updtate: {changedProps}. Player: {targetPlayer}");
-            deaths = (int)changedProps[$"{playerName}_deaths"];
-
-            OnDeathsChanged?.Invoke(this);
-        }
     }
 }

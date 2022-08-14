@@ -53,6 +53,7 @@ public class PlayerUI : MonoBehaviour
     public Text Timer;
     public Transform bottomRight;
     public GameObject multiplayerPointsHolder;
+    public Text multiplayerPointsGrey;
     public Text multiplayerPointsRed;
     public Text multiplayerPointsBlue;
     public GameObject swarmPointsHolder;
@@ -156,7 +157,10 @@ public class PlayerUI : MonoBehaviour
             //SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
             EnableMultiplayerUIComponents();
+            GetComponent<PlayerMultiplayerMatchStats>().OnKillsChanged += OnPVPKillsChanged_Delegate;
+        }
 
         OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);
     }
@@ -318,5 +322,10 @@ public class PlayerUI : MonoBehaviour
             Destroy(hm.gameObject, 0.5f);
         }
         catch { }
+    }
+
+    void OnPVPKillsChanged_Delegate(PlayerMultiplayerMatchStats playerMultiplayerMatchStats)
+    {
+        multiplayerPointsGrey.text = playerMultiplayerMatchStats.kills.ToString();
     }
 }

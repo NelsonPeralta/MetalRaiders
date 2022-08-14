@@ -54,8 +54,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void AddPlayerKill(AddPlayerKillStruct struc)
     {
-        PlayerMultiplayerMatchStats winningPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
-        PlayerMultiplayerMatchStats losingPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
+        PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
+        PlayerMultiplayerMatchStats losingPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
 
 
         List<Player> allPlayers = new List<Player>();
@@ -66,7 +66,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
         if (winningPlayerMS != losingPlayerMS)
         {
-            winningPlayerMS.AddKill();
+            winningPlayerMS.kills++;
             //foreach (Player pp in allPlayers)
             //    if (pp.PV.IsMine && pp)
             //    {
@@ -83,7 +83,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             //    if (pp.PV.IsMine && pp)
             //        pp.allPlayerScripts.killFeedManager.EnterNewFeed($"{losingPlayerMS.playerName} committed suicide");
         }
-        losingPlayerMS.AddDeath();
+        losingPlayerMS.deaths++;
 
         CheckForEndGame();
     }

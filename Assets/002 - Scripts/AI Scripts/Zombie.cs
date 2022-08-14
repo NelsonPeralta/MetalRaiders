@@ -105,7 +105,7 @@ public class Zombie : AiAbstractClass
         this.transform.LookAt(targetPostition);
     }
 
-    public override void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    protected override void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
         if (isDead)
             return;
@@ -118,7 +118,7 @@ public class Zombie : AiAbstractClass
         if (isDead)
             return;
 
-        Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         try
         {
             pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
