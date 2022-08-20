@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
-    public enum MultiplayerMode { Deathmatch, Unassgined }
+    public enum MultiplayerMode { Slayer, Pro, Snipers, Unassgined }
     public enum SwarmMode { Survival, Unassigned }
 
     // Intances
@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnCreateMultiplayerRoomButton_Delegate(Launcher launcher)
     {
         gameMode = GameMode.Multiplayer;
-        multiplayerMode = MultiplayerMode.Deathmatch;
+        multiplayerMode = MultiplayerMode.Slayer;
     }
 
 
@@ -169,7 +169,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
     }
 
-    public Player GetMyPlayer()
+    public static Player GetMyPlayer()
     {
         foreach (Player p in FindObjectsOfType<Player>())
             if (p.GetComponent<PhotonView>().IsMine)

@@ -109,10 +109,14 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    public float shieldPoints
+    {
+        get { return Mathf.Clamp((hitPoints - maxHealthPoints), 0, maxShieldPoints); }
+    }
+
     public float healthPoints
     {
-        get { return (hitPoints - maxShieldPoints); }
-    }
+        get { return (hitPoints - shieldPoints); }     }
     public float hitPoints
     {
         get { return _hitPoints; }
@@ -312,12 +316,14 @@ public class Player : MonoBehaviourPunCallbacks
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
         if (hitPoints <= 0 || isDead || isRespawning)
-            return;
+            return; 
 
         try
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
 
+            Debug.Log($"{hitPoints} vs {maxShieldPoints}");
+            Debug.Log($"{healthPoints} vs {healthDamage}");
             if (headshot)
             {
                 if (healthPoints <= healthDamage)

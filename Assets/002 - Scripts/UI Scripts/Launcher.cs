@@ -33,6 +33,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] Transform _playerListContent;
     [SerializeField] GameObject _playerListItemPrefab;
     [SerializeField] TMP_Text _mapSelectedText;
+    [SerializeField] TMP_Text _gametypeSelectedText;
 
     [SerializeField] TMP_InputField _loginUsernameText;
     [SerializeField] TMP_InputField registerUsernameText;
@@ -82,6 +83,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     public TMP_Text mapSelectedText
     {
         get { return _mapSelectedText; }
+    }
+
+    public TMP_Text gametypeSelectedText
+    {
+        get { return _gametypeSelectedText; }
     }
 
     void Start()
@@ -339,6 +345,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
         }
         catch { }
+    }
+
+    public void ChangeGameType(string gt)
+    {
+        FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("ChangeSubGameType_RPC", RpcTarget.All, gt);
     }
 
     //[PunRPC]

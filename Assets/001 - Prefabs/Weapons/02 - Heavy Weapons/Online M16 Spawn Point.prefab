@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8094552794020359953}
   m_Father: {fileID: 0}
@@ -44,17 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d4e2e1f1b6ce144eb2de2831e73cd38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: M16
+  codeName: m16
   weaponPlaceHolder: {fileID: 6503002777048967182}
   weaponSpawned: {fileID: 0}
   timeToSpawn: 120
-  weaponPool: {fileID: 0}
-  onlineGameTime: {fileID: 0}
 --- !u!1001 &2652976130179596453
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 8388261715954714168}
     m_Modifications:
     - target: {fileID: 194944462524637842, guid: 9a6aea291ec5b114c92fdb4be44d4d87,
@@ -203,6 +203,7 @@ PrefabInstance:
       value: M16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a6aea291ec5b114c92fdb4be44d4d87, type: 3}
 --- !u!1 &6503002777048967182 stripped
 GameObject:

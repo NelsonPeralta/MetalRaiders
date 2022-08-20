@@ -64,11 +64,11 @@ public class WeaponPool : MonoBehaviourPun
         //StartCoroutine(GiveAmmoPackSpawnPointAnAmmoPack());
     }
 
-    public GameObject GetWeaponFromList(string weaponName)
+    public GameObject GetWeaponFromList(string weaponCodeName)
     {
         for (int i = 0; i < allWeapons.Count; i++)
         {
-            if (allWeapons[i].name == weaponName && !allWeapons[i].gameObject.activeSelf)
+            if (allWeapons[i].codeName == weaponCodeName && !allWeapons[i].gameObject.activeSelf)
                 return allWeapons[i].gameObject;
         }
         return null;

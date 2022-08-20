@@ -69,4 +69,11 @@ public class MainMenuCaller : MonoBehaviour
             Debug.LogWarning($"No such gamemode. {e}");
         }
     }
+
+    [PunRPC]
+    void ChangeSubGameType_RPC(string sgt)
+    {
+        Launcher.instance.gametypeSelectedText.text = $"Gametype: {sgt}";
+        GameManager.instance.multiplayerMode = (GameManager.MultiplayerMode)System.Enum.Parse(typeof(GameManager.MultiplayerMode), sgt);
+    }
 }

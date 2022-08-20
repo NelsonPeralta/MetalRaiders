@@ -30,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6973292988515598720}
   m_Father: {fileID: 0}
@@ -110,17 +111,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d4e2e1f1b6ce144eb2de2831e73cd38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: R700
+  codeName: r700
   weaponPlaceHolder: {fileID: 6973292988515900832}
   weaponSpawned: {fileID: 0}
   timeToSpawn: 180
-  spawnAtStart: 1
-  weaponPool: {fileID: 0}
 --- !u!1001 &700108884655360549
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 8846814246862464851}
     m_Modifications:
     - target: {fileID: 7597946769775496101, guid: f3d22c83c234a0e409584975e231f579,
@@ -187,16 +187,17 @@ PrefabInstance:
     - {fileID: -3575392404828824887, guid: f3d22c83c234a0e409584975e231f579, type: 3}
     - {fileID: 8708929166952754519, guid: f3d22c83c234a0e409584975e231f579, type: 3}
     - {fileID: -6255673493111821111, guid: f3d22c83c234a0e409584975e231f579, type: 3}
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: f3d22c83c234a0e409584975e231f579, type: 3}
---- !u!1 &6973292988515900832 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7597946769775531909, guid: f3d22c83c234a0e409584975e231f579,
-    type: 3}
-  m_PrefabInstance: {fileID: 700108884655360549}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6973292988515598720 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7597946769775496101, guid: f3d22c83c234a0e409584975e231f579,
+    type: 3}
+  m_PrefabInstance: {fileID: 700108884655360549}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6973292988515900832 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7597946769775531909, guid: f3d22c83c234a0e409584975e231f579,
     type: 3}
   m_PrefabInstance: {fileID: 700108884655360549}
   m_PrefabAsset: {fileID: 0}

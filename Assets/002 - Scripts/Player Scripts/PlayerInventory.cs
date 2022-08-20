@@ -7,7 +7,7 @@ using System;
 public class PlayerInventory : MonoBehaviourPun
 {
     public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
-    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged;
+    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged, OnAmmoChanged;
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
@@ -111,11 +111,46 @@ public class PlayerInventory : MonoBehaviourPun
     [Header("Unequipped Weapons")]
     public GameObject[] allWeaponsInInventory = new GameObject[25];
 
-    [Space(20)]
-    [Header("Ammo")]
-    public int smallAmmo = 0;
-    public int heavyAmmo = 0;
-    public int powerAmmo = 0;
+    [SerializeField] int _smallAmmo = 0;
+    [SerializeField] int _heavyAmmo = 0;
+    [SerializeField] int _powerAmmo = 0;
+
+    public int smallAmmo
+    {
+        get { return _smallAmmo; }
+        set
+        {
+            _smallAmmo = value;
+            if (_smallAmmo > maxSmallAmmo)
+                _smallAmmo = maxSmallAmmo;
+
+            OnAmmoChanged?.Invoke(this);
+        }
+    }
+    public int heavyAmmo
+    {
+        get { return _heavyAmmo; }
+        set
+        {
+            _heavyAmmo = value;
+            if (_heavyAmmo > maxHeavyAmmo)
+                _heavyAmmo = maxHeavyAmmo;
+
+            OnAmmoChanged?.Invoke(this);
+        }
+    }
+    public int powerAmmo
+    {
+        get { return _powerAmmo; }
+        set
+        {
+            _powerAmmo = value;
+            if (_powerAmmo > maxPowerAmmo)
+                _powerAmmo = maxPowerAmmo;
+
+            OnAmmoChanged?.Invoke(this);
+        }
+    }
 
     [SerializeField] int _maxSmallAmmo = 144;
     [SerializeField] int _maxHeavyAmmo = 120;
@@ -212,6 +247,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public void Start()
     {
+        OnAmmoChanged += OnAmmoChanged_Delegate;
         audioSource = GetComponent<AudioSource>();
 
         StartCoroutine(EquipStartingWeapon());
@@ -321,6 +357,17 @@ public class PlayerInventory : MonoBehaviourPun
     public IEnumerator EquipStartingWeapon()
     {
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
+
+        if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Pro)
+        {
+            StartingWeapon = "m16";
+            //StartingWeapon2 = "patriot";
+        }
+        if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Snipers)
+        {
+            StartingWeapon = "r700";
+            //StartingWeapon2 = "patriot";
+        }
 
         for (int i = 0; i < allWeaponsInInventory.Length; i++)
         {
@@ -521,5 +568,12 @@ public class PlayerInventory : MonoBehaviourPun
         smallAmmoHudCounter.UpdateExtraAmmo();
         heavyAmmoHudCounter.UpdateExtraAmmo();
         powerAmmoHudCounter.UpdateExtraAmmo();
+    }
+
+    void OnAmmoChanged_Delegate(PlayerInventory playerInventory)
+    {
+        smallAmmoHudCounter.extraAmmoText.text = smallAmmo.ToString();
+        heavyAmmoHudCounter.extraAmmoText.text = heavyAmmo.ToString();
+        powerAmmoHudCounter.extraAmmoText.text = powerAmmo.ToString();
     }
 }

@@ -132,17 +132,29 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     {
         if (other.GetComponent<LootableWeapon>() && other.gameObject.activeSelf)
         {
-            if (player.isDead ||
-            weaponsInRange.Contains(other.GetComponent<LootableWeapon>()) ||
-            (pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.activeWeapon.codeName) ||
-                (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.holsteredWeapon.codeName))
+            //if (player.isDead ||
+            //weaponsInRange.Contains(other.GetComponent<LootableWeapon>()) ||
+            //(pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.activeWeapon.codeName) ||
+            //    (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.holsteredWeapon.codeName))
+            //    return;
+
+            if (player.isDead || weaponsInRange.Contains(other.GetComponent<LootableWeapon>()))
                 return;
 
-            other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
-            other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
+            if ((pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.activeWeapon.codeName) &&
+                (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.holsteredWeapon.codeName))
+            {
+                other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
+                other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
 
-            weaponsInRange.Add(other.GetComponent<LootableWeapon>());
-            weaponsInRange = weaponsInRange;
+                weaponsInRange.Add(other.GetComponent<LootableWeapon>());
+                weaponsInRange = weaponsInRange;
+            }
+            else
+            {
+                other.GetComponent<LootableWeapon>().LootWeapon();
+                ammoPickupAudioSource.Play();
+            }
         }
     }
     private void OnTriggerExit(Collider other)
@@ -302,7 +314,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
         foreach (LootableWeapon lw in weapons)
             if (lw.spawnPointPosition == collidingWeaponPosition)
-                lw.DisableWeapon();
+                lw.LootWeapon(onlyExtraAmmo: true);
     }
 
     // TO DO: make it across all the network

@@ -131,6 +131,7 @@ MonoBehaviour:
   - Destroy_RPC
   - UpdateData
   - DropWeapon_RPC
+  - ChangeSubGameType_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

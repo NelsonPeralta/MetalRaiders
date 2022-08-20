@@ -744,7 +744,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 if (!hp.gameObject.activeSelf)
                     hp.gameObject.SetActive(true);
 
-            WebManager.webManagerInstance.SaveSwarmStats(GameManager.instance.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
+            WebManager.webManagerInstance.SaveSwarmStats(GameManager.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
         }
     }
     int GetRandomPlayerPhotonId()

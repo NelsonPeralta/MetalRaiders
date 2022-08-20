@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using System;
 
 public class MultiplayerManager : MonoBehaviourPunCallbacks
 {
@@ -44,8 +45,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             instance = this;
 
-            if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
+            //if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer) || )
                 scoreToWin = 10;
+
+            
         }
         else // We are in the menu
         {
@@ -98,7 +101,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         string winningEntity = "";
         foreach (Player pp in FindObjectsOfType<Player>())
         {
-            if (pp.GetComponent<PlayerMultiplayerMatchStats>().kills >= scoreToWin && GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
+            if (pp.GetComponent<PlayerMultiplayerMatchStats>().kills >= scoreToWin && GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer)
                 winningEntity = pp.PV.Owner.NickName;
 
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.

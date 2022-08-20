@@ -229,9 +229,7 @@ public class PlayerUI : MonoBehaviour
 
     void EnableMultiplayerUIComponents()
     {
-        shieldBar.SetActive(true);
         multiplayerPointsHolder.SetActive(true);
-        motionTracker.SetActive(true);
 
         DisableSwarmUIComponents();
     }
@@ -247,7 +245,11 @@ public class PlayerUI : MonoBehaviour
     {
         shieldBar.SetActive(true);
         healthBar.SetActive(false);
-        motionTracker.SetActive(true);
+        if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer))
+            motionTracker.SetActive(true);
+        else
+            motionTracker.SetActive(false);
+
     }
     public void AddInformerText(string message)
     {

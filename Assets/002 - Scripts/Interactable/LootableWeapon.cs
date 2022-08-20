@@ -113,9 +113,27 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         extraAmmo = (int)Mathf.Ceil(Random.Range(0, extraAmmo));
     }
 
-    public void DisableWeapon()
+    public void LootWeapon(bool onlyExtraAmmo = false)
     {
         //onlineWeaponSpawnPoint.StartCoroutine(onlineWeaponSpawnPoint.RespawnWeapon());
+
+        int ammoToLoot = extraAmmo;
+        PlayerInventory playerInventory = GameManager.GetMyPlayer().playerInventory;
+        if (!onlyExtraAmmo)
+            ammoToLoot += ammoInThisWeapon;
+
+        foreach (GameObject wp in playerInventory.allWeaponsInInventory)
+            if (wp.GetComponent<WeaponProperties>().codeName == codeName)
+            {
+                WeaponProperties.AmmoType ammoType = wp.GetComponent<WeaponProperties>().ammoType;
+
+                if (ammoType == WeaponProperties.AmmoType.Light)
+                    playerInventory.smallAmmo += ammoToLoot;
+                else if (ammoType == WeaponProperties.AmmoType.Heavy)
+                    playerInventory.heavyAmmo += ammoToLoot;
+                else if (ammoType == WeaponProperties.AmmoType.Power)
+                    playerInventory.powerAmmo += ammoToLoot;
+            }
 
         OnLooted?.Invoke(this);
         if (onlineWeaponSpawnPoint)

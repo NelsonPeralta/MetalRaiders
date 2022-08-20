@@ -129,12 +129,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1568070640}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -143,18 +148,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.551983
+      value: -6.8268986
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.639436
+      value: -1.6380444
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.0698185
+      value: -0.5955734
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -169,7 +179,7 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -784,11 +794,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &20794815
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1310,7 +1317,7 @@ Transform:
   m_Children:
   - {fileID: 2029790048}
   m_Father: {fileID: 0}
-  m_RootOrder: 25
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &38447919
 PrefabInstance:
@@ -1476,11 +1483,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &41404097
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2007,11 +2011,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &60007841
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2533,7 +2534,7 @@ Transform:
   m_Children:
   - {fileID: 1102008100}
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &76294550
 PrefabInstance:
@@ -3599,11 +3600,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &129313921
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4532,11 +4530,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &156749415
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4819,12 +4814,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1638937177}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -4833,18 +4833,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.9
+      value: -8.478882
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.06
+      value: -4.21748
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -26.72
+      value: 33.194244
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -5666,7 +5676,7 @@ Transform:
   m_Children:
   - {fileID: 1481664942}
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &206395617
 GameObject:
@@ -5857,11 +5867,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &212205887
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6710,7 +6717,7 @@ Transform:
   m_Children:
   - {fileID: 1843216372}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &247566599
 GameObject:
@@ -6815,32 +6822,37 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
-      propertyPath: m_RootOrder
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
-        type: 3}
-      propertyPath: m_LocalPosition.x
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -29.378881
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.111
+      value: 4.83352
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -23.48
+      value: -17.005754
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -6850,17 +6862,17 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -6880,18 +6892,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 605e39760eff31e49958c43c651c2a74, type: 3}
+--- !u!4 &260140370 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+    type: 3}
+  m_PrefabInstance: {fileID: 260140369}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &261619368
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1064715159}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -6900,18 +6923,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.9
+      value: -50.27888
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.06
+      value: -4.21748
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -26.72
+      value: 33.194244
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -6926,7 +6954,7 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -7118,7 +7146,7 @@ Transform:
   m_Children:
   - {fileID: 704342555}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &271864128
 PrefabInstance:
@@ -7652,11 +7680,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &299181840
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8485,11 +8510,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &331355383
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9570,11 +9592,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &358669155
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10832,11 +10851,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &409001413
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11329,11 +11345,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &428760519
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11587,7 +11600,7 @@ Transform:
   m_Children:
   - {fileID: 1991881573}
   m_Father: {fileID: 0}
-  m_RootOrder: 23
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &437891461
 GameObject:
@@ -12568,32 +12581,37 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
-        type: 3}
-      propertyPath: m_LocalPosition.x
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -29.378881
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.129
+      value: 4.8515196
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 26.081
+      value: 32.555244
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -12603,17 +12621,17 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -12633,6 +12651,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 605e39760eff31e49958c43c651c2a74, type: 3}
+--- !u!4 &502919422 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+    type: 3}
+  m_PrefabInstance: {fileID: 502919421}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &503368229
 GameObject:
   m_ObjectHideFlags: 0
@@ -13588,12 +13612,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 2091590947}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -13603,17 +13632,17 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.13
+      value: -43.50888
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.061
+      value: -6.2164803
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.34
+      value: -5.865755
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -13623,7 +13652,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -13633,7 +13662,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -13945,12 +13974,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 2091590947}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -13960,17 +13994,17 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -35.56756
+      value: -64.94644
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.6752553
+      value: -1.6022248
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.838487
+      value: -2.3642416
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -15182,11 +15216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &609334770
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15493,12 +15524,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1638937177}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -15507,18 +15543,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.13
+      value: -15.248881
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.061
+      value: -6.2164803
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.34
+      value: 18.814245
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -15528,7 +15574,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -15538,7 +15584,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -15846,11 +15892,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &639981196
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16603,12 +16646,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 2091590947}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -16618,17 +16666,17 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.9
+      value: -50.27888
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.06
+      value: -4.21748
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -26.72
+      value: -20.245754
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -17267,32 +17315,37 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_Name
       value: Online Power Ammo Pack Spawn Point
       objectReference: {fileID: 0}
+    - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -29.378881
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.029255629
+      value: -7.2482243
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 6.474245
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
@@ -17302,17 +17355,17 @@ PrefabInstance:
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
@@ -17332,6 +17385,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7, type: 3}
+--- !u!4 &717234872 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+    type: 3}
+  m_PrefabInstance: {fileID: 717234871}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &720522962
 GameObject:
   m_ObjectHideFlags: 0
@@ -18879,7 +18938,7 @@ Transform:
   m_Children:
   - {fileID: 1369434910}
   m_Father: {fileID: 0}
-  m_RootOrder: 26
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &782754120
 GameObject:
@@ -18960,11 +19019,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &786258356
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20607,11 +20663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &849702983
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21180,11 +21233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &863008897
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21241,12 +21291,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1568070640}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -21255,18 +21310,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.9
+      value: -8.478882
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.06
+      value: -4.21748
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -26.72
+      value: -20.245754
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -21281,7 +21341,7 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -21355,7 +21415,7 @@ PrefabInstance:
     - target: {fileID: 8388261715954714168, guid: aa2f1e8b5042eda40aa95f5c6aa2335c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 33
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 8388261715954714168, guid: aa2f1e8b5042eda40aa95f5c6aa2335c,
         type: 3}
@@ -22369,11 +22429,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &897875760
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22430,32 +22487,37 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_Name
       value: Online Power Ammo Pack Spawn Point (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 35
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -29.378881
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.039
+      value: 4.7615194
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 6.474245
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
@@ -22465,17 +22527,17 @@ PrefabInstance:
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
@@ -22495,6 +22557,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7, type: 3}
+--- !u!4 &898736409 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+    type: 3}
+  m_PrefabInstance: {fileID: 898736408}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &904814937
 GameObject:
   m_ObjectHideFlags: 0
@@ -23240,12 +23308,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1568070640}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -23254,18 +23327,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -35.56756
+      value: 6.188677
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.6752553
+      value: -1.6022248
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.838487
+      value: -2.3642416
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -23280,7 +23358,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -23470,7 +23548,7 @@ Transform:
   m_Children:
   - {fileID: 1838571941}
   m_Father: {fileID: 0}
-  m_RootOrder: 30
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &948430924
 GameObject:
@@ -25084,12 +25162,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1568070640}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -25098,18 +25181,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.13
+      value: -15.248881
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.061
+      value: -6.2164803
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.34
+      value: -5.865755
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -25119,17 +25207,17 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -26456,12 +26544,7 @@ Transform:
   m_Children:
   - {fileID: 2021444950}
   - {fileID: 2001916703}
-  - {fileID: 1280044113}
-  - {fileID: 2082025414}
-  - {fileID: 1118413057}
   - {fileID: 465837252}
-  - {fileID: 261619369}
-  - {fileID: 1816811657}
   - {fileID: 1436648114}
   m_Father: {fileID: 836021830}
   m_RootOrder: -1
@@ -27400,12 +27483,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1064715159}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -27414,18 +27502,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.551983
+      value: -51.930862
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.639436
+      value: -1.6380444
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.0698185
+      value: 13.544064
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -27440,7 +27533,7 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -27756,32 +27849,37 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.004
+      value: -29.374882
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.107
+      value: -4.17048
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -26.953
+      value: -20.478754
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -27791,17 +27889,17 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -27821,6 +27919,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f0e765935520a34eb8840b0eb61447b, type: 3}
+--- !u!4 &1132632795 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1132632794}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1133340142
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28027,7 +28131,7 @@ PrefabInstance:
     - target: {fileID: 8010828169617120701, guid: abb160fb77d42b6458fe47524d6b2ac0,
         type: 3}
       propertyPath: sceneViewId
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8388261715954714168, guid: abb160fb77d42b6458fe47524d6b2ac0,
         type: 3}
@@ -29309,11 +29413,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1179700122
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -29790,12 +29891,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 2091590947}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -29805,17 +29911,17 @@ PrefabInstance:
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.551983
+      value: -51.930862
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.639436
+      value: -1.6380444
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.0698185
+      value: -0.5955734
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -31152,11 +31258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1252604308
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -31683,7 +31786,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1064715159}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -31692,18 +31795,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27.33614
+      value: -56.71502
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.0292552
+      value: -4.248225
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20.130701
+      value: 26.604946
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -31718,7 +31826,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -32627,7 +32735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4289799003212892, guid: 2b953a2ed8ec78e46840471627456106, type: 3}
       propertyPath: m_RootOrder
-      value: 18
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 4289799003212892, guid: 2b953a2ed8ec78e46840471627456106, type: 3}
       propertyPath: m_LocalPosition.x
@@ -32710,32 +32818,37 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.004
+      value: -29.374882
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.107
+      value: -4.17048
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 25.839
+      value: 32.313248
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -32745,17 +32858,17 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -32775,6 +32888,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f0e765935520a34eb8840b0eb61447b, type: 3}
+--- !u!4 &1319332820 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1319332819}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1321221565
 GameObject:
   m_ObjectHideFlags: 0
@@ -33151,11 +33270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1333204343
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36222,7 +36338,7 @@ PrefabInstance:
     - target: {fileID: 8428307233135478646, guid: 99b7c4da304dfe1469c212a93e2d3f2c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8428307233135478646, guid: 99b7c4da304dfe1469c212a93e2d3f2c,
         type: 3}
@@ -36307,7 +36423,7 @@ Transform:
   m_Children:
   - {fileID: 656335346}
   m_Father: {fileID: 0}
-  m_RootOrder: 28
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1481358362
 GameObject:
@@ -37199,7 +37315,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1001 &1513536906
 PrefabInstance:
@@ -37686,7 +37802,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1638937177}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -37695,18 +37811,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27.33614
+      value: -2.0427418
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.0292552
+      value: -4.248225
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20.130701
+      value: 26.604946
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -38274,12 +38400,7 @@ Transform:
   m_Children:
   - {fileID: 455744634}
   - {fileID: 1147814316}
-  - {fileID: 2145128846}
-  - {fileID: 940779645}
-  - {fileID: 782982}
   - {fileID: 1918446224}
-  - {fileID: 863932118}
-  - {fileID: 1005615635}
   - {fileID: 2094124600}
   m_Father: {fileID: 1816185794}
   m_RootOrder: -1
@@ -38463,11 +38584,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1577788049
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -39337,7 +39455,7 @@ Transform:
   - {fileID: 435612334}
   - {fileID: 836021830}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1612766781
 GameObject:
@@ -39710,7 +39828,7 @@ PrefabInstance:
     - target: {fileID: 9068968898833647393, guid: 69ccc9297ab3cd3468532c1e5571040c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9068968898833647393, guid: 69ccc9297ab3cd3468532c1e5571040c,
         type: 3}
@@ -39849,11 +39967,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1633651410
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -40177,12 +40292,7 @@ Transform:
   m_Children:
   - {fileID: 1139262517}
   - {fileID: 1641218876}
-  - {fileID: 1543286647}
-  - {fileID: 2101378404}
-  - {fileID: 1861852649}
   - {fileID: 931246721}
-  - {fileID: 170235899}
-  - {fileID: 626446212}
   - {fileID: 1373702161}
   m_Father: {fileID: 435612334}
   m_RootOrder: -1
@@ -40689,7 +40799,7 @@ Transform:
   m_Children:
   - {fileID: 1204670698}
   m_Father: {fileID: 0}
-  m_RootOrder: 29
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1666495806
 GameObject:
@@ -40738,11 +40848,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1666495809
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -41298,27 +41405,27 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -23.99
+      value: -53.36888
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0794346
+      value: -6.1980457
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 6.474245
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -41328,7 +41435,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -41338,7 +41445,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -41363,6 +41470,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ba3a0b97a7545734a8f57b752cbdcadd, type: 3}
+--- !u!4 &1681237475 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1681237474}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1683368533
 GameObject:
   m_ObjectHideFlags: 0
@@ -41929,11 +42042,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1696751064
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -42055,27 +42165,27 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -29.378881
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.097
+      value: -6.18048
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -18.062
+      value: -11.587755
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -42085,7 +42195,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -42095,7 +42205,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -42120,6 +42230,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ba3a0b97a7545734a8f57b752cbdcadd, type: 3}
+--- !u!4 &1699525857 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1699525856}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1702148173
 GameObject:
   m_ObjectHideFlags: 0
@@ -44377,7 +44493,7 @@ Transform:
   m_Children:
   - {fileID: 257564692}
   m_Father: {fileID: 0}
-  m_RootOrder: 27
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1766563101
 GameObject:
@@ -44787,11 +44903,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1786761463
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -45734,11 +45847,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1816064518
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -45873,12 +45983,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1064715159}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -45887,18 +46002,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.13
+      value: -43.50888
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.061
+      value: -6.2164803
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.34
+      value: 18.814245
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -45908,17 +46028,17 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -46877,12 +46997,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1638937177}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -46891,18 +47016,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.551983
+      value: -6.8268986
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.639436
+      value: -1.6380444
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.0698185
+      value: 13.544064
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -47265,7 +47400,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 2091590947}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -47275,17 +47410,17 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27.33614
+      value: -56.71502
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.0292552
+      value: -4.248225
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20.130701
+      value: -13.656456
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -48047,7 +48182,7 @@ PrefabInstance:
     - target: {fileID: 1230219406551997660, guid: d859a106cac05cb4f8fc7fa0aec58eac,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1230219406551997660, guid: d859a106cac05cb4f8fc7fa0aec58eac,
         type: 3}
@@ -48134,12 +48269,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d4e2e1f1b6ce144eb2de2831e73cd38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: Colt
+  codeName: 
   weaponPlaceHolder: {fileID: 69413447}
   weaponSpawned: {fileID: 0}
   timeToSpawn: 60
-  weaponPool: {fileID: 0}
-  onlineGameTime: {fileID: 0}
 --- !u!65 &1919785484
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48218,7 +48351,7 @@ Transform:
   - {fileID: 1039723845}
   - {fileID: 69413452}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1920039107
 GameObject:
@@ -48368,11 +48501,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1929874910
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -49206,6 +49336,66 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1966728049}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1969903051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1969903052}
+  m_Layer: 0
+  m_Name: Ammo Spawn Points
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1969903052
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969903051}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 29.378881, y: 7.27748, z: -6.474245}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1681237475}
+  - {fileID: 1699525857}
+  - {fileID: 1979882111}
+  - {fileID: 1280044113}
+  - {fileID: 1543286647}
+  - {fileID: 2145128846}
+  - {fileID: 1881073309}
+  - {fileID: 717234872}
+  - {fileID: 502919422}
+  - {fileID: 1132632795}
+  - {fileID: 1319332820}
+  - {fileID: 260140370}
+  - {fileID: 898736409}
+  - {fileID: 1118413057}
+  - {fileID: 1861852649}
+  - {fileID: 782982}
+  - {fileID: 1211262289}
+  - {fileID: 682565517}
+  - {fileID: 261619369}
+  - {fileID: 170235899}
+  - {fileID: 863932118}
+  - {fileID: 2101378404}
+  - {fileID: 2082025414}
+  - {fileID: 547217021}
+  - {fileID: 940779645}
+  - {fileID: 539561440}
+  - {fileID: 626446212}
+  - {fileID: 1816811657}
+  - {fileID: 1005615635}
+  m_Father: {fileID: 0}
+  m_RootOrder: 27
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1971058556
 GameObject:
   m_ObjectHideFlags: 0
@@ -49468,11 +49658,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1976792273
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -49529,27 +49716,27 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -29.378881
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.097
+      value: -6.18048
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 17.62
+      value: 24.094246
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -49559,7 +49746,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -49569,7 +49756,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -49594,6 +49781,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ba3a0b97a7545734a8f57b752cbdcadd, type: 3}
+--- !u!4 &1979882111 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1979882110}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1980132088
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49750,11 +49943,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &1990926397
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -50109,7 +50299,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4790796131391034, guid: 9c6f014dbd738ff4398d30310ec82e82, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4790796131391034, guid: 9c6f014dbd738ff4398d30310ec82e82, type: 3}
       propertyPath: m_LocalPosition.x
@@ -50833,11 +51023,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &2020386436
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -51579,7 +51766,7 @@ Transform:
   m_Children:
   - {fileID: 683492569}
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &2046385253
 PrefabInstance:
@@ -52617,12 +52804,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1064715159}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -52631,18 +52823,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -35.56756
+      value: -64.94644
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.6752553
+      value: -1.6022248
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.838487
+      value: 15.312732
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -52657,7 +52854,7 @@ PrefabInstance:
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -52735,11 +52932,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!23 &2085278714
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -52820,7 +53014,7 @@ Transform:
   m_Children:
   - {fileID: 58083403}
   m_Father: {fileID: 0}
-  m_RootOrder: 31
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2088473585
 GameObject:
@@ -52865,7 +53059,7 @@ PrefabInstance:
     - target: {fileID: 8388261715954714168, guid: aa2f1e8b5042eda40aa95f5c6aa2335c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8388261715954714168, guid: aa2f1e8b5042eda40aa95f5c6aa2335c,
         type: 3}
@@ -53038,12 +53232,7 @@ Transform:
   m_Children:
   - {fileID: 1005430439}
   - {fileID: 1613649687}
-  - {fileID: 1881073309}
-  - {fileID: 547217021}
-  - {fileID: 1211262289}
   - {fileID: 1364733719}
-  - {fileID: 682565517}
-  - {fileID: 539561440}
   - {fileID: 2003686351}
   m_Father: {fileID: 1499149475}
   m_RootOrder: -1
@@ -53273,12 +53462,17 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1638937177}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -53287,18 +53481,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -35.56756
+      value: 6.188677
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.6752553
+      value: -1.6022248
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.838487
+      value: 15.312732
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -54253,7 +54457,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 32
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &2138449791
 PrefabInstance:
@@ -54488,7 +54692,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 2
-    m_TransformParent: {fileID: 1568070640}
+    m_TransformParent: {fileID: 1969903052}
     m_Modifications:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -54497,18 +54701,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27.33614
+      value: -2.0427418
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.0292552
+      value: -4.248225
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20.130701
+      value: -13.656456
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -54523,7 +54732,7 @@ PrefabInstance:
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4551408254059741874, guid: ba3a0b97a7545734a8f57b752cbdcadd,
         type: 3}
@@ -54736,11 +54945,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!4 &248263774265848058
 Transform:
   m_ObjectHideFlags: 0
@@ -54787,7 +54993,7 @@ PrefabInstance:
     - target: {fileID: 7825897149244664666, guid: 2f3a9360cb500584b8f6ce9094678e35,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7825897149244664666, guid: 2f3a9360cb500584b8f6ce9094678e35,
         type: 3}
@@ -54992,5 +55198,5 @@ Transform:
   - {fileID: 1349946652}
   - {fileID: 1709172900}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
