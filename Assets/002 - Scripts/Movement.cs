@@ -4,7 +4,7 @@ using UnityEngine;
 using Rewired;
 using Photon.Pun;
 
-public class Movement : MonoBehaviour
+public class Movement : MonoBehaviour, IPunObservable
 {
     public delegate void PlayerMovementEvent(Movement movement);
     public PlayerMovementEvent OnPlayerStartedMoving, OnPlayerStoppedMoving;
@@ -31,7 +31,7 @@ public class Movement : MonoBehaviour
 
     public Vector3 movement;
     public Vector3 velocity;
-    Vector3 calulatedVelocity;
+    public Vector3 calulatedVelocity;
     public Vector3 lastPos;
 
     [SerializeField]
@@ -126,6 +126,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CalculateVelocity();
         if (!pController.PV.IsMine || pController.pauseMenuOpen)
             return;
 
@@ -136,7 +137,6 @@ public class Movement : MonoBehaviour
         Vector3 direction = new Vector3(x, 0f, z).normalized;
         xDirection = direction.x;
         zDirection = direction.z;
-        CalculateVelocity();
 
         if (isGrounded && velocity.y < 0)
         {
@@ -542,6 +542,20 @@ public class Movement : MonoBehaviour
     public float GetDefaultSpeed()
     {
         return defaultSpeed;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        //if (stream.IsWriting)
+        //{
+        //    stream.SendNext(movement);
+
+        //}
+        //else
+        //{
+        //    Debug.Log($"I am reading: {movement}");
+        //    movement = (Vector3)stream.ReceiveNext();
+        //}
     }
 }
 
