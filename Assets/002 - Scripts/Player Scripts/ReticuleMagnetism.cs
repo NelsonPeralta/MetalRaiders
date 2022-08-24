@@ -7,6 +7,7 @@ public class ReticuleMagnetism : MonoBehaviour
 {
     public Player player;
     public Movement movement;
+    public Transform cameraParent;
 
     RaycastHit hit;
     public LayerMask layerMask;
@@ -36,6 +37,9 @@ public class ReticuleMagnetism : MonoBehaviour
     [SerializeField] float xDiff;
     [SerializeField] float yDiff;
 
+    [SerializeField] int xFact;
+    [SerializeField] int yFact;
+
 
     // Update is called once per frame
     void Update()
@@ -62,7 +66,8 @@ public class ReticuleMagnetism : MonoBehaviour
                     firstRayHit = hit.transform.gameObject;
                 }
 
-                _hitScreenPosList.Add(hit.transform.position);
+                _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
+                //_hitScreenPosList.Add(hit.point); // When player moves and target does not
                 if (_hitScreenPosList.Count > 4)
                     _hitScreenPosList.RemoveAt(0);
             }
@@ -100,11 +105,11 @@ public class ReticuleMagnetism : MonoBehaviour
 
             try
             {
-                if (firstRayHit.GetComponent<ReticuleFriction>().player.GetComponent<Movement>().calulatedVelocity.magnitude <= .5)
-                {
-                    xDiff = 0;
-                    yDiff = 0;
-                }
+                //if (firstRayHit.GetComponent<ReticuleFriction>().player.GetComponent<Movement>().calulatedVelocity.magnitude <= .5)
+                //{
+                //    xDiff = 0;
+                //    yDiff = 0;
+                //}
             }
             catch { }
         }
@@ -112,16 +117,23 @@ public class ReticuleMagnetism : MonoBehaviour
 
     void Magnetism()
     {
-        if (Mathf.Abs(xDiff) > 0f)
-        {
-            float xMag = 0.2f * Mathf.Sign(xDiff);
-            player.transform.Rotate(Vector3.up * xMag);
+        //if (Mathf.Abs(yDiff) > 1f) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
+        if (Mathf.Abs(yDiff) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
+            {
+            float yMag = (Mathf.Abs(yDiff) / yFact) * -Mathf.Sign(yDiff);
+
+            Vector3 locRot = player.mainCamera.transform.localRotation.eulerAngles;
+            locRot += new Vector3(yMag, 0, 0);
+
+            //cameraParent.transform.localRotation = Quaternion.Euler(locRot);
+            cameraParent.transform.Rotate(Vector3.right * yMag);
         }
 
-        if (Mathf.Abs(yDiff) > 0.2f)
-        {
-            float yMag = 0.025f * Mathf.Sign(yDiff);
-            //player.mainCamera.transform.Rotate(Vector3.right * yMag);
+        //if (Mathf.Abs(xDiff) > 0.5f)
+        if (Mathf.Abs(xDiff) > 0)
+            {
+            float xMag = (Mathf.Abs(xDiff) / xFact) * Mathf.Sign(xDiff);
+            player.transform.Rotate(Vector3.up * xMag);
         }
     }
 }
