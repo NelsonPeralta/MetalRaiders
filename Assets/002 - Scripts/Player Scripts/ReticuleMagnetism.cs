@@ -7,7 +7,6 @@ public class ReticuleMagnetism : MonoBehaviour
 {
     public Player player;
     public Movement movement;
-    public Transform cameraParent;
 
     RaycastHit hit;
     public LayerMask layerMask;
@@ -44,6 +43,9 @@ public class ReticuleMagnetism : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Keyboard ||
+            player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Mouse)
+            return;
         Ray();
         CalculateDirection();
         Magnetism();
@@ -66,6 +68,7 @@ public class ReticuleMagnetism : MonoBehaviour
                     firstRayHit = hit.transform.gameObject;
                 }
 
+                //if(movement.speed == 0)
                 _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
                 //_hitScreenPosList.Add(hit.point); // When player moves and target does not
                 if (_hitScreenPosList.Count > 4)
@@ -126,7 +129,7 @@ public class ReticuleMagnetism : MonoBehaviour
             locRot += new Vector3(yMag, 0, 0);
 
             //cameraParent.transform.localRotation = Quaternion.Euler(locRot);
-            cameraParent.transform.Rotate(Vector3.right * yMag);
+            player.playerInventory.transform.Rotate(Vector3.right * yMag);
         }
 
         //if (Mathf.Abs(xDiff) > 0.5f)

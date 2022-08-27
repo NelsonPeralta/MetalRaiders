@@ -21,9 +21,9 @@ public class Movement : MonoBehaviour, IPunObservable
     public PlayerSFXs sfx;
     public GroundCheck groundCheckScript;
     public GroundCheck roofCheckScript;
-    float defaultSpeed; // Default = 5
+    public float defaultSpeed; // Default = 5
     public float speed;
-    public float playerSpeed;
+    public float playerSpeedPercent;
     public float jumpForce = 6f;
 
     public float defaultGravity = -12f;
@@ -459,20 +459,20 @@ public class Movement : MonoBehaviour, IPunObservable
                         if (!pController.isReloading && !pController.isDrawingWeapon && !pController.isThrowingGrenade &&
                             !pController.isMeleeing && !pController.isFiring)
                         {
-                            pController.weaponAnimator.speed = playerSpeed;
-                            tpLookAt.anim.speed = playerSpeed;
+                            pController.weaponAnimator.speed = playerSpeedPercent;
+                            tpLookAt.anim.speed = playerSpeedPercent;
                         }
                         else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade ||
                             pController.isMeleeing || pController.isFiring)
                         {
-                            playerSpeed = 1;
+                            playerSpeedPercent = 1;
                             pController.weaponAnimator.speed = 1;
                             tpLookAt.anim.speed = 1;
                         }
                     }
                     else
                     {
-                        playerSpeed = 1;
+                        playerSpeedPercent = 1;
                         pController.weaponAnimator.speed = 1;
                         if (tpLookAt.anim)
                             tpLookAt.anim.speed = 1;
@@ -493,18 +493,18 @@ public class Movement : MonoBehaviour, IPunObservable
         CalculatingPlayerSpeed = true;
         lastPos = gameObject.transform.position;
         yield return new WaitForSeconds(0.1f);
-        playerSpeed = (Mathf.Ceil(Vector3.Distance(gameObject.transform.position, lastPos) / 0.1f)) / 5f;
+        playerSpeedPercent = (Mathf.Ceil(Vector3.Distance(gameObject.transform.position, lastPos) / 0.1f)) / 5f;
 
-        if (playerSpeed > 1)
+        if (playerSpeedPercent > 1)
         {
-            playerSpeed = 1;
+            playerSpeedPercent = 1;
         }
         if (pController.isCrouching)
         {
-            playerSpeed *= 2;
+            playerSpeedPercent *= 2;
 
-            if (playerSpeed > 1)
-                playerSpeed = 1;
+            if (playerSpeedPercent > 1)
+                playerSpeedPercent = 1;
         }
         CalculatingPlayerSpeed = false;
     }

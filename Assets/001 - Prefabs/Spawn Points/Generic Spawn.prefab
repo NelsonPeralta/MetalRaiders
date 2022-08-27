@@ -183,10 +183,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 0
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
 --- !u!135 &16571891261673449
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -198,5 +194,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 15
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}

@@ -361,6 +361,7 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
+    float meleeMovementFactor = 0;
     void Melee()
     {
         if (!GetComponent<Player>().isDead)
@@ -368,10 +369,23 @@ public class PlayerController : MonoBehaviourPun
             if (player.GetButtonDown("Melee") && !isMeleeing && !isShooting && !isThrowingGrenade && !isSprinting)
             {
                 Debug.Log("RPC Call: Melee");
+                meleeMovementFactor = 1;
                 PV.RPC("Melee_RPC", RpcTarget.All);
             }
         }
+
+        if (meleeMovementFactor > 0)
+        {
+            if (melee.playersInMeleeZone.Count > 0)
+            {
+                Vector3 move = transform.forward * meleeMovementFactor;
+                GetComponent<CharacterController>().Move(move * movement.defaultSpeed * 10 * Time.deltaTime);
+            }
+
+            meleeMovementFactor -= Time.deltaTime * 5f;
+        }
     }
+
 
     [PunRPC]
     void Melee_RPC()

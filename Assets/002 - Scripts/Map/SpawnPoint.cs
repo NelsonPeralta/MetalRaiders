@@ -10,7 +10,7 @@ public class SpawnPoint : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<Player>() && !other.GetComponent<Player>().isDead)
+        if (other.GetComponent<Player>())
         {
             if (!players.Contains(other.GetComponent<Player>()))
             {
