@@ -6,4 +6,10 @@ public class Hitboxes : MonoBehaviour
 {
     public PlayerHitbox[] playerHitboxes;
     public AIHitbox[] AIHitboxes;
+
+    private void Start()
+    {
+        playerHitboxes = GetComponentsInChildren<PlayerHitbox>();
+        AIHitboxes = GetComponentsInChildren<AIHitbox>();
+    }
 }

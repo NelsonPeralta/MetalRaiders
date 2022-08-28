@@ -22,8 +22,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     [SerializeField] int _health;
     float newTargetSwitchingDelay;
     float _nextActionCooldown;
-    [SerializeField] bool _seek;
-    bool _canSeek;
+    [SerializeField] protected bool _seek;
+    [SerializeField]  bool _canSeek;
     bool _canDoAction;
     [SerializeField] bool _isDead;
     [SerializeField] int _deathDespawnTime = 5;
@@ -65,7 +65,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     float targetOutOfSightDefaultCountdown;
     float targetOutOfSightCountdown;
 
-    [SerializeField] float _newTargetCountdown;
+    [SerializeField] protected float _newTargetCountdown;
     public PlayerRange playerRange
     {
         get { return _playerRange; }
@@ -94,16 +94,21 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         get { return _target; }
         set
         {
+            Debug.Log(System.Environment.StackTrace);
             Debug.Log($"New AI Target: {value}");
             if (value)
             {
-                if (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning)
+                if (value.GetComponent<Player>() && (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning))
                     target = null;
                 else
                 {
                     _target = value;
+                    try
+                    {
                     _target.GetComponent<Player>().OnPlayerDeath -= OnTargetDeath_Delegate;
                     _target.GetComponent<Player>().OnPlayerDeath += OnTargetDeath_Delegate;
+                    }
+                    catch { }
                     DoAction();
                 }
             }
@@ -169,7 +174,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         }
     }
 
-    public bool seek
+    public virtual bool seek
     {
         get { return _seek; }
         set
@@ -189,9 +194,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             }
         }
     }
+
     public bool canSeek
     {
-        get { return !isDead && target && seek; }
+        get { _canSeek = (!isDead && target && seek); return _canSeek; }
     }
 
     public float nextActionCooldown
@@ -255,6 +261,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         OnDeathEnd += OnDeathEnd_Delegate;
         foreach (AiRangeTrigger arc in rangeColliders)
         {
+            arc.AiAbstractClass = this;
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
         }
@@ -262,7 +269,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         OnPrepareEnd?.Invoke(this);
     }
 
-    void Prepare()
+    protected void Prepare()
     {
         nma = GetComponent<NavMeshAgent>();
         health = defaultHealth + SwarmManager.instance.currentWave * 2;
@@ -338,7 +345,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         NewTargetCountdown();
     }
 
-    void NewTargetCountdown()
+    public virtual void NewTargetCountdown()
     {
         if (!gameObject.activeSelf || isDead)
             return;
@@ -484,11 +491,14 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         target = null;
     }
 
-    void GetNewTarget()
+    public virtual void GetNewTarget(bool emptyTarget = false)
     {
         //if (gameObject.activeSelf)
         //    StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
-        target = SwarmManager.instance.GetRandomPlayerTransform();
+        if (!emptyTarget)
+            target = SwarmManager.instance.GetRandomPlayerTransform();
+        else
+            target = GetRandomDestinationTransform();
     }
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()
     {
@@ -597,4 +607,68 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public abstract void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void DoAction();
     public abstract void ChildUpdate();
+
+
+
+
+
+
+
+
+
+
+    protected Vector3 GetRandomDestinationPosition()
+    {
+        int walkRadius = 100;
+
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * walkRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
+        Vector3 finalPosition = hit.position;
+
+        return finalPosition;
+    }
+
+    protected Transform GetRandomDestinationTransform()
+    {
+        GameObject d = Instantiate(new GameObject(), GetRandomDestinationPosition(), Quaternion.identity);
+        d.layer = 6;
+        d.AddComponent<BoxCollider>();
+        d.GetComponent<BoxCollider>().isTrigger = true;
+        d.AddComponent<Rigidbody>();
+        d.GetComponent<Rigidbody>().useGravity = false;
+        return d.transform;
+    }
+
+    protected void GoToRandomPoint()
+    {
+        int walkRadius = 100;
+
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * walkRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
+        Vector3 finalPosition = hit.position;
+
+        GetComponent<NavMeshAgent>().destination = finalPosition;
+        Debug.Log($"AI goint to random point: {finalPosition}");
+    }
+
+    protected bool DestinationReached()
+    {
+        // Check if we've reached the destination
+        if (!GetComponent<NavMeshAgent>().pathPending)
+        {
+            if (GetComponent<NavMeshAgent>().remainingDistance <= GetComponent<NavMeshAgent>().stoppingDistance)
+            {
+                if (!GetComponent<NavMeshAgent>().hasPath || GetComponent<NavMeshAgent>().velocity.sqrMagnitude == 0f)
+                {
+                    // Done
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

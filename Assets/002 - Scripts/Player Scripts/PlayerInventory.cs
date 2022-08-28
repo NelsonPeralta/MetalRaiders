@@ -50,7 +50,11 @@ public class PlayerInventory : MonoBehaviourPun
         set
         {
             _activeWeapon = value;
-            OnActiveWeaponChanged.Invoke(this);
+            try
+            {
+                OnActiveWeaponChanged.Invoke(this);
+            }
+            catch { }
             _activeWeapon.gameObject.SetActive(true);
             pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
 
@@ -252,14 +256,18 @@ public class PlayerInventory : MonoBehaviourPun
 
         StartCoroutine(EquipStartingWeapon());
 
-        pController.OnPlayerSwitchWeapons += OnPlayerSwitchWeapons_Delegate;
-        //pController.OnPlayerLongInteract += OnPlayerSwitchWeapons_Delegate;
-        rScript.OnReloadEnd += OnReloadEnd_Delegate;
-        playerWeaponSwapping.OnWeaponPickup += OnPlayerWeaponSwapping_Delegate;
+        try
+        {
+            pController.OnPlayerSwitchWeapons += OnPlayerSwitchWeapons_Delegate;
+            //pController.OnPlayerLongInteract += OnPlayerSwitchWeapons_Delegate;
+            rScript.OnReloadEnd += OnReloadEnd_Delegate;
+            playerWeaponSwapping.OnWeaponPickup += OnPlayerWeaponSwapping_Delegate;
 
-        //OnPlayerSwitchWeapons_Delegate(pController);
-        playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
-        pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
+            //OnPlayerSwitchWeapons_Delegate(pController);
+            playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
+            pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
+        }
+        catch { }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
@@ -373,7 +381,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (allWeaponsInInventory[i] != null)
             {
-                if (allWeaponsInInventory[i].GetComponent <WeaponProperties>().codeName == StartingWeapon)
+                if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon)
                 {
                     //DisableAmmoHUDCounters();
                     weaponsEquiped[0] = allWeaponsInInventory[i].gameObject;

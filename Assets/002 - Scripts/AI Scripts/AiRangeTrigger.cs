@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AiRangeTrigger : MonoBehaviour
 {
+    public AiAbstractClass AiAbstractClass;
     public delegate void RangeEvent(AiRangeTrigger aiRangeCollider);
     public RangeEvent OnRangeTriggerEnter, OnRangeTriggerExit;
     public AiAbstractClass.PlayerRange range;
@@ -11,6 +12,11 @@ public class AiRangeTrigger : MonoBehaviour
     public List<Player> playersInRange = new List<Player>();
     private void OnTriggerStay(Collider other)
     {
+        Debug.Log(other.name);
+        if (other.GetComponent<Transform>() == AiAbstractClass.target)
+        {
+            OnRangeTriggerEnter?.Invoke(this);
+        }
         if (other.GetComponent<Player>() && !playersInRange.Contains(other.GetComponent<Player>()))
         {
             if (other.GetComponent<Player>().isDead)
@@ -22,6 +28,10 @@ public class AiRangeTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.GetComponent<Transform>() == AiAbstractClass.target)
+        {
+            OnRangeTriggerExit?.Invoke(this);
+        }
         if (other.GetComponent<Player>() && playersInRange.Contains(other.GetComponent<Player>()))
         {
             if (other.GetComponent<Player>().isDead)

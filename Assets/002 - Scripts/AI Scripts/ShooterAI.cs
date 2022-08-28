@@ -5,28 +5,88 @@ using UnityEngine.AI;
 
 public class ShooterAI : AiAbstractClass
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        AIHitbox[] playerHitboxes = GetComponentsInChildren<AIHitbox>();
+    public enum ShooterAIActions { Idle, Roam, Shoot }
+    [SerializeField] ShooterAIActions _shooterAiAction;
 
-        foreach (AIHitbox playerHitbox in playerHitboxes)
+    public ShooterAIActions shooterAiAction
+    {
+        get { return _shooterAiAction; }
+        set
         {
-            playerHitbox.GetComponent<MeshRenderer>().enabled = false;
-            //playerHitbox.player = GetComponent<Player>();
-            playerHitbox.aiAbstractClass = this;
-            playerHitbox.gameObject.layer = 7;
+            if (_shooterAiAction != value)
+            {
+                _shooterAiAction = value;
+                InvokeOnActionChanged();
+            }
         }
-
-        GoToRandomPoint();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override bool seek
     {
-        if (DestinationReached())
-            GoToRandomPoint();
+        get { return _seek; }
+        set
+        {
+            _seek = value;
+
+            if (!seek)
+            {
+                nma.speed = 0;
+                nma.velocity = Vector3.zero;
+                animator.SetFloat("Vertical", 0);
+            }
+            else
+            {
+                nma.speed = speed;
+                animator.SetFloat("Vertical", 1);
+            }
+        }
     }
+
+    private void OnEnable()
+    {
+        Prepare();
+
+        target = GetRandomDestinationTransform();
+        gameObject.SetActive(true);
+
+        OnPlayerRangeChange?.Invoke(this);
+    }
+
+    // Start is called before the first frame update
+    //void Start()
+    //{
+    //    AIHitbox[] playerHitboxes = GetComponentsInChildren<AIHitbox>();
+
+    //    foreach (AIHitbox playerHitbox in playerHitboxes)
+    //    {
+    //        playerHitbox.GetComponent<MeshRenderer>().enabled = false;
+    //        //playerHitbox.player = GetComponent<Player>();
+    //        playerHitbox.aiAbstractClass = this;
+    //        playerHitbox.gameObject.layer = 7;
+    //    }
+
+    //    shooterAiAction = ShooterAIActions.Roam;
+    //    seek = true;
+    //}
+
+    int frames = 0;
+    // Update is called once per frame
+    //void Update()
+    //{
+    //    frames++;
+
+    //    if (frames < 5)
+    //        return;
+
+    //    //if (DestinationReached())
+    //    //    GoToRandomPoint();
+
+    //    //if (GetComponent<NavMeshAgent>().velocity.magnitude > 0.1f)
+    //    //    animator.SetFloat("Vertical", 1);
+
+    //    if (frames >= 5)
+    //        frames = 0;
+    //}
     public override void ChangeAction_RPC(string actionString)
     {
     }
@@ -41,6 +101,41 @@ public class ShooterAI : AiAbstractClass
 
     public override void DoAction()
     {
+        Debug.Log($"{this.GetType()} DoAction");
+
+        ShooterAIActions previousHellhoundAction = shooterAiAction;
+        if (!isDead && target)
+        {
+            seek = true;
+            //if (previousHellhoundAction != ShooterAIActions.Roam)
+            //    seek = false;
+            //else
+            //    seek = true;
+
+            //if (playerRange == PlayerRange.Out)
+            //    previousHellhoundAction = ShooterAIActions.Roam;
+
+            //if (previousHellhoundAction == HellhoundActions.Bite)
+            //{
+            //    if (canDoAction)
+            //    {
+            //        _voice.clip = _attackClip;
+            //        _voice.Play();
+            //        animator.Play("Bite");
+            //        target.GetComponent<Player>().Damage(meleeDamage, false, 99);
+            //        nextActionCooldown = defaultNextActionCooldown;
+            //    }
+            //}
+            //else
+            //    seek = true;
+
+            //Debug.Log($"Hellhound do action: {hellhoundAction}");
+        }
+        else if (!isDead && !target)
+        {
+            shooterAiAction = ShooterAIActions.Idle;
+            seek = false;
+        }
     }
 
     public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
@@ -49,10 +144,48 @@ public class ShooterAI : AiAbstractClass
 
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
+        ShooterAIActions previousAction = shooterAiAction;
+        int ran = Random.Range(0, 3);
+
+        if (aiAbstractClass.playerRange == PlayerRange.Close)
+        {
+            if (!target.GetComponent<Player>())
+            {
+                Debug.Log("Got to empty target");
+                GetNewTarget(emptyTarget: true);
+            }
+        }
+
+        //if (targetInLineOfSight)
+        //{
+        //    if (aiAbstractClass.playerRange == PlayerRange.Close)
+        //        previousAction = ShooterAIActions.Bite;
+        //    else
+        //        previousAction = ShooterAIActions.Seek;
+        //}
+        //else
+        //    previousAction = ShooterAIActions.Seek;
+
+            //if (aiAbstractClass.playerRange != PlayerRange.Close)
+            //    previousAction = ShooterAIActions.Seek;
+
+            //shooterAiAction = previousAction;
     }
 
     public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
     {
+        AIHitbox[] playerHitboxes = GetComponentsInChildren<AIHitbox>();
+
+        foreach (AIHitbox playerHitbox in playerHitboxes)
+        {
+            playerHitbox.GetComponent<MeshRenderer>().enabled = false;
+            //playerHitbox.player = GetComponent<Player>();
+            playerHitbox.aiAbstractClass = this;
+            playerHitbox.gameObject.layer = 7;
+        }
+
+        shooterAiAction = ShooterAIActions.Roam;
+        seek = true;
     }
 
     public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
@@ -63,34 +196,18 @@ public class ShooterAI : AiAbstractClass
     {
     }
 
-    void GoToRandomPoint()
+    public override void NewTargetCountdown()
     {
-        int walkRadius = 10;
-
-        Vector3 randomDirection = Random.insideUnitSphere * walkRadius;
-        randomDirection += transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
-        Vector3 finalPosition = hit.position;
-
-        GetComponent<NavMeshAgent>().destination = finalPosition;
-        Debug.Log($"AI goint to random point: {finalPosition}");
-    }
-
-    bool DestinationReached()
-    {
-        // Check if we've reached the destination
-        if (!GetComponent<NavMeshAgent>().pathPending)
+        if (!gameObject.activeSelf || isDead)
+            return;
+        if (_newTargetCountdown > 0)
         {
-            if (GetComponent<NavMeshAgent>().remainingDistance <= GetComponent<NavMeshAgent>().stoppingDistance)
+            _newTargetCountdown -= Time.deltaTime;
+
+            if (_newTargetCountdown <= 0)
             {
-                if (!GetComponent<NavMeshAgent>().hasPath || GetComponent<NavMeshAgent>().velocity.sqrMagnitude == 0f)
-                {
-                    // Done
-                    return true;
-                }
+                GetNewTarget(emptyTarget: true);
             }
         }
-        return false;
     }
 }
