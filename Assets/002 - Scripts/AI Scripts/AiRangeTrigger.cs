@@ -12,11 +12,15 @@ public class AiRangeTrigger : MonoBehaviour
     public List<Player> playersInRange = new List<Player>();
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log(other.name);
-        if (other.GetComponent<Transform>() == AiAbstractClass.target)
+        try
         {
-            OnRangeTriggerEnter?.Invoke(this);
+            if (other.GetComponent<Transform>() == AiAbstractClass.target)
+            {
+                Debug.Log("Arrived to empty target");
+                OnRangeTriggerEnter?.Invoke(this);
+            }
         }
+        catch { }
         if (other.GetComponent<Player>() && !playersInRange.Contains(other.GetComponent<Player>()))
         {
             if (other.GetComponent<Player>().isDead)

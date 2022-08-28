@@ -23,7 +23,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     float newTargetSwitchingDelay;
     float _nextActionCooldown;
     [SerializeField] protected bool _seek;
-    [SerializeField]  bool _canSeek;
+    [SerializeField] bool _canSeek;
     bool _canDoAction;
     [SerializeField] bool _isDead;
     [SerializeField] int _deathDespawnTime = 5;
@@ -105,8 +105,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                     _target = value;
                     try
                     {
-                    _target.GetComponent<Player>().OnPlayerDeath -= OnTargetDeath_Delegate;
-                    _target.GetComponent<Player>().OnPlayerDeath += OnTargetDeath_Delegate;
+                        _target.GetComponent<Player>().OnPlayerDeath -= OnTargetDeath_Delegate;
+                        _target.GetComponent<Player>().OnPlayerDeath += OnTargetDeath_Delegate;
                     }
                     catch { }
                     DoAction();
@@ -249,7 +249,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     void Start()
     {
         _voice = GetComponent<AudioSource>();
-        animator = GetComponent<Animator>();
+        if (GetComponent<Animator>())
+            animator = GetComponent<Animator>();
         targetOutOfSightDefaultCountdown = defaultNextActionCooldown * 2.5f;
         Prepare();
 
@@ -264,6 +265,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             arc.AiAbstractClass = this;
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
+            Debug.Log(arc.AiAbstractClass.name);
         }
 
         OnPrepareEnd?.Invoke(this);
@@ -401,7 +403,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             objectInLineOfSight = hit.transform.gameObject;
             //if (hit.transform.gameObject.GetComponent<PlayerHitbox>())
             if (hit.transform.gameObject.GetComponent<Player>())
-                {
+            {
                 Player playerInLOS = objectInLineOfSight.GetComponent<Player>();
 
                 if (playerInLOS == target.GetComponent<Player>())
@@ -422,6 +424,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider)
     {
+        if (!target.GetComponent<Player>())
+            GetNewTarget(emptyTarget: true);
         if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<Player>()))
         {
             playerRange = aiRangeCollider.range;
@@ -525,7 +529,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         string weaponColorCode = player.playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
         string colorCode = "";
-        
+
         if (className == "Watcher")
             colorCode = KillFeedManager.killFeedColorCodeDict["green"];
         if (className == "Knight")
