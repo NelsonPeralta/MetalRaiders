@@ -61,7 +61,7 @@ public class Zombie : AiAbstractClass
     public override void DoAction()
     {
         ZombieActions previousHellhoundAction = zombieAction;
-        if (!isDead && target)
+        if (!isDead && destination)
         {
             if (previousHellhoundAction != ZombieActions.Seek)
                 seek = false;
@@ -78,7 +78,7 @@ public class Zombie : AiAbstractClass
                     _voice.clip = _attackClip;
                     _voice.Play();
                     animator.Play("Attack");
-                    target.GetComponent<Player>().Damage(meleeDamage, false, 99);
+                    destination.GetComponent<Player>().Damage(meleeDamage, false, 99);
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
@@ -87,7 +87,7 @@ public class Zombie : AiAbstractClass
 
             //Debug.Log($"Hellhound do action: {hellhoundAction}");
         }
-        else if (!isDead && !target)
+        else if (!isDead && !destination)
         {
             zombieAction = ZombieActions.Idle;
             seek = false;
@@ -96,12 +96,12 @@ public class Zombie : AiAbstractClass
 
     public override void ChildUpdate()
     {
-        if (!target)
+        if (!destination)
             return;
 
-        Vector3 targetPostition = new Vector3(target.position.x,
+        Vector3 targetPostition = new Vector3(destination.position.x,
                                         this.transform.position.y,
-                                        target.position.z);
+                                        destination.position.z);
         this.transform.LookAt(targetPostition);
     }
 

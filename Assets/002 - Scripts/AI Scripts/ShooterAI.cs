@@ -5,7 +5,9 @@ using UnityEngine.AI;
 
 public class ShooterAI : AiAbstractClass
 {
-    public enum ShooterAIActions { Idle, Roam, Shoot }
+    public PlayerShooting playerShooting;
+    public PlayerInventory playerInventory;
+    public enum ShooterAIActions { Idle, Roam, Shoot, Strafe }
     [SerializeField] ShooterAIActions _shooterAiAction;
 
     public ShooterAIActions shooterAiAction
@@ -42,11 +44,45 @@ public class ShooterAI : AiAbstractClass
         }
     }
 
+
+    [SerializeField] Transform _playerTarget;
+    [SerializeField] bool _lookAtPlayerTarget;
+    [SerializeField] bool _shoot;
+    public bool shoot
+    {
+        set { _shoot = value; }
+        get { return _shoot; }
+    }
+    public bool lookAtPlayerTarget
+    {
+        get { return _lookAtPlayerTarget; }
+        set { _lookAtPlayerTarget = value; }
+    }
+    public Transform playerTarget
+    {
+        get { return _playerTarget; }
+        set { _playerTarget = value; }
+    }
+
+    public override Transform destination
+    {
+        get { return _destination; }
+        set
+        {
+            try { Destroy(_destination.gameObject); } catch { }
+            _destination = value;
+        }
+    }
+    float ogAngularSpeed;
+
     private void OnEnable()
     {
+        OnDestinationNull += OnDestinationNull_Delegate;
+        OnDestinationChanged += OnDestinationChanged_Delegate;
+        ogAngularSpeed = GetComponent<NavMeshAgent>().angularSpeed;
         Prepare();
 
-        target = GetRandomDestinationTransform();
+        GetNewTarget(emptyTarget: true);
         gameObject.SetActive(true);
 
         OnPlayerRangeChange?.Invoke(this);
@@ -69,7 +105,6 @@ public class ShooterAI : AiAbstractClass
     //    seek = true;
     //}
 
-    int frames = 0;
     // Update is called once per frame
     //void Update()
     //{
@@ -91,8 +126,28 @@ public class ShooterAI : AiAbstractClass
     {
     }
 
+    int frames = 0;
     public override void ChildUpdate()
     {
+        if (shoot)
+        {
+
+            frames++;
+
+            if (frames >= 30 && frames <= 60)
+                GetComponent<PlayerShooting>().Shoot();
+            if (frames > 90)
+                frames = 0;
+
+        }
+
+        if (lookAtPlayerTarget)
+        {
+            Vector3 t = new Vector3(playerTarget.position.x,
+                                        this.transform.position.y,
+                                        playerTarget.position.z);
+            this.transform.LookAt(t);
+        }
     }
 
     public override void Damage_RPC(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
@@ -104,7 +159,7 @@ public class ShooterAI : AiAbstractClass
         Debug.Log($"{this.GetType()} DoAction");
 
         ShooterAIActions previousHellhoundAction = shooterAiAction;
-        if (!isDead && target)
+        if (!isDead && destination)
         {
             seek = true;
             //if (previousHellhoundAction != ShooterAIActions.Roam)
@@ -131,7 +186,7 @@ public class ShooterAI : AiAbstractClass
 
             //Debug.Log($"Hellhound do action: {hellhoundAction}");
         }
-        else if (!isDead && !target)
+        else if (!isDead && !destination)
         {
             shooterAiAction = ShooterAIActions.Idle;
             seek = false;
@@ -149,10 +204,10 @@ public class ShooterAI : AiAbstractClass
 
         if (aiAbstractClass.playerRange == PlayerRange.Close)
         {
-            if (!target.GetComponent<Player>())
+            if (!destination.GetComponent<Player>())
             {
                 Debug.Log("Got to empty target");
-                GetNewTarget(emptyTarget: true);
+                //GetNewTarget(emptyTarget: true);
             }
         }
 
@@ -166,10 +221,10 @@ public class ShooterAI : AiAbstractClass
         //else
         //    previousAction = ShooterAIActions.Seek;
 
-            //if (aiAbstractClass.playerRange != PlayerRange.Close)
-            //    previousAction = ShooterAIActions.Seek;
+        //if (aiAbstractClass.playerRange != PlayerRange.Close)
+        //    previousAction = ShooterAIActions.Seek;
 
-            //shooterAiAction = previousAction;
+        //shooterAiAction = previousAction;
     }
 
     public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
@@ -206,8 +261,169 @@ public class ShooterAI : AiAbstractClass
 
             if (_newTargetCountdown <= 0)
             {
-                GetNewTarget(emptyTarget: true);
+                //GetNewTarget(emptyTarget: true);
             }
         }
+    }
+
+    float fireInterval = 0;
+    public override void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider, Collider triggerObj = null)
+    {
+        if (triggerObj.GetComponent<Player>())
+        {
+            Debug.Log("Here 2: " + triggerObj.name);
+            if (aiRangeCollider.range == PlayerRange.Medium)
+            {
+                Debug.Log("Here 2: " + triggerObj.name);
+                if (!playerTarget)
+                {
+                    Debug.Log("Here 3: " + triggerObj.name);
+                    // Strafe
+                    {
+                        foreach (AiRangeTrigger rt in rangeColliders)
+                            if (rt.range == PlayerRange.Close)
+                            {
+                                destination = null;
+                                GetNewTarget(walkRadius: rt.GetComponent<SphereCollider>().radius * 1.5f,
+                                    emptyTarget: true);
+                                shooterAiAction = ShooterAIActions.Strafe;
+                            }
+                    }
+                    playerTarget = triggerObj.GetComponent<Transform>();
+                    shoot = true;
+                    lookAtPlayerTarget = true;
+                }
+            }
+        }
+        else if (!destination.GetComponent<Player>() && triggerObj.GetComponent<Transform>() == destination)
+        {
+            if (aiRangeCollider.range == PlayerRange.Close)
+            {
+                if (shooterAiAction == ShooterAIActions.Roam)
+                {
+                    foreach (AiRangeTrigger rt in rangeColliders)
+                        if (rt.range == PlayerRange.Close)
+                        {
+                            destination = null;
+                            GetNewTarget(emptyTarget: true);
+                        }
+                }
+                else if (shooterAiAction == ShooterAIActions.Strafe)
+                {
+                    // Strafe
+                    foreach (AiRangeTrigger rt in rangeColliders)
+                        if (rt.range == PlayerRange.Close)
+                        {
+                            destination = null;
+                            GetNewTarget(walkRadius: rt.GetComponent<SphereCollider>().radius * 1.5f,
+                                        emptyTarget: true);
+                        }
+                }
+            }
+        }
+
+
+
+        {
+            //Debug.Log("Here 1: " + triggerObj.name);
+            //if (triggerObj.GetComponent<Player>() && !target.GetComponent<Player>())
+            //{
+            //    Debug.Log("Here 2");
+
+            //    if (aiRangeCollider.range == PlayerRange.Medium)
+            //    {
+            //        Debug.Log("Here 3 ");
+            //        GetComponent<NavMeshAgent>().angularSpeed = 0;
+
+            //        //shooterAiAction = ShooterAIActions.Idle;
+            //        //seek = false;
+
+            //        playerTarget = triggerObj.transform;
+            //        shoot = true;
+            //        lookAtPlayerTarget = true;
+            //        GetNewTarget(walkRadius: 2, emptyTarget: true);
+            //    }
+            //}
+
+            //if (!triggerObj.GetComponent<Player>() && !target.GetComponent<Player>())
+            //{
+            //    Debug.Log("Here 4 ");
+
+            //    if (!playerTarget)
+            //    {
+            //        Debug.Log("Here 5");
+            //        GetNewTarget(emptyTarget: true);
+            //    }
+            //}
+
+            //if (triggerObj == target)
+            //    Destroy(triggerObj.gameObject);
+        }
+    }
+
+    public override void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider, Collider triggerObj = null)
+    {
+        //if (aiRangeCollider.range == PlayerRange.Long && triggerObj.GetComponent<Player>())
+        //{
+        //    Debug.Log("OnRangeTriggerExit_Delegate Player in Range: " + seek);
+
+        //    shooterAiAction = ShooterAIActions.Roam;
+        //    seek = true;
+
+
+
+        //    GetComponent<NavMeshAgent>().angularSpeed = ogAngularSpeed;
+        //    playerTarget = null;
+        //    shoot = false;
+        //    lookAtPlayerTarget = false;
+        //    //GetNewTarget(emptyTarget: true);
+        //}
+
+
+
+
+        //bool playerInRange = false;
+        //foreach (AiRangeTrigger a in rangeColliders)
+        //    if (a.playersInRange.Count > 0)
+        //        playerInRange = true;
+
+        //if(!playerInRange)
+        //{
+        //    shooterAiAction = ShooterAIActions.Roam;
+        //    seek = true;
+        //}
+
+        Debug.Log("OnRangeTriggerExit_Delegate Player in Range: " + seek);
+        //if (!target.GetComponent<Player>())
+        //    GetNewTarget(emptyTarget: true);
+        //else
+        //{
+        //    shooterAiAction = ShooterAIActions.Idle;
+        //    seek = false;
+        //}
+        //if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<Player>()))
+        //{
+        //    PlayerRange exitingRange = aiRangeCollider.range;
+        //    PlayerRange newPlayerRange = playerRange;
+
+        //    if (exitingRange == PlayerRange.Close)
+        //        newPlayerRange = PlayerRange.Medium;
+        //    else if (exitingRange == PlayerRange.Medium)
+        //        newPlayerRange = PlayerRange.Long;
+        //    else if (exitingRange == PlayerRange.Long)
+        //        newPlayerRange = PlayerRange.Out;
+
+        //    playerRange = newPlayerRange;
+        //}
+    }
+
+    void OnDestinationNull_Delegate(AiAbstractClass aiAbstractClass)
+    {
+        //shooterAiAction = ShooterAIActions.Roam;
+    }
+
+    void OnDestinationChanged_Delegate(AiAbstractClass aiAbstractClass)
+    {
+        //shooterAiAction = ShooterAIActions.Roam;
     }
 }

@@ -253,8 +253,8 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
         OnDeathEnd += OnDeathEnd_Delegate;
         foreach (AiRangeTrigger arc in rangeColliders)
         {
-            arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
-            arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
+            //arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
+            //arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
         }
 
         OnPrepareEnd?.Invoke(this);

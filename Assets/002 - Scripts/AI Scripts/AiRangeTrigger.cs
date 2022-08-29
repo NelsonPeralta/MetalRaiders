@@ -5,7 +5,7 @@ using UnityEngine;
 public class AiRangeTrigger : MonoBehaviour
 {
     public AiAbstractClass AiAbstractClass;
-    public delegate void RangeEvent(AiRangeTrigger aiRangeCollider);
+    public delegate void RangeEvent(AiRangeTrigger aiRangeCollider, Collider triggerObj = null);
     public RangeEvent OnRangeTriggerEnter, OnRangeTriggerExit;
     public AiAbstractClass.PlayerRange range;
 
@@ -14,10 +14,10 @@ public class AiRangeTrigger : MonoBehaviour
     {
         try
         {
-            if (other.GetComponent<Transform>() == AiAbstractClass.target)
+            if (other.GetComponent<Transform>() == AiAbstractClass.destination)
             {
-                Debug.Log("Arrived to empty target");
-                OnRangeTriggerEnter?.Invoke(this);
+                //Debug.Log("Arrived to empty target");
+                OnRangeTriggerEnter?.Invoke(this, other);
             }
         }
         catch { }
@@ -26,13 +26,13 @@ public class AiRangeTrigger : MonoBehaviour
             if (other.GetComponent<Player>().isDead)
                 return;
             playersInRange.Add(other.GetComponent<Player>());
-            OnRangeTriggerEnter?.Invoke(this);
+            OnRangeTriggerEnter?.Invoke(this, other);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Transform>() == AiAbstractClass.target)
+        if (other.GetComponent<Transform>() == AiAbstractClass.destination)
         {
             OnRangeTriggerExit?.Invoke(this);
         }
@@ -40,7 +40,7 @@ public class AiRangeTrigger : MonoBehaviour
         {
             if (other.GetComponent<Player>().isDead)
                 return;
-            OnRangeTriggerExit?.Invoke(this);
+            OnRangeTriggerExit?.Invoke(this, other);
             playersInRange.Remove(other.GetComponent<Player>());
         }
     }

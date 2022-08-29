@@ -11,5 +11,12 @@ public class Hitboxes : MonoBehaviour
     {
         playerHitboxes = GetComponentsInChildren<PlayerHitbox>();
         AIHitboxes = GetComponentsInChildren<AIHitbox>();
+
+        try
+        {
+            foreach (AIHitbox aIHitbox in AIHitboxes)
+                aIHitbox.aiAbstractClass = GetComponent<AiAbstractClass>();
+        }
+        catch { }
     }
 }

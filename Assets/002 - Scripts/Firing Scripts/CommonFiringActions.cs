@@ -10,13 +10,13 @@ public class CommonFiringActions : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void AfterShootingAction(WeaponProperties weaponProperties)
@@ -79,10 +79,11 @@ public class CommonFiringActions : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
-    public void SpawnMuzzleflash()
+    public void SpawnMuzzleflash(bool absolute = false)
     {
-        if (playerController.isAiming && playerController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
-            return;
+        if (!absolute)
+            if (playerController.isAiming && playerController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
+                return;
         StartCoroutine(SpawnMuzzleflash_Coroutine());
     }
 
