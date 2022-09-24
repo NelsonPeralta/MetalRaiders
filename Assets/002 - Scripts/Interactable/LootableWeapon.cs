@@ -11,6 +11,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     Vector3 _spawnPointPosition;
     public string cleanName;
     public string codeName;
+    public int spriteId;
     public bool isWallGun;
 
     [SerializeField] int _ammoInThisWeapon;
@@ -70,6 +71,15 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     private void Awake()
     {
         _ttl = 0;
+    }
+
+    private void OnEnable()
+    {
+        spriteId = -1;
+        spriteId = WeaponProperties.spriteIdDic[codeName];
+
+        if (spriteId == -1)
+            spriteId = WeaponProperties.spriteIdDic[cleanName];
     }
     private void Start()
     {

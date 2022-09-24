@@ -13,7 +13,7 @@ public class PlayerInventory : MonoBehaviourPun
     public PlayerSFXs sfxManager;
     public CrosshairManager crosshairScript;
     public PlayerController pController;
-    public Player pProperties;
+    public Player player;
     public GeneralWeapProperties gwProperties;
     public ReloadScript rScript;
     public DualWielding dWielding;
@@ -251,6 +251,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public void Start()
     {
+        player.OnPlayerRespawnEarly += OnPlayerRespawnEarly_Delegate;
         OnAmmoChanged += OnAmmoChanged_Delegate;
         audioSource = GetComponent<AudioSource>();
 
@@ -334,7 +335,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         }
 
-        if (pController.pInventory.weaponsEquiped[1] != null && !pProperties.isDead && !pProperties.isRespawning)
+        if (pController.pInventory.weaponsEquiped[1] != null && !player.isDead && !player.isRespawning)
         {
             PV.RPC("SwitchWeapons", RpcTarget.All);
         }
@@ -377,6 +378,11 @@ public class PlayerInventory : MonoBehaviourPun
             //StartingWeapon2 = "patriot";
         }
 
+        if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Fiesta)
+        {
+            AssignRandomWeapons();
+        }
+
         for (int i = 0; i < allWeaponsInInventory.Length; i++)
         {
             if (allWeaponsInInventory[i] != null)
@@ -413,6 +419,17 @@ public class PlayerInventory : MonoBehaviourPun
             PlayDrawSound();
     }
 
+    void AssignRandomWeapons()
+    {
+        var random = new System.Random();
+        int ind = random.Next(allWeaponsInInventory.Length);
+        StartingWeapon = allWeaponsInInventory[ind].GetComponent<WeaponProperties>().codeName;
+
+        int ind2 = ind;
+        while (ind2 == ind) { ind2 = random.Next(allWeaponsInInventory.Length); }
+
+        StartingWeapon2 = allWeaponsInInventory[ind2].GetComponent<WeaponProperties>().codeName;
+    }
     void UpdateDualWieldedWeaponAmmo()
     {
         rightWeaponCurrentAmmo = rightWeapon.GetComponent<WeaponProperties>().currentAmmo;
@@ -583,5 +600,10 @@ public class PlayerInventory : MonoBehaviourPun
         smallAmmoHudCounter.extraAmmoText.text = smallAmmo.ToString();
         heavyAmmoHudCounter.extraAmmoText.text = heavyAmmo.ToString();
         powerAmmoHudCounter.extraAmmoText.text = powerAmmo.ToString();
+    }
+
+    void OnPlayerRespawnEarly_Delegate(Player player)
+    {
+        AssignRandomWeapons();
     }
 }

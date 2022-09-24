@@ -79,6 +79,7 @@ public class ShooterAI : AiAbstractClass
     {
         OnDestinationNull += OnDestinationNull_Delegate;
         OnDestinationChanged += OnDestinationChanged_Delegate;
+        OnPrepareEnd += OnPrepareEnd_Delegate;
         ogAngularSpeed = GetComponent<NavMeshAgent>().angularSpeed;
         Prepare();
 
@@ -229,6 +230,7 @@ public class ShooterAI : AiAbstractClass
 
     public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
     {
+        Debug.Log("OnPrepareEnd_Delegate");
         AIHitbox[] playerHitboxes = GetComponentsInChildren<AIHitbox>();
 
         foreach (AIHitbox playerHitbox in playerHitboxes)

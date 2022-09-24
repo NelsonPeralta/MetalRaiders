@@ -382,6 +382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: MP5
   codeName: mp5
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 24
   extraAmmo: 24

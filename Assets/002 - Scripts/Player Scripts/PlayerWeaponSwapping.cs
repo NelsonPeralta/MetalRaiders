@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using System.Collections.ObjectModel;
+using TMPro;
 
 public class PlayerWeaponSwapping : MonoBehaviourPun
 {
@@ -20,7 +21,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     public DualWielding dWielding;
     public PlayerController pController;
     public PlayerSFXs sfxManager;
-    public Text pickupText;
+    public TMP_Text pickupText;
     public AudioSource ammoPickupAudioSource;
     public PhotonView PV;
     //public ControllerScript cScript;
@@ -48,7 +49,14 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         {
             _closestLootableWeapon = value;
             if (value)
-                pickupText.text = "Hold E to pick up " + closestLootableWeapon.name;
+            {
+                if (closestLootableWeapon.spriteId >= 0)
+
+                    pickupText.text =  $"Hold E to pick up <sprite={WeaponProperties.spriteIdDic[closestLootableWeapon.codeName]}>";
+                else
+                    pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
+
+            }
             else
                 pickupText.text = "";
         }
@@ -121,6 +129,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     //}
     private void Start()
     {
+        pickupText.text = "";
         player.OnPlayerDeath -= OnPLayerDeath;
         player.OnPlayerDeath += OnPLayerDeath;
 

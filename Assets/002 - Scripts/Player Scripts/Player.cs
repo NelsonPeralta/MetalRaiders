@@ -7,7 +7,7 @@ using UnityEngine;
 public class Player : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerEvent(Player playerProperties);
-    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken, OnPlayerRespawned;
+    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken, OnPlayerRespawnEarly, OnPlayerRespawned;
 
     [Header("Singletons")]
     public SpawnManager spawnManager;
@@ -577,6 +577,8 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (!isRespawning)
             return;
+        OnPlayerRespawnEarly?.Invoke(this);
+
         GetComponent<Movement>().ResetCharacterControllerProperties();
         isRespawning = false;
         GetComponent<PlayerController>().ScopeOut();

@@ -133,6 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: AK-47
   codeName: ak47
+  spriteId: 3
   isWallGun: 0
   _ammoInThisWeapon: 30
   extraAmmo: 30

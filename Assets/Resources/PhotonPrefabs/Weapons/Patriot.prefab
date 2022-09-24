@@ -219,6 +219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: Patriot
   codeName: patriot
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 15
   extraAmmo: 15

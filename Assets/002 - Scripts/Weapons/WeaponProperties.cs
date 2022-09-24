@@ -178,6 +178,13 @@ public class WeaponProperties : MonoBehaviour
 
         }
     }
+
+    public static Dictionary<string, int> spriteIdDic = new Dictionary<string, int>()
+    {
+        {"scar", 0 }, {"ak47", 3 }, {"m4", 4 }, {"rpg", 5 }, {"m1100", 6 },
+        {"m1911", 8 }, {"mp5", 13 }, {"m249c", 15 }, {"r700", 17 }, {"barrett50cal", 18 },
+        {"patriot", 19 }, {"colt", 20 }, {"m16", 21 }
+    };
 }
 
 #if UNITY_EDITOR // Reference: https://answers.unity.com/questions/1169764/type-or-namespace-unityeditor-could-not-be-found-w.html

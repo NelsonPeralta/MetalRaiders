@@ -300,6 +300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: R700
   codeName: r700
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 6
   extraAmmo: 6

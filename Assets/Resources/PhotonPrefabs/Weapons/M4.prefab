@@ -300,6 +300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: M4
   codeName: m4
+  spriteId: 4
   isWallGun: 0
   _ammoInThisWeapon: 30
   extraAmmo: 30

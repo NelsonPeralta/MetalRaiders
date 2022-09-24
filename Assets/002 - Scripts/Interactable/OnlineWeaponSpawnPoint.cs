@@ -74,7 +74,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
             foreach (string weaponCode in lightWeaponCodeNames)
                 if (weaponCode == codeName)
                     codeName = "m1911";
-            
+
             foreach (string weaponCode in powerWeaponCodeNames)
                 if (weaponCode == codeName)
                     codeName = "barrett50cal";
@@ -83,6 +83,11 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
                 if (weaponCode == codeName)
                     codeName = "r700";
 
+        }
+
+        if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Fiesta))
+        {
+            Destroy(gameObject);
         }
     }
 }

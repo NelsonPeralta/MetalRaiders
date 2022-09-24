@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
-    public enum MultiplayerMode { Slayer, Pro, Snipers, Unassgined }
+    public enum MultiplayerMode { Fiesta, Slayer, Pro, Snipers, Unassgined }
     public enum SwarmMode { Survival, Unassigned }
 
     // Intances
@@ -158,6 +158,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
             UpdateRoomSettings();
+
+        Debug.Log($"Player joined room. ({PhotonNetwork.CurrentRoom.PlayerCount})");
     }
 
     public override void OnJoinedRoom()

@@ -11,6 +11,8 @@ using System.IO;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+    private TypedLobby typedLobby = new TypedLobby("NelsonLobby", LobbyType.Default);
+
     // Events
     public delegate void LauncherEvent(Launcher launcher);
     public LauncherEvent OnCreateSwarmRoomButton;
@@ -18,8 +20,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public static Launcher instance; // Singleton of the Photon Launcher
     public PhotonView PV;
-    public int levelToLoadIndex;
     public GameObject loginButton;
+
+    #region
+    public int levelToLoadIndex;
+    [SerializeField] int testingRoomLevelIndex;
+    [SerializeField] int waitingRoomLevelIndex;
+    #endregion
 
     // SerializeField makes private variables visible in the inspector
     [SerializeField] TMP_InputField roomNameInputField;
@@ -45,6 +52,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject mapSelector;
     [SerializeField] GameObject multiplayerMapSelector;
     [SerializeField] GameObject swarmMapSelector;
+
+    private string quickMatchRoomName = "quick_match_room";
 
     public TMP_InputField loginUsernameText
     {
@@ -154,11 +163,32 @@ public class Launcher : MonoBehaviourPunCallbacks
             PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
 
+    public void QuickMatch()
+    {
+        string randomRoomName = quickMatchRoomName;
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = maxRandomRoomPlayers;
+        roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+        roomOptions.CustomRoomProperties.Add("mode", "multiplayer");
+        roomOptions.CustomRoomProperties.Add("gamemode", GameManager.GameMode.Multiplayer);
+        roomOptions.CustomRoomProperties.Add("multiplayermode", GameManager.MultiplayerMode.Fiesta);
+        PhotonNetwork.JoinOrCreateRoom(randomRoomName, roomOptions, typedLobby);
+        //PhotonNetwork.JoinRandomRoom();
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log($"OnJoinRandomFailed: {message}");
+        //CreateAndJoinRandomRoom();
+    }
+
+    [SerializeField]
+    private byte maxRandomRoomPlayers = 6;
+
     public void CreateMultiplayerRoom()
     {
         Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
         RoomOptions options = new RoomOptions();
-        options.BroadcastPropsChangeToAll = true;
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
         options.CustomRoomProperties.Add("mode", "multiplayer");
         if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
@@ -208,29 +238,42 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Joined room");
-        if (PhotonNetwork.IsMasterClient)
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
         Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
         Debug.Log(PhotonNetwork.CurrentRoom.Name);
-        string roomType = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString() + "_room";
-        string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
 
-        commonRoomTexts.SetActive(true);
-        MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
-        roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
+        if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
+        { // Room is Random
+            GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+            GameManager.instance.multiplayerMode = GameManager.MultiplayerMode.Fiesta;
+            PhotonNetwork.LoadLevel(waitingRoomLevelIndex);
+        }
+        else
+        { // Room is private
 
-        //Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        if (mode == "multiplayer")
-        {
-            mapSelector = multiplayerMapSelector;
-            mapSelector.SetActive(PhotonNetwork.IsMasterClient);
+            if (PhotonNetwork.IsMasterClient)
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
+            string roomType = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString() + "_room";
+            string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+
+            commonRoomTexts.SetActive(true);
+            MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
+            roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
+
+            //Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
+            startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+            if (mode == "multiplayer")
+            {
+                mapSelector = multiplayerMapSelector;
+                mapSelector.SetActive(PhotonNetwork.IsMasterClient);
+            }
+            if (mode == "swarm")
+            {
+                mapSelector = swarmMapSelector;
+                mapSelector.SetActive(PhotonNetwork.IsMasterClient);
+            }
         }
-        if (mode == "swarm")
-        {
-            mapSelector = swarmMapSelector;
-            mapSelector.SetActive(PhotonNetwork.IsMasterClient);
-        }
+
+
     }
     //[PunRPC]
     //public void UpdatePlayerList()
@@ -307,8 +350,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("offline title");
     }
 
+    private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
+
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        UpdateCachedRoomList(roomList);
+
         foreach (Transform trans in roomListContent)
         {
             Destroy(trans.gameObject);
@@ -318,7 +365,25 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             if (roomList[i].RemovedFromList)
                 continue;
-            Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
+            if (roomList[i].Name != quickMatchRoomName)
+                Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
+        }
+    }
+
+    private void UpdateCachedRoomList(List<RoomInfo> roomList)
+    {
+        for (int i = 0; i < roomList.Count; i++)
+        {
+            RoomInfo info = roomList[i];
+            if (info.RemovedFromList)
+            {
+                cachedRoomList.Remove(info.Name);
+            }
+            else
+            {
+                cachedRoomList[info.Name] = info;
+            }
+            Debug.Log($"UpdateCachedRoomList: {info.Name}");
         }
     }
 

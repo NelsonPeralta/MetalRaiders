@@ -366,6 +366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: Colt
   codeName: colt
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 6
   extraAmmo: 6

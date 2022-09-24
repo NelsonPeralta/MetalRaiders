@@ -521,6 +521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: M249c
   codeName: m249c
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 100
   extraAmmo: 100
