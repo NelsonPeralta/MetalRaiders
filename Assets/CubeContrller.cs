@@ -7,7 +7,7 @@ using Rewired;
 public class CubeContrller : MonoBehaviour
 {
     public int playerID = 0;
-    Player player;
+    Rewired.Player player;
 
     private void Start()
     {

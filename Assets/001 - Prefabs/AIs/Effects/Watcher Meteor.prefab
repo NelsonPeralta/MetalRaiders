@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3885397476374691511}
   - component: {fileID: 3885397476374691528}
   - component: {fileID: 782322971091542482}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: Watcher Meteor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,8 +97,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: 1725880506ca28d4cb7d199c26e93c07, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -143,7 +143,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.5
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 6385091952076876663}
   - component: {fileID: 6506807355659121315}
   - component: {fileID: 6507232881748777559}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5130,7 +5130,7 @@ GameObject:
   - component: {fileID: 6377792187813618881}
   - component: {fileID: 6507560634559289765}
   - component: {fileID: 6507302683619681085}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10016,7 +10016,7 @@ GameObject:
   - component: {fileID: 6377911311358946757}
   - component: {fileID: 6507014879508574777}
   - component: {fileID: 6505788752050822625}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: FireBigRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14893,7 +14893,7 @@ GameObject:
   - component: {fileID: 6377865960979247975}
   - component: {fileID: 6506901152931512355}
   - component: {fileID: 6505724384093861009}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: FireRising
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19766,7 +19766,7 @@ GameObject:
   - component: {fileID: 6385057217318591185}
   - component: {fileID: 6506790770221437283}
   - component: {fileID: 6505882871213973167}
-  m_Layer: 11
+  m_Layer: 13
   m_Name: FireGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

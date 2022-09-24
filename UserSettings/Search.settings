@@ -1,15 +1,24 @@
 trackSelection = true
 fetchPreview = true
-wantsMore = false
+defaultFlags = 0
 keepOpen = false
 queryFolder = "Assets"
 onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
-	"last_search.83F126EB" = "generic"
+	"last_search.83F126EB" = ""
 	"InspectorPreview.83F126EB" = "0"
-	"currentGroup.83F126EB" = "asset"
+	"currentGroup.83F126EB" = "all"
+	"last_search.7F95D817" = "cScript"
+	"InspectorPreview.7F95D817" = "0"
+	"currentGroup.7F95D817" = "scene"
+	"last_search.7BEC51F9" = ""
+	"OpenInspectorPreview.7BEC51F9" = "0"
+	"currentGroup.7BEC51F9" = "asset"
+	"last_search.8BEC98E7" = "Movement"
+	"OpenInspectorPreview.8BEC98E7" = "0"
+	"currentGroup.8BEC98E7" = "scene"
 }
 providers = {
 	asset = {
@@ -47,9 +56,25 @@ providers = {
 		priority = 100
 		defaultAction = null
 	}
+	adb = {
+		active = false
+		priority = 2500
+		defaultAction = null
+	}
+	performance = {
+		active = false
+		priority = 100
+		defaultAction = null
+	}
+}
+objectSelectors = {
 }
 recentSearches = [
+	"Movement"
+	"minigun seller"
+	"table t:Prefab"
 	"generic"
+	"cScript"
 	"head"
 	"tunnel"
 	"finish"
@@ -59,3 +84,9 @@ searchItemFavorites = [
 ]
 savedSearchesSortOrder = 0
 showSavedSearchPanel = false
+expandedQueries = [
+]
+queryBuilder = false
+ignoredProperties = "id;name;classname;imagecontentshash"
+helperWidgetCurrentArea = "all"
+disabledIndexers = ""

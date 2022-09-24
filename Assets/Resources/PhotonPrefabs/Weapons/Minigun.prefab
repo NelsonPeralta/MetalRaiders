@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0064488635, y: 0.004250281, z: -0.00027178062}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2157255931142058238}
   m_RootOrder: 2
@@ -97,7 +98,7 @@ GameObject:
   - component: {fileID: 2014980408808694998}
   - component: {fileID: 5406913902717158425}
   - component: {fileID: 1500470692903090416}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Minigun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,6 +115,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: -0, z: 0}
   m_LocalScale: {x: 40, y: 40, z: 40}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5781098890288904189}
   - {fileID: 6540907355709442091}
@@ -213,16 +215,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: 
+  cleanName: Minigun
+  codeName: minigun
+  spriteId: 0
   isWallGun: 0
-  ammoInThisWeapon: 999
+  _ammoInThisWeapon: 999
   extraAmmo: 0
   isDualWieldable: 0
+  defaultAmmo: 999
+  defaultExtraAmmo: 999
   weaponType: Pistol
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  _ttl: 0
 --- !u!114 &1500470692903090416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,6 +280,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.004077226, y: 0.004110562, z: -0.005991975}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2157255931142058238}
   m_RootOrder: 1
@@ -355,6 +363,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0.0004041577, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2157255931142058238}
   m_RootOrder: 0
@@ -437,6 +446,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0.010309536, z: 0.0069586984}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2157255931142058238}
   m_RootOrder: 3

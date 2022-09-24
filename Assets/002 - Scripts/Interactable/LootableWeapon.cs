@@ -1,0 +1,188 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Photon.Pun;
+
+public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
+{
+    public delegate void LootableWeaponEvent(LootableWeapon lootableWeapon);
+    public LootableWeaponEvent OnLooted;
+
+    Vector3 _spawnPointPosition;
+    public string cleanName;
+    public string codeName;
+    public int spriteId;
+    public bool isWallGun;
+
+    [SerializeField] int _ammoInThisWeapon;
+
+    public int ammoInThisWeapon
+    {
+        get { return _ammoInThisWeapon; }
+        set
+        {
+            _ammoInThisWeapon = value;
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            param["ammo"] = ammoInThisWeapon.ToString();
+            GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
+        }
+    }
+    public int extraAmmo;
+    public bool isDualWieldable;
+
+    [SerializeField] int defaultAmmo;
+    [SerializeField] int defaultExtraAmmo;
+
+    public string weaponType;
+
+    public bool smallAmmo;
+    public bool heavyAmmo;
+    public bool powerAmmo;
+
+    [SerializeField] OnlineWeaponSpawnPoint _onlineWeaponSpawnPoint;
+    public OnlineWeaponSpawnPoint onlineWeaponSpawnPoint
+    {
+        get { return _onlineWeaponSpawnPoint; }
+        set { _onlineWeaponSpawnPoint = value; }
+    }
+
+    public Vector3 spawnPointPosition
+    {
+        get { return _spawnPointPosition; }
+        set { _spawnPointPosition = value; }
+    }
+
+
+    [SerializeField] float _ttl;
+    public float ttl
+    {
+        get { return _ttl; }
+        set
+        {
+            _ttl = value;
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            param["ttl"] = ttl.ToString();
+            GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
+        }
+    }
+
+    private void Awake()
+    {
+        _ttl = 0;
+    }
+
+    private void OnEnable()
+    {
+        spriteId = -1;
+        spriteId = WeaponProperties.spriteIdDic[codeName];
+
+        if (spriteId == -1)
+            spriteId = WeaponProperties.spriteIdDic[cleanName];
+    }
+    private void Start()
+    {
+        defaultAmmo = ammoInThisWeapon;
+        defaultExtraAmmo = extraAmmo;
+        //Debug.Log("Lootable Weapon Root: " + transform.parent);
+        //if (transform.parent)
+        //{
+        //    string parentName = transform.parent.name;
+        //    if (!parentName.Contains("WeaponPool"))
+        //        Destroy(gameObject);
+        //}
+        //else
+        //    Destroy(gameObject);
+
+        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
+    }
+
+    private void Update()
+    {
+        if (onlineWeaponSpawnPoint)
+            return;
+        _ttl -= Time.deltaTime;
+
+        if (!onlineWeaponSpawnPoint && _ttl <= 0)
+            Destroy(gameObject);
+    }
+
+    public void ResetAmmo()
+    {
+        ammoInThisWeapon = defaultAmmo;
+        extraAmmo = defaultExtraAmmo;
+    }
+
+    public void RandomAmmo()
+    {
+        ammoInThisWeapon = (int)Mathf.Ceil(Random.Range(0, ammoInThisWeapon));
+        extraAmmo = (int)Mathf.Ceil(Random.Range(0, extraAmmo));
+
+        defaultAmmo = (int)Mathf.Ceil(Random.Range(0, defaultAmmo)); ;
+        extraAmmo = (int)Mathf.Ceil(Random.Range(0, extraAmmo));
+    }
+
+    public void LootWeapon(bool onlyExtraAmmo = false)
+    {
+        //onlineWeaponSpawnPoint.StartCoroutine(onlineWeaponSpawnPoint.RespawnWeapon());
+
+        int ammoToLoot = extraAmmo;
+        PlayerInventory playerInventory = GameManager.GetMyPlayer().playerInventory;
+        if (!onlyExtraAmmo)
+            ammoToLoot += ammoInThisWeapon;
+
+        foreach (GameObject wp in playerInventory.allWeaponsInInventory)
+            if (wp.GetComponent<WeaponProperties>().codeName == codeName)
+            {
+                WeaponProperties.AmmoType ammoType = wp.GetComponent<WeaponProperties>().ammoType;
+
+                if (ammoType == WeaponProperties.AmmoType.Light)
+                    playerInventory.smallAmmo += ammoToLoot;
+                else if (ammoType == WeaponProperties.AmmoType.Heavy)
+                    playerInventory.heavyAmmo += ammoToLoot;
+                else if (ammoType == WeaponProperties.AmmoType.Power)
+                    playerInventory.powerAmmo += ammoToLoot;
+            }
+
+        OnLooted?.Invoke(this);
+        if (onlineWeaponSpawnPoint)
+        {
+            onlineWeaponSpawnPoint.StartRespawn();
+            gameObject.SetActive(false);
+        }
+        else
+            Destroy(gameObject);
+    }
+
+    public void EnableWeapon()
+    {
+        gameObject.SetActive(true);
+        ResetAmmo();
+    }
+
+    [PunRPC]
+    void UpdateData(Dictionary<string, string> param)
+    {
+        if (param.ContainsKey("ammo"))
+            _ammoInThisWeapon = int.Parse(param["ammo"]);
+
+        if (param.ContainsKey("ttl"))
+            _ttl = int.Parse(param["ttl"]);
+    }
+
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+    //    Debug.Log("OnPhotonSerializeView");
+    //    if (stream.IsWriting)
+    //    {
+    //        stream.SendNext(transform.position);
+    //        stream.SendNext(transform.rotation);
+    //    }
+    //    else if (stream.IsReading)
+    //    {
+    //        transform.position = (Vector3)stream.ReceiveNext();
+    //        transform.rotation = (Quaternion)stream.ReceiveNext();
+    //    }
+    //}
+}

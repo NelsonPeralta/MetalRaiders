@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.00040759443, y: 0.15553331, z: 0.18145324}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8350333313027536256}
   m_RootOrder: 3
@@ -110,6 +111,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0.029192815, z: 0.12974752}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8350333313027536256}
   m_RootOrder: 1
@@ -192,6 +194,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.0000000020861626, y: 0.03516702, z: 0.050356243}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8350333313027536256}
   m_RootOrder: 4
@@ -274,6 +277,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.02609398, y: 0.16207524, z: 0.25870088}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8350333313027536256}
   m_RootOrder: 0
@@ -356,6 +360,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.04280297, y: 0.10533338, z: 0.1457623}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8350333313027536256}
   m_RootOrder: 2
@@ -425,7 +430,7 @@ GameObject:
   - component: {fileID: 7291944246082082972}
   - component: {fileID: 1305468975565810727}
   - component: {fileID: 2562790906294140497}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: M249c
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -442,6 +447,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8357799442171268658}
   - {fileID: 8350541136324886630}
@@ -513,16 +519,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: m249c
+  cleanName: M249c
+  codeName: m249c
+  spriteId: 0
   isWallGun: 0
-  ammoInThisWeapon: 100
+  _ammoInThisWeapon: 100
   extraAmmo: 100
   isDualWieldable: 0
+  defaultAmmo: 100
+  defaultExtraAmmo: 0
   weaponType: Assault Rifle
   smallAmmo: 0
   heavyAmmo: 1
   powerAmmo: 0
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  _ttl: 0
 --- !u!114 &7291944246082082972
 MonoBehaviour:
   m_ObjectHideFlags: 0

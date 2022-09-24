@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.0001557623, y: -0.0010305855, z: 0.19969304}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1949347182520655834}
   m_RootOrder: 0
@@ -97,7 +98,7 @@ GameObject:
   - component: {fileID: 492138526804241230}
   - component: {fileID: 6583879716112079941}
   - component: {fileID: 2126470845479484210}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Model 1100
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -114,6 +115,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1949347182520655832}
   - {fileID: 1949347182520655838}
@@ -212,16 +214,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: remington_1100
+  cleanName: M1100
+  codeName: m1100
+  spriteId: 0
   isWallGun: 0
-  ammoInThisWeapon: 8
-  extraAmmo: 0
+  _ammoInThisWeapon: 6
+  extraAmmo: 6
   isDualWieldable: 0
+  defaultAmmo: 6
+  defaultExtraAmmo: 0
   weaponType: Shotgun
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  _ttl: 0
 --- !u!114 &2126470845479484210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +279,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.011228727, y: 0.030428596, z: -0.056504555}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1949347182520655834}
   m_RootOrder: 2
@@ -354,6 +362,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.00015575488, y: 0.052620158, z: 0.095899425}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1949347182520655834}
   m_RootOrder: 1

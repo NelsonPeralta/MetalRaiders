@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1016061319836381584}
   - component: {fileID: 2837782313116000565}
-  - component: {fileID: 1016061319836381599}
-  - component: {fileID: 1016061319836381585}
   - component: {fileID: 5826279401363352821}
   m_Layer: 0
   m_Name: GameManager
@@ -30,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -49,41 +48,14 @@ MonoBehaviour:
   gameMode: 2
   multiplayerMode: 1
   swarmMode: 1
---- !u!114 &1016061319836381599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1016061319836381598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 647e8b511d2c95b45bf0c9487b1c340e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1016061319836381585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1016061319836381598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 0
-  OwnershipTransfer: 0
-  observableSearch: 0
-  ObservedComponents:
-  - {fileID: 0}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  grenadeAmmoPack: {fileID: 1937134780927942664, guid: 87ac2625a070c8845851b8d2d28ae7eb,
+    type: 3}
+  lightAmmoPack: {fileID: 7421505056183394234, guid: 906ea3979109a7b40b59f266e72972c3,
+    type: 3}
+  heavyAmmoPack: {fileID: 4390517542131663730, guid: 41e5a168311fc9d429958f774ef52355,
+    type: 3}
+  powerAmmoPack: {fileID: 2352401233832416904, guid: c663879745f57484fa4eb19b0bf1b8eb,
+    type: 3}
 --- !u!114 &5826279401363352821
 MonoBehaviour:
   m_ObjectHideFlags: 0

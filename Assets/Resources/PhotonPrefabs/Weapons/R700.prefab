@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0063722804, y: -0.0319644, z: 0.28529152}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2358512475867144485}
   m_RootOrder: 1
@@ -110,6 +111,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.0014125005, y: 0.07536581, z: -0.0539758}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2358512475867144485}
   m_RootOrder: 2
@@ -179,7 +181,7 @@ GameObject:
   - component: {fileID: 552796238838542409}
   - component: {fileID: 3537047690651699159}
   - component: {fileID: 8253055556358932939}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: R700
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -196,6 +198,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2358512475867144487}
   - {fileID: 2358512475867144481}
@@ -295,16 +298,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: r700
+  cleanName: R700
+  codeName: r700
+  spriteId: 0
   isWallGun: 0
-  ammoInThisWeapon: 6
+  _ammoInThisWeapon: 6
   extraAmmo: 6
   isDualWieldable: 0
+  defaultAmmo: 6
+  defaultExtraAmmo: 0
   weaponType: Sniper
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  _ttl: 0
 --- !u!114 &8253055556358932939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -355,6 +363,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.00718801, y: -0.031964395, z: 0.28529152}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2358512475867144485}
   m_RootOrder: 0
@@ -437,6 +446,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.00040785412, y: 0.020638352, z: -0.16645963}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2358512475867144485}
   m_RootOrder: 3

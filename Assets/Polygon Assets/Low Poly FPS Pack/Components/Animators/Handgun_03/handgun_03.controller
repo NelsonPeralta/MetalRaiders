@@ -1687,7 +1687,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Reload Out Of Ammo
-  m_Speed: 1
+  m_Speed: 1.2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 110190720}
@@ -2166,7 +2166,7 @@ AnimatorStateMachine:
     m_Position: {x: -240, y: 432, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102778494825145108}
-    m_Position: {x: -192, y: 276, z: 0}
+    m_Position: {x: -190, y: 270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102813954800019746}
     m_Position: {x: -192, y: 204, z: 0}
@@ -2253,7 +2253,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.34113055
   m_TransitionOffset: 0
-  m_ExitTime: 0.7280094
+  m_ExitTime: 0.25
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -3542,7 +3542,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: GrenadeThrow
-  m_Speed: 1
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101051164930241812}
@@ -3569,7 +3569,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Reload Ammo Left
-  m_Speed: 1
+  m_Speed: 1.2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101177168727305880}

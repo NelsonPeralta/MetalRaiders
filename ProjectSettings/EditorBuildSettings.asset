@@ -12,6 +12,15 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Testing Room 2.unity
     guid: b36f86ced13373f4bab43f9d875ebb3e
   - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Waiting.unity
+    guid: 0627d17b61772164a9898d67aa6c9120
+  - enabled: 1
+    path: Assets/004 - Scenes/Placeholders/Placeholder 1.unity
+    guid: aa7ddece2912a1548b13fefa9770afcf
+  - enabled: 1
+    path: Assets/004 - Scenes/Placeholders/Placeholder 2.unity
+    guid: 4a42e724317d1a644a7d544d54a68683
+  - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Lighthouse.unity
     guid: 38cf578bd469df6449ce6788067dd73f
   - enabled: 1
@@ -20,6 +29,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Grudge.unity
     guid: 05d13dfdff6862447934b6dc6502b378
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Babylon.unity
+    guid: ffa1a3962a4fe1c4d96dd6e27b371baf
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Starship.unity
+    guid: 887ccbafd09e0cd43ac225973bdb7b20
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple.unity
+    guid: b0cdc5e69480f4a4eb87099f24318b3a
   - enabled: 1
     path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Drowned.unity
     guid: 02297af730643fe4f9b4bf60fda3ea46

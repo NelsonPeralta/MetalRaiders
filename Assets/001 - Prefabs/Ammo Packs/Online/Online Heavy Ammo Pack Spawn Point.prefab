@@ -29,10 +29,11 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.155, y: 1.07, z: 12.222367}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6421784879821767716}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1671090102122540942
 MeshFilter:
@@ -96,9 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e07e980db0b66d4ea1fbcec10f1fe21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 0}
   weaponPool: {fileID: 0}
   onlineGameTime: {fileID: 0}
+  randomAmmo: 0
   ammoType: heavy
   Placeholder: {fileID: 4302245313848072441}
   ammoPack: {fileID: 0}
@@ -108,8 +109,14 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 8848803701783850272}
     m_Modifications:
+    - target: {fileID: 437124632792033918, guid: 702058ef45baf2a43b607df3182a1fa3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3322662356481581191, guid: 702058ef45baf2a43b607df3182a1fa3,
         type: 3}
       propertyPath: m_Name
@@ -170,7 +177,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2044708889268190650, guid: 702058ef45baf2a43b607df3182a1fa3, type: 3}
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 702058ef45baf2a43b607df3182a1fa3, type: 3}
 --- !u!1 &4302245313848072441 stripped
 GameObject:

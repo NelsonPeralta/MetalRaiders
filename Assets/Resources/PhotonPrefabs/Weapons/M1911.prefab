@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.000031589774, y: -0.038502865, z: -0.03963307}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3597432282059949911}
   m_RootOrder: 1
@@ -110,6 +111,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.00008852587, y: 0.020434076, z: -0.045727633}
   m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3597432282059949919}
   m_RootOrder: 0
@@ -192,6 +194,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.00003159149, y: 0.036164764, z: -0.061646987}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3597432282059949911}
   m_RootOrder: 0
@@ -261,7 +264,7 @@ GameObject:
   - component: {fileID: 2449659924544914771}
   - component: {fileID: 8931483522755077858}
   - component: {fileID: 2332715956438352494}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: M1911
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -278,6 +281,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3597432282059949909}
   - {fileID: 3597432282059949905}
@@ -376,16 +380,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: m1911
+  cleanName: M1911
+  codeName: m1911
+  spriteId: 0
   isWallGun: 0
-  ammoInThisWeapon: 12
+  _ammoInThisWeapon: 12
   extraAmmo: 24
   isDualWieldable: 0
+  defaultAmmo: 12
+  defaultExtraAmmo: 0
   weaponType: Pistol
   smallAmmo: 1
   heavyAmmo: 0
   powerAmmo: 0
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  _ttl: 0
 --- !u!114 &2332715956438352494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,6 +445,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.000057045607, y: 0.034962863, z: 0.04330084}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3597432282059949907}
   m_Father: {fileID: 3597432282059949911}

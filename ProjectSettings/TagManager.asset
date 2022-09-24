@@ -43,35 +43,35 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - 3
   - Water
   - UI
-  - PlayerRangeTrigger
-  - 
-  - Third Person Model
-  - First Person
   - Player
-  - Bullet
-  - Shield
-  - Hitbox
-  - GroundCheck
+  - Player Hitbox
+  - Player Bullet
+  - Player Ground Check
+  - Player Feet
+  - AI
+  - AI Hitbox
+  - AI Attack
+  - AI Shield
+  - Aim Assist
   - Interactable
-  - Motion Tracker Dots
-  - 17
-  - 18
-  - 19
-  - 20
-  - 21
-  - NIWBullets
+  - Player Range Trigger
+  - Player FPS Models
+  - Player TPS Models
+  - Motion Tracker
+  - Reticule Friction
+  - Frag Grenade
+  - PlayerMelee
+  - Physical Loot
+  - LOS Ray
+  - 26
+  - 27
+  - 28
+  - 29
+  - 30
   - Hide
-  - P1 FPS
-  - P2 FPS
-  - P3 FPS
-  - P4 FPS
-  - P1 TPS
-  - P2 TPS
-  - P3 TPS
-  - P4 TPS
   m_SortingLayers:
   - name: Default
     uniqueID: 0

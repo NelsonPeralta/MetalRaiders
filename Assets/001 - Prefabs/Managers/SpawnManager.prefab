@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 248263773375483528}
   m_Father: {fileID: 0}
@@ -50,6 +51,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 7747061962181734985}
     m_Modifications:
     - target: {fileID: 926446499709091166, guid: a0c15bf386196da4cbc765e6e7929926,
@@ -98,6 +100,7 @@ PrefabInstance:
       value: Generic Spawn
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: a0c15bf386196da4cbc765e6e7929926, type: 3}
 --- !u!4 &248263773375483528 stripped
 Transform:

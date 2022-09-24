@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AppSettings:
     AppIdRealtime: 8e0d790f-bafa-4871-8414-2fd5cd167f4c
+    AppIdFusion: 
     AppIdChat: 
     AppIdVoice: 
     AppVersion: 
@@ -119,6 +120,19 @@ MonoBehaviour:
   - EndWave_RPC
   - SpawnAi_RPC
   - StartNewWave_RPC
+  - RespawnHealthPacks_RPC
+  - ChangeAction_RPC
+  - OnPlayerStartedMoving_Delegate_RPC
+  - OnPlayerStoppedMoving_Delegate_RPC
+  - HideDot_RPC
+  - ShowDot_RPC
+  - AddSecond_RPC
+  - DropWeapons_RPC
+  - Destroy_RPC
+  - UpdateData
+  - DropWeapon_RPC
+  - ChangeSubGameType_RPC
+  - Shoot_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

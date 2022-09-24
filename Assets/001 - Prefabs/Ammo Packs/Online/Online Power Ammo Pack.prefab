@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 639178691086886071}
   - component: {fileID: 724863432924919343}
   - component: {fileID: 724327813505791507}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: -0.00000044703478, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 630786274675851587}
   m_RootOrder: 0
@@ -600,6 +601,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -4108,6 +4110,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -4906,6 +4909,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 0
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
@@ -4929,6 +4933,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &633545405749301913
 GameObject:
@@ -4941,7 +4949,7 @@ GameObject:
   - component: {fileID: 639451432764409193}
   - component: {fileID: 723996631827623473}
   - component: {fileID: 722862694870433841}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4958,6 +4966,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 630786274675851587}
   m_RootOrder: 2
@@ -5530,6 +5539,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -8993,6 +9003,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.1
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -9791,6 +9802,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 1
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
@@ -9814,6 +9826,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &633662364963679367
 GameObject:
@@ -9826,7 +9842,7 @@ GameObject:
   - component: {fileID: 630780602128959327}
   - component: {fileID: 724935499121804941}
   - component: {fileID: 722955039746847507}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: VerticalGlowWidening
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9843,6 +9859,7 @@ Transform:
   m_LocalRotation: {x: 0.000000119209275, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 630786274675851587}
   m_RootOrder: 1
@@ -10415,6 +10432,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 1
@@ -13869,6 +13887,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -14667,6 +14686,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 4
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
@@ -14690,6 +14710,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &634386613893601023
 GameObject:
@@ -14702,7 +14726,7 @@ GameObject:
   - component: {fileID: 630786274675851587}
   - component: {fileID: 752578315017547903}
   - component: {fileID: 723503430235524303}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: LootRayPurple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14719,6 +14743,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 639178691086886071}
   - {fileID: 630780602128959327}
@@ -15294,6 +15319,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
+    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 1
@@ -18748,6 +18774,7 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -19546,6 +19573,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 4
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
@@ -19569,6 +19597,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &634533159889620782
 GameObject:
@@ -19581,7 +19613,7 @@ GameObject:
   - component: {fileID: 634533159889457934}
   - component: {fileID: 634533159888655150}
   - component: {fileID: 634533159887688174}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: grenade_launcher_01_projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19598,6 +19630,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.0287, z: 0.04699999}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1767087161283838692}
   m_RootOrder: 1
@@ -19663,7 +19696,7 @@ GameObject:
   - component: {fileID: 634533160243751886}
   - component: {fileID: 634533160247143406}
   - component: {fileID: 634533160246176046}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: shellcasing_empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19680,6 +19713,7 @@ Transform:
   m_LocalRotation: {x: 6.6097587e-12, y: 1, z: -0.0000018099951, w: 0.0000036517765}
   m_LocalPosition: {x: -0.056000233, y: 0.042, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1767087161283838692}
   m_RootOrder: 0
@@ -19745,7 +19779,7 @@ GameObject:
   - component: {fileID: 634533160477570371}
   - component: {fileID: 634533160474703203}
   - component: {fileID: 634533160475801507}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: sniper_03_mag_empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19762,6 +19796,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.046000004, y: 0.056, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1767087161283838692}
   m_RootOrder: 2
@@ -19827,7 +19862,7 @@ GameObject:
   - component: {fileID: 634533161607622650}
   - component: {fileID: 634533161608916954}
   - component: {fileID: 634533161609915674}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: rocket_launcher_01_projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19844,6 +19879,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.1638, z: -0.03909999}
   m_LocalScale: {x: 0.5, y: 0.50000024, z: 0.50000024}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1767087161283838692}
   m_RootOrder: 3
@@ -19907,10 +19943,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6170261287313123443}
-  - component: {fileID: 8558709816140163064}
   - component: {fileID: 2113546865190409756}
   - component: {fileID: 6315304384730974867}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: Online Power Ammo Pack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19927,37 +19962,12 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1767087161283838692}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8558709816140163064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4177692360218812475}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89b86c1753353344884fd40429370dbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tags:
-  - Look At Player
-  - 
-  - 
-  - 
-  - 
-  isPlayer: 0
-  isAI: 0
-  isHitbox: 0
-  isAlive: 0
-  redTeam: 0
-  blueTeam: 0
-  yellowTeam: 0
-  greenTeam: 0
 --- !u!135 &2113546865190409756
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -20002,7 +20012,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1767087161283838692}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20019,6 +20029,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 634533160243751886}
   - {fileID: 634533159889457934}
@@ -20041,13 +20052,13 @@ GameObject:
   - component: {fileID: 1972961399406708421}
   - component: {fileID: 2597185179929526852}
   - component: {fileID: 4304395879446467948}
-  m_Layer: 15
+  m_Layer: 16
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1121311026004157857
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20058,6 +20069,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1767087161283838692}
   m_RootOrder: 5

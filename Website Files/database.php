@@ -10,7 +10,11 @@
 
 
         $username = $_POST["username"];
+        //$username = substr_replace($username ,"",-3);
         $password = hash('sha512', $_POST["password"]);
+        //$password = hash('sha512', substr_replace($_POST["password"], "", -3));
+        //$password = $_POST["password"];
+        //$password = substr_replace($_POST["password"], "", -3);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
@@ -57,7 +61,11 @@
 
 
         $username = $_POST["username"];
+        //$username =substr_replace($username ,"",-3);
         $password = hash('sha512', $_POST["password"]);
+        //$password = hash('sha512', substr_replace($_POST["password"], "", -3));
+        //$password = $_POST["password"];
+        //$password = substr_replace($_POST["password"], "", -3);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
@@ -77,8 +85,52 @@
             }
             // Make sure no other echo or unity will read the json string and otther merges as a single string
             echo json_encode($rows[0]);
+
+
+            // while($row = $result->fetch_assoc()){
+            //     if($row["password"] == $password){
+            //         echo "login success";
+            //     }else{
+            //         echo "wrong credentials";
+            //     }
+            // }
+
+
+
         }else{
             echo "wrong credentials";
+            // echo "Username does not exist";
+        }
+
+        $conn->close();
+    }
+    
+    
+    
+    if($_POST["service"] == "getBasicOnlineData"){
+
+
+        $playerId = $_POST["playerId"];
+        //$username =substr_replace($username ,"",-3);
+        
+        if($conn->connect_error){
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        $sql = "SELECT player_id, level, xp, credits, armor_data_string, armor_data_string, unlocked_armor_data_string FROM player_basic_global_data WHERE player_id='$playerId'";
+        $result = $conn->query($sql);
+
+        if($result->num_rows > 0){
+            $row = array();
+
+            while($row = $result->fetch_assoc()){
+                $rows[] = $row;
+            }
+            // Make sure no other echo or unity will read the json string and otther merges as a single string
+            echo json_encode($rows[0]);
+
+        }else{
+            echo "Could not fetch basic global data. SQL request: '$sql'";
         }
 
         $conn->close();
@@ -90,6 +142,7 @@
 
 
         $playerId = $_POST["playerId"];
+        //$username =substr_replace($username ,"",-3);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
@@ -120,12 +173,13 @@
 
 
         $playerId = $_POST["playerId"];
+        //$username =substr_replace($username ,"",-3);
         
         if($conn->connect_error){
             die("Connection failed: " . $conn->connect_error);
         }
         
-        $sql = "SELECT player_id, kills, deaths, headshots, total_points FROM player_basic_pve_stats WHERE player_id='$playerId'";
+        $sql = "SELECT player_id, kills, deaths, headshots, highest_points FROM player_basic_pve_stats WHERE player_id='$playerId'";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0){
@@ -146,6 +200,34 @@
     
     
     
+    
+    
+    
+    if($_POST["service"] == "SaveBasicOnlineStats"){
+
+
+        $playerId = $_POST["playerId"];
+        $newLevel = $_POST["newLevel"];
+        $newXp = $_POST["newXp"];
+        $newCredits = $_POST["newCredits"];
+        
+        
+        if($conn->connect_error){
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        try{
+            $sql = "UPDATE player_basic_global_data SET level='$newLevel', xp='$newXp', credits='$newCredits' WHERE player_id='$playerId'";
+            $result = $conn->query($sql);
+            echo "Swarm stats saved successfully";
+        }catch(Exception $e){
+            echo "Could not save swarm stats. SQL request: '$sql'";
+        }
+
+        $conn->close();
+    }
+    
+    
     if($_POST["service"] == "SaveSwarmStats"){
 
 
@@ -154,7 +236,7 @@
         $newKills = $_POST["newKills"];
         $newDeaths = $_POST["newDeaths"];
         $newHeadshots = $_POST["newHeadshots"];
-        $newTotalPoints = $_POST["newTotalPoints"];
+        $newHighestPoints = $_POST["newHighestPoints"];
         
         
         if($conn->connect_error){
@@ -162,7 +244,7 @@
         }
         
         try{
-            $sql = "UPDATE player_basic_pve_stats SET kills='$newKills', deaths='$newDeaths', headshots='$newHeadshots', total_points='$newTotalPoints' WHERE player_id='$playerId'";
+            $sql = "UPDATE player_basic_pve_stats SET kills='$newKills', deaths='$newDeaths', headshots='$newHeadshots', highest_points='$newHighestPoints' WHERE player_id='$playerId'";
             $result = $conn->query($sql);
             echo "Swarm stats saved successfully";
         }catch(Exception $e){
@@ -193,6 +275,44 @@
             echo "Swarm stats saved successfully";
         }catch(Exception $e){
             echo "Could not save multiplayer stats. SQL request: '$sql'";
+        }
+
+        $conn->close();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    if($_POST["service"] == "SaveUnlockedArmorStringData"){
+
+        $playerId = $_POST["playerId"];
+        $newUnlockedArmorStringData = $_POST["newUnlockedArmorStringData"];
+        $newPlayerCredits = $_POST["newPlayerCredits"];
+        
+        
+        if($conn->connect_error){
+            die("Connection failed: " . $conn->connect_error);
+        }
+        
+        try{
+            $sql = "UPDATE player_basic_global_data SET unlocked_armor_data_string='$newUnlockedArmorStringData', credits='$newPlayerCredits' WHERE player_id='$playerId'";
+            $result = $conn->query($sql);
+            echo "UnlockedArmorStringData saved successfully";
+        }catch(Exception $e){
+            echo "Could not save UnlockedArmorStringData. SQL request: '$sql'";
         }
 
         $conn->close();

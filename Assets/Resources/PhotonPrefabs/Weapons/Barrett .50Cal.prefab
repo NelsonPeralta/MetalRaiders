@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.017254155, y: 0.015092178, z: -0.11387166}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8589383476620956718}
   m_RootOrder: 6
@@ -110,6 +111,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0009914942, y: 0.08806011, z: -0.14213303}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8589383476620956718}
   m_RootOrder: 5
@@ -192,6 +194,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0009780749, y: 0.014065281, z: 0.69187343}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8589383476620956718}
   m_RootOrder: 4
@@ -274,6 +277,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0009781492, y: -0.08174523, z: -0.08954774}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8589383476620956718}
   m_RootOrder: 3
@@ -356,6 +360,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0009781253, y: 0.057157893, z: 0.104851745}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8589383476620956718}
   m_RootOrder: 2
@@ -438,6 +443,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.028804239, y: -0.046664793, z: 0.22922146}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8589383476620956718}
   m_RootOrder: 1
@@ -520,6 +526,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.026848003, y: -0.046664793, z: 0.22922146}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8589383476620956718}
   m_RootOrder: 0
@@ -589,7 +596,7 @@ GameObject:
   - component: {fileID: 7738143648539804061}
   - component: {fileID: 7368614592611344181}
   - component: {fileID: 6136547517360919246}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Barrett .50Cal
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -606,6 +613,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8589383476620956716}
   - {fileID: 8589383476620956714}
@@ -708,16 +716,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: 
+  cleanName: Barrett .50 Cal
+  codeName: barrett50cal
+  spriteId: 0
   isWallGun: 0
-  ammoInThisWeapon: 4
+  _ammoInThisWeapon: 4
   extraAmmo: 4
   isDualWieldable: 0
+  defaultAmmo: 4
+  defaultExtraAmmo: 0
   weaponType: Sniper
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  _ttl: 0
 --- !u!114 &6136547517360919246
 MonoBehaviour:
   m_ObjectHideFlags: 0

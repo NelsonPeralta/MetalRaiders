@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.5527136e-17, y: 0.040006507, z: 0.055305142}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1311787766983242528}
   m_RootOrder: 2
@@ -97,7 +98,7 @@ GameObject:
   - component: {fileID: 1311787766983242556}
   - component: {fileID: 1311787766983242555}
   - component: {fileID: 789581672379072056}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Patriot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,6 +115,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 5.894, y: 0.405, z: 3.419}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1311787767104122650}
   - {fileID: 1311787767583673643}
@@ -215,16 +217,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: patriot
+  cleanName: Patriot
+  codeName: patriot
+  spriteId: 0
   isWallGun: 0
-  ammoInThisWeapon: 15
-  extraAmmo: 30
+  _ammoInThisWeapon: 15
+  extraAmmo: 15
   isDualWieldable: 0
+  defaultAmmo: 15
+  defaultExtraAmmo: 0
   weaponType: Assault Rifle
   smallAmmo: 0
   heavyAmmo: 1
   powerAmmo: 0
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  _ttl: 0
 --- !u!114 &789581672379072056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +282,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: -0.885, z: -0.375}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1311787766983242528}
   m_RootOrder: 3
@@ -357,6 +365,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.000000005722046, y: 0.13014367, z: 0.050079465}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1311787766983242528}
   m_RootOrder: 0
@@ -439,6 +448,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.006450404, y: 0.10696656, z: 0.1459795}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1311787766983242528}
   m_RootOrder: 1
@@ -521,6 +531,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.0269, z: 0.3093}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1311787766983242528}
   m_RootOrder: 4
@@ -604,6 +615,7 @@ Transform:
     w: 1}
   m_LocalPosition: {x: 0, y: 0.031153686, z: 0.1487994}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1311787766983242528}
   m_RootOrder: 5

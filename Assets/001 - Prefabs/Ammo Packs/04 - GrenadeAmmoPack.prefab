@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 1937134780927942664}
   - component: {fileID: 1937134780927942665}
   - component: {fileID: 6492066333233894012}
-  m_Layer: 22
+  m_Layer: 16
   m_Name: 04 - GrenadeAmmoPack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ MonoBehaviour:
   defaultAmmo: 2
   ammoInThisPack: 2
   ammoText: {fileID: 2143800888572340082}
-  spawnPoint: {fileID: 0}
+  onlineAmmoPackSpawnPoint: {fileID: 0}
   playerProperties: {fileID: 0}
 --- !u!1 &4603235642416271620
 GameObject:

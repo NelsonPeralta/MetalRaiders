@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 926446498779238455}
   - component: {fileID: 926446498779238453}
   - component: {fileID: 926446498779238454}
-  m_Layer: 23
+  m_Layer: 31
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 0.25, y: 1, z: 0.75}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 926446499709091166}
   m_RootOrder: 0
@@ -94,7 +95,8 @@ GameObject:
   - component: {fileID: 926446499709091139}
   - component: {fileID: 926446499709091164}
   - component: {fileID: 926446499709091165}
-  m_Layer: 23
+  - component: {fileID: 16571891261673449}
+  m_Layer: 31
   m_Name: Generic Spawn
   m_TagString: Spawn Point
   m_Icon: {fileID: 0}
@@ -111,10 +113,11 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.01, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 926446498779238455}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &926446499709091139
 MeshFilter:
@@ -178,7 +181,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnNumber: 0
-  player: 0
-  normalZombie: 0
-  hasRecentlySpawnedSomething: 0
+  players: []
+  spawnPointType: 0
+--- !u!135 &16571891261673449
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926446499709091167}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 15
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
