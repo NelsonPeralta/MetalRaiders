@@ -367,18 +367,18 @@ public class PlayerInventory : MonoBehaviourPun
     {
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
 
-        if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Pro)
+        if (GameManager.instance.gameType == GameManager.GameType.Pro)
         {
             StartingWeapon = "m16";
             //StartingWeapon2 = "patriot";
         }
-        if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Snipers)
+        if (GameManager.instance.gameType == GameManager.GameType.Snipers)
         {
             StartingWeapon = "r700";
             //StartingWeapon2 = "patriot";
         }
 
-        if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Fiesta)
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta)
         {
             AssignRandomWeapons();
         }

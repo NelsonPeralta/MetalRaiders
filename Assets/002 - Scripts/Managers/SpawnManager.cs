@@ -27,7 +27,7 @@ public class SpawnManager : MonoBehaviour
 
         foreach (SpawnPoint sp in genericSpawnPoints)
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer)
+                if (GameManager.instance.gameType == GameManager.GameType.Slayer)
                     if (sp.players.Count == 0)
                         availableSpawnPoints.Add(sp);
 
@@ -36,7 +36,7 @@ public class SpawnManager : MonoBehaviour
             int ran = Random.Range(0, availableSpawnPoints.Count);
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer)
+                if (GameManager.instance.gameType == GameManager.GameType.Slayer)
                     if (availableSpawnPoints[ran].players.Count == 0)
                     {
                         Debug.Log($"Returning Safe Spawn Point: {availableSpawnPoints[ran].transform}");

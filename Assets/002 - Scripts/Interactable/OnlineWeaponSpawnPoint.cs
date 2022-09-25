@@ -53,7 +53,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
         string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot" };
         string[] lightWeaponCodeNames = { "m1911", "colt", "mp5" };
 
-        if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Pro))
+        if ((GameManager.instance.gameType == GameManager.GameType.Pro))
         {
 
             //foreach (string weaponCode in powerWeaponCodeNames)
@@ -69,7 +69,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
             //        codeName = "patriot";
         }
 
-        if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Snipers))
+        if ((GameManager.instance.gameType == GameManager.GameType.Snipers))
         {
             foreach (string weaponCode in lightWeaponCodeNames)
                 if (weaponCode == codeName)
@@ -85,7 +85,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
 
         }
 
-        if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Fiesta))
+        if ((GameManager.instance.gameType == GameManager.GameType.Fiesta))
         {
             Destroy(gameObject);
         }

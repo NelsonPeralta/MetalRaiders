@@ -242,7 +242,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             _networkSwarmManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkSwarmManager"), Vector3.zero, Quaternion.identity).GetComponent<NetworkSwarmManager>();
             PV = _networkSwarmManager.GetComponent<PhotonView>();
 
-            if (GameManager.instance.swarmMode == GameManager.SwarmMode.Survival)
+            if (GameManager.instance.gameType == GameManager.GameType.Survival)
                 maxWave = 999999;
 
             foreach (HealthPack h in FindObjectsOfType<HealthPack>())

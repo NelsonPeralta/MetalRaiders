@@ -75,11 +75,15 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     private void OnEnable()
     {
-        spriteId = -1;
-        spriteId = WeaponProperties.spriteIdDic[codeName];
+        try
+        {
+            spriteId = -1;
+            spriteId = WeaponProperties.spriteIdDic[codeName];
 
-        if (spriteId == -1)
-            spriteId = WeaponProperties.spriteIdDic[cleanName];
+            if (spriteId == -1)
+                spriteId = WeaponProperties.spriteIdDic[cleanName];
+        }
+        catch { }
     }
     private void Start()
     {

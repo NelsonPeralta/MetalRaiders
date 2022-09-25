@@ -17,16 +17,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
-    public enum MultiplayerMode { Fiesta, Slayer, Pro, Snipers, Unassgined }
-    public enum SwarmMode { Survival, Unassigned }
+    public enum GameType { Fiesta, Slayer, Pro, Snipers, Survival, Unassgined }
+    public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers }
+    public enum CoopGameType { Survival }
+
+    public List<int> arenaLevelIndexes = new List<int>();
 
     // Intances
     public static GameManager instance;
 
     // Public variables
     public GameMode gameMode;
-    public MultiplayerMode multiplayerMode;
-    public SwarmMode swarmMode;
+    public GameType gameType;
 
     [Header("Ammo Packs")]
     public Transform grenadeAmmoPack;
@@ -36,7 +38,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     int _camSens = 100;
 
-    public int sceneIndex = 0;
+    public static int sceneIndex = 0;
     public int camSens
     {
         get { return instance._camSens; }
@@ -77,7 +79,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        try { FindObjectOfType<OnlineGameTime>().totalTime = 0; }
+        catch (Exception e) { Debug.LogWarning(e.Message); }
+
         Debug.Log("GameManager OnSceneLoaded called");
+        Debug.Log($"Room {PhotonNetwork.CurrentRoom.Name}. Master client: {PhotonNetwork.MasterClient}");
+
         instance = this;
         sceneIndex = scene.buildIndex;
 
@@ -85,28 +92,43 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             try
             {
-                Debug.Log($"Master CLient: {PhotonNetwork.MasterClient}");
-                Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["mode"]}");
-                string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+                Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["gamemode"]}");
+                Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+            }
+            catch (Exception e) { Debug.LogWarning(e.Message); }
 
+            try
+            {
+                GameManager.instance.gameMode = (GameMode)Enum.Parse(typeof(GameMode), PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString());
+                GameManager.instance.gameType = (GameType)Enum.Parse(typeof(GameType), PhotonNetwork.CurrentRoom.CustomProperties["gametype"].ToString());
+            }
+            catch (Exception e) { Debug.LogWarning(e.Message); }
+
+            try
+            {
+                Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Online Player V10"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation);
+            }
+            catch (Exception e) { Debug.LogWarning(e.Message); }
+
+            try
+            {
                 Debug.Log($"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
-                if (!PlayerManager.playerManagerInstance)
-                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
+                //if (!PlayerManager.playerManagerInstance)
+                //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
                 if (!GameObjectPool.gameObjectPoolInstance)
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineWeaponPool"), Vector3.zero + new Vector3(0, 5, 0), Quaternion.identity);
                 //if (!OnlineGameTime.onlineGameTimeInstance)
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
             }
-            catch
-            {
-
-            }
+            catch (Exception e) { Debug.LogWarning(e.Message); }
         }
         else
         {
             FindObjectOfType<Launcher>().OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
             FindObjectOfType<Launcher>().OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
+            FindObjectOfType<OnlineGameTime>().totalTime = 0;
         }
         OnSceneLoadedEvent?.Invoke();
     }
@@ -143,13 +165,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnCreateSwarmRoomButton_Delegate(Launcher launcher)
     {
         gameMode = GameMode.Swarm;
-        swarmMode = SwarmMode.Survival;
+        gameType = GameType.Survival;
     }
 
     void OnCreateMultiplayerRoomButton_Delegate(Launcher launcher)
     {
         gameMode = GameMode.Multiplayer;
-        multiplayerMode = MultiplayerMode.Slayer;
+        gameType = GameType.Slayer;
     }
 
 
@@ -171,8 +193,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Dictionary<string, string> roomParams = new Dictionary<string, string>();
         roomParams.Add("gamemode", gameMode.ToString());
-        roomParams.Add("multiplayermode", multiplayerMode.ToString());
-        roomParams.Add("swarmmode", swarmMode.ToString());
+        roomParams.Add("gametype", gameType.ToString());
 
         FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
     }
@@ -211,6 +232,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         Cursor.visible = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(0);
+    }
+
+    //https://answers.unity.com/questions/1262342/how-to-get-scene-name-at-certain-buildindex.html
+    public static string SceneNameFromIndex(int BuildIndex)
+    {
+        string path = SceneUtility.GetScenePathByBuildIndex(BuildIndex);
+        int slash = path.LastIndexOf('/');
+        string name = path.Substring(slash + 1);
+        int dot = name.LastIndexOf('.');
+        return name.Substring(0, dot);
+    }
+
+    // https://answers.unity.com/questions/1135506/how-do-i-get-the-name-of-the-active-scene.html
+    public static string GetActiveSceneName()
+    {
+        return SceneManager.GetActiveScene().name;
     }
 
     // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/indexers/

@@ -87,16 +87,12 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         {
             _weaponsInRange = value;
 
-            Debug.Log($"esrse123424");
-            Debug.Log(_weaponsInRange.Count);
             if (_weaponsInRange.Count == 0) { closestLootableWeapon = null; return; }
 
-            Debug.Log($"esrse");
             float smallestDistance = 100;
             for (int i = 0; i < weaponsInRange.Count; i++)
                 if (Vector3.Distance(weaponsInRange[i].transform.position, transform.position) < smallestDistance)
                 {
-                    Debug.Log($"esasdasqwerse");
                     smallestDistance = Vector3.Distance(weaponsInRange[i].transform.position, transform.position);
                     closestLootableWeapon = weaponsInRange[i];
                 }

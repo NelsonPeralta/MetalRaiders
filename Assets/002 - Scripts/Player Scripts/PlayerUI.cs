@@ -24,6 +24,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject stickyGrenadeIcon;
     public GameObject swarmLivesHolder;
     public Text swarmLivesText;
+    public Text mapNameText;
 
     [Header("Top Center", order = 2)]
     public Transform topMiddle;
@@ -51,6 +52,7 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Bottom Right", order = 6)]
     public Text Timer;
+    public Text gameType;
     public Transform bottomRight;
     public GameObject multiplayerPointsHolder;
     public Text multiplayerPointsGrey;
@@ -115,6 +117,11 @@ public class PlayerUI : MonoBehaviour
     private void Start()
     {
         Debug.Log("PlayerUI Start");
+        try { gameType.text = PhotonNetwork.CurrentRoom.CustomProperties["gametype"].ToString(); }
+        catch (System.Exception e) { Debug.LogWarning($"{e}"); }
+
+        try { mapNameText.text = GameManager.GetActiveSceneName().Replace("PVP - ", ""); }
+        catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
         try
         {
@@ -245,7 +252,7 @@ public class PlayerUI : MonoBehaviour
     {
         shieldBar.SetActive(true);
         healthBar.SetActive(false);
-        if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer))
+        if ((GameManager.instance.gameType == GameManager.GameType.Slayer))
             motionTracker.SetActive(true);
         else
             motionTracker.SetActive(false);

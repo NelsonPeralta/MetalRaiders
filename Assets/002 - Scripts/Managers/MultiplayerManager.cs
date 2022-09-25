@@ -101,7 +101,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         string winningEntity = "";
         foreach (Player pp in FindObjectsOfType<Player>())
         {
-            if (pp.GetComponent<PlayerMultiplayerMatchStats>().kills >= scoreToWin && GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer)
+            if (pp.GetComponent<PlayerMultiplayerMatchStats>().kills >= scoreToWin && GameManager.instance.gameType == GameManager.GameType.Slayer)
                 winningEntity = pp.PV.Owner.NickName;
 
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.

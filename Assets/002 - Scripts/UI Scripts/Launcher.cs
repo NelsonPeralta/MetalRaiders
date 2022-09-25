@@ -25,7 +25,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     #region
     public int levelToLoadIndex;
     [SerializeField] int testingRoomLevelIndex;
-    [SerializeField] int waitingRoomLevelIndex;
+    public int waitingRoomLevelIndex;
     #endregion
 
     // SerializeField makes private variables visible in the inspector
@@ -165,14 +165,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void QuickMatch()
     {
-        string randomRoomName = quickMatchRoomName;
+        string roomName = quickMatchRoomName;
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxRandomRoomPlayers;
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
-        roomOptions.CustomRoomProperties.Add("mode", "multiplayer");
-        roomOptions.CustomRoomProperties.Add("gamemode", GameManager.GameMode.Multiplayer);
-        roomOptions.CustomRoomProperties.Add("multiplayermode", GameManager.MultiplayerMode.Fiesta);
-        PhotonNetwork.JoinOrCreateRoom(randomRoomName, roomOptions, typedLobby);
+        roomOptions.CustomRoomProperties.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
+        roomOptions.CustomRoomProperties.Add("gametype", GameManager.GameType.Fiesta.ToString()); 
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, typedLobby);
         //PhotonNetwork.JoinRandomRoom();
     }
 
@@ -238,13 +237,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Joined room");
-        Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString());
+        Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString());
         Debug.Log(PhotonNetwork.CurrentRoom.Name);
 
         if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
         { // Room is Random
             GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
-            GameManager.instance.multiplayerMode = GameManager.MultiplayerMode.Fiesta;
+            GameManager.instance.gameType = GameManager.GameType.Fiesta;
             PhotonNetwork.LoadLevel(waitingRoomLevelIndex);
         }
         else
@@ -252,8 +251,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
-            string roomType = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString() + "_room";
-            string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+            string roomType = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower() + "_room";
+            string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower();
 
             commonRoomTexts.SetActive(true);
             MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
@@ -396,8 +395,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             Dictionary<string, string> roomParams = new Dictionary<string, string>();
             roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
-            roomParams["multiplayermode"] = GameManager.instance.multiplayerMode.ToString();
-            roomParams["swarmmode"] = GameManager.instance.swarmMode.ToString();
+            roomParams["gametype"] = GameManager.instance.gameType.ToString();
 
             FindObjectOfType<MainMenuCaller>().UpdateRoomSettings(roomParams);
         }
