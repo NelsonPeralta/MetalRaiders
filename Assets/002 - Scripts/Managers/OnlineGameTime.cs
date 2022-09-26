@@ -43,14 +43,15 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
 
     private void OnEnable()
     {
-        Debug.Log("OnEnable Awake");
-
+        base.OnEnable();// need this for OnRoomPropertiesUpdate to work if MonoBehaviourPunCallbacks
     }
     private void Start()
     {
 
     }
 
+    bool waitingTimedOut;
+    int minPlayers = 1;
     private void Update()
     {
         if (GameManager.sceneIndex <= 0)
@@ -66,7 +67,7 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
 
             // Waiting room Timeout
             #region
-            if (totalTime >= 4 && GameManager.sceneIndex == Launcher.instance.waitingRoomLevelIndex /*&& PhotonNetwork.CurrentRoom.PlayerCount > 1*/)
+            if (totalTime % 5 == 0 && GameManager.sceneIndex == Launcher.instance.waitingRoomLevelIndex && PhotonNetwork.CurrentRoom.PlayerCount >= minPlayers)
             {
                 // Choosing random GameType
                 #region
@@ -74,23 +75,34 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
                 System.Random random = new System.Random();
                 GameManager.ArenaGameType arenaGameType = (GameManager.ArenaGameType)values.GetValue(random.Next(values.Length));
 
-                for (int i = 0; i < 1; i++)
+                for (int i = 0; i < 3; i++)
                     if (arenaGameType != GameManager.ArenaGameType.Slayer)
                         arenaGameType = (GameManager.ArenaGameType)values.GetValue(random.Next(values.Length));
 
-                PhotonNetwork.CurrentRoom.CustomProperties["gametype"] = arenaGameType.ToString();
+                ExitGames.Client.Photon.Hashtable ht = new ExitGames.Client.Photon.Hashtable();
+                ht.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
+                ht.Add("gametype", arenaGameType.ToString());
+
+                PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
                 #endregion
 
-                // Choosing random Level
-                #region
-                int index = random.Next(GameManager.instance.arenaLevelIndexes.Count);
-                index = GameManager.instance.arenaLevelIndexes[index];
-                #endregion
-
-                Debug.Log($"Waiting room timeout.\nNew Scene: {GameManager.SceneNameFromIndex(index)} ({index}). New GameType: {arenaGameType}");
-                PhotonNetwork.LoadLevel(index);
+                waitingTimedOut = true;
             }
             #endregion
+        }
+    }
+
+    public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+        if (waitingTimedOut)
+        {
+            waitingTimedOut = false;
+            Debug.Log("OnRoomPropertiesUpdate");
+
+            System.Random random = new System.Random();
+            int index = random.Next(GameManager.instance.arenaLevelIndexes.Count);
+            index = GameManager.instance.arenaLevelIndexes[index];
+            PhotonNetwork.LoadLevel(index);
         }
     }
 

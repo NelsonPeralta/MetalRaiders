@@ -68,9 +68,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         instance = this;
     }
 
+    
+
     // called first
     void OnEnable()
     {
+        base.OnEnable(); // need this for OnRoomPropertiesUpdate to work
         Debug.Log("GameManager OnEnable called");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -187,6 +190,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
 
+    }
+
+    public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+        //Debug.Log("OnRoomPropertiesUpdate");
+        //Debug.Log(propertiesThatChanged["gametype"]);
+        //Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["gametype"]);
     }
 
     void UpdateRoomSettings()

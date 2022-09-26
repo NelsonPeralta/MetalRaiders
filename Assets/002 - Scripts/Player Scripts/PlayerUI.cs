@@ -252,7 +252,7 @@ public class PlayerUI : MonoBehaviour
     {
         shieldBar.SetActive(true);
         healthBar.SetActive(false);
-        if ((GameManager.instance.gameType == GameManager.GameType.Slayer))
+        if ((GameManager.instance.gameType == GameManager.GameType.Slayer) || GameManager.instance.gameType == GameManager.GameType.Fiesta)
             motionTracker.SetActive(true);
         else
             motionTracker.SetActive(false);
