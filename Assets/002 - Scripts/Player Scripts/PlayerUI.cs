@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -35,6 +36,8 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Top Right", order = 3)]
     public Transform topRight;
+    public TMP_Text activeWeaponIconText;
+    public TMP_Text holsteredWeaponIconText;
 
     [Header("Center", order = 4)]
     public Transform center;

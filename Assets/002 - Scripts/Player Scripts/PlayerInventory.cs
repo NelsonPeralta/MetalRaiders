@@ -317,6 +317,7 @@ public class PlayerInventory : MonoBehaviourPun
     void OnPlayerWeaponSwapping_Delegate(PlayerWeaponSwapping playerWeaponSwapping)
     {
         //AmmoManager();
+        ChangeActiveAmmoCounter();
         UpdateThirdPersonGunModelsOnCharacter();
     }
 
@@ -567,23 +568,36 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!activeWeapon)
             return;
+
+        player.GetComponent<PlayerUI>().activeWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[activeWeapon.codeName]}>";
+        player.GetComponent<PlayerUI>().holsteredWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[holsteredWeapon.codeName]}>";
+
+        heavyAmmoHudCounter.gameObject.SetActive(false);
+        powerAmmoHudCounter.gameObject.SetActive(false);
+        smallAmmoHudCounter.gameObject.SetActive(false);
+
         if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
         {
+            smallAmmoHudCounter.gameObject.SetActive(true);
             smallAmmoHudCounter.ChangeToDrawn();
-            heavyAmmoHudCounter.ChangeToHolstered();
-            powerAmmoHudCounter.ChangeToHolstered();
+            //heavyAmmoHudCounter.ChangeToHolstered();
+            //powerAmmoHudCounter.ChangeToHolstered();
         }
         else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
         {
-            smallAmmoHudCounter.ChangeToHolstered();
+            heavyAmmoHudCounter.gameObject.SetActive(true);
             heavyAmmoHudCounter.ChangeToDrawn();
-            powerAmmoHudCounter.ChangeToHolstered();
+
+            //smallAmmoHudCounter.ChangeToHolstered();
+            //powerAmmoHudCounter.ChangeToHolstered();
         }
         else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
         {
-            smallAmmoHudCounter.ChangeToHolstered();
-            heavyAmmoHudCounter.ChangeToHolstered();
+            powerAmmoHudCounter.gameObject.SetActive(true);
             powerAmmoHudCounter.ChangeToDrawn();
+
+            //smallAmmoHudCounter.ChangeToHolstered();
+            //heavyAmmoHudCounter.ChangeToHolstered();
         }
     }
 

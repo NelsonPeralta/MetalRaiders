@@ -36,6 +36,7 @@ public class WeaponProperties : MonoBehaviour
     public AmmoProjectileType ammoProjectileType;
     public AmmoReloadType ammoReloadType;
     [SerializeField] int _currentAmmo;
+    [SerializeField] int _spareAmmo;
     public int ammoCapacity;
     public float bulletSpray;
 
