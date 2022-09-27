@@ -26,6 +26,7 @@ public class Movement : MonoBehaviour, IPunObservable
     public float playerSpeedPercent;
     public float jumpForce = 6f;
 
+    public float _defaultGravity = -12f;
     public float defaultGravity = -12f;
     float gravity = -12f; // -9.81f
 
@@ -242,6 +243,7 @@ public class Movement : MonoBehaviour, IPunObservable
             StartCoroutine(CalculatePlayerSpeed());
 
         Jump();
+        CrouchJump();
         CheckMovingForward();
         ControlAnimationSpeed();
 
@@ -261,6 +263,40 @@ public class Movement : MonoBehaviour, IPunObservable
     public void SetPlayerIDInInput()
     {
         player = ReInput.players.GetPlayer(playerRewiredID);
+    }
+
+
+    float _crouchJumpTime = 0.2f;
+    float crouchJumpTime = 0.2f;
+    void CrouchJump()
+    {
+        if (!isGrounded && player.GetButton("Crouch"))
+        {
+            crouchJumpTime -= Time.deltaTime;
+            if(crouchJumpTime > 0)
+            {
+                gravity = 0;
+            }
+        }
+        else
+        {
+            gravity = _defaultGravity;
+        }
+
+        if (player.GetButtonUp("Crouch"))
+        {
+            crouchJumpTime = _crouchJumpTime;
+        }
+
+        //if (!isGrounded && player.GetButtonDown("Crouch"))
+        //{
+        //    Debug.Log("Crouch jumping");
+        //    Debug.Log(velocity.y);
+
+        //    float newForce = Mathf.Ceil(velocity.y + jumpForce;
+        //    velocity.y += jumpForce;
+        //    Debug.Log(velocity.y);
+        //}
     }
 
     void Jump()
@@ -292,6 +328,8 @@ public class Movement : MonoBehaviour, IPunObservable
 
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+
+        
 
         if (roofCheckScript.isGrounded)
             gravity = defaultGravity * 10;
