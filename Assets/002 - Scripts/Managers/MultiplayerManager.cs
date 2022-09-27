@@ -116,12 +116,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {winningEntity} wins.");
                 WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
                 pp.LeaveRoomWithDelay();
-
             }
             else
                 GameManager.instance.LeaveRoom();
-
-
         }
     }
 

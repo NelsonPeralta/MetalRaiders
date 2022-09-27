@@ -138,7 +138,7 @@ public class PlayerShooting : MonoBehaviourPun
                 bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
                 try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
                 bullet.SetActive(true);
-                GetComponent<CommonFiringActions>().SpawnMuzzleflash(absolute: true);
+                GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }
             else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
             {

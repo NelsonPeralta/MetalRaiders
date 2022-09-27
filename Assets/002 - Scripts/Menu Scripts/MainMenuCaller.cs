@@ -41,7 +41,7 @@ public class MainMenuCaller : MonoBehaviour
     public void UpdateSelectedMap(int index)
     {
         Launcher.instance.levelToLoadIndex = index;
-        string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+        string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString();
 
         if (mode == "multiplayer")
             Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(index).Replace("PVP - ", "")}";

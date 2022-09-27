@@ -53,7 +53,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject multiplayerMapSelector;
     [SerializeField] GameObject swarmMapSelector;
 
-    private string quickMatchRoomName = "quick_match_room";
+    public string quickMatchRoomName = "quick_match_room";
 
     public TMP_InputField loginUsernameText
     {
@@ -189,7 +189,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
         RoomOptions options = new RoomOptions();
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
-        options.CustomRoomProperties.Add("mode", "multiplayer");
+        options.CustomRoomProperties.Add("gamemode", "multiplayer");
         if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
         {
             return; // Do nothing
@@ -219,7 +219,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         RoomOptions options = new RoomOptions();
         options.BroadcastPropsChangeToAll = true;
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
-        options.CustomRoomProperties.Add("mode", "swarm");
+        options.CustomRoomProperties.Add("gamemode", "swarm");
         if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
         {
             return; // Do nothing
@@ -419,7 +419,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     //public void UpdateSelectedMap(int index)
     //{
     //    levelToLoadIndex = index;
-    //    string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+    //    string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString();
 
     //    if (mode == "multiplayer")
     //        _mapSelectedText.text = $"Map: {NameFromIndex(index).Replace("PVP - ", "")}";

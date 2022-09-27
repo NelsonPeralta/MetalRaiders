@@ -26,6 +26,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject swarmLivesHolder;
     public Text swarmLivesText;
     public Text mapNameText;
+    public Text roomNameText;
 
     [Header("Top Center", order = 2)]
     public Transform topMiddle;
@@ -124,6 +125,9 @@ public class PlayerUI : MonoBehaviour
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
         try { mapNameText.text = GameManager.GetActiveSceneName().Replace("PVP - ", ""); }
+        catch (System.Exception e) { Debug.LogWarning($"{e}"); }
+
+        try { roomNameText.text = PhotonNetwork.CurrentRoom.Name; }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
         try

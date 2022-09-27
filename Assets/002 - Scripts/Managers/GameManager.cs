@@ -26,9 +26,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Intances
     public static GameManager instance;
 
+
+    [SerializeField] GameMode _gameMode;
+    [SerializeField] GameType _gameType;
     // Public variables
-    public GameMode gameMode;
-    public GameType gameType;
+    public GameMode gameMode
+    {
+        get { return _gameMode; }
+        set { _gameMode = value; Debug.Log($"Game Mode: {gameMode}"); }
+    }
+    public GameType gameType
+    {
+        get { return _gameType; }
+        set { _gameType = value; }
+    }
 
     [Header("Ammo Packs")]
     public Transform grenadeAmmoPack;
@@ -68,7 +79,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         instance = this;
     }
 
-    
+
 
     // called first
     void OnEnable()

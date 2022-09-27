@@ -1031,7 +1031,8 @@ public class PlayerController : MonoBehaviourPun
         {
             //WebManager.webManagerInstance.SaveMultiplayerStats(GetComponent<PlayerMultiplayerMatchStats>());
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                FindObjectOfType<MultiplayerManager>().EndGame();
+                GetComponent<Player>().LeaveRoomWithDelay();
+                //FindObjectOfType<MultiplayerManager>().EndGame();
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 FindObjectOfType<SwarmManager>().EndGame();
         }

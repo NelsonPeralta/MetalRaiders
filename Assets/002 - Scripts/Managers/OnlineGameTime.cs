@@ -51,7 +51,8 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
     }
 
     bool waitingTimedOut;
-    int minPlayers = 1;
+    [SerializeField] int minPlayers = 2;
+    [SerializeField] int timeOutMultiples = 15;
     private void Update()
     {
         if (GameManager.sceneIndex <= 0)
@@ -67,7 +68,7 @@ public class OnlineGameTime : MonoBehaviourPunCallbacks
 
             // Waiting room Timeout
             #region
-            if (totalTime % 5 == 0 && GameManager.sceneIndex == Launcher.instance.waitingRoomLevelIndex && PhotonNetwork.CurrentRoom.PlayerCount >= minPlayers)
+            if (totalTime % timeOutMultiples == 0 && GameManager.sceneIndex == Launcher.instance.waitingRoomLevelIndex && PhotonNetwork.CurrentRoom.PlayerCount >= minPlayers)
             {
                 // Choosing random GameType
                 #region

@@ -116,7 +116,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     public float healthPoints
     {
-        get { return (hitPoints - shieldPoints); }     }
+        get { return (hitPoints - shieldPoints); }
+    }
     public float hitPoints
     {
         get { return _hitPoints; }
@@ -316,7 +317,7 @@ public class Player : MonoBehaviourPunCallbacks
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
         if (hitPoints <= 0 || isDead || isRespawning)
-            return; 
+            return;
 
         try
         { // Hit Marker Handling
@@ -676,10 +677,18 @@ public class Player : MonoBehaviourPunCallbacks
         Debug.Log("LeaveRoomWithDelay_Coroutine");
         yield return new WaitForSeconds(delay);
 
-        Cursor.visible = true;
-        PhotonNetwork.LeaveRoom();
-        //SceneManager.LoadScene("Main Menu");
-        PhotonNetwork.LoadLevel(0);
+
+        int levelToLoad = 0;
+        Debug.Log(PhotonNetwork.CurrentRoom.Name);
+
+        if (PhotonNetwork.CurrentRoom.Name == Launcher.instance.quickMatchRoomName)
+            levelToLoad = Launcher.instance.waitingRoomLevelIndex;
+        else
+        {
+            Cursor.visible = true;
+            PhotonNetwork.LeaveRoom();
+        }
+        PhotonNetwork.LoadLevel(levelToLoad);
     }
 
     void OnPlayerDamaged_Delegate(Player player)
@@ -717,7 +726,7 @@ public class Player : MonoBehaviourPunCallbacks
         StartCoroutine(Respawn_Coroutine());
         StartCoroutine(MidRespawnAction());
         DropWeapon(playerInventory.activeWeapon);
-        DropWeapon(playerInventory.holsteredWeapon, offset : new Vector3(0.5f, 0.5f, 0));
+        DropWeapon(playerInventory.holsteredWeapon, offset: new Vector3(0.5f, 0.5f, 0));
     }
 
     // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter

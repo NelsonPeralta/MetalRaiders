@@ -84,6 +84,9 @@ public class CommonFiringActions : MonoBehaviour
         if (!absolute)
             if (playerController.isAiming && playerController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
                 return;
+        Debug.Log(playerController.isAiming && playerController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope);
+        Debug.Log(playerController.isAiming);
+        Debug.Log(playerController.pInventory.activeWeapon.aimingMechanic);
         StartCoroutine(SpawnMuzzleflash_Coroutine());
     }
 
