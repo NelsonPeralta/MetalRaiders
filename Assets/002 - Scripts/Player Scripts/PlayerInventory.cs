@@ -377,6 +377,8 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 if (weap.GetComponent<WeaponProperties>().codeName == codeName)
                     activeWeapon = weap.GetComponent<WeaponProperties>();
+
+                Debug.Log($"Found weap {activeWeapon.codeName}");
             }
         }
     }
@@ -642,5 +644,6 @@ public class PlayerInventory : MonoBehaviourPun
         PlayDrawSound();
         CheckLowAmmoIndicator();
         UpdateAllExtraAmmoHuds();
+        UpdateThirdPersonGunModelsOnCharacter();
     }
 }
