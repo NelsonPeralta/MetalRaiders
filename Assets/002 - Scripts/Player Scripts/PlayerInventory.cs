@@ -77,7 +77,7 @@ public class PlayerInventory : MonoBehaviourPun
                 else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
                     activeAmmoHUDCounter = powerAmmoHudCounter;
 
-                PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName);
+                PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
             }
 
             try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
@@ -382,7 +382,7 @@ public class PlayerInventory : MonoBehaviourPun
                 if (weap.GetComponent<WeaponProperties>().codeName == codeName)
                 {
                     if (actWeap) // activeWeapon
-                        activeWeapon = weap.GetComponent<WeaponProperties>();
+                        _activeWeapon = weap.GetComponent<WeaponProperties>();
                     else
                         _holsteredWeapon = weap.GetComponent<WeaponProperties>();
 
