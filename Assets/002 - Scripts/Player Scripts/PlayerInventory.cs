@@ -77,7 +77,7 @@ public class PlayerInventory : MonoBehaviourPun
                 else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
                     activeAmmoHUDCounter = powerAmmoHudCounter;
 
-                PV.RPC("EquipActiveWeapon", RpcTarget.Others, activeWeapon.codeName);
+                PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName);
             }
 
             try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
@@ -89,8 +89,12 @@ public class PlayerInventory : MonoBehaviourPun
         get { return _holsteredWeapon; }
         set
         {
-            _holsteredWeapon = value;
-            _holsteredWeapon.gameObject.SetActive(false);
+            if (PV.IsMine)
+            {
+                _holsteredWeapon = value;
+                _holsteredWeapon.gameObject.SetActive(false);
+                PV.RPC("AssignWeapon", RpcTarget.Others, holsteredWeapon.codeName, false);
+            }
         }
     }
     public bool hasSecWeap = false;
@@ -369,16 +373,23 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     [PunRPC]
-    void EquipActiveWeapon(string codeName)
+    void AssignWeapon(string codeName, bool actWeap = true)
     {
         if (!PV.IsMine)
         {
             foreach (GameObject weap in allWeaponsInInventory)
             {
                 if (weap.GetComponent<WeaponProperties>().codeName == codeName)
-                    activeWeapon = weap.GetComponent<WeaponProperties>();
+                {
+                    if (actWeap) // activeWeapon
+                        activeWeapon = weap.GetComponent<WeaponProperties>();
+                    else
+                        _holsteredWeapon = weap.GetComponent<WeaponProperties>();
 
-                Debug.Log($"Found weap {activeWeapon.codeName}");
+                    Debug.Log($"{player.name}");
+                    Debug.Log($"Found weap {activeWeapon.codeName}");
+                }
+
             }
         }
     }
