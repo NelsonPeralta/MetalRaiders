@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1600
     height: 817
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Inspector
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 321}
   m_MaxSize: {x: 10000, y: 10000}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 15063
+  controlID: 148
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -168,12 +168,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 354
     y: 0
-    width: 859
+    width: 790
     height: 767
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 14995
+  controlID: 91
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -191,10 +191,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 859
-    height: 229
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+    width: 790
+    height: 356
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -218,11 +218,11 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 229
-    width: 859
-    height: 538
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+    y: 356
+    width: 790
+    height: 411
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 12}
@@ -247,12 +247,12 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1213
+    x: 1144
     y: 0
-    width: 152
+    width: 221
     height: 767
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 22}
   m_Panes:
   - {fileID: 22}
@@ -277,8 +277,8 @@ MonoBehaviour:
     y: 0
     width: 235
     height: 767
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 23}
   m_Panes:
   - {fileID: 23}
@@ -308,9 +308,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 354
-    y: 302
-    width: 857
-    height: 517
+    y: 429
+    width: 788
+    height: 390
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
@@ -362,23 +362,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 857
-      height: 496
-    m_Scale: {x: 0.44635415, y: 0.44635415}
-    m_Translation: {x: 428.5, y: 248}
+      width: 788
+      height: 369
+    m_Scale: {x: 0.34166664, y: 0.34166667}
+    m_Translation: {x: 393.99997, y: 184.5}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -960.00006
-      y: -555.6126
-      width: 1920.0001
-      height: 1111.2252
+      x: -1153.1708
+      y: -540
+      width: 2306.3416
+      height: 1080
     m_MinimalGUI: 1
-  m_defaultScale: 0.44635418
-  m_LastWindowPixelSize: {x: 857, y: 517}
+  m_defaultScale: 0.34166667
+  m_LastWindowPixelSize: {x: 788, y: 390}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -428,22 +428,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/001 - Prefabs/Weapons/02 - Heavy Weapons
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets
+  - Assets/001 - Prefabs/Weapons/02 - Heavy Weapons
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Repos\MetalRaiders\MetalRaiders
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 962a0100
-    m_LastClickedID: 76438
-    m_ExpandedIDs: 00000000962a0100be2a0100c22a0100062b0100242b0100402b0100482b0100602b0100b6fa0100c8fa0100e8fa01007e421100be541100c0541100c25411002ef5110030f5110032f5110000ca9a3bffffff7f
+    m_SelectedIDs: ccea0100
+    m_LastClickedID: 125644
+    m_ExpandedIDs: 00000000b42a0100dc2a0100e02a01005e2b01001eea0100acea010000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -471,7 +471,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000962a010000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000b42a0100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -579,8 +579,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 354
     y: 73
-    width: 857
-    height: 208
+    width: 788
+    height: 335
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
@@ -815,9 +815,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 3.6985736, y: 0.38908005, z: 3.9913359}
+    m_Target: {x: 36.06681, y: 1.6025643, z: -5.589761}
     speed: 2
-    m_Value: {x: 3.6985736, y: 0.38908005, z: 3.9913359}
+    m_Value: {x: 36.06681, y: 1.6025643, z: -5.589761}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -863,13 +863,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.04121204, y: 0.27977645, z: -0.02547587, w: 0.95685875}
+    m_Target: {x: 0.2690941, y: -0.09107066, z: 0.015645517, w: 0.95661753}
     speed: 2
-    m_Value: {x: 0.041290548, y: 0.2803094, z: -0.0255244, w: 0.9586815}
+    m_Value: {x: 0.26960096, y: -0.09268791, z: 0.016080791, w: 0.9583661}
   m_Size:
-    m_Target: 3.4961708
+    m_Target: 1.0876647
     speed: 2
-    m_Value: 3.4961708
+    m_Value: 1.0876647
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1389,9 +1389,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1213
+    x: 1144
     y: 73
-    width: 150
+    width: 219
     height: 746
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -1400,9 +1400,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 942b0100
-      m_LastClickedID: 0
-      m_ExpandedIDs: 28efdbff90f3dbffdcf3dbff9ef4dbff94a2dfffc2a5dfff4a1fe0ffd69eeafffa9eeaff009feaff0e9feafffa9feaff2ea6eaff2c6bf5ffd6d2fbffc6ebfbffb0ecfbff9cedfbffe403fcff5efafffff4ffffff646300002e6e0000b0770000d2f91100daf91100b09c1200569d1200ac63130052641300f4661300fc66130020121400061314000e131400
+      m_SelectedIDs: 82710000
+      m_LastClickedID: 29058
+      m_ExpandedIDs: 9e02fcff2e2efcffa05bffff3869ffff226affff0e6bffff3671ffff0cfbffff14fbffff446e0000387100006c710000a2770000a2e701008cf40100c0150200
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

@@ -7,7 +7,7 @@ using System;
 public class PlayerInventory : MonoBehaviourPun
 {
     public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
-    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged, OnAmmoChanged;
+    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged, OnActiveWeaponChangedLate, OnAmmoChanged;
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
@@ -49,37 +49,39 @@ public class PlayerInventory : MonoBehaviourPun
         get { return _activeWeapon; }
         set
         {
-            _activeWeapon = value;
-            try
+            if (PV.IsMine)
             {
-                OnActiveWeaponChanged.Invoke(this);
+
+                _activeWeapon = value;
+                try
+                {
+                    OnActiveWeaponChanged.Invoke(this);
+                }
+                catch { }
+                _activeWeapon.gameObject.SetActive(true);
+                pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
+
+                activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
+                activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
+                if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
+                    currentExtraAmmo = smallAmmo;
+                else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
+                    currentExtraAmmo = heavyAmmo;
+                else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
+                    currentExtraAmmo = powerAmmo;
+
+                if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
+                    activeAmmoHUDCounter = smallAmmoHudCounter;
+                else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
+                    activeAmmoHUDCounter = heavyAmmoHudCounter;
+                else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
+                    activeAmmoHUDCounter = powerAmmoHudCounter;
+
+                PV.RPC("EquipActiveWeapon", RpcTarget.Others, activeWeapon.codeName);
             }
-            catch { }
-            _activeWeapon.gameObject.SetActive(true);
-            pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
 
-            activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
-            activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
+            try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
 
-
-
-            if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
-                currentExtraAmmo = smallAmmo;
-            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
-                currentExtraAmmo = heavyAmmo;
-            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
-                currentExtraAmmo = powerAmmo;
-
-            if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
-                activeAmmoHUDCounter = smallAmmoHudCounter;
-            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
-                activeAmmoHUDCounter = heavyAmmoHudCounter;
-            else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
-                activeAmmoHUDCounter = powerAmmoHudCounter;
-
-            PlayDrawSound();
-            CheckLowAmmoIndicator();
-            UpdateAllExtraAmmoHuds();
         }
     }
     public WeaponProperties holsteredWeapon
@@ -253,6 +255,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         player.OnPlayerRespawnEarly += OnPlayerRespawnEarly_Delegate;
         OnAmmoChanged += OnAmmoChanged_Delegate;
+        OnActiveWeaponChangedLate += OnActiveWeaponChangedLate_Delegate;
         audioSource = GetComponent<AudioSource>();
 
         StartCoroutine(EquipStartingWeapon());
@@ -363,6 +366,19 @@ public class PlayerInventory : MonoBehaviourPun
         activeWeapon = newActiveWeapon;
         holsteredWeapon = previousActiveWeapon;
         UpdateThirdPersonGunModelsOnCharacter();
+    }
+
+    [PunRPC]
+    void EquipActiveWeapon(string codeName)
+    {
+        if (!PV.IsMine)
+        {
+            foreach (GameObject weap in allWeaponsInInventory)
+            {
+                if (weap.GetComponent<WeaponProperties>().codeName == codeName)
+                    activeWeapon = weap.GetComponent<WeaponProperties>();
+            }
+        }
     }
     public IEnumerator EquipStartingWeapon()
     {
@@ -619,5 +635,12 @@ public class PlayerInventory : MonoBehaviourPun
     void OnPlayerRespawnEarly_Delegate(Player player)
     {
         AssignRandomWeapons();
+    }
+
+    void OnActiveWeaponChangedLate_Delegate(PlayerInventory playerInventory)
+    {
+        PlayDrawSound();
+        CheckLowAmmoIndicator();
+        UpdateAllExtraAmmoHuds();
     }
 }

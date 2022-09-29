@@ -108,6 +108,13 @@ public class FragGrenade : MonoBehaviour
             if (rb != null)
                 rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
 
+            CharacterController cc = hit.GetComponent<CharacterController>();
+            if (cc)
+            {
+                Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, power * 5);
+            }
+
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
             {
                 GameObject playerHit = hit.GetComponent<PlayerHitbox>().player.gameObject;
