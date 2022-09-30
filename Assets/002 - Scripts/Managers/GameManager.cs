@@ -98,7 +98,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         catch (Exception e) { Debug.LogWarning(e.Message); }
 
         Debug.Log("GameManager OnSceneLoaded called");
-        Debug.Log($"Room {PhotonNetwork.CurrentRoom.Name}. Master client: {PhotonNetwork.MasterClient}");
 
         instance = this;
         sceneIndex = scene.buildIndex;

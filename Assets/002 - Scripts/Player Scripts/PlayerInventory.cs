@@ -78,9 +78,9 @@ public class PlayerInventory : MonoBehaviourPun
                     activeAmmoHUDCounter = powerAmmoHudCounter;
 
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
+                try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
 
-            try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
 
         }
     }
@@ -386,8 +386,7 @@ public class PlayerInventory : MonoBehaviourPun
                     else
                         _holsteredWeapon = weap.GetComponent<WeaponProperties>();
 
-                    Debug.Log($"{player.name}");
-                    Debug.Log($"Found weap {activeWeapon.codeName}");
+                    try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
                 }
 
             }
@@ -606,9 +605,13 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnActiveWeaponChangedLate_Delegate(PlayerInventory playerInventory)
     {
-        PlayDrawSound();
-        CheckLowAmmoIndicator();
-        UpdateAllExtraAmmoHuds();
-        UpdateThirdPersonGunModelsOnCharacter();
+        try
+        {
+            PlayDrawSound();
+            CheckLowAmmoIndicator();
+            UpdateAllExtraAmmoHuds();
+            UpdateThirdPersonGunModelsOnCharacter();
+        }
+        catch { }
     }
 }
