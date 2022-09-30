@@ -41,7 +41,8 @@ public partial class WebManager
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id));
 
-                    Launcher.instance.ShowPlayerMessage("Logged in successfully!");
+                    //Launcher.instance.ShowPlayerMessage("Logged in successfully!");
+                    MenuManager.Instance.OpenMenu("online title");
                 }
                 catch (Exception e)
                 {

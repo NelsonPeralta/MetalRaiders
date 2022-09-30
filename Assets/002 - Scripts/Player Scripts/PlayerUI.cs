@@ -121,7 +121,7 @@ public class PlayerUI : MonoBehaviour
     private void Start()
     {
         Debug.Log("PlayerUI Start");
-        try { gameType.text = PhotonNetwork.CurrentRoom.CustomProperties["gametype"].ToString(); }
+        try { gameType.text = GameManager.instance.gameType.ToString(); }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
         try { mapNameText.text = GameManager.GetActiveSceneName().Replace("PVP - ", ""); }
