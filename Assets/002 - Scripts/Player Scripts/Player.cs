@@ -596,7 +596,7 @@ public class Player : MonoBehaviourPunCallbacks
         playerInventory.powerAmmo = 4;
         playerInventory.grenades = 2;
 
-        StartCoroutine(playerInventory.EquipStartingWeapon());
+        //StartCoroutine(playerInventory.EquipStartingWeapon());
         playerInventory.weaponsEquiped[1] = null;
 
         hitboxesEnabled = true;

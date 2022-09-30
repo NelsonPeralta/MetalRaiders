@@ -396,6 +396,11 @@ public class PlayerInventory : MonoBehaviourPun
     {
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
 
+        if (GameManager.instance.gameType == GameManager.GameType.Slayer)
+        {
+            StartingWeapon = "m4";
+            StartingWeapon2 = "m1911";
+        }
         if (GameManager.instance.gameType == GameManager.GameType.Pro)
         {
             StartingWeapon = "m16";
@@ -600,7 +605,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPlayerRespawnEarly_Delegate(Player player)
     {
-        AssignRandomWeapons();
+        StartCoroutine(EquipStartingWeapon());
     }
 
     void OnActiveWeaponChangedLate_Delegate(PlayerInventory playerInventory)

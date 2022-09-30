@@ -90,6 +90,10 @@ public class PlayerShooting : MonoBehaviourPun
 
     void Shoot_Caller()
     {
+        WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        if (playerController.GetComponent<PhotonView>().IsMine)
+            if (activeWeapon.currentAmmo <= 0)
+                return;
         PV.RPC("Shoot_RPC", RpcTarget.All);
     }
 
@@ -98,8 +102,6 @@ public class PlayerShooting : MonoBehaviourPun
     {
         int counter = 1;
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-        if (activeWeapon.currentAmmo <= 0)
-            return;
 
         if (activeWeapon.isShotgun)
             counter = activeWeapon.numberOfPellets;
