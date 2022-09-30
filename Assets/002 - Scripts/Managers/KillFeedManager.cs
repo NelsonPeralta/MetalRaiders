@@ -57,14 +57,14 @@ public class KillFeedManager : MonoBehaviour
 
     public void EnterNewFeed(string feed)
     {
-        StartCoroutine(SpawnNewFeed_Coroutine(feed));
+        try { StartCoroutine(SpawnNewFeed_Coroutine(feed)); } catch { }
     }
 
     IEnumerator SpawnNewFeed_Coroutine(string playerWhoGotKillName, string playerWhoWasKilledName, bool wasHeadshot)
     {
         var nkf = Instantiate(killFeedItemPrefab);
         var headshotFeed = $"";
-        if(wasHeadshot)
+        if (wasHeadshot)
             headshotFeed = $"with a headshot!";
         nkf.GetComponent<TMP_Text>().text = $"{playerWhoGotKillName} Killed {playerWhoWasKilledName} {headshotFeed}";
         nkf.transform.SetParent(gridLayout.transform);

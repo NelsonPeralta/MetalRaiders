@@ -14,6 +14,12 @@ public class SpawnPoint : MonoBehaviour
         {
             if (!players.Contains(other.GetComponent<Player>()))
             {
+                if (GameManager.instance.isDev)
+                {
+                    GameObject wit = gameObject.transform.Find("Witness").gameObject;
+                    wit.SetActive(true);
+                }
+
                 other.GetComponent<Player>().OnPlayerDeath += OnPLayerDeath;
                 players.Add(other.GetComponent<Player>());
             }
@@ -26,6 +32,12 @@ public class SpawnPoint : MonoBehaviour
         {
             other.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
             players.Remove(other.GetComponent<Player>());
+
+            if (players.Count == 0 && GameManager.instance.isDev)
+            {
+                GameObject wit = gameObject.transform.Find("Witness").gameObject;
+                wit.SetActive(false);
+            }
         }
     }
 
@@ -33,5 +45,11 @@ public class SpawnPoint : MonoBehaviour
     {
         p.OnPlayerDeath -= OnPLayerDeath;
         players.Remove(p);
+
+        if (players.Count == 0)
+        {
+            GameObject wit = gameObject.transform.Find("Witness").gameObject;
+            wit.SetActive(false);
+        }
     }
 }

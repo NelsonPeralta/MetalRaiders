@@ -8,16 +8,22 @@ public class SpawnManager : MonoBehaviour
     public List<SpawnPoint> genericSpawnPoints;
     void Awake()
     {
+        int c = 0;
         if (genericSpawnPoints.Count == 0)
-
             foreach (SpawnPoint sp in GetComponentsInChildren<SpawnPoint>())
+            {
+                sp.name = $"Spawn point {c}";
+                c++;
+
                 genericSpawnPoints.Add(sp);
+            }
 
         spawnManagerInstance = this;
     }
 
     Transform GetRandomSpawnpoint()
     {
+        try { GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Spwaning randomly"); } catch { }
         return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
     }
 
@@ -39,7 +45,8 @@ public class SpawnManager : MonoBehaviour
                 if (GameManager.instance.gameType == GameManager.GameType.Slayer)
                     if (availableSpawnPoints[ran].players.Count == 0)
                     {
-                        Debug.Log($"Returning Safe Spawn Point: {availableSpawnPoints[ran].transform}");
+                        try { GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform.position})"); } catch { }
+                        Debug.Log($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform})");
                         return availableSpawnPoints[ran].transform;
                     }
         }

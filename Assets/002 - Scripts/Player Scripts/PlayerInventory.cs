@@ -471,56 +471,10 @@ public class PlayerInventory : MonoBehaviourPun
         foreach (GameObject awgo in allWeaponsInInventory)
         {
             WeaponProperties wp = awgo.GetComponent<WeaponProperties>();
-            try
-            {
-                wp.equippedModelA.SetActive(false);
-
-            }
-            catch (Exception e)
-            {
-                //Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
-            }
-
-            try
-            {
-                wp.unequippedModelA.SetActive(false);
-
-            }
-            catch (Exception e)
-            {
-                //Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
-            }
-        }
-
-        foreach (GameObject wego in weaponsEquiped)
-        {
-            WeaponProperties wp = wego.GetComponent<WeaponProperties>();
+            try { wp.equippedModelB.SetActive(false); } catch (Exception e) { Debug.LogWarning($"{e}"); }
 
             if (wp == activeWeapon)
-            {
-                try
-                {
-                    wp.equippedModelA.SetActive(true);
-
-                }
-                catch (Exception e)
-                {
-                    //Debug.LogWarning($"{wp.name} does not have an Equipped model assigned");
-
-                }
-            }
-            else
-            {
-                try
-                {
-                    wp.unequippedModelA.SetActive(true);
-                }
-                catch (Exception e)
-                {
-                    //Debug.LogWarning($"{wp.name} does not have an Unequipped model assigned");
-
-                }
-            }
+                try { wp.equippedModelB.SetActive(true); } catch (Exception e) { Debug.LogWarning($"{e}"); }
         }
     }
 

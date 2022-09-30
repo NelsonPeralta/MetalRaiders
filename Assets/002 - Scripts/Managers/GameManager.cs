@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     int _camSens = 100;
 
+    public bool isDev;
     public static int sceneIndex = 0;
     public int camSens
     {
