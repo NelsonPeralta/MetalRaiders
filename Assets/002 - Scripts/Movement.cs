@@ -124,9 +124,20 @@ public class Movement : MonoBehaviour, IPunObservable
         //StartCoroutine(CalcVelocity());
     }
 
+    // IMPORTANT
+    // Update() check for input
+    // FixedUpdate() move gameObjects that have riggidbody/apply forces
+    // LateUpdate() move Camera
+
     // Update is called once per frame
     void Update()
     {
+        {
+            var rotationVector = transform.rotation.eulerAngles;
+            rotationVector.z = 0;
+            rotationVector.x = 0;
+            gameObject.transform.rotation = Quaternion.Euler(rotationVector);
+        }
         CalculateVelocity();
         if (!pController.PV.IsMine || pController.pauseMenuOpen)
             return;
@@ -273,7 +284,7 @@ public class Movement : MonoBehaviour, IPunObservable
         if (!isGrounded && player.GetButton("Crouch"))
         {
             crouchJumpTime -= Time.deltaTime;
-            if(crouchJumpTime > 0)
+            if (crouchJumpTime > 0)
             {
                 gravity = 0;
             }
@@ -329,7 +340,7 @@ public class Movement : MonoBehaviour, IPunObservable
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
-        
+
 
         if (roofCheckScript.isGrounded)
             gravity = defaultGravity * 10;

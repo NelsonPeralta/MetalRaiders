@@ -101,6 +101,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        //if (Application.platform == RuntimePlatform.WindowsPlayer)
+            Debug.Log($"You are playing on a {Application.platform}");
+
         if (levelToLoadIndex == 0)
             levelToLoadIndex = 1;
 

@@ -173,6 +173,13 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
+            try
+            {
+                Debug.Log("Bullet IDamageable");
+                finalHitObject.GetComponent<IDamageable>().Damage(damage);
+            }
+            catch { }
+
             //Debug.Log($"Bullet final hit: {finalHitObject.name}");
             if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead)
             {
