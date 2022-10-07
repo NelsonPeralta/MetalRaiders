@@ -477,9 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d4e2e1f1b6ce144eb2de2831e73cd38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: Colt
+  codeName: colt
   weaponPlaceHolder: {fileID: 1116597069340160887}
   weaponSpawned: {fileID: 0}
   timeToSpawn: 60
-  weaponPool: {fileID: 0}
-  onlineGameTime: {fileID: 0}

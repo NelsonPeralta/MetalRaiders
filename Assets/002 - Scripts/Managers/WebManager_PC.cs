@@ -41,7 +41,8 @@ public partial class WebManager
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id));
 
-                    Launcher.instance.ShowPlayerMessage("Logged in successfully!");
+                    //Launcher.instance.ShowPlayerMessage("Logged in successfully!");
+                    MenuManager.Instance.OpenMenu("online title");
                 }
                 catch (Exception e)
                 {
@@ -109,7 +110,12 @@ public partial class WebManager
     IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null)
     {
         //int xpAndCreditGain = Random.Range(160, 240) + (SwarmManager.instance.currentWave * Random.Range(8, 12));
-        int xpAndCreditGain = Random.Range(160, 240);
+        int xpAndCreditGain = 0;
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            xpAndCreditGain = Random.Range(160, 240);
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            xpAndCreditGain = Random.Range(80, 120);
 
         Debug.Log("SaveBasicOnlineStats_Coroutine");
         Debug.Log(pda.playerBasicOnlineStats.xp);
@@ -152,10 +158,10 @@ public partial class WebManager
                 Debug.Log(www.downloadHandler.text);
 
                 if (www.result.ToString().Contains("Success"))
-                    GameManager.instance.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Credits");
+                    GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Credits");
                 if (dbXpToLevel < newXp)
                 {
-                    GameManager.instance.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
+                    GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
                 }
 
 

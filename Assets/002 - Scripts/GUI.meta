@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/002 - Scripts/GUI.meta
 guid: 4677d314286ac4f409cc10f40e48294c
+========
+guid: 015005e2d51697c4b97630553db0c6cc
+>>>>>>>> main:Assets/002 - Scripts/Abstract Classes.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

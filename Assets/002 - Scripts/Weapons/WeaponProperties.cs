@@ -36,10 +36,12 @@ public class WeaponProperties : MonoBehaviour
     public AmmoProjectileType ammoProjectileType;
     public AmmoReloadType ammoReloadType;
     [SerializeField] int _currentAmmo;
+    [SerializeField] int _spareAmmo;
     public int ammoCapacity;
     public float bulletSpray;
 
     [Header("Range")]
+    public bool fakeRRR;
     public float defaultRedReticuleRange;
     public float currentRedReticuleRange;
 
@@ -177,6 +179,13 @@ public class WeaponProperties : MonoBehaviour
 
         }
     }
+
+    public static Dictionary<string, int> spriteIdDic = new Dictionary<string, int>()
+    {
+        {"scar", 0 }, {"ak47", 3 }, {"m4", 4 }, {"rpg", 5 }, {"m1100", 6 },
+        {"m1911", 8 }, {"mp5", 13 }, {"m249c", 15 }, {"r700", 17 }, {"barrett50cal", 18 },
+        {"patriot", 19 }, {"colt", 20 }, {"m16", 21 }
+    };
 }
 
 #if UNITY_EDITOR // Reference: https://answers.unity.com/questions/1169764/type-or-namespace-unityeditor-could-not-be-found-w.html
@@ -229,6 +238,7 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Aiming", EditorStyles.boldLabel);
+        wp.fakeRRR = GUILayout.Toggle(wp.fakeRRR, "Fake RRR");
         wp.defaultRedReticuleRange = EditorGUILayout.FloatField("Default RRR:", wp.defaultRedReticuleRange);
         wp.aimingMechanic = (WeaponProperties.AimingMechanic)EditorGUILayout.EnumPopup("Aiming mechanic", wp.aimingMechanic);
 

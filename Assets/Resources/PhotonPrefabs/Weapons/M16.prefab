@@ -697,6 +697,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: M16
   codeName: m16
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 36
   extraAmmo: 36

@@ -1304,6 +1304,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
@@ -1741,6 +1746,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -2956,6 +2966,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_RootOrder
@@ -3527,6 +3542,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -6975,6 +6995,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
@@ -7317,6 +7342,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -9313,6 +9343,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
       propertyPath: m_RootOrder
@@ -9936,6 +9971,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -10645,6 +10685,83 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4049832906754302, guid: 54e8cd42ff115b14a90340ee66d64fa1,
     type: 3}
   m_PrefabInstance: {fileID: 947940295}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &951415938
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 2
+    m_TransformParent: {fileID: 1425649224}
+    m_Modifications:
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 37.192
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.7092459
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.1830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.1830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.6830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462500, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_Name
+      value: Online M4 Spawn Point (4)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_AddedGameObjects: []
+  m_SourcePrefab: {fileID: 100100000, guid: eb8fff03831ad4549827cd2323e19486, type: 3}
+--- !u!4 &951415939 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+    type: 3}
+  m_PrefabInstance: {fileID: 951415938}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &954561812
 PrefabInstance:
@@ -11614,6 +11731,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_RootOrder
@@ -12133,6 +12255,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -14071,6 +14198,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_RootOrder
@@ -14223,7 +14355,7 @@ PrefabInstance:
     - target: {fileID: 8010828169617120701, guid: abb160fb77d42b6458fe47524d6b2ac0,
         type: 3}
       propertyPath: sceneViewId
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8388261715954714168, guid: abb160fb77d42b6458fe47524d6b2ac0,
         type: 3}
@@ -14773,6 +14905,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -15349,17 +15486,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1907166985}
-  - {fileID: 907259879}
-  - {fileID: 2078082912}
-  - {fileID: 92834156}
-  - {fileID: 109087492}
-  - {fileID: 2108562767}
-  - {fileID: 635745706}
-  - {fileID: 858539747}
-  - {fileID: 1083560239}
-  - {fileID: 1601807445}
-  - {fileID: 1383421958}
+  - {fileID: 1494555261}
+  - {fileID: 951415939}
   - {fileID: 444878419}
   - {fileID: 342296528}
   - {fileID: 568743654}
@@ -15367,19 +15495,10 @@ Transform:
   - {fileID: 730385031}
   - {fileID: 810455272}
   - {fileID: 406835281}
-  - {fileID: 1896630826}
-  - {fileID: 264066782}
-  - {fileID: 675681753}
-  - {fileID: 326453313}
-  - {fileID: 1309544627}
+  - {fileID: 1907166985}
   - {fileID: 302086906}
-  - {fileID: 1496715066}
-  - {fileID: 1839588216}
   - {fileID: 625071647}
-  - {fileID: 1919492772}
-  - {fileID: 2068367298}
   - {fileID: 1963785027}
-  - {fileID: 1052257190}
   - {fileID: 553076707}
   - {fileID: 190422320}
   - {fileID: 1250164441}
@@ -15391,7 +15510,6 @@ Transform:
   - {fileID: 1496327133}
   - {fileID: 1631186438}
   - {fileID: 6068270}
-  - {fileID: 1913485493}
   - {fileID: 1917236727}
   - {fileID: 15800059}
   - {fileID: 1411805924}
@@ -15400,6 +15518,27 @@ Transform:
   - {fileID: 2080548693}
   - {fileID: 796693148}
   - {fileID: 751150232}
+  - {fileID: 907259879}
+  - {fileID: 2078082912}
+  - {fileID: 92834156}
+  - {fileID: 109087492}
+  - {fileID: 2108562767}
+  - {fileID: 635745706}
+  - {fileID: 858539747}
+  - {fileID: 1083560239}
+  - {fileID: 1601807445}
+  - {fileID: 1383421958}
+  - {fileID: 1896630826}
+  - {fileID: 264066782}
+  - {fileID: 675681753}
+  - {fileID: 326453313}
+  - {fileID: 1309544627}
+  - {fileID: 1496715066}
+  - {fileID: 1839588216}
+  - {fileID: 1919492772}
+  - {fileID: 2068367298}
+  - {fileID: 1052257190}
+  - {fileID: 1913485493}
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -15829,6 +15968,83 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1493807350}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1494555260
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 2
+    m_TransformParent: {fileID: 1425649224}
+    m_Modifications:
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -37.296
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.7092459
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.6830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.1830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.1830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171807189926462500, guid: eb8fff03831ad4549827cd2323e19486,
+        type: 3}
+      propertyPath: m_Name
+      value: Online M4 Spawn Point
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_AddedGameObjects: []
+  m_SourcePrefab: {fileID: 100100000, guid: eb8fff03831ad4549827cd2323e19486, type: 3}
+--- !u!4 &1494555261 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5171807189926462496, guid: eb8fff03831ad4549827cd2323e19486,
+    type: 3}
+  m_PrefabInstance: {fileID: 1494555260}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1496148326
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15995,6 +16211,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 586051174853796425, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -17228,6 +17449,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}
@@ -19002,6 +19228,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 586051174853796425, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -19097,7 +19328,7 @@ PrefabInstance:
     - target: {fileID: 8010828169617120701, guid: abb160fb77d42b6458fe47524d6b2ac0,
         type: 3}
       propertyPath: sceneViewId
-      value: 16
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8388261715954714168, guid: abb160fb77d42b6458fe47524d6b2ac0,
         type: 3}
@@ -19761,6 +19992,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_RootOrder
@@ -19980,6 +20216,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Power Ammo Pack Spawn Point
       objectReference: {fileID: 0}
+    - target: {fileID: 2085441575112892435, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2142202020611282282, guid: 8a913a9e4941eef4f9ebf5fe4b0987f7,
         type: 3}
       propertyPath: m_RootOrder
@@ -20148,6 +20389,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -21283,6 +21529,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
       propertyPath: m_RootOrder
@@ -21436,6 +21687,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Heavy Ammo Pack Spawn Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 58920547160362329, guid: 605e39760eff31e49958c43c651c2a74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8848803701783850272, guid: 605e39760eff31e49958c43c651c2a74,
         type: 3}
@@ -21790,6 +22046,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Online Small Ammo Pack Spawn Point (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566207872658531460, guid: 1f0e765935520a34eb8840b0eb61447b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1566207872658531471, guid: 1f0e765935520a34eb8840b0eb61447b,
         type: 3}

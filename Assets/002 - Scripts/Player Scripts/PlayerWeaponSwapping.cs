@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using System.Collections.ObjectModel;
+using TMPro;
 
 public class PlayerWeaponSwapping : MonoBehaviourPun
 {
@@ -20,7 +21,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     public DualWielding dWielding;
     public PlayerController pController;
     public PlayerSFXs sfxManager;
-    public Text pickupText;
+    public TMP_Text pickupText;
     public AudioSource ammoPickupAudioSource;
     public PhotonView PV;
     //public ControllerScript cScript;
@@ -48,7 +49,14 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         {
             _closestLootableWeapon = value;
             if (value)
-                pickupText.text = "Hold E to pick up " + closestLootableWeapon.name;
+            {
+                if (closestLootableWeapon.spriteId >= 0)
+
+                    pickupText.text =  $"Hold E to pick up <sprite={WeaponProperties.spriteIdDic[closestLootableWeapon.codeName]}>";
+                else
+                    pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
+
+            }
             else
                 pickupText.text = "";
         }
@@ -79,16 +87,12 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         {
             _weaponsInRange = value;
 
-            Debug.Log($"esrse123424");
-            Debug.Log(_weaponsInRange.Count);
             if (_weaponsInRange.Count == 0) { closestLootableWeapon = null; return; }
 
-            Debug.Log($"esrse");
             float smallestDistance = 100;
             for (int i = 0; i < weaponsInRange.Count; i++)
                 if (Vector3.Distance(weaponsInRange[i].transform.position, transform.position) < smallestDistance)
                 {
-                    Debug.Log($"esasdasqwerse");
                     smallestDistance = Vector3.Distance(weaponsInRange[i].transform.position, transform.position);
                     closestLootableWeapon = weaponsInRange[i];
                 }
@@ -121,6 +125,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     //}
     private void Start()
     {
+        pickupText.text = "";
         player.OnPlayerDeath -= OnPLayerDeath;
         player.OnPlayerDeath += OnPLayerDeath;
 
@@ -132,17 +137,29 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     {
         if (other.GetComponent<LootableWeapon>() && other.gameObject.activeSelf)
         {
-            if (player.isDead ||
-            weaponsInRange.Contains(other.GetComponent<LootableWeapon>()) ||
-            (pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.activeWeapon.codeName) ||
-                (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.holsteredWeapon.codeName))
+            //if (player.isDead ||
+            //weaponsInRange.Contains(other.GetComponent<LootableWeapon>()) ||
+            //(pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.activeWeapon.codeName) ||
+            //    (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.holsteredWeapon.codeName))
+            //    return;
+
+            if (player.isDead || weaponsInRange.Contains(other.GetComponent<LootableWeapon>()))
                 return;
 
-            other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
-            other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
+            if ((pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.activeWeapon.codeName) &&
+                (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.holsteredWeapon.codeName))
+            {
+                other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
+                other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
 
-            weaponsInRange.Add(other.GetComponent<LootableWeapon>());
-            weaponsInRange = weaponsInRange;
+                weaponsInRange.Add(other.GetComponent<LootableWeapon>());
+                weaponsInRange = weaponsInRange;
+            }
+            else
+            {
+                other.GetComponent<LootableWeapon>().LootWeapon();
+                ammoPickupAudioSource.Play();
+            }
         }
     }
     private void OnTriggerExit(Collider other)
@@ -302,7 +319,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
         foreach (LootableWeapon lw in weapons)
             if (lw.spawnPointPosition == collidingWeaponPosition)
-                lw.DisableWeapon();
+                lw.LootWeapon(onlyExtraAmmo: true);
     }
 
     // TO DO: make it across all the network

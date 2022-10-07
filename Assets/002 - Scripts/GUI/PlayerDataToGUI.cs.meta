@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/002 - Scripts/GUI/PlayerDataToGUI.cs.meta
 guid: 92cf67010a90ca545b857b69c7a1eb72
+========
+guid: 0c0449ceaecc26e47a47c5f380747b94
+>>>>>>>> main:Assets/002 - Scripts/Abstract Classes/Hitbox.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

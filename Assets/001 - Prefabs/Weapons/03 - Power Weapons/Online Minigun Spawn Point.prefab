@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0.0004041577, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8959280355935267999}
   m_RootOrder: 0
@@ -110,6 +111,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0.010309536, z: 0.0069586984}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8959280355935267999}
   m_RootOrder: 3
@@ -192,6 +194,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.004077226, y: 0.004110562, z: -0.005991975}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8959280355935267999}
   m_RootOrder: 1
@@ -277,6 +280,7 @@ Transform:
   m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 40, y: 40, z: 40}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3575655908562742172}
   - {fileID: 4278461705512981578}
@@ -376,16 +380,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: 
+  cleanName: 
+  codeName: 
   isWallGun: 0
-  ammoInThisWeapon: 999
+  _ammoInThisWeapon: 0
   extraAmmo: 0
   isDualWieldable: 0
+  defaultAmmo: 0
+  defaultExtraAmmo: 0
   weaponType: Pistol
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1
-  onlineWeaponSpawnPoint: {fileID: 0}
+  _onlineWeaponSpawnPoint: {fileID: 0}
+  _ttl: 0
 --- !u!1 &8982434554652100814
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,6 +424,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 4.27, y: 0.405, z: 3.419}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8959280355935267999}
   m_Father: {fileID: 0}
@@ -496,12 +505,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d4e2e1f1b6ce144eb2de2831e73cd38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: Minigun
+  codeName: minigun
   weaponPlaceHolder: {fileID: 5336373973871419020}
   weaponSpawned: {fileID: 0}
   timeToSpawn: 300
-  weaponPool: {fileID: 0}
-  onlineGameTime: {fileID: 0}
 --- !u!1 &9161281604271482164
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,6 +537,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0064488635, y: 0.004250281, z: -0.00027178062}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8959280355935267999}
   m_RootOrder: 2

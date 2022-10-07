@@ -114,10 +114,12 @@ public class CrosshairManager : MonoBehaviour
     {
         foreach (Crosshair c in crosshairList)
         {
-            if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
+            try
             {
-                c.redReticuleVersion.SetActive(true);
+                if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
+                    c.redReticuleVersion.SetActive(true);
             }
+            catch { }
         }
     }
 

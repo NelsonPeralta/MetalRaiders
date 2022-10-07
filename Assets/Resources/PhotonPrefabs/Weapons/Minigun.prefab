@@ -217,6 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: Minigun
   codeName: minigun
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 999
   extraAmmo: 0

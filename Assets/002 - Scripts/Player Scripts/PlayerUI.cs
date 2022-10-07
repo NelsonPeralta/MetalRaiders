@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class PlayerUI : MonoBehaviour
     public GameObject stickyGrenadeIcon;
     public GameObject swarmLivesHolder;
     public Text swarmLivesText;
+    public Text mapNameText;
+    public Text roomNameText;
 
     [Header("Top Center", order = 2)]
     public Transform topMiddle;
@@ -34,6 +37,8 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Top Right", order = 3)]
     public Transform topRight;
+    public TMP_Text activeWeaponIconText;
+    public TMP_Text holsteredWeaponIconText;
 
     [Header("Center", order = 4)]
     public Transform center;
@@ -51,8 +56,10 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Bottom Right", order = 6)]
     public Text Timer;
+    public Text gameType;
     public Transform bottomRight;
     public GameObject multiplayerPointsHolder;
+    public Text multiplayerPointsGrey;
     public Text multiplayerPointsRed;
     public Text multiplayerPointsBlue;
     public GameObject swarmPointsHolder;
@@ -63,6 +70,12 @@ public class PlayerUI : MonoBehaviour
     public GameObject splitScreenPauseMenu;
     public PlayerDebuggerOnUI PlayerDebuggerOnUI;
 
+    [Header("Hit Markers", order = 8)]
+    public Transform hitMarkerSpawnPoint;
+    public Transform hitMarker;
+    public Transform headshotMarker;
+    public Transform killMarker;
+    public Transform headshotKill;
     private void OnEnable()
     {
         try
@@ -108,6 +121,14 @@ public class PlayerUI : MonoBehaviour
     private void Start()
     {
         Debug.Log("PlayerUI Start");
+        try { gameType.text = GameManager.instance.gameType.ToString(); }
+        catch (System.Exception e) { Debug.LogWarning($"{e}"); }
+
+        try { mapNameText.text = GameManager.GetActiveSceneName().Replace("PVP - ", ""); }
+        catch (System.Exception e) { Debug.LogWarning($"{e}"); }
+
+        try { roomNameText.text = PhotonNetwork.CurrentRoom.Name; }
+        catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
         try
         {
@@ -150,7 +171,10 @@ public class PlayerUI : MonoBehaviour
             //SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
             EnableMultiplayerUIComponents();
+            GetComponent<PlayerMultiplayerMatchStats>().OnKillsChanged += OnPVPKillsChanged_Delegate;
+        }
 
         OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);
     }
@@ -165,16 +189,16 @@ public class PlayerUI : MonoBehaviour
         camSensWitnessText.text = $"Sens: {GameManager.instance.camSens.ToString()}";
     }
 
-    public void ShowHeadshotIndicator()
-    {
-        if (hideHeadshotIndicatorCoroutine != null)
-            StopCoroutine(hideHeadshotIndicatorCoroutine);
-        if (showHeadshotIndicatorCoroutine != null)
-            StopCoroutine(showHeadshotIndicatorCoroutine);
+    //public void ShowHeadshotIndicator()
+    //{
+    //    if (hideHeadshotIndicatorCoroutine != null)
+    //        StopCoroutine(hideHeadshotIndicatorCoroutine);
+    //    if (showHeadshotIndicatorCoroutine != null)
+    //        StopCoroutine(showHeadshotIndicatorCoroutine);
 
-        hideHeadshotIndicatorCoroutine = StartCoroutine(HideHeadshotIndicator_Coroutine());
-        showHeadshotIndicatorCoroutine = StartCoroutine(ShowHeadshotIndicator_Coroutine());
-    }
+    //    hideHeadshotIndicatorCoroutine = StartCoroutine(HideHeadshotIndicator_Coroutine());
+    //    showHeadshotIndicatorCoroutine = StartCoroutine(ShowHeadshotIndicator_Coroutine());
+    //}
 
     IEnumerator HideHeadshotIndicator_Coroutine()
     {
@@ -219,9 +243,7 @@ public class PlayerUI : MonoBehaviour
 
     void EnableMultiplayerUIComponents()
     {
-        shieldBar.SetActive(true);
         multiplayerPointsHolder.SetActive(true);
-        motionTracker.SetActive(true);
 
         DisableSwarmUIComponents();
     }
@@ -237,7 +259,11 @@ public class PlayerUI : MonoBehaviour
     {
         shieldBar.SetActive(true);
         healthBar.SetActive(false);
-        motionTracker.SetActive(true);
+        if ((GameManager.instance.gameType == GameManager.GameType.Slayer) || GameManager.instance.gameType == GameManager.GameType.Fiesta)
+            motionTracker.SetActive(true);
+        else
+            motionTracker.SetActive(false);
+
     }
     public void AddInformerText(string message)
     {
@@ -290,5 +316,32 @@ public class PlayerUI : MonoBehaviour
                 }
             }
         }
+    }
+
+    public enum HitMarkerType { Hit, Headshot, Kill, HeadshotKill };
+    public void SpawnHitMarker(HitMarkerType hitMarkerType = HitMarkerType.Hit)
+    {
+        if (!GetComponent<PhotonView>().IsMine)
+            return;
+        Transform hm = null;
+        if (hitMarkerType == HitMarkerType.Hit)
+            hm = Instantiate(hitMarker, hitMarkerSpawnPoint.transform);
+        else if (hitMarkerType == HitMarkerType.Headshot)
+            hm = Instantiate(headshotMarker, hitMarkerSpawnPoint.transform);
+        else if (hitMarkerType == HitMarkerType.Kill)
+            hm = Instantiate(killMarker, hitMarkerSpawnPoint.transform);
+        else if (hitMarkerType == HitMarkerType.HeadshotKill)
+            hm = Instantiate(headshotKill, hitMarkerSpawnPoint.transform);
+
+        try
+        {
+            Destroy(hm.gameObject, 0.5f);
+        }
+        catch { }
+    }
+
+    void OnPVPKillsChanged_Delegate(PlayerMultiplayerMatchStats playerMultiplayerMatchStats)
+    {
+        multiplayerPointsGrey.text = playerMultiplayerMatchStats.kills.ToString();
     }
 }

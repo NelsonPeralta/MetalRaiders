@@ -12124,7 +12124,7 @@ MonoBehaviour:
   nma: {fileID: 1673082705397814769}
   projectileSpawnPoint: {fileID: 6041454011544342894}
   motionTrackerDot: {fileID: 1673082704842895623}
-  _defaultHealth: 150
+  _defaultHealth: 100
   speed: 6
   rangeColliders:
   - {fileID: 2883373899656101094}

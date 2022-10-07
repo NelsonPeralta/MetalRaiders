@@ -9,21 +9,23 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 {
     // events
     public delegate void AiEvent(AiAbstractClass aiAbstractClass);
-    public AiEvent OnHealthChange, OnDeath, OnDeathEnd, OnPlayerRangeChange, OnActionChange, OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange, OnTargetDeath, OnPrepareEnd;
+    public AiEvent OnHealthChange, OnDeath, OnDeathEnd, OnPlayerRangeChange, OnActionChange, 
+        OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange, OnTargetDeath, OnPrepareEnd,
+        OnDestinationChanged, OnDestinationNull;
 
     // enums
     public enum PlayerRange { Out, Close, Medium, Long }
 
     // private variables
-    [SerializeField] Transform _target;
+    [SerializeField] protected Transform _destination;
     [SerializeField] PlayerRange _playerRange;
     PlayerRange _previousPlayerRange;
     public Animator animator;
     [SerializeField] int _health;
     float newTargetSwitchingDelay;
     float _nextActionCooldown;
-    [SerializeField] bool _seek;
-    bool _canSeek;
+    [SerializeField] protected bool _seek;
+    [SerializeField] bool _canSeek;
     bool _canDoAction;
     [SerializeField] bool _isDead;
     [SerializeField] int _deathDespawnTime = 5;
@@ -65,7 +67,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     float targetOutOfSightDefaultCountdown;
     float targetOutOfSightCountdown;
 
-    [SerializeField] float _newTargetCountdown;
+    [SerializeField] protected float _newTargetCountdown;
     public PlayerRange playerRange
     {
         get { return _playerRange; }
@@ -89,31 +91,38 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             _previousPlayerRange = value;
         }
     }
-    public Transform target
+    public virtual Transform destination
     {
-        get { return _target; }
+        get { return _destination; }
         set
         {
+            Debug.Log(System.Environment.StackTrace);
             Debug.Log($"New AI Target: {value}");
             if (value)
             {
-                if (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning)
-                    target = null;
+                if (value.GetComponent<Player>() && (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning))
+                    destination = null;
                 else
                 {
-                    _target = value;
-                    _target.GetComponent<Player>().OnPlayerDeath -= OnTargetDeath_Delegate;
-                    _target.GetComponent<Player>().OnPlayerDeath += OnTargetDeath_Delegate;
+                    _destination = value;
+                    try
+                    {
+                        _destination.GetComponent<Player>().OnPlayerDeath -= OnTargetDeath_Delegate;
+                        _destination.GetComponent<Player>().OnPlayerDeath += OnTargetDeath_Delegate;
+                    }
+                    catch { }
                     DoAction();
+                    OnDestinationChanged?.Invoke(this);
                 }
             }
             else
             {
                 Debug.Log($"New AI Target is NULL");
-                _target = null;
+                _destination = null;
                 seek = false;
                 playerRange = PlayerRange.Out;
                 _newTargetCountdown = 1;
+                OnDestinationNull?.Invoke(this);
 
                 //try
                 //{
@@ -169,7 +178,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         }
     }
 
-    public bool seek
+    public virtual bool seek
     {
         get { return _seek; }
         set
@@ -189,9 +198,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             }
         }
     }
+
     public bool canSeek
     {
-        get { return !isDead && target && seek; }
+        get { _canSeek = (!isDead && destination && seek); return _canSeek; }
     }
 
     public float nextActionCooldown
@@ -243,7 +253,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     void Start()
     {
         _voice = GetComponent<AudioSource>();
-        animator = GetComponent<Animator>();
+        if (GetComponent<Animator>())
+            animator = GetComponent<Animator>();
         targetOutOfSightDefaultCountdown = defaultNextActionCooldown * 2.5f;
         Prepare();
 
@@ -255,14 +266,16 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         OnDeathEnd += OnDeathEnd_Delegate;
         foreach (AiRangeTrigger arc in rangeColliders)
         {
+            arc.AiAbstractClass = this;
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
+            Debug.Log(arc.AiAbstractClass.name);
         }
 
         OnPrepareEnd?.Invoke(this);
     }
 
-    void Prepare()
+    protected void Prepare()
     {
         nma = GetComponent<NavMeshAgent>();
         health = defaultHealth + SwarmManager.instance.currentWave * 2;
@@ -288,7 +301,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         transform.position = spawnPointPosition;
         transform.rotation = spawnPointRotation;
-        target = PhotonView.Find(targetPhotonId).transform;
+        destination = PhotonView.Find(targetPhotonId).transform;
         gameObject.SetActive(true);
 
         OnPlayerRangeChange?.Invoke(this);
@@ -304,7 +317,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     IEnumerator Die_Coroutine()
     {
-        target = null;
+        destination = null;
         GetComponent<NavMeshAgent>().speed = 0;
         GetComponent<Animator>().Play("Die");
 
@@ -338,7 +351,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         NewTargetCountdown();
     }
 
-    void NewTargetCountdown()
+    public virtual void NewTargetCountdown()
     {
         if (!gameObject.activeSelf || isDead)
             return;
@@ -355,7 +368,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public void Movement()
     {
         if (canSeek)
-            nma.SetDestination(target.transform.position);
+            nma.SetDestination(destination.transform.position);
     }
 
     void NextActionCooldown()
@@ -378,12 +391,12 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void ShootLineOfSightRay()
     {
-        if (!target)
+        if (!destination)
             return;
 
-        LOSSpawn.transform.LookAt(target);
+        LOSSpawn.transform.LookAt(destination);
         if (projectileSpawnPoint)
-            projectileSpawnPoint.transform.LookAt(target);
+            projectileSpawnPoint.transform.LookAt(destination);
 
         raySpawn = LOSSpawn.transform.position + new Vector3(0, 0f, 0);
         //Debug.DrawRay(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, Color.green);
@@ -394,10 +407,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             objectInLineOfSight = hit.transform.gameObject;
             //if (hit.transform.gameObject.GetComponent<PlayerHitbox>())
             if (hit.transform.gameObject.GetComponent<Player>())
-                {
+            {
                 Player playerInLOS = objectInLineOfSight.GetComponent<Player>();
 
-                if (playerInLOS == target.GetComponent<Player>())
+                if (playerInLOS == destination.GetComponent<Player>())
                     targetInLineOfSight = true;
                 else
                     targetOutOfSight = true;
@@ -413,9 +426,11 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             objectInLineOfSight = null;
         }
     }
-    void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider)
+    public virtual void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider, Collider triggerObj = null)
     {
-        if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<Player>()))
+        if (!destination.GetComponent<Player>())
+            GetNewTarget(emptyTarget: true);
+        if (destination && aiRangeCollider.playersInRange.Contains(destination.GetComponent<Player>()))
         {
             playerRange = aiRangeCollider.range;
 
@@ -427,9 +442,9 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         }
     }
 
-    void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider)
+    public virtual void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider, Collider triggerObj = null)
     {
-        if (target && aiRangeCollider.playersInRange.Contains(target.GetComponent<Player>()))
+        if (destination && aiRangeCollider.playersInRange.Contains(destination.GetComponent<Player>()))
         {
             PlayerRange exitingRange = aiRangeCollider.range;
             PlayerRange newPlayerRange = playerRange;
@@ -473,32 +488,35 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         {
             try
             {
-                if (rt.playersInRange.Contains(target.GetComponent<Player>()))
-                    rt.playersInRange.Remove(target.GetComponent<Player>());
+                if (rt.playersInRange.Contains(destination.GetComponent<Player>()))
+                    rt.playersInRange.Remove(destination.GetComponent<Player>());
             }
             catch (System.Exception e)
             {
 
             }
         }
-        target = null;
+        destination = null;
     }
 
-    void GetNewTarget()
+    public virtual void GetNewTarget(float walkRadius = 100, bool emptyTarget = false)
     {
         //if (gameObject.activeSelf)
         //    StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
-        target = SwarmManager.instance.GetRandomPlayerTransform();
+        if (!emptyTarget)
+            destination = SwarmManager.instance.GetRandomPlayerTransform();
+        else
+            destination = GetRandomDestinationTransform(walkRadius);
     }
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()
     {
         yield return new WaitForSeconds(1);
-        target = SwarmManager.instance.GetRandomPlayerTransform();
+        destination = SwarmManager.instance.GetRandomPlayerTransform();
     }
 
     protected void ChangeAction(string actionString)
     {
-        if (!target || !target.GetComponent<Player>().PV.IsMine)
+        if (!destination || !destination.GetComponent<Player>().PV.IsMine)
             return;
 
         photonView.RPC("ChangeAction_RPC", RpcTarget.All, actionString);
@@ -506,8 +524,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     protected void SpawnKillFeed(string className, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
-        Player player = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
-        string nickName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI).nickName;
+        Player player = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        string nickName = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI).nickName;
         string teamColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
 
 
@@ -515,7 +533,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         string weaponColorCode = player.playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
         string colorCode = "";
-        
+
         if (className == "Watcher")
             colorCode = KillFeedManager.killFeedColorCodeDict["green"];
         if (className == "Knight")
@@ -565,7 +583,31 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         }
     }
     public abstract void ChangeAction_RPC(string actionString);
-    public abstract void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
+
+    public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    {
+        { // Hit Marker Handling
+            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+
+            if (isHeadshot)
+            {
+                if (health <= damage)
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
+                else
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
+            }
+            else
+            {
+                if (health <= damage)
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+                else
+                    p.GetComponent<PlayerUI>().SpawnHitMarker();
+            }
+        }
+
+        Damage_Abstract(damage, playerWhoShotPDI, damageSource, isHeadshot);
+    }
+    protected abstract void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
     public abstract void Damage_RPC(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
     public abstract void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass);
@@ -573,4 +615,69 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public abstract void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass);
     public abstract void DoAction();
     public abstract void ChildUpdate();
+
+
+
+
+
+
+
+
+
+
+    private Vector3 GetRandomDestinationPosition(float walkRadius = 100)
+    {
+        Debug.Log($"Walk radius: {walkRadius}");
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * walkRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
+        Vector3 finalPosition = hit.position;
+
+        return finalPosition;
+    }
+
+    private Transform GetRandomDestinationTransform(float walkRadius = 100)
+    {
+        GameObject d = new GameObject();
+        d.transform.position = GetRandomDestinationPosition(walkRadius);
+        d.layer = 6;
+        d.AddComponent<BoxCollider>();
+        d.GetComponent<BoxCollider>().isTrigger = true;
+        d.AddComponent<Rigidbody>();
+        d.GetComponent<Rigidbody>().useGravity = false;
+        Debug.Log("GetRandomDestinationTransform: " + d.name);
+        return d.transform;
+    }
+
+    protected void GoToRandomPoint()
+    {
+        int walkRadius = 100;
+
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * walkRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
+        Vector3 finalPosition = hit.position;
+
+        GetComponent<NavMeshAgent>().destination = finalPosition;
+        Debug.Log($"AI goint to random point: {finalPosition}");
+    }
+
+    protected bool DestinationReached()
+    {
+        // Check if we've reached the destination
+        if (!GetComponent<NavMeshAgent>().pathPending)
+        {
+            if (GetComponent<NavMeshAgent>().remainingDistance <= GetComponent<NavMeshAgent>().stoppingDistance)
+            {
+                if (!GetComponent<NavMeshAgent>().hasPath || GetComponent<NavMeshAgent>().velocity.sqrMagnitude == 0f)
+                {
+                    // Done
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

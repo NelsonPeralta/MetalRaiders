@@ -41,7 +41,7 @@ public class MainMenuCaller : MonoBehaviour
     public void UpdateSelectedMap(int index)
     {
         Launcher.instance.levelToLoadIndex = index;
-        string mode = PhotonNetwork.CurrentRoom.CustomProperties["mode"].ToString();
+        string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString();
 
         if (mode == "multiplayer")
             Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(index).Replace("PVP - ", "")}";
@@ -61,12 +61,18 @@ public class MainMenuCaller : MonoBehaviour
         try
         {
             GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), roomParams["gamemode"]);
-            GameManager.instance.multiplayerMode = (GameManager.MultiplayerMode)System.Enum.Parse(typeof(GameManager.MultiplayerMode), roomParams["multiplayermode"]);
-            GameManager.instance.swarmMode = (GameManager.SwarmMode)System.Enum.Parse(typeof(GameManager.SwarmMode), roomParams["swarmmode"]);
+            GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), roomParams["multiplayermode"]);
         }
         catch (System.Exception e)
         {
             Debug.LogWarning($"No such gamemode. {e}");
         }
+    }
+
+    [PunRPC]
+    void ChangeSubGameType_RPC(string sgt)
+    {
+        Launcher.instance.gametypeSelectedText.text = $"Gametype: {sgt}";
+        GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), sgt);
     }
 }

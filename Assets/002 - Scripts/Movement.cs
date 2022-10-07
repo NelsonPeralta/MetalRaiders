@@ -4,7 +4,7 @@ using UnityEngine;
 using Rewired;
 using Photon.Pun;
 
-public class Movement : MonoBehaviour
+public class Movement : MonoBehaviour, IPunObservable
 {
     public delegate void PlayerMovementEvent(Movement movement);
     public PlayerMovementEvent OnPlayerStartedMoving, OnPlayerStoppedMoving;
@@ -21,17 +21,18 @@ public class Movement : MonoBehaviour
     public PlayerSFXs sfx;
     public GroundCheck groundCheckScript;
     public GroundCheck roofCheckScript;
-    float defaultSpeed; // Default = 5
+    public float defaultSpeed; // Default = 5
     public float speed;
-    public float playerSpeed;
+    public float playerSpeedPercent;
     public float jumpForce = 6f;
 
+    public float _defaultGravity = -12f;
     public float defaultGravity = -12f;
     float gravity = -12f; // -9.81f
 
     public Vector3 movement;
     public Vector3 velocity;
-    Vector3 calulatedVelocity;
+    public Vector3 calulatedVelocity;
     public Vector3 lastPos;
 
     [SerializeField]
@@ -123,9 +124,21 @@ public class Movement : MonoBehaviour
         //StartCoroutine(CalcVelocity());
     }
 
+    // IMPORTANT
+    // Update() check for input
+    // FixedUpdate() move gameObjects that have riggidbody/apply forces
+    // LateUpdate() move Camera
+
     // Update is called once per frame
     void Update()
     {
+        {
+            var rotationVector = transform.rotation.eulerAngles;
+            rotationVector.z = 0;
+            rotationVector.x = 0;
+            gameObject.transform.rotation = Quaternion.Euler(rotationVector);
+        }
+        CalculateVelocity();
         if (!pController.PV.IsMine || pController.pauseMenuOpen)
             return;
 
@@ -136,7 +149,6 @@ public class Movement : MonoBehaviour
         Vector3 direction = new Vector3(x, 0f, z).normalized;
         xDirection = direction.x;
         zDirection = direction.z;
-        CalculateVelocity();
 
         if (isGrounded && velocity.y < 0)
         {
@@ -242,6 +254,7 @@ public class Movement : MonoBehaviour
             StartCoroutine(CalculatePlayerSpeed());
 
         Jump();
+        CrouchJump();
         CheckMovingForward();
         ControlAnimationSpeed();
 
@@ -261,6 +274,40 @@ public class Movement : MonoBehaviour
     public void SetPlayerIDInInput()
     {
         player = ReInput.players.GetPlayer(playerRewiredID);
+    }
+
+
+    float _crouchJumpTime = 0.2f;
+    float crouchJumpTime = 0.2f;
+    void CrouchJump()
+    {
+        if (!isGrounded && player.GetButton("Crouch"))
+        {
+            crouchJumpTime -= Time.deltaTime;
+            if (crouchJumpTime > 0)
+            {
+                gravity = 0;
+            }
+        }
+        else
+        {
+            gravity = _defaultGravity;
+        }
+
+        if (player.GetButtonUp("Crouch"))
+        {
+            crouchJumpTime = _crouchJumpTime;
+        }
+
+        //if (!isGrounded && player.GetButtonDown("Crouch"))
+        //{
+        //    Debug.Log("Crouch jumping");
+        //    Debug.Log(velocity.y);
+
+        //    float newForce = Mathf.Ceil(velocity.y + jumpForce;
+        //    velocity.y += jumpForce;
+        //    Debug.Log(velocity.y);
+        //}
     }
 
     void Jump()
@@ -292,6 +339,8 @@ public class Movement : MonoBehaviour
 
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+
+
 
         if (roofCheckScript.isGrounded)
             gravity = defaultGravity * 10;
@@ -459,20 +508,20 @@ public class Movement : MonoBehaviour
                         if (!pController.isReloading && !pController.isDrawingWeapon && !pController.isThrowingGrenade &&
                             !pController.isMeleeing && !pController.isFiring)
                         {
-                            pController.weaponAnimator.speed = playerSpeed;
-                            tpLookAt.anim.speed = playerSpeed;
+                            pController.weaponAnimator.speed = playerSpeedPercent;
+                            tpLookAt.anim.speed = playerSpeedPercent;
                         }
                         else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade ||
                             pController.isMeleeing || pController.isFiring)
                         {
-                            playerSpeed = 1;
+                            playerSpeedPercent = 1;
                             pController.weaponAnimator.speed = 1;
                             tpLookAt.anim.speed = 1;
                         }
                     }
                     else
                     {
-                        playerSpeed = 1;
+                        playerSpeedPercent = 1;
                         pController.weaponAnimator.speed = 1;
                         if (tpLookAt.anim)
                             tpLookAt.anim.speed = 1;
@@ -493,18 +542,18 @@ public class Movement : MonoBehaviour
         CalculatingPlayerSpeed = true;
         lastPos = gameObject.transform.position;
         yield return new WaitForSeconds(0.1f);
-        playerSpeed = (Mathf.Ceil(Vector3.Distance(gameObject.transform.position, lastPos) / 0.1f)) / 5f;
+        playerSpeedPercent = (Mathf.Ceil(Vector3.Distance(gameObject.transform.position, lastPos) / 0.1f)) / 5f;
 
-        if (playerSpeed > 1)
+        if (playerSpeedPercent > 1)
         {
-            playerSpeed = 1;
+            playerSpeedPercent = 1;
         }
         if (pController.isCrouching)
         {
-            playerSpeed *= 2;
+            playerSpeedPercent *= 2;
 
-            if (playerSpeed > 1)
-                playerSpeed = 1;
+            if (playerSpeedPercent > 1)
+                playerSpeedPercent = 1;
         }
         CalculatingPlayerSpeed = false;
     }
@@ -542,6 +591,20 @@ public class Movement : MonoBehaviour
     public float GetDefaultSpeed()
     {
         return defaultSpeed;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        //if (stream.IsWriting)
+        //{
+        //    stream.SendNext(movement);
+
+        //}
+        //else
+        //{
+        //    Debug.Log($"I am reading: {movement}");
+        //    movement = (Vector3)stream.ReceiveNext();
+        //}
     }
 }
 

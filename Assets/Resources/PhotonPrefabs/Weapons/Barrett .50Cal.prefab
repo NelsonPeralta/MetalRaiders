@@ -718,6 +718,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: Barrett .50 Cal
   codeName: barrett50cal
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 4
   extraAmmo: 4

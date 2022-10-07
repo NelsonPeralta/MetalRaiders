@@ -7,7 +7,7 @@ using UnityEngine;
 public class Player : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerEvent(Player playerProperties);
-    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken, OnPlayerRespawned;
+    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken, OnPlayerRespawnEarly, OnPlayerRespawned;
 
     [Header("Singletons")]
     public SpawnManager spawnManager;
@@ -107,6 +107,16 @@ public class Player : MonoBehaviourPunCallbacks
             if (value && !_hasMeleeUpgrade)
                 _meleeDamage *= 3;
         }
+    }
+
+    public float shieldPoints
+    {
+        get { return Mathf.Clamp((hitPoints - maxHealthPoints), 0, maxShieldPoints); }
+    }
+
+    public float healthPoints
+    {
+        get { return (hitPoints - shieldPoints); }
     }
     public float hitPoints
     {
@@ -309,6 +319,29 @@ public class Player : MonoBehaviourPunCallbacks
         if (hitPoints <= 0 || isDead || isRespawning)
             return;
 
+        try
+        { // Hit Marker Handling
+            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
+
+            Debug.Log($"{hitPoints} vs {maxShieldPoints}");
+            Debug.Log($"{healthPoints} vs {healthDamage}");
+            if (headshot)
+            {
+                if (healthPoints <= healthDamage)
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
+                else
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
+            }
+            else
+            {
+                if (healthPoints <= healthDamage)
+                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+                else
+                    p.GetComponent<PlayerUI>().SpawnHitMarker();
+            }
+        }
+        catch { }
+
         PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource, isGroin);
     }
 
@@ -349,7 +382,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (isDead)
         {
-            string sourcePlayerName = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).nickName;
+            string sourcePlayerName = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).nickName;
 
             int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
             int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
@@ -545,6 +578,8 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (!isRespawning)
             return;
+        OnPlayerRespawnEarly?.Invoke(this);
+
         GetComponent<Movement>().ResetCharacterControllerProperties();
         isRespawning = false;
         GetComponent<PlayerController>().ScopeOut();
@@ -561,7 +596,7 @@ public class Player : MonoBehaviourPunCallbacks
         playerInventory.powerAmmo = 4;
         playerInventory.grenades = 2;
 
-        StartCoroutine(playerInventory.EquipStartingWeapon());
+        //StartCoroutine(playerInventory.EquipStartingWeapon());
         playerInventory.weaponsEquiped[1] = null;
 
         hitboxesEnabled = true;
@@ -642,10 +677,18 @@ public class Player : MonoBehaviourPunCallbacks
         Debug.Log("LeaveRoomWithDelay_Coroutine");
         yield return new WaitForSeconds(delay);
 
-        Cursor.visible = true;
-        PhotonNetwork.LeaveRoom();
-        //SceneManager.LoadScene("Main Menu");
-        PhotonNetwork.LoadLevel(0);
+
+        int levelToLoad = 0;
+        Debug.Log(PhotonNetwork.CurrentRoom.Name);
+
+        if (PhotonNetwork.CurrentRoom.Name == Launcher.instance.quickMatchRoomName)
+            levelToLoad = Launcher.instance.waitingRoomLevelIndex;
+        else
+        {
+            Cursor.visible = true;
+            PhotonNetwork.LeaveRoom();
+        }
+        PhotonNetwork.LoadLevel(levelToLoad);
     }
 
     void OnPlayerDamaged_Delegate(Player player)
@@ -683,7 +726,7 @@ public class Player : MonoBehaviourPunCallbacks
         StartCoroutine(Respawn_Coroutine());
         StartCoroutine(MidRespawnAction());
         DropWeapon(playerInventory.activeWeapon);
-        DropWeapon(playerInventory.holsteredWeapon, offset : new Vector3(0.5f, 0.5f, 0));
+        DropWeapon(playerInventory.holsteredWeapon, offset: new Vector3(0.5f, 0.5f, 0));
     }
 
     // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter

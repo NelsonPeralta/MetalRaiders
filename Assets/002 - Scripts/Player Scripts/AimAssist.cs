@@ -152,7 +152,8 @@ public class AimAssist : MonoBehaviour
                 if (targetDistance <= wProperties.currentRedReticuleRange && target != null)
                 {
                     //Debug.Log("Toggling RRR to TRUE");
-                    crosshairScript.RRisActive = true;
+                    if (!pInventory.activeWeapon.fakeRRR)
+                        crosshairScript.RRisActive = true;
                     //if (string.Equals(target.GetComponent<AllPlayerScripts>().playerMPProperties.team.Trim(), playerMPProperties.team.Trim()))
                     //{
                     //    crosshairScript.friendlyRRisActive = true;
@@ -192,7 +193,8 @@ public class AimAssist : MonoBehaviour
                         //    //Debug.Log("Here 4");
                         //    crosshairScript.RRisActive = true;
                         //}
-                        crosshairScript.RRisActive = true;
+                        if (!pInventory.activeWeapon.fakeRRR)
+                            crosshairScript.RRisActive = true;
                     }
                     else if (targetDistance > wProperties.currentRedReticuleRange && target != null)
                     {

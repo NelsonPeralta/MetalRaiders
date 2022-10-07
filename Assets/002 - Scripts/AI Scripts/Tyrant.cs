@@ -87,7 +87,7 @@ public class Tyrant : AiAbstractClass
         if (playerRange == PlayerRange.Out)
             previousWatcherAction = TyrantActions.Seek;
 
-        if (!isDead && target)
+        if (!isDead && destination)
         {
 
             if (previousWatcherAction != TyrantActions.Block && previousWatcherAction != TyrantActions.Idle)
@@ -144,7 +144,7 @@ public class Tyrant : AiAbstractClass
                 seek = true;
             }
         }
-        else if (!isDead && !target)
+        else if (!isDead && !destination)
         {
             tyrantAction = TyrantActions.Idle;
             seek = false;
@@ -153,16 +153,16 @@ public class Tyrant : AiAbstractClass
 
     public override void ChildUpdate()
     {
-        if (!target)
+        if (!destination)
             return;
 
-        Vector3 targetPostition = new Vector3(target.position.x,
+        Vector3 targetPostition = new Vector3(destination.position.x,
                                         this.transform.position.y,
-                                        target.position.z);
+                                        destination.position.z);
         this.transform.LookAt(targetPostition);
     }
 
-    public override void Damage(int damage, int playerWhoShotPDI, string damageSource = null , bool isHeadshot = false)
+    protected override void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null , bool isHeadshot = false)
     {
         if (isDead)
             return;
@@ -175,7 +175,7 @@ public class Tyrant : AiAbstractClass
         if (isDead)
             return;
 
-        Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         health -= damage;

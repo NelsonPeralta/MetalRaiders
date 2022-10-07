@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class FragGrenade : MonoBehaviour
 {
@@ -34,9 +35,35 @@ public class FragGrenade : MonoBehaviour
     public AudioClip impactSound;
     public AudioClip explosionSound;
 
+    Transform[] ignore;
+
     private void Start()
     {
         PlaySound(throwSound);
+
+        ignore = playerWhoThrewGrenade.GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponentsInChildren<Transform>();
+    }
+
+    private void Update()
+    {
+        try
+        {
+            velocity = GetComponent<Rigidbody>().velocity.magnitude;
+            //Debug.Log(velocity);
+
+            if (hasHitObject)
+                if (GetComponent<Rigidbody>().velocity.magnitude != 10)
+                {
+                    Vector3 dir = GetComponent<Rigidbody>().velocity;
+                    dir.Normalize();
+                    //GetComponent<Rigidbody>().velocity.Normalize();
+                    GetComponent<Rigidbody>().velocity = dir * 10;
+                }
+        }
+        catch
+        {
+
+        }
     }
 
     private void Update()
@@ -63,7 +90,7 @@ public class FragGrenade : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer != 22 && !hasHitObject) // Non-Interactable Layer
+        if (collision.gameObject.layer != 22 && !hasHitObject && !ignore.Contains(collision.transform)) // Non-Interactable Layer
         {
             hasHitObject = true;
             Debug.Log($"Grenade Collided with: {collision.gameObject.name}");
@@ -102,6 +129,13 @@ public class FragGrenade : MonoBehaviour
             //Add force to nearby rigidbodies
             if (rb != null)
                 rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
+
+            CharacterController cc = hit.GetComponent<CharacterController>();
+            if (cc)
+            {
+                Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, power * 5);
+            }
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
             {

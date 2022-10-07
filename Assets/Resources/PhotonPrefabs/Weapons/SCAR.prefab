@@ -383,6 +383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: SCAR
   codeName: scar
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 20
   extraAmmo: 20

@@ -103,7 +103,7 @@ public class Watcher : AiAbstractClass
         if (playerRange == PlayerRange.Out)
             previousWatcherAction = WatcherActions.Seek;
 
-        if (!isDead && target)
+        if (!isDead && destination)
         {
 
             if (previousWatcherAction != WatcherActions.Defend && previousWatcherAction != WatcherActions.Idle)
@@ -152,7 +152,7 @@ public class Watcher : AiAbstractClass
                     _voice.Play();
                     animator.Play("Summon");
 
-                    var pSurro = target.GetComponent<Player>().playerSurroundings;
+                    var pSurro = destination.GetComponent<Player>().playerSurroundings;
                     var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
                     meteo.GetComponent<Fireball>().radius = meteorRadius;
                     meteo.GetComponent<Fireball>().damage = meteorDamage;
@@ -169,7 +169,7 @@ public class Watcher : AiAbstractClass
                 seek = true;
             }
         }
-        else if (!isDead && !target)
+        else if (!isDead && !destination)
         {
             watcherAction = WatcherActions.Idle;
             seek = false;
@@ -178,16 +178,16 @@ public class Watcher : AiAbstractClass
 
     public override void ChildUpdate()
     {
-        if (!target)
+        if (!destination)
             return;
 
-        Vector3 targetPostition = new Vector3(target.position.x,
+        Vector3 targetPostition = new Vector3(destination.position.x,
                                         this.transform.position.y,
-                                        target.position.z);
+                                        destination.position.z);
         this.transform.LookAt(targetPostition);
     }
 
-    public override void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    protected override void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
         if (isDead)
             return;
@@ -200,7 +200,7 @@ public class Watcher : AiAbstractClass
         if (isDead)
             return;
 
-        Player pp = GameManager.instance.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         health -= damage;

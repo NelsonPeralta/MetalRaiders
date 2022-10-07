@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using System;
 
 public class MultiplayerManager : MonoBehaviourPunCallbacks
 {
@@ -44,8 +45,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             instance = this;
 
-            if (GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
+            //if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer) || )
                 scoreToWin = 10;
+
+            
         }
         else // We are in the menu
         {
@@ -54,8 +57,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void AddPlayerKill(AddPlayerKillStruct struc)
     {
-        PlayerMultiplayerMatchStats winningPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
-        PlayerMultiplayerMatchStats losingPlayerMS = GameManager.instance.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
+        PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
+        PlayerMultiplayerMatchStats losingPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
 
 
         List<Player> allPlayers = new List<Player>();
@@ -66,7 +69,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
         if (winningPlayerMS != losingPlayerMS)
         {
-            winningPlayerMS.AddKill();
+            winningPlayerMS.kills++;
             //foreach (Player pp in allPlayers)
             //    if (pp.PV.IsMine && pp)
             //    {
@@ -83,7 +86,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             //    if (pp.PV.IsMine && pp)
             //        pp.allPlayerScripts.killFeedManager.EnterNewFeed($"{losingPlayerMS.playerName} committed suicide");
         }
-        losingPlayerMS.AddDeath();
+        losingPlayerMS.deaths++;
 
         CheckForEndGame();
     }
@@ -98,7 +101,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         string winningEntity = "";
         foreach (Player pp in FindObjectsOfType<Player>())
         {
-            if (pp.GetComponent<PlayerMultiplayerMatchStats>().kills >= scoreToWin && GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Deathmatch)
+            if (pp.GetComponent<PlayerMultiplayerMatchStats>().kills >= scoreToWin && GameManager.instance.gameType == GameManager.GameType.Slayer)
                 winningEntity = pp.PV.Owner.NickName;
 
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
@@ -113,12 +116,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {winningEntity} wins.");
                 WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
                 pp.LeaveRoomWithDelay();
-
             }
             else
                 GameManager.instance.LeaveRoom();
-
-
         }
     }
 

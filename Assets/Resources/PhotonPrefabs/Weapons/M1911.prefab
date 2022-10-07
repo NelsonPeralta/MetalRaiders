@@ -382,6 +382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: M1911
   codeName: m1911
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 12
   extraAmmo: 24

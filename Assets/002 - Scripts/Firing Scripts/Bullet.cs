@@ -173,6 +173,13 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
+            try
+            {
+                Debug.Log("Bullet IDamageable");
+                finalHitObject.GetComponent<IDamageable>().Damage(damage);
+            }
+            catch { }
+
             //Debug.Log($"Bullet final hit: {finalHitObject.name}");
             if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead)
             {
@@ -183,13 +190,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     //Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
                     finalDamage = (int)(weaponProperties.headshotMultiplier * damage);
-                    playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
 
                     if (hitbox.aiAbstractClass.health <= finalDamage)
                     {
                         playerWhoShot.GetComponent<PlayerSwarmMatchStats>().headshots++;
                     }
                 }
+
+
 
                 if (playerWhoShot.PV.IsMine)
                 {
@@ -225,22 +233,9 @@ public class Bullet : MonoBehaviourPunCallbacks
                     wasNutshot = hitbox.isNuts;
 
                     if (wasHeadshot && player.hitPoints < damage)
-                    {
-                        playerWhoShot.GetComponent<PlayerUI>().ShowHeadshotIndicator();
                         playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
-                    }
-                }/*else if (hitbox.isNuts)*/
-                //{
-                //    wasNuthsot = true;
 
-                //    int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
-
-                //    if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
-                //        damage = player.maxHealthPoints;
-
-                //    if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
-                //        damage = (int)(damage * weaponProperties.headshotMultiplier);
-                //}
+                }
 
                 if (playerWhoShot.PV.IsMine)
                 {

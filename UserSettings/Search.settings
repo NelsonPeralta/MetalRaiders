@@ -1,6 +1,6 @@
 trackSelection = true
 fetchPreview = true
-wantsMore = false
+defaultFlags = 0
 keepOpen = false
 queryFolder = "Assets"
 onBoardingDoNotAskAgain = true
@@ -16,6 +16,9 @@ scopes = {
 	"last_search.7BEC51F9" = ""
 	"OpenInspectorPreview.7BEC51F9" = "0"
 	"currentGroup.7BEC51F9" = "asset"
+	"last_search.8BEC98E7" = "Movement"
+	"OpenInspectorPreview.8BEC98E7" = "0"
+	"currentGroup.8BEC98E7" = "scene"
 }
 providers = {
 	asset = {
@@ -64,7 +67,10 @@ providers = {
 		defaultAction = null
 	}
 }
+objectSelectors = {
+}
 recentSearches = [
+	"Movement"
 	"minigun seller"
 	"table t:Prefab"
 	"generic"

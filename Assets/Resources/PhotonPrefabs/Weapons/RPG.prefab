@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanName: RPG
   codeName: rpg
+  spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 1
   extraAmmo: 3
