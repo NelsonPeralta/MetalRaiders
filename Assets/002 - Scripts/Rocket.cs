@@ -77,7 +77,7 @@ public class Rocket : MonoBehaviour
             if (cc)
             {
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, power * 5);
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(player, exDir, power * 5);
             }
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)

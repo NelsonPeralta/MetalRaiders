@@ -13,7 +13,7 @@ public class StickyGrenade : MonoBehaviour
     public Transform explosionPrefab;
 
     [Header("Background Info")]
-    public Player playerWhoThrewGrenade;
+    public Player player;
     public int playerRewiredID;
     public string team;
     bool hasHitObject;
@@ -76,7 +76,7 @@ public class StickyGrenade : MonoBehaviour
             else
             {
                 if (collision.gameObject.GetComponent<PlayerController>() == null
-                    && collision.gameObject.layer != 22 && collision.transform.root.gameObject != playerWhoThrewGrenade.gameObject)
+                    && collision.gameObject.layer != 22 && collision.transform.root.gameObject != player.gameObject)
                 {
                     Debug.Log("Collision = " + collision.gameObject.name + " GO Layer: " + collision.gameObject.layer
                         + " Root GO : " + collision.gameObject.transform.root.gameObject.name);
@@ -142,7 +142,7 @@ public class StickyGrenade : MonoBehaviour
             if (cc)
             {
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, power * 5);
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(player, exDir, power * 5);
             }
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
@@ -155,8 +155,8 @@ public class StickyGrenade : MonoBehaviour
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID, damageSource: "stickygrenade");
+                    if (player.PV.IsMine && calculatedDamage > 0)
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID, damageSource: "stickygrenade");
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
@@ -170,8 +170,8 @@ public class StickyGrenade : MonoBehaviour
                     float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
                     Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
-                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID, damageSource: "stickygrenade");
+                    if (player.PV.IsMine && calculatedDamage > 0)
+                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, player.PV.ViewID, damageSource: "stickygrenade");
                 }
             }
         }

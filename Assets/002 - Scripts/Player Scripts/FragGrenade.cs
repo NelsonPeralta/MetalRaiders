@@ -17,7 +17,7 @@ public class FragGrenade : MonoBehaviour
     float velocityOnCollision = 5f;
 
     [Header("Background Info")]
-    public Player playerWhoThrewGrenade;
+    public Player player;
     public int playerRewiredID;
     public string team;
     bool hasHitObject;
@@ -41,7 +41,7 @@ public class FragGrenade : MonoBehaviour
     {
         PlaySound(throwSound);
 
-        ignore = playerWhoThrewGrenade.GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponentsInChildren<Transform>();
+        ignore = player.GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponentsInChildren<Transform>();
     }
 
     private void Update()
@@ -112,7 +112,7 @@ public class FragGrenade : MonoBehaviour
             if (cc)
             {
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, power * 5);
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(player, exDir, power * 5);
             }
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
@@ -127,8 +127,8 @@ public class FragGrenade : MonoBehaviour
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
 
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID, damageSource : "fraggrenade");
+                    if (this.player.PV.IsMine && calculatedDamage > 0)
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, this.player.PV.ViewID, damageSource : "fraggrenade");
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
@@ -141,8 +141,8 @@ public class FragGrenade : MonoBehaviour
                     float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
                     Debug.Log($"Frag grenade Damage on AI: {calculatedDamage}");
-                    if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
-                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID, damageSource: "fraggrenade");
+                    if (player.PV.IsMine && calculatedDamage > 0)
+                        hitbox.aiAbstractClass.Damage((int)calculatedDamage, player.PV.ViewID, damageSource: "fraggrenade");
                 }
             }
         }

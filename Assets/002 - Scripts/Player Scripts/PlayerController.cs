@@ -828,7 +828,7 @@ public class PlayerController : MonoBehaviourPun
             grenade = Instantiate(pInventory.grenadePrefab,
                gwProperties.grenadeSpawnPoint.transform.position,
                gwProperties.grenadeSpawnPoint.transform.rotation);
-            grenade.GetComponent<FragGrenade>().playerWhoThrewGrenade = GetComponent<Player>();
+            grenade.GetComponent<FragGrenade>().player = GetComponent<Player>();
             grenade.GetComponent<FragGrenade>().playerRewiredID = playerRewiredID;
             //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
@@ -837,7 +837,7 @@ public class PlayerController : MonoBehaviourPun
             grenade = Instantiate(pInventory.stickyGrenadePrefab,
                gwProperties.grenadeSpawnPoint.transform.position,
                gwProperties.grenadeSpawnPoint.transform.rotation);
-            grenade.GetComponent<StickyGrenade>().playerWhoThrewGrenade = GetComponent<Player>();
+            grenade.GetComponent<StickyGrenade>().player = GetComponent<Player>();
             grenade.GetComponent<StickyGrenade>().playerRewiredID = playerRewiredID;
             //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
