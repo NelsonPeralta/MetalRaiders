@@ -26,9 +26,9 @@ public class Movement : MonoBehaviour, IPunObservable
     public float playerSpeedPercent;
     public float jumpForce = 6f;
 
-    public float _defaultGravity = -12f;
-    public float defaultGravity = -12f;
-    float gravity = -12f; // -9.81f
+    public float _defaultGravity = -9.81f;
+    public float defaultGravity = -9.81f;
+    float gravity = -9.81f;
 
     public Vector3 movement;
     public Vector3 velocity;
@@ -122,6 +122,7 @@ public class Movement : MonoBehaviour, IPunObservable
         defaultSlopeLimit = GetComponent<CharacterController>().slopeLimit;
         defaultStepOffset = GetComponent<CharacterController>().stepOffset;
         //StartCoroutine(CalcVelocity());
+        StartCoroutine(CalculatePlayerSpeed());
     }
 
     // IMPORTANT
@@ -138,126 +139,91 @@ public class Movement : MonoBehaviour, IPunObservable
             rotationVector.x = 0;
             gameObject.transform.rotation = Quaternion.Euler(rotationVector);
         }
+
+        isGrounded = groundCheckScript.isGrounded;
         CalculateVelocity();
+
         if (!pController.PV.IsMine || pController.pauseMenuOpen)
             return;
 
-        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        isGrounded = groundCheckScript.isGrounded;
-        float x = player.GetAxis("Move Horizontal");
-        float z = player.GetAxis("Move Vertical");
-        Vector3 direction = new Vector3(x, 0f, z).normalized;
+        // Axis Calculation
+        #region
+        float xAxis = player.GetAxis("Move Horizontal");
+        float zAxis = player.GetAxis("Move Vertical");
+        Vector3 direction = new Vector3(xAxis, 0f, zAxis).normalized;
         xDirection = direction.x;
         zDirection = direction.z;
+        #endregion
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -3f;
         }
 
-        if (x != 0 || z != 0)
+        // Walk animation
+        #region
+        if (xAxis != 0 || zAxis != 0)
         {
             if (isGrounded)
             {
                 if (pController.weaponAnimator)
                     pController.weaponAnimator.SetBool("Walk", true);
-
-                if (pController.isDualWielding)
-                {
-                    if (pController.animDWRight != null)
-                        pController.animDWRight.SetBool("Walk", true);
-                    if (pController.animDWLeft != null)
-                        pController.animDWLeft.SetBool("Walk", true);
-                }
             }
             else
-            {
-                if (pController.weaponAnimator != null)
-                {
-                    pController.weaponAnimator.SetBool("Walk", false);
-                }
-
-                if (pController.isDualWielding)
-                {
-                    pController.animDWRight.SetBool("Walk", false);
-                    pController.animDWLeft.SetBool("Walk", false);
-                }
-            }
+                try { pController.weaponAnimator.SetBool("Walk", false); } catch { }
         }
         else
-        {
-            if (pController.weaponAnimator != null)
-            {
-                pController.weaponAnimator.SetBool("Walk", false);
-            }
-
-            if (pController.isDualWielding)
-            {
-                if (pController.animDWRight != null)
-                    pController.animDWRight.SetBool("Walk", false);
-                if (pController.animDWLeft != null)
-                    pController.animDWLeft.SetBool("Walk", false);
-            }
-        }
+            try { pController.weaponAnimator.SetBool("Walk", false); } catch { }
+        #endregion
 
         if (isOnLadder)
             speed = defaultSpeed / 8;
 
+        // Movement
+        #region
         if (!pProperties.isDead)
         {
-            Vector3 currentMovementInput = transform.right * x + transform.forward * z;
+            Vector3 currentMovementInput = transform.right * xAxis + transform.forward * zAxis;
             if (isGrounded)
             {
-                movement = transform.right * x + transform.forward * z;
+                movement = transform.right * xAxis + transform.forward * zAxis;
                 if (!pController.isCrouching)
                 {
                     if (pController.isSprinting)
-                    {
                         cController.Move(currentMovementInput * (speed + 2f) * Time.deltaTime);
-                    }
                     else
-                    {
                         cController.Move(currentMovementInput * speed * Time.deltaTime);
-                    }
                 }
                 else
-                {
                     cController.Move(currentMovementInput * speed * .5f * Time.deltaTime);
-                }
             }
             else
             {
-
-                currentMovementInput = transform.right * x + transform.forward * z;
+                currentMovementInput = transform.right * xAxis + transform.forward * zAxis;
 
                 if (Mathf.Sign(movement.x) == Mathf.Sign(currentMovementInput.x))
                     currentMovementInput.x = 0;
                 if (Mathf.Sign(movement.z) == Mathf.Sign(currentMovementInput.z))
                     currentMovementInput.z = 0;
 
-
                 cController.Move(movement * speed * Time.deltaTime);
                 cController.Move(currentMovementInput * 0.65f * speed * Time.deltaTime);
             }
         }
-
+        #endregion
 
 
         CheckDirection(direction.x, direction.z);
 
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y += Mathf.Clamp( gravity * Time.deltaTime, -3f, 100);  
 
         if (cController.gameObject.activeSelf)
             cController.Move(velocity * Time.deltaTime);
-
-        if (!CalculatingPlayerSpeed)
-            StartCoroutine(CalculatePlayerSpeed());
 
         Jump();
         CrouchJump();
         CheckMovingForward();
         ControlAnimationSpeed();
-
     }
 
     void CalculateVelocity()
@@ -556,6 +522,7 @@ public class Movement : MonoBehaviour, IPunObservable
                 playerSpeedPercent = 1;
         }
         CalculatingPlayerSpeed = false;
+        StartCoroutine(CalculatePlayerSpeed());
     }
 
     void PlayWalkingSound()

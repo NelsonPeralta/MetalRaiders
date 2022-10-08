@@ -4921,8 +4921,8 @@ Transform:
   m_GameObject: {fileID: 1993397498319891242}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1998442795899506090}
   - {fileID: 1991842678897066028}
@@ -25187,7 +25187,7 @@ MonoBehaviour:
   throwForce: 625
   explosionPrefab: {fileID: 2064435946878792721, guid: 9c90c1d7343cb464698144039aff5a88,
     type: 3}
-  playerWhoThrewGrenade: {fileID: 0}
+  player: {fileID: 0}
   playerRewiredID: 0
   team: 
   audioSource: {fileID: 6769089064358604720}
