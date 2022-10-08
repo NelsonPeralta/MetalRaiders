@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerImpactReceiver : MonoBehaviour
 {
@@ -14,8 +15,19 @@ public class PlayerImpactReceiver : MonoBehaviour
     }
 
     // call this function to add an impact force:
-    public void AddImpact(Vector3 dir, float force)
+    public void AddImpact(Player ogPlayer, Vector3 dir, float force)
     {
+        if (!ogPlayer.GetComponent<PhotonView>().IsMine)
+            return;
+
+        if (!GetComponent<PhotonView>().IsMine)
+            GetComponent<PhotonView>().RPC("AddImpact_RPC", RpcTarget.All, dir, force);
+    }
+
+    [PunRPC]
+    void AddImpact_RPC(Vector3 dir, float force)
+    {
+        Debug.Log($"AddImpact_RPC");
         dir.Normalize();
         if (dir.y < 0) dir.y = -dir.y; // reflect down force on the ground
         impact += dir.normalized * force / mass;
