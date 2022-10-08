@@ -1721,7 +1721,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Reload Out Of Ammo
-  m_Speed: 1.4
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 110190720}
@@ -2176,7 +2176,7 @@ AnimatorStateMachine:
     m_Position: {x: -30, y: 570, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110232068}
-    m_Position: {x: -240, y: 372, z: 0}
+    m_Position: {x: -240, y: 370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110212644}
     m_Position: {x: 288, y: 420, z: 0}
@@ -4159,7 +4159,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Reload Ammo Left
-  m_Speed: 1.4
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101177168727305880}
