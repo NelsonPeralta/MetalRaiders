@@ -1,0 +1,1181 @@
+fileFormatVersion: 2
+guid: 0231b186a547145458b8850649d3a6a7
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_0
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 7428
+        width: 750
+        height: 238
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0987401000119149abd7f4bf02e4b9d
+      internalID: 522576621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_1
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 7424
+        width: 772
+        height: 265
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0446956f410fe1940b9bd12e0c99737e
+      internalID: 633935780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_2
+      rect:
+        serializedVersion: 2
+        x: 1665
+        y: 7448
+        width: 777
+        height: 249
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b02a28b7d47d9c4bad5e4bd508efaf3
+      internalID: 1936051171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_3
+      rect:
+        serializedVersion: 2
+        x: 2521
+        y: 7443
+        width: 663
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 664fc9889de28ea44959c4213c5302d3
+      internalID: 1134328144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_4
+      rect:
+        serializedVersion: 2
+        x: 3512
+        y: 7448
+        width: 348
+        height: 234
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8c0b729d47c36045bd4fd2e0c2aa117
+      internalID: 667493246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_5
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 6615
+        width: 383
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 435efddb77a9635468bb9c5fbc60dd14
+      internalID: 1286880694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_6
+      rect:
+        serializedVersion: 2
+        x: 1048
+        y: 6615
+        width: 403
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe40106e2faa3cf4b9870b9b90adf871
+      internalID: -620516281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_7
+      rect:
+        serializedVersion: 2
+        x: 1876
+        y: 6612
+        width: 375
+        height: 265
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44b6480f96ef8dd458fb65082c2cd0c1
+      internalID: 741270414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_8
+      rect:
+        serializedVersion: 2
+        x: 2478
+        y: 6674
+        width: 784
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0447d112f4cc2cc46b6f994db1f4a9ab
+      internalID: -1700870934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_9
+      rect:
+        serializedVersion: 2
+        x: 3321
+        y: 6670
+        width: 742
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 069b4db143e1c1748bb96bb0c6a99c3f
+      internalID: -1544560096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_10
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 5748
+        width: 680
+        height: 316
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2271dec268abde43852b92ae2d740c2
+      internalID: -1125234030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_11
+      rect:
+        serializedVersion: 2
+        x: 998
+        y: 5779
+        width: 482
+        height: 285
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 829b25d339cfe484eadf7b76ba724e7f
+      internalID: -937444330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_12
+      rect:
+        serializedVersion: 2
+        x: 1825
+        y: 5772
+        width: 559
+        height: 296
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51be12ac049f6364ba4946e697254337
+      internalID: -1358190009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_13
+      rect:
+        serializedVersion: 2
+        x: 2552
+        y: 5826
+        width: 636
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 953b69883e373484ba869bf63b9da766
+      internalID: 462711922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_14
+      rect:
+        serializedVersion: 2
+        x: 3340
+        y: 5768
+        width: 692
+        height: 284
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93fcb8e2cb6ad084e9a1422f24d5efaf
+      internalID: 2042469789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_15
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 5068
+        width: 788
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b59e16d227384a4fac618d623954f6f
+      internalID: -1864037994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_16
+      rect:
+        serializedVersion: 2
+        x: 849
+        y: 5057
+        width: 766
+        height: 183
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fe68c08285646047a2bf36274db25c1
+      internalID: 432731511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_17
+      rect:
+        serializedVersion: 2
+        x: 1681
+        y: 5064
+        width: 746
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35cae389682aac641b49838fa53170d5
+      internalID: 499836294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_18
+      rect:
+        serializedVersion: 2
+        x: 2486
+        y: 4990
+        width: 827
+        height: 258
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 391b87f14ccc9684582561226379a4b9
+      internalID: -961843108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_19
+      rect:
+        serializedVersion: 2
+        x: 3314
+        y: 5166
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d461708f00559849ab614f02e3c7394
+      internalID: -2083703080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_20
+      rect:
+        serializedVersion: 2
+        x: 3372
+        y: 4975
+        width: 546
+        height: 222
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39a66e9426650284896b6e0e79c9a506
+      internalID: 285540578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_21
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 4490
+        width: 859
+        height: 207
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b1ddcb8d11770d4f844cfa91319bfc9
+      internalID: 1408528024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_22
+      rect:
+        serializedVersion: 2
+        x: 982
+        y: 4490
+        width: 886
+        height: 215
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4f02d5334faa464c9ba1dfafc24fb79
+      internalID: 491365475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_23
+      rect:
+        serializedVersion: 2
+        x: 1974
+        y: 4495
+        width: 644
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3de95c347b4a9ec4aa184e7ec1accfde
+      internalID: 1804589374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_24
+      rect:
+        serializedVersion: 2
+        x: 2794
+        y: 4459
+        width: 792
+        height: 281
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c339f4b8b6f968b44bf74a56e78bca88
+      internalID: 1201327165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_25
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 3428
+        width: 559
+        height: 558
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c90f6693c9d4ff45b56d666d766d300
+      internalID: 1686826863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_26
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 3479
+        width: 324
+        height: 398
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f06368baae4a4d4a9910e21f559d461
+      internalID: -77247212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_27
+      rect:
+        serializedVersion: 2
+        x: 1705
+        y: 3428
+        width: 505
+        height: 524
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d9124dc938b9724ba778196149ba456
+      internalID: -182148550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_29
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 2468
+        width: 219
+        height: 588
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 855a4fc39add1c24da629c8bb0e6a95d
+      internalID: 2054187259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_30
+      rect:
+        serializedVersion: 2
+        x: 1006
+        y: 2479
+        width: 417
+        height: 546
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e7ee989f76660644b943656490e5471
+      internalID: -1154581464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_31
+      rect:
+        serializedVersion: 2
+        x: 1818
+        y: 2424
+        width: 413
+        height: 660
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e31c05ae0c50a44eab9c38bce98db79
+      internalID: -2061652832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_32
+      rect:
+        serializedVersion: 2
+        x: 2763
+        y: 2420
+        width: 195
+        height: 672
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92f0228072d30634cbe8afeafd0392bd
+      internalID: -322043935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_33
+      rect:
+        serializedVersion: 2
+        x: 3473
+        y: 2463
+        width: 347
+        height: 617
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08dad9a49be14304f942f6040e48351c
+      internalID: -563944366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_34
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 1568
+        width: 121
+        height: 754
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34407fb1f25158c48a4fd3321d080bed
+      internalID: -1205273007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_35
+      rect:
+        serializedVersion: 2
+        x: 1162
+        y: 1568
+        width: 121
+        height: 563
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20778e0e46d094843b347dfbe7765c6e
+      internalID: -2076755921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_36
+      rect:
+        serializedVersion: 2
+        x: 1962
+        y: 1736
+        width: 156
+        height: 422
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbc26e908f5988f4faa5eac93ed8aa6e
+      internalID: -1133873657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_37
+      rect:
+        serializedVersion: 2
+        x: 2782
+        y: 1736
+        width: 152
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b0237f8b6eba8a408478de0551ce4f8
+      internalID: 24912626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_38
+      rect:
+        serializedVersion: 2
+        x: 3559
+        y: 1627
+        width: 238
+        height: 621
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05a0f8668d9eea74a9587a2dbf5b4314
+      internalID: 87268849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_39
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 951
+        width: 484
+        height: 352
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1abd8bbae526f341acdef0183216cc9
+      internalID: -1686789784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_40
+      rect:
+        serializedVersion: 2
+        x: 1021
+        y: 839
+        width: 392
+        height: 471
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b7f5a04f47030e4aba1039e33f10d6c
+      internalID: 1237694111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_41
+      rect:
+        serializedVersion: 2
+        x: 1888
+        y: 764
+        width: 312
+        height: 726
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1368c3e9db334ca43a7682933f5f05e6
+      internalID: -877907980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_42
+      rect:
+        serializedVersion: 2
+        x: 2478
+        y: 1072
+        width: 765
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af4822c5f6b52e1449c02b9a43fde075
+      internalID: -843164419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_43
+      rect:
+        serializedVersion: 2
+        x: 3407
+        y: 1096
+        width: 558
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33f59a4ab4c20ee4fac9ad64e952fc31
+      internalID: 260135225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_44
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 128
+        width: 550
+        height: 397
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcd619d0afafe6542a9ccec066987436
+      internalID: -1336040649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_45
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 139
+        width: 613
+        height: 406
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 239d105c8e17bbe48a369932da6ad289
+      internalID: -616251769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_46
+      rect:
+        serializedVersion: 2
+        x: 1720
+        y: 150
+        width: 633
+        height: 383
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fd8e26344b64ca4892ce263bc096f02
+      internalID: 1449735337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_47
+      rect:
+        serializedVersion: 2
+        x: 2622
+        y: 115
+        width: 535
+        height: 414
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7e9231dd37e63c439e506da2bb90948
+      internalID: 2086820499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gun_Icons_Spritesheet_3_48
+      rect:
+        serializedVersion: 2
+        x: 3305
+        y: 232
+        width: 742
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19763eb5ed4688747972406a658c7f03
+      internalID: 1747554854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Gun_Icons_Spritesheet_3_30: -1154581464
+      Gun_Icons_Spritesheet_3_28: -1878232636
+      Gun_Icons_Spritesheet_3_43: 260135225
+      Gun_Icons_Spritesheet_3_26: -77247212
+      Gun_Icons_Spritesheet_3_14: 2042469789
+      Gun_Icons_Spritesheet_3_33: -563944366
+      Gun_Icons_Spritesheet_3_45: -616251769
+      Gun_Icons_Spritesheet_3_1: 633935780
+      Gun_Icons_Spritesheet_3_4: 667493246
+      Gun_Icons_Spritesheet_3_36: -1133873657
+      Gun_Icons_Spritesheet_3_46: 1449735337
+      Gun_Icons_Spritesheet_3_8: -1700870934
+      Gun_Icons_Spritesheet_3_11: -937444330
+      Gun_Icons_Spritesheet_3_37: 24912626
+      Gun_Icons_Spritesheet_3_27: -182148550
+      Gun_Icons_Spritesheet_3_42: -843164419
+      Gun_Icons_Spritesheet_3_41: -877907980
+      Gun_Icons_Spritesheet_3_18: -961843108
+      Gun_Icons_Spritesheet_3_34: -1205273007
+      Gun_Icons_Spritesheet_3_17: 499836294
+      Gun_Icons_Spritesheet_3_15: -1864037994
+      Gun_Icons_Spritesheet_3_20: 285540578
+      Gun_Icons_Spritesheet_3_2: 1936051171
+      Gun_Icons_Spritesheet_3_12: -1358190009
+      Gun_Icons_Spritesheet_3_32: -322043935
+      Gun_Icons_Spritesheet_3_38: 87268849
+      Gun_Icons_Spritesheet_3_6: -620516281
+      Gun_Icons_Spritesheet_3_5: 1286880694
+      Gun_Icons_Spritesheet_3_10: -1125234030
+      Gun_Icons_Spritesheet_3_40: 1237694111
+      Gun_Icons_Spritesheet_3_24: 1201327165
+      Gun_Icons_Spritesheet_3_35: -2076755921
+      Gun_Icons_Spritesheet_3_22: 491365475
+      Gun_Icons_Spritesheet_3_13: 462711922
+      Gun_Icons_Spritesheet_3_19: -2083703080
+      Gun_Icons_Spritesheet_3_7: 741270414
+      Gun_Icons_Spritesheet_3_31: -2061652832
+      Gun_Icons_Spritesheet_3_44: -1336040649
+      Gun_Icons_Spritesheet_3_23: 1804589374
+      Gun_Icons_Spritesheet_3_47: 2086820499
+      Gun_Icons_Spritesheet_3_25: 1686826863
+      Gun_Icons_Spritesheet_3_21: 1408528024
+      Gun_Icons_Spritesheet_3_39: -1686789784
+      Gun_Icons_Spritesheet_3_48: 1747554854
+      Gun_Icons_Spritesheet_3_9: -1544560096
+      Gun_Icons_Spritesheet_3_3: 1134328144
+      Gun_Icons_Spritesheet_3_16: 432731511
+      Gun_Icons_Spritesheet_3_0: 522576621
+      Gun_Icons_Spritesheet_3_29: 2054187259
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

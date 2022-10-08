@@ -22,6 +22,8 @@ public class PlayerImpactReceiver : MonoBehaviour
 
         if (!GetComponent<PhotonView>().IsMine)
             GetComponent<PhotonView>().RPC("AddImpact_RPC", RpcTarget.All, dir, force);
+        else
+            Impact(dir, force);
     }
 
     [PunRPC]
@@ -30,6 +32,11 @@ public class PlayerImpactReceiver : MonoBehaviour
         if (!GetComponent<PhotonView>().IsMine)
             return;
 
+        Impact(dir, force);
+    }
+
+    void Impact(Vector3 dir, float force)
+    {
         dir.Normalize();
         if (dir.y < 0) dir.y = -dir.y; // reflect down force on the ground
         impact += dir.normalized * force / mass;

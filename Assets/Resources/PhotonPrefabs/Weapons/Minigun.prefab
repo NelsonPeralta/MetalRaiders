@@ -224,7 +224,6 @@ MonoBehaviour:
   isDualWieldable: 0
   defaultAmmo: 999
   defaultExtraAmmo: 999
-  weaponType: Pistol
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1

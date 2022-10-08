@@ -412,6 +412,12 @@ public class PlayerInventory : MonoBehaviourPun
             //StartingWeapon2 = "patriot";
         }
 
+        if (GameManager.instance.gameType == GameManager.GameType.Rockets)
+        {
+            StartingWeapon = "rpg";
+            StartingWeapon2 = "m32";
+        }
+
         if (GameManager.instance.gameType == GameManager.GameType.Fiesta)
         {
             AssignRandomWeapons();
@@ -556,8 +562,16 @@ public class PlayerInventory : MonoBehaviourPun
         if (!activeWeapon)
             return;
 
-        player.GetComponent<PlayerUI>().activeWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[activeWeapon.codeName]}>";
-        player.GetComponent<PlayerUI>().holsteredWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[holsteredWeapon.codeName]}>";
+        try
+        {
+            player.GetComponent<PlayerUI>().activeWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[activeWeapon.codeName]}>";
+        }
+        catch { }
+        try
+        {
+            player.GetComponent<PlayerUI>().holsteredWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[holsteredWeapon.codeName]}>";
+        }
+        catch { }
 
         heavyAmmoHudCounter.gameObject.SetActive(false);
         powerAmmoHudCounter.gameObject.SetActive(false);

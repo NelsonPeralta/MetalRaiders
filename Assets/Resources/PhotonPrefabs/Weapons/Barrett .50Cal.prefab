@@ -725,7 +725,6 @@ MonoBehaviour:
   isDualWieldable: 0
   defaultAmmo: 4
   defaultExtraAmmo: 0
-  weaponType: Sniper
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1

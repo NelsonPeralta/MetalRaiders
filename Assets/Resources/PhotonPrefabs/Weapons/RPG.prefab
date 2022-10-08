@@ -139,7 +139,6 @@ MonoBehaviour:
   isDualWieldable: 0
   defaultAmmo: 1
   defaultExtraAmmo: 0
-  weaponType: RPG
   smallAmmo: 0
   heavyAmmo: 0
   powerAmmo: 1

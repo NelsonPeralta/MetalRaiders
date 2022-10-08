@@ -142,14 +142,20 @@ public class PlayerShooting : MonoBehaviourPun
                 bullet.SetActive(true);
                 GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }
-            else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+            else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
             {
-                var rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).gameObject;
+                Rocket rocket = null;
+
+                if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+                    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<Rocket>();
+                else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+                    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<Rocket>();
 
                 if (PV.IsMine)
-                    rocket.layer = 8;
+                    rocket.gameObject.layer = 8;
                 else
-                    rocket.layer = 0;
+                    rocket.gameObject.layer = 0;
+
                 rocket.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
                 rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
 

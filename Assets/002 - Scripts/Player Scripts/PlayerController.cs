@@ -657,7 +657,7 @@ public class PlayerController : MonoBehaviourPun
                     }
                 }
 
-                if (pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+                if (pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket /* || pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade */)
                 {
                     if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
                     {
@@ -1032,7 +1032,7 @@ public class PlayerController : MonoBehaviourPun
             //WebManager.webManagerInstance.SaveMultiplayerStats(GetComponent<PlayerMultiplayerMatchStats>());
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 GetComponent<Player>().LeaveRoomWithDelay();
-                //FindObjectOfType<MultiplayerManager>().EndGame();
+            //FindObjectOfType<MultiplayerManager>().EndGame();
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 FindObjectOfType<SwarmManager>().EndGame();
         }

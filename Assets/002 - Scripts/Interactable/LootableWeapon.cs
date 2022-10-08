@@ -34,8 +34,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     [SerializeField] int defaultAmmo;
     [SerializeField] int defaultExtraAmmo;
 
-    public string weaponType;
-
     public bool smallAmmo;
     public bool heavyAmmo;
     public bool powerAmmo;

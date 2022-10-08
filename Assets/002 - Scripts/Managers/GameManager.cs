@@ -17,9 +17,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
-    public enum GameType { Fiesta, Slayer, Pro, Snipers, Survival, Unassgined }
+    public enum GameType { Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers }
     public enum CoopGameType { Survival }
+    public enum TeamMode { Classic, None }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
+    [SerializeField] TeamMode _teamMode;
     // Public variables
     public GameMode gameMode
     {
@@ -39,6 +41,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         get { return _gameType; }
         set { _gameType = value; }
+    }
+
+    public TeamMode teamMode
+    {
+        get { return _teamMode; }
+        set { _teamMode = value; }
     }
 
     [Header("Ammo Packs")]

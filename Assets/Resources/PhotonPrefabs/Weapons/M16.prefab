@@ -704,7 +704,6 @@ MonoBehaviour:
   isDualWieldable: 0
   defaultAmmo: 36
   defaultExtraAmmo: 0
-  weaponType: Assault Rifle
   smallAmmo: 0
   heavyAmmo: 1
   powerAmmo: 0

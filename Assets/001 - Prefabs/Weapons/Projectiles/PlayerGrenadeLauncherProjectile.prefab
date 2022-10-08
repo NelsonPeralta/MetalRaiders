@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0.0000018099952, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -126,11 +127,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea644881a3a75642a14f3dbbeff4647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerWhoThrewGrenade: {fileID: 0}
-  damage: 250
+  player: {fileID: 0}
+  damage: 80
   force: 1500
-  radius: 4
-  power: 75
+  radius: 5
+  power: 100
   useConstantForce: 0
   explosionPrefab: {fileID: 2064435946878792721, guid: 8faa3f91f1abd2a46a8e747289c53d10,
     type: 3}

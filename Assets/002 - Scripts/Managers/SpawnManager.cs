@@ -33,22 +33,20 @@ public class SpawnManager : MonoBehaviour
 
         foreach (SpawnPoint sp in genericSpawnPoints)
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                if (GameManager.instance.gameType == GameManager.GameType.Slayer)
-                    if (sp.players.Count == 0)
-                        availableSpawnPoints.Add(sp);
+                if (sp.players.Count == 0)
+                    availableSpawnPoints.Add(sp);
 
         if (availableSpawnPoints.Count > 0)
         {
             int ran = Random.Range(0, availableSpawnPoints.Count);
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                if (GameManager.instance.gameType == GameManager.GameType.Slayer)
-                    if (availableSpawnPoints[ran].players.Count == 0)
-                    {
-                        try { GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform.position})"); } catch { }
-                        Debug.Log($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform})");
-                        return availableSpawnPoints[ran].transform;
-                    }
+                if (availableSpawnPoints[ran].players.Count == 0)
+                {
+                    try { GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform.position})"); } catch { }
+                    Debug.Log($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform})");
+                    return availableSpawnPoints[ran].transform;
+                }
         }
 
         return GetRandomSpawnpoint();

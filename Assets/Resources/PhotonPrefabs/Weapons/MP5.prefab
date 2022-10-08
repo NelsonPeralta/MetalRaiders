@@ -389,7 +389,6 @@ MonoBehaviour:
   isDualWieldable: 0
   defaultAmmo: 24
   defaultExtraAmmo: 0
-  weaponType: SMG
   smallAmmo: 1
   heavyAmmo: 0
   powerAmmo: 0
