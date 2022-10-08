@@ -27,7 +27,9 @@ public class PlayerImpactReceiver : MonoBehaviour
     [PunRPC]
     void AddImpact_RPC(Vector3 dir, float force)
     {
-        Debug.Log($"AddImpact_RPC");
+        if (!GetComponent<PhotonView>().IsMine)
+            return;
+
         dir.Normalize();
         if (dir.y < 0) dir.y = -dir.y; // reflect down force on the ground
         impact += dir.normalized * force / mass;
