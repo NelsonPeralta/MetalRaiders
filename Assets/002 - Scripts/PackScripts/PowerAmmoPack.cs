@@ -42,23 +42,23 @@ public class PowerAmmoPack : MonoBehaviour
             pInventory = other.gameObject.GetComponent<Player>().playerInventory;
             aSource = other.gameObject.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
 
-            ammoAllowedToRemoveFromThisPack = pInventory.maxPowerAmmo - pInventory.powerAmmo;
+            //ammoAllowedToRemoveFromThisPack = pInventory.maxPowerAmmo - pInventory.powerAmmo;
 
-            if (pInventory.powerAmmo != pInventory.maxPowerAmmo)
-                aSource.Play();
+            //if (pInventory.powerAmmo != pInventory.maxPowerAmmo)
+            //    aSource.Play();
 
-            if (ammoInThisPack <= ammoAllowedToRemoveFromThisPack)
-            {
-                pInventory.powerAmmo = pInventory.powerAmmo + ammoInThisPack;
-                ammoInThisPack = 0;
-            }
-            else if (ammoInThisPack > ammoAllowedToRemoveFromThisPack)
-            {
-                pInventory.powerAmmo = pInventory.powerAmmo + ammoAllowedToRemoveFromThisPack;
-                ammoInThisPack = ammoInThisPack - ammoAllowedToRemoveFromThisPack;
+            //if (ammoInThisPack <= ammoAllowedToRemoveFromThisPack)
+            //{
+            //    pInventory.powerAmmo = pInventory.powerAmmo + ammoInThisPack;
+            //    ammoInThisPack = 0;
+            //}
+            //else if (ammoInThisPack > ammoAllowedToRemoveFromThisPack)
+            //{
+            //    pInventory.powerAmmo = pInventory.powerAmmo + ammoAllowedToRemoveFromThisPack;
+            //    ammoInThisPack = ammoInThisPack - ammoAllowedToRemoveFromThisPack;
 
-                ammoText.text = ammoInThisPack.ToString();
-            }
+            //    ammoText.text = ammoInThisPack.ToString();
+            //}
 
             if (ammoInThisPack <= 0)
             {

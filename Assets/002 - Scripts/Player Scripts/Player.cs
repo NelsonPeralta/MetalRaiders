@@ -591,9 +591,6 @@ public class Player : MonoBehaviourPunCallbacks
 
         StartCoroutine(MakeThirdPersonModelVisible());
 
-        playerInventory.smallAmmo = 72;
-        playerInventory.heavyAmmo = 60;
-        playerInventory.powerAmmo = 4;
         playerInventory.grenades = 2;
 
         //StartCoroutine(playerInventory.EquipStartingWeapon());

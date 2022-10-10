@@ -87,16 +87,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     {
         defaultAmmo = ammoInThisWeapon;
         defaultExtraAmmo = extraAmmo;
-        //Debug.Log("Lootable Weapon Root: " + transform.parent);
-        //if (transform.parent)
-        //{
-        //    string parentName = transform.parent.name;
-        //    if (!parentName.Contains("WeaponPool"))
-        //        Destroy(gameObject);
-        //}
-        //else
-        //    Destroy(gameObject);
-
         spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
     }
 
@@ -127,27 +117,14 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     public void LootWeapon(bool onlyExtraAmmo = false)
     {
-        //onlineWeaponSpawnPoint.StartCoroutine(onlineWeaponSpawnPoint.RespawnWeapon());
-
-        int ammoToLoot = ammoInThisWeapon + extraAmmo;
+        int ammoToLoot = extraAmmo;
         PlayerInventory playerInventory = GameManager.GetMyPlayer().playerInventory;
         if (!onlyExtraAmmo)
             ammoToLoot += ammoInThisWeapon;
 
         foreach (GameObject wp in playerInventory.allWeaponsInInventory)
             if (wp.GetComponent<WeaponProperties>().codeName == codeName)
-            {
-                //WeaponProperties.AmmoType ammoType = wp.GetComponent<WeaponProperties>().ammoType;
-
-                //if (ammoType == WeaponProperties.AmmoType.Light)
-                //    playerInventory.smallAmmo += ammoToLoot;
-                //else if (ammoType == WeaponProperties.AmmoType.Heavy)
-                //    playerInventory.heavyAmmo += ammoToLoot;
-                //else if (ammoType == WeaponProperties.AmmoType.Power)
-                //    playerInventory.powerAmmo += ammoToLoot;
-
                 wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
-            }
 
         OnLooted?.Invoke(this);
         if (onlineWeaponSpawnPoint)
@@ -174,19 +151,4 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         if (param.ContainsKey("ttl"))
             _ttl = int.Parse(param["ttl"]);
     }
-
-    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    //{
-    //    Debug.Log("OnPhotonSerializeView");
-    //    if (stream.IsWriting)
-    //    {
-    //        stream.SendNext(transform.position);
-    //        stream.SendNext(transform.rotation);
-    //    }
-    //    else if (stream.IsReading)
-    //    {
-    //        transform.position = (Vector3)stream.ReceiveNext();
-    //        transform.rotation = (Quaternion)stream.ReceiveNext();
-    //    }
-    //}
 }

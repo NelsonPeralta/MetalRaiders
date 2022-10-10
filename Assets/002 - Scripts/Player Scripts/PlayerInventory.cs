@@ -93,51 +93,6 @@ public class PlayerInventory : MonoBehaviourPun
     [Header("Unequipped Weapons")]
     public GameObject[] allWeaponsInInventory = new GameObject[25];
 
-    [SerializeField] int _smallAmmo = 0;
-    [SerializeField] int _heavyAmmo = 0;
-    [SerializeField] int _powerAmmo = 0;
-
-    public int smallAmmo
-    {
-        get { return _smallAmmo; }
-        set
-        {
-            _smallAmmo = value;
-            if (_smallAmmo > maxSmallAmmo)
-                _smallAmmo = maxSmallAmmo;
-
-            OnAmmoChanged?.Invoke(this);
-        }
-    }
-    public int heavyAmmo
-    {
-        get { return _heavyAmmo; }
-        set
-        {
-            _heavyAmmo = value;
-            if (_heavyAmmo > maxHeavyAmmo)
-                _heavyAmmo = maxHeavyAmmo;
-
-            OnAmmoChanged?.Invoke(this);
-        }
-    }
-    public int powerAmmo
-    {
-        get { return _powerAmmo; }
-        set
-        {
-            _powerAmmo = value;
-            if (_powerAmmo > maxPowerAmmo)
-                _powerAmmo = maxPowerAmmo;
-
-            OnAmmoChanged?.Invoke(this);
-        }
-    }
-
-    [SerializeField] int _maxSmallAmmo = 144;
-    [SerializeField] int _maxHeavyAmmo = 120;
-    [SerializeField] int _maxPowerAmmo = 8;
-
     [Header("HUD Components")]
     public GameObject lowAmmoIndicator;
     public GameObject noAmmoIndicator;
@@ -165,36 +120,10 @@ public class PlayerInventory : MonoBehaviourPun
 
             if (value && !previousValue)
             {
-                maxSmallAmmo *= 2;
-                maxHeavyAmmo *= 2;
-                maxPowerAmmo *= 2;
-
-                smallAmmo = maxSmallAmmo;
-                heavyAmmo = maxHeavyAmmo;
-                powerAmmo = maxPowerAmmo;
-
                 ChangeActiveAmmoCounter();
             }
         }
     }
-    public int maxSmallAmmo
-    {
-        get { return _maxSmallAmmo; }
-        private set { _maxSmallAmmo = value; }
-    }
-
-    public int maxHeavyAmmo
-    {
-        get { return _maxHeavyAmmo; }
-        private set { _maxHeavyAmmo = value; }
-    }
-
-    public int maxPowerAmmo
-    {
-        get { return _maxPowerAmmo; }
-        private set { _maxPowerAmmo = value; }
-    }
-
     /// <summary>
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
@@ -243,21 +172,12 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
-            maxSmallAmmo *= 2;
-            maxHeavyAmmo *= 2;
-            maxPowerAmmo *= 2;
             maxGrenades *= 2;
 
-            smallAmmo = maxSmallAmmo;
-            heavyAmmo = maxHeavyAmmo;
-            powerAmmo = maxPowerAmmo;
             grenades = maxGrenades;
         }
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
-            smallAmmo = 72;
-            heavyAmmo = 60;
-            powerAmmo = 8;
             grenades = 2;
         }
     }

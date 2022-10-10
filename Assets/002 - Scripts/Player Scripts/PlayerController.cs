@@ -954,40 +954,6 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
-    public void TransferAmmoDW(bool reloadedRight, bool reloadedLeft)
-    {
-        if (reloadedRight)
-        {
-            ammoRightWeaponIsMissing = pInventory.rightWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.rightWeaponCurrentAmmo;
-
-            if (pInventory.smallAmmo >= ammoRightWeaponIsMissing)
-            {
-                pInventory.smallAmmo = pInventory.smallAmmo - ammoRightWeaponIsMissing;
-                pInventory.rightWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.rightWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-            }
-            else if (pInventory.smallAmmo < ammoRightWeaponIsMissing)
-            {
-                pInventory.rightWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.rightWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.smallAmmo;
-                pInventory.smallAmmo = 0;
-            }
-        }
-
-        if (reloadedLeft)
-        {
-            ammoLeftWeaponIsMissing = pInventory.leftWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.leftWeaponCurrentAmmo;
-
-            if (pInventory.smallAmmo >= ammoLeftWeaponIsMissing)
-            {
-                pInventory.smallAmmo = pInventory.smallAmmo - ammoLeftWeaponIsMissing;
-                pInventory.leftWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.leftWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-            }
-            else if (pInventory.smallAmmo < ammoLeftWeaponIsMissing)
-            {
-                pInventory.leftWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.leftWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.smallAmmo;
-                pInventory.smallAmmo = 0;
-            }
-        }
-    }
     void TestButton()
     {
         if (Input.GetKeyDown(KeyCode.T))

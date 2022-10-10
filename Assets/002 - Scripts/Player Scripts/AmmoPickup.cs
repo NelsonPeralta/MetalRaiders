@@ -20,14 +20,6 @@ public class AmmoPickup : MonoBehaviour
         AudioSource aSource = playerProperties.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
 
         int ammoToRemoveFromThisPack = 0;
-        if (ammoPackScript.ammoType == "small")
-            ammoToRemoveFromThisPack = pInventory.maxSmallAmmo - pInventory.smallAmmo;
-        else if (ammoPackScript.ammoType == "heavy")
-            ammoToRemoveFromThisPack = pInventory.maxHeavyAmmo - pInventory.heavyAmmo;
-        else if (ammoPackScript.ammoType == "power")
-            ammoToRemoveFromThisPack = pInventory.maxPowerAmmo - pInventory.powerAmmo;
-        else if (ammoPackScript.ammoType == "grenade")
-            ammoToRemoveFromThisPack = pInventory.maxGrenades - pInventory.grenades;
 
         if (ammoToRemoveFromThisPack > 0 && playerProperties.PV.IsMine)
             aSource.Play();
@@ -36,17 +28,6 @@ public class AmmoPickup : MonoBehaviour
 
         if (ammoPackScript.GetAmmo() <= ammoToRemoveFromThisPack)
             ammoToRemoveFromThisPack = ammoPackScript.GetAmmo();
-
-        if (ammoPackScript.ammoType == "small")
-            pInventory.smallAmmo += ammoToRemoveFromThisPack;
-        else if (ammoPackScript.ammoType == "heavy")
-            pInventory.heavyAmmo += ammoToRemoveFromThisPack;
-        else if (ammoPackScript.ammoType == "power")
-            pInventory.powerAmmo += ammoToRemoveFromThisPack;
-        else if (ammoPackScript.ammoType == "grenade")
-            pInventory.grenades += ammoToRemoveFromThisPack;
-
-        //ammoPackScript.GetAmmo() -= ammoToRemoveFromThisPack;
         ammoPackScript.ammoText.text = ammoPackScript.GetAmmo().ToString();
 
         playerProperties.allPlayerScripts.playerInventory.UpdateAllExtraAmmoHuds();
