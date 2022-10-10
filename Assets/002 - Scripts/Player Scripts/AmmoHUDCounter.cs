@@ -42,14 +42,6 @@ public class AmmoHUDCounter : MonoBehaviour
 
     public void UpdateExtraAmmo()
     {
-        if (!allPlayerScripts.GetComponent<PhotonView>().IsMine)
-            return;
-
-        if (this == playerInventory.smallAmmoHudCounter)
-            extraAmmoText.text = playerInventory.smallAmmo.ToString();
-        else if (this == playerInventory.heavyAmmoHudCounter)
-            extraAmmoText.text = playerInventory.heavyAmmo.ToString();
-        else if (this == playerInventory.powerAmmoHudCounter)
-            extraAmmoText.text = playerInventory.powerAmmo.ToString();
+        // TODO: Deprecate this
     }
 }

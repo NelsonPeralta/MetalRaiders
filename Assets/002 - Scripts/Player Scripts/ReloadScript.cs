@@ -182,28 +182,14 @@ public class ReloadScript : MonoBehaviourPun
 
     public void CheckAmmoTypeType(bool isOutOfAmmo)
     {
-        if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light && pController.pInventory.smallAmmo != 0 /* && !isInspecting */)
-        {
-            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity)
-            {
-                ReloadAnimation(isOutOfAmmo);
-            }
-        }
-        else if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy && pController.pInventory.heavyAmmo != 0 /* && !isInspecting */)
-        {
-            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity)
-            {
-                ReloadAnimation(isOutOfAmmo);
-            }
-        }
-        else if (!pController.isReloading && pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power && pController.pInventory.powerAmmo != 0 /* && !isInspecting */)
-        {
-            if (pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo < pController.pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity)
-            {
-                ReloadAnimation(isOutOfAmmo);
-            }
-        }
+        if (pController.isReloading)
+            return;
 
+        WeaponProperties activeWeapon = pController.pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        if (activeWeapon.currentAmmo < activeWeapon.ammoCapacity && activeWeapon.spareAmmo > 0)
+        {
+            ReloadAnimation(isOutOfAmmo);
+        }
     }
 
     public void ReloadAnimation(bool isOutOfAmmo)
@@ -237,18 +223,18 @@ public class ReloadScript : MonoBehaviourPun
             int ammoNeededToReload = pController.pInventory.activeWeapon.ammoCapacity - pController.pInventory.activeWeapon.currentAmmo;
             int ammoToReload = 0;
 
-            if (ammoNeededToReload > pController.pInventory.currentExtraAmmo)
+            if (ammoNeededToReload > pController.pInventory.activeWeapon.spareAmmo)
             {
-                ammoToReload = pController.pInventory.currentExtraAmmo;
+                ammoToReload = pController.pInventory.activeWeapon.spareAmmo;
             }
-            else if (ammoNeededToReload <= pController.pInventory.currentExtraAmmo)
+            else if (ammoNeededToReload <= pController.pInventory.activeWeapon.spareAmmo)
             {
                 ammoToReload = ammoNeededToReload;
             }
 
             shellsToInsert = ammoToReload;
-            Reload(0, DEFAULT_RELOAD_TIME / (3/2f),
-                DEFAULT_RELOAD_TIME / (3/2f), 0);
+            Reload(0, DEFAULT_RELOAD_TIME / (3 / 2f),
+                DEFAULT_RELOAD_TIME / (3 / 2f), 0);
             pController.weaponAnimator.Play("Reload Open", 0, 0f);
             pController.ScopeOut();
 

@@ -37,6 +37,10 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Top Right", order = 3)]
     public Transform topRight;
+    public TMP_Text activeAmmoText;
+    public TMP_Text spareAmmoText;
+    public Image activeWeaponIcon;
+    public Image holsteredWeaponIcon;
     public TMP_Text activeWeaponIconText;
     public TMP_Text holsteredWeaponIconText;
 
@@ -87,6 +91,7 @@ public class PlayerUI : MonoBehaviour
 
         //GetComponent<Player>().playerInventory.OnGrenadeChanged -= OnGrenadeChanged_Delegate;
         GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
+        GetComponent<Player>().playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             //SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
@@ -121,6 +126,8 @@ public class PlayerUI : MonoBehaviour
     private void Start()
     {
         Debug.Log("PlayerUI Start");
+        activeWeaponIcon = null;
+        holsteredWeaponIcon = null;
         try { gameType.text = GameManager.instance.gameType.ToString(); }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
@@ -283,6 +290,15 @@ public class PlayerUI : MonoBehaviour
     void OnPlayerLivesChanged_Delegate(SwarmManager swarmManager)
     {
         swarmLivesText.text = swarmManager.livesLeft.ToString();
+    }
+
+    void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
+    {
+        activeAmmoText.text = playerInventory.activeWeapon.currentAmmo.ToString();
+        spareAmmoText.text = playerInventory.activeWeapon.spareAmmo.ToString();
+
+        try { activeWeaponIcon.sprite = playerInventory.activeWeapon.weaponIcon; } catch { activeWeaponIcon.sprite = null; }
+        try { holsteredWeaponIcon.sprite = playerInventory.holsteredWeapon.weaponIcon; } catch { holsteredWeaponIcon.sprite = null; }
     }
     void OnGrenadeChanged_Delegate(PlayerInventory playerInventory)
     {

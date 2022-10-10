@@ -851,80 +851,105 @@ public class PlayerController : MonoBehaviourPun
     public void TransferAmmo()
     {
 
-        if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Light)
+        // Old Reload
+        #region
+        //if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Light)
+        //{
+        //    if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+        //    {
+        //        pInventory.smallAmmo = pInventory.smallAmmo - 1;
+        //        pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
+        //    }
+
+
+        //    else
+        //    {
+        //        ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+
+        //        if (pInventory.smallAmmo >= ammoWeaponIsMissing)
+        //        {
+        //            pInventory.smallAmmo = pInventory.smallAmmo - ammoWeaponIsMissing;
+        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
+        //        }
+        //        else if (pInventory.smallAmmo < ammoWeaponIsMissing)
+        //        {
+        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.smallAmmo;
+        //            pInventory.smallAmmo = 0;
+        //        }
+        //    }
+
+        //}
+
+        //else if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Heavy)
+        //{
+        //    if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+        //    {
+        //        pInventory.heavyAmmo = pInventory.heavyAmmo - 1;
+        //        pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
+        //    }
+
+        //    else
+        //    {
+        //        ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+
+        //        if (pInventory.heavyAmmo >= ammoWeaponIsMissing)
+        //        {
+        //            pInventory.heavyAmmo = pInventory.heavyAmmo - ammoWeaponIsMissing;
+        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
+        //        }
+        //        else if (pInventory.heavyAmmo < ammoWeaponIsMissing)
+        //        {
+        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.heavyAmmo;
+        //            pInventory.heavyAmmo = 0;
+        //        }
+        //    }
+        //}
+        //else if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Power)
+        //{
+
+        //    if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+        //    {
+        //        pInventory.powerAmmo = pInventory.powerAmmo - 1;
+        //        pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
+        //    }
+
+        //    else
+        //    {
+        //        ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
+
+        //        if (pInventory.powerAmmo >= ammoWeaponIsMissing)
+        //        {
+        //            pInventory.powerAmmo = pInventory.powerAmmo - ammoWeaponIsMissing;
+        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
+        //        }
+        //        else if (pInventory.powerAmmo < ammoWeaponIsMissing)
+        //        {
+        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.powerAmmo;
+        //            pInventory.powerAmmo = 0;
+        //        }
+        //    }
+        //}
+        #endregion
+
+
+        if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
-            if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
-            {
-                pInventory.smallAmmo = pInventory.smallAmmo - 1;
-                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
-            }
-
-
-            else
-            {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
-
-                if (pInventory.smallAmmo >= ammoWeaponIsMissing)
-                {
-                    pInventory.smallAmmo = pInventory.smallAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-                }
-                else if (pInventory.smallAmmo < ammoWeaponIsMissing)
-                {
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.smallAmmo;
-                    pInventory.smallAmmo = 0;
-                }
-            }
-
+            pInventory.activeWeapon.spareAmmo -= 1;
+            pInventory.activeWeapon.currentAmmo += 1;
         }
-
-        else if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Heavy)
+        else
         {
-            if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+            ammoWeaponIsMissing = pInventory.activeWeapon.ammoCapacity - pInventory.activeWeapon.currentAmmo;
+
+            if (pInventory.activeWeapon.spareAmmo >= ammoWeaponIsMissing)
             {
-                pInventory.heavyAmmo = pInventory.heavyAmmo - 1;
-                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
+                pInventory.activeWeapon.currentAmmo = pInventory.activeWeapon.ammoCapacity;
+                pInventory.activeWeapon.spareAmmo -= ammoWeaponIsMissing;
             }
-
-            else
+            else if (pInventory.activeWeapon.spareAmmo < ammoWeaponIsMissing)
             {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
-
-                if (pInventory.heavyAmmo >= ammoWeaponIsMissing)
-                {
-                    pInventory.heavyAmmo = pInventory.heavyAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-                }
-                else if (pInventory.heavyAmmo < ammoWeaponIsMissing)
-                {
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.heavyAmmo;
-                    pInventory.heavyAmmo = 0;
-                }
-            }
-        }
-        else if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Power)
-        {
-
-            if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
-            {
-                pInventory.powerAmmo = pInventory.powerAmmo - 1;
-                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
-            }
-
-            else
-            {
-                ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
-
-                if (pInventory.powerAmmo >= ammoWeaponIsMissing)
-                {
-                    pInventory.powerAmmo = pInventory.powerAmmo - ammoWeaponIsMissing;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-                }
-                else if (pInventory.powerAmmo < ammoWeaponIsMissing)
-                {
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.powerAmmo;
-                    pInventory.powerAmmo = 0;
-                }
+                pInventory.activeWeapon.currentAmmo += pInventory.activeWeapon.spareAmmo;
+                pInventory.activeWeapon.spareAmmo = 0;
             }
         }
     }

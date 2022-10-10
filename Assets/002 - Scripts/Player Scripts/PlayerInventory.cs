@@ -7,7 +7,7 @@ using System;
 public class PlayerInventory : MonoBehaviourPun
 {
     public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
-    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged, OnActiveWeaponChangedLate, OnAmmoChanged;
+    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged, OnActiveWeaponChangedLate, OnHolsteredWeaponChanged, OnAmmoChanged;
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
@@ -28,22 +28,7 @@ public class PlayerInventory : MonoBehaviourPun
     public int activeWeapIs = 0;
     [SerializeField] WeaponProperties _activeWeapon;
     [SerializeField] WeaponProperties _holsteredWeapon;
-    [SerializeField] AmmoHUDCounter _activeAmmoHUDCounter;
 
-    public AmmoHUDCounter activeAmmoHUDCounter
-    {
-        get { return _activeAmmoHUDCounter; }
-        set
-        {
-            smallAmmoHudCounter.ChangeToHolstered();
-            powerAmmoHudCounter.ChangeToHolstered();
-            heavyAmmoHudCounter.ChangeToHolstered();
-
-            _activeAmmoHUDCounter = value;
-            activeAmmoHUDCounter.ChangeToDrawn();
-            activeAmmoHUDCounter.ammoTextDrawn.text = activeWeapon.currentAmmo.ToString();
-        }
-    }
     public WeaponProperties activeWeapon
     {
         get { return _activeWeapon; }
@@ -63,19 +48,6 @@ public class PlayerInventory : MonoBehaviourPun
 
                 activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                 activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
-                if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
-                    currentExtraAmmo = smallAmmo;
-                else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
-                    currentExtraAmmo = heavyAmmo;
-                else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
-                    currentExtraAmmo = powerAmmo;
-
-                if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
-                    activeAmmoHUDCounter = smallAmmoHudCounter;
-                else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
-                    activeAmmoHUDCounter = heavyAmmoHudCounter;
-                else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
-                    activeAmmoHUDCounter = powerAmmoHudCounter;
 
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
@@ -93,6 +65,7 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 _holsteredWeapon = value;
                 _holsteredWeapon.gameObject.SetActive(false);
+                OnHolsteredWeaponChanged?.Invoke(this);
                 PV.RPC("AssignWeapon", RpcTarget.Others, holsteredWeapon.codeName, false);
             }
         }
@@ -102,7 +75,6 @@ public class PlayerInventory : MonoBehaviourPun
     [Space(20)]
     [Header("Equipped Weapons")]
     public GameObject[] weaponsEquiped = new GameObject[2];
-    public int currentExtraAmmo = 0;
 
     [Header("Grenades")]
     int _grenades;
@@ -167,9 +139,6 @@ public class PlayerInventory : MonoBehaviourPun
     [SerializeField] int _maxPowerAmmo = 8;
 
     [Header("HUD Components")]
-    public AmmoHUDCounter smallAmmoHudCounter;
-    public AmmoHUDCounter heavyAmmoHudCounter;
-    public AmmoHUDCounter powerAmmoHudCounter;
     public GameObject lowAmmoIndicator;
     public GameObject noAmmoIndicator;
 
@@ -204,11 +173,6 @@ public class PlayerInventory : MonoBehaviourPun
                 heavyAmmo = maxHeavyAmmo;
                 powerAmmo = maxPowerAmmo;
 
-                smallAmmoHudCounter.extraAmmoText.text = smallAmmo.ToString();
-                heavyAmmoHudCounter.extraAmmoText.text = heavyAmmo.ToString();
-                powerAmmoHudCounter.extraAmmoText.text = powerAmmo.ToString();
-
-                //AmmoManager();
                 ChangeActiveAmmoCounter();
             }
         }
@@ -300,7 +264,6 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnActiveWeaponAmmoChanged(WeaponProperties weaponProperties)
     {
-        activeAmmoHUDCounter.ammoTextDrawn.text = activeWeapon.currentAmmo.ToString();
         CheckLowAmmoIndicator();
     }
 
@@ -309,15 +272,15 @@ public class PlayerInventory : MonoBehaviourPun
         lowAmmoIndicator.SetActive(false);
         noAmmoIndicator.SetActive(false);
 
-        if (activeWeapon.currentAmmo == 0 && currentExtraAmmo == 0)
-        {
-            lowAmmoIndicator.SetActive(false);
-            noAmmoIndicator.SetActive(true);
-        }
-        else if (activeWeapon.currentAmmo < activeWeapon.GetComponent<WeaponProperties>().ammoCapacity * 0.4f && currentExtraAmmo >= 0)
+        if (activeWeapon.currentAmmo < activeWeapon.ammoCapacity * 0.4f)
         {
             lowAmmoIndicator.SetActive(true);
             noAmmoIndicator.SetActive(false);
+        }
+        if (activeWeapon.currentAmmo == 0 && activeWeapon.spareAmmo == 0)
+        {
+            lowAmmoIndicator.SetActive(false);
+            noAmmoIndicator.SetActive(true);
         }
     }
 
@@ -417,6 +380,10 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon = "rpg";
             StartingWeapon2 = "m32";
         }
+
+        GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
+        try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
+
 
         if (GameManager.instance.gameType == GameManager.GameType.Fiesta)
         {
@@ -572,49 +539,14 @@ public class PlayerInventory : MonoBehaviourPun
             player.GetComponent<PlayerUI>().holsteredWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[holsteredWeapon.codeName]}>";
         }
         catch { }
-
-        heavyAmmoHudCounter.gameObject.SetActive(false);
-        powerAmmoHudCounter.gameObject.SetActive(false);
-        smallAmmoHudCounter.gameObject.SetActive(false);
-
-        if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Light)
-        {
-            smallAmmoHudCounter.gameObject.SetActive(true);
-            smallAmmoHudCounter.ChangeToDrawn();
-            //heavyAmmoHudCounter.ChangeToHolstered();
-            //powerAmmoHudCounter.ChangeToHolstered();
-        }
-        else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Heavy)
-        {
-            heavyAmmoHudCounter.gameObject.SetActive(true);
-            heavyAmmoHudCounter.ChangeToDrawn();
-
-            //smallAmmoHudCounter.ChangeToHolstered();
-            //powerAmmoHudCounter.ChangeToHolstered();
-        }
-        else if (activeWeapon.GetComponent<WeaponProperties>().ammoType == WeaponProperties.AmmoType.Power)
-        {
-            powerAmmoHudCounter.gameObject.SetActive(true);
-            powerAmmoHudCounter.ChangeToDrawn();
-
-            //smallAmmoHudCounter.ChangeToHolstered();
-            //heavyAmmoHudCounter.ChangeToHolstered();
-        }
     }
 
     public void UpdateAllExtraAmmoHuds()
     {
-        //AmmoManager();
-        smallAmmoHudCounter.UpdateExtraAmmo();
-        heavyAmmoHudCounter.UpdateExtraAmmo();
-        powerAmmoHudCounter.UpdateExtraAmmo();
+        //TODO: Deprecate this function
     }
-
     void OnAmmoChanged_Delegate(PlayerInventory playerInventory)
     {
-        smallAmmoHudCounter.extraAmmoText.text = smallAmmo.ToString();
-        heavyAmmoHudCounter.extraAmmoText.text = heavyAmmo.ToString();
-        powerAmmoHudCounter.extraAmmoText.text = powerAmmo.ToString();
     }
 
     void OnPlayerRespawnEarly_Delegate(Player player)
@@ -632,5 +564,13 @@ public class PlayerInventory : MonoBehaviourPun
             UpdateThirdPersonGunModelsOnCharacter();
         }
         catch { }
+    }
+
+    WeaponProperties GetWeaponProperties(string codeName)
+    {
+        for (int i = 0; i < allWeaponsInInventory.Length; i++)
+            if (codeName == allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName)
+                return allWeaponsInInventory[i].GetComponent<WeaponProperties>();
+        return null;
     }
 }

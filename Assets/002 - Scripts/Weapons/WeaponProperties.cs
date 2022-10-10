@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class WeaponProperties : MonoBehaviour
 {
     public delegate void WeaponPropertiesEvent(WeaponProperties weaponProperties);
-    public WeaponPropertiesEvent OnCurrentAmmoChanged;
+    public WeaponPropertiesEvent OnCurrentAmmoChanged, OnSpareAmmoChanged;
 
     //Enums
     public enum ReticuleType { AR, DMR, Pistol, SMG, Shotgun, Sniper, None }
@@ -19,6 +20,7 @@ public class WeaponProperties : MonoBehaviour
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
     [Header("Weapon Info")]
+    public Sprite weaponIcon;
     public string codeName; // Used for scripting purposes
     public string cleanName; // Used for UI purposes
     public ReticuleType reticuleType;
@@ -37,6 +39,7 @@ public class WeaponProperties : MonoBehaviour
     public AmmoReloadType ammoReloadType;
     [SerializeField] int _currentAmmo;
     [SerializeField] int _spareAmmo;
+    [SerializeField] int _maxAmmo;
     public int ammoCapacity;
     public float bulletSpray;
 
@@ -96,7 +99,24 @@ public class WeaponProperties : MonoBehaviour
     public int currentAmmo
     {
         get { return _currentAmmo; }
-        set { _currentAmmo = value; OnCurrentAmmoChanged?.Invoke(this); }
+        set
+        {
+            _currentAmmo = value; 
+            OnCurrentAmmoChanged?.Invoke(this); 
+            pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
+        }
+    }
+
+    public int spareAmmo
+    {
+        get { return _spareAmmo; }
+        set { _spareAmmo = Mathf.Clamp(value, 0, _maxAmmo); OnSpareAmmoChanged?.Invoke(this); pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString(); }
+    }
+
+    public int maxAmmo
+    {
+        get { return _maxAmmo; }
+        set { _maxAmmo = value; }
     }
 
     // Properties
@@ -220,10 +240,13 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Ammo", EditorStyles.boldLabel);
+        wp.weaponIcon = (Sprite)EditorGUILayout.ObjectField("Weapon Icon", wp.weaponIcon, typeof(Sprite), false);
         wp.ammoType = (WeaponProperties.AmmoType)EditorGUILayout.EnumPopup("Ammo type", wp.ammoType);
         wp.ammoReloadType = (WeaponProperties.AmmoReloadType)EditorGUILayout.EnumPopup("Ammo reload type", wp.ammoReloadType);
         wp.ammoProjectileType = (WeaponProperties.AmmoProjectileType)EditorGUILayout.EnumPopup("Ammo projectile type", wp.ammoProjectileType);
         wp.currentAmmo = EditorGUILayout.IntField("Ammo:", wp.currentAmmo);
+        wp.spareAmmo = EditorGUILayout.IntField("Spare Ammo:", wp.spareAmmo);
+        wp.maxAmmo = EditorGUILayout.IntField("Max Ammo:", wp.maxAmmo);
         wp.ammoCapacity = EditorGUILayout.IntField("Ammo Capacity:", wp.ammoCapacity);
         wp.damage = EditorGUILayout.IntField("Bullet damage:", wp.damage);
         if (wp.bulletSize <= 0) wp.bulletSize = 1;

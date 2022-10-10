@@ -129,7 +129,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     {
         //onlineWeaponSpawnPoint.StartCoroutine(onlineWeaponSpawnPoint.RespawnWeapon());
 
-        int ammoToLoot = extraAmmo;
+        int ammoToLoot = ammoInThisWeapon + extraAmmo;
         PlayerInventory playerInventory = GameManager.GetMyPlayer().playerInventory;
         if (!onlyExtraAmmo)
             ammoToLoot += ammoInThisWeapon;
@@ -137,14 +137,16 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         foreach (GameObject wp in playerInventory.allWeaponsInInventory)
             if (wp.GetComponent<WeaponProperties>().codeName == codeName)
             {
-                WeaponProperties.AmmoType ammoType = wp.GetComponent<WeaponProperties>().ammoType;
+                //WeaponProperties.AmmoType ammoType = wp.GetComponent<WeaponProperties>().ammoType;
 
-                if (ammoType == WeaponProperties.AmmoType.Light)
-                    playerInventory.smallAmmo += ammoToLoot;
-                else if (ammoType == WeaponProperties.AmmoType.Heavy)
-                    playerInventory.heavyAmmo += ammoToLoot;
-                else if (ammoType == WeaponProperties.AmmoType.Power)
-                    playerInventory.powerAmmo += ammoToLoot;
+                //if (ammoType == WeaponProperties.AmmoType.Light)
+                //    playerInventory.smallAmmo += ammoToLoot;
+                //else if (ammoType == WeaponProperties.AmmoType.Heavy)
+                //    playerInventory.heavyAmmo += ammoToLoot;
+                //else if (ammoType == WeaponProperties.AmmoType.Power)
+                //    playerInventory.powerAmmo += ammoToLoot;
+
+                wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
             }
 
         OnLooted?.Invoke(this);
