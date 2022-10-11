@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 for (int i = 0; i < NbPlayers; i++)
                 {
                     Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-                    GameObject player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Online Player V10"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation);
+                    Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Online Player V10"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation).GetComponent<Player>();
                     player.GetComponent<PlayerController>().rid = i;
                 }
             }
@@ -391,5 +391,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         return totalLength;
+    }
+
+    public static Player GetLocalMasterPlayer()
+    {
+        foreach(Player p in FindObjectsOfType<Player>())
+        {
+            if (p.PV.IsMine && p.rid == 0)
+                return p;
+        }
+        return null;
     }
 }

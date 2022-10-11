@@ -254,6 +254,21 @@ public class Player : MonoBehaviourPunCallbacks
         }
         get { return _impactPos; }
     }
+
+    public bool isLocal
+    {
+        get { return PV.IsMine; }
+    }
+
+    public string localNickName
+    {
+        get
+        {
+            if (rid > 0)
+                return $"{nickName} ({rid})";
+            return nickName;
+        }
+    }
     private void Awake()
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
@@ -268,11 +283,28 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    string _nickName;
+    [SerializeField] string _nickName;
     public string nickName
     {
         get { return _nickName; }
-        private protected set { _nickName = value; }
+        private protected set
+        {
+            if (PV.IsMine)
+            {
+                _nickName = value;
+                if (rid > 0)
+                    _nickName += $" ({rid})";
+
+                PV.RPC("UpdateNickName_RPC", RpcTarget.All, nickName);
+            }
+        }
+
+    }
+
+    [PunRPC]
+    void UpdateNickName_RPC(string nn)
+    {
+        _nickName = nn;
     }
 
     public int rid
@@ -285,7 +317,11 @@ public class Player : MonoBehaviourPunCallbacks
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
         weaponPool = FindObjectOfType<WeaponPool>();
         PV = GetComponent<PhotonView>();
-        _nickName = PV.Owner.NickName;
+
+        if (rid > 0)
+            nickName = GameManager.GetLocalMasterPlayer().PV.Owner.NickName;
+        else
+            nickName = PV.Owner.NickName;
         GetComponent<PlayerUI>().isMineText.text = $"IM: {PV.IsMine}";
         gameObject.name = $"{PV.Owner.NickName} ({rid}). IM: {PV.IsMine}";
         //PhotonNetwork.SendRate = 100;
@@ -387,7 +423,8 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (isDead)
         {
-            string sourcePlayerName = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).nickName;
+            Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
+            string sourcePlayerName = sourcePlayer.nickName;
 
             int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
             int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
@@ -396,9 +433,9 @@ public class Player : MonoBehaviourPunCallbacks
 
             foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
             {
-                if (sourcePlayerName != nickName)
+                if (this != sourcePlayer)
                 {
-                    string feed = $"{sourcePlayerName} killed";
+                    string feed = $"{sourcePlayer.nickName} killed";
                     if (kfm.GetComponent<Player>() != this)
                     {
                         if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
