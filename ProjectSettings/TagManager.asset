@@ -43,14 +43,14 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 3
+  - Hide
   - Water
   - UI
   - Player
   - Player Hitbox
   - Player Bullet
   - Player Ground Check
-  - Player Feet
+  - Physical Loot (Player Feet)
   - AI
   - AI Hitbox
   - AI Attack
@@ -58,20 +58,20 @@ TagManager:
   - Aim Assist
   - Interactable
   - Player Range Trigger
-  - Player FPS Models
-  - Player TPS Models
+  - 18 (Player FPS Models)
+  - 19 (Player TPS Models)
   - Motion Tracker
   - Reticule Friction
-  - Frag Grenade
+  - 22 (Frag Grenade)
   - PlayerMelee
-  - Physical Loot
-  - LOS Ray
-  - 26
-  - 27
-  - 28
-  - 29
-  - 30
-  - Hide
+  - Player 1 FPS Models (Physical Loot)
+  - Player 1 TPS Models (LOS Ray)
+  - Player 2 FPS Models
+  - Player 2 TPS Models
+  - Player 3 FPS Models
+  - Player 3 TPS Models
+  - Player 4 FPS Models
+  - Player 4 TPS Models
   m_SortingLayers:
   - name: Default
     uniqueID: 0

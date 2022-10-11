@@ -21,6 +21,9 @@ public class AmmoPickup : MonoBehaviour
 
         int ammoToRemoveFromThisPack = 0;
 
+        if (ammoPackScript.ammoType == "grenade")
+            ammoToRemoveFromThisPack = pInventory.maxGrenades - pInventory.grenades;
+
         if (ammoToRemoveFromThisPack > 0 && playerProperties.PV.IsMine)
             aSource.Play();
         else
@@ -28,6 +31,10 @@ public class AmmoPickup : MonoBehaviour
 
         if (ammoPackScript.GetAmmo() <= ammoToRemoveFromThisPack)
             ammoToRemoveFromThisPack = ammoPackScript.GetAmmo();
+
+        if (ammoPackScript.ammoType == "grenade")
+            pInventory.grenades += ammoToRemoveFromThisPack;
+
         ammoPackScript.ammoText.text = ammoPackScript.GetAmmo().ToString();
 
         playerProperties.allPlayerScripts.playerInventory.UpdateAllExtraAmmoHuds();

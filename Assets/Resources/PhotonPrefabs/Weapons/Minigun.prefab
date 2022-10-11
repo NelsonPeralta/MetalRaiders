@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6946472063661373127}
   - component: {fileID: 6040315473705336712}
   - component: {fileID: 2433221991442546056}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Minigun_Part04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 2014980408808694998}
   - component: {fileID: 5406913902717158425}
   - component: {fileID: 1500470692903090416}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: Minigun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,7 +262,7 @@ GameObject:
   - component: {fileID: 6540907355709442091}
   - component: {fileID: 6674190969654524508}
   - component: {fileID: 5321693313242984696}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Minigun_Part03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 5781098890288904189}
   - component: {fileID: 501129368570153164}
   - component: {fileID: 2068499945385353794}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Minigun_Part01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   - component: {fileID: 8511724366076182935}
   - component: {fileID: 471353806484852831}
   - component: {fileID: 5522973945377068409}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Minigun_Part05
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -13,10 +13,12 @@ public class PlayerCamera : MonoBehaviour
     float minXClamp = -90;
     float maxXClamp = 90;
 
-    public Rewired.Player player;
-    public int playerRewiredID;
+    public Rewired.Player rewiredPlayer
+    {
+        get { return pController.rewiredPlayer; }
+    }
     public PlayerController pController;
-    public Player pProperties;
+    public Player player;
     public Camera mainCam;
     public Camera gunCam;
     public Vector3 mainCamDefaultLocalPosition;
@@ -52,7 +54,6 @@ public class PlayerCamera : MonoBehaviour
         }
         catch { }
 
-        player = ReInput.players.GetPlayer(playerRewiredID);
         defaultLocalRotation = transform.localRotation;
         mainCamDefaultLocalPosition = mainCam.transform.localPosition;
         mainCamDefaultLocalRotation = mainCam.transform.localRotation;
@@ -89,8 +90,8 @@ public class PlayerCamera : MonoBehaviour
 
         if (!pController.pauseMenuOpen)
         {
-            xAxisInput = player.GetAxis("Mouse X");
-            yAxisInput = player.GetAxis("Mouse Y");
+            xAxisInput = rewiredPlayer.GetAxis("Mouse X");
+            yAxisInput = rewiredPlayer.GetAxis("Mouse Y");
 
             float _xAxisInput = xAxisInput, _yAxisInput = yAxisInput;
 
@@ -125,12 +126,12 @@ public class PlayerCamera : MonoBehaviour
 
     float HorizontalSway()
     {
-        if (!pController.isAiming || pProperties.playerInventory.activeWeapon.scopeSway <= 0)
+        if (!pController.isAiming || player.playerInventory.activeWeapon.scopeSway <= 0)
             return 0;
 
-        weaponSway = pProperties.playerInventory.activeWeapon.scopeSway;
+        weaponSway = player.playerInventory.activeWeapon.scopeSway;
         if (pController.isCrouching)
-            weaponSway = pProperties.playerInventory.activeWeapon.scopeSway / 2f;
+            weaponSway = player.playerInventory.activeWeapon.scopeSway / 2f;
 
         if (targetHorizontalSway == 0)
         {
@@ -166,7 +167,7 @@ public class PlayerCamera : MonoBehaviour
 
     float VerticalSway()
     {
-        if (!pController.isAiming || pProperties.playerInventory.activeWeapon.scopeSway <= 0)
+        if (!pController.isAiming || player.playerInventory.activeWeapon.scopeSway <= 0)
             return 0;
         if (targetVerticalSway == 0)
         {
@@ -206,8 +207,8 @@ public class PlayerCamera : MonoBehaviour
     void WeaponSway()
     {
         float maxamount = weaponSway * 1.1f;
-        float factorX = (player.GetAxis("Mouse Y")) * weaponSway;
-        float factorY = -(player.GetAxis("Mouse X")) * weaponSway;
+        float factorX = (rewiredPlayer.GetAxis("Mouse Y")) * weaponSway;
+        float factorY = -(rewiredPlayer.GetAxis("Mouse X")) * weaponSway;
         //float factorZ = -Input.GetAxis("Vertical") * amount;
         float factorZ = 0 * weaponSway;
 
@@ -231,11 +232,6 @@ public class PlayerCamera : MonoBehaviour
 
         Quaternion Final = Quaternion.Euler(defaultLocalRotation.x + factorX, defaultLocalRotation.y + factorY, defaultLocalRotation.z + factorZ);
         transform.localRotation = transform.localRotation * Quaternion.Slerp(transform.localRotation, Final, (Time.time * 3));
-    }
-
-    public void SetPlayerIDInInput()
-    {
-        player = ReInput.players.GetPlayer(playerRewiredID);
     }
 
     public void RotateCameraBy(float rotationAmount)

@@ -175,7 +175,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
             try
             {
-                Debug.Log("Bullet IDamageable");
                 finalHitObject.GetComponent<IDamageable>().Damage(damage);
             }
             catch { }

@@ -24,8 +24,8 @@ public class PlayerController : MonoBehaviourPun
     public Camera gunCam;
     public PlayerCamera camScript;
     public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
-    public Rewired.Player player;
-    public int playerRewiredID;
+    public Rewired.Player rewiredPlayer;
+    public int rid;
     public CrosshairManager crosshairScript;
     public ReloadScript rScript;
     public PlayerWeaponSwapping wPickup;
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviourPun
     }
     public void Start()
     {
-        player = ReInput.players.GetPlayer(playerRewiredID);
+        rewiredPlayer = ReInput.players.GetPlayer(rid);
 
         if (!PV.IsMine)
         {
@@ -183,7 +183,7 @@ public class PlayerController : MonoBehaviourPun
 
     void LongInteract()
     {
-        if (player.GetButtonShortPressDown("Interact"))
+        if (rewiredPlayer.GetButtonShortPressDown("Interact"))
         {
             OnPlayerLongInteract?.Invoke(this);
         }
@@ -198,13 +198,13 @@ public class PlayerController : MonoBehaviourPun
                 return;
             if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
             {
-                if (player.GetButton("Sprint"))
+                if (rewiredPlayer.GetButton("Sprint"))
                     EnableSprint();
-                else if (player.GetButtonUp("Sprint"))
+                else if (rewiredPlayer.GetButtonUp("Sprint"))
                     DisableSprint();
             }
             else if (activeControllerType == ControllerType.Joystick)
-                if (player.GetButtonDown("Sprint"))
+                if (rewiredPlayer.GetButtonDown("Sprint"))
                     EnableSprint();
         }
         else
@@ -265,13 +265,13 @@ public class PlayerController : MonoBehaviourPun
         if (GetComponent<Player>().isDead || isSprinting)
             return;
 
-        if (player.GetButtonUp("Shoot"))
+        if (rewiredPlayer.GetButtonUp("Shoot"))
         {
             OnPlayerFireButtonUp?.Invoke(this);
         }
         if (!isDualWielding)
         {
-            if (player.GetButton("Shoot") && !pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            if (rewiredPlayer.GetButton("Shoot") && !pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
             {
                 isShooting = true;
                 OnPlayerFire?.Invoke(this);
@@ -286,7 +286,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (player.GetButton("Shoot") && !dwRightWP.isOutOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
+            if (rewiredPlayer.GetButton("Shoot") && !dwRightWP.isOutOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
                 isShootingRight = true;
             }
@@ -317,7 +317,7 @@ public class PlayerController : MonoBehaviourPun
         }
 
 
-        if (player.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
+        if (rewiredPlayer.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
         {
             if (pInventory.activeWeapon.aimingMechanic != WeaponProperties.AimingMechanic.None)
             {
@@ -366,7 +366,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead)
         {
-            if (player.GetButtonDown("Melee") && !isMeleeing && !isShooting && !isThrowingGrenade && !isSprinting)
+            if (rewiredPlayer.GetButtonDown("Melee") && !isMeleeing && !isShooting && !isThrowingGrenade && !isSprinting)
             {
                 Debug.Log("RPC Call: Melee");
                 meleeMovementFactor = 1;
@@ -405,9 +405,9 @@ public class PlayerController : MonoBehaviourPun
 
     void Crouch()
     {
-        if (player.GetButtonDown("Crouch"))
+        if (rewiredPlayer.GetButtonDown("Crouch"))
             EnableCrouch();
-        else if (player.GetButtonUp("Crouch"))
+        else if (rewiredPlayer.GetButtonUp("Crouch"))
             DisableCrouch();
     }
 
@@ -439,7 +439,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
-        if (player.GetButtonDown("Throw Grenade") && !isDualWielding && !isShooting && !isMeleeing && !isSprinting /* && !isInspecting */)
+        if (rewiredPlayer.GetButtonDown("Throw Grenade") && !isDualWielding && !isShooting && !isMeleeing && !isSprinting /* && !isInspecting */)
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {
@@ -455,7 +455,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (player.GetButton("Throw Grenade") && !dwLeftWP.isOutOfAmmo && !isReloadingLeft && !isShootingLeft)
+            if (rewiredPlayer.GetButton("Throw Grenade") && !dwLeftWP.isOutOfAmmo && !isReloadingLeft && !isShootingLeft)
             {
                 Debug.Log("Is Shooting Left");
                 isShootingLeft = true;
@@ -471,7 +471,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead)
         {
-            if (player.GetButtonDown("Reload") && !isReloading && !isDualWielding)
+            if (rewiredPlayer.GetButtonDown("Reload") && !isReloading && !isDualWielding)
             {
                 rScript.CheckAmmoTypeType(false);
             }
@@ -527,14 +527,14 @@ public class PlayerController : MonoBehaviourPun
 
     void SwitchWeapons()
     {
-        if (player.GetButtonDown("Switch Weapons"))
+        if (rewiredPlayer.GetButtonDown("Switch Weapons"))
         {
             OnPlayerSwitchWeapons?.Invoke(this);
         }
     }
     void SwitchGrenades()
     {
-        if (player.GetButtonDown("Switch Grenades") && PV.IsMine)
+        if (rewiredPlayer.GetButtonDown("Switch Grenades") && PV.IsMine)
         {
             grenadeSwitchAudioSource.Play();
             PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
@@ -829,7 +829,7 @@ public class PlayerController : MonoBehaviourPun
                gwProperties.grenadeSpawnPoint.transform.position,
                gwProperties.grenadeSpawnPoint.transform.rotation);
             grenade.GetComponent<FragGrenade>().player = GetComponent<Player>();
-            grenade.GetComponent<FragGrenade>().playerRewiredID = playerRewiredID;
+            grenade.GetComponent<FragGrenade>().playerRewiredID = rid;
             //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
         else if (stickyGrenadesActive)
@@ -838,7 +838,7 @@ public class PlayerController : MonoBehaviourPun
                gwProperties.grenadeSpawnPoint.transform.position,
                gwProperties.grenadeSpawnPoint.transform.rotation);
             grenade.GetComponent<StickyGrenade>().player = GetComponent<Player>();
-            grenade.GetComponent<StickyGrenade>().playerRewiredID = playerRewiredID;
+            grenade.GetComponent<StickyGrenade>().playerRewiredID = rid;
             //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
 
@@ -963,7 +963,7 @@ public class PlayerController : MonoBehaviourPun
     }
     void StartButton()
     {
-        if (player.GetButtonDown("Start") || player.GetButtonDown("Escape"))
+        if (rewiredPlayer.GetButtonDown("Start") || rewiredPlayer.GetButtonDown("Escape"))
         {
             Debug.Log($"Pausing game");
             TogglePauseGame();
@@ -972,11 +972,11 @@ public class PlayerController : MonoBehaviourPun
 
     void BackButton()
     {
-        if (player.GetButtonDown("Back"))
+        if (rewiredPlayer.GetButtonDown("Back"))
         {
             allPlayerScripts.scoreboardManager.OpenScoreboard();
         }
-        else if (player.GetButtonUp("Back"))
+        else if (rewiredPlayer.GetButtonUp("Back"))
         {
             allPlayerScripts.scoreboardManager.CloseScoreboard();
         }
@@ -1013,22 +1013,22 @@ public class PlayerController : MonoBehaviourPun
 
     public void SetPlayerIDInInput()
     {
-        player = ReInput.players.GetPlayer(playerRewiredID);
+        rewiredPlayer = ReInput.players.GetPlayer(rid);
     }
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        try
-        {
-            //WebManager.webManagerInstance.SaveMultiplayerStats(GetComponent<PlayerMultiplayerMatchStats>());
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                GetComponent<Player>().LeaveRoomWithDelay();
-            //FindObjectOfType<MultiplayerManager>().EndGame();
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                FindObjectOfType<SwarmManager>().EndGame();
-        }
-        catch (System.Exception e) { Debug.Log(e); }
-        GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1, 2, 1));
+        //try
+        //{
+        //    //WebManager.webManagerInstance.SaveMultiplayerStats(GetComponent<PlayerMultiplayerMatchStats>());
+        //    if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        //        GetComponent<Player>().LeaveRoomWithDelay();
+        //    //FindObjectOfType<MultiplayerManager>().EndGame();
+        //    if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        //        FindObjectOfType<SwarmManager>().EndGame();
+        //}
+        //catch (System.Exception e) { Debug.Log(e); }
+        //GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1, 2, 1));
     }
 }
 

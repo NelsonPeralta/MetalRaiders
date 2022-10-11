@@ -20,7 +20,6 @@ public class CrosshairManager : MonoBehaviour
     public bool RRisActive = false;
     public bool friendlyRRisActive = false;
 
-
     public void Start()
     {
 
@@ -29,15 +28,15 @@ public class CrosshairManager : MonoBehaviour
             FindComponents();
             hasFoundComponents = true;
         }
-        pInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
     }
 
-    void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
+    public void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
     {
         UpdateReticule();
     }
     public void UpdateReticule()
     {
+        Debug.Log("UpdateReticule");
         foreach (Crosshair c in crosshairList)
         {
             if (c.weaponReticule != pInventory.activeWeapon.reticuleType)

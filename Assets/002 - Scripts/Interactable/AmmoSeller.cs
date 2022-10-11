@@ -51,7 +51,7 @@ public class AmmoSeller : MonoBehaviour
     {
         if (player0 != null)
         {
-            if (player0.GetComponent<PlayerController>().player.GetButtonShortPressDown("Interact"))
+            if (player0.GetComponent<PlayerController>().rewiredPlayer.GetButtonShortPressDown("Interact"))
             {
                 if (player0.gameObject.GetComponent<PlayerSwarmMatchStats>() != null)
                 {

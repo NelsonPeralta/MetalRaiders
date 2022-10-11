@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4215036099704215088}
   - component: {fileID: 4181943708876664050}
   - component: {fileID: 4189876334602538260}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Revolver_02_Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4214933170317753456}
   - component: {fileID: 4182001815258002244}
   - component: {fileID: 4189303085335961848}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Revolver_02_Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 4206435267610484458}
   - component: {fileID: 4180516350075230640}
   - component: {fileID: 4188947837757416366}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Revolver_02_Cylander
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 4213060019384168117}
   - component: {fileID: 4213060019384168115}
   - component: {fileID: 4214886941747597611}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: Colt
   m_TagString: Untagged
   m_Icon: {fileID: 0}

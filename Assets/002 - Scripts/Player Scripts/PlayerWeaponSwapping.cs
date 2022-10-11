@@ -50,15 +50,26 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             _closestLootableWeapon = value;
             if (value)
             {
-                if (closestLootableWeapon.spriteId >= 0)
-
-                    pickupText.text = $"Hold E to pick up <sprite={WeaponProperties.spriteIdDic[closestLootableWeapon.codeName]}>";
+                WeaponProperties wp = player.playerInventory.GetWeaponProperties(closestLootableWeapon.codeName);
+                if (wp.weaponIcon)
+                {
+                    pickupText.text = $"Hold E to pick up";
+                    pickupText.GetComponentInChildren<Image>().sprite = wp.weaponIcon;
+                    var tempColor = pickupText.GetComponentInChildren<Image>().color;
+                    tempColor.a = 255;
+                    pickupText.GetComponentInChildren<Image>().color = tempColor;
+                }
                 else
                     pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
-
             }
             else
+            {
                 pickupText.text = "";
+                pickupText.GetComponentInChildren<Image>().sprite = null;
+                var tempColor = pickupText.GetComponentInChildren<Image>().color;
+                tempColor.a = 0;
+                pickupText.GetComponentInChildren<Image>().color = tempColor;
+            }
         }
     }
 

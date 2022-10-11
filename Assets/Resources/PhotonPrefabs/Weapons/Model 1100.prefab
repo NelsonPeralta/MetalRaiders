@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1949347182520655832}
   - component: {fileID: 1949347182523523064}
   - component: {fileID: 1949347182522424632}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: shotgun_01_grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 492138526804241230}
   - component: {fileID: 6583879716112079941}
   - component: {fileID: 2126470845479484210}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: Model 1100
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 1949347182520655836}
   - component: {fileID: 1949347182523523068}
   - component: {fileID: 1949347182522424636}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: shotgun_01_slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 1949347182520655838}
   - component: {fileID: 1949347182523523070}
   - component: {fileID: 1949347182522424638}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: shotgun_01_iron_sights
   m_TagString: Untagged
   m_Icon: {fileID: 0}

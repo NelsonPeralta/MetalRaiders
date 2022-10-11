@@ -52,8 +52,10 @@ public class Movement : MonoBehaviour, IPunObservable
     public string direction;
     public int directionIndicator;
 
-    public Rewired.Player player;
-    public int playerRewiredID;
+    public Rewired.Player player
+    {
+        get { return pController.rewiredPlayer; }
+    }
 
     [Header("Audio")]
     public AudioSource walkingSoundAS;
@@ -112,7 +114,6 @@ public class Movement : MonoBehaviour, IPunObservable
     void Start()
     {
         gravity = defaultGravity;
-        SetPlayerIDInInput();
         //tPersonScripts = cManager.FindChildWithTagScript("Third Person GO").GetComponent<ThirdPersonScript>();
         cController = gameObject.GetComponent<CharacterController>();
         rBody = gameObject.GetComponent<Rigidbody>();
@@ -237,11 +238,6 @@ public class Movement : MonoBehaviour, IPunObservable
             isMoving = false;
     }
 
-    public void SetPlayerIDInInput()
-    {
-        player = ReInput.players.GetPlayer(playerRewiredID);
-    }
-
 
     float _crouchJumpTime = 0.2f;
     float crouchJumpTime = 0.2f;
@@ -302,7 +298,7 @@ public class Movement : MonoBehaviour, IPunObservable
         if (isGrounded && player.GetButtonDown("Jump"))
         {
             velocity.y = jumpForce;
-
+            Debug.Log(player.name);
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 

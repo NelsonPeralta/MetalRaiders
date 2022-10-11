@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6590350620525666833}
   - component: {fileID: 6590350620522275377}
   - component: {fileID: 6590350620523241713}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: assault_rifle_03_mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 6590350620525666835}
   - component: {fileID: 6590350620522275379}
   - component: {fileID: 6590350620523241715}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: assault_rifle_03_iron_sights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 6590350620525666837}
   - component: {fileID: 6590350620522275381}
   - component: {fileID: 6590350620523241717}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: assault_rifle_03_grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 549855107005330412}
   - component: {fileID: 8951400907426846433}
   - component: {fileID: 223960435701437633}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: SCAR
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   - component: {fileID: 6590350620525666847}
   - component: {fileID: 6590350620522275391}
   - component: {fileID: 6590350620523241727}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: assault_rifle_03_slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

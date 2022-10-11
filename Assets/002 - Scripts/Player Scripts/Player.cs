@@ -274,6 +274,11 @@ public class Player : MonoBehaviourPunCallbacks
         get { return _nickName; }
         private protected set { _nickName = value; }
     }
+
+    public int rid
+    {
+        get { return GetComponent<PlayerController>().rid; }
+    }
     private void Start()
     {
         spawnManager = SpawnManager.spawnManagerInstance;
@@ -282,7 +287,7 @@ public class Player : MonoBehaviourPunCallbacks
         PV = GetComponent<PhotonView>();
         _nickName = PV.Owner.NickName;
         GetComponent<PlayerUI>().isMineText.text = $"IM: {PV.IsMine}";
-        gameObject.name = $"Player ({PV.Owner.NickName}. IM: {PV.IsMine})";
+        gameObject.name = $"{PV.Owner.NickName} ({rid}). IM: {PV.IsMine}";
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
 
@@ -749,9 +754,13 @@ public class Player : MonoBehaviourPunCallbacks
             GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
             wo.name = wo.name.Replace("(Clone)", "");
             wo.GetComponent<LootableWeapon>().ammoInThisWeapon = wp.currentAmmo;
+            wo.GetComponent<LootableWeapon>().extraAmmo = wp.spareAmmo;
             wo.GetComponent<LootableWeapon>().ttl = 60;
             wo.GetComponent<Rigidbody>().AddForce(weaponDropPoint.transform.forward * 200);
             Debug.Log($"Spawned {wo.name}");
+
+            wp.currentAmmo = 0;
+            wp.spareAmmo = 0;
         }
         catch (System.Exception e)
         {

@@ -38,18 +38,15 @@ public class PlayerInventory : MonoBehaviourPun
             {
 
                 _activeWeapon = value;
-                try
-                {
-                    OnActiveWeaponChanged.Invoke(this);
-                }
-                catch { }
                 _activeWeapon.gameObject.SetActive(true);
+
                 pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
 
                 activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                 activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
 
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
+                try { OnActiveWeaponChanged?.Invoke(this); } catch { }
                 try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
 
@@ -64,9 +61,9 @@ public class PlayerInventory : MonoBehaviourPun
             if (PV.IsMine)
             {
                 _holsteredWeapon = value;
-                _holsteredWeapon.gameObject.SetActive(false);
-                OnHolsteredWeaponChanged?.Invoke(this);
                 PV.RPC("AssignWeapon", RpcTarget.Others, holsteredWeapon.codeName, false);
+                OnHolsteredWeaponChanged?.Invoke(this);
+                _holsteredWeapon.gameObject.SetActive(false);
             }
         }
     }
@@ -150,9 +147,11 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public void Start()
     {
+        //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
         player.OnPlayerRespawnEarly += OnPlayerRespawnEarly_Delegate;
         OnAmmoChanged += OnAmmoChanged_Delegate;
         OnActiveWeaponChangedLate += OnActiveWeaponChangedLate_Delegate;
+        OnActiveWeaponChangedLate += crosshairScript.OnActiveWeaponChanged_Delegate;
         audioSource = GetComponent<AudioSource>();
 
         StartCoroutine(EquipStartingWeapon());
@@ -310,6 +309,8 @@ public class PlayerInventory : MonoBehaviourPun
             AssignRandomWeapons();
         }
 
+
+
         for (int i = 0; i < allWeaponsInInventory.Length; i++)
         {
             if (allWeaponsInInventory[i] != null)
@@ -448,17 +449,6 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!activeWeapon)
             return;
-
-        try
-        {
-            player.GetComponent<PlayerUI>().activeWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[activeWeapon.codeName]}>";
-        }
-        catch { }
-        try
-        {
-            player.GetComponent<PlayerUI>().holsteredWeaponIconText.text = $"<sprite={WeaponProperties.spriteIdDic[holsteredWeapon.codeName]}>";
-        }
-        catch { }
     }
 
     public void UpdateAllExtraAmmoHuds()
@@ -486,7 +476,7 @@ public class PlayerInventory : MonoBehaviourPun
         catch { }
     }
 
-    WeaponProperties GetWeaponProperties(string codeName)
+    public WeaponProperties GetWeaponProperties(string codeName)
     {
         for (int i = 0; i < allWeaponsInInventory.Length; i++)
             if (codeName == allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName)

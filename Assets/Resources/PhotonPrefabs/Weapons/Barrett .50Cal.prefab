@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8589383476620956704}
   - component: {fileID: 8589383476622283776}
   - component: {fileID: 8589383476623382208}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_02_slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 8589383476620956706}
   - component: {fileID: 8589383476622283778}
   - component: {fileID: 8589383476623382210}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_02_scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 8589383476620956708}
   - component: {fileID: 8589383476622283780}
   - component: {fileID: 8589383476623382212}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_02_muzzle_brake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 8589383476620956710}
   - component: {fileID: 8589383476622283782}
   - component: {fileID: 8589383476623382214}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_02_mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 8589383476620956712}
   - component: {fileID: 8589383476622283784}
   - component: {fileID: 8589383476623382216}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_02_handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -426,7 +426,7 @@ GameObject:
   - component: {fileID: 8589383476620956714}
   - component: {fileID: 8589383476622283786}
   - component: {fileID: 8589383476623382218}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_02_bipod_leg_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 8589383476620956716}
   - component: {fileID: 8589383476622283788}
   - component: {fileID: 8589383476623382220}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_02_bipod_leg_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -596,7 +596,7 @@ GameObject:
   - component: {fileID: 7738143648539804061}
   - component: {fileID: 7368614592611344181}
   - component: {fileID: 6136547517360919246}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: Barrett .50Cal
   m_TagString: Pickable
   m_Icon: {fileID: 0}

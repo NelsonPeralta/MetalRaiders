@@ -41,8 +41,6 @@ public class PlayerUI : MonoBehaviour
     public TMP_Text spareAmmoText;
     public Image activeWeaponIcon;
     public Image holsteredWeaponIcon;
-    public TMP_Text activeWeaponIconText;
-    public TMP_Text holsteredWeaponIconText;
 
     [Header("Center", order = 4)]
     public Transform center;
@@ -92,6 +90,7 @@ public class PlayerUI : MonoBehaviour
         //GetComponent<Player>().playerInventory.OnGrenadeChanged -= OnGrenadeChanged_Delegate;
         GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
         GetComponent<Player>().playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
+        GetComponent<Player>().playerInventory.OnHolsteredWeaponChanged += OnHolsteredWeaponChanged_Delegate;
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             //SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
@@ -126,8 +125,6 @@ public class PlayerUI : MonoBehaviour
     private void Start()
     {
         Debug.Log("PlayerUI Start");
-        activeWeaponIcon = null;
-        holsteredWeaponIcon = null;
         try { gameType.text = GameManager.instance.gameType.ToString(); }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
@@ -298,7 +295,13 @@ public class PlayerUI : MonoBehaviour
         spareAmmoText.text = playerInventory.activeWeapon.spareAmmo.ToString();
 
         try { activeWeaponIcon.sprite = playerInventory.activeWeapon.weaponIcon; } catch { activeWeaponIcon.sprite = null; }
-        try { holsteredWeaponIcon.sprite = playerInventory.holsteredWeapon.weaponIcon; } catch { holsteredWeaponIcon.sprite = null; }
+    }
+
+    void OnHolsteredWeaponChanged_Delegate(PlayerInventory playerInventory)
+    {
+        WeaponProperties wp = playerInventory.holsteredWeapon;
+        Debug.Log(wp.name);
+        try { holsteredWeaponIcon.sprite = wp.weaponIcon; } catch { holsteredWeaponIcon.sprite = null; }
     }
     void OnGrenadeChanged_Delegate(PlayerInventory playerInventory)
     {

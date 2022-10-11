@@ -76,7 +76,19 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                     ignoreList.Add(7); // 7 = Player Hitbox
                     foreach (GameObject model in models)
                         if (!feet.Contains(model))
-                            GameManager.SetLayerRecursively(model, 31, ignoreList);
+                        {
+                            if (player.PV.IsMine)
+                            {
+                                if (player.rid == 0)
+                                    GameManager.SetLayerRecursively(model, 25, ignoreList);
+                                else if (player.rid == 1)
+                                    GameManager.SetLayerRecursively(model, 27, ignoreList);
+                                else if (player.rid == 2)
+                                    GameManager.SetLayerRecursively(model, 29, ignoreList);
+                                else if (player.rid == 3)
+                                    GameManager.SetLayerRecursively(model, 31, ignoreList);
+                            }
+                        }
                 }
 
             }

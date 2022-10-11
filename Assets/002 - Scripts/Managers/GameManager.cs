@@ -7,6 +7,8 @@ using System;
 using Photon.Realtime;
 using System.IO;
 using System.Linq;
+using TMPro;
+using UnityEngine.UI;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -54,6 +56,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform lightAmmoPack;
     public Transform heavyAmmoPack;
     public Transform powerAmmoPack;
+
+    [SerializeField] int _nbPlayers;
+    public int NbPlayers { get { return _nbPlayers; } set { _nbPlayers = value; } }
 
     int _camSens = 100;
 
@@ -128,8 +133,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             try
             {
-                Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Online Player V10"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation);
+                for (int i = 0; i < NbPlayers; i++)
+                {
+                    Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+                    GameObject player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Online Player V10"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation);
+                    player.GetComponent<PlayerController>().rid = i;
+                }
             }
             catch (Exception e) { Debug.LogWarning(e.Message); }
 
@@ -363,5 +372,24 @@ public class GameManager : MonoBehaviourPunCallbacks
             customList = this;
         }
         public int Count => arr.Length;
+    }
+
+    public int CalculateLengthOfString(string message, Text text)
+    {
+        int totalLength = 0;
+
+        Font myFont = text.font;  //chatText is my Text component
+        CharacterInfo characterInfo = new CharacterInfo();
+
+        char[] arr = message.ToCharArray();
+
+        foreach (char c in arr)
+        {
+            myFont.GetCharacterInfo(c, out characterInfo, text.fontSize);
+
+            totalLength += characterInfo.advance;
+        }
+
+        return totalLength;
     }
 }

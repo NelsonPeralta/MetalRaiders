@@ -79,7 +79,7 @@ public class AimAssistCapsule : MonoBehaviour
 
         ReticuleFriction = reticuleFriction;
 
-        if (player.GetComponent<PlayerController>().player.GetButtonUp("Shoot"))
+        if (player.GetComponent<PlayerController>().rewiredPlayer.GetButtonUp("Shoot"))
         {
             player.GetComponent<PlayerController>().OnPlayerFireButtonUp?.Invoke(player.GetComponent<PlayerController>());
         }

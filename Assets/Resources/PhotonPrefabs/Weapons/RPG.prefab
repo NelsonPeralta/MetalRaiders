@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 390231688873399648}
   - component: {fileID: 2711562721274824091}
   - component: {fileID: 4695287854121063512}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: RPG
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 3961792897311190890}
   - component: {fileID: 3961792897309896522}
   - component: {fileID: 3961792897308896650}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: rocket_launcher_01_iron_sights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 3961792897311190892}
   - component: {fileID: 3961792897309896524}
   - component: {fileID: 3961792897308896652}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: rocket_launcher_01_projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}

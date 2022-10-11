@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3597432282059949905}
   - component: {fileID: 3597432282056525681}
   - component: {fileID: 3597432282057655729}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: handgun_03_mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 3597432282059949907}
   - component: {fileID: 3597432282056525683}
   - component: {fileID: 3597432282057655731}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: handgun_03_iron_sights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 3597432282059949909}
   - component: {fileID: 3597432282056525685}
   - component: {fileID: 3597432282057655733}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: handgun_03_hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 2449659924544914771}
   - component: {fileID: 8931483522755077858}
   - component: {fileID: 2332715956438352494}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: M1911
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -427,7 +427,7 @@ GameObject:
   - component: {fileID: 3597432282059949919}
   - component: {fileID: 3597432282056525695}
   - component: {fileID: 3597432282057655743}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: handgun_03_slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

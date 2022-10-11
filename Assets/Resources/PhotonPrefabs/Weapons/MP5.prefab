@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3643358748772243121}
   - component: {fileID: 3643358748771473041}
   - component: {fileID: 3643358748770341969}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: smg_05_slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 3643358748772243123}
   - component: {fileID: 3643358748771473043}
   - component: {fileID: 3643358748770341971}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: smg_05_mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 3643358748772243125}
   - component: {fileID: 3643358748771473045}
   - component: {fileID: 3643358748770341973}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: smg_05_iron_sights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 3985135026939622072}
   - component: {fileID: 439363896651038599}
   - component: {fileID: 4104014898070390738}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: MP5
   m_TagString: Pickable
   m_Icon: {fileID: 0}

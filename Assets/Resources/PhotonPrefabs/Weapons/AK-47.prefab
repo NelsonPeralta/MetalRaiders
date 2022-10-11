@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 288371628012197186}
   - component: {fileID: 1439370327776292833}
   - component: {fileID: 2336910426173594846}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: AK-47
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 3226603164749208523}
   - component: {fileID: 3219740467758588101}
   - component: {fileID: 3208703850443254833}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Assault_Rifle_01_Mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 3226505914621816171}
   - component: {fileID: 3216557314157057621}
   - component: {fileID: 3207709739477200849}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Assault_Rifle_01_Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 3231589988558091389}
   - component: {fileID: 3216461012718084459}
   - component: {fileID: 3207299664778637951}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Assault_Rifle_01_Iron_Sights
   m_TagString: Untagged
   m_Icon: {fileID: 0}

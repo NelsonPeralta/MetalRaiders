@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1998442795899506090}
   - component: {fileID: 1830780294168334946}
   - component: {fileID: 1832896949684181424}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnergySphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4905,7 +4905,7 @@ GameObject:
   - component: {fileID: 1831642831841566260}
   - component: {fileID: 1832591702414740010}
   - component: {fileID: 420977051245671939}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LightningMissileYellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9885,7 +9885,7 @@ GameObject:
   - component: {fileID: 1998163390211171560}
   - component: {fileID: 1830938127773267540}
   - component: {fileID: 1832912520322013678}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SparkTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14769,7 +14769,7 @@ GameObject:
   - component: {fileID: 1991842678897066028}
   - component: {fileID: 1831808375944886202}
   - component: {fileID: 1832850166535861378}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LightningSpikes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19663,7 +19663,7 @@ GameObject:
   - component: {fileID: 1831531177988736084}
   - component: {fileID: 1831086154161548334}
   - component: {fileID: 1944760320985243076}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArcTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24705,7 +24705,7 @@ GameObject:
   - component: {fileID: 6903862557258194994}
   - component: {fileID: 6720150121514712948}
   - component: {fileID: 6719706376160530956}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: World Space Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24807,7 +24807,7 @@ GameObject:
   - component: {fileID: 6901938422445866074}
   - component: {fileID: 6900493908357073452}
   - component: {fileID: 6719909806203054222}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24883,7 +24883,7 @@ GameObject:
   - component: {fileID: 6901830870047016074}
   - component: {fileID: 6900323344625207372}
   - component: {fileID: 6722960941405435836}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: Grenade Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24967,7 +24967,7 @@ GameObject:
   - component: {fileID: 6646898227201696302}
   - component: {fileID: 6769089064358604720}
   - component: {fileID: 8407305175540328391}
-  m_Layer: 22
+  m_Layer: 8
   m_Name: PlayerFragGrenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25205,7 +25205,7 @@ GameObject:
   - component: {fileID: 8038831537635943964}
   - component: {fileID: 8038831537616492270}
   - component: {fileID: 8038831537615615282}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Smoke_FX
   m_TagString: Untagged
   m_Icon: {fileID: 0}

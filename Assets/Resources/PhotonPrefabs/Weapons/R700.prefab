@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2358512475867144481}
   - component: {fileID: 2358512475866341633}
   - component: {fileID: 2358512475865244609}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_01_bipod_leg_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 2358512475867144483}
   - component: {fileID: 2358512475866341635}
   - component: {fileID: 2358512475865244611}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_01_scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 552796238838542409}
   - component: {fileID: 3537047690651699159}
   - component: {fileID: 8253055556358932939}
-  m_Layer: 24
+  m_Layer: 10
   m_Name: R700
   m_TagString: Pickable
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 2358512475867144487}
   - component: {fileID: 2358512475866341639}
   - component: {fileID: 2358512475865244615}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_01_bipod_leg_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   - component: {fileID: 2358512475867144493}
   - component: {fileID: 2358512475866341645}
   - component: {fileID: 2358512475865244621}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sniper_01_slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
