@@ -130,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   damage: 80
-  force: 1500
+  force: 2000
   radius: 5
   power: 100
   useConstantForce: 0
