@@ -220,7 +220,7 @@ MonoBehaviour:
   spriteId: 0
   isWallGun: 0
   _ammoInThisWeapon: 999
-  extraAmmo: 0
+  spareAmmo: 0
   isDualWieldable: 0
   defaultAmmo: 999
   defaultExtraAmmo: 999

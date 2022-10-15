@@ -136,7 +136,7 @@ MonoBehaviour:
   spriteId: 3
   isWallGun: 0
   _ammoInThisWeapon: 30
-  extraAmmo: 30
+  spareAmmo: 60
   isDualWieldable: 0
   defaultAmmo: 30
   defaultExtraAmmo: 0

@@ -28,7 +28,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
         }
     }
-    public int extraAmmo;
+    public int spareAmmo;
     public bool isDualWieldable;
 
     [SerializeField] int defaultAmmo;
@@ -86,7 +86,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     private void Start()
     {
         defaultAmmo = ammoInThisWeapon;
-        defaultExtraAmmo = extraAmmo;
+        defaultExtraAmmo = spareAmmo;
         spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
     }
 
@@ -103,21 +103,21 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public void ResetAmmo()
     {
         ammoInThisWeapon = defaultAmmo;
-        extraAmmo = defaultExtraAmmo;
+        spareAmmo = defaultExtraAmmo;
     }
 
     public void RandomAmmo()
     {
         ammoInThisWeapon = (int)Mathf.Ceil(Random.Range(0, ammoInThisWeapon));
-        extraAmmo = (int)Mathf.Ceil(Random.Range(0, extraAmmo));
+        spareAmmo = (int)Mathf.Ceil(Random.Range(0, spareAmmo));
 
         defaultAmmo = (int)Mathf.Ceil(Random.Range(0, defaultAmmo)); ;
-        extraAmmo = (int)Mathf.Ceil(Random.Range(0, extraAmmo));
+        spareAmmo = (int)Mathf.Ceil(Random.Range(0, spareAmmo));
     }
 
     public void LootWeapon(bool onlyExtraAmmo = false)
     {
-        int ammoToLoot = extraAmmo;
+        int ammoToLoot = spareAmmo;
         PlayerInventory playerInventory = GameManager.GetMyPlayer().playerInventory;
         if (!onlyExtraAmmo)
             ammoToLoot += ammoInThisWeapon;

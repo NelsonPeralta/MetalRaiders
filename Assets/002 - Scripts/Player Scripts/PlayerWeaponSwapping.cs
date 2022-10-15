@@ -215,6 +215,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
                 pInventory.hasSecWeap = true;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = closestLootableWeapon.ammoInThisWeapon;
+                pInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestLootableWeapon.spareAmmo;
 
                 pInventory.PlayDrawSound();
             }
@@ -282,6 +283,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
         pInventory.activeWeapon = newActiveWeapon;
         pInventory.activeWeapon.currentAmmo = lw.ammoInThisWeapon;
+        pInventory.activeWeapon.spareAmmo = lw.spareAmmo;
         //pInventory.holsteredWeapon = previousActiveWeapon;
 
         //StartCoroutine(pInventory.ToggleTPPistolIdle(1));
