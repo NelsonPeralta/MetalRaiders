@@ -133,22 +133,32 @@ public class Bullet : MonoBehaviourPunCallbacks
             if (!damageDealt && bulletLayers.Contains(hits[i].collider.gameObject.layer))
             {
                 GameObject hit = hits[i].collider.gameObject;
-                if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
-                {
-                    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
-                    objectsHit.Add(newHit);
 
-                }
-                else if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
+                if (hits[i].collider.GetComponent<IDamageable>() != null || hits[i].collider)
                 {
                     ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
                     objectsHit.Add(newHit);
                 }
-                else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>() && !hit.GetComponent<CharacterController>())
-                {
-                    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
-                    objectsHit.Add(newHit);
-                }
+
+                // Old
+                #region
+                //if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
+                //{
+                //    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
+                //    objectsHit.Add(newHit);
+
+                //}
+                //else if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
+                //{
+                //    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
+                //    objectsHit.Add(newHit);
+                //}
+                //else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>() && !hit.GetComponent<CharacterController>())
+                //{
+                //    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
+                //    objectsHit.Add(newHit);
+                //}
+                #endregion
             }
 
         }
@@ -160,6 +170,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         if (objectsHit.Count > 0)
         {
             GameObject finalHitObject = objectsHit[0].gameObject;
+            IDamageable finalHitDamageable = objectsHit[0].gameObject.GetComponent<IDamageable>();
             Vector3 finalHitPoint = objectsHit[0].hitPoint;
             float finalHitDistance = objectsHit[0].distanceFromPlayer;
             for (int i = 0; i < objectsHit.Count; i++)
@@ -168,6 +179,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 {
                     Debug.Log(objectsHit[i].hitPoint);
                     finalHitDistance = objectsHit[i].distanceFromPlayer;
+                    finalHitDamageable = objectsHit[i].gameObject.GetComponent<IDamageable>();
                     finalHitPoint = objectsHit[i].hitPoint;
                     finalHitObject = objectsHit[i].gameObject;
                 }
@@ -175,90 +187,138 @@ public class Bullet : MonoBehaviourPunCallbacks
 
             try
             {
-                finalHitObject.GetComponent<IDamageable>().Damage(damage);
+                if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
+                {
+                    PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
+                    Player player = hitbox.player.GetComponent<Player>();
+                    bool wasHeadshot = false;
+                    bool wasNutshot = false;
+                    if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+                    {
+                        int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
+
+                        if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
+                            damage = player.maxHealthPoints;
+
+                        if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                            damage = (int)(damage * weaponProperties.headshotMultiplier);
+
+                        wasHeadshot = hitbox.isHead;
+                        wasNutshot = hitbox.isNuts;
+
+                        if (wasHeadshot && player.hitPoints < damage)
+                            playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
+
+                    }
+
+                    if (playerWhoShot.PV.IsMine)
+                    {
+                        if (weaponProperties.codeName != null)
+                            finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
+                        else
+                            finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                    }
+
+                    damageDealt = true;
+                }
+                else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
+                {
+                    try
+                    {
+                        finalHitDamageable.Damage(damage);
+                    }
+                    catch { }
+                    GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+                    genericHit.transform.position = finalHitPoint;
+                    genericHit.SetActive(true);
+
+                    damageDealt = true;
+                }
+                gameObject.SetActive(false);
             }
             catch { }
 
-            //Debug.Log($"Bullet final hit: {finalHitObject.name}");
-            if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead)
-            {
-                AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
-                int finalDamage = damage;
-                bool isHeadshot = hitbox.isHead && weaponProperties.isHeadshotCapable;
-                if (isHeadshot)
-                {
-                    //Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
-                    finalDamage = (int)(weaponProperties.headshotMultiplier * damage);
+            // Old
+            #region
+            //if (finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<AIHitbox>().aiAbstractClass.isDead)
+            //{
+            //    AIHitbox hitbox = finalHitObject.GetComponent<AIHitbox>();
+            //    int finalDamage = damage;
+            //    bool isHeadshot = hitbox.isHead && weaponProperties.isHeadshotCapable;
+            //    if (isHeadshot)
+            //    {
+            //        //Debug.Log($"Bullet final hit: {finalHitObject.name} HEADSHOT");
+            //        finalDamage = (int)(weaponProperties.headshotMultiplier * damage);
 
-                    if (hitbox.aiAbstractClass.health <= finalDamage)
-                    {
-                        playerWhoShot.GetComponent<PlayerSwarmMatchStats>().headshots++;
-                    }
-                }
+            //        if (hitbox.aiAbstractClass.health <= finalDamage)
+            //        {
+            //            playerWhoShot.GetComponent<PlayerSwarmMatchStats>().headshots++;
+            //        }
+            //    }
 
 
 
-                if (playerWhoShot.PV.IsMine)
-                {
-                    //Debug.Log($"AI is dead: {hitbox.aiAbstractClass.isDead}");
-                    hitbox.aiAbstractClass.Damage(finalDamage, playerWhoShot.PV.ViewID, isHeadshot: isHeadshot, damageSource: weaponProperties.codeName);
-                }
+            //    if (playerWhoShot.PV.IsMine)
+            //    {
+            //        //Debug.Log($"AI is dead: {hitbox.aiAbstractClass.isDead}");
+            //        hitbox.aiAbstractClass.Damage(finalDamage, playerWhoShot.PV.ViewID, isHeadshot: isHeadshot, damageSource: weaponProperties.codeName);
+            //    }
 
-                GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
-                bloodHit.transform.position = finalHitPoint;
-                bloodHit.SetActive(true);
+            //    GameObject bloodHit = gameObjectPool.SpawnPooledBloodHit();
+            //    bloodHit.transform.position = finalHitPoint;
+            //    bloodHit.SetActive(true);
 
-                damageDealt = true;
-            }
-            else if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
-            {
-                //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
+            //    damageDealt = true;
+            //}
+            //else if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
+            //{
+            //    //hitMessage = "Hit Player at: + " + hit.name + damageDealt;
 
-                PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
-                Player player = hitbox.player.GetComponent<Player>();
-                bool wasHeadshot = false;
-                bool wasNutshot = false;
-                if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
-                {
-                    int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
+            //    PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
+            //    Player player = hitbox.player.GetComponent<Player>();
+            //    bool wasHeadshot = false;
+            //    bool wasNutshot = false;
+            //    if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+            //    {
+            //        int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
-                    if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
-                        damage = player.maxHealthPoints;
+            //        if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
+            //            damage = player.maxHealthPoints;
 
-                    if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
-                        damage = (int)(damage * weaponProperties.headshotMultiplier);
+            //        if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+            //            damage = (int)(damage * weaponProperties.headshotMultiplier);
 
-                    wasHeadshot = hitbox.isHead;
-                    wasNutshot = hitbox.isNuts;
+            //        wasHeadshot = hitbox.isHead;
+            //        wasNutshot = hitbox.isNuts;
 
-                    if (wasHeadshot && player.hitPoints < damage)
-                        playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
+            //        if (wasHeadshot && player.hitPoints < damage)
+            //            playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
 
-                }
+            //    }
 
-                if (playerWhoShot.PV.IsMine)
-                {
-                    if (weaponProperties.codeName != null)
-                    {
-                        player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
-                    }
-                    else
-                        player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
-                }
+            //    if (playerWhoShot.PV.IsMine)
+            //    {
+            //        if (weaponProperties.codeName != null)
+            //        {
+            //            player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
+            //        }
+            //        else
+            //            player.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+            //    }
 
-                damageDealt = true;
-            }
-            else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
-            {
-                //hitMessage += $"\n\n---HIT---: {hit.name}";
-                GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
-                //int iplus = Mathf.Clamp(i + 1, 0, hits.Length - 1); // Both inclusive
-                genericHit.transform.position = finalHitPoint;
-                genericHit.SetActive(true);
+            //    damageDealt = true;
+            //}
+            //else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
+            //{
+            //    //hitMessage += $"\n\n---HIT---: {hit.name}";
+            //    GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+            //    //int iplus = Mathf.Clamp(i + 1, 0, hits.Length - 1); // Both inclusive
+            //    genericHit.transform.position = finalHitPoint;
+            //    genericHit.SetActive(true);
 
-                damageDealt = true;
-            }
-            gameObject.SetActive(false);
+            //    damageDealt = true;
+            //}
+            #endregion
         }
 
     }
@@ -273,6 +333,17 @@ public class Bullet : MonoBehaviourPunCallbacks
             hitPoint = _hitPoint;
             distanceFromPlayer = dist;
         }
+    }
+
+    class BulletData
+    {
+        public int sourcePID;
+
+        public bool wasHeadshot;
+        public bool wasGroin;
+
+        public Vector3 finalHitPos;
+        public string sourceWeaponCodename;
     }
     void GetBulletInfo()
     {

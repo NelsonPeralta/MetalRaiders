@@ -1,21 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class ExplosiveBarrel : MonoBehaviour, IDamageable
 {
-    [SerializeField] int _hitPoints;
+    public delegate void ExplosiveBarrelEvent(ExplosiveBarrel explosiveBarrel);
+    ExplosiveBarrelEvent OnExploded;
+
+    [SerializeField] int _defaultHitPoints;
+
+    [SerializeField]  int _HitPoints;
+    int _hitPoints { get { return _HitPoints; } set { _HitPoints = value; if (_HitPoints <= 0) OnExploded?.Invoke(this); } }
     public int hitPoints
     {
         get { return _hitPoints; }
         set
         {
-            _hitPoints = value;
-
-            if (hitPoints <= 0)
-                gameObject.SetActive(false);
+            GetComponent<PhotonView>().RPC("UpdateHitPoints", RpcTarget.All, value);
         }
     }
+
+    public GameObject explosionPrefab;
+
+    private void OnEnable()
+    {
+        _HitPoints = _defaultHitPoints;
+    }
+
+    private void Start()
+    {
+        OnExploded += OnExplode_Delegate;
+    }
+
+    // Damage
+    #region
     public void Damage(int damage)
     {
         hitPoints -= damage;
@@ -30,4 +49,25 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     {
         hitPoints -= damage;
     }
+    #endregion
+
+    // Delegates
+    #region
+    void OnExplode_Delegate(ExplosiveBarrel explosiveBarrel)
+    {
+        //GameObject e = Instantiate(explosionPrefab, transform.position,transform.rotation);
+
+        //Destroy(e, 10);
+        Destroy(gameObject);
+    }
+    #endregion
+
+    // RPCs
+    #region
+    [PunRPC]
+    void UpdateHitPoints(int h)
+    {
+        _hitPoints = h;
+    }
+    #endregion
 }

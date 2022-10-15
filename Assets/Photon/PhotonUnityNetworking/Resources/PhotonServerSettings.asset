@@ -137,6 +137,7 @@ MonoBehaviour:
   - AssignWeapon
   - AddImpact_RPC
   - UpdateNickName_RPC
+  - UpdateHitPoints
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
