@@ -4942,7 +4942,7 @@ MonoBehaviour:
   player: {fileID: 0}
   damage: 0
   force: 50
-  radius: 5
+  radius: 6
   power: 100
   useConstantForce: 1
   explosionPrefab: {fileID: 2064435946878792721, guid: 64697961c622c284292667efd42b6f6e,

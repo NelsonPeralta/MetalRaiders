@@ -395,11 +395,16 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetLocalMasterPlayer()
     {
-        foreach(Player p in FindObjectsOfType<Player>())
+        foreach (Player p in FindObjectsOfType<Player>())
         {
             if (p.PV.IsMine && p.rid == 0)
                 return p;
         }
         return null;
+    }
+
+    public void ChangeNbLocalPlayers(string n)
+    {
+        NbPlayers = int.Parse(n);
     }
 }
