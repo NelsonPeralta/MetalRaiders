@@ -19,7 +19,7 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
         tts = _defaultTts;
 
         if (PhotonNetwork.IsMasterClient)
-            barell = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), Vector3.zero, Quaternion.identity).GetComponent<ExplosiveBarrel>();
+            barell = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>();
 
         placeHolder.SetActive(false);
     }

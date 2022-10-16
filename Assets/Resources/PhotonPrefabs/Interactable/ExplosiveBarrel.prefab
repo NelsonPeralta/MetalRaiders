@@ -35,7 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3180588974505713107
 MeshFilter:
@@ -115,7 +115,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _defaultHitPoints: 100
   _HitPoints: 100
-  explosionPrefab: {fileID: 0}
+  explosionPrefab: {fileID: 2067637460275169673, guid: 2226b5b04f1d7bd4db41e45d83857a9f,
+    type: 3}
 --- !u!54 &3180588974506303558
 Rigidbody:
   m_ObjectHideFlags: 0

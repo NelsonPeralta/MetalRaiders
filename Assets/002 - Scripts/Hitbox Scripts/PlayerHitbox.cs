@@ -9,7 +9,7 @@ public class PlayerHitbox : Hitbox, IDamageable
 
     public void Damage(int damage)
     {
-        throw new System.NotImplementedException();
+        player.hitPoints -= damage;
     }
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)

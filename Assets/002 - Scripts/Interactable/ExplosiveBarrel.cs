@@ -55,9 +55,9 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     #region
     void OnExplode_Delegate(ExplosiveBarrel explosiveBarrel)
     {
-        //GameObject e = Instantiate(explosionPrefab, transform.position,transform.rotation);
+        GameObject e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
 
-        //Destroy(e, 10);
+        Destroy(e, 10);
         Destroy(gameObject);
     }
     #endregion

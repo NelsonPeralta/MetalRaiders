@@ -26,12 +26,19 @@ public class PlayerImpactReceiver : MonoBehaviour
             Impact(dir, force);
     }
 
+    public void AddImpact(Vector3 dir, float force)
+    {
+        if (GetComponent<PhotonView>().IsMine)
+            Impact(dir, force);
+    }
+
     [PunRPC]
     void AddImpact_RPC(Vector3 dir, float force)
     {
         if (!GetComponent<PhotonView>().IsMine)
             return;
 
+        Debug.Log("AddImpact_RPC");
         Impact(dir, force);
     }
 

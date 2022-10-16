@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2164020101960394913}
   - component: {fileID: 2193735571161440121}
   - component: {fileID: 565854861898435905}
+  - component: {fileID: 3640975055457652952}
   m_Layer: 0
   m_Name: Barrel Explosion
   m_TagString: Untagged
@@ -4749,6 +4750,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3640975055457652952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067637460275169673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 338bbf90389e28f4f8a9e4760525b932, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 500
+  radius: 5
+  power: 200
 --- !u!1 &2067639922281562043
 GameObject:
   m_ObjectHideFlags: 0

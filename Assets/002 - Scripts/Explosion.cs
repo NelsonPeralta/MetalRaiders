@@ -5,17 +5,18 @@ using UnityEngine;
 public class Explosion : MonoBehaviour
 {
     public int damage;
-    float radius;
-    int power;
+    public float radius;
+    public int power;
 
     // Start is called before the first frame update
     void Start()
     {
         Explode();
     }
-        
+
     void Explode()
     {
+        Debug.Log("Exploded");
         //Explosion force
         Vector3 explosionPos = transform.position;
         //Use overlapshere to check for nearby colliders
@@ -33,8 +34,9 @@ public class Explosion : MonoBehaviour
             CharacterController cc = hit.GetComponent<CharacterController>();
             if (cc)
             {
+                Debug.Log("Explode CC");
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(null, exDir, power * 5);
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, power * 5);
             }
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
@@ -48,12 +50,9 @@ public class Explosion : MonoBehaviour
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
 
-                    //if (this.player.PV.IsMine && calculatedDamage > 0)
-                    //    playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, this.player.PV.ViewID, damageSource: "fraggrenade");
+                    hit.GetComponent<IDamageable>().Damage(damage);
                 }
             }
         }
-
-        Destroy(gameObject);
     }
 }
