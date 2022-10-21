@@ -35,7 +35,8 @@ public class PlayerCamera : MonoBehaviour
     float currentHorizontalSway;
     float sway;
 
-    public AimAssistCapsule aimAssistCapsule;
+    //public AimAssistCapsule aimAssistCapsule;
+    public AimAssistCone aimAssistCapsule;
 
     // Start is called before the first frame update
     void Start()

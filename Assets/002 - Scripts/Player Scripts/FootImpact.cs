@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class FootImpact : MonoBehaviour
 {
+    public Movement movement;
+    public AudioSource audioSource;
     public AudioClip footStepClip;
-    private void OnTriggerEnter(Collider other)
+    public void PlayFootImpactClip()
     {
-        GetComponent<AudioSource>().clip = footStepClip;
-        GetComponent<AudioSource>().Play();
+        if (movement.direction == "Idle")
+            return;
+        audioSource.clip = footStepClip;
+        audioSource.Play();
     }
 }

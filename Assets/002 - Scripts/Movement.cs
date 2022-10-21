@@ -225,6 +225,11 @@ public class Movement : MonoBehaviour, IPunObservable
         CrouchJump();
         CheckMovingForward();
         ControlAnimationSpeed();
+
+        if(this.direction == "Idle")
+        {
+
+        }
     }
 
     void CalculateVelocity()
@@ -418,25 +423,25 @@ public class Movement : MonoBehaviour, IPunObservable
         {
             directionIndicator = 0;
             direction = "Idle";
-            PauseWalkingSound();
+            //PauseWalkingSound();
             walkingSoundPlaying = false;
         }
 
         if (zValue > 0 || xValue > 0)
         {
-            if (isGrounded && !pController.isCrouching)
-            {
-                if (!walkingSoundPlaying)
-                {
-                    PlayWalkingSound();
-                    walkingSoundPlaying = true; ;
-                }
-            }
-            else
-            {
-                PauseWalkingSound();
-                walkingSoundPlaying = false;
-            }
+            //if (isGrounded && !pController.isCrouching)
+            //{
+            //    if (!walkingSoundPlaying)
+            //    {
+            //        PlayWalkingSound();
+            //        walkingSoundPlaying = true; ;
+            //    }
+            //}
+            //else
+            //{
+            //    PauseWalkingSound();
+            //    walkingSoundPlaying = false;
+            //}
         }
 
 
@@ -521,27 +526,27 @@ public class Movement : MonoBehaviour, IPunObservable
         StartCoroutine(CalculatePlayerSpeed());
     }
 
-    void PlayWalkingSound()
-    {
-        PV.RPC("PlayWalkingSound_RPC", RpcTarget.All);
-    }
+    //void PlayWalkingSound()
+    //{
+    //    PV.RPC("PlayWalkingSound_RPC", RpcTarget.All);
+    //}
 
-    void PauseWalkingSound()
-    {
-        PV.RPC("PauseWalkingSoundRPC", RpcTarget.All);
-    }
+    //void PauseWalkingSound()
+    //{
+    //    PV.RPC("PauseWalkingSoundRPC", RpcTarget.All);
+    //}
 
-    [PunRPC]
-    void PlayWalkingSound_RPC()
-    {
-        walkingSoundAS.Play();
-    }
+    //[PunRPC]
+    //void PlayWalkingSound_RPC()
+    //{
+    //    walkingSoundAS.Play();
+    //}
 
-    [PunRPC]
-    void PauseWalkingSoundRPC()
-    {
-        walkingSoundAS.Pause();
-    }
+    //[PunRPC]
+    //void PauseWalkingSoundRPC()
+    //{
+    //    walkingSoundAS.Pause();
+    //}
 
     public void ResetCharacterControllerProperties()
     {

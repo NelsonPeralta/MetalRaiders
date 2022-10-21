@@ -19,6 +19,8 @@ public class WeaponProperties : MonoBehaviour
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
+    float _aimAssistRadius;
+
     [Header("Weapon Info")]
     public Sprite weaponIcon;
     public string codeName; // Used for scripting purposes
@@ -119,11 +121,17 @@ public class WeaponProperties : MonoBehaviour
         set { _maxAmmo = value; }
     }
 
-    // Properties
     public bool isOutOfAmmo
     {
         get { return currentAmmo <= 0; }
     }
+
+    public float aimAssistRadius
+    {
+        get { return _aimAssistRadius; }
+        set { _aimAssistRadius = Mathf.Clamp(value, 0.1f, 10); }
+    }
+
     private void Start()
     {
         if (fireRate <= 0)

@@ -20,6 +20,7 @@ public class PlayerInventory : MonoBehaviourPun
     public PhotonView PV;
     public PlayerWeaponSwapping playerWeaponSwapping;
     public PlayerShooting playerShooting;
+    public AimAssistCone aimAssistCone;
 
     [Space(20)]
     [Header("Data")]
@@ -148,6 +149,7 @@ public class PlayerInventory : MonoBehaviourPun
     public void Start()
     {
         //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
+        OnActiveWeaponChanged += aimAssistCone.OnActiveWeaponChanged;
         player.OnPlayerRespawnEarly += OnPlayerRespawnEarly_Delegate;
         OnAmmoChanged += OnAmmoChanged_Delegate;
         OnActiveWeaponChangedLate += OnActiveWeaponChangedLate_Delegate;
