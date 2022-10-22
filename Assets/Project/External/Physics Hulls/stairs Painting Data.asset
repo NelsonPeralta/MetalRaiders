@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0de965f2e710c1c489ead8e62cd25da0, type: 3}
+  m_Name: stairs Painting Data
+  m_EditorClassIdentifier: 
+  hullData: {fileID: 11400000, guid: b135dbf09a9506e4e9d88add10bdf7c0, type: 2}
+  sourceMesh: {fileID: 4300034, guid: 7b23fcb368491cf4ca8fcd85d12bb784, type: 3}
+  activeHull: -1
+  faceThickness: 0.1
+  hulls:
+  - name: Stairs 1
+    isVisible: 1
+    type: 1
+    colour: {r: 0, g: 1, b: 1, a: 0.3}
+    material: {fileID: 0}
+    enableInflation: 0
+    inflationAmount: 0.1
+    isTrigger: 0
+    isChildCollider: 0
+    selectedFaces: 260000002700000003000000020000007500000076000000770000007a0000008e000000900000000100000000000000
+    collisionMesh: {fileID: 1436633521800285522, guid: b135dbf09a9506e4e9d88add10bdf7c0,
+      type: 2}
+    faceCollisionMesh: {fileID: 0}
+    collisionBox:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+    hasColliderError: 0
+    numColliderFaces: 17
+  - name: Floor 1
+    isVisible: 1
+    type: 0
+    colour: {r: 1, g: 0, b: 1, a: 0.3}
+    material: {fileID: 0}
+    enableInflation: 0
+    inflationAmount: 0.1
+    isTrigger: 0
+    isChildCollider: 0
+    selectedFaces: 28000000290000002a0000008500000083000000
+    collisionMesh: {fileID: 0}
+    faceCollisionMesh: {fileID: 0}
+    collisionBox:
+      m_Center: {x: -0.41437623, y: -0.6068763, z: 1.3451757}
+      m_Extent: {x: 1.0749913, y: 0.3, z: 0.86689305}
+    hasColliderError: 0
+    numColliderFaces: 0
+  - name: Stairs 2
+    isVisible: 1
+    type: 1
+    colour: {r: 1, g: 1, b: 0, a: 0.3}
+    material: {fileID: 0}
+    enableInflation: 0
+    inflationAmount: 0.01
+    isTrigger: 0
+    isChildCollider: 0
+    selectedFaces: 2c0000002b0000006e0000006d000000a9000000ad0000009700000099000000980000009500000096000000a1000000a00000009d0000009c000000a4000000a5000000a6000000ac000000b5000000b4000000b1000000b0000000
+    collisionMesh: {fileID: 6587267900354661915, guid: b135dbf09a9506e4e9d88add10bdf7c0,
+      type: 2}
+    faceCollisionMesh: {fileID: 0}
+    collisionBox:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+    hasColliderError: 0
+    numColliderFaces: 14
+  - name: Fence 1
+    isVisible: 1
+    type: 1
+    colour: {r: 1, g: 0, b: 0, a: 0.3}
+    material: {fileID: 0}
+    enableInflation: 1
+    inflationAmount: 0.1
+    isTrigger: 0
+    isChildCollider: 0
+    selectedFaces: 
+    collisionMesh: {fileID: 0}
+    faceCollisionMesh: {fileID: 0}
+    collisionBox:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+    hasColliderError: 0
+    numColliderFaces: 0
