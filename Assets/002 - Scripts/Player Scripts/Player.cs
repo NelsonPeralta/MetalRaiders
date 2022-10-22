@@ -330,15 +330,15 @@ public class Player : MonoBehaviourPunCallbacks
         mainOriginalCameraPosition = new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, mainCamera.transform.localPosition.z);
 
 
-        if (GetComponent<PlayerController>().PV.IsMine)
-        {
+        //if (GetComponent<PlayerController>().PV.IsMine)
+        //{
 
-        }
-        else
-        {
-            firstPersonModels.layer = 23; // 24 = P1 FPS
-            thirdPersonModels.layer = 0; // 0 = Default
-        }
+        //}
+        //else
+        //{
+        //    firstPersonModels.layer = 23; // 24 = P1 FPS
+        //    thirdPersonModels.layer = 0; // 0 = Default
+        //}
         //StartCoroutine(SlightlyIncreaseHealth());
 
         OnPlayerDeath += OnPlayerDeath_Delegate;
@@ -708,7 +708,8 @@ public class Player : MonoBehaviourPunCallbacks
     }
     public void LeaveRoomWithDelay()
     {
-        StartCoroutine(LeaveRoomWithDelay_Coroutine());
+        if (playerRewiredID == 0)
+            StartCoroutine(LeaveRoomWithDelay_Coroutine());
     }
 
     public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)

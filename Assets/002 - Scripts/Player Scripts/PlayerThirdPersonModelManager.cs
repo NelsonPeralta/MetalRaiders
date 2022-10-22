@@ -70,26 +70,27 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
                 OnModelAssigned?.Invoke(this);
 
-                if (player.PV.IsMine)
-                {
-                    List<int> ignoreList = new List<int>();
-                    ignoreList.Add(7); // 7 = Player Hitbox
-                    foreach (GameObject model in models)
-                        if (!feet.Contains(model))
+                List<int> ignoreList = new List<int>();
+                ignoreList.Add(7); // 7 = Player Hitbox
+                foreach (GameObject model in models)
+                    if (!feet.Contains(model))
+                    {
+                        if (player.PV.IsMine)
                         {
-                            if (player.PV.IsMine)
-                            {
-                                if (player.rid == 0)
-                                    GameManager.SetLayerRecursively(model, 25, ignoreList);
-                                else if (player.rid == 1)
-                                    GameManager.SetLayerRecursively(model, 27, ignoreList);
-                                else if (player.rid == 2)
-                                    GameManager.SetLayerRecursively(model, 29, ignoreList);
-                                else if (player.rid == 3)
-                                    GameManager.SetLayerRecursively(model, 31, ignoreList);
-                            }
+                            if (player.rid == 0)
+                                GameManager.SetLayerRecursively(model, 25, ignoreList);
+                            else if (player.rid == 1)
+                                GameManager.SetLayerRecursively(model, 27, ignoreList);
+                            else if (player.rid == 2)
+                                GameManager.SetLayerRecursively(model, 29, ignoreList);
+                            else if (player.rid == 3)
+                                GameManager.SetLayerRecursively(model, 31, ignoreList);
                         }
-                }
+                        else
+                        {
+                            GameManager.SetLayerRecursively(model, 0, ignoreList);
+                        }
+                    }
 
             }
             catch (System.Exception e) { Debug.Log(e); }

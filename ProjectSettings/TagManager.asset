@@ -47,7 +47,7 @@ TagManager:
   - Water
   - UI
   - Player
-  - Player Hitbox
+  - Hitbox
   - Player Bullet
   - Player Ground Check
   - Physical Loot (Player Feet)

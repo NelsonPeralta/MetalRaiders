@@ -8,6 +8,20 @@ public class ThirdPersonScript : MonoBehaviour
     public List<SkinnedMeshRenderer> meshes = new List<SkinnedMeshRenderer>();
     public Transform handBone;
 
+    private void Start()
+    {
+        //if (!player.PV.IsMine)
+        //    meshes[0].gameObject.layer = 0;
+        //else
+        //{
+        //    int l = 31 - (6 - player.playerRewiredID);
+        //    List<int> ignoreList = new List<int>();
+        //    ignoreList.Add(LayerMask.NameToLayer("Hitbox"));
+
+        //    GameManager.SetLayerRecursively(gameObject, l, ignoreList);
+        //}
+    }
+
     private void Update()
     {
         GetComponent<Animator>().SetFloat("Vertical", player.GetComponent<Movement>().zDirection, 1f, Time.deltaTime * 10f);

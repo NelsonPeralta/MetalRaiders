@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerArmorManager : MonoBehaviour
 {
+    public Player player;
     public List<PlayerArmorPiece> playerArmorPieces;
 
     private void OnEnable()
