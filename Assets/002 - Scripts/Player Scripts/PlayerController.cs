@@ -23,7 +23,6 @@ public class PlayerController : MonoBehaviourPun
     public Camera mainCam;
     public Camera gunCam;
     public PlayerCamera camScript;
-    public FPSControllerLPFP.FpsControllerLPFP notMyFPSController;
     public Rewired.Player rewiredPlayer;
     public int rid;
     public CrosshairManager crosshairScript;
