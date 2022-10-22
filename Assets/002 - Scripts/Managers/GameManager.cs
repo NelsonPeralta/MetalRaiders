@@ -267,6 +267,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void ToggleCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask ^= 1 << LayerMask.NameToLayer("SomeLayer"); }
     public void LeaveRoom()
     {
+        if()
         Cursor.visible = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(0);
