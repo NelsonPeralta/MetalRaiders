@@ -60,6 +60,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
         PlayerMultiplayerMatchStats losingPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
 
+        if (winningPlayerMS.kills >= scoreToWin)
+            return;
 
         List<Player> allPlayers = new List<Player>();
         foreach (Player pp in FindObjectsOfType<Player>())

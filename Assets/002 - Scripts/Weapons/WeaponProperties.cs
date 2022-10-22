@@ -199,6 +199,8 @@ public class WeaponProperties : MonoBehaviour
             else if (pController.rid == 3)
                 GameManager.SetLayerRecursively(gameObject, 30);
         }
+        else
+            GameManager.SetLayerRecursively(gameObject, 3);
     }
     private void OnEnable()
     {
