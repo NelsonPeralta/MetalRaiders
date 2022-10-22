@@ -389,7 +389,13 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
-        int damage = (int)(hitPoints - _newHealth);
+        Debug.Log($"Damage_RPC");
+
+            int damage = (int)(hitPoints - _newHealth);
+        bool _isDead = false;
+        if (hitPoints - damage <= 0)
+            _isDead = true;
+
         if (PV.IsMine)
         {
             GetComponent<PlayerController>().ScopeOut();
@@ -419,10 +425,11 @@ public class Player : MonoBehaviourPunCallbacks
         }
         catch (System.Exception e) { }
 
-        hitPoints = _newHealth;
+        Debug.Log($"Player is dead: {isDead}");
 
-        if (isDead)
+        if (_isDead)
         {
+            Debug.Log($"PLAYER: isDead");
             Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
             string sourcePlayerName = sourcePlayer.nickName;
 
@@ -508,6 +515,7 @@ public class Player : MonoBehaviourPunCallbacks
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
         }
+        hitPoints = _newHealth;
     }
     void HitPointsRecharge()
     {

@@ -9,7 +9,7 @@ public class PlayerHitbox : Hitbox, IDamageable
 
     public void Damage(int damage)
     {
-        player.hitPoints -= damage;
+        throw new System.NotImplementedException();
     }
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
@@ -22,6 +22,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
+        Debug.Log("PLAYER HITBOX DAMAGE");
         try
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
@@ -41,7 +42,7 @@ public class PlayerHitbox : Hitbox, IDamageable
                     p.GetComponent<PlayerUI>().SpawnHitMarker();
             }
         }
-        catch { }
+        catch(System.Exception e) { Debug.LogWarning(e); }
 
         player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource, isGroin);
 

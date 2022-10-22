@@ -126,8 +126,16 @@ public class AimAssistCone : MonoBehaviour
             var hb = collidingHitboxes[0];
 
             foreach (var item in collidingHitboxes)
-                if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(hb.transform.position, player.mainCamera.transform.position))
+                if (item.GetComponent<Hitbox>().isHead)
+                {
                     hb = item;
+                    break;
+                }
+                else
+                {
+                    if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(hb.transform.position, player.mainCamera.transform.position))
+                        hb = item;
+                }
 
             chb = hb;
         }
@@ -141,7 +149,10 @@ public class AimAssistCone : MonoBehaviour
                         obstruction = true;
             }
             else
-                chb = firstRayHit;
+            {
+                if (!chb.GetComponent<Hitbox>().isHead)
+                    chb = firstRayHit;
+            }
         }
 
         collidingHitbox = chb;
@@ -153,6 +164,7 @@ public class AimAssistCone : MonoBehaviour
         }
         else
         {
+            collidingHitbox = null;
             aimAssist.ResetRedReticule();
         }
     }

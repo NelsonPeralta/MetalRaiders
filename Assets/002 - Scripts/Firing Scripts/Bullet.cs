@@ -136,7 +136,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                 if (hits[i].collider.GetComponent<IDamageable>() != null || hits[i].collider)
                 {
-                    Debug.Log($"Bullet Hit: {hits[i].collider.name}");
                     ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
                     objectsHit.Add(newHit);
                 }
@@ -178,7 +177,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 if (objectsHit[i].distanceFromPlayer < finalHitDistance)
                 {
-                    Debug.Log(objectsHit[i].gameObject.name);
+                    Debug.Log($"BULLET: {objectsHit[i].gameObject.name}");
                     finalHitDistance = objectsHit[i].distanceFromPlayer;
                     finalHitDamageable = objectsHit[i].gameObject.GetComponent<IDamageable>();
                     finalHitPoint = objectsHit[i].hitPoint;

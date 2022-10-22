@@ -54,6 +54,11 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 7747061962181734985}
     m_Modifications:
+    - target: {fileID: 926446498779238448, guid: a0c15bf386196da4cbc765e6e7929926,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 926446499709091166, guid: a0c15bf386196da4cbc765e6e7929926,
         type: 3}
       propertyPath: m_RootOrder
@@ -98,6 +103,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Generic Spawn
+      objectReference: {fileID: 0}
+    - target: {fileID: 926446499709091167, guid: a0c15bf386196da4cbc765e6e7929926,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5559020412961890716, guid: a0c15bf386196da4cbc765e6e7929926,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7899318224915438862, guid: a0c15bf386196da4cbc765e6e7929926,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

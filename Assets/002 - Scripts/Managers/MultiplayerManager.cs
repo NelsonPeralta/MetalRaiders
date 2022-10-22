@@ -46,7 +46,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             instance = this;
 
             //if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer) || )
-                scoreToWin = 10;
+                scoreToWin = 5;
 
             
         }
@@ -57,11 +57,14 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void AddPlayerKill(AddPlayerKillStruct struc)
     {
+        Debug.Log("AddPlayerKill");
         PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
         PlayerMultiplayerMatchStats losingPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
 
         if (winningPlayerMS.kills >= scoreToWin)
             return;
+
+        Debug.Log($"Winning player: {winningPlayerMS.name}. Loser player: {losingPlayerMS.name}");
 
         List<Player> allPlayers = new List<Player>();
         foreach (Player pp in FindObjectsOfType<Player>())

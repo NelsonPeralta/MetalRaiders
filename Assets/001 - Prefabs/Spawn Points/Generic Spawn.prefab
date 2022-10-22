@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 926446498779238455}
   - component: {fileID: 926446498779238453}
   - component: {fileID: 926446498779238454}
-  m_Layer: 31
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 926446499709091166}
   - component: {fileID: 926446499709091165}
   - component: {fileID: 16571891261673449}
-  m_Layer: 17
+  m_Layer: 3
   m_Name: Generic Spawn
   m_TagString: Spawn Point
   m_Icon: {fileID: 0}
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 5338454617668365945}
   - component: {fileID: 6787552922952487152}
   - component: {fileID: 1752704100897744642}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Witness
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 7712944106289943776}
   - component: {fileID: 6212670733645648440}
   - component: {fileID: 2110362318412528069}
-  m_Layer: 31
+  m_Layer: 3
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
