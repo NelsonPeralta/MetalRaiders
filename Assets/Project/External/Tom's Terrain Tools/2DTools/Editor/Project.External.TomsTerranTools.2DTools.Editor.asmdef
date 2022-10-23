@@ -1,0 +1,18 @@
+{
+    "name": "Project.External.TomsTerranTools.2DTools.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:530e2f587ac0c19498db4a27a3203209"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
