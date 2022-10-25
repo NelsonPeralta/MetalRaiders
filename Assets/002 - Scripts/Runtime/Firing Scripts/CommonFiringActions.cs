@@ -19,18 +19,6 @@ public class CommonFiringActions : MonoBehaviour
 
     }
 
-    public void AfterShootingAction(WeaponProperties weaponProperties)
-    {
-        weaponProperties.Recoil();
-        weaponProperties.currentAmmo -= 1;
-
-        weaponProperties.mainAudioSource.clip = weaponProperties.Fire;
-        weaponProperties.mainAudioSource.Play();
-
-        playerController.weaponAnimator.Play("Fire", 0, 0f);
-        StartCoroutine(Player3PSFiringAnimation());
-    }
-
     void SpawnOtherFiringEffects()
     {
         //var mf = Instantiate(gwProperties.muzzleFlashEffect, gwProperties.bulletSpawnPoint.transform.position,

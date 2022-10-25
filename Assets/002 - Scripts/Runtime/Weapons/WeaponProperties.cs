@@ -78,7 +78,6 @@ public class WeaponProperties : MonoBehaviour
     public ReloadScript reloadScript;
 
     [Header("Components")]
-    public AudioSource mainAudioSource;
     public PlayerController pController;
 
     [Header("Animation")]

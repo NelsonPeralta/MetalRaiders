@@ -103,7 +103,7 @@ public class PlayerInventory : MonoBehaviourPun
     public GameObject weaponMesh1Location3;
     public GameObject weaponMesh2Location3;
 
-    AudioSource audioSource;
+    public AudioSource weaponDrawAudioSource;
 
     public GameObject allThirdPersonEquippedWeaponsHolder;
 
@@ -154,7 +154,6 @@ public class PlayerInventory : MonoBehaviourPun
         OnAmmoChanged += OnAmmoChanged_Delegate;
         OnActiveWeaponChangedLate += OnActiveWeaponChangedLate_Delegate;
         OnActiveWeaponChangedLate += crosshairScript.OnActiveWeaponChanged_Delegate;
-        audioSource = GetComponent<AudioSource>();
 
         StartCoroutine(EquipStartingWeapon());
 
@@ -443,8 +442,8 @@ public class PlayerInventory : MonoBehaviourPun
 
     public void PlayDrawSound()
     {
-        audioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
-        audioSource.Play();
+        weaponDrawAudioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
+        weaponDrawAudioSource.Play();
     }
 
     public void ChangeActiveAmmoCounter()
