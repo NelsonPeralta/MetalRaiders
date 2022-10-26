@@ -31,6 +31,8 @@ public class AimAssist : MonoBehaviour
     public Transform bulletSpawnPoint;
     public Quaternion originalBbulletSpawnPointRelativePos;
 
+    [SerializeField] Transform bulletSpawnPoint_Forward;
+
     [Header("MANUAL LINKING")]
     public Player thisPlayer;
 
@@ -44,7 +46,19 @@ public class AimAssist : MonoBehaviour
     private void Update()
     {
         if (redReticuleIsOn)
-            bulletSpawnPoint.LookAt(target.transform);
+        {
+            // https://forum.unity.com/threads/find-a-point-on-a-line-between-two-vector3.140700/
+            // https://www.varsitytutors.com/hotmath/hotmath_help/topics/adding-and-subtracting-vectors#:~:text=To%20add%20or%20subtract%20two,v2%E2%9F%A9%20be%20two%20vectors.&text=The%20sum%20of%20two%20or,method%20or%20the%20triangle%20method%20.
+            // https://answers.unity.com/questions/459532/how-to-get-a-point-on-a-direction.html
+
+            Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+            Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
+            Vector3 middleDir = bspDir + targetDir;
+
+            bulletSpawnPoint.forward = (middleDir);
+
+            //bulletSpawnPoint.LookAt(target.transform);
+        }
         else
         {
             if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
