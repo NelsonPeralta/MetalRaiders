@@ -25,7 +25,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
-    public enum GameType { Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined }
+    public enum GameType { Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
+                            Team_Slayer}
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers }
     public enum CoopGameType { Survival }
     public enum TeamMode { Classic, None }
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Intances
     public static GameManager instance;
 
+    public Dictionary<int, PlayerMultiplayerMatchStats.Team> controllerId_TeamDict;
 
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;

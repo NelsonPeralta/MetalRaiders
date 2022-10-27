@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Linq;
 
 public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 {
@@ -10,11 +11,14 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     // Events
     public PlayerMultiplayerStatsEvent OnKillsChanged, OnDeathsChanged, OnHeadshotsChanged, OnKDRatioChanged;
 
+    public enum Team { None, Red, Blue }
+
     // private variables
     [SerializeField] int _kills;
     [SerializeField] int _deaths;
     [SerializeField] int _headshots;
     [SerializeField] float _kd;
+    [SerializeField] Team _team;
 
     public int kills
     {
@@ -82,17 +86,70 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         }
     }
 
+    public Team team
+    {
+        get { return _team; }
+        set { _team = value; }
+    }
+
     private void Start()
     {
         this.OnKillsChanged += this.OnKillsChange;
         kills = 0;
         deaths = 0;
         headshots = 0;
+
+        int c = 1;
+
+        if (GameManager.instance.gameType == GameManager.GameType.Team_Slayer)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                Player[] pa = FindObjectsOfType<Player>();
+
+                List<Player> pl = pa.ToList();
+
+                foreach (Player p in pl)
+                {
+                    Team t = Team.Red;
+
+                    if (c % 2 == 0)
+                        t = Team.Blue;
+
+                    if (p.controllerId == 0)
+                    {
+                        p.GetComponent<PlayerMultiplayerMatchStats>().ChangeTeam(t);
+                        c++;
+                    }
+                }
+            }
+        }
     }
 
     void OnKillsChange(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
-        if(deaths > 0)
+        if (deaths > 0)
             _kd = (kills / deaths);
+    }
+
+    public void ChangeTeam(Team t)
+    {
+        GetComponent<PhotonView>().RPC("ChangeTeam_RPC", RpcTarget.All, t);
+    }
+
+    [PunRPC]
+    void ChangeTeam_RPC(Team t)
+    {
+        Player[] pa = FindObjectsOfType<Player>();
+
+        List<Player> pl = pa.ToList();
+
+        foreach (Player p in pl)
+        {
+            if (p.PV.IsMine)
+            {
+                team = t;
+            }
+        }
     }
 }

@@ -138,6 +138,7 @@ MonoBehaviour:
   - AddImpact_RPC
   - UpdateNickName_RPC
   - UpdateHitPoints
+  - ChangeTeam_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
