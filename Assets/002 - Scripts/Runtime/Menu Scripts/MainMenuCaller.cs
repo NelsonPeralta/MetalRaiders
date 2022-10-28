@@ -73,7 +73,7 @@ public class MainMenuCaller : MonoBehaviour
     void ChangeSubGameType_RPC(string sgt)
     {
         Launcher.instance.gametypeSelectedText.text = $"Gametype: {sgt}";
-        sgt.Replace("", "_");
+        sgt = sgt.Replace(" ", "");
         GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), sgt);
     }
 }

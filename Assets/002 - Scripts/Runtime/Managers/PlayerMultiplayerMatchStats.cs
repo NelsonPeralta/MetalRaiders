@@ -89,7 +89,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     public Team team
     {
         get { return _team; }
-        set { _team = value; }
+        set { _team = value; Debug.Log(value); }
     }
 
     private void Start()
@@ -99,9 +99,16 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         deaths = 0;
         headshots = 0;
 
+        StartCoroutine(ChangeTeam_Coroutine());
+    }
+
+    IEnumerator ChangeTeam_Coroutine()
+    {
+        yield return new WaitForSeconds(1);
+
         int c = 1;
 
-        if (GameManager.instance.gameType == GameManager.GameType.Team_Slayer)
+        if (GameManager.instance.gameType == GameManager.GameType.TeamSlayer)
         {
             if (PhotonNetwork.IsMasterClient)
             {
@@ -140,16 +147,8 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     [PunRPC]
     void ChangeTeam_RPC(Team t)
     {
-        Player[] pa = FindObjectsOfType<Player>();
-
-        List<Player> pl = pa.ToList();
-
-        foreach (Player p in pl)
-        {
-            if (p.PV.IsMine)
-            {
-                team = t;
-            }
-        }
+        foreach (Player p in FindObjectsOfType<Player>().ToList())
+            if (p.isMine)
+                p.GetComponent<PlayerMultiplayerMatchStats>().team = t;
     }
 }

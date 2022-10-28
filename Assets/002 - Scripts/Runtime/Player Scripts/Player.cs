@@ -304,6 +304,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     }
 
+    public bool isMine { get { return GetComponent<PhotonView>().IsMine; } }
+
     [PunRPC]
     void UpdateNickName_RPC(string nn)
     {
@@ -394,7 +396,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         Debug.Log($"Damage_RPC");
 
-            int damage = (int)(hitPoints - _newHealth);
+        int damage = (int)(hitPoints - _newHealth);
         bool _isDead = false;
         if (hitPoints - damage <= 0)
             _isDead = true;

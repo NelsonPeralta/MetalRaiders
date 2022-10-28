@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum GameType { Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
-                            Team_Slayer}
+                            TeamSlayer}
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers }
     public enum CoopGameType { Survival }
     public enum TeamMode { Classic, None }
