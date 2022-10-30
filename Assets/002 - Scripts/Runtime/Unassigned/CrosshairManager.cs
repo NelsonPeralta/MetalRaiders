@@ -44,14 +44,14 @@ public class CrosshairManager : MonoBehaviour
     }
     public void UpdateReticule()
     {
-        Debug.Log("UpdateReticule");
-        foreach (Crosshair c in crosshairList)
-        {
-            if (c.weaponReticule != pInventory.activeWeapon.reticuleType)
-                c.gameObject.SetActive(false);
-            else
-                c.gameObject.SetActive(true);
-        }
+        //Debug.Log("UpdateReticule");
+        //foreach (Crosshair c in crosshairList)
+        //{
+        //    if (c.weaponReticule != pInventory.activeWeapon.reticuleType)
+        //        c.gameObject.SetActive(false);
+        //    else
+        //        c.gameObject.SetActive(true);
+        //}
     }
 
     private void Update()
@@ -119,28 +119,28 @@ public class CrosshairManager : MonoBehaviour
 
     public void ActivateRedCrosshair()
     {
-        foreach (Crosshair c in crosshairList)
-        {
-            try
-            {
-                if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
-                    c.color = Crosshair.Color.Red;
-            }
-            catch { }
-        }
+        //foreach (Crosshair c in crosshairList)
+        //{
+        //    try
+        //    {
+        //        if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
+        //            c.color = Crosshair.Color.Red;
+        //    }
+        //    catch { }
+        //}
     }
 
     public void DeactivateRedCrosshair()
     {
-        foreach (Crosshair c in crosshairList)
-        {
-            try
-            {
-                if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
-                    c.color = Crosshair.Color.Red;
-            }
-            catch { }
-        }
+        //foreach (Crosshair c in crosshairList)
+        //{
+        //    try
+        //    {
+        //        if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
+        //            c.color = Crosshair.Color.Red;
+        //    }
+        //    catch { }
+        //}
     }
     public void FindComponents()
     {

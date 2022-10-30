@@ -104,8 +104,8 @@ public class WeaponProperties : MonoBehaviour
         get { return _currentAmmo; }
         set
         {
-            _currentAmmo = value; 
-            OnCurrentAmmoChanged?.Invoke(this); 
+            _currentAmmo = value;
+            OnCurrentAmmoChanged?.Invoke(this);
             pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
         }
     }
@@ -216,6 +216,8 @@ public class WeaponProperties : MonoBehaviour
     {
         try
         {
+            crosshair.gameObject.SetActive(true);
+            crosshair.color = Crosshair.Color.Blue;
             equippedModelB.SetActive(true);
         }
         catch
@@ -228,6 +230,7 @@ public class WeaponProperties : MonoBehaviour
     {
         try
         {
+            crosshair.gameObject.SetActive(false);
             equippedModelB.SetActive(false);
         }
         catch

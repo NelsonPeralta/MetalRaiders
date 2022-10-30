@@ -187,53 +187,174 @@ public class Bullet : MonoBehaviourPunCallbacks
 
             try
             {
-                if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
+                if (GameManager.instance.gameType.ToString().Contains("Team"))
                 {
-                    PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
-                    Player player = hitbox.player.GetComponent<Player>();
-                    bool wasHeadshot = false;
-                    bool wasNutshot = false;
-                    if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+
+                    if (finalHitObject.GetComponent<PlayerHitbox>())
                     {
-                        int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
+                        if (finalHitObject.GetComponent<PlayerHitbox>().player.team != playerWhoShot.team)
+                        {
+                            if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
+                            {
+                                PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
+                                Player player = hitbox.player.GetComponent<Player>();
+                                bool wasHeadshot = false;
+                                bool wasNutshot = false;
+                                if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+                                {
+                                    int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
-                        if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
-                            damage = player.maxHealthPoints;
+                                    if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
+                                        damage = player.maxHealthPoints;
 
-                        if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
-                            damage = (int)(damage * weaponProperties.headshotMultiplier);
+                                    if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                                        damage = (int)(damage * weaponProperties.headshotMultiplier);
 
-                        wasHeadshot = hitbox.isHead;
-                        wasNutshot = hitbox.isNuts;
+                                    wasHeadshot = hitbox.isHead;
+                                    wasNutshot = hitbox.isNuts;
 
-                        if (wasHeadshot && player.hitPoints < damage)
-                            playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
+                                    if (wasHeadshot && player.hitPoints < damage)
+                                        playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
 
-                    }
+                                }
 
-                    if (playerWhoShot.PV.IsMine)
-                    {
-                        if (weaponProperties.codeName != null)
-                            finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
+                                if (playerWhoShot.PV.IsMine)
+                                {
+                                    if (weaponProperties.codeName != null)
+                                        finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
+                                    else
+                                        finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                                }
+
+                                damageDealt = true;
+                            }
+                        }
                         else
-                            finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
-                    }
+                        {
+                            GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+                            genericHit.transform.position = finalHitPoint;
+                            genericHit.SetActive(true);
 
-                    damageDealt = true;
-                }
-                else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
-                {
-                    try
+                            damageDealt = true;
+                        }
+                    }
+                    else
                     {
-                        finalHitDamageable.Damage(damage);
-                    }
-                    catch { }
-                    GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
-                    genericHit.transform.position = finalHitPoint;
-                    genericHit.SetActive(true);
+                        try
+                        {
+                            if (!finalHitObject.GetComponent<PlayerHitbox>())
+                                finalHitDamageable.Damage(damage);
+                        }
+                        catch { }
+                        GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+                        genericHit.transform.position = finalHitPoint;
+                        genericHit.SetActive(true);
 
-                    damageDealt = true;
+                        damageDealt = true;
+                    }
+
                 }
+                else
+                {
+                    if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
+                    {
+                        PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
+                        Player player = hitbox.player.GetComponent<Player>();
+                        bool wasHeadshot = false;
+                        bool wasNutshot = false;
+                        if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+                        {
+                            int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
+
+                            if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
+                                damage = player.maxHealthPoints;
+
+                            if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                                damage = (int)(damage * weaponProperties.headshotMultiplier);
+
+                            wasHeadshot = hitbox.isHead;
+                            wasNutshot = hitbox.isNuts;
+
+                            if (wasHeadshot && player.hitPoints < damage)
+                                playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
+
+                        }
+
+                        if (playerWhoShot.PV.IsMine)
+                        {
+                            if (weaponProperties.codeName != null)
+                                finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
+                            else
+                                finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                        }
+
+                        damageDealt = true;
+                    }
+                    else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
+                    {
+                        try
+                        {
+                            finalHitDamageable.Damage(damage);
+                        }
+                        catch { }
+                        GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+                        genericHit.transform.position = finalHitPoint;
+                        genericHit.SetActive(true);
+
+                        damageDealt = true;
+                    }
+                }
+
+                #region
+                // New logic
+                //if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
+                //{
+                //    PlayerHitbox hitbox = finalHitObject.GetComponent<PlayerHitbox>();
+                //    Player player = hitbox.player.GetComponent<Player>();
+                //    bool wasHeadshot = false;
+                //    bool wasNutshot = false;
+                //    if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+                //    {
+                //        int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
+
+                //        if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
+                //            damage = player.maxHealthPoints;
+
+                //        if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                //            damage = (int)(damage * weaponProperties.headshotMultiplier);
+
+                //        wasHeadshot = hitbox.isHead;
+                //        wasNutshot = hitbox.isNuts;
+
+                //        if (wasHeadshot && player.hitPoints < damage)
+                //            playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
+
+                //    }
+
+                //    if (playerWhoShot.PV.IsMine)
+                //    {
+                //        if (weaponProperties.codeName != null)
+                //            finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
+                //        else
+                //            finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                //    }
+
+                //    damageDealt = true;
+                //}
+                //else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
+                //{
+                //    try
+                //    {
+                //        finalHitDamageable.Damage(damage);
+                //    }
+                //    catch { }
+                //    GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+                //    genericHit.transform.position = finalHitPoint;
+                //    genericHit.SetActive(true);
+
+                //    damageDealt = true;
+                //}
+                #endregion
                 gameObject.SetActive(false);
             }
             catch { }

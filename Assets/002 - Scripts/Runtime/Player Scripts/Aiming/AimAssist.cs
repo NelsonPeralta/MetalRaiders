@@ -51,8 +51,12 @@ public class AimAssist : MonoBehaviour
             // https://www.varsitytutors.com/hotmath/hotmath_help/topics/adding-and-subtracting-vectors#:~:text=To%20add%20or%20subtract%20two,v2%E2%9F%A9%20be%20two%20vectors.&text=The%20sum%20of%20two%20or,method%20or%20the%20triangle%20method%20.
             // https://answers.unity.com/questions/459532/how-to-get-a-point-on-a-direction.html
 
+            //Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+            //Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
+
             Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-            Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
+            Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position);
+
             Vector3 middleDir = bspDir + targetDir;
 
             bulletSpawnPoint.forward = (middleDir);

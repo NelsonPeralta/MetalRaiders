@@ -6,32 +6,54 @@ public class Crosshair : MonoBehaviour
 {
     public enum Color { Red, Green, Blue }
 
+    [SerializeField] Color _color;
+    [SerializeField] GameObject blueReticuleVersion;
+    [SerializeField] GameObject redReticuleVersion;
+    [SerializeField] GameObject greenReticuleVersion;
+
     public Color color
     {
-        get { return color; }
+        get { return _color; }
         set
         {
-            color = value;
+            _color = value;
 
             if (value == Color.Blue)
             {
-                redReticuleVersion.SetActive(false);
-                greenReticuleVersion.SetActive(false);
+                try
+                {
+                    blueReticuleVersion.SetActive(true);
+                    redReticuleVersion.SetActive(false);
+                    greenReticuleVersion.SetActive(false);
+                }
+                catch { }
             }
             else if (value == Color.Green)
             {
-                greenReticuleVersion.SetActive(true);
-                redReticuleVersion.SetActive(false);
+                try
+                {
+                    blueReticuleVersion.SetActive(false);
+                    greenReticuleVersion.SetActive(true);
+                    redReticuleVersion.SetActive(false);
+                }
+                catch { }
             }
             else if (value == Color.Red)
             {
-                greenReticuleVersion.SetActive(false);
-                redReticuleVersion.SetActive(true);
+                try
+                {
+                    blueReticuleVersion.SetActive(false);
+                    greenReticuleVersion.SetActive(false);
+                    redReticuleVersion.SetActive(true);
+                }
+                catch { }
             }
         }
     }
 
-    public WeaponProperties.ReticuleType weaponReticule;
-    [SerializeField] GameObject redReticuleVersion;
-    [SerializeField] GameObject greenReticuleVersion;
+
+    private void Start()
+    {
+        color = Color.Blue;
+    }
 }
