@@ -316,6 +316,12 @@ public class Player : MonoBehaviourPunCallbacks
     {
         get { return GetComponent<PlayerController>().rid; }
     }
+
+    public PlayerMultiplayerMatchStats.Team team
+    {
+        get { return GetComponent<PlayerMultiplayerMatchStats>().team; }
+        set { GetComponent<PlayerMultiplayerMatchStats>().team = value; }
+    }
     private void Start()
     {
         spawnManager = SpawnManager.spawnManagerInstance;

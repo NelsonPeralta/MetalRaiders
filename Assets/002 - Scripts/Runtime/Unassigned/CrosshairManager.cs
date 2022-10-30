@@ -124,7 +124,7 @@ public class CrosshairManager : MonoBehaviour
             try
             {
                 if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
-                    c.redReticuleVersion.SetActive(true);
+                    c.color = Crosshair.Color.Red;
             }
             catch { }
         }
@@ -137,7 +137,7 @@ public class CrosshairManager : MonoBehaviour
             try
             {
                 if (pInventory.activeWeapon.reticuleType == c.weaponReticule)
-                    c.redReticuleVersion.SetActive(false);
+                    c.color = Crosshair.Color.Red;
             }
             catch { }
         }

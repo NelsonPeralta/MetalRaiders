@@ -19,6 +19,8 @@ public class WeaponProperties : MonoBehaviour
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
+    public Crosshair crosshair;
+
     float _aimAssistRadius;
 
     [Header("Weapon Info")]
@@ -204,7 +206,11 @@ public class WeaponProperties : MonoBehaviour
 
     public void OnTeamMateHitbox_Delegate(AimAssistCone aimAssistCone)
     {
-
+        try
+        {
+            crosshair.color = Crosshair.Color.Green;
+        }
+        catch { }
     }
     private void OnEnable()
     {
@@ -291,6 +297,7 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Aiming", EditorStyles.boldLabel);
+        wp.crosshair = EditorGUILayout.ObjectField("Crosshair", wp.crosshair, typeof(Crosshair), true) as Crosshair;
         wp.fakeRRR = GUILayout.Toggle(wp.fakeRRR, "Fake RRR");
         wp.defaultRedReticuleRange = EditorGUILayout.FloatField("Default RRR:", wp.defaultRedReticuleRange);
         wp.aimingMechanic = (WeaponProperties.AimingMechanic)EditorGUILayout.EnumPopup("Aiming mechanic", wp.aimingMechanic);

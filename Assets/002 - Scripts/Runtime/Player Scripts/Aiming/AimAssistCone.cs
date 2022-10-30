@@ -63,6 +63,8 @@ public class AimAssistCone : MonoBehaviour
         get { return _firstHitPoint; }
         set { _firstHitPoint = (Vector3)value; }
     }
+
+
     private void Update()
     {
         if (frictionColliders.Count > 0)
@@ -163,13 +165,13 @@ public class AimAssistCone : MonoBehaviour
         if (!obstruction && collidingHitbox)
         {
             aimAssist.target = collidingHitbox;
-            aimAssist.redReticuleIsOn = true;
-            aimAssist.crosshairScript.ActivateRedCrosshair();
+            //aimAssist.redReticuleIsOn = true;
+            //aimAssist.crosshairScript.ActivateRedCrosshair();
         }
         else
         {
             collidingHitbox = null;
-            aimAssist.ResetRedReticule();
+            //aimAssist.ResetRedReticule();
         }
     }
 
