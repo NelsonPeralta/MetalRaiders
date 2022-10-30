@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviourPun
     public Animator weaponAnimator;
     public Camera mainCam;
     public Camera gunCam;
+    public Camera uiCam;
     public PlayerCamera camScript;
     public Rewired.Player rewiredPlayer;
     public int rid;
@@ -131,7 +132,7 @@ public class PlayerController : MonoBehaviourPun
                     Shooting();
                     CheckReloadButton();
                     CheckAmmoForAutoReload();
-                    Aiming();
+                    ScopeIn();
                     Melee();
                     Crouch();
                     Grenade(); //TO DO: Spawn Grenades the same way as bullets
@@ -303,7 +304,7 @@ public class PlayerController : MonoBehaviourPun
             if (wProperties.projectileToHide != null && wProperties.outOfAmmo)
                 wProperties.projectileToHide.SetActive(false);*/
     }
-    void Aiming()
+    void ScopeIn()
     {
         if (isAiming)
         {
@@ -326,7 +327,8 @@ public class PlayerController : MonoBehaviourPun
                 if (isAiming == false)
                 {
                     isAiming = true;
-                    mainCam.fieldOfView = pInventory.activeWeapon.scopeFov;
+                    mainCam.fieldOfView = pInventory.activeWeapon.scopeFov; 
+                    uiCam.fieldOfView = pInventory.activeWeapon.scopeFov;
                     if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
                         gunCam.enabled = false;
                     else
@@ -338,6 +340,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     isAiming = false;
                     mainCam.fieldOfView = GetComponent<Player>().defaultFov;
+                    uiCam.fieldOfView = GetComponent<Player>().defaultFov;
                     camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
                     gunCam.enabled = true;
                     gunCam.fieldOfView = 60;

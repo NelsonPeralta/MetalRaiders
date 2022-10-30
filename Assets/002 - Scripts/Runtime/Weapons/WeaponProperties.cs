@@ -201,6 +201,11 @@ public class WeaponProperties : MonoBehaviour
         else
             GameManager.SetLayerRecursively(gameObject, 3);
     }
+
+    public void OnTeamMateHitbox_Delegate(AimAssistCone aimAssistCone)
+    {
+
+    }
     private void OnEnable()
     {
         try

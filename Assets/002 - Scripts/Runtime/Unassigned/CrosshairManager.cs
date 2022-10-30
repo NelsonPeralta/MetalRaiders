@@ -20,6 +20,14 @@ public class CrosshairManager : MonoBehaviour
     public bool RRisActive = false;
     public bool friendlyRRisActive = false;
 
+    bool _greenReticule;
+
+    public bool greenReticule
+    {
+        get { return _greenReticule; }
+        set { _greenReticule = value; }
+    }
+
     public void Start()
     {
 
