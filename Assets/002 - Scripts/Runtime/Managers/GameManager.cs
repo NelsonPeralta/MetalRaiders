@@ -25,13 +25,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum GameMode { Multiplayer, Swarm, Unassigned }
-    public enum GameType { Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
-                            TeamSlayer}
+    public enum GameType
+    {
+        Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
+        TeamSlayer
+    }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers }
     public enum CoopGameType { Survival }
     public enum TeamMode { Classic, None }
 
     public List<int> arenaLevelIndexes = new List<int>();
+
+    [SerializeField] int targetFPS;
 
     // Intances
     public static GameManager instance;
@@ -71,7 +76,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     int _camSens = 100;
 
     public bool isDev;
-    [SerializeField]  int _sceneIndex = 0;
+    [SerializeField] int _sceneIndex = 0;
     public static int sceneIndex
     {
         get { return instance._sceneIndex; }
@@ -91,6 +96,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
 
     // called zero
     void Awake()
@@ -112,10 +118,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnEnable()
     {
         base.OnEnable(); // need this for OnRoomPropertiesUpdate to work
-        Debug.Log("GameManager OnEnable called");
+                Debug.Log("GameManager OnEnable called");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    
 
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
@@ -180,7 +187,19 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called third
     private void Start()
     {
+        
         Debug.Log("GameManager Start called");
+
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 200;
+
+        #if UNITY_EDITOR
+                Debug.unityLogger.logEnabled = true;
+        #else
+                  Debug.unityLogger.logEnabled = false;
+        #endif
+
+
         //SceneManager.sceneLoaded += OnSceneLoaded;
 
     }
@@ -194,6 +213,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if(targetFPS != Application.targetFrameRate)
+            Application.targetFrameRate = targetFPS;
+
         if (Input.GetKeyDown(KeyCode.Alpha4))
             camSens -= 10;
         if (Input.GetKeyDown(KeyCode.Alpha5))

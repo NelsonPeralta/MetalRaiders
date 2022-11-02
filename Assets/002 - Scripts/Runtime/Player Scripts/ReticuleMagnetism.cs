@@ -61,18 +61,21 @@ public class ReticuleMagnetism : MonoBehaviour
         {
             if (hit.transform.root.gameObject != player.gameObject)
             {
-                if (hit.transform.gameObject.layer == 0)
-                    firstRayHit = null;
-                else
+                if (!hit.transform.GetComponent<ReticuleFriction>().player.isDead && hit.transform.GetComponent<ReticuleFriction>().player.isRespawning)
                 {
-                    firstRayHit = hit.transform.gameObject;
-                }
+                    if (hit.transform.gameObject.layer == 0)
+                        firstRayHit = null;
+                    else
+                    {
+                        firstRayHit = hit.transform.gameObject;
+                    }
 
-                //if(movement.speed == 0)
-                _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
-                //_hitScreenPosList.Add(hit.point); // When player moves and target does not
-                if (_hitScreenPosList.Count > 4)
-                    _hitScreenPosList.RemoveAt(0);
+                    //if(movement.speed == 0)
+                    _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
+                                                                   //_hitScreenPosList.Add(hit.point); // When player moves and target does not
+                    if (_hitScreenPosList.Count > 4)
+                        _hitScreenPosList.RemoveAt(0);
+                }
             }
         }
         else
@@ -122,7 +125,7 @@ public class ReticuleMagnetism : MonoBehaviour
     {
         //if (Mathf.Abs(yDiff) > 1f) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
         if (Mathf.Abs(yDiff) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
-            {
+        {
             float yMag = (Mathf.Abs(yDiff) / yFact) * -Mathf.Sign(yDiff);
 
             Vector3 locRot = player.mainCamera.transform.localRotation.eulerAngles;
@@ -134,7 +137,7 @@ public class ReticuleMagnetism : MonoBehaviour
 
         //if (Mathf.Abs(xDiff) > 0.5f)
         if (Mathf.Abs(xDiff) > 0)
-            {
+        {
             float xMag = (Mathf.Abs(xDiff) / xFact) * Mathf.Sign(xDiff);
             player.transform.Rotate(Vector3.up * xMag);
         }
