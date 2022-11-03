@@ -534,6 +534,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButtonDown("Switch Weapons"))
         {
+            weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
             OnPlayerSwitchWeapons?.Invoke(this);
         }
     }

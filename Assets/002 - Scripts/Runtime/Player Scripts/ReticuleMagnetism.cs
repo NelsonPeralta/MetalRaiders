@@ -61,7 +61,6 @@ public class ReticuleMagnetism : MonoBehaviour
         {
             if (hit.transform.root.gameObject != player.gameObject)
             {
-                if (!hit.transform.GetComponent<ReticuleFriction>().player.isDead && hit.transform.GetComponent<ReticuleFriction>().player.isRespawning)
                 {
                     if (hit.transform.gameObject.layer == 0)
                         firstRayHit = null;
