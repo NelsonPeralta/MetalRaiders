@@ -140,7 +140,6 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (value >= maxHealthPoints && value < previousValue)
                 {
-                    Debug.Log("OnPlayerShieldDamaged");
                     OnPlayerShieldDamaged?.Invoke(this);
                 }
 
@@ -375,8 +374,6 @@ public class Player : MonoBehaviourPunCallbacks
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
 
-            Debug.Log($"{hitPoints} vs {maxShieldPoints}");
-            Debug.Log($"{healthPoints} vs {healthDamage}");
             if (headshot)
             {
                 if (healthPoints <= healthDamage)
@@ -400,8 +397,6 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
-        Debug.Log($"Damage_RPC");
-
         int damage = (int)(hitPoints - _newHealth);
         bool _isDead = false;
         if (hitPoints - damage <= 0)
@@ -436,11 +431,9 @@ public class Player : MonoBehaviourPunCallbacks
         }
         catch (System.Exception e) { }
 
-        Debug.Log($"Player is dead: {isDead}");
 
         if (_isDead)
         {
-            Debug.Log($"PLAYER: isDead");
             Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
             string sourcePlayerName = sourcePlayer.nickName;
 
@@ -733,12 +726,10 @@ public class Player : MonoBehaviourPunCallbacks
 
     public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)
     {
-        Debug.Log("LeaveRoomWithDelay_Coroutine");
         yield return new WaitForSeconds(delay);
 
 
         int levelToLoad = 0;
-        Debug.Log(PhotonNetwork.CurrentRoom.Name);
 
         if (PhotonNetwork.CurrentRoom.Name == Launcher.instance.quickMatchRoomName)
             levelToLoad = Launcher.instance.waitingRoomLevelIndex;
@@ -814,14 +805,15 @@ public class Player : MonoBehaviourPunCallbacks
             wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
             wo.GetComponent<LootableWeapon>().ttl = 60;
             wo.GetComponent<Rigidbody>().AddForce(weaponDropPoint.transform.forward * 200);
-            Debug.Log($"Spawned {wo.name}");
 
             wp.currentAmmo = 0;
             wp.spareAmmo = 0;
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning(e);
+            #if UNITY_EDITOR
+                Debug.LogWarning(e);
+            #endif
         }
     }
 }

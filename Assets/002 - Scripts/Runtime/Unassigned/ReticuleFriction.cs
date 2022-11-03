@@ -20,8 +20,8 @@ public class ReticuleFriction : MonoBehaviour
 
         if (player)
         {
-            player.OnPlayerDeath -= OnPlayerRespawn;
-            player.OnPlayerDeath += OnPlayerRespawn;
+            player.OnPlayerDeath -= OnPlayerDeath;
+            player.OnPlayerDeath += OnPlayerDeath;
 
             player.OnPlayerRespawned -= OnPlayerRespawn;
             player.OnPlayerRespawned += OnPlayerRespawn;
@@ -40,11 +40,11 @@ public class ReticuleFriction : MonoBehaviour
 
     void OnPlayerDeath(Player player)
     {
-        gameObject.SetActive(false);
+        gameObject.layer = 3;
     }
 
     void OnPlayerRespawn(Player player)
     {
-        gameObject.SetActive(true);
+        gameObject.layer = 21;
     }
 }

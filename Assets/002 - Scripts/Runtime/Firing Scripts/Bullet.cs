@@ -90,7 +90,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
         originalPos = transform.position;
         timeToDespawn = CalculateTimeToDespawn();
-        //Debug.Log($"BULLET CALCULATE DESPAWN TIME: {CalculateTimeToDespawn()}");
     }
 
     float CalculateTimeToDespawn()
@@ -177,7 +176,6 @@ public class Bullet : MonoBehaviourPunCallbacks
             {
                 if (objectsHit[i].distanceFromPlayer < finalHitDistance)
                 {
-                    Debug.Log($"BULLET: {objectsHit[i].gameObject.name}");
                     finalHitDistance = objectsHit[i].distanceFromPlayer;
                     finalHitDamageable = objectsHit[i].gameObject.GetComponent<IDamageable>();
                     finalHitPoint = objectsHit[i].hitPoint;
@@ -476,9 +474,6 @@ public class Bullet : MonoBehaviourPunCallbacks
             damage = weaponProperties.damage;
             size = weaponProperties.bulletSize;
             bulletSpeed = weaponProperties.bulletSpeed;
-            //Debug.Log(wProperties.gameObject.name);
-            //Debug.Log(wProperties.damage);
-            //Debug.Log(wProperties.bulletSpeed);
 
             isNormalBullet = true;
             isHeadshotCapable = false;
