@@ -4,39 +4,41 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    public int damage;
+    [Header("Settings")]
+    public float damage; // Determined in Weapon Properties Script
     public float radius;
-    public int power;
+    public float explosionPower;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Explode();
     }
 
     void Explode()
     {
-        Debug.Log("Exploded");
-        //Explosion force
-        Vector3 explosionPos = transform.position;
         //Use overlapshere to check for nearby colliders
+        Vector3 explosionPos = transform.position;
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
+
         List<GameObject> objectsHit = new List<GameObject>();
         for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
         {
             Collider hit = colliders[i];
             Rigidbody rb = hit.GetComponent<Rigidbody>();
+            CharacterController cc = hit.GetComponent<CharacterController>();
+
+            int arbitraryMutliplier = 100;
+            float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
+            float calculatedPower = (explosionPower * (1 - (hitDistance / radius))) * arbitraryMutliplier;
 
             //Add force to nearby rigidbodies
             if (rb != null)
-                rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
+                rb.AddExplosionForce(calculatedPower, explosionPos, radius, 3.0F);
 
-            CharacterController cc = hit.GetComponent<CharacterController>();
             if (cc)
             {
-                Debug.Log("Explode CC");
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, power * 5);
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, calculatedPower);
             }
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
@@ -44,15 +46,33 @@ public class Explosion : MonoBehaviour
                 GameObject playerHit = hit.GetComponent<PlayerHitbox>().player.gameObject;
                 if (!objectsHit.Contains(playerHit))
                 {
-                    Player player = hit.GetComponent<PlayerHitbox>().player;
                     objectsHit.Add(playerHit);
                     float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
-                    Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
-
-                    hit.GetComponent<IDamageable>().Damage(damage);
+                    try
+                    {
+                        hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage);
+                    }
+                    catch { }
+                }
+            }
+            else if (hit.GetComponent<IDamageable>() != null)
+            {
+                GameObject hitObject = hit.gameObject;
+                if (!objectsHit.Contains(hitObject))
+                {
+                    objectsHit.Add(hitObject);
+                    float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
+                    int calculatedDamage = (int)(damage * (1 - (playerDistance / radius)));
+                    try
+                    {
+                        hit.GetComponent<IDamageable>().Damage(calculatedDamage);
+                    }
+                    catch { }
                 }
             }
         }
+        Destroy(gameObject, 10);
     }
+
 }

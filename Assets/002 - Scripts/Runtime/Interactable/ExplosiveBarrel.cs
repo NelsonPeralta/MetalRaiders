@@ -23,6 +23,8 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
 
     public GameObject explosionPrefab;
 
+    [SerializeField] AudioClip _collisionAudioClip;
+
     private void OnEnable()
     {
         _hitPoints = _defaultHitPoints;
@@ -31,6 +33,16 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     private void Start()
     {
         OnExploded += OnExplode_Delegate;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        try
+        {
+            GetComponent<AudioSource>().clip = _collisionAudioClip;
+            GetComponent<AudioSource>().Play();
+        }
+        catch { }
     }
 
     // Damage
@@ -57,7 +69,6 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     {
         GameObject e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
 
-        Destroy(e, 10);
         Destroy(gameObject);
     }
     #endregion

@@ -9,7 +9,10 @@ public class PlayerHitbox : Hitbox, IDamageable
 
     public void Damage(int damage)
     {
-        throw new System.NotImplementedException();
+        if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
+            return;
+
+        player.PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)

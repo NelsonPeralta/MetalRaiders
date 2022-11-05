@@ -10,7 +10,7 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
     [SerializeField] float _tts;
 
     public GameObject placeHolder;
-    public ExplosiveBarrel barell;
+    public ExplosiveBarrel barrel;
     public GameObject prefab;
     public float tts { get { return _tts; } private set { _tts = value; } }
 
@@ -19,7 +19,7 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
         tts = _defaultTts;
 
         if (PhotonNetwork.IsMasterClient)
-            barell = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>();
+            barrel = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>();
 
         placeHolder.SetActive(false);
     }
@@ -30,8 +30,8 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
 
         if (tts < 0)
         {
-            if (PhotonNetwork.IsMasterClient && !barell)
-                barell = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>();
+            if (PhotonNetwork.IsMasterClient && !barrel)
+                barrel = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>();
             tts = _defaultTts;
         }
     }

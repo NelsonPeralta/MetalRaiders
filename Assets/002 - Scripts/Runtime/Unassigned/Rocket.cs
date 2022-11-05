@@ -70,7 +70,7 @@ public class Rocket : MonoBehaviour
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             CharacterController cc = hit.GetComponent<CharacterController>();
 
-            int arbitraryMutliplier = 10;
+            int arbitraryMutliplier = 100;
             float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
             float calculatedPower = (power * (1 - (hitDistance / radius))) * arbitraryMutliplier;
 

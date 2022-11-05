@@ -395,6 +395,13 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    void Damage_RPC(int damage)
+    {
+        if (!isDead && !isRespawning)
+            hitPoints -= damage;
+    }
+
+    [PunRPC]
     void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
         int damage = (int)(hitPoints - _newHealth);
@@ -811,9 +818,9 @@ public class Player : MonoBehaviourPunCallbacks
         }
         catch (System.Exception e)
         {
-            #if UNITY_EDITOR
-                Debug.LogWarning(e);
-            #endif
+#if UNITY_EDITOR
+            Debug.LogWarning(e);
+#endif
         }
     }
 }
