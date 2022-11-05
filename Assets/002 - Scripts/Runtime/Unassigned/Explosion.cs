@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
+    public delegate void ExplosionEvent(Explosion explosion);
+    public ExplosionEvent OnObjectAdded;
+
     [Header("Settings")]
     public float damage; // Determined in Weapon Properties Script
     public float radius;
     public float explosionPower;
+
+    List<GameObject> objectsHit = new List<GameObject>();
+
 
     private void Start()
     {
@@ -20,7 +26,6 @@ public class Explosion : MonoBehaviour
         Vector3 explosionPos = transform.position;
         Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
 
-        List<GameObject> objectsHit = new List<GameObject>();
         for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
         {
             Collider hit = colliders[i];
@@ -47,6 +52,7 @@ public class Explosion : MonoBehaviour
                 if (!objectsHit.Contains(playerHit))
                 {
                     objectsHit.Add(playerHit);
+                    OnObjectAdded?.Invoke(this);
                     float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
                     try
@@ -62,6 +68,7 @@ public class Explosion : MonoBehaviour
                 if (!objectsHit.Contains(hitObject))
                 {
                     objectsHit.Add(hitObject);
+                    OnObjectAdded?.Invoke(this);
                     float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
                     int calculatedDamage = (int)(damage * (1 - (playerDistance / radius)));
                     try
