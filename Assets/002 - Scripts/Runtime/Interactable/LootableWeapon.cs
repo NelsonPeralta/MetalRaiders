@@ -46,6 +46,13 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         set { _onlineWeaponSpawnPoint = value; }
     }
 
+    [SerializeField] NetworkWeaponSpawnPoint _networkWeaponSpawnPoint;
+    public NetworkWeaponSpawnPoint networkWeaponSpawnPoint
+    {
+        get { return _networkWeaponSpawnPoint; }
+        set { _networkWeaponSpawnPoint = value; }
+    }
+
     public Vector3 spawnPointPosition
     {
         get { return _spawnPointPosition; }
@@ -93,12 +100,13 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     private void Update()
     {
-        if (onlineWeaponSpawnPoint)
+        if (onlineWeaponSpawnPoint || networkWeaponSpawnPoint)
             return;
         _ttl -= Time.deltaTime;
 
-        if (!onlineWeaponSpawnPoint && _ttl <= 0)
-            Destroy(gameObject);
+        if (!onlineWeaponSpawnPoint && !networkWeaponSpawnPoint)
+            if (_ttl <= 0)
+                Destroy(gameObject);
     }
 
     public void ResetAmmo()

@@ -230,6 +230,7 @@ MonoBehaviour:
   heavyAmmo: 0
   powerAmmo: 1
   _onlineWeaponSpawnPoint: {fileID: 0}
+  _networkWeaponSpawnPoint: {fileID: 0}
   _ttl: 0
 --- !u!114 &1500470692903090416
 MonoBehaviour:
