@@ -140,6 +140,8 @@ MonoBehaviour:
   - UpdateHitPoints
   - ChangeTeam_RPC
   - SimpleDamage_RPC
+  - UpdateTeam_RPC
+  - UpdateTeamMode_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
