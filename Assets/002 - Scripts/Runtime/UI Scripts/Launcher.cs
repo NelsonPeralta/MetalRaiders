@@ -253,7 +253,10 @@ public class Launcher : MonoBehaviourPunCallbacks
         { // Room is private
 
             if (PhotonNetwork.IsMasterClient)
+            {
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+            }
             string roomType = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower() + "_room";
             string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower();
 

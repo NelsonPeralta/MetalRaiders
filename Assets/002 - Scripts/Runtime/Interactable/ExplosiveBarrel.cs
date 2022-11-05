@@ -10,11 +10,11 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
 
     [SerializeField] int _defaultHitPoints;
 
-    [SerializeField]  int _HitPoints;
-    int _hitPoints { get { return _HitPoints; } set { _HitPoints = value; if (_HitPoints <= 0) OnExploded?.Invoke(this); } }
+    [SerializeField]  int _hitPoints;
+    int _networkHitPoints { get { return _hitPoints; } set { _hitPoints = value; if (_hitPoints <= 0) OnExploded?.Invoke(this); } }
     public int hitPoints
     {
-        get { return _hitPoints; }
+        get { return _networkHitPoints; }
         set
         {
             GetComponent<PhotonView>().RPC("UpdateHitPoints", RpcTarget.All, value);
@@ -25,7 +25,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
 
     private void OnEnable()
     {
-        _HitPoints = _defaultHitPoints;
+        _hitPoints = _defaultHitPoints;
     }
 
     private void Start()
@@ -67,7 +67,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     [PunRPC]
     void UpdateHitPoints(int h)
     {
-        _hitPoints = h;
+        _networkHitPoints = h;
     }
     #endregion
 }

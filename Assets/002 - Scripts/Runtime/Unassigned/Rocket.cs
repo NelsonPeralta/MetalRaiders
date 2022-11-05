@@ -70,14 +70,18 @@ public class Rocket : MonoBehaviour
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             CharacterController cc = hit.GetComponent<CharacterController>();
 
+            int arbitraryMutliplier = 10;
+            float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
+            float calculatedPower = (power * (1 - (hitDistance / radius))) * arbitraryMutliplier;
+
             //Add force to nearby rigidbodies
             if (rb != null)
-                rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
+                rb.AddExplosionForce(calculatedPower, explosionPos, radius, 3.0F);
 
             if (cc)
             {
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(player, exDir, power * 5);
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(player, exDir, calculatedPower);
             }
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)

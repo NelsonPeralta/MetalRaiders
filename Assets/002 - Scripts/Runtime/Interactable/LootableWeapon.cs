@@ -15,6 +15,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public bool isWallGun;
 
     [SerializeField] int _ammoInThisWeapon;
+    [SerializeField] AudioClip _collisionAudioClip;
 
     public int ammoInThisWeapon
     {
@@ -150,5 +151,15 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
         if (param.ContainsKey("ttl"))
             _ttl = int.Parse(param["ttl"]);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        try
+        {
+            GetComponent<AudioSource>().clip = _collisionAudioClip;
+            GetComponent<AudioSource>().Play();
+        }
+        catch { }
     }
 }

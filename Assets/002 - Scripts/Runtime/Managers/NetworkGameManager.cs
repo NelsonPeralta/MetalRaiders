@@ -5,5 +5,5 @@ using Photon.Pun;
 
 public class NetworkGameManager : MonoBehaviourPun
 {
-    
+
 }

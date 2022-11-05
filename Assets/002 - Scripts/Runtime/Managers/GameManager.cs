@@ -20,6 +20,9 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    // https://stackoverflow.com/questions/150479/order-of-items-in-classes-fields-properties-constructors-methods
+
+
     // Events
     public delegate void GameManagerEvent();
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
@@ -446,5 +449,4 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         NbPlayers = int.Parse(n);
     }
-
 }
