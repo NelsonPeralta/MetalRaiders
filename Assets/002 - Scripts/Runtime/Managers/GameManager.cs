@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
         TeamSlayer
     }
-    public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers }
+    public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum CoopGameType { Survival }
     public enum TeamMode { Classic, None }
 
@@ -100,6 +100,16 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public PlayerMultiplayerMatchStats.Team onlineTeam
+    {
+        set { _onlineTeam = value; }
+    }
+    //public string rootPlayerNickname
+    //{
+    //    get { return GetComponent<PhotonView>()}
+    //}
+
+    [SerializeField] PlayerMultiplayerMatchStats.Team _onlineTeam;
 
     // called zero
     void Awake()
@@ -121,11 +131,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnEnable()
     {
         base.OnEnable(); // need this for OnRoomPropertiesUpdate to work
-                Debug.Log("GameManager OnEnable called");
+        Debug.Log("GameManager OnEnable called");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    
+
 
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
@@ -190,17 +200,17 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called third
     private void Start()
     {
-        
+
         Debug.Log("GameManager Start called");
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 200;
 
-        #if UNITY_EDITOR
-                Debug.unityLogger.logEnabled = true;
-        #else
+#if UNITY_EDITOR
+        Debug.unityLogger.logEnabled = true;
+#else
                   Debug.unityLogger.logEnabled = false;
-        #endif
+#endif
 
 
         //SceneManager.sceneLoaded += OnSceneLoaded;
@@ -216,7 +226,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if(targetFPS != Application.targetFrameRate)
+        if (targetFPS != Application.targetFrameRate)
             Application.targetFrameRate = targetFPS;
 
         if (Input.GetKeyDown(KeyCode.Alpha4))

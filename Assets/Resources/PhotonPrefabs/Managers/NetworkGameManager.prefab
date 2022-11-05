@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1911758663881696864}
   - component: {fileID: 1727837796786221306}
+  - component: {fileID: -7307216551071852385}
   m_Layer: 0
   m_Name: NetworkGameManager
   m_TagString: Untagged
@@ -44,3 +45,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3041ffae615a4a43b5075f9e4400bbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-7307216551071852385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911758663881696895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

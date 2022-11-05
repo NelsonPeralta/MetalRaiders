@@ -41,6 +41,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject _playerListItemPrefab;
     [SerializeField] TMP_Text _mapSelectedText;
     [SerializeField] TMP_Text _gametypeSelectedText;
+    [SerializeField] TMP_Text _teamModeText;
 
     [SerializeField] TMP_InputField _loginUsernameText;
     [SerializeField] TMP_InputField registerUsernameText;
@@ -102,7 +103,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     void Start()
     {
         //if (Application.platform == RuntimePlatform.WindowsPlayer)
-            Debug.Log($"You are playing on a {Application.platform}");
+        Debug.Log($"You are playing on a {Application.platform}");
 
         if (levelToLoadIndex == 0)
             levelToLoadIndex = 1;
@@ -173,7 +174,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         roomOptions.MaxPlayers = maxRandomRoomPlayers;
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
         roomOptions.CustomRoomProperties.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
-        roomOptions.CustomRoomProperties.Add("gametype", GameManager.GameType.Fiesta.ToString()); 
+        roomOptions.CustomRoomProperties.Add("gametype", GameManager.GameType.Fiesta.ToString());
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, typedLobby);
         //PhotonNetwork.JoinRandomRoom();
     }
@@ -352,6 +353,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
         MenuManager.Instance.OpenMenu("offline title");
     }
 
@@ -416,9 +418,40 @@ public class Launcher : MonoBehaviourPunCallbacks
         catch { }
     }
 
+    public void ChangeTeamMode(string tm)
+    {
+        _teamModeText.text = $"Team Mode: {tm}";
+        NetworkGameManager.instance.UpdateTeamMode(tm);
+    }
+
     public void ChangeGameType(string gt)
     {
+        instance.gametypeSelectedText.text = $"Gametype: {gt}";
+        gt = gt.Replace(" ", "");
+        GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
+
         FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("ChangeSubGameType_RPC", RpcTarget.All, gt);
+
+        UpdateTeams();
+    }
+
+    void UpdateTeams()
+    {
+        foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
+        {
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    PlayerMultiplayerMatchStats.Team t = PlayerMultiplayerMatchStats.Team.Red;
+
+                    if (kvp.Key % 2 == 0)
+                        t = PlayerMultiplayerMatchStats.Team.Blue;
+
+                    NetworkGameManager.instance.UpdateTeam(t.ToString(), kvp.Value.ToString());
+                }
+            }
+        }
     }
 
     //[PunRPC]
