@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum GameType
     {
         Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
-        TeamSlayer
+        Shotguns
     }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum CoopGameType { Survival }
@@ -64,7 +64,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     public TeamMode teamMode
     {
         get { return _teamMode; }
-        set { _teamMode = value; }
+        set
+        {
+            _teamMode = value;
+            if(value == TeamMode.None)
+            {
+                onlineTeam = PlayerMultiplayerMatchStats.Team.None;
+            }
+        }
     }
 
     [Header("Ammo Packs")]
@@ -102,7 +109,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public PlayerMultiplayerMatchStats.Team onlineTeam
     {
-        set { _onlineTeam = value; }
+        get { return instance._onlineTeam; }
+        set
+        {
+            _onlineTeam = value;
+        }
     }
     //public string rootPlayerNickname
     //{

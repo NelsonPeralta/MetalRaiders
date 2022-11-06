@@ -318,8 +318,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public PlayerMultiplayerMatchStats.Team team
     {
-        get { return GetComponent<PlayerMultiplayerMatchStats>().team; }
-        set { GetComponent<PlayerMultiplayerMatchStats>().team = value; }
+        get { return GameManager.instance.onlineTeam; }
     }
     private void Start()
     {

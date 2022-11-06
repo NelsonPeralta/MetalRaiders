@@ -32,6 +32,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
                         lw.transform.position = transform.position;
                         lw.transform.rotation = transform.rotation;
+                        lw.transform.parent = transform;
                         lw.gameObject.SetActive(true);
                         lw.networkWeaponSpawnPoint = this;
                         weaponSpawned = lw;

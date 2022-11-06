@@ -86,69 +86,17 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         }
     }
 
-    public Team team
-    {
-        get { return _team; }
-        set { _team = value; Debug.Log(value); }
-    }
-
     private void Start()
     {
         this.OnKillsChanged += this.OnKillsChange;
         kills = 0;
         deaths = 0;
         headshots = 0;
-
-        StartCoroutine(ChangeTeam_Coroutine());
-    }
-
-    IEnumerator ChangeTeam_Coroutine()
-    {
-        yield return new WaitForSeconds(1);
-
-        int c = 1;
-
-        if (GameManager.instance.gameType == GameManager.GameType.TeamSlayer)
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                Player[] pa = FindObjectsOfType<Player>();
-
-                List<Player> pl = pa.ToList();
-
-                foreach (Player p in pl)
-                {
-                    Team t = Team.Red;
-
-                    if (c % 2 == 0)
-                        t = Team.Blue;
-
-                    if (p.controllerId == 0)
-                    {
-                        p.GetComponent<PlayerMultiplayerMatchStats>().ChangeTeam(t);
-                        c++;
-                    }
-                }
-            }
-        }
     }
 
     void OnKillsChange(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
         if (deaths > 0)
             _kd = (kills / deaths);
-    }
-
-    public void ChangeTeam(Team t)
-    {
-        GetComponent<PhotonView>().RPC("ChangeTeam_RPC", RpcTarget.All, t);
-    }
-
-    [PunRPC]
-    void ChangeTeam_RPC(Team t)
-    {
-        foreach (Player p in FindObjectsOfType<Player>().ToList())
-            if (p.isMine)
-                p.GetComponent<PlayerMultiplayerMatchStats>().team = t;
     }
 }

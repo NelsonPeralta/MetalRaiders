@@ -221,19 +221,14 @@ MonoBehaviour:
   cleanName: Patriot
   codeName: patriot
   spriteId: 0
-  isWallGun: 0
-  _ammoInThisWeapon: 15
+  _ammo: 0
+  _spareAmmo: 0
+  _defaultAmmo: 0
+  _defaultSpareAmmo: 0
+  _tts: 0
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
-  spareAmmo: 30
-  isDualWieldable: 0
-  defaultAmmo: 15
-  defaultExtraAmmo: 0
-  smallAmmo: 0
-  heavyAmmo: 1
-  powerAmmo: 0
-  _onlineWeaponSpawnPoint: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _ttl: 0
+  _spawnPointPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &789581672379072056
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -301,16 +301,18 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "m32";
         }
 
-        GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
-        try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
-
+        if (GameManager.instance.gameType.ToString().Contains("Shotguns"))
+        {
+            StartingWeapon = "m1100";
+        }
 
         if (GameManager.instance.gameType.ToString().Contains("Fiesta"))
         {
-            AssignRandomWeapons();
+            AssignRandomWeapons(); 
         }
 
-
+        GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
+        try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
 
         for (int i = 0; i < allWeaponsInInventory.Length; i++)
         {
