@@ -134,19 +134,13 @@ MonoBehaviour:
   cleanName: RPG
   codeName: rpg
   spriteId: 0
-  isWallGun: 0
-  _ammoInThisWeapon: 1
+  _ammo: 1
+  _spareAmmo: 5
+  _defaultAmmo: 1
+  _defaultSpareAmmo: 5
+  _tts: 180
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
-  spareAmmo: 3
-  isDualWieldable: 0
-  defaultAmmo: 1
-  defaultExtraAmmo: 0
-  smallAmmo: 0
-  heavyAmmo: 0
-  powerAmmo: 1
-  _onlineWeaponSpawnPoint: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _ttl: 0
 --- !u!114 &4695287854121063512
 MonoBehaviour:
   m_ObjectHideFlags: 0

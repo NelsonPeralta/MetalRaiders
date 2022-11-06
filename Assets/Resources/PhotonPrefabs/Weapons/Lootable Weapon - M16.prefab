@@ -699,19 +699,13 @@ MonoBehaviour:
   cleanName: M16
   codeName: m16
   spriteId: 0
-  isWallGun: 0
-  _ammoInThisWeapon: 36
+  _ammo: 36
+  _spareAmmo: 72
+  _defaultAmmo: 36
+  _defaultSpareAmmo: 72
+  _tts: 120
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
-  spareAmmo: 72
-  isDualWieldable: 0
-  defaultAmmo: 36
-  defaultExtraAmmo: 72
-  smallAmmo: 0
-  heavyAmmo: 1
-  powerAmmo: 0
-  _onlineWeaponSpawnPoint: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _ttl: 0
 --- !u!114 &5475654205409238296
 MonoBehaviour:
   m_ObjectHideFlags: 0

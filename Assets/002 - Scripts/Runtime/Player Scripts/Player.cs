@@ -808,9 +808,8 @@ public class Player : MonoBehaviourPunCallbacks
         {
             GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
             wo.name = wo.name.Replace("(Clone)", "");
-            wo.GetComponent<LootableWeapon>().ammoInThisWeapon = wp.currentAmmo;
+            wo.GetComponent<LootableWeapon>().ammo = wp.currentAmmo;
             wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
-            wo.GetComponent<LootableWeapon>().ttl = 60;
             wo.GetComponent<Rigidbody>().AddForce(weaponDropPoint.transform.forward * 200);
 
             wp.currentAmmo = 0;

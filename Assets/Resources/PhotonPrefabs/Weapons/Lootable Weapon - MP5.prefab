@@ -384,19 +384,13 @@ MonoBehaviour:
   cleanName: MP5
   codeName: mp5
   spriteId: 0
-  isWallGun: 0
-  _ammoInThisWeapon: 24
+  _ammo: 24
+  _spareAmmo: 48
+  _defaultAmmo: 24
+  _defaultSpareAmmo: 48
+  _tts: 60
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
-  spareAmmo: 48
-  isDualWieldable: 0
-  defaultAmmo: 24
-  defaultExtraAmmo: 0
-  smallAmmo: 1
-  heavyAmmo: 0
-  powerAmmo: 0
-  _onlineWeaponSpawnPoint: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _ttl: 0
 --- !u!114 &4104014898070390738
 MonoBehaviour:
   m_ObjectHideFlags: 0

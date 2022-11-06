@@ -368,19 +368,13 @@ MonoBehaviour:
   cleanName: Colt
   codeName: colt
   spriteId: 0
-  isWallGun: 0
-  _ammoInThisWeapon: 6
+  _ammo: 6
+  _spareAmmo: 12
+  _defaultAmmo: 6
+  _defaultSpareAmmo: 12
+  _tts: 60
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
-  spareAmmo: 12
-  isDualWieldable: 0
-  defaultAmmo: 6
-  defaultExtraAmmo: 0
-  smallAmmo: 0
-  heavyAmmo: 0
-  powerAmmo: 1
-  _onlineWeaponSpawnPoint: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _ttl: 0
 --- !u!54 &4213060019384168115
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -384,19 +384,13 @@ MonoBehaviour:
   cleanName: M1911
   codeName: m1911
   spriteId: 0
-  isWallGun: 0
-  _ammoInThisWeapon: 12
+  _ammo: 12
+  _spareAmmo: 24
+  _defaultAmmo: 12
+  _defaultSpareAmmo: 24
+  _tts: 60
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
-  spareAmmo: 24
-  isDualWieldable: 0
-  defaultAmmo: 12
-  defaultExtraAmmo: 0
-  smallAmmo: 1
-  heavyAmmo: 0
-  powerAmmo: 0
-  _onlineWeaponSpawnPoint: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _ttl: 0
 --- !u!114 &2332715956438352494
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,52 +1,34 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
 public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 {
     public delegate void LootableWeaponEvent(LootableWeapon lootableWeapon);
     public LootableWeaponEvent OnLooted;
 
-    Vector3 _spawnPointPosition;
     public string cleanName;
     public string codeName;
     public int spriteId;
-    public bool isWallGun;
-
-    [SerializeField] int _ammoInThisWeapon;
-    [SerializeField] AudioClip _collisionAudioClip;
-
-    public int ammoInThisWeapon
+    public int ammo
     {
-        get { return _ammoInThisWeapon; }
+        get { return _ammo; }
         set
         {
-            _ammoInThisWeapon = value;
+            _ammo = value;
             Dictionary<string, string> param = new Dictionary<string, string>();
 
-            param["ammo"] = ammoInThisWeapon.ToString();
-            GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
+            param["ammo"] = ammo.ToString();
+            try
+            {
+                GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
+            }
+            catch (System.Exception e) { Debug.LogWarning(e); }
         }
     }
-    public int spareAmmo;
-    public bool isDualWieldable;
+    public int spareAmmo { get { return _spareAmmo; } set { _spareAmmo = value; } }
 
-    [SerializeField] int defaultAmmo;
-    [SerializeField] int defaultExtraAmmo;
 
-    public bool smallAmmo;
-    public bool heavyAmmo;
-    public bool powerAmmo;
-
-    [SerializeField] OnlineWeaponSpawnPoint _onlineWeaponSpawnPoint;
-    public OnlineWeaponSpawnPoint onlineWeaponSpawnPoint
-    {
-        get { return _onlineWeaponSpawnPoint; }
-        set { _onlineWeaponSpawnPoint = value; }
-    }
-
-    [SerializeField] NetworkWeaponSpawnPoint _networkWeaponSpawnPoint;
     public NetworkWeaponSpawnPoint networkWeaponSpawnPoint
     {
         get { return _networkWeaponSpawnPoint; }
@@ -59,24 +41,37 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         set { _spawnPointPosition = value; }
     }
 
-
-    [SerializeField] float _ttl;
-    public float ttl
+    public float tts
     {
-        get { return _ttl; }
+        get { return _tts; }
         set
         {
-            _ttl = value;
+            _tts = value;
             Dictionary<string, string> param = new Dictionary<string, string>();
 
-            param["ttl"] = ttl.ToString();
+            param["ttl"] = tts.ToString();
             GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
         }
     }
+    public int defaultAmmo { get { return _defaultAmmo; } }
+    public int defaultSpareAmmo { get { return _defaultSpareAmmo; } }
+
+    [SerializeField] int _ammo;
+    [SerializeField] int _spareAmmo;
+    [SerializeField] int _defaultAmmo;
+    [SerializeField] int _defaultSpareAmmo;
+    [SerializeField] float _tts;
+
+    [SerializeField] AudioClip _collisionAudioClip;
+
+    [SerializeField] NetworkWeaponSpawnPoint _networkWeaponSpawnPoint;
+
+    Vector3 _spawnPointPosition;
+    float _ttl;
 
     private void Awake()
     {
-        _ttl = 0;
+        _ttl = 60;
     }
 
     private void OnEnable()
@@ -90,37 +85,38 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
                 spriteId = WeaponProperties.spriteIdDic[cleanName];
         }
         catch { }
+
+        _ammo = defaultAmmo;
+        _spareAmmo = defaultSpareAmmo;
     }
     private void Start()
     {
-        defaultAmmo = ammoInThisWeapon;
-        defaultExtraAmmo = spareAmmo;
         spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
     }
 
     private void Update()
     {
-        if (onlineWeaponSpawnPoint || networkWeaponSpawnPoint)
-            return;
-        _ttl -= Time.deltaTime;
+        if (!networkWeaponSpawnPoint)
+        {
+            _ttl -= Time.deltaTime;
 
-        if (!onlineWeaponSpawnPoint && !networkWeaponSpawnPoint)
             if (_ttl <= 0)
                 Destroy(gameObject);
+        }
     }
 
     public void ResetAmmo()
     {
-        ammoInThisWeapon = defaultAmmo;
-        spareAmmo = defaultExtraAmmo;
+        ammo = _defaultAmmo;
+        spareAmmo = _defaultSpareAmmo;
     }
 
     public void RandomAmmo()
     {
-        ammoInThisWeapon = (int)Mathf.Ceil(Random.Range(0, ammoInThisWeapon));
+        ammo = (int)Mathf.Ceil(Random.Range(0, ammo));
         spareAmmo = (int)Mathf.Ceil(Random.Range(0, spareAmmo));
 
-        defaultAmmo = (int)Mathf.Ceil(Random.Range(0, defaultAmmo)); ;
+        _defaultAmmo = (int)Mathf.Ceil(Random.Range(0, _defaultAmmo)); ;
         spareAmmo = (int)Mathf.Ceil(Random.Range(0, spareAmmo));
     }
 
@@ -129,16 +125,15 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         int ammoToLoot = spareAmmo;
         PlayerInventory playerInventory = GameManager.GetMyPlayer(controllerId).playerInventory;
         if (!onlyExtraAmmo)
-            ammoToLoot += ammoInThisWeapon;
+            ammoToLoot += ammo;
 
         foreach (GameObject wp in playerInventory.allWeaponsInInventory)
             if (wp.GetComponent<WeaponProperties>().codeName == codeName)
                 wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
 
         OnLooted?.Invoke(this);
-        if (onlineWeaponSpawnPoint)
+        if (networkWeaponSpawnPoint)
         {
-            onlineWeaponSpawnPoint.StartRespawn();
             gameObject.SetActive(false);
         }
         else
@@ -155,10 +150,10 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     void UpdateData(Dictionary<string, string> param)
     {
         if (param.ContainsKey("ammo"))
-            _ammoInThisWeapon = int.Parse(param["ammo"]);
+            _ammo = int.Parse(param["ammo"]);
 
         if (param.ContainsKey("ttl"))
-            _ttl = int.Parse(param["ttl"]);
+            _tts = int.Parse(param["ttl"]);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -169,5 +164,13 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             GetComponent<AudioSource>().Play();
         }
         catch { }
+    }
+
+    private void OnDisable()
+    {
+        if (networkWeaponSpawnPoint)
+        {
+            NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
+        }
     }
 }

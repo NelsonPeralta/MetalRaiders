@@ -214,7 +214,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 OnWeaponPickup?.Invoke(this);
 
                 pInventory.hasSecWeap = true;
-                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = closestLootableWeapon.ammoInThisWeapon;
+                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = closestLootableWeapon.ammo;
                 pInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestLootableWeapon.spareAmmo;
 
                 pInventory.PlayDrawSound();
@@ -282,7 +282,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         //newActiveWeapon.currentAmmo = lw.ammoInThisWeapon;
 
         pInventory.activeWeapon = newActiveWeapon;
-        pInventory.activeWeapon.currentAmmo = lw.ammoInThisWeapon;
+        pInventory.activeWeapon.currentAmmo = lw.ammo;
         pInventory.activeWeapon.spareAmmo = lw.spareAmmo;
         //pInventory.holsteredWeapon = previousActiveWeapon;
 
@@ -314,7 +314,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         pInventory.activeWeapIs = 1;
         pInventory.hasSecWeap = true;
 
-        weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammoInThisWeapon;
+        weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammo;
         //pickupExtraAmmoFromWeapon(closestLootableWeapon);
 
         Debug.Log("Replace Weapon 1");
@@ -343,33 +343,30 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         {
             LootableWeapon weaponScript = weapon.GetComponent<LootableWeapon>();
 
-            if (!weaponScript.isWallGun)
+            //pickupExtraAmmoFromWeapon(weaponScript);
+            int ammoAllowedToRemoveFromWeapon = pInventory.activeWeapon.maxAmmo - pInventory.activeWeapon.spareAmmo;
+
+            if (weaponScript.ammo <= ammoAllowedToRemoveFromWeapon)
             {
-                //pickupExtraAmmoFromWeapon(weaponScript);
-                int ammoAllowedToRemoveFromWeapon = pInventory.activeWeapon.maxAmmo - pInventory.activeWeapon.spareAmmo;
+                weaponScript.ammo = 0;
+                ammoPickupAudioSource.Play();
+            }
+            else if (weaponScript.ammo > ammoAllowedToRemoveFromWeapon)
+            {
+                weaponScript.ammo = weaponScript.ammo - ammoAllowedToRemoveFromWeapon;
+                ammoPickupAudioSource.Play();
+            }
 
-                if (weaponScript.ammoInThisWeapon <= ammoAllowedToRemoveFromWeapon)
-                {
-                    weaponScript.ammoInThisWeapon = 0;
-                    ammoPickupAudioSource.Play();
-                }
-                else if (weaponScript.ammoInThisWeapon > ammoAllowedToRemoveFromWeapon)
-                {
-                    weaponScript.ammoInThisWeapon = weaponScript.ammoInThisWeapon - ammoAllowedToRemoveFromWeapon;
-                    ammoPickupAudioSource.Play();
-                }
-
-                if (weaponScript.ammoInThisWeapon == 0)
-                {
-                    //Destroy(weapon.gameObject);
-                    weapon.SetActive(false);
-                    Debug.Log("Destroyed Small Weapon");
-                }
-                if (weaponScript.ammoInThisWeapon == 0)
-                {
-                    //Destroy(weapon.gameObject);
-                    weapon.SetActive(false);
-                }
+            if (weaponScript.ammo == 0)
+            {
+                //Destroy(weapon.gameObject);
+                weapon.SetActive(false);
+                Debug.Log("Destroyed Small Weapon");
+            }
+            if (weaponScript.ammo == 0)
+            {
+                //Destroy(weapon.gameObject);
+                weapon.SetActive(false);
             }
         }
     }

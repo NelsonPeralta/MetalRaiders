@@ -385,19 +385,13 @@ MonoBehaviour:
   cleanName: SCAR
   codeName: scar
   spriteId: 0
-  isWallGun: 0
-  _ammoInThisWeapon: 20
+  _ammo: 20
+  _spareAmmo: 40
+  _defaultAmmo: 20
+  _defaultSpareAmmo: 40
+  _tts: 120
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
-  spareAmmo: 40
-  isDualWieldable: 0
-  defaultAmmo: 20
-  defaultExtraAmmo: 0
-  smallAmmo: 0
-  heavyAmmo: 1
-  powerAmmo: 0
-  _onlineWeaponSpawnPoint: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _ttl: 0
 --- !u!114 &223960435701437633
 MonoBehaviour:
   m_ObjectHideFlags: 0

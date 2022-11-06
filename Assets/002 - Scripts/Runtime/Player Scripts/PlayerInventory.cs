@@ -279,23 +279,23 @@ public class PlayerInventory : MonoBehaviourPun
     {
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
 
-        if (GameManager.instance.gameType == GameManager.GameType.Slayer)
+        if (GameManager.instance.gameType.ToString().Contains("Slayer"))
         {
             StartingWeapon = "m4";
             StartingWeapon2 = "m1911";
         }
-        if (GameManager.instance.gameType == GameManager.GameType.Pro)
+        if (GameManager.instance.gameType.ToString().Contains("Pro"))
         {
             StartingWeapon = "m16";
             //StartingWeapon2 = "patriot";
         }
-        if (GameManager.instance.gameType == GameManager.GameType.Snipers)
+        if (GameManager.instance.gameType.ToString().Contains("Snipers"))
         {
             StartingWeapon = "r700";
             //StartingWeapon2 = "patriot";
         }
 
-        if (GameManager.instance.gameType == GameManager.GameType.Rockets)
+        if (GameManager.instance.gameType.ToString().Contains("Rockets"))
         {
             StartingWeapon = "rpg";
             StartingWeapon2 = "m32";
@@ -305,7 +305,7 @@ public class PlayerInventory : MonoBehaviourPun
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
 
 
-        if (GameManager.instance.gameType == GameManager.GameType.Fiesta)
+        if (GameManager.instance.gameType.ToString().Contains("Fiesta"))
         {
             AssignRandomWeapons();
         }

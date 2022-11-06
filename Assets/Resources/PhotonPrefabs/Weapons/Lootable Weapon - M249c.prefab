@@ -523,19 +523,13 @@ MonoBehaviour:
   cleanName: M249c
   codeName: m249c
   spriteId: 0
-  isWallGun: 0
-  _ammoInThisWeapon: 100
+  _ammo: 100
+  _spareAmmo: 0
+  _defaultAmmo: 100
+  _defaultSpareAmmo: 0
+  _tts: 120
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
-  spareAmmo: 100
-  isDualWieldable: 0
-  defaultAmmo: 100
-  defaultExtraAmmo: 0
-  smallAmmo: 0
-  heavyAmmo: 1
-  powerAmmo: 0
-  _onlineWeaponSpawnPoint: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _ttl: 0
 --- !u!114 &7291944246082082972
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,14 +7,16 @@ using System.IO;
 public class NetworkWeaponSpawnPoint : MonoBehaviour
 {
     public string codeName;
-    public int timeToSpawn;
     public GameObject placeHolder;
     public LootableWeapon weaponSpawned;
     public List<LootableWeapon> networkLootableWeaponPrefabs = new List<LootableWeapon>();
 
+    float _tts;
+
     private void Start()
     {
-        //ReplaceWeaponsByGametype();
+        ReplaceWeaponsByGametype();
+
         if (placeHolder)
             placeHolder.gameObject.SetActive(false);
 
@@ -26,19 +28,112 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 {
                     try
                     {
+                        LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), Vector3.zero, Quaternion.identity).GetComponent<LootableWeapon>();
 
-                    LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.cleanName), Vector3.zero, Quaternion.identity).GetComponent<LootableWeapon>();
-
-                    lw.transform.position = transform.position;
-                    lw.transform.rotation = transform.rotation;
-                    lw.gameObject.SetActive(true);
-                    lw.networkWeaponSpawnPoint = this;
-                    weaponSpawned = lw;
+                        lw.transform.position = transform.position;
+                        lw.transform.rotation = transform.rotation;
+                        lw.gameObject.SetActive(true);
+                        lw.networkWeaponSpawnPoint = this;
+                        weaponSpawned = lw;
+                        _tts = lw.tts;
                     }
-                    catch(System.Exception e) { Debug.LogWarning(e); }
+                    catch (System.Exception e) { Debug.LogWarning(e); }
                 }
             }
         }
         catch { }
     }
+
+    private void Update()
+    {
+        if (weaponSpawned)
+        {
+            _tts -= Time.deltaTime;
+
+            if (_tts < 0)
+            {
+                if (PhotonNetwork.IsMasterClient && !weaponSpawned.gameObject.activeSelf)
+                {
+                    NetworkGameManager.instance.EnableLootableWeapon(weaponSpawned.spawnPointPosition);
+                    weaponSpawned.ammo = weaponSpawned.defaultAmmo;
+                    weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+                }
+                _tts = weaponSpawned.tts;
+            }
+        }
+    }
+
+    // Methods
+    #region
+    void ReplaceWeaponsByGametype()
+    {
+        string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal" };
+        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot" };
+        string[] lightWeaponCodeNames = { "m1911", "colt", "mp5" };
+
+        if ((GameManager.instance.gameType.ToString().Contains("Pro")))
+        {
+            foreach (string weaponCode in powerWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "m16";
+
+            foreach (string weaponCode in heavyWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "m16";
+
+            foreach (string weaponCode in lightWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "mk14";
+        }
+        else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
+        {
+            foreach (string weaponCode in lightWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "r700";
+
+            foreach (string weaponCode in powerWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "barrett50cal";
+
+            foreach (string weaponCode in heavyWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "r700";
+
+        }
+        else if ((GameManager.instance.gameType.ToString().Contains("Rockets")))
+        {
+            foreach (string weaponCode in lightWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "m32";
+
+            foreach (string weaponCode in powerWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "rpg";
+
+            foreach (string weaponCode in heavyWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "m32";
+
+        }
+        else if ((GameManager.instance.gameType.ToString().Contains("Shotguns")))
+        {
+            foreach (string weaponCode in lightWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "m1100";
+
+            foreach (string weaponCode in powerWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "m1100";
+
+            foreach (string weaponCode in heavyWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "m1100";
+        }
+
+        if ((GameManager.instance.gameType.ToString().Contains("Fiesta")))
+        {
+            Destroy(gameObject);
+        }
+    }
+    #endregion
 }

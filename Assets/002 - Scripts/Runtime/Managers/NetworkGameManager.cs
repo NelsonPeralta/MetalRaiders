@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Linq;
 
 public class NetworkGameManager : MonoBehaviourPun
 {
@@ -12,6 +13,9 @@ public class NetworkGameManager : MonoBehaviourPun
         DontDestroyOnLoad(gameObject);
     }
 
+
+    // Methods
+    #region
     public void UpdateTeamMode(string tm)
     {
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
@@ -20,7 +24,18 @@ public class NetworkGameManager : MonoBehaviourPun
     {
         GetComponent<PhotonView>().RPC("UpdateTeam_RPC", RpcTarget.All, t.ToString(), playerNickName);
     }
+    public void DisableLootableWeapon(Vector3 position)
+    {
+        GetComponent<PhotonView>().RPC("DisableLootableWeapon_RPC", RpcTarget.All, position);
+    }
+    public void EnableLootableWeapon(Vector3 position)
+    {
+        GetComponent<PhotonView>().RPC("EnableLootableWeapon_RPC", RpcTarget.All, position);
+    }
+    #endregion
 
+    // RPCs
+    #region
     [PunRPC]
     void UpdateTeam_RPC(string t, string playerNickName)
     {
@@ -38,4 +53,25 @@ public class NetworkGameManager : MonoBehaviourPun
 
         GameManager.instance.teamMode = tm;
     }
+
+    [PunRPC]
+    void DisableLootableWeapon_RPC(Vector3 position)
+    {
+        foreach(LootableWeapon lw in FindObjectsOfType<LootableWeapon>().ToList())
+        {
+            if (lw.spawnPointPosition == position)
+                lw.gameObject.SetActive(false);
+        }
+    }
+
+    [PunRPC]
+    public void EnableLootableWeapon_RPC(Vector3 position)
+    {
+        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>().ToList())
+        {
+            if (lw.spawnPointPosition == position)
+                lw.gameObject.SetActive(true);
+        }
+    }
+    #endregion
 }
