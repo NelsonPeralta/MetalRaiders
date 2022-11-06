@@ -144,6 +144,7 @@ MonoBehaviour:
   - UpdateTeamMode_RPC
   - DisableLootableWeapon_RPC
   - EnableLootableWeapon_RPC
+  - RelocateLootableWeapon_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
