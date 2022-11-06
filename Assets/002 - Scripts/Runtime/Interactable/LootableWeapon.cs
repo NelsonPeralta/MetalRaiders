@@ -41,6 +41,12 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         set { _spawnPointPosition = value; }
     }
 
+    public Quaternion spawnPointRotation
+    {
+        get { return _spawnPointRotation; }
+        set { _spawnPointRotation = value; }
+    }
+
     public float tts
     {
         get { return _tts; }
@@ -66,7 +72,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     [SerializeField] NetworkWeaponSpawnPoint _networkWeaponSpawnPoint;
 
-    Vector3 _spawnPointPosition;
+    [SerializeField] Vector3 _spawnPointPosition;
+
+    Quaternion _spawnPointRotation;
     float _ttl;
 
     private void Awake()
@@ -92,6 +100,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     private void Start()
     {
         spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
+        spawnPointRotation = transform.rotation;
     }
 
     private void Update()

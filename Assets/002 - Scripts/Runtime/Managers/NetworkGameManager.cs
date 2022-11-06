@@ -32,6 +32,11 @@ public class NetworkGameManager : MonoBehaviourPun
     {
         GetComponent<PhotonView>().RPC("EnableLootableWeapon_RPC", RpcTarget.All, position);
     }
+
+    public void RelocateLootableWeapon(Vector3 position, Quaternion rotation)
+    {
+        GetComponent<PhotonView>().RPC("RelocateLootableWeapon_RPC", RpcTarget.All, position, rotation);
+    }
     #endregion
 
     // RPCs
@@ -65,12 +70,26 @@ public class NetworkGameManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void EnableLootableWeapon_RPC(Vector3 position)
+    void EnableLootableWeapon_RPC(Vector3 position)
     {
-        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>().ToList())
+        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>(true).ToList())
         {
+            Debug.Log($"Weapon: {lw.cleanName}. SP: {lw.spawnPointPosition}. Is Active: {lw.gameObject.activeSelf}");
             if (lw.spawnPointPosition == position)
                 lw.gameObject.SetActive(true);
+        }
+    }
+
+    [PunRPC]
+    void RelocateLootableWeapon_RPC(Vector3 position, Quaternion rotation)
+    {
+        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>(true).ToList())
+        {
+            if (lw.spawnPointPosition == position)
+            {
+                lw.transform.position = position;
+                lw.transform.rotation = rotation;
+            }
         }
     }
     #endregion

@@ -52,11 +52,18 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
             if (_tts < 0)
             {
-                if (PhotonNetwork.IsMasterClient && !weaponSpawned.gameObject.activeSelf)
+                if (PhotonNetwork.IsMasterClient)
                 {
-                    NetworkGameManager.instance.EnableLootableWeapon(weaponSpawned.spawnPointPosition);
-                    weaponSpawned.ammo = weaponSpawned.defaultAmmo;
-                    weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+                    if (!weaponSpawned.gameObject.activeSelf)
+                    {
+                        NetworkGameManager.instance.EnableLootableWeapon(weaponSpawned.spawnPointPosition);
+                        weaponSpawned.ammo = weaponSpawned.defaultAmmo;
+                        weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+                    }
+                    else
+                    {
+                        NetworkGameManager.instance.RelocateLootableWeapon(weaponSpawned.spawnPointPosition, weaponSpawned.spawnPointRotation);
+                    }
                 }
                 _tts = weaponSpawned.tts;
             }
