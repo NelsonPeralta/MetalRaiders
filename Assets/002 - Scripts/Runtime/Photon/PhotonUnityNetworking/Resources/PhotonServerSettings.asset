@@ -145,6 +145,11 @@ MonoBehaviour:
   - DisableLootableWeapon_RPC
   - EnableLootableWeapon_RPC
   - RelocateLootableWeapon_RPC
+  - DamageIceChunk_RPC
+  - DamageExplosiveBarrel_RPC
+  - DisableExplosiveBarrel_RPC
+  - EnableExplosiveBarrel_RPC
+  - RelocateExplosiveBarrel_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

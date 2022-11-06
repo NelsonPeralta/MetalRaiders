@@ -84,6 +84,8 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     private void OnEnable()
     {
+        GetComponent<Rigidbody>().velocity *= 0;
+
         try
         {
             spriteId = -1;

@@ -10,28 +10,44 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
 
     [SerializeField] int _defaultHitPoints;
 
-    [SerializeField]  int _hitPoints;
-    int _networkHitPoints { get { return _hitPoints; } set { _hitPoints = value; if (_hitPoints <= 0) OnExploded?.Invoke(this); } }
+    [SerializeField] int _hitPoints;
+    public int _networkHitPoints { get { return _hitPoints; } set { _hitPoints = value; if (_hitPoints <= 0) OnExploded?.Invoke(this); } }
     public int hitPoints
     {
         get { return _networkHitPoints; }
         set
         {
-            GetComponent<PhotonView>().RPC("UpdateHitPoints", RpcTarget.All, value);
+            NetworkGameManager.instance.DamageExplosiveBarrel(spawnPointPosition, value);
         }
+    }
+    public Vector3 spawnPointPosition
+    {
+        get { return _spawnPointPosition; }
+    }
+    public Quaternion spawnPointRotation
+    {
+        get { return _spawnPointRotation; }
     }
 
     public GameObject explosionPrefab;
 
     [SerializeField] AudioClip _collisionAudioClip;
+    [SerializeField] Vector3 _spawnPointPosition;
+    [SerializeField] Quaternion _spawnPointRotation;
 
+    private void Awake()
+    {
+    }
     private void OnEnable()
     {
+        GetComponent<Rigidbody>().velocity *= 0;
         _hitPoints = _defaultHitPoints;
     }
 
     private void Start()
     {
+        _spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
+        _spawnPointRotation = transform.rotation;
         OnExploded += OnExplode_Delegate;
     }
 
@@ -68,8 +84,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     void OnExplode_Delegate(ExplosiveBarrel explosiveBarrel)
     {
         GameObject e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
-
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
     #endregion
 

@@ -30,8 +30,22 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
 
         if (tts < 0)
         {
-            if (PhotonNetwork.IsMasterClient && !barrel)
-                barrel = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>();
+            //if (PhotonNetwork.IsMasterClient && !barrel)
+            //    barrel = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>();
+            //tts = _defaultTts;
+
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                if (!barrel.gameObject.activeSelf)
+                {
+                    NetworkGameManager.instance.EnableExplosiveBarrel(barrel.spawnPointPosition);
+                }
+                else
+                {
+                    NetworkGameManager.instance.RelocateExplosiveBarrel(barrel.spawnPointPosition, barrel.spawnPointRotation);
+                }
+            }
             tts = _defaultTts;
         }
     }

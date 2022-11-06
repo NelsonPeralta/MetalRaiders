@@ -320,8 +320,11 @@ public class Player : MonoBehaviourPunCallbacks
     {
         get { return GameManager.instance.onlineTeam; }
     }
+
+    int lastPID;
     private void Start()
     {
+        lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
         weaponPool = FindObjectOfType<WeaponPool>();
@@ -364,6 +367,10 @@ public class Player : MonoBehaviourPunCallbacks
             return false;
         return true;
     }
+    public void Damage(int damage)
+    {
+        PV.RPC("Damage_RPC", RpcTarget.All, damage);
+    }
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
         if (hitPoints <= 0 || isDead || isRespawning)
@@ -371,6 +378,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         try
         { // Hit Marker Handling
+            lastPID = playerWhoShotThisPlayerPhotonId;
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
 
             if (headshot)
@@ -398,6 +406,30 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (!isDead && !isRespawning)
             hitPoints -= damage;
+
+        if (lastPID > -1)
+        {
+            try
+            {
+                Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(lastPID);
+                string feed = $"{sourcePlayer.nickName} killed {nickName}";
+                foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+                {
+                    if (sourcePlayer != this)
+                        kfm.EnterNewFeed(feed);
+                    else
+                        kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+                }
+            }
+            catch
+            {
+                foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+                {
+                        kfm.EnterNewFeed($"Mistakes were made ({nickName})");
+                }
+            }
+            lastPID = -1;
+        }
     }
 
     [PunRPC]

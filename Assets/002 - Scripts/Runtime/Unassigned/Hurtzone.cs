@@ -25,13 +25,18 @@ public class Hurtzone : MonoBehaviour
     {
         if (instantKillzone)
             damage = 9999;
-        StartCoroutine(DamagePlayersInRange_Coroutine());
+        //StartCoroutine(DamagePlayersInRange_Coroutine());
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<Player>() != null)
         {
+            if (instantKillzone)
+            {
+                other.gameObject.GetComponent<Player>().Damage(999);
+                return;
+            }
             playersInRange.Add(other.GetComponent<Player>());
             if (!instantKillzone)
                 other.GetComponent<ScreenEffects>().orangeScreen.SetActive(true);
