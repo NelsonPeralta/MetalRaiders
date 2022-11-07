@@ -6,8 +6,11 @@ using Photon.Pun;
 public class PlayerImpactReceiver : MonoBehaviour
 {
     [SerializeField] float mass = 60f; // defines the character mass
-    Vector3 impact = Vector3.zero;
+    public Vector3 impact = Vector3.zero;
     CharacterController character = new CharacterController();
+    [SerializeField] GroundCheck groundCheck;
+
+    float _groundCheckCountdown;
 
     void Start()
     {
@@ -29,7 +32,10 @@ public class PlayerImpactReceiver : MonoBehaviour
     public void AddImpact(Vector3 dir, float force)
     {
         if (GetComponent<PhotonView>().IsMine)
+        {
+            _groundCheckCountdown = 1f;
             Impact(dir, force);
+        }
     }
 
     [PunRPC]
@@ -45,7 +51,7 @@ public class PlayerImpactReceiver : MonoBehaviour
     void Impact(Vector3 dir, float force)
     {
         dir.Normalize();
-        if (dir.y < 0) dir.y = -dir.y; // reflect down force on the ground
+        //if (dir.y < 0) dir.y = -dir.y; // reflect down force on the ground
         impact += dir.normalized * force / mass;
     }
 
@@ -54,6 +60,23 @@ public class PlayerImpactReceiver : MonoBehaviour
         // apply the impact force:
         if (impact.magnitude > 0.2) character.Move(impact * Time.deltaTime);
         // consumes the impact energy each cycle:
-        impact = Vector3.Lerp(impact, Vector3.zero, 5 * Time.deltaTime);
+        impact = Vector3.Lerp(impact, Vector3.zero, 1 * Time.deltaTime);
+
+        if (_groundCheckCountdown > 0)
+            _groundCheckCountdown -= Time.deltaTime;
+
+        //if (_groundCheckCountdown <= 0)
+        //{
+        //    if (groundCheck.isGrounded && impact.magnitude > 0)
+        //    {
+        //        impact *= 0;
+        //    }
+        //}
+    }
+
+    public void OnGrounded_Event(GroundCheck gc)
+    {
+        if (_groundCheckCountdown <= 0)
+            impact *= 0;
     }
 }

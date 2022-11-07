@@ -169,6 +169,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     private void OnCollisionEnter(Collision collision)
     {
+        GetComponent<Rigidbody>().velocity /= 2;
         try
         {
             GetComponent<AudioSource>().clip = _collisionAudioClip;
