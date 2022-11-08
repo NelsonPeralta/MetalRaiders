@@ -39,6 +39,7 @@ public class Explosion : MonoBehaviour
             int characterControllerDivider = 3;
             float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
             float calculatedPower = (explosionPower * (1 - (hitDistance / radius)));
+            int calculatedDamage = (int)Mathf.Clamp((damage * (1 - (hitDistance / radius))), 0, damage);
 
             //Add force to nearby rigidbodies
             if (rb != null)
@@ -57,8 +58,6 @@ public class Explosion : MonoBehaviour
                 {
                     objectsHit.Add(playerHit);
                     OnObjectAdded?.Invoke(this);
-                    float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
-                    float calculatedDamage = damage * (1 - (playerDistance / radius));
                     try
                     {
                         hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid);
@@ -73,8 +72,6 @@ public class Explosion : MonoBehaviour
                 {
                     objectsHit.Add(hitObject);
                     OnObjectAdded?.Invoke(this);
-                    float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
-                    int calculatedDamage = (int)(damage * (1 - (playerDistance / radius)));
                     try
                     {
                         hit.GetComponent<IDamageable>().Damage(calculatedDamage);
