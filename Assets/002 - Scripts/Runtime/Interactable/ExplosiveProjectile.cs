@@ -11,11 +11,20 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] Player _player;
     [SerializeField] int _force;
     [SerializeField] bool _useConstantForce;
+    [SerializeField] float _explosionDelayOnImpact;
     [SerializeField] Transform explosionPrefab;
+    [SerializeField] AudioClip _collisionSound;
+    [SerializeField] bool _sticky;
+    [SerializeField] LayerMask _stickyLayerMask;
+
+    bool _collided;
 
     // Start is called before the first frame update
     void Start()
     {
+        foreach (PlayerHitbox ph in player.GetComponent<PlayerHitboxes>().playerHitboxes)
+            Physics.IgnoreCollision(GetComponent<Collider>(), ph.GetComponent<Collider>());
+
         if (!useConstantForce)
             GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * force);
     }
@@ -26,12 +35,42 @@ public class ExplosiveProjectile : MonoBehaviour
         if (useConstantForce)
             GetComponent<Rigidbody>().AddForce
                 (gameObject.transform.forward * force);
+
+        if (_collided)
+        {
+            _explosionDelayOnImpact -= Time.deltaTime;
+            if (_explosionDelayOnImpact < 0)
+                Explosion();
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer != 9)
-            Explosion();
+        {
+            _collided = true;
+
+            try
+            {
+                GetComponent<AudioSource>().clip = _collisionSound;
+                GetComponent<AudioSource>().Play();
+            }
+            catch { }
+
+            if (_sticky)
+            {
+                _sticky = false;
+                {
+                    if (_stickyLayerMask == (_stickyLayerMask | (1 << collision.gameObject.layer)))
+                    {
+                        gameObject.transform.parent = collision.gameObject.transform;
+
+                        GetComponent<Rigidbody>().useGravity = false;
+                        GetComponent<Rigidbody>().isKinematic = true;
+                    }
+                }
+            }
+        }
     }
 
     void Explosion()

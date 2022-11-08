@@ -140,10 +140,10 @@ GameObject:
   - component: {fileID: 3330426199547648510}
   - component: {fileID: 3323438325925666012}
   - component: {fileID: 308888794767148583}
-  - component: {fileID: 9122526615004078143}
   - component: {fileID: 9160456491394204891}
   - component: {fileID: 3248583250224941726}
   - component: {fileID: 5732484404395741313}
+  - component: {fileID: -5392217163931447814}
   m_Layer: 8
   m_Name: PlayerStickyGrenade
   m_TagString: Untagged
@@ -234,32 +234,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &9122526615004078143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3334927101774382662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47c59f712eaa599429b891dba7a0a167, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 4
-  damage: 350
-  power: 50
-  grenadeTimer: 1
-  throwForce: 625
-  explosionPrefab: {fileID: 2064435946878792721, guid: 9c90c1d7343cb464698144039aff5a88,
-    type: 3}
-  player: {fileID: 0}
-  playerRewiredID: 0
-  team: 
-  audioSource: {fileID: 3248583250224941726}
-  throwSound: {fileID: 8300000, guid: d0f397d454ef26c439e9fefb62fd433b, type: 3}
-  impactSound: {fileID: 8300000, guid: bc6805e0645c59c4b91a979d862f3b21, type: 3}
-  explosionSound: {fileID: 8300000, guid: f6fb4a08e94154e4ead86a161f2f8e0e, type: 3}
 --- !u!65 &9160456491394204891
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -268,7 +242,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3334927101774382662}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.25, y: 0.25, z: 0.25}
@@ -382,6 +356,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   notes: Radius of 4 and 400 damage gives 256 damage on foot.
+--- !u!114 &-5392217163931447814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3334927101774382662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5c64e5c8f6fed8429c987cafcef949d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 0}
+  _force: 0
+  _useConstantForce: 0
+  _explosionDelayOnImpact: 1
+  explosionPrefab: {fileID: 9198120252748331428, guid: 133e7e85df7e0964ca94128ae8063fb0,
+    type: 3}
+  _collisionSound: {fileID: 8300000, guid: bc6805e0645c59c4b91a979d862f3b21, type: 3}
+  _sticky: 1
+  _stickyLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &4586933230011390623
 GameObject:
   m_ObjectHideFlags: 0

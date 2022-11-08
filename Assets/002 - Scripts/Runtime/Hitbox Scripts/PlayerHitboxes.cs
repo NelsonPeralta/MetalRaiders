@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerHitboxes : MonoBehaviour
 {
-    [SerializeField] PlayerHitbox[] playerHitboxes = null;
+    public PlayerHitbox[] playerHitboxes { get { return _playerHitboxes; } }
+    [SerializeField] PlayerHitbox[] _playerHitboxes = null;
     private void Awake()
     {
     }
@@ -12,9 +13,9 @@ public class PlayerHitboxes : MonoBehaviour
     public void OnModelAssigned(PlayerThirdPersonModelManager playerThirdPersonModelManager)
     {
         //Debug.Log($"PlayerHitboxes OnModelAssigned {GetComponent<Player>().nickName}");
-        playerHitboxes = GetComponentsInChildren<PlayerHitbox>();
+        _playerHitboxes = GetComponentsInChildren<PlayerHitbox>();
 
-        foreach (PlayerHitbox playerHitbox in playerHitboxes)
+        foreach (PlayerHitbox playerHitbox in _playerHitboxes)
         {
             playerHitbox.GetComponent<MeshRenderer>().enabled = false;
             playerHitbox.player = GetComponent<Player>();
@@ -25,7 +26,7 @@ public class PlayerHitboxes : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha0))
-            foreach (PlayerHitbox playerHitbox in playerHitboxes)
+            foreach (PlayerHitbox playerHitbox in _playerHitboxes)
                 try
                 {
                     playerHitbox.GetComponent<MeshRenderer>().enabled = !playerHitbox.GetComponent<MeshRenderer>().enabled;

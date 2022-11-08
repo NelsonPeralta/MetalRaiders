@@ -24966,7 +24966,7 @@ GameObject:
   - component: {fileID: 6635619522076087204}
   - component: {fileID: 6646898227201696302}
   - component: {fileID: 6769089064358604720}
-  - component: {fileID: 8407305175540328391}
+  - component: {fileID: 2953166181282599976}
   m_Layer: 8
   m_Name: PlayerFragGrenade
   m_TagString: Untagged
@@ -25081,7 +25081,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 64baa1f44691afc42a584e482cd9a27d, type: 3}
+  m_audioClip: {fileID: 8300000, guid: d0f397d454ef26c439e9fefb62fd433b, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -25167,7 +25167,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &8407305175540328391
+--- !u!114 &2953166181282599976
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -25176,24 +25176,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 6688451184937881618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09755d57781448f4489e95ee286ef48c, type: 3}
+  m_Script: {fileID: 11500000, guid: d5c64e5c8f6fed8429c987cafcef949d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 0
-  radius: 6
-  damage: 250
-  power: 100
-  grenadeTimer: 0.75
-  throwForce: 625
-  explosionPrefab: {fileID: 2064435946878792721, guid: 9c90c1d7343cb464698144039aff5a88,
+  _player: {fileID: 0}
+  _force: 0
+  _useConstantForce: 0
+  _explosionDelayOnImpact: 0.8
+  explosionPrefab: {fileID: 9198120252748331428, guid: a0031679046e9984387a3d6b9094f878,
     type: 3}
-  player: {fileID: 0}
-  playerRewiredID: 0
-  team: 
-  audioSource: {fileID: 6769089064358604720}
-  throwSound: {fileID: 8300000, guid: d0f397d454ef26c439e9fefb62fd433b, type: 3}
-  impactSound: {fileID: 8300000, guid: bc6805e0645c59c4b91a979d862f3b21, type: 3}
-  explosionSound: {fileID: 8300000, guid: f6fb4a08e94154e4ead86a161f2f8e0e, type: 3}
+  _collisionSound: {fileID: 8300000, guid: bc6805e0645c59c4b91a979d862f3b21, type: 3}
+  _sticky: 0
+  _stickyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &8038831537635717386
 GameObject:
   m_ObjectHideFlags: 0

@@ -9812,9 +9812,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 338bbf90389e28f4f8a9e4760525b932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
   damage: 200
   radius: 6
-  explosionPower: 20
+  explosionPower: 2000
 --- !u!82 &7241414760208152368
 AudioSource:
   m_ObjectHideFlags: 0
