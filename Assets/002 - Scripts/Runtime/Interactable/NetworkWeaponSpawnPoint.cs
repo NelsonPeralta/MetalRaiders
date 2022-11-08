@@ -76,20 +76,20 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     void ReplaceWeaponsByGametype()
     {
         string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal" };
-        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot" };
+        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14"};
         string[] lightWeaponCodeNames = { "m1911", "colt", "mp5" };
 
         if ((GameManager.instance.gameType.ToString().Contains("Pro")))
         {
-            foreach (string weaponCode in powerWeaponCodeNames)
+            foreach (string weaponCode in lightWeaponCodeNames)
                 if (weaponCode == codeName)
-                    codeName = "m16";
+                    codeName = "mk14";
 
             foreach (string weaponCode in heavyWeaponCodeNames)
                 if (weaponCode == codeName)
                     codeName = "m16";
 
-            foreach (string weaponCode in lightWeaponCodeNames)
+            foreach (string weaponCode in powerWeaponCodeNames)
                 if (weaponCode == codeName)
                     codeName = "mk14";
         }
@@ -97,20 +97,23 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         {
             foreach (string weaponCode in lightWeaponCodeNames)
                 if (weaponCode == codeName)
+                    codeName = "barrett50cal";
+            
+            foreach (string weaponCode in heavyWeaponCodeNames)
+                if (weaponCode == codeName)
                     codeName = "r700";
 
             foreach (string weaponCode in powerWeaponCodeNames)
                 if (weaponCode == codeName)
                     codeName = "barrett50cal";
-
-            foreach (string weaponCode in heavyWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "r700";
-
         }
         else if ((GameManager.instance.gameType.ToString().Contains("Rockets")))
         {
             foreach (string weaponCode in lightWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "rpg";
+
+            foreach (string weaponCode in heavyWeaponCodeNames)
                 if (weaponCode == codeName)
                     codeName = "m32";
 
@@ -118,9 +121,6 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 if (weaponCode == codeName)
                     codeName = "rpg";
 
-            foreach (string weaponCode in heavyWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "m32";
 
         }
         else if ((GameManager.instance.gameType.ToString().Contains("Shotguns")))

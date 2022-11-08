@@ -262,6 +262,11 @@ public class Player : MonoBehaviourPunCallbacks
         get { return PV.IsMine; }
     }
 
+    public int pid
+    {
+        get { return PV.ViewID; }
+    }
+
     public string localNickName
     {
         get

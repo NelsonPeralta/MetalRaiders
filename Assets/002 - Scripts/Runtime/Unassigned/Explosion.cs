@@ -7,6 +7,10 @@ public class Explosion : MonoBehaviour
     public delegate void ExplosionEvent(Explosion explosion);
     public ExplosionEvent OnObjectAdded;
 
+    public Player player { get { return _player; } set { _player = value; } }
+
+    [SerializeField] Player _player;
+
     [Header("Settings")]
     public float damage; // Determined in Weapon Properties Script
     public float radius;
@@ -32,9 +36,9 @@ public class Explosion : MonoBehaviour
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             CharacterController cc = hit.GetComponent<CharacterController>();
 
-            int arbitraryMutliplier = 100;
+            int characterControllerDivider = 3;
             float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
-            float calculatedPower = (explosionPower * (1 - (hitDistance / radius))) * arbitraryMutliplier;
+            float calculatedPower = (explosionPower * (1 - (hitDistance / radius)));
 
             //Add force to nearby rigidbodies
             if (rb != null)
@@ -43,7 +47,7 @@ public class Explosion : MonoBehaviour
             if (cc)
             {
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, calculatedPower);
+                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, calculatedPower / characterControllerDivider);
             }
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
@@ -57,9 +61,9 @@ public class Explosion : MonoBehaviour
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
                     try
                     {
-                        hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage);
+                        hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid);
                     }
-                    catch { }
+                    catch { hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }
             }
             else if (hit.GetComponent<IDamageable>() != null)

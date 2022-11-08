@@ -49,44 +49,44 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
     void ReplaceWeaponsByGametype()
     {
         string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal" };
-        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot" };
+        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14" };
         string[] lightWeaponCodeNames = { "m1911", "colt", "mp5" };
 
         if ((GameManager.instance.gameType == GameManager.GameType.Pro))
         {
 
-            //foreach (string weaponCode in powerWeaponCodeNames)
-            //    if (weaponCode == codeName)
-            //        codeName = "m16";
+            foreach (string weaponCode in powerWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "mk14";
 
-            //foreach (string weaponCode in heavyWeaponCodeNames)
-            //    if (weaponCode == codeName)
-            //        codeName = "m16";
+            foreach (string weaponCode in heavyWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "m16";
 
-            //foreach (string weaponCode in lightWeaponCodeNames)
-            //    if (weaponCode == codeName)
-            //        codeName = "patriot";
+            foreach (string weaponCode in lightWeaponCodeNames)
+                if (weaponCode == codeName)
+                    codeName = "mk14";
         }
 
         if ((GameManager.instance.gameType == GameManager.GameType.Snipers))
         {
             foreach (string weaponCode in lightWeaponCodeNames)
                 if (weaponCode == codeName)
-                    codeName = "m1911";
+                    codeName = "barrett50cal";
 
             foreach (string weaponCode in powerWeaponCodeNames)
                 if (weaponCode == codeName)
-                    codeName = "barrett50cal";
+                    codeName = "r700";
 
             foreach (string weaponCode in heavyWeaponCodeNames)
                 if (weaponCode == codeName)
-                    codeName = "r700";
+                    codeName = "barrett50cal";
 
         }else if ((GameManager.instance.gameType == GameManager.GameType.Rockets))
         {
             foreach (string weaponCode in lightWeaponCodeNames)
                 if (weaponCode == codeName)
-                    codeName = "m1911";
+                    codeName = "rpg";
 
             foreach (string weaponCode in powerWeaponCodeNames)
                 if (weaponCode == codeName)

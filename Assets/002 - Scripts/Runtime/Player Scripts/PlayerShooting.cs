@@ -144,12 +144,15 @@ public class PlayerShooting : MonoBehaviourPun
             }
             else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
             {
-                Rocket rocket = null;
+                ExplosiveProjectile rocket = null;
 
                 if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
-                    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<Rocket>();
+                {
+                    //rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<Rocket>();
+                    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<ExplosiveProjectile>();
+                }
                 else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
-                    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<Rocket>();
+                    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
 
                 if (PV.IsMine)
                     rocket.gameObject.layer = 8;
@@ -159,8 +162,7 @@ public class PlayerShooting : MonoBehaviourPun
                 rocket.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
                 rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
 
-                rocket.gameObject.GetComponent<Rocket>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
-                rocket.GetComponent<Rocket>().damage = activeWeapon.damage;
+                rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
                 GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }
 

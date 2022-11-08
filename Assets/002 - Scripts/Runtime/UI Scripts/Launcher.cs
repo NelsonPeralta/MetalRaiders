@@ -353,7 +353,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
+        try
+        {
+            Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
+        }
+        catch { }
         MenuManager.Instance.OpenMenu("offline title");
     }
 
@@ -454,7 +458,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             _teamModeText.text = $"Team: {GameManager.instance.onlineTeam}";
-        else if(GameManager.instance.teamMode == GameManager.TeamMode.None)
+        else if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             _teamModeText.text = $"Free For All";
     }
 
