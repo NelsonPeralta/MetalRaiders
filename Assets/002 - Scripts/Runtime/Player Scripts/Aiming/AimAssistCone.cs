@@ -164,9 +164,9 @@ public class AimAssistCone : MonoBehaviour
         collidingHitbox = chb;
         if (!obstruction && collidingHitbox)
         {
-            if(GameManager.instance.gameType.ToString().Contains("Team"))
+            if (GameManager.instance.gameType.ToString().Contains("Team"))
             {
-                if(collidingHitbox.GetComponent<PlayerHitbox>().player.team == player.team)
+                if (collidingHitbox.GetComponent<PlayerHitbox>().player.team == player.team)
                 {
                     aimAssist.target = null;
                     aimAssist.redReticuleIsOn = false;
@@ -192,7 +192,7 @@ public class AimAssistCone : MonoBehaviour
         {
             aimAssist.target = null;
             collidingHitbox = null;
-            playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Blue;
+            try { playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Blue; } catch { }
             //aimAssist.ResetRedReticule();
         }
     }

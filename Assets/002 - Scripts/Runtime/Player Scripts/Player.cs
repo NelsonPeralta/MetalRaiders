@@ -9,77 +9,14 @@ public class Player : MonoBehaviourPunCallbacks
     public delegate void PlayerEvent(Player playerProperties);
     public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken, OnPlayerRespawnEarly, OnPlayerRespawned;
 
-    [Header("Singletons")]
-    public SpawnManager spawnManager;
-    public AllPlayerScripts allPlayerScripts;
-    public PlayerManager playerManager;
-    public GameObjectPool gameObjectPool;
-    public WeaponPool weaponPool;
 
-    [Header("Models")]
-    public GameObject firstPersonModels;
-    public GameObject thirdPersonModels;
+    // public variables
+    #region
 
-    [Header("Other Scripts")]
-    public PlayerInventory playerInventory;
-    public CrosshairManager cScript;
-    public AimAssist aimAssist;
-    public PlayerSurroundings playerSurroundings;
-
-    [Header("Camera Options")]
-    [Tooltip("Default value for camera field of view (40 is recommended).")]
-    public float defaultFov = 60.0f;
-
-    [Header("Cameras")]
-    public Camera mainCamera;
-    public Camera gunCamera;
-    public Camera deathCamera;
-
-    public Vector3 mainOriginalCameraPosition;
-
-    [Header("Hitboxes")]
-    public List<GameObject> hitboxes = new List<GameObject>();
-
-    [Header("Player Voice")]
-    public AudioSource playerVoice;
-    public AudioClip sprintingClip;
-    public AudioClip[] meleeClips;
-    public AudioClip[] hurtClips;
-    public AudioClip[] deathClips;
-
-    public PhotonView PV;
-
-    [Header("Player Info")]
-    public bool needsHealthPack;
     public int controllerId
     {
         get { return GetComponent<PlayerController>().rid; }
     }
-
-    // Private Variables
-    int _maxHitPoints = 250;
-    int _maxHealthPoints = 100;
-    int _maxShieldPoints = 150;
-    float _hitPoints = 250;
-    int _meleeDamage = 150;
-    bool _isRespawning;
-    bool _isDead, _isHealing;
-    int _respawnTime = 5;
-
-    int _defaultRespawnTime = 4;
-
-    int _defaultHealingCountdown = 4;
-    [SerializeField] float _healingCountdown;
-    [SerializeField] float _shieldRechargeCountdown;
-
-    float _healthHealingIncrement = (100 * 2);
-    float _shieldHealingIncrement = (150 * 0.5f);
-
-    bool _hasArmor;
-
-    public GameObject bloodImpact;
-    Vector3 _impactPos;
-    public Transform weaponDropPoint;
     public bool hasArmor // Used to handle armor seller for Swarm Mode
     {
         get { return _hasArmor; }
@@ -98,7 +35,6 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    bool _hasMeleeUpgrade;
     public bool hasMeleeUpgrade
     {
         get { return _hasMeleeUpgrade; }
@@ -276,21 +212,7 @@ public class Player : MonoBehaviourPunCallbacks
             return nickName;
         }
     }
-    private void Awake()
-    {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-        {
-            hasArmor = true;
-        }
-        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        {
-            maxHitPoints = 100;
-            hitPoints = maxHitPoints;
-            needsHealthPack = true;
-        }
-    }
 
-    [SerializeField] string _nickName;
     public string nickName
     {
         get { return _nickName; }
@@ -310,12 +232,6 @@ public class Player : MonoBehaviourPunCallbacks
 
     public bool isMine { get { return GetComponent<PhotonView>().IsMine; } }
 
-    [PunRPC]
-    void UpdateNickName_RPC(string nn)
-    {
-        _nickName = nn;
-    }
-
     public int rid
     {
         get { return GetComponent<PlayerController>().rid; }
@@ -325,8 +241,110 @@ public class Player : MonoBehaviourPunCallbacks
     {
         get { return GameManager.instance.onlineTeam; }
     }
+    public int lastPID { get { return _lastPID; } set { _lastPID = value; } }
 
-    int lastPID;
+    #endregion
+
+    // serialized variables
+    #region
+
+
+    [SerializeField] string _nickName;
+    [SerializeField] int _lastPID;
+
+    #endregion
+
+    // private variables
+    #region
+
+    int _maxHitPoints = 250;
+    int _maxHealthPoints = 100;
+    int _maxShieldPoints = 150;
+    float _hitPoints = 250;
+    int _meleeDamage = 150;
+    bool _isRespawning;
+    bool _isDead, _isHealing;
+    int _respawnTime = 5;
+
+    int _defaultRespawnTime = 4;
+
+    int _defaultHealingCountdown = 4;
+
+    float _healthHealingIncrement = (100 * 2);
+    float _shieldHealingIncrement = (150 * 0.5f);
+
+    bool _hasArmor;
+    bool _hasMeleeUpgrade;
+
+    Vector3 _impactPos;
+
+    #endregion
+
+    [Header("Singletons")]
+    public SpawnManager spawnManager;
+    public AllPlayerScripts allPlayerScripts;
+    public PlayerManager playerManager;
+    public GameObjectPool gameObjectPool;
+    public WeaponPool weaponPool;
+
+    [Header("Models")]
+    public GameObject firstPersonModels;
+    public GameObject thirdPersonModels;
+
+    [Header("Other Scripts")]
+    public PlayerInventory playerInventory;
+    public CrosshairManager cScript;
+    public AimAssist aimAssist;
+    public PlayerSurroundings playerSurroundings;
+
+    [Header("Camera Options")]
+    [Tooltip("Default value for camera field of view (40 is recommended).")]
+    public float defaultFov = 60.0f;
+
+    [Header("Cameras")]
+    public Camera mainCamera;
+    public Camera gunCamera;
+    public Camera deathCamera;
+
+    public Vector3 mainOriginalCameraPosition;
+
+    [Header("Hitboxes")]
+    public List<GameObject> hitboxes = new List<GameObject>();
+
+    [Header("Player Voice")]
+    public AudioSource playerVoice;
+    public AudioClip sprintingClip;
+    public AudioClip[] meleeClips;
+    public AudioClip[] hurtClips;
+    public AudioClip[] deathClips;
+
+    public PhotonView PV;
+
+    [Header("Player Info")]
+    public bool needsHealthPack;
+
+    // Private Variables
+
+    [SerializeField] float _healingCountdown;
+    [SerializeField] float _shieldRechargeCountdown;
+
+
+    public GameObject bloodImpact;
+    public Transform weaponDropPoint;
+
+    private void Awake()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
+            hasArmor = true;
+        }
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            maxHitPoints = 100;
+            hitPoints = maxHitPoints;
+            needsHealthPack = true;
+        }
+    }
     private void Start()
     {
         lastPID = -1;
@@ -366,6 +384,15 @@ public class Player : MonoBehaviourPunCallbacks
     {
         HitPointsRecharge();
     }
+
+
+
+
+
+
+    // public functions
+    #region
+
     public bool CanBeDamaged()
     {
         if (hitPoints <= 0 || isDead || isRespawning)
@@ -406,6 +433,306 @@ public class Player : MonoBehaviourPunCallbacks
         PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource, isGroin);
     }
 
+    // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter
+    public void DropWeapon(WeaponProperties weapon, Vector3? offset = null)
+    {
+        if (!GetComponent<PhotonView>().IsMine || weapon.currentAmmo <= 0)
+            return;
+
+        WeaponProperties wp = null;
+
+        if (weapon.codeName == null)
+            return;
+
+        if (offset == null)
+            offset = new Vector3(0, 0, 0);
+
+        foreach (GameObject w in playerInventory.allWeaponsInInventory)
+            if (w.GetComponent<WeaponProperties>().codeName == weapon.codeName)
+                wp = w.GetComponent<WeaponProperties>();
+
+        try
+        {
+            GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
+            wo.name = wo.name.Replace("(Clone)", "");
+            wo.GetComponent<LootableWeapon>().ammo = wp.currentAmmo;
+            wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
+            wo.GetComponent<Rigidbody>().AddForce(weaponDropPoint.transform.forward * 200);
+
+            wp.currentAmmo = 0;
+            wp.spareAmmo = 0;
+        }
+        catch (System.Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning(e);
+#endif
+        }
+    }
+
+    public void PlayMeleeSound()
+    {
+        int randomSound = Random.Range(0, meleeClips.Length);
+        playerVoice.clip = meleeClips[randomSound];
+        playerVoice.Play();
+    }
+    public void LeaveRoomWithDelay()
+    {
+        if (controllerId == 0)
+            StartCoroutine(LeaveRoomWithDelay_Coroutine());
+    }
+
+    void SpawnRagdoll()
+    {
+        var ragdoll = FindObjectOfType<GameObjectPool>().SpawnPooledPlayerRagdoll();
+
+        // LAG with the Head and Chest, unknown cause
+        //////////////////////////////
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position = ragdollScript.Head.position;
+        //Debug.Log("Player Head Pos: " + ragdollScript.Head.position + "; Ragdoll head position: " + ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position);
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.position = ragdollScript.Chest.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = GetComponent<RagdollSpawn>().Hips.position;
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.rotation = ragdollScript.Head.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.rotation = ragdollScript.Chest.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = GetComponent<RagdollSpawn>().Hips.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = GetComponent<RagdollSpawn>().UpperArmLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = GetComponent<RagdollSpawn>().UpperArmRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = GetComponent<RagdollSpawn>().UpperArmLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = GetComponent<RagdollSpawn>().UpperArmRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = GetComponent<RagdollSpawn>().LowerArmLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = GetComponent<RagdollSpawn>().LowerArmRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = GetComponent<RagdollSpawn>().LowerArmLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = GetComponent<RagdollSpawn>().LowerArmRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = GetComponent<RagdollSpawn>().UpperLegLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = GetComponent<RagdollSpawn>().UpperLegRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = GetComponent<RagdollSpawn>().UpperLegLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = GetComponent<RagdollSpawn>().UpperLegRight.rotation;
+
+
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = GetComponent<RagdollSpawn>().LowerLegLeft.position;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = GetComponent<RagdollSpawn>().LowerLegRight.position;
+
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = GetComponent<RagdollSpawn>().LowerLegLeft.rotation;
+        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = GetComponent<RagdollSpawn>().LowerLegRight.rotation;
+
+        ragdoll.SetActive(true);
+    }
+
+    void HitPointsRecharge()
+    {
+        if (healingCountdown > 0)
+        {
+            healingCountdown -= Time.deltaTime;
+        }
+
+        if (healingCountdown <= 0 && hitPoints < maxHitPoints && !needsHealthPack)
+        {
+            if (!_isHealing)
+                OnPlayerShieldRechargeStarted?.Invoke(this);
+
+            _isHealing = true;
+            if (hitPoints < maxHealthPoints)
+                hitPoints += (Time.deltaTime * _healthHealingIncrement);
+            else
+                hitPoints += (Time.deltaTime * _shieldHealingIncrement);
+
+            if (hitPoints == maxHitPoints)
+                _isHealing = false;
+        }
+
+        if (shieldRechargeCountdown > 0)
+        {
+            shieldRechargeCountdown -= Time.deltaTime;
+        }
+    }
+
+    void Respawn()
+    {
+        if (!isRespawning)
+            return;
+        lastPID = -1;
+        OnPlayerRespawnEarly?.Invoke(this);
+
+        GetComponent<Movement>().ResetCharacterControllerProperties();
+        isRespawning = false;
+        GetComponent<PlayerController>().ScopeOut();
+        hitPoints = maxHitPoints;
+
+        mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
+        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
+        gunCamera.enabled = true;
+
+        StartCoroutine(MakeThirdPersonModelVisible());
+
+        playerInventory.grenades = 2;
+
+        //StartCoroutine(playerInventory.EquipStartingWeapon());
+        playerInventory.weaponsEquiped[1] = null;
+
+        hitboxesEnabled = true;
+
+        OnPlayerRespawned?.Invoke(this);
+    }
+
+    void PlayDeathSound()
+    {
+        for (int i = 0; i < deathClips.Length; i++)
+            if (playerVoice.isPlaying && playerVoice.clip == deathClips[i])
+                return;
+        int randomSound = Random.Range(0, deathClips.Length);
+        playerVoice.clip = deathClips[randomSound];
+        playerVoice.Play();
+    }
+
+    public void PlaySprintingSound()
+    {
+        PV.RPC("PlaySprintingSound_RPC", RpcTarget.All);
+    }
+    public void StopPlayingPlayerVoice()
+    {
+        PV.RPC("StopPlayingPlayerVoice_RPC", RpcTarget.All);
+    }
+
+
+    #endregion
+
+    // public coroutines
+    #region
+    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)
+    {
+        yield return new WaitForSeconds(delay);
+
+
+        int levelToLoad = 0;
+
+        if (PhotonNetwork.CurrentRoom.Name == Launcher.instance.quickMatchRoomName)
+            levelToLoad = Launcher.instance.waitingRoomLevelIndex;
+        else
+        {
+            Cursor.visible = true;
+            PhotonNetwork.LeaveRoom();
+        }
+        PhotonNetwork.LoadLevel(levelToLoad);
+    }
+
+    #endregion
+
+    // private functions
+    #region
+
+    #endregion
+
+    // private coroutines
+    #region
+
+
+    IEnumerator MidRespawnAction()
+    {
+        yield return new WaitForSeconds(_defaultRespawnTime / 2);
+        hitPoints = maxHitPoints;
+        Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint(controllerId);
+        transform.position = spawnPoint.position + new Vector3(0, 2, 0);
+        transform.rotation = spawnPoint.rotation;
+        isDead = false;
+    }
+
+
+
+    IEnumerator Respawn_Coroutine()
+    {
+        gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
+
+        GetComponent<PlayerController>().isShooting = false;
+
+        mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
+        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
+
+        gunCamera.enabled = false;
+
+        hitboxesEnabled = false;
+
+        SpawnRagdoll();
+        hitPoints = maxHitPoints;
+        yield return new WaitForSeconds(_defaultRespawnTime);
+        Respawn();
+    }
+
+    IEnumerator MakeThirdPersonModelVisible()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        hitboxesEnabled = true;
+    }
+
+    #endregion
+
+    // delegate functions
+    #region
+
+    void OnPlayerDeath_Delegate(Player playerProperties)
+    {
+        isRespawning = true;
+
+        thirdPersonModels.SetActive(false);
+        hitboxesEnabled = false;
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            SwarmManager.instance.livesLeft--;
+
+        //playerInventory.holsteredWeapon = null;
+        GetComponent<PlayerController>().DisableCrouch();
+        //StopShieldAlarmSound();
+        PlayDeathSound();
+        GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
+        StartCoroutine(Respawn_Coroutine());
+        StartCoroutine(MidRespawnAction());
+        DropWeapon(playerInventory.activeWeapon);
+        DropWeapon(playerInventory.holsteredWeapon, offset: new Vector3(0.5f, 0.5f, 0));
+    }
+
+    void OnPlayerDamaged_Delegate(Player player)
+    {
+        _isHealing = false;
+        if (!needsHealthPack)
+        {
+            healingCountdown = _defaultHealingCountdown;
+            shieldRechargeCountdown = _defaultHealingCountdown;
+            if (hitPoints <= maxHealthPoints)
+                shieldRechargeCountdown = _defaultHealingCountdown + ((maxHealthPoints - hitPoints) / _healthHealingIncrement);
+        }
+    }
+
+    void OnPlayerHealthDamaged_Delegate(Player player)
+    {
+        var a = Instantiate(bloodImpact, _impactPos, Quaternion.identity);
+        Destroy(a, 1);
+    }
+
+    #endregion
+
+    // rpc functions
+    #region
+    [PunRPC]
+    void UpdateNickName_RPC(string nn)
+    {
+        _nickName = nn;
+    }
+
     [PunRPC]
     void Damage_RPC(int damage)
     {
@@ -430,7 +757,7 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
                 {
-                        kfm.EnterNewFeed($"Mistakes were made ({nickName})");
+                    kfm.EnterNewFeed($"Mistakes were made ({nickName})");
                 }
             }
             lastPID = -1;
@@ -445,6 +772,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (hitPoints - damage <= 0)
             _isDead = true;
 
+        lastPID = playerWhoShotThisPlayerPhotonId;
         if (PV.IsMine)
         {
             GetComponent<PlayerController>().ScopeOut();
@@ -564,172 +892,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
         hitPoints = _newHealth;
     }
-    void HitPointsRecharge()
-    {
-        if (healingCountdown > 0)
-        {
-            healingCountdown -= Time.deltaTime;
-        }
 
-        if (healingCountdown <= 0 && hitPoints < maxHitPoints && !needsHealthPack)
-        {
-            if (!_isHealing)
-                OnPlayerShieldRechargeStarted?.Invoke(this);
-
-            _isHealing = true;
-            if (hitPoints < maxHealthPoints)
-                hitPoints += (Time.deltaTime * _healthHealingIncrement);
-            else
-                hitPoints += (Time.deltaTime * _shieldHealingIncrement);
-
-            if (hitPoints == maxHitPoints)
-                _isHealing = false;
-        }
-
-        if (shieldRechargeCountdown > 0)
-        {
-            shieldRechargeCountdown -= Time.deltaTime;
-        }
-    }
-    IEnumerator MidRespawnAction()
-    {
-        yield return new WaitForSeconds(_defaultRespawnTime / 2);
-        hitPoints = maxHitPoints;
-        Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint(controllerId);
-        transform.position = spawnPoint.position + new Vector3(0, 2, 0);
-        transform.rotation = spawnPoint.rotation;
-        isDead = false;
-    }
-
-    void SpawnRagdoll()
-    {
-        var ragdoll = FindObjectOfType<GameObjectPool>().SpawnPooledPlayerRagdoll();
-
-        // LAG with the Head and Chest, unknown cause
-        //////////////////////////////
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position = ragdollScript.Head.position;
-        //Debug.Log("Player Head Pos: " + ragdollScript.Head.position + "; Ragdoll head position: " + ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position);
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.position = ragdollScript.Chest.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = GetComponent<RagdollSpawn>().Hips.position;
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.rotation = ragdollScript.Head.rotation;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.rotation = ragdollScript.Chest.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = GetComponent<RagdollSpawn>().Hips.rotation;
-
-
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = GetComponent<RagdollSpawn>().UpperArmLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = GetComponent<RagdollSpawn>().UpperArmRight.position;
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = GetComponent<RagdollSpawn>().UpperArmLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = GetComponent<RagdollSpawn>().UpperArmRight.rotation;
-
-
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = GetComponent<RagdollSpawn>().LowerArmLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = GetComponent<RagdollSpawn>().LowerArmRight.position;
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = GetComponent<RagdollSpawn>().LowerArmLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = GetComponent<RagdollSpawn>().LowerArmRight.rotation;
-
-
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = GetComponent<RagdollSpawn>().UpperLegLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = GetComponent<RagdollSpawn>().UpperLegRight.position;
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = GetComponent<RagdollSpawn>().UpperLegLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = GetComponent<RagdollSpawn>().UpperLegRight.rotation;
-
-
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = GetComponent<RagdollSpawn>().LowerLegLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = GetComponent<RagdollSpawn>().LowerLegRight.position;
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = GetComponent<RagdollSpawn>().LowerLegLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = GetComponent<RagdollSpawn>().LowerLegRight.rotation;
-
-        ragdoll.SetActive(true);
-    }
-
-    IEnumerator Respawn_Coroutine()
-    {
-        gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
-
-        GetComponent<PlayerController>().isShooting = false;
-
-        mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
-        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
-
-        gunCamera.enabled = false;
-
-        hitboxesEnabled = false;
-
-        SpawnRagdoll();
-        hitPoints = maxHitPoints;
-        yield return new WaitForSeconds(_defaultRespawnTime);
-        Respawn();
-    }
-
-    void Respawn()
-    {
-        if (!isRespawning)
-            return;
-        OnPlayerRespawnEarly?.Invoke(this);
-
-        GetComponent<Movement>().ResetCharacterControllerProperties();
-        isRespawning = false;
-        GetComponent<PlayerController>().ScopeOut();
-        hitPoints = maxHitPoints;
-
-        mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
-        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
-        gunCamera.enabled = true;
-
-        StartCoroutine(MakeThirdPersonModelVisible());
-
-        playerInventory.grenades = 2;
-
-        //StartCoroutine(playerInventory.EquipStartingWeapon());
-        playerInventory.weaponsEquiped[1] = null;
-
-        hitboxesEnabled = true;
-
-        OnPlayerRespawned?.Invoke(this);
-    }
-
-    IEnumerator MakeThirdPersonModelVisible()
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        hitboxesEnabled = true;
-    }
-    void PlayHurtSound()
-    {
-        if (hitPoints <= 0)
-            return;
-        for (int i = 0; i < hurtClips.Length; i++)
-            if (playerVoice.isPlaying && playerVoice.clip == hurtClips[i])
-                return;
-        int randomSound = Random.Range(0, hurtClips.Length);
-        playerVoice.clip = hurtClips[randomSound];
-        playerVoice.Play();
-    }
-
-    void PlayDeathSound()
-    {
-        for (int i = 0; i < deathClips.Length; i++)
-            if (playerVoice.isPlaying && playerVoice.clip == deathClips[i])
-                return;
-        int randomSound = Random.Range(0, deathClips.Length);
-        playerVoice.clip = deathClips[randomSound];
-        playerVoice.Play();
-    }
-
-    public void PlaySprintingSound()
-    {
-        PV.RPC("PlaySprintingSound_RPC", RpcTarget.All);
-    }
 
     [PunRPC]
     public void PlaySprintingSound_RPC()
@@ -742,10 +905,6 @@ public class Player : MonoBehaviourPunCallbacks
         playerVoice.Play();
     }
 
-    public void StopPlayingPlayerVoice()
-    {
-        PV.RPC("StopPlayingPlayerVoice_RPC", RpcTarget.All);
-    }
 
     [PunRPC]
     public void StopPlayingPlayerVoice_RPC()
@@ -755,107 +914,5 @@ public class Player : MonoBehaviourPunCallbacks
         playerVoice.Stop();
     }
 
-    public void PlayMeleeSound()
-    {
-        int randomSound = Random.Range(0, meleeClips.Length);
-        playerVoice.clip = meleeClips[randomSound];
-        playerVoice.Play();
-    }
-    public void LeaveRoomWithDelay()
-    {
-        if (controllerId == 0)
-            StartCoroutine(LeaveRoomWithDelay_Coroutine());
-    }
-
-    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)
-    {
-        yield return new WaitForSeconds(delay);
-
-
-        int levelToLoad = 0;
-
-        if (PhotonNetwork.CurrentRoom.Name == Launcher.instance.quickMatchRoomName)
-            levelToLoad = Launcher.instance.waitingRoomLevelIndex;
-        else
-        {
-            Cursor.visible = true;
-            PhotonNetwork.LeaveRoom();
-        }
-        PhotonNetwork.LoadLevel(levelToLoad);
-    }
-
-    void OnPlayerDamaged_Delegate(Player player)
-    {
-        _isHealing = false;
-        if (!needsHealthPack)
-        {
-            healingCountdown = _defaultHealingCountdown;
-            shieldRechargeCountdown = _defaultHealingCountdown;
-            if (hitPoints <= maxHealthPoints)
-                shieldRechargeCountdown = _defaultHealingCountdown + ((maxHealthPoints - hitPoints) / _healthHealingIncrement);
-        }
-    }
-
-    void OnPlayerHealthDamaged_Delegate(Player player)
-    {
-        var a = Instantiate(bloodImpact, _impactPos, Quaternion.identity);
-        Destroy(a, 1);
-    }
-    void OnPlayerDeath_Delegate(Player playerProperties)
-    {
-        isRespawning = true;
-
-        thirdPersonModels.SetActive(false);
-        hitboxesEnabled = false;
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            SwarmManager.instance.livesLeft--;
-
-        //playerInventory.holsteredWeapon = null;
-        GetComponent<PlayerController>().DisableCrouch();
-        //StopShieldAlarmSound();
-        PlayDeathSound();
-        GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
-        StartCoroutine(Respawn_Coroutine());
-        StartCoroutine(MidRespawnAction());
-        DropWeapon(playerInventory.activeWeapon);
-        DropWeapon(playerInventory.holsteredWeapon, offset: new Vector3(0.5f, 0.5f, 0));
-    }
-
-    // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter
-    public void DropWeapon(WeaponProperties weapon, Vector3? offset = null)
-    {
-        if (!GetComponent<PhotonView>().IsMine || weapon.currentAmmo <= 0)
-            return;
-
-        WeaponProperties wp = null;
-
-        if (weapon.codeName == null)
-            return;
-
-        if (offset == null)
-            offset = new Vector3(0, 0, 0);
-
-        foreach (GameObject w in playerInventory.allWeaponsInInventory)
-            if (w.GetComponent<WeaponProperties>().codeName == weapon.codeName)
-                wp = w.GetComponent<WeaponProperties>();
-
-        try
-        {
-            GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
-            wo.name = wo.name.Replace("(Clone)", "");
-            wo.GetComponent<LootableWeapon>().ammo = wp.currentAmmo;
-            wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
-            wo.GetComponent<Rigidbody>().AddForce(weaponDropPoint.transform.forward * 200);
-
-            wp.currentAmmo = 0;
-            wp.spareAmmo = 0;
-        }
-        catch (System.Exception e)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning(e);
-#endif
-        }
-    }
+    #endregion
 }
