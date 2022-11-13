@@ -70,9 +70,11 @@ public class NetworkGameManager : MonoBehaviourPun
     {
         Debug.Log($"UpdateTeam_RPC: {t}, {playerNickName}");
 
-        PlayerMultiplayerMatchStats.Team te = (PlayerMultiplayerMatchStats.Team)System.Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), t);
-
-        GameManager.instance.onlineTeam = te;
+        if (GetComponent<PhotonView>().Owner.NickName == playerNickName)
+        {
+            PlayerMultiplayerMatchStats.Team te = (PlayerMultiplayerMatchStats.Team)System.Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), t);
+            GameManager.instance.onlineTeam = te;
+        }
     }
 
     [PunRPC]

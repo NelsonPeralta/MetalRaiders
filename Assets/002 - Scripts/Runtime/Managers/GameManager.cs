@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             _teamMode = value;
-            if(value == TeamMode.None)
+            if (value == TeamMode.None)
             {
                 onlineTeam = PlayerMultiplayerMatchStats.Team.None;
             }
@@ -113,6 +113,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             _onlineTeam = value;
+            try
+            {
+                FindObjectOfType<Launcher>().teamModeText.text = _onlineTeam.ToString();
+            }
+            catch { }
         }
     }
     //public string rootPlayerNickname

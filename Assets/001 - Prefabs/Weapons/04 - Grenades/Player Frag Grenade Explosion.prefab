@@ -9814,7 +9814,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
   damage: 250
-  radius: 7
+  radius: 5
   explosionPower: 1000
 --- !u!82 &7241414760208152368
 AudioSource:

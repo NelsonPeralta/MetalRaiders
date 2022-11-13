@@ -457,19 +457,6 @@ public class PlayerController : MonoBehaviourPun
                 //StartCoroutine(ThrowGrenade3PS());
             }
         }
-
-        if (isDualWielding)
-        {
-            if (rewiredPlayer.GetButton("Throw Grenade") && !dwLeftWP.isOutOfAmmo && !isReloadingLeft && !isShootingLeft)
-            {
-                Debug.Log("Is Shooting Left");
-                isShootingLeft = true;
-            }
-            else
-            {
-                isShootingLeft = false;
-            }
-        }
     }
 
     void CheckReloadButton()

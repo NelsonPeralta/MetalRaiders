@@ -24968,7 +24968,7 @@ GameObject:
   - component: {fileID: 6769089064358604720}
   - component: {fileID: 2953166181282599976}
   m_Layer: 8
-  m_Name: PlayerFragGrenade
+  m_Name: Player FragGrenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

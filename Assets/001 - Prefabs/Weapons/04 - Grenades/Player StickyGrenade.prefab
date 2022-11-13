@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 5732484404395741313}
   - component: {fileID: -5392217163931447814}
   m_Layer: 8
-  m_Name: PlayerStickyGrenade
+  m_Name: Player StickyGrenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

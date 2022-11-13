@@ -75,6 +75,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         get { return _playerListItemPrefab; }
     }
+
+    public TMP_Text teamModeText { get { return _teamModeText; } }
     void Awake()
     {
         if (instance)
