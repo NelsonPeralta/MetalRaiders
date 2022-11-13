@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
     [SerializeField] TeamMode _teamMode;
+    [SerializeField] PlayerMultiplayerMatchStats.Team _onlineTeam;
     // Public variables
     public GameMode gameMode
     {
@@ -115,7 +116,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             _onlineTeam = value;
             try
             {
-                FindObjectOfType<Launcher>().teamModeText.text = _onlineTeam.ToString();
+                FindObjectOfType<Launcher>().teamModeText.text = $"Team Mode: {teamMode}";
+                if (teamMode == TeamMode.Classic)
+                    FindObjectOfType<Launcher>().teamModeText.text += $" ({_onlineTeam.ToString()})";
             }
             catch { }
         }
@@ -125,7 +128,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     //    get { return GetComponent<PhotonView>()}
     //}
 
-    [SerializeField] PlayerMultiplayerMatchStats.Team _onlineTeam;
 
     // called zero
     void Awake()

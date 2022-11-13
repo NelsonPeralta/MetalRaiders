@@ -427,7 +427,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void ChangeTeamMode(string tm)
     {
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
-        _teamModeText.text = $"Team Mode: {tm}";
         UpdateTeams();
     }
 
@@ -457,11 +456,6 @@ public class Launcher : MonoBehaviourPunCallbacks
                 }
             }
         }
-
-        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-            _teamModeText.text = $"Team: {GameManager.instance.onlineTeam}";
-        else if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-            _teamModeText.text = $"Free For All";
     }
 
     //[PunRPC]
