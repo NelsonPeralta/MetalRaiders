@@ -427,6 +427,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void ChangeTeamMode(string tm)
     {
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
+
+        FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("UpdateTeamMode_RPC", RpcTarget.All, tm);
         UpdateTeams();
     }
 
@@ -452,7 +454,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                     if (kvp.Key % 2 == 0)
                         t = PlayerMultiplayerMatchStats.Team.Blue;
 
-                    NetworkGameManager.instance.UpdateTeam(t.ToString(), kvp.Value.ToString());
+                    NetworkGameManager.instance.UpdateTeam(t.ToString(), kvp.Value.NickName);
                 }
             }
         }
