@@ -10,16 +10,12 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     public delegate void PlayerMultiplayerStatsEvent(PlayerMultiplayerMatchStats playerMultiplayerStats);
     // Events
     public PlayerMultiplayerStatsEvent OnKillsChanged, OnDeathsChanged, OnHeadshotsChanged, OnKDRatioChanged;
-
     public enum Team { None, Red, Blue }
 
-    // private variables
-    [SerializeField] int _kills;
-    [SerializeField] int _deaths;
-    [SerializeField] int _headshots;
-    [SerializeField] float _kd;
-    [SerializeField] Team _team;
-
+    public string username
+    {
+        get { return GetComponent<Player>().nickName; }
+    }
     public int kills
     {
         get { return _kills; }
@@ -86,12 +82,30 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         }
     }
 
+    public Team team
+    {
+        get { return _team; }
+        set { NetworkGameManager.instance.UpdatePlayerTeam(value.ToString(), GetComponent<Player>().nickName); }
+    }
+
+    public Team networkTeam { get { return _team; } set { _team = value; } }
+
+    // private variables
+    [SerializeField] int _kills;
+    [SerializeField] int _deaths;
+    [SerializeField] int _headshots;
+    [SerializeField] float _kd;
+    [SerializeField] Team _team;
+
     private void Start()
     {
         this.OnKillsChanged += this.OnKillsChange;
         kills = 0;
         deaths = 0;
         headshots = 0;
+
+        if (GetComponent<Player>().isMine)
+            team = GameManager.instance.onlineTeam;
     }
 
     void OnKillsChange(PlayerMultiplayerMatchStats playerMultiplayerStats)

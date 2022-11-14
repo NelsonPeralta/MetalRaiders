@@ -4,14 +4,51 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 using System;
+using System.Linq;
 
 public class MultiplayerManager : MonoBehaviourPunCallbacks
 {
     // public variables
     public static MultiplayerManager instance;
 
-    [Header("Score")]
-    public int scoreToWin;
+    public int scoreToWin
+    {
+        get
+        {
+            if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                return 15;
+            else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                return 25;
+
+            return 5;
+        }
+    }
+    public int highestScore
+    {
+        get
+        {
+            int hs = 0;
+            if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+            {
+                foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
+                {
+                    if (pms.kills > hs)
+                        hs = pms.kills;
+                }
+            }
+            else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            {
+                hs = Math.Max(redTeamScore, blueTeamScore);
+            }
+
+            return hs;
+        }
+    }
+    public int redTeamScore { get { return _redTeamScore; } private set { _redTeamScore = value; } }
+    public int blueTeamScore { get { return _blueTeamScore; } private set { _blueTeamScore = value; } }
+
+    [SerializeField] int _redTeamScore;
+    [SerializeField] int _blueTeamScore;
 
     // private variables
     PhotonView PV;
@@ -37,69 +74,37 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     void OnSceneLoaded()
     {
         Scene currentScene = SceneManager.GetActiveScene();
-
-        if (currentScene.buildIndex > 0) // We are not in the menu
-        {
-            if (GameManager.instance.gameMode != GameManager.GameMode.Multiplayer)
-                return;
-
-            instance = this;
-
-            //if ((GameManager.instance.multiplayerMode == GameManager.MultiplayerMode.Slayer) || )
-            scoreToWin = 15;
-
-
-        }
-        else // We are in the menu
-        {
-            scoreToWin = 0;
-        }
     }
     public void AddPlayerKill(AddPlayerKillStruct struc)
     {
-        Debug.Log("AddPlayerKill");
         PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
         PlayerMultiplayerMatchStats losingPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
 
-        if (winningPlayerMS.kills >= scoreToWin)
+        if (highestScore >= scoreToWin)
             return;
-
-        Debug.Log($"Winning player: {winningPlayerMS.name}. Loser player: {losingPlayerMS.name}");
-
-        List<Player> allPlayers = new List<Player>();
-        foreach (Player pp in FindObjectsOfType<Player>())
-            allPlayers.Add(pp);
-
-
 
         if (winningPlayerMS != losingPlayerMS)
         {
             winningPlayerMS.kills++;
-            //foreach (Player pp in allPlayers)
-            //    if (pp.PV.IsMine && pp)
-            //    {
-            //        KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
-            //        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-            //        string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
 
-            //        killFeedManager.EnterNewFeed($"You took {damage} <sprite={damageSourceSpriteCode} color={colorCode}> damage");
-            //    }
+            if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Red)
+                redTeamScore++;
+            else if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Blue)
+                blueTeamScore++;
         }
         else
         {
-            //foreach (Player pp in allPlayers)
-            //    if (pp.PV.IsMine && pp)
-            //        pp.allPlayerScripts.killFeedManager.EnterNewFeed($"{losingPlayerMS.playerName} committed suicide");
+
         }
+
         losingPlayerMS.deaths++;
 
         CheckForEndGame();
     }
     public void CheckForEndGame()
     {
-        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-            if (pms.kills == scoreToWin)
-                EndGame();
+        if (highestScore == scoreToWin)
+            EndGame();
     }
     public void EndGame(bool saveXp = true)
     {

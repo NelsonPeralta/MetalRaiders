@@ -96,7 +96,7 @@ public class Movement : MonoBehaviour, IPunObservable
         {
             armorThirdPersonScript.gameObject.SetActive(true);
             armorThirdPersonScript.EnableSkinnedMeshes();
-            noArmorThirdPersonScript.DisableSkinnedMeshes();
+            //noArmorThirdPersonScript.DisableSkinnedMeshes();
             if (!PV.IsMine)
             {
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.gameObject.layer = 0;

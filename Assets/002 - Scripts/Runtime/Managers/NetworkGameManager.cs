@@ -61,6 +61,11 @@ public class NetworkGameManager : MonoBehaviourPun
     {
         GetComponent<PhotonView>().RPC("DamageIceChunk_RPC", RpcTarget.All, position, val);
     }
+
+    public void UpdatePlayerTeam(string t, string pn)
+    {
+        GetComponent<PhotonView>().RPC("UpdatePlayerTeam_RPC", RpcTarget.All, t, pn);
+    }
     #endregion
 
     // RPCs
@@ -183,4 +188,11 @@ public class NetworkGameManager : MonoBehaviourPun
         }
     }
 
+    [PunRPC]
+    void UpdatePlayerTeam_RPC(string t, string pn)
+    {
+        foreach(PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
+            if(pms.username == pn)
+                pms.networkTeam = (PlayerMultiplayerMatchStats.Team)System.Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), t);
+    }
 }
