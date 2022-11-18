@@ -60,7 +60,8 @@ public class Explosion : MonoBehaviour
                     OnObjectAdded?.Invoke(this);
                     try
                     {
-                        hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid);
+                        Debug.Log("Here");
+                        hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: "grenade");
                     }
                     catch { hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }

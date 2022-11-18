@@ -12,12 +12,13 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
+        Debug.Log("SIMPLER PLAYER HITBOX DAMAGE");
         player.PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        throw new System.NotImplementedException();
+        Damage(healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos: null);
     }
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
@@ -25,7 +26,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
-        //Debug.Log("PLAYER HITBOX DAMAGE");
+        Debug.Log("PLAYER HITBOX DAMAGE");
         try
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);

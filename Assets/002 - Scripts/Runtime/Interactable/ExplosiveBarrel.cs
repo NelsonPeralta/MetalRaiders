@@ -34,6 +34,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     [SerializeField] AudioClip _collisionAudioClip;
     [SerializeField] Vector3 _spawnPointPosition;
     [SerializeField] Quaternion _spawnPointRotation;
+    [SerializeField] int _lastPID;
 
     private void Awake()
     {
@@ -68,9 +69,10 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
         hitPoints -= damage;
     }
 
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
+    public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        throw new System.NotImplementedException();
+        hitPoints -= damage;
+        _lastPID = playerWhoShotThisPlayerPhotonId;
     }
 
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
@@ -84,6 +86,11 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     void OnExplode_Delegate(ExplosiveBarrel explosiveBarrel)
     {
         GameObject e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
+        try
+        {
+            e.GetComponent<Explosion>().player = GameManager.GetPlayerWithPhotonViewId(_lastPID);
+        }
+        catch { }
         gameObject.SetActive(false);
     }
     #endregion

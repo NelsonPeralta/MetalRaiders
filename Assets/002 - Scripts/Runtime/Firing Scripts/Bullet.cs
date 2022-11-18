@@ -241,7 +241,15 @@ public class Bullet : MonoBehaviourPunCallbacks
                         try
                         {
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
-                                finalHitDamageable.Damage(damage);
+                                try
+                                {
+                                    finalHitDamageable.Damage(damage, false, playerWhoShot.pid);
+
+                                }
+                                catch
+                                {
+                                    finalHitDamageable.Damage(damage);
+                                }
                         }
                         catch { }
                         GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
@@ -292,7 +300,16 @@ public class Bullet : MonoBehaviourPunCallbacks
                     {
                         try
                         {
-                            finalHitDamageable.Damage(damage);
+                            if (!finalHitObject.GetComponent<PlayerHitbox>())
+                                try
+                                {
+                                    finalHitDamageable.Damage(damage, false, playerWhoShot.pid);
+
+                                }
+                                catch
+                                {
+                                    finalHitDamageable.Damage(damage);
+                                }
                         }
                         catch { }
                         GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();

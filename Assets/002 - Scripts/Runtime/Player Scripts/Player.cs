@@ -740,28 +740,36 @@ public class Player : MonoBehaviourPunCallbacks
             hitPoints -= damage;
 
         if (lastPID > -1)
-        {
-            try
+            if (isDead)
             {
-                Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(lastPID);
-                string feed = $"{sourcePlayer.nickName} killed {nickName}";
-                foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lastPID, PV.ViewID, false));
+
+                try
                 {
-                    if (sourcePlayer != this)
-                        kfm.EnterNewFeed(feed);
-                    else
-                        kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+                    Debug.Log($"Simple Damage_RPC");
+                    Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(lastPID);
+                    string feed = $"{sourcePlayer.nickName} killed {nickName}";
+                    foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+                    {
+                        if (sourcePlayer != this)
+                            kfm.EnterNewFeed(feed);
+                        else
+                            kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+                    }
+                }
+                catch
+                {
+                    foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+                    {
+                        kfm.EnterNewFeed($"Mistakes were made ({nickName})");
+                    }
+                }
+                finally
+                {
+                    lastPID = -1;
                 }
             }
-            catch
-            {
-                foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
-                {
-                    kfm.EnterNewFeed($"Mistakes were made ({nickName})");
-                }
-            }
-            lastPID = -1;
-        }
     }
 
     [PunRPC]
@@ -772,6 +780,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (hitPoints - damage <= 0)
             _isDead = true;
 
+        Debug.Log($"Damage_RPC");
         lastPID = playerWhoShotThisPlayerPhotonId;
         if (PV.IsMine)
         {
@@ -786,13 +795,13 @@ public class Player : MonoBehaviourPunCallbacks
                 if (damageSource.Contains("grenade"))
                 {
                     string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
-                    killFeedManager.EnterNewFeed($"You took {damage} <sprite={damageSourceSpriteCode} color={colorCode}> damage");
+                    killFeedManager.EnterNewFeed($"You took {damage} <color={colorCode}>grenade damage");
                 }
-                else if (damageSource.Contains("melee"))
-                {
-                    string colorCode = KillFeedManager.killFeedColorCodeDict["yellow"];
-                    killFeedManager.EnterNewFeed($"You took {meleeDamage} <sprite={damageSourceSpriteCode} color={colorCode}> damage");
-                }
+                //else if (damageSource.Contains("melee"))
+                //{
+                //    string colorCode = KillFeedManager.killFeedColorCodeDict["yellow"];
+                //    killFeedManager.EnterNewFeed($"You took {meleeDamage} melee  damage");
+                //}
             }
             catch { }
         }
@@ -815,8 +824,13 @@ public class Player : MonoBehaviourPunCallbacks
 
             foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
             {
+                string f = $"{sourcePlayer.nickName} killed {nickName}";
+                kfm.EnterNewFeed(f);
+
+                continue;
                 if (this != sourcePlayer)
                 {
+
                     string feed = $"{sourcePlayer.nickName} killed";
                     if (kfm.GetComponent<Player>() != this)
                     {
@@ -886,7 +900,10 @@ public class Player : MonoBehaviourPunCallbacks
             }
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            {
                 MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoShotThisPlayerPhotonId, PV.ViewID, wasHeadshot));
+
+            }
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
         }

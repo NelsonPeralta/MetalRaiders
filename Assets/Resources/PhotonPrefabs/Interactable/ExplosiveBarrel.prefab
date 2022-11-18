@@ -121,6 +121,7 @@ MonoBehaviour:
   _collisionAudioClip: {fileID: 8300000, guid: 7b8d3fe1ccbe9bb469f46468002bf917, type: 3}
   _spawnPointPosition: {x: 0, y: 0, z: 0}
   _spawnPointRotation: {x: 0, y: 0, z: 0, w: 0}
+  _lastPID: 0
 --- !u!54 &4980083233162663823
 Rigidbody:
   m_ObjectHideFlags: 0
