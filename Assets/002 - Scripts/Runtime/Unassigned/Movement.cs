@@ -148,7 +148,12 @@ public class Movement : MonoBehaviour, IPunObservable
             return;
 
         if (pProperties.isDead || pProperties.isRespawning)
+        {
+            movement = Vector3.zero;
+            velocity = Vector3.zero;
             return;
+        }
+
 
         // Axis Calculation
         #region
@@ -219,7 +224,7 @@ public class Movement : MonoBehaviour, IPunObservable
 
         CheckDirection(direction.x, direction.z);
 
-        velocity.y += Mathf.Clamp( gravity * Time.deltaTime, -3f, 100);  
+        velocity.y += Mathf.Clamp(gravity * Time.deltaTime, -3f, 100);
 
         if (cController.gameObject.activeSelf)
             cController.Move(velocity * Time.deltaTime);
@@ -229,7 +234,7 @@ public class Movement : MonoBehaviour, IPunObservable
         CheckMovingForward();
         ControlAnimationSpeed();
 
-        if(this.direction == "Idle")
+        if (this.direction == "Idle")
         {
 
         }

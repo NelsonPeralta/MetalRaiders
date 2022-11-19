@@ -595,6 +595,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (!isRespawning)
             return;
+        try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         lastPID = -1;
         OnPlayerRespawnEarly?.Invoke(this);
 
@@ -664,6 +665,7 @@ public class Player : MonoBehaviourPunCallbacks
     IEnumerator MidRespawnAction()
     {
         yield return new WaitForSeconds(_defaultRespawnTime / 2);
+        GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         hitPoints = maxHitPoints;
         Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint(controllerId);
         transform.position = spawnPoint.position + new Vector3(0, 2, 0);
@@ -717,15 +719,9 @@ public class Player : MonoBehaviourPunCallbacks
 
         hitboxesEnabled = false;
 
-        try { SpawnRagdoll(); }
-        catch { }
-
-        try
-        {
-            StartCoroutine(Respawn_Coroutine());
-            StartCoroutine(MidRespawnAction());
-        }
-        catch { }
+        try { SpawnRagdoll(); }  catch { }
+        try { StartCoroutine(Respawn_Coroutine()); } catch { }
+        try { StartCoroutine(MidRespawnAction()); } catch { }
 
         DropWeapon(playerInventory.activeWeapon);
         DropWeapon(playerInventory.holsteredWeapon, offset: new Vector3(0.5f, 0.5f, 0));

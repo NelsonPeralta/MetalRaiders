@@ -46,6 +46,10 @@ public class ReticuleMagnetism : MonoBehaviour
         if (player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Keyboard ||
             player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Mouse)
             return;
+
+        if (player.GetComponent<PlayerController>().isAiming)
+            return;
+
         Ray();
         CalculateDirection();
         Magnetism();
