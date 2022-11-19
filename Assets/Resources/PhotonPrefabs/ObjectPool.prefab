@@ -57,7 +57,7 @@ MonoBehaviour:
   genericHitPrefab: {fileID: 8649884254006485902, guid: 8ea603131d195f2438c4eafba1c9f895,
     type: 3}
   ragdolls: []
-  ragdollPrefab: {fileID: 6960028148522978984, guid: 72d2b2848eccf4948b1fbeae6309ab7e,
+  ragdollPrefab: {fileID: 1404711780952444306, guid: 0601e9c46bd5e27429129bd7700998cd,
     type: 3}
   testingObjects: []
   testingObjectPrefab: {fileID: 4932562514326571089, guid: 58cf38eb4faf0504abb19237fdc480ef,

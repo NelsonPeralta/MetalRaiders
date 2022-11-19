@@ -43,13 +43,13 @@ public class SpawnPoint : MonoBehaviour
 
     void OnPLayerDeath(Player p)
     {
-        p.OnPlayerDeath -= OnPLayerDeath;
-        players.Remove(p);
+        //p.OnPlayerDeath -= OnPLayerDeath;
+        //players.Remove(p);
 
-        if (players.Count == 0)
-        {
-            GameObject wit = gameObject.transform.Find("Witness").gameObject;
-            wit.SetActive(false);
-        }
+        //if (players.Count == 0)
+        //{
+        //    GameObject wit = gameObject.transform.Find("Witness").gameObject;
+        //    wit.SetActive(false);
+        //}
     }
 }

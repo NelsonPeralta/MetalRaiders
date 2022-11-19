@@ -21,7 +21,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         Damage(healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos: null);
     }
 
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
     {
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
@@ -48,7 +48,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         }
         catch(System.Exception e) { Debug.LogWarning(e); }
 
-        player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource, isGroin);
+        player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
 
     }
 }

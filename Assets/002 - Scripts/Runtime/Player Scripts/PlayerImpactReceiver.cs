@@ -57,6 +57,9 @@ public class PlayerImpactReceiver : MonoBehaviour
 
     void Update()
     {
+        if (GetComponent<Player>().isDead || GetComponent<Player>().isRespawning)
+            impact = Vector3.zero;
+
         // apply the impact force:
         if (impact.magnitude > 0.2) character.Move(impact * Time.deltaTime);
         // consumes the impact energy each cycle:

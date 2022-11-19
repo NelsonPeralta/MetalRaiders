@@ -45,7 +45,7 @@ public class IceChunk : MonoBehaviour, IDamageable
         throw new System.NotImplementedException();
     }
 
-    public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
+    public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
     {
         hitPoints -= damage;
     }

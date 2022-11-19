@@ -19,4 +19,13 @@ public class RagdollPrefab : MonoBehaviour
     [Space(10)]
     public Transform ragdollLowerLegLeft;
     public Transform ragdollLowerLegRight;
+
+    public List<AudioClip> deathClips;
+
+    private void Start()
+    {
+        int randomSound = Random.Range(0, deathClips.Count);
+        GetComponent<AudioSource>().clip = deathClips[randomSound];
+        GetComponent<AudioSource>().Play();
+    }
 }

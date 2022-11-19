@@ -9813,7 +9813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  damage: 150
+  damage: 120
   radius: 5
   explosionPower: 1000
 --- !u!82 &7241414760208152368

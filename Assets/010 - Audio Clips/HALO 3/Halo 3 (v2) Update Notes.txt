@@ -1,0 +1,8 @@
+Halo 3 (v2):
+
+ADDED:
+Shields - Beat Down & Sniper Rifle Damage
+Weapons - Ammo Pick Up (All Weapons)
+Weapons - Beat Down (All Weapons)
+Weapons - Plasma Grenade & Spike Grenade Stick
+Weapons - Rocket Launcher Explosion

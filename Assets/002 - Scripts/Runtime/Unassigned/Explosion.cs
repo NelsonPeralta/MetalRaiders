@@ -38,6 +38,7 @@ public class Explosion : MonoBehaviour
 
             int characterControllerDivider = 3;
             float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
+            float disRatio = (1 - (hitDistance / radius));
             float calculatedPower = (explosionPower * (1 - (hitDistance / radius)));
             int calculatedDamage = (int)Mathf.Clamp((damage * (1 - (hitDistance / radius))), 0, damage);
 
@@ -47,6 +48,9 @@ public class Explosion : MonoBehaviour
 
             if (cc)
             {
+                Debug.Log(hitDistance);
+                Debug.Log(disRatio);
+                Debug.Log(calculatedDamage);
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
                 cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, calculatedPower / characterControllerDivider);
             }

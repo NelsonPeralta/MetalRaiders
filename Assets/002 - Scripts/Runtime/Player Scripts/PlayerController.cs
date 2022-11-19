@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviourPun
     public delegate void PlayerControllerEvent(PlayerController playerController);
     public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract,
         OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade,
-        OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop;
+        OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop, OnPlayerDeath;
 
     Vector3 _originalCharacterControllerCenter;
 
@@ -231,8 +231,8 @@ public class PlayerController : MonoBehaviourPun
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Sprint", true);
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Rifle", false);
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Pistol", false);
-        GetComponent<Player>().playerVoice.volume = 0.1f;
-        GetComponent<Player>().PlaySprintingSound();
+        //GetComponent<Player>().playerVoice.volume = 0.1f;
+        //GetComponent<Player>().PlaySprintingSound();
     }
 
     void DisableSprint()
@@ -1020,6 +1020,11 @@ public class PlayerController : MonoBehaviourPun
         //}
         //catch (System.Exception e) { Debug.Log(e); }
         //GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1, 2, 1));
+    }
+
+    public void OnDeath_Delegate(Player player)
+    {
+        isSprinting = false;
     }
 }
 

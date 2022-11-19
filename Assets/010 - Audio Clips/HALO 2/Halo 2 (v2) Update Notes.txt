@@ -1,0 +1,9 @@
+Halo 2 (v2):
+
+ADDED:
+Shields - Beat Down & Sniper Rifle Damage
+Weapons - Ammo Pick Up (All Weapons)
+Weapons - Beat Down (All Weapons)
+Weapons - Frag Grenade & Plasma Grenade Explosions
+Weapons - Plasma Grenade Stick
+Weapons - Rocket Launcher Explosion

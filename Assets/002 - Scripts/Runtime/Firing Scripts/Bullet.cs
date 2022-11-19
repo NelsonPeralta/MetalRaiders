@@ -6,6 +6,15 @@ using System;
 
 public class Bullet : MonoBehaviourPunCallbacks
 {
+    public Player player { get { return _player; } set { _player = value; _spawnDir = player.transform.position; } }
+    public Vector3 spawnDir
+    {
+        get { return _spawnDir; }
+    }
+
+    Player _player;
+    Vector3 _spawnDir;
+
     public PhotonView PV;
     [Header("Other Scripts")]
     // BulletProperties bProperties;
@@ -58,6 +67,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     int frameCounter;
     List<ObjectHit> objectsHit = new List<ObjectHit>();
+
     void Awake()
     {
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
@@ -183,6 +193,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
+            Debug.Log(_spawnDir);
+            Debug.Log(finalHitPoint);
+            _spawnDir = finalHitPoint - _spawnDir;
+
             try
             {
                 if (GameManager.instance.gameType.ToString().Contains("Team"))
@@ -219,7 +233,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 if (playerWhoShot.PV.IsMine)
                                 {
                                     if (weaponProperties.codeName != null)
-                                        finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
+                                        finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir:spawnDir, damageSource: weaponProperties.codeName, isGroin: wasNutshot);
                                     else
                                         finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
                                 }
@@ -289,7 +303,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         if (playerWhoShot.PV.IsMine)
                         {
                             if (weaponProperties.codeName != null)
-                                finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, weaponProperties.codeName, isGroin: wasNutshot);
+                                finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.codeName, isGroin: wasNutshot);
                             else
                                 finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
                         }

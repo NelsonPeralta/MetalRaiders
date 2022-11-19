@@ -11,6 +11,7 @@ public class PlayerMarker : MonoBehaviour
 
     [SerializeField] Player player;
     [SerializeField] Player targetPlayer;
+    [SerializeField] GameObject model;
     [SerializeField] int controllerIdTarget;
 
     [SerializeField] Material green;
@@ -18,6 +19,8 @@ public class PlayerMarker : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        player.OnPlayerDeath += OnPLayerDeath_Delegate;
+        player.OnPlayerRespawned += OnPlayerRespawn_Delegate;
         //if(controllerIdTarget == 0)
         //{
         //    gameObject.layer = 31 - (7 + targetPlayer.controllerId * 2);
@@ -75,4 +78,14 @@ public class PlayerMarker : MonoBehaviour
     //            }
     //    }
     //}
+
+    public void OnPLayerDeath_Delegate(Player player)
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    public void OnPlayerRespawn_Delegate(Player player)
+    {
+        GetComponent<MeshRenderer>().enabled = true;
+    }
 }

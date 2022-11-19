@@ -193,6 +193,22 @@ public class Player : MonoBehaviourPunCallbacks
         get { return _impactPos; }
     }
 
+    public Vector3? impactDir
+    {
+        protected set
+        {
+            try
+            {
+                _impactDir = (Vector3)value;
+            }
+            catch { }
+
+            if (value == Vector3.zero)
+                _deathByHeadshot = false;
+        }
+        get { return _impactDir; }
+    }
+
     public bool isLocal
     {
         get { return PV.IsMine; }
@@ -276,7 +292,9 @@ public class Player : MonoBehaviourPunCallbacks
     bool _hasArmor;
     bool _hasMeleeUpgrade;
 
+    bool _deathByHeadshot;
     Vector3 _impactPos;
+    Vector3 _impactDir;
 
     #endregion
 
@@ -379,6 +397,7 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerDeath += OnPlayerDeath_Delegate;
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
+        OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
     }
     private void Update()
     {
@@ -484,7 +503,10 @@ public class Player : MonoBehaviourPunCallbacks
 
     void SpawnRagdoll()
     {
-        var ragdoll = FindObjectOfType<GameObjectPool>().SpawnPooledPlayerRagdoll();
+        var ragdoll = Instantiate(FindObjectOfType<GameObjectPool>().ragdollPrefab);
+
+        ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
+        ragdoll.transform.rotation = transform.rotation;
 
         // LAG with the Head and Chest, unknown cause
         //////////////////////////////
@@ -492,45 +514,53 @@ public class Player : MonoBehaviourPunCallbacks
         //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position = ragdollScript.Head.position;
         //Debug.Log("Player Head Pos: " + ragdollScript.Head.position + "; Ragdoll head position: " + ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position);
         //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.position = ragdollScript.Chest.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = GetComponent<RagdollSpawn>().Hips.position;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = GetComponent<RagdollSpawn>().Hips.position;
 
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.rotation = ragdollScript.Head.rotation;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.rotation = ragdollScript.Chest.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = GetComponent<RagdollSpawn>().Hips.rotation;
-
-
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = GetComponent<RagdollSpawn>().UpperArmLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = GetComponent<RagdollSpawn>().UpperArmRight.position;
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = GetComponent<RagdollSpawn>().UpperArmLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = GetComponent<RagdollSpawn>().UpperArmRight.rotation;
+        ////ragdoll.GetComponent<RagdollPrefab>().ragdollHead.rotation = ragdollScript.Head.rotation;
+        ////ragdoll.GetComponent<RagdollPrefab>().ragdollChest.rotation = ragdollScript.Chest.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = GetComponent<RagdollSpawn>().Hips.rotation;
 
 
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = GetComponent<RagdollSpawn>().LowerArmLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = GetComponent<RagdollSpawn>().LowerArmRight.position;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = GetComponent<RagdollSpawn>().UpperArmLeft.position;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = GetComponent<RagdollSpawn>().UpperArmRight.position;
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = GetComponent<RagdollSpawn>().LowerArmLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = GetComponent<RagdollSpawn>().LowerArmRight.rotation;
-
-
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = GetComponent<RagdollSpawn>().UpperLegLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = GetComponent<RagdollSpawn>().UpperLegRight.position;
-
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = GetComponent<RagdollSpawn>().UpperLegLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = GetComponent<RagdollSpawn>().UpperLegRight.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = GetComponent<RagdollSpawn>().UpperArmLeft.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = GetComponent<RagdollSpawn>().UpperArmRight.rotation;
 
 
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = GetComponent<RagdollSpawn>().LowerLegLeft.position;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = GetComponent<RagdollSpawn>().LowerLegRight.position;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = GetComponent<RagdollSpawn>().LowerArmLeft.position;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = GetComponent<RagdollSpawn>().LowerArmRight.position;
 
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = GetComponent<RagdollSpawn>().LowerLegLeft.rotation;
-        ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = GetComponent<RagdollSpawn>().LowerLegRight.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = GetComponent<RagdollSpawn>().LowerArmLeft.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = GetComponent<RagdollSpawn>().LowerArmRight.rotation;
+
+
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = GetComponent<RagdollSpawn>().UpperLegLeft.position;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = GetComponent<RagdollSpawn>().UpperLegRight.position;
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = GetComponent<RagdollSpawn>().UpperLegLeft.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = GetComponent<RagdollSpawn>().UpperLegRight.rotation;
+
+
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = GetComponent<RagdollSpawn>().LowerLegLeft.position;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = GetComponent<RagdollSpawn>().LowerLegRight.position;
+
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = GetComponent<RagdollSpawn>().LowerLegLeft.rotation;
+        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = GetComponent<RagdollSpawn>().LowerLegRight.rotation;
 
         ragdoll.SetActive(true);
+
+
+        Debug.Log(impactDir);
+
+        if (!_deathByHeadshot)
+            ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 200);
+        else
+            ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 200);
     }
 
     void HitPointsRecharge()
@@ -585,18 +615,8 @@ public class Player : MonoBehaviourPunCallbacks
         playerInventory.weaponsEquiped[1] = null;
 
         hitboxesEnabled = true;
-
+        impactDir = Vector3.zero;
         OnPlayerRespawned?.Invoke(this);
-    }
-
-    void PlayDeathSound()
-    {
-        for (int i = 0; i < deathClips.Length; i++)
-            if (playerVoice.isPlaying && playerVoice.clip == deathClips[i])
-                return;
-        int randomSound = Random.Range(0, deathClips.Length);
-        playerVoice.clip = deathClips[randomSound];
-        playerVoice.Play();
     }
 
     public void PlaySprintingSound()
@@ -655,19 +675,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     IEnumerator Respawn_Coroutine()
     {
-        gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
 
-        GetComponent<PlayerController>().isShooting = false;
-
-        mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
-        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
-
-        gunCamera.enabled = false;
-
-        hitboxesEnabled = false;
-
-        SpawnRagdoll();
-        hitPoints = maxHitPoints;
         yield return new WaitForSeconds(_defaultRespawnTime);
         Respawn();
     }
@@ -687,20 +695,38 @@ public class Player : MonoBehaviourPunCallbacks
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
         isRespawning = true;
-
-        thirdPersonModels.SetActive(false);
         hitboxesEnabled = false;
+        thirdPersonModels.SetActive(false);
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             SwarmManager.instance.livesLeft--;
 
-        //playerInventory.holsteredWeapon = null;
         GetComponent<PlayerController>().DisableCrouch();
-        //StopShieldAlarmSound();
-        PlayDeathSound();
+        GetComponent<PlayerController>().isShooting = false;
         GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
-        StartCoroutine(Respawn_Coroutine());
-        StartCoroutine(MidRespawnAction());
+        gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
+
+        try
+        {
+            mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
+            mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
+            gunCamera.enabled = false;
+        }
+        catch { }
+        finally { gunCamera.enabled = false; }
+
+        hitboxesEnabled = false;
+
+        try { SpawnRagdoll(); }
+        catch { }
+
+        try
+        {
+            StartCoroutine(Respawn_Coroutine());
+            StartCoroutine(MidRespawnAction());
+        }
+        catch { }
+
         DropWeapon(playerInventory.activeWeapon);
         DropWeapon(playerInventory.holsteredWeapon, offset: new Vector3(0.5f, 0.5f, 0));
     }
@@ -773,12 +799,14 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
+    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
     {
         int damage = (int)(hitPoints - _newHealth);
         bool _isDead = false;
         if (hitPoints - damage <= 0)
             _isDead = true;
+
+        _deathByHeadshot = wasHeadshot;
 
         Debug.Log($"Damage_RPC");
         lastPID = playerWhoShotThisPlayerPhotonId;
@@ -807,7 +835,9 @@ public class Player : MonoBehaviourPunCallbacks
         }
         try
         {
+            Debug.Log(impactDir);
             this.impactPos = (Vector3)impactPos;
+            this.impactDir = (Vector3)impactDir;
         }
         catch (System.Exception e) { }
 

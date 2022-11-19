@@ -133,6 +133,7 @@ public class PlayerShooting : MonoBehaviourPun
                     bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
                 }
 
+                try { bullet.gameObject.GetComponent<Bullet>().player = playerController.GetComponent<Player>(); } catch { }
                 try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
                 bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
                 bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
