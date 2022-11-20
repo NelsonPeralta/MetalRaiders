@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Runtime.CompilerServices;
 
 public class PlayerHitbox : Hitbox, IDamageable
 {
@@ -22,12 +23,20 @@ public class PlayerHitbox : Hitbox, IDamageable
         Damage(healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos: null);
     }
 
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string sourceFilePath = "",
+        [CallerLineNumber] int sourceLineNumber = 0)
     {
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
         Debug.Log("PLAYER HITBOX DAMAGE");
+        Debug.Log("member name: " + memberName);
+        Debug.Log("source file path: " + sourceFilePath);
+        Debug.Log("source line number: " + sourceLineNumber);
+
         try
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
@@ -49,7 +58,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         }
         catch(System.Exception e) { Debug.LogWarning(e); }
 
-        player.Damage((int)player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin); ;
-        //player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
+        //player.Damage((int)player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin); ;
+        player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
     }
 }

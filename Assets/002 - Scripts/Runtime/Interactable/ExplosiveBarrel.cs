@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Runtime.CompilerServices;
 
 public class ExplosiveBarrel : MonoBehaviour, IDamageable
 {
@@ -75,7 +76,11 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
         _lastPID = playerWhoShotThisPlayerPhotonId;
     }
 
-    public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
+    public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string sourceFilePath = "",
+        [CallerLineNumber] int sourceLineNumber = 0)
     {
         hitPoints -= damage;
     }
