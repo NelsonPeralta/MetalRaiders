@@ -13,7 +13,8 @@ public class PlayerHitbox : Hitbox, IDamageable
             return;
 
         Debug.Log("SIMPLER PLAYER HITBOX DAMAGE");
-        player.PV.RPC("Damage_RPC", RpcTarget.All, damage);
+        player.Damage(damage);
+        //player.PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
@@ -48,7 +49,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         }
         catch(System.Exception e) { Debug.LogWarning(e); }
 
-        player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
-
+        player.Damage((int)player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin); ;
+        //player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
     }
 }

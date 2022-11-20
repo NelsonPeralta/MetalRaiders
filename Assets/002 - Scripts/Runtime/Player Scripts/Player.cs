@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -418,7 +419,10 @@ public class Player : MonoBehaviourPunCallbacks
             return false;
         return true;
     }
-    public void Damage(int damage)
+    public void Damage(int damage,
+         [CallerMemberName] string memberName = "",
+        [CallerFilePath] string sourceFilePath = "",
+        [CallerLineNumber] int sourceLineNumber = 0)
     {
         if (!PV.IsMine)
             return;
@@ -426,10 +430,19 @@ public class Player : MonoBehaviourPunCallbacks
         if (PV.IsMine)
             if (this.isDead || this.isRespawning || _hitPoints <= 0)
                 return;
+
+        Debug.Log("member name: " + memberName);
+        Debug.Log("source file path: " + sourceFilePath);
+        Debug.Log("source line number: " + sourceLineNumber);
 
         PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
+
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string sourceFilePath = "",
+        [CallerLineNumber] int sourceLineNumber = 0)
     {
         if (!PV.IsMine)
             return;
@@ -437,6 +450,10 @@ public class Player : MonoBehaviourPunCallbacks
         if (PV.IsMine)
             if (this.isDead || this.isRespawning || _hitPoints <= 0)
                 return;
+
+        Debug.Log("member name: " + memberName);
+        Debug.Log("source file path: " + sourceFilePath);
+        Debug.Log("source line number: " + sourceLineNumber);
 
         try
         { // Hit Marker Handling
@@ -460,7 +477,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
         catch { }
 
-        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, damageSource, isGroin);
+        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
     }
 
     // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter
@@ -806,7 +823,8 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
+    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, 
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
     {
         
 
