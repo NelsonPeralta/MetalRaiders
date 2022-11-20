@@ -5,6 +5,10 @@ using Photon.Pun;
 
 public class ScoreboardManager : MonoBehaviour
 {
+    [SerializeField] GameObject teamScoreboard;
+    [SerializeField] TMPro.TMP_Text redTeamText;
+    [SerializeField] TMPro.TMP_Text blueTeamText;
+
     [Header("Singletons")]
     public SpawnManager spawnManager;
     public AllPlayerScripts allPlayerScripts;
@@ -31,6 +35,7 @@ public class ScoreboardManager : MonoBehaviour
 
     public void OpenScoreboard()
     {
+        OpenTeamScoreboard();
         UpdateScoreboard();
         if (!scoreboardOpen)
         {
@@ -46,6 +51,7 @@ public class ScoreboardManager : MonoBehaviour
 
     public void CloseScoreboard()
     {
+        CloseTeamScoreboard();
         scoreboardUIGO.SetActive(false);
         scoreboardOpen = false;
     }
@@ -108,5 +114,25 @@ public class ScoreboardManager : MonoBehaviour
     {
         foreach (ScoreboardRow sr in scoreboardRows)
             sr.gameObject.SetActive(false);
+    }
+
+    void OpenTeamScoreboard()
+    {
+        if (GameManager.instance.teamMode != GameManager.TeamMode.Classic)
+            return;
+
+        try { teamScoreboard.SetActive(true); } catch { }
+
+        try
+        {
+            redTeamText.text = $"Red: {FindObjectOfType<MultiplayerManager>().redTeamScore}";
+            blueTeamText.text = $"Blue: {FindObjectOfType<MultiplayerManager>().blueTeamScore}";
+        }
+        catch { }
+    }
+
+    void CloseTeamScoreboard()
+    {
+        try { teamScoreboard.SetActive(false); } catch { }
     }
 }

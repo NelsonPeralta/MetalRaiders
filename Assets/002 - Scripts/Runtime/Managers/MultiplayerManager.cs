@@ -50,6 +50,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     [SerializeField] int _redTeamScore;
     [SerializeField] int _blueTeamScore;
 
+    int _initialRoomPlayercount;
+
     // private variables
     PhotonView PV;
 
@@ -67,6 +69,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PV = GetComponent<PhotonView>();
+
+        _initialRoomPlayercount = PhotonNetwork.CurrentRoom.PlayerCount;
 
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
     }
