@@ -125,13 +125,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             if (highestScore >= scoreToWin)
             {
-                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                 {
                     foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
                         if (pms.kills >= scoreToWin)
                             pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {pms.GetComponent<Player>().nickName} wins!");
                 }
-                else if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 {
                     if (redTeamScore >= scoreToWin)
                         pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! Red Team wins!");

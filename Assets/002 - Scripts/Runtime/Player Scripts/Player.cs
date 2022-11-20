@@ -265,7 +265,7 @@ public class Player : MonoBehaviourPunCallbacks
     // serialized variables
     #region
 
-
+    [SerializeField] PlayerMedals playerMedals;
     [SerializeField] string _nickName;
     [SerializeField] int _lastPID;
 
@@ -963,6 +963,21 @@ public class Player : MonoBehaviourPunCallbacks
             }
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
+
+            if (wasHeadshot)
+                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
+                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
+                        pm.SpawnHeadshotMedal();
+
+            if (damageSource == "melee")
+                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
+                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
+                        pm.SpawnMeleeMedal();
+
+            if (damageSource.Contains("grenade"))
+                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
+                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
+                        pm.SpawnGrenadeMedal();
         }
         hitPoints = _newHealth;
     }
