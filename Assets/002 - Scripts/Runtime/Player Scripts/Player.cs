@@ -719,7 +719,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         hitboxesEnabled = false;
 
-        try { SpawnRagdoll(); }  catch { }
+        try { SpawnRagdoll(); } catch { }
         try { StartCoroutine(Respawn_Coroutine()); } catch { }
         try { StartCoroutine(MidRespawnAction()); } catch { }
 
@@ -797,6 +797,13 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
     {
+        if (!PV.IsMine)
+            return;
+
+        if (PV.IsMine)
+            if (this.isDead || this.isRespawning || _hitPoints <= 0)
+                return;
+
         int damage = (int)(hitPoints - _newHealth);
         bool _isDead = false;
         if (hitPoints - damage <= 0)

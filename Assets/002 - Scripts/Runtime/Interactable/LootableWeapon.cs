@@ -73,15 +73,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     [SerializeField] NetworkWeaponSpawnPoint _networkWeaponSpawnPoint;
 
     [SerializeField] Vector3 _spawnPointPosition;
+    [SerializeField] float _ttl;
 
     Quaternion _spawnPointRotation;
-    float _ttl;
-
-    private void Awake()
-    {
-        _ttl = 60;
-    }
-
     private void OnEnable()
     {
         GetComponent<Rigidbody>().velocity *= 0;
