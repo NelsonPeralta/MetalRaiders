@@ -144,7 +144,7 @@ public class Movement : MonoBehaviour, IPunObservable
         isGrounded = groundCheckScript.isGrounded;
         CalculateVelocity();
 
-        if (!pController.PV.IsMine || pController.pauseMenuOpen)
+        if (!pController.PV.IsMine)
             return;
 
         if (pProperties.isDead || pProperties.isRespawning)
@@ -154,20 +154,30 @@ public class Movement : MonoBehaviour, IPunObservable
             return;
         }
 
+        if (isGrounded && velocity.y < 0)
+            velocity.y = -3f;
+
+        velocity.y += Mathf.Clamp(gravity * Time.deltaTime, -3f, 100);
+
+        if (cController.gameObject.activeSelf)
+            cController.Move(velocity * Time.deltaTime);
 
         // Axis Calculation
         #region
-        float xAxis = player.GetAxis("Move Horizontal");
-        float zAxis = player.GetAxis("Move Vertical");
-        Vector3 direction = new Vector3(xAxis, 0f, zAxis).normalized;
-        xDirection = direction.x;
-        zDirection = direction.z;
+        float xAxis = 0;
+        float zAxis = 0;
+        Vector3 direction = Vector3.zero;
+
+        if (!pController.pauseMenuOpen)
+        {
+            xAxis = player.GetAxis("Move Horizontal");
+            zAxis = player.GetAxis("Move Vertical");
+            direction = new Vector3(xAxis, 0f, zAxis).normalized;
+            xDirection = direction.x;
+            zDirection = direction.z;
+        }
         #endregion
 
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -3f;
-        }
 
         // Walk animation
         #region
@@ -184,9 +194,9 @@ public class Movement : MonoBehaviour, IPunObservable
         else
             try { pController.weaponAnimator.SetBool("Walk", false); } catch { }
         #endregion
-
-        if (isOnLadder)
-            speed = defaultSpeed / 8;
+        if (!pController.pauseMenuOpen)
+            if (isOnLadder)
+                speed = defaultSpeed / 8;
 
         // Movement
         #region
@@ -221,23 +231,15 @@ public class Movement : MonoBehaviour, IPunObservable
         }
         #endregion
 
+        if (pController.pauseMenuOpen)
+            return;
 
         CheckDirection(direction.x, direction.z);
-
-        velocity.y += Mathf.Clamp(gravity * Time.deltaTime, -3f, 100);
-
-        if (cController.gameObject.activeSelf)
-            cController.Move(velocity * Time.deltaTime);
 
         Jump();
         CrouchJump();
         CheckMovingForward();
         ControlAnimationSpeed();
-
-        if (this.direction == "Idle")
-        {
-
-        }
     }
 
     void CalculateVelocity()
