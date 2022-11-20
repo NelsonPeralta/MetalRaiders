@@ -420,12 +420,23 @@ public class Player : MonoBehaviourPunCallbacks
     }
     public void Damage(int damage)
     {
+        if (!PV.IsMine)
+            return;
+
+        if (PV.IsMine)
+            if (this.isDead || this.isRespawning || _hitPoints <= 0)
+                return;
+
         PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, string damageSource = null, bool isGroin = false)
     {
-        if (hitPoints <= 0 || isDead || isRespawning)
+        if (!PV.IsMine)
             return;
+
+        if (PV.IsMine)
+            if (this.isDead || this.isRespawning || _hitPoints <= 0)
+                return;
 
         try
         { // Hit Marker Handling
@@ -797,12 +808,7 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
     {
-        if (!PV.IsMine)
-            return;
-
-        if (PV.IsMine)
-            if (this.isDead || this.isRespawning || _hitPoints <= 0)
-                return;
+        
 
         int damage = (int)(hitPoints - _newHealth);
         bool _isDead = false;
