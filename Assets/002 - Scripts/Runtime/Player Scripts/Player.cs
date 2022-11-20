@@ -433,7 +433,7 @@ public class Player : MonoBehaviourPunCallbacks
         PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
 
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId,
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
@@ -811,10 +811,10 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId, 
+    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId,
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
     {
-        
+
 
         int damage = (int)(hitPoints - _newHealth);
         bool _isDead = false;
@@ -965,7 +965,8 @@ public class Player : MonoBehaviourPunCallbacks
             if (damageSource.Contains("grenade"))
                 foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
                     if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
-                        pm.SpawnGrenadeMedal();
+                        if (playerWhoShotThisPlayerPhotonId != this.pid)
+                            pm.SpawnGrenadeMedal();
         }
         hitPoints = _newHealth;
     }
