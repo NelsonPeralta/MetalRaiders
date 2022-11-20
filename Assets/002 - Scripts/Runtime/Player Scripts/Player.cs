@@ -80,8 +80,15 @@ public class Player : MonoBehaviourPunCallbacks
                     OnPlayerShieldDamaged?.Invoke(this);
                 }
 
+                Debug.Log(previousValue);
+                Debug.Log(value);
+                Debug.Log(maxHealthPoints);
+
                 if (value <= maxHealthPoints && previousValue > maxHealthPoints)
+                {
+                    Debug.Log($"{nickName} OnPlayerShieldBroken");
                     OnPlayerShieldBroken?.Invoke(this);
+                }
             }
 
             if (value < maxHealthPoints && previousValue <= maxHealthPoints && previousValue > value)

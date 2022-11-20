@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMedals : MonoBehaviour
 {
-    public Player player { get { return GetComponent<Player>(); } }
+    public Player player { get { return transform.root.GetComponent<Player>(); } }
 
     [SerializeField] Transform grid;
     [SerializeField] Transform headshotMedalPrefab;
