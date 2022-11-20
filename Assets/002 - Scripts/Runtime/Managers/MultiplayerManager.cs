@@ -122,7 +122,27 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             // return will stop this method, break will stop the loop, continue will stop the current iteration
             if (!pp.PV.IsMine)
                 continue;
-            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {winningEntity} wins.");
+
+            if (highestScore >= scoreToWin)
+            {
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                {
+                    foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                        if (pms.kills >= scoreToWin)
+                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {pms.GetComponent<Player>().nickName} wins!");
+                }
+                else if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                {
+                    if (redTeamScore >= scoreToWin)
+                        pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! Red Team wins!");
+                    else if (blueTeamScore >= scoreToWin)
+                        pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! Blue Team wins!");
+                }
+            }
+            else
+            {
+                pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER!");
+            }
 
             if (saveXp)
             {
