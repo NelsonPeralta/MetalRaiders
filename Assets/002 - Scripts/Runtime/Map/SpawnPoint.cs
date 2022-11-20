@@ -20,6 +20,7 @@ public class SpawnPoint : MonoBehaviour
                     wit.SetActive(true);
                 }
 
+                other.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
                 other.GetComponent<Player>().OnPlayerDeath += OnPLayerDeath;
                 players.Add(other.GetComponent<Player>());
             }
@@ -43,8 +44,12 @@ public class SpawnPoint : MonoBehaviour
 
     void OnPLayerDeath(Player p)
     {
-        //p.OnPlayerDeath -= OnPLayerDeath;
-        //players.Remove(p);
+        try
+        {
+            p.OnPlayerDeath -= OnPLayerDeath;
+            players.Remove(p);
+        }
+        catch { }
 
         //if (players.Count == 0)
         //{

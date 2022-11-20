@@ -13,22 +13,19 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnHeadshotMedal()
     {
-        Transform h = Instantiate(headshotMedalPrefab);
-        h.parent = grid;
+        Transform h = Instantiate(headshotMedalPrefab, grid);
         h.SetAsFirstSibling();
     }
 
     public void SpawnMeleeMedal()
     {
-        Transform h = Instantiate(meleeMedalPrefab);
-        h.parent = grid;
+        Transform h = Instantiate(meleeMedalPrefab, grid);
         h.SetAsFirstSibling();
     }
 
     public void SpawnGrenadeMedal()
     {
-        Transform h = Instantiate(grenadeMedalPrefab);
-        h.parent = grid;
+        Transform h = Instantiate(grenadeMedalPrefab, grid);
         h.SetAsFirstSibling();
     }
 }

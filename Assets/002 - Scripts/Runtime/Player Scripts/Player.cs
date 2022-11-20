@@ -80,15 +80,8 @@ public class Player : MonoBehaviourPunCallbacks
                     OnPlayerShieldDamaged?.Invoke(this);
                 }
 
-                Debug.Log(previousValue);
-                Debug.Log(value);
-                Debug.Log(maxHealthPoints);
-
                 if (value <= maxHealthPoints && previousValue > maxHealthPoints)
-                {
-                    Debug.Log($"{nickName} OnPlayerShieldBroken");
                     OnPlayerShieldBroken?.Invoke(this);
-                }
             }
 
             if (value < maxHealthPoints && previousValue <= maxHealthPoints && previousValue > value)
@@ -426,18 +419,13 @@ public class Player : MonoBehaviourPunCallbacks
             return false;
         return true;
     }
+
+    // Used to pass melee damage
     public void Damage(int damage,
          [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        if (!PV.IsMine)
-            return;
-
-        if (PV.IsMine)
-            if (this.isDead || this.isRespawning || _hitPoints <= 0)
-                return;
-
         Debug.Log("member name: " + memberName);
         Debug.Log("source file path: " + sourceFilePath);
         Debug.Log("source line number: " + sourceLineNumber);
@@ -451,13 +439,6 @@ public class Player : MonoBehaviourPunCallbacks
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        if (!PV.IsMine)
-            return;
-
-        if (PV.IsMine)
-            if (this.isDead || this.isRespawning || _hitPoints <= 0)
-                return;
-
         Debug.Log("member name: " + memberName);
         Debug.Log("source file path: " + sourceFilePath);
         Debug.Log("source line number: " + sourceLineNumber);

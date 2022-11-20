@@ -9813,9 +9813,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
+  damageSource: rocket
   damage: 500
   radius: 6
-  explosionPower: 1000
+  explosionPower: 800
 --- !u!82 &7241414760208152368
 AudioSource:
   m_ObjectHideFlags: 0

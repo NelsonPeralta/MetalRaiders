@@ -102,6 +102,8 @@ public class PlayerCamera : MonoBehaviour
                     _xAxisInput = 0;
                 if (Mathf.Abs(yAxisInput) <= 0.1f)
                     _yAxisInput = 0;
+
+                _yAxisInput *= 0.75f;
             }
 
             mouseX = _xAxisInput * mouseSensitivity * Time.deltaTime + HorizontalSway();

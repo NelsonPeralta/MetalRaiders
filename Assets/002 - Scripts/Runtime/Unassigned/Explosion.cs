@@ -10,6 +10,7 @@ public class Explosion : MonoBehaviour
     public Player player { get { return _player; } set { _player = value; } }
 
     [SerializeField] Player _player;
+    [SerializeField] string damageSource;
 
     [Header("Settings")]
     public float damage; // Determined in Weapon Properties Script
@@ -66,7 +67,7 @@ public class Explosion : MonoBehaviour
                     try
                     {
                         if (player.isMine)
-                            hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: "grenade");
+                            hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: this.damageSource);
                     }
                     catch { if (hit.GetComponent<PlayerHitbox>().player.isMine) hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }

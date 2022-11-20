@@ -36,7 +36,11 @@ public class Melee : MonoBehaviour
         Player player = (Player)other.GetComponent<Player>();
 
         if (!playersInMeleeZone.Contains(player) && player != this.player)
+        {
             playersInMeleeZone.Add(player);
+            player.OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
+            player.OnPlayerDeath += OnForeignPlayerDeath_Delegate;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -58,12 +62,17 @@ public class Melee : MonoBehaviour
             for (int i = 0; i < playersInMeleeZone.Count; i++)
             {
                 Player playerToDamage = playersInMeleeZone[i];
-                if (playerToDamage.hitPoints < player.meleeDamage)
+                if (playerToDamage.hitPoints < player.meleeDamage || playerToDamage.isDead || playerToDamage.isRespawning)
                     playersInMeleeZone.Remove(playerToDamage);
-
-                playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee");
+                else
+                    playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee");
             }
         }
+    }
+
+    void OnForeignPlayerDeath_Delegate(Player player)
+    {
+        playersInMeleeZone.Remove(player);
     }
 
     void OnPlayerDeadth_Delegate(Player player)

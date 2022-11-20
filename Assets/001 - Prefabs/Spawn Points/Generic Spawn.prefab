@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 926446499709091166}
   - component: {fileID: 926446499709091165}
   - component: {fileID: 16571891261673449}
-  m_Layer: 3
+  m_Layer: 17
   m_Name: Generic Spawn
   m_TagString: Spawn Point
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ Transform:
   - {fileID: 7712944106289943776}
   - {fileID: 5338454617668365945}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &926446499709091165
 MonoBehaviour:
@@ -144,7 +144,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 20
+  m_Radius: 25
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &5559020412961890716
 GameObject:

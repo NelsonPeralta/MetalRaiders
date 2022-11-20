@@ -111,7 +111,7 @@ public class PlayerShield : MonoBehaviour
         HideThirdPersionShieldElectricityModel();
     }
 
-    void PlayShieldDownSound(Player player)
+    public void PlayShieldDownSound(Player player)
     {
         shieldAudioSource.clip = shieldDownClip;
         shieldAudioSource.Play();
