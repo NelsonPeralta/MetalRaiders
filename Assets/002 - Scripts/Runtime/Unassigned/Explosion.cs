@@ -62,12 +62,14 @@ public class Explosion : MonoBehaviour
                 {
                     objectsHit.Add(playerHit);
                     OnObjectAdded?.Invoke(this);
-                    try
-                    {
-                        Debug.Log("Here");
-                        hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: "grenade");
-                    }
-                    catch { hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
+
+                    if (player.isMine)
+                        try
+                        {
+                            Debug.Log("Here");
+                            hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: "grenade");
+                        }
+                        catch { hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }
             }
             else if (hit.GetComponent<IDamageable>() != null)
