@@ -1009,6 +1009,8 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
+        GetComponentInChildren<PlayerMedals>().spree++;
+
         //try
         //{
         //    //WebManager.webManagerInstance.SaveMultiplayerStats(GetComponent<PlayerMultiplayerMatchStats>());
