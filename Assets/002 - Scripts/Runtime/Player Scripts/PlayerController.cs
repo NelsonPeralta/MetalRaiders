@@ -1009,7 +1009,7 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        GetComponentInChildren<PlayerMedals>().spree++;
+        GetComponentInChildren<PlayerMedals>().kills++;
 
         //try
         //{

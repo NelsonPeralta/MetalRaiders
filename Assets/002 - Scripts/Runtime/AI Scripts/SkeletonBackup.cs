@@ -212,7 +212,6 @@ public class SkeletonBackup : MonoBehaviour
 
         motionTrackerDot.SetActive(false);
 
-        lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
         TransferPoints();
         DropRandomWeapon();
         //DropRandomAmmoPack();

@@ -156,7 +156,6 @@ public class WatcherBackup : MonoBehaviour
 
         motionTrackerDot.SetActive(false);
 
-        lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
         //TransferPoints();
         //DropRandomAmmoPack();
         DropRandomWeapon();

@@ -418,7 +418,6 @@ public class BlackKnight : MonoBehaviour
 
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
             TransferPoints();
         }
         DropExtraLife();

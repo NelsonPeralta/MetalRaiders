@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerMedal : MonoBehaviour
 {
+    public AudioClip clip { get { return _clip; } }
+    [SerializeField] AudioClip _clip;
     private void Start()
     {
-        Destroy(gameObject, 4);
+        Destroy(gameObject, 6);
     }
 }

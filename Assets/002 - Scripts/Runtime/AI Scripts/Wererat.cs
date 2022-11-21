@@ -237,7 +237,6 @@ public class Wererat : MonoBehaviour
 
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.gameObject.GetComponent<Announcer>().AddToMultiKill();
             TransferPoints();
         }
         DropRandomAmmoPack();

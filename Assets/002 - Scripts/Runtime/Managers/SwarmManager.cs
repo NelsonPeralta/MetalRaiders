@@ -844,7 +844,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (saveXp)
             {
-                pp.allPlayerScripts.announcer.PlayGameOverClip();
                 pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER!");
                 WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>());
                 pp.LeaveRoomWithDelay();

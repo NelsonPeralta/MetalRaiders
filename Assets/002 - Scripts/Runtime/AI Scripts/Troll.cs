@@ -217,7 +217,6 @@ public class Troll : MonoBehaviour
 
         motionTrackerDot.SetActive(false);
 
-        lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
         TransferPoints();
         //DropRandomAmmoPack();
         DropRandomWeapon();

@@ -978,7 +978,7 @@ public class Player : MonoBehaviourPunCallbacks
                 foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
                     if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
                         if (playerWhoShotThisPlayerPhotonId != this.pid)
-                            pm.spree++;
+                            pm.kills++;
             }
         }
         hitPoints = _newHealth;

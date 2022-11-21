@@ -305,7 +305,6 @@ public class Skeleton : MonoBehaviour
         motionTrackerDot.SetActive(false);
         if (lastPlayerWhoShot)
         {
-            lastPlayerWhoShot.GetComponent<AllPlayerScripts>().announcer.AddToMultiKill();
             TransferPoints();
             lastPlayerWhoShot.GetComponent<PlayerSwarmMatchStats>().kills++;
         }
