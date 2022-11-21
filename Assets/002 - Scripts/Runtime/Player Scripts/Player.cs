@@ -960,6 +960,12 @@ public class Player : MonoBehaviourPunCallbacks
                         pm.SpawnHeadshotMedal();
 
             }
+            else if (isGroin)
+            {
+                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
+                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
+                        pm.SpawnNutshotMedal();
+            }
             else if (damageSource == "melee")
             {
                 foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
