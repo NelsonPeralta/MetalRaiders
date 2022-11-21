@@ -952,21 +952,34 @@ public class Player : MonoBehaviourPunCallbacks
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
 
+
             if (wasHeadshot)
+            {
                 foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
                     if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
                         pm.SpawnHeadshotMedal();
 
-            if (damageSource == "melee")
+            }
+            else if (damageSource == "melee")
+            {
                 foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
                     if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
                         pm.SpawnMeleeMedal();
-
-            if (damageSource.Contains("grenade"))
+            }
+            else if (damageSource.Contains("grenade"))
+            {
                 foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
                     if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
                         if (playerWhoShotThisPlayerPhotonId != this.pid)
                             pm.SpawnGrenadeMedal();
+            }
+            else
+            {
+                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
+                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
+                        if (playerWhoShotThisPlayerPhotonId != this.pid)
+                            pm.spree++;
+            }
         }
         hitPoints = _newHealth;
     }

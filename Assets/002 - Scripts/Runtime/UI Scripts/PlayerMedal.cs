@@ -6,6 +6,6 @@ public class PlayerMedal : MonoBehaviour
 {
     private void Start()
     {
-        Destroy(gameObject, 5);
+        Destroy(gameObject, 4);
     }
 }
