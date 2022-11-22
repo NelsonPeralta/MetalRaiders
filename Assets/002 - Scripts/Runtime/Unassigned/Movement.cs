@@ -95,10 +95,13 @@ public class Movement : MonoBehaviour, IPunObservable
     public float xDirection;
     public float zDirection;
 
-    [SerializeField] float _testXSpeed, _testYSpeed;
-    float _maxTestSpeed = 10;
-    float _acceleration = 2f;
-    float _deceleration = 2f;
+    float _defaultMaxSpeed = 5;
+
+    [SerializeField] float _testXSpeed, _testZSpeed;
+    [SerializeField] float _maxXSpeed;
+    [SerializeField] float _maxZSpeed;
+    float _acceleration = 4f;
+    float _deceleration = 5f;
 
     float _xDeadzone = 0.2f;
     float _zDeadzone = 0.2f;
@@ -126,7 +129,9 @@ public class Movement : MonoBehaviour, IPunObservable
     }
     void Start()
     {
-        _maxTestSpeed = 10;
+        _defaultMaxSpeed = 1.25f;
+        _maxXSpeed = 1.25f;
+        _maxZSpeed = 1.25f;
 
 
         gravity = defaultGravity;
@@ -198,30 +203,42 @@ public class Movement : MonoBehaviour, IPunObservable
                 zAxis = 0;
 
 
-
-            direction = new Vector3(xAxis, 0f, zAxis).normalized;
-            xDirection = direction.x;
-            zDirection = direction.z;
-
-
-
-
-
+            // DO NOT TOUCH
+            {
+                // Returns a Vector3 with whole numbers (no floats). Used for animation
+                direction = new Vector3(xAxis, 0f, zAxis).normalized;
+                xDirection = direction.x;
+                zDirection = direction.z;
+            }
 
 
 
-
-
+            _maxXSpeed = Mathf.Abs(xAxis * _defaultMaxSpeed);
+            _maxZSpeed = Mathf.Abs(zAxis * _defaultMaxSpeed);
 
 
 
 
 
 
-            if (xDirection < 0 && (_testXSpeed < _maxTestSpeed))
-                _testXSpeed = Mathf.Clamp(_testXSpeed - _acceleration * Time.deltaTime, -_maxTestSpeed, _maxTestSpeed);
-            else if (xDirection > 0 && (_testXSpeed > -_maxTestSpeed))
-                _testXSpeed = Mathf.Clamp(_testXSpeed + _acceleration * Time.deltaTime, -_maxTestSpeed, _maxTestSpeed);
+
+
+
+
+
+
+            if (xDirection < 0 && (_testXSpeed < _maxXSpeed))
+            {
+                //if(_testXSpeed > 0)
+                //    _testXSpeed = 0;
+                _testXSpeed = Mathf.Clamp(_testXSpeed - _acceleration * Time.deltaTime, -_maxXSpeed, _maxXSpeed);
+            }
+            else if (xDirection > 0 && (_testXSpeed > -_maxXSpeed))
+            {
+                //if (_testXSpeed < 0)
+                //    _testXSpeed = 0;
+                _testXSpeed = Mathf.Clamp(_testXSpeed + _acceleration * Time.deltaTime, -_maxXSpeed, _maxXSpeed);
+            }
             else if (xDirection == 0)
             {
                 if (_testXSpeed > _deceleration * Time.deltaTime)
@@ -232,18 +249,18 @@ public class Movement : MonoBehaviour, IPunObservable
                     _testXSpeed = 0;
             }
 
-            if (zDirection < 0 && (_testYSpeed < _maxTestSpeed))
-                _testYSpeed = Mathf.Clamp(_testYSpeed - _acceleration * Time.deltaTime, -_maxTestSpeed, _maxTestSpeed);
-            else if (zDirection > 0 && (_testYSpeed > -_maxTestSpeed))
-                _testYSpeed = Mathf.Clamp(_testYSpeed + _acceleration * Time.deltaTime, -_maxTestSpeed, _maxTestSpeed);
+            if (zDirection < 0 && (_testZSpeed < _maxZSpeed))
+                _testZSpeed = Mathf.Clamp(_testZSpeed - _acceleration * Time.deltaTime, -_maxZSpeed, _maxZSpeed);
+            else if (zDirection > 0 && (_testZSpeed > -_maxZSpeed))
+                _testZSpeed = Mathf.Clamp(_testZSpeed + _acceleration * Time.deltaTime, -_maxZSpeed, _maxZSpeed);
             else if (zDirection == 0)
             {
-                if (_testYSpeed > _deceleration * Time.deltaTime)
-                    _testYSpeed = _testYSpeed - _deceleration * Time.deltaTime;
-                else if (_testYSpeed < -_deceleration * Time.deltaTime)
-                    _testYSpeed = _testYSpeed + _deceleration * Time.deltaTime;
+                if (_testZSpeed > _deceleration * Time.deltaTime)
+                    _testZSpeed = _testZSpeed - _deceleration * Time.deltaTime;
+                else if (_testZSpeed < -_deceleration * Time.deltaTime)
+                    _testZSpeed = _testZSpeed + _deceleration * Time.deltaTime;
                 else
-                    _testYSpeed = 0;
+                    _testZSpeed = 0;
             }
         }
         #endregion
@@ -282,7 +299,10 @@ public class Movement : MonoBehaviour, IPunObservable
                     if (pController.isSprinting)
                         cController.Move(currentMovementInput * (speed + 2f) * Time.deltaTime);
                     else
+                    {
+                        currentMovementInput = transform.right * Mathf.Abs(xAxis) * _testXSpeed + transform.forward * Mathf.Abs( zAxis) * _testZSpeed;
                         cController.Move(currentMovementInput * speed * Time.deltaTime);
+                    }
                 }
                 else
                     cController.Move(currentMovementInput * speed * .5f * Time.deltaTime);
