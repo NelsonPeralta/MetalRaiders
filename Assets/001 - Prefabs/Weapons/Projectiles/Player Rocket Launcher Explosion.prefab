@@ -9816,7 +9816,7 @@ MonoBehaviour:
   damageSource: rocket
   damage: 500
   radius: 6
-  explosionPower: 800
+  explosionPower: 600
 --- !u!82 &7241414760208152368
 AudioSource:
   m_ObjectHideFlags: 0
