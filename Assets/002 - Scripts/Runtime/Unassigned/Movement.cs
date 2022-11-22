@@ -47,8 +47,6 @@ public class Movement : MonoBehaviour, IPunObservable
     public bool isOnLadder;
     bool CalculatingPlayerSpeed;
 
-    public float xDirection;
-    public float zDirection;
     public string direction;
     public int directionIndicator;
 
@@ -91,10 +89,19 @@ public class Movement : MonoBehaviour, IPunObservable
         }
     }
 
+    [SerializeField] float _rawXInput;
+    [SerializeField] float _rawZInput;
+
+    public float xDirection;
+    public float zDirection;
+
     [SerializeField] float _testXSpeed, _testYSpeed;
     float _maxTestSpeed = 10;
     float _acceleration = 2f;
     float _deceleration = 2f;
+
+    float _xDeadzone = 0.2f;
+    float _zDeadzone = 0.2f;
 
     private void Awake()
     {
@@ -143,38 +150,6 @@ public class Movement : MonoBehaviour, IPunObservable
     // Update is called once per frame
     void Update()
     {
-
-
-        if ((Input.GetKey(KeyCode.A)) && (_testXSpeed < _maxTestSpeed))
-            _testXSpeed = _testXSpeed - _acceleration * Time.deltaTime;
-        else if ((Input.GetKey(KeyCode.D)) && (_testXSpeed > -_maxTestSpeed))
-            _testXSpeed = _testXSpeed + _acceleration * Time.deltaTime;
-        else
-        {
-            if (_testXSpeed > _deceleration * Time.deltaTime)
-                _testXSpeed = _testXSpeed - _deceleration * Time.deltaTime;
-            else if (_testXSpeed < -_deceleration * Time.deltaTime)
-                _testXSpeed = _testXSpeed + _deceleration * Time.deltaTime;
-            else
-                _testXSpeed = 0;
-        }
-
-        if ((Input.GetKey(KeyCode.W)) && (_testYSpeed < _maxTestSpeed))
-            _testYSpeed = _testYSpeed - _acceleration * Time.deltaTime;
-        else if ((Input.GetKey(KeyCode.S)) && (_testYSpeed > -_maxTestSpeed))
-            _testYSpeed = _testYSpeed + _acceleration * Time.deltaTime;
-        else
-        {
-            if (_testYSpeed > _deceleration * Time.deltaTime)
-                _testYSpeed = _testYSpeed - _deceleration * Time.deltaTime;
-            else if (_testYSpeed < -_deceleration * Time.deltaTime)
-                _testYSpeed = _testYSpeed + _deceleration * Time.deltaTime;
-            else
-                _testYSpeed = 0;
-        }
-
-
-
         {
             var rotationVector = transform.rotation.eulerAngles;
             rotationVector.z = 0;
@@ -213,9 +188,63 @@ public class Movement : MonoBehaviour, IPunObservable
         {
             xAxis = player.GetAxis("Move Horizontal");
             zAxis = player.GetAxis("Move Vertical");
+
+            _rawXInput = player.GetAxis("Move Horizontal");
+            _rawZInput = player.GetAxis("Move Vertical");
+
+            if (Mathf.Abs(xAxis) <= _xDeadzone)
+                xAxis = 0;
+            if (Mathf.Abs(zAxis) <= _zDeadzone)
+                zAxis = 0;
+
+
+
             direction = new Vector3(xAxis, 0f, zAxis).normalized;
             xDirection = direction.x;
             zDirection = direction.z;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (xDirection < 0 && (_testXSpeed < _maxTestSpeed))
+                _testXSpeed = Mathf.Clamp(_testXSpeed - _acceleration * Time.deltaTime, -_maxTestSpeed, _maxTestSpeed);
+            else if (xDirection > 0 && (_testXSpeed > -_maxTestSpeed))
+                _testXSpeed = Mathf.Clamp(_testXSpeed + _acceleration * Time.deltaTime, -_maxTestSpeed, _maxTestSpeed);
+            else if (xDirection == 0)
+            {
+                if (_testXSpeed > _deceleration * Time.deltaTime)
+                    _testXSpeed = _testXSpeed - _deceleration * Time.deltaTime;
+                else if (_testXSpeed < -_deceleration * Time.deltaTime)
+                    _testXSpeed = _testXSpeed + _deceleration * Time.deltaTime;
+                else
+                    _testXSpeed = 0;
+            }
+
+            if (zDirection < 0 && (_testYSpeed < _maxTestSpeed))
+                _testYSpeed = Mathf.Clamp(_testYSpeed - _acceleration * Time.deltaTime, -_maxTestSpeed, _maxTestSpeed);
+            else if (zDirection > 0 && (_testYSpeed > -_maxTestSpeed))
+                _testYSpeed = Mathf.Clamp(_testYSpeed + _acceleration * Time.deltaTime, -_maxTestSpeed, _maxTestSpeed);
+            else if (zDirection == 0)
+            {
+                if (_testYSpeed > _deceleration * Time.deltaTime)
+                    _testYSpeed = _testYSpeed - _deceleration * Time.deltaTime;
+                else if (_testYSpeed < -_deceleration * Time.deltaTime)
+                    _testYSpeed = _testYSpeed + _deceleration * Time.deltaTime;
+                else
+                    _testYSpeed = 0;
+            }
         }
         #endregion
 
