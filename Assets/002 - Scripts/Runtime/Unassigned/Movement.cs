@@ -90,6 +90,12 @@ public class Movement : MonoBehaviour, IPunObservable
             }
         }
     }
+
+    [SerializeField] float _testXSpeed, _testYSpeed;
+    float _maxTestSpeed = 10;
+    float _acceleration = 2f;
+    float _deceleration = 2f;
+
     private void Awake()
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
@@ -113,6 +119,9 @@ public class Movement : MonoBehaviour, IPunObservable
     }
     void Start()
     {
+        _maxTestSpeed = 10;
+
+
         gravity = defaultGravity;
         //tPersonScripts = cManager.FindChildWithTagScript("Third Person GO").GetComponent<ThirdPersonScript>();
         cController = gameObject.GetComponent<CharacterController>();
@@ -134,6 +143,38 @@ public class Movement : MonoBehaviour, IPunObservable
     // Update is called once per frame
     void Update()
     {
+
+
+        if ((Input.GetKey(KeyCode.A)) && (_testXSpeed < _maxTestSpeed))
+            _testXSpeed = _testXSpeed - _acceleration * Time.deltaTime;
+        else if ((Input.GetKey(KeyCode.D)) && (_testXSpeed > -_maxTestSpeed))
+            _testXSpeed = _testXSpeed + _acceleration * Time.deltaTime;
+        else
+        {
+            if (_testXSpeed > _deceleration * Time.deltaTime)
+                _testXSpeed = _testXSpeed - _deceleration * Time.deltaTime;
+            else if (_testXSpeed < -_deceleration * Time.deltaTime)
+                _testXSpeed = _testXSpeed + _deceleration * Time.deltaTime;
+            else
+                _testXSpeed = 0;
+        }
+
+        if ((Input.GetKey(KeyCode.W)) && (_testYSpeed < _maxTestSpeed))
+            _testYSpeed = _testYSpeed - _acceleration * Time.deltaTime;
+        else if ((Input.GetKey(KeyCode.S)) && (_testYSpeed > -_maxTestSpeed))
+            _testYSpeed = _testYSpeed + _acceleration * Time.deltaTime;
+        else
+        {
+            if (_testYSpeed > _deceleration * Time.deltaTime)
+                _testYSpeed = _testYSpeed - _deceleration * Time.deltaTime;
+            else if (_testYSpeed < -_deceleration * Time.deltaTime)
+                _testYSpeed = _testYSpeed + _deceleration * Time.deltaTime;
+            else
+                _testYSpeed = 0;
+        }
+
+
+
         {
             var rotationVector = transform.rotation.eulerAngles;
             rotationVector.z = 0;
@@ -205,6 +246,7 @@ public class Movement : MonoBehaviour, IPunObservable
             Vector3 currentMovementInput = transform.right * xAxis + transform.forward * zAxis;
             if (isGrounded)
             {
+
                 movement = transform.right * xAxis + transform.forward * zAxis;
                 if (!pController.isCrouching)
                 {

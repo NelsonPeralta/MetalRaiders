@@ -62,7 +62,7 @@ public class Melee : MonoBehaviour
             for (int i = 0; i < playersInMeleeZone.Count; i++)
             {
                 Player playerToDamage = playersInMeleeZone[i];
-                if (playerToDamage.hitPoints < player.meleeDamage || playerToDamage.isDead || playerToDamage.isRespawning)
+                if (playerToDamage.hitPoints <=0 || playerToDamage.isDead || playerToDamage.isRespawning)
                     playersInMeleeZone.Remove(playerToDamage);
                 else
                     playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee");
