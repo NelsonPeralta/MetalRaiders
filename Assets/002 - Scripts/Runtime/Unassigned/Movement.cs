@@ -300,7 +300,7 @@ public class Movement : MonoBehaviour, IPunObservable
                         cController.Move(currentMovementInput * (speed + 2f) * Time.deltaTime);
                     else
                     {
-                        currentMovementInput = transform.right * Mathf.Abs(xAxis) * _testXSpeed + transform.forward * Mathf.Abs( zAxis) * _testZSpeed;
+                        //currentMovementInput = transform.right * Mathf.Abs(xAxis) * _testXSpeed + transform.forward * Mathf.Abs( zAxis) * _testZSpeed;
                         cController.Move(currentMovementInput * speed * Time.deltaTime);
                     }
                 }

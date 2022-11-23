@@ -18,8 +18,10 @@ public class Announcer : MonoBehaviour
 
             if (_clips.Count > 0)
             {
-                StartCoroutine(RemoveClip_Coroutine(preCount + 1 * _defaultDelay * 0.9f, _clips.Last()));
-                StartCoroutine(PlayClip_Coroutine(preCount * _defaultDelay, _clips.Last()));
+                StartCoroutine(PlayClip_Coroutine(_clipTimeRemaining, _clips.Last()));
+                _clipTimeRemaining += _clips.Last().length + 0.1f;
+                StartCoroutine(RemoveClip_Coroutine(_clipTimeRemaining * 0.95f, _clips.Last()));
+
             }
         }
     }
@@ -28,11 +30,22 @@ public class Announcer : MonoBehaviour
     [SerializeField] AudioClip gameOverClip;
 
     int _defaultDelay;
+    float _clipTimeRemaining;
 
     private void Start()
     {
         _defaultDelay = 2;
         player.OnPlayerRespawned += OnPlayerRespwan;
+    }
+
+    private void Update()
+    {
+        if (_clipTimeRemaining > 0)
+        {
+            _clipTimeRemaining -= Time.deltaTime;
+            if (_clipTimeRemaining <= 0)
+                _clipTimeRemaining = 0;
+        }
     }
 
     public void PlayGameOverClip()
@@ -55,7 +68,7 @@ public class Announcer : MonoBehaviour
             GetComponent<AudioSource>().clip = clip;
             GetComponent<AudioSource>().Play();
         }
-        catch(System.Exception ex) { Debug.Log(ex); }
+        catch (System.Exception ex) { Debug.Log(ex); }
 
     }
 
