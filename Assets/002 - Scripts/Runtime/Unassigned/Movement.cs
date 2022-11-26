@@ -100,8 +100,8 @@ public class Movement : MonoBehaviour, IPunObservable
     [SerializeField] float _testXSpeed, _testZSpeed;
     [SerializeField] float _maxXSpeed;
     [SerializeField] float _maxZSpeed;
-    float _acceleration = 8f;
-    float _deceleration = 8f;
+    float _acceleration = 10f;
+    float _deceleration = 10f;
 
     float _xDeadzone = 0.2f;
     float _zDeadzone = 0.2f;
@@ -290,6 +290,7 @@ public class Movement : MonoBehaviour, IPunObservable
         if (!pProperties.isDead && !pProperties.isRespawning)
         {
             Vector3 currentMovementInput = transform.right * xAxis + transform.forward * zAxis;
+            currentMovementInput = transform.right * Mathf.Abs(xAxis) * _testXSpeed + transform.forward * Mathf.Abs(zAxis) * _testZSpeed;
             if (isGrounded)
             {
 
@@ -300,7 +301,6 @@ public class Movement : MonoBehaviour, IPunObservable
                         cController.Move(currentMovementInput * (speed + 2f) * Time.deltaTime);
                     else
                     {
-                        currentMovementInput = transform.right * Mathf.Abs(xAxis) * _testXSpeed + transform.forward * Mathf.Abs(zAxis) * _testZSpeed;
                         cController.Move(currentMovementInput * speed * Time.deltaTime);
                     }
                 }
