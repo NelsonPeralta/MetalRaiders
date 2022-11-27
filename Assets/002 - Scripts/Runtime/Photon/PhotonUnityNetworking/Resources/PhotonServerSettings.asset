@@ -151,6 +151,9 @@ MonoBehaviour:
   - EnableExplosiveBarrel_RPC
   - RelocateExplosiveBarrel_RPC
   - UpdatePlayerTeam_RPC
+  - ResetAllExplosiveBarrels_RPC
+  - DisableAmmoPack_RPC
+  - ResetAllAmmoPacks_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

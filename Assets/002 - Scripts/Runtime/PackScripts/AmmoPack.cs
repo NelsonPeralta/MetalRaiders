@@ -2,14 +2,39 @@
 using UnityEngine;
 using TMPro;
 using Photon.Pun;
+using System.Threading;
 
 public class AmmoPack : MonoBehaviour
 {
+    public bool enable
+    {
+        set
+        {
+            _model.SetActive(value); ammoInThisPack = defaultAmmo;
+            GetComponent<SphereCollider>().enabled = value;
+            UpdateAmmoText();
+        }
+    }
+    public Vector3 spawnPoint { get { return _spawnPoint; } }
+    public int index { get { return _index; } }
+
+    [SerializeField] GameObject _model;
+    [SerializeField] int _index;
+    [SerializeField] int _defaultTts;
+    [SerializeField] float _tts;
+
+    Vector3 _spawnPoint;
+
+
+
+
+
+
+
     public PhotonView PV;
 
     [Header("Single")]
     public WeaponPool weaponPool;
-    public OnlineGameTime onlineGameTime;
 
     [Header("Ammo")]
     public bool randomAmmo;
@@ -26,23 +51,38 @@ public class AmmoPack : MonoBehaviour
 
     private void Start()
     {
+        _tts = _defaultTts;
+
+        int i = 0;
+        foreach (AmmoPack eb in FindObjectsOfType<AmmoPack>())
+        {
+            if (eb == this)
+                _index = i;
+            i++;
+        }
+
+
+        _spawnPoint = transform.position;
         weaponPool = FindObjectOfType<WeaponPool>();
-        onlineGameTime = OnlineGameTime.onlineGameTimeInstance;
         ammoInThisPack = GetNewAmmo();
         UpdateAmmoText();
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
+        if (!_model)
+            return;
+        if (index != 0)
+            return;
 
-    }
+        _tts -= Time.deltaTime;
 
-    public void EnablePack()
-    {
-        ammoInThisPack = GetNewAmmo();
-        UpdateAmmoText();
-        gameObject.SetActive(true);
+        if (_tts < 0)
+        {
+            if (PhotonNetwork.IsMasterClient)
+                NetworkGameManager.instance.ResetAllAmmoPacks();
+            _tts = _defaultTts;
+        }
     }
 
     int GetNewAmmo()

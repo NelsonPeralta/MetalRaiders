@@ -36,8 +36,9 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
             ammoPack = newAmmoPack;
             if(randomAmmo)
                 ammoPack.SetRandomAmmoAsDefault();
-        }else
-            ammoPack.EnablePack();
+        }
+        //else
+        //    ammoPack.EnablePack();
     }
 
     public void StartRespawn()

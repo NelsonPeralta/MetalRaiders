@@ -19736,7 +19736,7 @@ GameObject:
   - component: {fileID: 9067899134917446177}
   - component: {fileID: 9062402170995111746}
   m_Layer: 16
-  m_Name: Online Grenade Ammo Pack
+  m_Name: Grenade Ammo Pack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19783,9 +19783,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e77e572154c53a49a5832a4f84b9acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _model: {fileID: 266514025356576590}
+  _index: 0
+  _defaultTts: 10
+  _tts: 0
   PV: {fileID: 0}
   weaponPool: {fileID: 0}
-  onlineGameTime: {fileID: 0}
   randomAmmo: 0
   ammoType: grenade
   defaultAmmo: 2

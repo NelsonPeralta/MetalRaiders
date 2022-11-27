@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.Linq;
+using UnityEngine.UIElements;
 
 public class NetworkGameManager : MonoBehaviourPun
 {
@@ -47,6 +48,12 @@ public class NetworkGameManager : MonoBehaviourPun
     {
         GetComponent<PhotonView>().RPC("DamageExplosiveBarrel_RPC", RpcTarget.All, position, val);
     }
+
+    public void ResetAllExplosiveBarrels()
+    {
+        GetComponent<PhotonView>().RPC("ResetAllExplosiveBarrels_RPC", RpcTarget.All);
+    }
+
     public void EnableExplosiveBarrel(Vector3 position)
     {
         GetComponent<PhotonView>().RPC("EnableExplosiveBarrel_RPC", RpcTarget.All, position);
@@ -67,6 +74,36 @@ public class NetworkGameManager : MonoBehaviourPun
         GetComponent<PhotonView>().RPC("UpdatePlayerTeam_RPC", RpcTarget.All, t, pn);
     }
     #endregion
+
+
+    // Explosive Barrel
+    #region
+
+    public void DisableAmmoPack(Vector3 sp)
+    {
+        GetComponent<PhotonView>().RPC("DisableAmmoPack_RPC", RpcTarget.All, sp);
+    }
+
+    public void ResetAllAmmoPacks()
+    {
+        GetComponent<PhotonView>().RPC("ResetAllAmmoPacks_RPC", RpcTarget.All);
+    }
+
+    #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // RPCs
     #region
@@ -147,6 +184,20 @@ public class NetworkGameManager : MonoBehaviourPun
             }
         }
     }
+
+    [PunRPC]
+    void ResetAllExplosiveBarrels_RPC()
+    {
+        foreach (ExplosiveBarrel ic in FindObjectsOfType<ExplosiveBarrel>(true).ToList())
+        {
+            ic.gameObject.SetActive(true);
+            ic.transform.position = ic.spawnPointPosition;
+            ic.transform.rotation = ic.spawnPointRotation;
+        }
+        Debug.Log("All Barrels Reset");
+    }
+
+
     [PunRPC]
     void EnableExplosiveBarrel_RPC(Vector3 position)
     {
@@ -191,8 +242,26 @@ public class NetworkGameManager : MonoBehaviourPun
     [PunRPC]
     void UpdatePlayerTeam_RPC(string t, string pn)
     {
-        foreach(PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
-            if(pms.username == pn)
+        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
+            if (pms.username == pn)
                 pms.networkTeam = (PlayerMultiplayerMatchStats.Team)System.Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), t);
+    }
+
+
+
+
+    [PunRPC]
+    void DisableAmmoPack_RPC(Vector3 sp)
+    {
+        foreach (AmmoPack ap in FindObjectsOfType<AmmoPack>())
+            if (ap.spawnPoint == sp)
+                ap.enable = false;
+    }
+
+    [PunRPC]
+    void ResetAllAmmoPacks_RPC()
+    {
+        foreach (AmmoPack ap in FindObjectsOfType<AmmoPack>())
+            ap.enable = true;
     }
 }

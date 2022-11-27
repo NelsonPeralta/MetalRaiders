@@ -39,10 +39,7 @@ public class AmmoPickup : MonoBehaviour
 
         playerProperties.allPlayerScripts.playerInventory.UpdateAllExtraAmmoHuds();
 
-        if (ammoPackScript.onlineAmmoPackSpawnPoint)
-            PV.RPC("DisableAmmoPack", RpcTarget.All, ammoPackPosition);
-        else
-            PV.RPC("DestroyAmmoPack", RpcTarget.All, ammoPackPosition);
+        NetworkGameManager.instance.DisableAmmoPack(ammoPackScript.spawnPoint);
     }
 
     [PunRPC]
