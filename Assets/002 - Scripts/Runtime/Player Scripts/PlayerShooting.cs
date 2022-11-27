@@ -100,6 +100,100 @@ public class PlayerShooting : MonoBehaviourPun
     [PunRPC]
     void Shoot_RPC()
     {
+        shaaaaa();
+        shoooo();
+        {
+            //int counter = 1;
+            //WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+
+            //if (activeWeapon.isShotgun)
+            //    counter = activeWeapon.numberOfPellets;
+
+            //for (int i = 0; i < counter; i++)
+            //    if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
+            //    {
+            //        try
+            //        {
+            //            if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
+            //                playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
+            //            playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
+            //        }
+            //        catch { }
+
+            //        var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
+            //        if (PV.IsMine)
+            //            bullet.layer = 8;
+            //        else
+            //            bullet.layer = 0;
+            //        try
+            //        {
+            //            bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+            //            bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+            //        }
+            //        catch
+            //        {
+            //            bullet.transform.position = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+            //            bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+            //        }
+
+
+
+            //        //try { bullet.gameObject.GetComponent<Bullet>().player = playerController.GetComponent<Player>(); } catch { }
+            //        //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
+            //        //bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
+            //        //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+            //        //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
+            //        //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+            //        //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
+            //        bullet.SetActive(true);
+            //        GetComponent<CommonFiringActions>().SpawnMuzzleflash();
+            //    }
+            //    else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+            //    {
+            //        ExplosiveProjectile rocket = null;
+
+            //        if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+            //        {
+            //            //rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<Rocket>();
+            //            rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<ExplosiveProjectile>();
+            //        }
+            //        else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+            //            rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
+
+            //        if (PV.IsMine)
+            //            rocket.gameObject.layer = 8;
+            //        else
+            //            rocket.gameObject.layer = 0;
+
+            //        rocket.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+            //        rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+
+            //        rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
+            //        GetComponent<CommonFiringActions>().SpawnMuzzleflash();
+            //    }
+
+            //if (PV.IsMine)
+            //    activeWeapon.currentAmmo -= 1;
+
+            //try
+            //{
+            //    playerController.weaponAnimator.Play("Fire", 0, 0f);
+            //    StartCoroutine(Player3PSFiringAnimation());
+            //    activeWeapon.Recoil();
+            //}
+            //catch { }
+            //GetComponent<AudioSource>().clip = activeWeapon.Fire;
+            //GetComponent<AudioSource>().Play();
+            //OnBulletSpawned?.Invoke(this);
+        }
+    }
+
+    void shaaaaa()
+    {
+        Debug.Log("shaaaaa");
+    }
+    void shoooo()
+    {
         int counter = 1;
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
@@ -118,10 +212,10 @@ public class PlayerShooting : MonoBehaviourPun
                 catch { }
 
                 var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
-                if (PV.IsMine)
-                    bullet.layer = 8;
-                else
-                    bullet.layer = 0;
+                //if (PV.IsMine)
+                //    bullet.layer = 8;
+                //else
+                //    bullet.layer = 0;
                 try
                 {
                     bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
@@ -133,13 +227,16 @@ public class PlayerShooting : MonoBehaviourPun
                     bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
                 }
 
-                try { bullet.gameObject.GetComponent<Bullet>().player = playerController.GetComponent<Player>(); } catch { }
-                try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
-                bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
-                bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-                try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
-                bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-                try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
+
+
+                try { bullet.gameObject.GetComponent<ProjectileBullet>().player = playerController.GetComponent<Player>(); } catch { }
+                try { bullet.gameObject.GetComponent<ProjectileBullet>().damage = playerController.GetComponent<Player>().playerInventory.activeWeapon.damage; } catch { }
+                //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
+                bullet.gameObject.GetComponent<ProjectileBullet>().range = (int)activeWeapon.range;
+                //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+                //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
+                //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+                //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
                 bullet.SetActive(true);
                 GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }

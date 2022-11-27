@@ -121,7 +121,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         Despawn();
     }
 
-    List<int> bulletLayers = new List<int> { 0, 7, 12, 14 };
+    //List<int> bulletLayers = new List<int> { 0, 7, 12, 14 };
     void Travel()
     {
         frameCounter++;
@@ -139,7 +139,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         for (int i = 0; i < hits.Length; i++) // wWith a normal for loop, if the player is too close to a wall, it checks what object it collided with from farthest to closest. (int i = 0; i < hits.Length; i++)
         {
             //hitMessage += $"\nHIT INDEX: {i}. Hit NAME: {hits[i].collider.name} HIT DISTANCE FROM PLAYER: {Vector3.Distance(playerWhoShot.transform.position, hits[i].point)}";
-            if (!damageDealt && bulletLayers.Contains(hits[i].collider.gameObject.layer))
+            if (!damageDealt)
             {
                 GameObject hit = hits[i].collider.gameObject;
 
