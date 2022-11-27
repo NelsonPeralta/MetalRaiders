@@ -7,6 +7,19 @@ public class AmmoPickup : MonoBehaviour
 {
     public PhotonView PV;
     public Player playerProperties;
+
+    int _originalLayer;
+
+    private void Start()
+    {
+        _originalLayer = gameObject.layer;
+
+        playerProperties.OnPlayerDeath -= OnPLayerDeath;
+        playerProperties.OnPlayerDeath += OnPLayerDeath;
+
+        playerProperties.OnPlayerRespawned -= OnPlayerRespawn;
+        playerProperties.OnPlayerRespawned += OnPlayerRespawn;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (!playerProperties.PV.IsMine || !other.GetComponent<AmmoPack>())
@@ -70,5 +83,15 @@ public class AmmoPickup : MonoBehaviour
         {
             Debug.LogError(e);
         }
+    }
+
+    void OnPLayerDeath(Player p)
+    {
+        gameObject.layer = 3;
+    }
+
+    void OnPlayerRespawn(Player p)
+    {
+        gameObject.layer = _originalLayer;
     }
 }

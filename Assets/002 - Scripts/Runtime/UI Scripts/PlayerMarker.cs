@@ -5,7 +5,7 @@ using System.Linq;
 
 public class PlayerMarker : MonoBehaviour
 {
-    public enum Color { Red, Green}
+    public enum Color { Red, Green }
 
     public Color color;
 
@@ -21,63 +21,28 @@ public class PlayerMarker : MonoBehaviour
     {
         player.OnPlayerDeath += OnPLayerDeath_Delegate;
         player.OnPlayerRespawned += OnPlayerRespawn_Delegate;
-        //if(controllerIdTarget == 0)
-        //{
-        //    gameObject.layer = 31 - (7 + targetPlayer.controllerId * 2);
-        //    gameObject.layer = 5;
-        //}
 
         if (GameManager.instance.gameType.ToString().Contains("Team"))
         {
             Debug.Log(GameManager.instance.gameType.ToString());
             if (!player.isMine)
             {
-                if(color == Color.Green)
-                    gameObject.SetActive(false);
-                //GetComponent<MeshRenderer>().material = red;
+                if (color == Color.Red)
+                    if (player.team == GameManager.GetMyPlayer().team)
+                        gameObject.SetActive(false);
             }
             else
             {
                 if (color == Color.Red)
                     gameObject.SetActive(false);
-                //GetComponent<MeshRenderer>().material = green;
             }
         }
         else
         {
             if (color == Color.Green)
                 gameObject.SetActive(false);
-            //GetComponent<MeshRenderer>().material = red;
         }
-
-        //if (GetComponent<MeshRenderer>().material = green)
-        //    gameObject.layer = 5;
-
-
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //if (targetPlayer)
-        //{
-        //    gameObject.transform.LookAt(targetPlayer.transform.position);
-        //}
-    }
-
-    //IEnumerator LookForPlayer()
-    //{
-    //    yield return new WaitForSeconds(1);
-
-    //    foreach (Player p in FindObjectsOfType<Player>().ToList())
-    //    {
-    //        if (GameManager.instance.gameType.ToString().Contains("Team"))
-    //            if (p != player && p.controllerId == controllerIdTarget)
-    //            {
-    //                targetPlayer = p;
-    //            }
-    //    }
-    //}
 
     public void OnPLayerDeath_Delegate(Player player)
     {

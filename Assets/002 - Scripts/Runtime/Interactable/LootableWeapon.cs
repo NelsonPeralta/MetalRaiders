@@ -137,6 +137,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
                 wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
 
         OnLooted?.Invoke(this);
+        Debug.Log("OnLooted");
         if (networkWeaponSpawnPoint)
         {
             gameObject.SetActive(false);

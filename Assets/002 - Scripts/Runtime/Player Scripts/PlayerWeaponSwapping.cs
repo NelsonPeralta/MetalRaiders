@@ -8,6 +8,10 @@ using TMPro;
 
 public class PlayerWeaponSwapping : MonoBehaviourPun
 {
+    int _originalLayer;
+
+
+
     // Events
     public delegate void WeaponSwappingEvent(PlayerWeaponSwapping weaponPickUp);
     public WeaponSwappingEvent OnWeaponPickup;
@@ -136,9 +140,13 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     //}
     private void Start()
     {
+        _originalLayer = gameObject.layer;
         pickupText.text = "";
         player.OnPlayerDeath -= OnPLayerDeath;
         player.OnPlayerDeath += OnPLayerDeath;
+
+        player.OnPlayerRespawned -= OnPlayerRespawn;
+        player.OnPlayerRespawned += OnPlayerRespawn;
 
         weaponPool = FindObjectOfType<WeaponPool>();
 
@@ -189,8 +197,14 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
     void OnPLayerDeath(Player p)
     {
-        weaponsInRange.Clear();
+        gameObject.layer = 3;
+        weaponsInRange.Clear(); 
         weaponsInRange = weaponsInRange;
+    }
+
+    void OnPlayerRespawn(Player p)
+    {
+        gameObject.layer = _originalLayer;
     }
     void OnPlayerLongInteract_Delegate(PlayerController playerController)
     {
