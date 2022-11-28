@@ -190,9 +190,10 @@ public class NetworkGameManager : MonoBehaviourPun
     {
         foreach (ExplosiveBarrel ic in FindObjectsOfType<ExplosiveBarrel>(true).ToList())
         {
-            ic.gameObject.SetActive(true);
+            ic.GetComponent<Rigidbody>().velocity = Vector3.zero;
             ic.transform.position = ic.spawnPointPosition;
             ic.transform.rotation = ic.spawnPointRotation;
+            ic.gameObject.SetActive(true);
         }
         Debug.Log("All Barrels Reset");
     }

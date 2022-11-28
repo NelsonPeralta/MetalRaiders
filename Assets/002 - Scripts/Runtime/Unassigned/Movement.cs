@@ -129,9 +129,9 @@ public class Movement : MonoBehaviour, IPunObservable
     }
     void Start()
     {
-        _defaultMaxSpeed = 1.25f;
-        _maxXSpeed = 1.25f;
-        _maxZSpeed = 1.25f;
+        _defaultMaxSpeed = 1f;
+        _maxXSpeed = 1f;
+        _maxZSpeed = 1f;
 
 
         gravity = defaultGravity;

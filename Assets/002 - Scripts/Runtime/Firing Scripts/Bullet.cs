@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     Player _player;
     Vector3 _spawnDir;
+    Vector3 _nextPos;
 
     public PhotonView PV;
     [Header("Other Scripts")]
@@ -30,12 +31,12 @@ public class Bullet : MonoBehaviourPunCallbacks
     public GameObject bulletTarget;
 
     public RaycastHit[] hits;
-    //public LayerMask layerMask;
+    [SerializeField] LayerMask _layerMask;
 
     [Header("Bullet Info")]
     public int damage;
     public int size;
-    public float bulletSpeed;
+    public float speed;
     public float range;
     public float distanceTravelled;
     public int playerRewiredID;
@@ -75,6 +76,9 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     override public void OnEnable()
     {
+        prePos = transform.position;
+        _nextPos = Vector3.zero;
+
         objectsHit.Clear();
         if (playerWhoShot)
             playerPosWhenBulletShot = playerWhoShot.transform.position;
@@ -104,7 +108,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     float CalculateTimeToDespawn()
     {
-        return (range / bulletSpeed);
+        return (range / speed);
     }
 
     void Despawn()
@@ -117,16 +121,25 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        ShootRay();
         Travel();
-        Despawn();
+    }
+    private void LateUpdate()
+    {
+        //Travel();
+        //Despawn();
     }
 
+
+    float _distanceTravalled;
     //List<int> bulletLayers = new List<int> { 0, 7, 12, 14 };
-    void Travel()
+    void ShootRay()
     {
-        frameCounter++;
-        prePos = transform.position; // Previous Position
-        transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
+        prePos = transform.position;
+       _nextPos = transform.position + transform.TransformDirection(Vector3.forward) * speed * Time.deltaTime;
+        //transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
+
+        float _dTravalled = Vector3.Distance(prePos, _nextPos);
 
         //Collider[] colliders = Physics.OverlapSphere(transform.position, size);
         //List<GameObject> objectsHit = new List<GameObject>();
@@ -135,7 +148,33 @@ public class Bullet : MonoBehaviourPunCallbacks
         //    Debug.Log($"Bullet OverlapSphere: {colliders[i].name}. Frame: {frameCounter}. Distance from bullet: {Vector3.Distance(colliders[i].transform.position, transform.position)}");
         //}
 
-        hits = Physics.RaycastAll(new Ray(prePos, (transform.position - prePos).normalized), (transform.position - prePos).magnitude);//, layerMask);
+        RaycastHit[] m_Results = new RaycastHit[5];
+        Ray r = new Ray(prePos, (_nextPos - prePos).normalized);
+        int dLayer = 0;
+        int hLayer = 7;
+
+        int finalmask = (1 << dLayer) | (1 << hLayer);
+
+        RaycastHit fhit;
+        if(Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, finalmask))
+        {
+            Debug.Log($"HIT: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}");
+
+
+            GameObject hit = fhit.collider.gameObject;
+
+            if (fhit.collider.GetComponent<IDamageable>() != null || fhit.collider)
+            {
+                ObjectHit newHit = new ObjectHit(hit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
+                objectsHit.Add(newHit);
+            }
+
+            CheckForFinalHit();
+
+            gameObject.SetActive(false);
+
+        }
+        return;
         for (int i = 0; i < hits.Length; i++) // wWith a normal for loop, if the player is too close to a wall, it checks what object it collided with from farthest to closest. (int i = 0; i < hits.Length; i++)
         {
             //hitMessage += $"\nHIT INDEX: {i}. Hit NAME: {hits[i].collider.name} HIT DISTANCE FROM PLAYER: {Vector3.Distance(playerWhoShot.transform.position, hits[i].point)}";
@@ -174,6 +213,12 @@ public class Bullet : MonoBehaviourPunCallbacks
         CheckForFinalHit();
     }
 
+    void Travel()
+    {
+        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        //prePos = transform.position;
+    }
+
     void CheckForFinalHit()
     {
         if (objectsHit.Count > 0)
@@ -193,8 +238,6 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
-            Debug.Log(_spawnDir);
-            Debug.Log(finalHitPoint);
             _spawnDir = finalHitPoint - _spawnDir;
 
             try
@@ -504,7 +547,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         {
             damage = weaponProperties.damage;
             size = weaponProperties.bulletSize;
-            bulletSpeed = weaponProperties.bulletSpeed;
+            speed = weaponProperties.bulletSpeed;
 
             isNormalBullet = true;
             isHeadshotCapable = false;

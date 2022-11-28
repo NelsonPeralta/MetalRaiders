@@ -6,7 +6,7 @@ using UnityEngine;
 public class ProjectileBullet : MonoBehaviour
 {
     public Player player { get { return _player; } set { _player = value; _spawnDir = player.transform.position; } }
-    public int speed { get { return _speed; } set { _speed = value; } }
+    public int speed { get { return _speed; } set { _speed = value * 10; } }
     public int range { get { return _range; } set { _range = value; } }
     public int damage { get { return _damage; } set { _damage = value; } }
     public Vector3 spawnDir { get { return _spawnDir; } }
@@ -20,8 +20,7 @@ public class ProjectileBullet : MonoBehaviour
 
     private void OnEnable()
     {
-
-        GetComponent<Rigidbody>().AddForce(transform.forward.normalized * 10000);
+        GetComponent<Rigidbody>().AddForce(transform.forward.normalized * speed);
     }
     private void OnDisable()
     {
@@ -35,6 +34,9 @@ public class ProjectileBullet : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log(collision.gameObject.name);
+
+        if (collision.gameObject.GetComponent<Rigidbody>())
+            collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         //GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
         //genericHit.transform.position = collision.contacts[0].point;

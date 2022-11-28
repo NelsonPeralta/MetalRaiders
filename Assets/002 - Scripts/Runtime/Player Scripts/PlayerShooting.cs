@@ -25,6 +25,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     private void Start()
     {
+        _ignoreShootCounter = 2;
         playerController.OnPlayerFire += OnPlayerControllerFire_Delegate;
         playerController.OnPlayerFireButtonUp += OnPlayerControllerFireUp_Delegate;
     }
@@ -100,7 +101,6 @@ public class PlayerShooting : MonoBehaviourPun
     [PunRPC]
     void Shoot_RPC()
     {
-        shaaaaa();
         shoooo();
         {
             //int counter = 1;
@@ -192,6 +192,8 @@ public class PlayerShooting : MonoBehaviourPun
     {
         Debug.Log("shaaaaa");
     }
+
+    int _ignoreShootCounter;
     void shoooo()
     {
         int counter = 1;
@@ -203,41 +205,46 @@ public class PlayerShooting : MonoBehaviourPun
         for (int i = 0; i < counter; i++)
             if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
             {
-                try
+                if (_ignoreShootCounter % 2 == 0)
                 {
-                    if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
-                        playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
-                    playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
+
+                    try
+                    {
+                        if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
+                            playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
+                        playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
+                    }
+                    catch { }
+
+                    var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
+                    //if (PV.IsMine)
+                    //    bullet.layer = 8;
+                    //else
+                    //    bullet.layer = 0;
+                    try
+                    {
+                        bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                        bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+                    }
+                    catch
+                    {
+                        bullet.transform.position = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                        bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+                    }
+
+
+
+                    try { bullet.gameObject.GetComponent<Bullet>().player = playerController.GetComponent<Player>(); } catch { }
+                    try { bullet.gameObject.GetComponent<Bullet>().damage = playerController.GetComponent<Player>().playerInventory.activeWeapon.damage; } catch { }
+                    //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
+                    bullet.gameObject.GetComponent<Bullet>().range = (int)activeWeapon.range;
+                    bullet.gameObject.GetComponent<Bullet>().speed = (int)activeWeapon.bulletSpeed;
+                    //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+                    //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
+                    //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+                    //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
+                    bullet.SetActive(true);
                 }
-                catch { }
-
-                var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
-                //if (PV.IsMine)
-                //    bullet.layer = 8;
-                //else
-                //    bullet.layer = 0;
-                try
-                {
-                    bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-                    bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-                }
-                catch
-                {
-                    bullet.transform.position = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-                    bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-                }
-
-
-
-                try { bullet.gameObject.GetComponent<ProjectileBullet>().player = playerController.GetComponent<Player>(); } catch { }
-                try { bullet.gameObject.GetComponent<ProjectileBullet>().damage = playerController.GetComponent<Player>().playerInventory.activeWeapon.damage; } catch { }
-                //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
-                bullet.gameObject.GetComponent<ProjectileBullet>().range = (int)activeWeapon.range;
-                //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-                //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
-                //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-                //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
-                bullet.SetActive(true);
                 GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }
             else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
@@ -263,6 +270,9 @@ public class PlayerShooting : MonoBehaviourPun
                 rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
                 GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }
+
+        if (!PV.IsMine)
+            _ignoreShootCounter++;
 
         if (PV.IsMine)
             activeWeapon.currentAmmo -= 1;
