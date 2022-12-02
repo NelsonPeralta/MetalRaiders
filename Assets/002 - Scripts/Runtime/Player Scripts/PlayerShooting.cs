@@ -37,6 +37,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     void OnPlayerControllerFire_Delegate(PlayerController playerController)
     {
+        Debug.Log("OnPlayerControllerFire_Delegate");
         if (playerController.isDrawingWeapon)
             return;
 
@@ -45,8 +46,12 @@ public class PlayerShooting : MonoBehaviourPun
 
     public void Shoot()
     {
+        Debug.Log("Shoot 1");
+
         if (fireInterval > 0)
             return;
+        Debug.Log("Shoot 2");
+
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
         if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
             fireInterval = defaultBurstInterval * 5.5f;
@@ -86,15 +91,22 @@ public class PlayerShooting : MonoBehaviourPun
     {
         yield return new WaitForSeconds(delay);
 
-        PV.RPC("Shoot_RPC", RpcTarget.All);
+        Shoot_RPC();
+        //return;
+        //PV.RPC("Shoot_RPC", RpcTarget.All);
     }
 
     void Shoot_Caller()
     {
+        Debug.Log("Shoot_Caller 1");
+
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-        if (playerController.GetComponent<PhotonView>().IsMine)
             if (activeWeapon.currentAmmo <= 0)
                 return;
+        Debug.Log("Shoot_Caller 1");
+
+        Shoot_RPC();
+        return;
         PV.RPC("Shoot_RPC", RpcTarget.All);
     }
 
@@ -196,6 +208,8 @@ public class PlayerShooting : MonoBehaviourPun
     int _ignoreShootCounter;
     void shoooo()
     {
+        Debug.Log("shoooo 1");
+
         int counter = 1;
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
@@ -207,6 +221,7 @@ public class PlayerShooting : MonoBehaviourPun
             {
                 if (_ignoreShootCounter % 2 == 0)
                 {
+                    Debug.Log("shoooo 2");
 
                     try
                     {

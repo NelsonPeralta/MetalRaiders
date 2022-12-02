@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviourPun
     [HideInInspector]
     public bool hasBeenHolstered = false, holstered, isRunning, isWalking;
     [HideInInspector]
-    public bool isInspecting, isShooting, aimSoundHasPlayed = false;
+    public bool isInspecting, aimSoundHasPlayed = false;
 
     public bool isReloading, reloadAnimationStarted, reloadWasCanceled, isFiring,
         isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isMeleeing, isSprinting;
@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviourPun
     public Animator animDWLeft;
     public WeaponProperties dwRightWP;
     public WeaponProperties dwLeftWP;
+    public bool isShooting;
     public bool isDualWielding;
     public bool isShootingRight;
     public bool isShootingLeft;
@@ -263,10 +264,60 @@ public class PlayerController : MonoBehaviourPun
         GetComponent<Player>().StopPlayingPlayerVoice();
     }
 
+    void _StartShoot()
+    {
+        if (PV.IsMine)
+            PV.RPC("_StartShoot_RPC", RpcTarget.All);
+    }
+    void _StopShoot()
+    {
+        if (PV.IsMine)
+            PV.RPC("_StopShoot_RPC", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void _StartShoot_RPC()
+    {
+
+        if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading &&
+            !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
+        {
+            isShooting = true;
+
+        }
+        else
+        {
+            isShooting = false;
+        }
+    }
+
+    [PunRPC]
+    void _StopShoot_RPC()
+    {
+        isShooting = false;
+        OnPlayerFireButtonUp?.Invoke(this);
+    }
+
     void Shooting()
     {
         if (GetComponent<Player>().isDead || isSprinting)
             return;
+
+        if (isShooting)
+            OnPlayerFire?.Invoke(this);
+
+
+        if (rewiredPlayer.GetButtonDown("Shoot"))
+        {
+            _StartShoot();
+        }
+        if (rewiredPlayer.GetButtonUp("Shoot"))
+        {
+            _StopShoot();
+        }
+
+
+        return;
 
         if (rewiredPlayer.GetButtonUp("Shoot"))
         {
@@ -327,7 +378,7 @@ public class PlayerController : MonoBehaviourPun
                 if (isAiming == false)
                 {
                     isAiming = true;
-                    mainCam.fieldOfView = pInventory.activeWeapon.scopeFov; 
+                    mainCam.fieldOfView = pInventory.activeWeapon.scopeFov;
                     uiCam.fieldOfView = pInventory.activeWeapon.scopeFov;
                     if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
                         gunCam.enabled = false;

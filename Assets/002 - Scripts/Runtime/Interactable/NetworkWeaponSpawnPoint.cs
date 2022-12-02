@@ -89,9 +89,9 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 if (weaponCode == codeName)
                     codeName = "m16";
 
-            foreach (string weaponCode in powerWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "mk14";
+            //foreach (string weaponCode in powerWeaponCodeNames)
+            //    if (weaponCode == codeName)
+            //        codeName = "mk14";
         }
         else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
         {

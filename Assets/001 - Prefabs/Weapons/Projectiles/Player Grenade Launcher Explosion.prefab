@@ -9814,7 +9814,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
   damageSource: grenadelauncher
-  damage: 150
+  damage: 140
   radius: 5
   explosionPower: 500
 --- !u!82 &7241414760208152368

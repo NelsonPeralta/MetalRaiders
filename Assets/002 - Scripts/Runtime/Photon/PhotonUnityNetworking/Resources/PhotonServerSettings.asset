@@ -154,6 +154,8 @@ MonoBehaviour:
   - ResetAllExplosiveBarrels_RPC
   - DisableAmmoPack_RPC
   - ResetAllAmmoPacks_RPC
+  - _StartShoot_RPC
+  - _StopShoot_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
