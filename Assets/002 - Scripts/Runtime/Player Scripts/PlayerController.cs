@@ -113,10 +113,12 @@ public class PlayerController : MonoBehaviourPun
 
     private void Update()
     {
-        if (!PV.IsMine)
-            return;
+        if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !isSprinting)
+        {
+            Shooting();
 
-        //UpdateWeaponPropertiesAndAnimator();
+        }
+        if (PV.IsMine)
         {
             StartButton();
             BackButton();
@@ -130,7 +132,6 @@ public class PlayerController : MonoBehaviourPun
                     LongInteract();
                     if (isSprinting)
                         return;
-                    Shooting();
                     CheckReloadButton();
                     CheckAmmoForAutoReload();
                     ScopeIn();
@@ -141,12 +142,12 @@ public class PlayerController : MonoBehaviourPun
                     CheckDrawingWeapon();
                 }
             }
-        }
 
-        AnimationCheck();
-        TestButton();
-        if (ReInput.controllers != null)
-            activeControllerType = ReInput.controllers.GetLastActiveControllerType();
+            AnimationCheck();
+            TestButton();
+            if (ReInput.controllers != null)
+                activeControllerType = ReInput.controllers.GetLastActiveControllerType();
+        }
 
     }
     void UpdateWeaponPropertiesAndAnimator()
@@ -283,12 +284,12 @@ public class PlayerController : MonoBehaviourPun
             !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
         {
             isShooting = true;
-
         }
         else
         {
             isShooting = false;
         }
+        Debug.Log($"{GetComponent<Player>().nickName}: _StartShoot_RPC {isShooting}");
     }
 
     [PunRPC]
@@ -296,6 +297,7 @@ public class PlayerController : MonoBehaviourPun
     {
         isShooting = false;
         OnPlayerFireButtonUp?.Invoke(this);
+        Debug.Log($"{GetComponent<Player>().nickName}: _StopShoot_RPC {isShooting}");
     }
 
     void Shooting()

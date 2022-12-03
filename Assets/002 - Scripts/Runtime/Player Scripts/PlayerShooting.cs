@@ -101,8 +101,8 @@ public class PlayerShooting : MonoBehaviourPun
         Debug.Log("Shoot_Caller 1");
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-            if (activeWeapon.currentAmmo <= 0)
-                return;
+        if (activeWeapon.currentAmmo <= 0)
+            return;
         Debug.Log("Shoot_Caller 1");
 
         Shoot_RPC();
@@ -307,10 +307,7 @@ public class PlayerShooting : MonoBehaviourPun
     public void Update()
     {
         if (playerController)
-            if (!PV.IsMine)
-                return;
-
-        FireCooldown();
+            FireCooldown();
     }
     IEnumerator Player3PSFiringAnimation()
     {
