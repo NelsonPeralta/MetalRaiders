@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1098116645e46d6498857aa4a1d22baf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultTts: 8
+  _defaultTts: 45
   _tts: 0
   placeHolder: {fileID: 5004349968389705153}
   barrel: {fileID: 0}

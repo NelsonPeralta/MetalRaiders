@@ -205,6 +205,16 @@ public class GameManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
             }
             catch (Exception e) { Debug.LogWarning(e.Message); }
+
+            try
+            {
+                int c = 0;
+                foreach (NetworkWeaponSpawnPoint nws in FindObjectsOfType<NetworkWeaponSpawnPoint>())
+                {
+
+                }
+            }
+            catch { }
         }
         else
         {

@@ -30,6 +30,7 @@ public class NetworkGameManager : MonoBehaviourPun
     #region
     public void EnableLootableWeapon(Vector3 position)
     {
+        Debug.Log("EnableLootableWeapon");
         GetComponent<PhotonView>().RPC("EnableLootableWeapon_RPC", RpcTarget.All, position);
     }
     public void DisableLootableWeapon(Vector3 position)

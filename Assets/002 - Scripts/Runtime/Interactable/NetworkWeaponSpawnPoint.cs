@@ -6,12 +6,14 @@ using System.IO;
 
 public class NetworkWeaponSpawnPoint : MonoBehaviour
 {
+    public bool auth { get { return _auth; } set { _auth = value; } }
     public string codeName;
     public GameObject placeHolder;
     public LootableWeapon weaponSpawned;
     public List<LootableWeapon> networkLootableWeaponPrefabs = new List<LootableWeapon>();
 
-    float _tts;
+    [SerializeField] float _tts;
+    bool _auth;
 
     private void Start()
     {

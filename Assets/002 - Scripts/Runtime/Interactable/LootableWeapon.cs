@@ -167,6 +167,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         GetComponent<Rigidbody>().velocity /= 2;
         try
         {
+            Debug.Log("On Collision");
             GetComponent<AudioSource>().clip = _collisionAudioClip;
             GetComponent<AudioSource>().Play();
         }
