@@ -279,8 +279,8 @@ public class Player : MonoBehaviourPunCallbacks
     int _maxShieldPoints = 150;
     float _hitPoints = 250;
     int _meleeDamage = 150;
-    bool _isRespawning;
-    bool _isDead, _isHealing;
+    [SerializeField] bool _isRespawning, _isDead;
+    bool _isHealing;
     int _respawnTime = 5;
 
     int _defaultRespawnTime = 4;

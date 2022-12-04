@@ -112,7 +112,7 @@ public class WeaponProperties : MonoBehaviour
             OnCurrentAmmoChanged?.Invoke(this);
             pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
 
-            if (player.isMine && (_currentAmmo == ammoCapacity))
+            if (player.isMine && (_currentAmmo == 0 || _currentAmmo == ammoCapacity))
             {
                 UpdateAmmo(index, _currentAmmo);
             }
@@ -277,6 +277,7 @@ public class WeaponProperties : MonoBehaviour
             player.PV.RPC("UpdateAmmo", Photon.Pun.RpcTarget.All, i, a, isSpare, sender);
         else
         {
+            Debug.Log("UpdateAmmo");
             if (!isSpare)
                 _currentAmmo = a;
             else

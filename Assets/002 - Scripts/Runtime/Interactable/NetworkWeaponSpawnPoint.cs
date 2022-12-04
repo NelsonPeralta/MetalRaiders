@@ -30,10 +30,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 {
                     try
                     {
-                        LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), Vector3.zero, Quaternion.identity).GetComponent<LootableWeapon>();
+                        LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
 
-                        lw.transform.position = transform.position;
-                        lw.transform.rotation = transform.rotation;
                         lw.transform.parent = transform;
                         lw.gameObject.SetActive(true);
                         lw.networkWeaponSpawnPoint = this;

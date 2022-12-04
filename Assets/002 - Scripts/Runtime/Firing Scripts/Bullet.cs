@@ -6,13 +6,13 @@ using System;
 
 public class Bullet : MonoBehaviourPunCallbacks
 {
-    public Player player { get { return _player; } set { _player = value; _spawnDir = player.transform.position; } }
+    public Player sourcePlayer { get { return _sourcePlayer; } set { _sourcePlayer = value; _spawnDir = sourcePlayer.transform.position; } }
     public Vector3 spawnDir
     {
         get { return _spawnDir; }
     }
 
-    Player _player;
+    Player _sourcePlayer;
     Vector3 _spawnDir;
     Vector3 _nextPos;
 
@@ -20,7 +20,6 @@ public class Bullet : MonoBehaviourPunCallbacks
     [Header("Other Scripts")]
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
-    public Player playerWhoShot;
     public PlayerInventory pInventory;
     public WeaponProperties weaponProperties;
     public Zombie zScript;
@@ -80,12 +79,11 @@ public class Bullet : MonoBehaviourPunCallbacks
         _nextPos = Vector3.zero;
 
         objectsHit.Clear();
-        if (playerWhoShot)
-            playerPosWhenBulletShot = playerWhoShot.transform.position;
+        if (sourcePlayer)
+            playerPosWhenBulletShot = sourcePlayer.transform.position;
         frameCounter = 0;
         distanceTravelled = 0;
         damageDealt = false;
-        GetBulletInfo();
 
         if (crosshairScript && weaponProperties)
             if (!crosshairScript.RRisActive)
@@ -136,7 +134,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     void ShootRay()
     {
         prePos = transform.position;
-       _nextPos = transform.position + transform.TransformDirection(Vector3.forward) * speed * Time.deltaTime;
+        _nextPos = transform.position + transform.TransformDirection(Vector3.forward) * speed * Time.deltaTime;
         //transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
 
         float _dTravalled = Vector3.Distance(prePos, _nextPos);
@@ -156,7 +154,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         int finalmask = (1 << dLayer) | (1 << hLayer);
 
         RaycastHit fhit;
-        if(Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, finalmask))
+        if (Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, finalmask))
         {
             Debug.Log($"HIT: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}");
 
@@ -239,6 +237,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             }
 
             _spawnDir = finalHitPoint - _spawnDir;
+            Debug.Log("asdf");
 
             try
             {
@@ -247,7 +246,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                     if (finalHitObject.GetComponent<PlayerHitbox>())
                     {
-                        if (finalHitObject.GetComponent<PlayerHitbox>().player.team != playerWhoShot.team)
+                        if (finalHitObject.GetComponent<PlayerHitbox>().player.team != sourcePlayer.team)
                         {
                             if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)
                             {
@@ -269,16 +268,16 @@ public class Bullet : MonoBehaviourPunCallbacks
                                     wasNutshot = hitbox.isNuts;
 
                                     if (wasHeadshot && player.hitPoints < damage)
-                                        playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
+                                        sourcePlayer.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
 
                                 }
 
-                                if (playerWhoShot.PV.IsMine)
+                                if (sourcePlayer.PV.IsMine)
                                 {
                                     if (weaponProperties.codeName != null)
-                                        finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir:spawnDir, damageSource: weaponProperties.codeName, isGroin: wasNutshot);
+                                        finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, damageSource: weaponProperties.codeName, isGroin: wasNutshot);
                                     else
-                                        finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                                        finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
                                 }
 
                                 damageDealt = true;
@@ -300,7 +299,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
                                 try
                                 {
-                                    finalHitDamageable.Damage(damage, false, playerWhoShot.pid);
+                                    finalHitDamageable.Damage(damage, false, sourcePlayer.pid);
 
                                 }
                                 catch
@@ -325,8 +324,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                         Player player = hitbox.player.GetComponent<Player>();
                         bool wasHeadshot = false;
                         bool wasNutshot = false;
+
                         if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
                         {
+                            Debug.Log("asdf5");
+
                             int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
                             if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
@@ -339,28 +341,32 @@ public class Bullet : MonoBehaviourPunCallbacks
                             wasNutshot = hitbox.isNuts;
 
                             if (wasHeadshot && player.hitPoints < damage)
-                                playerWhoShot.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
+                                sourcePlayer.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
 
                         }
 
-                        if (playerWhoShot.PV.IsMine)
+                        if (sourcePlayer.PV.IsMine)
                         {
+                            Debug.Log("asdf6");
+
                             if (weaponProperties.codeName != null)
-                                finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.codeName, isGroin: wasNutshot);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.codeName, isGroin: wasNutshot);
                             else
-                                finalHitDamageable.Damage(damage, wasHeadshot, playerWhoShot.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
                         }
 
                         damageDealt = true;
                     }
                     else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
                     {
+                        Debug.Log("asdf10");
+
                         try
                         {
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
                                 try
                                 {
-                                    finalHitDamageable.Damage(damage, false, playerWhoShot.pid);
+                                    finalHitDamageable.Damage(damage, false, sourcePlayer.pid);
 
                                 }
                                 catch
@@ -429,7 +435,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 #endregion
                 gameObject.SetActive(false);
             }
-            catch { }
+            catch (System.Exception e) { Debug.LogWarning(e); }
 
             // Old
             #region
@@ -537,29 +543,5 @@ public class Bullet : MonoBehaviourPunCallbacks
 
         public Vector3 finalHitPos;
         public string sourceWeaponCodename;
-    }
-    void GetBulletInfo()
-    {
-        if (playerWhoShot)
-            if (!playerWhoShot.GetComponent<PlayerController>().isDualWielding)
-                weaponProperties = pInventory.activeWeapon.gameObject.GetComponent<WeaponProperties>();
-        if (weaponProperties)
-        {
-            damage = weaponProperties.damage;
-            size = weaponProperties.bulletSize;
-            speed = weaponProperties.bulletSpeed;
-
-            isNormalBullet = true;
-            isHeadshotCapable = false;
-            canBleedthroughHeadshot = false;
-            canBleedthroughAnything = false;
-            if (weaponProperties.isHeadshotCapable)
-            {
-                isNormalBullet = false;
-                isHeadshotCapable = true;
-                canBleedthroughHeadshot = false;
-                canBleedthroughAnything = false;
-            }
-        }
     }
 }

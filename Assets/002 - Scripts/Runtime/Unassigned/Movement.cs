@@ -298,7 +298,7 @@ public class Movement : MonoBehaviour, IPunObservable
                 if (!pController.isCrouching)
                 {
                     if (pController.isSprinting)
-                        cController.Move(currentMovementInput * (speed + 2f) * Time.deltaTime);
+                        cController.Move(currentMovementInput * (speed * 1.5f) * Time.deltaTime);
                     else
                     {
                         cController.Move(currentMovementInput * speed * Time.deltaTime);

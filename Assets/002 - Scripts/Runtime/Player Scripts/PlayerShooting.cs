@@ -243,7 +243,8 @@ public class PlayerShooting : MonoBehaviourPun
 
 
 
-                    try { bullet.gameObject.GetComponent<Bullet>().player = playerController.GetComponent<Player>(); } catch { }
+                    try { bullet.gameObject.GetComponent<Bullet>().sourcePlayer = playerController.GetComponent<Player>(); } catch { }
+                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
                     try { bullet.gameObject.GetComponent<Bullet>().damage = playerController.GetComponent<Player>().playerInventory.activeWeapon.damage; } catch { }
                     //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
                     bullet.gameObject.GetComponent<Bullet>().range = (int)activeWeapon.range;
