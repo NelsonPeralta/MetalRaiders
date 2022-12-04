@@ -37,7 +37,6 @@ public class PlayerShooting : MonoBehaviourPun
 
     void OnPlayerControllerFire_Delegate(PlayerController playerController)
     {
-        Debug.Log("OnPlayerControllerFire_Delegate");
         if (playerController.isDrawingWeapon)
             return;
 
@@ -46,11 +45,8 @@ public class PlayerShooting : MonoBehaviourPun
 
     public void Shoot()
     {
-        Debug.Log("Shoot 1");
-
         if (fireInterval > 0)
             return;
-        Debug.Log("Shoot 2");
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
         if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
@@ -98,12 +94,10 @@ public class PlayerShooting : MonoBehaviourPun
 
     void Shoot_Caller()
     {
-        Debug.Log("Shoot_Caller 1");
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-        if (activeWeapon.currentAmmo <= 0)
+        if (activeWeapon.currentAmmo <= 0 || playerController.isReloading)
             return;
-        Debug.Log("Shoot_Caller 1");
 
         Shoot_RPC();
         return;

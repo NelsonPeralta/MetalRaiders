@@ -116,7 +116,8 @@ public class PlayerController : MonoBehaviourPun
         if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !isSprinting)
         {
             Shooting();
-
+            CheckReloadButton();
+            CheckAmmoForAutoReload();
         }
         if (PV.IsMine)
         {
@@ -132,8 +133,6 @@ public class PlayerController : MonoBehaviourPun
                     LongInteract();
                     if (isSprinting)
                         return;
-                    CheckReloadButton();
-                    CheckAmmoForAutoReload();
                     ScopeIn();
                     Melee();
                     Crouch();
@@ -305,20 +304,20 @@ public class PlayerController : MonoBehaviourPun
         if (GetComponent<Player>().isDead || isSprinting)
             return;
 
-        if (isShooting)
-            OnPlayerFire?.Invoke(this);
 
 
         if (rewiredPlayer.GetButtonDown("Shoot"))
         {
             _StartShoot();
         }
+
+        if (isShooting)
+            OnPlayerFire?.Invoke(this);
+
         if (rewiredPlayer.GetButtonUp("Shoot"))
         {
             _StopShoot();
         }
-
-
         return;
 
         if (rewiredPlayer.GetButtonUp("Shoot"))
@@ -516,11 +515,17 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead)
         {
-            if (rewiredPlayer.GetButtonDown("Reload") && !isReloading && !isDualWielding)
+            if (PV.IsMine && rewiredPlayer.GetButtonDown("Reload") && !isReloading && !isDualWielding)
             {
-                rScript.CheckAmmoTypeType(false);
+                PV.RPC("CheckRealodButton_RPC", RpcTarget.All);
             }
         }
+    }
+
+    [PunRPC]
+    void CheckRealodButton_RPC()
+    {
+        rScript.CheckAmmoTypeType(false);
     }
 
     void CheckAmmoForAutoReload()

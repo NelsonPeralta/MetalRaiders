@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System;
+using System.Linq;
 
 public class PlayerInventory : MonoBehaviourPun
 {
@@ -36,7 +37,7 @@ public class PlayerInventory : MonoBehaviourPun
         get { return _activeWeapon; }
         set
         {
-            if (PV.IsMine)
+            //if (PV.IsMine)
             {
 
                 _activeWeapon = value;
@@ -47,7 +48,7 @@ public class PlayerInventory : MonoBehaviourPun
                 activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                 activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
 
-                PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
+                //PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 try { OnActiveWeaponChanged?.Invoke(this); } catch { }
                 try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
@@ -168,6 +169,13 @@ public class PlayerInventory : MonoBehaviourPun
             //OnPlayerSwitchWeapons_Delegate(pController);
             playerShooting.OnBulletSpawned += OnBulletSpawned_Delegate;
             pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
+
+            int c = 0;
+            foreach(GameObject w in allWeaponsInInventory.ToList())
+            {
+                w.GetComponent<WeaponProperties>().index = c;
+                c++;
+            }
         }
         catch { }
 

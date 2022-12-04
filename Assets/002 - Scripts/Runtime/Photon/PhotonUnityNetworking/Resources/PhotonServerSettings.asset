@@ -156,6 +156,8 @@ MonoBehaviour:
   - ResetAllAmmoPacks_RPC
   - _StartShoot_RPC
   - _StopShoot_RPC
+  - CheckRealodButton_RPC
+  - UpdateAmmo
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

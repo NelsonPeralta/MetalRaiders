@@ -1011,5 +1011,11 @@ public class Player : MonoBehaviourPunCallbacks
         playerVoice.Stop();
     }
 
+    [PunRPC]
+    public void UpdateAmmo(int i, int a, bool isSpare = false, bool sender = true)
+    {
+        playerInventory.allWeaponsInInventory[i].GetComponent<WeaponProperties>().UpdateAmmo(i, a, isSpare, false);
+    }
+
     #endregion
 }

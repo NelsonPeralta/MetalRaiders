@@ -200,14 +200,19 @@ public class ReloadScript : MonoBehaviourPun
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
                     if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.pInventory.activeWeapon.gameObject)
                         PV.RPC("PlayReloadSound_RPC", RpcTarget.All, i);
+            //PlayReloadSound_RPC(i);
             //reloadAudioSource.clip = pController.wProperties.Reload_1;
             //reloadAudioSource.Play();
 
-            if (!isOutOfAmmo)
-                pController.weaponAnimator.Play("Reload Ammo Left", 0, 0f);
-            else
-                pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
-            pController.ScopeOut();
+            try
+            {
+                if (!isOutOfAmmo)
+                    pController.weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                else
+                    pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
+                pController.ScopeOut();
+            }
+            catch { }
 
             if (pController.gwProperties.bulletInMagRenderer != null)
             {

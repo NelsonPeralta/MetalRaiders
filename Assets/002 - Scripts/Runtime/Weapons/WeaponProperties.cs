@@ -19,6 +19,8 @@ public class WeaponProperties : MonoBehaviour
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
+    public Player player { get { return pController.GetComponent<Player>(); } }
+
     public Crosshair crosshair;
 
     float _aimAssistRadius;
@@ -99,6 +101,8 @@ public class WeaponProperties : MonoBehaviour
 
     public GameObject weaponRessource;
 
+
+
     public int currentAmmo
     {
         get { return _currentAmmo; }
@@ -107,13 +111,27 @@ public class WeaponProperties : MonoBehaviour
             _currentAmmo = value;
             OnCurrentAmmoChanged?.Invoke(this);
             pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
+
+            if (player.isMine && (_currentAmmo == ammoCapacity))
+            {
+                UpdateAmmo(index, _currentAmmo);
+            }
         }
     }
 
     public int spareAmmo
     {
         get { return _spareAmmo; }
-        set { _spareAmmo = Mathf.Clamp(value, 0, _maxAmmo); OnSpareAmmoChanged?.Invoke(this); pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString(); }
+        set
+        {
+            _spareAmmo = Mathf.Clamp(value, 0, _maxAmmo);
+            OnSpareAmmoChanged?.Invoke(this); pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString();
+
+            if (player.isMine)
+            {
+                UpdateAmmo(index, _spareAmmo, true);
+            }
+        }
     }
 
     public int maxAmmo
@@ -132,6 +150,10 @@ public class WeaponProperties : MonoBehaviour
         get { return _aimAssistRadius; }
         set { _aimAssistRadius = Mathf.Clamp(value, 0.1f, 10); }
     }
+
+    public int index { get { return _index; } set { _index = value; } }
+
+    int _index;
 
     private void Start()
     {
@@ -245,6 +267,22 @@ public class WeaponProperties : MonoBehaviour
         {"m1911", 8 }, {"mp5", 13 }, {"m249c", 15 }, {"r700", 17 }, {"barrett50cal", 18 },
         {"patriot", 19 }, {"colt", 20 }, {"m16", 21 }
     };
+
+    public void UpdateAmmo(int i, int a, bool isSpare = false, bool sender = true)
+    {
+        if (!player.isMine)
+            return;
+
+        if (sender)
+            player.PV.RPC("UpdateAmmo", Photon.Pun.RpcTarget.All, i, a, isSpare, sender);
+        else
+        {
+            if (!isSpare)
+                _currentAmmo = a;
+            else
+                _spareAmmo= a;
+        }
+    }
 }
 
 #if UNITY_EDITOR // Reference: https://answers.unity.com/questions/1169764/type-or-namespace-unityeditor-could-not-be-found-w.html
