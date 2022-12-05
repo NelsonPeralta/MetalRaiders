@@ -119,13 +119,13 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        Despawn();
         ShootRay();
         Travel();
     }
     private void LateUpdate()
     {
         //Travel();
-        //Despawn();
     }
 
 

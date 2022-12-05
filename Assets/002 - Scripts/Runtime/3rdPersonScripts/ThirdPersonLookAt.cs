@@ -62,6 +62,8 @@ public class ThirdPersonLookAt : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (movement.GetComponent<PlayerController>().isSprinting)
+            return;
         UpdateOffset(movement.directionIndicator);
         PlayerChestRotation();
         //photonView.RPC("UpdateOffset", RpcTarget.All, movement.directionIndicator);

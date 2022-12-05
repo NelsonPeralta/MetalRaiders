@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviourPun
 
     private void Update()
     {
-        if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !isSprinting)
+        if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !isSprinting && !pauseMenuOpen)
         {
             Shooting();
             CheckReloadButton();
@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviourPun
             BackButton();
             if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning)
             {
-                if (!pauseMenuOpen)
+                if (!pauseMenuOpen) 
                 {
                     Sprint();
                     SwitchGrenades();

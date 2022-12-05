@@ -952,41 +952,44 @@ public class Player : MonoBehaviourPunCallbacks
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
 
+            PlayerMedals sourcePlayerMedals = null;
+            foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
+                if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
+                    sourcePlayerMedals = pm;
 
             if (wasHeadshot)
             {
-                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
-                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
-                        pm.SpawnHeadshotMedal();
-
+                if (playerWhoShotThisPlayerPhotonId != this.pid)
+                    sourcePlayerMedals.SpawnHeadshotMedal();
             }
             else if (isGroin)
             {
-                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
-                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
-                        pm.SpawnNutshotMedal();
+                if (playerWhoShotThisPlayerPhotonId != this.pid)
+                    sourcePlayerMedals.SpawnNutshotMedal();
             }
             else if (damageSource == "melee")
             {
-                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
-                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
-                        pm.SpawnMeleeMedal();
+                if (playerWhoShotThisPlayerPhotonId != this.pid)
+                    sourcePlayerMedals.SpawnMeleeMedal();
             }
             else if (damageSource.Contains("grenade"))
             {
-                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
-                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
-                        if (playerWhoShotThisPlayerPhotonId != this.pid)
-                            pm.SpawnGrenadeMedal();
+                if (playerWhoShotThisPlayerPhotonId != this.pid)
+                    sourcePlayerMedals.SpawnGrenadeMedal();
             }
             else
             {
-                foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
-                    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
-                        if (playerWhoShotThisPlayerPhotonId != this.pid)
-                            pm.kills++;
+                if (playerWhoShotThisPlayerPhotonId != this.pid)
+                    sourcePlayerMedals.kills++;
             }
+
+            if (playerMedals.spree >= 3)
+                if (playerWhoShotThisPlayerPhotonId != this.pid)
+                    sourcePlayerMedals.SpawnKilljoySpreeMedal();
         }
+
+
+
         hitPoints = _newHealth;
     }
 

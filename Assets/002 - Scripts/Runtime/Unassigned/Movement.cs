@@ -100,8 +100,8 @@ public class Movement : MonoBehaviour, IPunObservable
     [SerializeField] float _testXSpeed, _testZSpeed;
     [SerializeField] float _maxXSpeed;
     [SerializeField] float _maxZSpeed;
-    float _acceleration = 10f;
-    float _deceleration = 10f;
+    float _acceleration = 7f;
+    float _deceleration = 7f;
 
     float _xDeadzone = 0.2f;
     float _zDeadzone = 0.2f;

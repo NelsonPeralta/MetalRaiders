@@ -277,7 +277,8 @@ public class WeaponProperties : MonoBehaviour
             player.PV.RPC("UpdateAmmo", Photon.Pun.RpcTarget.All, i, a, isSpare, sender);
         else
         {
-            Debug.Log("UpdateAmmo");
+            if (player.isMine)
+                return;
             if (!isSpare)
                 _currentAmmo = a;
             else

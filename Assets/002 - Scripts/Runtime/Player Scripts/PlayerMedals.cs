@@ -6,6 +6,7 @@ public class PlayerMedals : MonoBehaviour
 {
     public Player player { get { return transform.root.GetComponent<Player>(); } }
 
+    public int spree { get { return _spree; } }
     public int kills
     {
         get { return _shortKillSpree; }
@@ -38,6 +39,8 @@ public class PlayerMedals : MonoBehaviour
 
     [SerializeField] Transform killingSpreeMedalPrefab;
 
+    [SerializeField] Transform killjoyMedalPrefab;
+
 
     [SerializeField] int _spree;
     [SerializeField] int _shortKillSpree;
@@ -49,6 +52,8 @@ public class PlayerMedals : MonoBehaviour
         player.OnPlayerRespawned += OnPlayerRespawn_Delegate;
 
         announcer = player.allPlayerScripts.announcer;
+        if(!player.isMine)
+            announcer.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -123,6 +128,13 @@ public class PlayerMedals : MonoBehaviour
         h.SetAsFirstSibling();
 
         announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
+    }
+
+
+    public void SpawnKilljoySpreeMedal()
+    {
+        Transform h = Instantiate(killjoyMedalPrefab, grid);
+        h.SetAsFirstSibling();
     }
 
 
