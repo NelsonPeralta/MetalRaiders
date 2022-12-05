@@ -5,6 +5,7 @@ using Rewired;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using UnityEngine.EventSystems;
+using ExitGames.Client.Photon.StructWrapping;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -13,6 +14,8 @@ public class PlayerController : MonoBehaviourPun
     public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract,
         OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade,
         OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop, OnPlayerDeath;
+
+    public Player player { get { return GetComponent<Player>(); } }
 
     Vector3 _originalCharacterControllerCenter;
 
@@ -125,7 +128,7 @@ public class PlayerController : MonoBehaviourPun
             BackButton();
             if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning)
             {
-                if (!pauseMenuOpen) 
+                if (!pauseMenuOpen)
                 {
                     Sprint();
                     SwitchGrenades();
@@ -649,11 +652,11 @@ public class PlayerController : MonoBehaviourPun
 
         //Inspect weapon when T key is pressed
         ///////////////////////////////////////
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            weaponAnimator.Play("Reload Open", 0, 0f);
-            //anim.SetTrigger("Inspect");
-        }
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
+        //    weaponAnimator.Play("Reload Open", 0, 0f);
+        //    //anim.SetTrigger("Inspect");
+        //}
     }
 
     private void AnimationCheck()
@@ -1067,7 +1070,8 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        GetComponentInChildren<PlayerMedals>().kills++;
+        Debug.Log("asdfsd");
+        try { Debug.Log(GameManager.instance.pid_player_Dict[player.pid].name); } catch (System.Exception e) { Debug.LogWarning(e); }
 
         //try
         //{

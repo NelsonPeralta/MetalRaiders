@@ -399,6 +399,8 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
+
+        try { GameManager.instance.pid_player_Dict.Add(pid, this); } catch { }
     }
     private void Update()
     {
