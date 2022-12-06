@@ -521,59 +521,11 @@ public class Player : MonoBehaviourPunCallbacks
 
     void SpawnRagdoll()
     {
-        var ragdoll = Instantiate(FindObjectOfType<GameObjectPool>().ragdollPrefab);
-
+        var ragdoll = FindObjectOfType<GameObjectPool>().SpawnPooledPlayerRagdoll();
+        Debug.Log(ragdoll.name);
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
-
-        // LAG with the Head and Chest, unknown cause
-        //////////////////////////////
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position = ragdollScript.Head.position;
-        //Debug.Log("Player Head Pos: " + ragdollScript.Head.position + "; Ragdoll head position: " + ragdoll.GetComponent<RagdollPrefab>().ragdollHead.position);
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollChest.position = ragdollScript.Chest.position;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollHips.position = GetComponent<RagdollSpawn>().Hips.position;
-
-        ////ragdoll.GetComponent<RagdollPrefab>().ragdollHead.rotation = ragdollScript.Head.rotation;
-        ////ragdoll.GetComponent<RagdollPrefab>().ragdollChest.rotation = ragdollScript.Chest.rotation;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollHips.rotation = GetComponent<RagdollSpawn>().Hips.rotation;
-
-
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.position = GetComponent<RagdollSpawn>().UpperArmLeft.position;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.position = GetComponent<RagdollSpawn>().UpperArmRight.position;
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmLeft.rotation = GetComponent<RagdollSpawn>().UpperArmLeft.rotation;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperArmRight.rotation = GetComponent<RagdollSpawn>().UpperArmRight.rotation;
-
-
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.position = GetComponent<RagdollSpawn>().LowerArmLeft.position;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.position = GetComponent<RagdollSpawn>().LowerArmRight.position;
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmLeft.rotation = GetComponent<RagdollSpawn>().LowerArmLeft.rotation;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerArmRight.rotation = GetComponent<RagdollSpawn>().LowerArmRight.rotation;
-
-
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.position = GetComponent<RagdollSpawn>().UpperLegLeft.position;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.position = GetComponent<RagdollSpawn>().UpperLegRight.position;
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegLeft.rotation = GetComponent<RagdollSpawn>().UpperLegLeft.rotation;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollUpperLegRight.rotation = GetComponent<RagdollSpawn>().UpperLegRight.rotation;
-
-
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.position = GetComponent<RagdollSpawn>().LowerLegLeft.position;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.position = GetComponent<RagdollSpawn>().LowerLegRight.position;
-
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegLeft.rotation = GetComponent<RagdollSpawn>().LowerLegLeft.rotation;
-        //ragdoll.GetComponent<RagdollPrefab>().ragdollLowerLegRight.rotation = GetComponent<RagdollSpawn>().LowerLegRight.rotation;
-
         ragdoll.SetActive(true);
-
-
-        Debug.Log(impactDir);
 
         if (!_deathByHeadshot)
             ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 200);
@@ -737,7 +689,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         hitboxesEnabled = false;
 
-        try { SpawnRagdoll(); } catch { }
+        try { SpawnRagdoll(); } catch (System.Exception e) { Debug.Log(e); }
         try { StartCoroutine(Respawn_Coroutine()); } catch { }
         try { StartCoroutine(MidRespawnAction()); } catch { }
 

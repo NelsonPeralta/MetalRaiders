@@ -109,12 +109,12 @@ public class PlayerCamera : MonoBehaviour
             float yExtremeDeadzone = 0.98f;
 
             if (Mathf.Abs(xAxisInput) >= xExtremeDeadzone)
-                if (Mathf.Abs(yAxisInput) <= 0.2f || yAxisInput == 0)
-                    _xAxisInput *= 2.5f;
+                //if (Mathf.Abs(yAxisInput) <= 0.2f || yAxisInput == 0)
+                _xAxisInput *= 2.5f;
 
             if (Mathf.Abs(yAxisInput) >= yExtremeDeadzone)
-                if (Mathf.Abs(xAxisInput) <= 0.2f || yAxisInput == 0)
-                    _yAxisInput *= 2.5f;
+                //if (Mathf.Abs(xAxisInput) <= 0.2f || yAxisInput == 0)
+                _yAxisInput *= 2.5f;
 
             mouseX = _xAxisInput * mouseSensitivity * Time.deltaTime + HorizontalSway();
             mouseY = _yAxisInput * mouseSensitivity * 0.75f * Time.deltaTime;
