@@ -172,6 +172,13 @@ public class Movement : MonoBehaviour, IPunObservable
         {
             movement = Vector3.zero;
             velocity = Vector3.zero;
+
+            _maxXSpeed= 0f;
+            _maxZSpeed = 0f;
+
+            _testXSpeed= 0f;
+            _testZSpeed= 0f;
+
             return;
         }
 

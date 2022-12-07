@@ -29,4 +29,8 @@ public class PlayerHealthBar : PlayerBar
         else
             healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 255, 0, 255); // Yellow
     }
+
+    public override void OnPlayerOvershieldPointsChanged_Delegate(Player player)
+    {
+    }
 }

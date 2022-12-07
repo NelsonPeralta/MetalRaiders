@@ -102,7 +102,7 @@ public class PlayerShield : MonoBehaviour
         shieldAudioSource.Play();
     }
 
-    void PlayShieldStartSound(Player player)
+    public void PlayShieldStartSound(Player player)
     {
         shieldAudioSource.clip = shieldStartClip;
         shieldAudioSource.Play();

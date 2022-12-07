@@ -7,6 +7,7 @@ public class PlayerShieldBar : PlayerBar
 {
     public Slider healingSlider;
     [SerializeField] GameObject redAlertBar;
+    [SerializeField] bool isOvershield;
 
     float redAlertInterval = 0.25f;
     float _redAlertBarCountdown = 1;
@@ -24,12 +25,16 @@ public class PlayerShieldBar : PlayerBar
 
         player.OnPlayerShieldDamaged += OnShieldDamaged_Delegate;
         player.OnPlayerShieldBroken += OnShieldBroken_Delegate;
+        player.OnPlayerOvershieldPointsChanged += OnPlayerOvershieldPointsChanged_Delegate;
 
         redAlertBar.SetActive(false);
     }
 
     private void Update()
     {
+        if (isOvershield)
+            return;
+
         healingSlider.value = player.shieldRechargeCountdown;
 
         if (redAlertBarCountdown <= redAlertInterval)
@@ -46,9 +51,32 @@ public class PlayerShieldBar : PlayerBar
     }
     public override void OnPlayerHitPointsChanged_Delegate(Player player)
     {
-        if (player.hitPoints >= 100)
+        if (isOvershield)
         {
-            GetComponent<Slider>().value = player.hitPoints - 100;
+            GetComponent<Slider>().value = player.overshieldPoints;
+            return;
+        }
+
+        if (player.hitPoints >= player.maxHealthPoints)
+        {
+            GetComponent<Slider>().value = player.hitPoints - player.maxHealthPoints;
+            redAlertBarCountdown = 1;
+        }
+        else
+            GetComponent<Slider>().value = 0;
+    }
+
+    public override void OnPlayerOvershieldPointsChanged_Delegate(Player player)
+    {
+        if (isOvershield)
+        {
+            GetComponent<Slider>().value = player.overshieldPoints;
+            return;
+        }
+
+        if (player.hitPoints >= player.maxHealthPoints)
+        {
+            GetComponent<Slider>().value = player.hitPoints - player.maxHealthPoints;
             redAlertBarCountdown = 1;
         }
         else
@@ -56,11 +84,17 @@ public class PlayerShieldBar : PlayerBar
     }
     void OnShieldDamaged_Delegate(Player player)
     {
+        if (isOvershield)
+            return;
+
         healingSlider.maxValue = player.defaultHealingCountdown;
     }
 
     void OnShieldBroken_Delegate(Player player)
     {
+        if (isOvershield)
+            return;
+
         Debug.Log("OnShieldBroken_Delegate");
         healingSlider.maxValue = player.defaultHealingCountdown + ((player.maxHealthPoints - player.hitPoints) / player.healthHealingIncrement);
         redAlertBarCountdown = redAlertInterval;

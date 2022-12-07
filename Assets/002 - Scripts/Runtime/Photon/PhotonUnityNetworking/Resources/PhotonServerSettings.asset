@@ -158,6 +158,7 @@ MonoBehaviour:
   - _StopShoot_RPC
   - CheckRealodButton_RPC
   - UpdateAmmo
+  - StartOverShieldRespawn_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

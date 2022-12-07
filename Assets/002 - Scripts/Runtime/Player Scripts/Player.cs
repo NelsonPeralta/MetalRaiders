@@ -8,7 +8,9 @@ using System.Runtime.CompilerServices;
 public class Player : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerEvent(Player playerProperties);
-    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage, OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken, OnPlayerRespawnEarly, OnPlayerRespawned;
+    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage,
+        OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
+        OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged;
 
 
     // public variables
@@ -65,26 +67,44 @@ public class Player : MonoBehaviourPunCallbacks
         set
         {
             float previousValue = _hitPoints;
-            _hitPoints = Mathf.Clamp(value, 0, _maxHitPoints);
+            float damage = previousValue - value;
 
-            if (previousValue > value)
+            if (_isInvincible)
+                return;
+
+            if (overshieldPoints > 0)
+            {
+                float _originalOsPoints = overshieldPoints;
+                overshieldPoints -= damage;
+                if (damage > _originalOsPoints)
+                    damage -= _originalOsPoints;
+                else
+                    return;
+            }
+
+            float newValue = previousValue - damage;
+
+            if (overshieldPoints <= 0)
+                _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+
+            if (previousValue > newValue)
                 OnPlayerDamaged?.Invoke(this);
 
-            if (previousValue != value)
+            if (previousValue != newValue)
                 OnPlayerHitPointsChanged?.Invoke(this);
 
-            if (maxHitPoints == 250)
+            if (_maxShieldPoints > 0)
             {
-                if (value >= maxHealthPoints && value < previousValue)
+                if (newValue >= maxHealthPoints && newValue < previousValue)
                 {
                     OnPlayerShieldDamaged?.Invoke(this);
                 }
 
-                if (value <= maxHealthPoints && previousValue > maxHealthPoints)
+                if (newValue <= maxHealthPoints && previousValue > maxHealthPoints)
                     OnPlayerShieldBroken?.Invoke(this);
             }
 
-            if (value < maxHealthPoints && previousValue <= maxHealthPoints && previousValue > value)
+            if (newValue < maxHealthPoints && previousValue <= maxHealthPoints && previousValue > newValue)
                 OnPlayerHealthDamage?.Invoke(this);
 
 
@@ -96,12 +116,46 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    public float overshieldPoints
+    {
+        get { return _overshieldPoints; }
+        private set
+        {
+            _overshieldPoints = Mathf.Clamp(value, 0, _maxOvershieldPoints);
+
+            if (_overshieldPoints >= _maxOvershieldPoints)
+            {
+                _isInvincible = false;
+                _overshieldRecharge = false;
+            }
+
+            if (_overshieldPoints <= 0)
+                _overshieldFx.SetActive(false);
+
+            OnPlayerOvershieldPointsChanged?.Invoke(this);
+        }
+    }
+
     public int maxHitPoints { get { return _maxHitPoints; } set { _maxHitPoints = value; } }
 
     public int maxHealthPoints
     {
         get { return _maxHealthPoints; }
         private set { _maxHealthPoints = value; }
+    }
+    public int maxOvershieldPoints
+    {
+        get { return _maxOvershieldPoints; }
+        set
+        {
+            _maxOvershieldPoints = value;
+            if (_maxOvershieldPoints > 0)
+            {
+                _overshieldRecharge = true;
+                _overshieldFx.SetActive(true);
+                GetComponent<PlayerShield>().PlayShieldStartSound(this);
+            }
+        }
     }
     public int maxShieldPoints
     {
@@ -274,13 +328,19 @@ public class Player : MonoBehaviourPunCallbacks
     // private variables
     #region
 
-    int _maxHitPoints = 250;
-    int _maxHealthPoints = 100;
-    int _maxShieldPoints = 150;
-    float _hitPoints = 250;
+
+    [SerializeField] int _maxHitPoints = 250;
+    [SerializeField] int _maxHealthPoints = 100;
+    [SerializeField] int _maxShieldPoints = 150;
+    [SerializeField] int _maxOvershieldPoints = 150;
+    [SerializeField] float _hitPoints = 250, _overshieldPoints = 150;
+    [SerializeField] bool _isRespawning, _isDead, _isInvincible;
+    [SerializeField] GameObject _overshieldFx;
+
+
     int _meleeDamage = 150;
-    [SerializeField] bool _isRespawning, _isDead;
     bool _isHealing;
+    bool _overshieldRecharge;
     int _respawnTime = 5;
 
     int _defaultRespawnTime = 4;
@@ -296,6 +356,8 @@ public class Player : MonoBehaviourPunCallbacks
     bool _deathByHeadshot;
     Vector3 _impactPos;
     Vector3 _impactDir;
+
+
 
     #endregion
 
@@ -405,11 +467,18 @@ public class Player : MonoBehaviourPunCallbacks
     private void Update()
     {
         HitPointsRecharge();
+        OvershieldPointsRecharge();
     }
 
 
-
-
+    void OvershieldPointsRecharge()
+    {
+        if (_overshieldRecharge && overshieldPoints < _maxOvershieldPoints)
+        {
+            _isInvincible = true;
+            overshieldPoints += (Time.deltaTime * _shieldHealingIncrement);
+        }
+    }
 
 
     // public functions
@@ -450,20 +519,15 @@ public class Player : MonoBehaviourPunCallbacks
             lastPID = playerWhoShotThisPlayerPhotonId;
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
 
-            if (headshot)
-            {
-                if (healthPoints <= healthDamage)
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
-                else
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
-            }
+            if (_isInvincible)
+                healthDamage = 0;
+            if (overshieldPoints > 0)
+                healthDamage -= (int)_overshieldPoints;
+
+            if (hitPoints <= healthDamage)
+                p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
             else
-            {
-                if (healthPoints <= healthDamage)
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-                else
-                    p.GetComponent<PlayerUI>().SpawnHitMarker();
-            }
+                p.GetComponent<PlayerUI>().SpawnHitMarker();
         }
         catch { }
 
@@ -535,6 +599,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void HitPointsRecharge()
     {
+
         if (healingCountdown > 0)
         {
             healingCountdown -= Time.deltaTime;

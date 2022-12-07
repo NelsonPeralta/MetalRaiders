@@ -14,6 +14,8 @@ public class NetworkGameManager : MonoBehaviourPun
         DontDestroyOnLoad(gameObject);
     }
 
+    public Overshield overshield;
+
 
     // Methods
     #region
@@ -73,6 +75,24 @@ public class NetworkGameManager : MonoBehaviourPun
     public void UpdatePlayerTeam(string t, string pn)
     {
         GetComponent<PhotonView>().RPC("UpdatePlayerTeam_RPC", RpcTarget.All, t, pn);
+    }
+
+    public void StartOverShieldRespawn(int t)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        int _time = FindObjectOfType<OnlineGameTime>().totalTime;
+
+        int timeLeft = 0;
+
+        if (_time < t)
+            timeLeft = t - _time;
+        else
+            timeLeft = t - (_time % t);
+        Debug.Log(timeLeft);
+
+        GetComponent<PhotonView>().RPC("StartOverShieldRespawn_RPC", RpcTarget.All, timeLeft);
     }
     #endregion
 
@@ -265,5 +285,22 @@ public class NetworkGameManager : MonoBehaviourPun
     {
         foreach (AmmoPack ap in FindObjectsOfType<AmmoPack>())
             ap.enable = true;
+    }
+
+    [PunRPC]
+    void StartOverShieldRespawn_RPC(int t)
+    {
+        Debug.Log("sdfaeqwer");
+        StartCoroutine(StartOverShieldRespawn_Coroutine(t));
+    }
+
+
+
+
+
+    IEnumerator StartOverShieldRespawn_Coroutine(int t)
+    {
+        yield return new WaitForSeconds(t);
+        overshield.gameObject.SetActive(true);
     }
 }

@@ -10,6 +10,7 @@ abstract public class PlayerBar : MonoBehaviour
     private void Awake()
     {
         player.OnPlayerHitPointsChanged += OnPlayerHitPointsChanged_Delegate;
+        player.OnPlayerOvershieldPointsChanged += OnPlayerOvershieldPointsChanged_Delegate;
     }
 
     private void Start()
@@ -17,4 +18,5 @@ abstract public class PlayerBar : MonoBehaviour
         OnPlayerHitPointsChanged_Delegate(player);
     }
     public abstract void OnPlayerHitPointsChanged_Delegate(Player player);
+    public abstract void OnPlayerOvershieldPointsChanged_Delegate(Player player);
 }
