@@ -5,10 +5,16 @@ using Photon.Pun;
 
 public class NetworkGameTime : MonoBehaviour
 {
-    OnlineGameTime gameTime;
+    GameTime gameTime;
     [PunRPC]
     public void AddSecond_RPC(int newTotalTime)
     {
-        FindObjectOfType<OnlineGameTime>().totalTime = newTotalTime;
+        FindObjectOfType<GameTime>().totalTime = newTotalTime;
+    }
+
+    [PunRPC]
+    public void UpdateTime_RPC(int newTotalTime)
+    {
+        FindObjectOfType<GameTime>().totalTime = newTotalTime;
     }
 }

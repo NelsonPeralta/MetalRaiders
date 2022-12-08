@@ -16,7 +16,6 @@ public class NetworkGameManager : MonoBehaviourPun
 
     public Overshield overshield;
 
-
     // Methods
     #region
     public void UpdateTeamMode(string tm)
@@ -82,7 +81,7 @@ public class NetworkGameManager : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        int _time = FindObjectOfType<OnlineGameTime>().totalTime;
+        int _time = FindObjectOfType<GameTime>().totalTime;
 
         int timeLeft = 0;
 
@@ -93,6 +92,11 @@ public class NetworkGameManager : MonoBehaviourPun
         Debug.Log(timeLeft);
 
         GetComponent<PhotonView>().RPC("StartOverShieldRespawn_RPC", RpcTarget.All, timeLeft);
+    }
+
+    public void StartLootableWeaponRespawn(Vector3 v)
+    {
+        GetComponent<PhotonView>().RPC("StartLootableWeaponRespawn_RPC", RpcTarget.All, v);
     }
     #endregion
 
@@ -292,6 +296,13 @@ public class NetworkGameManager : MonoBehaviourPun
     {
         Debug.Log("sdfaeqwer");
         StartCoroutine(StartOverShieldRespawn_Coroutine(t));
+    }
+
+    [PunRPC]
+    void StartLootableWeaponRespawn_RPC(Vector3 v)
+    {
+        Debug.Log("sdfaeqwer");
+        MultiplayerManager.instance.StartLootableWeaponRespawn(v);
     }
 
 

@@ -11,7 +11,7 @@ public class PlayerUI : MonoBehaviour
     [Header("Scripts")]
     public PlayerSwarmMatchStats onlinePlayerSwarmScript;
     [Header("Singletons")]
-    public OnlineGameTime onlineGameTimeInstance;
+    public GameTime onlineGameTimeInstance;
     public PhotonView PV;
 
     [Header("Cameras", order = 0)]

@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         try { pid_player_Dict.Clear(); } catch { }
-        try { FindObjectOfType<OnlineGameTime>().totalTime = 0; }
+        try { FindObjectOfType<GameTime>().totalTime = 0; }
         catch (Exception e) { Debug.LogWarning(e.Message); }
 
         Debug.Log("GameManager OnSceneLoaded called");
@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             FindObjectOfType<Launcher>().OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
             FindObjectOfType<Launcher>().OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
-            FindObjectOfType<OnlineGameTime>().totalTime = 0;
+            FindObjectOfType<GameTime>().totalTime = 0;
         }
         OnSceneLoadedEvent?.Invoke();
     }
@@ -488,5 +488,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void ChangeNbLocalPlayers(string n)
     {
         NbPlayers = int.Parse(n);
+    }
+
+    public static int GetNextTiming(int tts)
+    {
+        int _time = FindObjectOfType<GameTime>().totalTime;
+
+        int timeLeft = 0;
+
+        if (_time < tts)
+            timeLeft = tts - _time;
+        else
+            timeLeft = tts - (_time % tts);
+        Debug.Log(timeLeft);
+
+        return timeLeft;
     }
 }

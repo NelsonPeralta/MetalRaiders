@@ -17,6 +17,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     private void Start()
     {
+        GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
         ReplaceWeaponsByGametype();
 
         if (placeHolder)
@@ -47,6 +48,9 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     private void Update()
     {
+
+        return;
+
         if (weaponSpawned)
         {
             _tts -= Time.deltaTime;
@@ -71,12 +75,26 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         }
     }
 
+    void OnGameTimeChanged(GameTime gameTime)
+    {
+        if (gameTime.totalTime % weaponSpawned.tts == 0)
+        {
+            weaponSpawned.gameObject.SetActive(true);
+
+            weaponSpawned.ammo = weaponSpawned.defaultAmmo;
+            weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+
+            weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
+            weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+        }
+    }
+
     // Methods
     #region
     void ReplaceWeaponsByGametype()
     {
         string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal" };
-        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14"};
+        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14" };
         string[] lightWeaponCodeNames = { "m1911", "colt", "mp5" };
 
         if ((GameManager.instance.gameType.ToString().Contains("Pro")))
@@ -98,7 +116,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             foreach (string weaponCode in lightWeaponCodeNames)
                 if (weaponCode == codeName)
                     codeName = "barrett50cal";
-            
+
             foreach (string weaponCode in heavyWeaponCodeNames)
                 if (weaponCode == codeName)
                     codeName = "r700";

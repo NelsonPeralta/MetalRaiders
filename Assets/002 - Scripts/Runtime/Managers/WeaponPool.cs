@@ -7,7 +7,7 @@ using System.Collections;
 public class WeaponPool : MonoBehaviourPun
 {
     public PhotonView PV;
-    public static OnlineGameTime onlineGameTimeInstance;
+    public static GameTime onlineGameTimeInstance;
     public int amountOfWeaponsToPool;
     public int amountOfWeaponPacksToPool;
 
@@ -31,7 +31,7 @@ public class WeaponPool : MonoBehaviourPun
 
     private void Start()
     {
-        onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
+        onlineGameTimeInstance = GameTime.instance;
 
         for (int i = 0; i < weaponPrefabs.Count; i++)
             for (int j = 0; j < amountOfWeaponsToPool; j++)

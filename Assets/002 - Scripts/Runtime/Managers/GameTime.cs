@@ -1,149 +1,141 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using ExitGames.Client.Photon;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
+using System;
 
-public class GameTime : MonoBehaviour
+public class GameTime : MonoBehaviourPunCallbacks
 {
-    [Header("Info")]
-    public int minutes;
-    public int seconds;
-    public float totalGameTime;
+    public static GameTime instance;
 
-    [Header("MANUAL LINKING")]
-    public Text minutesTextPlayer1;
-    public Text minutesTextPlayer2;
-    public Text minutesTextPlayer3;
-    public Text minutesTextPlayer4;
-    public Text secondsTexPlayer1;
-    public Text secondsTexPlayer2;
-    public Text secondsTexPlayer3;
-    public Text secondsTexPlayer4;
 
-    // Start is called before the first frame update
-    void Start()
+    public delegate void GameTimeEvent(GameTime gameTime);
+    public GameTimeEvent OnGameTimeChanged;
+
+    public int totalTime
     {
-        if (minutesTextPlayer1 != null)
+        get { return _totalTime; }
+        set
         {
-            minutesTextPlayer1.text = "00";
-            secondsTexPlayer1.text = "00";
-        }
-
-        if (minutesTextPlayer2 != null)
-        {
-            minutesTextPlayer2.text = "00";
-            secondsTexPlayer2.text = "00";
-        }
-
-        if (minutesTextPlayer3 != null)
-        {
-            minutesTextPlayer3.text = "00";
-            secondsTexPlayer3.text = "00";
-        }
-
-        if (minutesTextPlayer4 != null)
-        {
-            minutesTextPlayer4.text = "00";
-            secondsTexPlayer4.text = "00";
+            if (_totalTime != value)
+            {
+                _totalTime = value;
+                OnGameTimeChanged?.Invoke(this);
+            }
         }
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    [SerializeField] int _totalTime = 0;
+    [SerializeField] int __totalTime = 0;
+    [SerializeField] int minPlayers = 2;
+    [SerializeField] int timeOutMultiples = 15;
+
+    float secondCountdown = 1f;
+    bool waitingTimedOut;
+
+    private void Awake()
     {
-        totalGameTime += Time.deltaTime;
-
-        minutes = Mathf.RoundToInt(totalGameTime) / 60;
-        seconds = Mathf.RoundToInt(totalGameTime) % 60;
-
-        if (minutes >= 10)
+        Debug.Log("OnlineGameTime Awake");
+        if (instance)
         {
-            if (minutesTextPlayer1 != null)
-            {
-                minutesTextPlayer1.text = minutes.ToString();
-            }
-
-            if (minutesTextPlayer2 != null)
-            {
-                minutesTextPlayer2.text = minutes.ToString();
-            }
-
-            if (minutesTextPlayer3 != null)
-            {
-                minutesTextPlayer3.text = minutes.ToString();
-            }
-
-            if (minutesTextPlayer4 != null)
-            {
-                minutesTextPlayer4.text = minutes.ToString();
-            }
+            Destroy(gameObject);
+            return;
         }
-        else if (minutes < 10)
+        DontDestroyOnLoad(gameObject);
+        instance = this;
+    }
+
+    private void OnEnable()
+    {
+        base.OnEnable();// need this for OnRoomPropertiesUpdate to work if MonoBehaviourPunCallbacks
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
+    }
+    void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        totalTime = 0;
+    }
+
+    private void Start()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void Update()
+    {
+        if (GameManager.sceneIndex <= 0)
+            return;
+        secondCountdown -= Time.deltaTime;
+
+        if (secondCountdown < 0)
         {
-            if (minutesTextPlayer1 != null)
-            {
-                minutesTextPlayer1.text = "0" + minutes.ToString();
-            }
+            __totalTime++;
 
-            if (minutesTextPlayer2 != null)
-            {
-                minutesTextPlayer2.text = "0" + minutes.ToString();
-            }
+            if (PhotonNetwork.IsMasterClient)
+                FindObjectOfType<NetworkGameTime>().GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.All, __totalTime);
 
-            if (minutesTextPlayer3 != null)
-            {
-                minutesTextPlayer3.text = "0" + minutes.ToString();
-            }
+            //FindObjectOfType<NetworkGameTime>().GetComponent<PhotonView>().RPC("AddSecond_RPC", RpcTarget.All, totalTime);
+            secondCountdown = 1;
 
-            if (minutesTextPlayer4 != null)
+            return;
+            // TODO
+            // Waiting room Timeout
+            #region
+            if (totalTime % timeOutMultiples == 0 && GameManager.sceneIndex == Launcher.instance.waitingRoomLevelIndex && PhotonNetwork.CurrentRoom.PlayerCount >= minPlayers)
             {
-                minutesTextPlayer4.text = "0" + minutes.ToString();
-            }
-        }
+                // Choosing random GameType
+                #region
+                Array values = Enum.GetValues(typeof(GameManager.ArenaGameType));
+                System.Random random = new System.Random();
+                GameManager.ArenaGameType arenaGameType = (GameManager.ArenaGameType)values.GetValue(random.Next(values.Length));
 
-        if (seconds >= 10)
-        {
-            if (minutesTextPlayer1 != null)
-            {
-                secondsTexPlayer1.text = seconds.ToString();
-            }
+                for (int i = 0; i < 3; i++)
+                    if (arenaGameType != GameManager.ArenaGameType.Slayer)
+                        arenaGameType = (GameManager.ArenaGameType)values.GetValue(random.Next(values.Length));
 
-            if (minutesTextPlayer2 != null)
-            {
-                secondsTexPlayer2.text = seconds.ToString();
-            }
+                ExitGames.Client.Photon.Hashtable ht = new ExitGames.Client.Photon.Hashtable();
+                ht.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
+                ht.Add("gametype", arenaGameType.ToString());
 
-            if (minutesTextPlayer3 != null)
-            {
-                secondsTexPlayer3.text = seconds.ToString();
-            }
+                PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
+                #endregion
 
-            if (minutesTextPlayer4 != null)
-            {
-                secondsTexPlayer4.text = seconds.ToString();
+                waitingTimedOut = true;
             }
-        }
-        else if (seconds < 10)
-        {
-            if (minutesTextPlayer1 != null)
-            {
-                secondsTexPlayer1.text = "0" + seconds.ToString();
-            }
-
-            if (minutesTextPlayer2 != null)
-            {
-                secondsTexPlayer2.text = "0" + seconds.ToString();
-            }
-
-            if (minutesTextPlayer3 != null)
-            {
-                secondsTexPlayer3.text = "0" + seconds.ToString();
-            }
-
-            if (minutesTextPlayer4 != null)
-            {
-                secondsTexPlayer4.text = "0" + seconds.ToString();
-            }
+            #endregion
         }
     }
+
+
+
+
+
+
+
+
+    // OLD
+    #region
+
+    //public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    //{
+    //    if (waitingTimedOut)
+    //    {
+    //        waitingTimedOut = false;
+    //        Debug.Log("OnRoomPropertiesUpdate");
+
+    //        System.Random random = new System.Random();
+    //        int index = random.Next(GameManager.instance.arenaLevelIndexes.Count);
+    //        index = GameManager.instance.arenaLevelIndexes[index];
+    //        PhotonNetwork.LoadLevel(index);
+    //    }
+    //}
+
+    #endregion
 }

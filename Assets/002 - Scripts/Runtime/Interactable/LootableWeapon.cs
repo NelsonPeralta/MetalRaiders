@@ -97,6 +97,12 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     {
         spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
         spawnPointRotation = transform.rotation;
+
+        try
+        {
+            MultiplayerManager.instance.lootableWeaponsDict.Add(spawnPointPosition, this);
+        }
+        catch(System.Exception e) { Debug.LogWarning(e); }
     }
 
     private void Update()
@@ -138,6 +144,8 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
         OnLooted?.Invoke(this);
         Debug.Log("OnLooted");
+        //NetworkGameManager.instance.StartLootableWeaponRespawn(spawnPointPosition);
+        //return;
         if (networkWeaponSpawnPoint)
         {
             gameObject.SetActive(false);

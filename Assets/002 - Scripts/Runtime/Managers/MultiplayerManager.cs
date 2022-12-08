@@ -11,6 +11,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     // public variables
     public static MultiplayerManager instance;
 
+    public Dictionary<Vector3, LootableWeapon> lootableWeaponsDict = new Dictionary<Vector3, LootableWeapon>();
+
+
     public int scoreToWin
     {
         get
@@ -173,5 +176,36 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             this.losingPlayerPhotonId = losingPlayerPhotonId;
             this.headshot = headshot;
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public void StartLootableWeaponRespawn(Vector3 v)
+    {
+        LootableWeapon lw = lootableWeaponsDict[v];
+        int t = GameManager.GetNextTiming((int)lw.tts);
+
+        Debug.Log(t);
+
+        StartCoroutine(LootableWeaponSpawn_Coroutine(lw, t));
+    }
+
+
+
+
+    IEnumerator LootableWeaponSpawn_Coroutine(LootableWeapon lw, int t)
+    {
+        yield return new WaitForSeconds(t);
+
+        lw.gameObject.SetActive(true);
     }
 }
