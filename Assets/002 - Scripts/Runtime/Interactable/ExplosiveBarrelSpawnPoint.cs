@@ -16,9 +16,15 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
     public int index { get { return barrel.index; } }
     public float tts { get { return _tts; } private set { _tts = value; } }
 
+    private void OnDestroy()
+    {
+        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+    }
+
     private void Start()
     {
         tts = _defaultTts;
+        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
         GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
 
         if (PhotonNetwork.IsMasterClient)

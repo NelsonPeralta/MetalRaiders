@@ -15,8 +15,13 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     [SerializeField] float _tts;
     bool _auth;
 
+    private void OnDestroy()
+    {
+        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+    }
     private void Start()
     {
+        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
         GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
         ReplaceWeaponsByGametype();
 

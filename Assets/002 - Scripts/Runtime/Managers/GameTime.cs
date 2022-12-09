@@ -42,7 +42,7 @@ public class GameTime : MonoBehaviourPunCallbacks
         Debug.Log("OnlineGameTime Awake");
         if (instance)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
             return;
         }
         DontDestroyOnLoad(gameObject);
@@ -52,19 +52,19 @@ public class GameTime : MonoBehaviourPunCallbacks
     private void OnEnable()
     {
         base.OnEnable();// need this for OnRoomPropertiesUpdate to work if MonoBehaviourPunCallbacks
-    }
 
-    private void OnDestroy()
-    {
-        instance = null;
+        secondCountdown = 1;
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         totalTime = 0;
+        __totalTime = 0;
+        secondCountdown = 1;
     }
 
     private void Start()
     {
+        Debug.Log("OnlineGameTime Awake");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 

@@ -497,6 +497,11 @@ public class Player : MonoBehaviourPunCallbacks
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
+        if (_isInvincible)
+            damage = 0;
+        if (overshieldPoints > 0)
+            damage -= (int)_overshieldPoints;
+
         Debug.Log("member name: " + memberName);
         Debug.Log("source file path: " + sourceFilePath);
         Debug.Log("source line number: " + sourceLineNumber);
