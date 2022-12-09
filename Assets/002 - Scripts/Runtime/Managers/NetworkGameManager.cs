@@ -68,6 +68,7 @@ public class NetworkGameManager : MonoBehaviourPun
 
     public void DamageIceChunk(Vector3 position, int val)
     {
+        Debug.Log(val);
         GetComponent<PhotonView>().RPC("DamageIceChunk_RPC", RpcTarget.All, position, val);
     }
 

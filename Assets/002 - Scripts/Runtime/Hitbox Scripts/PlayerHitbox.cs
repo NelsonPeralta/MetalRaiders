@@ -32,6 +32,11 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
+        if (player.isInvincible)
+            healthDamage = 0;
+        if (player.overshieldPoints > 0)
+            healthDamage -= (int)player.overshieldPoints;
+
         Debug.Log("PLAYER HITBOX DAMAGE");
         Debug.Log("member name: " + memberName);
         Debug.Log("source file path: " + sourceFilePath);
@@ -41,22 +46,17 @@ public class PlayerHitbox : Hitbox, IDamageable
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
 
-            if (headshot)
-            {
-                if (player.healthPoints <= healthDamage)
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
-                else
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
-            }
+            if (player.isInvincible)
+                healthDamage = 0;
+            if (player.overshieldPoints > 0)
+                healthDamage -= (int)player.overshieldPoints;
+
+            if (player.hitPoints <= healthDamage)
+                p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
             else
-            {
-                if (player.healthPoints <= healthDamage)
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-                else
-                    p.GetComponent<PlayerUI>().SpawnHitMarker();
-            }
+                p.GetComponent<PlayerUI>().SpawnHitMarker();
         }
-        catch(System.Exception e) { Debug.LogWarning(e); }
+        catch { }
 
         //player.Damage((int)player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin); ;
         player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);

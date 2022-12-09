@@ -21,7 +21,6 @@ public class PlayerGameTime : MonoBehaviour
 
     void OnGameTimeChange(GameTime gameTime)
     {
-        Debug.Log(GameTime.instance.totalTime);
         _timer.text = $"{(GameTime.instance.totalTime / 60).ToString("00")}:{(GameTime.instance.totalTime % 60).ToString("00")}";
     }
 }

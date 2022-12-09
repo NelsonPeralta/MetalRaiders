@@ -34,14 +34,27 @@ public class Explosion : MonoBehaviour
         for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
         {
             Collider hit = colliders[i];
+            float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
+
+            if (hitDistance > radius)
+                continue;
+
+
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             CharacterController cc = hit.GetComponent<CharacterController>();
 
+
+            float disRatio = 1 - (hitDistance / radius);
+            float calculatedPower = explosionPower * disRatio;
+            int calculatedDamage = (int)(damage * disRatio);
+
             int characterControllerDivider = 3;
-            float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
-            float disRatio = (1 - (hitDistance / radius));
-            float calculatedPower = (explosionPower * (1 - (hitDistance / radius)));
-            int calculatedDamage = (int)Mathf.Clamp((damage * (1 - (hitDistance / radius))), 0, damage);
+
+            //Debug.Log(hitDistance);
+            //Debug.Log(disRatio);
+            //Debug.Log(calculatedPower);
+            //Debug.Log((damage * disRatio));
+
 
             //Add force to nearby rigidbodies
             if (rb != null)
@@ -49,9 +62,6 @@ public class Explosion : MonoBehaviour
 
             if (cc)
             {
-                Debug.Log(hitDistance);
-                Debug.Log(disRatio);
-                Debug.Log(calculatedDamage);
                 Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
                 cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, calculatedPower / characterControllerDivider);
             }
@@ -77,13 +87,16 @@ public class Explosion : MonoBehaviour
                 GameObject hitObject = hit.gameObject;
                 if (!objectsHit.Contains(hitObject))
                 {
+                    Debug.Log(hitObject.name);
+                    Debug.Log(calculatedDamage);
+
                     objectsHit.Add(hitObject);
                     OnObjectAdded?.Invoke(this);
                     try
                     {
                         hit.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.pid);
                     }
-                    catch { }
+                    catch(System.Exception e) { Debug.LogWarning(e); hit.GetComponent<IDamageable>().Damage(calculatedDamage); }
                 }
             }
         }

@@ -43,7 +43,7 @@ public class IceChunk : MonoBehaviour, IDamageable
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        throw new System.NotImplementedException();
+        Damage(healthDamage, headshot, playerWhoShotThisPlayerPhotonId, damageSource: "");
     }
 
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
@@ -52,6 +52,7 @@ public class IceChunk : MonoBehaviour, IDamageable
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
+        Debug.Log("ice chunk " + damage);
         hitPoints -= damage;
     }
     #endregion

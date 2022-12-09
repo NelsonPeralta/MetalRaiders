@@ -15,7 +15,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     // public variables
     #region
-
+    public bool isInvincible { get { return _isInvincible; } }
     public int controllerId
     {
         get { return GetComponent<PlayerController>().rid; }
