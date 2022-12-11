@@ -621,7 +621,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public void PlayMeleeSound()
     {
-        int randomSound = Random.Range(0, meleeClips.Length);
+        int randomSound = UnityEngine.Random.Range(0, meleeClips.Length);
         playerVoice.clip = meleeClips[randomSound];
         playerVoice.Play();
     }
