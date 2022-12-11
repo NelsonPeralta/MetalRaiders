@@ -79,9 +79,6 @@ public class ProjectileBullet : MonoBehaviour
                                 wasHeadshot = hitbox.isHead;
                                 wasNutshot = hitbox.isNuts;
 
-                                if (wasHeadshot && player.hitPoints < damage)
-                                    player.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
-
                             }
 
                             if (player.PV.IsMine)
@@ -148,10 +145,6 @@ public class ProjectileBullet : MonoBehaviour
 
                         wasHeadshot = hitbox.isHead;
                         wasNutshot = hitbox.isNuts;
-
-                        if (wasHeadshot && player.hitPoints < damage)
-                            player.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
-
                     }
 
                     if (player.PV.IsMine)

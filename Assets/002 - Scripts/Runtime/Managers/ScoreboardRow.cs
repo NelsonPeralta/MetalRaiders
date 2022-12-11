@@ -35,4 +35,5 @@ public class ScoreboardRow : MonoBehaviour
     public TextMeshProUGUI playerHeadshotsText;
     public TextMeshProUGUI playerCurrentPointsText;
     public TextMeshProUGUI playerTotalPointsText;
+    public TextMeshProUGUI playerTotalDamageText;
 }

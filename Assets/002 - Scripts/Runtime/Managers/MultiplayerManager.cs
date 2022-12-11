@@ -94,6 +94,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         {
             winningPlayerMS.kills++;
 
+            if(struc.headshot)
+                winningPlayerMS.headshots++;
+
             if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Red)
                 redTeamScore++;
             else if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Blue)

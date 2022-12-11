@@ -267,9 +267,6 @@ public class Bullet : MonoBehaviourPunCallbacks
                                     wasHeadshot = hitbox.isHead;
                                     wasNutshot = hitbox.isNuts;
 
-                                    if (wasHeadshot && player.hitPoints < damage)
-                                        sourcePlayer.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
-
                                 }
 
                                 if (sourcePlayer.PV.IsMine)
@@ -339,10 +336,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                             wasHeadshot = hitbox.isHead;
                             wasNutshot = hitbox.isNuts;
-
-                            if (wasHeadshot && player.hitPoints < damage)
-                                sourcePlayer.GetComponent<PlayerMultiplayerMatchStats>().headshots++;
-
                         }
 
                         if (sourcePlayer.PV.IsMine)

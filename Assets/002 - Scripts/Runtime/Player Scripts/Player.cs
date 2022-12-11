@@ -531,7 +531,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     public void Damage(int damage, bool headshot, int source_pid,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, 
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null,
         bool isGroin = false,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
@@ -566,8 +566,8 @@ public class Player : MonoBehaviourPunCallbacks
         }
         Debug.Log(damage);
 
-        PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, source_pid, 
-            impactPos, impactDir, damageSource, 
+        PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, source_pid,
+            impactPos, impactDir, damageSource,
             isGroin);
     }
 
@@ -629,9 +629,9 @@ public class Player : MonoBehaviourPunCallbacks
         ragdoll.SetActive(true);
 
         if (!_deathByHeadshot)
-            ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 200);
+            ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 400);
         else
-            ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 200);
+            ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 400);
     }
 
     void HitPointsRecharge()
@@ -868,16 +868,18 @@ public class Player : MonoBehaviourPunCallbacks
 
     [PunRPC]
     void Damage_RPC(int damage, bool headshot, int sourcePid,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, 
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null,
         bool isGroin = false)
     {
         Debug.Log($"Damage_RPC: {damage}");
         Debug.Log(damage);
         Debug.Log(hitPoints);
+        Debug.Log(damageSource);
 
         _deathByHeadshot = headshot;
         lastPID = sourcePid;
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
+        try { lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
 
         if (PV.IsMine)
         {
@@ -1043,12 +1045,7 @@ public class Player : MonoBehaviourPunCallbacks
         try
         { // Hit Marker Handling
 
-            if (isInvincible)
-                damage = 0;
-            if (overshieldPoints > 0)
-                damage -= (int)overshieldPoints;
-
-            if (hitPoints <= damage)
+            if (isDead)
                 lastPlayerSource.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
             else
                 lastPlayerSource.GetComponent<PlayerUI>().SpawnHitMarker();
@@ -1070,35 +1067,55 @@ public class Player : MonoBehaviourPunCallbacks
             foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
             {
                 string f = $"{lastPlayerSource.nickName} killed {nickName}";
-                kfm.EnterNewFeed(f);
 
-                continue;
                 {
                     if (this != lastPlayerSource)
                     {
+                        kfm.EnterNewFeed(f);
+                        continue;
 
-                        string feed = $"{lastPlayerSource.nickName} killed";
-                        if (kfm.GetComponent<Player>() != this)
                         {
-                            if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
+                            string feed = $"{lastPlayerSource.nickName} killed";
+                            if (kfm.GetComponent<Player>() != this)
                             {
-                                try
+                                if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
                                 {
-                                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                                    feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
+                                    try
+                                    {
+                                        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                                        feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
-                                    if (headshot)
-                                        feed += $"<sprite={hsCode}>";
+                                        if (headshot)
+                                            feed += $"<sprite={hsCode}>";
 
-                                    if (isGroin)
-                                        feed += $"<sprite={nsCode}>";
+                                        if (isGroin)
+                                            feed += $"<sprite={nsCode}>";
 
-                                    feed += $" <color=\"red\">{nickName}";
-                                    kfm.EnterNewFeed(feed);
+                                        feed += $" <color=\"red\">{nickName}";
+                                        kfm.EnterNewFeed(feed);
+                                    }
+                                    catch
+                                    {
+                                        kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
+                                    }
                                 }
-                                catch
+                                else
                                 {
-                                    kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
+                                    try
+                                    {
+                                        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                                        feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+                                        if (headshot)
+                                            feed += $"<sprite={hsCode}>";
+
+                                        feed += $" <color=\"red\">{nickName}";
+                                        kfm.EnterNewFeed(feed);
+                                    }
+                                    catch
+                                    {
+                                        kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+                                    }
                                 }
                             }
                             else
@@ -1111,31 +1128,13 @@ public class Player : MonoBehaviourPunCallbacks
                                     if (headshot)
                                         feed += $"<sprite={hsCode}>";
 
-                                    feed += $" <color=\"red\">{nickName}";
+                                    feed += $" <color={youColorCode}>You";
                                     kfm.EnterNewFeed(feed);
                                 }
                                 catch
                                 {
-                                    kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+                                    kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
                                 }
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                                feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                                if (headshot)
-                                    feed += $"<sprite={hsCode}>";
-
-                                feed += $" <color={youColorCode}>You";
-                                kfm.EnterNewFeed(feed);
-                            }
-                            catch
-                            {
-                                kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
                             }
                         }
                     }

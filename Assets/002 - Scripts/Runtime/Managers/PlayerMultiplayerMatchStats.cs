@@ -32,6 +32,12 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             _kills = kills;
         }
     }
+
+    public int damage
+    {
+        get { return _damage; }
+        set { _damage = value; }
+    }
     public int deaths
     {
         get { return _deaths; }
@@ -92,6 +98,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
     // private variables
     [SerializeField] int _kills;
+    [SerializeField] int _damage;
     [SerializeField] int _deaths;
     [SerializeField] int _headshots;
     [SerializeField] float _kd;
