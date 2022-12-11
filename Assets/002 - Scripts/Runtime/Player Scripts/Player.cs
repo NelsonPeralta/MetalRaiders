@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Runtime.CompilerServices;
+using System;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -320,7 +321,16 @@ public class Player : MonoBehaviourPunCallbacks
     public PlayerMultiplayerMatchStats.Team team
     {
         get { return GameManager.instance.onlineTeam; }
-        private set { _team = value; }
+        private set
+        {
+            if (isMine)
+            {
+                _team = value;
+                PV.RPC("UpdateTeam_RPC", RpcTarget.All, nickName);
+
+                name += $" {_team} team";
+            }
+        }
     }
     public int lastPID
     {
@@ -352,7 +362,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] float _hitPoints = 250, _overshieldPoints = 150;
     [SerializeField] bool _isRespawning, _isDead, _isInvincible;
     [SerializeField] GameObject _overshieldFx;
-#endregion
+    #endregion
 
 
     // private variables
@@ -829,6 +839,12 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    void UpdateTeam_RPC(string nn)
+    {
+        _team = (PlayerMultiplayerMatchStats.Team)Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), nn);
+    }
+
+    [PunRPC]
     void Damage_RPC(int damage)
     {
         if (!isDead && !isRespawning)
@@ -880,7 +896,7 @@ public class Player : MonoBehaviourPunCallbacks
         _deathByHeadshot = headshot;
         lastPID = sourcePid;
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
-        try { if(lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
+        try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
 
         if (PV.IsMine)
         {
