@@ -32,6 +32,9 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
+        if (GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).team == player.team)
+            return;
+
         //Debug.Log(healthDamage);
         //Debug.Log(player.overshieldPoints);
 

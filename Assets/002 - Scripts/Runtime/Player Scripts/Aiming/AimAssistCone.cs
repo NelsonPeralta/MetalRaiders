@@ -164,7 +164,7 @@ public class AimAssistCone : MonoBehaviour
         collidingHitbox = chb;
         if (!obstruction && collidingHitbox)
         {
-            if (GameManager.instance.gameType.ToString().Contains("Classic"))
+            if (GameManager.instance.teamMode.ToString().Contains("Classic"))
             {
                 if (collidingHitbox.GetComponent<PlayerHitbox>().player.team == player.team)
                 {
