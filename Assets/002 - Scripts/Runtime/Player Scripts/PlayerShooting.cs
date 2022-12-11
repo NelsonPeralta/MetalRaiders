@@ -202,6 +202,9 @@ public class PlayerShooting : MonoBehaviourPun
     int _ignoreShootCounter;
     void shoooo()
     {
+        if (playerController.GetComponent<Player>().isDead || playerController.GetComponent<Player>().isRespawning)
+            return;
+
         Debug.Log("shoooo 1");
 
         int counter = 1;

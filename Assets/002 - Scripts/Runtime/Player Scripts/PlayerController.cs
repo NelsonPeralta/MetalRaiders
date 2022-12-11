@@ -1085,7 +1085,6 @@ public class PlayerController : MonoBehaviourPun
         //catch (System.Exception e) { Debug.Log(e); }
         //GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1, 2, 1));
     }
-
     public void OnDeath_Delegate(Player player)
     {
         isSprinting = false;

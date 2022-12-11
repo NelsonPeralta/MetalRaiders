@@ -879,7 +879,7 @@ public class Player : MonoBehaviourPunCallbacks
         _deathByHeadshot = headshot;
         lastPID = sourcePid;
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
-        try { lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
+        try { if(lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
 
         if (PV.IsMine)
         {
