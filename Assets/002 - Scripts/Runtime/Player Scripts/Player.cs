@@ -320,6 +320,7 @@ public class Player : MonoBehaviourPunCallbacks
     public PlayerMultiplayerMatchStats.Team team
     {
         get { return GameManager.instance.onlineTeam; }
+        private set { _team = value; }
     }
     public int lastPID
     {
@@ -339,17 +340,11 @@ public class Player : MonoBehaviourPunCallbacks
     // serialized variables
     #region
 
+    [SerializeField] PlayerMultiplayerMatchStats.Team _team;
     [SerializeField] PlayerMedals playerMedals;
     [SerializeField] string _nickName;
     [SerializeField] Player _lastPlayerSource;
     [SerializeField] int _lastPID;
-
-    #endregion
-
-    // private variables
-    #region
-
-
     [SerializeField] int _maxHitPoints = 250;
     [SerializeField] int _maxHealthPoints = 100;
     [SerializeField] int _maxShieldPoints = 150;
@@ -357,7 +352,12 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] float _hitPoints = 250, _overshieldPoints = 150;
     [SerializeField] bool _isRespawning, _isDead, _isInvincible;
     [SerializeField] GameObject _overshieldFx;
+#endregion
 
+
+    // private variables
+
+    #region
 
     int _meleeDamage = 150;
     bool _isHealing;
@@ -484,6 +484,7 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
 
         try { GameManager.instance.pid_player_Dict.Add(pid, this); } catch { }
+        try { team = GameManager.instance.onlineTeam; } catch { }
     }
     private void Update()
     {

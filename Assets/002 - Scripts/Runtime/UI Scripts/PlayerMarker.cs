@@ -22,7 +22,7 @@ public class PlayerMarker : MonoBehaviour
         player.OnPlayerDeath += OnPLayerDeath_Delegate;
         player.OnPlayerRespawned += OnPlayerRespawn_Delegate;
 
-        if (GameManager.instance.gameType.ToString().Contains("Team"))
+        if (GameManager.instance.teamMode.ToString().Contains("Classic"))
         {
             Debug.Log(GameManager.instance.gameType.ToString());
             Debug.Log(GameManager.instance.onlineTeam.ToString());
