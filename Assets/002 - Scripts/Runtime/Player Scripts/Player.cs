@@ -60,14 +60,20 @@ public class Player : MonoBehaviourPunCallbacks
     {
         get { return (hitPoints - shieldPoints); }
     }
+
+    public float fullPoints { get { return _hitPoints + _overshieldPoints; } }
     public float hitPoints
     {
-        get { return _hitPoints; }
+        get { return _hitPoints + _overshieldPoints; }
 
         set
         {
             float previousValue = _hitPoints;
             float damage = previousValue - value;
+
+            Debug.Log(_isInvincible);
+            Debug.Log(previousValue);
+            Debug.Log(damage);
 
             if (_isInvincible)
                 return;
@@ -77,7 +83,10 @@ public class Player : MonoBehaviourPunCallbacks
                 float _originalOsPoints = overshieldPoints;
                 overshieldPoints -= damage;
                 if (damage > _originalOsPoints)
+                {
                     damage -= _originalOsPoints;
+                    Debug.Log(damage);
+                }
                 else
                     return;
             }
@@ -312,7 +321,18 @@ public class Player : MonoBehaviourPunCallbacks
     {
         get { return GameManager.instance.onlineTeam; }
     }
-    public int lastPID { get { return _lastPID; } set { _lastPID = value; } }
+    public int lastPID
+    {
+        get { return _lastPID; }
+        set
+        {
+            _lastPID = value;
+
+            try { lastPlayerSource = GameManager.GetPlayerWithPhotonViewId(_lastPID); } catch { _lastPID = 0; }
+        }
+    }
+
+    public Player lastPlayerSource { get { return _lastPlayerSource; } private set { _lastPlayerSource = value; } }
 
     #endregion
 
@@ -321,6 +341,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     [SerializeField] PlayerMedals playerMedals;
     [SerializeField] string _nickName;
+    [SerializeField] Player _lastPlayerSource;
     [SerializeField] int _lastPID;
 
     #endregion
@@ -509,34 +530,45 @@ public class Player : MonoBehaviourPunCallbacks
         PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
 
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
+    public void Damage(int damage, bool headshot, int source_pid,
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, 
+        bool isGroin = false,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        Debug.Log("member name: " + memberName);
-        Debug.Log("source file path: " + sourceFilePath);
-        Debug.Log("source line number: " + sourceLineNumber);
+        {
+            //Debug.Log("member name: " + memberName);
+            //Debug.Log("source file path: " + sourceFilePath);
+            //Debug.Log("source line number: " + sourceLineNumber);
 
-        try
-        { // Hit Marker Handling
-            lastPID = playerWhoShotThisPlayerPhotonId;
-            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
 
-            if (_isInvincible)
-                healthDamage = 0;
-            if (overshieldPoints > 0)
-                healthDamage -= (int)_overshieldPoints;
+            //Debug.Log(healthDamage);
+            //Debug.Log(_isInvincible);
+            //Debug.Log(overshieldPoints);
 
-            if (hitPoints <= healthDamage)
-                p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-            else
-                p.GetComponent<PlayerUI>().SpawnHitMarker();
+            //try
+            //{ // Hit Marker Handling
+            //    lastPID = playerWhoShotThisPlayerPhotonId;
+            //    Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
+
+            //    if (_isInvincible)
+            //        healthDamage = 0;
+            //    if (overshieldPoints > 0)
+            //        healthDamage -= (int)_overshieldPoints;
+
+            //    if (hitPoints <= healthDamage)
+            //        p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+            //    else
+            //        p.GetComponent<PlayerUI>().SpawnHitMarker();
+            //}
+            //catch (System.Exception e) { Debug.LogWarning(e); }
         }
-        catch { }
+        Debug.Log(damage);
 
-        PV.RPC("Damage_RPC", RpcTarget.All, hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
+        PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, source_pid, 
+            impactPos, impactDir, damageSource, 
+            isGroin);
     }
 
     // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter
@@ -835,93 +867,257 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(float _newHealth, bool wasHeadshot, int playerWhoShotThisPlayerPhotonId,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false)
+    void Damage_RPC(int damage, bool headshot, int sourcePid,
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, 
+        bool isGroin = false)
     {
+        Debug.Log($"Damage_RPC: {damage}");
+        Debug.Log(damage);
+        Debug.Log(hitPoints);
 
+        _deathByHeadshot = headshot;
+        lastPID = sourcePid;
+        try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
 
-        int damage = (int)(hitPoints - _newHealth);
-        bool _isDead = false;
-        if (hitPoints - damage <= 0)
-            _isDead = true;
-
-        _deathByHeadshot = wasHeadshot;
-
-        Debug.Log($"Damage_RPC");
-        lastPID = playerWhoShotThisPlayerPhotonId;
         if (PV.IsMine)
         {
             GetComponent<PlayerController>().ScopeOut();
-            allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(playerWhoShotThisPlayerPhotonId);
+            allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
 
-            try
             {
-                KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
-                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-
-                if (damageSource.Contains("grenade"))
+                try
                 {
-                    string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
-                    killFeedManager.EnterNewFeed($"You took {damage} <color={colorCode}>grenade damage");
+                    KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
+                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+
+                    if (damageSource.Contains("grenade"))
+                    {
+                        string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
+                        killFeedManager.EnterNewFeed($"You took {damage} <color={colorCode}>grenade damage");
+                    }
+                    //else if (damageSource.Contains("melee"))
+                    //{
+                    //    string colorCode = KillFeedManager.killFeedColorCodeDict["yellow"];
+                    //    killFeedManager.EnterNewFeed($"You took {meleeDamage} melee  damage");
+                    //}
                 }
-                //else if (damageSource.Contains("melee"))
-                //{
-                //    string colorCode = KillFeedManager.killFeedColorCodeDict["yellow"];
-                //    killFeedManager.EnterNewFeed($"You took {meleeDamage} melee  damage");
-                //}
+                catch { }
             }
-            catch { }
         }
+
+        if (isDead)
+        {
+            //Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
+            //string sourcePlayerName = sourcePlayer.nickName;
+
+            //int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
+            //int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
+            //string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
+            //string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
+
+            //foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+            //{
+            //    string f = $"{sourcePlayer.nickName} killed {nickName}";
+            //    kfm.EnterNewFeed(f);
+
+            //    continue;
+            //    if (this != sourcePlayer)
+            //    {
+
+            //        string feed = $"{sourcePlayer.nickName} killed";
+            //        if (kfm.GetComponent<Player>() != this)
+            //        {
+            //            if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
+            //            {
+            //                try
+            //                {
+            //                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+            //                    feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+            //                    if (wasHeadshot)
+            //                        feed += $"<sprite={hsCode}>";
+
+            //                    if (isGroin)
+            //                        feed += $"<sprite={nsCode}>";
+
+            //                    feed += $" <color=\"red\">{nickName}";
+            //                    kfm.EnterNewFeed(feed);
+            //                }
+            //                catch
+            //                {
+            //                    kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
+            //                }
+            //            }
+            //            else
+            //            {
+            //                try
+            //                {
+            //                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+            //                    feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+            //                    if (wasHeadshot)
+            //                        feed += $"<sprite={hsCode}>";
+
+            //                    feed += $" <color=\"red\">{nickName}";
+            //                    kfm.EnterNewFeed(feed);
+            //                }
+            //                catch
+            //                {
+            //                    kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            try
+            //            {
+            //                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+            //                feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+            //                if (wasHeadshot)
+            //                    feed += $"<sprite={hsCode}>";
+
+            //                feed += $" <color={youColorCode}>You";
+            //                kfm.EnterNewFeed(feed);
+            //            }
+            //            catch
+            //            {
+            //                kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+            //    }
+            //}
+
+            //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            //{
+            //    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoShotThisPlayerPhotonId, PV.ViewID, wasHeadshot));
+
+            //}
+            //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            //    GetComponent<PlayerSwarmMatchStats>().deaths++;
+
+            //PlayerMedals sourcePlayerMedals = null;
+            //foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
+            //    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
+            //        sourcePlayerMedals = pm;
+
+            //if (wasHeadshot)
+            //{
+            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
+            //        sourcePlayerMedals.SpawnHeadshotMedal();
+            //}
+            //else if (isGroin)
+            //{
+            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
+            //        sourcePlayerMedals.SpawnNutshotMedal();
+            //}
+            //else if (damageSource == "melee")
+            //{
+            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
+            //        sourcePlayerMedals.SpawnMeleeMedal();
+            //}
+            //else if (damageSource.Contains("grenade"))
+            //{
+            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
+            //        sourcePlayerMedals.SpawnGrenadeMedal();
+            //}
+            //else
+            //{
+            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
+            //        sourcePlayerMedals.kills++;
+            //}
+
+            //if (playerMedals.spree >= 3)
+            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
+            //        sourcePlayerMedals.SpawnKilljoySpreeMedal();
+        }
+
+
+
+        hitPoints -= damage;
+
         try
-        {
-            Debug.Log(impactDir);
-            this.impactPos = (Vector3)impactPos;
-            this.impactDir = (Vector3)impactDir;
+        { // Hit Marker Handling
+
+            if (isInvincible)
+                damage = 0;
+            if (overshieldPoints > 0)
+                damage -= (int)overshieldPoints;
+
+            if (hitPoints <= damage)
+                lastPlayerSource.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+            else
+                lastPlayerSource.GetComponent<PlayerUI>().SpawnHitMarker();
         }
-        catch (System.Exception e) { }
+        catch { }
 
-
-        if (_isDead)
+        if (isDead)
         {
-            Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
-            string sourcePlayerName = sourcePlayer.nickName;
+            string sourcePlayerName = lastPlayerSource.nickName;
 
             int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
             int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
             string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
             string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
+
+
+
             foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
             {
-                string f = $"{sourcePlayer.nickName} killed {nickName}";
+                string f = $"{lastPlayerSource.nickName} killed {nickName}";
                 kfm.EnterNewFeed(f);
 
                 continue;
-                if (this != sourcePlayer)
                 {
-
-                    string feed = $"{sourcePlayer.nickName} killed";
-                    if (kfm.GetComponent<Player>() != this)
+                    if (this != lastPlayerSource)
                     {
-                        if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
+
+                        string feed = $"{lastPlayerSource.nickName} killed";
+                        if (kfm.GetComponent<Player>() != this)
                         {
-                            try
+                            if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
                             {
-                                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                                feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
+                                try
+                                {
+                                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                                    feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
-                                if (wasHeadshot)
-                                    feed += $"<sprite={hsCode}>";
+                                    if (headshot)
+                                        feed += $"<sprite={hsCode}>";
 
-                                if (isGroin)
-                                    feed += $"<sprite={nsCode}>";
+                                    if (isGroin)
+                                        feed += $"<sprite={nsCode}>";
 
-                                feed += $" <color=\"red\">{nickName}";
-                                kfm.EnterNewFeed(feed);
+                                    feed += $" <color=\"red\">{nickName}";
+                                    kfm.EnterNewFeed(feed);
+                                }
+                                catch
+                                {
+                                    kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
+                                }
                             }
-                            catch
+                            else
                             {
-                                kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
+                                try
+                                {
+                                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                                    feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+                                    if (headshot)
+                                        feed += $"<sprite={hsCode}>";
+
+                                    feed += $" <color=\"red\">{nickName}";
+                                    kfm.EnterNewFeed(feed);
+                                }
+                                catch
+                                {
+                                    kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+                                }
                             }
                         }
                         else
@@ -931,90 +1127,67 @@ public class Player : MonoBehaviourPunCallbacks
                                 int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
                                 feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
-                                if (wasHeadshot)
+                                if (headshot)
                                     feed += $"<sprite={hsCode}>";
 
-                                feed += $" <color=\"red\">{nickName}";
+                                feed += $" <color={youColorCode}>You";
                                 kfm.EnterNewFeed(feed);
                             }
                             catch
                             {
-                                kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+                                kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
                             }
                         }
                     }
                     else
                     {
-                        try
-                        {
-                            int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                            feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                            if (wasHeadshot)
-                                feed += $"<sprite={hsCode}>";
-
-                            feed += $" <color={youColorCode}>You";
-                            kfm.EnterNewFeed(feed);
-                        }
-                        catch
-                        {
-                            kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
-                        }
+                        kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
                     }
-                }
-                else
-                {
-                    kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
                 }
             }
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             {
-                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoShotThisPlayerPhotonId, PV.ViewID, wasHeadshot));
+                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(sourcePid, PV.ViewID, headshot));
 
             }
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
 
-            PlayerMedals sourcePlayerMedals = null;
-            foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
-                if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
-                    sourcePlayerMedals = pm;
+            PlayerMedals sourcePlayerMedals = lastPlayerSource.playerMedals;
+            if (sourcePlayerMedals != this.playerMedals)
+            {
+                if (headshot)
+                {
+                    if (sourcePid != this.pid)
+                        sourcePlayerMedals.SpawnHeadshotMedal();
+                }
+                else if (isGroin)
+                {
+                    if (sourcePid != this.pid)
+                        sourcePlayerMedals.SpawnNutshotMedal();
+                }
+                else if (damageSource == "melee")
+                {
+                    if (sourcePid != this.pid)
+                        sourcePlayerMedals.SpawnMeleeMedal();
+                }
+                else if (damageSource.Contains("grenade"))
+                {
+                    if (sourcePid != this.pid)
+                        sourcePlayerMedals.SpawnGrenadeMedal();
+                }
+                else
+                {
+                    if (sourcePid != this.pid)
+                        sourcePlayerMedals.kills++;
+                }
 
-            if (wasHeadshot)
-            {
-                if (playerWhoShotThisPlayerPhotonId != this.pid)
-                    sourcePlayerMedals.SpawnHeadshotMedal();
+                if (playerMedals.spree >= 3)
+                    if (sourcePid != this.pid)
+                        sourcePlayerMedals.SpawnKilljoySpreeMedal();
             }
-            else if (isGroin)
-            {
-                if (playerWhoShotThisPlayerPhotonId != this.pid)
-                    sourcePlayerMedals.SpawnNutshotMedal();
-            }
-            else if (damageSource == "melee")
-            {
-                if (playerWhoShotThisPlayerPhotonId != this.pid)
-                    sourcePlayerMedals.SpawnMeleeMedal();
-            }
-            else if (damageSource.Contains("grenade"))
-            {
-                if (playerWhoShotThisPlayerPhotonId != this.pid)
-                    sourcePlayerMedals.SpawnGrenadeMedal();
-            }
-            else
-            {
-                if (playerWhoShotThisPlayerPhotonId != this.pid)
-                    sourcePlayerMedals.kills++;
-            }
-
-            if (playerMedals.spree >= 3)
-                if (playerWhoShotThisPlayerPhotonId != this.pid)
-                    sourcePlayerMedals.SpawnKilljoySpreeMedal();
         }
-
-
-
-        hitPoints = _newHealth;
     }
 
 

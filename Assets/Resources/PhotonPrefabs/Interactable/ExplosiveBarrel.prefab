@@ -117,7 +117,7 @@ MonoBehaviour:
   _index: 0
   explosionPrefab: {fileID: 9199873579906523012, guid: df71d7b947465be45909b10bdf0100e4,
     type: 3}
-  _defaultHitPoints: 60
+  _defaultHitPoints: 40
   _hitPoints: 0
   _collisionAudioClip: {fileID: 8300000, guid: 7b8d3fe1ccbe9bb469f46468002bf917, type: 3}
   _spawnPointPosition: {x: 0, y: 0, z: 0}

@@ -324,7 +324,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetPlayerWithPhotonViewId(int pid)
     {
-        return PhotonView.Find(pid).GetComponent<Player>();
+        return instance.pid_player_Dict[pid];
     }
 
     public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null)

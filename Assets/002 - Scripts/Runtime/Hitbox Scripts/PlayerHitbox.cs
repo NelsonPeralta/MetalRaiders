@@ -23,7 +23,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         Damage(healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos: null);
     }
 
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
+    public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
@@ -32,33 +32,37 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
-        if (player.isInvincible)
-            healthDamage = 0;
-        if (player.overshieldPoints > 0)
-            healthDamage -= (int)player.overshieldPoints;
+        //Debug.Log(healthDamage);
+        //Debug.Log(player.overshieldPoints);
 
-        Debug.Log("PLAYER HITBOX DAMAGE");
-        Debug.Log("member name: " + memberName);
-        Debug.Log("source file path: " + sourceFilePath);
-        Debug.Log("source line number: " + sourceLineNumber);
+        //if (player.isInvincible)
+        //    healthDamage = 0;
+        //if (player.overshieldPoints > 0)
+        //    healthDamage -= (int)player.overshieldPoints;
 
-        try
-        { // Hit Marker Handling
-            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
+        //Debug.Log("PLAYER HITBOX DAMAGE");
+        //Debug.Log("member name: " + memberName);
+        //Debug.Log("source file path: " + sourceFilePath);
+        //Debug.Log("source line number: " + sourceLineNumber);
 
-            if (player.isInvincible)
-                healthDamage = 0;
-            if (player.overshieldPoints > 0)
-                healthDamage -= (int)player.overshieldPoints;
+        //try
+        //{ // Hit Marker Handling
+        //    Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
 
-            if (player.hitPoints <= healthDamage)
-                p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-            else
-                p.GetComponent<PlayerUI>().SpawnHitMarker();
-        }
-        catch { }
+        //    if (player.isInvincible)
+        //        healthDamage = 0;
+        //    if (player.overshieldPoints > 0)
+        //        healthDamage -= (int)player.overshieldPoints;
 
-        //player.Damage((int)player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin); ;
-        player.PV.RPC("Damage_RPC", RpcTarget.All, player.hitPoints - healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
+        //    if (player.hitPoints <= healthDamage)
+        //        p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+        //    else
+        //        p.GetComponent<PlayerUI>().SpawnHitMarker();
+        //}
+        //catch { }
+        Debug.Log(damage);
+
+        player.Damage((int)damage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin); ;
+        //player.PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
     }
 }

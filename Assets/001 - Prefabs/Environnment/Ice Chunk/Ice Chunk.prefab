@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b84000bc4da119b4491b2c91a94879fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultHitPoints: 60
+  _defaultHitPoints: 40
   _hitPoints: 0
   explosionPrefab: {fileID: 6860896204298834303, guid: 265c8f58886e0c047bb48f4b26e649d3,
     type: 3}

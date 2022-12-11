@@ -3849,6 +3849,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Man Cannon (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7209461666461803120, guid: 0110d7531bfb1a94785b51125515d715,
+        type: 3}
+      propertyPath: power
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 7209461666461803121, guid: 0110d7531bfb1a94785b51125515d715,
         type: 3}
       propertyPath: m_RootOrder
@@ -15801,7 +15806,7 @@ PrefabInstance:
     - target: {fileID: 6770151803344703304, guid: 49ece1bd826e5e04892ba511dc0aa3e6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6770151803344703304, guid: 49ece1bd826e5e04892ba511dc0aa3e6,
         type: 3}
@@ -23814,6 +23819,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Man Cannon
+      objectReference: {fileID: 0}
+    - target: {fileID: 7209461666461803120, guid: 0110d7531bfb1a94785b51125515d715,
+        type: 3}
+      propertyPath: power
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 7209461666461803121, guid: 0110d7531bfb1a94785b51125515d715,
         type: 3}
