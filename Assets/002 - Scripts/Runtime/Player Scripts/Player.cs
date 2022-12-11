@@ -11,7 +11,7 @@ public class Player : MonoBehaviourPunCallbacks
     public delegate void PlayerEvent(Player playerProperties);
     public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage,
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
-        OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged;
+        OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged;
 
 
     // public variables
@@ -326,6 +326,7 @@ public class Player : MonoBehaviourPunCallbacks
             if (isMine)
             {
                 _team = value;
+                OnPlayerTeamChanged?.Invoke(this);
                 Debug.Log(_team);
                 PV.RPC("UpdateTeam_RPC", RpcTarget.All, _team.ToString());
 
@@ -489,6 +490,8 @@ public class Player : MonoBehaviourPunCallbacks
         //}
         //StartCoroutine(SlightlyIncreaseHealth());
 
+        //foreach (PlayerMarker pm in GetComponentsInChildren<PlayerMarker>())
+        //    OnPlayerTeamChanged += pm.OnPlayerTeamDelegate;
         OnPlayerDeath += OnPlayerDeath_Delegate;
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
@@ -842,8 +845,13 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateTeam_RPC(string nn)
     {
-        Debug.Log(nn);
-        _team = (PlayerMultiplayerMatchStats.Team)Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), nn);
+        if (!PV.IsMine)
+        {
+            Debug.Log(nn);
+            _team = (PlayerMultiplayerMatchStats.Team)Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), nn);
+            OnPlayerTeamChanged?.Invoke(this);
+            name += $" {_team} team";
+        }
     }
 
     [PunRPC]

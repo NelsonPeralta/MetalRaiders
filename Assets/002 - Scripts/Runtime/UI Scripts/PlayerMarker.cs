@@ -17,20 +17,30 @@ public class PlayerMarker : MonoBehaviour
     [SerializeField] Material green;
     [SerializeField] Material red;
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        player.OnPlayerTeamChanged += OnPlayerTeamDelegate;
+    }
     private void Start()
     {
         player.OnPlayerDeath += OnPLayerDeath_Delegate;
         player.OnPlayerRespawned += OnPlayerRespawn_Delegate;
+    }
 
+    public void OnPlayerTeamDelegate(Player player)
+    {
         if (GameManager.instance.teamMode.ToString().Contains("Classic"))
         {
-            Debug.Log(GameManager.instance.gameType.ToString());
-            Debug.Log(GameManager.instance.onlineTeam.ToString());
-
+            Debug.Log("Player Marker");
             if (!player.isMine)
             {
                 if (color == Color.Red)
                 {
+                    Debug.Log(player.nickName);
+                    Debug.Log(player.team);
+                    Debug.Log(GameManager.GetMyPlayer().team);
+
                     if (player.team == GameManager.GetMyPlayer().team)
                         gameObject.SetActive(false);
                 }
@@ -51,7 +61,6 @@ public class PlayerMarker : MonoBehaviour
                 gameObject.SetActive(false);
         }
     }
-
     public void OnPLayerDeath_Delegate(Player player)
     {
         GetComponent<MeshRenderer>().enabled = false;
