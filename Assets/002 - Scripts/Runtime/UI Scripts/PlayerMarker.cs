@@ -25,17 +25,22 @@ public class PlayerMarker : MonoBehaviour
         if (GameManager.instance.gameType.ToString().Contains("Team"))
         {
             Debug.Log(GameManager.instance.gameType.ToString());
-            Debug.Log(GameManager.instance.onlineTeam);
+            Debug.Log(GameManager.instance.onlineTeam.ToString());
 
             if (!player.isMine)
             {
                 if (color == Color.Red)
                 {
-                    Debug.Log(player.team);
-                    Debug.Log(GameManager.GetMyPlayer().team);
+                    Debug.Log(player.team.ToString());
+                    Debug.Log(GameManager.GetMyPlayer().team.ToString());
 
                     if (player.team == GameManager.GetMyPlayer().team)
                         gameObject.SetActive(false);
+                }
+                else
+                {
+                    Debug.Log(player.team.ToString());
+                    Debug.Log(GameManager.GetMyPlayer().team.ToString());
                 }
             }
             else
