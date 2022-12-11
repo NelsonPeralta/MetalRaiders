@@ -326,7 +326,7 @@ public class Player : MonoBehaviourPunCallbacks
             if (isMine)
             {
                 _team = value;
-                PV.RPC("UpdateTeam_RPC", RpcTarget.All, nickName);
+                PV.RPC("UpdateTeam_RPC", RpcTarget.All, _team);
 
                 name += $" {_team} team";
             }
