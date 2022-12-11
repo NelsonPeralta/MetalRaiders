@@ -241,7 +241,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
             try
             {
-                if (GameManager.instance.gameType.ToString().Contains("Team"))
+                if (GameManager.instance.teamMode.ToString().Contains("Classic"))
                 {
 
                     if (finalHitObject.GetComponent<PlayerHitbox>())
