@@ -326,7 +326,8 @@ public class Player : MonoBehaviourPunCallbacks
             if (isMine)
             {
                 _team = value;
-                PV.RPC("UpdateTeam_RPC", RpcTarget.All, _team);
+                Debug.Log(_team);
+                PV.RPC("UpdateTeam_RPC", RpcTarget.All, _team.ToString());
 
                 name += $" {_team} team";
             }
@@ -841,6 +842,7 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateTeam_RPC(string nn)
     {
+        Debug.Log(nn);
         _team = (PlayerMultiplayerMatchStats.Team)Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), nn);
     }
 

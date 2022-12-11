@@ -31,16 +31,12 @@ public class PlayerMarker : MonoBehaviour
             {
                 if (color == Color.Red)
                 {
-                    Debug.Log(player.team.ToString());
-                    Debug.Log(GameManager.GetMyPlayer().team.ToString());
-
                     if (player.team == GameManager.GetMyPlayer().team)
                         gameObject.SetActive(false);
                 }
                 else
                 {
-                    Debug.Log(player.team.ToString());
-                    Debug.Log(GameManager.GetMyPlayer().team.ToString());
+
                 }
             }
             else
