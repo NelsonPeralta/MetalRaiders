@@ -68,12 +68,12 @@ public class Player : MonoBehaviourPunCallbacks
 
         set
         {
-            float previousValue = _hitPoints;
-            float damage = previousValue - value;
+            float _previousValue = hitPoints;
+            float _damage = _previousValue - value;
 
-            Debug.Log(_isInvincible);
-            Debug.Log(previousValue);
-            Debug.Log(damage);
+            Debug.Log(_previousValue);
+            Debug.Log(value);
+            Debug.Log(_damage);
 
             if (_isInvincible)
                 return;
@@ -81,39 +81,39 @@ public class Player : MonoBehaviourPunCallbacks
             if (overshieldPoints > 0)
             {
                 float _originalOsPoints = overshieldPoints;
-                overshieldPoints -= damage;
-                if (damage > _originalOsPoints)
+                overshieldPoints -= _damage;
+                if (_damage > _originalOsPoints)
                 {
-                    damage -= _originalOsPoints;
-                    Debug.Log(damage);
+                    _damage -= _originalOsPoints;
+                    Debug.Log(_damage);
                 }
                 else
                     return;
             }
 
-            float newValue = previousValue - damage;
+            float newValue = hitPoints - _damage;
 
             if (overshieldPoints <= 0)
                 _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
 
-            if (previousValue > newValue)
+            if (_previousValue > newValue)
                 OnPlayerDamaged?.Invoke(this);
 
-            if (previousValue != newValue)
+            if (_previousValue != newValue)
                 OnPlayerHitPointsChanged?.Invoke(this);
 
             if (_maxShieldPoints > 0)
             {
-                if (newValue >= maxHealthPoints && newValue < previousValue)
+                if (newValue >= maxHealthPoints && newValue < _previousValue)
                 {
                     OnPlayerShieldDamaged?.Invoke(this);
                 }
 
-                if (newValue <= maxHealthPoints && previousValue > maxHealthPoints)
+                if (newValue <= maxHealthPoints && _previousValue > maxHealthPoints)
                     OnPlayerShieldBroken?.Invoke(this);
             }
 
-            if (newValue < maxHealthPoints && previousValue <= maxHealthPoints && previousValue > newValue)
+            if (newValue < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newValue)
                 OnPlayerHealthDamage?.Invoke(this);
 
 
