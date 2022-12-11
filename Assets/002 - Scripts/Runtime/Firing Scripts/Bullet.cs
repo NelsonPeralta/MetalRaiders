@@ -246,6 +246,9 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                     if (finalHitObject.GetComponent<PlayerHitbox>())
                     {
+                        Debug.Log(sourcePlayer.team.ToString());
+                        Debug.Log(finalHitObject.GetComponent<PlayerHitbox>().player.team.ToString());
+
                         if (finalHitObject.GetComponent<PlayerHitbox>().player.team != sourcePlayer.team)
                         {
                             if (finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<PlayerHitbox>().player.isDead && !finalHitObject.GetComponent<PlayerHitbox>().player.isRespawning)

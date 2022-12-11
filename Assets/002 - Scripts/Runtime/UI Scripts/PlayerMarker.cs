@@ -39,10 +39,10 @@ public class PlayerMarker : MonoBehaviour
                 {
                     if (player.team != GameManager.GetMyPlayer().team)
                         gameObject.SetActive(false);
-                }
-                else
+                }else if(color == Color.Red)
                 {
-
+                    if (player.team == GameManager.GetMyPlayer().team)
+                        gameObject.SetActive(false);
                 }
             }
         }

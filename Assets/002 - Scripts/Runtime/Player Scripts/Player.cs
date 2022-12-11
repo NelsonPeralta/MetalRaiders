@@ -850,7 +850,7 @@ public class Player : MonoBehaviourPunCallbacks
             Debug.Log(nn);
             _team = (PlayerMultiplayerMatchStats.Team)Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), nn);
             OnPlayerTeamChanged?.Invoke(this);
-            name += $" {_team} team";
+            name += $" {_team.ToString()} team";
         }
     }
 
