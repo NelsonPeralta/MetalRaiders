@@ -35,24 +35,15 @@ public class PlayerMarker : MonoBehaviour
             Debug.Log("Player Marker");
             if (!player.isMine)
             {
-                if (color == Color.Red)
+                if (color == Color.Green)
                 {
-                    Debug.Log(player.nickName);
-                    Debug.Log(player.team);
-                    Debug.Log(GameManager.GetMyPlayer().team);
-
-                    if (player.team == GameManager.GetMyPlayer().team)
+                    if (player.team != GameManager.GetMyPlayer().team)
                         gameObject.SetActive(false);
                 }
                 else
                 {
 
                 }
-            }
-            else
-            {
-                if (color == Color.Red)
-                    gameObject.SetActive(false);
             }
         }
         else
