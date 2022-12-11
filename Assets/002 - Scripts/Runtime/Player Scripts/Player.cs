@@ -320,7 +320,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public PlayerMultiplayerMatchStats.Team team
     {
-        get { return GameManager.instance.onlineTeam; }
+        get { return _team; }
         private set
         {
             if (isMine)
