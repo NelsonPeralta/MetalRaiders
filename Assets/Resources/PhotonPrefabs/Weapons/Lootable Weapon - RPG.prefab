@@ -135,7 +135,7 @@ MonoBehaviour:
   codeName: rpg
   spriteId: 0
   _ammo: 1
-  _spareAmmo: 5
+  _spareAmmo: 2
   _defaultAmmo: 1
   _defaultSpareAmmo: 5
   _tts: 180

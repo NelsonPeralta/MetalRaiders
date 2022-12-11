@@ -9815,7 +9815,7 @@ MonoBehaviour:
   _player: {fileID: 0}
   damageSource: grenadelauncher
   damage: 140
-  radius: 5
+  radius: 4.5
   explosionPower: 500
 --- !u!82 &7241414760208152368
 AudioSource:

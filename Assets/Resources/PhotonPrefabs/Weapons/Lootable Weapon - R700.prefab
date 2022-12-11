@@ -302,10 +302,10 @@ MonoBehaviour:
   cleanName: R700
   codeName: r700
   spriteId: 0
-  _ammo: 6
-  _spareAmmo: 12
-  _defaultAmmo: 6
-  _defaultSpareAmmo: 12
+  _ammo: 8
+  _spareAmmo: 8
+  _defaultAmmo: 8
+  _defaultSpareAmmo: 8
   _tts: 180
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}

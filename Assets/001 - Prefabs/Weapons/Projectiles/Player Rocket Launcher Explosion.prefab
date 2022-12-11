@@ -9815,7 +9815,7 @@ MonoBehaviour:
   _player: {fileID: 0}
   damageSource: rocket
   damage: 500
-  radius: 6
+  radius: 7
   explosionPower: 600
 --- !u!82 &7241414760208152368
 AudioSource:
