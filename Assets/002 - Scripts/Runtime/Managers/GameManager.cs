@@ -72,6 +72,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (value == TeamMode.None)
             {
                 onlineTeam = PlayerMultiplayerMatchStats.Team.None;
+                FindObjectOfType<Launcher>().teamRoomUI.SetActive(false);
+
+            }
+            else
+            {
+                FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
             }
         }
     }
@@ -119,7 +125,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 FindObjectOfType<Launcher>().teamModeText.text = $"Team Mode: {teamMode}";
                 if (teamMode == TeamMode.Classic)
-                    FindObjectOfType<Launcher>().teamModeText.text += $" ({_onlineTeam.ToString()})";
+                    FindObjectOfType<Launcher>().teamText.text = $"Team: ({_onlineTeam.ToString()})";
             }
             catch { }
         }

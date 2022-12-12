@@ -34,6 +34,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text errorText;
     [SerializeField] TMP_Text messageText;
     [SerializeField] GameObject commonRoomTexts;
+    [SerializeField] GameObject _teamRoomUI;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
@@ -42,6 +43,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text _mapSelectedText;
     [SerializeField] TMP_Text _gametypeSelectedText;
     [SerializeField] TMP_Text _teamModeText;
+    [SerializeField] TMP_Text _teamText;
 
     [SerializeField] TMP_InputField _loginUsernameText;
     [SerializeField] TMP_InputField registerUsernameText;
@@ -77,6 +79,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     }
 
     public TMP_Text teamModeText { get { return _teamModeText; } }
+    public TMP_Text teamText { get { return _teamText; } }
+    public GameObject teamRoomUI { get { return _teamRoomUI; } }
     void Awake()
     {
         if (instance)
@@ -430,6 +434,18 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("UpdateTeamMode_RPC", RpcTarget.All, tm);
         UpdateTeams();
+    }
+
+    public void ChangeTeam()
+    {
+        try
+        {
+            if (GameManager.instance.onlineTeam == PlayerMultiplayerMatchStats.Team.Blue)
+                GameManager.instance.onlineTeam = PlayerMultiplayerMatchStats.Team.Red;
+            else if (GameManager.instance.onlineTeam == PlayerMultiplayerMatchStats.Team.Red)
+                GameManager.instance.onlineTeam = PlayerMultiplayerMatchStats.Team.Blue;
+        }
+        catch { }
     }
 
     public void ChangeGameType(string gt)
