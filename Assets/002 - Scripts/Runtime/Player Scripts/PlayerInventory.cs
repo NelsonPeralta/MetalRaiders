@@ -290,18 +290,18 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType.ToString().Contains("Slayer"))
         {
-            StartingWeapon = "m4";
+            StartingWeapon = "mp5";
             StartingWeapon2 = "m1911";
         }
         if (GameManager.instance.gameType.ToString().Contains("Pro"))
         {
             StartingWeapon = "m16";
-            //StartingWeapon2 = "patriot";
+            StartingWeapon2 = "m4";
         }
         if (GameManager.instance.gameType.ToString().Contains("Snipers"))
         {
             StartingWeapon = "r700";
-            //StartingWeapon2 = "patriot";
+            StartingWeapon2 = "nailgun";
         }
 
         if (GameManager.instance.gameType.ToString().Contains("Rockets"))
@@ -313,6 +313,7 @@ public class PlayerInventory : MonoBehaviourPun
         if (GameManager.instance.gameType.ToString().Contains("Shotguns"))
         {
             StartingWeapon = "m1100";
+            StartingWeapon2 = "nailgun";
         }
 
         if (GameManager.instance.gameType.ToString().Contains("Fiesta"))

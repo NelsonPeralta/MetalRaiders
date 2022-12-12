@@ -23,7 +23,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         Damage(healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos: null);
     }
 
-    public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
+    public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId,
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
@@ -32,8 +32,9 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
-        if (GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).team == player.team)
-            return;
+        if (GameManager.instance.teamMode.ToString().Contains("Classic"))
+            if (GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).team == player.team)
+                return;
 
         //Debug.Log(healthDamage);
         //Debug.Log(player.overshieldPoints);
