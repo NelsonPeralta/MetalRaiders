@@ -82,16 +82,21 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void OnGameTimeChanged(GameTime gameTime)
     {
-        if (gameTime.totalTime % weaponSpawned.tts == 0)
+        try
         {
-            weaponSpawned.gameObject.SetActive(true);
 
-            weaponSpawned.ammo = weaponSpawned.defaultAmmo;
-            weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+            if (gameTime.totalTime % weaponSpawned.tts == 0)
+            {
+                weaponSpawned.gameObject.SetActive(true);
 
-            weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
-            weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+                weaponSpawned.ammo = weaponSpawned.defaultAmmo;
+                weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+
+                weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
+                weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+            }
         }
+        catch (System.Exception e) { Debug.LogWarning(e); }
     }
 
     // Methods

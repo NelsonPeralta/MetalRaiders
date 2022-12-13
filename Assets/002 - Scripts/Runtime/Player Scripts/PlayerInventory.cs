@@ -290,7 +290,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType.ToString().Contains("Slayer"))
         {
-            StartingWeapon = "mp5";
+            StartingWeapon = "p90";
             StartingWeapon2 = "m1911";
         }
         if (GameManager.instance.gameType.ToString().Contains("Pro"))

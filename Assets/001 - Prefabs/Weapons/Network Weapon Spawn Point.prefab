@@ -391,6 +391,7 @@ MonoBehaviour:
   _collisionAudioClip: {fileID: 0}
   _networkWeaponSpawnPoint: {fileID: 0}
   _spawnPointPosition: {x: 0, y: 0, z: 0}
+  _ttl: 0
 --- !u!1 &3572041859339391070
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,6 +572,8 @@ MonoBehaviour:
   - {fileID: 8951400907426846433, guid: 695351ec79d320f4db79ff0dd95e737e, type: 3}
   - {fileID: 2711562721274824091, guid: 009dd02cd58b6da44a5d9f221233fe21, type: 3}
   - {fileID: 5406913902717158425, guid: 823dd5995a5be7b40b8deae36ce5ce68, type: 3}
+  - {fileID: 439363896651038599, guid: 17881a4d2a6d973428f0fe428e568de4, type: 3}
+  _tts: 0
 --- !u!1001 &5425998958598396845
 PrefabInstance:
   m_ObjectHideFlags: 0

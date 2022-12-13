@@ -16139,24 +16139,13 @@ PrefabInstance:
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: p90
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: timeToSpawn
       value: 180
       objectReference: {fileID: 0}
-    - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
-        type: 3}
-      propertyPath: networkLootableWeaponPrefabs.Array.size
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
-        type: 3}
-      propertyPath: networkLootableWeaponPrefabs.Array.data[13]
-      value: 
-      objectReference: {fileID: 2711562721274824091, guid: 009dd02cd58b6da44a5d9f221233fe21,
-        type: 3}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: m_RootOrder
@@ -50168,24 +50157,13 @@ PrefabInstance:
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: p90
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: timeToSpawn
       value: 180
       objectReference: {fileID: 0}
-    - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
-        type: 3}
-      propertyPath: networkLootableWeaponPrefabs.Array.size
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
-        type: 3}
-      propertyPath: networkLootableWeaponPrefabs.Array.data[13]
-      value: 
-      objectReference: {fileID: 2711562721274824091, guid: 009dd02cd58b6da44a5d9f221233fe21,
-        type: 3}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: m_RootOrder
