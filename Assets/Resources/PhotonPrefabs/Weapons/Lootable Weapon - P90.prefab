@@ -166,9 +166,9 @@ MonoBehaviour:
   codeName: p90
   spriteId: 0
   _ammo: 50
-  _spareAmmo: 50
+  _spareAmmo: 100
   _defaultAmmo: 50
-  _defaultSpareAmmo: 50
+  _defaultSpareAmmo: 100
   _tts: 60
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}
