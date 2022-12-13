@@ -644,9 +644,9 @@ public class Player : MonoBehaviourPunCallbacks
         ragdoll.SetActive(true);
 
         if (!_deathByHeadshot)
-            ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 400);
+            ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 300);
         else
-            ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 400);
+            ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 300);
     }
 
     void HitPointsRecharge()
@@ -716,6 +716,10 @@ public class Player : MonoBehaviourPunCallbacks
         PV.RPC("StopPlayingPlayerVoice_RPC", RpcTarget.All);
     }
 
+    public void Teleport(Vector3 v, Vector3 r)
+    {
+        PV.RPC("Teleport_RPC", RpcTarget.All, v, r);
+    }
 
     #endregion
 
@@ -1240,8 +1244,19 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateAmmo(int i, int a, bool isSpare = false, bool sender = true)
     {
+        Debug.Log("UpdateAmmo");
         playerInventory.allWeaponsInInventory[i].GetComponent<WeaponProperties>().UpdateAmmo(i, a, isSpare, false);
     }
 
+    [PunRPC]
+    void Teleport_RPC(Vector3 t, Vector3 r)
+    {
+        Debug.Log("Teleport_RPC");
+        Debug.Log(t);
+        GetComponent<CharacterController>().enabled = false;
+        transform.position = t;
+        GetComponent<CharacterController>().enabled = true;
+        transform.eulerAngles = r;
+    }
     #endregion
 }
