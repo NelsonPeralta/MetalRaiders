@@ -133,6 +133,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     public void LootWeapon(int controllerId = 0, bool onlyExtraAmmo = false)
     {
+        Debug.Log("OnLooted");
         int ammoToLoot = spareAmmo;
         PlayerInventory playerInventory = GameManager.GetMyPlayer(controllerId).playerInventory;
         if (!onlyExtraAmmo)
@@ -142,10 +143,14 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             if (wp.GetComponent<WeaponProperties>().codeName == codeName)
                 wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
 
+        DisableWeapon();
+    }
+
+    public void DisableWeapon()
+    {
+        Debug.Log("DisableWeapon");
         OnLooted?.Invoke(this);
-        Debug.Log("OnLooted");
-        //NetworkGameManager.instance.StartLootableWeaponRespawn(spawnPointPosition);
-        //return;
+
         if (networkWeaponSpawnPoint)
         {
             gameObject.SetActive(false);

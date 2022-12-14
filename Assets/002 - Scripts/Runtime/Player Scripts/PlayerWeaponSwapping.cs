@@ -346,7 +346,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
         foreach (LootableWeapon lw in weapons)
             if (lw.spawnPointPosition == collidingWeaponPosition)
-                lw.LootWeapon(player.controllerId, onlyExtraAmmo: true);
+                lw.DisableWeapon();
     }
 
     // TO DO: make it across all the network
