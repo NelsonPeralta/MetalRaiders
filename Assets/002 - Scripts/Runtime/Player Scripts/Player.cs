@@ -347,6 +347,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     public Player lastPlayerSource { get { return _lastPlayerSource; } private set { _lastPlayerSource = value; } }
 
+    public Camera uiCamera { get { return _uiCamera; } }
+
     #endregion
 
     // serialized variables
@@ -364,6 +366,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] float _hitPoints = 250, _overshieldPoints = 150;
     [SerializeField] bool _isRespawning, _isDead, _isInvincible;
     [SerializeField] GameObject _overshieldFx;
+    [SerializeField] Camera _uiCamera;
     #endregion
 
 
@@ -498,6 +501,15 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
 
         try { GameManager.instance.pid_player_Dict.Add(pid, this); } catch { }
+        try
+        {
+            if (isMine)
+            {
+                Debug.Log($"Adding local player {controllerId}");
+                GameManager.instance.localPlayers.Add(controllerId, this);
+            }
+        }
+        catch { }
         try { team = GameManager.instance.onlineTeam; } catch { }
     }
     private void Update()

@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Dictionary<int, PlayerMultiplayerMatchStats.Team> controllerId_TeamDict;
     public Dictionary<int, Player> pid_player_Dict = new Dictionary<int, Player>();
+    public Dictionary<int, Player> localPlayers = new Dictionary<int, Player>();
 
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
@@ -166,6 +167,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         try { pid_player_Dict.Clear(); } catch { }
+        try { localPlayers.Clear(); } catch { }
         try { FindObjectOfType<GameTime>().totalTime = 0; }
         catch (Exception e) { Debug.LogWarning(e.Message); }
 

@@ -64,6 +64,7 @@ public class AimAssistCone : MonoBehaviour
         set { _firstHitPoint = (Vector3)value; }
     }
 
+    int _reticuleFrictionLayer = 19;
 
     private void Update()
     {
@@ -202,11 +203,11 @@ public class AimAssistCone : MonoBehaviour
         if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
             return;
 
-        if (other.gameObject.layer != 21)
+        if (other.gameObject.layer != _reticuleFrictionLayer)
             if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
                 collidingHitboxes.Add(other.gameObject);
 
-        if (other.gameObject.layer == 21)
+        if (other.gameObject.layer == _reticuleFrictionLayer)
             if (!frictionColliders.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
                 frictionColliders.Add(other.gameObject);
     }

@@ -57,13 +57,13 @@ TagManager:
   - AI Shield
   - Aim Assist
   - Interactable
-  - Player Range Trigger
-  - 18 (Player FPS Models)
-  - 19 (Player TPS Models)
-  - Motion Tracker
-  - Reticule Friction
-  - 22 (Frag Grenade)
-  - PlayerMelee
+  - Player/HB Detector
+  - Motion Tracker (Player FPS Models)
+  - Reticule Friction (Player TPS Models)
+  - Player 1 UI (Motion Tracker)
+  - Player 2 UI (Reticule Friction)
+  - Player 3 UI (Frag Grenade)
+  - Player 4 UI (PlayerMelee)
   - Player 1 FPS Models (Physical Loot)
   - Player 1 TPS Models (LOS Ray)
   - Player 2 FPS Models
