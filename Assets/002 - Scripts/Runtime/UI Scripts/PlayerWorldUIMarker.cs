@@ -6,6 +6,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class PlayerWorldUIMarker : MonoBehaviour
 {
+    public GameObject holder { get { return _holder; } }
+
     [SerializeField] Player _player;
     [SerializeField] int _controllerTarget;
     [SerializeField] Player _targetPlayer;
@@ -17,6 +19,10 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
     int damping = 1;
 
+    private void Awake()
+    {
+        _player.OnPlayerTeamChanged += OnPlayerTeamDelegate;
+    }
     private void Start()
     {
         StartCoroutine(LateStart());
@@ -48,34 +54,32 @@ public class PlayerWorldUIMarker : MonoBehaviour
         catch (System.Exception e) { Debug.LogWarning(e); gameObject.SetActive(false); }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnPlayerTeamDelegate(Player player)
     {
-        try
+        if (GameManager.instance.teamMode.ToString().Contains("Classic"))
         {
-            if (other.GetComponent<Player>() == _targetPlayer)
+            Debug.Log("Player Marker");
+            if (!player.isMine)
             {
-                _holder.SetActive(true);
+                if (player.team != GameManager.GetMyPlayer().team)
+                {
+                    _greenMarker.gameObject.SetActive(false);
+                }
+                if (player.team == GameManager.GetMyPlayer().team)
+                {
+                    _redMarker.gameObject.SetActive(false);
+                }
             }
         }
-        catch (System.Exception e)
+        else
         {
+            _greenMarker.gameObject.SetActive(false);
+
+            Debug.Log("PlayerWorldUIMarker");
+            _holder.gameObject.SetActive(false);    
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        try
-        {
-            if (other.GetComponent<Player>() == _targetPlayer)
-            {
-                _holder.SetActive(false);
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogWarning(e);
-        }
-    }
     void OnPlayerDeath(Player player)
     {
         _holder.SetActive(false);

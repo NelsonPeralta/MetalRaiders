@@ -19,6 +19,7 @@ public class AllPlayerScripts : MonoBehaviour
     public ScoreboardManager scoreboardManager;
     public KillFeedManager killFeedManager;
     public DamageIndicatorManager damageIndicatorManager;
+    public List<PlayerWorldUIMarker> worldUis = new List<PlayerWorldUIMarker>();
     [Header("Sounds")]
     public PlayerSFXs playerSFXs;
     public Announcer announcer;
