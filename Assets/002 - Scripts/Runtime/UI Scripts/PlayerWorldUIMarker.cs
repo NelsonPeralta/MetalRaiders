@@ -64,6 +64,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
                 if (player.team != GameManager.GetMyPlayer().team)
                 {
                     _greenMarker.gameObject.SetActive(false);
+                    _holder.gameObject.SetActive(false);
                 }
                 if (player.team == GameManager.GetMyPlayer().team)
                 {
@@ -76,7 +77,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
             _greenMarker.gameObject.SetActive(false);
 
             Debug.Log("PlayerWorldUIMarker");
-            _holder.gameObject.SetActive(false);    
+            _holder.gameObject.SetActive(false);
         }
     }
 

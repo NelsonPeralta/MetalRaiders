@@ -104,12 +104,19 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     void ReplaceWeaponsByGametype()
     {
         string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal", "m32" };
-        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14" };
-        string[] lightWeaponCodeNames = { "m1911", "colt", "mp5" };
+        string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
+        string[] lightWeaponCodeNames = { "m1911", "colt", "mp5", "p90" };
 
-        if ((GameManager.instance.gameType.ToString().Contains("Pro")))
+        if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
         {
+            if (codeName == "scar")
+                codeName = "m249c";
 
+            if (codeName == "m16")
+                codeName = "colt";
+
+            if (codeName == "mk14")
+                codeName = "p90";
         }
         else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
         {
@@ -143,7 +150,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         {
             foreach (string weaponCode in lightWeaponCodeNames)
                 if (weaponCode == codeName)
-                    codeName = "colt";
+                    codeName = "nailgun";
 
             foreach (string weaponCode in powerWeaponCodeNames)
                 if (weaponCode == codeName)

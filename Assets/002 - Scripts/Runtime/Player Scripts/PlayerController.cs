@@ -112,6 +112,7 @@ public class PlayerController : MonoBehaviourPun
             mainCam.gameObject.SetActive(false);
         }
         OnPlayerSwitchWeapons?.Invoke(this);
+        player.OnPlayerRespawned += OnRespawn_Delegate;
     }
 
     private void Update()
@@ -304,7 +305,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Shooting()
     {
-        if (GetComponent<Player>().isDead || isSprinting)
+        if (GetComponent<Player>().isDead || isSprinting || player.isRespawning)
             return;
 
 
@@ -1088,6 +1089,13 @@ public class PlayerController : MonoBehaviourPun
     public void OnDeath_Delegate(Player player)
     {
         isSprinting = false;
+        isShooting= false;
+    }
+
+    void OnRespawn_Delegate(Player player)
+    {
+        isSprinting = false;
+        isShooting= false;
     }
 }
 
