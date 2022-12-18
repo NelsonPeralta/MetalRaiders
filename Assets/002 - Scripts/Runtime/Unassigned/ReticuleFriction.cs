@@ -7,6 +7,8 @@ public class ReticuleFriction : MonoBehaviour
     public AiAbstractClass ai;
     public Player player;
 
+    [SerializeField] int _reticuleFrictionLayer;
+
     private void Start()
     {
         if (ai)
@@ -45,6 +47,6 @@ public class ReticuleFriction : MonoBehaviour
 
     void OnPlayerRespawn(Player player)
     {
-        gameObject.layer = 21;
+        gameObject.layer = _reticuleFrictionLayer;
     }
 }

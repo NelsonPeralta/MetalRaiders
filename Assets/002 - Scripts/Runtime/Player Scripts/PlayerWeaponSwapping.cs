@@ -152,6 +152,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
         pController.OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
     }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.GetComponent<LootableWeapon>() && other.gameObject.activeSelf)
@@ -165,19 +166,29 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             if (player.isDead || weaponsInRange.Contains(other.GetComponent<LootableWeapon>()))
                 return;
 
-            if ((pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.activeWeapon.codeName) &&
-                (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.holsteredWeapon.codeName))
+            try
             {
-                other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
-                other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
+                if ((pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.activeWeapon.codeName) &&
+                    (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.holsteredWeapon.codeName))
+                {
+                    other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
+                    other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
 
-                weaponsInRange.Add(other.GetComponent<LootableWeapon>());
-                weaponsInRange = weaponsInRange;
+                    //other.GetComponent<LootableWeapon>(). += OnWeaponLooted;
+
+                    weaponsInRange.Add(other.GetComponent<LootableWeapon>());
+                    weaponsInRange = weaponsInRange;
+                }
+                else
+                {
+                    other.GetComponent<LootableWeapon>().LootWeapon(player.controllerId);
+                    ammoPickupAudioSource.Play();
+                }
             }
-            else
+            catch (System.Exception ex)
             {
-                other.GetComponent<LootableWeapon>().LootWeapon(player.controllerId);
-                ammoPickupAudioSource.Play();
+                Debug.LogWarning(ex);
+                //closestLootableWeapon = null;
             }
         }
     }
@@ -198,7 +209,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     void OnPLayerDeath(Player p)
     {
         gameObject.layer = 3;
-        weaponsInRange.Clear(); 
+        weaponsInRange.Clear();
         weaponsInRange = weaponsInRange;
     }
 
@@ -261,10 +272,23 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             }
     }
 
-
-    private void Update()
+    void OnWeaponDespawned(LootableWeapon lw)
     {
 
+    }
+    private void Update()
+    {
+        if(weaponsInRange.Count > 0)
+        {
+            for(int i = 0; i< weaponsInRange.Count;i++)
+                if (weaponsInRange[i] == null)
+                {
+                    List<LootableWeapon> nl = weaponsInRange;
+                    nl.RemoveAt(i);
+
+                    weaponsInRange=nl;
+                }
+        }
     }
 
 

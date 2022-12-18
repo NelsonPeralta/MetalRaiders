@@ -414,6 +414,7 @@ public class PlayerController : MonoBehaviourPun
         isAiming = false;
         mainCam.fieldOfView = GetComponent<Player>().defaultFov;
         gunCam.fieldOfView = 60;
+        uiCam.fieldOfView = GetComponent<Player>().defaultFov;
         camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
         allPlayerScripts.aimingScript.playAimSound();
 
@@ -1089,13 +1090,13 @@ public class PlayerController : MonoBehaviourPun
     public void OnDeath_Delegate(Player player)
     {
         isSprinting = false;
-        isShooting= false;
+        isShooting = false;
     }
 
     void OnRespawn_Delegate(Player player)
     {
         isSprinting = false;
-        isShooting= false;
+        isShooting = false;
     }
 }
 

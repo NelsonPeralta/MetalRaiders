@@ -9,21 +9,6 @@ public class PlayerWorldUIConeDetector : MonoBehaviour
         get { return _obstruction; }
         set
         {
-            //GameObject _previous = _obstruction;
-            //try
-            //{
-            //    if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-            //    {
-            //        if (_previous.GetComponent<ReticuleFriction>().player.team != _player.team)
-            //            _previous.GetComponent<ReticuleFriction>().player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
-            //    }
-            //    else
-            //    {
-            //        _previous.GetComponent<ReticuleFriction>().player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
-            //    }
-            //}
-            //catch { }
-
             _unfilteredHit = value;
             GameObject _previous = _obstruction;
 
@@ -61,7 +46,7 @@ public class PlayerWorldUIConeDetector : MonoBehaviour
                         _previous.GetComponent<ReticuleFriction>().player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
                     }
             }
-            catch (System.Exception e) { Debug.LogWarning(e); }
+            catch (System.Exception e) { /*Debug.LogWarning(e);*/ }
         }
     }
 
@@ -71,12 +56,12 @@ public class PlayerWorldUIConeDetector : MonoBehaviour
 
     [SerializeField] LayerMask _layerMask;
 
-    int _distance = 25;
+    [SerializeField]  int _distance = 25;
 
     private void Update()
     {
-        try { if (_player.isDead || _player.isRespawning) obstruction = null; } catch { }
-        try { _distance = (int)_player.playerInventory.activeWeapon.range; } catch { _distance = 25; }
+        try { if (_player.isDead || _player.isRespawning) { obstruction = null; return; } } catch { }
+        try { _distance = (int)_player.playerInventory.activeWeapon.currentRedReticuleRange; } catch { _distance = 15; }
 
         var hit = new RaycastHit();
         Ray ray = new Ray(transform.position, transform.forward);
@@ -103,20 +88,20 @@ public class PlayerWorldUIConeDetector : MonoBehaviour
 
     void OnPlayerDeath(Player player)
     {
-        try
-        {
-            if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-            {
-                if (player.GetComponent<Player>().team != _player.team)
-                    player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
-            }
-            else
-            {
-                player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
-            }
+        //try
+        //{
+        //    if (GameManager.instance.teamMode.ToString().Contains("Classic"))
+        //    {
+        //        if (player.GetComponent<Player>().team != _player.team)
+        //            player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
+        //    }
+        //    else
+        //    {
+        //        player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
+        //    }
 
-            player.OnPlayerDeath -= OnPlayerDeath;
-        }
-        catch { }
+        //    player.OnPlayerDeath -= OnPlayerDeath;
+        //}
+        //catch { }
     }
 }

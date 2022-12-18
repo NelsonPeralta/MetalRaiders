@@ -161,6 +161,7 @@ public class Player : MonoBehaviourPunCallbacks
             _maxOvershieldPoints = value;
             if (_maxOvershieldPoints > 0)
             {
+                hitPoints = _maxHitPoints;
                 _overshieldRecharge = true;
                 _overshieldFx.SetActive(true);
                 GetComponent<PlayerShield>().PlayShieldStartSound(this);
@@ -367,6 +368,8 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] bool _isRespawning, _isDead, _isInvincible;
     [SerializeField] GameObject _overshieldFx;
     [SerializeField] Camera _uiCamera;
+    [SerializeField] int _defaultRespawnTime = 4;
+    [SerializeField] int _pushForce =10;
     #endregion
 
 
@@ -378,8 +381,6 @@ public class Player : MonoBehaviourPunCallbacks
     bool _isHealing;
     bool _overshieldRecharge;
     int _respawnTime = 5;
-
-    int _defaultRespawnTime = 4;
 
     int _defaultHealingCountdown = 4;
 
@@ -518,11 +519,21 @@ public class Player : MonoBehaviourPunCallbacks
         OvershieldPointsRecharge();
     }
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        float movementSpeedRatio = GetComponent<Movement>().playerSpeedPercent;
+        Rigidbody rb = hit.collider.attachedRigidbody;
+        if(rb && !rb.isKinematic)
+        {
+            rb.velocity = hit.moveDirection * _pushForce * movementSpeedRatio;
+        }
+    }
 
     void OvershieldPointsRecharge()
     {
         if (_overshieldRecharge && overshieldPoints < _maxOvershieldPoints)
         {
+            hitPoints = _maxHitPoints;
             _isInvincible = true;
             overshieldPoints += (Time.deltaTime * _shieldHealingIncrement);
         }
@@ -767,7 +778,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     IEnumerator MidRespawnAction()
     {
-        yield return new WaitForSeconds(_defaultRespawnTime / 2);
+        yield return new WaitForSeconds(_defaultRespawnTime * 0.7f );
         GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         hitPoints = maxHitPoints;
         Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint(controllerId);

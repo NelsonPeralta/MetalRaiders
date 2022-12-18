@@ -83,6 +83,6 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
     void OnPlayerDeath(Player player)
     {
-        _holder.SetActive(false);
+        //_holder.SetActive(false);
     }
 }
