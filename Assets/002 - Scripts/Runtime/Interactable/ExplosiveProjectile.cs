@@ -7,6 +7,9 @@ public class ExplosiveProjectile : MonoBehaviour
     public Player player { get { return _player; } set { _player = value; } }
     public int force { get { return _force; } set { _force = value; } }
     public bool useConstantForce { get { return _useConstantForce; } set { _useConstantForce = value; } }
+    public GameObject model { get { return _model; } }
+    public GameObject visualIndicator { get { return _visualIndicator; } }
+    public GameObject visualIndicatorPrefab { get { return _visualIndicatorPrefab; } }
 
     [SerializeField] Player _player;
     [SerializeField] int _force;
@@ -16,6 +19,9 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] AudioClip _collisionSound;
     [SerializeField] bool _sticky;
     [SerializeField] LayerMask _stickyLayerMask;
+    [SerializeField] GameObject _model;
+    [SerializeField] GameObject _visualIndicator;
+    [SerializeField] GameObject _visualIndicatorPrefab;
 
     bool _collided;
 

@@ -28,7 +28,7 @@ public class PlayerWorldUIConeDetector : MonoBehaviour
                     }
                 }
             }
-            catch (System.Exception e) { Debug.LogWarning(e); }
+            catch (System.Exception e) { /*Debug.LogWarning(e);*/ }
 
 
 
