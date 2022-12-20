@@ -21,36 +21,21 @@ public class Portal : MonoBehaviour
             Rigidbody rb = other.GetComponent<Rigidbody>();
             Vector3 vel = rb.velocity;
 
-            Destroy(other.GetComponent<ExplosiveProjectile>().visualIndicator.gameObject);
-
-            //rb.velocity = Vector3.zero;
-            //other.GetComponent<Rigidbody>().isKinematic = true;
-            //other.gameObject.SetActive(false);
+            other.GetComponent<ExplosiveProjectile>().visualIndicator.SetActive(false); // Good
 
             Vector3 t = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);
             Vector3 r = _endpoint.transform.rotation.eulerAngles;
             other.transform.position = t;
             other.transform.eulerAngles = r;
 
-            Instantiate(other.GetComponent<ExplosiveProjectile>().visualIndicatorPrefab, parent: other.transform, instantiateInWorldSpace: false);
+            other.GetComponent<ExplosiveProjectile>().visualIndicatorDuplicate.SetActive(true);
 
-            //other.GetComponent<Rigidbody>().isKinematic = false;
-            //other.gameObject.SetActive(true);
-            //rb.AddForce(vel, ForceMode.Impulse);
-
-            //other.GetComponent<ExplosiveProjectile>().model.SetActive(false);
-
-
-            //StartCoroutine(Delay(other.GetComponent<ExplosiveProjectile>()));
-            //other.GetComponent<ExplosiveProjectile>().model.SetActive(true);
-            //GetComponent<Rigidbody>().for = true;
+        }else if (other.GetComponent<Bullet>())
+        {
+            Vector3 t = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);
+            Vector3 r = _endpoint.transform.rotation.eulerAngles;
+            other.transform.position = t;
+            other.transform.eulerAngles = r;
         }
-    }
-
-    IEnumerator Delay(ExplosiveProjectile ep)
-    {
-        // Tried WaitForEndOfFrame, doesnt work, still sliding
-        yield return new WaitForSeconds(0.1f);
-        ep.model.SetActive(true);
     }
 }

@@ -9,7 +9,7 @@ public class ExplosiveProjectile : MonoBehaviour
     public bool useConstantForce { get { return _useConstantForce; } set { _useConstantForce = value; } }
     public GameObject model { get { return _model; } }
     public GameObject visualIndicator { get { return _visualIndicator; } }
-    public GameObject visualIndicatorPrefab { get { return _visualIndicatorPrefab; } }
+    public GameObject visualIndicatorDuplicate { get { return _visualIndicatorDuplicate; } }
 
     [SerializeField] Player _player;
     [SerializeField] int _force;
@@ -21,7 +21,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] LayerMask _stickyLayerMask;
     [SerializeField] GameObject _model;
     [SerializeField] GameObject _visualIndicator;
-    [SerializeField] GameObject _visualIndicatorPrefab;
+    [SerializeField] GameObject _visualIndicatorDuplicate;
 
     bool _collided;
 
