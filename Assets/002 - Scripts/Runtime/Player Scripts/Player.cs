@@ -369,7 +369,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] GameObject _overshieldFx;
     [SerializeField] Camera _uiCamera;
     [SerializeField] int _defaultRespawnTime = 4;
-    [SerializeField] int _pushForce =10;
+    [SerializeField] int _pushForce = 10;
     #endregion
 
 
@@ -523,7 +523,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         float movementSpeedRatio = GetComponent<Movement>().playerSpeedPercent;
         Rigidbody rb = hit.collider.attachedRigidbody;
-        if(rb && !rb.isKinematic)
+        if (rb && !rb.isKinematic)
         {
             rb.velocity = hit.moveDirection * _pushForce * movementSpeedRatio;
         }
@@ -778,7 +778,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     IEnumerator MidRespawnAction()
     {
-        yield return new WaitForSeconds(_defaultRespawnTime * 0.7f );
+        yield return new WaitForSeconds(_defaultRespawnTime * 0.7f);
         GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         hitPoints = maxHitPoints;
         Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint(controllerId);
@@ -1093,8 +1093,9 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
 
-
-        hitPoints -= damage;
+        if (isMine)
+            hitPoints -= damage;
+        UpdateData();
 
         try
         { // Hit Marker Handling
@@ -1240,6 +1241,22 @@ public class Player : MonoBehaviourPunCallbacks
                     if (sourcePid != this.pid)
                         sourcePlayerMedals.SpawnKilljoySpreeMedal();
             }
+        }
+    }
+
+    void UpdateData()
+    {
+        if (isMine)
+            PV.RPC("UpdateData_RPC", RpcTarget.All, hitPoints, overshieldPoints);
+    }
+
+    [PunRPC]
+    void UpdateData_RPC(int h, int o)
+    {
+        if (!isMine)
+        {
+            overshieldPoints = o;
+            hitPoints = h;
         }
     }
 

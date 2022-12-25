@@ -77,14 +77,20 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                     {
                         if (player.PV.IsMine)
                         {
+                            int l = 0;
+
                             if (player.rid == 0)
-                                GameManager.SetLayerRecursively(model, 25, ignoreList);
+                                l = 25;
                             else if (player.rid == 1)
-                                GameManager.SetLayerRecursively(model, 27, ignoreList);
+                                l = 27;
                             else if (player.rid == 2)
-                                GameManager.SetLayerRecursively(model, 29, ignoreList);
+                                l = 29;
                             else if (player.rid == 3)
-                                GameManager.SetLayerRecursively(model, 31, ignoreList);
+                                l = 31;
+
+                            Debug.Log($"PlayerThirdPersonModelManager {l}");
+
+                            GameManager.SetLayerRecursively(model, l, ignoreList);
                         }
                         else
                         {
@@ -93,7 +99,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                     }
 
             }
-            catch (System.Exception e) { Debug.Log(e); }
+            catch (System.Exception e) { Debug.LogException(e); }
         }
     }
 

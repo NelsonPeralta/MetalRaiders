@@ -81,6 +81,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     void OnSceneLoaded()
     {
         Scene currentScene = SceneManager.GetActiveScene();
+        Debug.Log("Multiplayer Manager OnSceneLoaded");
+
+        redTeamScore = 0;
+        blueTeamScore = 0;
     }
     public void AddPlayerKill(AddPlayerKillStruct struc)
     {
