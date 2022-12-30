@@ -1095,7 +1095,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (isMine)
             hitPoints -= damage;
-        UpdateData();
+        //UpdateData();
 
         try
         { // Hit Marker Handling
