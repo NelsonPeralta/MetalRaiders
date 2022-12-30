@@ -11,9 +11,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/004 - Scenes/Testing Room 2.unity
     guid: b36f86ced13373f4bab43f9d875ebb3e
-  - enabled: 1
+  - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Vertigo.unity
     guid: 259bca2e8df9dfd4991ae2a59076a883
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/Factory.unity
+    guid: cea931439210b1c4bbb050121647d39d
   - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Frost.unity
     guid: f2c0429d453be4745b1dbef8bb0b258a
@@ -62,7 +65,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Plasmid.unity
     guid: 5d2a582b1ad58104ea2246f26a792daf
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   m_configObjects: {}
