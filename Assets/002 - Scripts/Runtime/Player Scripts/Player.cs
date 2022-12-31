@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using System.Runtime.CompilerServices;
 using System;
+using System.Linq;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -182,19 +183,19 @@ public class Player : MonoBehaviourPunCallbacks
         set
         {
             thirdPersonModels.SetActive(value);
-            foreach (GameObject go in hitboxes)
+            foreach (PlayerHitbox ph in hitboxes)
             {
                 if (!value)
-                    go.layer = 31;
+                    ph.gameObject.layer = 31;
                 else
-                    go.layer = 7;
-                go.SetActive(value);
+                    ph.gameObject.layer = 7;
+                ph.gameObject.SetActive(value);
 
-                if (go.GetComponent<BoxCollider>() != null)
-                    go.GetComponent<BoxCollider>().enabled = value;
+                if (ph.GetComponent<BoxCollider>() != null)
+                    ph.GetComponent<BoxCollider>().enabled = value;
 
-                if (go.GetComponent<SphereCollider>() != null)
-                    go.GetComponent<SphereCollider>().enabled = value;
+                if (ph.GetComponent<SphereCollider>() != null)
+                    ph.GetComponent<SphereCollider>().enabled = value;
 
                 GetComponent<CharacterController>().enabled = value;
             }
@@ -427,7 +428,7 @@ public class Player : MonoBehaviourPunCallbacks
     public Vector3 mainOriginalCameraPosition;
 
     [Header("Hitboxes")]
-    public List<GameObject> hitboxes = new List<GameObject>();
+    public List<PlayerHitbox> hitboxes = new List<PlayerHitbox>();
 
     [Header("Player Voice")]
     public AudioSource playerVoice;
@@ -462,6 +463,8 @@ public class Player : MonoBehaviourPunCallbacks
             hitPoints = maxHitPoints;
             needsHealthPack = true;
         }
+
+        hitboxes = GetComponentsInChildren<PlayerHitbox>().ToList();
     }
     private void Start()
     {

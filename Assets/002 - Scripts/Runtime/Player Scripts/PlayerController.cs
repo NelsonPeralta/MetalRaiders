@@ -896,7 +896,7 @@ public class PlayerController : MonoBehaviourPun
             //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
         }
 
-        foreach (GameObject hb in GetComponent<Player>().hitboxes)
+        foreach (PlayerHitbox hb in GetComponent<Player>().hitboxes)
             Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
 
         grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
