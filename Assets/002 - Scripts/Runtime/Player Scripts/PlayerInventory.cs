@@ -255,17 +255,16 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void SwitchWeapons_RPC() 
+    public void SwitchWeapons_RPC()
     {
-        Debug.Log("SwitchWeapons_RPC");
-        WeaponProperties previousActiveWeapon = activeWeapon;
-        WeaponProperties newActiveWeapon = holsteredWeapon;
+        if (player.isMine)
+        {
+            WeaponProperties previousActiveWeapon = activeWeapon;
+            WeaponProperties newActiveWeapon = holsteredWeapon;
 
-        activeWeapon = newActiveWeapon;
-        holsteredWeapon = previousActiveWeapon;
-        Debug.Log($"SwitchWeapons_RPC: Active Weapon: {activeWeapon.name}");
-
-        UpdateThirdPersonGunModelsOnCharacter();
+            activeWeapon = newActiveWeapon;
+            holsteredWeapon = previousActiveWeapon;
+        }
     }
 
     [PunRPC]
@@ -278,7 +277,10 @@ public class PlayerInventory : MonoBehaviourPun
                 if (weap.GetComponent<WeaponProperties>().codeName == codeName)
                 {
                     if (actWeap) // activeWeapon
+                    {
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
+                        UpdateThirdPersonGunModelsOnCharacter();
+                    }
                     else
                         _holsteredWeapon = weap.GetComponent<WeaponProperties>();
 
