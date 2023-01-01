@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviourPun
     public delegate void PlayerControllerEvent(PlayerController playerController);
     public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract,
         OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade,
-        OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop, OnPlayerDeath;
+        OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop, OnPlayerDeath,
+        OnControllerTypeChangedToController, OnControllerTypeChangedToMouseAndKeyboard;
 
     public Player player { get { return GetComponent<Player>(); } }
 
@@ -37,7 +38,31 @@ public class PlayerController : MonoBehaviourPun
     public DualWieldingReload dwReload;
     public Movement movement;
     public Melee melee;
-    public ControllerType activeControllerType;
+    public ControllerType activeControllerType
+    {
+        get { return _activeControllerType; }
+        private set
+        {
+
+            if (value == _activeControllerType)
+                return;
+
+            _activeControllerType = value;
+
+            if (value == ControllerType.Joystick)
+            {
+                OnControllerTypeChangedToController?.Invoke(this);
+                Debug.Log("OnControllerTypeChangedToController");
+            }
+            else
+            {
+                OnControllerTypeChangedToMouseAndKeyboard?.Invoke(this);
+                Debug.Log("OnControllerTypeChangedToMouseAndKeyboard");
+            }
+        }
+    }
+
+    ControllerType _activeControllerType;
 
     public PhotonView PV;
 

@@ -38,6 +38,7 @@ public class WeaponProperties : MonoBehaviour
     public float range;
     public bool isShotgun;
     public float redReticuleHint;
+    float _previousRedReticuleHint;
 
     [Header("Ammo")]
     public AmmoType ammoType;
@@ -168,6 +169,11 @@ public class WeaponProperties : MonoBehaviour
         currentRedReticuleRange = defaultRedReticuleRange;
 
         SetCorrectLayer();
+
+        _previousRedReticuleHint = redReticuleHint;
+
+        pController.OnControllerTypeChangedToController += OnControllerTypeChanged;
+        pController.OnControllerTypeChangedToMouseAndKeyboard += OnControllerTypeChanged;
     }
 
     public void Recoil()
@@ -258,6 +264,19 @@ public class WeaponProperties : MonoBehaviour
         catch
         {
 
+        }
+    }
+
+    void OnControllerTypeChanged(PlayerController playerController)
+    {
+        Debug.Log("OnControllerTypeChanged");
+        if(playerController.activeControllerType == Rewired.ControllerType.Joystick)
+        {
+            redReticuleHint = _previousRedReticuleHint;
+        }
+        else
+        {
+            redReticuleHint = _previousRedReticuleHint * 0.8f;
         }
     }
 
