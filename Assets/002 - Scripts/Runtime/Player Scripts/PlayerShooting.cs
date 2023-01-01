@@ -40,7 +40,6 @@ public class PlayerShooting : MonoBehaviourPun
         if (playerController.isDrawingWeapon)
             return;
 
-        Debug.Log("OnPlayerControllerFire_Delegate");
         Shoot();
     }
 
@@ -97,8 +96,13 @@ public class PlayerShooting : MonoBehaviourPun
 
     void Shoot_Caller()
     {
+
         Debug.Log("Shoot_Caller");
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+
+        Debug.Log(activeWeapon.currentAmmo);
+        Debug.Log(playerController.isReloading);
+
         if (activeWeapon.currentAmmo <= 0 || playerController.isReloading)
             return;
 
