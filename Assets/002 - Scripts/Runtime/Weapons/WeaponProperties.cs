@@ -114,7 +114,7 @@ public class WeaponProperties : MonoBehaviour
 
             if (player.isMine && (_currentAmmo == 0 || _currentAmmo == ammoCapacity))
             {
-                UpdateAmmo(index, _currentAmmo, true);
+                UpdateAmmo(index, _currentAmmo, sender: true);
             }
         }
     }
@@ -129,7 +129,7 @@ public class WeaponProperties : MonoBehaviour
 
             if (player.isMine)
             {
-                UpdateAmmo(index, _spareAmmo, true);
+                //UpdateAmmo(index, _spareAmmo, true);
             }
         }
     }
@@ -270,13 +270,18 @@ public class WeaponProperties : MonoBehaviour
 
     public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = false)
     {
+        Debug.Log($"UpdateAmmo");
         if (player.isMine)
         {
-            if(sender)
+            if (sender)
+            {
+                Debug.Log($"UpdateAmmo Sender");
                 player.PV.RPC("UpdateAmmo", Photon.Pun.RpcTarget.All, wIndex, ammo, isSpare, sender);
+            }
         }
         else
         {
+            Debug.Log($"UpdateAmmo Is Not Mine");
             if (!isSpare)
                 _currentAmmo = ammo;
             else
