@@ -8,7 +8,7 @@ using System.Linq;
 public class PlayerInventory : MonoBehaviourPun
 {
     public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
-    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged, 
+    public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged,
         OnActiveWeaponChangedLate, OnHolsteredWeaponChanged, OnAmmoChanged;
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -172,7 +172,7 @@ public class PlayerInventory : MonoBehaviourPun
             pController.GetComponent<ReloadScript>().OnReloadEnd += OnReloadEnd_Delegate;
 
             int c = 0;
-            foreach(GameObject w in allWeaponsInInventory.ToList())
+            foreach (GameObject w in allWeaponsInInventory.ToList())
             {
                 w.GetComponent<WeaponProperties>().index = c;
                 c++;
@@ -238,7 +238,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (pController.pInventory.weaponsEquiped[1] != null && !player.isDead && !player.isRespawning)
         {
-            PV.RPC("SwitchWeapons", RpcTarget.All);
+            PV.RPC("SwitchWeapons_RPC", RpcTarget.All);
         }
         crosshairScript.UpdateReticule();
 
@@ -255,13 +255,16 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void SwitchWeapons()
+    public void SwitchWeapons_RPC()
     {
+        Debug.Log("SwitchWeapons_RPC");
         WeaponProperties previousActiveWeapon = activeWeapon;
         WeaponProperties newActiveWeapon = holsteredWeapon;
 
         activeWeapon = newActiveWeapon;
         holsteredWeapon = previousActiveWeapon;
+        Debug.Log($"SwitchWeapons_RPC: Active Weapon: {activeWeapon.name}");
+
         UpdateThirdPersonGunModelsOnCharacter();
     }
 
@@ -321,7 +324,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType.ToString().Contains("Fiesta"))
         {
-            AssignRandomWeapons(); 
+            AssignRandomWeapons();
         }
 
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
@@ -390,7 +393,7 @@ public class PlayerInventory : MonoBehaviourPun
         foreach (GameObject awgo in allWeaponsInInventory)
         {
             WeaponProperties wp = awgo.GetComponent<WeaponProperties>();
-            try { wp.equippedModelB.SetActive(false); } catch (Exception e) { Debug.LogWarning($"{e}"); }
+            try { if (wp != activeWeapon) wp.equippedModelB.SetActive(false); } catch (Exception e) { Debug.LogWarning($"{e}"); }
 
             if (wp == activeWeapon)
                 try { wp.equippedModelB.SetActive(true); } catch (Exception e) { Debug.LogWarning($"{e}"); }
