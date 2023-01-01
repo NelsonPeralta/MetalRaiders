@@ -207,9 +207,15 @@ public class ReloadScript : MonoBehaviourPun
             try
             {
                 if (!isOutOfAmmo)
+                {
                     pController.weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                    PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Ammo Left");
+                }
                 else
+                {
                     pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
+                    PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Out Of Ammo");
+                }
                 pController.ScopeOut();
             }
             catch { }
@@ -241,6 +247,7 @@ public class ReloadScript : MonoBehaviourPun
             Reload(0, DEFAULT_RELOAD_TIME / (3 / 2f),
                 DEFAULT_RELOAD_TIME / (3 / 2f), 0);
             pController.weaponAnimator.Play("Reload Open", 0, 0f);
+            PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Open");
             pController.ScopeOut();
 
 
@@ -254,6 +261,7 @@ public class ReloadScript : MonoBehaviourPun
             //reloadAudioSource.clip = pController.wProperties.Reload_1;
             //reloadAudioSource.Play();
             try { pController.weaponAnimator.Play("Reload", 0, 0f); } catch { }
+            PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload");
             pController.ScopeOut();
 
             Reload(0, 0, 0, singleReloadTime);
@@ -296,5 +304,12 @@ public class ReloadScript : MonoBehaviourPun
         if (pController.pInventory.activeWeapon.ReloadShort)
             reloadAudioSource.clip = pController.pInventory.activeWeapon.ReloadShort;
         reloadAudioSource.Play();
+    }
+
+    [PunRPC]
+    void PlayFirstPersonReloadAnimation_RPC(string reloadString)
+    {
+        if (!pController.player.isMine)
+            try { pController.weaponAnimator.Play(reloadString, 0, 0f); } catch { }
     }
 }
