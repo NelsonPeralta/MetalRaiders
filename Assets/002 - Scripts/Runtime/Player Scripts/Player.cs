@@ -1142,6 +1142,11 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 string f = $"{lastPlayerSource.nickName} killed {nickName}";
 
+                if(damageSource != null)
+                {
+                    f += $" with an {damageSource}";
+                }
+
                 {
                     if (this != lastPlayerSource)
                     {

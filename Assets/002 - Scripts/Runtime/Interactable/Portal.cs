@@ -15,7 +15,8 @@ public class Portal : MonoBehaviour
 
             other.GetComponent<Player>().Teleport(t, r);
 
-            GetComponent<AudioSource>().Play();
+            //GetComponent<AudioSource>().Play();
+            _endpoint.GetComponent<AudioSource>().Play();
         }else if(other.GetComponent<ExplosiveProjectile>())
         {
             Rigidbody rb = other.GetComponent<Rigidbody>();
