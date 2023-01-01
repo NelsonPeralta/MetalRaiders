@@ -332,12 +332,12 @@ public class PlayerInventory : MonoBehaviourPun
                 {
                     //DisableAmmoHUDCounters();
                     weaponsEquiped[0] = allWeaponsInInventory[i].gameObject;
-                    //Debug.Log("Check 1");
                     activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
                     weaponsEquiped[0] = activeWeapon.gameObject;
                     activeWeapIs = 0;
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                     allWeaponsInInventory[i].gameObject.SetActive(true);
+                    Debug.Log($"Starting Active weapon: {activeWeapon.name}");
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
                 else if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon2)
@@ -346,6 +346,7 @@ public class PlayerInventory : MonoBehaviourPun
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
                     weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
                     holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
+                    Debug.Log($"Starting Secondary weapon: {activeWeapon.name}");
                     hasSecWeap = true;
                 }
                 else if (allWeaponsInInventory[i].name != StartingWeapon)

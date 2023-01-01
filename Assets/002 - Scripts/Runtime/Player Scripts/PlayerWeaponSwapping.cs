@@ -300,17 +300,18 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     [PunRPC]
     public void ReplaceWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
-        LootableWeapon lw = null;
-        LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
-        foreach (LootableWeapon w in weapons)
-            if (w.spawnPointPosition == collidingWeaponPosition)
-                lw = w;
+        LootableWeapon weaponToLoot = null;
+        LootableWeapon[] allLootableWeapons = FindObjectsOfType<LootableWeapon>();
+        foreach (LootableWeapon _allLootableWeapons in allLootableWeapons)
+            if (_allLootableWeapons.spawnPointPosition == collidingWeaponPosition)
+                weaponToLoot = _allLootableWeapons;
 
+        Debug.Log($"ReplaceWeapon: weaponToLoot: {weaponToLoot.name}");
 
         WeaponProperties previousActiveWeapon = pInventory.activeWeapon;
         WeaponProperties newActiveWeapon = null;
         foreach (GameObject w in pInventory.allWeaponsInInventory)
-            if (w.GetComponent<WeaponProperties>().codeName == lw.codeName)
+            if (w.GetComponent<WeaponProperties>().codeName == weaponToLoot.codeName)
                 newActiveWeapon = w.GetComponent<WeaponProperties>();
 
         Debug.Log($"New Active weapon: {newActiveWeapon.name}");
@@ -320,8 +321,8 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         //newActiveWeapon.currentAmmo = lw.ammoInThisWeapon;
 
         pInventory.activeWeapon = newActiveWeapon;
-        pInventory.activeWeapon.currentAmmo = lw.ammo;
-        pInventory.activeWeapon.spareAmmo = lw.spareAmmo;
+        pInventory.activeWeapon.currentAmmo = weaponToLoot.ammo;
+        pInventory.activeWeapon.spareAmmo = weaponToLoot.spareAmmo;
         //pInventory.holsteredWeapon = previousActiveWeapon;
 
         //StartCoroutine(pInventory.ToggleTPPistolIdle(1));
