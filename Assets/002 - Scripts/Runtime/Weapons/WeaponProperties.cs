@@ -114,7 +114,7 @@ public class WeaponProperties : MonoBehaviour
 
             if (player.isMine && (_currentAmmo == 0 || _currentAmmo == ammoCapacity))
             {
-                UpdateAmmo(index, _currentAmmo);
+                UpdateAmmo(index, _currentAmmo, true);
             }
         }
     }
