@@ -664,135 +664,140 @@ public class PlayerController : MonoBehaviourPun
 
     private void AnimationCheck()
     {
-        if (!isDualWielding)
+        try
         {
-            if (pInventory.activeWeapon != null)
+
+            if (!isDualWielding)
             {
-                if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
-                    isFiring = true;
-                else
-                    isFiring = false;
-
-                if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+                if (pInventory.activeWeapon != null)
                 {
-                    //Check if reloading
-                    //Check both animations
-                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
-                        weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left"))
-                    {
-                        isReloading = true;
-                    }
+                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
+                        isFiring = true;
                     else
-                    {
-                        isReloading = false;
-                    }
-                }
+                        isFiring = false;
 
-                if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
-                {
-                    //Check if reloading
-                    //Check both animations
-                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Open") ||
-                        weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Insert Shell") ||
-                        weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Close"))
+                    if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
                     {
-                        isReloading = true;
-                    }
-                    else
-                    {
-                        isReloading = false;
-                    }
-
-                    //Check if inspecting weapon
-                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Inspect"))
-                    {
-                        isInspecting = true;
-                    }
-                    else
-                    {
-                        isInspecting = false;
-                    }
-                }
-
-                if (pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket /* || pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade */)
-                {
-                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
-                    {
-                        isReloading = true;
-
-                        /*
-                        if (wProperties.projectileToHide != null)
+                        //Check if reloading
+                        //Check both animations
+                        if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
+                            weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left"))
                         {
-                            wProperties.projectileToHide.SetActive(true);
-                        }*/
+                            isReloading = true;
+                        }
+                        else
+                        {
+                            isReloading = false;
+                        }
                     }
 
-                    else
+                    if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
                     {
-                        isReloading = false;
+                        //Check if reloading
+                        //Check both animations
+                        if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Open") ||
+                            weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Insert Shell") ||
+                            weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Close"))
+                        {
+                            isReloading = true;
+                        }
+                        else
+                        {
+                            isReloading = false;
+                        }
+
+                        //Check if inspecting weapon
+                        if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Inspect"))
+                        {
+                            isInspecting = true;
+                        }
+                        else
+                        {
+                            isInspecting = false;
+                        }
+                    }
+
+                    if (pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket /* || pInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade */)
+                    {
+                        if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
+                        {
+                            isReloading = true;
+
+                            /*
+                            if (wProperties.projectileToHide != null)
+                            {
+                                wProperties.projectileToHide.SetActive(true);
+                            }*/
+                        }
+
+                        else
+                        {
+                            isReloading = false;
+                        }
                     }
                 }
             }
+
+            //if (isDualWielding)
+            //{
+            //    if (dwRightWP.usesMags)
+            //    {
+            //        //Check if reloading
+            //        //Check both animations
+            //        if (animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
+            //            animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
+            //            animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
+            //        {
+            //            isReloadingRight = true;
+            //        }
+            //        else
+            //        {
+            //            isReloadingRight = false;
+            //        }
+            //    }
+
+            //    if (dwLeftWP.usesMags)
+            //    {
+            //        //Check if reloading
+            //        //Check both animations
+            //        if (animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
+            //            animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
+            //            animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
+            //        {
+            //            isReloadingLeft = true;
+            //        }
+            //        else
+            //        {
+            //            isReloadingLeft = false;
+            //        }
+            //    }
+            //}
+
+            if (weaponAnimator != null)
+            {
+                if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("GrenadeThrow"))
+                {
+                    isThrowingGrenade = true;
+                }
+                else
+                {
+                    isThrowingGrenade = false;
+                }
+            }
+
+            if (weaponAnimator != null)
+            {
+                if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Knife Attack 2"))
+                {
+                    isMeleeing = true;
+                }
+                else
+                {
+                    isMeleeing = false;
+                }
+            }
         }
-
-        //if (isDualWielding)
-        //{
-        //    if (dwRightWP.usesMags)
-        //    {
-        //        //Check if reloading
-        //        //Check both animations
-        //        if (animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
-        //            animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
-        //            animDWRight.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
-        //        {
-        //            isReloadingRight = true;
-        //        }
-        //        else
-        //        {
-        //            isReloadingRight = false;
-        //        }
-        //    }
-
-        //    if (dwLeftWP.usesMags)
-        //    {
-        //        //Check if reloading
-        //        //Check both animations
-        //        if (animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
-        //            animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left") ||
-        //            animDWLeft.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left Take Out"))
-        //        {
-        //            isReloadingLeft = true;
-        //        }
-        //        else
-        //        {
-        //            isReloadingLeft = false;
-        //        }
-        //    }
-        //}
-
-        if (weaponAnimator != null)
-        {
-            if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("GrenadeThrow"))
-            {
-                isThrowingGrenade = true;
-            }
-            else
-            {
-                isThrowingGrenade = false;
-            }
-        }
-
-        if (weaponAnimator != null)
-        {
-            if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Knife Attack 2"))
-            {
-                isMeleeing = true;
-            }
-            else
-            {
-                isMeleeing = false;
-            }
-        }
+        catch { }
     }
 
     IEnumerator ThrowGrenade3PS()
