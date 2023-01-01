@@ -255,7 +255,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void SwitchWeapons_RPC()
+    public void SwitchWeapons_RPC() 
     {
         Debug.Log("SwitchWeapons_RPC");
         WeaponProperties previousActiveWeapon = activeWeapon;

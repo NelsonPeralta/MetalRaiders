@@ -163,6 +163,7 @@ MonoBehaviour:
   - UpdateTime_RPC
   - Teleport_RPC
   - UpdateData_RPC
+  - SwitchWeapons_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
