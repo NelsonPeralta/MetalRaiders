@@ -268,21 +268,19 @@ public class WeaponProperties : MonoBehaviour
         {"patriot", 19 }, {"colt", 20 }, {"m16", 21 }
     };
 
-    public void UpdateAmmo(int i, int a, bool isSpare = false, bool sender = true)
+    public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = false)
     {
-        if (!player.isMine)
-            return;
-
-        if (sender)
-            player.PV.RPC("UpdateAmmo", Photon.Pun.RpcTarget.All, i, a, isSpare, sender);
+        if (player.isMine)
+        {
+            if(sender)
+                player.PV.RPC("UpdateAmmo", Photon.Pun.RpcTarget.All, wIndex, ammo, isSpare, sender);
+        }
         else
         {
-            if (player.isMine)
-                return;
             if (!isSpare)
-                _currentAmmo = a;
+                _currentAmmo = ammo;
             else
-                _spareAmmo= a;
+                _spareAmmo = ammo;
         }
     }
 }
