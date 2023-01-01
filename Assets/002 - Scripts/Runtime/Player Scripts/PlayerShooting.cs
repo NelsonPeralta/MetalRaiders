@@ -262,6 +262,7 @@ public class PlayerShooting : MonoBehaviourPun
             }
             else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
             {
+                Debug.Log($"{playerController.name} PlayerShooting: AmmoProjectileType.Rocket");
                 ExplosiveProjectile rocket = null;
 
                 if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
@@ -271,6 +272,9 @@ public class PlayerShooting : MonoBehaviourPun
                 }
                 else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
                     rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
+
+                Debug.Log($"{playerController.name} PlayerShooting: {rocket.name}");
+
 
                 if (PV.IsMine)
                     rocket.gameObject.layer = 8;
