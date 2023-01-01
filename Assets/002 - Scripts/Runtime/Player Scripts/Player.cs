@@ -73,12 +73,12 @@ public class Player : MonoBehaviourPunCallbacks
             float _previousValue = hitPoints;
             float _damage = _previousValue - value;
 
-            if(_damage > 0)
+            if (_damage > 0)
             {
 
-            Debug.Log(_previousValue);
-            Debug.Log(value);
-            Debug.Log(_damage);
+                Debug.Log(_previousValue);
+                Debug.Log(value);
+                Debug.Log(_damage);
             }
 
             if (_isInvincible || hitPoints <= 0)
@@ -355,11 +355,14 @@ public class Player : MonoBehaviourPunCallbacks
 
     public Camera uiCamera { get { return _uiCamera; } }
 
+    private NetworkPlayer _player { get { return _networkPlayer; } }
+
     #endregion
 
     // serialized variables
     #region
 
+    [SerializeField] NetworkPlayer _networkPlayer;
     [SerializeField] PlayerMultiplayerMatchStats.Team _team;
     [SerializeField] PlayerMedals playerMedals;
     [SerializeField] string _nickName;
@@ -469,6 +472,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         hitboxes = GetComponentsInChildren<PlayerHitbox>().ToList();
+        _networkPlayer = GetComponent<NetworkPlayer>();
     }
     private void Start()
     {
@@ -891,9 +895,8 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void Damage_RPC(int damage)
     {
-        if (isMine)
-            if (hitPoints <= 0 || isRespawning || isDead)
-                return;
+        if (hitPoints <= 0 || isRespawning || isDead)
+            return;
 
         if (!isDead && !isRespawning)
             hitPoints -= damage;
@@ -931,14 +934,15 @@ public class Player : MonoBehaviourPunCallbacks
             }
     }
 
+    public bool deathByHeadshot { get { return _deathByHeadshot; } }
+
     [PunRPC]
     void Damage_RPC(int damage, bool headshot, int sourcePid,
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null,
         bool isGroin = false)
     {
-        if (isMine)
-            if (hitPoints <= 0 || isRespawning || isDead)
-                return;
+        if (hitPoints <= 0 || isRespawning || isDead)
+            return;
 
         Debug.Log($"Damage_RPC: {damage}");
         Debug.Log(damage);
@@ -1108,8 +1112,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
 
-        if (isMine)
-            hitPoints -= damage;
+        hitPoints -= damage;
         //UpdateData();
 
         try
