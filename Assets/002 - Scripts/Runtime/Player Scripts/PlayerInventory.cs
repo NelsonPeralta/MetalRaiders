@@ -279,7 +279,12 @@ public class PlayerInventory : MonoBehaviourPun
                 {
                     if (actWeap) // activeWeapon
                     {
+                        WeaponProperties _previousActiveWeapon = _activeWeapon;
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
+
+                        _activeWeapon.gameObject.SetActive(true);
+                        _previousActiveWeapon.gameObject.SetActive(false);  
+
                         pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
                         UpdateThirdPersonGunModelsOnCharacter();
                     }

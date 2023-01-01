@@ -122,6 +122,8 @@ public class PlayerController : MonoBehaviourPun
             Shooting();
             CheckReloadButton();
             CheckAmmoForAutoReload();
+            AnimationCheck();
+
         }
         if (PV.IsMine)
         {
@@ -146,7 +148,6 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
 
-            AnimationCheck();
             TestButton();
             if (ReInput.controllers != null)
                 activeControllerType = ReInput.controllers.GetLastActiveControllerType();
