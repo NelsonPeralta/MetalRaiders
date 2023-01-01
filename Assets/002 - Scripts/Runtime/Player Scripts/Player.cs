@@ -81,7 +81,7 @@ public class Player : MonoBehaviourPunCallbacks
                 Debug.Log(_damage);
             }
 
-            if (_isInvincible || hitPoints <= 0)
+            if (_damage > 0 && (_isInvincible || hitPoints <= 0))
                 return;
 
             if (overshieldPoints > 0)
@@ -724,7 +724,7 @@ public class Player : MonoBehaviourPunCallbacks
         isRespawning = false;
         GetComponent<PlayerController>().ScopeOut();
 
-        _hitPoints = maxHitPoints;
+        hitPoints = maxHitPoints;
 
         mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
