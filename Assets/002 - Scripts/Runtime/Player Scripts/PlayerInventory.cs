@@ -324,6 +324,10 @@ public class PlayerInventory : MonoBehaviourPun
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
 
+
+        Debug.Log($"Starting Active weapon: {StartingWeapon}");
+        Debug.Log($"Starting Active weapon: {StartingWeapon2}");
+
         for (int i = 0; i < allWeaponsInInventory.Length; i++)
         {
             if (allWeaponsInInventory[i] != null)
@@ -346,7 +350,7 @@ public class PlayerInventory : MonoBehaviourPun
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
                     weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
                     holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
-                    Debug.Log($"Starting Secondary weapon: {activeWeapon.name}");
+                    Debug.Log($"Starting Secondary weapon: {holsteredWeapon.name}");
                     hasSecWeap = true;
                 }
                 else if (allWeaponsInInventory[i].name != StartingWeapon)
