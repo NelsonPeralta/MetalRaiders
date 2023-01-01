@@ -51,6 +51,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                 //PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 try { OnActiveWeaponChanged?.Invoke(this); } catch { }
+                    try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
 
 
@@ -279,12 +280,11 @@ public class PlayerInventory : MonoBehaviourPun
                     if (actWeap) // activeWeapon
                     {
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
+                        pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
                         UpdateThirdPersonGunModelsOnCharacter();
                     }
                     else
                         _holsteredWeapon = weap.GetComponent<WeaponProperties>();
-
-                    try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
                 }
 
             }

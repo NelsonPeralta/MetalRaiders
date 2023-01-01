@@ -253,7 +253,7 @@ public class ReloadScript : MonoBehaviourPun
                         PV.RPC("PlayReloadSound_RPC", RpcTarget.All, i);
             //reloadAudioSource.clip = pController.wProperties.Reload_1;
             //reloadAudioSource.Play();
-            pController.weaponAnimator.Play("Reload", 0, 0f);
+            try { pController.weaponAnimator.Play("Reload", 0, 0f); } catch { }
             pController.ScopeOut();
 
             Reload(0, 0, 0, singleReloadTime);

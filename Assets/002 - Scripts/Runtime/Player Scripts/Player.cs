@@ -1306,7 +1306,7 @@ public class Player : MonoBehaviourPunCallbacks
         Debug.Log("UpdateAmmo");
         try
         {
-            playerInventory.activeWeapon.GetComponent<WeaponProperties>().UpdateAmmo(wIndex, ammo, isSpare, false);
+            playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateAmmo(wIndex, ammo, isSpare, false);
         }
         catch { }
     }
