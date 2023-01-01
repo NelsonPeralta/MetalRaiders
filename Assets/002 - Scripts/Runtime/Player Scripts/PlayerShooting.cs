@@ -269,6 +269,9 @@ public class PlayerShooting : MonoBehaviourPun
             }
             else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
             {
+                // Projectile does not spawn if ammo left is 0, lag
+                if (playerController.player.isMine)
+                    PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.All);
                 Debug.Log($"{playerController.name} PlayerShooting: AmmoProjectileType.Rocket");
                 ExplosiveProjectile rocket = null;
 
@@ -281,6 +284,7 @@ public class PlayerShooting : MonoBehaviourPun
                     rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
 
                 Debug.Log($"{playerController.name} PlayerShooting: {rocket.name}");
+                rocket.player = playerController.player;
 
 
                 if (PV.IsMine)
@@ -311,6 +315,38 @@ public class PlayerShooting : MonoBehaviourPun
         GetComponent<AudioSource>().clip = activeWeapon.Fire;
         GetComponent<AudioSource>().Play();
         OnBulletSpawned?.Invoke(this);
+    }
+
+    [PunRPC]
+    void SpawnFakeExplosiveProjectile_RPC()
+    {
+        if (playerController.player.isMine)
+            return;
+        WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        ExplosiveProjectile rocket = null;
+
+        if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+        {
+            //rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<Rocket>();
+            rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<ExplosiveProjectile>();
+        }
+        else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+            rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
+
+        Debug.Log($"{playerController.name} PlayerShooting: {rocket.name}");
+        rocket.player = playerController.player;
+
+
+        if (PV.IsMine)
+            rocket.gameObject.layer = 8;
+        else
+            rocket.gameObject.layer = 0;
+
+        rocket.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+        rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+
+        rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
+        GetComponent<CommonFiringActions>().SpawnMuzzleflash();
     }
 
     public void Update()
