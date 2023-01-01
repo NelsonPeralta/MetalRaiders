@@ -723,7 +723,8 @@ public class Player : MonoBehaviourPunCallbacks
         GetComponent<Movement>().ResetCharacterControllerProperties();
         isRespawning = false;
         GetComponent<PlayerController>().ScopeOut();
-        hitPoints = maxHitPoints;
+
+        _hitPoints = maxHitPoints;
 
         mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
