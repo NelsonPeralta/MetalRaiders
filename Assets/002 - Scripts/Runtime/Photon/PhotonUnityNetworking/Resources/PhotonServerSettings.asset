@@ -164,6 +164,8 @@ MonoBehaviour:
   - Teleport_RPC
   - UpdateData_RPC
   - SwitchWeapons_RPC
+  - SpawnFakeExplosiveProjectile_RPC
+  - PlayFirstPersonReloadAnimation_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
