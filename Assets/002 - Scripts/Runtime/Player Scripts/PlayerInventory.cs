@@ -37,10 +37,11 @@ public class PlayerInventory : MonoBehaviourPun
         get { return _activeWeapon; }
         set
         {
-            //if (PV.IsMine)
+            if (PV.IsMine)
             {
 
                 _activeWeapon = value;
+                PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 _activeWeapon.gameObject.SetActive(true);
 
                 pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
@@ -50,7 +51,6 @@ public class PlayerInventory : MonoBehaviourPun
 
                 //PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 try { OnActiveWeaponChanged?.Invoke(this); } catch { }
-                try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
 
 
@@ -157,6 +157,7 @@ public class PlayerInventory : MonoBehaviourPun
         OnActiveWeaponChangedLate += OnActiveWeaponChangedLate_Delegate;
         OnActiveWeaponChangedLate += crosshairScript.OnActiveWeaponChanged_Delegate;
 
+        Debug.Log($"{player.name} PlayerInventory Start");
         StartCoroutine(EquipStartingWeapon());
 
         try
@@ -288,6 +289,8 @@ public class PlayerInventory : MonoBehaviourPun
     {
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
 
+        Debug.Log("EquipStartingWeapon");
+
         if (GameManager.instance.gameType.ToString().Contains("Slayer"))
         {
             StartingWeapon = "p90";
@@ -325,8 +328,8 @@ public class PlayerInventory : MonoBehaviourPun
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
 
 
-        Debug.Log($"Starting Active weapon: {StartingWeapon}");
-        Debug.Log($"Starting Active weapon: {StartingWeapon2}");
+        Debug.Log($"Starting Active weapon: {player.name} {StartingWeapon}");
+        Debug.Log($"Starting Active weapon: {player.name} {StartingWeapon2}");
 
         for (int i = 0; i < allWeaponsInInventory.Length; i++)
         {
@@ -341,7 +344,7 @@ public class PlayerInventory : MonoBehaviourPun
                     activeWeapIs = 0;
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                     allWeaponsInInventory[i].gameObject.SetActive(true);
-                    Debug.Log($"Starting Active weapon: {activeWeapon.name}");
+                    Debug.Log($"Starting Active weapon: {player.name} {activeWeapon.name}");
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
                 else if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon2)
@@ -350,7 +353,7 @@ public class PlayerInventory : MonoBehaviourPun
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
                     weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
                     holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
-                    Debug.Log($"Starting Secondary weapon: {holsteredWeapon.name}");
+                    Debug.Log($"Starting Secondary weapon: {player.name} {holsteredWeapon.name}");
                     hasSecWeap = true;
                 }
                 else if (allWeaponsInInventory[i].name != StartingWeapon)
