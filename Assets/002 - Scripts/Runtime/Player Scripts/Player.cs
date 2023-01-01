@@ -1304,7 +1304,11 @@ public class Player : MonoBehaviourPunCallbacks
     public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = true)
     {
         Debug.Log("UpdateAmmo");
-        playerInventory.activeWeapon.GetComponent<WeaponProperties>().UpdateAmmo(wIndex, ammo, isSpare, false);
+        try
+        {
+            playerInventory.activeWeapon.GetComponent<WeaponProperties>().UpdateAmmo(wIndex, ammo, isSpare, false);
+        }
+        catch { }
     }
 
     [PunRPC]
