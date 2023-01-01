@@ -73,11 +73,15 @@ public class Player : MonoBehaviourPunCallbacks
             float _previousValue = hitPoints;
             float _damage = _previousValue - value;
 
+            if(_damage > 0)
+            {
+
             Debug.Log(_previousValue);
             Debug.Log(value);
             Debug.Log(_damage);
+            }
 
-            if (_isInvincible)
+            if (_isInvincible || hitPoints <= 0)
                 return;
 
             if (overshieldPoints > 0)
@@ -887,6 +891,10 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void Damage_RPC(int damage)
     {
+        if (isMine)
+            if (hitPoints <= 0 || isRespawning || isDead)
+                return;
+
         if (!isDead && !isRespawning)
             hitPoints -= damage;
 
@@ -928,6 +936,10 @@ public class Player : MonoBehaviourPunCallbacks
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null,
         bool isGroin = false)
     {
+        if (isMine)
+            if (hitPoints <= 0 || isRespawning || isDead)
+                return;
+
         Debug.Log($"Damage_RPC: {damage}");
         Debug.Log(damage);
         Debug.Log(hitPoints);
