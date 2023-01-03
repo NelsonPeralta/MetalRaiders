@@ -179,25 +179,27 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InRoom)
         {
             Debug.Log("GameManager OnSceneLoaded: in a room");
-            Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["gamemode"]}");
-            Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
         }
         else
         {
             Debug.Log("GameManager OnSceneLoaded: NOT in a room");
+        }
+
+        if (scene.buildIndex == 0)
+        {
             try { gameType = GameType.Fiesta; } catch { }
             try { teamMode = TeamMode.None; } catch { }
             try { onlineTeam = PlayerMultiplayerMatchStats.Team.None; } catch { }
         }
-
-        if (scene.buildIndex > 0) // We're in the game scene
+        else if (scene.buildIndex > 0) // We're in the game scene
         {
-            try
-            {
-                GameManager.instance.gameMode = (GameMode)Enum.Parse(typeof(GameMode), PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString());
-                GameManager.instance.gameType = (GameType)Enum.Parse(typeof(GameType), PhotonNetwork.CurrentRoom.CustomProperties["gametype"].ToString());
-            }
-            catch (Exception e) { Debug.LogWarning(e.Message); }
+            if (PhotonNetwork.InRoom)
+                try
+                {
+                    GameManager.instance.gameMode = (GameMode)Enum.Parse(typeof(GameMode), PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString());
+                    GameManager.instance.gameType = (GameType)Enum.Parse(typeof(GameType), PhotonNetwork.CurrentRoom.CustomProperties["gametype"].ToString());
+                }
+                catch (Exception e) { Debug.LogWarning(e.Message); }
 
             try
             {
