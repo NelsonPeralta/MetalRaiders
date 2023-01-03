@@ -176,15 +176,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         instance = this;
         sceneIndex = scene.buildIndex;
 
+        if (PhotonNetwork.InRoom)
+        {
+            Debug.Log("GameManager OnSceneLoaded: in a room");
+            Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["gamemode"]}");
+            Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+        }
+        else
+        {
+            Debug.Log("GameManager OnSceneLoaded: NOT in a room");
+            try { gameType = GameType.Fiesta; } catch { }
+            try { teamMode = TeamMode.None; } catch { }
+            try { onlineTeam = PlayerMultiplayerMatchStats.Team.None; } catch { }
+        }
+
         if (scene.buildIndex > 0) // We're in the game scene
         {
-            try
-            {
-                Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["gamemode"]}");
-                Debug.Log($"{PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
-            }
-            catch (Exception e) { Debug.LogWarning(e.Message); }
-
             try
             {
                 GameManager.instance.gameMode = (GameMode)Enum.Parse(typeof(GameMode), PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString());
