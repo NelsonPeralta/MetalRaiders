@@ -66,7 +66,7 @@ public class Player : MonoBehaviourPunCallbacks
     public float fullPoints { get { return _hitPoints + _overshieldPoints; } }
     public float hitPoints
     {
-        get { return _hitPoints + _overshieldPoints; }
+        get { return networkHitPoints; }
 
         set
         {
@@ -77,7 +77,6 @@ public class Player : MonoBehaviourPunCallbacks
 
                 if (_damage > 0)
                 {
-
                     Debug.Log(_previousValue);
                     Debug.Log(value);
                     Debug.Log(_damage);
@@ -99,35 +98,47 @@ public class Player : MonoBehaviourPunCallbacks
                         return;
                 }
 
-                float newValue = hitPoints - _damage;
+                float newHitPoints = hitPoints - _damage;
+
+                if (!_isHealing)
+                    GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
+                else if (hitPoints == maxHitPoints)
+                    GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
+            }
+        }
+    }
+
+    private float networkHitPoints
+    {
+        get { return _hitPoints + _overshieldPoints; }
+        set
+        {
+            {
+                float _previousValue = hitPoints;
+                float newHitPoints = value;
 
                 if (overshieldPoints <= 0)
-                    _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+                    _hitPoints = Mathf.Clamp(newHitPoints, 0, (_maxHealthPoints + _maxShieldPoints));
 
-                if (_previousValue > newValue)
+                if (_previousValue > newHitPoints)
                     OnPlayerDamaged?.Invoke(this);
 
-                if (_previousValue != newValue)
+                if (_previousValue != newHitPoints)
                     OnPlayerHitPointsChanged?.Invoke(this);
 
                 if (_maxShieldPoints > 0)
                 {
-                    if (newValue >= maxHealthPoints && newValue < _previousValue)
+                    if (newHitPoints >= maxHealthPoints && newHitPoints < _previousValue)
                     {
                         OnPlayerShieldDamaged?.Invoke(this);
                     }
 
-                    if (newValue <= maxHealthPoints && _previousValue > maxHealthPoints)
+                    if (newHitPoints <= maxHealthPoints && _previousValue > maxHealthPoints)
                         OnPlayerShieldBroken?.Invoke(this);
                 }
 
-                if (newValue < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newValue)
+                if (newHitPoints < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newHitPoints)
                     OnPlayerHealthDamage?.Invoke(this);
-
-                if (!_isHealing)
-                    GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, _hitPoints, _overshieldPoints);
-                else if (hitPoints == maxHitPoints)
-                    GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, _hitPoints, _overshieldPoints);
 
                 if (_hitPoints <= 0)
                     isDead = true;
@@ -136,7 +147,6 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
     }
-
     public float overshieldPoints
     {
         get { return _overshieldPoints; }
@@ -378,7 +388,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] int _maxHealthPoints = 100;
     [SerializeField] int _maxShieldPoints = 150;
     [SerializeField] int _maxOvershieldPoints = 150;
-    [SerializeField] float _hitPoints = 250, _overshieldPoints = 150;
+    [SerializeField] float _networkHitPoints = 250, _hitPoints = 250, _overshieldPoints = 150;
     [SerializeField] bool _isRespawning, _isDead, _isInvincible;
     [SerializeField] GameObject _overshieldFx;
     [SerializeField] Camera _uiCamera;
@@ -955,11 +965,11 @@ public class Player : MonoBehaviourPunCallbacks
         lastPID = sourcePid;
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
+        try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
         if (PV.IsMine)
         {
             try { GetComponent<PlayerController>().ScopeOut(); } catch { }
-            try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
             try
             {
@@ -975,6 +985,11 @@ public class Player : MonoBehaviourPunCallbacks
             catch { }
 
             hitPoints -= damage;
+        }
+
+        if(isDead)
+        {
+
         }
 
         if (isDead)
@@ -1275,7 +1290,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (!isMine)
         {
             overshieldPoints = o;
-            hitPoints = h;
+            networkHitPoints = h;
         }
     }
 
