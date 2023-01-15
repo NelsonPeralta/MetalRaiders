@@ -742,6 +742,9 @@ public class Player : MonoBehaviourPunCallbacks
             return;
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         lastPID = -1;
+        _deathByGroin= false;
+        _deathByHeadshot= false;
+        _damageSource= null;
         OnPlayerRespawnEarly?.Invoke(this);
 
         GetComponent<Movement>().ResetCharacterControllerProperties();
