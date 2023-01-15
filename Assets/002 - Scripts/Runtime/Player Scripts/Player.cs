@@ -70,64 +70,67 @@ public class Player : MonoBehaviourPunCallbacks
 
         set
         {
-            float _previousValue = hitPoints;
-            float _damage = _previousValue - value;
-
-            if (_damage > 0)
+            if (isMine)
             {
+                float _previousValue = hitPoints;
+                float _damage = _previousValue - value;
 
-                Debug.Log(_previousValue);
-                Debug.Log(value);
-                Debug.Log(_damage);
-            }
-
-            if (_damage > 0 && (_isInvincible || hitPoints <= 0))
-                return;
-
-            if (overshieldPoints > 0)
-            {
-                float _originalOsPoints = overshieldPoints;
-                overshieldPoints -= _damage;
-                if (_damage > _originalOsPoints)
+                if (_damage > 0)
                 {
-                    _damage -= _originalOsPoints;
+
+                    Debug.Log(_previousValue);
+                    Debug.Log(value);
                     Debug.Log(_damage);
                 }
-                else
+
+                if (_damage > 0 && (_isInvincible || hitPoints <= 0))
                     return;
-            }
 
-            float newValue = hitPoints - _damage;
-
-            if (overshieldPoints <= 0)
-                _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
-
-            if (_previousValue > newValue)
-                OnPlayerDamaged?.Invoke(this);
-
-            if (_previousValue != newValue)
-                OnPlayerHitPointsChanged?.Invoke(this);
-
-            if (_maxShieldPoints > 0)
-            {
-                if (newValue >= maxHealthPoints && newValue < _previousValue)
+                if (overshieldPoints > 0)
                 {
-                    OnPlayerShieldDamaged?.Invoke(this);
+                    float _originalOsPoints = overshieldPoints;
+                    overshieldPoints -= _damage;
+                    if (_damage > _originalOsPoints)
+                    {
+                        _damage -= _originalOsPoints;
+                        Debug.Log(_damage);
+                    }
+                    else
+                        return;
                 }
 
-                if (newValue <= maxHealthPoints && _previousValue > maxHealthPoints)
-                    OnPlayerShieldBroken?.Invoke(this);
+                float newValue = hitPoints - _damage;
+
+                if (overshieldPoints <= 0)
+                    _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+
+                if (_previousValue > newValue)
+                    OnPlayerDamaged?.Invoke(this);
+
+                if (_previousValue != newValue)
+                    OnPlayerHitPointsChanged?.Invoke(this);
+
+                if (_maxShieldPoints > 0)
+                {
+                    if (newValue >= maxHealthPoints && newValue < _previousValue)
+                    {
+                        OnPlayerShieldDamaged?.Invoke(this);
+                    }
+
+                    if (newValue <= maxHealthPoints && _previousValue > maxHealthPoints)
+                        OnPlayerShieldBroken?.Invoke(this);
+                }
+
+                if (newValue < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newValue)
+                    OnPlayerHealthDamage?.Invoke(this);
+
+                GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, _hitPoints, _overshieldPoints);
+
+                if (_hitPoints <= 0)
+                    isDead = true;
+
+                impactPos = null;
             }
-
-            if (newValue < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newValue)
-                OnPlayerHealthDamage?.Invoke(this);
-
-
-
-            if (_hitPoints <= 0)
-                isDead = true;
-
-            impactPos = null;
         }
     }
 
@@ -945,11 +948,6 @@ public class Player : MonoBehaviourPunCallbacks
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
-        Debug.Log($"Damage_RPC: {damage}");
-        Debug.Log(damage);
-        Debug.Log(hitPoints);
-        Debug.Log(damageSource);
-
         _deathByHeadshot = headshot;
         lastPID = sourcePid;
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
@@ -957,28 +955,23 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (PV.IsMine)
         {
-            GetComponent<PlayerController>().ScopeOut();
-            allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
+            try { GetComponent<PlayerController>().ScopeOut(); } catch { }
+            try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
+            try
             {
-                try
-                {
-                    KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
-                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+                KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
+                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
 
-                    if (damageSource.Contains("grenade"))
-                    {
-                        string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
-                        killFeedManager.EnterNewFeed($"You took {damage} <color={colorCode}>grenade damage");
-                    }
-                    //else if (damageSource.Contains("melee"))
-                    //{
-                    //    string colorCode = KillFeedManager.killFeedColorCodeDict["yellow"];
-                    //    killFeedManager.EnterNewFeed($"You took {meleeDamage} melee  damage");
-                    //}
+                if (damageSource.Contains("grenade"))
+                {
+                    string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
+                    killFeedManager.EnterNewFeed($"You took {damage} <color={colorCode}>grenade damage");
                 }
-                catch { }
             }
+            catch { }
+
+            hitPoints -= damage;
         }
 
         if (isDead)
@@ -1113,7 +1106,6 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
 
-        hitPoints -= damage;
         //UpdateData();
 
         try
@@ -1142,9 +1134,9 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 string f = $"{lastPlayerSource.nickName} killed {nickName}";
 
-                if(damageSource != null)
+                if (damageSource != null)
                 {
-                    f += $" with an {damageSource}";
+                    f += $" with: {damageSource}";
                 }
 
                 {
@@ -1275,7 +1267,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void UpdateData_RPC(int h, int o)
+    void UpdateHitPoints_RPC(int h, int o)
     {
         if (!isMine)
         {
