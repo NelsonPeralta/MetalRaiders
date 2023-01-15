@@ -1287,7 +1287,6 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateHitPoints_RPC(float h, float o)
     {
-        if (!isMine)
         {
             overshieldPoints = o;
             networkHitPoints = h;
