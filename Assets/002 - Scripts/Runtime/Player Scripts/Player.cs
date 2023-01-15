@@ -99,15 +99,14 @@ public class Player : MonoBehaviourPunCallbacks
                 }
 
                 float newHitPoints = hitPoints - _damage;
+                if (_isHealing)
+                    if (overshieldPoints <= 0)
+                        _hitPoints = Mathf.Clamp(newHitPoints, 0, (_maxHealthPoints + _maxShieldPoints));
 
                 if (!_isHealing)
                     GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
                 else if (hitPoints == maxHitPoints)
                     GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
-                else if (_isHealing)
-                {
-                    _hitPoints = value;
-                }
             }
         }
     }
