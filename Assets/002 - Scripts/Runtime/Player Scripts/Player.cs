@@ -421,7 +421,8 @@ public class Player : MonoBehaviourPunCallbacks
     bool _hasArmor;
     bool _hasMeleeUpgrade;
 
-    bool _deathByHeadshot;
+    string _damageSource;
+    bool _deathByHeadshot, _deathByGroin;
     Vector3 _impactPos;
     Vector3 _impactDir;
 
@@ -845,6 +846,149 @@ public class Player : MonoBehaviourPunCallbacks
 
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
+
+        if (isDead)
+        {
+            string sourcePlayerName = lastPlayerSource.nickName;
+
+            int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
+            int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
+            string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
+            string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
+
+
+
+
+            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+            {
+                string f = $"{lastPlayerSource.nickName} killed {nickName}";
+
+                if (_damageSource != null)
+                {
+                    f += $" with: {_damageSource}";
+                }
+
+                {
+                    if (this != lastPlayerSource)
+                    {
+                        kfm.EnterNewFeed(f);
+                        continue;
+
+                        {
+                            string feed = $"{lastPlayerSource.nickName} killed";
+                            if (kfm.GetComponent<Player>() != this)
+                            {
+                                if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
+                                {
+                                    try
+                                    {
+                                        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
+                                        feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+                                        if (_deathByHeadshot)
+                                            feed += $"<sprite={hsCode}>";
+
+                                        if (_deathByGroin)
+                                            feed += $"<sprite={nsCode}>";
+
+                                        feed += $" <color=\"red\">{nickName}";
+                                        kfm.EnterNewFeed(feed);
+                                    }
+                                    catch
+                                    {
+                                        kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
+                                    }
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
+                                        feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+                                        if (_deathByHeadshot)
+                                            feed += $"<sprite={hsCode}>";
+
+                                        feed += $" <color=\"red\">{nickName}";
+                                        kfm.EnterNewFeed(feed);
+                                    }
+                                    catch
+                                    {
+                                        kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
+                                    feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+                                    if (_deathByHeadshot)
+                                        feed += $"<sprite={hsCode}>";
+
+                                    feed += $" <color={youColorCode}>You";
+                                    kfm.EnterNewFeed(feed);
+                                }
+                                catch
+                                {
+                                    kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+                    }
+                }
+            }
+
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            {
+                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathByHeadshot));
+
+            }
+            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                GetComponent<PlayerSwarmMatchStats>().deaths++;
+
+            PlayerMedals sourcePlayerMedals = lastPlayerSource.playerMedals;
+            if (sourcePlayerMedals != this.playerMedals)
+            {
+                if (_deathByHeadshot)
+                {
+                    if (_lastPID != this.pid)
+                        sourcePlayerMedals.SpawnHeadshotMedal();
+                }
+                else if (_deathByGroin)
+                {
+                    if (_lastPID != this.pid)
+                        sourcePlayerMedals.SpawnNutshotMedal();
+                }
+                else if (_damageSource == "melee")
+                {
+                    if (_lastPID != this.pid)
+                        sourcePlayerMedals.SpawnMeleeMedal();
+                }
+                else if (_damageSource.Contains("grenade"))
+                {
+                    if (_lastPID != this.pid)
+                        sourcePlayerMedals.SpawnGrenadeMedal();
+                }
+                else
+                {
+                    if (_lastPID != this.pid)
+                        sourcePlayerMedals.kills++;
+                }
+
+                if (playerMedals.spree >= 3)
+                    if (_lastPID != this.pid)
+                        sourcePlayerMedals.SpawnKilljoySpreeMedal();
+            }
+        }
+
+
         isRespawning = true;
         hitboxesEnabled = false;
         thirdPersonModels.SetActive(false);
@@ -968,14 +1112,21 @@ public class Player : MonoBehaviourPunCallbacks
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
-        _deathByHeadshot = headshot;
-        lastPID = sourcePid;
+        try
+        {
+            _damageSource = damageSource;
+            _deathByHeadshot = headshot;
+            _deathByGroin = isGroin;
+            lastPID = sourcePid;
+        }
+        catch { }
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
         if (PV.IsMine)
         {
+
             try { GetComponent<PlayerController>().ScopeOut(); } catch { }
 
             try
@@ -991,147 +1142,9 @@ public class Player : MonoBehaviourPunCallbacks
             }
             catch { }
 
+
             hitPoints -= damage;
         }
-
-        if (isDead)
-        {
-
-        }
-
-        if (isDead)
-        {
-            //Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
-            //string sourcePlayerName = sourcePlayer.nickName;
-
-            //int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
-            //int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
-            //string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
-            //string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
-
-            //foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
-            //{
-            //    string f = $"{sourcePlayer.nickName} killed {nickName}";
-            //    kfm.EnterNewFeed(f);
-
-            //    continue;
-            //    if (this != sourcePlayer)
-            //    {
-
-            //        string feed = $"{sourcePlayer.nickName} killed";
-            //        if (kfm.GetComponent<Player>() != this)
-            //        {
-            //            if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
-            //            {
-            //                try
-            //                {
-            //                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-            //                    feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-            //                    if (wasHeadshot)
-            //                        feed += $"<sprite={hsCode}>";
-
-            //                    if (isGroin)
-            //                        feed += $"<sprite={nsCode}>";
-
-            //                    feed += $" <color=\"red\">{nickName}";
-            //                    kfm.EnterNewFeed(feed);
-            //                }
-            //                catch
-            //                {
-            //                    kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
-            //                }
-            //            }
-            //            else
-            //            {
-            //                try
-            //                {
-            //                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-            //                    feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-            //                    if (wasHeadshot)
-            //                        feed += $"<sprite={hsCode}>";
-
-            //                    feed += $" <color=\"red\">{nickName}";
-            //                    kfm.EnterNewFeed(feed);
-            //                }
-            //                catch
-            //                {
-            //                    kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            try
-            //            {
-            //                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-            //                feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-            //                if (wasHeadshot)
-            //                    feed += $"<sprite={hsCode}>";
-
-            //                feed += $" <color={youColorCode}>You";
-            //                kfm.EnterNewFeed(feed);
-            //            }
-            //            catch
-            //            {
-            //                kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
-            //    }
-            //}
-
-            //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            //{
-            //    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoShotThisPlayerPhotonId, PV.ViewID, wasHeadshot));
-
-            //}
-            //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            //    GetComponent<PlayerSwarmMatchStats>().deaths++;
-
-            //PlayerMedals sourcePlayerMedals = null;
-            //foreach (PlayerMedals pm in FindObjectsOfType<PlayerMedals>())
-            //    if (pm.player.pid == playerWhoShotThisPlayerPhotonId)
-            //        sourcePlayerMedals = pm;
-
-            //if (wasHeadshot)
-            //{
-            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
-            //        sourcePlayerMedals.SpawnHeadshotMedal();
-            //}
-            //else if (isGroin)
-            //{
-            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
-            //        sourcePlayerMedals.SpawnNutshotMedal();
-            //}
-            //else if (damageSource == "melee")
-            //{
-            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
-            //        sourcePlayerMedals.SpawnMeleeMedal();
-            //}
-            //else if (damageSource.Contains("grenade"))
-            //{
-            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
-            //        sourcePlayerMedals.SpawnGrenadeMedal();
-            //}
-            //else
-            //{
-            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
-            //        sourcePlayerMedals.kills++;
-            //}
-
-            //if (playerMedals.spree >= 3)
-            //    if (playerWhoShotThisPlayerPhotonId != this.pid)
-            //        sourcePlayerMedals.SpawnKilljoySpreeMedal();
-        }
-
-
-        //UpdateData();
 
         try
         { // Hit Marker Handling
@@ -1143,148 +1156,12 @@ public class Player : MonoBehaviourPunCallbacks
         }
         catch { }
 
-        if (isDead)
-        {
-            string sourcePlayerName = lastPlayerSource.nickName;
-
-            int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
-            int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
-            string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
-            string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
-
-
-
-
-            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
-            {
-                string f = $"{lastPlayerSource.nickName} killed {nickName}";
-
-                if (damageSource != null)
-                {
-                    f += $" with: {damageSource}";
-                }
-
-                {
-                    if (this != lastPlayerSource)
-                    {
-                        kfm.EnterNewFeed(f);
-                        continue;
-
-                        {
-                            string feed = $"{lastPlayerSource.nickName} killed";
-                            if (kfm.GetComponent<Player>() != this)
-                            {
-                                if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
-                                {
-                                    try
-                                    {
-                                        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                                        feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                                        if (headshot)
-                                            feed += $"<sprite={hsCode}>";
-
-                                        if (isGroin)
-                                            feed += $"<sprite={nsCode}>";
-
-                                        feed += $" <color=\"red\">{nickName}";
-                                        kfm.EnterNewFeed(feed);
-                                    }
-                                    catch
-                                    {
-                                        kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
-                                    }
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                                        feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                                        if (headshot)
-                                            feed += $"<sprite={hsCode}>";
-
-                                        feed += $" <color=\"red\">{nickName}";
-                                        kfm.EnterNewFeed(feed);
-                                    }
-                                    catch
-                                    {
-                                        kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                                    feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                                    if (headshot)
-                                        feed += $"<sprite={hsCode}>";
-
-                                    feed += $" <color={youColorCode}>You";
-                                    kfm.EnterNewFeed(feed);
-                                }
-                                catch
-                                {
-                                    kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
-                    }
-                }
-            }
-
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            {
-                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(sourcePid, PV.ViewID, headshot));
-
-            }
-            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                GetComponent<PlayerSwarmMatchStats>().deaths++;
-
-            PlayerMedals sourcePlayerMedals = lastPlayerSource.playerMedals;
-            if (sourcePlayerMedals != this.playerMedals)
-            {
-                if (headshot)
-                {
-                    if (sourcePid != this.pid)
-                        sourcePlayerMedals.SpawnHeadshotMedal();
-                }
-                else if (isGroin)
-                {
-                    if (sourcePid != this.pid)
-                        sourcePlayerMedals.SpawnNutshotMedal();
-                }
-                else if (damageSource == "melee")
-                {
-                    if (sourcePid != this.pid)
-                        sourcePlayerMedals.SpawnMeleeMedal();
-                }
-                else if (damageSource.Contains("grenade"))
-                {
-                    if (sourcePid != this.pid)
-                        sourcePlayerMedals.SpawnGrenadeMedal();
-                }
-                else
-                {
-                    if (sourcePid != this.pid)
-                        sourcePlayerMedals.kills++;
-                }
-
-                if (playerMedals.spree >= 3)
-                    if (sourcePid != this.pid)
-                        sourcePlayerMedals.SpawnKilljoySpreeMedal();
-            }
-        }
     }
 
+    void SpawnDeathKillFeed()
+    {
+
+    }
     void UpdateData()
     {
         if (isMine)
