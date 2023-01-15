@@ -104,6 +104,10 @@ public class Player : MonoBehaviourPunCallbacks
                     GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
                 else if (hitPoints == maxHitPoints)
                     GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
+                else if (_isHealing)
+                {
+                    _hitPoints = value;
+                }
             }
         }
     }
