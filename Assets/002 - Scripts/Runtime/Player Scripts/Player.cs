@@ -124,7 +124,10 @@ public class Player : MonoBehaviourPunCallbacks
                 if (newValue < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newValue)
                     OnPlayerHealthDamage?.Invoke(this);
 
-                GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, _hitPoints, _overshieldPoints);
+                if (!_isHealing)
+                    GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, _hitPoints, _overshieldPoints);
+                else if (hitPoints == maxHitPoints)
+                    GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, _hitPoints, _overshieldPoints);
 
                 if (_hitPoints <= 0)
                     isDead = true;
@@ -1267,7 +1270,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void UpdateHitPoints_RPC(int h, int o)
+    void UpdateHitPoints_RPC(float h, float o)
     {
         if (!isMine)
         {
