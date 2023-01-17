@@ -573,6 +573,7 @@ MonoBehaviour:
   - {fileID: 2711562721274824091, guid: 009dd02cd58b6da44a5d9f221233fe21, type: 3}
   - {fileID: 5406913902717158425, guid: 823dd5995a5be7b40b8deae36ce5ce68, type: 3}
   - {fileID: 439363896651038599, guid: 17881a4d2a6d973428f0fe428e568de4, type: 3}
+  - {fileID: 3627902294259101941, guid: 033f2f56169556e49bf912e701a2a29c, type: 3}
   _tts: 0
 --- !u!1001 &5425998958598396845
 PrefabInstance:

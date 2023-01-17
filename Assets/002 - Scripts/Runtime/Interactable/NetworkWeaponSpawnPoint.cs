@@ -105,7 +105,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     {
         string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal", "m32" };
         string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
-        string[] lightWeaponCodeNames = { "m1911", "colt", "mp5", "p90" };
+        string[] lightWeaponCodeNames = { "m1911", "colt", "mp5", "p90", "desert_eagle" };
 
         if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
         {
@@ -113,7 +113,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 codeName = "m249c";
 
             if (codeName == "m16")
-                codeName = "colt";
+                codeName = "desert_eagle";
 
             if (codeName == "mk14")
                 codeName = "p90";

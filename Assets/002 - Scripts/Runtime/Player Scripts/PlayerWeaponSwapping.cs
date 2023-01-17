@@ -171,6 +171,8 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 if ((pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.activeWeapon.codeName) &&
                     (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.holsteredWeapon.codeName))
                 {
+                    Debug.Log("other.GetComponent<LootableWeapon>().codeName");
+                    Debug.Log(other.GetComponent<LootableWeapon>().codeName);
                     other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
                     other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
 
