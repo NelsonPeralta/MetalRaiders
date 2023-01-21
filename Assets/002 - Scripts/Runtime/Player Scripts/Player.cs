@@ -1052,12 +1052,12 @@ public class Player : MonoBehaviourPunCallbacks
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnNutshotMedal();
                     }
-                    else if (_damageSource == "melee")
+                    else if (_damageSource == "elee")
                     {
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnMeleeMedal();
                     }
-                    else if (_damageSource.Contains("grenade"))
+                    else if (_damageSource.Contains("renade"))
                     {
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnGrenadeMedal();

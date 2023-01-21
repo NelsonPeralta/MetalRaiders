@@ -9813,7 +9813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  damageSource: grenadelauncher
+  damageSource: M32
   damage: 140
   radius: 4.5
   explosionPower: 500
