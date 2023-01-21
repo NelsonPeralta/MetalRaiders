@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cleanName: Desert Eagle
-  codeName: desert_eagle
+  codeName: deagle
   spriteId: 0
   _ammo: 8
   _spareAmmo: 24

@@ -113,7 +113,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 codeName = "m249c";
 
             if (codeName == "m16")
-                codeName = "desert_eagle";
+                codeName = "deagle";
 
             if (codeName == "mk14")
                 codeName = "p90";
