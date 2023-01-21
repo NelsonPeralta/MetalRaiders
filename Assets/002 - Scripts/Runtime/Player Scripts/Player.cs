@@ -6,6 +6,8 @@ using UnityEngine;
 using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
+using static UnityEngine.ProBuilder.AutoUnwrapSettings;
+using System.Text;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -14,6 +16,7 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
         OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged;
 
+    public enum DeathSpecialNature { None, Headshot, Groin, Melee }
 
     // public variables
     #region
@@ -66,53 +69,108 @@ public class Player : MonoBehaviourPunCallbacks
     public float fullPoints { get { return _hitPoints + _overshieldPoints; } }
     public float hitPoints
     {
-        get { return networkHitPoints; }
+        get { return _hitPoints + _overshieldPoints; }
 
         set
         {
-            if (isMine)
-            {
-                float _previousValue = hitPoints;
-                float _damage = _previousValue - value;
+            float _previousValue = hitPoints;
+            float _damage = _previousValue - value;
 
-                if (_damage > 0)
+            if (_damage > 0 && (_isInvincible || hitPoints <= 0))
+                return;
+
+            if (overshieldPoints > 0)
+            {
+                float _originalOsPoints = overshieldPoints;
+                overshieldPoints -= _damage;
+                if (_damage > _originalOsPoints)
                 {
-                    Debug.Log(_previousValue);
-                    Debug.Log(value);
+                    _damage -= _originalOsPoints;
                     Debug.Log(_damage);
                 }
-
-                if (_damage > 0 && (_isInvincible || hitPoints <= 0))
+                else
                     return;
+            }
 
-                if (overshieldPoints > 0)
+            float newValue = hitPoints - _damage;
+
+            if (overshieldPoints <= 0)
+                _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+
+            if (_previousValue > newValue)
+                OnPlayerDamaged?.Invoke(this);
+
+            if (_previousValue != newValue)
+                OnPlayerHitPointsChanged?.Invoke(this);
+
+            if (_maxShieldPoints > 0)
+            {
+                if (newValue >= maxHealthPoints && newValue < _previousValue)
                 {
-                    float _originalOsPoints = overshieldPoints;
-                    overshieldPoints -= _damage;
-                    if (_damage > _originalOsPoints)
-                    {
-                        _damage -= _originalOsPoints;
-                        Debug.Log(_damage);
-                    }
-                    else
-                        return;
+                    OnPlayerShieldDamaged?.Invoke(this);
                 }
 
-                float newHitPoints = hitPoints - _damage;
-                if (_isHealing)
-                    if (overshieldPoints <= 0)
-                    {
-                        _hitPoints = Mathf.Clamp(newHitPoints, 0, (_maxHealthPoints + _maxShieldPoints));
-                        if (_previousValue != newHitPoints)
-                            OnPlayerHitPointsChanged?.Invoke(this);
-                    }
-
-                if (!_isHealing)
-                    GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
-                else if (hitPoints == maxHitPoints)
-                    GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
+                if (newValue <= maxHealthPoints && _previousValue > maxHealthPoints)
+                    OnPlayerShieldBroken?.Invoke(this);
             }
+
+            if (newValue < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newValue)
+                OnPlayerHealthDamage?.Invoke(this);
+
+            if (_hitPoints <= 0)
+                isDead = true;
+
+            impactPos = null;
         }
+
+
+        //get { return networkHitPoints; }
+
+        //set
+        //{
+        //    if (isMine)
+        //    {
+        //        float _previousValue = hitPoints;
+        //        float _damage = _previousValue - value;
+
+        //        if (_damage > 0)
+        //        {
+        //            Debug.Log(_previousValue);
+        //            Debug.Log(value);
+        //            Debug.Log(_damage);
+        //        }
+
+        //        if (_damage > 0 && (_isInvincible || hitPoints <= 0))
+        //            return;
+
+        //        if (overshieldPoints > 0)
+        //        {
+        //            float _originalOsPoints = overshieldPoints;
+        //            overshieldPoints -= _damage;
+        //            if (_damage > _originalOsPoints)
+        //            {
+        //                _damage -= _originalOsPoints;
+        //                Debug.Log(_damage);
+        //            }
+        //            else
+        //                return;
+        //        }
+
+        //        float newHitPoints = hitPoints - _damage;
+        //        if (_isHealing)
+        //            if (overshieldPoints <= 0)
+        //            {
+        //                _hitPoints = Mathf.Clamp(newHitPoints, 0, (_maxHealthPoints + _maxShieldPoints));
+        //                if (_previousValue != newHitPoints)
+        //                    OnPlayerHitPointsChanged?.Invoke(this);
+        //            }
+
+        //        if (!_isHealing)
+        //            GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
+        //        else if (hitPoints == maxHitPoints)
+        //            GetComponent<PhotonView>().RPC("UpdateHitPoints_RPC", RpcTarget.All, newHitPoints, _overshieldPoints);
+        //    }
+        //}
     }
 
     private float networkHitPoints
@@ -298,7 +356,7 @@ public class Player : MonoBehaviourPunCallbacks
             catch { }
 
             if (value == Vector3.zero)
-                _deathByHeadshot = false;
+                deathByHeadshot = false;
         }
         get { return _impactDir; }
     }
@@ -426,7 +484,7 @@ public class Player : MonoBehaviourPunCallbacks
     Vector3 _impactPos;
     Vector3 _impactDir;
 
-
+    private bool deathByHeadshot { get { return _deathByHeadshot; } set { _deathByHeadshot = value; } }
 
     #endregion
 
@@ -637,11 +695,24 @@ public class Player : MonoBehaviourPunCallbacks
             //}
             //catch (System.Exception e) { Debug.LogWarning(e); }
         }
-        Debug.Log(damage);
 
-        PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, source_pid,
-            impactPos, impactDir, damageSource,
-            isGroin);
+        //PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, source_pid,
+        //    impactPos, impactDir, damageSource,
+        //    isGroin);
+
+
+        try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
+
+        Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(source_pid);
+        if (sourcePlayer.isMine)
+        {
+            DeathSpecialNature dsn = DeathSpecialNature.None;
+            if(headshot)
+                dsn = DeathSpecialNature.Headshot;
+
+            byte[] bytes = Encoding.UTF8.GetBytes(damageSource);
+            PV.RPC("Damage_RPC", RpcTarget.All, damage, source_pid, bytes, (int)dsn);
+        }
     }
 
     // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter
@@ -701,7 +772,7 @@ public class Player : MonoBehaviourPunCallbacks
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.SetActive(true);
 
-        if (!_deathByHeadshot)
+        if (!deathByHeadshot)
             ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 300);
         else
             ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 300);
@@ -742,9 +813,9 @@ public class Player : MonoBehaviourPunCallbacks
             return;
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         lastPID = -1;
-        _deathByGroin= false;
-        _deathByHeadshot= false;
-        _damageSource= null;
+        _deathByGroin = false;
+        deathByHeadshot = false;
+        _damageSource = null;
         OnPlayerRespawnEarly?.Invoke(this);
 
         GetComponent<Movement>().ResetCharacterControllerProperties();
@@ -852,54 +923,77 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (isDead)
         {
-            string sourcePlayerName = lastPlayerSource.nickName;
-
-            int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
-            int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
-            string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
-            string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
-
-
-
-
-            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+            try
             {
-                string f = $"{lastPlayerSource.nickName} killed {nickName}";
+                string sourcePlayerName = lastPlayerSource.nickName;
 
-                if (_damageSource != null)
-                {
-                    f += $" with: {_damageSource}";
-                }
+                int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
+                int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
+                string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
+                string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
+
+
+
+                foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
                 {
-                    if (this != lastPlayerSource)
+                    string f = $"{lastPlayerSource.nickName} killed {nickName}";
+
+                    if (_damageSource != null && _damageSource != "")
                     {
-                        kfm.EnterNewFeed(f);
-                        continue;
+                        f = $"{lastPlayerSource.nickName} [ {_damageSource} ] {nickName}";
+                    }
+                    if (_deathByHeadshot)
+                        f += $" with a <color=\"red\">Headshot</color>!";
 
+                    {
+                        if (this != lastPlayerSource)
                         {
-                            string feed = $"{lastPlayerSource.nickName} killed";
-                            if (kfm.GetComponent<Player>() != this)
+                            kfm.EnterNewFeed(f);
+                            continue;
+
                             {
-                                if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
+                                string feed = $"{lastPlayerSource.nickName} killed";
+                                if (kfm.GetComponent<Player>() != this)
                                 {
-                                    try
+                                    if (kfm.GetComponent<Player>().nickName == sourcePlayerName)
                                     {
-                                        int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
-                                        feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
+                                        try
+                                        {
+                                            int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
+                                            feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
-                                        if (_deathByHeadshot)
-                                            feed += $"<sprite={hsCode}>";
+                                            if (deathByHeadshot)
+                                                feed += $"<sprite={hsCode}>";
 
-                                        if (_deathByGroin)
-                                            feed += $"<sprite={nsCode}>";
+                                            if (_deathByGroin)
+                                                feed += $"<sprite={nsCode}>";
 
-                                        feed += $" <color=\"red\">{nickName}";
-                                        kfm.EnterNewFeed(feed);
+                                            feed += $" <color=\"red\">{nickName}";
+                                            kfm.EnterNewFeed(feed);
+                                        }
+                                        catch
+                                        {
+                                            kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
+                                        }
                                     }
-                                    catch
+                                    else
                                     {
-                                        kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
+                                        try
+                                        {
+                                            int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
+                                            feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+
+                                            if (deathByHeadshot)
+                                                feed += $"<sprite={hsCode}>";
+
+                                            feed += $" <color=\"red\">{nickName}";
+                                            kfm.EnterNewFeed(feed);
+                                        }
+                                        catch
+                                        {
+                                            kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+                                        }
                                     }
                                 }
                                 else
@@ -909,86 +1003,77 @@ public class Player : MonoBehaviourPunCallbacks
                                         int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
                                         feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
-                                        if (_deathByHeadshot)
+                                        if (deathByHeadshot)
                                             feed += $"<sprite={hsCode}>";
 
-                                        feed += $" <color=\"red\">{nickName}";
+                                        feed += $" <color={youColorCode}>You";
                                         kfm.EnterNewFeed(feed);
                                     }
                                     catch
                                     {
-                                        kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{nickName}");
+                                        kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
                                     }
                                 }
                             }
-                            else
-                            {
-                                try
-                                {
-                                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
-                                    feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                                    if (_deathByHeadshot)
-                                        feed += $"<sprite={hsCode}>";
-
-                                    feed += $" <color={youColorCode}>You";
-                                    kfm.EnterNewFeed(feed);
-                                }
-                                catch
-                                {
-                                    kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
-                                }
-                            }
                         }
+                        else
+                        {
+                            kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            try
+            {
+                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                {
+                    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, deathByHeadshot));
+
+                }
+                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    GetComponent<PlayerSwarmMatchStats>().deaths++;
+            }
+            catch { }
+
+            try
+            {
+                PlayerMedals sourcePlayerMedals = lastPlayerSource.playerMedals;
+                if (sourcePlayerMedals != this.playerMedals)
+                {
+                    if (deathByHeadshot)
+                    {
+                        if (_lastPID != this.pid)
+                            sourcePlayerMedals.SpawnHeadshotMedal();
+                    }
+                    else if (_deathByGroin)
+                    {
+                        if (_lastPID != this.pid)
+                            sourcePlayerMedals.SpawnNutshotMedal();
+                    }
+                    else if (_damageSource == "melee")
+                    {
+                        if (_lastPID != this.pid)
+                            sourcePlayerMedals.SpawnMeleeMedal();
+                    }
+                    else if (_damageSource.Contains("grenade"))
+                    {
+                        if (_lastPID != this.pid)
+                            sourcePlayerMedals.SpawnGrenadeMedal();
                     }
                     else
                     {
-                        kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+                        if (_lastPID != this.pid)
+                            sourcePlayerMedals.kills++;
                     }
+
+                    if (playerMedals.spree >= 3)
+                        if (_lastPID != this.pid)
+                            sourcePlayerMedals.SpawnKilljoySpreeMedal();
                 }
             }
-
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            {
-                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathByHeadshot));
-
-            }
-            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                GetComponent<PlayerSwarmMatchStats>().deaths++;
-
-            PlayerMedals sourcePlayerMedals = lastPlayerSource.playerMedals;
-            if (sourcePlayerMedals != this.playerMedals)
-            {
-                if (_deathByHeadshot)
-                {
-                    if (_lastPID != this.pid)
-                        sourcePlayerMedals.SpawnHeadshotMedal();
-                }
-                else if (_deathByGroin)
-                {
-                    if (_lastPID != this.pid)
-                        sourcePlayerMedals.SpawnNutshotMedal();
-                }
-                else if (_damageSource == "melee")
-                {
-                    if (_lastPID != this.pid)
-                        sourcePlayerMedals.SpawnMeleeMedal();
-                }
-                else if (_damageSource.Contains("grenade"))
-                {
-                    if (_lastPID != this.pid)
-                        sourcePlayerMedals.SpawnGrenadeMedal();
-                }
-                else
-                {
-                    if (_lastPID != this.pid)
-                        sourcePlayerMedals.kills++;
-                }
-
-                if (playerMedals.spree >= 3)
-                    if (_lastPID != this.pid)
-                        sourcePlayerMedals.SpawnKilljoySpreeMedal();
-            }
+            catch { }
         }
 
 
@@ -1025,6 +1110,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     void OnPlayerDamaged_Delegate(Player player)
     {
+        try { GetComponent<PlayerController>().ScopeOut(); } catch { }
+
         _isHealing = false;
         if (!needsHealthPack)
         {
@@ -1105,49 +1192,26 @@ public class Player : MonoBehaviourPunCallbacks
             }
     }
 
-    public bool deathByHeadshot { get { return _deathByHeadshot; } }
-
     [PunRPC]
-    void Damage_RPC(int damage, bool headshot, int sourcePid,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null,
-        bool isGroin = false)
+    void Damage_RPC(int damage, int sourcePid, byte[] bytes, int deathSpecialNature)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
+        try {_damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try
         {
-            _damageSource = damageSource;
-            _deathByHeadshot = headshot;
-            _deathByGroin = isGroin;
             lastPID = sourcePid;
+
+            if((DeathSpecialNature)deathSpecialNature == DeathSpecialNature.Headshot )
+                _deathByHeadshot= true;
         }
         catch { }
-        try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
+        //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
-        if (PV.IsMine)
-        {
-
-            try { GetComponent<PlayerController>().ScopeOut(); } catch { }
-
-            try
-            {
-                KillFeedManager killFeedManager = GetComponent<KillFeedManager>();
-                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-
-                if (damageSource.Contains("grenade"))
-                {
-                    string colorCode = KillFeedManager.killFeedColorCodeDict["orange"];
-                    killFeedManager.EnterNewFeed($"You took {damage} <color={colorCode}>grenade damage");
-                }
-            }
-            catch { }
-
-
-            hitPoints -= damage;
-        }
+        hitPoints -= damage;
 
         try
         { // Hit Marker Handling

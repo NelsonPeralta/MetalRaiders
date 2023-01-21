@@ -272,10 +272,10 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                                 }
 
-                                if (sourcePlayer.PV.IsMine)
+                                //if (sourcePlayer.PV.IsMine)
                                 {
                                     if (weaponProperties.codeName != null)
-                                        finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, damageSource: weaponProperties.codeName, isGroin: wasNutshot);
+                                        finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, damageSource: weaponProperties.cleanName, isGroin: wasNutshot);
                                     else
                                         finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
                                 }
@@ -341,12 +341,12 @@ public class Bullet : MonoBehaviourPunCallbacks
                             wasNutshot = hitbox.isNuts;
                         }
 
-                        if (sourcePlayer.PV.IsMine)
+                        //if (sourcePlayer.PV.IsMine)
                         {
                             Debug.Log("asdf6");
 
                             if (weaponProperties.codeName != null)
-                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.codeName, isGroin: wasNutshot);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.cleanName, isGroin: wasNutshot);
                             else
                                 finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
                         }
