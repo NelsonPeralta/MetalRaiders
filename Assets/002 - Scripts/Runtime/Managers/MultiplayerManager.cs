@@ -18,6 +18,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         get
         {
+            if (GameManager.instance.gameType == GameManager.GameType.Hill)
+                return 60;
+
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                 return 15;
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
@@ -31,6 +34,17 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         get
         {
             int hs = 0;
+
+            if(GameManager.instance.gameType == GameManager.GameType.Hill)
+            {
+                foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
+                {
+                    if (pms.score > hs)
+                        hs = pms.score;
+                }
+            }
+
+
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
                 foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
@@ -98,7 +112,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         {
             winningPlayerMS.kills++;
 
-            if(struc.headshot)
+            if (struc.headshot)
                 winningPlayerMS.headshots++;
 
             if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Red)
@@ -112,6 +126,16 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         }
 
         losingPlayerMS.deaths++;
+
+        CheckForEndGame();
+    }
+
+    public void AddPlayerPoint(int pid)
+    {
+        if (highestScore >= scoreToWin)
+            return;
+        PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(pid).GetComponent<PlayerMultiplayerMatchStats>();
+        winningPlayerMS.score++;
 
         CheckForEndGame();
     }

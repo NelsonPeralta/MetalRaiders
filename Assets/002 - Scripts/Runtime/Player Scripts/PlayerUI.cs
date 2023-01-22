@@ -177,7 +177,7 @@ public class PlayerUI : MonoBehaviour
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             EnableMultiplayerUIComponents();
-            GetComponent<PlayerMultiplayerMatchStats>().OnKillsChanged += OnPVPKillsChanged_Delegate;
+            GetComponent<PlayerMultiplayerMatchStats>().OnPlayerScoreChanged += OnPlayerScoreChanged_Delegate;
         }
 
         OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);
@@ -359,7 +359,7 @@ public class PlayerUI : MonoBehaviour
         catch { }
     }
 
-    void OnPVPKillsChanged_Delegate(PlayerMultiplayerMatchStats playerMultiplayerMatchStats)
+    void OnPlayerScoreChanged_Delegate(PlayerMultiplayerMatchStats playerMultiplayerMatchStats)
     {
         multiplayerPointsGrey.text = playerMultiplayerMatchStats.kills.ToString();
     }

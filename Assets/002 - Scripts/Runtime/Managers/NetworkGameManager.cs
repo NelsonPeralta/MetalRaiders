@@ -117,9 +117,16 @@ public class NetworkGameManager : MonoBehaviourPun
 
     #endregion
 
+    // Multiplayer
+    public void AddPlayerPoint(int pid)
+    {
+        GetComponent<PhotonView>().RPC("AddPlayerPoint_RPC", RpcTarget.All, pid);
+    }
 
-
-
+    public void NextHillLocation()
+    {
+        GetComponent<PhotonView>().RPC("NextHillLocation_RPC", RpcTarget.All);
+    }
 
 
 
@@ -307,6 +314,21 @@ public class NetworkGameManager : MonoBehaviourPun
     }
 
 
+
+    // Multiplayer
+    [PunRPC]
+    void AddPlayerPoint_RPC(int pid)
+    {
+        Debug.Log("AddPlayerPoint_RPC");
+        MultiplayerManager.instance.AddPlayerPoint(pid);
+    }
+
+    [PunRPC]
+    void NextHillLocation_RPC()
+    {
+        Debug.Log("NextHillLocation_RPC");
+        FindObjectOfType<HillManager>().NextLocation();
+    }
 
 
 

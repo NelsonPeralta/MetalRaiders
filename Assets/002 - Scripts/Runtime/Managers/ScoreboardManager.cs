@@ -88,6 +88,9 @@ public class ScoreboardManager : MonoBehaviour
                 else
                     scoreboardRows[i].playerCurrentPointsText.text = "0";
 
+                if(GameManager.instance.gameType == GameManager.GameType.Hill)
+                    scoreboardRows[i].playerKillsText.text = allPlayersMS[i].score.ToString();
+
                 scoreboardRows[i].gameObject.SetActive(true);
             }
         }

@@ -167,6 +167,8 @@ MonoBehaviour:
   - SpawnFakeExplosiveProjectile_RPC
   - PlayFirstPersonReloadAnimation_RPC
   - UpdateHitPoints_RPC
+  - AddPlayerPoint_RPC
+  - NextHillLocation_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

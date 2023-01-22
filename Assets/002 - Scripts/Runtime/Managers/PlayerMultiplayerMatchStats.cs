@@ -9,12 +9,35 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerMultiplayerStatsEvent(PlayerMultiplayerMatchStats playerMultiplayerStats);
     // Events
-    public PlayerMultiplayerStatsEvent OnKillsChanged, OnDeathsChanged, OnHeadshotsChanged, OnKDRatioChanged;
+    public PlayerMultiplayerStatsEvent OnPlayerScoreChanged, OnDeathsChanged, OnHeadshotsChanged, OnKDRatioChanged;
     public enum Team { None, Red, Blue }
 
     public string username
     {
         get { return GetComponent<Player>().nickName; }
+    }
+
+    public int score
+    {
+        get
+        {
+            if (GameManager.instance.gameType == GameManager.GameType.Hill)
+                return _score;
+
+            return kills;
+        }
+        set
+        {
+            var previous = _score;
+
+            _score = Mathf.Clamp(value, 0, 999);
+
+            if (_score != previous)
+            {
+                OnPlayerScoreChanged?.Invoke(this);
+            }
+            //_score = _score;
+        }
     }
     public int kills
     {
@@ -27,9 +50,9 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
             if (_kills != previous)
             {
-                OnKillsChanged?.Invoke(this);
+                OnPlayerScoreChanged?.Invoke(this);
             }
-            _kills = kills;
+            //_kills = kills;
         }
     }
 
@@ -51,7 +74,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnDeathsChanged?.Invoke(this);
             }
-            _deaths = deaths;
+            //_deaths = deaths;
         }
     }
 
@@ -68,7 +91,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnHeadshotsChanged?.Invoke(this);
             }
-            _headshots = headshots;
+            //_headshots = headshots;
         }
     }
 
@@ -97,6 +120,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     public Team networkTeam { get { return _team; } set { _team = value; } }
 
     // private variables
+    [SerializeField] int _score;
     [SerializeField] int _kills;
     [SerializeField] int _damage;
     [SerializeField] int _deaths;
@@ -106,7 +130,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        this.OnKillsChanged += this.OnKillsChange;
+        this.OnPlayerScoreChanged += this.OnKillsChange;
         kills = 0;
         deaths = 0;
         headshots = 0;

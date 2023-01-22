@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum GameType
     {
         Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
-        Shotguns
+        Shotguns, Hill
     }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum CoopGameType { Survival }
