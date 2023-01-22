@@ -437,6 +437,7 @@ public class Player : MonoBehaviourPunCallbacks
     public Camera uiCamera { get { return _uiCamera; } }
 
     private NetworkPlayer _player { get { return _networkPlayer; } }
+    public Announcer announcer { get { return _announcer; } }
 
     #endregion
 
@@ -459,6 +460,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] Camera _uiCamera;
     [SerializeField] int _defaultRespawnTime = 4;
     [SerializeField] int _pushForce = 10;
+    [SerializeField] Announcer _announcer;
     #endregion
 
 

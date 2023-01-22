@@ -361,6 +361,6 @@ public class PlayerUI : MonoBehaviour
 
     void OnPlayerScoreChanged_Delegate(PlayerMultiplayerMatchStats playerMultiplayerMatchStats)
     {
-        multiplayerPointsGrey.text = playerMultiplayerMatchStats.kills.ToString();
+        multiplayerPointsGrey.text = playerMultiplayerMatchStats.score.ToString();
     }
 }

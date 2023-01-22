@@ -13,7 +13,7 @@ public class HillManager : MonoBehaviour
     float _moveTimer;
     bool _allPlayersJoined;
     int c;
-    int _hillTtl = 30;
+    int _hillTtl = 45;
 
     // Start is called before the first frame update
     void Start()
@@ -66,7 +66,7 @@ public class HillManager : MonoBehaviour
             c = -1;
 
         _moveTimer = _hillTtl;
-        GetComponent<AudioSource>().clip = _hillMoved;
-        GetComponent<AudioSource>().Play();
+
+        GameManager.GetMyPlayer().announcer.AddClip(_hillMoved);
     }
 }
