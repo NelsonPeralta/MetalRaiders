@@ -95,6 +95,28 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         }
     }
 
+    public int meleeKills
+    {
+        get { return _meleeKills; }
+        set
+        {
+            var previous = _meleeKills;
+
+            _meleeKills = Mathf.Clamp(value, 0, 999);
+        }
+    }
+
+    public int grenadeKills
+    {
+        get { return _grenadeKills; }
+        set
+        {
+            var previous = _grenadeKills;
+
+            _grenadeKills = Mathf.Clamp(value, 0, 999);
+        }
+    }
+
     public float kd
     {
         get { return _kd; }
@@ -125,6 +147,8 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     [SerializeField] int _damage;
     [SerializeField] int _deaths;
     [SerializeField] int _headshots;
+    [SerializeField] int _meleeKills;
+    [SerializeField] int _grenadeKills;
     [SerializeField] float _kd;
     [SerializeField] Team _team;
 

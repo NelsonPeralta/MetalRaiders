@@ -26,7 +26,7 @@ public class ServiceRecordMenu : MonoBehaviour
             kd = pda.GetPvPKills() / (float)pda.GetPvPDeaths();
         }
         Debug.Log($"Initializing Service Record Menu. PvE Kills {pda.GetPvEKills()}");
-        multiplayerStatsText.text = $"MULTIPLAYER\n----------\n\nKills: {pda.GetPvPKills()}\nDeaths: {pda.GetPvPDeaths()}\nHeadshots: {pda.GetPvPHeadshots()}\nK/D: {kd}";
+        multiplayerStatsText.text = $"MULTIPLAYER\n----------\n\nKills: {pda.GetPvPKills()}\nDeaths: {pda.GetPvPDeaths()}\nK/D: {kd}\nHeadshots: {pda.GetPvPHeadshots()}\nMelee Kills: {pda.PvPMeleeKills}\nGrenade Kills: {pda.PvPGrenadeKills}";
         swarmStatsText.text = $"SWARM\n-----\n\nKills: {pda.GetPvEKills()}\nDeaths: {pda.GetPvEDeaths()}\nHeadshots: {pda.GetPvEHeadshots()}\nHighest Score: {pda.GetPvEHighestPoints()}";
 
         levelText.text = $"Level: {pda.level.ToString()}";

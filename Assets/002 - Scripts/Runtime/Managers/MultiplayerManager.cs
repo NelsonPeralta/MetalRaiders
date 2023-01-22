@@ -114,6 +114,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             if (struc.headshot)
                 winningPlayerMS.headshots++;
+            if (struc.melee)
+                winningPlayerMS.meleeKills++;
+            if (struc.grenade)
+                winningPlayerMS.grenadeKills++;
 
             if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Red)
                 redTeamScore++;
@@ -200,12 +204,24 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         public readonly int winningPlayerPhotonId;
         public readonly int losingPlayerPhotonId;
         public readonly bool headshot;
+        public readonly bool melee;
+        public readonly bool grenade;
 
-        public AddPlayerKillStruct(int winningPlayerPhotonId, int losingPlayerPhotonId, bool headshot)
+        public AddPlayerKillStruct(int winningPlayerPhotonId, int losingPlayerPhotonId, Player.DeathNature kn)
         {
+            this.headshot = false;
+            this.melee = false;
+            this.grenade = false;
+
             this.winningPlayerPhotonId = winningPlayerPhotonId;
             this.losingPlayerPhotonId = losingPlayerPhotonId;
-            this.headshot = headshot;
+
+            if (kn == Player.DeathNature.Headshot)
+                this.headshot = true;
+            if (kn == Player.DeathNature.Melee)
+                this.melee = true;
+            if (kn == Player.DeathNature.Grenade)
+                this.grenade = true;
         }
     }
 

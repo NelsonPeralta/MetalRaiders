@@ -27,7 +27,7 @@ public class PlayerDatabaseAdaptor
     public void SetPlayerBasicPvPStats(PlayerBasicPvPStats playerData)
     {
         this._playerBasicPvPStats = playerData;
-        Debug.Log($"Player basic pvp stats are set. Kills: {this._playerBasicPvPStats.kills}. Deaths: {this._playerBasicPvPStats.deaths}. Headshots: {this._playerBasicPvPStats.headshots}");
+        Debug.Log($"Player basic pvp stats are set. Kills: {this._playerBasicPvPStats.kills}. Deaths: {this._playerBasicPvPStats.deaths}. Headshots: {this._playerBasicPvPStats.headshots}. Melee Kills: {this._playerBasicPvPStats.melee_kills}. Grenade Kills: {this._playerBasicPvPStats.grenade_kills}");
     }
 
     public void SetPlayerBasicPvEStats(PlayerBasicPvEStats playerData)
@@ -76,6 +76,8 @@ public class PlayerDatabaseAdaptor
     public int GetPvEHeadshots() { return _playerBasicPvEStats.headshots; }
     public int GetPvEHighestPoints() { return _playerBasicPvEStats.highest_points; }
     public bool PlayerDataIsSet() { return _playerLoginData != null; }
+    public int PvPMeleeKills { get { return _playerBasicPvPStats.melee_kills; } }
+    public int PvPGrenadeKills { get { return _playerBasicPvPStats.grenade_kills; } }
 
 
     // **************** Properties **************** //
@@ -155,7 +157,7 @@ public class PlayerDatabaseAdaptor
     public class PlayerBasicPvPStats
     {
         int player_id;
-        public int kills, deaths, headshots;
+        public int kills, deaths, headshots, melee_kills, grenade_kills;
 
         public static PlayerBasicPvPStats CreateFromJSON(string jsonString)
         {

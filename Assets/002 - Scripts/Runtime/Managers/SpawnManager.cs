@@ -23,7 +23,7 @@ public class SpawnManager : MonoBehaviour
 
     Transform GetRandomSpawnpoint()
     {
-        try { GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Spwaning randomly"); } catch { }
+        try { GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Spawning randomly"); } catch { }
         return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
     }
 
@@ -43,7 +43,7 @@ public class SpawnManager : MonoBehaviour
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 if (availableSpawnPoints[ran].players.Count == 0)
                 {
-                    try { GameManager.GetMyPlayer(controllerId).GetComponent<KillFeedManager>().EnterNewFeed($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform.position})"); } catch { }
+                    //try { GameManager.GetMyPlayer(controllerId).GetComponent<KillFeedManager>().EnterNewFeed($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform.position})"); } catch { }
                     Debug.Log($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform})");
                     return availableSpawnPoints[ran].transform;
                 }

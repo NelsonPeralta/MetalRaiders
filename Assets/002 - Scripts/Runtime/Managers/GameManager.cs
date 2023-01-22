@@ -53,6 +53,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             int previousCount = _pid_player_Dict.Count;
             _pid_player_Dict = value;
+
+            Debug.Log($"_pid_player_Dict previous count:{previousCount}");
+            Debug.Log($"_pid_player_Dict NEW count:{_pid_player_Dict.Count}");
+
             if (pid_player_Dict.Count != previousCount)
             {
                 Debug.Log($"New Player Joined out of {PhotonNetwork.CurrentRoom.PlayerCount} total");

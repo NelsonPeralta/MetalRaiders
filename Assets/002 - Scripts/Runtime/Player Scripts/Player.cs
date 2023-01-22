@@ -16,7 +16,7 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
         OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged;
 
-    public enum DeathSpecialNature { None, Headshot, Groin, Melee }
+    public enum DeathNature { None, Headshot, Groin, Melee, Grenade }
 
     // public variables
     #region
@@ -438,6 +438,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     private NetworkPlayer _player { get { return _networkPlayer; } }
     public Announcer announcer { get { return _announcer; } }
+    public DeathNature deathNature { get { return _deathNature; }private set { _deathNature = value; } }
 
     #endregion
 
@@ -449,6 +450,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] PlayerMedals playerMedals;
     [SerializeField] string _nickName;
     [SerializeField] Player _lastPlayerSource;
+    [SerializeField] DeathNature _deathNature;
     [SerializeField] int _lastPID;
     [SerializeField] int _maxHitPoints = 250;
     [SerializeField] int _maxHealthPoints = 100;
@@ -486,6 +488,7 @@ public class Player : MonoBehaviourPunCallbacks
     Vector3 _impactPos;
     Vector3 _impactDir;
     float _gameStartDelay;
+    bool _allPlayersJoined;
 
     private bool deathByHeadshot { get { return _deathByHeadshot; } set { _deathByHeadshot = value; } }
 
@@ -561,7 +564,6 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        _gameStartDelay = GameManager.GameStartDelay * 0.99f;
         lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
@@ -597,12 +599,18 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
+        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
 
         try
         {
-            Dictionary<int, Player> t = new Dictionary<int, Player>();
+            Debug.Log($"Trying to Assigning Player to Player Dict: {GameManager.instance.pid_player_Dict.Count}");
+            Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.pid_player_Dict);
             if (!t.ContainsKey(pid))
+            {
+                Debug.Log($"Player Dict does NOT contain Player {nickName}({pid})");
                 t.Add(pid, this);
+            }
             GameManager.instance.pid_player_Dict = t;
         }
         catch { }
@@ -654,6 +662,14 @@ public class Player : MonoBehaviourPunCallbacks
         {
             rb.velocity = hit.moveDirection * _pushForce * movementSpeedRatio;
         }
+    }
+
+    void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
+    {
+        Debug.Log("OnAllPlayersJoinedRoom_Delegate");
+
+        _allPlayersJoined = true;
+        _gameStartDelay = GameManager.GameStartDelay * 0.99f;
     }
 
     void OvershieldPointsRecharge()
@@ -740,9 +756,15 @@ public class Player : MonoBehaviourPunCallbacks
         Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(source_pid);
         if (sourcePlayer.isMine)
         {
-            DeathSpecialNature dsn = DeathSpecialNature.None;
+            DeathNature dsn = DeathNature.None;
             if (headshot)
-                dsn = DeathSpecialNature.Headshot;
+                dsn = DeathNature.Headshot;
+
+            if (damageSource.Contains("renade"))
+                dsn = DeathNature.Grenade;
+
+            if (damageSource.Contains("elee"))
+                dsn = DeathNature.Melee;
 
             byte[] bytes = Encoding.UTF8.GetBytes(damageSource);
             PV.RPC("Damage_RPC", RpcTarget.All, damage, source_pid, bytes, (int)dsn);
@@ -847,6 +869,7 @@ public class Player : MonoBehaviourPunCallbacks
             return;
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         lastPID = -1;
+        deathNature = DeathNature.None;
         _deathByGroin = false;
         deathByHeadshot = false;
         _damageSource = null;
@@ -1061,9 +1084,14 @@ public class Player : MonoBehaviourPunCallbacks
 
             try
             {
+                DeathNature dn = DeathNature.None;
+
+                if (deathByHeadshot)
+                    dn = DeathNature.Headshot;
+
                 if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 {
-                    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, deathByHeadshot));
+                    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathNature));
 
                 }
                 else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
@@ -1076,7 +1104,7 @@ public class Player : MonoBehaviourPunCallbacks
                 PlayerMedals sourcePlayerMedals = lastPlayerSource.playerMedals;
                 if (sourcePlayerMedals != this.playerMedals)
                 {
-                    if (deathByHeadshot)
+                    if (deathNature == DeathNature.Headshot)
                     {
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnHeadshotMedal();
@@ -1086,12 +1114,12 @@ public class Player : MonoBehaviourPunCallbacks
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnNutshotMedal();
                     }
-                    else if (_damageSource == "elee")
+                    else if (deathNature == DeathNature.Melee)
                     {
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnMeleeMedal();
                     }
-                    else if (_damageSource.Contains("renade"))
+                    else if (deathNature == DeathNature.Grenade)
                     {
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnGrenadeMedal();
@@ -1197,7 +1225,9 @@ public class Player : MonoBehaviourPunCallbacks
             if (isDead)
             {
                 if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lastPID, PV.ViewID, false));
+                {
+                    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lastPID, PV.ViewID, DeathNature.None));
+                }
 
                 try
                 {
@@ -1227,17 +1257,18 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(int damage, int sourcePid, byte[] bytes, int deathSpecialNature)
+    void Damage_RPC(int damage, int sourcePid, byte[] bytes, int deathNature)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
         try { _damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
+        try { this.deathNature = (DeathNature)deathNature; } catch { }
         try
         {
             lastPID = sourcePid;
 
-            if ((DeathSpecialNature)deathSpecialNature == DeathSpecialNature.Headshot)
+            if ((DeathNature)deathNature == DeathNature.Headshot)
                 _deathByHeadshot = true;
         }
         catch { }

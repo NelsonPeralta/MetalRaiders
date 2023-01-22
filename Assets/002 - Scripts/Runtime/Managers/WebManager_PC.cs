@@ -237,6 +237,8 @@ public partial class WebManager
         int newKills = pda.GetPvPKills() + playerMultiplayerStats.kills;
         int newDeaths = pda.GetPvPDeaths() + playerMultiplayerStats.deaths;
         int newHeadshots = pda.GetPvPHeadshots() + playerMultiplayerStats.headshots;
+        int newMeleeKills = pda.PvPMeleeKills + playerMultiplayerStats.meleeKills;
+        int newGrenadeKills = pda.PvPGrenadeKills + playerMultiplayerStats.grenadeKills;
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveMultiplayerStats");
@@ -244,6 +246,8 @@ public partial class WebManager
         form.AddField("newKills", newKills);
         form.AddField("newDeaths", newDeaths);
         form.AddField("newHeadshots", newHeadshots);
+        form.AddField("newMeleeKills", newMeleeKills);
+        form.AddField("newGrenadeKills", newGrenadeKills);
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
