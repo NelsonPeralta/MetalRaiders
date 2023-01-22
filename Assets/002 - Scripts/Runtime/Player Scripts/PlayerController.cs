@@ -144,16 +144,23 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !isSprinting && !pauseMenuOpen)
         {
-            Shooting();
-            CheckReloadButton();
-            CheckAmmoForAutoReload();
-            AnimationCheck();
-
+            if (GameManager.instance.gameStarted)
+            {
+                Shooting();
+                CheckReloadButton();
+                CheckAmmoForAutoReload();
+                AnimationCheck();
+            }
         }
+
         if (PV.IsMine)
         {
             StartButton();
             BackButton();
+
+            if (!GameManager.instance.gameStarted)
+                return;
+
             if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning)
             {
                 if (!pauseMenuOpen)

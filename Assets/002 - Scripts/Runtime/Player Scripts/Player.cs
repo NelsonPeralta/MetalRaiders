@@ -483,6 +483,7 @@ public class Player : MonoBehaviourPunCallbacks
     bool _deathByHeadshot, _deathByGroin;
     Vector3 _impactPos;
     Vector3 _impactDir;
+    float _gameStartDelay;
 
     private bool deathByHeadshot { get { return _deathByHeadshot; } set { _deathByHeadshot = value; } }
 
@@ -558,6 +559,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
+        _gameStartDelay = GameManager.GameStartDelay * 0.99f;
         lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
@@ -594,7 +596,14 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
 
-        try { GameManager.instance.pid_player_Dict.Add(pid, this); } catch { }
+        try
+        {
+            Dictionary<int, Player> t = new Dictionary<int, Player>();
+            if (!t.ContainsKey(pid))
+                t.Add(pid, this);
+            GameManager.instance.pid_player_Dict = t;
+        }
+        catch { }
         try
         {
             if (isMine)
@@ -605,11 +614,34 @@ public class Player : MonoBehaviourPunCallbacks
         }
         catch { }
         try { team = GameManager.instance.onlineTeam; } catch { }
+
+
+        // Bug
+        mainCamera.enabled = false;
+        gunCamera.enabled = false;
+        uiCamera.enabled = false;
     }
     private void Update()
     {
         HitPointsRecharge();
         OvershieldPointsRecharge();
+
+        if (_gameStartDelay > 0)
+        {
+            _gameStartDelay -= Time.deltaTime;
+
+            if (_gameStartDelay < 0)
+            {
+                mainCamera.enabled = false;
+                mainCamera.enabled = true;
+
+                gunCamera.enabled = false;
+                gunCamera.enabled = true;
+
+                uiCamera.enabled = false;
+                uiCamera.enabled = true;
+            }
+        }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -707,7 +739,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (sourcePlayer.isMine)
         {
             DeathSpecialNature dsn = DeathSpecialNature.None;
-            if(headshot)
+            if (headshot)
                 dsn = DeathSpecialNature.Headshot;
 
             byte[] bytes = Encoding.UTF8.GetBytes(damageSource);
@@ -1198,13 +1230,13 @@ public class Player : MonoBehaviourPunCallbacks
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
-        try {_damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
+        try { _damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try
         {
             lastPID = sourcePid;
 
-            if((DeathSpecialNature)deathSpecialNature == DeathSpecialNature.Headshot )
-                _deathByHeadshot= true;
+            if ((DeathSpecialNature)deathSpecialNature == DeathSpecialNature.Headshot)
+                _deathByHeadshot = true;
         }
         catch { }
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }

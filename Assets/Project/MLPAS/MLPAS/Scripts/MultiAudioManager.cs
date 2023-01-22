@@ -164,11 +164,11 @@ namespace AlmenaraGames{
 		MultiAudioManager.instanceNULL = false;
 		instance = this;
 
-		DontDestroyOnLoad(gameObject);
+			DontDestroyOnLoad(gameObject);
 
 
 
-		if (!ignore) {
+			if (!ignore) {
 
 				sessionIndex = 0;
 

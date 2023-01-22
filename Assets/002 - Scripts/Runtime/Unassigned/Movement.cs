@@ -155,6 +155,9 @@ public class Movement : MonoBehaviour, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.instance.gameStarted)
+            return;
+
         {
             var rotationVector = transform.rotation.eulerAngles;
             rotationVector.z = 0;

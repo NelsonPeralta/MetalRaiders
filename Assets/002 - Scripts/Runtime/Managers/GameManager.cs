@@ -43,9 +43,31 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     // Intances
     public static GameManager instance;
+    public static int GameStartDelay = 6;
 
     public Dictionary<int, PlayerMultiplayerMatchStats.Team> controllerId_TeamDict;
-    public Dictionary<int, Player> pid_player_Dict = new Dictionary<int, Player>();
+    public Dictionary<int, Player> pid_player_Dict
+    {
+        get { return _pid_player_Dict; }
+        set
+        {
+            int previousCount = _pid_player_Dict.Count;
+            _pid_player_Dict = value;
+            if (pid_player_Dict.Count != previousCount)
+            {
+                Debug.Log($"New Player Joined out of {PhotonNetwork.CurrentRoom.PlayerCount} total");
+
+                if (pid_player_Dict.Count == PhotonNetwork.CurrentRoom.PlayerCount)
+                    GetComponent<GameManagerEvents>().allPlayersJoined= true;
+            }
+        }
+    }
+
+    public bool gameStarted
+    {
+        get { return GetComponent<GameManagerEvents>().gameStarted; }
+    }
+
     public Dictionary<int, Player> localPlayers = new Dictionary<int, Player>();
 
     [SerializeField] GameMode _gameMode;
@@ -115,7 +137,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
     }
-
     public PlayerMultiplayerMatchStats.Team onlineTeam
     {
         get { return instance._onlineTeam; }
@@ -138,6 +159,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     // called zero
+
+    // private Variables
+    [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
+
     void Awake()
     {
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
@@ -166,8 +191,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        try { pid_player_Dict.Clear(); } catch { }
-        try { localPlayers.Clear(); } catch { }
+        try { instance.pid_player_Dict.Clear(); } catch { }
+        try { instance.localPlayers.Clear(); } catch { }
+
         try { FindObjectOfType<GameTime>().totalTime = 0; }
         catch (Exception e) { Debug.LogWarning(e.Message); }
 
@@ -201,16 +227,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 }
                 catch (Exception e) { Debug.LogWarning(e.Message); }
 
-            try
-            {
-                for (int i = 0; i < NbPlayers; i++)
-                {
-                    Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-                    Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Online Player Test"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation).GetComponent<Player>();
-                    player.GetComponent<PlayerController>().rid = i;
-                }
-            }
-            catch (Exception e) { Debug.LogWarning(e.Message); }
+            StartCoroutine(SpawnPlayers_Coroutine());
 
             try
             {
@@ -331,6 +348,33 @@ public class GameManager : MonoBehaviourPunCallbacks
         FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
     }
 
+
+    IEnumerator SpawnPlayers_Coroutine()
+    {
+        Debug.Log("SpawnPlayers_Coroutine");
+        yield return new WaitForSeconds(1);
+
+        try
+        {
+            for (int i = 0; i < NbPlayers; i++)
+            {
+                Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Online Player Test"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation).GetComponent<Player>();
+                player.GetComponent<PlayerController>().rid = i;
+            }
+        }
+        catch (Exception e) { Debug.LogWarning(e.Message); }
+    }
+
+
+
+
+
+
+
+
+
+
     public static Player GetMyPlayer(int controllerId = 0)
     {
         foreach (Player p in FindObjectsOfType<Player>())
@@ -382,6 +426,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         return SceneManager.GetActiveScene().name;
     }
+
+
 
 
     // Custom List
@@ -521,4 +567,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         return timeLeft;
     }
+
+
 }
