@@ -61,8 +61,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -156486658544998735, guid: 7c90950b9eabfb7429968d82b0d82ffa, type: 3}
-  - {fileID: 4913426069162526988, guid: 7c90950b9eabfb7429968d82b0d82ffa, type: 3}
+  - {fileID: 2100000, guid: c8837be2d56762345b68a1de5c8bc967, type: 2}
+  - {fileID: 2100000, guid: c8837be2d56762345b68a1de5c8bc967, type: 2}
   - {fileID: 5865586234719623449, guid: 7c90950b9eabfb7429968d82b0d82ffa, type: 3}
   - {fileID: 2646190618815262879, guid: 7c90950b9eabfb7429968d82b0d82ffa, type: 3}
   - {fileID: -314706589591088707, guid: 7c90950b9eabfb7429968d82b0d82ffa, type: 3}
@@ -159,7 +159,7 @@ Transform:
   m_Children:
   - {fileID: 9051103499996982302}
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &586429968163174546
 Rigidbody:

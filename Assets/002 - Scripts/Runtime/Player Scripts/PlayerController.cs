@@ -455,31 +455,37 @@ public class PlayerController : MonoBehaviourPun
         gunCam.enabled = true;
     }
 
-    [PunRPC]
+    int _meleeCount = 0;
     float meleeMovementFactor = 0;
     void Melee()
     {
-        int c = 0;
         if (!GetComponent<Player>().isDead)
         {
             if (rewiredPlayer.GetButtonDown("Melee") && !isMeleeing && !isShooting && !isThrowingGrenade && !isSprinting)
             {
-                c = melee.playersInMeleeZone.Count;
+                _meleeCount = melee.playersInMeleeZone.Count;
                 Debug.Log("RPC Call: Melee");
                 meleeMovementFactor = 1;
+
                 PV.RPC("Melee_RPC", RpcTarget.All);
             }
         }
 
         if (meleeMovementFactor > 0)
         {
-            if (c > 0)
+            if (_meleeCount > 0)
             {
                 Vector3 move = transform.forward * meleeMovementFactor;
                 GetComponent<CharacterController>().Move(move * movement.defaultSpeed * 10 * Time.deltaTime);
             }
 
             meleeMovementFactor -= Time.deltaTime * 5f;
+
+            if(meleeMovementFactor <= 0)
+            {
+                _meleeCount = 0;
+                meleeMovementFactor = 0;
+            }
         }
     }
 

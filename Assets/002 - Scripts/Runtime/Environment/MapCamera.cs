@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapCamera : MonoBehaviour
 {
     [SerializeField] AudioClip _slayerClip;
+    [SerializeField] AudioClip _KingOfTheHillClip;
 
     float _gameStartDelay;
     bool _allPlayersJoined;
@@ -51,7 +52,11 @@ public class MapCamera : MonoBehaviour
                 Debug.Log(AudioListener.volume);
                 AudioListener.volume = 1f;
                 Debug.Log(AudioListener.volume);
+
                 GetComponent<AudioSource>().clip = _slayerClip;
+                if (GameManager.instance.gameType == GameManager.GameType.Hill)
+                    GetComponent<AudioSource>().clip = _KingOfTheHillClip;
+
                 GetComponent<AudioSource>().Play();
             }
 

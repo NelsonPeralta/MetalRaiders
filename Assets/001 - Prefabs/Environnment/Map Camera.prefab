@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slayerClip: {fileID: 8300000, guid: fa3fbd16a79894c49a742f120d2373d1, type: 3}
+  _KingOfTheHillClip: {fileID: 8300000, guid: 6edf9a3c4aebf0842ba92241fb53cf0b, type: 3}
 --- !u!82 &1352993268692100055
 AudioSource:
   m_ObjectHideFlags: 0

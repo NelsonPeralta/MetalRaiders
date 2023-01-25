@@ -15,7 +15,7 @@ public class Hill : MonoBehaviour
             int p = _playersInRange.Count;
             _playersInRange = value;
 
-            //if (p != _playersInRange.Count)
+            if (p != _playersInRange.Count)
             {
                 _grey.SetActive(false);
                 _red.SetActive(false);
@@ -75,7 +75,7 @@ public class Hill : MonoBehaviour
 
     private void Start()
     {
-        if(GameManager.instance.gameType != GameManager.GameType.Hill)
+        if (GameManager.instance.gameType != GameManager.GameType.Hill)
         {
             gameObject.SetActive(false);
         }
@@ -92,7 +92,7 @@ public class Hill : MonoBehaviour
             if (!p.isDead && !p.isRespawning && !playersInRange.Contains(p))
             {
                 p.OnPlayerDeath += OnPlayerDeath;
-                List<Player> list = playersInRange;
+                List<Player> list = new List<Player>(playersInRange);
                 list.Add(p);
 
                 playersInRange = list;
@@ -108,7 +108,7 @@ public class Hill : MonoBehaviour
 
             if (playersInRange.Contains(p))
             {
-                List<Player> list = playersInRange;
+                List<Player> list = new List<Player>(playersInRange);
                 list.Remove(p);
 
                 playersInRange = list;
@@ -118,7 +118,7 @@ public class Hill : MonoBehaviour
 
     void OnPlayerDeath(Player player)
     {
-        List<Player> list = playersInRange;
+        List<Player> list = new List<Player>(playersInRange);
         list.Remove(player);
 
         playersInRange = list;

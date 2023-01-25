@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 714100952796172971}
   - component: {fileID: 4972173216825724730}
   - component: {fileID: 2361413830681991591}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Hill (King of the Kill)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
