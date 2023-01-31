@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using System.Text;
+using System.Net.Mail;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -355,8 +356,8 @@ public class Player : MonoBehaviourPunCallbacks
             }
             catch { }
 
-            if (value == Vector3.zero)
-                deathByHeadshot = false;
+            //if (value == Vector3.zero)
+            //    deathByHeadshot = false;
         }
         get { return _impactDir; }
     }
@@ -438,7 +439,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     private NetworkPlayer _player { get { return _networkPlayer; } }
     public Announcer announcer { get { return _announcer; } }
-    public DeathNature deathNature { get { return _deathNature; }private set { _deathNature = value; } }
+    public DeathNature deathNature { get { return _deathNature; } private set { _deathNature = value; } }
 
     #endregion
 
@@ -484,13 +485,13 @@ public class Player : MonoBehaviourPunCallbacks
     bool _hasMeleeUpgrade;
 
     string _damageSource;
-    bool _deathByHeadshot, _deathByGroin;
     Vector3 _impactPos;
     Vector3 _impactDir;
     float _gameStartDelay;
     bool _allPlayersJoined;
 
-    private bool deathByHeadshot { get { return _deathByHeadshot; } set { _deathByHeadshot = value; } }
+    private bool deathByHeadshot { get { if (deathNature == DeathNature.Headshot) return true; else return false; } }
+    private bool deathByGroin { get { if (deathNature == DeathNature.Groin) return true; else return false; } }
 
     #endregion
 
@@ -870,8 +871,6 @@ public class Player : MonoBehaviourPunCallbacks
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         lastPID = -1;
         deathNature = DeathNature.None;
-        _deathByGroin = false;
-        deathByHeadshot = false;
         _damageSource = null;
         OnPlayerRespawnEarly?.Invoke(this);
 
@@ -1000,7 +999,7 @@ public class Player : MonoBehaviourPunCallbacks
                     {
                         f = $"{lastPlayerSource.nickName} [ {_damageSource} ] {nickName}";
                     }
-                    if (_deathByHeadshot)
+                    if (deathByHeadshot)
                         f += $" with a <color=\"red\">Headshot</color>!";
 
                     {
@@ -1023,7 +1022,7 @@ public class Player : MonoBehaviourPunCallbacks
                                             if (deathByHeadshot)
                                                 feed += $"<sprite={hsCode}>";
 
-                                            if (_deathByGroin)
+                                            if (deathByGroin)
                                                 feed += $"<sprite={nsCode}>";
 
                                             feed += $" <color=\"red\">{nickName}";
@@ -1096,8 +1095,33 @@ public class Player : MonoBehaviourPunCallbacks
                 }
                 else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                     GetComponent<PlayerSwarmMatchStats>().deaths++;
+
             }
-            catch { }
+            catch (Exception e)
+            {
+                MailMessage newMail = new MailMessage();
+                // use the Gmail SMTP Host
+                SmtpClient client = new SmtpClient("smtp.office365.com");
+
+                // Follow the RFS 5321 Email Standard
+                newMail.From = new MailAddress("nelson@peralta.tech", "Nelson");
+
+                newMail.To.Add("nperalta@hilotech.ca");// declare the email subject
+
+                newMail.Subject = "Space Wackos Error Report"; // use HTML for the email body
+
+                newMail.IsBodyHtml = true; newMail.Body = $"<h1> Space Wackos </h1><br><br><h2>Error</h2><br>=====<br><p>${e}</p>";
+
+                // enable SSL for encryption across channels
+                client.EnableSsl = true;
+                // Port 465 for SSL communication
+                client.Port = 587;
+                // Provide authentication information with Gmail SMTP server to authenticate your sender account
+                client.Credentials = new System.Net.NetworkCredential("nelson@peralta.tech", "Cazadores1!");
+
+                client.Send(newMail); // Send the constructed mail
+                Debug.Log("Email Sent");
+            }
 
             try
             {
@@ -1109,7 +1133,7 @@ public class Player : MonoBehaviourPunCallbacks
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnHeadshotMedal();
                     }
-                    else if (_deathByGroin)
+                    else if (deathByGroin)
                     {
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnNutshotMedal();
@@ -1264,14 +1288,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         try { _damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try { this.deathNature = (DeathNature)deathNature; } catch { }
-        try
-        {
-            lastPID = sourcePid;
-
-            if ((DeathNature)deathNature == DeathNature.Headshot)
-                _deathByHeadshot = true;
-        }
-        catch { }
+        try { lastPID = sourcePid; } catch { }
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
