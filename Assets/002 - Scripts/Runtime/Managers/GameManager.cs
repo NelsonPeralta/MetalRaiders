@@ -39,8 +39,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public List<int> arenaLevelIndexes = new List<int>();
 
-    [SerializeField] int targetFPS;
-
     // Intances
     public static GameManager instance;
     public static int GameStartDelay = 6;
@@ -272,7 +270,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("GameManager Start called");
 
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 200;
+        Application.targetFrameRate = 65;
 
 #if UNITY_EDITOR
         Debug.unityLogger.logEnabled = true;
@@ -294,9 +292,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (targetFPS != Application.targetFrameRate)
-            Application.targetFrameRate = targetFPS;
-
         if (Input.GetKeyDown(KeyCode.Alpha4))
             camSens -= 10;
         if (Input.GetKeyDown(KeyCode.Alpha5))
