@@ -17,7 +17,7 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
         OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged;
 
-    public enum DeathNature { None, Headshot, Groin, Melee, Grenade }
+    public enum DeathNature { None, Headshot, Groin, Melee, Grenade, Stuck }
 
     // public variables
     #region
@@ -764,6 +764,9 @@ public class Player : MonoBehaviourPunCallbacks
             if (damageSource.Contains("renade"))
                 dsn = DeathNature.Grenade;
 
+            if (damageSource.Contains("tuck"))
+                dsn = DeathNature.Stuck;
+
             if (damageSource.Contains("elee"))
                 dsn = DeathNature.Melee;
 
@@ -1147,6 +1150,11 @@ public class Player : MonoBehaviourPunCallbacks
                     {
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnGrenadeMedal();
+                    }
+                    else if (deathNature == DeathNature.Stuck)
+                    {
+                        if (_lastPID != this.pid)
+                            sourcePlayerMedals.SpawnStuckKillMedal();
                     }
                     else
                     {

@@ -18,6 +18,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] Transform explosionPrefab;
     [SerializeField] AudioClip _collisionSound;
     [SerializeField] bool _sticky;
+    [SerializeField] bool _stuck;
     [SerializeField] LayerMask _stickyLayerMask;
     [SerializeField] GameObject _model;
     [SerializeField] GameObject _visualIndicator;
@@ -73,6 +74,9 @@ public class ExplosiveProjectile : MonoBehaviour
 
                         GetComponent<Rigidbody>().useGravity = false;
                         GetComponent<Rigidbody>().isKinematic = true;
+
+                        if(collision.gameObject.GetComponent<PlayerHitbox>())
+                            _stuck= true;
                     }
                 }
             }
@@ -83,6 +87,7 @@ public class ExplosiveProjectile : MonoBehaviour
     {
         Transform e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
         e.GetComponent<Explosion>().player = player;
+        e.GetComponent<Explosion>().stuck = true;
         gameObject.SetActive(false);
     }
 }

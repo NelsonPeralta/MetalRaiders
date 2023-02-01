@@ -8,6 +8,7 @@ public class Explosion : MonoBehaviour
     public ExplosionEvent OnObjectAdded;
 
     public Player player { get { return _player; } set { _player = value; } }
+    public bool stuck { get { return _stuck; } set { _stuck = value; } }
 
     [SerializeField] Player _player;
     [SerializeField] string damageSource;
@@ -18,7 +19,7 @@ public class Explosion : MonoBehaviour
     public float explosionPower;
 
     List<GameObject> objectsHit = new List<GameObject>();
-
+    bool _stuck;
 
     private void Start()
     {
@@ -76,6 +77,8 @@ public class Explosion : MonoBehaviour
 
                     try
                     {
+                        if (stuck)
+                            damageSource = "Stuck";
                         if (player.isMine)
                             hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: this.damageSource);
                     }
