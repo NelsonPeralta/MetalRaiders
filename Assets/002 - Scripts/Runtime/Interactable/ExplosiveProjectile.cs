@@ -75,8 +75,11 @@ public class ExplosiveProjectile : MonoBehaviour
                         GetComponent<Rigidbody>().useGravity = false;
                         GetComponent<Rigidbody>().isKinematic = true;
 
-                        if(collision.gameObject.GetComponent<PlayerHitbox>())
+                        if (collision.gameObject.GetComponent<PlayerHitbox>())
+                        {
+                            Debug.Log("STUCK!");
                             _stuck= true;
+                        }
                     }
                 }
             }
@@ -87,7 +90,7 @@ public class ExplosiveProjectile : MonoBehaviour
     {
         Transform e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
         e.GetComponent<Explosion>().player = player;
-        e.GetComponent<Explosion>().stuck = true;
+        e.GetComponent<Explosion>().stuck = _stuck;
         gameObject.SetActive(false);
     }
 }

@@ -80,7 +80,8 @@ public class ScoreboardManager : MonoBehaviour
                 scoreboardRows[i].playerNameText.text = allPlayersMS[i].GetComponent<Player>().nickName;
                 scoreboardRows[i].playerKillsText.text = allPlayersMS[i].kills.ToString();
                 scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
-                scoreboardRows[i].playerHeadshotsText.text = $"{allPlayersMS[i].headshots.ToString()}/{allPlayersMS[i].meleeKills}/{allPlayersMS[i].grenadeKills}";
+                //scoreboardRows[i].playerHeadshotsText.text = $"{allPlayersMS[i].headshots.ToString()}/{allPlayersMS[i].meleeKills}/{allPlayersMS[i].grenadeKills}";
+                scoreboardRows[i].playerHeadshotsText.text = $"{allPlayersMS[i].headshots}";
                 scoreboardRows[i].playerTotalDamageText.text = allPlayersMS[i].damage.ToString();
                 scoreboardRows[i].team = allPlayersMS[i].team;
                 if (allPlayersMS[i].deaths > 0)

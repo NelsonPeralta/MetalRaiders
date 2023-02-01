@@ -1128,9 +1128,13 @@ public class Player : MonoBehaviourPunCallbacks
 
             try
             {
+                Debug.Log("Processing medals");
+                Debug.Log(deathNature);
                 PlayerMedals sourcePlayerMedals = lastPlayerSource.playerMedals;
                 if (sourcePlayerMedals != this.playerMedals)
                 {
+                    Debug.Log(_lastPID);
+                    Debug.Log(this.pid);
                     if (deathNature == DeathNature.Headshot)
                     {
                         if (_lastPID != this.pid)
@@ -1153,6 +1157,8 @@ public class Player : MonoBehaviourPunCallbacks
                     }
                     else if (deathNature == DeathNature.Stuck)
                     {
+                        Debug.Log(_lastPID);
+                        Debug.Log(this.pid);
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnStuckKillMedal();
                     }
