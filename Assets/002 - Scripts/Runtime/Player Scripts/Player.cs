@@ -1307,7 +1307,7 @@ public class Player : MonoBehaviourPunCallbacks
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
-        hitPoints -= damage;
+        try { hitPoints -= damage; } catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
 
         try
         { // Hit Marker Handling
