@@ -11,8 +11,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if(instance != null)
-            Destroy(instance);
+        Debug.Log($"NetworkGameManager Start");
+        //if(instance != null)
+        //    Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
     }
