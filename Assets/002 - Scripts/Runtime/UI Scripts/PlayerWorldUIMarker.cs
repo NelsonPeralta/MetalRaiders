@@ -91,11 +91,11 @@ public class PlayerWorldUIMarker : MonoBehaviour
     {
         try
         {
+            Debug.Log("PlayerWorldUIMarker OnEnable");
+            Debug.Log(_player.nickName);
+
             _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
             _text.text = _player.nickName;
-
-            _targetPlayer.OnPlayerDeath -= OnPlayerDeath;
-            _targetPlayer.OnPlayerDeath += OnPlayerDeath;
         }
         catch (System.Exception e)
         {
