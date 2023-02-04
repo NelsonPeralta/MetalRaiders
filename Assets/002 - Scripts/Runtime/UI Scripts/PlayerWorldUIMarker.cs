@@ -51,7 +51,13 @@ public class PlayerWorldUIMarker : MonoBehaviour
             _targetPlayer.OnPlayerDeath -= OnPlayerDeath;
             _targetPlayer.OnPlayerDeath += OnPlayerDeath;
         }
-        catch (System.Exception e) { Debug.LogWarning(e); gameObject.SetActive(false); }
+        catch (System.Exception e)
+        {
+            Debug.Log("Error with PlayerWorldUIMarker");
+            Debug.LogWarning(e); 
+            
+            gameObject.SetActive(false);
+        }
     }
 
     public void OnPlayerTeamDelegate(Player player)
@@ -78,6 +84,25 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
             Debug.Log("PlayerWorldUIMarker");
             _holder.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnEnable()
+    {
+        try
+        {
+            _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
+            _text.text = _player.nickName;
+
+            _targetPlayer.OnPlayerDeath -= OnPlayerDeath;
+            _targetPlayer.OnPlayerDeath += OnPlayerDeath;
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log("Error with PlayerWorldUIMarker");
+            Debug.LogWarning(e);
+
+            gameObject.SetActive(false);
         }
     }
 
