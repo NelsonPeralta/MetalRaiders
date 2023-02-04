@@ -102,7 +102,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         {
             MultiplayerManager.instance.lootableWeaponsDict.Add(spawnPointPosition, this);
         }
-        catch(System.Exception e) { Debug.LogWarning(e); }
+        catch (System.Exception e) { Debug.LogWarning(e); }
     }
 
     private void Update()
@@ -153,10 +153,14 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
         if (networkWeaponSpawnPoint)
         {
+            Debug.Log("DisableWeapon 1");
             gameObject.SetActive(false);
         }
         else
+        {
+            Debug.Log("DisableWeapon 2");
             Destroy(gameObject);
+        }
     }
 
     public void EnableWeapon()

@@ -367,13 +367,17 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     [PunRPC]
     public void RPC_DisableCollidingWeapon(Vector3 collidingWeaponPosition)
     {
-        Debug.Log("RPC: Disabling lootable weapon");
+        Debug.Log($"RPC: Disabling lootable weapon: {collidingWeaponPosition}");
         //weaponPool.DisablePooledWeapon(collidingWeaponPosition);
 
         LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
         foreach (LootableWeapon lw in weapons)
             if (lw.spawnPointPosition == collidingWeaponPosition)
+            {
                 lw.DisableWeapon();
+                return;
+            }
+        Debug.Log($"RPC: FOUND NO WEAPON TO DISABLE");
     }
 
     // TO DO: make it across all the network

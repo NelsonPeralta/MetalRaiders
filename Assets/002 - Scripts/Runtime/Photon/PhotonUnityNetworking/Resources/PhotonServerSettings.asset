@@ -169,6 +169,7 @@ MonoBehaviour:
   - UpdateHitPoints_RPC
   - AddPlayerPoint_RPC
   - NextHillLocation_RPC
+  - IsDead_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

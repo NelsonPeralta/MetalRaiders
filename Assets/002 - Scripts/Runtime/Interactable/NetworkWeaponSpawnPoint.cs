@@ -21,6 +21,10 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     }
     private void Start()
     {
+        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
+
+
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
         GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
         ReplaceWeaponsByGametype();
@@ -28,27 +32,6 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         if (placeHolder)
             placeHolder.gameObject.SetActive(false);
 
-        try
-        {
-            foreach (LootableWeapon weapon in networkLootableWeaponPrefabs)
-            {
-                if (weapon.codeName == codeName)
-                {
-                    try
-                    {
-                        LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
-
-                        lw.transform.parent = transform;
-                        lw.gameObject.SetActive(true);
-                        lw.networkWeaponSpawnPoint = this;
-                        weaponSpawned = lw;
-                        _tts = lw.tts;
-                    }
-                    catch (System.Exception e) { Debug.LogWarning(e); }
-                }
-            }
-        }
-        catch { }
     }
 
     private void Update()
@@ -97,6 +80,34 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             }
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
+    }
+
+    void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
+    {
+        Debug.Log("OnAllPlayersJoinedRoom_Delegate");
+
+        try
+        {
+            foreach (LootableWeapon weapon in networkLootableWeaponPrefabs)
+            {
+                if (weapon.codeName == codeName)
+                {
+                    try
+                    {
+                        LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
+
+                        lw.transform.parent = transform;
+                        lw.gameObject.SetActive(true);
+                        lw.networkWeaponSpawnPoint = this;
+                        weaponSpawned = lw;
+                        _tts = lw.tts;
+                    }
+                    catch (System.Exception e) { Debug.LogWarning(e); }
+                }
+            }
+        }
+        catch { }
+
     }
 
     // Methods

@@ -10,9 +10,7 @@ using System;
 
 public class GameTime : MonoBehaviourPunCallbacks
 {
-    public static GameTime instance;
-
-
+    public static GameTime instance { get { return FindObjectOfType<GameTime>(); } }
     public delegate void GameTimeEvent(GameTime gameTime);
     public GameTimeEvent OnGameTimeChanged;
 
@@ -40,13 +38,13 @@ public class GameTime : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Debug.Log("OnlineGameTime Awake");
-        if (instance)
-        {
-            //Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
-        instance = this;
+        //if (instance)
+        //{
+        //    //Destroy(gameObject);
+        //    return;
+        //}
+        //DontDestroyOnLoad(gameObject);
+        //instance = this;
     }
 
     private void OnEnable()
@@ -81,61 +79,7 @@ public class GameTime : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient)
                 FindObjectOfType<NetworkGameTime>().GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.All, __totalTime);
 
-            //FindObjectOfType<NetworkGameTime>().GetComponent<PhotonView>().RPC("AddSecond_RPC", RpcTarget.All, totalTime);
             secondCountdown = 1;
-
-            return;
-            // TODO
-            // Waiting room Timeout
-            #region
-            if (totalTime % timeOutMultiples == 0 && GameManager.sceneIndex == Launcher.instance.waitingRoomLevelIndex && PhotonNetwork.CurrentRoom.PlayerCount >= minPlayers)
-            {
-                // Choosing random GameType
-                #region
-                Array values = Enum.GetValues(typeof(GameManager.ArenaGameType));
-                System.Random random = new System.Random();
-                GameManager.ArenaGameType arenaGameType = (GameManager.ArenaGameType)values.GetValue(random.Next(values.Length));
-
-                for (int i = 0; i < 3; i++)
-                    if (arenaGameType != GameManager.ArenaGameType.Slayer)
-                        arenaGameType = (GameManager.ArenaGameType)values.GetValue(random.Next(values.Length));
-
-                ExitGames.Client.Photon.Hashtable ht = new ExitGames.Client.Photon.Hashtable();
-                ht.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
-                ht.Add("gametype", arenaGameType.ToString());
-
-                PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
-                #endregion
-
-                waitingTimedOut = true;
-            }
-            #endregion
         }
     }
-
-
-
-
-
-
-
-
-    // OLD
-    #region
-
-    //public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
-    //{
-    //    if (waitingTimedOut)
-    //    {
-    //        waitingTimedOut = false;
-    //        Debug.Log("OnRoomPropertiesUpdate");
-
-    //        System.Random random = new System.Random();
-    //        int index = random.Next(GameManager.instance.arenaLevelIndexes.Count);
-    //        index = GameManager.instance.arenaLevelIndexes[index];
-    //        PhotonNetwork.LoadLevel(index);
-    //    }
-    //}
-
-    #endregion
 }

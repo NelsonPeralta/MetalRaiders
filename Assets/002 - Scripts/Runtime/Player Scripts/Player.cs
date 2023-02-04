@@ -118,8 +118,9 @@ public class Player : MonoBehaviourPunCallbacks
             if (newValue < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newValue)
                 OnPlayerHealthDamage?.Invoke(this);
 
-            if (_hitPoints <= 0)
-                isDead = true;
+            if (_hitPoints <= 0 && isMine)
+                PV.RPC("IsDead_RPC", RpcTarget.All);
+                //isDead = true;
 
             impactPos = null;
         }
@@ -1381,6 +1382,12 @@ public class Player : MonoBehaviourPunCallbacks
         transform.position = t;
         GetComponent<CharacterController>().enabled = true;
         transform.eulerAngles = r;
+    }
+
+    [PunRPC]
+    void IsDead_RPC()
+    {
+        isDead = true;
     }
     #endregion
 }
