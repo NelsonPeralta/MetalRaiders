@@ -8,14 +8,23 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuCaller : MonoBehaviour
+public class NetworkMainMenu : MonoBehaviourPunCallbacks
 {
-    public delegate void MainMenuCallerEvent(MainMenuCaller mainMenuCaller);
+    public delegate void MainMenuCallerEvent(NetworkMainMenu mainMenuCaller);
     public MainMenuCallerEvent mainMenuCallerCreated;
     private void Start()
     {
         UpdatePlayerList();
     }
+
+    public override void OnLeftRoom()
+    {
+        Debug.Log($"NetworkMainMenu OnLeftRoom");
+        //base.OnLeftRoom();
+
+        //Destroy(gameObject);
+    }
+
 
     [PunRPC]
     public void UpdatePlayerList()
@@ -52,7 +61,7 @@ public class MainMenuCaller : MonoBehaviour
 
     public void UpdateRoomSettings(Dictionary<string, string> roomParams)
     {
-        GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All,  roomParams);
+        GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
     }
 
     [PunRPC]

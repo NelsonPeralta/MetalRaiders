@@ -5,16 +5,32 @@ using Photon.Pun;
 using System.Linq;
 using UnityEngine.UIElements;
 
-public class NetworkGameManager : MonoBehaviourPun
+public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
-    public static NetworkGameManager instance;
+    public static NetworkGameManager instance { get { return FindObjectOfType<NetworkGameManager>(); } }
+
     private void Start()
     {
-        instance = this;
+        if(instance != null)
+            Destroy(instance);
+
         DontDestroyOnLoad(gameObject);
     }
 
     public Overshield overshield;
+
+    private void OnDestroy()
+    {
+        Debug.Log($"NetworkGameManager OnDestroy");
+    }
+
+    public override void OnLeftRoom()
+    {
+        Debug.Log($"NetworkGameManager OnLeftRoom");
+        //base.OnLeftRoom();
+
+        //Destroy(gameObject);
+    }
 
     // Methods
     #region

@@ -171,7 +171,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 if ((pInventory.activeWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.activeWeapon.codeName) &&
                     (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName != pInventory.holsteredWeapon.codeName))
                 {
-                    Debug.Log("other.GetComponent<LootableWeapon>().codeName");
+                    //Debug.Log("other.GetComponent<LootableWeapon>().codeName");
                     Debug.Log(other.GetComponent<LootableWeapon>().codeName);
                     other.GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
                     other.GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
@@ -224,7 +224,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         if (!PV.IsMine)
             return;
 
-        Debug.Log("Om Player Long Interact Delegate");
+        //Debug.Log("Om Player Long Interact Delegate");
 
         if (closestLootableWeapon)
         {
@@ -235,7 +235,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             Vector3 lwPosition = closestLootableWeapon.GetComponent<LootableWeapon>().spawnPointPosition;
             if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
             {
-                Debug.Log("RPC: Picking up second weapon");
+                //Debug.Log("RPC: Picking up second weapon");
                 //PickupSecWeap();
                 PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
                 OnWeaponPickup?.Invoke(this);
@@ -250,7 +250,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             {
                 if (player.GetComponent<PhotonView>().IsMine)
                 {
-                    Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
+                    //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
                     player.DropWeapon(pInventory.activeWeapon);
                 }
                 PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
@@ -258,7 +258,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
                 pInventory.PlayDrawSound();
             }
-            Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
+            //Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
             PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPosition);
         }
     }
@@ -308,7 +308,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             if (_allLootableWeapons.spawnPointPosition == collidingWeaponPosition)
                 weaponToLoot = _allLootableWeapons;
 
-        Debug.Log($"ReplaceWeapon: weaponToLoot: {weaponToLoot.name}");
+        //Debug.Log($"ReplaceWeapon: weaponToLoot: {weaponToLoot.name}");
 
         WeaponProperties previousActiveWeapon = pInventory.activeWeapon;
         WeaponProperties newActiveWeapon = null;
@@ -316,7 +316,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             if (w.GetComponent<WeaponProperties>().codeName == weaponToLoot.codeName)
                 newActiveWeapon = w.GetComponent<WeaponProperties>();
 
-        Debug.Log($"New Active weapon: {newActiveWeapon.name}");
+        //Debug.Log($"New Active weapon: {newActiveWeapon.name}");
         newActiveWeapon.gameObject.SetActive(true);
         previousActiveWeapon.gameObject.SetActive(false);
 
@@ -358,7 +358,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.ammo;
         //pickupExtraAmmoFromWeapon(closestLootableWeapon);
 
-        Debug.Log("Replace Weapon 1");
+        //Debug.Log("Replace Weapon 1");
 
         StartCoroutine(pInventory.ToggleTPPistolIdle(0));
         pInventory.ChangeActiveAmmoCounter();
@@ -383,7 +383,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     // TO DO: make it across all the network
     public void PickupAmmoFromWeapon(GameObject weapon)
     {
-        Debug.Log("In Ammo Pickuo From Weapon: " + weapon);
+        //Debug.Log("In Ammo Pickuo From Weapon: " + weapon);
         if (weapon.GetComponent<LootableWeapon>() != null)
         {
             LootableWeapon weaponScript = weapon.GetComponent<LootableWeapon>();
@@ -406,7 +406,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             {
                 //Destroy(weapon.gameObject);
                 weapon.SetActive(false);
-                Debug.Log("Destroyed Small Weapon");
+                //Debug.Log("Destroyed Small Weapon");
             }
             if (weaponScript.ammo == 0)
             {
@@ -430,7 +430,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     {
         if (!PV.IsMine)
             return;
-        Debug.Log("Disabling Ammo Pack");
+        //Debug.Log("Disabling Ammo Pack");
         PV.RPC("DespawnAmmoPack_RPC", RpcTarget.All, index);
     }
 

@@ -261,7 +261,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "MainMenuCommunicator"), Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "NetworkMainMenu"), Vector3.zero, Quaternion.identity);
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
             }
             string roomType = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower() + "_room";
@@ -314,7 +314,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void UpdateNickname() // Deprecated. Used to be used when changing username with a text field and button
     {
         //PhotonNetwork.NickName = nicknameInputField.text;
-        FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdatePlayerList", RpcTarget.All);
+        FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("UpdatePlayerList", RpcTarget.All);
     }
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
@@ -361,7 +361,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         try
         {
-            Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
+            //Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
         }
         catch { }
         MenuManager.Instance.OpenMenu("offline title");
@@ -415,7 +415,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
             roomParams["gametype"] = GameManager.instance.gameType.ToString();
 
-            FindObjectOfType<MainMenuCaller>().UpdateRoomSettings(roomParams);
+            FindObjectOfType<NetworkMainMenu>().UpdateRoomSettings(roomParams);
         }
     }
 
@@ -423,7 +423,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         try
         {
-            FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
+            FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
         }
         catch { }
     }
@@ -454,7 +454,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         gt = gt.Replace(" ", "");
         GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
 
-        FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("ChangeSubGameType_RPC", RpcTarget.All, gt);
+        FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("ChangeSubGameType_RPC", RpcTarget.All, gt);
     }
 
     void UpdateTeams()

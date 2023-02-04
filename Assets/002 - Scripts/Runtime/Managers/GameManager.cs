@@ -345,7 +345,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         roomParams.Add("gamemode", gameMode.ToString());
         roomParams.Add("gametype", gameType.ToString());
 
-        FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
+        FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
     }
 
 
