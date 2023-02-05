@@ -261,8 +261,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
-                //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "NetworkMainMenu"), Vector3.zero, Quaternion.identity);
-                //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "NetworkMainMenu"), Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
             }
             string roomType = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower() + "_room";
             string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower();
@@ -415,7 +415,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
             roomParams["gametype"] = GameManager.instance.gameType.ToString();
 
-            FindObjectOfType<NetworkMainMenu>().UpdateRoomSettings(roomParams);
+            //FindObjectOfType<NetworkMainMenu>().UpdateRoomSettings(roomParams);
         }
     }
 
