@@ -13,6 +13,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
     [SerializeField] Player _targetPlayer;
 
     [SerializeField] GameObject _holder;
+    [SerializeField] PlayerWorldUIMarkerHolder _holderScript;
     [SerializeField] TMP_Text _text;
     [SerializeField] GameObject _redMarker;
     [SerializeField] GameObject _greenMarker;
@@ -26,6 +27,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
     private void Start()
     {
         StartCoroutine(LateStart());
+        _holderScript.OnEnabledThis += OnHolderEnabled;
     }
 
     private void Update()
@@ -88,7 +90,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    void OnHolderEnabled(PlayerWorldUIMarkerHolder playerWorldUIMarkerHolder)
     {
         try
         {
