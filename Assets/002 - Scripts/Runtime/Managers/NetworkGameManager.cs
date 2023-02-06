@@ -59,6 +59,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         GetComponent<PhotonView>().RPC("RelocateLootableWeapon_RPC", RpcTarget.All, position, rotation);
     }
+
+    public void UpdateLootableWeaponData(Vector3 spp, Dictionary<string, string> param)
+    {
+        GetComponent<PhotonView>().RPC("UpdateLootableWeaponData_RPC", RpcTarget.All, param);
+    }
     #endregion
 
     // Explosive Barrel
@@ -215,6 +220,24 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
                 lw.transform.position = position;
                 lw.transform.rotation = rotation;
+            }
+        }
+    }
+
+    [PunRPC]
+    void UpdateLootableWeaponData_RPC(Vector3 spp, Dictionary<string, string> param)
+    {
+        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>(true).ToList())
+        {
+            if (lw.spawnPointPosition == spp)
+            {
+                if (param.ContainsKey("ammo"))
+                    lw.ammo = int.Parse(param["ammo"]);
+
+                if (param.ContainsKey("ttl"))
+                    lw.tts = int.Parse(param["ttl"]);
+
+                break;
             }
         }
     }

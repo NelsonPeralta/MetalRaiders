@@ -21,7 +21,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             param["ammo"] = ammo.ToString();
             try
             {
-                GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
+                NetworkGameManager.instance.UpdateLootableWeaponData(spawnPointPosition, param);
             }
             catch (System.Exception e) { Debug.LogWarning(e); }
         }
@@ -56,7 +56,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             Dictionary<string, string> param = new Dictionary<string, string>();
 
             param["ttl"] = tts.ToString();
-            GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
+            NetworkGameManager.instance.UpdateLootableWeaponData(spawnPointPosition, param);
+
+            //GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
         }
     }
     public int defaultAmmo { get { return _defaultAmmo; } }
@@ -169,15 +171,15 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         ResetAmmo();
     }
 
-    [PunRPC]
-    void UpdateData(Dictionary<string, string> param)
-    {
-        if (param.ContainsKey("ammo"))
-            _ammo = int.Parse(param["ammo"]);
+    //[PunRPC]
+    //void UpdateData(Dictionary<string, string> param)
+    //{
+    //    if (param.ContainsKey("ammo"))
+    //        _ammo = int.Parse(param["ammo"]);
 
-        if (param.ContainsKey("ttl"))
-            _tts = int.Parse(param["ttl"]);
-    }
+    //    if (param.ContainsKey("ttl"))
+    //        _tts = int.Parse(param["ttl"]);
+    //}
 
     private void OnCollisionEnter(Collision collision)
     {
