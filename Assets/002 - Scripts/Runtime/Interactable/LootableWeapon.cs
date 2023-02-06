@@ -98,7 +98,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     }
     private void Start()
     {
-        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
+        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 2), (float)System.Math.Round(transform.position.y, 2), (float)System.Math.Round(transform.position.z, 2));
         spawnPointRotation = transform.rotation;
 
         try

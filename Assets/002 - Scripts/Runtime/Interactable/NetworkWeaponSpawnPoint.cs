@@ -4,7 +4,6 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using System.Linq;
-using static UnityEditor.Progress;
 
 public class NetworkWeaponSpawnPoint : MonoBehaviour
 {
