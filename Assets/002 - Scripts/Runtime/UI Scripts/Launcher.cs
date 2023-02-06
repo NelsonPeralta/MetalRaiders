@@ -399,7 +399,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(false);
 
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
-        PhotonNetwork.LoadLevel(levelToLoadIndex);
+        StartCoroutine(LoadLevel_Coroutine());
     }
 
     public void LeaveRoom()
@@ -666,5 +666,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             //commonRoomTexts.gameObject.SetActive(false);
         }
+    }
+
+    IEnumerator LoadLevel_Coroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        PhotonNetwork.LoadLevel(levelToLoadIndex);
     }
 }
