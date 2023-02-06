@@ -1,6 +1,7 @@
 ﻿using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 {
@@ -184,6 +185,18 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
         if (param.ContainsKey("ttl"))
             _tts = int.Parse(param["ttl"]);
+    }
+
+    public void UpdateSpawnPointPosition(Vector3 spp)
+    {
+        GetComponent<PhotonView>().RPC("UpdateSpawnPointPosition_RPC", RpcTarget.All, spp);
+    }
+
+    [PunRPC]
+    public void UpdateSpawnPointPosition_RPC(Vector3 spp)
+    {
+        Debug.Log("UpdateSpawnPointPosition_RPC");
+        _spawnPointPosition= spp;
     }
 
     private void OnCollisionEnter(Collision collision)

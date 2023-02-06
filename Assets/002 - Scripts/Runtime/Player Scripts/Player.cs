@@ -9,6 +9,7 @@ using System.Linq;
 using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using System.Text;
 using System.Net.Mail;
+using TMPro;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -798,6 +799,8 @@ public class Player : MonoBehaviourPunCallbacks
         {
             GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
             wo.name = wo.name.Replace("(Clone)", "");
+            wo.GetComponent<LootableWeapon>().UpdateSpawnPointPosition(weaponDropPoint.position);
+
             wo.GetComponent<LootableWeapon>().ammo = wp.currentAmmo;
             wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
             wo.GetComponent<LootableWeapon>().AddForce(weaponDropPoint.transform.forward);
