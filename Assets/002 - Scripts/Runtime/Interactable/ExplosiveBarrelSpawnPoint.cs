@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
-using static Codice.Client.Common.Connection.AskCredentialsToUser;
 
 public class ExplosiveBarrelSpawnPoint : MonoBehaviour
 {
