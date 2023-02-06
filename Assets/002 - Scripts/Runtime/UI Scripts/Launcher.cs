@@ -200,6 +200,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         RoomOptions options = new RoomOptions();
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
         options.CustomRoomProperties.Add("gamemode", "multiplayer");
+
         if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
         {
             return; // Do nothing
@@ -361,7 +362,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         try
         {
-            //Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
+            Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
         }
         catch { }
         MenuManager.Instance.OpenMenu("offline title");
@@ -416,6 +417,25 @@ public class Launcher : MonoBehaviourPunCallbacks
             roomParams["gametype"] = GameManager.instance.gameType.ToString();
 
             //FindObjectOfType<NetworkMainMenu>().UpdateRoomSettings(roomParams);
+        }
+        else
+        {
+            try
+            {
+                Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
+                int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
+                Launcher.instance.levelToLoadIndex = ltl;
+                Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
+            }
+            catch (System.Exception e) { Debug.Log(e); }
+
+            try
+            {
+                Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+                int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
+                GameManager.instance.gameType = (GameManager.GameType)ei;
+            }
+            catch (System.Exception e) { Debug.Log(e); }
         }
     }
 

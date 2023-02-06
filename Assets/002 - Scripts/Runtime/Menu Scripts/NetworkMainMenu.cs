@@ -7,6 +7,7 @@ using Photon.Realtime;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class NetworkMainMenu : MonoBehaviourPunCallbacks
 {
@@ -23,6 +24,17 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
         //base.OnLeftRoom();
 
         //Destroy(gameObject);
+    }
+
+    public void UpdateRoomSettings(Dictionary<string, string> roomParams)
+    {
+        GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
+    }
+
+    IEnumerator LateStart()
+    {
+        yield return new WaitForEndOfFrame();
+        //UpdateRoomSettings();
     }
 
 
@@ -52,6 +64,24 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
         Launcher.instance.levelToLoadIndex = index;
         string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString();
 
+        try
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
+                //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+                props.Add("leveltoloadindex", index);
+                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+                Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
+
+        Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString()}");
+
         if (mode == "multiplayer")
             Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(index).Replace("PVP - ", "")}";
         if (mode == "swarm")
@@ -59,10 +89,6 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
 
     }
 
-    public void UpdateRoomSettings(Dictionary<string, string> roomParams)
-    {
-        GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
-    }
 
     [PunRPC]
     void UpdateRoomSettings_RPC(Dictionary<string, string> roomParams)
@@ -84,5 +110,21 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
         Launcher.instance.gametypeSelectedText.text = $"Gametype: {sgt}";
         sgt = sgt.Replace(" ", "");
         GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), sgt);
+
+        try
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
+                //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+                props.Add("gametype", (int)GameManager.instance.gameType);
+                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+                Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
     }
 }
