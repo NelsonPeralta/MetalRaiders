@@ -58,7 +58,7 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
 
     void OnGameTimeChanged(GameTime gameTime)
     {
-        if (gameTime.totalTime % tts == 0)
+        if (gameTime.totalTime % tts == 0 && gameTime.totalTime > 0)
         {
             barrel.gameObject.SetActive(true);
 
