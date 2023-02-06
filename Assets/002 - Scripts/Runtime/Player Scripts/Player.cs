@@ -1422,11 +1422,21 @@ public class Player : MonoBehaviourPunCallbacks
 
         Debug.Log(spp);
 
-        wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
         try { wo.GetComponent<LootableWeapon>().ammo = param["ammo"]; } catch (System.Exception e) { Debug.Log(e); }
         try { wo.GetComponent<LootableWeapon>().spareAmmo = param["spareammo"]; } catch (System.Exception e) { Debug.Log(e); }
         try { wo.GetComponent<LootableWeapon>().tts = param["tts"]; } catch (System.Exception e) { Debug.Log(e); }
         wo.GetComponent<LootableWeapon>().GetComponent<Rigidbody>().AddForce(fDir * 200);
+
+        //StartCoroutine(UpdateWeaponSpawnPosition_Coroutine(wo, spp));
+        wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
+        Debug.Log($"DropWeapon_RPC: {wo.GetComponent<LootableWeapon>().spawnPointPosition}");
+
     }
     #endregion
+    IEnumerator UpdateWeaponSpawnPosition_Coroutine(GameObject wo, Vector3 spp)
+    {
+        yield return new WaitForEndOfFrame();
+        wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
+
+    }
 }

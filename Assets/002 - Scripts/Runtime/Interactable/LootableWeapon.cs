@@ -39,7 +39,11 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public Vector3 spawnPointPosition
     {
         get { return _spawnPointPosition; }
-        set { _spawnPointPosition = value; }
+        set
+        {
+           Vector3 spp = new Vector3((float)System.Math.Round(value.x, 1), (float)System.Math.Round(value.y, 1), (float)System.Math.Round(value.z, 1));
+            _spawnPointPosition = spp;
+        }
     }
 
     public Quaternion spawnPointRotation
@@ -79,6 +83,14 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     [SerializeField] float _ttl;
 
     Quaternion _spawnPointRotation;
+
+    private void Awake()
+    {
+        Debug.Log("LootableWeapon Awake");
+        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
+        spawnPointRotation = transform.rotation;
+        Debug.Log(spawnPointPosition);
+    }
     private void OnEnable()
     {
         GetComponent<Rigidbody>().velocity *= 0;
@@ -98,9 +110,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     }
     private void Start()
     {
-        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 2), (float)System.Math.Round(transform.position.y, 2), (float)System.Math.Round(transform.position.z, 2));
-        spawnPointRotation = transform.rotation;
-
         try
         {
             MultiplayerManager.instance.lootableWeaponsDict.Add(spawnPointPosition, this);
@@ -196,7 +205,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public void UpdateSpawnPointPosition_RPC(Vector3 spp)
     {
         Debug.Log("UpdateSpawnPointPosition_RPC");
-        _spawnPointPosition= spp;
+        _spawnPointPosition = spp;
     }
 
     private void OnCollisionEnter(Collision collision)
