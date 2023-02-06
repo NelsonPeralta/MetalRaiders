@@ -68,7 +68,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         try
         {
 
-            if (gameTime.totalTime % weaponSpawned.tts == 0)
+            if (gameTime.totalTime % weaponSpawned.tts == 0 && gameTime.totalTime > 0)
             {
                 weaponSpawned.gameObject.SetActive(true);
 
