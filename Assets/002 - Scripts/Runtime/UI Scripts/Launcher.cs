@@ -303,6 +303,8 @@ public class Launcher : MonoBehaviourPunCallbacks
                 Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
                 int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
                 GameManager.instance.gameType = (GameManager.GameType)ei;
+
+                Launcher.instance.gametypeSelectedText.text = $"Gametype: {GameManager.instance.gameType}";
             }
             catch (System.Exception e) { Debug.Log(e); }
         }

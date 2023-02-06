@@ -321,8 +321,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        if (PhotonNetwork.IsMasterClient)
-            UpdateRoomSettings();
+        //if (PhotonNetwork.IsMasterClient)
+        //    UpdateRoomSettings();
 
         Debug.Log($"Player joined room. ({PhotonNetwork.CurrentRoom.PlayerCount})");
     }
