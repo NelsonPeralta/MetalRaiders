@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
+using static Codice.Client.Common.Connection.AskCredentialsToUser;
 
 public class ExplosiveBarrelSpawnPoint : MonoBehaviour
 {
@@ -27,8 +28,11 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
         GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
 
-        if (PhotonNetwork.IsMasterClient)
-            barrel = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>();
+        //if (PhotonNetwork.IsMasterClient)
+        //{
+        //    GameObject b = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Interactable", "ExplosiveBarrel"), transform.position, Quaternion.identity).GetComponent<ExplosiveBarrel>().gameObject;
+        //    b.transform.parent = transform;
+        //}
 
         placeHolder.SetActive(false);
     }
