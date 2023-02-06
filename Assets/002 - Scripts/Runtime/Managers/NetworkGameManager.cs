@@ -62,7 +62,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void UpdateLootableWeaponData(Vector3 spp, Dictionary<string, string> param)
     {
-        GetComponent<PhotonView>().RPC("UpdateLootableWeaponData_RPC", RpcTarget.All, param);
+        GetComponent<PhotonView>().RPC("UpdateLootableWeaponData_RPC", RpcTarget.All, spp, param);
+    }
+
+    public void AddForceLootableWeapon(Vector3 spp, Vector3 dir)
+    {
+        GetComponent<PhotonView>().RPC("AddForceLootableWeapon_RPC", RpcTarget.All, spp, dir);
     }
     #endregion
 
@@ -231,13 +236,26 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             if (lw.spawnPointPosition == spp)
             {
-                if (param.ContainsKey("ammo"))
-                    lw.ammo = int.Parse(param["ammo"]);
+                lw.UpdateData(param);
+                //if (param.ContainsKey("ammo"))
+                //    lw.ammo = int.Parse(param["ammo"]);
 
-                if (param.ContainsKey("ttl"))
-                    lw.tts = int.Parse(param["ttl"]);
+                //if (param.ContainsKey("ttl"))
+                //    lw.tts = int.Parse(param["ttl"]);
 
                 break;
+            }
+        }
+    }
+
+    [PunRPC]
+    void AddForceLootableWeapon_RPC(Vector3 spp, Vector3 dir)
+    {
+        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>(true).ToList())
+        {
+            if (lw.spawnPointPosition == spp)
+            {
+                lw.GetComponent<Rigidbody>().AddForce(dir * 200);
             }
         }
     }

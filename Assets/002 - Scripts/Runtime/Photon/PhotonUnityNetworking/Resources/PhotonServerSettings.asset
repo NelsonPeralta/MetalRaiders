@@ -170,6 +170,8 @@ MonoBehaviour:
   - AddPlayerPoint_RPC
   - NextHillLocation_RPC
   - IsDead_RPC
+  - UpdateLootableWeaponData_RPC
+  - AddForceLootableWeapon_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

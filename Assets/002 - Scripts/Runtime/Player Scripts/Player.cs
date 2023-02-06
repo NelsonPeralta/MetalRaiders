@@ -800,7 +800,7 @@ public class Player : MonoBehaviourPunCallbacks
             wo.name = wo.name.Replace("(Clone)", "");
             wo.GetComponent<LootableWeapon>().ammo = wp.currentAmmo;
             wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
-            wo.GetComponent<Rigidbody>().AddForce(weaponDropPoint.transform.forward * 200);
+            wo.GetComponent<LootableWeapon>().AddForce(weaponDropPoint.transform.forward);
 
             wp.currentAmmo = 0;
             wp.spareAmmo = 0;

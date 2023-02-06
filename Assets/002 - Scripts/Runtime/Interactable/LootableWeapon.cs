@@ -171,15 +171,20 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         ResetAmmo();
     }
 
-    //[PunRPC]
-    //void UpdateData(Dictionary<string, string> param)
-    //{
-    //    if (param.ContainsKey("ammo"))
-    //        _ammo = int.Parse(param["ammo"]);
+    public void AddForce(Vector3 forwardDir)
+    {
+        NetworkGameManager.instance.AddForceLootableWeapon(spawnPointPosition, forwardDir);
+        //GetComponent<Rigidbody>().AddForce(forwardDir * 200);
+    }
 
-    //    if (param.ContainsKey("ttl"))
-    //        _tts = int.Parse(param["ttl"]);
-    //}
+    public void UpdateData(Dictionary<string, string> param)
+    {
+        if (param.ContainsKey("ammo"))
+            _ammo = int.Parse(param["ammo"]);
+
+        if (param.ContainsKey("ttl"))
+            _tts = int.Parse(param["ttl"]);
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
