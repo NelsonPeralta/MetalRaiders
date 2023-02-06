@@ -286,22 +286,26 @@ public class Launcher : MonoBehaviourPunCallbacks
             }
         }
 
-        try
+        if (!PhotonNetwork.IsMasterClient)
         {
-            Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
-            int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
-            Launcher.instance.levelToLoadIndex = ltl;
-            Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
-        }
-        catch (System.Exception e) { Debug.Log(e); }
 
-        try
-        {
-            Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
-            int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
-            GameManager.instance.gameType = (GameManager.GameType)ei;
+            try
+            {
+                Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
+                int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
+                Launcher.instance.levelToLoadIndex = ltl;
+                Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
+            }
+            catch (System.Exception e) { Debug.Log(e); }
+
+            try
+            {
+                Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+                int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
+                GameManager.instance.gameType = (GameManager.GameType)ei;
+            }
+            catch (System.Exception e) { Debug.Log(e); }
         }
-        catch (System.Exception e) { Debug.Log(e); }
     }
     //[PunRPC]
     //public void UpdatePlayerList()
@@ -435,7 +439,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         else
         {
-            
+
         }
     }
 
