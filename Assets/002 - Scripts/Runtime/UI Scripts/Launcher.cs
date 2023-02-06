@@ -262,8 +262,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "NetworkMainMenu"), Vector3.zero, Quaternion.identity);
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+                //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "NetworkMainMenu"), Vector3.zero, Quaternion.identity);
+                //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
             }
             string roomType = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower() + "_room";
             string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower();
@@ -309,6 +309,40 @@ public class Launcher : MonoBehaviourPunCallbacks
             catch (System.Exception e) { Debug.Log(e); }
         }
     }
+
+    public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+        try
+        {
+            Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
+            int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
+            Launcher.instance.levelToLoadIndex = ltl;
+            Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
+        }
+        catch (System.Exception e) { Debug.Log(e); }
+
+        try
+        {
+            Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+            int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
+            GameManager.instance.gameType = (GameManager.GameType)ei;
+
+            Launcher.instance.gametypeSelectedText.text = $"Gametype: {GameManager.instance.gameType}";
+        }
+        catch (System.Exception e) { Debug.Log(e); }
+
+        try
+        {
+            Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["teammode"]}");
+            int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["teammode"];
+            GameManager.instance.teamMode = (GameManager.TeamMode)ei;
+
+            UpdateTeams();
+        }
+        catch (System.Exception e) { Debug.Log(e); }
+    }
+
+
     //[PunRPC]
     //public void UpdatePlayerList()
     //{
@@ -363,6 +397,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsVisible = false;
 
         startGameButton.SetActive(false);
+
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
         PhotonNetwork.LoadLevel(levelToLoadIndex);
     }
 
@@ -447,18 +483,62 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
+        Launcher.instance.levelToLoadIndex = index;
+        string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString();
+
         try
         {
-            FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
+                //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+                try { props.Add("leveltoloadindex", index); } catch { props["leveltoloadindex"] = index; }
+                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+                Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
+            }
         }
-        catch { }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
+
+        Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString()}");
+
+        if (mode == "multiplayer")
+            Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(index).Replace("PVP - ", "")}";
+        if (mode == "swarm")
+            Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(index).Replace("Coop - ", "")}";
+
+        //try
+        //{
+        //    FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("UpdateSelectedMap", RpcTarget.All, index);
+        //}
+        //catch { }
     }
 
     public void ChangeTeamMode(string tm)
     {
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
 
-        FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("UpdateTeamMode_RPC", RpcTarget.All, tm);
+        try
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
+                //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+                try { props.Add("teammode", (int)GameManager.instance.teamMode); } catch { props["teammode"] = (int)GameManager.instance.teamMode; }
+                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+                Debug.Log($"ChangeTeamMode: {PhotonNetwork.CurrentRoom.CustomProperties["teammode"]}");
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
+
+
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+        //FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("UpdateTeamMode_RPC", RpcTarget.All, tm);
         UpdateTeams();
     }
 
@@ -480,7 +560,27 @@ public class Launcher : MonoBehaviourPunCallbacks
         gt = gt.Replace(" ", "");
         GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
 
-        FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("ChangeSubGameType_RPC", RpcTarget.All, gt);
+        Launcher.instance.gametypeSelectedText.text = $"Gametype: {gt}";
+        gt = gt.Replace(" ", "");
+        GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
+
+        try
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
+                //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+                try { props.Add("gametype", (int)GameManager.instance.gameType); } catch { props["gametype"] = (int)GameManager.instance.gameType; }
+                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+                Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
+
+        //FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("ChangeSubGameType_RPC", RpcTarget.All, gt);
     }
 
     void UpdateTeams()

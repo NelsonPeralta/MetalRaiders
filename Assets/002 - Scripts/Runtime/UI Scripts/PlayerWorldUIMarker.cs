@@ -46,6 +46,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         try
         {
             _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
+            Debug.Log($"PlayerWorldUIMarker LateStart: {_player.nickName}");
             _text.text = _player.nickName;
 
             _targetPlayer.OnPlayerDeath -= OnPlayerDeath;
