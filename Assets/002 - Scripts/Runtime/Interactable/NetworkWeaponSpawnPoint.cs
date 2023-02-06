@@ -9,10 +9,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     public bool auth { get { return _auth; } set { _auth = value; } }
     public string codeName;
     public GameObject placeHolder;
-    public LootableWeapon weaponSpawned;
+    public LootableWeapon weaponSpawned { get { return _weaponSpawned; } set { _weaponSpawned = value; _tts = _weaponSpawned.tts; } }
     public List<LootableWeapon> networkLootableWeaponPrefabs = new List<LootableWeapon>();
 
     [SerializeField] float _tts;
+    [SerializeField] LootableWeapon _weaponSpawned;
     bool _auth;
 
     private void OnDestroy()
@@ -90,17 +91,17 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         {
             foreach (LootableWeapon weapon in networkLootableWeaponPrefabs)
             {
-                if (weapon.codeName == codeName)
+                if (weapon.codeName == codeName && PhotonNetwork.IsMasterClient)
                 {
                     try
                     {
                         LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
 
-                        lw.transform.parent = transform;
-                        lw.gameObject.SetActive(true);
-                        lw.networkWeaponSpawnPoint = this;
-                        weaponSpawned = lw;
-                        _tts = lw.tts;
+                        //lw.transform.parent = transform;
+                        //lw.gameObject.SetActive(true);
+                        //lw.networkWeaponSpawnPoint = this;
+                        //weaponSpawned = lw;
+                        //_tts = lw.tts;
                     }
                     catch (System.Exception e) { Debug.LogWarning(e); }
                 }

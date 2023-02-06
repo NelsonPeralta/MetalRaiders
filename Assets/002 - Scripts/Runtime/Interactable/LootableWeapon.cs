@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
@@ -76,6 +77,22 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     [SerializeField] float _ttl;
 
     Quaternion _spawnPointRotation;
+
+    private void Awake()
+    {
+        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
+        spawnPointRotation = transform.rotation;
+
+        List<NetworkWeaponSpawnPoint> l = FindObjectsOfType<NetworkWeaponSpawnPoint>().ToList();
+        foreach (NetworkWeaponSpawnPoint n in l)
+        {
+            if (n.transform.position == spawnPointPosition)
+                _networkWeaponSpawnPoint = n;
+
+            transform.parent = n.transform;
+            n.weaponSpawned = this;
+        }
+    }
     private void OnEnable()
     {
         GetComponent<Rigidbody>().velocity *= 0;
@@ -95,8 +112,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     }
     private void Start()
     {
-        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
-        spawnPointRotation = transform.rotation;
 
         try
         {
