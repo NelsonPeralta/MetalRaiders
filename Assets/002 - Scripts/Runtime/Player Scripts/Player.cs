@@ -121,7 +121,7 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (_hitPoints <= 0 && isMine)
                 PV.RPC("IsDead_RPC", RpcTarget.All);
-                //isDead = true;
+            //isDead = true;
 
             impactPos = null;
         }
@@ -783,30 +783,49 @@ public class Player : MonoBehaviourPunCallbacks
         if (!GetComponent<PhotonView>().IsMine || weapon.currentAmmo <= 0)
             return;
 
-        WeaponProperties wp = null;
-
         if (weapon.codeName == null)
             return;
+
+        WeaponProperties wp = null;
+        int wi = 0;
 
         if (offset == null)
             offset = new Vector3(0, 0, 0);
 
         foreach (GameObject w in playerInventory.allWeaponsInInventory)
+        {
             if (w.GetComponent<WeaponProperties>().codeName == weapon.codeName)
+            {
                 wp = w.GetComponent<WeaponProperties>();
+                break;
+            }
+            wi++;
+        }
 
         try
         {
-            GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
-            wo.name = wo.name.Replace("(Clone)", "");
-            //wo.GetComponent<LootableWeapon>().UpdateSpawnPointPosition(weaponDropPoint.position);
+            //GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
+            //wo.name = wo.name.Replace("(Clone)", "");
+            ////wo.GetComponent<LootableWeapon>().UpdateSpawnPointPosition(weaponDropPoint.position);
 
-            wo.GetComponent<LootableWeapon>().ammo = wp.currentAmmo;
-            wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
-            wo.GetComponent<LootableWeapon>().AddForce(weaponDropPoint.transform.forward);
+            //wo.GetComponent<LootableWeapon>().ammo = wp.currentAmmo;
+            //wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
+            //wo.GetComponent<LootableWeapon>().AddForce(weaponDropPoint.transform.forward);
+
+            //wp.currentAmmo = 0;
+            //wp.spareAmmo = 0;
+
+
+            Dictionary<string, int> param = new Dictionary<string, int>();
+            param["ammo"] = wp.currentAmmo;
+            param["spareammo"] = wp.spareAmmo;
+            Vector3 spp = weaponDropPoint.position + (Vector3)offset;
+            Vector3 fDir = weaponDropPoint.transform.forward;
 
             wp.currentAmmo = 0;
             wp.spareAmmo = 0;
+
+            GetComponent<PhotonView>().RPC("DropWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
         }
         catch (System.Exception e)
         {
@@ -815,6 +834,7 @@ public class Player : MonoBehaviourPunCallbacks
 #endif
         }
     }
+
 
     public void PlayMeleeSound()
     {
@@ -1391,6 +1411,22 @@ public class Player : MonoBehaviourPunCallbacks
     void IsDead_RPC()
     {
         isDead = true;
+    }
+
+    [PunRPC]
+    void DropWeapon_RPC(int wi, Vector3 spp, Vector3 fDir, Dictionary<string, int> param)
+    {
+        Debug.Log("DropWeapon_RPC");
+        GameObject wo = Instantiate(playerInventory.allWeaponsInInventory[wi].GetComponent<WeaponProperties>().weaponRessource, spp, Quaternion.identity);
+        wo.name = wo.name.Replace("(Clone)", "");
+
+        Debug.Log(spp);
+
+        wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
+        try { wo.GetComponent<LootableWeapon>().ammo = param["ammo"]; } catch (System.Exception e) { Debug.Log(e); }
+        try { wo.GetComponent<LootableWeapon>().spareAmmo = param["spareammo"]; } catch (System.Exception e) { Debug.Log(e); }
+        try { wo.GetComponent<LootableWeapon>().tts = param["tts"]; } catch (System.Exception e) { Debug.Log(e); }
+        wo.GetComponent<LootableWeapon>().GetComponent<Rigidbody>().AddForce(fDir * 200);
     }
     #endregion
 }

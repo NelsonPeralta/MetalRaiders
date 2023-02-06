@@ -174,7 +174,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     public void AddForce(Vector3 forwardDir)
     {
-        NetworkGameManager.instance.AddForceLootableWeapon(spawnPointPosition, forwardDir);
+        //NetworkGameManager.instance.AddForceLootableWeapon(spawnPointPosition, forwardDir);
         //GetComponent<Rigidbody>().AddForce(forwardDir * 200);
     }
 
