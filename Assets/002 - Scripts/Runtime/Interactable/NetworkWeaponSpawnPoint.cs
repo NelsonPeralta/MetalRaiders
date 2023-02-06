@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
+using System.Linq;
+using static UnityEditor.Progress;
 
 public class NetworkWeaponSpawnPoint : MonoBehaviour
 {
@@ -91,17 +93,17 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         {
             foreach (LootableWeapon weapon in networkLootableWeaponPrefabs)
             {
-                if (weapon.codeName == codeName && PhotonNetwork.IsMasterClient)
+                if (weapon.codeName == codeName)
                 {
                     try
                     {
-                        LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
-
-                        //lw.transform.parent = transform;
-                        //lw.gameObject.SetActive(true);
-                        //lw.networkWeaponSpawnPoint = this;
-                        //weaponSpawned = lw;
-                        //_tts = lw.tts;
+                        //LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
+                        LootableWeapon lw = Instantiate(networkLootableWeaponPrefabs.Where(x => x.name == weapon.name).SingleOrDefault(), transform.position, transform.rotation);
+                        lw.transform.parent = transform;
+                        lw.gameObject.SetActive(true);
+                        lw.networkWeaponSpawnPoint = this;
+                        weaponSpawned = lw;
+                        _tts = lw.tts;
                     }
                     catch (System.Exception e) { Debug.LogWarning(e); }
                 }
