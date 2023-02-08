@@ -10,6 +10,7 @@ using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using System.Text;
 using System.Net.Mail;
 using TMPro;
+using static Player;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -119,9 +120,16 @@ public class Player : MonoBehaviourPunCallbacks
             if (newValue < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newValue)
                 OnPlayerHealthDamage?.Invoke(this);
 
-            if (_hitPoints <= 0 && isMine)
-                PV.RPC("IsDead_RPC", RpcTarget.All);
-            //isDead = true;
+            if (_hitPoints <= 0)
+            {
+                if (isMine)
+                {
+                    //PV.RPC("IsDead_RPC", RpcTarget.All);
+                    //PV.RPC("SendHitPointsCheck_RPC", RpcTarget.All, (int)hitPoints, isMine, GameTime.instance.totalTime);
+                }
+                    isDead = true;
+
+            }
 
             impactPos = null;
         }
@@ -711,7 +719,8 @@ public class Player : MonoBehaviourPunCallbacks
         Debug.Log("source file path: " + sourceFilePath);
         Debug.Log("source line number: " + sourceLineNumber);
 
-        PV.RPC("Damage_RPC", RpcTarget.All, damage);
+        int newHealth = (int)hitPoints - damage;
+        PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage);
     }
 
     public void Damage(int damage, bool headshot, int source_pid,
@@ -773,7 +782,9 @@ public class Player : MonoBehaviourPunCallbacks
                 dsn = DeathNature.Melee;
 
             byte[] bytes = Encoding.UTF8.GetBytes(damageSource);
-            PV.RPC("Damage_RPC", RpcTarget.All, damage, source_pid, bytes, (int)dsn);
+
+            int newHealth = (int)hitPoints - damage;
+            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn);
         }
     }
 
@@ -855,6 +866,9 @@ public class Player : MonoBehaviourPunCallbacks
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.SetActive(true);
+
+        Debug.Log("SpawnRagdoll");
+        Debug.Log(deathByHeadshot);
 
         if (!deathByHeadshot)
             ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 300);
@@ -1106,7 +1120,7 @@ public class Player : MonoBehaviourPunCallbacks
                     }
                 }
             }
-            catch { }
+            catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
 
             try
             {
@@ -1117,6 +1131,8 @@ public class Player : MonoBehaviourPunCallbacks
 
                 if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 {
+                    //if(isMine)
+                    //    PV.RPC("AddPlayerKill_RPC", RpcTarget.All, _lastPID, PV.ViewID, (int)_deathNature);
                     MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathNature));
 
                 }
@@ -1124,31 +1140,7 @@ public class Player : MonoBehaviourPunCallbacks
                     GetComponent<PlayerSwarmMatchStats>().deaths++;
 
             }
-            catch (Exception e)
-            {
-                MailMessage newMail = new MailMessage();
-                // use the Gmail SMTP Host
-                SmtpClient client = new SmtpClient("smtp.office365.com");
-
-                // Follow the RFS 5321 Email Standard
-                newMail.From = new MailAddress("nelson@peralta.tech", "Nelson");
-
-                newMail.To.Add("nperalta@hilotech.ca");// declare the email subject
-
-                newMail.Subject = "Space Wackos Error Report"; // use HTML for the email body
-
-                newMail.IsBodyHtml = true; newMail.Body = $"<h1> Space Wackos </h1><br><br><h2>Error</h2><br>=====<br><p>${e}</p>";
-
-                // enable SSL for encryption across channels
-                client.EnableSsl = true;
-                // Port 465 for SSL communication
-                client.Port = 587;
-                // Provide authentication information with Gmail SMTP server to authenticate your sender account
-                client.Credentials = new System.Net.NetworkCredential("nelson@peralta.tech", "Cazadores1!");
-
-                client.Send(newMail); // Send the constructed mail
-                Debug.Log("Email Sent");
-            }
+            catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
 
             try
             {
@@ -1275,13 +1267,13 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(int damage)
+    void Damage_RPC(int newHealth, int damage)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
         if (!isDead && !isRespawning)
-            hitPoints -= damage;
+            hitPoints = newHealth;
 
         if (lastPID > -1)
             if (isDead)
@@ -1319,19 +1311,19 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(int damage, int sourcePid, byte[] bytes, int deathNature)
+    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
         try { _damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
-        try { this.deathNature = (DeathNature)deathNature; } catch { }
+        try { deathNature = (DeathNature)dn; } catch { }
         try { lastPID = sourcePid; } catch { }
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
-        try { hitPoints -= damage; } catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
+        try { hitPoints = newHealth; } catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
 
         try
         { // Hit Marker Handling
@@ -1432,6 +1424,28 @@ public class Player : MonoBehaviourPunCallbacks
         Debug.Log($"DropWeapon_RPC: {wo.GetComponent<LootableWeapon>().spawnPointPosition}");
 
     }
+
+    [PunRPC]
+    void SendHitPointsCheck_RPC(int h, bool im, int tt)
+    {
+        GameManager.report += $"SendHitPointsCheck_RPC<br>===============<br>PLAYER: {nickName}<br>Is mine: {im}<br>Health: {h}<br>Time: {tt}<br><br>";
+        if (!im)
+            GameManager.report += "<br><br><br>";
+    }
+
+    string mmm;
+
+    public void SendEndGameReport()
+    {
+    }
+
+
+    [PunRPC]
+    void AddPlayerKill_RPC(int lpid, int tpid, int dni)
+    {
+        MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lpid, tpid, (DeathNature)dni));
+    }
+
     #endregion
     IEnumerator UpdateWeaponSpawnPosition_Coroutine(GameObject wo, Vector3 spp)
     {

@@ -21,7 +21,7 @@ public class PlayerMedals : MonoBehaviour
             if (_shortKillSpree == 3)
                 SpawnTripleKillMedal();
 
-            if (_spree == 3)
+            if (_spree == 5)
                 SpawnKillingSpreeMedal();
         }
     }

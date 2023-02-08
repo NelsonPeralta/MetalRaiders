@@ -173,6 +173,8 @@ MonoBehaviour:
   - UpdateLootableWeaponData_RPC
   - AddForceLootableWeapon_RPC
   - UpdateSpawnPointPosition_RPC
+  - SendHitPointsCheck_RPC
+  - AddPlayerKill_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

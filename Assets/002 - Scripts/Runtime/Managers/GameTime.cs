@@ -55,6 +55,7 @@ public class GameTime : MonoBehaviourPunCallbacks
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        OnGameTimeChanged = null;
         totalTime = 0;
         __totalTime = 0;
         secondCountdown = 1;

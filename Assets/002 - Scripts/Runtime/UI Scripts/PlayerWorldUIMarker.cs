@@ -23,6 +23,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
     private void Awake()
     {
         _player.OnPlayerTeamChanged += OnPlayerTeamDelegate;
+        _player.OnPlayerHitPointsChanged += OnPlayerHitPointsChanged;
     }
     private void Start()
     {
@@ -90,6 +91,18 @@ public class PlayerWorldUIMarker : MonoBehaviour
         }
     }
 
+    public void OnPlayerHitPointsChanged(Player player)
+    {
+        try
+        {
+            _text.text = _player.nickName + "\n" + _player.hitPoints;
+        }
+        catch (System.Exception e)
+        {
+
+        }
+    }
+
     void OnHolderEnabled(PlayerWorldUIMarkerHolder playerWorldUIMarkerHolder)
     {
         try
@@ -98,7 +111,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
             Debug.Log(_player.nickName);
 
             _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
-            _text.text = _player.nickName;
+            _text.text = _player.nickName + "\n" + _player.hitPoints;
         }
         catch (System.Exception e)
         {
