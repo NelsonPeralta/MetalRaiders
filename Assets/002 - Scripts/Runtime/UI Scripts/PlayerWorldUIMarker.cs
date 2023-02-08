@@ -93,14 +93,14 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
     public void OnPlayerHitPointsChanged(Player player)
     {
-        try
-        {
-            _text.text = _player.nickName + "\n" + _player.hitPoints;
-        }
-        catch (System.Exception e)
-        {
+        //try
+        //{
+        //    _text.text = _player.nickName + "\n" + _player.hitPoints;
+        //}
+        //catch (System.Exception e)
+        //{
 
-        }
+        //}
     }
 
     void OnHolderEnabled(PlayerWorldUIMarkerHolder playerWorldUIMarkerHolder)
@@ -111,7 +111,8 @@ public class PlayerWorldUIMarker : MonoBehaviour
             Debug.Log(_player.nickName);
 
             _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
-            _text.text = _player.nickName + "\n" + _player.hitPoints;
+            //_text.text = _player.nickName + "\n" + _player.hitPoints;
+            _text.text = _player.nickName;
         }
         catch (System.Exception e)
         {
