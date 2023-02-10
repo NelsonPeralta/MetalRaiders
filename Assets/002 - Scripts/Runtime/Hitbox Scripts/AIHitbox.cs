@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class AIHitbox : Hitbox
+public class AIHitbox : Hitbox, IDamageable
 {
     public AiAbstractClass aiAbstractClass;
     public GameObject aiGO;
@@ -383,5 +384,20 @@ public class AIHitbox : Hitbox
                 hitbox.aiHealth = newHealth;
             }
         }
+    }
+
+    public void Damage(int damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
+    {
+        aiAbstractClass.Damage((int)healthDamage, playerWhoShotThisPlayerPhotonId, isHeadshot: headshot);
+    }
+
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
+    {
+        aiAbstractClass.Damage((int)healthDamage, playerWhoShotThisPlayerPhotonId, isHeadshot: headshot);
     }
 }

@@ -87,7 +87,7 @@ public class Tyrant : AiAbstractClass
         if (playerRange == PlayerRange.Out)
             previousWatcherAction = TyrantActions.Seek;
 
-        if (!isDead && destination)
+        if (!isDead && targetPlayer)
         {
 
             if (previousWatcherAction != TyrantActions.Block && previousWatcherAction != TyrantActions.Idle)
@@ -144,7 +144,7 @@ public class Tyrant : AiAbstractClass
                 seek = true;
             }
         }
-        else if (!isDead && !destination)
+        else if (!isDead && !targetPlayer)
         {
             tyrantAction = TyrantActions.Idle;
             seek = false;
@@ -153,12 +153,12 @@ public class Tyrant : AiAbstractClass
 
     public override void ChildUpdate()
     {
-        if (!destination)
+        if (!targetPlayer)
             return;
 
-        Vector3 targetPostition = new Vector3(destination.position.x,
+        Vector3 targetPostition = new Vector3(targetPlayer.position.x,
                                         this.transform.position.y,
-                                        destination.position.z);
+                                        targetPlayer.position.z);
         this.transform.LookAt(targetPostition);
     }
 

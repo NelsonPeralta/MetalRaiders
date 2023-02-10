@@ -64,7 +64,7 @@ public class ShooterAI : AiAbstractClass
         set { _playerTarget = value; }
     }
 
-    public override Transform destination
+    public override Transform targetPlayer
     {
         get { return _destination; }
         set
@@ -160,7 +160,7 @@ public class ShooterAI : AiAbstractClass
         Debug.Log($"{this.GetType()} DoAction");
 
         ShooterAIActions previousHellhoundAction = shooterAiAction;
-        if (!isDead && destination)
+        if (!isDead && targetPlayer)
         {
             seek = true;
             //if (previousHellhoundAction != ShooterAIActions.Roam)
@@ -187,7 +187,7 @@ public class ShooterAI : AiAbstractClass
 
             //Debug.Log($"Hellhound do action: {hellhoundAction}");
         }
-        else if (!isDead && !destination)
+        else if (!isDead && !targetPlayer)
         {
             shooterAiAction = ShooterAIActions.Idle;
             seek = false;
@@ -205,7 +205,7 @@ public class ShooterAI : AiAbstractClass
 
         if (aiAbstractClass.playerRange == PlayerRange.Close)
         {
-            if (!destination.GetComponent<Player>())
+            if (!targetPlayer.GetComponent<Player>())
             {
                 Debug.Log("Got to empty target");
                 //GetNewTarget(emptyTarget: true);
@@ -285,7 +285,7 @@ public class ShooterAI : AiAbstractClass
                         foreach (AiRangeTrigger rt in rangeColliders)
                             if (rt.range == PlayerRange.Close)
                             {
-                                destination = null;
+                                targetPlayer = null;
                                 GetNewTarget(walkRadius: rt.GetComponent<SphereCollider>().radius * 1.5f,
                                     emptyTarget: true);
                                 shooterAiAction = ShooterAIActions.Strafe;
@@ -297,7 +297,7 @@ public class ShooterAI : AiAbstractClass
                 }
             }
         }
-        else if (!destination.GetComponent<Player>() && triggerObj.GetComponent<Transform>() == destination)
+        else if (!targetPlayer.GetComponent<Player>() && triggerObj.GetComponent<Transform>() == targetPlayer)
         {
             if (aiRangeCollider.range == PlayerRange.Close)
             {
@@ -306,7 +306,7 @@ public class ShooterAI : AiAbstractClass
                     foreach (AiRangeTrigger rt in rangeColliders)
                         if (rt.range == PlayerRange.Close)
                         {
-                            destination = null;
+                            targetPlayer = null;
                             GetNewTarget(emptyTarget: true);
                         }
                 }
@@ -316,7 +316,7 @@ public class ShooterAI : AiAbstractClass
                     foreach (AiRangeTrigger rt in rangeColliders)
                         if (rt.range == PlayerRange.Close)
                         {
-                            destination = null;
+                            targetPlayer = null;
                             GetNewTarget(walkRadius: rt.GetComponent<SphereCollider>().radius * 1.5f,
                                         emptyTarget: true);
                         }

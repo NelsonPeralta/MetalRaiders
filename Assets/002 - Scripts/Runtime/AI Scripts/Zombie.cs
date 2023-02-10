@@ -22,6 +22,7 @@ public class Zombie : AiAbstractClass
             if (_zombieAction != value)
             {
                 _zombieAction = value;
+                Debug.Log($"ZOMBIE New Action: {_zombieAction}");
                 InvokeOnActionChanged();
             }
         }
@@ -61,7 +62,7 @@ public class Zombie : AiAbstractClass
     public override void DoAction()
     {
         ZombieActions previousHellhoundAction = zombieAction;
-        if (!isDead && destination)
+        if (!isDead && targetPlayer)
         {
             if (previousHellhoundAction != ZombieActions.Seek)
                 seek = false;
@@ -78,7 +79,7 @@ public class Zombie : AiAbstractClass
                     _voice.clip = _attackClip;
                     _voice.Play();
                     animator.Play("Attack");
-                    destination.GetComponent<Player>().Damage(meleeDamage, false, 99);
+                    targetPlayer.GetComponent<Player>().Damage(meleeDamage);
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
@@ -87,7 +88,7 @@ public class Zombie : AiAbstractClass
 
             //Debug.Log($"Hellhound do action: {hellhoundAction}");
         }
-        else if (!isDead && !destination)
+        else if (!isDead && !targetPlayer)
         {
             zombieAction = ZombieActions.Idle;
             seek = false;
@@ -96,12 +97,12 @@ public class Zombie : AiAbstractClass
 
     public override void ChildUpdate()
     {
-        if (!destination)
+        if (!targetPlayer)
             return;
 
-        Vector3 targetPostition = new Vector3(destination.position.x,
+        Vector3 targetPostition = new Vector3(targetPlayer.position.x,
                                         this.transform.position.y,
-                                        destination.position.z);
+                                        targetPlayer.position.z);
         this.transform.LookAt(targetPostition);
     }
 
@@ -109,26 +110,30 @@ public class Zombie : AiAbstractClass
     {
         if (isDead)
             return;
-        photonView.RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot);
+
+        int nh = _health - damage;
+        photonView.RPC("Damage_RPC", RpcTarget.All, nh, playerWhoShotPDI, damageSource, isHeadshot);
     }
 
     [PunRPC]
-    public override void Damage_RPC(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    public override void Damage_RPC(int nh, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
         if (isDead)
             return;
 
+        int _damage = health - nh;
+
         Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         try
         {
-            pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
+            pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(_damage);
         }
         catch (System.Exception e)
         {
 
         }
 
-        health -= damage;
+        health = nh;
         if (isDead)
         {
             try
@@ -146,7 +151,10 @@ public class Zombie : AiAbstractClass
     public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
     {
         if (!targetInLineOfSight)
+        {
+            Debug.Log($"OnTargetInLineOfSightChanged_Delegate TARGET NOT IN LOF");
             zombieAction = ZombieActions.Seek;
+        }
         else
         {
             Debug.Log($"Target in line of sight. Player range: {playerRange}");

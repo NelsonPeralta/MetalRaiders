@@ -167,18 +167,28 @@ public class AimAssistCone : MonoBehaviour
         {
             if (GameManager.instance.teamMode.ToString().Contains("Classic"))
             {
-                if (collidingHitbox.GetComponent<PlayerHitbox>().player.team == player.team)
+                try
                 {
-                    aimAssist.target = null;
-                    aimAssist.redReticuleIsOn = false;
-                    playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Green;
+                    if (collidingHitbox.GetComponent<AIHitbox>())
+                    {
+                        aimAssist.target = collidingHitbox;
+                        aimAssist.redReticuleIsOn = true;
+                        playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
+                    }
+                    else if (collidingHitbox.GetComponent<PlayerHitbox>().player.team == player.team)
+                    {
+                        aimAssist.target = null;
+                        aimAssist.redReticuleIsOn = false;
+                        playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Green;
+                    }
+                    else
+                    {
+                        aimAssist.target = collidingHitbox;
+                        aimAssist.redReticuleIsOn = true;
+                        playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
+                    }
                 }
-                else
-                {
-                    aimAssist.target = collidingHitbox;
-                    aimAssist.redReticuleIsOn = true;
-                    playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
-                }
+                catch { }
             }
             else
             {

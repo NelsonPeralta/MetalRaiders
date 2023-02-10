@@ -9,7 +9,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 {
     // events
     public delegate void AiEvent(AiAbstractClass aiAbstractClass);
-    public AiEvent OnHealthChange, OnDeath, OnDeathEnd, OnPlayerRangeChange, OnActionChange, 
+    public AiEvent OnHealthChange, OnDeath, OnDeathEnd, OnPlayerRangeChange, OnActionChange,
         OnNextActionReset, OnNextActionReady, OnTargeInLineOfSightChange, OnTargetDeath, OnPrepareEnd,
         OnDestinationChanged, OnDestinationNull;
 
@@ -21,7 +21,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     [SerializeField] PlayerRange _playerRange;
     PlayerRange _previousPlayerRange;
     public Animator animator;
-    [SerializeField] int _health;
+    [SerializeField] protected int _health;
     float newTargetSwitchingDelay;
     float _nextActionCooldown;
     [SerializeField] protected bool _seek;
@@ -91,7 +91,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             _previousPlayerRange = value;
         }
     }
-    public virtual Transform destination
+    public virtual Transform targetPlayer
     {
         get { return _destination; }
         set
@@ -101,7 +101,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             if (value)
             {
                 if (value.GetComponent<Player>() && (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning))
-                    destination = null;
+                    targetPlayer = null;
                 else
                 {
                     _destination = value;
@@ -201,7 +201,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     public bool canSeek
     {
-        get { _canSeek = (!isDead && destination && seek); return _canSeek; }
+        get { _canSeek = (!isDead && targetPlayer && seek); return _canSeek; }
     }
 
     public float nextActionCooldown
@@ -301,7 +301,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         transform.position = spawnPointPosition;
         transform.rotation = spawnPointRotation;
-        destination = PhotonView.Find(targetPhotonId).transform;
+        targetPlayer = PhotonView.Find(targetPhotonId).transform;
         gameObject.SetActive(true);
 
         OnPlayerRangeChange?.Invoke(this);
@@ -317,7 +317,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     IEnumerator Die_Coroutine()
     {
-        destination = null;
+        targetPlayer = null;
         GetComponent<NavMeshAgent>().speed = 0;
         GetComponent<Animator>().Play("Die");
 
@@ -368,7 +368,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public void Movement()
     {
         if (canSeek)
-            nma.SetDestination(destination.transform.position);
+            nma.SetDestination(targetPlayer.transform.position);
     }
 
     void NextActionCooldown()
@@ -391,18 +391,19 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void ShootLineOfSightRay()
     {
-        if (!destination)
+        if (!targetPlayer)
             return;
 
-        LOSSpawn.transform.LookAt(destination);
+        LOSSpawn.transform.LookAt(targetPlayer);
         if (projectileSpawnPoint)
-            projectileSpawnPoint.transform.LookAt(destination);
+            projectileSpawnPoint.transform.LookAt(targetPlayer);
 
-        raySpawn = LOSSpawn.transform.position + new Vector3(0, 0f, 0);
+        var hit = new RaycastHit();
+        Ray ray = new Ray(LOSSpawn.transform.position, LOSSpawn.transform.forward);
         //Debug.DrawRay(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, Color.green);
 
         // Need a Raycast Range Overload to work with LayerMask
-        if (Physics.Raycast(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, out hit, maxRangeDistance, layerMask))
+        if (Physics.Raycast(ray, out hit, maxRangeDistance * 1.2f, layerMask))
         {
             objectInLineOfSight = hit.transform.gameObject;
             //if (hit.transform.gameObject.GetComponent<PlayerHitbox>())
@@ -410,7 +411,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             {
                 Player playerInLOS = objectInLineOfSight.GetComponent<Player>();
 
-                if (playerInLOS == destination.GetComponent<Player>())
+                if (playerInLOS == targetPlayer.GetComponent<Player>())
                     targetInLineOfSight = true;
                 else
                     targetOutOfSight = true;
@@ -428,9 +429,9 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     public virtual void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider, Collider triggerObj = null)
     {
-        if (!destination.GetComponent<Player>())
+        if (!targetPlayer.GetComponent<Player>())
             GetNewTarget(emptyTarget: true);
-        if (destination && aiRangeCollider.playersInRange.Contains(destination.GetComponent<Player>()))
+        if (targetPlayer && aiRangeCollider.playersInRange.Contains(targetPlayer.GetComponent<Player>()))
         {
             playerRange = aiRangeCollider.range;
 
@@ -444,7 +445,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     public virtual void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider, Collider triggerObj = null)
     {
-        if (destination && aiRangeCollider.playersInRange.Contains(destination.GetComponent<Player>()))
+        if (targetPlayer && aiRangeCollider.playersInRange.Contains(targetPlayer.GetComponent<Player>()))
         {
             PlayerRange exitingRange = aiRangeCollider.range;
             PlayerRange newPlayerRange = playerRange;
@@ -488,15 +489,15 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         {
             try
             {
-                if (rt.playersInRange.Contains(destination.GetComponent<Player>()))
-                    rt.playersInRange.Remove(destination.GetComponent<Player>());
+                if (rt.playersInRange.Contains(targetPlayer.GetComponent<Player>()))
+                    rt.playersInRange.Remove(targetPlayer.GetComponent<Player>());
             }
             catch (System.Exception e)
             {
 
             }
         }
-        destination = null;
+        targetPlayer = null;
     }
 
     public virtual void GetNewTarget(float walkRadius = 100, bool emptyTarget = false)
@@ -504,19 +505,19 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         //if (gameObject.activeSelf)
         //    StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
         if (!emptyTarget)
-            destination = SwarmManager.instance.GetRandomPlayerTransform();
+            targetPlayer = SwarmManager.instance.GetRandomPlayerTransform();
         else
-            destination = GetRandomDestinationTransform(walkRadius);
+            targetPlayer = GetRandomDestinationTransform(walkRadius);
     }
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()
     {
         yield return new WaitForSeconds(1);
-        destination = SwarmManager.instance.GetRandomPlayerTransform();
+        targetPlayer = SwarmManager.instance.GetRandomPlayerTransform();
     }
 
     protected void ChangeAction(string actionString)
     {
-        if (!destination || !destination.GetComponent<Player>().PV.IsMine)
+        if (!targetPlayer || !targetPlayer.GetComponent<Player>().PV.IsMine)
             return;
 
         photonView.RPC("ChangeAction_RPC", RpcTarget.All, actionString);

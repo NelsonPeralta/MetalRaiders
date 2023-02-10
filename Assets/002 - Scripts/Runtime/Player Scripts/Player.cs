@@ -563,10 +563,14 @@ public class Player : MonoBehaviourPunCallbacks
         {
             hasArmor = true;
         }
-        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
-            maxHitPoints = 100;
-            hitPoints = maxHitPoints;
+            _defaultRespawnTime = 7;
+            _overshieldPoints= 0;
+            _maxShieldPoints = 0;
+            _maxHitPoints = 100;
+            _networkHitPoints = maxHitPoints;
+            _hitPoints = maxHitPoints;
             needsHealthPack = true;
         }
 
@@ -1273,7 +1277,10 @@ public class Player : MonoBehaviourPunCallbacks
             return;
 
         if (!isDead && !isRespawning)
+        {
+            _impactPos = transform.position;
             hitPoints = newHealth;
+        }
 
         if (lastPID > -1)
             if (isDead)

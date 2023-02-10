@@ -52,12 +52,12 @@ public class PlayerController : MonoBehaviourPun
             if (value == ControllerType.Joystick)
             {
                 OnControllerTypeChangedToController?.Invoke(this);
-                Debug.Log("OnControllerTypeChangedToController");
+                //Debug.Log("OnControllerTypeChangedToController");
             }
             else
             {
                 OnControllerTypeChangedToMouseAndKeyboard?.Invoke(this);
-                Debug.Log("OnControllerTypeChangedToMouseAndKeyboard");
+                //Debug.Log("OnControllerTypeChangedToMouseAndKeyboard");
             }
         }
     }

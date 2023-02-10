@@ -296,6 +296,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     {
                         try
                         {
+                            Debug.Log("asdf1234");
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
                                 try
                                 {

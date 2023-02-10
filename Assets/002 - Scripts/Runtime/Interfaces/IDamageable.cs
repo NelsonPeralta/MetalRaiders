@@ -5,9 +5,9 @@ using UnityEngine;
 
 interface IDamageable
 {
-    void Damage(int damage);
-    void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId);
-    void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, 
+    void Damage(int d);
+    void Damage(int d, bool h, int pid);
+    void Damage(int d, bool h, int pid, 
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",

@@ -103,7 +103,7 @@ public class Watcher : AiAbstractClass
         if (playerRange == PlayerRange.Out)
             previousWatcherAction = WatcherActions.Seek;
 
-        if (!isDead && destination)
+        if (!isDead && targetPlayer)
         {
 
             if (previousWatcherAction != WatcherActions.Defend && previousWatcherAction != WatcherActions.Idle)
@@ -152,7 +152,7 @@ public class Watcher : AiAbstractClass
                     _voice.Play();
                     animator.Play("Summon");
 
-                    var pSurro = destination.GetComponent<Player>().playerSurroundings;
+                    var pSurro = targetPlayer.GetComponent<Player>().playerSurroundings;
                     var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
                     meteo.GetComponent<Fireball>().radius = meteorRadius;
                     meteo.GetComponent<Fireball>().damage = meteorDamage;
@@ -169,7 +169,7 @@ public class Watcher : AiAbstractClass
                 seek = true;
             }
         }
-        else if (!isDead && !destination)
+        else if (!isDead && !targetPlayer)
         {
             watcherAction = WatcherActions.Idle;
             seek = false;
@@ -178,12 +178,12 @@ public class Watcher : AiAbstractClass
 
     public override void ChildUpdate()
     {
-        if (!destination)
+        if (!targetPlayer)
             return;
 
-        Vector3 targetPostition = new Vector3(destination.position.x,
+        Vector3 targetPostition = new Vector3(targetPlayer.position.x,
                                         this.transform.position.y,
-                                        destination.position.z);
+                                        targetPlayer.position.z);
         this.transform.LookAt(targetPostition);
     }
 

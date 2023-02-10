@@ -12,15 +12,16 @@ public class AiRangeTrigger : MonoBehaviour
     public List<Player> playersInRange = new List<Player>();
     private void OnTriggerStay(Collider other)
     {
-        try
-        {
-            if (other.GetComponent<Transform>() == AiAbstractClass.destination)
-            {
-                //Debug.Log("Arrived to empty target");
-                OnRangeTriggerEnter?.Invoke(this, other);
-            }
-        }
-        catch { }
+        //try
+        //{
+        //    if (other.GetComponent<Transform>() == AiAbstractClass.targetPlayer)
+        //    {
+        //        //Debug.Log("Arrived to empty target");
+        //        Debug.Log(gameObject);
+        //        OnRangeTriggerEnter?.Invoke(this, other);
+        //    }
+        //}
+        //catch { }
         if (other.GetComponent<Player>() && !playersInRange.Contains(other.GetComponent<Player>()))
         {
             if (other.GetComponent<Player>().isDead)
@@ -32,7 +33,7 @@ public class AiRangeTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Transform>() == AiAbstractClass.destination)
+        if (other.GetComponent<Transform>() == AiAbstractClass.targetPlayer)
         {
             OnRangeTriggerExit?.Invoke(this);
         }

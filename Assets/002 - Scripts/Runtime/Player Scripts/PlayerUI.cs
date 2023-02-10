@@ -229,6 +229,8 @@ public class PlayerUI : MonoBehaviour
 
     void EnableSwarmUIComponents()
     {
+        healthBar.SetActive(true);
+
         swarmPointsHolder.SetActive(true);
         swarmPointsText.text = "0";
 

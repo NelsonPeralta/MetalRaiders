@@ -37,10 +37,10 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_Delegate;
         playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             thirdPersonScript = spartanModel;
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            thirdPersonScript = humanModel;
+        //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        //    thirdPersonScript = humanModel;
     }
     private void Start()
     {
@@ -51,22 +51,22 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
             {
 
                 Debug.Log($"PlayerThirdPersonModelManager game mode: {GameManager.instance.gameMode}");
-                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                {
-                    humanModel.gameObject.SetActive(false);
-                    spartanModel.gameObject.SetActive(true);
+                //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                //{
+                //    humanModel.gameObject.SetActive(false);
+                //    spartanModel.gameObject.SetActive(true);
 
-                    spartanModel.EnableSkinnedMeshes();
-                    humanModel.DisableSkinnedMeshes();
-                }
-                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                {
-                    humanModel.gameObject.SetActive(true);
-                    spartanModel.gameObject.SetActive(false);
+                //    spartanModel.EnableSkinnedMeshes();
+                //    humanModel.DisableSkinnedMeshes();
+                //}
+                //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                //{
+                //    humanModel.gameObject.SetActive(true);
+                //    spartanModel.gameObject.SetActive(false);
 
-                    spartanModel.DisableSkinnedMeshes();
-                    humanModel.EnableSkinnedMeshes();
-                }
+                //    spartanModel.DisableSkinnedMeshes();
+                //    humanModel.EnableSkinnedMeshes();
+                //}
 
                 OnModelAssigned?.Invoke(this);
 

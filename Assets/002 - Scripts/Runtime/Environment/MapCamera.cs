@@ -53,11 +53,15 @@ public class MapCamera : MonoBehaviour
                 AudioListener.volume = 1f;
                 Debug.Log(AudioListener.volume);
 
-                GetComponent<AudioSource>().clip = _slayerClip;
-                if (GameManager.instance.gameType == GameManager.GameType.Hill)
-                    GetComponent<AudioSource>().clip = _KingOfTheHillClip;
+                try
+                {
+                    GetComponent<AudioSource>().clip = _slayerClip;
+                    if (GameManager.instance.gameType == GameManager.GameType.Hill)
+                        GetComponent<AudioSource>().clip = _KingOfTheHillClip;
 
-                GetComponent<AudioSource>().Play();
+                    GetComponent<AudioSource>().Play();
+                }
+                catch { }
             }
 
             if (_gameStartDelay <= 0)

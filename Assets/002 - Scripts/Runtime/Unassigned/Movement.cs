@@ -108,7 +108,7 @@ public class Movement : MonoBehaviour, IPunObservable
 
     private void Awake()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             armorThirdPersonScript.gameObject.SetActive(true);
             armorThirdPersonScript.EnableSkinnedMeshes();
@@ -121,11 +121,11 @@ public class Movement : MonoBehaviour, IPunObservable
                     s.gameObject.layer = 0;
             }
         }
-        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        {
-            armorThirdPersonScript.DisableSkinnedMeshes();
-            noArmorThirdPersonScript.EnableSkinnedMeshes();
-        }
+        //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        //{
+        //    armorThirdPersonScript.DisableSkinnedMeshes();
+        //    noArmorThirdPersonScript.EnableSkinnedMeshes();
+        //}
     }
     void Start()
     {
@@ -391,10 +391,10 @@ public class Movement : MonoBehaviour, IPunObservable
     void Jump()
     {
         ThirdPersonScript thirdPersonScript = null;
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().humanModel;
+        //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        //    thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().humanModel;
 
         if (isGrounded)
         {

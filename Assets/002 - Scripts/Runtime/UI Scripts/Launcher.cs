@@ -42,6 +42,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject _playerListItemPrefab;
     [SerializeField] TMP_Text _mapSelectedText;
     [SerializeField] TMP_Text _gametypeSelectedText;
+    [SerializeField] TMP_Text _gameModeSelectedText;
     [SerializeField] TMP_Text _teamModeText;
     [SerializeField] TMP_Text _teamText;
 
@@ -314,6 +315,25 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         try
         {
+            int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gamemode"];
+            GameManager.instance.gameMode = (GameManager.GameMode)ei;
+
+            Launcher.instance._gameModeSelectedText.text = $"Game Mode: {GameManager.instance.gameMode}";
+
+            multiplayerMapSelector.SetActive(false);
+            swarmMapSelector.SetActive(false);
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                multiplayerMapSelector.SetActive(true);
+            else if(GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            {
+                swarmMapSelector.SetActive(true);
+                GameManager.instance.teamMode = GameManager.TeamMode.Classic;
+            }
+        }
+        catch (System.Exception e) { Debug.Log(e); }
+
+        try
+        {
             Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
             int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
             Launcher.instance.levelToLoadIndex = ltl;
@@ -581,6 +601,28 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
 
         //FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("ChangeSubGameType_RPC", RpcTarget.All, gt);
+    }
+
+    public void ChangeGameMode(string gm)
+    {
+        instance._gameModeSelectedText.text = $"Game Mode: {gm}";
+        gm = gm.Replace(" ", "");
+        GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gm);
+
+        try
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
+                //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+                try { props.Add("gamemode", (int)GameManager.instance.gameMode); } catch { props["gamemode"] = (int)GameManager.instance.gameMode; }
+                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
     }
 
     void UpdateTeams()

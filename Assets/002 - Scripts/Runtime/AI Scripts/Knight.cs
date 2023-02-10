@@ -87,7 +87,7 @@ public class Knight : AiAbstractClass
         if (playerRange == PlayerRange.Out)
             previousKnightAction = KnightActions.Seek;
 
-        if (!isDead && destination)
+        if (!isDead && targetPlayer)
         {
             if (previousKnightAction != KnightActions.Defend)
             {
@@ -157,7 +157,7 @@ public class Knight : AiAbstractClass
                 seek = true;
             }
         }
-        else if (!isDead && !destination)
+        else if (!isDead && !targetPlayer)
         {
             knightAction = KnightActions.Idle;
             seek = false;
@@ -166,12 +166,12 @@ public class Knight : AiAbstractClass
 
     public override void ChildUpdate()
     {
-        if (!destination)
+        if (!targetPlayer)
             return;
 
-        Vector3 targetPostition = new Vector3(destination.position.x,
+        Vector3 targetPostition = new Vector3(targetPlayer.position.x,
                                         this.transform.position.y,
-                                        destination.position.z);
+                                        targetPlayer.position.z);
         this.transform.LookAt(targetPostition);
     }
 

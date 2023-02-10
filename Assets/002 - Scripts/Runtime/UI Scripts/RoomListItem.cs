@@ -14,6 +14,8 @@ public class RoomListItem : MonoBehaviour
 	{
 		info = _info;
 		text.text = _info.Name;
+
+		try { text.text += $" [{info.CustomProperties["gamemode"]}]"; } catch { }
 	}
 
 	public void OnClick()
