@@ -27,6 +27,11 @@ public class AIHitbox : Hitbox, IDamageable
     [Header("Other Hitboxes")]
     public Hitboxes otherHitboxes;
 
+
+    private void OnEnable()
+    {
+        gameObject.layer = 7;
+    }
     private void Start()
     {
         //if (zScript != null)

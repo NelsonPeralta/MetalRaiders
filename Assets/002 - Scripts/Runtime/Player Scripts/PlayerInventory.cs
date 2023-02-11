@@ -51,7 +51,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                 //PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 try { OnActiveWeaponChanged?.Invoke(this); } catch { }
-                    try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
+                try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
 
 
@@ -281,7 +281,7 @@ public class PlayerInventory : MonoBehaviourPun
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
 
                         _activeWeapon.gameObject.SetActive(true);
-                        _previousActiveWeapon.gameObject.SetActive(false);  
+                        _previousActiveWeapon.gameObject.SetActive(false);
 
                         pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
                         UpdateThirdPersonGunModelsOnCharacter();
@@ -302,7 +302,7 @@ public class PlayerInventory : MonoBehaviourPun
         if (GameManager.instance.gameType.ToString().Contains("Slayer"))
         {
             StartingWeapon = "p90";
-            StartingWeapon2 = "colt";
+            StartingWeapon2 = "m1911";
         }
         if (GameManager.instance.gameType.ToString().Contains("Pro"))
         {
@@ -330,6 +330,12 @@ public class PlayerInventory : MonoBehaviourPun
         if (GameManager.instance.gameType.ToString().Contains("Fiesta"))
         {
             AssignRandomWeapons();
+        }
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            StartingWeapon = "p90";
+            StartingWeapon2 = "m1911";
         }
 
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;

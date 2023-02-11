@@ -34,6 +34,13 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         if (placeHolder)
             placeHolder.gameObject.SetActive(false);
 
+
+        try
+        {
+            FindObjectOfType<SwarmManager>().OnWaveStart -= OnWaveStart;
+            FindObjectOfType<SwarmManager>().OnWaveStart += OnWaveStart;
+        }
+        catch { }
     }
 
     private void Update()
@@ -67,6 +74,9 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void OnGameTimeChanged(GameTime gameTime)
     {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            return;
+
         try
         {
 
@@ -112,6 +122,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     }
 
+    void OnWaveStart(SwarmManager swarmManager)
+    {
+        Debug.Log($"NetworkWeaponSpawnPoint OnWaveStart: {swarmManager.currentWave}");
+    }
+
     // Methods
     #region
     void ReplaceWeaponsByGametype()
@@ -120,59 +135,60 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
         string[] lightWeaponCodeNames = { "m1911", "colt", "mp5", "p90", "desert_eagle" };
 
-        if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
-        {
-            if (codeName == "scar")
-                codeName = "m249c";
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
+            {
+                if (codeName == "scar")
+                    codeName = "m249c";
 
-            if (codeName == "m16")
-                codeName = "deagle";
+                if (codeName == "m16")
+                    codeName = "deagle";
 
-            if (codeName == "mk14")
-                codeName = "p90";
-        }
-        else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
-        {
-            foreach (string weaponCode in powerWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "barrett50cal";
+                if (codeName == "mk14")
+                    codeName = "p90";
+            }
+            else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
+            {
+                foreach (string weaponCode in powerWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "barrett50cal";
 
-            foreach (string weaponCode in lightWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "r700";
+                foreach (string weaponCode in lightWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "r700";
 
-            foreach (string weaponCode in heavyWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "r700";
-        }
-        else if ((GameManager.instance.gameType.ToString().Contains("Rockets")))
-        {
-            foreach (string weaponCode in powerWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "rpg";
+                foreach (string weaponCode in heavyWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "r700";
+            }
+            else if ((GameManager.instance.gameType.ToString().Contains("Rockets")))
+            {
+                foreach (string weaponCode in powerWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "rpg";
 
-            foreach (string weaponCode in lightWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "rpg";
+                foreach (string weaponCode in lightWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "rpg";
 
-            foreach (string weaponCode in heavyWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "m32";
-        }
-        else if ((GameManager.instance.gameType.ToString().Contains("Shotguns")))
-        {
-            foreach (string weaponCode in lightWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "nailgun";
+                foreach (string weaponCode in heavyWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "m32";
+            }
+            else if ((GameManager.instance.gameType.ToString().Contains("Shotguns")))
+            {
+                foreach (string weaponCode in lightWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "nailgun";
 
-            foreach (string weaponCode in powerWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "m1100";
+                foreach (string weaponCode in powerWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "m1100";
 
-            foreach (string weaponCode in heavyWeaponCodeNames)
-                if (weaponCode == codeName)
-                    codeName = "m1100";
-        }
+                foreach (string weaponCode in heavyWeaponCodeNames)
+                    if (weaponCode == codeName)
+                        codeName = "m1100";
+            }
 
         if ((GameManager.instance.gameType.ToString().Contains("Fiesta")))
         {

@@ -309,7 +309,12 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 }
                         }
                         catch { }
-                        GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+
+                        GameObject genericHit;
+                        if (finalHitObject.GetComponent<AIHitbox>())
+                            genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledBloodHit();
+                        else
+                            genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
                         genericHit.transform.position = finalHitPoint;
                         genericHit.SetActive(true);
 

@@ -308,6 +308,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnDeath_Delegate(AiAbstractClass aiAbstractClass) // Bug: Event called twice
     {
+        foreach (AIHitbox h in GetComponentsInChildren<AIHitbox>())
+            h.gameObject.layer = 3;
         Debug.Log($"AI on death delegate. Is dead: {isDead}");
         SwarmManager.instance.DropRandomLoot(transform.position, transform.rotation);
         _voice.clip = _dieClip;
@@ -429,18 +431,22 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     public virtual void OnRangeTriggerEnter_Delegate(AiRangeTrigger aiRangeCollider, Collider triggerObj = null)
     {
-        if (!targetPlayer.GetComponent<Player>())
-            GetNewTarget(emptyTarget: true);
-        if (targetPlayer && aiRangeCollider.playersInRange.Contains(targetPlayer.GetComponent<Player>()))
+        try
         {
-            playerRange = aiRangeCollider.range;
+            if (!targetPlayer.GetComponent<Player>())
+                GetNewTarget(emptyTarget: true);
+            if (targetPlayer && aiRangeCollider.playersInRange.Contains(targetPlayer.GetComponent<Player>()))
+            {
+                playerRange = aiRangeCollider.range;
 
-            //foreach(AiRangeTrigger rt in rangeColliders)
-            //{
-            //    if (rt != aiRangeCollider)
-            //        rt.playersInRange.Remove(target.GetComponent<Player>());
-            //}
+                //foreach(AiRangeTrigger rt in rangeColliders)
+                //{
+                //    if (rt != aiRangeCollider)
+                //        rt.playersInRange.Remove(target.GetComponent<Player>());
+                //}
+            }
         }
+        catch { }
     }
 
     public virtual void OnRangeTriggerExit_Delegate(AiRangeTrigger aiRangeCollider, Collider triggerObj = null)
