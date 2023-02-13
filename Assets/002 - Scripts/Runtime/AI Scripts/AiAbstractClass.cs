@@ -39,7 +39,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     [Header("Properties")]
     [SerializeField]
     int _defaultHealth;
-    public int speed;
+    public float speed;
 
     [Header("Combat")]
     public List<AiRangeTrigger> rangeColliders = new List<AiRangeTrigger>();

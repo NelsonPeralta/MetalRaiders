@@ -30,13 +30,13 @@ public class Zombie : AiAbstractClass
 
     public override void OnEnable()
     {
-        _health += FindObjectOfType<SwarmManager>().currentWave * 2;
+        _health += FindObjectOfType<SwarmManager>().currentWave * 3;
         zombieAction = ZombieActions.Seek;
         seek = true;
 
+        foreach(GameObject obj in skins) { obj.SetActive(false); }
 
-        int ran = Random.Range(0, skins.Count - 1);
-        skins[0].SetActive(false);
+        int ran = Random.Range(0, skins.Count);
         skins[ran].SetActive(true);
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)

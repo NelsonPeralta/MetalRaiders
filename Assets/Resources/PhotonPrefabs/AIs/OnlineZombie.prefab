@@ -311,7 +311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6508294057408483968
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6850,7 +6850,7 @@ MonoBehaviour:
   projectileSpawnPoint: {fileID: 0}
   motionTrackerDot: {fileID: 4315748272230013826}
   _defaultHealth: 100
-  speed: 1
+  speed: 1.5
   rangeColliders:
   - {fileID: 9060461887471515584}
   - {fileID: 5401988016692361254}
