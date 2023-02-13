@@ -70,6 +70,9 @@ public class GameManagerEvents : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        if (scene.buildIndex == 0)
+            OnAllPlayersJoinedRoom = null;
+
         allPlayersJoined = false;
         gameStarted = false;
     }

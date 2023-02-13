@@ -25,6 +25,10 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     public List<GameObject> models = new List<GameObject>();
     public List<GameObject> feet = new List<GameObject>();
 
+    [SerializeField] SkinnedMeshRenderer skinnedMeshRenderer;
+    [SerializeField] Mesh undersuitMesh;
+    [SerializeField] GameObject soldierMeshObj;
+
     private void OnEnable()
     {
 
@@ -38,7 +42,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
 
         //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            thirdPersonScript = spartanModel;
+        thirdPersonScript = spartanModel;
         //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         //    thirdPersonScript = humanModel;
     }
@@ -51,6 +55,14 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
             {
 
                 Debug.Log($"PlayerThirdPersonModelManager game mode: {GameManager.instance.gameMode}");
+                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                {
+                }
+                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                {
+                    //skinnedMeshRenderer.sharedMesh = soldierMeshObj.GetComponent<SkinnedMeshRenderer>().sharedMesh;
+                    //skinnedMeshRenderer.material = soldierMeshObj.GetComponent<SkinnedMeshRenderer>().material;
+                }
                 //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 //{
                 //    humanModel.gameObject.SetActive(false);

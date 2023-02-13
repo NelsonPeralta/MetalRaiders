@@ -36,11 +36,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     [SerializeField] GameObject zombiePrefab;
-    
+
     public List<Zombie> zombieList;
 
     [Header("AI Pools")]
-    List<Zombie> _zombieList;
+    List<Zombie> _zombieList = new List<Zombie>();
     public Watcher[] watcherPool;
     public Knight[] knightPool;
     public Hellhound[] hellhoundPool;
@@ -223,7 +223,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
     {
-        Begin();
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            Begin();
     }
 
     void NewWaveCountdown()
@@ -251,12 +252,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
                 return;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 50; i++)
             {
                 GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
                 //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
-                z.transform.parent = transform;
                 _zombieList.Add(z.GetComponent<Zombie>());
+                z.transform.parent = transform;
                 z.SetActive(false);
             }
 
@@ -335,13 +336,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void CalculateNumberOfAIsForNextWave()
     {
-        if (currentWave % 5 != 0)
+        //if (currentWave % 5 != 0)
         {
             int nbPlayers = FindObjectsOfType<Player>().Length;
             if (nbPlayers <= 0)
                 nbPlayers = 1;
 
-            zombiesLeft = nbPlayers + (int)Mathf.Floor((currentWave / 2));
+            zombiesLeft = nbPlayers + (int)Mathf.Floor((currentWave * 2));
             if (zombiesLeft > _zombieList.Count)
                 zombiesLeft = _zombieList.Count;
 
@@ -359,12 +360,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //if (hellhoundsLeft > hellhoundPool.Length)
             //    hellhoundsLeft = hellhoundPool.Length;
         }
-        else
-        {
-            tyrantsLeft = FindObjectsOfType<Player>().Length * 2;
-            if (tyrantsLeft > tyrantPool.Length)
-                tyrantsLeft = tyrantPool.Length;
-        }
+        //else
+        //{
+        //    tyrantsLeft = FindObjectsOfType<Player>().Length * 2;
+        //    if (tyrantsLeft > tyrantPool.Length)
+        //        tyrantsLeft = tyrantPool.Length;
+        //}
 
 
         if (editMode)

@@ -73,7 +73,7 @@ public class ProjectileBullet : MonoBehaviour
                                 if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
                                     damage = player.maxHealthPoints;
 
-                                if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                                if (weaponProperties.weaponType == WeaponProperties.WeaponType.Sniper)
                                     damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                                 wasHeadshot = hitbox.isHead;
@@ -140,7 +140,7 @@ public class ProjectileBullet : MonoBehaviour
                         if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
                             damage = player.maxHealthPoints;
 
-                        if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                        if (weaponProperties.weaponType == WeaponProperties.WeaponType.Sniper)
                             damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                         wasHeadshot = hitbox.isHead;

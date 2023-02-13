@@ -175,6 +175,7 @@ MonoBehaviour:
   - UpdateSpawnPointPosition_RPC
   - SendHitPointsCheck_RPC
   - AddPlayerKill_RPC
+  - SpawnNetworkWeapon_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

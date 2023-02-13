@@ -41,6 +41,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             FindObjectOfType<SwarmManager>().OnWaveStart += OnWaveStart;
         }
         catch { }
+
     }
 
     private void Update()
@@ -75,23 +76,30 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     void OnGameTimeChanged(GameTime gameTime)
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            //EnableWeapon();
             return;
+        }
 
         try
         {
-
-            if (gameTime.totalTime % weaponSpawned.tts == 0 && gameTime.totalTime > 0)
+            if (weaponSpawned && gameTime.totalTime % weaponSpawned.tts == 0 && gameTime.totalTime > 0)
             {
-                weaponSpawned.gameObject.SetActive(true);
-
-                weaponSpawned.ammo = weaponSpawned.defaultAmmo;
-                weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
-
-                weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
-                weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+                EnableWeapon();
             }
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
+    }
+
+    void EnableWeapon()
+    {
+        weaponSpawned.gameObject.SetActive(true);
+
+        weaponSpawned.ammo = weaponSpawned.defaultAmmo;
+        weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+
+        weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
+        weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
     }
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)

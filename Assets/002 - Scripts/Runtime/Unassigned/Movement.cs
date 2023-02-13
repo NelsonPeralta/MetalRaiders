@@ -133,6 +133,8 @@ public class Movement : MonoBehaviour, IPunObservable
         _maxXSpeed = 1f;
         _maxZSpeed = 1f;
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            speed *= 0.7f;
 
         gravity = defaultGravity;
         //tPersonScripts = cManager.FindChildWithTagScript("Third Person GO").GetComponent<ThirdPersonScript>();
@@ -145,6 +147,7 @@ public class Movement : MonoBehaviour, IPunObservable
         defaultStepOffset = GetComponent<CharacterController>().stepOffset;
         //StartCoroutine(CalcVelocity());
         StartCoroutine(CalculatePlayerSpeed());
+
     }
 
     // IMPORTANT

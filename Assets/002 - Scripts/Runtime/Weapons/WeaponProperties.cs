@@ -11,7 +11,7 @@ public class WeaponProperties : MonoBehaviour
     public WeaponPropertiesEvent OnCurrentAmmoChanged, OnSpareAmmoChanged;
 
     //Enums
-    public enum ReticuleType { AR, DMR, Pistol, SMG, Shotgun, Sniper, None }
+    public enum WeaponType { AR, DMR, Pistol, SMG, Shotgun, Sniper, LMG, Launcher, None }
     public enum FiringMode { Auto, Burst, Single }
     public enum AmmoType { Heavy, Light, Power }
     public enum AmmoReloadType { Magazine, Shell, Single }
@@ -29,7 +29,7 @@ public class WeaponProperties : MonoBehaviour
     public Sprite weaponIcon;
     public string codeName; // Used for scripting purposes
     public string cleanName; // Used for UI purposes
-    public ReticuleType reticuleType;
+    public WeaponType weaponType;
     public FiringMode firingMode;
     public int damage = 50;
     public int bulletSize;
@@ -330,7 +330,7 @@ public class WeaponPropertiesEditor : Editor
         wp.codeName = EditorGUILayout.TextField("Code Name:", wp.codeName);
         wp.cleanName = EditorGUILayout.TextField("Clean Name:", wp.cleanName);
         wp.fireRate = EditorGUILayout.IntField("Fire Rate:", wp.fireRate);
-        wp.reticuleType = (WeaponProperties.ReticuleType)EditorGUILayout.EnumPopup("Reticule Type", wp.reticuleType);
+        wp.weaponType = (WeaponProperties.WeaponType)EditorGUILayout.EnumPopup("Weapon Type", wp.weaponType);
         wp.firingMode = (WeaponProperties.FiringMode)EditorGUILayout.EnumPopup("Firing mode", wp.firingMode);
         wp.isShotgun = GUILayout.Toggle(wp.isShotgun, "Is shotgun");
         if (wp.isShotgun)

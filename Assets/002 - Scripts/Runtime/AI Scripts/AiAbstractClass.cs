@@ -311,7 +311,12 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         foreach (AIHitbox h in GetComponentsInChildren<AIHitbox>())
             h.gameObject.layer = 3;
         Debug.Log($"AI on death delegate. Is dead: {isDead}");
-        SwarmManager.instance.DropRandomLoot(transform.position, transform.rotation);
+        //SwarmManager.instance.DropRandomLoot(transform.position, transform.rotation);
+        try
+        {
+            DropRandomWeapon();
+        }
+        catch (Exception e) { Debug.LogError(e); }
         _voice.clip = _dieClip;
         _voice.Play();
         StartCoroutine(Die_Coroutine());
@@ -614,6 +619,35 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         Damage_Abstract(damage, playerWhoShotPDI, damageSource, isHeadshot);
     }
+
+    void DropRandomWeapon()
+    {
+        int ChanceToDrop = UnityEngine.Random.Range(0, 10);
+
+        if (ChanceToDrop <= 3)
+        {
+            float ranAmmoFactor = UnityEngine.Random.Range(0.1f, 0.9f);
+            float ranCapFactor = UnityEngine.Random.Range(0.1f, 0.6f);
+            int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory.Length);
+
+            WeaponProperties wp = GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
+
+            if (wp.weaponType == WeaponProperties.WeaponType.LMG || wp.weaponType == WeaponProperties.WeaponType.Launcher || wp.weaponType == WeaponProperties.WeaponType.Shotgun || wp.weaponType == WeaponProperties.WeaponType.Sniper)
+                return;
+            Debug.Log($"DropRandomWeapon: {wp.cleanName}");
+
+
+
+
+            Dictionary<string, int> param = new Dictionary<string, int>();
+            param["ammo"] = (int)(wp.ammoCapacity * ranAmmoFactor);
+            param["spareammo"] = (int)(wp.maxAmmo * ranCapFactor);
+            Vector3 spp = transform.position;
+            Vector3 fDir = LOSSpawn.transform.forward + new Vector3(0, 2f, 0);
+            NetworkGameManager.SpawnNetworkWeapon(randomWeaponInd, spp, fDir, param);
+        }
+    }
+
     protected abstract void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
     public abstract void Damage_RPC(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false);
     public abstract void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass);

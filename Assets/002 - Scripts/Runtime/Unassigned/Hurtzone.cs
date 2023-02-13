@@ -12,7 +12,7 @@ public class Hurtzone : MonoBehaviour
     public bool damageOverTime;
     public int damage;
     public float damageDelay;
-    public float damageCountdown;
+    float damageCountdown;
     bool playersReceivingDamage;
 
     [Header("Other")]
@@ -28,9 +28,9 @@ public class Hurtzone : MonoBehaviour
         //StartCoroutine(DamagePlayersInRange_Coroutine());
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.GetComponent<Player>() != null)
+        if (other.gameObject.GetComponent<Player>() && !playersInRange.Contains(other.GetComponent<Player>()))
         {
             if (instantKillzone)
             {
@@ -38,39 +38,42 @@ public class Hurtzone : MonoBehaviour
                 return;
             }
             playersInRange.Add(other.GetComponent<Player>());
-            if (!instantKillzone)
-                other.GetComponent<ScreenEffects>().orangeScreen.SetActive(true);
+            //if (!instantKillzone)
+            //    other.GetComponent<ScreenEffects>().orangeScreen.SetActive(true);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.GetComponent<Player>() != null)
+        if (other.gameObject.GetComponent<Player>())
         {
-            other.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
-            RemovePlayerFromRange(other.GetComponent<Player>());
+            //other.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
+            try { playersInRange.Remove(other.gameObject.GetComponent<Player>()); } catch { }
         }
     }
 
-    IEnumerator DamagePlayersInRange_Coroutine()
+    private void Update()
     {
-        yield return new WaitForSeconds(damageDelay);
+        if (instantKillzone)
+            return;
 
-        if (playersInRange.Count > 0)
+        if (damageCountdown > 0)
+            damageCountdown -= Time.deltaTime;
+
+        if (damageCountdown <= 0)
+        {
+            foreach (Player player in playersInRange)
+            {
+                if (player.isDead || player.isRespawning)
+                    playersInRange.Remove(player);
+            }
+
             for (int i = 0; i < playersInRange.Count; i++)
             {
-                playersInRange[i].Damage(damage, false, 99);
-                if (instantKillzone)
-                    RemovePlayerFromRange(playersInRange[i]);
+                playersInRange[i].Damage(damage);
             }
-        StartCoroutine(DamagePlayersInRange_Coroutine());
-    }
-    void RemovePlayerFromRange(Player pp)
-    {
-        for (int i = 0; i < playersInRange.Count; i++)
-        {
-            if (pp == playersInRange[i])
-                playersInRange.RemoveAt(i);
+
+            damageCountdown = 0.35f;
         }
     }
 }

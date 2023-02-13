@@ -264,7 +264,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                     if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
                                         damage = player.maxHealthPoints;
 
-                                    if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                                    if (weaponProperties.weaponType == WeaponProperties.WeaponType.Sniper)
                                         damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                                     wasHeadshot = hitbox.isHead;
@@ -300,6 +300,8 @@ public class Bullet : MonoBehaviourPunCallbacks
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
                                 try
                                 {
+                                    if (finalHitObject.GetComponent<AIHitbox>() && finalHitObject.GetComponent<AIHitbox>().isHead && weaponProperties.isHeadshotCapable)
+                                        damage = (int)(damage * weaponProperties.headshotMultiplier);
                                     finalHitDamageable.Damage(damage, false, sourcePlayer.pid);
 
                                 }
@@ -340,7 +342,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                             if (maxShieldPoints > 0 && (player.hitPoints <= player.maxHealthPoints))
                                 damage = player.maxHealthPoints;
 
-                            if (weaponProperties.reticuleType == WeaponProperties.ReticuleType.Sniper)
+                            if (weaponProperties.weaponType == WeaponProperties.WeaponType.Sniper)
                                 damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                             wasHeadshot = hitbox.isHead;

@@ -81,7 +81,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameMode gameMode
     {
         get { return _gameMode; }
-        set { _gameMode = value; Debug.Log($"Game Mode: {gameMode}"); }
+        set
+        {
+            _gameMode = value; 
+            Debug.Log($"Game Mode: {gameMode}");
+            if (_gameMode == GameMode.Swarm)
+                gameType = GameType.Slayer;
+        }
     }
     public GameType gameType
     {
@@ -403,6 +409,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 trans.gameObject.layer = layerNumber;
         }
     }
+
 
     public static string report;
 

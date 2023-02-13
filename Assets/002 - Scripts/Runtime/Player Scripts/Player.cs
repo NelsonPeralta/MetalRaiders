@@ -127,7 +127,7 @@ public class Player : MonoBehaviourPunCallbacks
                     //PV.RPC("IsDead_RPC", RpcTarget.All);
                     //PV.RPC("SendHitPointsCheck_RPC", RpcTarget.All, (int)hitPoints, isMine, GameTime.instance.totalTime);
                 }
-                    isDead = true;
+                isDead = true;
 
             }
 
@@ -566,7 +566,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             _defaultRespawnTime = 7;
-            _overshieldPoints= 0;
+            _overshieldPoints = 0;
             _maxShieldPoints = 0;
             _maxHitPoints = 100;
             _networkHitPoints = maxHitPoints;
@@ -579,6 +579,11 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
+        Debug.Log("Player Start");
+        Debug.Log(FindObjectOfType<GameManagerEvents>());
+        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
+
         lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
         gameObjectPool = GameObjectPool.gameObjectPoolInstance;
@@ -614,8 +619,6 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
 
         try
         {
@@ -840,7 +843,8 @@ public class Player : MonoBehaviourPunCallbacks
             wp.currentAmmo = 0;
             wp.spareAmmo = 0;
 
-            GetComponent<PhotonView>().RPC("DropWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
+            NetworkGameManager.SpawnNetworkWeapon(wi, spp, fDir, param);
+            //GetComponent<PhotonView>().RPC("DropWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
         }
         catch (System.Exception e)
         {
@@ -1124,7 +1128,7 @@ public class Player : MonoBehaviourPunCallbacks
                     }
                 }
             }
-            catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
+            catch (Exception e) {  }
 
             try
             {
@@ -1144,7 +1148,7 @@ public class Player : MonoBehaviourPunCallbacks
                     GetComponent<PlayerSwarmMatchStats>().deaths++;
 
             }
-            catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
+            catch (Exception e) {  }
 
             try
             {

@@ -30,6 +30,7 @@ public class Zombie : AiAbstractClass
 
     public override void OnEnable()
     {
+        _health += FindObjectOfType<SwarmManager>().currentWave * 2;
         zombieAction = ZombieActions.Seek;
         seek = true;
 
@@ -171,7 +172,7 @@ public class Zombie : AiAbstractClass
 
     public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
     {
-
+        //SwarmManager.instance.DropRandomLoot(transform.position, transform.rotation);
     }
 
     public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
