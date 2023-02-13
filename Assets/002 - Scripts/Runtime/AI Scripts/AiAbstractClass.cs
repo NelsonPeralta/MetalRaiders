@@ -124,16 +124,16 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 _newTargetCountdown = 1;
                 OnDestinationNull?.Invoke(this);
 
-                //try
-                //{
-                //    GetNewTarget();
-                //}
-                //catch (Exception e)
-                //{
-                //    Debug.Log($"ERROR while trying to get new target for AI");
-                //    Debug.LogWarning(e);
-                //    _target = null;
-                //}
+                try
+                {
+                    //GetNewTarget();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log($"ERROR while trying to get new target for AI");
+                    //Debug.LogWarning(e);
+                    //_target = null;
+                }
             }
         }
     }
@@ -153,7 +153,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             }
 
             if (_health <= 0 && !isDead)
+            {
+                targetPlayer = null;
                 isDead = true;
+            }
             else if (value > 0 && isDead)
                 isDead = false;
         }
@@ -294,6 +297,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             arc.playersInRange.Clear();
 
         OnPrepareEnd?.Invoke(this);
+
+        transform.position = new Vector3(0, -10, 0);
     }
     public void Spawn(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
@@ -308,6 +313,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnDeath_Delegate(AiAbstractClass aiAbstractClass) // Bug: Event called twice
     {
+        targetPlayer = null;
         foreach (AIHitbox h in GetComponentsInChildren<AIHitbox>())
             h.gameObject.layer = 3;
         Debug.Log($"AI on death delegate. Is dead: {isDead}");
@@ -374,7 +380,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     public void Movement()
     {
-        if (canSeek)
+        if (canSeek && GetComponent<PhotonView>().IsMine)
             nma.SetDestination(targetPlayer.transform.position);
     }
 
@@ -513,17 +519,20 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     public virtual void GetNewTarget(float walkRadius = 100, bool emptyTarget = false)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
+
         //if (gameObject.activeSelf)
         //    StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
-        if (!emptyTarget)
-            targetPlayer = SwarmManager.instance.GetRandomPlayerTransform();
-        else
-            targetPlayer = GetRandomDestinationTransform(walkRadius);
+        //if (!emptyTarget)
+        //    targetPlayer = SwarmManager.instance.GetRandomPlayerTransform();
+        //else
+        //    targetPlayer = GetRandomDestinationTransform(walkRadius);
     }
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()
     {
         yield return new WaitForSeconds(1);
-        targetPlayer = SwarmManager.instance.GetRandomPlayerTransform();
+        int pid = SwarmManager.instance.GetRandomPlayerTransform().GetComponent<PhotonView>().ViewID;
+        photonView.RPC("UpdateTarget_RPC", RpcTarget.All, pid);
     }
 
     protected void ChangeAction(string actionString)
@@ -658,7 +667,12 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public abstract void ChildUpdate();
 
 
-
+    [PunRPC]
+    void UpdateTarget_RPC(int pid)
+    {
+        Debug.Log($"UpdateTarget_RPC: {pid}");
+        targetPlayer = PhotonView.Find(pid).transform;
+    }
 
 
 

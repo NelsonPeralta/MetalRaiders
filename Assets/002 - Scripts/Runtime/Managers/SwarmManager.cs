@@ -5,6 +5,7 @@ using Photon.Pun;
 using UnityEngine.SceneManagement;
 using System.IO;
 using UnityEngine.Events;
+using System.Linq;
 
 public class SwarmManager : MonoBehaviourPunCallbacks
 {
@@ -252,21 +253,28 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
                 return;
 
-            for (int i = 0; i < 50; i++)
-            {
-                GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
-                //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
-                _zombieList.Add(z.GetComponent<Zombie>());
-                z.transform.parent = transform;
-                z.SetActive(false);
-            }
 
             instance = this;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                _networkSwarmManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkSwarmManager"), Vector3.zero, Quaternion.identity).GetComponent<NetworkSwarmManager>();
+                PV = _networkSwarmManager.GetComponent<PhotonView>();
 
-            _networkSwarmManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkSwarmManager"), Vector3.zero, Quaternion.identity).GetComponent<NetworkSwarmManager>();
-            PV = _networkSwarmManager.GetComponent<PhotonView>();
+                for (int i = 0; i < 50; i++)
+                {
+                    //Transform sp = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
+                    GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
+                    //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
+                    //_zombieList.Add(z.GetComponent<Zombie>());
+                    //z.transform.parent = transform;
+                    //z.SetActive(false);
+                }
 
-            if (GameManager.instance.gameType == GameManager.GameType.Survival)
+            }
+            
+
+
+            //if (GameManager.instance.gameType == GameManager.GameType.Survival)
                 maxWave = 999999;
 
             foreach (HealthPack h in FindObjectsOfType<HealthPack>())
@@ -279,7 +287,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             OnWaveEnd -= OnWaveEnd_Delegate;
             OnWaveEnd += OnWaveEnd_Delegate;
 
-            CreateAIPool();
+            //CreateAIPool();
         }
         else // We are in the menu
         {
@@ -293,6 +301,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void CreateAIPool()
     {
         Debug.Log("Creating AI Pool");
+        foreach (Zombie z in FindObjectsOfType<Zombie>().ToList())
+        {
+            //z.transform.position = new Vector3(0, -10, 0);
+            _zombieList.Add(z);
+            z.transform.parent = transform;
+            z.gameObject.SetActive(false);
+        }
         //_zombieList = FindObjectsOfType<Zombie>();
         //foreach (Zombie w in _zombieList)
         //    w.gameObject.SetActive(false);
@@ -317,6 +332,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void Begin()
     {
+        CreateAIPool();
+
         if (!PhotonNetwork.IsMasterClient)
             return;
         _networkSwarmManager.GetComponent<PhotonView>().RPC("IncreaseWave_RPC", RpcTarget.All);
@@ -409,10 +426,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             return;
         Debug.Log("Spawning Ais");
         SpawnAi(AiType.Zombie);
-        SpawnAi(AiType.Watcher);
-        SpawnAi(AiType.Knight);
-        SpawnAi(AiType.Hellhound);
-        SpawnAi(AiType.Tyrant);
+        //SpawnAi(AiType.Watcher);
+        //SpawnAi(AiType.Knight);
+        //SpawnAi(AiType.Hellhound);
+        //SpawnAi(AiType.Tyrant);
     }
     public void SpawnAi(AiType aiType, Transform transform = null)
     {
@@ -423,12 +440,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int targetPhotonId = GetRandomPlayerPhotonId();
         int pdelay = -1;
 
-        List<SpawnPoint> aiSpawnPoints = new List<SpawnPoint>();
-        foreach (SpawnPoint sp in FindObjectsOfType<SpawnPoint>())
-            if (sp.spawnPointType == SpawnPoint.SpawnPointType.Computer)
-                aiSpawnPoints.Add(sp);
         int aiPhotonId = -1;
-        Transform spawnPoint = aiSpawnPoints[Random.Range(0, aiSpawnPoints.Count)].transform;
+        Transform spawnPoint = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
         if (transform)
         {
             spawnPoint = transform;
@@ -580,90 +593,90 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning($"ERROR SpawnAI_Coroutine {e}");
+            Debug.LogError($"ERROR SpawnAI_Coroutine {e}");
 
-            if (aiTypeEnum == AiType.Zombie)
-            {
-                foreach (Zombie w in _zombieList)
-                {
-                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
-                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
-                    {
-                        Debug.Log("Found");
-                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
-                    }
-                }
-            }
-            else if (aiTypeEnum == AiType.Watcher)
-            {
-                foreach (Watcher w in watcherPool)
-                {
-                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
-                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
-                    {
-                        Debug.Log("Found");
+            //if (aiTypeEnum == AiType.Zombie)
+            //{
+            //    foreach (Zombie w in _zombieList)
+            //    {
+            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+            //        {
+            //            Debug.Log("Found");
+            //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+            //        }
+            //    }
+            //}
+            //else if (aiTypeEnum == AiType.Watcher)
+            //{
+            //    foreach (Watcher w in watcherPool)
+            //    {
+            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+            //        {
+            //            Debug.Log("Found");
 
-                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
-                    }
-                }
+            //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+            //        }
+            //    }
 
-            }
-            else if (aiTypeEnum == AiType.Knight)
-            {
-                foreach (Knight w in knightPool)
-                {
-                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
-                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
-                    {
-                        Debug.Log("Found");
+            //}
+            //else if (aiTypeEnum == AiType.Knight)
+            //{
+            //    foreach (Knight w in knightPool)
+            //    {
+            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+            //        {
+            //            Debug.Log("Found");
 
-                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
-                    }
-                }
-            }
-            else if (aiTypeEnum == AiType.Hellhound)
-            {
-                foreach (Hellhound w in hellhoundPool)
-                {
-                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
-                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
-                    {
-                        Debug.Log("Found");
+            //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+            //        }
+            //    }
+            //}
+            //else if (aiTypeEnum == AiType.Hellhound)
+            //{
+            //    foreach (Hellhound w in hellhoundPool)
+            //    {
+            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+            //        {
+            //            Debug.Log("Found");
 
-                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
-                    }
-                }
-            }
-            else if (aiTypeEnum == AiType.Tyrant)
-            {
-                foreach (Tyrant w in tyrantPool)
-                {
-                    Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
-                    if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
-                    {
-                        Debug.Log("Found");
+            //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+            //        }
+            //    }
+            //}
+            //else if (aiTypeEnum == AiType.Tyrant)
+            //{
+            //    foreach (Tyrant w in tyrantPool)
+            //    {
+            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
+            //        {
+            //            Debug.Log("Found");
 
-                        w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
-                    }
-                }
-            }
+            //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
+            //        }
+            //    }
+            //}
 
-            if (pdelay < 0)
-            {
-                if (aiTypeEnum == AiType.Zombie)
-                    zombiesLeft--;
-                else if (aiTypeEnum == AiType.Watcher)
-                    watchersLeft--;
-                else if (aiTypeEnum == AiType.Knight)
-                    knightsLeft--;
-                else if (aiTypeEnum == AiType.Hellhound)
-                    hellhoundsLeft--;
-                else if (aiTypeEnum == AiType.Tyrant)
-                    tyrantsLeft--;
-                SpawnAi(aiTypeEnum);
-            }
+            //if (pdelay < 0)
+            //{
+            //    if (aiTypeEnum == AiType.Zombie)
+            //        zombiesLeft--;
+            //    else if (aiTypeEnum == AiType.Watcher)
+            //        watchersLeft--;
+            //    else if (aiTypeEnum == AiType.Knight)
+            //        knightsLeft--;
+            //    else if (aiTypeEnum == AiType.Hellhound)
+            //        hellhoundsLeft--;
+            //    else if (aiTypeEnum == AiType.Tyrant)
+            //        tyrantsLeft--;
+            //    SpawnAi(aiTypeEnum);
+            //}
 
-            OnAiSpawn?.Invoke(this);
+            //OnAiSpawn?.Invoke(this);
         }
     }
     void OnAiDeath_Delegate(SwarmManager swarmManager)
@@ -776,9 +789,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     int GetRandomPlayerPhotonId()
     {
-        Player[] allPlayers = FindObjectsOfType<Player>();
-        int ran = Random.Range(0, allPlayers.Length);
-        int targetPhotonId = allPlayers[ran].PV.ViewID;
+        List<Player> allPlayers = FindObjectsOfType<Player>().ToList();
+        List<Player> allAlivePlayers = new List<Player>();
+        foreach (Player p in allPlayers)
+            if (!p.isDead && !p.isRespawning)
+                allAlivePlayers.Add(p);
+
+        int ran = Random.Range(0, allAlivePlayers.Count);
+        int targetPhotonId = allAlivePlayers[ran].PV.ViewID;
         return targetPhotonId;
     }
 

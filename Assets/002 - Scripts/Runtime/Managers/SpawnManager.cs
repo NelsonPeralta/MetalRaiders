@@ -21,6 +21,19 @@ public class SpawnManager : MonoBehaviour
         spawnManagerInstance = this;
     }
 
+    public Transform GetRandomComputerSpawnPoint()
+    {
+        List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
+
+        foreach (SpawnPoint sp in genericSpawnPoints)
+            if (sp.spawnPointType == SpawnPoint.SpawnPointType.Computer)
+                availableSpawnPoints.Add(sp);
+
+        int ran = Random.Range(0, availableSpawnPoints.Count);
+
+        return availableSpawnPoints[ran].transform;
+    }
+
     Transform GetRandomSpawnpoint()
     {
         try { GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Spawning randomly"); } catch { }

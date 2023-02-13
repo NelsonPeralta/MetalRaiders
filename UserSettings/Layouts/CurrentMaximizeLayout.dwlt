@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 1
-  controlID: 33262
+  controlID: 33473
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 50}
   m_MaxSize: {x: 32384, y: 8096}
   vertical: 0
-  controlID: 33263
+  controlID: 33474
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,8 +169,8 @@ MonoBehaviour:
     y: 0
     width: 275
     height: 535
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 5}
   m_Panes:
   - {fileID: 5}
@@ -215,7 +215,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: f6ff53ffde4154ff924d54ff3a5354ff429554ff3ee259ff46f95bffeefe5bfff6405cfff28d61ff9afc6fff98d67bfffefd7bffa6037cffa8457cffb09281ff283987ff3a3a87ff5099d1ff42f8d6ffde55dcff44cae1ffc269faff02bcfffffefafffff4ffffff06e80400fe3f0500ba980f00
+      m_ExpandedIDs: 728e33ffc88e33ffe2c933ff24ca33ff9ce733ff80ec33ff945135ff28ee35ff589b36ff12ac36ffaee036ffc4f436ff384c37ff406c37ffac9d37ff2cb837ff30d037ff34d037ff38d037ffead237ff6e4c38ff367938fff6ff53ffde4154ff924d54ff3a5354ff429554ff3ee259ff46f95bffeefe5bfff6405cfff28d61ff9afc6fff98d67bfffefd7bffa6037cffa8457cffb09281ff283987ff3a3a87ff5099d1ff42f8d6ffde55dcff44cae1ffc269faff02bcfffffefafffff4ffffff06e80400fe3f0500ba980f00
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -258,8 +258,8 @@ MonoBehaviour:
     y: 0
     width: 343
     height: 535
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 102, y: 121}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 7}
   m_Panes:
   - {fileID: 7}
@@ -318,8 +318,8 @@ MonoBehaviour:
     y: 0
     width: 585
     height: 535
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 2}
   m_Panes:
   - {fileID: 2}
@@ -344,8 +344,8 @@ MonoBehaviour:
     y: 0
     width: 397
     height: 535
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 10}
   m_Panes:
   - {fileID: 10}
@@ -688,7 +688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c262c1329a02fa49b5cb4c297106f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MinSize: {x: 136, y: 30}
+  m_MinSize: {x: 129, y: 28}
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
     m_Text: ProBuilder
