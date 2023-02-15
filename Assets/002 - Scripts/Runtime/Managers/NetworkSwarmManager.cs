@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Linq;
 
 public class NetworkSwarmManager : MonoBehaviourPun
 {
@@ -16,6 +17,7 @@ public class NetworkSwarmManager : MonoBehaviourPun
             return _swarmManager;
         }
     }
+
 
     [PunRPC]
     void IncreaseWave_RPC()
@@ -67,5 +69,21 @@ public class NetworkSwarmManager : MonoBehaviourPun
     void DropRandomLoot_RPC(string ammotype, Vector3 position, Quaternion rotation)
     {
         swarmManager.DropRandomLoot(ammotype, position, rotation);
+    }
+
+    [PunRPC]
+    public void EnableStartingNetworkWeapons(bool punCall = true)
+    {
+        if (punCall)
+        {
+            GetComponent<PhotonView>().RPC("EnableStartingNetworkWeapons", RpcTarget.All, false);
+        }
+        else
+        {
+            foreach (NetworkWeaponSpawnPoint nsp in FindObjectsOfType<NetworkWeaponSpawnPoint>().ToList())
+            {
+                nsp.weaponSpawned.gameObject.SetActive(true);
+            }
+        }
     }
 }

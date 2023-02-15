@@ -269,7 +269,7 @@ public class WeaponProperties : MonoBehaviour
 
     void OnControllerTypeChanged(PlayerController playerController)
     {
-        Debug.Log("OnControllerTypeChanged");
+        //Debug.Log("OnControllerTypeChanged");
         if(playerController.activeControllerType == Rewired.ControllerType.Joystick)
         {
             redReticuleHint = _previousRedReticuleHint;

@@ -472,7 +472,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] GameObject _overshieldFx;
     [SerializeField] Camera _uiCamera;
     [SerializeField] int _defaultRespawnTime = 4;
-    [SerializeField] int _pushForce = 10;
+    [SerializeField] int _pushForce = 7;
     [SerializeField] Announcer _announcer;
     #endregion
 
@@ -674,10 +674,13 @@ public class Player : MonoBehaviourPunCallbacks
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        //Debug.Log("Player OnControllerColliderHit");
         float movementSpeedRatio = GetComponent<Movement>().playerSpeedPercent;
         Rigidbody rb = hit.collider.attachedRigidbody;
         if (rb && !rb.isKinematic)
         {
+            Debug.Log(_pushForce);
+            Debug.Log(movementSpeedRatio);
             rb.velocity = hit.moveDirection * _pushForce * movementSpeedRatio;
         }
     }
@@ -1128,7 +1131,7 @@ public class Player : MonoBehaviourPunCallbacks
                     }
                 }
             }
-            catch (Exception e) {  }
+            catch (Exception e) { }
 
             try
             {
@@ -1148,7 +1151,7 @@ public class Player : MonoBehaviourPunCallbacks
                     GetComponent<PlayerSwarmMatchStats>().deaths++;
 
             }
-            catch (Exception e) {  }
+            catch (Exception e) { }
 
             try
             {

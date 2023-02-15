@@ -74,7 +74,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     // constants
-    const int ZOMBIE_SPAWN_DELAY = 4;
+    const int ZOMBIE_SPAWN_DELAY = 2;
     const int WATCHER_SPAWN_DELAY = 7;
     const int KNIGHT_SPAWN_DELAY = 10;
     const int HELLHOUND_SPAWN_DELAY = 5;
@@ -271,11 +271,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 }
 
             }
-            
+
 
 
             //if (GameManager.instance.gameType == GameManager.GameType.Survival)
-                maxWave = 999999;
+            maxWave = 999999;
 
             foreach (HealthPack h in FindObjectsOfType<HealthPack>())
                 healthPacks.Add(h);
@@ -359,7 +359,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (nbPlayers <= 0)
                 nbPlayers = 1;
 
-            zombiesLeft = nbPlayers + (int)Mathf.Floor((currentWave * 2));
+            zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 2));
             if (zombiesLeft > _zombieList.Count)
                 zombiesLeft = _zombieList.Count;
 
@@ -784,7 +784,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 if (!hp.gameObject.activeSelf)
                     hp.gameObject.SetActive(true);
 
-            WebManager.webManagerInstance.SaveSwarmStats(GameManager.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
+            FindObjectOfType<NetworkSwarmManager>().EnableStartingNetworkWeapons();
+
+            try
+            {
+                WebManager.webManagerInstance.SaveSwarmStats(GameManager.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
+            }
+            catch (System.Exception e) { Debug.LogException(e); }
         }
     }
     int GetRandomPlayerPhotonId()

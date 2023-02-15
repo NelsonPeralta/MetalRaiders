@@ -5,12 +5,12 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public static SpawnManager spawnManagerInstance;
-    public List<SpawnPoint> genericSpawnPoints;
+    public List<SpawnPoint> genericSpawnPoints = new List<SpawnPoint>();
     void Awake()
     {
         int c = 0;
         if (genericSpawnPoints.Count == 0)
-            foreach (SpawnPoint sp in GetComponentsInChildren<SpawnPoint>())
+            foreach (SpawnPoint sp in FindObjectsOfType<SpawnPoint>())
             {
                 sp.name = $"Spawn point {c}";
                 c++;

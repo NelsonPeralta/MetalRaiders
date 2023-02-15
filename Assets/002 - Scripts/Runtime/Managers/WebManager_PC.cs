@@ -149,7 +149,7 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Debug.LogError(www.error);
             }
             else
             {

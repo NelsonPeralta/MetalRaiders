@@ -30,7 +30,7 @@ public class Zombie : AiAbstractClass
 
     public override void OnEnable()
     {
-        _health += FindObjectOfType<SwarmManager>().currentWave * 3;
+        _health += FindObjectOfType<SwarmManager>().currentWave * 5;
         zombieAction = ZombieActions.Seek;
         seek = true;
 

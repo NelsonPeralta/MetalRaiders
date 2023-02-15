@@ -633,10 +633,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         int ChanceToDrop = UnityEngine.Random.Range(0, 10);
 
-        if (ChanceToDrop <= 3)
+        if (ChanceToDrop <= 4)
         {
-            float ranAmmoFactor = UnityEngine.Random.Range(0.1f, 0.9f);
-            float ranCapFactor = UnityEngine.Random.Range(0.1f, 0.6f);
+            float ranAmmoFactor = UnityEngine.Random.Range(0.2f, 0.9f);
+            float ranCapFactor = UnityEngine.Random.Range(0.2f, 0.6f);
             int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory.Length);
 
             WeaponProperties wp = GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
