@@ -70,6 +70,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public List<HealthPack> healthPacks = new List<HealthPack>();
 
     [SerializeField] AudioClip _ambiantMusic;
+    [SerializeField] AudioClip _waveStartClip;
+    [SerializeField] AudioClip _weaponDropClip;
+    [SerializeField] AudioClip _livesAddedClip;
     [SerializeField] AudioClip _waveSuccessClip;
 
 
