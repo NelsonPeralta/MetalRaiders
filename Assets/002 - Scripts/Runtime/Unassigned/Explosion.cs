@@ -87,7 +87,15 @@ public class Explosion : MonoBehaviour
             }
             else if (hit.GetComponent<IDamageable>() != null)
             {
+                if (hit.GetComponent<AIHitbox>())
+                    if (objectsHit.Contains(hit.GetComponent<AIHitbox>().aiAbstractClass.gameObject))
+                        return;
+                    else
+                        objectsHit.Add(hit.GetComponent<AIHitbox>().aiAbstractClass.gameObject);
+                else;
+
                 GameObject hitObject = hit.gameObject;
+
                 if (!objectsHit.Contains(hitObject))
                 {
                     Debug.Log(hitObject.name);
@@ -99,7 +107,7 @@ public class Explosion : MonoBehaviour
                     {
                         hit.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.pid);
                     }
-                    catch(System.Exception e) { Debug.LogWarning(e); hit.GetComponent<IDamageable>().Damage(calculatedDamage); }
+                    catch (System.Exception e) { Debug.LogWarning(e); hit.GetComponent<IDamageable>().Damage(calculatedDamage); }
                 }
             }
         }

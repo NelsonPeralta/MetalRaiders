@@ -6841,10 +6841,10 @@ MonoBehaviour:
   _playerRange: 0
   animator: {fileID: 6465815501100595880}
   _health: 100
+  _nextActionCooldown: 0
   _seek: 1
   _canSeek: 0
-  _isDead: 0
-  _deathDespawnTime: 5
+  _staticAnimationPlaying: 0
   hitboxes: {fileID: 4315748272142158354}
   nma: {fileID: 6407237786346386502}
   projectileSpawnPoint: {fileID: 0}

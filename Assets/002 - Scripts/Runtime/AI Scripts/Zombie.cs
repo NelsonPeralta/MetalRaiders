@@ -19,6 +19,11 @@ public class Zombie : AiAbstractClass
         get { return _zombieAction; }
         set
         {
+            if (value == ZombieActions.Seek)
+                staticAnimationPlaying = false;
+            else
+                staticAnimationPlaying = true;
+
             if (_zombieAction != value)
             {
                 _zombieAction = value;
@@ -34,7 +39,7 @@ public class Zombie : AiAbstractClass
         zombieAction = ZombieActions.Seek;
         seek = true;
 
-        foreach(GameObject obj in skins) { obj.SetActive(false); }
+        foreach (GameObject obj in skins) { obj.SetActive(false); }
 
         int ran = Random.Range(0, skins.Count);
         skins[ran].SetActive(true);

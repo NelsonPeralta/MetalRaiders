@@ -23,12 +23,12 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public Animator animator;
     [SerializeField] protected int _health;
     float newTargetSwitchingDelay;
-    float _nextActionCooldown;
+    [SerializeField] float _nextActionCooldown;
     [SerializeField] protected bool _seek;
-    [SerializeField] bool _canSeek;
+    [SerializeField] protected bool _canSeek, _staticAnimationPlaying;
     bool _canDoAction;
-    [SerializeField] bool _isDead;
-    [SerializeField] int _deathDespawnTime = 5;
+    bool _isDead;
+     int _deathDespawnTime = 5;
 
     // public variables
     public Hitboxes hitboxes;
@@ -253,6 +253,13 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    public bool staticAnimationPlaying
+    {
+        set { _staticAnimationPlaying = value; }
+        get { return _staticAnimationPlaying; }
+    }
+
     void Start()
     {
         _voice = GetComponent<AudioSource>();
@@ -380,8 +387,15 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     public void Movement()
     {
-        if (canSeek && GetComponent<PhotonView>().IsMine)
+        if (canSeek && GetComponent<PhotonView>().IsMine && !staticAnimationPlaying)
             nma.SetDestination(targetPlayer.transform.position);
+
+
+        //if (canSeek && GetComponent<PhotonView>().IsMine)
+        //    if (animator.GetCurrentAnimatorStateInfo(0).IsName("Walk") ||
+        //        animator.GetCurrentAnimatorStateInfo(0).IsName("Run") ||
+        //        animator.GetCurrentAnimatorStateInfo(0).IsName("Sprint"))
+        //        nma.SetDestination(targetPlayer.transform.position);
     }
 
     void NextActionCooldown()
@@ -492,7 +506,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         DoAction();
 
-        nextActionCooldown = defaultNextActionCooldown;
+        //nextActionCooldown = defaultNextActionCooldown;
         OnNextActionReset?.Invoke(this);
     }
 
