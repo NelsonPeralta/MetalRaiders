@@ -337,6 +337,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     IEnumerator Die_Coroutine()
     {
+        Debug.Log("Die_Coroutine");
         targetPlayer = null;
         GetComponent<NavMeshAgent>().speed = 0;
         GetComponent<Animator>().Play("Die");

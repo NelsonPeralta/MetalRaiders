@@ -49,9 +49,17 @@ Camera:
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -100,6 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slayerClip: {fileID: 8300000, guid: fa3fbd16a79894c49a742f120d2373d1, type: 3}
   _KingOfTheHillClip: {fileID: 8300000, guid: 6edf9a3c4aebf0842ba92241fb53cf0b, type: 3}
+  _FirefightClip: {fileID: 8300000, guid: 123b8cfeed50fd1489ba7ee9637b1daf, type: 3}
 --- !u!82 &1352993268692100055
 AudioSource:
   m_ObjectHideFlags: 0

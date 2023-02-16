@@ -6,6 +6,7 @@ public class MapCamera : MonoBehaviour
 {
     [SerializeField] AudioClip _slayerClip;
     [SerializeField] AudioClip _KingOfTheHillClip;
+    [SerializeField] AudioClip _FirefightClip;
 
     float _gameStartDelay;
     bool _allPlayersJoined;
@@ -58,6 +59,8 @@ public class MapCamera : MonoBehaviour
                     GetComponent<AudioSource>().clip = _slayerClip;
                     if (GameManager.instance.gameType == GameManager.GameType.Hill)
                         GetComponent<AudioSource>().clip = _KingOfTheHillClip;
+                    if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                        GetComponent<AudioSource>().clip = _FirefightClip;
 
                     GetComponent<AudioSource>().Play();
                 }

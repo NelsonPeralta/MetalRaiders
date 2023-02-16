@@ -6850,7 +6850,7 @@ MonoBehaviour:
   projectileSpawnPoint: {fileID: 0}
   motionTrackerDot: {fileID: 4315748272230013826}
   _defaultHealth: 100
-  speed: 2
+  speed: 1.5
   rangeColliders:
   - {fileID: 9060461887471515584}
   - {fileID: 5401988016692361254}

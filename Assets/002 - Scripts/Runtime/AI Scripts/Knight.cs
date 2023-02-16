@@ -146,8 +146,8 @@ public class Knight : AiAbstractClass
                     potionBomb.GetComponent<AIGrenade>().radius = grenadeRadius;
                     potionBomb.GetComponent<AIGrenade>().damage = grenadeDamage;
                     potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
-                    potionBomb.GetComponent<AIGrenade>().playerRewiredID = 99;
-                    potionBomb.GetComponent<AIGrenade>().team = hitboxes.AIHitboxes[0].team;
+                    //potionBomb.GetComponent<AIGrenade>().playerRewiredID = 99;
+                    //potionBomb.GetComponent<AIGrenade>().team = hitboxes.AIHitboxes[0].team;
 
                     nextActionCooldown = defaultNextActionCooldown;
                 }

@@ -37,13 +37,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     [SerializeField] GameObject zombiePrefab;
+    [SerializeField] GameObject knightPrefab;
 
-    public List<Zombie> zombieList;
+    public List<Zombie> zombieList { get { return _zombieList; } set { _zombieList = value; } }
+    public List<Knight> knightPool { get { return _knightPool; } set { _knightPool = value; } }
+
 
     [Header("AI Pools")]
     List<Zombie> _zombieList = new List<Zombie>();
+    public List<Knight> _knightPool = new List<Knight>();
     public Watcher[] watcherPool;
-    public Knight[] knightPool;
     public Hellhound[] hellhoundPool;
     public Tyrant[] tyrantPool;
 
@@ -267,6 +270,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 {
                     //Transform sp = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
                     GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
+                    GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero, Quaternion.identity);
                     //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
                     //_zombieList.Add(z.GetComponent<Zombie>());
                     //z.transform.parent = transform;
@@ -320,9 +324,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         foreach (Watcher w in watcherPool)
             w.gameObject.SetActive(false);
 
-        knightPool = FindObjectsOfType<Knight>();
-        foreach (Knight w in knightPool)
+        foreach (Knight w in FindObjectsOfType<Knight>(true).ToList())
+        {
+            _knightPool.Add(w);
+            w.transform.parent = transform;
             w.gameObject.SetActive(false);
+        }
 
         hellhoundPool = FindObjectsOfType<Hellhound>();
         foreach (Hellhound w in hellhoundPool)
@@ -372,9 +379,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //if (watchersLeft > watcherPool.Length)
             //    watchersLeft = watcherPool.Length;
 
-            //knightsLeft = nbPlayers * 2 + (currentWave);
-            //if (knightsLeft > knightPool.Length)
-            //    knightsLeft = knightPool.Length;
+            knightsLeft = nbPlayers * 2 + (currentWave);
+            if (knightsLeft > knightPool.Count)
+                knightsLeft = knightPool.Count;
+
+            knightsLeft = 1;
 
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)
@@ -425,12 +434,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void SpawnAIs_Delegate(SwarmManager swarmManager)
     {
+        if (currentWave > 1)
+            GameManager.GetMyPlayer().announcer.AddClip(_waveStartClip);
         if (!PhotonNetwork.IsMasterClient)
             return;
         Debug.Log("Spawning Ais");
         SpawnAi(AiType.Zombie);
         //SpawnAi(AiType.Watcher);
-        //SpawnAi(AiType.Knight);
+        SpawnAi(AiType.Knight);
         //SpawnAi(AiType.Hellhound);
         //SpawnAi(AiType.Tyrant);
     }
@@ -571,7 +582,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         yield return new WaitForSeconds(delay);
 
-        Debug.Log($"AFTER DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
+        Debug.Log($"AFTER DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}. {PhotonView.Find(aiPhotonId).name}");
         try
         {
             var newAiObj = PhotonView.Find(aiPhotonId).gameObject;

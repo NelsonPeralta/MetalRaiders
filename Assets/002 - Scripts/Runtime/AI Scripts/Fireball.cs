@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -86,7 +87,7 @@ public class Fireball : MonoBehaviour
                 if (playerDistance < radius)
                 {
                     //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
-                    player.GetComponent<Player>().Damage((int)calculatedDamage, false, 99);
+                    player.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.GetComponent<PhotonView>().ViewID);
                     playersHit.Add(player.GetComponent<Player>());
                 }
             }

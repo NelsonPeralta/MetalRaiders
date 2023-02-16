@@ -775,23 +775,29 @@ public class Player : MonoBehaviourPunCallbacks
 
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
 
-        Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(source_pid);
-        if (sourcePlayer.isMine)
+        if ((GameManager.instance.pid_player_Dict.ContainsKey(source_pid) && GameManager.GetPlayerWithPhotonViewId(source_pid).isMine) ||
+            PhotonView.Find(source_pid).GetComponent<AiAbstractClass>())
         {
             DeathNature dsn = DeathNature.None;
             if (headshot)
                 dsn = DeathNature.Headshot;
 
-            if (damageSource.Contains("renade"))
-                dsn = DeathNature.Grenade;
 
-            if (damageSource.Contains("tuck"))
-                dsn = DeathNature.Stuck;
+            byte[] bytes = Encoding.UTF8.GetBytes("");
 
-            if (damageSource.Contains("elee"))
-                dsn = DeathNature.Melee;
+            if (damageSource != null)
+            {
+                if (damageSource.Contains("renade"))
+                    dsn = DeathNature.Grenade;
 
-            byte[] bytes = Encoding.UTF8.GetBytes(damageSource);
+                if (damageSource.Contains("tuck"))
+                    dsn = DeathNature.Stuck;
+
+                if (damageSource.Contains("elee"))
+                    dsn = DeathNature.Melee;
+                bytes = Encoding.UTF8.GetBytes(damageSource);
+            }
+
 
             int newHealth = (int)hitPoints - damage;
             PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn);
