@@ -106,10 +106,16 @@ public class Zombie : AiAbstractClass
         if (!targetPlayer)
             return;
 
-        Vector3 targetPostition = new Vector3(targetPlayer.position.x,
-                                        this.transform.position.y,
-                                        targetPlayer.position.z);
-        this.transform.LookAt(targetPostition);
+
+        // DO NOT MIX NMA.SETDESTINATION WITH AI POSITION OR ROTATION
+        // USE ONE OR THE OTHER, NOT BOTH AT THE SAME TIME
+        // TODO: Use following code only when AI is static
+
+
+        //Vector3 targetPostition = new Vector3(targetPlayer.position.x,
+        //                                this.transform.position.y,
+        //                                targetPlayer.position.z);
+        //this.transform.LookAt(targetPostition);
     }
 
     protected override void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)

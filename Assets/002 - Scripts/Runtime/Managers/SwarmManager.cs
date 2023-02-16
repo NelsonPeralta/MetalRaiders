@@ -342,6 +342,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void Begin()
     {
+        if (editMode)
+            return;
         CreateAIPool();
 
         if (!PhotonNetwork.IsMasterClient)
@@ -402,7 +404,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             zombiesLeft = 0;
             knightsLeft = 0;
             hellhoundsLeft = 0;
-            watchersLeft = 1;
+            watchersLeft = 0;
             tyrantsLeft = 0;
         }
 
