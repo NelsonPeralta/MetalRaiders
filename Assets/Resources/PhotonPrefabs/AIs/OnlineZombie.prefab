@@ -6850,15 +6850,17 @@ MonoBehaviour:
   projectileSpawnPoint: {fileID: 0}
   motionTrackerDot: {fileID: 4315748272230013826}
   _defaultHealth: 100
-  speed: 1.5
+  speed: 0.6
   rangeColliders:
   - {fileID: 9060461887471515584}
   - {fileID: 5401988016692361254}
   - {fileID: 8635798236389588565}
-  defaultNextActionCooldown: 1.5
+  defaultNextActionCooldown: 1
   newTargetPhotonId: 0
-  LOSSpawn: {fileID: 7324093308885670195}
   objectInLineOfSight: {fileID: 0}
+  _targetInLineOfSight: 0
+  _targetOutOfSight: 0
+  LOSSpawn: {fileID: 7324093308885670195}
   layerMask:
     serializedVersion: 2
     m_Bits: 65

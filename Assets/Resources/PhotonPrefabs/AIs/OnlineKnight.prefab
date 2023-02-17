@@ -24204,8 +24204,10 @@ MonoBehaviour:
   - {fileID: 2238946081727377362}
   defaultNextActionCooldown: 1.5
   newTargetPhotonId: 0
-  LOSSpawn: {fileID: 696158254859062735}
   objectInLineOfSight: {fileID: 0}
+  _targetInLineOfSight: 0
+  _targetOutOfSight: 0
+  LOSSpawn: {fileID: 696158254859062735}
   layerMask:
     serializedVersion: 2
     m_Bits: 65

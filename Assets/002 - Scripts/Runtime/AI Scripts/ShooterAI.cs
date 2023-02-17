@@ -66,12 +66,12 @@ public class ShooterAI : AiAbstractClass
 
     public override Transform targetPlayer
     {
-        get { return _destination; }
-        set
-        {
-            try { Destroy(_destination.gameObject); } catch { }
-            _destination = value;
-        }
+        get { return null; }
+        //set
+        //{
+        //    try { Destroy(_destination.gameObject); } catch { }
+        //    _destination = value;
+        //}
     }
     float ogAngularSpeed;
 

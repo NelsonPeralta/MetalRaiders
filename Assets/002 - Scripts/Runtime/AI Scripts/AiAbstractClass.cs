@@ -17,7 +17,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public enum PlayerRange { Out, Close, Medium, Long }
 
     // private variables
-    [SerializeField] protected Transform _destination;
+    [SerializeField] Transform _destination;
     [SerializeField] PlayerRange _playerRange;
     PlayerRange _previousPlayerRange;
     public Animator animator;
@@ -28,7 +28,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     [SerializeField] protected bool _canSeek, _staticAnimationPlaying;
     bool _canDoAction;
     bool _isDead;
-     int _deathDespawnTime = 5;
+    int _deathDespawnTime = 5;
 
     // public variables
     public Hitboxes hitboxes;
@@ -50,9 +50,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     [Header("Line Of Sight")]
     int maxRangeDistance = 15;
-    bool _targetInLineOfSight;
-    public GameObject LOSSpawn;
     public GameObject objectInLineOfSight;
+    [SerializeField] bool _targetInLineOfSight;
+    [SerializeField] bool _targetOutOfSight;
+    public GameObject LOSSpawn;
     public LayerMask layerMask;
     Vector3 raySpawn;
     RaycastHit hit;
@@ -63,7 +64,6 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     [SerializeField] protected AudioClip _attackClip;
     [SerializeField] protected AudioClip _dieClip;
 
-    bool _targetOutOfSight;
     float targetOutOfSightDefaultCountdown;
     float targetOutOfSightCountdown;
 
@@ -260,6 +260,15 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         get { return _staticAnimationPlaying; }
     }
 
+
+
+    Vector3 _defaultLOSLocalPosition;
+
+    private void Awake()
+    {
+        _defaultLOSLocalPosition = LOSSpawn.transform.localPosition;
+    }
+
     void Start()
     {
         _voice = GetComponent<AudioSource>();
@@ -297,8 +306,12 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         playerRange = PlayerRange.Out;
         previousPlayerRange = PlayerRange.Out;
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-            hitbox.gameObject.SetActive(true);
+        try
+        {
+            foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+                hitbox.gameObject.SetActive(true);
+        }
+        catch { }
 
         foreach (AiRangeTrigger arc in rangeColliders)
             arc.playersInRange.Clear();
@@ -419,35 +432,47 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     }
     void ShootLineOfSightRay()
     {
-        if (!targetPlayer)
-            return;
 
-        LOSSpawn.transform.LookAt(targetPlayer);
-        if (projectileSpawnPoint)
-            projectileSpawnPoint.transform.LookAt(targetPlayer);
 
-        var hit = new RaycastHit();
+        if (targetPlayer)
+            LOSSpawn.transform.LookAt(targetPlayer);
+        else
+            LOSSpawn.transform.localPosition = _defaultLOSLocalPosition;
+
+        try
+        {
+            if (projectileSpawnPoint)
+                projectileSpawnPoint.transform.LookAt(targetPlayer);
+        }
+        catch { }
+
+
+
+        float raycastRange = maxRangeDistance * 1.2f;
+
         Ray ray = new Ray(LOSSpawn.transform.position, LOSSpawn.transform.forward);
         //Debug.DrawRay(raySpawn, LOSSpawn.transform.forward * maxRangeDistance, Color.green);
 
         // Need a Raycast Range Overload to work with LayerMask
-        if (Physics.Raycast(ray, out hit, maxRangeDistance * 1.2f, layerMask))
+        if (Physics.Raycast(ray, out hit, raycastRange, layerMask))
         {
             objectInLineOfSight = hit.transform.gameObject;
             //if (hit.transform.gameObject.GetComponent<PlayerHitbox>())
-            if (hit.transform.gameObject.GetComponent<Player>())
-            {
-                Player playerInLOS = objectInLineOfSight.GetComponent<Player>();
 
-                if (playerInLOS == targetPlayer.GetComponent<Player>())
-                    targetInLineOfSight = true;
+            if (targetPlayer)
+                if (hit.transform.gameObject.GetComponent<Player>())
+                {
+                    Player playerInLOS = objectInLineOfSight.GetComponent<Player>();
+
+                    if (playerInLOS == targetPlayer.GetComponent<Player>())
+                        targetInLineOfSight = true;
+                    else
+                        targetOutOfSight = true;
+                }
                 else
+                {
                     targetOutOfSight = true;
-            }
-            else
-            {
-                targetOutOfSight = true;
-            }
+                }
         }
         else
         {

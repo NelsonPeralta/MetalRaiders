@@ -25,6 +25,11 @@ public class Knight : AiAbstractClass
         get { return _knightAction; }
         set
         {
+            if (value == KnightActions.Seek)
+                staticAnimationPlaying = false;
+            else
+                staticAnimationPlaying = true;
+
             if (_knightAction != value)
             {
                 _knightAction = value;
@@ -36,6 +41,7 @@ public class Knight : AiAbstractClass
 
     public override void OnEnable()
     {
+        _health += FindObjectOfType<SwarmManager>().currentWave * 8;
         knightAction = KnightActions.Seek;
         seek = true;
     }
@@ -73,7 +79,7 @@ public class Knight : AiAbstractClass
 
     public override void DoAction()
     {
-        int ran = Random.Range(0, 3);
+        int ran = Random.Range(0, 4);
         KnightActions previousKnightAction = knightAction;
 
         if (playerRange == PlayerRange.Medium || playerRange == PlayerRange.Long)
@@ -117,14 +123,16 @@ public class Knight : AiAbstractClass
                     _voice.Play();
                     animator.Play("Projectile");
 
-                    var proj = Instantiate(projectile.gameObject, projectileSpawnPoint.transform.position
-                        , projectileSpawnPoint.transform.rotation);
-                    foreach (AIHitbox c in hitboxes.AIHitboxes)
-                        Physics.IgnoreCollision(projectile.GetComponent<Collider>(), c.GetComponent<Collider>());
-                    proj.GetComponent<Fireball>().damage = projectileDamage;
-                    proj.GetComponent<Fireball>().force = projectileSpeed;
-                    proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-                    Destroy(proj, 5);
+                    {
+                        var proj = Instantiate(projectile.gameObject, projectileSpawnPoint.transform.position
+                            , projectileSpawnPoint.transform.rotation);
+                        foreach (AIHitbox c in hitboxes.AIHitboxes)
+                            Physics.IgnoreCollision(projectile.GetComponent<Collider>(), c.GetComponent<Collider>());
+                        proj.GetComponent<Fireball>().damage = projectileDamage;
+                        proj.GetComponent<Fireball>().force = projectileSpeed;
+                        proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                        Destroy(proj, 5);
+                    }
 
                     nextActionCooldown = defaultNextActionCooldown;
                 }
@@ -137,17 +145,21 @@ public class Knight : AiAbstractClass
                     _voice.Play();
                     animator.Play("Throw");
 
-                    var potionBomb = Instantiate(grenade.gameObject, projectileSpawnPoint.transform.position, projectileSpawnPoint.transform.rotation);
-                    foreach (AIHitbox c in hitboxes.AIHitboxes)
-                        Physics.IgnoreCollision(potionBomb.GetComponent<Collider>(), c.GetComponent<Collider>());
+                    {
+                        var potionBomb = Instantiate(grenade.gameObject, projectileSpawnPoint.transform.position, projectileSpawnPoint.transform.rotation);
+                        foreach (AIHitbox c in hitboxes.AIHitboxes)
+                            Physics.IgnoreCollision(potionBomb.GetComponent<Collider>(), c.GetComponent<Collider>());
 
-                    potionBomb.GetComponent<Rigidbody>().AddForce(projectileSpawnPoint.transform.forward * 300);
+                        potionBomb.GetComponent<Rigidbody>().AddForce(projectileSpawnPoint.transform.forward * 300);
 
-                    potionBomb.GetComponent<AIGrenade>().radius = grenadeRadius;
-                    potionBomb.GetComponent<AIGrenade>().damage = grenadeDamage;
-                    potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
-                    //potionBomb.GetComponent<AIGrenade>().playerRewiredID = 99;
-                    //potionBomb.GetComponent<AIGrenade>().team = hitboxes.AIHitboxes[0].team;
+                        potionBomb.GetComponent<AIGrenade>().radius = grenadeRadius;
+                        potionBomb.GetComponent<AIGrenade>().damage = grenadeDamage;
+                        potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
+
+
+                        //potionBomb.GetComponent<AIGrenade>().playerRewiredID = 99;
+                        //potionBomb.GetComponent<AIGrenade>().team = hitboxes.AIHitboxes[0].team;
+                    }
 
                     nextActionCooldown = defaultNextActionCooldown;
                 }
@@ -169,10 +181,13 @@ public class Knight : AiAbstractClass
         if (!targetPlayer)
             return;
 
-        Vector3 targetPostition = new Vector3(targetPlayer.position.x,
-                                        this.transform.position.y,
-                                        targetPlayer.position.z);
-        this.transform.LookAt(targetPostition);
+        if (staticAnimationPlaying)
+        {
+            Vector3 targetPostition = new Vector3(targetPlayer.position.x,
+                                            this.transform.position.y,
+                                            targetPlayer.position.z);
+            this.transform.LookAt(targetPostition);
+        }
     }
 
     protected override void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)

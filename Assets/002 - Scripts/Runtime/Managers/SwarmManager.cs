@@ -16,7 +16,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     // public variables
     public static SwarmManager instance;
-    public enum AiType { Zombie, Watcher, Knight, Hellhound, Tyrant }
+    public enum AiType { Zombie, AlienShooter, Knight, Hellhound, Tyrant }
 
     [SerializeField] int _currentWave;
     public int currentWave
@@ -38,15 +38,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     [SerializeField] GameObject zombiePrefab;
     [SerializeField] GameObject knightPrefab;
+    [SerializeField] GameObject alienShooterPrefab;
 
     public List<Zombie> zombieList { get { return _zombieList; } set { _zombieList = value; } }
     public List<Knight> knightPool { get { return _knightPool; } set { _knightPool = value; } }
+    public List<SimpleAlienShooter> watcherPool { get { return _watcherPool; } set { _watcherPool = value; } }
 
 
     [Header("AI Pools")]
     List<Zombie> _zombieList = new List<Zombie>();
     public List<Knight> _knightPool = new List<Knight>();
-    public Watcher[] watcherPool;
+    public List<SimpleAlienShooter> _watcherPool = new List<SimpleAlienShooter>();
     public Hellhound[] hellhoundPool;
     public Tyrant[] tyrantPool;
 
@@ -81,8 +83,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     // constants
     const int ZOMBIE_SPAWN_DELAY = 2;
-    const int WATCHER_SPAWN_DELAY = 7;
-    const int KNIGHT_SPAWN_DELAY = 10;
+    const int SHOOTER_SPAWN_DELAY = 7;
+    const int KNIGHT_SPAWN_DELAY = 6;
     const int HELLHOUND_SPAWN_DELAY = 5;
     const int TYRANT_SPAWN_DELAY = 20;
 
@@ -271,6 +273,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     //Transform sp = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
                     GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
                     GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero, Quaternion.identity);
+                    GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero, Quaternion.identity);
                     //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
                     //_zombieList.Add(z.GetComponent<Zombie>());
                     //z.transform.parent = transform;
@@ -294,7 +297,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             OnWaveEnd -= OnWaveEnd_Delegate;
             OnWaveEnd += OnWaveEnd_Delegate;
 
-            //CreateAIPool();
+            CreateAIPool();
         }
         else // We are in the menu
         {
@@ -320,9 +323,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         //    w.gameObject.SetActive(false);
 
         // Watcher GameObject must be active in order to be found with FindObjectsOfType
-        watcherPool = FindObjectsOfType<Watcher>();
-        foreach (Watcher w in watcherPool)
+        watcherPool = FindObjectsOfType<SimpleAlienShooter>().ToList();
+        foreach (SimpleAlienShooter w in watcherPool)
+        {
+            _watcherPool.Add(w);
+            w.transform.parent = transform;
             w.gameObject.SetActive(false);
+        }
 
         foreach (Knight w in FindObjectsOfType<Knight>(true).ToList())
         {
@@ -344,7 +351,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if (editMode)
             return;
-        CreateAIPool();
 
         if (!PhotonNetwork.IsMasterClient)
             return;
@@ -371,21 +377,20 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (nbPlayers <= 0)
                 nbPlayers = 1;
 
-            zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 2));
-            if (zombiesLeft > _zombieList.Count)
-                zombiesLeft = _zombieList.Count;
+            //zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 2));
+            //if (zombiesLeft > _zombieList.Count)
+            //    zombiesLeft = _zombieList.Count;
 
             Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
 
             //watchersLeft = nbPlayers * 3 + (currentWave * 2);
             //if (watchersLeft > watcherPool.Length)
-            //    watchersLeft = watcherPool.Length;
+            watchersLeft = 1;
 
-            knightsLeft = nbPlayers * 2 + (currentWave);
-            if (knightsLeft > knightPool.Count)
-                knightsLeft = knightPool.Count;
+            //knightsLeft = nbPlayers * 2 + (currentWave);
+            //if (knightsLeft > knightPool.Count)
+            //    knightsLeft = knightPool.Count;
 
-            knightsLeft = 1;
 
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)
@@ -442,7 +447,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             return;
         Debug.Log("Spawning Ais");
         SpawnAi(AiType.Zombie);
-        //SpawnAi(AiType.Watcher);
+        SpawnAi(AiType.AlienShooter);
         SpawnAi(AiType.Knight);
         //SpawnAi(AiType.Hellhound);
         //SpawnAi(AiType.Tyrant);
@@ -478,7 +483,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Zombie.ToString(), pdelay);
         }
-        else if (aiType == AiType.Watcher)
+        else if (aiType == AiType.AlienShooter)
         {
             if (watchersLeft <= 0)
             {
@@ -486,11 +491,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 return;
             }
 
-            foreach (Watcher w in watcherPool)
+            foreach (SimpleAlienShooter w in watcherPool)
                 if (!w.gameObject.activeSelf)
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
 
-            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Watcher.ToString(), pdelay);
+            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.AlienShooter.ToString(), pdelay);
         }
         else if (aiType == AiType.Knight)
         {
@@ -562,9 +567,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             delay = ZOMBIE_SPAWN_DELAY + waveSpawnDelay;
         }
-        else if (aiTypeEnum == AiType.Watcher)
+        else if (aiTypeEnum == AiType.AlienShooter)
         {
-            delay = WATCHER_SPAWN_DELAY + waveSpawnDelay;
+            delay = SHOOTER_SPAWN_DELAY + waveSpawnDelay;
         }
         else if (aiTypeEnum == AiType.Knight)
         {
@@ -594,7 +599,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             {
                 if (aiTypeEnum == AiType.Zombie)
                     zombiesLeft--;
-                else if (aiTypeEnum == AiType.Watcher)
+                else if (aiTypeEnum == AiType.AlienShooter)
                     watchersLeft--;
                 else if (aiTypeEnum == AiType.Knight)
                     knightsLeft--;
@@ -710,7 +715,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (w.gameObject.activeSelf && !w.isDead)
                 __zombiesAlive++;
 
-        foreach (Watcher w in watcherPool)
+        foreach (SimpleAlienShooter w in watcherPool)
             if (w.gameObject.activeSelf && !w.isDead)
                 __watchersAlive++;
 

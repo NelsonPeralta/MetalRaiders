@@ -398,11 +398,13 @@ public class AIHitbox : Hitbox, IDamageable
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
+        //Debug.Log("AI HItbox Damage 1");
         aiAbstractClass.Damage((int)healthDamage, playerWhoShotThisPlayerPhotonId, isHeadshot: headshot);
     }
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
     {
+        //Debug.Log("AI HItbox Damage 2");
         aiAbstractClass.Damage((int)healthDamage, playerWhoShotThisPlayerPhotonId, isHeadshot: headshot);
     }
 }
