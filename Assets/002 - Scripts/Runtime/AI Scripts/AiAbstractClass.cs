@@ -561,8 +561,10 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        //if (gameObject.activeSelf)
-        //    StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
+
+
+        if (gameObject.activeSelf)
+            StartCoroutine(GetRandomPlayerTransformSlow_Coroutine());
         //if (!emptyTarget)
         //    targetPlayer = SwarmManager.instance.GetRandomPlayerTransform();
         //else
@@ -571,8 +573,16 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     IEnumerator GetRandomPlayerTransformSlow_Coroutine()
     {
         yield return new WaitForSeconds(1);
-        int pid = SwarmManager.instance.GetRandomPlayerTransform().GetComponent<PhotonView>().ViewID;
-        photonView.RPC("UpdateTarget_RPC", RpcTarget.All, pid);
+
+
+        Debug.Log("GetRandomPlayerTransformSlow_Coroutine");
+        try
+        {
+            targetPlayer = GameManager.instance.pid_player_Dict[FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId()].transform;
+        }
+        catch { targetPlayer = null; }
+        //int pid = SwarmManager.instance.GetRandomPlayerTransform().GetComponent<PhotonView>().ViewID;
+        //photonView.RPC("UpdateTarget_RPC", RpcTarget.All, pid);
     }
 
     protected void ChangeAction(string actionString)

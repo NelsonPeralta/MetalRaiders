@@ -323,8 +323,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         //    w.gameObject.SetActive(false);
 
         // Watcher GameObject must be active in order to be found with FindObjectsOfType
-        watcherPool = FindObjectsOfType<SimpleAlienShooter>().ToList();
-        foreach (SimpleAlienShooter w in watcherPool)
+        foreach (SimpleAlienShooter w in FindObjectsOfType<SimpleAlienShooter>().ToList())
         {
             _watcherPool.Add(w);
             w.transform.parent = transform;
@@ -377,20 +376,20 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (nbPlayers <= 0)
                 nbPlayers = 1;
 
-            //zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 2));
-            //if (zombiesLeft > _zombieList.Count)
-            //    zombiesLeft = _zombieList.Count;
+            zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 2));
+            if (zombiesLeft > _zombieList.Count)
+                zombiesLeft = _zombieList.Count;
 
             Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
 
-            //watchersLeft = nbPlayers * 3 + (currentWave * 2);
-            //if (watchersLeft > watcherPool.Length)
-            watchersLeft = 1;
 
-            //knightsLeft = nbPlayers * 2 + (currentWave);
-            //if (knightsLeft > knightPool.Count)
-            //    knightsLeft = knightPool.Count;
+            knightsLeft = nbPlayers * 2 + (currentWave);
+            if (knightsLeft > knightPool.Count)
+                knightsLeft = knightPool.Count;
 
+            watchersLeft = nbPlayers * 3 + (currentWave * 2);
+            if (watchersLeft > watcherPool.Count)
+                watchersLeft = knightPool.Count;
 
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)

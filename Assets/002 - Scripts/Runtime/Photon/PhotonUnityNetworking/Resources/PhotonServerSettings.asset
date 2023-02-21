@@ -178,6 +178,9 @@ MonoBehaviour:
   - SpawnNetworkWeapon_RPC
   - UpdateTarget_RPC
   - EnableStartingNetworkWeapons
+  - GetRandomAlivePlayerTransform
+  - GetRandomAlivePlayerPosition
+  - GetRandomAlivePlayerPhotonId
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

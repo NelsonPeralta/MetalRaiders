@@ -86,4 +86,24 @@ public class NetworkSwarmManager : MonoBehaviourPun
             }
         }
     }
+
+    [PunRPC]
+    public int GetRandomAlivePlayerPhotonId(bool punCall = true)
+    {
+        if (punCall)
+        {
+            GetComponent<PhotonView>().RPC("GetRandomAlivePlayerTransform", RpcTarget.All, false);
+        }
+        else
+        {
+            foreach (Player nsp in FindObjectsOfType<Player>().ToList())
+            {
+                if (!nsp.isDead && !nsp.isRespawning)
+                    return nsp.GetComponent<PhotonView>().ViewID;
+
+            }
+        }
+
+        return -1;
+    }
 }
