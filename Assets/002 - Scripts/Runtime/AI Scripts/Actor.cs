@@ -42,6 +42,7 @@ abstract public class Actor : MonoBehaviour
     public int midRange { get { return _midRange; } }
     public int closeRange { get { return _closeRange; } }
 
+    public string currentAnimatorClipName { get { return _currentAnimatorState; } private set { _currentAnimatorState = value; } }
 
     [SerializeField] int _hitPoints;
     [SerializeField] Transform _target;
@@ -50,6 +51,7 @@ abstract public class Actor : MonoBehaviour
     [SerializeField] FieldOfView _fieldOfView;
     [SerializeField] NavMeshAgent _nma;
     [SerializeField] protected Animator _animator;
+    [SerializeField] protected string _currentAnimatorState;
     [SerializeField] protected Action _action;
 
     [SerializeField] int _closeRange, _midRange, _longRange;
@@ -57,6 +59,8 @@ abstract public class Actor : MonoBehaviour
     [SerializeField] float _analyzeNextActionCooldown;
 
     protected int _defaultHitpoints;
+
+    protected bool isIdling, isRunning, isMeleeing;
 
     private void Awake()
     {
@@ -88,6 +92,7 @@ abstract public class Actor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        AnimationCheck();
         CooldownsUpdate();
 
         if (hitPoints > 0)
@@ -98,9 +103,11 @@ abstract public class Actor : MonoBehaviour
                 if (_analyzeNextActionCooldown <= 0)
                 {
                     AnalyzeNextAction();
-                    _analyzeNextActionCooldown = 0.5f;
+                    _analyzeNextActionCooldown = 0.3f;
                 }
             }
+
+        LookAtTarget();
     }
 
     private void OnEnable()
@@ -146,11 +153,59 @@ abstract public class Actor : MonoBehaviour
     }
 
 
+    void AnimationCheck()
+    {
+        //currentAnimatorClipName = _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            isIdling = true;
+        else
+            isIdling = false;
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
+            isMeleeing = true;
+        else
+            isMeleeing = false;
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+            isRunning = true;
+        else
+            isRunning = false;
+    }
+
+    protected void LookAtTarget()
+    {
+        if (target && (isIdling || isMeleeing))
+        {
+            Vector3 targetPostition = new Vector3(target.position.x,
+                                                this.transform.position.y,
+                                                target.position.z);
+            this.transform.LookAt(targetPostition);
+        }
+    }
+
+
+
+
+
+
+
     IEnumerator Hide()
     {
         yield return new WaitForSeconds(5);
         gameObject.SetActive(false);
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     [PunRPC]
     public void DamageActor(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)

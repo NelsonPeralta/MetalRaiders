@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,24 +21,34 @@ public class Undead : Actor
 
     public override void AnalyzeNextAction()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         //if (fieldOfView.canSeePlayer) // Chase Player
         if (target)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
             if (distanceToTarget <= closeRange)
             {
+                Debug.Log("Punch Player");
+                nma.enabled = false;
+
                 if (_meleeCooldown <= 0)
                 {
-                    Debug.Log("Punch Player");
-                    _animator.Play("Attack");
-                    nma.enabled = false;
-                    _meleeCooldown = 1;
+                    UndeadAttack();
+                }
+                else
+                {
+                    //if (!isIdling)
+                    //    CloseRange_RPC(false);
                 }
             }
             else if (distanceToTarget > closeRange)
             {
-                Debug.Log("Chase Player");
-                _animator.Play("Run");
+                if (!isRunning)
+                {
+                    Debug.Log("Chase Player");
+                    UndeadRun();
+                }
                 nma.enabled = true;
                 nma.SetDestination(target.position);
             }
@@ -72,9 +83,60 @@ public class Undead : Actor
         }
         else // Stop Chasing
         {
-            _animator.Play("Idle");
-            nma.enabled = false;
+            if (!isIdling)
+                UndeadIdle();
             //nma.isStopped = true;
+        }
+    }
+
+
+
+    [PunRPC]
+    void UndeadAttack(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("UndeadAttack", RpcTarget.All, false);
+        }
+        else
+        {
+            Debug.Log("Punch Player RPC");
+
+            _animator.SetBool("Run", false);
+            _animator.Play("Melee");
+            _meleeCooldown = 1;
+        }
+    }
+
+    [PunRPC]
+    void UndeadIdle(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("UndeadIdle", RpcTarget.All, false);
+        }
+        else
+        {
+            Debug.Log("UndeadIdle RPC");
+
+            nma.enabled = false;
+            _animator.SetBool("Run", false);
+        }
+    }
+
+    [PunRPC]
+    void UndeadRun(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("UndeadRun", RpcTarget.All, false);
+        }
+        else
+        {
+            Debug.Log("UndeadRun RPC");
+
+            //_animator.Play("Run");
+            _animator.SetBool("Run", true);
         }
     }
 }
