@@ -5,18 +5,27 @@ using UnityEngine;
 
 public class RandomAISkinChooser : MonoBehaviour
 {
-    List<Transform> _skins = new List<Transform>();
+    public List<Transform> _skins = new List<Transform>();
+    int lastRan;
 
     private void Awake()
     {
-        _skins = GetComponentsInChildren<Transform>().ToList();
+        _skins = GetComponentsInChildren<Transform>(true).ToList();
+        lastRan = 1;
     }
 
     private void Start()
     {
-        int ran = Random.Range(0, _skins.Count);
 
-        _skins[0].gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        _skins[lastRan].gameObject.SetActive(false);
+
+        int ran = Random.Range(1, _skins.Count);
+        lastRan = ran;
+
         _skins[ran].gameObject.SetActive(true);
     }
 }

@@ -383,13 +383,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
 
 
-            knightsLeft = nbPlayers * 2 + (currentWave);
-            if (knightsLeft > knightPool.Count)
-                knightsLeft = knightPool.Count;
+            //knightsLeft = nbPlayers * 2 + (currentWave);
+            //if (knightsLeft > knightPool.Count)
+            //    knightsLeft = knightPool.Count;
 
-            watchersLeft = nbPlayers * 3 + (currentWave * 2);
-            if (watchersLeft > watcherPool.Count)
-                watchersLeft = knightPool.Count;
+            //watchersLeft = nbPlayers * 3 + (currentWave * 2);
+            //if (watchersLeft > watcherPool.Count)
+            //    watchersLeft = knightPool.Count;
 
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)
@@ -403,7 +403,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         //}
 
 
-        //if (editMode)
+        if (editMode)
         {
             zombiesLeft = 1;
             knightsLeft = 0;
@@ -744,7 +744,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             }
     }
 
-    public void Invoke_OnAiDeath() // Called multiple times on an ai death. TODO: Find independant solution
+    public void InvokeOnAiDeath() // Called multiple times on an ai death. TODO: Find independant solution
     {
         Debug.Log("Swarm Manager OnAiDeath");
         OnAiDeath?.Invoke(this);

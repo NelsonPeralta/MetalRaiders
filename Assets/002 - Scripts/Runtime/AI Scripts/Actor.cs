@@ -26,6 +26,7 @@ abstract public class Actor : MonoBehaviour
                     ah.gameObject.SetActive(false);
                 _animator.Play("Die");
                 nma.enabled = false;
+                SwarmManager.instance.InvokeOnAiDeath();
                 StartCoroutine(Hide());
             }
 
@@ -122,12 +123,8 @@ abstract public class Actor : MonoBehaviour
     {
         transform.position = new Vector3(0, -10, 0);
         hitPoints = _defaultHitpoints + SwarmManager.instance.currentWave * 2;
-        try
-        {
-            foreach (ActorHitbox hitbox in GetComponentsInChildren<ActorHitbox>())
-                hitbox.gameObject.SetActive(true);
-        }
-        catch { }
+        foreach (ActorHitbox hitbox in GetComponentsInChildren<ActorHitbox>(true))
+            hitbox.gameObject.SetActive(true);
     }
 
     public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
@@ -135,20 +132,10 @@ abstract public class Actor : MonoBehaviour
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
 
-            if (isHeadshot)
-            {
-                if (hitPoints <= damage)
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.HeadshotKill);
-                else
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Headshot);
-            }
+            if (hitPoints <= damage)
+                p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
             else
-            {
-                if (hitPoints <= damage)
-                    p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-                else
-                    p.GetComponent<PlayerUI>().SpawnHitMarker();
-            }
+                p.GetComponent<PlayerUI>().SpawnHitMarker();
         }
 
         try
