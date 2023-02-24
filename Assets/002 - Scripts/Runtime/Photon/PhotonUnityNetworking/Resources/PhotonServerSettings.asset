@@ -181,6 +181,7 @@ MonoBehaviour:
   - GetRandomAlivePlayerTransform
   - GetRandomAlivePlayerPosition
   - GetRandomAlivePlayerPhotonId
+  - DamageActor
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

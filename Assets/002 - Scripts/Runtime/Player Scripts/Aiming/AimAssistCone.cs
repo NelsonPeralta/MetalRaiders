@@ -169,7 +169,7 @@ public class AimAssistCone : MonoBehaviour
             {
                 try
                 {
-                    if (collidingHitbox.GetComponent<AIHitbox>())
+                    if (collidingHitbox.GetComponent<ActorHitbox>())
                     {
                         aimAssist.target = collidingHitbox;
                         aimAssist.redReticuleIsOn = true;

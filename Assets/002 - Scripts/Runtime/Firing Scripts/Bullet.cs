@@ -241,6 +241,32 @@ public class Bullet : MonoBehaviourPunCallbacks
 
             try
             {
+                if (finalHitObject.GetComponent<ActorHitbox>())
+                {
+                    try
+                    {
+                        bool ih = false;
+                        if (finalHitObject.GetComponent<ActorHitbox>() && finalHitObject.GetComponent<ActorHitbox>().isHead)
+                        {
+                            ih = true;
+                            damage = (int)(damage * weaponProperties.headshotMultiplier);
+                        }
+                        finalHitDamageable.Damage(damage, ih, sourcePlayer.pid);
+
+                    }
+                    catch
+                    {
+                        finalHitDamageable.Damage(damage);
+                    }
+                    genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledBloodHit();
+                    genericHit.transform.position = finalHitPoint;
+                    genericHit.SetActive(true);
+
+                    damageDealt = true;
+
+                    return;
+                }
+
                 if (GameManager.instance.teamMode.ToString().Contains("Classic"))
                 {
 
@@ -300,7 +326,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
                                 try
                                 {
-                                    if (finalHitObject.GetComponent<AIHitbox>() && finalHitObject.GetComponent<AIHitbox>().isHead)
+                                    if (finalHitObject.GetComponent<ActorHitbox>() && finalHitObject.GetComponent<ActorHitbox>().isHead)
                                         damage = (int)(damage * weaponProperties.headshotMultiplier);
                                     finalHitDamageable.Damage(damage, false, sourcePlayer.pid);
 
@@ -313,7 +339,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         catch { }
 
                         GameObject genericHit;
-                        if (finalHitObject.GetComponent<AIHitbox>())
+                        if (finalHitObject.GetComponent<ActorHitbox>())
                             genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledBloodHit();
                         else
                             genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
@@ -361,7 +387,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                         damageDealt = true;
                     }
-                    else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<AIHitbox>() && !finalHitObject.GetComponent<CharacterController>())
+                    else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<ActorHitbox>() && !finalHitObject.GetComponent<CharacterController>())
                     {
                         Debug.Log("asdf10");
 

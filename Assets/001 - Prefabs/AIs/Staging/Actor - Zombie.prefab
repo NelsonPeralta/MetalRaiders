@@ -1277,7 +1277,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 180
+  m_AngularSpeed: 300
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1417,12 +1417,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 325236bdafc28274bb78ddebd0d5f026, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hitPoints: 100
   _target: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 4826668848798919738}
   _fieldOfView: {fileID: 0}
   _nma: {fileID: 0}
   _animator: {fileID: 0}
+  _action: 0
   _closeRange: 0
   _midRange: 0
   _longRange: 0
@@ -2072,7 +2074,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1070549773685785548}
   - component: {fileID: 1067596114735800267}
-  - component: {fileID: 1067596114735800268}
+  - component: {fileID: 4617326598682984131}
   m_Layer: 7
   m_Name: Elbow_L
   m_TagString: Untagged
@@ -2119,7 +2121,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 0
   m_Center: {x: -0.15, y: 0, z: 0}
---- !u!114 &1067596114735800268
+--- !u!114 &4617326598682984131
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2128,25 +2130,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067596114735800266}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1067610027546637880
 GameObject:
   m_ObjectHideFlags: 0
@@ -2191,7 +2180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1070556234560654434}
   - component: {fileID: 1067618263834982604}
-  - component: {fileID: 1067618263834982603}
+  - component: {fileID: 2525285568770957241}
   m_Layer: 7
   m_Name: Shoulder_R
   m_TagString: Untagged
@@ -2238,7 +2227,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 0
   m_Center: {x: 0.15, y: 0, z: 0}
---- !u!114 &1067618263834982603
+--- !u!114 &2525285568770957241
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2247,25 +2236,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067618263834982602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1067622174220285188
 GameObject:
   m_ObjectHideFlags: 0
@@ -3108,7 +3084,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1070457475616317168}
   - component: {fileID: 1067674359543098205}
-  - component: {fileID: 1067674359543098206}
+  - component: {fileID: 7421406221991743563}
   m_Layer: 7
   m_Name: UpperLeg_R
   m_TagString: Untagged
@@ -3155,7 +3131,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 0
   m_Center: {x: -0.2, y: 0, z: 0}
---- !u!114 &1067674359543098206
+--- !u!114 &7421406221991743563
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3164,25 +3140,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067674359543098204}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1067674531657318094
 GameObject:
   m_ObjectHideFlags: 0
@@ -3463,7 +3426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1070225137687461942}
   - component: {fileID: 1067689820124296487}
-  - component: {fileID: 1067689820124296488}
+  - component: {fileID: 7338403116341837768}
   m_Layer: 7
   m_Name: UpperLeg_L
   m_TagString: Untagged
@@ -3510,7 +3473,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 0
   m_Center: {x: 0.2, y: 0, z: 0}
---- !u!114 &1067689820124296488
+--- !u!114 &7338403116341837768
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3519,25 +3482,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067689820124296486}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1067692203159491328
 GameObject:
   m_ObjectHideFlags: 0
@@ -3777,7 +3727,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1064230224026150036}
   - component: {fileID: 1067751938072255141}
-  - component: {fileID: 1067751938072255142}
+  - component: {fileID: 6550634363064283492}
   m_Layer: 7
   m_Name: Spine_02
   m_TagString: Untagged
@@ -3824,7 +3774,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 2
   m_Center: {x: 0.05, y: 0, z: 0}
---- !u!114 &1067751938072255142
+--- !u!114 &6550634363064283492
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3833,25 +3783,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067751938072255140}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1067753281743531538
 GameObject:
   m_ObjectHideFlags: 0
@@ -5373,7 +5310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1070261599077287580}
   - component: {fileID: 1067854500931237309}
-  - component: {fileID: 1067854500931237310}
+  - component: {fileID: 950009865851699692}
   m_Layer: 7
   m_Name: Hips
   m_TagString: Untagged
@@ -5422,7 +5359,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1067854500931237310
+--- !u!114 &950009865851699692
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5431,25 +5368,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067854500931237308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1067861531974545458
 GameObject:
   m_ObjectHideFlags: 0
@@ -6437,7 +6361,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1064161283588344014}
   - component: {fileID: 1068236584528575419}
-  - component: {fileID: 1068236584528575420}
+  - component: {fileID: 5764550927084366093}
   m_Layer: 7
   m_Name: LowerLeg_L
   m_TagString: Untagged
@@ -6484,7 +6408,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 0
   m_Center: {x: 0.2, y: 0, z: 0}
---- !u!114 &1068236584528575420
+--- !u!114 &5764550927084366093
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6493,25 +6417,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1068236584528575418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1068253195316324504
 GameObject:
   m_ObjectHideFlags: 0
@@ -6959,7 +6870,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1070403746201441758}
   - component: {fileID: 1068277088966997195}
-  - component: {fileID: 1068277088966997196}
+  - component: {fileID: 5339994033432558408}
   m_Layer: 7
   m_Name: LowerLeg_R
   m_TagString: Untagged
@@ -7006,7 +6917,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 0
   m_Center: {x: -0.2, y: 0, z: 0}
---- !u!114 &1068277088966997196
+--- !u!114 &5339994033432558408
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7015,25 +6926,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1068277088966997194}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1068279047926136572
 GameObject:
   m_ObjectHideFlags: 0
@@ -7574,7 +7472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1064255409658547538}
   - component: {fileID: 1068346185864494659}
-  - component: {fileID: 1068346185864494660}
+  - component: {fileID: 2549759507763166593}
   m_Layer: 7
   m_Name: Head
   m_TagString: Untagged
@@ -7621,7 +7519,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.2
   m_Center: {x: 0, y: 0.075, z: 0}
---- !u!114 &1068346185864494660
+--- !u!114 &2549759507763166593
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7630,25 +7528,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1068346185864494658}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 1
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1068349047640356366
 GameObject:
   m_ObjectHideFlags: 0
@@ -7794,7 +7679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1064292894099086516}
   - component: {fileID: 1068380737355611713}
-  - component: {fileID: 1068380737355611714}
+  - component: {fileID: 7121501584739917858}
   m_Layer: 7
   m_Name: Spine_03
   m_TagString: Untagged
@@ -7843,7 +7728,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1068380737355611714
+--- !u!114 &7121501584739917858
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7852,25 +7737,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1068380737355611712}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1068390462831350330
 GameObject:
   m_ObjectHideFlags: 0
@@ -7881,7 +7753,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1070317114388987626}
   - component: {fileID: 1068390462831350332}
-  - component: {fileID: 1068390462831350331}
+  - component: {fileID: 263325719926944713}
   m_Layer: 7
   m_Name: Elbow_R
   m_TagString: Untagged
@@ -7928,7 +7800,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 0
   m_Center: {x: 0.15, y: 0, z: 0}
---- !u!114 &1068390462831350331
+--- !u!114 &263325719926944713
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7937,25 +7809,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1068390462831350330}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1068401650250604706
 GameObject:
   m_ObjectHideFlags: 0
@@ -8364,7 +8223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1070580901942761932}
   - component: {fileID: 1069058424931417559}
-  - component: {fileID: 1069058424931417560}
+  - component: {fileID: 6882158129547111966}
   m_Layer: 7
   m_Name: Shoulder_L
   m_TagString: Untagged
@@ -8411,7 +8270,7 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 0
   m_Center: {x: -0.15, y: 0, z: 0}
---- !u!114 &1069058424931417560
+--- !u!114 &6882158129547111966
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8420,25 +8279,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1069058424931417558}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac06f2f4c75e224c95ec7de2d1093fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHead: 0
   isNuts: 0
-  aiAbstractClass: {fileID: 0}
-  aiGO: {fileID: 1067516613320950448}
-  aiHealth: 0
-  zScript: {fileID: 0}
-  skeleton: {fileID: 0}
-  watcher: {fileID: 0}
-  troll: {fileID: 0}
-  hellhound: {fileID: 0}
-  wererat: {fileID: 0}
-  blackKnight: {fileID: 0}
-  flameTyrant: {fileID: 0}
-  team: Ennemi AI
-  AIisDead: 0
-  otherHitboxes: {fileID: 7917080024312331494}
+  actor: {fileID: 2878286452659524791}
 --- !u!1 &1069059884118216542
 GameObject:
   m_ObjectHideFlags: 0
@@ -9745,6 +9591,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7917080023273927787}
+  - component: {fileID: 3160373415313087709}
   m_Layer: 0
   m_Name: Skins
   m_TagString: Untagged
@@ -9817,6 +9664,18 @@ Transform:
   m_Father: {fileID: 1070363331271798782}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3160373415313087709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7917080023273927786}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6529b6a750bff34c921b915d11c1428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7917080024312331492
 GameObject:
   m_ObjectHideFlags: 0
@@ -9863,18 +9722,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHitboxes: []
   AIHitboxes:
-  - {fileID: 1067854500931237310}
-  - {fileID: 1067751938072255142}
-  - {fileID: 1068380737355611714}
-  - {fileID: 1069058424931417560}
-  - {fileID: 1067596114735800268}
-  - {fileID: 1067618263834982603}
-  - {fileID: 1068390462831350331}
-  - {fileID: 1068346185864494660}
-  - {fileID: 1067689820124296488}
-  - {fileID: 1068236584528575420}
-  - {fileID: 1067674359543098206}
-  - {fileID: 1068277088966997196}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &7917080024458898806
 GameObject:
   m_ObjectHideFlags: 0

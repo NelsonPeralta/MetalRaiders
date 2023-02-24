@@ -87,11 +87,11 @@ public class Explosion : MonoBehaviour
             }
             else if (hit.GetComponent<IDamageable>() != null)
             {
-                if (hit.GetComponent<AIHitbox>())
-                    if (objectsHit.Contains(hit.GetComponent<AIHitbox>().aiAbstractClass.gameObject))
+                if (hit.GetComponent<ActorHitbox>())
+                    if (objectsHit.Contains(hit.GetComponent<ActorHitbox>().actor.gameObject))
                         return;
                     else
-                        objectsHit.Add(hit.GetComponent<AIHitbox>().aiAbstractClass.gameObject);
+                        objectsHit.Add(hit.GetComponent<ActorHitbox>().actor.gameObject);
                 else;
 
                 GameObject hitObject = hit.gameObject;

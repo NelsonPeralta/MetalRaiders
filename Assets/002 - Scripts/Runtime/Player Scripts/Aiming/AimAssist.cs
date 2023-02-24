@@ -13,7 +13,7 @@ public class AimAssist : MonoBehaviour
     public Transform puCollider;
     public CrosshairManager crosshairScript;
     public GameObject target;
-    public AIHitbox aiHitbox;
+    public ActorHitbox ActorHitbox;
     public PlayerHitbox targetHitbox;
     public LayerMask layerMask;
 
@@ -89,13 +89,13 @@ public class AimAssist : MonoBehaviour
         //        firstRayHit = hit.transform.gameObject;
         //        float gunRRR = player.allPlayerScripts.playerInventory.activeWeapon.GetComponent<WeaponProperties>().currentRedReticuleRange;
 
-        //        if (!hit.transform.gameObject.GetComponent<PlayerHitbox>() && !hit.transform.gameObject.GetComponent<AIHitbox>())
+        //        if (!hit.transform.gameObject.GetComponent<PlayerHitbox>() && !hit.transform.gameObject.GetComponent<ActorHitbox>())
         //        {
         //            ResetRedReticule();
         //            return;
         //        }
 
-        //        if (hit.transform.root.GetComponent<Player>() || hit.transform.GetComponent<AIHitbox>())
+        //        if (hit.transform.root.GetComponent<Player>() || hit.transform.GetComponent<ActorHitbox>())
         //            if (player.gameObject && targetDistance <= gunRRR)
         //                ActivateRedReticule();
         //            else
@@ -140,11 +140,11 @@ public class AimAssist : MonoBehaviour
 
         if (Physics.Raycast(raySpawn, puCollider.transform.forward * raycastRange, out hit, raycastRange, layerMask)) // Need a Raycast Range Overload to work with LayerMask
         {
-            if (hit.transform.gameObject.GetComponent<AIHitbox>() != null && hit.transform.gameObject.GetComponent<AIHitbox>().gameObject.layer == 13)
+            if (hit.transform.gameObject.GetComponent<ActorHitbox>() != null && hit.transform.gameObject.GetComponent<ActorHitbox>().gameObject.layer == 13)
             {
                 //Debug.Log("Hitting AI Hitbox");
-                target = hit.transform.gameObject.GetComponent<AIHitbox>().aiGO;
-                aiHitbox = hit.transform.gameObject.GetComponent<AIHitbox>();
+                target = hit.transform.gameObject.GetComponent<ActorHitbox>().actor.gameObject;
+                ActorHitbox = hit.transform.gameObject.GetComponent<ActorHitbox>();
                 targetDistance = hit.distance;
             }
             else if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null && hit.transform.gameObject.GetComponent<PlayerHitbox>().gameObject.layer == 13)
@@ -189,7 +189,7 @@ public class AimAssist : MonoBehaviour
 
             }
 
-            if (hit.transform.gameObject.GetComponent<AIHitbox>() != null)
+            if (hit.transform.gameObject.GetComponent<ActorHitbox>() != null)
             {
 
                 //Debug.Log("Check 2");
@@ -200,7 +200,7 @@ public class AimAssist : MonoBehaviour
                     if (targetDistance <= wProperties.currentRedReticuleRange && target != null)
                     {
                         //Debug.Log("Here 2");
-                        //if (string.Equals(hit.transform.gameObject.GetComponent<AIHitbox>().team.Trim(), playerMPProperties.team.Trim()))
+                        //if (string.Equals(hit.transform.gameObject.GetComponent<ActorHitbox>().team.Trim(), playerMPProperties.team.Trim()))
                         //{
                         //    //Debug.Log("Here 3");
                         //    crosshairScript.friendlyRRisActive = true;
@@ -228,7 +228,7 @@ public class AimAssist : MonoBehaviour
         {
             //Debug.Log("No hit");
             target = null;
-            aiHitbox = null;
+            ActorHitbox = null;
             targetHitbox = null;
             targetDistance = raycastRange;
             crosshairScript.RRisActive = false;
