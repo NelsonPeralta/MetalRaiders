@@ -4302,7 +4302,7 @@ Transform:
   m_GameObject: {fileID: 6079326229931853587}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.94, y: 0.94, z: 0.94}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6077022356158602181}
@@ -8181,11 +8181,14 @@ MonoBehaviour:
   _fieldOfView: {fileID: 0}
   _nma: {fileID: 0}
   _animator: {fileID: 0}
+  _currentAnimatorState: 
   _action: 0
   _closeRange: 0
   _midRange: 0
   _longRange: 0
   _analyzeNextActionCooldown: 0
+  _attackClip: {fileID: 8300000, guid: db58b211023bfee43a364a82d5c9e340, type: 3}
+  _deathClip: {fileID: 8300000, guid: aeac8b2a755723240ad121f9075b7445, type: 3}
 --- !u!114 &538785608468160624
 MonoBehaviour:
   m_ObjectHideFlags: 0

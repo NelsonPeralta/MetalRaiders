@@ -182,6 +182,9 @@ MonoBehaviour:
   - GetRandomAlivePlayerPosition
   - GetRandomAlivePlayerPhotonId
   - DamageActor
+  - UndeadAttack
+  - UndeadIdle
+  - UndeadRun
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

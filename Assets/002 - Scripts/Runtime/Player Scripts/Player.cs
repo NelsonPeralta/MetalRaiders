@@ -776,7 +776,7 @@ public class Player : MonoBehaviourPunCallbacks
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
 
         if ((GameManager.instance.pid_player_Dict.ContainsKey(source_pid) && GameManager.GetPlayerWithPhotonViewId(source_pid).isMine) ||
-            PhotonView.Find(source_pid).GetComponent<AiAbstractClass>())
+            PhotonView.Find(source_pid).GetComponent<Actor>())
         {
             DeathNature dsn = DeathNature.None;
             if (headshot)
@@ -1344,6 +1344,7 @@ public class Player : MonoBehaviourPunCallbacks
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
         try { hitPoints = newHealth; } catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
+
 
         try
         { // Hit Marker Handling

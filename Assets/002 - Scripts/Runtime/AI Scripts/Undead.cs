@@ -29,7 +29,7 @@ public class Undead : Actor
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
             if (distanceToTarget <= closeRange)
             {
-                Debug.Log("Punch Player");
+                //Debug.Log("Punch Player");
                 nma.enabled = false;
 
                 if (_meleeCooldown <= 0)
@@ -46,7 +46,7 @@ public class Undead : Actor
             {
                 if (!isRunning)
                 {
-                    Debug.Log("Chase Player");
+                    //Debug.Log("Chase Player");
                     UndeadRun();
                 }
                 nma.enabled = true;
@@ -83,8 +83,9 @@ public class Undead : Actor
         }
         else // Stop Chasing
         {
-            if (!isIdling)
-                UndeadIdle();
+            if (hitPoints > 0)
+                if (!isIdling)
+                    UndeadIdle();
             //nma.isStopped = true;
         }
     }
@@ -97,10 +98,14 @@ public class Undead : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("UndeadAttack", RpcTarget.All, false);
+            target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
         {
-            Debug.Log("Punch Player RPC");
+            //Debug.Log("Punch Player RPC");
+
+            GetComponent<AudioSource>().clip = _attackClip;
+            GetComponent<AudioSource>().Play();
 
             _animator.SetBool("Run", false);
             _animator.Play("Melee");
@@ -117,7 +122,7 @@ public class Undead : Actor
         }
         else
         {
-            Debug.Log("UndeadIdle RPC");
+            //Debug.Log("UndeadIdle RPC");
 
             nma.enabled = false;
             _animator.SetBool("Run", false);
@@ -133,7 +138,7 @@ public class Undead : Actor
         }
         else
         {
-            Debug.Log("UndeadRun RPC");
+            //Debug.Log("UndeadRun RPC");
 
             //_animator.Play("Run");
             _animator.SetBool("Run", true);
