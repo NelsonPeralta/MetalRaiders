@@ -383,9 +383,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
 
 
-            //knightsLeft = nbPlayers * 2 + (currentWave);
-            //if (knightsLeft > knightPool.Count)
-            //    knightsLeft = knightPool.Count;
+            knightsLeft = nbPlayers * 2 + (currentWave);
+            if (knightsLeft > knightPool.Count)
+                knightsLeft = knightPool.Count;
 
             //watchersLeft = nbPlayers * 3 + (currentWave * 2);
             //if (watchersLeft > watcherPool.Count)
@@ -403,7 +403,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         //}
 
 
-        //if (editMode)
+        if (editMode)
         {
             zombiesLeft = 0;
             knightsLeft = 1;
