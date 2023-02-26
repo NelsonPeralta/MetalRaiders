@@ -16,7 +16,7 @@ abstract public class Actor : MonoBehaviour
     public int hitPoints
     {
         get { return _hitPoints; }
-        private set
+        protected set
         {
             int pv = _hitPoints;
             int nv = Mathf.Clamp(value, 0, _defaultHitpoints);
@@ -64,36 +64,37 @@ abstract public class Actor : MonoBehaviour
     public Transform losSpawn { get { return _losSpawn; } set { _losSpawn = value; } }
     public virtual FieldOfView fieldOfView { get { return _fieldOfView; } private set { _fieldOfView = value; } }
     public NavMeshAgent nma { get { return _nma; } private set { _nma = value; } }
+    public List<ActorHitbox> actorHitboxes { get { return _actorHitboxes; } }
 
     public int longRange { get { return _longRange; } }
     public int midRange { get { return _midRange; } }
     public int closeRange { get { return _closeRange; } }
 
-    public string currentAnimatorClipName { get { return _currentAnimatorState; } private set { _currentAnimatorState = value; } }
 
     [SerializeField] int _hitPoints;
     [SerializeField] Transform _target;
     [SerializeField] Vector3 _destination;
     [SerializeField] Transform _losSpawn;
-    [SerializeField] FieldOfView _fieldOfView;
-    [SerializeField] NavMeshAgent _nma;
-    [SerializeField] protected Animator _animator;
-    [SerializeField] protected string _currentAnimatorState;
-    [SerializeField] protected Action _action;
 
     [SerializeField] int _closeRange, _midRange, _longRange;
     [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown;
     [SerializeField] protected AudioClip _attackClip, _deathClip;
 
+
+
+    protected NavMeshAgent _nma;
+    protected FieldOfView _fieldOfView;
+    protected Animator _animator;
     protected int _defaultHitpoints;
     protected bool isIdling, isRunning, isMeleeing;
+    protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     private void Awake()
     {
         _defaultHitpoints = _hitPoints;
-        _animator = GetComponent<Animator>();
         _analyzeNextActionCooldown = _findNewTargetCooldown = 0.5f;
 
+        _animator = GetComponent<Animator>();
         _fieldOfView = GetComponent<FieldOfView>();
         _nma = GetComponent<NavMeshAgent>();
 
@@ -106,7 +107,11 @@ abstract public class Actor : MonoBehaviour
         if (_longRange <= 0)
             _longRange = 20;
 
-        foreach (ActorHitbox ah in GetComponentsInChildren<ActorHitbox>()) { ah.actor = this; }
+        foreach (ActorHitbox ah in GetComponentsInChildren<ActorHitbox>())
+        {
+            ah.actor = this;
+            _actorHitboxes.Add(ah);
+        }
     }
 
     // Start is called before the first frame update
@@ -158,7 +163,10 @@ abstract public class Actor : MonoBehaviour
 
         transform.position = spawnPointPosition;
         transform.rotation = spawnPointRotation;
-        target = PhotonView.Find(targetPhotonId).transform;
+
+        if (targetPhotonId > 0)
+            target = PhotonView.Find(targetPhotonId).transform;
+
         gameObject.SetActive(true);
     }
 
@@ -240,7 +248,11 @@ abstract public class Actor : MonoBehaviour
 
             WeaponProperties wp = GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
 
-            if (wp.weaponType == WeaponProperties.WeaponType.LMG || wp.weaponType == WeaponProperties.WeaponType.Launcher || wp.weaponType == WeaponProperties.WeaponType.Shotgun || wp.weaponType == WeaponProperties.WeaponType.Sniper)
+            if (wp.weaponType == WeaponProperties.WeaponType.LMG ||
+                wp.weaponType == WeaponProperties.WeaponType.Launcher ||
+                wp.weaponType == WeaponProperties.WeaponType.Shotgun ||
+                wp.weaponType == WeaponProperties.WeaponType.Sniper ||
+                wp.weaponType == WeaponProperties.WeaponType.DMR)
                 return;
             Debug.Log($"DropRandomWeapon: {wp.cleanName}");
 
@@ -295,6 +307,13 @@ abstract public class Actor : MonoBehaviour
 
 
 
+    public abstract void AnalyzeNextAction();
+    public abstract void CooldownsUpdate();
+    public abstract void ChildPrepare();
+
+
+
+
 
 
 
@@ -334,18 +353,4 @@ abstract public class Actor : MonoBehaviour
             target = PhotonView.Find(pid).transform;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    public abstract void AnalyzeNextAction();
-    public abstract void CooldownsUpdate();
 }

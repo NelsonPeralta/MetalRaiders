@@ -416,7 +416,10 @@ public class Movement : MonoBehaviour, IPunObservable
 
         if (isGrounded && player.GetButtonDown("Jump"))
         {
-            velocity.y = jumpForce;
+            float _jumpForce = jumpForce;
+
+            if(GameManager.instance.gameMode == GameManager.GameMode.Swarm) { _jumpForce = jumpForce * 0.7f; }
+            velocity.y = _jumpForce;
             Debug.Log(player.name);
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }

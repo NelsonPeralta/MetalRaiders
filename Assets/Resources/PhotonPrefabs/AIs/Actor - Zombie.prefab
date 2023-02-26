@@ -8178,15 +8178,11 @@ MonoBehaviour:
   _target: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 1762168991798063459}
-  _fieldOfView: {fileID: 0}
-  _nma: {fileID: 0}
-  _animator: {fileID: 0}
-  _currentAnimatorState: 
-  _action: 0
   _closeRange: 0
   _midRange: 0
   _longRange: 0
   _analyzeNextActionCooldown: 0
+  _findNewTargetCooldown: 0
   _attackClip: {fileID: 8300000, guid: db58b211023bfee43a364a82d5c9e340, type: 3}
   _deathClip: {fileID: 8300000, guid: aeac8b2a755723240ad121f9075b7445, type: 3}
 --- !u!114 &538785608468160624

@@ -9,6 +9,10 @@ public class Undead : Actor
     float _targetLostCooldown;
 
 
+    private void OnEnable()
+    {
+        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
+    }
 
     public override void CooldownsUpdate()
     {
@@ -112,6 +116,19 @@ public class Undead : Actor
             _meleeCooldown = 1;
         }
     }
+
+
+
+
+    public override void ChildPrepare()
+    {
+
+    }
+
+
+
+
+
 
     [PunRPC]
     void UndeadIdle(bool caller = true)
