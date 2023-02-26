@@ -130,6 +130,15 @@ MonoBehaviour:
   - BreatherThrowGrenade
   - BreatherThrowFireBall
   - BreatherMelee
+  - AlienShooterRun
+  - AlienShooterIdle
+  - AlienShooterThrowGrenade
+  - AlienShooterMelee
+  - AlienShooterShoot
+  - FlameTyrantFireBall
+  - FlameTyrantIdle
+  - FlameTyrantMelee
+  - FlameTyrantRun
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

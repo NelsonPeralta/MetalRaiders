@@ -4013,9 +4013,9 @@ MonoBehaviour:
   _target: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 3512012615773341269}
-  _closeRange: 0
-  _midRange: 0
-  _longRange: 0
+  _closeRange: 3
+  _midRange: 15
+  _longRange: 20
   _analyzeNextActionCooldown: 0
   _findNewTargetCooldown: 0
   _attackClip: {fileID: 8300000, guid: f2350706efe6ac14d8484a2a3d88aea7, type: 3}

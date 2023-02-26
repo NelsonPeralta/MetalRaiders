@@ -157,7 +157,7 @@ public class Breather : Actor
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
             proj.GetComponent<Fireball>().damage = 8;
-            proj.GetComponent<Fireball>().force = 200;
+            proj.GetComponent<Fireball>().force = 300;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
             _throwFireballCooldown = 2f;
