@@ -1069,12 +1069,12 @@ Transform:
   - {fileID: 3042837289629065971}
   - {fileID: 3043065611800518865}
   - {fileID: 6585857433713372890}
+  - {fileID: 3336777966131421424}
   - {fileID: 8413654202798521083}
   - {fileID: 8416555634248423477}
   - {fileID: 8416555634619597615}
   - {fileID: 7429971499405281060}
   - {fileID: 2371751096011490860}
-  - {fileID: 3336777966131421424}
   - {fileID: 6441501727693841694}
   - {fileID: 1168328163400292070}
   m_Father: {fileID: 0}
@@ -1125,6 +1125,9 @@ MonoBehaviour:
   _deathClip: {fileID: 8300000, guid: b979c8b17b61fe041bf88ab821639874, type: 3}
   _fireBallPrefab: {fileID: 3996956188031236213, guid: b8556c475913e5a48a676f6421af774e,
     type: 3}
+  _minionSpawnPoints:
+  - {fileID: 1899560240701333374}
+  - {fileID: 3202571792362354202}
 --- !u!195 &3039395898336096142
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2613,7 +2616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3336777966131421424
 Transform:
   m_ObjectHideFlags: 0

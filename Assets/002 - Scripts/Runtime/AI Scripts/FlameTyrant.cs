@@ -6,9 +6,11 @@ using UnityEngine;
 public class FlameTyrant : Actor
 {
     [SerializeField] Fireball _fireBallPrefab;
+    [SerializeField] List<Transform> _minionSpawnPoints = new List<Transform>();
 
     float _meleeCooldown;
     float _throwFireballCooldown;
+    float _summonlCooldown;
 
     bool isInRange;
 
@@ -24,6 +26,9 @@ public class FlameTyrant : Actor
 
         if (_throwFireballCooldown > 0)
             _throwFireballCooldown -= Time.deltaTime;
+
+        if (_summonlCooldown > 0)
+            _summonlCooldown -= Time.deltaTime;
     }
 
 
@@ -58,10 +63,23 @@ public class FlameTyrant : Actor
 
                 if (isInRange)
                 {
-                    if (_throwFireballCooldown <= 0)
+                    int ran = Random.Range(0, 5);
+
+                    if (ran != 0)
                     {
-                        Debug.Log("Throw Fireball to Player");
-                        FlameTyrantFireBall(false);
+                        if (_throwFireballCooldown <= 0)
+                        {
+                            Debug.Log("Throw Fireball to Player");
+                            FlameTyrantFireBall(false);
+                        }
+                    }
+                    else
+                    {
+                        if (_summonlCooldown <= 0)
+                        {
+                            Debug.Log("Throw Fireball to Player");
+                            FlameTyrantSummon(false);
+                        }
                     }
                 }
                 else
@@ -156,10 +174,33 @@ public class FlameTyrant : Actor
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
             proj.GetComponent<Fireball>().damage = 8;
-            proj.GetComponent<Fireball>().force = 300;
+            proj.GetComponent<Fireball>().force = 200;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
             _throwFireballCooldown = 2f;
+        }
+    }
+
+    [PunRPC]
+    void FlameTyrantSummon(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.All, false);
+            //target.GetComponent<Player>().Damage(4, false, pid);
+        }
+        else
+        {
+            //Debug.Log("Punch Player RPC");
+
+            _animator.SetBool("Run", false);
+            nma.enabled = false;
+            _animator.Play("Summon");
+
+            SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, _minionSpawnPoints[0]);
+            SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, _minionSpawnPoints[1]);
+
+            _summonlCooldown = 4f;
         }
     }
 

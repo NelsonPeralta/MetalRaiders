@@ -211,7 +211,7 @@ public class Tyrant : AiAbstractClass
     IEnumerator SpawnHellhound_Coroutine()
     {
         Debug.Log(_minionsToSpawn);
-        SwarmManager.instance.SpawnAi(SwarmManager.AiType.Hellhound, minionSpawnPoints[_minionsToSpawn - 1]);
+        SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, minionSpawnPoints[_minionsToSpawn - 1]);
         _minionsToSpawn--;
         yield return new WaitForSeconds(0.1f);
         if (_minionsToSpawn > 0)

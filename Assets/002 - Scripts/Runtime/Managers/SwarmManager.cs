@@ -16,7 +16,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     // public variables
     public static SwarmManager instance;
-    public enum AiType { Undead, AlienShooter, Breather, Hellhound, FlameTyrant }
+    public enum AiType { Undead, AlienShooter, Breather, Helldog, FlameTyrant }
 
     [SerializeField] int _currentWave;
     public int currentWave
@@ -40,6 +40,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject knightPrefab;
     [SerializeField] GameObject alienShooterPrefab;
     [SerializeField] GameObject tyrantPrefab;
+    [SerializeField] GameObject helldogPrefab;
 
     public List<Undead> zombieList { get { return _zombieList; } set { _zombieList = value; } }
     public List<Breather> knightPool { get { return _knightPool; } set { _knightPool = value; } }
@@ -50,7 +51,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     List<Undead> _zombieList = new List<Undead>();
     public List<Breather> _knightPool = new List<Breather>();
     public List<AlienShooter> _watcherPool = new List<AlienShooter>();
-    public Hellhound[] hellhoundPool;
+    public List<Helldog> hellhoundPool = new List<Helldog>();
     public List<FlameTyrant> tyrantPool = new List<FlameTyrant>();
 
     // private variables
@@ -277,6 +278,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero, Quaternion.identity);
                     GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero, Quaternion.identity);
                     GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero, Quaternion.identity);
+                    GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero, Quaternion.identity);
                     //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
                     //_zombieList.Add(z.GetComponent<Undead>());
                     //z.transform.parent = transform;
@@ -340,9 +342,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             w.gameObject.SetActive(false);
         }
 
-        hellhoundPool = FindObjectsOfType<Hellhound>();
-        foreach (Hellhound w in hellhoundPool)
+        foreach (Helldog w in FindObjectsOfType<Helldog>(true).ToList())
+        {
+            hellhoundPool.Add(w);
+            w.transform.parent = transform;
             w.gameObject.SetActive(false);
+        }
 
 
         foreach (FlameTyrant w in FindObjectsOfType<FlameTyrant>(true).ToList())
@@ -410,7 +415,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
 
 
-        if (editMode)
+        //if (editMode)
         {
             zombiesLeft = 0;
             knightsLeft = 0;
@@ -455,7 +460,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         SpawnAi(AiType.Undead);
         SpawnAi(AiType.AlienShooter);
         SpawnAi(AiType.Breather);
-        //SpawnAi(AiType.Hellhound);
+        SpawnAi(AiType.Helldog);
         SpawnAi(AiType.FlameTyrant);
     }
     public void SpawnAi(AiType aiType, Transform transform = null)
@@ -522,7 +527,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Breather.ToString(), pdelay);
         }
-        else if (aiType == AiType.Hellhound)
+        else if (aiType == AiType.Helldog)
         {
             if (hellhoundsLeft <= 0 && pdelay < 0)
             {
@@ -530,17 +535,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 return;
             }
 
-            foreach (Hellhound w in hellhoundPool)
+            foreach (Helldog w in hellhoundPool)
                 if (!w.gameObject.activeSelf)
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
 
-            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Hellhound.ToString(), pdelay);
+            PV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId, spawnPoint.position, spawnPoint.rotation, AiType.Helldog.ToString(), pdelay);
         }
         else if (aiType == AiType.FlameTyrant)
         {
             if (tyrantsLeft <= 0)
             {
-                foreach (Hellhound h in FindObjectsOfType<Hellhound>())
+                foreach (Helldog h in FindObjectsOfType<Helldog>())
                     h.Damage(999, 0);
                 OnAiDeath?.Invoke(this);
                 return;
@@ -586,7 +591,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             delay = KNIGHT_SPAWN_DELAY + waveSpawnDelay;
         }
-        else if (aiTypeEnum == AiType.Hellhound)
+        else if (aiTypeEnum == AiType.Helldog)
         {
             delay = HELLHOUND_SPAWN_DELAY + waveSpawnDelay;
         }
@@ -614,7 +619,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     watchersLeft--;
                 else if (aiTypeEnum == AiType.Breather)
                     knightsLeft--;
-                else if (aiTypeEnum == AiType.Hellhound)
+                else if (aiTypeEnum == AiType.Helldog)
                     hellhoundsLeft--;
                 else if (aiTypeEnum == AiType.FlameTyrant)
                     tyrantsLeft--;
@@ -666,9 +671,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //        }
             //    }
             //}
-            //else if (aiTypeEnum == AiType.Hellhound)
+            //else if (aiTypeEnum == AiType.Helldog)
             //{
-            //    foreach (Hellhound w in hellhoundPool)
+            //    foreach (Helldog w in hellhoundPool)
             //    {
             //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
             //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
@@ -701,7 +706,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //        watchersLeft--;
             //    else if (aiTypeEnum == AiType.Breather)
             //        knightsLeft--;
-            //    else if (aiTypeEnum == AiType.Hellhound)
+            //    else if (aiTypeEnum == AiType.Helldog)
             //        hellhoundsLeft--;
             //    else if (aiTypeEnum == AiType.FlameTyrant)
             //        tyrantsLeft--;
@@ -734,8 +739,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (w.gameObject.activeSelf && w.hitPoints > 0)
                 __knightsAlive++;
 
-        foreach (Hellhound w in hellhoundPool)
-            if (w.gameObject.activeSelf && !w.isDead)
+        foreach (Helldog w in hellhoundPool)
+            if (w.gameObject.activeSelf && w.hitPoints > 0)
                 __hellhoundsAlive++;
 
         foreach (FlameTyrant w in tyrantPool)
