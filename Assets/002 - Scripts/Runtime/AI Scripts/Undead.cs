@@ -25,7 +25,7 @@ public class Undead : Actor
 
     public override void AnalyzeNextAction()
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!GetComponent<PhotonView>().IsMine)
             return;
         //if (fieldOfView.canSeePlayer) // Chase Player
         if (target)

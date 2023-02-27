@@ -30,7 +30,7 @@ public class Breather : Actor
 
     public override void AnalyzeNextAction()
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!GetComponent<PhotonView>().IsMine)
             return;
         if (target)
         {
@@ -41,7 +41,7 @@ public class Breather : Actor
 
                 if (_meleeCooldown <= 0)
                 {
-                    BreatherMelee(false);
+                    BreatherMelee();
                 }
                 else
                 {
@@ -62,7 +62,7 @@ public class Breather : Actor
                     if (_throwFireballCooldown <= 0)
                     {
                         Debug.Log("Throw Fireball to Player");
-                        BreatherThrowFireBall(false);
+                        BreatherThrowFireBall();
                     }
                 }
                 else
@@ -70,7 +70,7 @@ public class Breather : Actor
                     if (!isRunning)
                     {
                         Debug.Log("Chase Player");
-                        BreatherRun(false);
+                        BreatherRun();
                     }
                     nma.enabled = true;
                     nma.SetDestination(target.position);
@@ -84,7 +84,7 @@ public class Breather : Actor
                 if (!isRunning)
                 {
                     //Debug.Log("Chase Player");
-                    BreatherRun(false);
+                    BreatherRun();
                 }
                 nma.enabled = true;
                 nma.SetDestination(target.position);
@@ -96,7 +96,7 @@ public class Breather : Actor
         {
             if (hitPoints > 0)
                 if (!isIdling)
-                    BreatherIdle(false);
+                    BreatherIdle();
             //nma.isStopped = true;
         }
     }

@@ -313,49 +313,54 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         //Begin();
     }
 
-    void CreateAIPool()
+    public void CreateAIPool(bool caller = true)
     {
-        Debug.Log("Creating AI Pool");
-        foreach (Undead z in FindObjectsOfType<Undead>().ToList())
+        if (!caller)
         {
-            //z.transform.position = new Vector3(0, -10, 0);
-            _zombieList.Add(z);
-            z.transform.parent = transform;
-            z.gameObject.SetActive(false);
-        }
-        //_zombieList = FindObjectsOfType<Undead>();
-        //foreach (Undead w in _zombieList)
-        //    w.gameObject.SetActive(false);
+            Debug.Log("Creating AI Pool");
+            foreach (Undead z in FindObjectsOfType<Undead>().ToList())
+            {
+                //z.transform.position = new Vector3(0, -10, 0);
+                _zombieList.Add(z);
+                z.transform.parent = transform;
+                z.gameObject.SetActive(false);
+            }
+            //_zombieList = FindObjectsOfType<Undead>();
+            //foreach (Undead w in _zombieList)
+            //    w.gameObject.SetActive(false);
 
-        // Watcher GameObject must be active in order to be found with FindObjectsOfType
-        foreach (AlienShooter w in FindObjectsOfType<AlienShooter>().ToList())
-        {
-            _watcherPool.Add(w);
-            w.transform.parent = transform;
-            w.gameObject.SetActive(false);
-        }
+            // Watcher GameObject must be active in order to be found with FindObjectsOfType
+            foreach (AlienShooter w in FindObjectsOfType<AlienShooter>().ToList())
+            {
+                _watcherPool.Add(w);
+                w.transform.parent = transform;
+                w.gameObject.SetActive(false);
+            }
 
-        foreach (Breather w in FindObjectsOfType<Breather>(true).ToList())
-        {
-            _knightPool.Add(w);
-            w.transform.parent = transform;
-            w.gameObject.SetActive(false);
-        }
+            foreach (Breather w in FindObjectsOfType<Breather>(true).ToList())
+            {
+                _knightPool.Add(w);
+                w.transform.parent = transform;
+                w.gameObject.SetActive(false);
+            }
 
-        foreach (Helldog w in FindObjectsOfType<Helldog>(true).ToList())
-        {
-            hellhoundPool.Add(w);
-            w.transform.parent = transform;
-            w.gameObject.SetActive(false);
-        }
+            foreach (Helldog w in FindObjectsOfType<Helldog>(true).ToList())
+            {
+                hellhoundPool.Add(w);
+                w.transform.parent = transform;
+                w.gameObject.SetActive(false);
+            }
 
 
-        foreach (FlameTyrant w in FindObjectsOfType<FlameTyrant>(true).ToList())
-        {
-            tyrantPool.Add(w);
-            w.transform.parent = transform;
-            w.gameObject.SetActive(false);
+            foreach (FlameTyrant w in FindObjectsOfType<FlameTyrant>(true).ToList())
+            {
+                tyrantPool.Add(w);
+                w.transform.parent = transform;
+                w.gameObject.SetActive(false);
+            }
         }
+        else
+            PV.RPC("CreateAIPool", RpcTarget.All);
     }
 
     void Begin()
@@ -415,13 +420,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
 
 
-        if (editMode)
+        //if (editMode)
         {
-            zombiesLeft = 0;
-            knightsLeft = 0;
+            zombiesLeft = 1;
+            knightsLeft = 1;
             hellhoundsLeft = 0;
-            watchersLeft = 0;
-            tyrantsLeft = 1;
+            watchersLeft = 1;
+            tyrantsLeft = 0;
         }
 
         OnAIsCalculated?.Invoke(this);

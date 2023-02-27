@@ -34,7 +34,7 @@ public class FlameTyrant : Actor
 
     public override void AnalyzeNextAction()
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!GetComponent<PhotonView>().IsMine)
             return;
         if (target)
         {

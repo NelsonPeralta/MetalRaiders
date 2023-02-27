@@ -87,6 +87,12 @@ public class NetworkSwarmManager : MonoBehaviourPun
         }
     }
 
+    [PunRPC]
+
+    public void CreateAIPool()
+    {
+        FindObjectOfType<SwarmManager>().CreateAIPool(false);
+    }
     public int GetRandomAlivePlayerPhotonId()
     {
         //if (punCall)

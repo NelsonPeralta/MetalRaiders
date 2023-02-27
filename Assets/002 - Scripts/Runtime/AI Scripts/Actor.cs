@@ -135,7 +135,8 @@ abstract public class Actor : MonoBehaviour
 
                 if (_analyzeNextActionCooldown <= 0)
                 {
-                    AnalyzeNextAction();
+                    if (GetComponent<PhotonView>().IsMine)
+                        AnalyzeNextAction();
                     _analyzeNextActionCooldown = 0.3f;
                 }
             }
@@ -226,7 +227,7 @@ abstract public class Actor : MonoBehaviour
     }
     protected void LookAtTarget()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (GetComponent<PhotonView>().IsMine)
             if (target && (isIdling || isMeleeing))
             {
                 Vector3 targetPostition = new Vector3(target.position.x,

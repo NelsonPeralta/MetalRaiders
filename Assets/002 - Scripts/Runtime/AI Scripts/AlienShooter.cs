@@ -45,7 +45,7 @@ public class AlienShooter : Actor
 
                 if (_meleeCooldown <= 0)
                 {
-                    AlienShooterMelee(false);
+                    AlienShooterMelee();
                 }
                 else
                 {
@@ -70,7 +70,7 @@ public class AlienShooter : Actor
                         if (_throwFireballCooldown <= 0)
                         {
                             Debug.Log("Throw Fireball to Player");
-                            AlienShooterShoot(false);
+                            AlienShooterShoot();
                         }
                     }
                     else
@@ -78,7 +78,7 @@ public class AlienShooter : Actor
                         if (_throwGrenadeCooldown <= 0)
                         {
                             Debug.Log("Throw Fireball to Player");
-                            AlienShooterThrowGrenade(false);
+                            AlienShooterThrowGrenade();
                         }
                     }
                 }
@@ -87,7 +87,7 @@ public class AlienShooter : Actor
                     if (!isRunning)
                     {
                         Debug.Log("Chase Player");
-                        AlienShooterRun(false);
+                        AlienShooterRun();
                     }
                     nma.enabled = true;
                     nma.SetDestination(target.position);
@@ -101,7 +101,7 @@ public class AlienShooter : Actor
                 if (!isRunning)
                 {
                     //Debug.Log("Chase Player");
-                    AlienShooterRun(false);
+                    AlienShooterRun();
                 }
                 nma.enabled = true;
                 nma.SetDestination(target.position);
@@ -113,7 +113,7 @@ public class AlienShooter : Actor
         {
             if (hitPoints > 0)
                 if (!isIdling)
-                    AlienShooterIdle(false);
+                    AlienShooterIdle();
             //nma.isStopped = true;
         }
     }
