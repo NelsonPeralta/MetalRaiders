@@ -173,8 +173,8 @@ public class FlameTyrant : Actor
                 , Quaternion.LookRotation(dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
-            proj.GetComponent<Fireball>().damage = 8;
-            proj.GetComponent<Fireball>().force = 200;
+            proj.GetComponent<Fireball>().damage = 14;
+            proj.GetComponent<Fireball>().force = 150;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
             _throwFireballCooldown = 2f;
