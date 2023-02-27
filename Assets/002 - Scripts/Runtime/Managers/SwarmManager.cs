@@ -302,7 +302,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             OnWaveEnd -= OnWaveEnd_Delegate;
             OnWaveEnd += OnWaveEnd_Delegate;
 
-            CreateAIPool();
+            if (PhotonNetwork.IsMasterClient)
+                CreateAIPool();
         }
         else // We are in the menu
         {
