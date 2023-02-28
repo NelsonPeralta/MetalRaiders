@@ -1123,6 +1123,7 @@ MonoBehaviour:
   _findNewTargetCooldown: 0
   _attackClip: {fileID: 8300000, guid: 205b3d2d7b6f63b48aaa14ffff125125, type: 3}
   _deathClip: {fileID: 8300000, guid: b979c8b17b61fe041bf88ab821639874, type: 3}
+  _tauntClip: {fileID: 0}
   _fireBallPrefab: {fileID: 3996956188031236213, guid: b8556c475913e5a48a676f6421af774e,
     type: 3}
   _minionSpawnPoints:

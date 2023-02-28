@@ -3422,7 +3422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea11089b7903c0845b654cb9d4186576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitPoints: 250
+  _hitPoints: 500
   _target: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 3976385901426164958}
@@ -3433,6 +3433,7 @@ MonoBehaviour:
   _findNewTargetCooldown: 0
   _attackClip: {fileID: 8300000, guid: fdc8080df366feb43805c05300069c0e, type: 3}
   _deathClip: {fileID: 8300000, guid: 94f300b380dc25f44b40e75fb5931bf8, type: 3}
+  _tauntClip: {fileID: 8300000, guid: 98e43a47e797e4941a04a53e0c6f192e, type: 3}
   _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
     type: 3}
   _grenadePrefab: {fileID: 6543794610344578356, guid: ace650de0d210f54490f7e347a783c04,

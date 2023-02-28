@@ -67,7 +67,7 @@ public class AlienShooter : Actor
 
                     if (ran != 0)
                     {
-                        if (_throwFireballCooldown <= 0)
+                        if (_throwFireballCooldown <= 0 && !isTaunting)
                         {
                             Debug.Log("Throw Fireball to Player");
                             AlienShooterShoot();
@@ -75,7 +75,7 @@ public class AlienShooter : Actor
                     }
                     else
                     {
-                        if (_throwGrenadeCooldown <= 0)
+                        if (_throwGrenadeCooldown <= 0 && !isTaunting)
                         {
                             Debug.Log("Throw Fireball to Player");
                             AlienShooterThrowGrenade();

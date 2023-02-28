@@ -24,6 +24,16 @@ abstract public class Actor : MonoBehaviour
 
             _hitPoints = nv;
 
+            if ((nv <= 0.5f * _defaultHitpoints) && (pv > 0.5f * _defaultHitpoints))
+                try
+                {
+                    GetComponent<AudioSource>().clip = _tauntClip;
+                    GetComponent<AudioSource>().Play();
+                    _animator.Play("Taunt");
+                }
+                catch { }
+
+
             if (_hitPoints <= 0 && nv != pv)
             {
                 //target = null; \\DO NOT REMOVE TARGET HERE
@@ -78,7 +88,7 @@ abstract public class Actor : MonoBehaviour
 
     [SerializeField] int _closeRange, _midRange, _longRange;
     [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown;
-    [SerializeField] protected AudioClip _attackClip, _deathClip;
+    [SerializeField] protected AudioClip _attackClip, _deathClip, _tauntClip;
 
 
 
@@ -86,7 +96,7 @@ abstract public class Actor : MonoBehaviour
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
     protected int _defaultHitpoints;
-    protected bool isIdling, isRunning, isMeleeing;
+    protected bool isIdling, isRunning, isMeleeing, isTaunting;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     private void Awake()
@@ -215,6 +225,11 @@ abstract public class Actor : MonoBehaviour
             isRunning = true;
         else
             isRunning = false;
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Taunt"))
+            isTaunting = true;
+        else
+            isTaunting = false;
     }
 
     void TargetStateCheck()
@@ -240,8 +255,9 @@ abstract public class Actor : MonoBehaviour
     void DropRandomWeapon()
     {
         int ChanceToDrop = UnityEngine.Random.Range(0, 10);
+        int cap = 5;
 
-        if (ChanceToDrop <= 4)
+        if (ChanceToDrop <= cap)
         {
             float ranAmmoFactor = UnityEngine.Random.Range(0.2f, 0.9f);
             float ranCapFactor = UnityEngine.Random.Range(0.2f, 0.6f);
