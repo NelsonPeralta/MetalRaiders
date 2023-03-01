@@ -423,8 +423,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (editMode)
         {
-            zombiesLeft = 1;
-            knightsLeft = 1;
+            zombiesLeft = 0;
+            knightsLeft = 0;
             hellhoundsLeft = 0;
             watchersLeft = 1;
             tyrantsLeft = 0;

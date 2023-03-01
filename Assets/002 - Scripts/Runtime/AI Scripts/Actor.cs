@@ -24,6 +24,8 @@ abstract public class Actor : MonoBehaviour
 
             _hitPoints = nv;
 
+            if(nv < pv)
+
             if ((nv <= 0.5f * _defaultHitpoints) && (pv > 0.5f * _defaultHitpoints))
                 try
                 {
@@ -96,7 +98,7 @@ abstract public class Actor : MonoBehaviour
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
     protected int _defaultHitpoints;
-    protected bool isIdling, isRunning, isMeleeing, isTaunting;
+    protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     private void Awake()
@@ -230,6 +232,11 @@ abstract public class Actor : MonoBehaviour
             isTaunting = true;
         else
             isTaunting = false;
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Flinch"))
+            isFlinching = true;
+        else
+            isFlinching = false;
     }
 
     void TargetStateCheck()
@@ -306,7 +313,7 @@ abstract public class Actor : MonoBehaviour
         }
     }
 
-
+  public virtual void OnHealthHitEarly() { }
 
 
 
