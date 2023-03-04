@@ -144,9 +144,13 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!PV.IsMine)
         {
-            allThirdPersonEquippedWeaponsHolder.SetActive(true);
-            foreach (GameObject w in allWeaponsInInventory)
-                GameManager.SetLayerRecursively(w, 31);
+            try
+            {
+                allThirdPersonEquippedWeaponsHolder.SetActive(true);
+                foreach (GameObject w in allWeaponsInInventory)
+                    GameManager.SetLayerRecursively(w, 31);
+            }
+            catch (System.Exception e) { Debug.LogWarning(e); }
         }
     }
     public void Start()

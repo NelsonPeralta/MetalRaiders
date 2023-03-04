@@ -58,8 +58,8 @@ public class PlayerWorldUIMarker : MonoBehaviour
         catch (System.Exception e)
         {
             Debug.Log("Error with PlayerWorldUIMarker");
-            Debug.LogWarning(e); 
-            
+            Debug.LogWarning(e);
+
             gameObject.SetActive(false);
         }
     }
@@ -71,15 +71,19 @@ public class PlayerWorldUIMarker : MonoBehaviour
             Debug.Log("Player Marker");
             if (!player.isMine)
             {
-                if (player.team != GameManager.GetMyPlayer().team)
+                try
                 {
-                    _greenMarker.gameObject.SetActive(false);
-                    _holder.gameObject.SetActive(false);
+                    if (player.team != GameManager.GetMyPlayer().team)
+                    {
+                        _greenMarker.gameObject.SetActive(false);
+                        _holder.gameObject.SetActive(false);
+                    }
+                    if (player.team == GameManager.GetMyPlayer().team)
+                    {
+                        _redMarker.gameObject.SetActive(false);
+                    }
                 }
-                if (player.team == GameManager.GetMyPlayer().team)
-                {
-                    _redMarker.gameObject.SetActive(false);
-                }
+                catch (System.Exception e) { Debug.LogWarning(e); }
             }
         }
         else
