@@ -371,6 +371,9 @@ public class Bullet : MonoBehaviourPunCallbacks
                             if (weaponProperties.weaponType == WeaponProperties.WeaponType.Sniper)
                                 damage = (int)(damage * weaponProperties.headshotMultiplier);
 
+                            if (GameManager.instance.gameType == GameManager.GameType.Swat)
+                                damage = 999;
+
                             wasHeadshot = hitbox.isHead;
                             wasNutshot = hitbox.isNuts;
                         }

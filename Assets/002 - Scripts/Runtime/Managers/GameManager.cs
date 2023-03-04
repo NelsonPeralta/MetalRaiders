@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum GameType
     {
         Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
-        Shotguns, Hill
+        Shotguns, Swat, Hill
     }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum CoopGameType { Survival }
@@ -222,6 +222,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            try { gameMode = GameMode.Multiplayer; } catch { }
             try { gameType = GameType.Fiesta; } catch { }
             try { teamMode = TeamMode.None; } catch { }
             try { onlineTeam = PlayerMultiplayerMatchStats.Team.None; } catch { }

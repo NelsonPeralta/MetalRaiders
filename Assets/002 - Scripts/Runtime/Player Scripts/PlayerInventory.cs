@@ -185,6 +185,8 @@ public class PlayerInventory : MonoBehaviourPun
         {
             grenades = maxGrenades;
         }
+        else if (GameManager.instance.gameType == GameManager.GameType.Swat)
+            grenades = 1;
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             grenades = 2;

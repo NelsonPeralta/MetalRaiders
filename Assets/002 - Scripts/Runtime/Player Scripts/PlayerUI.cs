@@ -30,6 +30,7 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Top Center", order = 2)]
     public Transform topMiddle;
+    [SerializeField] GameObject barsHolder;
     public GameObject healthBar;
     public GameObject shieldBar;
     [SerializeField] Text objectiveInformerText;
@@ -179,6 +180,8 @@ public class PlayerUI : MonoBehaviour
             EnableMultiplayerUIComponents();
             GetComponent<PlayerMultiplayerMatchStats>().OnPlayerScoreChanged += OnPlayerScoreChanged_Delegate;
         }
+        if(GameManager.instance.gameType == GameManager.GameType.Swat)
+            barsHolder.SetActive(false);
 
         OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);
     }

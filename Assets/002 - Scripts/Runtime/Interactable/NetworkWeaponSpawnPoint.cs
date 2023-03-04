@@ -17,12 +17,16 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     [SerializeField] LootableWeapon _weaponSpawned;
     bool _auth;
 
+    float _respawnListenerDelay = 1;
+
     private void OnDestroy()
     {
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
     }
     private void Start()
     {
+        _respawnListenerDelay = 1;
+
         FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
         FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
 
@@ -85,7 +89,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         {
             if (weaponSpawned && gameTime.totalTime % weaponSpawned.tts == 0 && gameTime.totalTime > 0)
             {
-                EnableWeapon();
+                //EnableWeapon();
+                StartCoroutine(EnableWeapon_Coroutine());
             }
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
@@ -93,13 +98,14 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void EnableWeapon()
     {
-        weaponSpawned.gameObject.SetActive(true);
 
         weaponSpawned.ammo = weaponSpawned.defaultAmmo;
         weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
 
         weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
         weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+        
+        weaponSpawned.gameObject.SetActive(true);
     }
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
@@ -204,4 +210,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         }
     }
     #endregion
+
+    IEnumerator EnableWeapon_Coroutine()
+    {
+        yield return new WaitForSeconds(_respawnListenerDelay);
+
+        EnableWeapon();
+    }
 }

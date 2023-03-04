@@ -562,6 +562,18 @@ public class Player : MonoBehaviourPunCallbacks
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             hasArmor = true;
+
+            if(GameManager.instance.gameType == GameManager.GameType.Swat)
+            {
+                hasArmor = false;
+
+                _overshieldPoints = 0;
+                _maxShieldPoints = 0;
+
+                _maxHitPoints = 100;
+                _networkHitPoints = maxHitPoints;
+                _hitPoints = maxHitPoints;
+            }
         }
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
@@ -945,6 +957,8 @@ public class Player : MonoBehaviourPunCallbacks
         StartCoroutine(MakeThirdPersonModelVisible());
 
         playerInventory.grenades = 2;
+        if (GameManager.instance.gameType == GameManager.GameType.Swat)
+            playerInventory.grenades = 1;
 
         //StartCoroutine(playerInventory.EquipStartingWeapon());
         playerInventory.weaponsEquiped[1] = null;
@@ -1295,39 +1309,39 @@ public class Player : MonoBehaviourPunCallbacks
             hitPoints = newHealth;
         }
 
-        if (lastPID > -1)
-            if (isDead)
-            {
-                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                {
-                    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lastPID, PV.ViewID, DeathNature.None));
-                }
+        //if (lastPID > -1)
+        //    if (isDead)
+        //    {
+        //        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        //        {
+        //            MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lastPID, PV.ViewID, DeathNature.None));
+        //        }
 
-                try
-                {
-                    Debug.Log($"Simple Damage_RPC");
-                    Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(lastPID);
-                    string feed = $"{sourcePlayer.nickName} killed {nickName}";
-                    foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
-                    {
-                        if (sourcePlayer != this)
-                            kfm.EnterNewFeed(feed);
-                        else
-                            kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
-                    }
-                }
-                catch
-                {
-                    foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
-                    {
-                        kfm.EnterNewFeed($"Mistakes were made ({nickName})");
-                    }
-                }
-                finally
-                {
-                    lastPID = -1;
-                }
-            }
+        //        try
+        //        {
+        //            Debug.Log($"Simple Damage_RPC");
+        //            Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(lastPID);
+        //            string feed = $"{sourcePlayer.nickName} killed {nickName}";
+        //            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+        //            {
+        //                if (sourcePlayer != this)
+        //                    kfm.EnterNewFeed(feed);
+        //                else
+        //                    kfm.EnterNewFeed($"<color=\"white\"> {nickName} committed suicide");
+        //            }
+        //        }
+        //        catch
+        //        {
+        //            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+        //            {
+        //                kfm.EnterNewFeed($"Mistakes were made ({nickName})");
+        //            }
+        //        }
+        //        finally
+        //        {
+        //            lastPID = -1;
+        //        }
+        //    }
     }
 
     [PunRPC]
