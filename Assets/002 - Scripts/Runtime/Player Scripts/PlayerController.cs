@@ -476,7 +476,7 @@ public class PlayerController : MonoBehaviourPun
             if (_meleeCount > 0)
             {
                 Vector3 move = transform.forward * meleeMovementFactor;
-                GetComponent<CharacterController>().Move(move * movement.defaultSpeed * 10 * Time.deltaTime);
+                GetComponent<CharacterController>().Move(move * movement.defaultSpeed * 6 * Time.deltaTime);
             }
 
             meleeMovementFactor -= Time.deltaTime * 5f;
