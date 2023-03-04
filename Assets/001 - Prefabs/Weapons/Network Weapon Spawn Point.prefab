@@ -286,6 +286,7 @@ Transform:
   - {fileID: 3572041859339881586}
   - {fileID: 3572041859339881584}
   - {fileID: 3572041859339881598}
+  - {fileID: 5423411002955345699}
   m_Father: {fileID: 7018294377465490732}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -346,10 +347,21 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3572041859339391062}
-  serializedVersion: 2
+  serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -363,9 +375,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3572041859339391062}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 0.0625, y: 0.25, z: 0.875}
   m_Center: {x: -0.00034391508, y: -0.040407673, z: 0.037544146}
 --- !u!114 &4320403524980906602
@@ -504,7 +524,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3572041859339881590}
-  - {fileID: 5423411002955345699}
   m_Father: {fileID: 8628595011434998442}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -539,7 +558,7 @@ Transform:
   m_Children:
   - {fileID: 7018294377465490732}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8628595011434998437
 MonoBehaviour:
@@ -555,7 +574,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   codeName: m4
   placeHolder: {fileID: 6158655549419261311}
-  weaponSpawned: {fileID: 0}
   networkLootableWeaponPrefabs:
   - {fileID: 1439370327776292833, guid: d3503e4978fa8374fbdd46bac43b9032, type: 3}
   - {fileID: 7368614592611344181, guid: 925ac30203b8e74458a86fb75b6c4a1d, type: 3}
@@ -575,13 +593,14 @@ MonoBehaviour:
   - {fileID: 439363896651038599, guid: 17881a4d2a6d973428f0fe428e568de4, type: 3}
   - {fileID: 3627902294259101941, guid: 033f2f56169556e49bf912e701a2a29c, type: 3}
   _tts: 0
+  _weaponSpawned: {fileID: 0}
 --- !u!1001 &5425998958598396845
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
-    m_TransformParent: {fileID: 7018294377465490732}
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3572041859339881590}
     m_Modifications:
     - target: {fileID: 1780108520312974, guid: ca97d3903f5a95e4f9176b90a8021415, type: 3}
       propertyPath: m_Name
@@ -653,7 +672,9 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca97d3903f5a95e4f9176b90a8021415, type: 3}
 --- !u!4 &5423411002955345699 stripped
 Transform:
