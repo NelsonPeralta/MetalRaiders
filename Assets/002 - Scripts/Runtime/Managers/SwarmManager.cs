@@ -260,6 +260,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
+            Debug.Log("SWARM MANAGER: OnSceneLoaded");
             if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
                 return;
 

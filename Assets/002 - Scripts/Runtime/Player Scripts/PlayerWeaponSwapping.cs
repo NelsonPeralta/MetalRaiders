@@ -374,7 +374,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         foreach (LootableWeapon lw in weapons)
             if (lw.spawnPointPosition == collidingWeaponPosition)
             {
-                lw.DisableWeapon();
+                lw.HideWeapon();
                 return;
             }
         Debug.Log($"RPC: FOUND NO WEAPON TO DISABLE");

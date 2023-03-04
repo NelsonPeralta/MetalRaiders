@@ -155,10 +155,10 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             if (wp.GetComponent<WeaponProperties>().codeName == codeName)
                 wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
 
-        DisableWeapon();
+        HideWeapon();
     }
 
-    public void DisableWeapon()
+    public void HideWeapon()
     {
         Debug.Log("DisableWeapon");
         OnLooted?.Invoke(this);
@@ -166,13 +166,18 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         if (networkWeaponSpawnPoint)
         {
             Debug.Log("DisableWeapon 1");
-            gameObject.SetActive(false);
+            GameManager.SetLayerRecursively(gameObject, 3);
         }
         else
         {
             Debug.Log("DisableWeapon 2");
             Destroy(gameObject);
         }
+    }
+
+    public void ShowWeapon()
+    {
+        GameManager.SetLayerRecursively(gameObject, 10);
     }
 
     public void EnableWeapon()

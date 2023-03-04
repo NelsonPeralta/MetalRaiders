@@ -70,6 +70,8 @@ public class GameManagerEvents : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        Debug.Log("GAME MANAGER EVENTS: OnSceneLoaded");
+
         if (scene.buildIndex == 0)
         {
             OnAllPlayersJoinedRoom = null;

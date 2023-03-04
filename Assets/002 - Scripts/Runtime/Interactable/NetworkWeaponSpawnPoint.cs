@@ -89,8 +89,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         {
             if (weaponSpawned && gameTime.totalTime % weaponSpawned.tts == 0 && gameTime.totalTime > 0)
             {
-                //EnableWeapon();
-                StartCoroutine(EnableWeapon_Coroutine());
+                EnableWeapon();
+                //StartCoroutine(EnableWeapon_Coroutine());
             }
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
@@ -102,10 +102,18 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         weaponSpawned.ammo = weaponSpawned.defaultAmmo;
         weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
 
-        weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
-        weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
-        
-        weaponSpawned.gameObject.SetActive(true);
+        Vector3 wpp = weaponSpawned.transform.position;
+        float d = Vector3.Distance(wpp, weaponSpawned.spawnPointPosition);
+
+        if (d > 2)
+        {
+            weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
+            weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+        }
+
+        //weaponSpawned.gameObject.SetActive(true);
+        if (weaponSpawned.gameObject.layer != 10)
+            weaponSpawned.ShowWeapon();
     }
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
