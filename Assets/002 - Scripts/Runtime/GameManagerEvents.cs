@@ -71,7 +71,13 @@ public class GameManagerEvents : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         if (scene.buildIndex == 0)
+        {
             OnAllPlayersJoinedRoom = null;
+
+
+            OnAllPlayersJoinedRoom -= FindObjectOfType<SwarmManager>().OnAllPlayersJoinedRoom_Delegate;
+            OnAllPlayersJoinedRoom += FindObjectOfType<SwarmManager>().OnAllPlayersJoinedRoom_Delegate;
+        }
 
         allPlayersJoined = false;
         gameStarted = false;

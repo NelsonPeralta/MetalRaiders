@@ -205,9 +205,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     private void Awake()
     {
-
-        currentWave = 0;
-        nextWaveDelay = 5;
         if (instance)
         {
             Destroy(gameObject);
@@ -233,21 +230,23 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         NewWaveCountdown();
     }
 
-    void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
+    public void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
     {
+        Debug.Log("SWARM MANAGER: OnAllPlayersJoinedRoom_Delegate");
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             Begin();
     }
 
     void NewWaveCountdown()
     {
-        if (_newWaveCountdown > 0)
-        {
-            _newWaveCountdown -= Time.deltaTime;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (_newWaveCountdown > 0)
+            {
+                _newWaveCountdown -= Time.deltaTime;
 
-            if (_newWaveCountdown <= 0)
-                IncreaseWave();
-        }
+                if (_newWaveCountdown <= 0)
+                    IncreaseWave();
+            }
     }
     void OnSceneLoaded()
     {
@@ -263,7 +262,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
                 return;
-
 
             instance = this;
             if (PhotonNetwork.IsMasterClient)
@@ -371,6 +369,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.IsMasterClient)
             return;
+        Debug.Log("SWARM MANAGER: Begin");
+
         _networkSwarmManager.GetComponent<PhotonView>().RPC("IncreaseWave_RPC", RpcTarget.All);
     }
 
@@ -401,11 +401,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
 
 
-            knightsLeft = nbPlayers * 2 + (int)(currentWave * 1.7f);
+            knightsLeft = nbPlayers * 3 + (int)(currentWave * 1.7f);
             if (knightsLeft > knightPool.Count)
                 knightsLeft = knightPool.Count;
 
-            watchersLeft = nbPlayers * 3 + (int)(currentWave * 1.2f);
+            watchersLeft = nbPlayers * 2 + (int)(currentWave * 1.2f);
             if (watchersLeft > watcherPool.Count)
                 watchersLeft = knightPool.Count;
 
