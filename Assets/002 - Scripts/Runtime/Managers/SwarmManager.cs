@@ -84,9 +84,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     // constants
-    const int ZOMBIE_SPAWN_DELAY = 4;
-    const int SHOOTER_SPAWN_DELAY = 14;
-    const int KNIGHT_SPAWN_DELAY = 12;
+    const int ZOMBIE_SPAWN_DELAY = 6;
+    const int SHOOTER_SPAWN_DELAY = 24;
+    const int KNIGHT_SPAWN_DELAY = 15;
     const int HELLHOUND_SPAWN_DELAY = 5;
     const int TYRANT_SPAWN_DELAY = 4;
 

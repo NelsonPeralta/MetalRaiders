@@ -75,7 +75,7 @@ public class Fireball : MonoBehaviour
 
             //Add force to nearby rigidbodies
             if (rb != null && rb.gameObject.layer != gameObject.layer)
-                rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
+                rb.AddExplosionForce(power, explosionPos, radius, 3.0F);
 
             if (hit.GetComponent<PlayerHitbox>() && !playersHit.Contains(hit.GetComponent<PlayerHitbox>().player))
             {

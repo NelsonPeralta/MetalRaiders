@@ -265,7 +265,7 @@ abstract public class Actor : MonoBehaviour
     void DropRandomWeapon()
     {
         int ChanceToDrop = UnityEngine.Random.Range(0, 10);
-        int cap = 5;
+        int cap = 6;
 
         if (ChanceToDrop <= cap)
         {
