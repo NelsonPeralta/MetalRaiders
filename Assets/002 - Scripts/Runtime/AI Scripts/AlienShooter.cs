@@ -8,6 +8,9 @@ public class AlienShooter : Actor
     [SerializeField] Fireball _fireBallPrefab;
     [SerializeField] AIGrenade _grenadePrefab;
 
+    [SerializeField] AudioClip _hurtClip;
+
+
     float _meleeCooldown;
     float _throwFireballCooldown;
     float _throwGrenadeCooldown;
@@ -16,6 +19,7 @@ public class AlienShooter : Actor
 
     private void OnEnable()
     {
+        _flinchCooldown = 3.2f;
         hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
     }
 
@@ -29,8 +33,19 @@ public class AlienShooter : Actor
 
         if (_throwGrenadeCooldown > 0)
             _throwGrenadeCooldown -= Time.deltaTime;
+
+        if (_flinchCooldown > 0 && hitPoints < _defaultHitpoints)
+            _flinchCooldown -= Time.deltaTime;
     }
 
+    public override void ChildOnActorDamaged()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            if (_flinchCooldown <= 0)
+            {
+                AlienShooterFlinch();
+            }
+    }
 
     public override void AnalyzeNextAction()
     {
@@ -43,7 +58,7 @@ public class AlienShooter : Actor
             {
                 nma.enabled = false;
 
-                if (_meleeCooldown <= 0)
+                if (_meleeCooldown <= 0 && !isFlinching)
                 {
                     AlienShooterMelee();
                 }
@@ -67,7 +82,7 @@ public class AlienShooter : Actor
 
                     if (ran != 0)
                     {
-                        if (_throwFireballCooldown <= 0 && !isTaunting)
+                        if (_throwFireballCooldown <= 0 && !isTaunting && !isFlinching)
                         {
                             Debug.Log("Throw Fireball to Player");
                             AlienShooterShoot();
@@ -75,7 +90,7 @@ public class AlienShooter : Actor
                     }
                     else
                     {
-                        if (_throwGrenadeCooldown <= 0 && !isTaunting)
+                        if (_throwGrenadeCooldown <= 0 && !isTaunting && !isFlinching)
                         {
                             Debug.Log("Throw Fireball to Player");
                             AlienShooterThrowGrenade();
@@ -208,6 +223,7 @@ public class AlienShooter : Actor
             potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
 
             _throwGrenadeCooldown = 1.5f;
+            _throwFireballCooldown = 1f;
         }
     }
 
@@ -240,6 +256,28 @@ public class AlienShooter : Actor
 
             //_animator.Play("Run");
             _animator.SetBool("Run", true);
+        }
+    }
+
+    [PunRPC]
+    void AlienShooterFlinch(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("AlienShooterFlinch", RpcTarget.All, false);
+        }
+        else
+        {
+            try
+            {
+                GetComponent<AudioSource>().clip = _hurtClip;
+                GetComponent<AudioSource>().Play();
+
+                nma.enabled = false;
+                _animator.Play("Flinch");
+                _flinchCooldown = 3.2f;
+            }
+            catch { }
         }
     }
 }

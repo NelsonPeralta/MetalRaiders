@@ -3434,10 +3434,12 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: fdc8080df366feb43805c05300069c0e, type: 3}
   _deathClip: {fileID: 8300000, guid: 94f300b380dc25f44b40e75fb5931bf8, type: 3}
   _tauntClip: {fileID: 8300000, guid: 98e43a47e797e4941a04a53e0c6f192e, type: 3}
+  _flinchCooldown: 0
   _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
     type: 3}
   _grenadePrefab: {fileID: 6543794610344578356, guid: ace650de0d210f54490f7e347a783c04,
     type: 3}
+  _hurtClip: {fileID: 8300000, guid: a5cf47b8c1aa8c14bb232e34edbda1b9, type: 3}
 --- !u!195 &8516912798924777545
 NavMeshAgent:
   m_ObjectHideFlags: 0

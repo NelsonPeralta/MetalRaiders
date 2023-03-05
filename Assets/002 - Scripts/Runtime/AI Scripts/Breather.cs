@@ -8,6 +8,8 @@ public class Breather : Actor
 {
     [SerializeField] Fireball _fireBallPrefab;
 
+    [SerializeField] AudioClip _hurtClip;
+
     float _meleeCooldown;
     float _throwFireballCooldown;
 
@@ -18,6 +20,15 @@ public class Breather : Actor
         hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
     }
 
+    public override void ChildOnActorDamaged()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            if (_flinchCooldown <= 0)
+            {
+                BreatherFlinch();
+            }
+    }
+
     public override void CooldownsUpdate()
     {
         if (_meleeCooldown > 0)
@@ -25,6 +36,9 @@ public class Breather : Actor
 
         if (_throwFireballCooldown > 0)
             _throwFireballCooldown -= Time.deltaTime;
+
+        if (_flinchCooldown > 0)
+            _flinchCooldown -= Time.deltaTime;
     }
 
 
@@ -39,7 +53,7 @@ public class Breather : Actor
             {
                 nma.enabled = false;
 
-                if (_meleeCooldown <= 0)
+                if (_meleeCooldown <= 0 && !isFlinching)
                 {
                     BreatherMelee();
                 }
@@ -59,7 +73,7 @@ public class Breather : Actor
 
                 if (isInRange)
                 {
-                    if (_throwFireballCooldown <= 0)
+                    if (_throwFireballCooldown <= 0 && !isFlinching)
                     {
                         Debug.Log("Throw Fireball to Player");
                         BreatherThrowFireBall();
@@ -193,6 +207,28 @@ public class Breather : Actor
 
             //_animator.Play("Run");
             _animator.SetBool("Run", true);
+        }
+    }
+
+    [PunRPC]
+    void BreatherFlinch(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("BreatherFlinch", RpcTarget.All, false);
+        }
+        else
+        {
+            try
+            {
+                GetComponent<AudioSource>().clip = _hurtClip;
+                GetComponent<AudioSource>().Play();
+
+                nma.enabled = false;
+                _animator.Play("Flinch");
+                _flinchCooldown = 2.2f;
+            }
+            catch { }
         }
     }
 }

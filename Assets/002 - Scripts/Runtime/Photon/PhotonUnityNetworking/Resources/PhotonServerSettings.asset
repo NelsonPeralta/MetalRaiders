@@ -144,6 +144,8 @@ MonoBehaviour:
   - HelldogRun
   - FlameTyrantSummon
   - CreateAIPool
+  - BreatherFlinch
+  - AlienShooterFlinch
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

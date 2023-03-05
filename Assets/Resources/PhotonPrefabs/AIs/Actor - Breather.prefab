@@ -3908,7 +3908,7 @@ GameObject:
   - component: {fileID: 8448585316378270687}
   - component: {fileID: -9038763875858074809}
   m_Layer: 0
-  m_Name: Actor - Breather (SM_Chr_Alien_01) (1)
+  m_Name: Actor - Breather
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4021,8 +4021,10 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: f2350706efe6ac14d8484a2a3d88aea7, type: 3}
   _deathClip: {fileID: 8300000, guid: cd6a399cf21af214ebcaa9d5132927b4, type: 3}
   _tauntClip: {fileID: 0}
+  _flinchCooldown: 0
   _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
     type: 3}
+  _hurtClip: {fileID: 8300000, guid: 881598fd05821d44786ee69b0cb084ab, type: 3}
 --- !u!82 &7575627652589808186
 AudioSource:
   m_ObjectHideFlags: 0

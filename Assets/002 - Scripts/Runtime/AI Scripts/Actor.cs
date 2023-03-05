@@ -24,7 +24,8 @@ abstract public class Actor : MonoBehaviour
 
             _hitPoints = nv;
 
-            if(nv < pv)
+            if (nv < pv)
+                ChildOnActorDamaged();
 
             if ((nv <= 0.5f * _defaultHitpoints) && (pv > 0.5f * _defaultHitpoints))
                 try
@@ -100,6 +101,8 @@ abstract public class Actor : MonoBehaviour
     protected int _defaultHitpoints;
     protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
+
+    [SerializeField] protected float _flinchCooldown;
 
     private void Awake()
     {
@@ -313,7 +316,7 @@ abstract public class Actor : MonoBehaviour
         }
     }
 
-  public virtual void OnHealthHitEarly() { }
+    public virtual void OnHealthHitEarly() { }
 
 
 
@@ -335,6 +338,8 @@ abstract public class Actor : MonoBehaviour
     public abstract void CooldownsUpdate();
     public abstract void ChildPrepare();
 
+
+    public virtual void ChildOnActorDamaged() { }
 
 
 
