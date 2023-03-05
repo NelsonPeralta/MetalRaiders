@@ -323,10 +323,10 @@ public class Launcher : MonoBehaviourPunCallbacks
             multiplayerMapSelector.SetActive(false);
             swarmMapSelector.SetActive(false);
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                multiplayerMapSelector.SetActive(true);
+                multiplayerMapSelector.SetActive(PhotonNetwork.IsMasterClient);
             else if(GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             {
-                swarmMapSelector.SetActive(true);
+                swarmMapSelector.SetActive(PhotonNetwork.IsMasterClient);
                 GameManager.instance.teamMode = GameManager.TeamMode.Classic;
             }
         }
