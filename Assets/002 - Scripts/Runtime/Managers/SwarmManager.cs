@@ -74,6 +74,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     int _hellhoundsAlive;
     int _tyrantsAlive;
 
+    int _maxAliensEnabled;
+    int _maxBreathersEnabled;
+
     public List<HealthPack> healthPacks = new List<HealthPack>();
 
     [SerializeField] AudioClip _ambiantMusic;
@@ -216,6 +219,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+
         GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
 
@@ -365,6 +369,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void Begin()
     {
+
+        _maxBreathersEnabled = 3 + FindObjectsOfType<Player>().Count();
+        _maxAliensEnabled = 1 + FindObjectsOfType<Player>().Count();
         if (editMode)
             return;
 
@@ -514,6 +521,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 return;
             }
 
+            int breathersEnabled = FindObjectsOfType<AlienShooter>().Count();
+            if (breathersEnabled >= _maxAliensEnabled)
+            {
+                StartCoroutine(SpawnAISkip_Coroutine(aiType));
+                return;
+            }
+
             foreach (AlienShooter w in watcherPool)
                 if (!w.gameObject.activeSelf)
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
@@ -525,6 +539,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (knightsLeft <= 0)
             {
                 OnAiDeath?.Invoke(this);
+                return;
+            }
+
+            int breathersEnabled = FindObjectsOfType<Breather>().Count();
+            if (breathersEnabled >= _maxBreathersEnabled)
+            {
+                StartCoroutine(SpawnAISkip_Coroutine(aiType));
                 return;
             }
 
@@ -722,6 +743,27 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             //OnAiSpawn?.Invoke(this);
         }
+    }
+
+
+    IEnumerator SpawnAISkip_Coroutine(AiType aiType)
+    {
+        int delay = 0;
+
+        if (aiType == AiType.Undead)
+            delay = ZOMBIE_SPAWN_DELAY;
+        else if (aiType == AiType.AlienShooter)
+            delay = SHOOTER_SPAWN_DELAY;
+        else if (aiType == AiType.Breather)
+            delay = KNIGHT_SPAWN_DELAY;
+        else if (aiType == AiType.Helldog)
+            delay = HELLHOUND_SPAWN_DELAY;
+        else if (aiType == AiType.FlameTyrant)
+            delay = TYRANT_SPAWN_DELAY;
+
+        yield return new WaitForSeconds(delay);
+
+        SpawnAi(aiType);
     }
     void OnAiDeath_Delegate(SwarmManager swarmManager)
     {

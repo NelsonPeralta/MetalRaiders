@@ -161,10 +161,10 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
             {
                 if (codeName == "scar")
-                    codeName = "m249c";
+                    codeName = "m4";
 
                 if (codeName == "m16")
-                    codeName = "deagle";
+                    codeName = "m1911";
 
                 if (codeName == "mk14")
                     codeName = "p90";

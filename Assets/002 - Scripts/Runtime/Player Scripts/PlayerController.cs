@@ -576,7 +576,7 @@ public class PlayerController : MonoBehaviourPun
 
     void CheckAmmoForAutoReload()
     {
-        if (!isDualWielding)
+        if (!isDualWielding && !isDrawingWeapon)
         {
             if (pInventory.activeWeapon)
             {
