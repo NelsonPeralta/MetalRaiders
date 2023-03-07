@@ -9032,7 +9032,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1269481381300164, guid: ddea709db0b3fbe4eb227c58cfa874d2, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1269481381300164, guid: ddea709db0b3fbe4eb227c58cfa874d2, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -9044,7 +9044,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1914222424990736, guid: ddea709db0b3fbe4eb227c58cfa874d2, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1914222424990736, guid: ddea709db0b3fbe4eb227c58cfa874d2, type: 3}
       propertyPath: m_StaticEditorFlags

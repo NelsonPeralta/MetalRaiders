@@ -103,10 +103,16 @@ public class AlienShooter : Actor
                     if (!isRunning && !isFlinching && !isTaunting)
                     {
                         Debug.Log("Chase Player");
-                        nma.enabled = true;
-                        nma.SetDestination(target.position);
                         AlienShooterRun();
                     }
+
+                    if (isRunning && !isFlinching && !isTaunting)
+                    {
+                        nma.enabled = true;
+                        nma.SetDestination(target.position);
+                    }
+                    else if (isFlinching || isTaunting)
+                        nma.enabled = false;
                 }
             }
             else if (distanceToTarget > longRange)
@@ -114,13 +120,19 @@ public class AlienShooter : Actor
                 if (isInRange)
                     isInRange = false;
 
-                if (!isRunning && !isFlinching && !isTaunting)
+                if (!isRunning)
                 {
                     //Debug.Log("Chase Player");
-                    nma.enabled = true;
-                    nma.SetDestination(target.position);
                     AlienShooterRun();
                 }
+
+                if (isRunning && !isFlinching && !isTaunting)
+                {
+                    nma.enabled = true;
+                    nma.SetDestination(target.position);
+                }
+                else if (isFlinching || isTaunting)
+                    nma.enabled = false;
             }
 
 

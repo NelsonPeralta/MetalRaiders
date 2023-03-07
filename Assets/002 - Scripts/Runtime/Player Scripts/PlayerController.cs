@@ -546,6 +546,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {
+                rScript.reloadIsCanceled = true;
                 ScopeOut();
                 pInventory.grenades = pInventory.grenades - 1;
                 weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
@@ -576,7 +577,7 @@ public class PlayerController : MonoBehaviourPun
 
     void CheckAmmoForAutoReload()
     {
-        if (!isDualWielding && !isDrawingWeapon)
+        if (!isDualWielding && !isDrawingWeapon && !isThrowingGrenade)
         {
             if (pInventory.activeWeapon)
             {
