@@ -11,7 +11,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public string cleanName;
     public string codeName;
     public int spriteId;
-    public int ammo
+    public int networkAmmo
     {
         get { return _ammo; }
         set
@@ -19,13 +19,19 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             _ammo = value;
             Dictionary<string, string> param = new Dictionary<string, string>();
 
-            param["ammo"] = ammo.ToString();
+            param["ammo"] = networkAmmo.ToString();
             try
             {
                 NetworkGameManager.instance.UpdateLootableWeaponData(spawnPointPosition, param);
             }
             catch (System.Exception e) { Debug.LogWarning(e); }
         }
+    }
+
+    public int localAmmo
+    {
+        get { return _ammo; }
+        set { _ammo = value; }
     }
     public int spareAmmo { get { return _spareAmmo; } set { _spareAmmo = value; } }
 
@@ -41,7 +47,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         get { return _spawnPointPosition; }
         set
         {
-           Vector3 spp = new Vector3((float)System.Math.Round(value.x, 1), (float)System.Math.Round(value.y, 1), (float)System.Math.Round(value.z, 1));
+            Vector3 spp = new Vector3((float)System.Math.Round(value.x, 1), (float)System.Math.Round(value.y, 1), (float)System.Math.Round(value.z, 1));
             _spawnPointPosition = spp;
         }
     }
@@ -130,13 +136,13 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     public void ResetAmmo()
     {
-        ammo = _defaultAmmo;
+        networkAmmo = _defaultAmmo;
         spareAmmo = _defaultSpareAmmo;
     }
 
     public void RandomAmmo()
     {
-        ammo = (int)Mathf.Ceil(Random.Range(0, ammo));
+        networkAmmo = (int)Mathf.Ceil(Random.Range(0, networkAmmo));
         spareAmmo = (int)Mathf.Ceil(Random.Range(0, spareAmmo));
 
         _defaultAmmo = (int)Mathf.Ceil(Random.Range(0, _defaultAmmo)); ;
@@ -149,7 +155,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         int ammoToLoot = spareAmmo;
         PlayerInventory playerInventory = GameManager.GetMyPlayer(controllerId).playerInventory;
         if (!onlyExtraAmmo)
-            ammoToLoot += ammo;
+            ammoToLoot += networkAmmo;
 
         foreach (GameObject wp in playerInventory.allWeaponsInInventory)
             if (wp.GetComponent<WeaponProperties>().codeName == codeName)
@@ -166,7 +172,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         if (networkWeaponSpawnPoint)
         {
             Debug.Log("DisableWeapon 1");
-            GameManager.SetLayerRecursively(gameObject, 3);
+            //GameManager.SetLayerRecursively(gameObject, 3);
+            //gameObject.layer = 3;
+            gameObject.SetActive(false);
         }
         else
         {
@@ -177,7 +185,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     public void ShowWeapon()
     {
-        GameManager.SetLayerRecursively(gameObject, 10);
+        //GameManager.SetLayerRecursively(gameObject, 10);
+        //gameObject.layer = 10;
+        gameObject.SetActive(true);
     }
 
     public void EnableWeapon()

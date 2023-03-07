@@ -338,6 +338,12 @@ public class PlayerInventory : MonoBehaviourPun
             AssignRandomWeapons();
         }
 
+        if (GameManager.instance.gameType.ToString().Contains("Swat"))
+        {
+            StartingWeapon = "m16";
+            StartingWeapon2 = "m4";
+        }
+
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             StartingWeapon = "p90";

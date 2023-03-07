@@ -1449,7 +1449,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         Debug.Log(spp);
 
-        try { wo.GetComponent<LootableWeapon>().ammo = param["ammo"]; } catch (System.Exception e) { Debug.Log(e); }
+        try { wo.GetComponent<LootableWeapon>().networkAmmo = param["ammo"]; } catch (System.Exception e) { Debug.Log(e); }
         try { wo.GetComponent<LootableWeapon>().spareAmmo = param["spareammo"]; } catch (System.Exception e) { Debug.Log(e); }
         try { wo.GetComponent<LootableWeapon>().tts = param["tts"]; } catch (System.Exception e) { Debug.Log(e); }
         wo.GetComponent<LootableWeapon>().GetComponent<Rigidbody>().AddForce(fDir * 200);

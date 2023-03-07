@@ -132,6 +132,9 @@ public class PlayerUI : MonoBehaviour
         try { mapNameText.text = GameManager.GetActiveSceneName().Replace("PVP - ", ""); }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
+        try { mapNameText.text = GameManager.GetActiveSceneName().Replace("Coop - ", ""); }
+        catch (System.Exception e) { Debug.LogWarning($"{e}"); }
+
         try { roomNameText.text = PhotonNetwork.CurrentRoom.Name; }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
@@ -281,8 +284,21 @@ public class PlayerUI : MonoBehaviour
 
     IEnumerator AddInformerText_Coroutine(string message)
     {
+        objectiveInformerText.gameObject.SetActive(false);
+
         objectiveInformerText.text = $"{message}";
-        yield return new WaitForSeconds(3);
+        
+        yield return new WaitForSeconds(0.2f);
+        objectiveInformerText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.2f);
+        objectiveInformerText.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.2f);
+        objectiveInformerText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.2f);
+        objectiveInformerText.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.2f);
+        objectiveInformerText.gameObject.SetActive(true);
+
     }
     void OnNewWave_Delegate(SwarmManager swarmManager)
     {
@@ -322,10 +338,10 @@ public class PlayerUI : MonoBehaviour
         {
             try
             {
-                objectiveInformerText.text = $"Z: {swarmManager.zombiesLeft + swarmManager.zombiesAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} S: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
+                swarmAisLeftText.text = $"Aliens: {swarmManager.watchersLeft + swarmManager.watchersAlive}\nBreathers: {swarmManager.knightsLeft + swarmManager.knightsAlive}\nZombies: {swarmManager.zombiesLeft + swarmManager.zombiesAlive}";
 
                 if (swarmManager.currentWave % 5 == 0)
-                    objectiveInformerText.text = $"Tyrants: {swarmManager.tyrantsLeft + swarmManager.tyrantsAlive}";
+                    swarmAisLeftText.text = $"Tyrants: {swarmManager.tyrantsLeft + swarmManager.tyrantsAlive}";
             }
             catch
             {

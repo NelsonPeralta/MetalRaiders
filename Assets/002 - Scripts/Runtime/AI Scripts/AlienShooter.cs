@@ -20,7 +20,7 @@ public class AlienShooter : Actor
     private void OnEnable()
     {
         _flinchCooldown = 3.2f;
-        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
+        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 16;
     }
 
     public override void CooldownsUpdate()

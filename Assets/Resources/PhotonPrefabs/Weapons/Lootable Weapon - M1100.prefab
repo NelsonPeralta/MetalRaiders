@@ -246,7 +246,7 @@ MonoBehaviour:
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}
   _spawnPointPosition: {x: 0, y: 0, z: 0}
-  _ttl: 60
+  _ttl: 30
 --- !u!114 &2126470845479484210
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -426,6 +426,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         commonRoomTexts.SetActive(false);
         PhotonNetwork.LeaveRoom();
+        GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
         //MenuManager.Instance.OpenMenu("loading");
     }
 

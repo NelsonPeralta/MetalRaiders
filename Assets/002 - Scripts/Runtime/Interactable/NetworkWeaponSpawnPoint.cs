@@ -64,7 +64,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                     if (!weaponSpawned.gameObject.activeSelf)
                     {
                         NetworkGameManager.instance.EnableLootableWeapon(weaponSpawned.spawnPointPosition);
-                        weaponSpawned.ammo = weaponSpawned.defaultAmmo;
+                        weaponSpawned.networkAmmo = weaponSpawned.defaultAmmo;
                         weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
                     }
                     else
@@ -87,10 +87,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
         try
         {
-            if (weaponSpawned && gameTime.totalTime % weaponSpawned.tts == 0 && gameTime.totalTime > 0)
+            if (weaponSpawned && (gameTime.totalTime % (weaponSpawned.tts - 5) == 0) && gameTime.totalTime > 0)
             {
-                EnableWeapon();
-                //StartCoroutine(EnableWeapon_Coroutine());
+                //EnableWeapon();
+                StartCoroutine(ResetWeaponPosition_Coroutine());
+                StartCoroutine(EnableWeapon_Coroutine());
             }
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
@@ -99,21 +100,21 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     void EnableWeapon()
     {
 
-        weaponSpawned.ammo = weaponSpawned.defaultAmmo;
+        weaponSpawned.localAmmo = weaponSpawned.defaultAmmo;
         weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
 
-        Vector3 wpp = weaponSpawned.transform.position;
-        float d = Vector3.Distance(wpp, weaponSpawned.spawnPointPosition);
+        //Vector3 wpp = weaponSpawned.transform.position;
+        //float d = Vector3.Distance(wpp, weaponSpawned.spawnPointPosition);
 
-        if (d > 2)
-        {
-            weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
-            weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
-        }
+        //if (d > 2 || !weaponSpawned.gameObject.activeSelf)
+        //{
+        //    weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
+        //    weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+        //}
 
-        //weaponSpawned.gameObject.SetActive(true);
-        if (weaponSpawned.gameObject.layer != 10)
-            weaponSpawned.ShowWeapon();
+        weaponSpawned.gameObject.SetActive(true);
+        //if (weaponSpawned.gameObject.layer != 10)
+        //    weaponSpawned.ShowWeapon();
     }
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
@@ -221,8 +222,22 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     IEnumerator EnableWeapon_Coroutine()
     {
-        yield return new WaitForSeconds(_respawnListenerDelay);
+        yield return new WaitForSeconds(5);
 
         EnableWeapon();
+    }
+
+    IEnumerator ResetWeaponPosition_Coroutine()
+    {
+        yield return new WaitForSeconds(2);
+
+        Vector3 wpp = weaponSpawned.transform.position;
+        float d = Vector3.Distance(wpp, weaponSpawned.spawnPointPosition);
+
+        if (d > 2 || !weaponSpawned.gameObject.activeSelf)
+        {
+            weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
+            weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+        }
     }
 }
