@@ -19,8 +19,7 @@ abstract public class Actor : MonoBehaviour
         protected set
         {
             int pv = _hitPoints;
-            int nv = Mathf.Clamp(value, 0, _defaultHitpoints);
-
+            int nv = Mathf.Clamp(value, 0, _defaultHitpoints * 2);
 
             _hitPoints = nv;
 
@@ -162,7 +161,7 @@ abstract public class Actor : MonoBehaviour
 
     private void OnEnable()
     {
-
+        ChildOnEnable();
     }
 
     void OnPlayerDeath(Player p)
@@ -339,8 +338,8 @@ abstract public class Actor : MonoBehaviour
     public abstract void ChildPrepare();
 
 
-    public virtual void ChildOnActorDamaged() { }
-
+    protected virtual void ChildOnActorDamaged() { }
+    protected virtual void ChildOnEnable() { }
 
 
 

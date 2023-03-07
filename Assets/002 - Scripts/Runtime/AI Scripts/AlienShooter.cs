@@ -17,10 +17,11 @@ public class AlienShooter : Actor
 
     bool isInRange;
 
-    private void OnEnable()
+
+    protected override void ChildOnEnable()
     {
-        _flinchCooldown = 3.2f;
-        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 16;
+        _flinchCooldown = 2.2f;
+        hitPoints = _defaultHitpoints + (SwarmManager.instance.currentWave * 12 * FindObjectsOfType<Player>().Length);
     }
 
     public override void CooldownsUpdate()
@@ -38,7 +39,7 @@ public class AlienShooter : Actor
             _flinchCooldown -= Time.deltaTime;
     }
 
-    public override void ChildOnActorDamaged()
+    protected override void ChildOnActorDamaged()
     {
         if (PhotonNetwork.IsMasterClient)
             if (_flinchCooldown <= 0)
@@ -99,13 +100,13 @@ public class AlienShooter : Actor
                 }
                 else
                 {
-                    if (!isRunning)
+                    if (!isRunning && !isFlinching && !isTaunting)
                     {
                         Debug.Log("Chase Player");
+                        nma.enabled = true;
+                        nma.SetDestination(target.position);
                         AlienShooterRun();
                     }
-                    nma.enabled = true;
-                    nma.SetDestination(target.position);
                 }
             }
             else if (distanceToTarget > longRange)
@@ -113,13 +114,13 @@ public class AlienShooter : Actor
                 if (isInRange)
                     isInRange = false;
 
-                if (!isRunning)
+                if (!isRunning && !isFlinching && !isTaunting)
                 {
                     //Debug.Log("Chase Player");
+                    nma.enabled = true;
+                    nma.SetDestination(target.position);
                     AlienShooterRun();
                 }
-                nma.enabled = true;
-                nma.SetDestination(target.position);
             }
 
 
@@ -275,7 +276,7 @@ public class AlienShooter : Actor
 
                 nma.enabled = false;
                 _animator.Play("Flinch");
-                _flinchCooldown = 3.2f;
+                _flinchCooldown = 2.2f;
             }
             catch { }
         }

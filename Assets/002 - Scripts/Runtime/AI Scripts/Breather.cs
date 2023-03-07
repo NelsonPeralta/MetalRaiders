@@ -15,12 +15,12 @@ public class Breather : Actor
 
     bool isInRange;
 
-    private void OnEnable()
+    protected override void ChildOnEnable()
     {
-        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 12;
+        hitPoints = _defaultHitpoints + (SwarmManager.instance.currentWave * 6 * FindObjectsOfType<Player>().Length);
     }
 
-    public override void ChildOnActorDamaged()
+    protected override void ChildOnActorDamaged()
     {
         if (PhotonNetwork.IsMasterClient)
             if (_flinchCooldown <= 0)
@@ -226,7 +226,7 @@ public class Breather : Actor
 
                 nma.enabled = false;
                 _animator.Play("Flinch");
-                _flinchCooldown = 2.2f;
+                _flinchCooldown = 1.6f;
             }
             catch { }
         }

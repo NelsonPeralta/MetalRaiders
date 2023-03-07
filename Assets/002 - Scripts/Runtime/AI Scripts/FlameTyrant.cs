@@ -14,9 +14,10 @@ public class FlameTyrant : Actor
 
     bool isInRange;
 
-    private void OnEnable()
+    protected override void ChildOnEnable()
     {
-        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
+        _flinchCooldown = 2.8f;
+        hitPoints = _defaultHitpoints + (SwarmManager.instance.currentWave * 12 * FindObjectsOfType<Player>().Length);
     }
 
     public override void CooldownsUpdate()
