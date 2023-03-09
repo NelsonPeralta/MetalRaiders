@@ -264,12 +264,12 @@ abstract public class Actor : MonoBehaviour
     void DropRandomWeapon()
     {
         int ChanceToDrop = UnityEngine.Random.Range(0, 10);
-        int cap = 6;
+        int cap = 7;
 
         if (ChanceToDrop <= cap)
         {
             float ranAmmoFactor = UnityEngine.Random.Range(0.2f, 0.9f);
-            float ranCapFactor = UnityEngine.Random.Range(0.2f, 0.6f);
+            float ranCapFactor = UnityEngine.Random.Range(0.4f, 0.6f);
             int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory.Length);
 
             WeaponProperties wp = GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();

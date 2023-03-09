@@ -76,6 +76,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     int _maxAliensEnabled;
     int _maxBreathersEnabled;
+    int _maxZombieEnabled;
 
     public List<HealthPack> healthPacks = new List<HealthPack>();
 
@@ -88,8 +89,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     // constants
     const int ZOMBIE_SPAWN_DELAY = 4;
-    const int SHOOTER_SPAWN_DELAY = 12;
-    const int KNIGHT_SPAWN_DELAY = 8;
+    const int SHOOTER_SPAWN_DELAY = 8;
+    const int KNIGHT_SPAWN_DELAY = 6;
     const int HELLHOUND_SPAWN_DELAY = 5;
     const int TYRANT_SPAWN_DELAY = 4;
 
@@ -370,8 +371,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void Begin()
     {
 
-        _maxBreathersEnabled = 3 + FindObjectsOfType<Player>().Count();
+        _maxBreathersEnabled = 2 + FindObjectsOfType<Player>().Count();
         _maxAliensEnabled = 1 + FindObjectsOfType<Player>().Count();
+        _maxZombieEnabled = 3 + FindObjectsOfType<Player>().Count();
         if (editMode)
             return;
 
@@ -402,7 +404,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (nbPlayers <= 0)
                 nbPlayers = 1;
 
-            zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 2));
+            zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 3));
             if (zombiesLeft > _zombieList.Count)
                 zombiesLeft = _zombieList.Count;
 
@@ -426,6 +428,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             tyrantsLeft = 2;
             if (tyrantsLeft > tyrantPool.Count)
                 tyrantsLeft = tyrantPool.Count;
+            tyrantsLeft = 1;
         }
 
 
@@ -504,6 +507,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (zombiesLeft <= 0)
             {
                 OnAiDeath?.Invoke(this);
+                return;
+            }
+
+            int breathersEnabled = FindObjectsOfType<Undead>().Count();
+            if (breathersEnabled >= _maxZombieEnabled)
+            {
+                StartCoroutine(SpawnAISkip_Coroutine(aiType));
                 return;
             }
 

@@ -343,7 +343,7 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-        if (rewiredPlayer.GetButtonDown("Shoot"))
+        if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isShooting)
         {
             _StartShoot();
         }
@@ -467,6 +467,8 @@ public class PlayerController : MonoBehaviourPun
                 Debug.Log("RPC Call: Melee");
                 meleeMovementFactor = 1;
 
+                rScript.reloadIsCanceled = true;
+
                 PV.RPC("Melee_RPC", RpcTarget.All);
             }
         }
@@ -577,7 +579,7 @@ public class PlayerController : MonoBehaviourPun
 
     void CheckAmmoForAutoReload()
     {
-        if (!isDualWielding && !isDrawingWeapon && !isThrowingGrenade)
+        if (!isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing)
         {
             if (pInventory.activeWeapon)
             {

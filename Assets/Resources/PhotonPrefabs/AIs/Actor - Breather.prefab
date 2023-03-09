@@ -4009,7 +4009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc497c84cef3b7f41ac49d1a84030501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitPoints: 250
+  _hitPoints: 150
   _target: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 3512012615773341269}
