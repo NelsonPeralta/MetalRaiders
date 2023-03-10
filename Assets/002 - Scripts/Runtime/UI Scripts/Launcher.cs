@@ -45,6 +45,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text _gameModeSelectedText;
     [SerializeField] TMP_Text _teamModeText;
     [SerializeField] TMP_Text _teamText;
+    [SerializeField] GameObject _teamModeBtns;
+    [SerializeField] GameObject _swarmDifficultyBtns;
 
     [SerializeField] TMP_InputField _loginUsernameText;
     [SerializeField] TMP_InputField registerUsernameText;
@@ -82,6 +84,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     public TMP_Text teamModeText { get { return _teamModeText; } }
     public TMP_Text teamText { get { return _teamText; } }
     public GameObject teamRoomUI { get { return _teamRoomUI; } }
+
+    public GameObject teamModeBtns { get { return _teamModeBtns; } }
+    public GameObject swarmModeBtns { get { return _swarmDifficultyBtns; } }
     void Awake()
     {
         if (instance)
@@ -324,7 +329,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             swarmMapSelector.SetActive(false);
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 multiplayerMapSelector.SetActive(PhotonNetwork.IsMasterClient);
-            else if(GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             {
                 swarmMapSelector.SetActive(PhotonNetwork.IsMasterClient);
                 GameManager.instance.teamMode = GameManager.TeamMode.Classic;
@@ -643,6 +648,12 @@ public class Launcher : MonoBehaviourPunCallbacks
                 }
             }
         }
+    }
+
+    public void ChangeSwarmDifficulty(int enumI)
+    {
+        NetworkGameManager.instance.UpdateSwarmDifficulty(enumI);
+
     }
 
     //[PunRPC]

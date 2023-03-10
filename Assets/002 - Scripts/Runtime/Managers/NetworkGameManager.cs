@@ -44,6 +44,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         GetComponent<PhotonView>().RPC("UpdateTeam_RPC", RpcTarget.All, t.ToString(), playerNickName);
     }
 
+    public void UpdateSwarmDifficulty(int ei)
+    {
+        GetComponent<PhotonView>().RPC("UpdateSwarmDifficulty_RPC", RpcTarget.All, ei);
+
+    }
+
     // Lootable Weapons
     #region
     public void EnableLootableWeapon(Vector3 position)
@@ -72,7 +78,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public static void SpawnNetworkWeapon(int wi, Vector3 spp, Vector3 fDir, Dictionary<string, int> param)
     {
-       FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("SpawnNetworkWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
+        FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("SpawnNetworkWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
     }
     #endregion
 
@@ -282,7 +288,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         //StartCoroutine(UpdateWeaponSpawnPosition_Coroutine(wo, spp));
         wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
 
-        if(fDir != Vector3.zero)
+        if (fDir != Vector3.zero)
             wo.GetComponent<Rigidbody>().AddForce(fDir * 200);
         Debug.Log($"DropWeapon_RPC: {wo.GetComponent<LootableWeapon>().spawnPointPosition}");
     }
@@ -413,6 +419,13 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("NextHillLocation_RPC");
         FindObjectOfType<HillManager>().NextLocation();
+    }
+
+
+    [PunRPC]
+    void UpdateSwarmDifficulty_RPC(int ei)
+    {
+        FindObjectOfType<SwarmManager>().difficulty = (SwarmManager.Difficulty)ei;
     }
 
 

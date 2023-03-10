@@ -83,16 +83,31 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _gameMode; }
         set
         {
-            _gameMode = value; 
+            _gameMode = value;
             Debug.Log($"Game Mode: {gameMode}");
             if (_gameMode == GameMode.Swarm)
+            {
+                FindObjectOfType<Launcher>().teamModeBtns.SetActive(false);
+                FindObjectOfType<Launcher>().swarmModeBtns.SetActive(true);
+
                 gameType = GameType.Slayer;
+                teamMode = TeamMode.Classic;
+                FindObjectOfType<SwarmManager>().difficulty = SwarmManager.Difficulty.Normal;
+            }
+            else if (_gameMode == GameMode.Multiplayer)
+            {
+                FindObjectOfType<Launcher>().swarmModeBtns.SetActive(false);
+                FindObjectOfType<Launcher>().teamModeBtns.SetActive(true);
+
+                gameType = GameType.Slayer;
+                teamMode = TeamMode.None;
+            }
         }
     }
     public GameType gameType
     {
         get { return _gameType; }
-        set { _gameType = value; }
+        set { _gameType = value; Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}"; }
     }
 
     public TeamMode teamMode
@@ -101,6 +116,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             _teamMode = value;
+            Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
             {
                 onlineTeam = PlayerMultiplayerMatchStats.Team.None;

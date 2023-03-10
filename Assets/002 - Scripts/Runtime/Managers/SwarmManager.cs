@@ -16,6 +16,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     // public variables
     public static SwarmManager instance;
+
+    public enum Difficulty { Normal, Heroic, Legendary }
     public enum AiType { Undead, AlienShooter, Breather, Helldog, FlameTyrant }
 
     [SerializeField] int _currentWave;
@@ -78,6 +80,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     int _maxBreathersEnabled;
     int _maxZombieEnabled;
 
+    Difficulty _difficulty;
+
     public List<HealthPack> healthPacks = new List<HealthPack>();
 
     [SerializeField] AudioClip _ambiantMusic;
@@ -94,6 +98,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     const int HELLHOUND_SPAWN_DELAY = 5;
     const int TYRANT_SPAWN_DELAY = 4;
 
+
+    public Difficulty difficulty
+    {
+        get { return _difficulty; }
+        set
+        {
+            _difficulty = value;
+            FindObjectOfType<Launcher>().teamModeText.text = $"Difficulty: {_difficulty.ToString()}";
+        }
+    }
     public int zombiesLeft
     {
         get { return _zombiesLeft; }

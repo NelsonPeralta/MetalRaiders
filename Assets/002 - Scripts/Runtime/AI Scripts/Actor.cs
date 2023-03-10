@@ -45,16 +45,7 @@ abstract public class Actor : MonoBehaviour
                 }
                 catch (Exception e) { Debug.LogError(e); }
 
-                GetComponent<AudioSource>().clip = _deathClip;
-                GetComponent<AudioSource>().Play();
-
-                foreach (ActorHitbox ah in GetComponentsInChildren<ActorHitbox>())
-                    ah.gameObject.SetActive(false);
-                _animator.Play("Die");
-                nma.enabled = false;
-                SwarmManager.instance.InvokeOnAiDeath();
-                StartCoroutine(Hide());
-                target = null;
+                ActorDeath();
 
             }
 
@@ -98,7 +89,7 @@ abstract public class Actor : MonoBehaviour
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
     protected int _defaultHitpoints;
-    protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching;
+    protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isDead;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     [SerializeField] protected float _flinchCooldown;
@@ -142,7 +133,7 @@ abstract public class Actor : MonoBehaviour
         AnimationCheck();
         CooldownsUpdate();
 
-        if (hitPoints > 0)
+        if (hitPoints > 0 && !isDead)
             if (_analyzeNextActionCooldown > 0)
             {
                 _analyzeNextActionCooldown -= Time.deltaTime;
@@ -174,6 +165,7 @@ abstract public class Actor : MonoBehaviour
 
     public void Spawn(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
+        isDead = false;
         Prepare();
 
         transform.position = spawnPointPosition;
@@ -379,6 +371,31 @@ abstract public class Actor : MonoBehaviour
         else
         {
             target = PhotonView.Find(pid).transform;
+        }
+    }
+
+
+    [PunRPC]
+    void ActorDeath(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("ActorDeath", RpcTarget.All, false);
+        }
+        else
+        {
+            isDead = true;
+            GetComponent<AudioSource>().clip = _deathClip;
+            GetComponent<AudioSource>().Play();
+
+            foreach (ActorHitbox ah in GetComponentsInChildren<ActorHitbox>())
+                ah.gameObject.SetActive(false);
+
+            _animator.Play("Die");
+            nma.enabled = false;
+            SwarmManager.instance.InvokeOnAiDeath();
+            StartCoroutine(Hide());
+            target = null;
         }
     }
 }
