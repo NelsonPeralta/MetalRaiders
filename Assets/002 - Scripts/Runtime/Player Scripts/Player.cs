@@ -557,6 +557,8 @@ public class Player : MonoBehaviourPunCallbacks
     public GameObject bloodImpact;
     public Transform weaponDropPoint;
 
+    [SerializeField] GameObject headhunterSkullPrefab;
+
     private void Awake()
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
@@ -1051,6 +1053,12 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (isDead)
         {
+            try
+            {
+                GameObject s = Instantiate(headhunterSkullPrefab, weaponDropPoint.position, Quaternion.identity);
+                s.GetComponent<Rigidbody>().AddForce(new Vector3(0, 800, 0));
+            }
+            catch { }
             try
             {
                 string sourcePlayerName = lastPlayerSource.nickName;
