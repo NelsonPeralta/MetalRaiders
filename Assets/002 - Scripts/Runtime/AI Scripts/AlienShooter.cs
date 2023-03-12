@@ -50,8 +50,6 @@ public class AlienShooter : Actor
 
     public override void AnalyzeNextAction()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
         if (target)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.position);

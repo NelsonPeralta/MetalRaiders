@@ -814,7 +814,7 @@ public class Player : MonoBehaviourPunCallbacks
 
 
             int newHealth = (int)hitPoints - damage;
-            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn);
+            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn, impactDir);
         }
     }
 
@@ -1353,11 +1353,12 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn)
+    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn, Vector3 impDir)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
+        try { this.impactDir = impDir; } catch { }
         try { _damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try { deathNature = (DeathNature)dn; } catch { }
         try { lastPID = sourcePid; } catch { }

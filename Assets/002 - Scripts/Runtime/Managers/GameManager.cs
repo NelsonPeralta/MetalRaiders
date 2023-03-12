@@ -31,8 +31,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum GameType
     {
-        Fiesta, Rockets, Slayer, Pro, Snipers, Survival, Unassgined,
-        Shotguns, Swat, Hill
+        Fiesta, Rockets, Slayer, Pro, Snipers, Unassgined,
+        Shotguns, Swat, Hill,
+
+        // Swarm Game Types
+        Survival
     }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum CoopGameType { Survival }
@@ -87,17 +90,17 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log($"Game Mode: {gameMode}");
             if (_gameMode == GameMode.Swarm)
             {
-                FindObjectOfType<Launcher>().teamModeBtns.SetActive(false);
-                FindObjectOfType<Launcher>().swarmModeBtns.SetActive(true);
+                FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(!PhotonNetwork.IsMasterClient);
+                FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
 
-                gameType = GameType.Slayer;
+                gameType = GameType.Survival;
                 teamMode = TeamMode.Classic;
                 FindObjectOfType<SwarmManager>().difficulty = SwarmManager.Difficulty.Normal;
             }
             else if (_gameMode == GameMode.Multiplayer)
             {
-                FindObjectOfType<Launcher>().swarmModeBtns.SetActive(false);
-                FindObjectOfType<Launcher>().teamModeBtns.SetActive(true);
+                FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(!PhotonNetwork.IsMasterClient);
+                FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
 
                 gameType = GameType.Slayer;
                 teamMode = TeamMode.None;
@@ -107,7 +110,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameType gameType
     {
         get { return _gameType; }
-        set { _gameType = value; Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}"; }
+        set
+        {
+            _gameType = value; 
+            Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
+        }
     }
 
     public TeamMode teamMode

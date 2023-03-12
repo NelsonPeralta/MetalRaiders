@@ -44,8 +44,6 @@ public class Breather : Actor
 
     public override void AnalyzeNextAction()
     {
-        if (!GetComponent<PhotonView>().IsMine)
-            return;
         if (target)
         {
             float distanceToTarget = Vector3.Distance(transform.position, target.position);

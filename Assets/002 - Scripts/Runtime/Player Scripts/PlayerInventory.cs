@@ -305,7 +305,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         Debug.Log("EquipStartingWeapon");
 
-        if (GameManager.instance.gameType.ToString().Contains("Slayer"))
+        if (GameManager.instance.gameType.ToString().Contains("Slayer")  || GameManager.instance.gameType == GameManager.GameType.Survival)
         {
             StartingWeapon = "p90";
             StartingWeapon2 = "m1911";

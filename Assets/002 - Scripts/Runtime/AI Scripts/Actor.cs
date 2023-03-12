@@ -89,7 +89,7 @@ abstract public class Actor : MonoBehaviour
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
     protected int _defaultHitpoints;
-    protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isDead;
+    protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     [SerializeField] protected float _flinchCooldown;
@@ -133,14 +133,14 @@ abstract public class Actor : MonoBehaviour
         AnimationCheck();
         CooldownsUpdate();
 
-        if (hitPoints > 0 && !isDead)
+        if (hitPoints > 0)
             if (_analyzeNextActionCooldown > 0)
             {
                 _analyzeNextActionCooldown -= Time.deltaTime;
 
                 if (_analyzeNextActionCooldown <= 0)
                 {
-                    if (GetComponent<PhotonView>().IsMine)
+                    if (PhotonNetwork.IsMasterClient)
                         AnalyzeNextAction();
                     _analyzeNextActionCooldown = 0.3f;
                 }
@@ -165,7 +165,6 @@ abstract public class Actor : MonoBehaviour
 
     public void Spawn(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
-        isDead = false;
         Prepare();
 
         transform.position = spawnPointPosition;
@@ -243,7 +242,7 @@ abstract public class Actor : MonoBehaviour
     }
     protected void LookAtTarget()
     {
-        if (GetComponent<PhotonView>().IsMine)
+        if (PhotonNetwork.IsMasterClient)
             if (target && (isIdling || isMeleeing))
             {
                 Vector3 targetPostition = new Vector3(target.position.x,
@@ -384,7 +383,6 @@ abstract public class Actor : MonoBehaviour
         }
         else
         {
-            isDead = true;
             GetComponent<AudioSource>().clip = _deathClip;
             GetComponent<AudioSource>().Play();
 

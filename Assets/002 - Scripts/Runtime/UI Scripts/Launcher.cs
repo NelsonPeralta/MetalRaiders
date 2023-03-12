@@ -55,9 +55,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     [Header("Master Client Only")]
     [SerializeField] GameObject startGameButton;
-    [SerializeField] GameObject mapSelector;
-    [SerializeField] GameObject multiplayerMapSelector;
-    [SerializeField] GameObject swarmMapSelector;
+    [SerializeField] GameObject _multiplayerMcComponentsHolder;
+    [SerializeField] GameObject _swarmMcComponentsHolder;
 
     public string quickMatchRoomName = "quick_match_room";
 
@@ -87,6 +86,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public GameObject teamModeBtns { get { return _teamModeBtns; } }
     public GameObject swarmModeBtns { get { return _swarmDifficultyBtns; } }
+    public GameObject multiplayerMcComponentsHolder { get { return _multiplayerMcComponentsHolder; } }
+    public GameObject swarmMcComponentsHolder { get { return _swarmMcComponentsHolder; } }
     void Awake()
     {
         if (instance)
@@ -269,7 +270,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient)
             {
                 //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "NetworkMainMenu"), Vector3.zero, Quaternion.identity);
-                //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
             }
             string roomType = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower() + "_room";
             string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower();
@@ -280,16 +281,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             //Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
             startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-            if (mode == "multiplayer")
-            {
-                mapSelector = multiplayerMapSelector;
-                mapSelector.SetActive(PhotonNetwork.IsMasterClient);
-            }
-            if (mode == "swarm")
-            {
-                mapSelector = swarmMapSelector;
-                mapSelector.SetActive(PhotonNetwork.IsMasterClient);
-            }
         }
 
         if (!PhotonNetwork.IsMasterClient)
@@ -325,15 +316,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             Launcher.instance._gameModeSelectedText.text = $"Game Mode: {GameManager.instance.gameMode}";
 
-            multiplayerMapSelector.SetActive(false);
-            swarmMapSelector.SetActive(false);
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                multiplayerMapSelector.SetActive(PhotonNetwork.IsMasterClient);
-            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            {
-                swarmMapSelector.SetActive(PhotonNetwork.IsMasterClient);
-                GameManager.instance.teamMode = GameManager.TeamMode.Classic;
-            }
+            //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            //    multiplayerMapSelector.SetActive(PhotonNetwork.IsMasterClient);
+            //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            //{
+            //    swarmMapSelector.SetActive(PhotonNetwork.IsMasterClient);
+            //    GameManager.instance.teamMode = GameManager.TeamMode.Classic;
+            //}
         }
         catch (System.Exception e) { Debug.Log(e); }
 
@@ -423,7 +412,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         startGameButton.SetActive(false);
 
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+        //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
         StartCoroutine(LoadLevel_Coroutine());
     }
 
@@ -563,7 +552,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
 
 
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+        //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
         //FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("UpdateTeamMode_RPC", RpcTarget.All, tm);
         UpdateTeams();
     }
