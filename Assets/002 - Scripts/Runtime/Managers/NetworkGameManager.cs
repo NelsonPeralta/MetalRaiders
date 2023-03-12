@@ -9,6 +9,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
     public static NetworkGameManager instance { get { return FindObjectOfType<NetworkGameManager>(); } }
 
+    Overshield _overshield;
+
     private void Start()
     {
         Debug.Log($"NetworkGameManager Start");
@@ -18,7 +20,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
     }
 
-    public Overshield overshield;
+    public Overshield overshield
+    {
+        get { return _overshield; }
+        set { _overshield = value; }
+    }
 
     private void OnDestroy()
     {
@@ -50,6 +56,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     }
 
+
     // Lootable Weapons
     #region
     public void EnableLootableWeapon(Vector3 position)
@@ -80,6 +87,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("SpawnNetworkWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
     }
+
+    
     #endregion
 
     // Explosive Barrel
@@ -115,7 +124,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         GetComponent<PhotonView>().RPC("UpdatePlayerTeam_RPC", RpcTarget.All, t, pn);
     }
 
-    public void StartOverShieldRespawn(int t)
+    void StartOverShieldRespawn(int t)
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
@@ -427,6 +436,26 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         FindObjectOfType<SwarmManager>().difficulty = (SwarmManager.Difficulty)ei;
     }
+
+
+
+    [PunRPC]
+    public void HideOvershield(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("HideOvershield", RpcTarget.All, false);
+        }
+        else
+        {
+            StartOverShieldRespawn(overshield.tts);
+            overshield.gameObject.SetActive(false);
+        }
+    }
+
+
+
+
 
 
 

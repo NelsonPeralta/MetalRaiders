@@ -148,6 +148,7 @@ MonoBehaviour:
   - AlienShooterFlinch
   - ActorDeath
   - UpdateSwarmDifficulty_RPC
+  - HideOvershield
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

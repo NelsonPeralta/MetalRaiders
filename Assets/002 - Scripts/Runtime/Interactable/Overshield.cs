@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Overshield : MonoBehaviour
 {
+    public int tts { get { return _tts; } }
+
     [SerializeField] int _tts;
     private void Start()
     {
@@ -11,11 +13,13 @@ public class Overshield : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<Player>() && !other.GetComponent<Player>().isDead && !other.GetComponent<Player>().isRespawning)
+        if (other.GetComponent<Player>() && !other.GetComponent<Player>().isDead && !other.GetComponent<Player>().isRespawning)
         {
-            NetworkGameManager.instance.StartOverShieldRespawn(_tts);
-            other.GetComponent<Player>().maxOvershieldPoints = 150;
-            gameObject.SetActive(false);
+            if (other.GetComponent<Player>().isMine)
+            {
+                other.GetComponent<Player>().maxOvershieldPoints = 150;
+                NetworkGameManager.instance.HideOvershield();
+            }
         }
     }
 }

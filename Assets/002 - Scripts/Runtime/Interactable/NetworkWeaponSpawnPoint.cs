@@ -158,6 +158,9 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         string[] heavyWeaponCodeNames = { "m16", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
         string[] lightWeaponCodeNames = { "m1911", "colt", "mp5", "p90", "desert_eagle" };
 
+        if (codeName == "mk14")
+            codeName = "c7";
+
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
             {
@@ -167,7 +170,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 if (codeName == "m16")
                     codeName = "m1911";
 
-                if (codeName == "mk14")
+                if (codeName == "c7" || codeName == "mk14")
                     codeName = "p90";
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))

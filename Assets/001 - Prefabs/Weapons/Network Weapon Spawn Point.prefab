@@ -558,7 +558,7 @@ Transform:
   m_Children:
   - {fileID: 7018294377465490732}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8628595011434998437
 MonoBehaviour:
@@ -592,6 +592,7 @@ MonoBehaviour:
   - {fileID: 5406913902717158425, guid: 823dd5995a5be7b40b8deae36ce5ce68, type: 3}
   - {fileID: 439363896651038599, guid: 17881a4d2a6d973428f0fe428e568de4, type: 3}
   - {fileID: 3627902294259101941, guid: 033f2f56169556e49bf912e701a2a29c, type: 3}
+  - {fileID: 1369567904875085839, guid: cb4c8189f7e216640a723b346c501671, type: 3}
   _tts: 0
   _weaponSpawned: {fileID: 0}
 --- !u!1001 &5425998958598396845
