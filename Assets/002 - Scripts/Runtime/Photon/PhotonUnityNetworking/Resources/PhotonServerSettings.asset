@@ -149,6 +149,8 @@ MonoBehaviour:
   - ActorDeath
   - UpdateSwarmDifficulty_RPC
   - HideOvershield
+  - ChangeGameMode
+  - SendGameParams
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

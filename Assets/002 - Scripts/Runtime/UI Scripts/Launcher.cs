@@ -23,7 +23,16 @@ public class Launcher : MonoBehaviourPunCallbacks
     public GameObject loginButton;
 
     #region
-    public int levelToLoadIndex;
+    public int levelToLoadIndex
+    {
+        get { return _levelToLoadIndex; }
+        set
+        {
+            _levelToLoadIndex = value;
+            mapSelectedText.text = $"Map: {Launcher.NameFromIndex(_levelToLoadIndex).Replace("PVP - ", "")}";
+        }
+    }
+    int _levelToLoadIndex;
     [SerializeField] int testingRoomLevelIndex;
     public int waitingRoomLevelIndex;
     #endregion
@@ -80,6 +89,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         get { return _playerListItemPrefab; }
     }
 
+    public TMP_Text gameModeText { get { return _gameModeSelectedText; } }
     public TMP_Text teamModeText { get { return _teamModeText; } }
     public TMP_Text teamText { get { return _teamText; } }
     public GameObject teamRoomUI { get { return _teamRoomUI; } }
@@ -88,6 +98,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     public GameObject swarmModeBtns { get { return _swarmDifficultyBtns; } }
     public GameObject multiplayerMcComponentsHolder { get { return _multiplayerMcComponentsHolder; } }
     public GameObject swarmMcComponentsHolder { get { return _swarmMcComponentsHolder; } }
+
+
+
+    List<Photon.Realtime.Player> _previousListOfPlayersInRoom = new List<Photon.Realtime.Player>();
+
+
     void Awake()
     {
         if (instance)
@@ -255,8 +271,67 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Joined room");
-        Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString());
-        Debug.Log(PhotonNetwork.CurrentRoom.Name);
+        foreach (var kvp in PhotonNetwork.CurrentRoom.Players) { Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}"); }
+
+        List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
+
+        var listPlayersDiff = newListPlayers.Except(_previousListOfPlayersInRoom).ToList();
+        Debug.Log($"{listPlayersDiff[0].NickName} Joined room");
+
+        {
+            //if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
+            //{ // Room is Random
+            //    GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+            //    GameManager.instance.gameType = GameManager.GameType.Fiesta;
+            //    PhotonNetwork.LoadLevel(waitingRoomLevelIndex);
+            //}
+            //else
+            //{ // Room is private
+
+            //    if (PhotonNetwork.IsMasterClient)
+            //    {
+            //        //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "NetworkMainMenu"), Vector3.zero, Quaternion.identity);
+            //        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+            //    }
+            //    string roomType = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower() + "_room";
+            //    string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower();
+
+            //    commonRoomTexts.SetActive(true);
+            //    MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
+            //    roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
+
+            //    //Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
+            //    startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+            //}
+
+            //if (!PhotonNetwork.IsMasterClient)
+            //{
+
+            //    try
+            //    {
+            //        Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
+            //        int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
+            //        Launcher.instance.levelToLoadIndex = ltl;
+            //        Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
+            //    }
+            //    catch (System.Exception e) { Debug.Log(e); }
+
+            //    try
+            //    {
+            //        Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+            //        int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
+            //        GameManager.instance.gameType = (GameManager.GameType)ei;
+
+            //        Launcher.instance.gametypeSelectedText.text = $"Gametype: {GameManager.instance.gameType}";
+            //    }
+            //    catch (System.Exception e) { Debug.Log(e); }
+            //}
+        }
+
+
+
+
+
 
         if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
         { // Room is Random
@@ -267,43 +342,22 @@ public class Launcher : MonoBehaviourPunCallbacks
         else
         { // Room is private
 
-            if (PhotonNetwork.IsMasterClient)
-            {
-                //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/UI", "NetworkMainMenu"), Vector3.zero, Quaternion.identity);
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
-            }
-            string roomType = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower() + "_room";
-            string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString().ToLower();
-
             commonRoomTexts.SetActive(true);
-            MenuManager.Instance.OpenMenu(roomType); // Show the "room" menu
+            MenuManager.Instance.OpenMenu("multiplayer_room"); // Show the "room" menu
             roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
-            //Debug.Log($"Is Master Client: {FindObjectOfType<MainMenuCaller>().GetComponent<PhotonView>().ViewID} and Master Client: {PhotonNetwork.IsMasterClient}");
-            startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        }
+            try { Destroy(FindObjectOfType<NetworkGameManager>().gameObject); } catch { }
 
-        if (!PhotonNetwork.IsMasterClient)
-        {
-
-            try
+            if (PhotonNetwork.IsMasterClient)
             {
-                Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
-                int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
-                Launcher.instance.levelToLoadIndex = ltl;
-                Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
-            }
-            catch (System.Exception e) { Debug.Log(e); }
+                if (listPlayersDiff[0].NickName.Contains(GameManager.instance.rootPlayerNickname))
+                    GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 
-            try
-            {
-                Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
-                int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
-                GameManager.instance.gameType = (GameManager.GameType)ei;
+                StartCoroutine(InstantiateNetworkGameManager_Coroutine());
+                startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
-                Launcher.instance.gametypeSelectedText.text = $"Gametype: {GameManager.instance.gameType}";
+                //NetworkGameManager.instance.SendGameParams();
             }
-            catch (System.Exception e) { Debug.Log(e); }
         }
     }
 
@@ -311,10 +365,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         try
         {
-            int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gamemode"];
-            GameManager.instance.gameMode = (GameManager.GameMode)ei;
+            //int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gamemode"];
+            //GameManager.instance.gameMode = (GameManager.GameMode)ei;
 
-            Launcher.instance._gameModeSelectedText.text = $"Game Mode: {GameManager.instance.gameMode}";
+            //Launcher.instance._gameModeSelectedText.text = $"Game Mode: {GameManager.instance.gameMode}";
 
             //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             //    multiplayerMapSelector.SetActive(PhotonNetwork.IsMasterClient);
@@ -328,28 +382,28 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         try
         {
-            Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
-            int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
-            Launcher.instance.levelToLoadIndex = ltl;
-            Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
+            //Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
+            //int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
+            //Launcher.instance.levelToLoadIndex = ltl;
+            //Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
         }
         catch (System.Exception e) { Debug.Log(e); }
 
         try
         {
-            Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
-            int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
-            GameManager.instance.gameType = (GameManager.GameType)ei;
+            //Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+            //int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
+            //GameManager.instance.gameType = (GameManager.GameType)ei;
 
-            Launcher.instance.gametypeSelectedText.text = $"Gametype: {GameManager.instance.gameType}";
+            //Launcher.instance.gametypeSelectedText.text = $"Gametype: {GameManager.instance.gameType}";
         }
         catch (System.Exception e) { Debug.Log(e); }
 
         try
         {
-            Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["teammode"]}");
-            int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["teammode"];
-            GameManager.instance.teamMode = (GameManager.TeamMode)ei;
+            //Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["teammode"]}");
+            //int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["teammode"];
+            //GameManager.instance.teamMode = (GameManager.TeamMode)ei;
 
             UpdateTeams();
         }
@@ -499,6 +553,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void ChangeLevelToLoadWithIndex(int index)
     {
         Launcher.instance.levelToLoadIndex = index;
+        NetworkGameManager.instance.SendGameParams();
+        return;
+
+
+        Launcher.instance.levelToLoadIndex = index;
         string mode = PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString();
 
         try
@@ -571,6 +630,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeGameType(string gt)
     {
+
+        GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
+        FindObjectOfType<NetworkGameManager>().SendGameParams();
+        return;
+
         instance.gametypeSelectedText.text = $"Gametype: {gt}";
         gt = gt.Replace(" ", "");
         GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
@@ -598,26 +662,26 @@ public class Launcher : MonoBehaviourPunCallbacks
         //FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("ChangeSubGameType_RPC", RpcTarget.All, gt);
     }
 
-    public void ChangeGameMode(string gm)
+    public void ChangeGameMode(string gt)
     {
-        instance._gameModeSelectedText.text = $"Game Mode: {gm}";
-        gm = gm.Replace(" ", "");
-        GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gm);
+        GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gt);
+        FindObjectOfType<NetworkGameManager>().SendGameParams();
+        //GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gm);
 
-        try
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
-                //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
-                try { props.Add("gamemode", (int)GameManager.instance.gameMode); } catch { props["gamemode"] = (int)GameManager.instance.gameMode; }
-                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.Log(e);
-        }
+        //try
+        //{
+        //    if (PhotonNetwork.IsMasterClient)
+        //    {
+        //        ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
+        //        //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
+        //        try { props.Add("gamemode", (int)GameManager.instance.gameMode); } catch { props["gamemode"] = (int)GameManager.instance.gameMode; }
+        //        PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+        //    }
+        //}
+        //catch (System.Exception e)
+        //{
+        //    Debug.Log(e);
+        //}
     }
 
     void UpdateTeams()
@@ -709,6 +773,18 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             //commonRoomTexts.gameObject.SetActive(false);
         }
+    }
+
+
+
+
+
+    IEnumerator InstantiateNetworkGameManager_Coroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+        NetworkGameManager.instance.SendGameParams();
+
     }
 
     IEnumerator LoadLevel_Coroutine()

@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log($"Game Mode: {gameMode}");
             if (_gameMode == GameMode.Swarm)
             {
-                FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(!PhotonNetwork.IsMasterClient);
+                FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
 
                 gameType = GameType.Survival;
@@ -99,12 +99,13 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else if (_gameMode == GameMode.Multiplayer)
             {
-                FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(!PhotonNetwork.IsMasterClient);
+                FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
 
                 gameType = GameType.Slayer;
                 teamMode = TeamMode.None;
             }
+            Launcher.instance.gameModeText.text = $"Game Mode: {_gameMode}";
         }
     }
     public GameType gameType
@@ -112,7 +113,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _gameType; }
         set
         {
-            _gameType = value; 
+            Debug.Log("sadfsfgfgd");
+            _gameType = value;
             Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
         }
     }
@@ -132,7 +134,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
+                if (gameMode == GameMode.Multiplayer)
+                    FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
             }
         }
     }
@@ -184,10 +187,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             catch { }
         }
     }
-    //public string rootPlayerNickname
-    //{
-    //    get { return GetComponent<PhotonView>()}
-    //}
+
+    public string rootPlayerNickname
+    {
+        get { return WebManager.webManagerInstance.pda.username; }
+    }
 
 
     // called zero
@@ -494,7 +498,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         return SceneManager.GetActiveScene().name;
     }
-
 
 
 

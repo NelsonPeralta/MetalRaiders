@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.Linq;
 using UnityEngine.UIElements;
+using System;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -38,6 +39,39 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
         //Destroy(gameObject);
     }
+
+
+    // Menu
+    #region
+
+    [PunRPC]
+    public void SendGameParams(Dictionary<string, string> p = null, bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            Dictionary<string, string> ps = new Dictionary<string, string>();
+            ps.Add("gamemode", GameManager.instance.gameMode.ToString());
+            ps.Add("gametype", GameManager.instance.gameType.ToString());
+            ps.Add("leveltoloadindex", Launcher.instance.levelToLoadIndex.ToString());
+            ps.Add("teammode", GameManager.instance.teamMode.ToString());
+
+            GetComponent<PhotonView>().RPC("SendGameParams", RpcTarget.All, ps, false);
+        }
+        else
+        {
+            if (PhotonNetwork.IsMasterClient)
+                return;
+
+            try { GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), p["gamemode"]); } catch (System.Exception e) { Debug.Log(e); }
+            try { GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), p["gametype"]); } catch (System.Exception e) { Debug.Log(e); }
+            try { Launcher.instance.levelToLoadIndex = (System.Int16.Parse(p["leveltoloadindex"])); } catch (System.Exception e) { Debug.Log(e); }
+            try { GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), p["teammode"]); } catch (System.Exception e) { Debug.Log(e); }
+        }
+    }
+
+    #endregion
+
+
 
     // Methods
     #region
@@ -88,7 +122,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("SpawnNetworkWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
     }
 
-    
+
     #endregion
 
     // Explosive Barrel
@@ -126,9 +160,6 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     void StartOverShieldRespawn(int t)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
         int _time = FindObjectOfType<GameTime>().totalTime;
 
         int timeLeft = 0;
@@ -139,7 +170,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             timeLeft = t - (_time % t);
         Debug.Log(timeLeft);
 
-        GetComponent<PhotonView>().RPC("StartOverShieldRespawn_RPC", RpcTarget.All, timeLeft);
+        StartCoroutine(StartOverShieldRespawn_Coroutine(t));
+        //GetComponent<PhotonView>().RPC("StartOverShieldRespawn_RPC", RpcTarget.All, timeLeft);
     }
 
     public void StartLootableWeaponRespawn(Vector3 v)
@@ -444,7 +476,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("HideOvershield", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("HideOvershield", RpcTarget.AllViaServer, false);
         }
         else
         {
