@@ -268,7 +268,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         OnCreateSwarmRoomButton?.Invoke(this);
     }
 
-    public override void OnJoinedRoom()
+    public override void OnJoinedRoom() // Runs only when THIS player joins room
     {
         Debug.Log("Joined room");
         foreach (var kvp in PhotonNetwork.CurrentRoom.Players) { Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}"); }
@@ -346,14 +346,16 @@ public class Launcher : MonoBehaviourPunCallbacks
             MenuManager.Instance.OpenMenu("multiplayer_room"); // Show the "room" menu
             roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
-            try { Destroy(FindObjectOfType<NetworkGameManager>().gameObject); } catch { }
+            try { Destroy(FindObjectOfType<NetworkGameManager>().gameObject); } catch { } finally { Debug.Log("Destroying NetworkGameManager"); }
 
             if (PhotonNetwork.IsMasterClient)
             {
                 if (listPlayersDiff[0].NickName.Contains(GameManager.instance.rootPlayerNickname))
                     GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 
-                StartCoroutine(InstantiateNetworkGameManager_Coroutine());
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+                NetworkGameManager.instance.SendGameParams();
+
                 startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
                 //NetworkGameManager.instance.SendGameParams();
@@ -531,18 +533,22 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
+    // Runs when OTHER players join room
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        Debug.Log("OnPlayerEnteredRoom");
+        Debug.Log("LAUNCHER OnPlayerEnteredRoom");
         Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
 
+        Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
         if (PhotonNetwork.IsMasterClient)
         {
-            Dictionary<string, string> roomParams = new Dictionary<string, string>();
-            roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
-            roomParams["gametype"] = GameManager.instance.gameType.ToString();
+            //Dictionary<string, string> roomParams = new Dictionary<string, string>();
+            //roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
+            //roomParams["gametype"] = GameManager.instance.gameType.ToString();
 
             //FindObjectOfType<NetworkMainMenu>().UpdateRoomSettings(roomParams);
+
+            StartCoroutine(InstantiateNetworkGameManager_Coroutine());
         }
         else
         {
@@ -781,7 +787,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     IEnumerator InstantiateNetworkGameManager_Coroutine()
     {
-        yield return new WaitForEndOfFrame();
+        Debug.Log("InstantiateNetworkGameManager_Coroutine");
+        yield return new WaitForSeconds(0.1f);
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
         NetworkGameManager.instance.SendGameParams();
 
