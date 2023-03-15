@@ -271,9 +271,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() // Runs only when THIS player joins room
     {
         Debug.Log("Joined room");
-        foreach (var kvp in PhotonNetwork.CurrentRoom.Players) { Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}"); }
+        //foreach (var kvp in PhotonNetwork.CurrentRoom.Players) { Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}"); }
 
         List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
+
+        foreach(Photon.Realtime.Player player in newListPlayers)
+            Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(player);
 
         var listPlayersDiff = newListPlayers.Except(_previousListOfPlayersInRoom).ToList();
         Debug.Log($"{listPlayersDiff[0].NickName} Joined room");
@@ -346,70 +349,48 @@ public class Launcher : MonoBehaviourPunCallbacks
             MenuManager.Instance.OpenMenu("multiplayer_room"); // Show the "room" menu
             roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
 
-            try { Destroy(FindObjectOfType<NetworkGameManager>().gameObject); } catch { } finally { Debug.Log("Destroying NetworkGameManager"); }
+            //try { Destroy(FindObjectOfType<NetworkGameManager>().gameObject); } catch { } finally { Debug.Log("Destroying NetworkGameManager"); }
+
+            startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
             if (PhotonNetwork.IsMasterClient)
             {
+                Debug.Log("Joined room IsMasterClient");
+
                 if (listPlayersDiff[0].NickName.Contains(GameManager.instance.rootPlayerNickname))
                     GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
                 NetworkGameManager.instance.SendGameParams();
-
-                startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-
-                //NetworkGameManager.instance.SendGameParams();
             }
+        }
+    }
+
+    // Runs when OTHER players join room
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        Debug.Log("LAUNCHER OnPlayerEnteredRoom");
+        Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //Dictionary<string, string> roomParams = new Dictionary<string, string>();
+            //roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
+            //roomParams["gametype"] = GameManager.instance.gameType.ToString();
+
+            //FindObjectOfType<NetworkMainMenu>().UpdateRoomSettings(roomParams);
+
+            StartCoroutine(InstantiateNetworkGameManager_Coroutine());
+        }
+        else
+        {
+
         }
     }
 
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
-        try
-        {
-            //int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gamemode"];
-            //GameManager.instance.gameMode = (GameManager.GameMode)ei;
-
-            //Launcher.instance._gameModeSelectedText.text = $"Game Mode: {GameManager.instance.gameMode}";
-
-            //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            //    multiplayerMapSelector.SetActive(PhotonNetwork.IsMasterClient);
-            //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            //{
-            //    swarmMapSelector.SetActive(PhotonNetwork.IsMasterClient);
-            //    GameManager.instance.teamMode = GameManager.TeamMode.Classic;
-            //}
-        }
-        catch (System.Exception e) { Debug.Log(e); }
-
-        try
-        {
-            //Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
-            //int ltl = (int)PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"];
-            //Launcher.instance.levelToLoadIndex = ltl;
-            //Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(ltl).Replace("PVP - ", "")}";
-        }
-        catch (System.Exception e) { Debug.Log(e); }
-
-        try
-        {
-            //Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
-            //int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["gametype"];
-            //GameManager.instance.gameType = (GameManager.GameType)ei;
-
-            //Launcher.instance.gametypeSelectedText.text = $"Gametype: {GameManager.instance.gameType}";
-        }
-        catch (System.Exception e) { Debug.Log(e); }
-
-        try
-        {
-            //Debug.Log($"OnPlayerEnteredRoom: {PhotonNetwork.CurrentRoom.CustomProperties["teammode"]}");
-            //int ei = (int)PhotonNetwork.CurrentRoom.CustomProperties["teammode"];
-            //GameManager.instance.teamMode = (GameManager.TeamMode)ei;
-
-            UpdateTeams();
-        }
-        catch (System.Exception e) { Debug.Log(e); }
+        
     }
 
 
@@ -533,28 +514,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    // Runs when OTHER players join room
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-    {
-        Debug.Log("LAUNCHER OnPlayerEnteredRoom");
-        Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
-
-        Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            //Dictionary<string, string> roomParams = new Dictionary<string, string>();
-            //roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
-            //roomParams["gametype"] = GameManager.instance.gameType.ToString();
-
-            //FindObjectOfType<NetworkMainMenu>().UpdateRoomSettings(roomParams);
-
-            StartCoroutine(InstantiateNetworkGameManager_Coroutine());
-        }
-        else
-        {
-
-        }
-    }
+    
 
     public void ChangeLevelToLoadWithIndex(int index)
     {

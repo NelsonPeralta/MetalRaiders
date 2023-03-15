@@ -8,10 +8,19 @@ using System;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
-    public static NetworkGameManager instance { get { return FindObjectOfType<NetworkGameManager>(); } }
+    public static NetworkGameManager instance;
 
     Overshield _overshield;
 
+    private void Awake()
+    {
+        Debug.Log("NetworkGameManager Awake");
+        if (instance)
+            Destroy(instance.gameObject);
+
+        DontDestroyOnLoad(gameObject);
+        instance = this;
+    }
     private void Start()
     {
         Debug.Log($"NetworkGameManager Start");

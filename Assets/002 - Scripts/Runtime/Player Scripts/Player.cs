@@ -795,6 +795,8 @@ public class Player : MonoBehaviourPunCallbacks
             DeathNature dsn = DeathNature.None;
             if (headshot)
                 dsn = DeathNature.Headshot;
+            if(isGroin)
+                dsn = DeathNature.Groin;
 
 
             byte[] bytes = Encoding.UTF8.GetBytes("");
@@ -1055,8 +1057,9 @@ public class Player : MonoBehaviourPunCallbacks
         {
             try
             {
-                GameObject s = Instantiate(headhunterSkullPrefab, weaponDropPoint.position, Quaternion.identity);
-                s.GetComponent<Rigidbody>().AddForce(new Vector3(0, 800, 0));
+                // Spawn Skull
+                //GameObject s = Instantiate(headhunterSkullPrefab, weaponDropPoint.position, Quaternion.identity);
+                //s.GetComponent<Rigidbody>().AddForce(new Vector3(0, 800, 0));
             }
             catch { }
             try
@@ -1081,6 +1084,8 @@ public class Player : MonoBehaviourPunCallbacks
                     }
                     if (deathByHeadshot)
                         f += $" with a <color=\"red\">Headshot</color>!";
+                    if (deathByGroin)
+                        f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
 
                     {
                         if (this != lastPlayerSource)

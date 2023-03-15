@@ -21,6 +21,9 @@ abstract public class Actor : MonoBehaviour
             int pv = _hitPoints;
             int nv = Mathf.Clamp(value, 0, _defaultHitpoints * 2);
 
+            if (nv > pv)
+                return;
+
             _hitPoints = nv;
 
             if (nv < pv)
@@ -179,7 +182,7 @@ abstract public class Actor : MonoBehaviour
     protected void Prepare()
     {
         transform.position = new Vector3(0, -10, 0);
-        hitPoints = _defaultHitpoints + SwarmManager.instance.currentWave * 2;
+        _hitPoints = _defaultHitpoints + SwarmManager.instance.currentWave * 2;
         foreach (ActorHitbox hitbox in GetComponentsInChildren<ActorHitbox>(true))
             hitbox.gameObject.SetActive(true);
     }
@@ -375,7 +378,7 @@ abstract public class Actor : MonoBehaviour
 
 
     [PunRPC]
-    void ActorDeath(bool caller = true)
+    public void ActorDeath(bool caller = true)
     {
         if (caller)
         {

@@ -18,7 +18,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
     [SerializeField] GameObject _redMarker;
     [SerializeField] GameObject _greenMarker;
 
-    int damping = 1;
+    int damping = 1, tries = 0;
 
     private void Awake()
     {
@@ -44,12 +44,11 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
     IEnumerator LateStart()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(1);
 
         try
         {
             _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
-            Debug.Log($"PlayerWorldUIMarker LateStart: {_player.nickName}");
             _text.text = _player.nickName;
 
             _targetPlayer.OnPlayerDeath -= OnPlayerDeath;
@@ -57,10 +56,11 @@ public class PlayerWorldUIMarker : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.Log("Error with PlayerWorldUIMarker");
-            Debug.LogWarning(e);
+            StartCoroutine(LateStart());
+            tries++;
 
-            gameObject.SetActive(false);
+            if (tries == 5)
+                gameObject.SetActive(false);
         }
     }
 

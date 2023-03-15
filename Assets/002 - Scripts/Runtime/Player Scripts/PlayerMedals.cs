@@ -77,7 +77,7 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnNutshotMedal()
     {
-        Transform h = Instantiate(headshotMedalPrefab, grid);
+        Transform h = Instantiate(nutshotMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
     }
@@ -141,6 +141,8 @@ public class PlayerMedals : MonoBehaviour
     {
         Transform h = Instantiate(killjoyMedalPrefab, grid);
         h.SetAsFirstSibling();
+
+        announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
     }
 
 
