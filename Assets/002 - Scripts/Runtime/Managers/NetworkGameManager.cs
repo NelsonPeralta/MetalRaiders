@@ -481,14 +481,15 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    public void HideOvershield(bool caller = true)
+    public void LootOvershield(int pid, bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("HideOvershield", RpcTarget.AllViaServer, false);
+            GetComponent<PhotonView>().RPC("LootOvershield", RpcTarget.AllViaServer, pid, false);
         }
         else
         {
+            GameManager.instance.pid_player_Dict[pid].maxOvershieldPoints = 150;
             StartOverShieldRespawn(overshield.tts);
             overshield.gameObject.SetActive(false);
         }

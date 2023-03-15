@@ -17,8 +17,7 @@ public class Overshield : MonoBehaviour
         {
             if (other.GetComponent<Player>().isMine)
             {
-                other.GetComponent<Player>().maxOvershieldPoints = 150;
-                NetworkGameManager.instance.HideOvershield();
+                NetworkGameManager.instance.LootOvershield(other.GetComponent<Player>().pid);
             }
         }
     }
