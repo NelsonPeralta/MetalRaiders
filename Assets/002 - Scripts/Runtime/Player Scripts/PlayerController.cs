@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviourPun
     public Animator animDWLeft;
     public WeaponProperties dwRightWP;
     public WeaponProperties dwLeftWP;
-    public bool isShooting;
+    public bool isHoldingShootBtn;
     public bool isDualWielding;
     public bool isShootingRight;
     public bool isShootingLeft;
@@ -317,23 +317,23 @@ public class PlayerController : MonoBehaviourPun
     {
 
         if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading &&
-            !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
         {
-            isShooting = true;
+            isHoldingShootBtn = true;
         }
         else
         {
-            isShooting = false;
+            isHoldingShootBtn = false;
         }
-        Debug.Log($"{GetComponent<Player>().nickName}: _StartShoot_RPC {isShooting}");
+        Debug.Log($"{GetComponent<Player>().nickName}: _StartShoot_RPC {isHoldingShootBtn}");
     }
 
     [PunRPC]
     void _StopShoot_RPC()
     {
-        isShooting = false;
+        isHoldingShootBtn = false;
         OnPlayerFireButtonUp?.Invoke(this);
-        Debug.Log($"{GetComponent<Player>().nickName}: _StopShoot_RPC {isShooting}");
+        Debug.Log($"{GetComponent<Player>().nickName}: _StopShoot_RPC {isHoldingShootBtn}");
     }
 
     void Shooting()
@@ -343,12 +343,12 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-        if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isShooting)
+        if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
         {
             _StartShoot();
         }
 
-        if (isShooting)
+        if (isHoldingShootBtn)
             OnPlayerFire?.Invoke(this);
 
         if (rewiredPlayer.GetButtonUp("Shoot"))
@@ -363,15 +363,15 @@ public class PlayerController : MonoBehaviourPun
         }
         if (!isDualWielding)
         {
-            if (rewiredPlayer.GetButton("Shoot") && !pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isShooting && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            if (rewiredPlayer.GetButton("Shoot") && !pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
             {
-                isShooting = true;
+                isHoldingShootBtn = true;
                 OnPlayerFire?.Invoke(this);
 
             }
             else
             {
-                isShooting = false;
+                isHoldingShootBtn = false;
             }
 
         }
@@ -461,7 +461,8 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead)
         {
-            if (rewiredPlayer.GetButtonDown("Melee") && !isMeleeing && !isShooting && !isThrowingGrenade && !isSprinting)
+            if (rewiredPlayer.GetButtonDown("Melee") && !isMeleeing &&
+                !isHoldingShootBtn && !isFiring && !isThrowingGrenade && !isSprinting)
             {
                 _meleeCount = melee.playersInMeleeZone.Count;
                 Debug.Log("RPC Call: Melee");
@@ -483,7 +484,7 @@ public class PlayerController : MonoBehaviourPun
 
             meleeMovementFactor -= Time.deltaTime * 5f;
 
-            if(meleeMovementFactor <= 0)
+            if (meleeMovementFactor <= 0)
             {
                 _meleeCount = 0;
                 meleeMovementFactor = 0;
@@ -496,14 +497,7 @@ public class PlayerController : MonoBehaviourPun
     void Melee_RPC()
     {
         if (PV.IsMine)
-        {
             melee.Knife();
-            if (melee.playersInMeleeZone.Count > 0)
-                meleeAudioSource.clip = melee.knifeSuccessSound;
-            else
-                meleeAudioSource.clip = melee.knifeFailSound;
-        }
-        meleeAudioSource.Play();
         weaponAnimator.Play("Knife Attack 2", 0, 0f);
         StartCoroutine(Melee3PS());
     }
@@ -544,7 +538,8 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
-        if (rewiredPlayer.GetButtonDown("Throw Grenade") && !isDualWielding && !isShooting && !isMeleeing && !isSprinting /* && !isInspecting */)
+        if (rewiredPlayer.GetButtonDown("Throw Grenade") && !isDualWielding &&
+            !isHoldingShootBtn && !isFiring && !isMeleeing && !isSprinting /* && !isInspecting */)
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {
@@ -715,9 +710,14 @@ public class PlayerController : MonoBehaviourPun
                 if (pInventory.activeWeapon != null)
                 {
                     if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
+                    {
                         isFiring = true;
+                    }
                     else
+                    {
+
                         isFiring = false;
+                    }
 
                     if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
                     {
@@ -870,7 +870,7 @@ public class PlayerController : MonoBehaviourPun
     IEnumerator Melee3PS()
     {
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("Melee");
-        StartCoroutine(ShowMeleeKnife());
+        //StartCoroutine(ShowMeleeKnife());
         yield return new WaitForEndOfFrame();
     }
 
@@ -1139,13 +1139,13 @@ public class PlayerController : MonoBehaviourPun
     public void OnDeath_Delegate(Player player)
     {
         isSprinting = false;
-        isShooting = false;
+        isHoldingShootBtn = false;
     }
 
     void OnRespawn_Delegate(Player player)
     {
         isSprinting = false;
-        isShooting = false;
+        isHoldingShootBtn = false;
     }
 }
 

@@ -94,6 +94,7 @@ public class WeaponProperties : MonoBehaviour
     public GameObject rightHandGO;
     public GameObject leftHandGO;
     public bool isDualWieldable;
+    public WeaponProperties leftWeapon;
     public bool isRightWeapon;
     public bool isLeftWeapon;
 
@@ -101,7 +102,6 @@ public class WeaponProperties : MonoBehaviour
     public GameObject equippedModelB;
 
     public GameObject weaponRessource;
-
 
 
     public int currentAmmo
@@ -355,6 +355,7 @@ public class WeaponPropertiesEditor : Editor
         wp.bulletSpeed = EditorGUILayout.IntField("Bullet speed:", wp.bulletSpeed);
         wp.range = EditorGUILayout.FloatField("Bullet range:", wp.range);
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);
+        wp.isDualWieldable = GUILayout.Toggle(wp.isDualWieldable, "Is Dual WieldAble");
         wp.isHeadshotCapable = GUILayout.Toggle(wp.isHeadshotCapable, "Is Headshot Capable");
         if (wp.isHeadshotCapable)
             wp.headshotMultiplier = EditorGUILayout.FloatField("Headshot Multiplier:", wp.headshotMultiplier);

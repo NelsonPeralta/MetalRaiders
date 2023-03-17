@@ -305,7 +305,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         Debug.Log("EquipStartingWeapon");
 
-        if (GameManager.instance.gameType.ToString().Contains("Slayer")  || GameManager.instance.gameType == GameManager.GameType.Survival)
+        if (GameManager.instance.gameType.ToString().Contains("Slayer") || GameManager.instance.gameType == GameManager.GameType.Survival)
         {
             StartingWeapon = "p90";
             StartingWeapon2 = "m1911";
@@ -416,10 +416,22 @@ public class PlayerInventory : MonoBehaviourPun
         foreach (GameObject awgo in allWeaponsInInventory)
         {
             WeaponProperties wp = awgo.GetComponent<WeaponProperties>();
-            try { if (wp != activeWeapon) wp.equippedModelB.SetActive(false); } catch (Exception e) { Debug.LogWarning($"{e}"); }
+            try
+            {
+                if (wp != activeWeapon)
+                {
+                    Debug.Log($"UpdateThirdPersonGunModelsOnCharacter {activeWeapon}");
 
-            if (wp == activeWeapon)
-                try { wp.equippedModelB.SetActive(true); } catch (Exception e) { Debug.LogWarning($"{e}"); }
+                    wp.equippedModelB.SetActive(false);
+                }
+
+                if (wp == activeWeapon)
+                {
+                    Debug.Log($"UpdateThirdPersonGunModelsOnCharacter {activeWeapon}");
+                    try { wp.equippedModelB.SetActive(true); } catch (Exception e) { Debug.LogWarning($"{e}"); }
+                }
+            }
+            catch (Exception e) { Debug.LogWarning($"{e}"); }
         }
     }
 

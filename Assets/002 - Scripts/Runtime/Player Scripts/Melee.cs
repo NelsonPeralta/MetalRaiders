@@ -62,10 +62,21 @@ public class Melee : MonoBehaviour
             for (int i = 0; i < playersInMeleeZone.Count; i++)
             {
                 Player playerToDamage = playersInMeleeZone[i];
-                if (playerToDamage.hitPoints <=0 || playerToDamage.isDead || playerToDamage.isRespawning)
+                if (playerToDamage.hitPoints <= 0 || playerToDamage.isDead || playerToDamage.isRespawning)
                     playersInMeleeZone.Remove(playerToDamage);
                 else
-                    playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee");
+                {
+                    if (player.isMine)
+                    {
+                        if (playersInMeleeZone.Count > 0)
+                            audioSource.clip = knifeSuccessSound;
+                        else
+                            audioSource.clip = knifeFailSound;
+
+                        audioSource.Play();
+                        playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee");
+                    }
+                }
             }
         }
     }

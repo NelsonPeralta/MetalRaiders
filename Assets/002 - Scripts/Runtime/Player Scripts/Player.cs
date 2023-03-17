@@ -1228,7 +1228,7 @@ public class Player : MonoBehaviourPunCallbacks
                             sourcePlayerMedals.kills++;
                     }
 
-                    if (playerMedals.spree >= 3)
+                    if (playerMedals.spree >= 5) 
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnKilljoySpreeMedal();
                 }
@@ -1245,7 +1245,7 @@ public class Player : MonoBehaviourPunCallbacks
             SwarmManager.instance.livesLeft--;
 
         GetComponent<PlayerController>().DisableCrouch();
-        GetComponent<PlayerController>().isShooting = false;
+        GetComponent<PlayerController>().isHoldingShootBtn = false;
         GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
         gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
 
