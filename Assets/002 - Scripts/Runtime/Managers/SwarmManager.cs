@@ -218,7 +218,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void OnEnable()
     {
-        currentWave = 0;
+        //currentWave = 0;
         nextWaveDelay = 5;
     }
     private void Awake()
@@ -271,7 +271,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         Scene currentScene = SceneManager.GetActiveScene();
 
-        currentWave = 0;
+        //currentWave = 0;
         nextWaveDelay = 5;
 
         if (editMode)

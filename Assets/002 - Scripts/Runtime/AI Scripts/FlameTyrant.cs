@@ -187,7 +187,7 @@ public class FlameTyrant : Actor
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("FlameTyrantSummon", RpcTarget.All, false);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else

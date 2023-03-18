@@ -462,7 +462,7 @@ public class PlayerController : MonoBehaviourPun
         if (!GetComponent<Player>().isDead)
         {
             if (rewiredPlayer.GetButtonDown("Melee") && !isMeleeing &&
-                !isHoldingShootBtn && !isFiring && !isThrowingGrenade && !isSprinting)
+                !isHoldingShootBtn && /*!isFiring &&*/ !isThrowingGrenade && !isSprinting)
             {
                 _meleeCount = melee.playersInMeleeZone.Count;
                 Debug.Log("RPC Call: Melee");
@@ -539,7 +539,7 @@ public class PlayerController : MonoBehaviourPun
     void Grenade()
     {
         if (rewiredPlayer.GetButtonDown("Throw Grenade") && !isDualWielding &&
-            !isHoldingShootBtn && !isFiring && !isMeleeing && !isSprinting /* && !isInspecting */)
+            !isHoldingShootBtn && /*!isFiring &&*/ !isMeleeing && !isSprinting /* && !isInspecting */)
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)
             {

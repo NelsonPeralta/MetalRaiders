@@ -42,14 +42,8 @@ abstract public class Actor : MonoBehaviour
             if (_hitPoints <= 0 && nv != pv)
             {
                 //target = null; \\DO NOT REMOVE TARGET HERE
-                try
-                {
-                    DropRandomWeapon();
-                }
-                catch (Exception e) { Debug.LogError(e); }
-
+                DropRandomWeapon();
                 ActorDeath();
-
             }
 
         }
@@ -257,6 +251,9 @@ abstract public class Actor : MonoBehaviour
 
     void DropRandomWeapon()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
         int ChanceToDrop = UnityEngine.Random.Range(0, 10);
         int cap = 7;
 
@@ -266,25 +263,29 @@ abstract public class Actor : MonoBehaviour
             float ranCapFactor = UnityEngine.Random.Range(0.4f, 0.6f);
             int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory.Length);
 
-            WeaponProperties wp = GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
+            try
+            {
+                WeaponProperties wp = GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
 
-            if (wp.weaponType == WeaponProperties.WeaponType.LMG ||
-                wp.weaponType == WeaponProperties.WeaponType.Launcher ||
-                wp.weaponType == WeaponProperties.WeaponType.Shotgun ||
-                wp.weaponType == WeaponProperties.WeaponType.Sniper ||
-                wp.weaponType == WeaponProperties.WeaponType.DMR)
-                return;
-            Debug.Log($"DropRandomWeapon: {wp.cleanName}");
+                if (wp.weaponType == WeaponProperties.WeaponType.LMG ||
+                    wp.weaponType == WeaponProperties.WeaponType.Launcher ||
+                    wp.weaponType == WeaponProperties.WeaponType.Shotgun ||
+                    wp.weaponType == WeaponProperties.WeaponType.Sniper ||
+                    wp.weaponType == WeaponProperties.WeaponType.DMR)
+                    return;
+                Debug.Log($"DropRandomWeapon: {wp.cleanName}");
 
 
 
 
-            Dictionary<string, int> param = new Dictionary<string, int>();
-            param["ammo"] = (int)(wp.ammoCapacity * ranAmmoFactor);
-            param["spareammo"] = (int)(wp.maxAmmo * ranCapFactor);
-            Vector3 spp = transform.position;
-            Vector3 fDir = losSpawn.transform.forward + new Vector3(0, 2f, 0);
-            NetworkGameManager.SpawnNetworkWeapon(randomWeaponInd, spp, fDir, param);
+                Dictionary<string, int> param = new Dictionary<string, int>();
+                param["ammo"] = (int)(wp.ammoCapacity * ranAmmoFactor);
+                param["spareammo"] = (int)(wp.maxAmmo * ranCapFactor);
+                Vector3 spp = transform.position;
+                Vector3 fDir = losSpawn.transform.forward + new Vector3(0, 2f, 0);
+                NetworkGameManager.SpawnNetworkWeapon(randomWeaponInd, spp, fDir, param);
+            }
+            catch { }
         }
     }
 
