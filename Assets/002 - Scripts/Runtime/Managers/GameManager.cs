@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
                 gameType = GameType.Survival;
                 teamMode = TeamMode.Classic;
-                FindObjectOfType<SwarmManager>().difficulty = SwarmManager.Difficulty.Normal;
+                difficulty = SwarmManager.Difficulty.Normal;
             }
             else if (_gameMode == GameMode.Multiplayer)
             {
@@ -137,6 +137,17 @@ public class GameManager : MonoBehaviourPunCallbacks
                 if (gameMode == GameMode.Multiplayer)
                     FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
             }
+        }
+    }
+
+    public SwarmManager.Difficulty difficulty
+    {
+        get { return _difficulty; }
+        set
+        {
+            _difficulty = value;
+            FindObjectOfType<Launcher>().teamModeText.text = $"Difficulty: {_difficulty.ToString()}";
+            NetworkGameManager.instance.SendGameParams();
         }
     }
 
@@ -198,6 +209,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     // private Variables
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
+
+
+    SwarmManager.Difficulty _difficulty;
 
     void Awake()
     {

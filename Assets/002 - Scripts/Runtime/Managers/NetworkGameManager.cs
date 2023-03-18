@@ -475,7 +475,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateSwarmDifficulty_RPC(int ei)
     {
-        FindObjectOfType<SwarmManager>().difficulty = (SwarmManager.Difficulty)ei;
+        GameManager.instance.difficulty = (SwarmManager.Difficulty)ei;
     }
 
 
