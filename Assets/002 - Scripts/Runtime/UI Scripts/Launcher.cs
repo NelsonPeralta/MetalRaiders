@@ -223,6 +223,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
         RoomOptions options = new RoomOptions();
+        options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
         options.CustomRoomProperties.Add("gamemode", "multiplayer");
 
