@@ -1,231 +1,239 @@
-﻿using System.Collections;
+using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using Photon.Pun;
 
-public class Tyrant : AiAbstractClass
+public class Tyrant : Actor
 {
-    [Header("Combat")]
-    public int projectileDamage;
-    public int projectileSpeed;
-    public List<Transform> minionSpawnPoints = new List<Transform>();
+    [SerializeField] Fireball _fireBallPrefab;
+    [SerializeField] List<Transform> _minionSpawnPoints = new List<Transform>();
 
-    [Header("Prefabs")]
-    public GameObject projectile;
-    public GameObject explosion;
+    float _meleeCooldown;
+    float _throwFireballCooldown;
+    float _summonlCooldown;
 
-    public enum TyrantActions { Block, Fireball, Summon, Seek, Idle }
-    [SerializeField] TyrantActions _tyrantAction;
+    bool isInRange;
 
-    int _minionsToSpawn;
-    public TyrantActions tyrantAction
+    protected override void ChildOnEnable()
     {
-        get { return _tyrantAction; }
-        set
-        {
-            if (_tyrantAction != value)
-            {
-                _tyrantAction = value;
-                InvokeOnActionChanged();
-            }
-        }
+        _flinchCooldown = 2.8f;
+        hitPoints = _defaultHitpoints + (SwarmManager.instance.currentWave * 12 * FindObjectsOfType<Player>().Length);
     }
-    public override void OnEnable()
-    {
-        tyrantAction = TyrantActions.Seek;
-        seek = true;
-    }
-    public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
-    {
-        PlayerRange newPlayerRange = aiAbstractClass.playerRange;
-        PlayerRange previousPlayerRange = aiAbstractClass.previousPlayerRange;
-        TyrantActions previousAction = tyrantAction;
-        int ran = Random.Range(0, 3);
 
-        if (targetInLineOfSight)
+    public override void CooldownsUpdate()
+    {
+        if (_meleeCooldown > 0)
+            _meleeCooldown -= Time.deltaTime;
+
+        if (_throwFireballCooldown > 0)
+            _throwFireballCooldown -= Time.deltaTime;
+
+        if (_summonlCooldown > 0)
+            _summonlCooldown -= Time.deltaTime;
+    }
+
+
+    public override void AnalyzeNextAction()
+    {
+        if (!GetComponent<PhotonView>().IsMine)
+            return;
+        if (target)
         {
-            if (newPlayerRange == PlayerRange.Medium)
-                seek = false;
-            if (newPlayerRange == PlayerRange.Medium && (previousPlayerRange == PlayerRange.Close || previousPlayerRange == PlayerRange.Long))
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            if (distanceToTarget <= closeRange)
             {
-                if (ran == 0)
-                    previousAction = TyrantActions.Summon;
+                nma.enabled = false;
+
+                if (_meleeCooldown <= 0)
+                {
+                    FlameTyrantMelee(false);
+                }
                 else
-                    previousAction = TyrantActions.Fireball;
-            }
-            else if (newPlayerRange == PlayerRange.Out)
-                previousAction = TyrantActions.Seek;
-        }
-        else
-        {
-            previousAction = TyrantActions.Seek;
-        }
-
-        if (newPlayerRange == PlayerRange.Close)
-            previousAction = TyrantActions.Block;
-        else if (newPlayerRange == PlayerRange.Out)
-            previousAction = TyrantActions.Seek;
-
-        ChangeAction(previousAction.ToString());
-    }
-
-    public override void DoAction()
-    {
-        int ran = Random.Range(0, 3);
-        TyrantActions previousWatcherAction = tyrantAction;
-
-        if (playerRange == PlayerRange.Medium || playerRange == PlayerRange.Long)
-        {
-            seek = false;
-            if (ran == 0)
-                previousWatcherAction = TyrantActions.Summon;
-            else
-                previousWatcherAction = TyrantActions.Fireball;
-        }
-
-        if (playerRange == PlayerRange.Out)
-            previousWatcherAction = TyrantActions.Seek;
-
-        if (!isDead && targetPlayer)
-        {
-
-            if (previousWatcherAction != TyrantActions.Block && previousWatcherAction != TyrantActions.Idle)
-            {
-                animator.SetBool("Block", false);
-            }
-
-            if (previousWatcherAction != TyrantActions.Seek)
-            {
-                seek = false;
-            }
-
-
-            if (previousWatcherAction == TyrantActions.Block)
-            {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Defend"))
                 {
-                    animator.SetBool("Block", true);
+
                 }
             }
-            else if (previousWatcherAction == TyrantActions.Fireball)
+            else if (distanceToTarget > closeRange && distanceToTarget <= longRange)
             {
-                if (canDoAction)
+                if (distanceToTarget > closeRange && distanceToTarget <= midRange)
                 {
-                    _voice.clip = _attackClip;
-                    _voice.Play();
-                    animator.Play("Projectile");
+                    if (!isInRange)
+                        isInRange = true;
+                }
 
-                    var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
-                        , projectileSpawnPoint.transform.rotation);
-                    proj.GetComponent<Fireball>().damage = projectileDamage;
-                    proj.GetComponent<Fireball>().force = projectileSpeed;
-                    proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-                    Destroy(proj, 5);
 
-                    nextActionCooldown = defaultNextActionCooldown;
+                if (isInRange)
+                {
+                    int ran = Random.Range(0, 5);
+
+                    if (ran != 0)
+                    {
+                        if (_throwFireballCooldown <= 0)
+                        {
+                            Debug.Log("Throw Fireball to Player");
+                            FlameTyrantFireBall(false);
+                        }
+                    }
+                    else
+                    {
+                        if (_summonlCooldown <= 0)
+                        {
+                            Debug.Log("Throw Fireball to Player");
+                            FlameTyrantSummon(false);
+                        }
+                    }
+                }
+                else
+                {
+                    if (!isRunning)
+                    {
+                        Debug.Log("Chase Player");
+                        FlameTyrantRun(false);
+                    }
+                    nma.enabled = true;
+                    nma.SetDestination(target.position);
                 }
             }
-            else if (previousWatcherAction == TyrantActions.Summon)
+            else if (distanceToTarget > longRange)
             {
-                if (canDoAction)
-                {
-                    _voice.clip = _attackClip;
-                    _voice.Play();
-                    animator.Play("Summon");
+                if (isInRange)
+                    isInRange = false;
 
-                    _minionsToSpawn = minionSpawnPoints.Count;
-                    StartCoroutine(SpawnHellhound_Coroutine());
-                    nextActionCooldown = defaultNextActionCooldown;
+                if (!isRunning)
+                {
+                    //Debug.Log("Chase Player");
+                    FlameTyrantRun(false);
                 }
+                nma.enabled = true;
+                nma.SetDestination(target.position);
             }
-            else if (previousWatcherAction == TyrantActions.Seek)
-            {
-                seek = true;
-            }
+
+
         }
-        else if (!isDead && !targetPlayer)
+        else // Stop Chasing
         {
-            tyrantAction = TyrantActions.Idle;
-            seek = false;
+            if (hitPoints > 0)
+                if (!isIdling)
+                    FlameTyrantIdle(false);
+            //nma.isStopped = true;
         }
     }
 
-    public override void ChildUpdate()
-    {
-        if (!targetPlayer)
-            return;
 
-        Vector3 targetPostition = new Vector3(targetPlayer.position.x,
-                                        this.transform.position.y,
-                                        targetPlayer.position.z);
-        this.transform.LookAt(targetPostition);
+
+
+
+    public override void ChildPrepare()
+    {
+        isInRange = false;
     }
 
-    protected override void Damage_Abstract(int damage, int playerWhoShotPDI, string damageSource = null , bool isHeadshot = false)
-    {
-        if (isDead)
-            return;
-        GetComponent<PhotonView>().RPC("Damage_RPC", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot);
-    }
+
+
+
 
     [PunRPC]
-    public override void Damage_RPC(int damage, int playerWhoShotPDI, string damageSource = null , bool isHeadshot = false)
+    void FlameTyrantMelee(bool caller = true)
     {
-        if (isDead)
-            return;
-
-        Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
-        pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
-
-        health -= damage;
-        if (isDead)
+        if (caller)
         {
-            SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
-
-            pp.GetComponent<PlayerSwarmMatchStats>().kills++;
-            pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
+            GetComponent<PhotonView>().RPC("FlameTyrantMelee", RpcTarget.All, false);
+            target.GetComponent<Player>().Damage(4, false, pid);
         }
-    }
-
-    public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
-    {
-        if (!targetInLineOfSight)
-            tyrantAction = TyrantActions.Seek;
         else
         {
-            Debug.Log($"Target in line of sight. Player range: {playerRange}");
-            if (playerRange == PlayerRange.Medium)
-                tyrantAction = TyrantActions.Fireball;
-            else if (playerRange == PlayerRange.Long)
-                tyrantAction = TyrantActions.Summon;
+            //Debug.Log("Punch Player RPC");
+
+            GetComponent<AudioSource>().clip = _attackClip;
+            GetComponent<AudioSource>().Play();
+
+            _animator.SetBool("Run", false);
+            _animator.Play("Melee");
+            _meleeCooldown = 1;
         }
     }
 
     [PunRPC]
-    public override void ChangeAction_RPC(string actionString)
+    void FlameTyrantFireBall(bool caller = true)
     {
-        tyrantAction = (TyrantActions)System.Enum.Parse(typeof(TyrantActions), actionString);
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.All, false);
+            //target.GetComponent<Player>().Damage(4, false, pid);
+        }
+        else
+        {
+            //Debug.Log("Punch Player RPC");
+
+            _animator.SetBool("Run", false);
+            nma.enabled = false;
+            _animator.Play("Throw Fireball");
+
+            Vector3 dir = (target.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
+                , Quaternion.LookRotation(dir));
+            foreach (ActorHitbox c in actorHitboxes)
+                Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
+            proj.GetComponent<Fireball>().damage = 14;
+            proj.GetComponent<Fireball>().force = 150;
+            proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+            Destroy(proj, 5);
+            _throwFireballCooldown = 2f;
+        }
     }
 
-    IEnumerator SpawnHellhound_Coroutine()
+    [PunRPC]
+    void FlameTyrantSummon(bool caller = true)
     {
-        Debug.Log(_minionsToSpawn);
-        SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, minionSpawnPoints[_minionsToSpawn - 1]);
-        _minionsToSpawn--;
-        yield return new WaitForSeconds(0.1f);
-        if (_minionsToSpawn > 0)
-            StartCoroutine(SpawnHellhound_Coroutine());
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("FlameTyrantSummon", RpcTarget.All, false);
+            //target.GetComponent<Player>().Damage(4, false, pid);
+        }
+        else
+        {
+            //Debug.Log("Punch Player RPC");
+
+            _animator.SetBool("Run", false);
+            nma.enabled = false;
+            _animator.Play("Summon");
+
+            SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, _minionSpawnPoints[0]);
+            SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, _minionSpawnPoints[1]);
+
+            _summonlCooldown = 4f;
+        }
     }
 
-    public override void OnDeathEnd_Delegate(AiAbstractClass aiAbstractClass)
+    [PunRPC]
+    void FlameTyrantIdle(bool caller = true)
     {
-        GameObject ex = Instantiate(explosion, transform.position + new Vector3(0, 0.75f, 0), transform.rotation);
-        Destroy(ex, 2);
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("FlameTyrantIdle", RpcTarget.All, false);
+        }
+        else
+        {
+            //Debug.Log("UndeadIdle RPC");
+
+            nma.enabled = false;
+            _animator.SetBool("Run", false);
+        }
     }
 
-    public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
+    [PunRPC]
+    void FlameTyrantRun(bool caller = true)
     {
-        projectileDamage += SwarmManager.instance.currentWave * 2;
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("FlameTyrantRun", RpcTarget.All, false);
+        }
+        else
+        {
+            //Debug.Log("UndeadRun RPC");
+
+            //_animator.Play("Run");
+            _animator.SetBool("Run", true);
+        }
     }
 }

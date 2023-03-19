@@ -3422,7 +3422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea11089b7903c0845b654cb9d4186576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitPoints: 400
+  _hitPoints: 500
   _target: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 3976385901426164958}

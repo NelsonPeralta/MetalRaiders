@@ -54,7 +54,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public List<Breather> _knightPool = new List<Breather>();
     public List<AlienShooter> _watcherPool = new List<AlienShooter>();
     public List<Helldog> hellhoundPool = new List<Helldog>();
-    public List<FlameTyrant> tyrantPool = new List<FlameTyrant>();
+    public List<Tyrant> tyrantPool = new List<Tyrant>();
 
     // private variables
     PhotonView PV;
@@ -359,7 +359,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             }
 
 
-            foreach (FlameTyrant w in FindObjectsOfType<FlameTyrant>(true).ToList())
+            foreach (Tyrant w in FindObjectsOfType<Tyrant>(true).ToList())
             {
                 tyrantPool.Add(w);
                 w.transform.parent = transform;
@@ -591,7 +591,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 return;
             }
 
-            foreach (FlameTyrant w in tyrantPool)
+            foreach (Tyrant w in tyrantPool)
                 if (!w.gameObject.activeSelf)
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
 
@@ -804,7 +804,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (w.gameObject.activeSelf && w.hitPoints > 0)
                 __hellhoundsAlive++;
 
-        foreach (FlameTyrant w in tyrantPool)
+        foreach (Tyrant w in tyrantPool)
             if (w.gameObject.activeSelf && w.hitPoints > 0)
                 __tyrantsAlive++;
 

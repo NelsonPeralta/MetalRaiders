@@ -59,7 +59,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
             StartCoroutine(LateStart());
             tries++;
 
-            if (tries == 5)
+            if (tries == 15)
                 gameObject.SetActive(false);
         }
     }

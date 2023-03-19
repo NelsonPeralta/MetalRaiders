@@ -64,6 +64,8 @@ public class AimAssistCone : MonoBehaviour
         set { _firstHitPoint = (Vector3)value; }
     }
 
+    [SerializeField] LayerMask obstructionMask;
+
     int _reticuleFrictionLayer = 19;
 
     private void Update()
@@ -148,8 +150,16 @@ public class AimAssistCone : MonoBehaviour
             if (firstRayHit.layer == 0)
             {
                 if (collidingHitboxes.Count > 0)
-                    if (Vector3.Distance(firstRayHit.transform.position, player.mainCamera.transform.position) < Vector3.Distance(chb.transform.position, player.mainCamera.transform.position))
+                {
+                    Vector3 directionToHb = (chb.transform.position - player.mainCamera.transform.position).normalized;
+                    float distanceToHb = Vector3.Distance(player.mainCamera.transform.position, chb.transform.position);
+
+                    if (Physics.Raycast(player.mainCamera.transform.position, directionToHb, distanceToHb, obstructionMask))
                         obstruction = true;
+
+                    //if (Vector3.Distance(firstRayHit.transform.position, player.mainCamera.transform.position) < Vector3.Distance(chb.transform.position, player.mainCamera.transform.position))
+                    //    obstruction = true;
+                }
             }
             else
             {

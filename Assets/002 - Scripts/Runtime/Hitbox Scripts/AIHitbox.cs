@@ -19,7 +19,7 @@ public class AIHitbox : Hitbox, IDamageable
     public Hellhound hellhound;
     public Wererat wererat;
     public BlackKnight blackKnight;
-    public Tyrant flameTyrant;
+    public Tyrant_Old flameTyrant;
 
     public string team;
     public bool AIisDead = false;
