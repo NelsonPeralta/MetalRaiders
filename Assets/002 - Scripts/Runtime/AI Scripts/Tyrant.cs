@@ -46,7 +46,7 @@ public class Tyrant : Actor
 
                 if (_meleeCooldown <= 0)
                 {
-                    FlameTyrantMelee(false);
+                    FlameTyrantMelee();
                 }
                 else
                 {
@@ -71,7 +71,7 @@ public class Tyrant : Actor
                         if (_throwFireballCooldown <= 0)
                         {
                             Debug.Log("Throw Fireball to Player");
-                            FlameTyrantFireBall(false);
+                            FlameTyrantFireBall();
                         }
                     }
                     else
@@ -79,7 +79,7 @@ public class Tyrant : Actor
                         if (_summonlCooldown <= 0)
                         {
                             Debug.Log("Throw Fireball to Player");
-                            FlameTyrantSummon(false);
+                            FlameTyrantSummon();
                         }
                     }
                 }
@@ -88,7 +88,7 @@ public class Tyrant : Actor
                     if (!isRunning)
                     {
                         Debug.Log("Chase Player");
-                        FlameTyrantRun(false);
+                        FlameTyrantRun();
                     }
                     nma.enabled = true;
                     nma.SetDestination(target.position);
@@ -102,7 +102,7 @@ public class Tyrant : Actor
                 if (!isRunning)
                 {
                     //Debug.Log("Chase Player");
-                    FlameTyrantRun(false);
+                    FlameTyrantRun();
                 }
                 nma.enabled = true;
                 nma.SetDestination(target.position);
@@ -114,7 +114,7 @@ public class Tyrant : Actor
         {
             if (hitPoints > 0)
                 if (!isIdling)
-                    FlameTyrantIdle(false);
+                    FlameTyrantIdle();
             //nma.isStopped = true;
         }
     }
@@ -158,12 +158,13 @@ public class Tyrant : Actor
     {
         if (caller)
         {
+            Debug.Log("CALLER FlameTyrantFireBall");
             GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.All, false);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
         {
-            //Debug.Log("Punch Player RPC");
+            Debug.Log("FlameTyrantFireBall");
 
             _animator.SetBool("Run", false);
             nma.enabled = false;
@@ -230,9 +231,7 @@ public class Tyrant : Actor
         }
         else
         {
-            //Debug.Log("UndeadRun RPC");
-
-            //_animator.Play("Run");
+            Debug.Log("FlameTyrantRun RPC");
             _animator.SetBool("Run", true);
         }
     }
