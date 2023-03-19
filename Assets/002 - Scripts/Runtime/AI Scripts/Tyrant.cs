@@ -137,7 +137,7 @@ public class Tyrant : Actor
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("FlameTyrantMelee", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("FlameTyrantMelee", RpcTarget.AllViaServer, false);
             target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -159,7 +159,7 @@ public class Tyrant : Actor
         if (caller)
         {
             Debug.Log("CALLER FlameTyrantFireBall");
-            GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.AllViaServer, false);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -188,7 +188,7 @@ public class Tyrant : Actor
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("FlameTyrantSummon", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("FlameTyrantSummon", RpcTarget.AllViaServer, false);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -211,7 +211,7 @@ public class Tyrant : Actor
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("FlameTyrantIdle", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("FlameTyrantIdle", RpcTarget.AllViaServer, false);
         }
         else
         {
@@ -227,7 +227,7 @@ public class Tyrant : Actor
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("FlameTyrantRun", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("FlameTyrantRun", RpcTarget.AllViaServer, false);
         }
         else
         {

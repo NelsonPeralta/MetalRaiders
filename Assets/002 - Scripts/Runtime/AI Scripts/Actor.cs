@@ -194,7 +194,7 @@ abstract public class Actor : MonoBehaviour
 
         try
         {
-            GetComponent<PhotonView>().RPC("DamageActor", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot);
+            GetComponent<PhotonView>().RPC("DamageActor", RpcTarget.AllViaServer, damage, playerWhoShotPDI, damageSource, isHeadshot);
         }
         catch { }
     }
@@ -369,7 +369,7 @@ abstract public class Actor : MonoBehaviour
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("SetNewTargetWithPid", RpcTarget.All, pid, false);
+            GetComponent<PhotonView>().RPC("SetNewTargetWithPid", RpcTarget.AllViaServer, pid, false);
         }
         else
         {
@@ -383,7 +383,7 @@ abstract public class Actor : MonoBehaviour
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("ActorDeath", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("ActorDeath", RpcTarget.AllViaServer, false);
         }
         else
         {
