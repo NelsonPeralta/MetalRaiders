@@ -63,7 +63,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField registerPasswordText;
 
     [Header("Master Client Only")]
-    [SerializeField] GameObject startGameButton;
+    [SerializeField] GameObject _startGameButton;
+    [SerializeField] GameObject _gameModeBtns;
     [SerializeField] GameObject _multiplayerMcComponentsHolder;
     [SerializeField] GameObject _swarmMcComponentsHolder;
 
@@ -94,6 +95,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public TMP_Text teamText { get { return _teamText; } }
     public GameObject teamRoomUI { get { return _teamRoomUI; } }
 
+    public GameObject gameModeBtns { get { return _gameModeBtns; } }
     public GameObject teamModeBtns { get { return _teamModeBtns; } }
     public GameObject swarmModeBtns { get { return _swarmDifficultyBtns; } }
     public GameObject multiplayerMcComponentsHolder { get { return _multiplayerMcComponentsHolder; } }
@@ -351,7 +353,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             //try { Destroy(FindObjectOfType<NetworkGameManager>().gameObject); } catch { } finally { Debug.Log("Destroying NetworkGameManager"); }
 
-            startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+            _startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
             if (PhotonNetwork.IsMasterClient)
             {
@@ -426,7 +428,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
     {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        _startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -447,7 +449,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
 
-        startGameButton.SetActive(false);
+        _startGameButton.SetActive(false);
 
         //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
         StartCoroutine(LoadLevel_Coroutine());

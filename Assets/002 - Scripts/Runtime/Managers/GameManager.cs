@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             _gameMode = value;
             Debug.Log($"Game Mode: {gameMode}");
+            FindObjectOfType<Launcher>().gameModeBtns.SetActive(PhotonNetwork.IsMasterClient);
             if (_gameMode == GameMode.Swarm)
             {
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
