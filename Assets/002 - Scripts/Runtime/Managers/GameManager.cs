@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
+                FindObjectOfType<Launcher>().levelToLoadIndex = 13;
 
                 gameType = GameType.Survival;
                 teamMode = TeamMode.Classic;
@@ -102,6 +103,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
+                FindObjectOfType<Launcher>().levelToLoadIndex = 5;
+
+
 
                 gameType = GameType.Slayer;
                 teamMode = TeamMode.None;
