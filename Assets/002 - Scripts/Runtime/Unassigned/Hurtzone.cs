@@ -34,7 +34,12 @@ public class Hurtzone : MonoBehaviour
         {
             if (instantKillzone)
             {
-                other.gameObject.GetComponent<Player>().Damage(999);
+                Player player = other.GetComponent<Player>();
+                //other.gameObject.GetComponent<Player>().BasicDamage(999);
+                if (player.lastPID > 0)
+                    player.Damage((int)player.hitPoints, false, player.lastPID);
+                else
+                    player.Damage((int)player.hitPoints, false, player.pid);
                 return;
             }
             playersInRange.Add(other.GetComponent<Player>());
@@ -70,7 +75,7 @@ public class Hurtzone : MonoBehaviour
 
             for (int i = 0; i < playersInRange.Count; i++)
             {
-                playersInRange[i].Damage(damage);
+                playersInRange[i].BasicDamage(damage);
             }
 
             damageCountdown = 0.35f;

@@ -14,7 +14,7 @@ public class PlayerHitbox : Hitbox, IDamageable
             return;
 
         Debug.Log("SIMPLER PLAYER HITBOX DAMAGE");
-        player.Damage(damage);
+        player.BasicDamage(damage);
         //player.PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
 

@@ -31,4 +31,10 @@ public class GroundCheck : MonoBehaviour
             OnGrounded?.Invoke(this);
         }
     }
+
+    private void Update()
+    {
+        if (!_touch)
+            isGrounded = false;
+    }
 }

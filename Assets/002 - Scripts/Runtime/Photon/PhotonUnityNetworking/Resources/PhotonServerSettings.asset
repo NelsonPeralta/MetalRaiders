@@ -36,18 +36,31 @@ MonoBehaviour:
   RpcList:
   - _StartShoot_RPC
   - _StopShoot_RPC
-  - ActorSetNewTargetWithPid
+  - ActorDeath
   - AddForceLootableWeapon_RPC
   - AddImpact_RPC
   - AddPlayerKill_RPC
   - AddPlayerPoint_RPC
   - AddPoints_RPC
   - AddSecond_RPC
+  - AlienShooterFlinch
+  - AlienShooterIdle
+  - AlienShooterMelee
+  - AlienShooterRun
+  - AlienShooterShoot
+  - AlienShooterThrowGrenade
   - AssignWeapon
+  - BasicDamage_RPC
+  - BreatherFlinch
+  - BreatherIdle
+  - BreatherMelee
+  - BreatherRun
+  - BreatherThrowFireBall
   - ChangeAction_RPC
   - ChangeSubGameType_RPC
   - CheckRealodButton_RPC
   - ClickRpc
+  - CreateAIPool
   - Damage_RPC
   - DamageActor
   - DamageExplosiveBarrel_RPC
@@ -69,10 +82,19 @@ MonoBehaviour:
   - EnableStartingNetworkWeapons
   - EndWave_RPC
   - Fire
+  - FlameTyrantFireBall
+  - FlameTyrantIdle
+  - FlameTyrantMelee
+  - FlameTyrantRun
+  - FlameTyrantSummon
   - GiveAmmoPackSpawnPointAnAmmoPack_RPC
+  - HelldogAttack
+  - HelldogIdle
+  - HelldogRun
   - HideDot_RPC
   - IncreaseWave_RPC
   - IsDead_RPC
+  - LootOvershield
   - Melee_RPC
   - NextHillLocation_RPC
   - PickupSecondWeapon
@@ -91,7 +113,9 @@ MonoBehaviour:
   - RespawnHealthPacks_RPC
   - RespawnSpaceship
   - RPC_DisableCollidingWeapon
+  - SendGameParams
   - SendHitPointsCheck_RPC
+  - SetNewTargetWithPid
   - Shoot_RPC
   - ShowDot_RPC
   - SpawnAi_RPC
@@ -118,40 +142,11 @@ MonoBehaviour:
   - UpdateRoomSettings_RPC
   - UpdateSelectedMap
   - UpdateSpawnPointPosition_RPC
+  - UpdateSwarmDifficulty_RPC
   - UpdateTarget_RPC
   - UpdateTeam_RPC
   - UpdateTeamMode_RPC
   - UpdateTime_RPC
-  - SetNewTargetWithPid
-  - SetNewTargetWithPidTEST
-  - BreatherAttack
-  - BreatherIdle
-  - BreatherRun
-  - BreatherThrowGrenade
-  - BreatherThrowFireBall
-  - BreatherMelee
-  - AlienShooterRun
-  - AlienShooterIdle
-  - AlienShooterThrowGrenade
-  - AlienShooterMelee
-  - AlienShooterShoot
-  - FlameTyrantFireBall
-  - FlameTyrantIdle
-  - FlameTyrantMelee
-  - FlameTyrantRun
-  - HelldogAttack
-  - HelldogIdle
-  - HelldogRun
-  - FlameTyrantSummon
-  - CreateAIPool
-  - BreatherFlinch
-  - AlienShooterFlinch
-  - ActorDeath
-  - UpdateSwarmDifficulty_RPC
-  - HideOvershield
-  - ChangeGameMode
-  - SendGameParams
-  - LootOvershield
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

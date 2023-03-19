@@ -1121,20 +1121,7 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        Debug.Log("asdfsd");
-        try { Debug.Log(GameManager.instance.pid_player_Dict[player.pid].name); } catch (System.Exception e) { Debug.LogWarning(e); }
-
-        //try
-        //{
-        //    //WebManager.webManagerInstance.SaveMultiplayerStats(GetComponent<PlayerMultiplayerMatchStats>());
-        //    if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-        //        GetComponent<Player>().LeaveRoomWithDelay();
-        //    //FindObjectOfType<MultiplayerManager>().EndGame();
-        //    if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        //        FindObjectOfType<SwarmManager>().EndGame();
-        //}
-        //catch (System.Exception e) { Debug.Log(e); }
-        //GetComponent<Player>().Damage(23, false, GetComponent<PhotonView>().ViewID, new Vector3(1, 2, 1));
+        player.BasicDamage(50);
     }
     public void OnDeath_Delegate(Player player)
     {

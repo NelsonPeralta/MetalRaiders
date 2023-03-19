@@ -729,7 +729,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     // Used to pass melee damage
-    public void Damage(int damage,
+    public void BasicDamage(int damage,
          [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
@@ -739,12 +739,12 @@ public class Player : MonoBehaviourPunCallbacks
         if (overshieldPoints > 0)
             damage -= (int)_overshieldPoints;
 
-        Debug.Log("member name: " + memberName);
-        Debug.Log("source file path: " + sourceFilePath);
-        Debug.Log("source line number: " + sourceLineNumber);
+        //Debug.Log("member name: " + memberName);
+        //Debug.Log("source file path: " + sourceFilePath);
+        //Debug.Log("source line number: " + sourceLineNumber);
 
         int newHealth = (int)hitPoints - damage;
-        PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage);
+        PV.RPC("BasicDamage_RPC", RpcTarget.All, newHealth, damage);
     }
 
     public void Damage(int damage, bool headshot, int source_pid,
@@ -1311,7 +1311,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Damage_RPC(int newHealth, int damage)
+    void BasicDamage_RPC(int newHealth, int damage)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;

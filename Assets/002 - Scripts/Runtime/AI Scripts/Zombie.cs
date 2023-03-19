@@ -85,7 +85,7 @@ public class Zombie : AiAbstractClass
                     _voice.clip = _attackClip;
                     _voice.Play();
                     animator.Play("Attack");
-                    targetPlayer.GetComponent<Player>().Damage(meleeDamage);
+                    targetPlayer.GetComponent<Player>().BasicDamage(meleeDamage);
                     nextActionCooldown = defaultNextActionCooldown;
                 }
             }
