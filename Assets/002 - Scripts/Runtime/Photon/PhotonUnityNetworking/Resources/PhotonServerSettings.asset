@@ -147,6 +147,7 @@ MonoBehaviour:
   - UpdateTeam_RPC
   - UpdateTeamMode_RPC
   - UpdateTime_RPC
+  - SendNewTeamDict
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

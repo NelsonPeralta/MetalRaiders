@@ -36,7 +36,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         {
             int hs = 0;
 
-            if(GameManager.instance.gameType == GameManager.GameType.Hill)
+            if (GameManager.instance.gameType == GameManager.GameType.Hill)
             {
                 foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
                 {
@@ -129,7 +129,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             }
             else
             {
+                losingPlayerMS.kills--;
 
+                if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Red)
+                    redTeamScore--;
+                else if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Blue)
+                    blueTeamScore--;
             }
 
             losingPlayerMS.deaths++;

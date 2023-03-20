@@ -129,6 +129,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _teamMode; }
         set
         {
+            TeamMode _prev = _teamMode;
+
+            Debug.Log("teamMode: " + value);
             _teamMode = value;
             Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
@@ -141,6 +144,22 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 if (gameMode == GameMode.Multiplayer)
                     FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
+
+                Dictionary<string, int> _teamDict = new Dictionary<string, int>();
+
+                foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                    {
+                        PlayerMultiplayerMatchStats.Team t = PlayerMultiplayerMatchStats.Team.Red;
+
+                        if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
+                            t = PlayerMultiplayerMatchStats.Team.Blue;
+
+                        _teamDict.Add(kvp.Value.NickName, (int)t);
+
+                        Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
+                    }
+                GameManager.instance.teamDict = _teamDict;
             }
         }
     }
@@ -194,6 +213,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             _onlineTeam = value;
+            Debug.Log("onlineTeam: " + value);
+
             try
             {
                 FindObjectOfType<Launcher>().teamModeText.text = $"Team Mode: {teamMode}";
@@ -209,11 +230,49 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return WebManager.webManagerInstance.pda.username; }
     }
 
+    public Dictionary<string, int> teamDict
+    {
+        get { return _teamDict; }
+        set
+        {
+            _teamDict = value;
+
+            if (_teamDict.ContainsKey(rootPlayerNickname))
+            {
+                Debug.Log("Contains my name");
+                onlineTeam = (PlayerMultiplayerMatchStats.Team)_teamDict[rootPlayerNickname];
+
+
+
+                foreach (Transform child in Launcher.instance.playerListContent)
+                    Destroy(child.gameObject);
+
+                Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+                for (int i = 1; i < PhotonNetwork.CurrentRoom.PlayerCount + 1; i++)
+                {
+                    string n = PhotonNetwork.CurrentRoom.Players[i].NickName;
+                    Debug.Log(n);
+
+                    GameObject plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
+                    plt.GetComponent<PlayerListItem>().SetUp($"{n} ({(PlayerMultiplayerMatchStats.Team)(_teamDict[n])})");
+                }
+            }
+            else
+            {
+                _teamDict = new Dictionary<string, int>();
+                onlineTeam = PlayerMultiplayerMatchStats.Team.None;
+
+                FindObjectOfType<NetworkMainMenu>().UpdatePlayerList();
+            }
+        }
+    }
+
 
     // called zero
 
     // private Variables
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
+    [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
 
 
     SwarmManager.Difficulty _difficulty;

@@ -17,6 +17,11 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 		text.text = _player.NickName;
 	}
 
+	public void SetUp(string s)
+	{
+		text.text = s;
+	}
+
 	public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
 	{
 		if(player == otherPlayer)

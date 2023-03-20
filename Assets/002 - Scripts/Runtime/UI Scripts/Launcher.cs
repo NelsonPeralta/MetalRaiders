@@ -278,7 +278,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
 
-        foreach(Photon.Realtime.Player player in newListPlayers)
+        foreach (Photon.Realtime.Player player in newListPlayers)
             Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(player);
 
         var listPlayersDiff = newListPlayers.Except(_previousListOfPlayersInRoom).ToList();
@@ -393,7 +393,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
-        
+
     }
 
 
@@ -517,7 +517,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    
+
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
@@ -567,6 +567,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.IsMasterClient)
             {
+                NetworkGameManager.instance.SendGameParams();
+                //UpdateTeams();
+
+                return;
+
                 ExitGames.Client.Photon.Hashtable props = PhotonNetwork.CurrentRoom.CustomProperties;
                 //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
                 try { props.Add("teammode", (int)GameManager.instance.teamMode); } catch { props["teammode"] = (int)GameManager.instance.teamMode; }
@@ -587,14 +592,23 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeTeam()
     {
-        try
-        {
-            if (GameManager.instance.onlineTeam == PlayerMultiplayerMatchStats.Team.Blue)
-                GameManager.instance.onlineTeam = PlayerMultiplayerMatchStats.Team.Red;
-            else if (GameManager.instance.onlineTeam == PlayerMultiplayerMatchStats.Team.Red)
-                GameManager.instance.onlineTeam = PlayerMultiplayerMatchStats.Team.Blue;
-        }
-        catch { }
+        if (GameManager.instance.onlineTeam != PlayerMultiplayerMatchStats.Team.None)
+            try
+            {
+                PlayerMultiplayerMatchStats.Team nt = PlayerMultiplayerMatchStats.Team.None;
+
+                if (GameManager.instance.onlineTeam == PlayerMultiplayerMatchStats.Team.Blue)
+                    nt = PlayerMultiplayerMatchStats.Team.Red;
+                else if (GameManager.instance.onlineTeam == PlayerMultiplayerMatchStats.Team.Red)
+                    nt = PlayerMultiplayerMatchStats.Team.Blue;
+
+                Dictionary<string, int> nd = new Dictionary<string, int>(GameManager.instance.teamDict);
+
+                nd[GameManager.instance.rootPlayerNickname] = (int)nt;
+
+                NetworkGameManager.instance.SendNewTeamDict(nd);
+            }
+            catch { }
     }
 
     public void ChangeGameType(string gt)

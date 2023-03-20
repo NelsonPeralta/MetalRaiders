@@ -9,7 +9,7 @@ public class Undead : Actor
     float _targetLostCooldown;
 
 
-    private void OnEnable()
+    protected override void ChildOnEnable()
     {
         hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
     }

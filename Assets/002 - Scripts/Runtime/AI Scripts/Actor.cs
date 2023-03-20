@@ -19,7 +19,7 @@ abstract public class Actor : MonoBehaviour
         protected set
         {
             int pv = _hitPoints;
-            int nv = Mathf.Clamp(value, 0, _defaultHitpoints * 2);
+            int nv = Mathf.Clamp(value, 0, _defaultHitpoints * 3);
 
             if (nv > pv)
                 return;
@@ -91,8 +91,21 @@ abstract public class Actor : MonoBehaviour
 
     [SerializeField] protected float _flinchCooldown;
 
+    protected float _diffHpMult, _diffAttMult;
+
     private void Awake()
     {
+        _diffHpMult = _diffAttMult = 1;
+
+        if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic)
+        {
+            _diffHpMult = _diffAttMult = 1.5f;
+        }
+        else if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary)
+        {
+            _diffHpMult = _diffAttMult = 2f;
+        }
+
         _defaultHitpoints = _hitPoints;
         _analyzeNextActionCooldown = _findNewTargetCooldown = 0.5f;
 
@@ -149,6 +162,7 @@ abstract public class Actor : MonoBehaviour
 
     private void OnEnable()
     {
+        hitPoints = (int)(_defaultHitpoints * _diffHpMult);
         ChildOnEnable();
     }
 
@@ -255,12 +269,12 @@ abstract public class Actor : MonoBehaviour
             return;
 
         int ChanceToDrop = UnityEngine.Random.Range(0, 10);
-        int cap = 7;
+        int cap = 6;
 
         if (ChanceToDrop <= cap)
         {
             float ranAmmoFactor = UnityEngine.Random.Range(0.2f, 0.9f);
-            float ranCapFactor = UnityEngine.Random.Range(0.4f, 0.6f);
+            float ranCapFactor = UnityEngine.Random.Range(0.3f, 0.5f);
             int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory.Length);
 
             try

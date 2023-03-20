@@ -5,6 +5,7 @@ using Photon.Pun;
 using System.Linq;
 using UnityEngine.UIElements;
 using System;
+using Newtonsoft.Json;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -59,22 +60,48 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         if (caller && PhotonNetwork.IsMasterClient)
         {
             Dictionary<string, string> ps = new Dictionary<string, string>();
+
             ps.Add("gamemode", GameManager.instance.gameMode.ToString());
             ps.Add("gametype", GameManager.instance.gameType.ToString());
             ps.Add("leveltoloadindex", Launcher.instance.levelToLoadIndex.ToString());
             ps.Add("teammode", GameManager.instance.teamMode.ToString());
+            //ps.Add("teamdict", string.Join(Environment.NewLine, GameManager.instance.teamDict));
+            ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));
+
+            Debug.Log($"SendGameParams {GameManager.instance.teamDict}");
 
             GetComponent<PhotonView>().RPC("SendGameParams", RpcTarget.All, ps, false);
         }
-        else
+        else if (!caller && !PhotonNetwork.IsMasterClient)
         {
-            if (PhotonNetwork.IsMasterClient)
-                return;
-
             try { GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), p["gamemode"]); } catch (System.Exception e) { Debug.Log(e); }
             try { GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), p["gametype"]); } catch (System.Exception e) { Debug.Log(e); }
             try { Launcher.instance.levelToLoadIndex = (System.Int16.Parse(p["leveltoloadindex"])); } catch (System.Exception e) { Debug.Log(e); }
             try { GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), p["teammode"]); } catch (System.Exception e) { Debug.Log(e); }
+            try
+            {
+                GameManager.instance.teamDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["teamdict"]);
+                Debug.Log(GameManager.instance.teamDict);
+            }
+            catch { }
+        }
+    }
+
+    [PunRPC]
+
+    public void SendNewTeamDict(Dictionary<string, int> d, bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("SendNewTeamDict", RpcTarget.AllViaServer, d, false);
+        }
+        else
+        {
+            try
+            {
+                GameManager.instance.teamDict = d;
+            }
+            catch { }
         }
     }
 

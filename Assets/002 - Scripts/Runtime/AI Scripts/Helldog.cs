@@ -8,10 +8,9 @@ public class Helldog : Actor
     float _meleeCooldown;
     float _targetLostCooldown;
 
-
-    private void OnEnable()
+    protected override void ChildOnEnable()
     {
-        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
+        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 4;
     }
 
     public override void CooldownsUpdate()
