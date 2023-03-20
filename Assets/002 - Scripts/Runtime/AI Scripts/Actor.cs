@@ -71,7 +71,7 @@ abstract public class Actor : MonoBehaviour
     public int closeRange { get { return _closeRange; } }
 
 
-    [SerializeField] int _hitPoints;
+    [SerializeField] protected int _hitPoints;
     [SerializeField] Transform _target;
     [SerializeField] Vector3 _destination;
     [SerializeField] Transform _losSpawn;
@@ -85,7 +85,7 @@ abstract public class Actor : MonoBehaviour
     protected NavMeshAgent _nma;
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
-    protected int _defaultHitpoints;
+    [SerializeField] protected int _defaultHitpoints;
     protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
@@ -162,7 +162,7 @@ abstract public class Actor : MonoBehaviour
 
     private void OnEnable()
     {
-        hitPoints = (int)(_defaultHitpoints * _diffHpMult);
+        // See Prepare() for resetting hitpoints on Spawn
         ChildOnEnable();
     }
 
@@ -190,7 +190,7 @@ abstract public class Actor : MonoBehaviour
     protected void Prepare()
     {
         transform.position = new Vector3(0, -10, 0);
-        _hitPoints = _defaultHitpoints + SwarmManager.instance.currentWave * 2;
+        _hitPoints = (int)(_defaultHitpoints * _diffHpMult);
         foreach (ActorHitbox hitbox in GetComponentsInChildren<ActorHitbox>(true))
             hitbox.gameObject.SetActive(true);
     }

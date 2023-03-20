@@ -864,6 +864,7 @@ public class PlayerController : MonoBehaviourPun
     public IEnumerator Reload3PS()
     {
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("Reload");
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetTrigger("Reload 0");
         yield return new WaitForEndOfFrame();
     }
 

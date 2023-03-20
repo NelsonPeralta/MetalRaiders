@@ -17,7 +17,7 @@ public class Breather : Actor
 
     protected override void ChildOnEnable()
     {
-        hitPoints = +(SwarmManager.instance.currentWave * 12 * FindObjectsOfType<Player>().Length);
+        _hitPoints += (SwarmManager.instance.currentWave * 12 * FindObjectsOfType<Player>().Length);
     }
 
     protected override void ChildOnActorDamaged()

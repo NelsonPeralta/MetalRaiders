@@ -17,7 +17,7 @@ public class Tyrant : Actor
     protected override void ChildOnEnable()
     {
         _flinchCooldown = 2.8f;
-        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 24;
+        _hitPoints += FindObjectOfType<SwarmManager>().currentWave * 24;
     }
 
     public override void CooldownsUpdate()

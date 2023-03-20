@@ -10,7 +10,7 @@ public class Helldog : Actor
 
     protected override void ChildOnEnable()
     {
-        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 4;
+        _hitPoints += FindObjectOfType<SwarmManager>().currentWave * 4;
     }
 
     public override void CooldownsUpdate()

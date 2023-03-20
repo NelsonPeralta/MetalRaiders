@@ -20,8 +20,10 @@ public class AlienShooter : Actor
 
     protected override void ChildOnEnable()
     {
+        Debug.Log("Alien Shooter ChildOnEnable " + hitPoints);
         _flinchCooldown = 2.2f;
-        hitPoints = +(SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length);
+        _hitPoints += (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length);
+        Debug.Log("Alien Shooter ChildOnEnable " + hitPoints + (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length));
     }
 
     public override void CooldownsUpdate()

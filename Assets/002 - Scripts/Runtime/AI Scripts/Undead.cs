@@ -11,7 +11,7 @@ public class Undead : Actor
 
     protected override void ChildOnEnable()
     {
-        hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
+        _hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
     }
 
     public override void CooldownsUpdate()
