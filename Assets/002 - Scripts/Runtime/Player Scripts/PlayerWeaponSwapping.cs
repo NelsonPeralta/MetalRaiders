@@ -184,7 +184,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 else
                 {
                     other.GetComponent<LootableWeapon>().LootWeapon(player.controllerId);
-                    ammoPickupAudioSource.Play();
                 }
             }
             catch (System.Exception ex)

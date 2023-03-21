@@ -11,6 +11,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public string cleanName;
     public string codeName;
     public int spriteId;
+    public bool isDw;
     public int networkAmmo
     {
         get { return _ammo; }
@@ -149,19 +150,55 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         spareAmmo = (int)Mathf.Ceil(Random.Range(0, spareAmmo));
     }
 
-    public void LootWeapon(int controllerId = 0, bool onlyExtraAmmo = false)
+    public void LootWeapon(int controllerId = 0)
     {
         Debug.Log("OnLooted");
-        int ammoToLoot = spareAmmo;
         PlayerInventory playerInventory = GameManager.GetMyPlayer(controllerId).playerInventory;
-        if (!onlyExtraAmmo)
-            ammoToLoot += networkAmmo;
+        WeaponProperties w = playerInventory.activeWeapon;
+        if (playerInventory.holsteredWeapon.codeName == codeName)
+            w = playerInventory.holsteredWeapon;
+
+        int ammoNeeded = w.maxAmmo - w.spareAmmo;
+        int ammoAvailable = (localAmmo + spareAmmo);
+
+        if (ammoNeeded <= 0)
+            return;
+
+
+        int ammoToLoot = ammoNeeded;
+        if (ammoNeeded >= ammoAvailable)
+            ammoToLoot = ammoAvailable;
 
         foreach (GameObject wp in playerInventory.allWeaponsInInventory)
             if (wp.GetComponent<WeaponProperties>().codeName == codeName)
                 wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
 
-        HideWeapon();
+        if (ammoNeeded >= ammoAvailable)
+            HideWeapon();
+        else
+        {
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            int newAmmo = localAmmo;
+            int newSpareAmmo = spareAmmo;
+
+            Debug.Log(newSpareAmmo);
+            Debug.Log(ammoNeeded);
+
+            newSpareAmmo -= ammoNeeded;
+            if (newSpareAmmo < 0)
+            {
+                newAmmo -= Mathf.Abs(newSpareAmmo);
+                newSpareAmmo = 0;
+            }
+
+            param["ammo"] = newAmmo.ToString();
+            param["spareAmmo"] = newSpareAmmo.ToString();
+            Debug.Log(newAmmo.ToString());
+            Debug.Log(newSpareAmmo.ToString());
+            NetworkGameManager.instance.UpdateLootableWeaponData(spawnPointPosition, param);
+        }
+        playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();
     }
 
     public void HideWeapon()
@@ -206,6 +243,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     {
         if (param.ContainsKey("ammo"))
             _ammo = int.Parse(param["ammo"]);
+
+        if (param.ContainsKey("spareAmmo"))
+            _spareAmmo = int.Parse(param["spareAmmo"]);
 
         if (param.ContainsKey("ttl"))
             _tts = int.Parse(param["ttl"]);
