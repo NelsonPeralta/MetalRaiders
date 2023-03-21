@@ -95,6 +95,7 @@ public class WeaponProperties : MonoBehaviour
     public GameObject leftHandGO;
     public bool isDualWieldable;
     public WeaponProperties leftWeapon;
+    public WeaponProperties rightWeapon;
     public bool isRightWeapon;
     public bool isLeftWeapon;
 
@@ -153,8 +154,9 @@ public class WeaponProperties : MonoBehaviour
     }
 
     public int index { get { return _index; } set { _index = value; } }
+    public int previousLayer { get { return _preLayer; } set { _preLayer = value; } }
 
-    int _index;
+    int _index, _preLayer;
 
     private void Start()
     {
@@ -244,6 +246,7 @@ public class WeaponProperties : MonoBehaviour
     {
         try
         {
+            previousLayer = gameObject.layer;
             crosshair.gameObject.SetActive(true);
             crosshair.color = Crosshair.Color.Blue;
             equippedModelB.SetActive(true);
@@ -270,7 +273,7 @@ public class WeaponProperties : MonoBehaviour
     void OnControllerTypeChanged(PlayerController playerController)
     {
         //Debug.Log("OnControllerTypeChanged");
-        if(playerController.activeControllerType == Rewired.ControllerType.Joystick)
+        if (playerController.activeControllerType == Rewired.ControllerType.Joystick)
         {
             redReticuleHint = _previousRedReticuleHint;
         }
@@ -355,11 +358,17 @@ public class WeaponPropertiesEditor : Editor
         wp.bulletSpeed = EditorGUILayout.IntField("Bullet speed:", wp.bulletSpeed);
         wp.range = EditorGUILayout.FloatField("Bullet range:", wp.range);
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);
-        wp.isDualWieldable = GUILayout.Toggle(wp.isDualWieldable, "Is Dual WieldAble");
+
         wp.isHeadshotCapable = GUILayout.Toggle(wp.isHeadshotCapable, "Is Headshot Capable");
         if (wp.isHeadshotCapable)
             wp.headshotMultiplier = EditorGUILayout.FloatField("Headshot Multiplier:", wp.headshotMultiplier);
 
+        wp.isDualWieldable = GUILayout.Toggle(wp.isDualWieldable, "Is Dual WieldAble");
+        if (wp.isDualWieldable)
+        {
+            wp.leftWeapon = EditorGUILayout.ObjectField("Left Weapon", wp.leftWeapon, typeof(WeaponProperties), true) as WeaponProperties;
+            wp.rightWeapon = EditorGUILayout.ObjectField("Right Weapon", wp.rightWeapon, typeof(WeaponProperties), true) as WeaponProperties;
+        }
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Aiming", EditorStyles.boldLabel);

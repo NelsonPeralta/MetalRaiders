@@ -182,9 +182,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             int newAmmo = localAmmo;
             int newSpareAmmo = spareAmmo;
 
-            Debug.Log(newSpareAmmo);
-            Debug.Log(ammoNeeded);
-
             newSpareAmmo -= ammoNeeded;
             if (newSpareAmmo < 0)
             {
@@ -194,8 +191,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
             param["ammo"] = newAmmo.ToString();
             param["spareAmmo"] = newSpareAmmo.ToString();
-            Debug.Log(newAmmo.ToString());
-            Debug.Log(newSpareAmmo.ToString());
+
             NetworkGameManager.instance.UpdateLootableWeaponData(spawnPointPosition, param);
         }
         playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();

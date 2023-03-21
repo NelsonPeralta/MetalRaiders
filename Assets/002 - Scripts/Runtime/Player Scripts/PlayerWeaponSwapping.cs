@@ -55,16 +55,24 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             if (value)
             {
                 WeaponProperties wp = player.playerInventory.GetWeaponProperties(closestLootableWeapon.codeName);
-                if (wp.weaponIcon)
+
+                if (!wp.isDualWieldable)
                 {
-                    pickupText.text = $"Hold E to pick up";
-                    pickupText.GetComponentInChildren<Image>().sprite = wp.weaponIcon;
-                    var tempColor = pickupText.GetComponentInChildren<Image>().color;
-                    tempColor.a = 255;
-                    pickupText.GetComponentInChildren<Image>().color = tempColor;
+                    if (wp.weaponIcon)
+                    {
+                        pickupText.text = $"Hold E to pick up";
+                        pickupText.GetComponentInChildren<Image>().sprite = wp.weaponIcon;
+                        var tempColor = pickupText.GetComponentInChildren<Image>().color;
+                        tempColor.a = 255;
+                        pickupText.GetComponentInChildren<Image>().color = tempColor;
+                    }
+                    else
+                        pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
                 }
                 else
-                    pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
+                {
+                    pickupText.text = "Hold E to DUAL WIELD " + closestLootableWeapon.cleanName;
+                }
             }
             else
             {
@@ -183,7 +191,17 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 }
                 else
                 {
-                    other.GetComponent<LootableWeapon>().LootWeapon(player.controllerId);
+                    LootableWeapon lw = other.GetComponent<LootableWeapon>();
+                    lw.LootWeapon(player.controllerId);
+
+                    if (lw.isDw)
+                    {
+                        lw.OnLooted -= OnWeaponLooted;
+                        lw.OnLooted += OnWeaponLooted;
+
+                        weaponsInRange.Add(lw);
+                        weaponsInRange = weaponsInRange;
+                    }
                 }
             }
             catch (System.Exception ex)
@@ -232,32 +250,50 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 if (weaponCollidingWithInInventory == pInventory.allWeaponsInInventory[i])
                     weaponCollidingWithInInventoryIndex = i;
             Vector3 lwPosition = closestLootableWeapon.GetComponent<LootableWeapon>().spawnPointPosition;
-            if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
-            {
-                //Debug.Log("RPC: Picking up second weapon");
-                //PickupSecWeap();
-                PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
-                OnWeaponPickup?.Invoke(this);
 
-                pInventory.hasSecWeap = true;
-                pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = closestLootableWeapon.networkAmmo;
-                pInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestLootableWeapon.spareAmmo;
-
-                pInventory.PlayDrawSound();
-            }
-            else if (pInventory.holsteredWeapon)
+            if (!closestLootableWeapon.isDw)
             {
-                if (player.GetComponent<PhotonView>().IsMine)
+                if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
                 {
-                    //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
-                    player.DropWeapon(pInventory.activeWeapon);
-                }
-                PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
-                OnWeaponPickup?.Invoke(this);
+                    //Debug.Log("RPC: Picking up second weapon");
+                    //PickupSecWeap();
+                    PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                    OnWeaponPickup?.Invoke(this);
 
-                pInventory.PlayDrawSound();
+                    pInventory.hasSecWeap = true;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = closestLootableWeapon.networkAmmo;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestLootableWeapon.spareAmmo;
+
+                    pInventory.PlayDrawSound();
+                }
+                else if (pInventory.holsteredWeapon)
+                {
+                    if (player.GetComponent<PhotonView>().IsMine)
+                    {
+                        //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
+                        player.DropWeapon(pInventory.activeWeapon);
+                    }
+                    PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                    OnWeaponPickup?.Invoke(this);
+
+                    pInventory.PlayDrawSound();
+                }
             }
-            //Debug.Log("RPC: Calling RPC_DisableCollidingWeapon");
+            else
+            {
+                foreach (GameObject w in pInventory.allWeaponsInInventory)
+                    if (w.GetComponent<WeaponProperties>().codeName == closestLootableWeapon.GetComponent<LootableWeapon>().codeName)
+                    {
+                        foreach (Transform child in pInventory.activeWeapon.transform)
+                            child.gameObject.SetActive(false);
+
+                        pInventory.leftWeapon = w.GetComponent<WeaponProperties>().leftWeapon;
+
+                        pInventory.activeWeapon.rightWeapon.gameObject.SetActive(true);
+                        pInventory.leftWeapon.gameObject.SetActive(true);
+                    }
+            }
+
             PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPosition);
         }
     }
@@ -279,15 +315,15 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     }
     private void Update()
     {
-        if(weaponsInRange.Count > 0)
+        if (weaponsInRange.Count > 0)
         {
-            for(int i = 0; i< weaponsInRange.Count;i++)
+            for (int i = 0; i < weaponsInRange.Count; i++)
                 if (weaponsInRange[i] == null)
                 {
                     List<LootableWeapon> nl = weaponsInRange;
                     nl.RemoveAt(i);
 
-                    weaponsInRange=nl;
+                    weaponsInRange = nl;
                 }
         }
     }

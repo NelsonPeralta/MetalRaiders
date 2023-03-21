@@ -31,6 +31,7 @@ public class PlayerInventory : MonoBehaviourPun
     public int activeWeapIs = 0;
     [SerializeField] WeaponProperties _activeWeapon;
     [SerializeField] WeaponProperties _holsteredWeapon;
+    [SerializeField] WeaponProperties _leftWeapon;
 
     public WeaponProperties activeWeapon
     {
@@ -71,6 +72,16 @@ public class PlayerInventory : MonoBehaviourPun
             }
         }
     }
+
+    public WeaponProperties leftWeapon
+    {
+        get { return _leftWeapon; }
+        set
+        {
+            _leftWeapon = value;
+        }
+    }
+
     public bool hasSecWeap = false;
 
     [Space(20)]
@@ -86,7 +97,6 @@ public class PlayerInventory : MonoBehaviourPun
 
     [Header("Dual Wielding")]
     public GameObject rightWeapon;
-    public GameObject leftWeapon;
     public int rightWeaponCurrentAmmo;
     public int leftWeaponCurrentAmmo;
 
