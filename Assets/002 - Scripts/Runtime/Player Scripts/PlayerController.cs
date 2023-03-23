@@ -62,6 +62,11 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    public bool isDualWielding
+    {
+        get { return pInventory.leftWeapon; }
+    }
+
     ControllerType _activeControllerType;
 
     public PhotonView PV;
@@ -106,7 +111,6 @@ public class PlayerController : MonoBehaviourPun
     public WeaponProperties dwRightWP;
     public WeaponProperties dwLeftWP;
     public bool isHoldingShootBtn;
-    public bool isDualWielding;
     public bool isShootingRight;
     public bool isShootingLeft;
     public bool isReloadingRight;
@@ -120,6 +124,7 @@ public class PlayerController : MonoBehaviourPun
     public AudioSource playerVoice;
     public AudioSource grenadeSwitchAudioSource;
     public AudioSource meleeAudioSource;
+
 
     void Awake()
     {

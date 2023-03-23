@@ -36,6 +36,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         if (!_targetPlayer)
             return;
 
+        _text.text = _player.nickName + " " + _player.team;
         Vector3 targetPostition = new Vector3(_targetPlayer.transform.position.x,
                                         this.transform.position.y,
                                         _targetPlayer.transform.position.z);
@@ -49,7 +50,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         try
         {
             _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
-            _text.text = _player.nickName;
+            _text.text = _player.nickName + _player.team;
 
             _targetPlayer.OnPlayerDeath -= OnPlayerDeath;
             _targetPlayer.OnPlayerDeath += OnPlayerDeath;
@@ -80,6 +81,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
                     }
                     if (player.team == GameManager.GetMyPlayer().team)
                     {
+                        _greenMarker.gameObject.SetActive(true);
                         _redMarker.gameObject.SetActive(false);
                     }
                 }

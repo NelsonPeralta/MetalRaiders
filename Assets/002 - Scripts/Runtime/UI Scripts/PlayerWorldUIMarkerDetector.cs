@@ -59,6 +59,9 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
 
     private void Update()
     {
+        if (!_player.isMine)
+            return;
+
         try { if (_player.isDead || _player.isRespawning) { obstruction = null; return; } } catch { }
         try { _distance = (int)_player.playerInventory.activeWeapon.currentRedReticuleRange; } catch { _distance = 15; }
 

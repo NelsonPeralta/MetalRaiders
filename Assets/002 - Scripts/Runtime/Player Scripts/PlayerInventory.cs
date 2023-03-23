@@ -78,9 +78,28 @@ public class PlayerInventory : MonoBehaviourPun
         get { return _leftWeapon; }
         set
         {
+            if (value != null)
+            {
+                foreach (Transform child in activeWeapon.transform)
+                    child.gameObject.SetActive(false);
+
+                activeWeapon.rightWeapon.gameObject.SetActive(true);
+                activeWeapon.leftWeapon.gameObject.SetActive(true);
+            }
+            else
+            {
+                foreach (Transform child in activeWeapon.transform)
+                    child.gameObject.SetActive(true);
+
+                activeWeapon.leftWeapon.gameObject.SetActive(false);
+                activeWeapon.rightWeapon.gameObject.SetActive(false);
+            }
+
             _leftWeapon = value;
         }
     }
+
+    public bool isDualWielding { get { return leftWeapon; } }
 
     public bool hasSecWeap = false;
 
@@ -248,7 +267,6 @@ public class PlayerInventory : MonoBehaviourPun
         if (pController.isReloading && pController.pInventory.weaponsEquiped[1] != null)
         {
             rScript.reloadIsCanceled = true;
-
         }
 
         if (pController.pInventory.weaponsEquiped[1] != null && !player.isDead && !player.isRespawning)
@@ -274,11 +292,19 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (player.isMine)
         {
-            WeaponProperties previousActiveWeapon = activeWeapon;
-            WeaponProperties newActiveWeapon = holsteredWeapon;
+            if (!isDualWielding)
+            {
+                WeaponProperties previousActiveWeapon = activeWeapon;
+                WeaponProperties newActiveWeapon = holsteredWeapon;
 
-            activeWeapon = newActiveWeapon;
-            holsteredWeapon = previousActiveWeapon;
+                activeWeapon = newActiveWeapon;
+                holsteredWeapon = previousActiveWeapon;
+            }
+            else
+            {
+                player.DropWeapon(leftWeapon);
+                leftWeapon = null;
+            }
         }
     }
 

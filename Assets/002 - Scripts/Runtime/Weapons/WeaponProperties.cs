@@ -127,7 +127,8 @@ public class WeaponProperties : MonoBehaviour
         set
         {
             _spareAmmo = Mathf.Clamp(value, 0, _maxAmmo);
-            OnSpareAmmoChanged?.Invoke(this); pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString();
+            if (!leftWeapon)
+                OnSpareAmmoChanged?.Invoke(this); pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString();
 
             if (player.isMine)
             {

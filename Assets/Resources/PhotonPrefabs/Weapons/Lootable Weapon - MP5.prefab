@@ -403,6 +403,7 @@ MonoBehaviour:
   cleanName: MP5
   codeName: mp5
   spriteId: 0
+  isDw: 1
   _ammo: 24
   _spareAmmo: 48
   _defaultAmmo: 24

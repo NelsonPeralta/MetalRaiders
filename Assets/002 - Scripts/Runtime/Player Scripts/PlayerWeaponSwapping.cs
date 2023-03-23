@@ -284,13 +284,9 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 foreach (GameObject w in pInventory.allWeaponsInInventory)
                     if (w.GetComponent<WeaponProperties>().codeName == closestLootableWeapon.GetComponent<LootableWeapon>().codeName)
                     {
-                        foreach (Transform child in pInventory.activeWeapon.transform)
-                            child.gameObject.SetActive(false);
-
                         pInventory.leftWeapon = w.GetComponent<WeaponProperties>().leftWeapon;
-
-                        pInventory.activeWeapon.rightWeapon.gameObject.SetActive(true);
-                        pInventory.leftWeapon.gameObject.SetActive(true);
+                        pInventory.leftWeapon.currentAmmo = closestLootableWeapon.networkAmmo;
+                        pInventory.leftWeapon.spareAmmo = closestLootableWeapon.spareAmmo;
                     }
             }
 
