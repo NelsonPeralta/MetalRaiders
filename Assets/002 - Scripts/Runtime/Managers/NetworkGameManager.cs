@@ -194,22 +194,6 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         GetComponent<PhotonView>().RPC("UpdatePlayerTeam_RPC", RpcTarget.All, t, pn);
     }
 
-    void StartOverShieldRespawn(int t)
-    {
-        int _time = FindObjectOfType<GameTime>().totalTime;
-
-        int timeLeft = 0;
-
-        if (_time < t)
-            timeLeft = t - _time;
-        else
-            timeLeft = t - (_time % t);
-        Debug.Log(timeLeft);
-
-        StartCoroutine(StartOverShieldRespawn_Coroutine(t));
-        //GetComponent<PhotonView>().RPC("StartOverShieldRespawn_RPC", RpcTarget.All, timeLeft);
-    }
-
     public void StartLootableWeaponRespawn(Vector3 v)
     {
         GetComponent<PhotonView>().RPC("StartLootableWeaponRespawn_RPC", RpcTarget.All, v);
@@ -517,7 +501,20 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         else
         {
             GameManager.instance.pid_player_Dict[pid].maxOvershieldPoints = 150;
-            StartOverShieldRespawn(overshield.tts);
+
+
+            int t = overshield.tts;
+            int _time = FindObjectOfType<GameTime>().totalTime;
+
+            int timeLeft = 0;
+
+            if (_time < t)
+                timeLeft = t - _time;
+            else
+                timeLeft = t - (_time % t);
+            Debug.Log(timeLeft);
+
+            StartCoroutine(StartOverShieldRespawn_Coroutine(t));
             overshield.gameObject.SetActive(false);
         }
     }
@@ -530,6 +527,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     IEnumerator StartOverShieldRespawn_Coroutine(int t)
     {
+        Debug.Log($"Spawning Overshiled in {t} seconds");
         yield return new WaitForSeconds(t);
         overshield.gameObject.SetActive(true);
     }
