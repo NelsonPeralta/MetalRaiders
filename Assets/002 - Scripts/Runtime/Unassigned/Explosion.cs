@@ -51,12 +51,6 @@ public class Explosion : MonoBehaviour
 
             int characterControllerDivider = 3;
 
-            //Debug.Log(hitDistance);
-            //Debug.Log(disRatio);
-            //Debug.Log(calculatedPower);
-            //Debug.Log((damage * disRatio));
-
-
             //Add force to nearby rigidbodies
             if (rb != null)
                 rb.AddExplosionForce(calculatedPower, explosionPos, radius, 3.0F);

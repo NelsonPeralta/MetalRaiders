@@ -69,7 +69,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _model: {fileID: 4048270236436684970}
   _index: 0
-  _defaultTts: 10
+  _defaultTts: 30
   _tts: 0
   PV: {fileID: 0}
   weaponPool: {fileID: 0}
