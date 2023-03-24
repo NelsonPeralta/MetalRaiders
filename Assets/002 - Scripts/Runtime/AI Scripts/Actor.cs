@@ -395,11 +395,11 @@ abstract public class Actor : MonoBehaviour
     [PunRPC]
     public void ActorDeath(bool caller = true)
     {
-        if (caller)
+        if (caller && PhotonNetwork.IsMasterClient)
         {
             GetComponent<PhotonView>().RPC("ActorDeath", RpcTarget.AllViaServer, false);
         }
-        else
+        else if (!caller)
         {
             GetComponent<AudioSource>().clip = _deathClip;
             GetComponent<AudioSource>().Play();
