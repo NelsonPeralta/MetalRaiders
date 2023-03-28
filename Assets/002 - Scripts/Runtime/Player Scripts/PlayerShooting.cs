@@ -16,8 +16,8 @@ public class PlayerShooting : MonoBehaviourPun
 
     // Private variables
     int playerRewiredID;
-    float fireInterval = 0;
-    bool fireButtonDown = false;
+    [SerializeField] float fireInterval = 0, leftFireInterval = 0;
+    [SerializeField] bool fireButtonDown = false, scopeBtnDown = false;
     public float defaultBurstInterval
     {
         get { return 0.08f; }
@@ -28,6 +28,9 @@ public class PlayerShooting : MonoBehaviourPun
         _ignoreShootCounter = 2;
         playerController.OnPlayerFire += OnPlayerControllerFire_Delegate;
         playerController.OnPlayerFireButtonUp += OnPlayerControllerFireUp_Delegate;
+
+        playerController.OnPlayerScopeBtnDown += OnPlayerControllerScope_Delegate;
+        playerController.OnPlayerScopeBtnUp += OnPlayerControllerScopeUp_Delegate;
     }
 
     void OnPlayerControllerFireUp_Delegate(PlayerController playerController)
@@ -43,26 +46,64 @@ public class PlayerShooting : MonoBehaviourPun
         Shoot();
     }
 
-    public void Shoot()
+
+
+    void OnPlayerControllerScopeUp_Delegate(PlayerController playerController)
     {
-        if (fireInterval > 0)
+        scopeBtnDown = false;
+    }
+    void OnPlayerControllerScope_Delegate(PlayerController playerController)
+    {
+        if (playerController.isDrawingWeapon)
             return;
 
-        WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-        if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
-            fireInterval = defaultBurstInterval * 5.5f;
-        else
-            fireInterval = 1 / (activeWeapon.fireRate / 60f);
+        Shoot(pInventory.activeWeapon.leftWeapon);
+    }
 
-        if (CanShootAuto(activeWeapon) || CanShootSingleOrBurst(activeWeapon))
+    public void Shoot(WeaponProperties wp = null)
+    {
+        WeaponProperties sw = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        if (wp)
+            sw = wp;
+
+        if ((fireInterval > 0 && !wp))
+            return;
+        if ((leftFireInterval > 0 && wp))
+            return;
+
+        bool isLeftWeapon = false;
+
+        if (wp)
         {
-            Debug.Log("Shoot");
+            sw = wp;
+            isLeftWeapon = true;
+        }
 
-            fireButtonDown = true;
-            if (activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
-                ShootBurst(activeWeapon);
+        if (!isLeftWeapon)
+        {
+
+            if (sw.firingMode == WeaponProperties.FiringMode.Burst)
+                fireInterval = defaultBurstInterval * 5.5f;
             else
-                Shoot_Caller();
+                fireInterval = 1 / (sw.fireRate / 60f);
+        }
+        else
+        {
+            leftFireInterval = 1 / (sw.fireRate / 60f);
+        }
+
+        if (CanShootAuto(sw) || CanShootSingleOrBurst(sw))
+        {
+            if (!isLeftWeapon)
+                fireButtonDown = true;
+            else
+                scopeBtnDown = true;
+
+
+            if (sw.firingMode == WeaponProperties.FiringMode.Burst)
+                ShootBurst(sw);
+            else
+                Shoot_Caller(isLeftWeapon);
         }
     }
 
@@ -73,7 +114,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     bool CanShootSingleOrBurst(WeaponProperties activeWeapon)
     {
-        return ((activeWeapon.firingMode == WeaponProperties.FiringMode.Single || activeWeapon.firingMode == WeaponProperties.FiringMode.Burst) && !fireButtonDown);
+        return ((activeWeapon.firingMode == WeaponProperties.FiringMode.Single || activeWeapon.firingMode == WeaponProperties.FiringMode.Burst) && ((!fireButtonDown && !pInventory.isDualWielding) || (!scopeBtnDown && pInventory.isDualWielding)));
     }
 
     void ShootBurst(WeaponProperties activeWeapon)
@@ -94,19 +135,20 @@ public class PlayerShooting : MonoBehaviourPun
         //PV.RPC("Shoot_RPC", RpcTarget.All);
     }
 
-    void Shoot_Caller()
+    void Shoot_Caller(bool isLeftWeapon = false)
     {
 
         Debug.Log("Shoot_Caller");
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
-        Debug.Log(activeWeapon.currentAmmo);
-        Debug.Log(playerController.isReloading);
+        if (isLeftWeapon)
+            activeWeapon = pInventory.activeWeapon.leftWeapon;
 
         if (activeWeapon.currentAmmo <= 0 || playerController.isReloading)
             return;
 
-        Shoot_RPC();
+        shoooo(isLeftWeapon);
+        //Shoot_RPC();
         return;
         PV.RPC("Shoot_RPC", RpcTarget.All);
     }
@@ -115,90 +157,6 @@ public class PlayerShooting : MonoBehaviourPun
     void Shoot_RPC()
     {
         shoooo();
-        {
-            //int counter = 1;
-            //WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-
-            //if (activeWeapon.isShotgun)
-            //    counter = activeWeapon.numberOfPellets;
-
-            //for (int i = 0; i < counter; i++)
-            //    if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
-            //    {
-            //        try
-            //        {
-            //            if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
-            //                playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
-            //            playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
-            //        }
-            //        catch { }
-
-            //        var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
-            //        if (PV.IsMine)
-            //            bullet.layer = 8;
-            //        else
-            //            bullet.layer = 0;
-            //        try
-            //        {
-            //            bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-            //            bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-            //        }
-            //        catch
-            //        {
-            //            bullet.transform.position = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-            //            bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-            //        }
-
-
-
-            //        //try { bullet.gameObject.GetComponent<Bullet>().player = playerController.GetComponent<Player>(); } catch { }
-            //        //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
-            //        //bullet.gameObject.GetComponent<Bullet>().range = activeWeapon.range;
-            //        //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-            //        //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
-            //        //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-            //        //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
-            //        bullet.SetActive(true);
-            //        GetComponent<CommonFiringActions>().SpawnMuzzleflash();
-            //    }
-            //    else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
-            //    {
-            //        ExplosiveProjectile rocket = null;
-
-            //        if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
-            //        {
-            //            //rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<Rocket>();
-            //            rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<ExplosiveProjectile>();
-            //        }
-            //        else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
-            //            rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
-
-            //        if (PV.IsMine)
-            //            rocket.gameObject.layer = 8;
-            //        else
-            //            rocket.gameObject.layer = 0;
-
-            //        rocket.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-            //        rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-
-            //        rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
-            //        GetComponent<CommonFiringActions>().SpawnMuzzleflash();
-            //    }
-
-            //if (PV.IsMine)
-            //    activeWeapon.currentAmmo -= 1;
-
-            //try
-            //{
-            //    playerController.weaponAnimator.Play("Fire", 0, 0f);
-            //    StartCoroutine(Player3PSFiringAnimation());
-            //    activeWeapon.Recoil();
-            //}
-            //catch { }
-            //GetComponent<AudioSource>().clip = activeWeapon.Fire;
-            //GetComponent<AudioSource>().Play();
-            //OnBulletSpawned?.Invoke(this);
-        }
     }
 
     void shaaaaa()
@@ -207,7 +165,7 @@ public class PlayerShooting : MonoBehaviourPun
     }
 
     int _ignoreShootCounter;
-    void shoooo()
+    void shoooo(bool isLeftWeapon = false)
     {
         if (playerController.GetComponent<Player>().isDead || playerController.GetComponent<Player>().isRespawning)
             return;
@@ -216,6 +174,9 @@ public class PlayerShooting : MonoBehaviourPun
 
         int counter = 1;
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+
+        if (isLeftWeapon)
+            activeWeapon = pInventory.activeWeapon.leftWeapon;
 
         if (activeWeapon.isShotgun)
             counter = activeWeapon.numberOfPellets;
@@ -307,7 +268,7 @@ public class PlayerShooting : MonoBehaviourPun
 
         try
         {
-            playerController.weaponAnimator.Play("Fire", 0, 0f);
+            activeWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
             StartCoroutine(Player3PSFiringAnimation());
             activeWeapon.Recoil();
         }
@@ -361,8 +322,10 @@ public class PlayerShooting : MonoBehaviourPun
     }
     void FireCooldown()
     {
-        if (fireInterval <= 0)
-            return;
-        fireInterval -= Time.deltaTime;
+        if (fireInterval > 0)
+            fireInterval -= Time.deltaTime;
+
+        if (leftFireInterval > 0)
+            leftFireInterval -= Time.deltaTime;
     }
 }

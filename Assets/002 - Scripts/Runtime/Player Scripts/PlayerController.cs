@@ -14,7 +14,8 @@ public class PlayerController : MonoBehaviourPun
     public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract,
         OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade,
         OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop, OnPlayerDeath,
-        OnControllerTypeChangedToController, OnControllerTypeChangedToMouseAndKeyboard;
+        OnControllerTypeChangedToController, OnControllerTypeChangedToMouseAndKeyboard,
+        OnPlayerScopeBtnDown, OnPlayerScopeBtnUp;
 
     public Player player { get { return GetComponent<Player>(); } }
 
@@ -110,7 +111,7 @@ public class PlayerController : MonoBehaviourPun
     public Animator animDWLeft;
     public WeaponProperties dwRightWP;
     public WeaponProperties dwLeftWP;
-    public bool isHoldingShootBtn;
+    public bool isHoldingShootBtn, isHoldingScopeBtn;
     public bool isShootingRight;
     public bool isShootingLeft;
     public bool isReloadingRight;
@@ -152,6 +153,7 @@ public class PlayerController : MonoBehaviourPun
             if (GameManager.instance.gameStarted)
             {
                 Shooting();
+                LeftShooting();
                 CheckReloadButton();
                 CheckAmmoForAutoReload();
                 AnimationCheck();
@@ -398,8 +400,45 @@ public class PlayerController : MonoBehaviourPun
             if (wProperties.projectileToHide != null && wProperties.outOfAmmo)
                 wProperties.projectileToHide.SetActive(false);*/
     }
+
+
+    void LeftShooting()
+    {
+        if (!isDualWielding)
+            return;
+        if (GetComponent<Player>().isDead || isSprinting || player.isRespawning)
+            return;
+
+
+
+        if ((rewiredPlayer.GetButtonDown("Aim") || rewiredPlayer.GetButton("Aim")) && !isHoldingScopeBtn)
+        {
+            if (!pInventory.activeWeapon.leftWeapon.isOutOfAmmo && !isReloadingLeft &&
+            !isHoldingScopeBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            {
+                isHoldingScopeBtn = true;
+            }
+            else
+            {
+                isHoldingScopeBtn = false;
+            }
+        }
+
+        if (isHoldingScopeBtn)
+            OnPlayerScopeBtnDown?.Invoke(this);
+
+        if (rewiredPlayer.GetButtonUp("Aim"))
+        {
+            isHoldingScopeBtn = false;
+            OnPlayerScopeBtnUp?.Invoke(this);
+        }
+    }
+
     void ScopeIn()
     {
+        if (isDualWielding)
+            return;
+
         if (isAiming)
         {
             pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.scopeRRR;

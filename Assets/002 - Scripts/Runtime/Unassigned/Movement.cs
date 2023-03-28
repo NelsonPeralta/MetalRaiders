@@ -179,11 +179,11 @@ public class Movement : MonoBehaviour, IPunObservable
             movement = Vector3.zero;
             velocity = Vector3.zero;
 
-            _maxXSpeed= 0f;
+            _maxXSpeed = 0f;
             _maxZSpeed = 0f;
 
-            _testXSpeed= 0f;
-            _testZSpeed= 0f;
+            _testXSpeed = 0f;
+            _testZSpeed = 0f;
 
             return;
         }
@@ -395,7 +395,7 @@ public class Movement : MonoBehaviour, IPunObservable
     {
         ThirdPersonScript thirdPersonScript = null;
         //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
+        thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
         //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         //    thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().humanModel;
 
@@ -418,7 +418,7 @@ public class Movement : MonoBehaviour, IPunObservable
         {
             float _jumpForce = jumpForce;
 
-            if(GameManager.instance.gameMode == GameManager.GameMode.Swarm) { _jumpForce = jumpForce * 0.7f; }
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) { _jumpForce = jumpForce * 0.7f; }
             velocity.y = _jumpForce;
             Debug.Log(player.name);
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -593,6 +593,8 @@ public class Movement : MonoBehaviour, IPunObservable
                             !pController.isMeleeing && !pController.isFiring)
                         {
                             pController.weaponAnimator.speed = playerSpeedPercent;
+                            if (pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
+                                pController.weaponAnimator.speed = 1;
                             tpLookAt.anim.speed = playerSpeedPercent;
                         }
                         else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade ||

@@ -171,7 +171,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                     codeName = "m1911";
 
                 if (codeName == "c7" || codeName == "mk14")
-                    codeName = "p90";
+                    codeName = "mp5";
+                    //codeName = "p90";
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
             {
