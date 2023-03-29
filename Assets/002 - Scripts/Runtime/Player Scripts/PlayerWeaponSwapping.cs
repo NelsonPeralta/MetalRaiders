@@ -56,7 +56,11 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             {
                 WeaponProperties wp = player.playerInventory.GetWeaponProperties(closestLootableWeapon.codeName);
 
-                if (!wp.isDualWieldable)
+                if (wp.isDualWieldable && pInventory.activeWeapon.isDualWieldable)
+                {
+                    pickupText.text = "Hold E to DUAL WIELD " + closestLootableWeapon.cleanName;
+                }
+                else
                 {
                     if (wp.weaponIcon)
                     {
@@ -68,10 +72,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     }
                     else
                         pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
-                }
-                else
-                {
-                    pickupText.text = "Hold E to DUAL WIELD " + closestLootableWeapon.cleanName;
                 }
             }
             else
@@ -251,7 +251,17 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     weaponCollidingWithInInventoryIndex = i;
             Vector3 lwPosition = closestLootableWeapon.GetComponent<LootableWeapon>().spawnPointPosition;
 
-            if (!closestLootableWeapon.isDw)
+            if (closestLootableWeapon.isDw && pInventory.activeWeapon.isDualWieldable)
+            {
+                foreach (GameObject w in pInventory.allWeaponsInInventory)
+                    if (w.GetComponent<WeaponProperties>().codeName == closestLootableWeapon.GetComponent<LootableWeapon>().codeName)
+                    {
+                        pInventory.leftWeapon = w.GetComponent<WeaponProperties>().leftWeapon;
+                        pInventory.leftWeapon.currentAmmo = closestLootableWeapon.networkAmmo;
+                        pInventory.leftWeapon.spareAmmo = closestLootableWeapon.spareAmmo;
+                    }
+            }
+            else
             {
                 if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
                 {
@@ -279,16 +289,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     pInventory.PlayDrawSound();
                 }
             }
-            else
-            {
-                foreach (GameObject w in pInventory.allWeaponsInInventory)
-                    if (w.GetComponent<WeaponProperties>().codeName == closestLootableWeapon.GetComponent<LootableWeapon>().codeName)
-                    {
-                        pInventory.leftWeapon = w.GetComponent<WeaponProperties>().leftWeapon;
-                        pInventory.leftWeapon.currentAmmo = closestLootableWeapon.networkAmmo;
-                        pInventory.leftWeapon.spareAmmo = closestLootableWeapon.spareAmmo;
-                    }
-            }
 
             PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPosition);
         }
@@ -314,7 +314,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         if (weaponsInRange.Count > 0)
         {
             for (int i = 0; i < weaponsInRange.Count; i++)
-                if (weaponsInRange[i] == null)
+                if (weaponsInRange[i] == null || !weaponsInRange[i].gameObject.activeSelf)
                 {
                     List<LootableWeapon> nl = weaponsInRange;
                     nl.RemoveAt(i);
