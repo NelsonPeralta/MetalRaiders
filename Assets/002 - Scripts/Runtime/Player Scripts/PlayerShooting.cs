@@ -186,7 +186,7 @@ public class PlayerShooting : MonoBehaviourPun
             if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
             {
                 Player player = playerController.GetComponent<Player>();
-                if (player.isMine)
+                if (!player.isMine)
                 {
                     RaycastHit hit;
                     if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
@@ -199,7 +199,7 @@ public class PlayerShooting : MonoBehaviourPun
                         StartCoroutine(pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range));
                 }
 
-                if (_ignoreShootCounter % 2 == 0)
+                if (_ignoreShootCounter % 2 == 99999)
                 {
                     Debug.Log("shoooo 2");
 
