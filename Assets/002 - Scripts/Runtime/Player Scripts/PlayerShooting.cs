@@ -199,7 +199,7 @@ public class PlayerShooting : MonoBehaviourPun
                         StartCoroutine(pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range));
                 }
 
-                if (_ignoreShootCounter % 2 == 99999)
+                if (player.isMine)
                 {
                     Debug.Log("shoooo 2");
 
