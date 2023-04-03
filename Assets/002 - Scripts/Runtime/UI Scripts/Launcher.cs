@@ -274,6 +274,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() // Runs only when THIS player joins room
     {
         Debug.Log("Joined room");
+        foreach (Transform child in _playerListContent)
+            Destroy(child.gameObject);
         //foreach (var kvp in PhotonNetwork.CurrentRoom.Players) { Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}"); }
 
         List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
@@ -472,11 +474,12 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        Debug.Log("LAUNCHER: OnLeftRoom");
         try
         {
             Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
         }
-        catch { }
+        catch (System.Exception e) { Debug.LogWarning(e); }
         MenuManager.Instance.OpenMenu("offline title");
     }
 

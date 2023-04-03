@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 onlineTeam = PlayerMultiplayerMatchStats.Team.None;
                 FindObjectOfType<Launcher>().teamRoomUI.SetActive(false);
-
+                _teamDict = new Dictionary<string, int>();
             }
             else
             {

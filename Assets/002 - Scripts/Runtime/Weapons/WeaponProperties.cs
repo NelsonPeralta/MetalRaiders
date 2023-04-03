@@ -103,6 +103,7 @@ public class WeaponProperties : MonoBehaviour
     public GameObject equippedModelB;
 
     public GameObject weaponRessource;
+    public GameObject muzzleFlash;
 
 
     public int currentAmmo
@@ -111,8 +112,17 @@ public class WeaponProperties : MonoBehaviour
         set
         {
             _currentAmmo = value;
-            OnCurrentAmmoChanged?.Invoke(this);
-            pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
+
+            if ((!player.playerInventory.leftWeapon) || (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon != this))
+            {
+                OnCurrentAmmoChanged?.Invoke(this);
+                pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
+            }
+            else if (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon == this)
+            {
+                player.GetComponent<PlayerUI>().leftActiveAmmoText.text = currentAmmo.ToString();
+                player.GetComponent<PlayerUI>().leftSpareAmmoText.text = spareAmmo.ToString();
+            }
 
             if (player.isMine && (_currentAmmo == 0 || _currentAmmo == ammoCapacity))
             {
@@ -157,6 +167,8 @@ public class WeaponProperties : MonoBehaviour
     public int index { get { return _index; } set { _index = value; } }
     public int previousLayer { get { return _preLayer; } set { _preLayer = value; } }
 
+
+
     int _index, _preLayer;
 
     private void Start()
@@ -197,6 +209,19 @@ public class WeaponProperties : MonoBehaviour
                 }
             }
     }
+
+    public void SpawnMuzzleflash()
+    {
+        StartCoroutine(SpawnMuzzleflash_Coroutine());
+    }
+
+    IEnumerator SpawnMuzzleflash_Coroutine()
+    {
+        muzzleFlash.SetActive(false);
+        yield return new WaitForEndOfFrame();
+        muzzleFlash.SetActive(true);
+    }
+
     public Quaternion GetRandomSprayRotation()
     {
         float currentBulletSpray = bulletSpray;

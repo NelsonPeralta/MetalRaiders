@@ -257,7 +257,11 @@ public class PlayerShooting : MonoBehaviourPun
                 rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
 
                 rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
-                GetComponent<CommonFiringActions>().SpawnMuzzleflash();
+
+                if (activeWeapon.muzzleFlash)
+                    activeWeapon.SpawnMuzzleflash();
+                else
+                    GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }
 
         if (!PV.IsMine)
@@ -269,8 +273,12 @@ public class PlayerShooting : MonoBehaviourPun
         try
         {
             activeWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
+            if (pInventory.isDualWielding)
+                activeWeapon.rightWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
             StartCoroutine(Player3PSFiringAnimation());
             activeWeapon.Recoil();
+            if (pInventory.isDualWielding)
+                activeWeapon.rightWeapon.Recoil();
         }
         catch { }
         GetComponent<AudioSource>().clip = activeWeapon.Fire;

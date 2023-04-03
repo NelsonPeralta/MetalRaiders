@@ -483,6 +483,14 @@ public class PlayerController : MonoBehaviourPun
             }
         }
     }
+
+
+    float zoomTime = 1f;
+    void ScopeZoom()
+    {
+        float plusZoom = 0;
+    }
+
     public void ScopeOut()
     {
         if (!isAiming && !GetComponent<Player>().isDead)
@@ -591,7 +599,8 @@ public class PlayerController : MonoBehaviourPun
                 ScopeOut();
                 pInventory.grenades = pInventory.grenades - 1;
                 weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
-                PV.RPC("ThrowGrenade_RPC", RpcTarget.All);
+                StartCoroutine(GrenadeSpawnDelay());
+                //PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
                 OnPLayerThrewGrenade?.Invoke(this);
                 //StartCoroutine(GrenadeSpawnDelay());
                 //StartCoroutine(ThrowGrenade3PS());
@@ -634,22 +643,15 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (pInventory.rightWeaponCurrentAmmo <= 0)
+            if (pInventory.activeWeapon.currentAmmo <= 0)
             {
-                pInventory.rightWeaponCurrentAmmo = 0;
-                //dwReload.CheckAmmoTypeType(true, false);
-            }
-            else
-            {
+                rScript.CheckAmmoTypeType(true);
+
             }
 
             if (pInventory.leftWeaponCurrentAmmo <= 0)
             {
-                pInventory.leftWeaponCurrentAmmo = 0;
-                //dwReload.CheckAmmoTypeType(false, true);
-            }
-            else
-            {
+                rScript.CheckAmmoTypeType(true, pInventory.leftWeapon);
             }
         }
     }
@@ -957,129 +959,50 @@ public class PlayerController : MonoBehaviourPun
     /// 
 
     [PunRPC]
-    public void ThrowGrenade_RPC()
+    public void ThrowGrenade3PS_RPC()
     {
-        StartCoroutine(GrenadeSpawnDelay());
         StartCoroutine(ThrowGrenade3PS());
     }
 
     private IEnumerator GrenadeSpawnDelay()
     {
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("Throw Grenade");
 
         //Wait for set amount of time before spawning grenade
         yield return new WaitForSeconds(pInventory.grenadeSpawnDelay);
         //Spawn grenade prefab at spawnpoint
 
-        var grenade = Instantiate(pInventory.grenadePrefab);
-        Destroy(grenade.gameObject);
+        PV.RPC("SpawnGrenade_RPC", RpcTarget.All, gwProperties.grenadeSpawnPoint.position,
+            gwProperties.grenadeSpawnPoint.rotation, gwProperties.grenadeSpawnPoint.forward);
 
-        if (fragGrenadesActive)
-        {
-            grenade = Instantiate(pInventory.grenadePrefab,
-               gwProperties.grenadeSpawnPoint.transform.position,
-               gwProperties.grenadeSpawnPoint.transform.rotation);
-            grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
-            //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
-        }
-        else if (stickyGrenadesActive)
-        {
-            grenade = Instantiate(pInventory.stickyGrenadePrefab,
-               gwProperties.grenadeSpawnPoint.transform.position,
-               gwProperties.grenadeSpawnPoint.transform.rotation);
-            grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
-            //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
-        }
+        //var grenade = Instantiate(pInventory.grenadePrefab);
+        //Destroy(grenade.gameObject);
 
-        foreach (PlayerHitbox hb in GetComponent<Player>().hitboxes)
-            Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+        //if (fragGrenadesActive)
+        //{
+        //    grenade = Instantiate(pInventory.grenadePrefab,
+        //       gwProperties.grenadeSpawnPoint.transform.position,
+        //       gwProperties.grenadeSpawnPoint.transform.rotation);
+        //    grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
+        //    //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
+        //}
+        //else if (stickyGrenadesActive)
+        //{
+        //    grenade = Instantiate(pInventory.stickyGrenadePrefab,
+        //       gwProperties.grenadeSpawnPoint.transform.position,
+        //       gwProperties.grenadeSpawnPoint.transform.rotation);
+        //    grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
+        //    //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
+        //}
 
-        grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
-        Destroy(grenade.gameObject, 10);
+        //foreach (PlayerHitbox hb in GetComponent<Player>().hitboxes)
+        //    Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+
+        //grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
+        //Destroy(grenade.gameObject, 10);
     }
     public void TransferAmmo()
     {
-
-        // Old Reload
-        #region
-        //if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Light)
-        //{
-        //    if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
-        //    {
-        //        pInventory.smallAmmo = pInventory.smallAmmo - 1;
-        //        pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
-        //    }
-
-
-        //    else
-        //    {
-        //        ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
-
-        //        if (pInventory.smallAmmo >= ammoWeaponIsMissing)
-        //        {
-        //            pInventory.smallAmmo = pInventory.smallAmmo - ammoWeaponIsMissing;
-        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-        //        }
-        //        else if (pInventory.smallAmmo < ammoWeaponIsMissing)
-        //        {
-        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.smallAmmo;
-        //            pInventory.smallAmmo = 0;
-        //        }
-        //    }
-
-        //}
-
-        //else if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Heavy)
-        //{
-        //    if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
-        //    {
-        //        pInventory.heavyAmmo = pInventory.heavyAmmo - 1;
-        //        pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
-        //    }
-
-        //    else
-        //    {
-        //        ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
-
-        //        if (pInventory.heavyAmmo >= ammoWeaponIsMissing)
-        //        {
-        //            pInventory.heavyAmmo = pInventory.heavyAmmo - ammoWeaponIsMissing;
-        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-        //        }
-        //        else if (pInventory.heavyAmmo < ammoWeaponIsMissing)
-        //        {
-        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.heavyAmmo;
-        //            pInventory.heavyAmmo = 0;
-        //        }
-        //    }
-        //}
-        //else if (pInventory.activeWeapon.ammoType == WeaponProperties.AmmoType.Power)
-        //{
-
-        //    if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
-        //    {
-        //        pInventory.powerAmmo = pInventory.powerAmmo - 1;
-        //        pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + 1;
-        //    }
-
-        //    else
-        //    {
-        //        ammoWeaponIsMissing = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity - pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo;
-
-        //        if (pInventory.powerAmmo >= ammoWeaponIsMissing)
-        //        {
-        //            pInventory.powerAmmo = pInventory.powerAmmo - ammoWeaponIsMissing;
-        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-        //        }
-        //        else if (pInventory.powerAmmo < ammoWeaponIsMissing)
-        //        {
-        //            pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo + pInventory.powerAmmo;
-        //            pInventory.powerAmmo = 0;
-        //        }
-        //    }
-        //}
-        #endregion
-
-
         if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
             pInventory.activeWeapon.spareAmmo -= 1;
@@ -1098,6 +1021,22 @@ public class PlayerController : MonoBehaviourPun
             {
                 pInventory.activeWeapon.currentAmmo += pInventory.activeWeapon.spareAmmo;
                 pInventory.activeWeapon.spareAmmo = 0;
+            }
+
+            if (pInventory.leftWeapon)
+            {
+                ammoWeaponIsMissing = pInventory.leftWeapon.ammoCapacity - pInventory.leftWeapon.currentAmmo;
+
+                if (pInventory.leftWeapon.spareAmmo >= ammoWeaponIsMissing)
+                {
+                    pInventory.leftWeapon.currentAmmo = pInventory.leftWeapon.ammoCapacity;
+                    pInventory.leftWeapon.spareAmmo -= ammoWeaponIsMissing;
+                }
+                else if (pInventory.leftWeapon.spareAmmo < ammoWeaponIsMissing)
+                {
+                    pInventory.leftWeapon.currentAmmo += pInventory.leftWeapon.spareAmmo;
+                    pInventory.leftWeapon.spareAmmo = 0;
+                }
             }
         }
     }
@@ -1178,6 +1117,46 @@ public class PlayerController : MonoBehaviourPun
     {
         isSprinting = false;
         isHoldingShootBtn = false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    [PunRPC]
+    void SpawnGrenade_RPC(Vector3 sp, Quaternion sr, Vector3 forw)
+    {
+        var grenade = Instantiate(pInventory.grenadePrefab);
+        Destroy(grenade.gameObject);
+
+        if (fragGrenadesActive)
+        {
+            grenade = Instantiate(pInventory.grenadePrefab,
+               sp,
+               sr);
+            grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
+            //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
+        }
+        else if (stickyGrenadesActive)
+        {
+            grenade = Instantiate(pInventory.stickyGrenadePrefab,
+               sp,
+               sr);
+            grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
+            //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
+        }
+
+        foreach (PlayerHitbox hb in GetComponent<Player>().hitboxes)
+            Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+
+        grenade.GetComponent<Rigidbody>().AddForce(forw * grenadeThrowForce);
+        Destroy(grenade.gameObject, 10);
     }
 }
 

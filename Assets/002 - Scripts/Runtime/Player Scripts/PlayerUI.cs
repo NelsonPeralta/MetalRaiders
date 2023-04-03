@@ -27,6 +27,10 @@ public class PlayerUI : MonoBehaviour
     public Text swarmLivesText;
     public Text mapNameText;
     public Text roomNameText;
+    public GameObject leftWeaponUiHolder;
+    public TMP_Text leftActiveAmmoText;
+    public TMP_Text leftSpareAmmoText;
+    public Image leftWeaponIcon;
 
     [Header("Top Center", order = 2)]
     public Transform topMiddle;

@@ -180,41 +180,48 @@ public class ReloadScript : MonoBehaviourPun
         }
     }
 
-    public void CheckAmmoTypeType(bool isOutOfAmmo)
+    public void CheckAmmoTypeType(bool isOutOfAmmo, WeaponProperties wp = null)
     {
         if (pController.isReloading)
             return;
 
         WeaponProperties activeWeapon = pController.pInventory.activeWeapon.GetComponent<WeaponProperties>();
+
+        if (wp)
+            activeWeapon = wp;
+
         if (activeWeapon.currentAmmo < activeWeapon.ammoCapacity && activeWeapon.spareAmmo > 0)
         {
-            ReloadAnimation(isOutOfAmmo);
+            ReloadAnimation(isOutOfAmmo, activeWeapon);
         }
     }
 
-    public void ReloadAnimation(bool isOutOfAmmo)
+    public void ReloadAnimation(bool isOutOfAmmo, WeaponProperties wp)
     {
         if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
         {
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
-                    if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.pInventory.activeWeapon.gameObject)
+                    if (pController.pInventory.allWeaponsInInventory[i].GetComponent<WeaponProperties>() == wp)
                         PV.RPC("PlayReloadSound_RPC", RpcTarget.All, i);
-            //PlayReloadSound_RPC(i);
-            //reloadAudioSource.clip = pController.wProperties.Reload_1;
-            //reloadAudioSource.Play();
 
             try
             {
-                if (!isOutOfAmmo)
-                {
-                    pController.weaponAnimator.Play("Reload Ammo Left", 0, 0f);
-                    PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Ammo Left");
-                }
+                if (!pController.pInventory.leftWeapon)
+                    if (!isOutOfAmmo)
+                    {
+                        pController.weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                        PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Ammo Left");
+                    }
+                    else
+                    {
+                        pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
+                        PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Out Of Ammo");
+                    }
                 else
                 {
-                    pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
-                    PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Out Of Ammo");
+                    pController.pInventory.activeWeapon.rightWeapon.GetComponent<Animator>().Play("Reload Ammo Left", 0, 0f);
+                    pController.pInventory.leftWeapon.GetComponent<Animator>().Play("Reload Ammo Left", 0, 0f);
                 }
                 pController.ScopeOut();
             }

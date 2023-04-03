@@ -85,6 +85,12 @@ public class PlayerInventory : MonoBehaviourPun
 
                 activeWeapon.rightWeapon.gameObject.SetActive(true);
                 activeWeapon.leftWeapon.gameObject.SetActive(true);
+
+                PlayerUI pui = player.GetComponent<PlayerUI>();
+                pui.leftWeaponUiHolder.SetActive(true);
+                pui.leftActiveAmmoText.text = value.currentAmmo.ToString();
+                pui.leftSpareAmmoText.text = value.spareAmmo.ToString();
+                pui.leftWeaponIcon.sprite = value.weaponIcon;
             }
             else
             {
