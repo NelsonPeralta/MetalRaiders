@@ -620,7 +620,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                 fbt.transform.localRotation = Quaternion.identity;
                 fbt.transform.localPosition = Vector3.zero;
-                fbt.transform.localScale = Vector3.one;
+                fbt.transform.localScale = new Vector3(2, 2, 1);
 
                 fbt.gameObject.SetActive(false);
                 break;
