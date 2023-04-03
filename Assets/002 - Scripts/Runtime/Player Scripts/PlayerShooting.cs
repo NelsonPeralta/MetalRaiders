@@ -186,17 +186,19 @@ public class PlayerShooting : MonoBehaviourPun
             if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
             {
                 Player player = playerController.GetComponent<Player>();
+                Quaternion ranSprayQuat = activeWeapon.GetRandomSprayRotation();
+
                 if (!player.isMine)
                 {
                     RaycastHit hit;
                     if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
                     {
                         int d = (int)Vector3.Distance(player.mainCamera.transform.position, hit.point);
-                        StartCoroutine(pInventory.SpawnFakeBulletTrail(d));
+                        StartCoroutine(pInventory.SpawnFakeBulletTrail(d, ranSprayQuat));
                     }
                     else
 
-                        StartCoroutine(pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range));
+                        StartCoroutine(pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat));
                 }
 
                 if (player.isMine)
@@ -207,7 +209,7 @@ public class PlayerShooting : MonoBehaviourPun
                     {
                         if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
                             playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
-                        playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= activeWeapon.GetRandomSprayRotation();
+                        playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= ranSprayQuat;
                     }
                     catch { }
 

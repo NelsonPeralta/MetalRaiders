@@ -603,14 +603,15 @@ public class PlayerInventory : MonoBehaviourPun
         return null;
     }
 
-    public IEnumerator SpawnFakeBulletTrail(int l)
+    public IEnumerator SpawnFakeBulletTrail(int l, Quaternion spray)
     {
         foreach (Transform fbt in _fakeBulletTrailPool)
         {
             if (!fbt.gameObject.activeInHierarchy)
             {
                 Debug.Log("SpawnFakeBulletTrail");
-                fbt.transform.localScale = new Vector3(1, 1, Mathf.Clamp(l, 0, 999));
+                fbt.transform.localScale = new Vector3(l * 0.5f, l * 0.5f, Mathf.Clamp(l, 0, 999));
+                fbt.transform.localRotation *= spray;
                 fbt.gameObject.SetActive(true);
                 fbt.transform.parent = null;
 
@@ -620,7 +621,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                 fbt.transform.localRotation = Quaternion.identity;
                 fbt.transform.localPosition = Vector3.zero;
-                fbt.transform.localScale = new Vector3(2, 2, 1);
+                fbt.transform.localScale = Vector3.one;
 
                 fbt.gameObject.SetActive(false);
                 break;
