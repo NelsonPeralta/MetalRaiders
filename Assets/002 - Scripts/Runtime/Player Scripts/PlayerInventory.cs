@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Photon.Pun;
+﻿using Photon.Pun;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class PlayerInventory : MonoBehaviourPun
 {
@@ -175,17 +175,35 @@ public class PlayerInventory : MonoBehaviourPun
         }
     }
 
+    [SerializeField] Transform _fakeBulletTrailHolder;
+    [SerializeField] Transform _fakeBulleTrailPrefab;
+    [SerializeField] List<Transform> _fakeBulletTrailPool = new List<Transform>();
+
     private void Awake()
     {
         if (!PV.IsMine)
         {
             try
             {
+                //for (int i = 0; i < 100; i++)
+                //{
+                //    Transform fbtt = Instantiate(_fakeBulleTrailPrefab, _fakeBulletTrailHolder);
+                //    _fakeBulletTrailPool.Add(fbtt);
+                //    fbtt.gameObject.SetActive(false);
+                //}
+
                 allThirdPersonEquippedWeaponsHolder.SetActive(true);
                 foreach (GameObject w in allWeaponsInInventory)
                     GameManager.SetLayerRecursively(w, 31);
             }
             catch (System.Exception e) { Debug.LogWarning(e); }
+        }
+
+        for (int i = 0; i < 100; i++)
+        {
+            Transform fbtt = Instantiate(_fakeBulleTrailPrefab, _fakeBulletTrailHolder);
+            _fakeBulletTrailPool.Add(fbtt);
+            fbtt.gameObject.SetActive(false);
         }
     }
     public void Start()
@@ -583,5 +601,30 @@ public class PlayerInventory : MonoBehaviourPun
             if (codeName == allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName)
                 return allWeaponsInInventory[i].GetComponent<WeaponProperties>();
         return null;
+    }
+
+    public IEnumerator SpawnFakeBulletTrail(int l)
+    {
+        foreach (Transform fbt in _fakeBulletTrailPool)
+        {
+            if (!fbt.gameObject.activeInHierarchy)
+            {
+                Debug.Log("SpawnFakeBulletTrail");
+                fbt.transform.localScale = new Vector3(1, 1, Mathf.Clamp(l, 0, 999));
+                fbt.gameObject.SetActive(true);
+                fbt.transform.parent = null;
+
+                yield return new WaitForSeconds(0.25f);
+
+                fbt.transform.parent = _fakeBulletTrailHolder;
+
+                fbt.transform.localRotation = Quaternion.identity;
+                fbt.transform.localPosition = Vector3.zero;
+                fbt.transform.localScale = Vector3.one;
+
+                fbt.gameObject.SetActive(false);
+                break;
+            }
+        }
     }
 }

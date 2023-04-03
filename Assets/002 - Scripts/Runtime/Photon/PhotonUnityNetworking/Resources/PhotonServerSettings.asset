@@ -148,6 +148,8 @@ MonoBehaviour:
   - UpdateTeamMode_RPC
   - UpdateTime_RPC
   - SendNewTeamDict
+  - SpawnGrenade_RPC
+  - ThrowGrenade3PS_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

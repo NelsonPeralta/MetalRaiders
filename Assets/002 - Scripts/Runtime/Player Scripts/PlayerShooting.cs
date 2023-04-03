@@ -18,6 +18,7 @@ public class PlayerShooting : MonoBehaviourPun
     int playerRewiredID;
     [SerializeField] float fireInterval = 0, leftFireInterval = 0;
     [SerializeField] bool fireButtonDown = false, scopeBtnDown = false;
+    [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
     public float defaultBurstInterval
     {
         get { return 0.08f; }
@@ -184,6 +185,20 @@ public class PlayerShooting : MonoBehaviourPun
         for (int i = 0; i < counter; i++)
             if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
             {
+                Player player = playerController.GetComponent<Player>();
+                if (player.isMine)
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
+                    {
+                        int d = (int)Vector3.Distance(player.mainCamera.transform.position, hit.point);
+                        StartCoroutine(pInventory.SpawnFakeBulletTrail(d));
+                    }
+                    else
+
+                        StartCoroutine(pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range));
+                }
+
                 if (_ignoreShootCounter % 2 == 0)
                 {
                     Debug.Log("shoooo 2");
