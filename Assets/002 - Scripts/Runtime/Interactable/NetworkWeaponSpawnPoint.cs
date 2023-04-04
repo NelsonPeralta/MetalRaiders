@@ -161,6 +161,9 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         if (codeName == "mk14")
             codeName = "c7";
 
+        if (codeName == "colt")
+            codeName = "deagle";
+
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
             {
