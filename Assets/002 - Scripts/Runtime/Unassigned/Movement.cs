@@ -4,7 +4,7 @@ using UnityEngine;
 using Rewired;
 using Photon.Pun;
 
-public class Movement : MonoBehaviour, IPunObservable
+public class Movement : MonoBehaviour
 {
     public delegate void PlayerMovementEvent(Movement movement);
     public PlayerMovementEvent OnPlayerStartedMoving, OnPlayerStoppedMoving;
@@ -645,27 +645,7 @@ public class Movement : MonoBehaviour, IPunObservable
         StartCoroutine(CalculatePlayerSpeed());
     }
 
-    //void PlayWalkingSound()
-    //{
-    //    PV.RPC("PlayWalkingSound_RPC", RpcTarget.All);
-    //}
 
-    //void PauseWalkingSound()
-    //{
-    //    PV.RPC("PauseWalkingSoundRPC", RpcTarget.All);
-    //}
-
-    //[PunRPC]
-    //void PlayWalkingSound_RPC()
-    //{
-    //    walkingSoundAS.Play();
-    //}
-
-    //[PunRPC]
-    //void PauseWalkingSoundRPC()
-    //{
-    //    walkingSoundAS.Pause();
-    //}
 
     public void ResetCharacterControllerProperties()
     {
@@ -680,18 +660,32 @@ public class Movement : MonoBehaviour, IPunObservable
         return defaultSpeed;
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //if (stream.IsWriting)
-        //{
-        //    stream.SendNext(movement);
+        if (RayGrounded(GetRayAtPos(0, 0)) && GetComponent<CharacterController>().isGrounded)
+        {
+            Debug.Log("OnControllerColliderHit");
+            Vector3 edgeFallMovement = transform.position - hit.point;
+            edgeFallMovement.y = 0;
+            float edgeFallFactor = 1;
+            movement += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
+        }
+    }
 
-        //}
-        //else
-        //{
-        //    Debug.Log($"I am reading: {movement}");
-        //    movement = (Vector3)stream.ReceiveNext();
-        //}
+    private Ray GetRayAtPos(float x, float z)
+    {
+        Vector3 rayPos = transform.position;
+        rayPos.y -= GetComponent<CharacterController>().height / 2 - GetComponent<CharacterController>().radius;
+        rayPos.x += x;
+        rayPos.z += z;
+        return new Ray(rayPos, Vector3.down);
+    }
+
+    private bool RayGrounded(Ray ray)
+    {
+        float groundRayLength = 0.5f;
+        RaycastHit[] rayResults = new RaycastHit[5];
+        return Physics.RaycastNonAlloc(ray, rayResults, groundRayLength, groundMask) < 1;
     }
 }
 
