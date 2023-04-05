@@ -64,7 +64,7 @@ public class Tyrant : Actor
 
                 if (isInRange)
                 {
-                    int ran = Random.Range(0, 5);
+                    int ran = Random.Range(0, 6);
 
                     if (ran != 0)
                     {
