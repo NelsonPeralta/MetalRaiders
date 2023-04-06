@@ -514,7 +514,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 timeLeft = t - (_time % t);
             Debug.Log(timeLeft);
 
-            StartCoroutine(StartOverShieldRespawn_Coroutine(t));
+            StartCoroutine(StartOverShieldRespawn_Coroutine(timeLeft));
             overshield.gameObject.SetActive(false);
         }
     }

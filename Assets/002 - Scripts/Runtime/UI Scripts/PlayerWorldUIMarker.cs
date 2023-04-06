@@ -50,7 +50,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         try
         {
             _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
-            _text.text = _player.nickName + _player.team;
+            _text.text = _player.nickName;
 
             _targetPlayer.OnPlayerDeath -= OnPlayerDeath;
             _targetPlayer.OnPlayerDeath += OnPlayerDeath;
