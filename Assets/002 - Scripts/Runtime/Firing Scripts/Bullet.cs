@@ -138,15 +138,8 @@ public class Bullet : MonoBehaviourPunCallbacks
         //transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
 
         float _dTravalled = Vector3.Distance(prePos, _nextPos);
-        if(_dTravalled > weaponProperties.range)
-            gameObject.SetActive(false);
-
-        //Collider[] colliders = Physics.OverlapSphere(transform.position, size);
-        //List<GameObject> objectsHit = new List<GameObject>();
-        //for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
-        //{
-        //    Debug.Log($"Bullet OverlapSphere: {colliders[i].name}. Frame: {frameCounter}. Distance from bullet: {Vector3.Distance(colliders[i].transform.position, transform.position)}");
-        //}
+        //if (_dTravalled > weaponProperties.range)
+        //    gameObject.SetActive(false);
 
         RaycastHit[] m_Results = new RaycastHit[5];
         Ray r = new Ray(prePos, (_nextPos - prePos).normalized);
@@ -165,8 +158,13 @@ public class Bullet : MonoBehaviourPunCallbacks
 
             if (fhit.collider.GetComponent<IDamageable>() != null || fhit.collider)
             {
-                ObjectHit newHit = new ObjectHit(hit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
-                objectsHit.Add(newHit);
+                float _distanceFromSpawnToHit = Vector3.Distance(originalPos, fhit.point);
+
+                if (_distanceFromSpawnToHit <= weaponProperties.range)
+                {
+                    ObjectHit newHit = new ObjectHit(hit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
+                    objectsHit.Add(newHit);
+                }
             }
 
             CheckForFinalHit();
