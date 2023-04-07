@@ -19,11 +19,18 @@ public class PlayerShooting : MonoBehaviourPun
     [SerializeField] float fireInterval = 0, leftFireInterval = 0;
     [SerializeField] bool fireButtonDown = false, scopeBtnDown = false;
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
+
+    List<Quaternion> quats = new List<Quaternion>();
     public float defaultBurstInterval
     {
         get { return 0.08f; }
     }
 
+
+    private void Awake()
+    {
+
+    }
     private void Start()
     {
         _ignoreShootCounter = 2;
@@ -180,7 +187,12 @@ public class PlayerShooting : MonoBehaviourPun
             activeWeapon = pInventory.activeWeapon.leftWeapon;
 
         if (activeWeapon.isShotgun)
+        {
             counter = activeWeapon.numberOfPellets;
+            if (activeWeapon.isShotgun)
+                for (int j = 0; j < activeWeapon.numberOfPellets; j++)
+                    quats.Add(Quaternion.Euler(Vector3.zero));
+        }
 
         for (int i = 0; i < counter; i++)
             if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
@@ -204,16 +216,24 @@ public class PlayerShooting : MonoBehaviourPun
                 if (player.isMine)
                 {
                     Debug.Log("shoooo 2");
+                    var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
 
                     try
                     {
                         if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
                             playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
-                        playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= ranSprayQuat;
+
+
+                        if (activeWeapon.isShotgun)
+                        {
+                            quats[i] = Random.rotation;
+                            playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation, quats[i], activeWeapon.bulletSpray);
+                        }
+                        else
+                            playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= ranSprayQuat;
                     }
                     catch { }
 
-                    var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
                     //if (PV.IsMine)
                     //    bullet.layer = 8;
                     //else
