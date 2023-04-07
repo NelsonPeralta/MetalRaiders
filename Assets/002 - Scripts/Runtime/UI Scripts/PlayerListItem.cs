@@ -7,31 +7,45 @@ using UnityEngine;
 
 public class PlayerListItem : MonoBehaviourPunCallbacks
 {
-	public TMP_Text text;
-	public TMP_Text levelText;
-	Photon.Realtime.Player player;
+    public TMP_Text text;
+    public TMP_Text levelText;
+    Photon.Realtime.Player player;
 
-	public void SetUp(Photon.Realtime.Player _player)
-	{
-		player = _player;
-		text.text = _player.NickName;
-	}
+    public PlayerDatabaseAdaptor pda
+    {
+        get { return _pda; }
+        set
+        {
+            _pda = value;
+        }
+    }
 
-	public void SetUp(string s)
-	{
-		text.text = s;
-	}
+    PlayerDatabaseAdaptor _pda;
 
-	public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
-	{
-		if(player == otherPlayer)
-		{
-			Destroy(gameObject);
-		}
-	}
+    public void SetUp(Photon.Realtime.Player _player)
+    {
+        player = _player;
+        text.text = _player.NickName;
 
-	public override void OnLeftRoom()
-	{
-		Destroy(gameObject);
-	}
+        //if (PhotonNetwork.NickName != _player.NickName)
+            WebManager.webManagerInstance.GetPlayerPublicData(_player.NickName, this);
+    }
+
+    public void SetUp(string s)
+    {
+        text.text = s;
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        if (player == otherPlayer)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public override void OnLeftRoom()
+    {
+        Destroy(gameObject);
+    }
 }

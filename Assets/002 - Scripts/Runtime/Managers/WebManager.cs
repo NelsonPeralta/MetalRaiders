@@ -39,6 +39,12 @@ public partial class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine(username, password));
     }
 
+    public void GetPlayerPublicData(string username, PlayerListItem pli)
+    {
+        StartCoroutine(GetPlayerPublicData_Coroutine(username, pli));
+
+    }
+
     public void UpdatePlayerCommonData()
     {
         StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id));

@@ -267,12 +267,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public Dictionary<string, string> roomPlayerData
+    {
+        get { return _roomPlayerData; }
+        set
+        {
 
-    // called zero
+        }
+    }
 
-    // private Variables
-    [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
+
+        // called zero
+
+        // private Variables
+        [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
+    [SerializeField] Dictionary<string, string> _roomPlayerData = new Dictionary<string, string>();
 
 
     SwarmManager.Difficulty _difficulty;

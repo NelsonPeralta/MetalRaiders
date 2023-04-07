@@ -57,6 +57,62 @@ public partial class WebManager
         }
     }
 
+    IEnumerator GetPlayerPublicData_Coroutine(string username, PlayerListItem pli = null)
+    {
+        PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
+        if (pli)
+            pda.playerListItem = pli;
+        WWWForm form = new WWWForm();
+        form.AddField("service", "getplayerpublicdata");
+        form.AddField("username", username);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                string jsonarray = www.downloadHandler.text;
+
+                try
+                {
+                    pda.playerLoginData = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
+
+                    StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id, pda));
+                    StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
+                    StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
+
+                    Debug.Log(pda.id);
+                    Debug.Log(pda.username);
+                    Debug.Log(pda.level);
+
+                    if (pli)
+                        pli.pda = pda;
+
+
+                    //Launcher.instance.ShowPlayerMessage("Logged in successfully!");
+                    MenuManager.Instance.OpenMenu("online title");
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                    if (www.downloadHandler.text.Contains("wrong credentials"))
+                    {
+                        Launcher.instance.OnCreateRoomFailed(0, "Wrong credentials");
+                        Launcher.instance.loginButton.SetActive(true);
+                    }
+                }
+            }
+        }
+    }
+
     IEnumerator SaveArmorData_Coroutine(string newDataString)
     {
         int xpAndCreditGain = Random.Range(160, 240);
@@ -311,7 +367,7 @@ public partial class WebManager
 
 
 
-    IEnumerator Login_Coroutine_Set_Online_Stats(int playerId)
+    IEnumerator Login_Coroutine_Set_Online_Stats(int playerId, PlayerDatabaseAdaptor _pda = null)
     {
         WWWForm form = new WWWForm();
         form.AddField("service", "getBasicOnlineData");
@@ -327,8 +383,8 @@ public partial class WebManager
             }
             else
             {
-                //Debug.Log(www.result);
-                //Debug.Log(www.downloadHandler.text);
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
@@ -337,7 +393,10 @@ public partial class WebManager
                 try
                 {
                     PlayerDatabaseAdaptor.PlayerCommonData pd = PlayerDatabaseAdaptor.PlayerCommonData.CreateFromJSON(jsonarray);
-                    pda.playerBasicOnlineStats = pd;
+                    if (_pda == null)
+                        pda.playerBasicOnlineStats = pd;
+                    else
+                        _pda.playerBasicOnlineStats = pd;
 
                     if (www.result.ToString().Contains("Success"))
                     {
@@ -357,7 +416,7 @@ public partial class WebManager
         }
     }
 
-    IEnumerator Login_Coroutine_Set_PvP_Stats(int playerId)
+    IEnumerator Login_Coroutine_Set_PvP_Stats(int playerId, PlayerDatabaseAdaptor _pda = null)
     {
         WWWForm form = new WWWForm();
         form.AddField("service", "getBasicPvPStats");
@@ -381,7 +440,11 @@ public partial class WebManager
                 try
                 {
                     PlayerDatabaseAdaptor.PlayerBasicPvPStats pd = PlayerDatabaseAdaptor.PlayerBasicPvPStats.CreateFromJSON(jsonarray);
-                    pda.SetPlayerBasicPvPStats(pd);
+
+                    if (_pda == null)
+                        pda.SetPlayerBasicPvPStats(pd);
+                    else
+                        _pda.SetPlayerBasicPvPStats(pd);
                 }
                 catch (Exception e)
                 {
@@ -395,7 +458,7 @@ public partial class WebManager
         }
     }
 
-    IEnumerator Login_Coroutine_Set_PvE_Stats(int playerId)
+    IEnumerator Login_Coroutine_Set_PvE_Stats(int playerId, PlayerDatabaseAdaptor _pda = null)
     {
         WWWForm form = new WWWForm();
         form.AddField("service", "getBasicPvEStats");
@@ -419,7 +482,11 @@ public partial class WebManager
                 try
                 {
                     PlayerDatabaseAdaptor.PlayerBasicPvEStats pd = PlayerDatabaseAdaptor.PlayerBasicPvEStats.CreateFromJSON(jsonarray);
-                    pda.SetPlayerBasicPvEStats(pd);
+
+                    if (_pda == null)
+                        pda.SetPlayerBasicPvEStats(pd);
+                    else
+                        _pda.SetPlayerBasicPvEStats(pd);
                 }
                 catch (Exception e)
                 {

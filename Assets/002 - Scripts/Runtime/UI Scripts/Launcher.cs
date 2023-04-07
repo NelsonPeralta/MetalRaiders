@@ -377,6 +377,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
         Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
 
+
         if (PhotonNetwork.IsMasterClient)
         {
             //Dictionary<string, string> roomParams = new Dictionary<string, string>();

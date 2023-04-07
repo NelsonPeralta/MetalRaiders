@@ -6,6 +6,8 @@ public class PlayerDatabaseAdaptor
 {
     public delegate void OnAnyPlayerDataChanged(string log);
 
+    public PlayerListItem playerListItem;
+
     PlayerLoginData _playerLoginData;
     PlayerCommonData _playerCommonData;
     PlayerBasicPvPStats _playerBasicPvPStats;
@@ -115,6 +117,9 @@ public class PlayerDatabaseAdaptor
         set
         {
             _playerCommonData = value;
+
+            if (playerListItem)
+                playerListItem.text.text = $"{username} ({level})";
 
             //if(_playerBasicOnlineStats == null)
             //    _playerBasicOnlineStats = value;

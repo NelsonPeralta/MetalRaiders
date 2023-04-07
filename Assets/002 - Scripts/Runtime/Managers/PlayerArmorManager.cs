@@ -7,9 +7,13 @@ public class PlayerArmorManager : MonoBehaviour
 {
     public Player player;
     public List<PlayerArmorPiece> playerArmorPieces;
+    string armorDataString;
 
     private void OnEnable()
     {
+        if (player.isMine)
+            armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
+
         DisableAllArmor();
         EnableAllArmorsInDataString();
     }
@@ -22,9 +26,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     void EnableAllArmorsInDataString()
     {
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
-
         foreach (PlayerArmorPiece piece in playerArmorPieces)
-            piece.gameObject.SetActive(pda.playerBasicOnlineStats.armor_data_string.Contains(piece.entity));
+            piece.gameObject.SetActive(armorDataString.Contains(piece.entity));
     }
 }
