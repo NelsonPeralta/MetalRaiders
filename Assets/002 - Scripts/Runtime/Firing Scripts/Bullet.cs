@@ -138,6 +138,8 @@ public class Bullet : MonoBehaviourPunCallbacks
         //transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
 
         float _dTravalled = Vector3.Distance(prePos, _nextPos);
+        if(_dTravalled > weaponProperties.range)
+            gameObject.SetActive(false);
 
         //Collider[] colliders = Physics.OverlapSphere(transform.position, size);
         //List<GameObject> objectsHit = new List<GameObject>();
