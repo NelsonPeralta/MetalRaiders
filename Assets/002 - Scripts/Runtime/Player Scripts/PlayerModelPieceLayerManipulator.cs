@@ -22,5 +22,11 @@ public class PlayerModelPieceLayerManipulator : MonoBehaviour
 
         if (playerRewiredId == 1)
             gameObject.layer = 27;
+
+        if (playerRewiredId == 3)
+            gameObject.layer = 29;
+
+        if (playerRewiredId == 4)
+            gameObject.layer = 31;
     }
 }

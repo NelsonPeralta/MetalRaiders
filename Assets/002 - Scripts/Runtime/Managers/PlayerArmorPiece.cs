@@ -32,7 +32,9 @@ public class PlayerArmorPiece : MonoBehaviour
         LeftShin,
         RightShin,
 
-        Feet
+        Feet,
+
+        Effect
     }
     public enum PieceType
     {
@@ -44,7 +46,7 @@ public class PlayerArmorPiece : MonoBehaviour
     public BodyPart bodyPart;
 
     public string entity;
-    public string uiName;
+    public string cleanName;
 
     public int cost;
 }

@@ -47,7 +47,7 @@ public class ArmorPieceListing : MonoBehaviour
             PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
             _playerArmorPiece = value;
 
-            armorPieceNameText.text = playerArmorPiece.entity;
+            armorPieceNameText.text = playerArmorPiece.cleanName;
 
             if (pda.playerBasicOnlineStats.unlocked_armor_data_string.Contains(playerArmorPiece.entity))
             {
