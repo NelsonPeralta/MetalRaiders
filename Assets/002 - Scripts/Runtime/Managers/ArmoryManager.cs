@@ -40,11 +40,15 @@ public class ArmoryManager : MonoBehaviour
 
         foreach(PlayerArmorPiece playerArmorPiece in playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
         {
+            Debug.Log(playerArmorPiece.entity);
             GameObject pal = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
             armorPieceListingList.Add(pal.GetComponent<ArmorPieceListing>());
             pal.GetComponent<ArmorPieceListing>().playerArmorPiece = playerArmorPiece;
-        } 
-            
+        }
+        PlayerArmorPiece ppp = new PlayerArmorPiece() { entity = "filler" };
+        GameObject ppppp = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
+        armorPieceListingList.Add(ppppp.GetComponent<ArmorPieceListing>());
+        ppppp.GetComponent<ArmorPieceListing>().playerArmorPiece = ppp;
     }
 
     private void OnDisable()

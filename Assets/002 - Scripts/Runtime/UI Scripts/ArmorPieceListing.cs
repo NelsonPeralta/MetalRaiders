@@ -60,21 +60,21 @@ public class ArmorPieceListing : MonoBehaviour
             }
 
 
-            if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost)
-            {
-                buyButton.gameObject.SetActive(true);
-                buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
-            }
+            if (playerArmorPiece.cost > 0)
+                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost)
+                {
+                    buyButton.gameObject.SetActive(true);
+                    buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
+                }
+                else
+                {
+                    buyButton.gameObject.SetActive(false);
+                    equipButton.gameObject.SetActive(false);
 
-            else
-            {
-                buyButton.gameObject.SetActive(false);
-                equipButton.gameObject.SetActive(false);
 
-
-                notEnoughCreditsButton.gameObject.SetActive(true);
-                notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
-            }
+                    notEnoughCreditsButton.gameObject.SetActive(true);
+                    notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
+                }
 
         }
     }
