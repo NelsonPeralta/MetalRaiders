@@ -519,8 +519,8 @@ public partial class WebManager
     // Armory
     public IEnumerator SaveUnlockedArmorStringData_Coroutine(PlayerArmorPiece playerArmorPiece)
     {
-        pda.unlockedArmorDataString += $"{playerArmorPiece.entity}\n";
-        pda.unlockedArmorDataString.Replace("\n\n", "\n");
+        pda.unlockedArmorDataString += $"-{playerArmorPiece.entity}-";
+        //pda.unlockedArmorDataString.Replace("\n\n", "\n");
         pda.credits -= playerArmorPiece.cost;
 
         WWWForm form = new WWWForm();

@@ -107,8 +107,8 @@ public class ArmorPieceListing : MonoBehaviour
                         armorPieceListing.UnequipArmorPiece();
                 }
 
-        WebManager.webManagerInstance.pda.armorDataString += $"{playerArmorPiece.entity}\n";
-        WebManager.webManagerInstance.pda.armorDataString.Replace("\n\n", "\n");
+        WebManager.webManagerInstance.pda.armorDataString += $"-{playerArmorPiece.entity}-";
+        //WebManager.webManagerInstance.pda.armorDataString.Replace("\n\n", "\n");
         StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
 
         //if (this.playerArmorPiece.pieceType == PlayerArmorPiece.PieceType.Core)
