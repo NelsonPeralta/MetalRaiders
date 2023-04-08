@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,32 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void OnEnable()
     {
-        if (player.isMine)
-            armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
+        try
+        {
+            Debug.Log("PlayerArmorManager");
+            Debug.Log(WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string);
+            Debug.Log(GameManager.instance.roomPlayerData[PhotonNetwork.NickName].armorDataString);
+        }
+        catch { }
+
+        try
+        {
+            if (player)
+            {
+                if (player.isMine)
+                {
+                    if (player.rid == 0)
+                        armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
+                    else
+                        armorDataString = "helmet1";
+                }
+                else
+                    armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
+            }
+            else
+                armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
+        }
+        catch { }
 
         DisableAllArmor();
         EnableAllArmorsInDataString();

@@ -7,7 +7,15 @@ using UnityEngine.EventSystems;
 
 public class ArmorPieceListing : MonoBehaviour
 {
-    public GameObject model;
+    public GameObject model
+    {
+        get
+        {
+            Debug.Log(name);
+            Debug.Log(playerArmorPiece.gameObject.name);
+            return playerArmorPiece.gameObject;
+        }
+    }
 
     public TMP_Text armorPieceNameText;
 
@@ -20,8 +28,6 @@ public class ArmorPieceListing : MonoBehaviour
     {
         playerArmorPiece = p_playerArmorPiece;
     }
-
-    PlayerArmorPiece _playerArmorPiece;
 
     public PlayerArmorPiece playerArmorPiece
     {
@@ -40,7 +46,6 @@ public class ArmorPieceListing : MonoBehaviour
 
             PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
             _playerArmorPiece = value;
-            model = playerArmorPiece.gameObject;
 
             armorPieceNameText.text = playerArmorPiece.entity;
 
@@ -78,6 +83,9 @@ public class ArmorPieceListing : MonoBehaviour
 
         }
     }
+
+    [SerializeField] PlayerArmorPiece _playerArmorPiece;
+
 
     void BuyArmorPiece()
     {
@@ -138,10 +146,12 @@ public class ArmorPieceListing : MonoBehaviour
 
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
-                if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && this.playerArmorPiece.bodyPart == armorPieceListing.playerArmorPiece.bodyPart && armorPieceListing.model.gameObject.activeSelf)
+                try
                 {
-                    armorPieceListing.model.SetActive(false);
+                    if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && this.playerArmorPiece.bodyPart == armorPieceListing.playerArmorPiece.bodyPart && armorPieceListing.model.gameObject.activeSelf)
+                        armorPieceListing.model.SetActive(false);
                 }
+                catch { }
 
         model.SetActive(true);
     }

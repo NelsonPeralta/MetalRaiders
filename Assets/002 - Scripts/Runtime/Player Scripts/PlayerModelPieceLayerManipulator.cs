@@ -18,9 +18,9 @@ public class PlayerModelPieceLayerManipulator : MonoBehaviour
         int playerRewiredId = player.GetComponent<PlayerController>().rid;
 
         if (playerRewiredId == 0)
-            gameObject.layer = 24;
+            gameObject.layer = 25;
 
         if (playerRewiredId == 1)
-            gameObject.layer = 26;
+            gameObject.layer = 27;
     }
 }

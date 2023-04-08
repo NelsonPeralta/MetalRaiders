@@ -4,6 +4,7 @@ using System;
 using Photon.Pun;
 using System.Collections;
 using Random = UnityEngine.Random;
+using System.Collections.Generic;
 
 public partial class WebManager
 {
@@ -89,16 +90,21 @@ public partial class WebManager
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
 
-                    Debug.Log(pda.id);
-                    Debug.Log(pda.username);
-                    Debug.Log(pda.level);
+                    var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
+                    if (!d.ContainsKey(pda.username))
+                        d.Add(pda.username, pda);
+                    else
+                        d[pda.username] = pda;
+
+                    GameManager.instance.roomPlayerData = d;
 
                     if (pli)
                         pli.pda = pda;
 
 
                     //Launcher.instance.ShowPlayerMessage("Logged in successfully!");
-                    MenuManager.Instance.OpenMenu("online title");
+                    if (!pli)
+                        MenuManager.Instance.OpenMenu("online title");
                 }
                 catch (Exception e)
                 {

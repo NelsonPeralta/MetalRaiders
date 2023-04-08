@@ -69,14 +69,17 @@ public class MenuManager : MonoBehaviour
         {
             if (menus[i].open)
             {
+                Debug.Log($"Closing {menus[i].menuName}");
                 CloseMenu(menus[i]);
             }
         }
+        Debug.Log($"Opem {menu.menuName}");
         menu.Open(); // Then open the one we need
     }
 
     public void CloseMenu(Menu menu)
     {
+        Debug.Log($"Closing {menu.menuName}");
         menu.Close();
     }
 
@@ -109,7 +112,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenLoadingMenu(string message = "Loading...")
     {
-       loadingMenuText.text = message;
+        loadingMenuText.text = message;
 
         OpenMenu("loading");
     }

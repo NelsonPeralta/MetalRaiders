@@ -38,24 +38,27 @@ public class ArmoryManager : MonoBehaviour
         newArmorDataString.text = $"NADS: {pda.armorDataString.ToString()}";
         unlockedArmorDataString.text = $"UADS: {pda.unlockedArmorDataString.ToString()}";
 
-        foreach(PlayerArmorPiece playerArmorPiece in playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
+        int i = 1;
+        foreach (PlayerArmorPiece playerArmorPiece in playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
         {
-            Debug.Log(playerArmorPiece.entity);
             GameObject pal = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
             armorPieceListingList.Add(pal.GetComponent<ArmorPieceListing>());
             pal.GetComponent<ArmorPieceListing>().playerArmorPiece = playerArmorPiece;
+            pal.name += $" ({i})";
+            i++;
         }
         PlayerArmorPiece ppp = new PlayerArmorPiece() { entity = "filler" };
         GameObject ppppp = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
         armorPieceListingList.Add(ppppp.GetComponent<ArmorPieceListing>());
         ppppp.GetComponent<ArmorPieceListing>().playerArmorPiece = ppp;
+        ppppp.name += $" (filler)";
     }
 
     private void OnDisable()
     {
         playerModel.SetActive(false);
 
-        foreach(ArmorPieceListing armorPieceListing in armorPieceListingList)
+        foreach (ArmorPieceListing armorPieceListing in armorPieceListingList)
             Destroy(armorPieceListing.gameObject);
         armorPieceListingList.Clear();
     }

@@ -36,7 +36,6 @@ public class PlayerWorldUIMarker : MonoBehaviour
         if (!_targetPlayer)
             return;
 
-        _text.text = _player.nickName + " " + _player.team;
         Vector3 targetPostition = new Vector3(_targetPlayer.transform.position.x,
                                         this.transform.position.y,
                                         _targetPlayer.transform.position.z);
