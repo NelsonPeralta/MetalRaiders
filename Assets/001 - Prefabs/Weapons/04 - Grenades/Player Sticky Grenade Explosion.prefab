@@ -9845,6 +9845,9 @@ MonoBehaviour:
   damage: 400
   radius: 5
   explosionPower: 700
+  _obsLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!82 &7241414760208152368
 AudioSource:
   m_ObjectHideFlags: 0

@@ -117,7 +117,8 @@ public class WeaponProperties : MonoBehaviour
             if ((!player.playerInventory.leftWeapon) || (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon != this))
             {
                 OnCurrentAmmoChanged?.Invoke(this);
-                pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
+                if (this == player.playerInventory.activeWeapon)
+                    pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
             }
             else if (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon == this)
             {

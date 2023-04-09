@@ -18,6 +18,8 @@ public class Explosion : MonoBehaviour
     public float radius;
     public float explosionPower;
 
+    [SerializeField] LayerMask _obsLayerMask;
+
     List<GameObject> objectsHit = new List<GameObject>();
     bool _stuck;
 
@@ -34,15 +36,30 @@ public class Explosion : MonoBehaviour
 
         for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
         {
-            Collider hit = colliders[i];
-            float hitDistance = Vector3.Distance(transform.position, hit.transform.position);
+            Collider col = colliders[i];
+            float hitDistance = Vector3.Distance(transform.position, col.transform.position);
 
             if (hitDistance > radius)
                 continue;
 
 
-            Rigidbody rb = hit.GetComponent<Rigidbody>();
-            CharacterController cc = hit.GetComponent<CharacterController>();
+            // Check if the is an obstruction between explosion and the hit
+            {
+                Transform or = transform;
+
+                Vector3 directionToTarget = (col.transform.position - or.position).normalized;
+                RaycastHit hit;
+                if (Physics.Raycast(or.position, directionToTarget, out hit, hitDistance, _obsLayerMask))
+                {
+                    //Debug.Log($"EXPLOSION. Hit {col.name} but colliding with {hit.collider.name}");
+                    if (hit.collider != col) // Checks if the object obstructing is not the hit itself if it happens to be of layer Default
+                        continue;
+                }
+            }
+
+
+            Rigidbody rb = col.GetComponent<Rigidbody>();
+            CharacterController cc = col.GetComponent<CharacterController>();
 
 
             float disRatio = 1 - (hitDistance / radius);
@@ -61,9 +78,9 @@ public class Explosion : MonoBehaviour
                 cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, calculatedPower / characterControllerDivider);
             }
 
-            if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
+            if (col.GetComponent<PlayerHitbox>() && !col.GetComponent<PlayerHitbox>().player.isDead && !col.GetComponent<PlayerHitbox>().player.isRespawning)
             {
-                GameObject playerHit = hit.GetComponent<PlayerHitbox>().player.gameObject;
+                GameObject playerHit = col.GetComponent<PlayerHitbox>().player.gameObject;
                 if (!objectsHit.Contains(playerHit))
                 {
                     objectsHit.Add(playerHit);
@@ -74,21 +91,21 @@ public class Explosion : MonoBehaviour
                         if (stuck)
                             damageSource = "Stuck";
                         if (player.isMine)
-                            hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: this.damageSource);
+                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: this.damageSource);
                     }
-                    catch { if (hit.GetComponent<PlayerHitbox>().player.isMine) hit.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
+                    catch { if (col.GetComponent<PlayerHitbox>().player.isMine) col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }
             }
-            else if (hit.GetComponent<IDamageable>() != null)
+            else if (col.GetComponent<IDamageable>() != null)
             {
-                if (hit.GetComponent<ActorHitbox>())
-                    if (objectsHit.Contains(hit.GetComponent<ActorHitbox>().actor.gameObject))
+                if (col.GetComponent<ActorHitbox>())
+                    if (objectsHit.Contains(col.GetComponent<ActorHitbox>().actor.gameObject))
                         return;
                     else
-                        objectsHit.Add(hit.GetComponent<ActorHitbox>().actor.gameObject);
+                        objectsHit.Add(col.GetComponent<ActorHitbox>().actor.gameObject);
                 else;
 
-                GameObject hitObject = hit.gameObject;
+                GameObject hitObject = col.gameObject;
 
                 if (!objectsHit.Contains(hitObject))
                 {
@@ -99,9 +116,9 @@ public class Explosion : MonoBehaviour
                     OnObjectAdded?.Invoke(this);
                     try
                     {
-                        hit.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.pid);
+                        col.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.pid);
                     }
-                    catch (System.Exception e) { Debug.LogWarning(e); hit.GetComponent<IDamageable>().Damage(calculatedDamage); }
+                    catch (System.Exception e) { Debug.LogWarning(e); col.GetComponent<IDamageable>().Damage(calculatedDamage); }
                 }
             }
         }

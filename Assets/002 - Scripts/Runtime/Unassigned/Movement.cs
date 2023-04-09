@@ -664,7 +664,7 @@ public class Movement : MonoBehaviour
     {
         if (RayGrounded(GetRayAtPos(0, 0)) && GetComponent<CharacterController>().isGrounded)
         {
-            Debug.Log("OnControllerColliderHit");
+            //Debug.Log("OnControllerColliderHit");
             Vector3 edgeFallMovement = transform.position - hit.point;
             edgeFallMovement.y = 0;
             float edgeFallFactor = 1;
