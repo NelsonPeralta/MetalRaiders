@@ -175,9 +175,13 @@ public partial class WebManager
         int xpAndCreditGain = 0;
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            xpAndCreditGain = Random.Range(160, 240);
+            xpAndCreditGain = Random.Range(320, 480);
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            xpAndCreditGain = Random.Range(80, 120);
+            xpAndCreditGain = Random.Range(160, 240);
+
+        var date = DateTime.Now;
+        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+            xpAndCreditGain *= 2;
 
         Debug.Log("SaveBasicOnlineStats_Coroutine");
         Debug.Log(pda.playerBasicOnlineStats.xp);
