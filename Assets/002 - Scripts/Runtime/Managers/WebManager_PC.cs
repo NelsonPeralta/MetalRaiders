@@ -219,8 +219,10 @@ public partial class WebManager
                 Debug.Log(www.result);
                 Debug.Log(www.downloadHandler.text);
 
-                if (www.result.ToString().Contains("Success"))
+                if (www.result.ToString().Contains("uccess"))
                     GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Credits");
+                else
+                    GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
                 if (dbXpToLevel < newXp)
                 {
                     GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");

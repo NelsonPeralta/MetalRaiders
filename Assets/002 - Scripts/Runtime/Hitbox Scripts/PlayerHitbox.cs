@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.Runtime.CompilerServices;
+using UnityEngine.SceneManagement;
 
 public class PlayerHitbox : Hitbox, IDamageable
 {
     public Player player;
+
+    private void Start()
+    {
+        if(SceneManager.GetActiveScene().buildIndex == 0)
+            Destroy(gameObject);
+    }
 
     public void Damage(int damage)
     {

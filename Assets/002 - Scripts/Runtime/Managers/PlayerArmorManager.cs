@@ -35,7 +35,10 @@ public class PlayerArmorManager : MonoBehaviour
                     armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
             }
             else
+            {
                 armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
+                Debug.Log(armorDataString);
+            }
         }
         catch { }
 
@@ -45,13 +48,21 @@ public class PlayerArmorManager : MonoBehaviour
 
     void DisableAllArmor()
     {
-        foreach (PlayerArmorPiece piece in playerArmorPieces)
-            piece.gameObject.SetActive(false);
+        try
+        {
+            foreach (PlayerArmorPiece piece in playerArmorPieces)
+                piece.gameObject.SetActive(false);
+        }
+        catch { }
     }
 
     void EnableAllArmorsInDataString()
     {
         foreach (PlayerArmorPiece piece in playerArmorPieces)
-            piece.gameObject.SetActive(armorDataString.Contains(piece.entity));
+            try
+            {
+                piece.gameObject.SetActive(armorDataString.Contains(piece.entity));
+            }
+            catch { piece.gameObject.SetActive(false); }
     }
 }
