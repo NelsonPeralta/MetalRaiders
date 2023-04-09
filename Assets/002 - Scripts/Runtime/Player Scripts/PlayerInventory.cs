@@ -40,6 +40,15 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (PV.IsMine)
             {
+                WeaponProperties preVal = _activeWeapon;
+
+                try
+                {
+                    preVal.equippedModelB.SetActive(false);
+                    preVal.holsteredModel.SetActive(false);
+                }
+                catch { }
+
 
                 _activeWeapon = value;
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
@@ -65,9 +74,19 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (PV.IsMine)
             {
+                WeaponProperties preVal = _holsteredWeapon;
+
+                try
+                {
+                    preVal.equippedModelB.SetActive(false);
+                    preVal.holsteredModel.SetActive(false);
+                }
+                catch { }
+
                 _holsteredWeapon = value;
                 PV.RPC("AssignWeapon", RpcTarget.Others, holsteredWeapon.codeName, false);
                 OnHolsteredWeaponChanged?.Invoke(this);
+                try { _holsteredWeapon.holsteredModel.SetActive(true); } catch (System.Exception e) { Debug.LogWarning(e); }
                 _holsteredWeapon.gameObject.SetActive(false);
             }
         }
@@ -341,21 +360,50 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 if (weap.GetComponent<WeaponProperties>().codeName == codeName)
                 {
+                    WeaponProperties _previousActiveWeapon = _activeWeapon;
+
+                    try
+                    {
+                        _previousActiveWeapon.equippedModelB.SetActive(false);
+                        _previousActiveWeapon.holsteredModel.SetActive(false);
+                    }
+                    catch { }
+                    try
+                    {
+                        _holsteredWeapon.equippedModelB.SetActive(false);
+                        _holsteredWeapon.holsteredModel.SetActive(false);
+                    }
+                    catch { }
+
+
+
+
                     if (actWeap) // activeWeapon
                     {
-                        WeaponProperties _previousActiveWeapon = _activeWeapon;
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
 
                         _activeWeapon.gameObject.SetActive(true);
                         _previousActiveWeapon.gameObject.SetActive(false);
 
                         pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
-                        UpdateThirdPersonGunModelsOnCharacter();
+                        //UpdateThirdPersonGunModelsOnCharacter();
                     }
                     else
+                    {
                         _holsteredWeapon = weap.GetComponent<WeaponProperties>();
-                }
+                        try { _holsteredWeapon.holsteredModel.SetActive(true); } catch (System.Exception e) { Debug.LogWarning(e); }
+                    }
 
+
+
+
+                    try
+                    {
+                        _activeWeapon.equippedModelB.SetActive(true);
+                        _holsteredWeapon.holsteredModel.SetActive(true);
+                    }
+                    catch { }
+                }
             }
         }
     }

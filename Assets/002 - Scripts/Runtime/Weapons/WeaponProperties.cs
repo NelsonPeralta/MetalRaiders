@@ -101,6 +101,7 @@ public class WeaponProperties : MonoBehaviour
 
 
     public GameObject equippedModelB;
+    public GameObject holsteredModel;
 
     public GameObject weaponRessource;
     public GameObject muzzleFlash;
@@ -422,6 +423,7 @@ public class WeaponPropertiesEditor : Editor
         wp.equippedModelA = EditorGUILayout.ObjectField("Equipped model A", wp.equippedModelA, typeof(GameObject), true) as GameObject;
         wp.unequippedModelA = EditorGUILayout.ObjectField("Unequipped model A", wp.unequippedModelA, typeof(GameObject), true) as GameObject;
         wp.equippedModelB = EditorGUILayout.ObjectField("Equipped model B", wp.equippedModelB, typeof(GameObject), true) as GameObject;
+        wp.holsteredModel = EditorGUILayout.ObjectField("Holstered model", wp.holsteredModel, typeof(GameObject), true) as GameObject;
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
