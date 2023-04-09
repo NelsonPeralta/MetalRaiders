@@ -8,11 +8,30 @@ public class PlayerArmorManager : MonoBehaviour
 {
     public Player player;
     public List<PlayerArmorPiece> playerArmorPieces;
-    string armorDataString;
+
+    public string armorDataString
+    {
+        get { return _armorDataString; }
+        set
+        {
+            _armorDataString = value;
+        }
+    }
+
+
+    [SerializeField] string _armorDataString;
+
+    int tries = 0;
 
     private void OnEnable()
     {
         ReloadArmor();
+
+        if (armorDataString == null || armorDataString == "")
+        {
+            tries = 0;
+            StartCoroutine(ReloadArmor_Coroutine());
+        }
     }
 
     private void Awake()
@@ -30,8 +49,7 @@ public class PlayerArmorManager : MonoBehaviour
         try
         {
             Debug.Log("PlayerArmorManager");
-            Debug.Log(WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string);
-            Debug.Log(GameManager.instance.roomPlayerData[PhotonNetwork.NickName].armorDataString);
+            Debug.Log(GameManager.instance.roomPlayerData[player.nickName].armorDataString);
         }
         catch { }
 
@@ -47,15 +65,19 @@ public class PlayerArmorManager : MonoBehaviour
                         armorDataString = "helmet1";
                 }
                 else
+                {
+                    Debug.Log("PlayerArmorManager NOT MINE");
+                    Debug.Log(GameManager.instance.roomPlayerData[player.nickName].armorDataString);
                     armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
+                }
             }
             else
             {
                 armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
-                Debug.Log(armorDataString);
             }
         }
         catch { }
+        Debug.Log(armorDataString);
 
         DisableAllArmor();
         EnableAllArmorsInDataString();
@@ -79,5 +101,15 @@ public class PlayerArmorManager : MonoBehaviour
                 piece.gameObject.SetActive(armorDataString.Contains(piece.entity));
             }
             catch { piece.gameObject.SetActive(false); }
+    }
+
+    IEnumerator ReloadArmor_Coroutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        ReloadArmor();
+        tries++;
+
+        if (tries < 10 && (armorDataString == null || armorDataString == ""))
+            StartCoroutine(ReloadArmor_Coroutine());
     }
 }
