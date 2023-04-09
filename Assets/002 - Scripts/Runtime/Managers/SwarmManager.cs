@@ -406,20 +406,20 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (nbPlayers <= 0)
                 nbPlayers = 1;
 
-            zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 3));
+            zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 2.5f));
             if (zombiesLeft > _zombieList.Count)
                 zombiesLeft = _zombieList.Count;
 
             Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
 
 
-            knightsLeft = nbPlayers * 3 + (int)(currentWave * 1.7f);
+            knightsLeft = nbPlayers * 3 + (int)(currentWave * 1.4f);
             if (knightsLeft > knightPool.Count)
                 knightsLeft = knightPool.Count;
 
-            watchersLeft = nbPlayers * 2 + (int)(currentWave * 1.2f);
+            watchersLeft = nbPlayers * 2 + (int)(currentWave * 1.1f);
             if (watchersLeft > watcherPool.Count)
-                watchersLeft = knightPool.Count;
+                watchersLeft = watcherPool.Count;
 
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)

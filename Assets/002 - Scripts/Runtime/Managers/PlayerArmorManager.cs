@@ -12,6 +12,21 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void OnEnable()
     {
+        ReloadArmor();
+    }
+
+    private void Awake()
+    {
+        //ReloadArmor();
+    }
+
+    private void Start()
+    {
+        //ReloadArmor();
+    }
+
+    void ReloadArmor()
+    {
         try
         {
             Debug.Log("PlayerArmorManager");
