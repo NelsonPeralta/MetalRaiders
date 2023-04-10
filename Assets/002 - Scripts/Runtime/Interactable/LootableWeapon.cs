@@ -171,7 +171,18 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
         foreach (GameObject wp in playerInventory.allWeaponsInInventory)
             if (wp.GetComponent<WeaponProperties>().codeName == codeName)
+            {
+                int pre = wp.GetComponent<WeaponProperties>().spareAmmo;
+                int newVal = wp.GetComponent<WeaponProperties>().spareAmmo + ammoToLoot;
+
                 wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
+
+                if (newVal > pre)
+                {
+                    int diff = newVal - pre;
+                    playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({diff})");
+                }
+            }
 
         if (ammoNeeded >= ammoAvailable)
             HideWeapon();

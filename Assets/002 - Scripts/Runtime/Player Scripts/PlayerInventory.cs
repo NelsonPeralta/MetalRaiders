@@ -41,6 +41,7 @@ public class PlayerInventory : MonoBehaviourPun
             if (PV.IsMine)
             {
                 WeaponProperties preVal = _activeWeapon;
+                WeaponProperties preHol = _holsteredWeapon;
 
                 try
                 {
@@ -49,6 +50,8 @@ public class PlayerInventory : MonoBehaviourPun
                 }
                 catch { }
 
+                if (value != preHol)
+                    player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up an {value.cleanName}");
 
                 _activeWeapon = value;
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
