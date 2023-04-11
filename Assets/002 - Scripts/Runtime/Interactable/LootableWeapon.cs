@@ -150,10 +150,10 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         spareAmmo = (int)Mathf.Ceil(Random.Range(0, spareAmmo));
     }
 
-    public void LootWeapon(int controllerId = 0)
+    public void LootWeapon(Player player)
     {
         Debug.Log("OnLooted");
-        PlayerInventory playerInventory = GameManager.GetMyPlayer(controllerId).playerInventory;
+        PlayerInventory playerInventory = player.playerInventory;
         WeaponProperties w = playerInventory.activeWeapon;
         if (playerInventory.holsteredWeapon.codeName == codeName)
             w = playerInventory.holsteredWeapon;

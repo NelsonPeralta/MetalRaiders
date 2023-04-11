@@ -192,7 +192,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 else
                 {
                     LootableWeapon lw = other.GetComponent<LootableWeapon>();
-                    lw.LootWeapon(player.controllerId);
+                    lw.LootWeapon(player);
 
                     if (lw.isDw)
                     {
@@ -356,6 +356,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         pInventory.activeWeapon = newActiveWeapon;
         pInventory.activeWeapon.currentAmmo = weaponToLoot.networkAmmo;
         pInventory.activeWeapon.spareAmmo = weaponToLoot.spareAmmo;
+        pInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up an {pInventory.activeWeapon.cleanName}");
         //pInventory.holsteredWeapon = previousActiveWeapon;
 
         //StartCoroutine(pInventory.ToggleTPPistolIdle(1));

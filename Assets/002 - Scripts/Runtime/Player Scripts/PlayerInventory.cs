@@ -50,9 +50,6 @@ public class PlayerInventory : MonoBehaviourPun
                 }
                 catch { }
 
-                if (value != preHol)
-                    player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up an {value.cleanName}");
-
                 _activeWeapon = value;
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 _activeWeapon.gameObject.SetActive(true);
