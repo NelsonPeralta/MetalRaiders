@@ -171,13 +171,7 @@ public partial class WebManager
 
     IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null)
     {
-        //int xpAndCreditGain = Random.Range(160, 240) + (SwarmManager.instance.currentWave * Random.Range(8, 12));
-        int xpAndCreditGain = 0;
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            xpAndCreditGain = Random.Range(320, 480);
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            xpAndCreditGain = Random.Range(160, 240);
+        int xpAndCreditGain = GameManager.baseXpGainPerMatch;
 
         var date = DateTime.Now;
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)

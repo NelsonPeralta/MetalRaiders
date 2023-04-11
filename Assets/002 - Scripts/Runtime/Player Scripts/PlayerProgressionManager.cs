@@ -27,15 +27,6 @@ public class PlayerProgressionManager : MonoBehaviour
 
     }
 
-    public int baseXpGainPerMatch
-    {
-        get
-        {
-            int r = Random.Range(160, 240); // Reach Credits divided by 5
-            return r;
-        }
-    }
-
     public Dictionary<int, int> playerLevelToXpDic = new Dictionary<int, int>()
     {
         {1, 1000 }, {2, 1250 }, {3, 1750 }, {4, 2500 }, {5, 5000 },

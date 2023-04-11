@@ -23,6 +23,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     // https://stackoverflow.com/questions/150479/order-of-items-in-classes-fields-properties-constructors-methods
 
+    public static int baseXpGainPerMatch
+    {
+        get
+        {
+            int r = UnityEngine.Random.Range(160, 240); // Reach Credits divided by 5
+            return r;
+        }
+    }
+
 
     // Events
     public delegate void GameManagerEvent();
