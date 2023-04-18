@@ -11,8 +11,6 @@ public class ArmorPieceListing : MonoBehaviour
     {
         get
         {
-            Debug.Log(name);
-            Debug.Log(playerArmorPiece.gameObject.name);
             return playerArmorPiece.gameObject;
         }
     }
@@ -99,27 +97,26 @@ public class ArmorPieceListing : MonoBehaviour
 
     void EquipArmorPiece()
     {
+        string oldData = WebManager.webManagerInstance.pda.armorDataString;
+        Debug.Log($"Previous: {oldData}");
+
+
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
                 if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && this.playerArmorPiece.bodyPart == armorPieceListing.playerArmorPiece.bodyPart)
                 {
                     if (WebManager.webManagerInstance.pda.unlockedArmorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
-                        armorPieceListing.UnequipArmorPiece();
+                    {
+                        armorPieceListing.model.gameObject.SetActive(false);
+                        armorPieceListing.equipButton.gameObject.SetActive(true);
+                        armorPieceListing.unequipButton.gameObject.SetActive(false);
+
+                       string newData = oldData.Replace($"-{armorPieceListing.playerArmorPiece.entity}-", "");
+                    }
                 }
 
         WebManager.webManagerInstance.pda.armorDataString += $"-{playerArmorPiece.entity}-";
-        //WebManager.webManagerInstance.pda.armorDataString.Replace("\n\n", "\n");
         StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
-
-        //if (this.playerArmorPiece.pieceType == PlayerArmorPiece.PieceType.Core)
-        //    foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
-        //        if (armorPieceListing != this)
-        //            if (armorPieceListing.playerArmorPiece.pieceType == PlayerArmorPiece.PieceType.Core)
-        //                if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && armorPieceListing.model.gameObject.activeSelf)
-        //                {
-        //                    armorPieceListing.equipButton.gameObject.SetActive(true);
-        //                }
-
 
         model.gameObject.SetActive(true);
         equipButton.gameObject.SetActive(false);
@@ -129,8 +126,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void UnequipArmorPiece()
     {
-        string newData = WebManager.webManagerInstance.pda.armorDataString.Replace(playerArmorPiece.entity, "");
-        newData.Replace("\n\n", "\n");
+        string newData = WebManager.webManagerInstance.pda.armorDataString.Replace($"-{playerArmorPiece.entity}-", "");
         WebManager.webManagerInstance.pda.armorDataString = newData;
         StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
 
@@ -141,9 +137,6 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void OnButtonMouseEnter()
     {
-        Debug.Log("OnButtonMouseEnter");
-        Debug.Log(model.name);
-
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
                 try
@@ -158,9 +151,6 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void OnButtonMouseExit()
     {
-        Debug.Log("OnButtonMouseExit");
-        Debug.Log(model.name);
-
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
                 if (WebManager.webManagerInstance.pda.armorDataString.Contains(armorPieceListing.playerArmorPiece.entity))

@@ -566,6 +566,8 @@ public partial class WebManager
 
         form.AddField("newEquippedArmorStringData", data);
 
+        Debug.Log(data);
+
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
             yield return www.SendWebRequest();
