@@ -45,7 +45,7 @@ public class StickyGrenade : MonoBehaviour
             {
                 if (collision.gameObject.GetComponent<PlayerHitbox>())
                 {
-                        gameObject.transform.parent = collision.gameObject.transform;
+                    gameObject.transform.SetParent(collision.gameObject.transform, true);
 
                         GetComponent<Rigidbody>().useGravity = false;
                         GetComponent<Rigidbody>().isKinematic = true;
@@ -62,7 +62,8 @@ public class StickyGrenade : MonoBehaviour
                 else if (collision.gameObject.GetComponent<AIHitbox>())
                 {
                     Debug.Log("Here!!!!");
-                    gameObject.transform.parent = collision.gameObject.transform;
+                    gameObject.transform.SetParent(collision.gameObject.transform, true);
+                    //gameObject.transform.parent = collision.gameObject.transform;
 
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
@@ -80,7 +81,8 @@ public class StickyGrenade : MonoBehaviour
                 {
                     Debug.Log("Collision = " + collision.gameObject.name + " GO Layer: " + collision.gameObject.layer
                         + " Root GO : " + collision.gameObject.transform.root.gameObject.name);
-                    gameObject.transform.parent = collision.gameObject.transform;
+                    gameObject.transform.SetParent(collision.gameObject.transform, true);
+                    //gameObject.transform.parent = collision.gameObject.transform;
 
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
