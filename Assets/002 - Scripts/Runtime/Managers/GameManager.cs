@@ -439,8 +439,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            Transform sp = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", "ShooterAI"), sp.position + new Vector3(0, 2, 0), sp.rotation);
+            //Transform sp = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+            //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", "ShooterAI"), sp.position + new Vector3(0, 2, 0), sp.rotation);
         }
     }
 
