@@ -19,6 +19,9 @@ using System.Net.Mail;
 //Debug.unityLogger.logEnabled = false;
 //#endif
 
+// Create log files
+// https://www.youtube.com/watch?v=B0deytHpajQ&ab_channel=techydevy
+
 public class GameManager : MonoBehaviourPunCallbacks
 {
     // https://stackoverflow.com/questions/150479/order-of-items-in-classes-fields-properties-constructors-methods
