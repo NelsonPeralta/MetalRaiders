@@ -97,8 +97,8 @@ public class ArmorPieceListing : MonoBehaviour
 
     void EquipArmorPiece()
     {
-        string oldData = WebManager.webManagerInstance.pda.armorDataString;
-        Debug.Log($"Previous: {oldData}");
+        Debug.Log($"Previous: {WebManager.webManagerInstance.pda.armorDataString}");
+        string newData = WebManager.webManagerInstance.pda.armorDataString;
 
 
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
@@ -107,15 +107,22 @@ public class ArmorPieceListing : MonoBehaviour
                 {
                     if (WebManager.webManagerInstance.pda.unlockedArmorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
                     {
+                        Debug.Log($"asdfrhjfghjyhetywrtyert");
+                        Debug.Log(armorPieceListing.playerArmorPiece.entity);
+
                         armorPieceListing.model.gameObject.SetActive(false);
                         armorPieceListing.equipButton.gameObject.SetActive(true);
                         armorPieceListing.unequipButton.gameObject.SetActive(false);
 
-                       string newData = oldData.Replace($"-{armorPieceListing.playerArmorPiece.entity}-", "");
+                        newData = WebManager.webManagerInstance.pda.armorDataString.Replace($"{armorPieceListing.playerArmorPiece.entity}", "");
                     }
                 }
 
-        WebManager.webManagerInstance.pda.armorDataString += $"-{playerArmorPiece.entity}-";
+        newData += $"-{playerArmorPiece.entity}-";
+        newData = newData.Replace($"----", "--");
+        newData = newData.Replace($"---", "--");
+
+        WebManager.webManagerInstance.pda.armorDataString = newData;
         StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
 
         model.gameObject.SetActive(true);
@@ -126,7 +133,10 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void UnequipArmorPiece()
     {
-        string newData = WebManager.webManagerInstance.pda.armorDataString.Replace($"-{playerArmorPiece.entity}-", "");
+        string newData = WebManager.webManagerInstance.pda.armorDataString.Replace($"{playerArmorPiece.entity}", "");
+        newData = newData.Replace($"----", "--");
+        newData = newData.Replace($"---", "--");
+
         WebManager.webManagerInstance.pda.armorDataString = newData;
         StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
 

@@ -101,7 +101,11 @@ public class PlayerDatabaseAdaptor
 
     public string armorDataString
     {
-        set { playerBasicOnlineStats.armor_data_string = value; }
+        set
+        {
+            playerBasicOnlineStats.armor_data_string = value;
+            GameObject.FindObjectOfType<ArmoryManager>().armorDataString.text = playerBasicOnlineStats.armor_data_string.ToString();
+        }
         get { return playerBasicOnlineStats.armor_data_string; }
     }
 

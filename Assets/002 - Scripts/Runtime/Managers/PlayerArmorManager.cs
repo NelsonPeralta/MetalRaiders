@@ -95,12 +95,12 @@ public class PlayerArmorManager : MonoBehaviour
 
     void EnableAllArmorsInDataString()
     {
-        foreach (PlayerArmorPiece piece in playerArmorPieces)
-            try
-            {
+        try
+        {
+            foreach (PlayerArmorPiece piece in playerArmorPieces)
                 piece.gameObject.SetActive(armorDataString.Contains(piece.entity));
-            }
-            catch { piece.gameObject.SetActive(false); }
+        }
+        catch {  }
     }
 
     IEnumerator ReloadArmor_Coroutine()
