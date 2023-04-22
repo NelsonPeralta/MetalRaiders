@@ -105,6 +105,23 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void EndGame(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("EndGame", RpcTarget.AllViaServer, false);
+        }
+        else
+        {
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                MultiplayerManager.instance.EndGame();
+            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                SwarmManager.instance.EndGame();
+        }
+
+    }
+
     #endregion
 
 

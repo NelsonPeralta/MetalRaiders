@@ -139,7 +139,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             losingPlayerMS.deaths++;
 
-            CheckForEndGame();
+            if (PhotonNetwork.IsMasterClient)
+                CheckForEndGame();
         }
         catch (Exception e)
         {
@@ -180,7 +181,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public void CheckForEndGame()
     {
         if (highestScore == scoreToWin)
-            EndGame();
+            FindObjectOfType<NetworkGameManager>().EndGame();
+            //EndGame();
     }
     public void EndGame(bool saveXp = true)
     {

@@ -96,9 +96,6 @@ public class WeaponProperties : MonoBehaviour
     public bool isDualWieldable;
     public WeaponProperties leftWeapon;
     public WeaponProperties rightWeapon;
-    public bool isRightWeapon;
-    public bool isLeftWeapon;
-
 
     public GameObject equippedModelB;
     public GameObject holsteredModel;
@@ -139,8 +136,10 @@ public class WeaponProperties : MonoBehaviour
         set
         {
             _spareAmmo = Mathf.Clamp(value, 0, _maxAmmo);
-            if (!leftWeapon)
-                OnSpareAmmoChanged?.Invoke(this); pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString();
+            OnSpareAmmoChanged?.Invoke(this);
+
+            if (isActiveWeapon && !isLeftWeapon)
+                pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString();
 
             if (player.isMine)
             {
@@ -168,8 +167,8 @@ public class WeaponProperties : MonoBehaviour
 
     public int index { get { return _index; } set { _index = value; } }
     public int previousLayer { get { return _preLayer; } set { _preLayer = value; } }
-
-
+    public bool isActiveWeapon { get { return this == player.playerInventory.activeWeapon; } }
+    public bool isLeftWeapon { get { return this == player.playerInventory.leftWeapon; } }
 
     int _index, _preLayer;
 

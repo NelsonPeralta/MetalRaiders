@@ -194,6 +194,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         set
         {
             _livesLeft = value;
+
+            if (_livesLeft <= 0)
+                EndGame();
+
             OnPlayerLivesChanged?.Invoke(this);
         }
     }

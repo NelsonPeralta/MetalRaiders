@@ -1174,11 +1174,18 @@ public class Player : MonoBehaviourPunCallbacks
 
             try
             {
-                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathNature));
-                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                    GetComponent<PlayerSwarmMatchStats>().deaths++;
+                if (isMine)
+                {
 
+                    PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature);
+
+                    //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                    //    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathNature));
+                    //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    //    GetComponent<PlayerSwarmMatchStats>().deaths++;
+                }
+                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    GetComponent<PlayerSwarmMatchStats>().deaths++;
             }
             catch (Exception e) { }
 
@@ -1492,9 +1499,10 @@ public class Player : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    void AddPlayerKill_RPC(int lpid, int tpid, int dni)
+    void AddPlayerKill_RPC(int wpid, int lpid, int dni)
     {
-        MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(lpid, tpid, (DeathNature)dni));
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni));
     }
 
     #endregion

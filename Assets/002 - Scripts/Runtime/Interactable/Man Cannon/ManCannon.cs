@@ -6,6 +6,7 @@ using Photon.Pun;
 public class ManCannon : MonoBehaviour
 {
     [SerializeField] int power;
+    [SerializeField] bool _blockMovement;
     [SerializeField] AudioClip onTriggerAudioClip;
     private void OnTriggerEnter(Collider other)
     {
@@ -30,6 +31,9 @@ public class ManCannon : MonoBehaviour
 
                 CharacterController cc = other.GetComponent<CharacterController>();
                 cc.GetComponent<PlayerImpactReceiver>().AddImpact(transform.up, power);
+
+                if (_blockMovement)
+                    cc.GetComponent<Movement>().canMoveWhileJumping = false;
 
                 GetComponent<AudioSource>().clip = onTriggerAudioClip;
                 GetComponent<AudioSource>().Play();

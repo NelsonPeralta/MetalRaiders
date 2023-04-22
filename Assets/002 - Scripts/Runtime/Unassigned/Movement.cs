@@ -42,7 +42,6 @@ public class Movement : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
-    public bool isGrounded;
     public bool isMovingForward;
     public bool isOnLadder;
     bool CalculatingPlayerSpeed;
@@ -71,6 +70,19 @@ public class Movement : MonoBehaviour
     public ThirdPersonScript armorThirdPersonScript;
 
     bool _isMoving;
+
+    public bool isGrounded
+    {
+        get { return _isGrounded; }
+        set
+        {
+            if (value != _isGrounded)
+            {
+                _isGrounded = value;
+                canMoveWhileJumping = true;
+            }
+        }
+    }
     public bool isMoving
     {
         get { return _isMoving; }
@@ -85,6 +97,26 @@ public class Movement : MonoBehaviour
             {
                 _isMoving = false;
                 OnPlayerStoppedMoving?.Invoke(this);
+            }
+        }
+    }
+
+    public bool canMoveWhileJumping
+    {
+        get { return _canMoveWhileJumping; }
+        set
+        {
+            if (value != _canMoveWhileJumping)
+            {
+                if (!value)
+                {
+                    _canMoveWhileJumpingCooldown = 0.5f;
+                    _canMoveWhileJumping = value;
+                }
+                else if (value && _canMoveWhileJumpingCooldown <= 0)
+                    _canMoveWhileJumping = value;
+
+                Debug.Log($"Can move while jumping: {canMoveWhileJumping}");
             }
         }
     }
@@ -105,6 +137,8 @@ public class Movement : MonoBehaviour
 
     float _xDeadzone = 0.2f;
     float _zDeadzone = 0.2f;
+    float _canMoveWhileJumpingCooldown = 0.5f;
+    bool _canMoveWhileJumping, _isGrounded;
 
     private void Awake()
     {
@@ -158,6 +192,14 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_canMoveWhileJumpingCooldown > 0)
+        {
+            _canMoveWhileJumpingCooldown -= Time.deltaTime;
+
+            if (_canMoveWhileJumpingCooldown < 0)
+                _canMoveWhileJumpingCooldown = 0;
+        }
+
         if (!GameManager.instance.gameStarted)
             return;
 
@@ -320,7 +362,7 @@ public class Movement : MonoBehaviour
                 else
                     cController.Move(currentMovementInput * speed * .5f * Time.deltaTime);
             }
-            else
+            else if (!isGrounded && canMoveWhileJumping)
             {
                 currentMovementInput = transform.right * xAxis + transform.forward * zAxis;
 

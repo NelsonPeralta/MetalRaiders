@@ -150,6 +150,7 @@ MonoBehaviour:
   - SendNewTeamDict
   - SpawnGrenade_RPC
   - ThrowGrenade3PS_RPC
+  - EndGame
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
