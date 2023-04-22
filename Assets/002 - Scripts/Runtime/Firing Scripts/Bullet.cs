@@ -162,7 +162,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                 if (_distanceFromSpawnToHit <= weaponProperties.range)
                 {
-                    ObjectHit newHit = new ObjectHit(hit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
+                    ObjectHit newHit = new ObjectHit(hit, fhit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
                     objectsHit.Add(newHit);
                 }
             }
@@ -182,7 +182,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                 if (hits[i].collider.GetComponent<IDamageable>() != null || hits[i].collider)
                 {
-                    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
+                    ObjectHit newHit = new ObjectHit(hit, fhit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
                     objectsHit.Add(newHit);
                 }
 
@@ -221,6 +221,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     {
         if (objectsHit.Count > 0)
         {
+            RaycastHit hitInfo = objectsHit[0].raycastHit;
             GameObject finalHitObject = objectsHit[0].gameObject;
             IDamageable finalHitDamageable = objectsHit[0].gameObject.GetComponent<IDamageable>();
             Vector3 finalHitPoint = objectsHit[0].hitPoint;
@@ -233,6 +234,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     finalHitDamageable = objectsHit[i].gameObject.GetComponent<IDamageable>();
                     finalHitPoint = objectsHit[i].hitPoint;
                     finalHitObject = objectsHit[i].gameObject;
+                    hitInfo = objectsHit[i].raycastHit;
                 }
             }
 
@@ -316,6 +318,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                             genericHit.SetActive(true);
 
                             damageDealt = true;
+
+                            GameObject imp = FindObjectOfType<GameObjectPool>().SpawnBulletMetalImpactObject();
+                            imp.transform.position = finalHitPoint;
+                            imp.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+                            imp.SetActive(true);
                         }
                     }
                     else
@@ -342,7 +349,14 @@ public class Bullet : MonoBehaviourPunCallbacks
                         if (finalHitObject.GetComponent<ActorHitbox>())
                             genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledBloodHit();
                         else
+                        {
                             genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+
+                            GameObject imp = FindObjectOfType<GameObjectPool>().SpawnBulletMetalImpactObject();
+                            imp.transform.position = finalHitPoint;
+                            imp.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+                            imp.SetActive(true);
+                        }
                         genericHit.transform.position = finalHitPoint;
                         genericHit.SetActive(true);
 
@@ -411,6 +425,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                         GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
                         genericHit.transform.position = finalHitPoint;
                         genericHit.SetActive(true);
+
+                        GameObject imp = FindObjectOfType<GameObjectPool>().SpawnBulletMetalImpactObject();
+                        imp.transform.position = finalHitPoint;
+                        imp.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+                        imp.SetActive(true);
 
                         damageDealt = true;
                     }
@@ -556,11 +575,13 @@ public class Bullet : MonoBehaviourPunCallbacks
     }
     public class ObjectHit
     {
+        public RaycastHit raycastHit;
         public GameObject gameObject;
         public Vector3 hitPoint;
         public float distanceFromPlayer;
-        public ObjectHit(GameObject _gameobject, Vector3 _hitPoint, float dist)
+        public ObjectHit(GameObject _gameobject, RaycastHit hitInfo, Vector3 _hitPoint, float dist)
         {
+            raycastHit = hitInfo;
             gameObject = _gameobject;
             hitPoint = _hitPoint;
             distanceFromPlayer = dist;

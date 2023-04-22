@@ -25,6 +25,9 @@ public class GameObjectPool : MonoBehaviour
     public List<GameObject> testingObjects = new List<GameObject>();
     public GameObject testingObjectPrefab;
 
+    public List<GameObject> bulletMetalImpactList = new List<GameObject>();
+    [SerializeField] GameObject bulletMetalImpactPrefab;
+
     private void Awake()
     {
         if (gameObjectPoolInstance)
@@ -66,6 +69,21 @@ public class GameObjectPool : MonoBehaviour
             obj = Instantiate(testingObjectPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             testingObjects.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+            obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            bulletMetalImpactList.Add(obj);
+            obj.transform.parent = gameObject.transform;
+        }
+
+
+
+        for (int i = 0; i < amountToPool * 5; i++)
+        {
+            GameObject obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            bulletMetalImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
     }
@@ -122,6 +140,18 @@ public class GameObjectPool : MonoBehaviour
                 if (!obj.activeSelf)
                 {
                     StartCoroutine(DisableObjectAfterTime(obj));
+                    return obj;
+                }
+        return null;
+    }
+
+    public GameObject SpawnBulletMetalImpactObject()
+    {
+        foreach (GameObject obj in bulletMetalImpactList)
+            if (!obj.activeSelf)
+                if (!obj.activeSelf)
+                {
+                    StartCoroutine(DisableObjectAfterTime(obj, 10));
                     return obj;
                 }
         return null;

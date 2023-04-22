@@ -30,6 +30,7 @@ public class PlayerMedals : MonoBehaviour
     [SerializeField] Transform grid;
 
     [SerializeField] Transform headshotMedalPrefab;
+    [SerializeField] Transform sniperHeadshotMedalPrefab;
     [SerializeField] Transform nutshotMedalPrefab;
     [SerializeField] Transform meleeMedalPrefab;
     [SerializeField] Transform grenadeMedalPrefab;
@@ -71,6 +72,13 @@ public class PlayerMedals : MonoBehaviour
     public void SpawnHeadshotMedal()
     {
         Transform h = Instantiate(headshotMedalPrefab, grid);
+        h.SetAsFirstSibling();
+        kills++;
+    }
+
+    public void SpawnSniperHeadshotMedal()
+    {
+        Transform h = Instantiate(sniperHeadshotMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
     }

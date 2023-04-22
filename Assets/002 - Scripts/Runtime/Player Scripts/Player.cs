@@ -19,7 +19,7 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
         OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged;
 
-    public enum DeathNature { None, Headshot, Groin, Melee, Grenade, Stuck }
+    public enum DeathNature { None, Headshot, Groin, Melee, Grenade, Stuck, Sniped }
 
     // public variables
     #region
@@ -450,6 +450,7 @@ public class Player : MonoBehaviourPunCallbacks
     private NetworkPlayer _player { get { return _networkPlayer; } }
     public Announcer announcer { get { return _announcer; } }
     public DeathNature deathNature { get { return _deathNature; } private set { _deathNature = value; } }
+    public PlayerMedals playerMedals { get { return _playerMedals; } }
 
     #endregion
 
@@ -458,7 +459,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     [SerializeField] NetworkPlayer _networkPlayer;
     [SerializeField] PlayerMultiplayerMatchStats.Team _team;
-    [SerializeField] PlayerMedals playerMedals;
+    [SerializeField] PlayerMedals _playerMedals;
     [SerializeField] string _nickName;
     [SerializeField] Player _lastPlayerSource;
     [SerializeField] DeathNature _deathNature;
@@ -500,7 +501,7 @@ public class Player : MonoBehaviourPunCallbacks
     float _gameStartDelay;
     bool _allPlayersJoined;
 
-    private bool deathByHeadshot { get { if (deathNature == DeathNature.Headshot) return true; else return false; } }
+    private bool deathByHeadshot { get { if (deathNature == DeathNature.Headshot || deathNature == DeathNature.Sniped) return true; else return false; } }
     private bool deathByGroin { get { if (deathNature == DeathNature.Groin) return true; else return false; } }
 
     #endregion
@@ -565,7 +566,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             hasArmor = true;
 
-            if(GameManager.instance.gameType == GameManager.GameType.Swat)
+            if (GameManager.instance.gameType == GameManager.GameType.Swat)
             {
                 hasArmor = false;
 
@@ -795,7 +796,9 @@ public class Player : MonoBehaviourPunCallbacks
             DeathNature dsn = DeathNature.None;
             if (headshot)
                 dsn = DeathNature.Headshot;
-            if(isGroin)
+            if (headshot && GameManager.GetPlayerWithPhotonViewId(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
+                dsn = DeathNature.Sniped;
+            if (isGroin)
                 dsn = DeathNature.Groin;
 
 
@@ -1082,9 +1085,12 @@ public class Player : MonoBehaviourPunCallbacks
                     {
                         f = $"{lastPlayerSource.nickName} [ {_damageSource} ] {nickName}";
                     }
-                    if (deathByHeadshot)
+
+                    if (deathNature == DeathNature.Sniped)
+                        f = $"{lastPlayerSource.nickName} <color=\"yellow\">!!! Sniped !!!</color> {nickName}";
+                    else if (deathByHeadshot)
                         f += $" with a <color=\"red\">Headshot</color>!";
-                    if (deathByGroin)
+                    else if (deathByGroin)
                         f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
 
                     {
@@ -1168,18 +1174,8 @@ public class Player : MonoBehaviourPunCallbacks
 
             try
             {
-                DeathNature dn = DeathNature.None;
-
-                if (deathByHeadshot)
-                    dn = DeathNature.Headshot;
-
                 if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                {
-                    //if(isMine)
-                    //    PV.RPC("AddPlayerKill_RPC", RpcTarget.All, _lastPID, PV.ViewID, (int)_deathNature);
                     MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathNature));
-
-                }
                 else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                     GetComponent<PlayerSwarmMatchStats>().deaths++;
 
@@ -1190,12 +1186,18 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 Debug.Log("Processing medals");
                 Debug.Log(deathNature);
-                PlayerMedals sourcePlayerMedals = lastPlayerSource.playerMedals;
-                if (sourcePlayerMedals != this.playerMedals)
+                PlayerMedals sourcePlayerMedals = lastPlayerSource._playerMedals;
+                if (sourcePlayerMedals != this._playerMedals)
                 {
                     Debug.Log(_lastPID);
                     Debug.Log(this.pid);
-                    if (deathNature == DeathNature.Headshot)
+
+                    if (deathNature == DeathNature.Sniped)
+                    {
+                        if (_lastPID != this.pid)
+                            sourcePlayerMedals.SpawnSniperHeadshotMedal();
+                    }
+                    else if (deathNature == DeathNature.Headshot)
                     {
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnHeadshotMedal();
@@ -1228,7 +1230,7 @@ public class Player : MonoBehaviourPunCallbacks
                             sourcePlayerMedals.kills++;
                     }
 
-                    if (playerMedals.spree >= 5) 
+                    if (_playerMedals.spree >= 5)
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnKilljoySpreeMedal();
                 }

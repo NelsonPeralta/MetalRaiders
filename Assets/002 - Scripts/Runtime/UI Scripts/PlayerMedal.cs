@@ -6,8 +6,26 @@ public class PlayerMedal : MonoBehaviour
 {
     public AudioClip clip { get { return _clip; } }
     [SerializeField] AudioClip _clip;
+
+    Vector3 oScale;
+
+    private void Awake()
+    {
+        oScale = transform.localScale;
+        //transform.localScale = Vector3.zero;
+    }
+
     private void Start()
     {
         Destroy(gameObject, 6);
+    }
+
+    private void Update()
+    {
+            Debug.Log(transform.localScale);
+
+            //https://forum.unity.com/threads/slowly-scale-object.91659/
+            //var newScale = Mathf.Lerp(1, 5, Time.time);
+            //transform.localScale = new Vector3(newScale, newScale, 1);
     }
 }

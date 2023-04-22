@@ -437,8 +437,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.Alpha6))
             SendReport();
 
-        if (Input.GetKeyDown(KeyCode.Alpha0))
+        if (Input.GetKeyDown(KeyCode.Alpha9))
         {
+            try
+            {
+                GetMyPlayer().playerMedals.SpawnHeadshotMedal();
+            }catch { }
             //Transform sp = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
             //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", "ShooterAI"), sp.position + new Vector3(0, 2, 0), sp.rotation);
         }

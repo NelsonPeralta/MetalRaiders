@@ -62,6 +62,9 @@ MonoBehaviour:
   testingObjects: []
   testingObjectPrefab: {fileID: 4932562514326571089, guid: 58cf38eb4faf0504abb19237fdc480ef,
     type: 3}
+  bulletMetalImpactList: []
+  bulletMetalImpactPrefab: {fileID: 4537056961858913665, guid: 4a0c9aef69209e24e88754e9cdc94acf,
+    type: 3}
 --- !u!114 &-6797353524191117134
 MonoBehaviour:
   m_ObjectHideFlags: 0

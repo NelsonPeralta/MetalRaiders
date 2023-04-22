@@ -250,7 +250,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             this.winningPlayerPhotonId = winningPlayerPhotonId;
             this.losingPlayerPhotonId = losingPlayerPhotonId;
 
-            if (kn == Player.DeathNature.Headshot)
+            if (kn == Player.DeathNature.Headshot || kn == Player.DeathNature.Sniped)
                 this.headshot = true;
             if (kn == Player.DeathNature.Melee)
                 this.melee = true;
