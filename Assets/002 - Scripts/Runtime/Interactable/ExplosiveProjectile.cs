@@ -56,13 +56,7 @@ public class ExplosiveProjectile : MonoBehaviour
         if (collision.gameObject.layer != 9)
         {
             _collided = true;
-
-            try
-            {
-                GetComponent<AudioSource>().clip = _collisionSound;
-                GetComponent<AudioSource>().Play();
-            }
-            catch { }
+            try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
 
             if (_sticky)
             {
@@ -78,7 +72,7 @@ public class ExplosiveProjectile : MonoBehaviour
                         if (collision.gameObject.GetComponent<PlayerHitbox>())
                         {
                             Debug.Log("STUCK!");
-                            _stuck= true;
+                            _stuck = true;
                         }
                     }
                 }

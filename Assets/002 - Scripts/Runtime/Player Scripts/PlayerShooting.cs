@@ -20,12 +20,13 @@ public class PlayerShooting : MonoBehaviourPun
     [SerializeField] bool fireButtonDown = false, scopeBtnDown = false;
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
 
-    List<Quaternion> quats = new List<Quaternion>();
     public float defaultBurstInterval
     {
         get { return 0.08f; }
     }
 
+
+    List<Quaternion> quats = new List<Quaternion>();
 
     private void Awake()
     {
@@ -216,7 +217,7 @@ public class PlayerShooting : MonoBehaviourPun
                 if (player.isMine)
                 {
                     Debug.Log("shoooo 2");
-                    var bullet = FindObjectOfType<GameObjectPool>().SpawnPooledBullet();
+                    var bullet = GameObjectPool.gameObjectPoolInstance.SpawnPooledBullet();
 
                     try
                     {

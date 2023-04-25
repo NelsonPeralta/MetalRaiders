@@ -70,7 +70,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        gameObjectPool = GameObjectPool.gameObjectPoolInstance;
+        gameObjectPool = FindObjectOfType<GameObjectPool>();
     }
 
     override public void OnEnable()
@@ -260,7 +260,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     {
                         finalHitDamageable.Damage(damage);
                     }
-                    genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledBloodHit();
+                    genericHit = gameObjectPool.SpawnPooledBloodHit();
                     genericHit.transform.position = finalHitPoint;
                     genericHit.SetActive(true);
 
@@ -313,13 +313,13 @@ public class Bullet : MonoBehaviourPunCallbacks
                         }
                         else
                         {
-                            GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+                            GameObject genericHit = gameObjectPool.SpawnPooledGenericHit();
                             genericHit.transform.position = finalHitPoint;
                             genericHit.SetActive(true);
 
                             damageDealt = true;
 
-                            GameObject imp = FindObjectOfType<GameObjectPool>().SpawnBulletMetalImpactObject();
+                            GameObject imp = gameObjectPool.SpawnBulletMetalImpactObject();
                             imp.transform.position = finalHitPoint;
                             imp.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
                             imp.SetActive(true);
@@ -347,12 +347,12 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                         GameObject genericHit;
                         if (finalHitObject.GetComponent<ActorHitbox>())
-                            genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledBloodHit();
+                            genericHit = gameObjectPool.SpawnPooledBloodHit();
                         else
                         {
-                            genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+                            genericHit = gameObjectPool.SpawnPooledGenericHit();
 
-                            GameObject imp = FindObjectOfType<GameObjectPool>().SpawnBulletMetalImpactObject();
+                            GameObject imp = gameObjectPool.SpawnBulletMetalImpactObject();
                             imp.transform.position = finalHitPoint;
                             imp.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
                             imp.SetActive(true);
@@ -422,11 +422,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 }
                         }
                         catch { }
-                        GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
+                        GameObject genericHit = gameObjectPool.SpawnPooledGenericHit();
                         genericHit.transform.position = finalHitPoint;
                         genericHit.SetActive(true);
 
-                        GameObject imp = FindObjectOfType<GameObjectPool>().SpawnBulletMetalImpactObject();
+                        GameObject imp = gameObjectPool.SpawnBulletMetalImpactObject();
                         imp.transform.position = finalHitPoint;
                         imp.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
                         imp.SetActive(true);

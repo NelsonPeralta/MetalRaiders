@@ -151,6 +151,7 @@ MonoBehaviour:
   - SpawnGrenade_RPC
   - ThrowGrenade3PS_RPC
   - EndGame
+  - SpawnKillHitMarker_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

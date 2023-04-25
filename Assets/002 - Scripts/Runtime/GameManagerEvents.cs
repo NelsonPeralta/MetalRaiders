@@ -31,6 +31,11 @@ public class GameManagerEvents : MonoBehaviour
             _gameStarted = value;
             if (value)
                 OnGameStarted?.Invoke(this);
+            else
+            {
+                _gameStartedTime = GameManager.GameStartDelay;
+                allPlayersJoined = false;
+            }
         }
     }
 
@@ -81,7 +86,6 @@ public class GameManagerEvents : MonoBehaviour
             OnAllPlayersJoinedRoom += FindObjectOfType<SwarmManager>().OnAllPlayersJoinedRoom_Delegate;
         }
 
-        allPlayersJoined = false;
         gameStarted = false;
     }
 

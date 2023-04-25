@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+/// <summary>
+/// DEPRECATED: Use class ExplosiveProjectile
+/// </summary>
+
 public class FragGrenade : MonoBehaviour
 {
-    public float velocity;
-
     [Header("Settings")]
     public float radius = 5.0F;
     public int damage = 100;
@@ -28,6 +30,7 @@ public class FragGrenade : MonoBehaviour
     float explosionTimer;
     GameObject[] playersHit = new GameObject[4];
     GameObject[] AIsHit = new GameObject[20];
+    List<IDamageable> hits = new List<IDamageable>();
 
     [Header("Audio")]
     public AudioSource audioSource;
@@ -37,27 +40,37 @@ public class FragGrenade : MonoBehaviour
 
     Transform[] ignore;
 
+
+
+
+
+
+    [SerializeField] float _velocityMagnitude;
+
+
+
+
+
     private void Start()
     {
         PlaySound(throwSound);
 
-        ignore = player.GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponentsInChildren<Transform>();
+        //ignore = player.GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponentsInChildren<Transform>();
     }
 
     private void Update()
     {
         try
         {
-            velocity = GetComponent<Rigidbody>().velocity.magnitude;
-            //Debug.Log(velocity);
+            _velocityMagnitude = GetComponent<Rigidbody>().velocity.magnitude;
 
             if (hasHitObject)
-                if (GetComponent<Rigidbody>().velocity.magnitude != 10)
+                if (GetComponent<Rigidbody>().velocity.magnitude != 5)
                 {
                     Vector3 dir = GetComponent<Rigidbody>().velocity;
                     dir.Normalize();
                     //GetComponent<Rigidbody>().velocity.Normalize();
-                    GetComponent<Rigidbody>().velocity = dir * 10;
+                    GetComponent<Rigidbody>().velocity = dir * 5;
                 }
         }
         catch
