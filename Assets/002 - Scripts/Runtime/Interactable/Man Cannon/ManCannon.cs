@@ -31,6 +31,7 @@ public class ManCannon : MonoBehaviour
 
                 CharacterController cc = other.GetComponent<CharacterController>();
                 cc.GetComponent<PlayerImpactReceiver>().AddImpact(transform.up, power);
+                cc.GetComponent<Movement>().manCannonCooldown = 1;
 
                 if (_blockMovement)
                     cc.GetComponent<Movement>().canMoveWhileJumping = false;

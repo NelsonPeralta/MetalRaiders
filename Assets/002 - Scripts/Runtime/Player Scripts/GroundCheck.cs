@@ -10,6 +10,8 @@ public class GroundCheck : MonoBehaviour
     public Player player;
     public bool isGrounded;
 
+    public GameObject touch { get { return _touch; } }
+
     [SerializeField] GameObject _touch;
 
     private void Start()
@@ -24,7 +26,7 @@ public class GroundCheck : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.transform.root.gameObject != player.gameObject)
+        if (other.transform.root.gameObject != player.gameObject && !other.GetComponent<ManCannon>())
         {
             _touch = other.gameObject;
             isGrounded = true;

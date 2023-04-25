@@ -121,6 +121,16 @@ public class Movement : MonoBehaviour
         }
     }
 
+    public float manCannonCooldown
+    {
+        get { return _manCannonCooldown; }
+        set
+        {
+            Debug.Log("Man Cannon Cooldown");
+            _manCannonCooldown = 0.5f;
+        }
+    }
+
     [SerializeField] float _rawXInput;
     [SerializeField] float _rawZInput;
 
@@ -137,7 +147,7 @@ public class Movement : MonoBehaviour
 
     float _xDeadzone = 0.2f;
     float _zDeadzone = 0.2f;
-    float _canMoveWhileJumpingCooldown = 0.5f;
+    float _canMoveWhileJumpingCooldown, _manCannonCooldown = 0.5f;
     bool _canMoveWhileJumping, _isGrounded;
 
     private void Awake()
@@ -199,6 +209,9 @@ public class Movement : MonoBehaviour
             if (_canMoveWhileJumpingCooldown < 0)
                 _canMoveWhileJumpingCooldown = 0;
         }
+
+        if (_manCannonCooldown > 0)
+            _manCannonCooldown -= Time.deltaTime;
 
         if (!GameManager.instance.gameStarted)
             return;
@@ -382,7 +395,8 @@ public class Movement : MonoBehaviour
 
         CheckDirection(direction.x, direction.z);
 
-        Jump();
+        if (manCannonCooldown <= 0) Jump();
+
         CrouchJump();
         CheckMovingForward();
         ControlAnimationSpeed();
@@ -462,7 +476,7 @@ public class Movement : MonoBehaviour
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) { _jumpForce = jumpForce * 0.7f; }
             velocity.y = _jumpForce;
-            Debug.Log(player.name);
+            Debug.Log(groundCheckScript.touch);
             //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
