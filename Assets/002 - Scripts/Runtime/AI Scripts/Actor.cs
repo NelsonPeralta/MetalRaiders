@@ -275,11 +275,11 @@ abstract public class Actor : MonoBehaviour
         {
             float ranAmmoFactor = UnityEngine.Random.Range(0.2f, 0.9f);
             float ranCapFactor = UnityEngine.Random.Range(0.3f, 0.5f);
-            int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory.Length);
+            int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory.Length);
 
             try
             {
-                WeaponProperties wp = GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
+                WeaponProperties wp = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
 
                 if (wp.weaponType == WeaponProperties.WeaponType.LMG ||
                     wp.weaponType == WeaponProperties.WeaponType.Launcher ||

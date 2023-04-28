@@ -67,6 +67,6 @@ public class HillManager : MonoBehaviour
 
         _moveTimer = _hillTtl;
 
-        GameManager.GetMyPlayer().announcer.AddClip(_hillMoved);
+        GameManager.GetRootPlayer().announcer.AddClip(_hillMoved);
     }
 }

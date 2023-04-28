@@ -21,7 +21,7 @@ public class FieldOfView : MonoBehaviour
 
     private void Start()
     {
-        playerRef = GameManager.GetMyPlayer().gameObject;
+        playerRef = GameManager.GetRootPlayer().gameObject;
         StartCoroutine(FOVRoutine());
     }
 

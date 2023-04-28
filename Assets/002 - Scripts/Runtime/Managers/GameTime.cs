@@ -35,6 +35,8 @@ public class GameTime : MonoBehaviourPunCallbacks
     float secondCountdown = 1f;
     bool waitingTimedOut;
 
+    NetworkGameTime _networkGameTime;
+
     private void Awake()
     {
         Debug.Log("OnlineGameTime Awake");
@@ -65,6 +67,7 @@ public class GameTime : MonoBehaviourPunCallbacks
     {
         Debug.Log("OnlineGameTime Awake");
         SceneManager.sceneLoaded += OnSceneLoaded;
+        _networkGameTime = FindObjectOfType<NetworkGameTime>();
     }
 
     private void Update()
@@ -78,7 +81,12 @@ public class GameTime : MonoBehaviourPunCallbacks
             __totalTime++;
 
             if (PhotonNetwork.IsMasterClient)
-                FindObjectOfType<NetworkGameTime>().GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.All, __totalTime);
+            {
+                if (!_networkGameTime)
+                    _networkGameTime = FindObjectOfType<NetworkGameTime>();
+
+                try { _networkGameTime.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.All, __totalTime); } catch { }
+            }
 
             secondCountdown = 1;
         }

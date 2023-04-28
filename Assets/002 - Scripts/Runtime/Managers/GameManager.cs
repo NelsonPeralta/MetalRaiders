@@ -291,10 +291,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-        // called zero
+    // called zero
 
-        // private Variables
-        [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
+    // private Variables
+    [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
 
@@ -373,7 +373,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.Log($"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
                 //if (!PlayerManager.playerManagerInstance)
                 //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
-                if (!GameObjectPool.gameObjectPoolInstance)
+                if (!GameObjectPool.instance)
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
                 //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineWeaponPool"), Vector3.zero + new Vector3(0, 5, 0), Quaternion.identity);
                 //if (!OnlineGameTime.onlineGameTimeInstance)
@@ -441,8 +441,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             try
             {
-                GetMyPlayer().playerMedals.SpawnHeadshotMedal();
-            }catch { }
+                GetRootPlayer().playerMedals.SpawnHeadshotMedal();
+            }
+            catch { }
             //Transform sp = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
             //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", "ShooterAI"), sp.position + new Vector3(0, 2, 0), sp.rotation);
         }
@@ -518,12 +519,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public static Player GetMyPlayer(int controllerId = 0)
+    public static Player GetLocalPlayer(int controllerId)
     {
-        foreach (Player p in FindObjectsOfType<Player>())
-            if (p.GetComponent<PhotonView>().IsMine && controllerId == p.controllerId)
-                return p;
-        return null;
+        return instance.localPlayers[controllerId];
+    }
+
+    public static Player GetRootPlayer()
+    {
+        return instance.localPlayers[0];
     }
 
     public static Player GetPlayerWithPhotonViewId(int pid)

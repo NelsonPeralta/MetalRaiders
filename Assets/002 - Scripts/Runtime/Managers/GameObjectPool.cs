@@ -7,7 +7,7 @@ using System.IO;
 public class GameObjectPool : MonoBehaviour
 {
     public PhotonView PV;
-    public static GameObjectPool gameObjectPoolInstance;
+    public static GameObjectPool instance;
     public int amountToPool;
     bool objectsSpawned = false;
 
@@ -28,20 +28,23 @@ public class GameObjectPool : MonoBehaviour
     public List<GameObject> bulletMetalImpactList = new List<GameObject>();
     [SerializeField] GameObject bulletMetalImpactPrefab;
 
-    private void Awake()
+    void Awake()
     {
-        if (gameObjectPoolInstance)
+        if (instance)
         {
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
-        gameObjectPoolInstance = this;
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     private void Start()
     {
-        if (GameObjectPool.gameObjectPoolInstance.objectsSpawned)
+        if (GameObjectPool.instance.objectsSpawned)
             return;
         for (int i = 0; i < amountToPool; i++)
         {
@@ -173,7 +176,7 @@ public class GameObjectPool : MonoBehaviour
         foreach (GameObject go in testingObjects)
             Destroy(go);
 
-        gameObjectPoolInstance = null;
+        instance = null;
     }
 
     IEnumerator DisableObjectAfterTime(GameObject obj, int time = 1)

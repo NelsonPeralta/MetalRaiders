@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviourPun
     public bool isInspecting, aimSoundHasPlayed = false;
 
     public bool isReloading, reloadAnimationStarted, reloadWasCanceled, isFiring,
-        isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isMeleeing, isSprinting;
+        isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isSprinting;
 
     //Used for fire rate
     private float lastFired;
@@ -127,6 +127,12 @@ public class PlayerController : MonoBehaviourPun
     public AudioSource meleeAudioSource;
 
 
+    public bool isMeleeing { get { return _isMeleeing; } set { _isMeleeing = value; if (value) _meleeCooldown = 0.9f; } }
+
+
+    bool _isMeleeing;
+    float _meleeCooldown;
+
     void Awake()
     {
         PV = GetComponent<PhotonView>();
@@ -148,6 +154,17 @@ public class PlayerController : MonoBehaviourPun
 
     private void Update()
     {
+        if (_meleeCooldown > 0)
+            _meleeCooldown -= Time.deltaTime;
+
+        if (_meleeCooldown <= 0)
+        {
+            _meleeCooldown = 0;
+            _isMeleeing = false;
+        }
+
+
+
         if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !isSprinting && !pauseMenuOpen)
         {
             if (GameManager.instance.gameStarted)
@@ -516,6 +533,7 @@ public class PlayerController : MonoBehaviourPun
             if (rewiredPlayer.GetButtonDown("Melee") && !isMeleeing &&
                 !isHoldingShootBtn && /*!isFiring &&*/ !isThrowingGrenade && !isSprinting)
             {
+                isMeleeing = true;
                 _meleeCount = melee.playersInMeleeZone.Count;
                 Debug.Log("RPC Call: Melee");
                 meleeMovementFactor = 1;
@@ -874,17 +892,17 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
 
-            if (weaponAnimator != null)
-            {
-                if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Knife Attack 2"))
-                {
-                    isMeleeing = true;
-                }
-                else
-                {
-                    isMeleeing = false;
-                }
-            }
+            //if (weaponAnimator != null)
+            //{
+            //    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Knife Attack 2"))
+            //    {
+            //        isMeleeing = true;
+            //    }
+            //    else
+            //    {
+            //        isMeleeing = false;
+            //    }
+            //}
         }
         catch { }
     }

@@ -37,11 +37,11 @@ public class PlayerMarker : MonoBehaviour
             {
                 if (color == Color.Green)
                 {
-                    if (player.team != GameManager.GetMyPlayer().team)
+                    if (player.team != GameManager.GetRootPlayer().team)
                         gameObject.SetActive(false);
                 }else if(color == Color.Red)
                 {
-                    if (player.team == GameManager.GetMyPlayer().team)
+                    if (player.team == GameManager.GetRootPlayer().team)
                         gameObject.SetActive(false);
                 }
             }

@@ -20,6 +20,8 @@ public class PlayerShooting : MonoBehaviourPun
     [SerializeField] bool fireButtonDown = false, scopeBtnDown = false;
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
 
+    GameObjectPool _gameObjectPool;
+
     public float defaultBurstInterval
     {
         get { return 0.08f; }
@@ -30,7 +32,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     private void Awake()
     {
-
+        _gameObjectPool = FindObjectOfType<GameObjectPool>();
     }
     private void Start()
     {
@@ -217,7 +219,8 @@ public class PlayerShooting : MonoBehaviourPun
                 if (player.isMine)
                 {
                     Debug.Log("shoooo 2");
-                    var bullet = GameObjectPool.gameObjectPoolInstance.SpawnPooledBullet();
+                    var bullet = _gameObjectPool.SpawnPooledBullet();
+
 
                     try
                     {

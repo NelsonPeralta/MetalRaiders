@@ -68,16 +68,24 @@ public class Melee : MonoBehaviour
                 {
                     if (player.isMine)
                     {
-                        if (playersInMeleeZone.Count > 0)
-                            audioSource.clip = knifeSuccessSound;
-                        else
-                            audioSource.clip = knifeFailSound;
+                        audioSource.clip = knifeSuccessSound;
+                        audioSource.volume = 1;
+                        audioSource.spatialBlend = 1;
 
                         audioSource.Play();
+
                         playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee");
                     }
                 }
             }
+        }
+        else
+        {
+            audioSource.clip = knifeFailSound;
+            audioSource.volume = 0.5f;
+            audioSource.spatialBlend = 1;
+
+            audioSource.Play();
         }
     }
 

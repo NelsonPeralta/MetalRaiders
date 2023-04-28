@@ -12,6 +12,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     public static NetworkGameManager instance;
 
     Overshield _overshield;
+    PhotonView _pv;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         //    Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
+        _pv = GetComponent<PhotonView>();
     }
 
     public Overshield overshield
@@ -70,7 +72,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
             Debug.Log($"SendGameParams {GameManager.instance.teamDict}");
 
-            GetComponent<PhotonView>().RPC("SendGameParams", RpcTarget.All, ps, false);
+            _pv.RPC("SendGameParams", RpcTarget.All, ps, false);
         }
         else if (!caller && !PhotonNetwork.IsMasterClient)
         {
@@ -93,7 +95,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("SendNewTeamDict", RpcTarget.AllViaServer, d, false);
+            _pv.RPC("SendNewTeamDict", RpcTarget.AllViaServer, d, false);
         }
         else
         {
@@ -110,7 +112,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("EndGame", RpcTarget.AllViaServer, false);
+            _pv.RPC("EndGame", RpcTarget.AllViaServer, false);
         }
         else
         {
@@ -134,12 +136,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
     public void UpdateTeam(string t, string playerNickName)
     {
-        GetComponent<PhotonView>().RPC("UpdateTeam_RPC", RpcTarget.All, t.ToString(), playerNickName);
+        _pv.RPC("UpdateTeam_RPC", RpcTarget.All, t.ToString(), playerNickName);
     }
 
     public void UpdateSwarmDifficulty(int ei)
     {
-        GetComponent<PhotonView>().RPC("UpdateSwarmDifficulty_RPC", RpcTarget.All, ei);
+        _pv.RPC("UpdateSwarmDifficulty_RPC", RpcTarget.All, ei);
 
     }
 
@@ -149,30 +151,30 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     public void EnableLootableWeapon(Vector3 position)
     {
         Debug.Log("EnableLootableWeapon");
-        GetComponent<PhotonView>().RPC("EnableLootableWeapon_RPC", RpcTarget.All, position);
+        _pv.RPC("EnableLootableWeapon_RPC", RpcTarget.All, position);
     }
     public void DisableLootableWeapon(Vector3 position)
     {
-        GetComponent<PhotonView>().RPC("DisableLootableWeapon_RPC", RpcTarget.All, position);
+        _pv.RPC("DisableLootableWeapon_RPC", RpcTarget.All, position);
     }
     public void RelocateLootableWeapon(Vector3 position, Quaternion rotation)
     {
-        GetComponent<PhotonView>().RPC("RelocateLootableWeapon_RPC", RpcTarget.All, position, rotation);
+        _pv.RPC("RelocateLootableWeapon_RPC", RpcTarget.All, position, rotation);
     }
 
     public void UpdateLootableWeaponData(Vector3 spp, Dictionary<string, string> param)
     {
-        GetComponent<PhotonView>().RPC("UpdateLootableWeaponData_RPC", RpcTarget.All, spp, param);
+        _pv.RPC("UpdateLootableWeaponData_RPC", RpcTarget.All, spp, param);
     }
 
     public void AddForceLootableWeapon(Vector3 spp, Vector3 dir)
     {
-        GetComponent<PhotonView>().RPC("AddForceLootableWeapon_RPC", RpcTarget.All, spp, dir);
+        _pv.RPC("AddForceLootableWeapon_RPC", RpcTarget.All, spp, dir);
     }
 
     public static void SpawnNetworkWeapon(int wi, Vector3 spp, Vector3 fDir, Dictionary<string, int> param)
     {
-        FindObjectOfType<NetworkGameManager>().GetComponent<PhotonView>().RPC("SpawnNetworkWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
+        FindObjectOfType<NetworkGameManager>()._pv.RPC("SpawnNetworkWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
     }
 
 
@@ -182,38 +184,38 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     #region
     public void DamageExplosiveBarrel(Vector3 position, int val)
     {
-        GetComponent<PhotonView>().RPC("DamageExplosiveBarrel_RPC", RpcTarget.All, position, val);
+        _pv.RPC("DamageExplosiveBarrel_RPC", RpcTarget.All, position, val);
     }
 
     public void ResetAllExplosiveBarrels()
     {
-        GetComponent<PhotonView>().RPC("ResetAllExplosiveBarrels_RPC", RpcTarget.All);
+        _pv.RPC("ResetAllExplosiveBarrels_RPC", RpcTarget.All);
     }
 
     public void EnableExplosiveBarrel(Vector3 position)
     {
-        GetComponent<PhotonView>().RPC("EnableExplosiveBarrel_RPC", RpcTarget.All, position);
+        _pv.RPC("EnableExplosiveBarrel_RPC", RpcTarget.All, position);
     }
     public void RelocateExplosiveBarrel(Vector3 position, Quaternion rotation)
     {
-        GetComponent<PhotonView>().RPC("RelocateExplosiveBarrel_RPC", RpcTarget.All, position, rotation);
+        _pv.RPC("RelocateExplosiveBarrel_RPC", RpcTarget.All, position, rotation);
     }
     #endregion
 
     public void DamageIceChunk(Vector3 position, int val)
     {
         Debug.Log(val);
-        GetComponent<PhotonView>().RPC("DamageIceChunk_RPC", RpcTarget.All, position, val);
+        _pv.RPC("DamageIceChunk_RPC", RpcTarget.All, position, val);
     }
 
     public void UpdatePlayerTeam(string t, string pn)
     {
-        GetComponent<PhotonView>().RPC("UpdatePlayerTeam_RPC", RpcTarget.All, t, pn);
+        _pv.RPC("UpdatePlayerTeam_RPC", RpcTarget.All, t, pn);
     }
 
     public void StartLootableWeaponRespawn(Vector3 v)
     {
-        GetComponent<PhotonView>().RPC("StartLootableWeaponRespawn_RPC", RpcTarget.All, v);
+        _pv.RPC("StartLootableWeaponRespawn_RPC", RpcTarget.All, v);
     }
     #endregion
 
@@ -223,12 +225,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void DisableAmmoPack(Vector3 sp)
     {
-        GetComponent<PhotonView>().RPC("DisableAmmoPack_RPC", RpcTarget.All, sp);
+        _pv.RPC("DisableAmmoPack_RPC", RpcTarget.All, sp);
     }
 
     public void ResetAllAmmoPacks()
     {
-        GetComponent<PhotonView>().RPC("ResetAllAmmoPacks_RPC", RpcTarget.All);
+        _pv.RPC("ResetAllAmmoPacks_RPC", RpcTarget.All);
     }
 
     #endregion
@@ -236,12 +238,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     // Multiplayer
     public void AddPlayerPoint(int pid)
     {
-        GetComponent<PhotonView>().RPC("AddPlayerPoint_RPC", RpcTarget.All, pid);
+        _pv.RPC("AddPlayerPoint_RPC", RpcTarget.All, pid);
     }
 
     public void NextHillLocation()
     {
-        GetComponent<PhotonView>().RPC("NextHillLocation_RPC", RpcTarget.All);
+        _pv.RPC("NextHillLocation_RPC", RpcTarget.All);
     }
 
 
@@ -353,7 +355,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     void SpawnNetworkWeapon_RPC(int wi, Vector3 spp, Vector3 fDir, Dictionary<string, int> param)
     {
         Debug.Log("SpawnNetworkWeapon_RPC");
-        GameObject wo = Instantiate(GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[wi].GetComponent<WeaponProperties>().weaponRessource, spp, Quaternion.identity);
+        GameObject wo = Instantiate(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[wi].GetComponent<WeaponProperties>().weaponRessource, spp, Quaternion.identity);
         wo.name = wo.name.Replace("(Clone)", "");
 
         Debug.Log(spp);
@@ -513,7 +515,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("LootOvershield", RpcTarget.AllViaServer, pid, false);
+            _pv.RPC("LootOvershield", RpcTarget.AllViaServer, pid, false);
         }
         else
         {

@@ -85,21 +85,6 @@ public class Bullet : MonoBehaviourPunCallbacks
         distanceTravelled = 0;
         damageDealt = false;
 
-        if (crosshairScript && weaponProperties)
-            if (!crosshairScript.RRisActive)
-            {
-                //if (wProperties.weaponType == "Shotgun")
-                //{
-                //    //gameObject.SetActive(false);
-                //}
-
-                useUpdateVoid = true;
-            }
-            else
-            {
-                useUpdateVoid = false;
-            }
-
         originalPos = transform.position;
         timeToDespawn = CalculateTimeToDespawn();
     }

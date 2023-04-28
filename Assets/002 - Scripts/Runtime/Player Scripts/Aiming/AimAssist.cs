@@ -115,13 +115,11 @@ public class AimAssist : MonoBehaviour
     {
         redReticuleIsOn = true;
         target = hit.transform.gameObject;
-        crosshairScript.ActivateRedCrosshair();
     }
     public void ResetRedReticule()
     {
         redReticuleIsOn = false;
         target = null;
-        crosshairScript.DeactivateRedCrosshair();
     }
 
     void ShootInspectorRay()
@@ -169,22 +167,11 @@ public class AimAssist : MonoBehaviour
 
                 if (targetDistance <= wProperties.currentRedReticuleRange && target != null)
                 {
-                    //Debug.Log("Toggling RRR to TRUE");
-                    if (!pInventory.activeWeapon.fakeRRR)
-                        crosshairScript.RRisActive = true;
-                    //if (string.Equals(target.GetComponent<AllPlayerScripts>().playerMPProperties.team.Trim(), playerMPProperties.team.Trim()))
-                    //{
-                    //    crosshairScript.friendlyRRisActive = true;
-                    //}
-                    //else
-                    //{
-                    //    crosshairScript.RRisActive = true;
-                    //}
+
                 }
                 else if (targetDistance > wProperties.currentRedReticuleRange && target != null)
                 {
-                    crosshairScript.RRisActive = false;
-                    crosshairScript.friendlyRRisActive = false;
+
                 }
 
             }
@@ -211,14 +198,9 @@ public class AimAssist : MonoBehaviour
                         //    //Debug.Log("Here 4");
                         //    crosshairScript.RRisActive = true;
                         //}
-                        if (!pInventory.activeWeapon.fakeRRR)
-                            crosshairScript.RRisActive = true;
                     }
                     else if (targetDistance > wProperties.currentRedReticuleRange && target != null)
                     {
-                        //Debug.Log("Here 5");
-                        crosshairScript.RRisActive = false;
-                        crosshairScript.friendlyRRisActive = false;
                     }
 
                 }
@@ -231,8 +213,6 @@ public class AimAssist : MonoBehaviour
             ActorHitbox = null;
             targetHitbox = null;
             targetDistance = raycastRange;
-            crosshairScript.RRisActive = false;
-            crosshairScript.friendlyRRisActive = false;
         }
     }
 }

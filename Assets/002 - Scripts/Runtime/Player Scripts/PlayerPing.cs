@@ -9,9 +9,22 @@ public class PlayerPing : MonoBehaviour
 {
     [SerializeField] Text pingText;
 
-    // Update is called once per frame
+    float _delay;
+
+    private void Start()
+    {
+        _delay = 1;
+    }
+
     void Update()
     {
-        pingText.text = $"Ping: {PhotonNetwork.GetPing()}";
+        if (_delay > 0)
+            _delay -= Time.deltaTime;
+
+        if (_delay <= 0)
+        {
+            pingText.text = $"Ping: {PhotonNetwork.GetPing()}";
+            _delay = 1;
+        }
     }
 }

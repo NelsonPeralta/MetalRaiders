@@ -91,7 +91,7 @@ public class Explosion : MonoBehaviour
                         if (stuck)
                             damageSource = "Stuck";
                         if (player.isMine)
-                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: this.damageSource);
+                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: this.damageSource, impactDir: (col.transform.position - transform.position));
                     }
                     catch { if (col.GetComponent<PlayerHitbox>().player.isMine) col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }
@@ -109,14 +109,14 @@ public class Explosion : MonoBehaviour
 
                 if (!objectsHit.Contains(hitObject))
                 {
-                    Debug.Log(hitObject.name);
-                    Debug.Log(calculatedDamage);
+                    //Debug.Log(hitObject.name);
+                    //Debug.Log(calculatedDamage);
 
                     objectsHit.Add(hitObject);
                     OnObjectAdded?.Invoke(this);
                     try
                     {
-                        col.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.pid);
+                        col.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.pid, impactDir: (col.transform.position - transform.position));
                     }
                     catch (System.Exception e) { Debug.LogWarning(e); col.GetComponent<IDamageable>().Damage(calculatedDamage); }
                 }

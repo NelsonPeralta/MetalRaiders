@@ -218,12 +218,12 @@ public partial class WebManager
                 Debug.Log(www.downloadHandler.text);
 
                 if (www.result.ToString().Contains("uccess"))
-                    GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Credits");
+                    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Credits");
                 else
-                    GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
+                    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
                 if (dbXpToLevel < newXp)
                 {
-                    GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
+                    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
                 }
 
 

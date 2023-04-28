@@ -232,7 +232,6 @@ public class PlayerInventory : MonoBehaviourPun
         player.OnPlayerRespawnEarly += OnPlayerRespawnEarly_Delegate;
         OnAmmoChanged += OnAmmoChanged_Delegate;
         OnActiveWeaponChangedLate += OnActiveWeaponChangedLate_Delegate;
-        OnActiveWeaponChangedLate += crosshairScript.OnActiveWeaponChanged_Delegate;
 
         Debug.Log($"{player.name} PlayerInventory Start");
         StartCoroutine(EquipStartingWeapon());
@@ -304,7 +303,6 @@ public class PlayerInventory : MonoBehaviourPun
             return;
 
         pController.ScopeOut();
-        crosshairScript.DeactivateRedCrosshair();
         allPlayerScripts.aimAssist.ResetRedReticule();
 
         if (pController.isReloading && pController.pInventory.weaponsEquiped[1] != null)
@@ -316,7 +314,6 @@ public class PlayerInventory : MonoBehaviourPun
         {
             PV.RPC("SwitchWeapons_RPC", RpcTarget.All);
         }
-        crosshairScript.UpdateReticule();
 
         ChangeActiveAmmoCounter();
     }
@@ -528,14 +525,11 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 if (wp != activeWeapon)
                 {
-                    Debug.Log($"UpdateThirdPersonGunModelsOnCharacter {activeWeapon}");
-
                     wp.equippedModelB.SetActive(false);
                 }
 
                 if (wp == activeWeapon)
                 {
-                    Debug.Log($"UpdateThirdPersonGunModelsOnCharacter {activeWeapon}");
                     try { wp.equippedModelB.SetActive(true); } catch (Exception e) { Debug.LogWarning($"{e}"); }
                 }
             }

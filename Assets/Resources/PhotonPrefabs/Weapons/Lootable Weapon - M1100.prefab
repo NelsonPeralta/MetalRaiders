@@ -238,10 +238,11 @@ MonoBehaviour:
   cleanName: M1100
   codeName: m1100
   spriteId: 0
-  _ammo: 8
-  _spareAmmo: 8
-  _defaultAmmo: 8
-  _defaultSpareAmmo: 8
+  isDw: 0
+  _ammo: 6
+  _spareAmmo: 6
+  _defaultAmmo: 6
+  _defaultSpareAmmo: 6
   _tts: 180
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}

@@ -38,7 +38,21 @@ public class PlayerCamera : MonoBehaviour
     //public AimAssistCapsule aimAssistCapsule;
     public AimAssistCone aimAssistCapsule;
 
-    // Start is called before the first frame update
+
+
+
+
+
+
+
+
+
+
+    ControllerType _controllerType;
+
+
+
+
     void Start()
     {
         try
@@ -70,16 +84,14 @@ public class PlayerCamera : MonoBehaviour
         if (!pController.PV.IsMine)
             return;
 
-        string controllerType = "";
+        _controllerType = pController.activeControllerType;
 
-        if (pController.activeControllerType.ToString() != "Keyboard" && pController.activeControllerType.ToString() != "Mouse")
+        if (_controllerType == ControllerType.Joystick)
         {
-            controllerType = "controller";
             mouseSensitivity = defaultMouseSensitivy * 1.15f;
         }
-        else if (pController.activeControllerType.ToString() == "Keyboard" || pController.activeControllerType.ToString() == "Mouse")
+        else
         {
-            controllerType = "m&k";
             mouseSensitivity = defaultMouseSensitivy / 10;
         }
 
@@ -87,7 +99,12 @@ public class PlayerCamera : MonoBehaviour
             mouseSensitivity /= 2;
 
         if (pController.isAiming)
+        {
             mouseSensitivity /= 2;
+
+            if (_controllerType == ControllerType.Joystick && player.playerInventory.activeWeapon.scopeFov == 20)
+                mouseSensitivity *= 0.6f;
+        }
 
         //if (pProperties.aimAssist.redReticuleIsOn && (pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Custom || pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
         //    mouseSensitivity /= 3;
@@ -99,7 +116,7 @@ public class PlayerCamera : MonoBehaviour
 
             float _xAxisInput = xAxisInput, _yAxisInput = yAxisInput;
 
-            if (controllerType == "controller")
+            if (_controllerType == ControllerType.Joystick)
             {
                 if (Mathf.Abs(xAxisInput) <= 0.1f)
                     _xAxisInput = 0;

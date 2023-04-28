@@ -117,7 +117,7 @@ public class KillFeedManager : MonoBehaviour
 
         t1.text = part1;
         t2.text = part2;
-        im.sprite = GameManager.GetMyPlayer().playerInventory.GetWeaponProperties(weaponCodeName).weaponIcon;
+        im.sprite = GameManager.GetRootPlayer().playerInventory.GetWeaponProperties(weaponCodeName).weaponIcon;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(gridLayout.GetComponent<RectTransform>());
         LayoutRebuilder.ForceRebuildLayoutImmediate(im.GetComponent<RectTransform>());

@@ -34,9 +34,9 @@ public class SpawnManager : MonoBehaviour
         return availableSpawnPoints[ran].transform;
     }
 
-    Transform GetRandomSpawnpoint()
+    Transform GetRandomSpawnpoint(int controllerId)
     {
-        try { GameManager.GetMyPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"Spawning randomly"); } catch { }
+        try { GameManager.GetLocalPlayer(controllerId).GetComponent<KillFeedManager>().EnterNewFeed($"Spawning randomly"); } catch { }
         return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
     }
 
@@ -72,6 +72,6 @@ public class SpawnManager : MonoBehaviour
 
         }
 
-        return GetRandomSpawnpoint();
+        return GetRandomSpawnpoint(controllerId);
     }
 }

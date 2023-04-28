@@ -687,9 +687,9 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         {
             float ranAmmoFactor = UnityEngine.Random.Range(0.2f, 0.9f);
             float ranCapFactor = UnityEngine.Random.Range(0.2f, 0.6f);
-            int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory.Length);
+            int randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory.Length);
 
-            WeaponProperties wp = GameManager.GetMyPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
+            WeaponProperties wp = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
 
             if (wp.weaponType == WeaponProperties.WeaponType.LMG || wp.weaponType == WeaponProperties.WeaponType.Launcher || wp.weaponType == WeaponProperties.WeaponType.Shotgun || wp.weaponType == WeaponProperties.WeaponType.Sniper)
                 return;

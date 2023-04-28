@@ -343,7 +343,7 @@ public class BlackKnight : MonoBehaviour
             if (IsInMeleeRange)
             {
                 anim.Play("Kick");
-                targetMovement.velocity.y = targetMovement.jumpForce;
+                //targetMovement.velocity.y = targetMovement.jumpForce;
                 //targetMovement.velocity.z = -targetMovement.jumpForce * 0.5f;
                 hasKickedPlayer = true;
             }
@@ -351,7 +351,7 @@ public class BlackKnight : MonoBehaviour
             {
                 if (targetMovement.isGrounded)
                 {
-                    targetMovement.velocity.z = 0;
+                    //targetMovement.velocity.z = 0;
                     hasKickedPlayer = false;
                 }
             }

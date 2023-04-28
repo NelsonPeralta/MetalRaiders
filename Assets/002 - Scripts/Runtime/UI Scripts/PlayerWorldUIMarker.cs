@@ -73,12 +73,12 @@ public class PlayerWorldUIMarker : MonoBehaviour
             {
                 try
                 {
-                    if (player.team != GameManager.GetMyPlayer().team)
+                    if (player.team != GameManager.GetRootPlayer().team)
                     {
                         _greenMarker.gameObject.SetActive(false);
                         _holder.gameObject.SetActive(false);
                     }
-                    if (player.team == GameManager.GetMyPlayer().team)
+                    if (player.team == GameManager.GetRootPlayer().team)
                     {
                         _greenMarker.gameObject.SetActive(true);
                         _redMarker.gameObject.SetActive(false);

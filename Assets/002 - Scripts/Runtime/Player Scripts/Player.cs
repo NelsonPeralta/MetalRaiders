@@ -363,6 +363,7 @@ public class Player : MonoBehaviourPunCallbacks
             try
             {
                 _impactDir = (Vector3)value;
+                Debug.Log(_impactDir);
             }
             catch { }
 
@@ -601,7 +602,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
-        gameObjectPool = GameObjectPool.gameObjectPoolInstance;
+        gameObjectPool = GameObjectPool.instance;
         weaponPool = FindObjectOfType<WeaponPool>();
         PV = GetComponent<PhotonView>();
 
@@ -897,7 +898,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void SpawnRagdoll()
     {
-        var ragdoll = FindObjectOfType<GameObjectPool>().SpawnPooledPlayerRagdoll();
+        var ragdoll = GameObjectPool.instance.SpawnPooledPlayerRagdoll();
         Debug.Log(ragdoll.name);
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
@@ -905,11 +906,12 @@ public class Player : MonoBehaviourPunCallbacks
 
         Debug.Log("SpawnRagdoll");
         Debug.Log(deathByHeadshot);
+        Debug.Log(deathNature);
+        Debug.Log(impactDir);
 
-        if (!deathByHeadshot)
-            ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 300);
-        else
-            ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 300);
+        if (deathByHeadshot) { Debug.Log("SpawnRagdoll deathByHeadshot"); ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+        else if (deathNature == DeathNature.Grenade) { Debug.Log("SpawnRagdoll grenade"); ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
+        else if (!deathByHeadshot) { Debug.Log("SpawnRagdoll headshot"); ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 
     void HitPointsRecharge()

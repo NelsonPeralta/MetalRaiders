@@ -36,7 +36,7 @@ public class Hill : MonoBehaviour
                         _blue.SetActive(true);
 
                         _audioSource.clip = _hillControlled;
-                        GameManager.GetMyPlayer().announcer.AddClip(_hillControlled);
+                        GameManager.GetRootPlayer().announcer.AddClip(_hillControlled);
                     }
                     else
                     {
@@ -51,7 +51,7 @@ public class Hill : MonoBehaviour
                     //_blue.SetActive(false);
 
                     _audioSource.clip = _hillContested;
-                    GameManager.GetMyPlayer().announcer.AddClip(_hillContested);
+                    GameManager.GetRootPlayer().announcer.AddClip(_hillContested);
                 }
             }
         }

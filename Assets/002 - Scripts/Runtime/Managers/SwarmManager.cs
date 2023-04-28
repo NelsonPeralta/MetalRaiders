@@ -476,7 +476,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void SpawnAIs_Delegate(SwarmManager swarmManager)
     {
         if (currentWave > 1)
-            GameManager.GetMyPlayer().announcer.AddClip(_waveStartClip);
+            GameManager.GetRootPlayer().announcer.AddClip(_waveStartClip);
         if (!PhotonNetwork.IsMasterClient)
             return;
         Debug.Log("Spawning Ais");
@@ -890,7 +890,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             try
             {
-                WebManager.webManagerInstance.SaveSwarmStats(GameManager.GetMyPlayer().GetComponent<PlayerSwarmMatchStats>());
+                WebManager.webManagerInstance.SaveSwarmStats(GameManager.GetRootPlayer().GetComponent<PlayerSwarmMatchStats>());
             }
             catch (System.Exception e) { Debug.LogException(e); }
         }

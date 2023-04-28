@@ -142,7 +142,6 @@ public class AimAssistCapsule : MonoBehaviour
         {
             aimAssist.target = collidingHitbox;
             aimAssist.redReticuleIsOn = true;
-            aimAssist.crosshairScript.ActivateRedCrosshair();
         }
         else
         {
