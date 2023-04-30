@@ -30,7 +30,6 @@ public class MapCamera : MonoBehaviour
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
     {
-        Debug.Log("OnAllPlayersJoinedRoom_Delegate");
         try
         {
             _gameStartDelay = GameManager.GameStartDelay;
