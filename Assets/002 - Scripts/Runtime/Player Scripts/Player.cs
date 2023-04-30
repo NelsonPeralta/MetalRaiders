@@ -89,7 +89,6 @@ public class Player : MonoBehaviourPunCallbacks
                 if (_damage > _originalOsPoints)
                 {
                     _damage -= _originalOsPoints;
-                    Debug.Log(_damage);
                 }
                 else
                     return;
@@ -426,7 +425,6 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 _team = value;
                 OnPlayerTeamChanged?.Invoke(this);
-                Debug.Log(_team);
                 PV.RPC("UpdateTeam_RPC", RpcTarget.All, _team.ToString());
 
                 name += $" {_team} team";
@@ -567,7 +565,8 @@ public class Player : MonoBehaviourPunCallbacks
         {
             hasArmor = true;
 
-            if (GameManager.instance.gameType == GameManager.GameType.Swat)
+            if (GameManager.instance.gameType == GameManager.GameType.Swat
+                || GameManager.instance.gameType == GameManager.GameType.Retro)
             {
                 hasArmor = false;
 
@@ -595,8 +594,6 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        Debug.Log("Player Start");
-        Debug.Log(FindObjectOfType<GameManagerEvents>());
         FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
         FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
 
@@ -638,11 +635,9 @@ public class Player : MonoBehaviourPunCallbacks
 
         try
         {
-            Debug.Log($"Trying to Assigning Player to Player Dict: {GameManager.instance.pid_player_Dict.Count}");
             Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.pid_player_Dict);
             if (!t.ContainsKey(pid))
             {
-                Debug.Log($"Player Dict does NOT contain Player {nickName}({pid})");
                 t.Add(pid, this);
             }
             GameManager.instance.pid_player_Dict = t;
@@ -652,7 +647,6 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (isMine)
             {
-                Debug.Log($"Adding local player {controllerId}");
                 GameManager.instance.localPlayers.Add(controllerId, this);
             }
         }
@@ -695,16 +689,12 @@ public class Player : MonoBehaviourPunCallbacks
         Rigidbody rb = hit.collider.attachedRigidbody;
         if (rb && !rb.isKinematic)
         {
-            Debug.Log(_pushForce);
-            Debug.Log(movementSpeedRatio);
             rb.velocity = hit.moveDirection * _pushForce * movementSpeedRatio;
         }
     }
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
     {
-        Debug.Log("OnAllPlayersJoinedRoom_Delegate");
-
         _allPlayersJoined = true;
         _gameStartDelay = GameManager.GameStartDelay * 0.99f;
     }
@@ -741,10 +731,6 @@ public class Player : MonoBehaviourPunCallbacks
         if (overshieldPoints > 0)
             damage -= (int)_overshieldPoints;
 
-        //Debug.Log("member name: " + memberName);
-        //Debug.Log("source file path: " + sourceFilePath);
-        //Debug.Log("source line number: " + sourceLineNumber);
-
         int newHealth = (int)hitPoints - damage;
         PV.RPC("BasicDamage_RPC", RpcTarget.All, newHealth, damage);
     }
@@ -757,15 +743,6 @@ public class Player : MonoBehaviourPunCallbacks
         [CallerLineNumber] int sourceLineNumber = 0)
     {
         {
-            //Debug.Log("member name: " + memberName);
-            //Debug.Log("source file path: " + sourceFilePath);
-            //Debug.Log("source line number: " + sourceLineNumber);
-
-
-            //Debug.Log(healthDamage);
-            //Debug.Log(_isInvincible);
-            //Debug.Log(overshieldPoints);
-
             //try
             //{ // Hit Marker Handling
             //    lastPID = playerWhoShotThisPlayerPhotonId;
@@ -831,6 +808,9 @@ public class Player : MonoBehaviourPunCallbacks
             return;
 
         if (weapon.codeName == null)
+            return;
+
+        if (GameManager.instance.gameType == GameManager.GameType.GunGame)
             return;
 
         WeaponProperties wp = null;
@@ -904,14 +884,10 @@ public class Player : MonoBehaviourPunCallbacks
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.SetActive(true);
 
-        Debug.Log("SpawnRagdoll");
-        Debug.Log(deathByHeadshot);
-        Debug.Log(deathNature);
-        Debug.Log(impactDir);
-
-        if (deathByHeadshot) { Debug.Log("SpawnRagdoll deathByHeadshot"); ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.Grenade) { Debug.Log("SpawnRagdoll grenade"); ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
-        else if (!deathByHeadshot) { Debug.Log("SpawnRagdoll headshot"); ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+        if (deathByHeadshot) {  ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+        else if (deathNature == DeathNature.Grenade) {  ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
+        else if (deathNature == DeathNature.Melee) {  ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 500); }
+        else if (!deathByHeadshot) {  ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 
     void HitPointsRecharge()
@@ -966,7 +942,8 @@ public class Player : MonoBehaviourPunCallbacks
         StartCoroutine(MakeThirdPersonModelVisible());
 
         playerInventory.grenades = 2;
-        if (GameManager.instance.gameType == GameManager.GameType.Swat)
+        if (GameManager.instance.gameType == GameManager.GameType.Swat
+                || GameManager.instance.gameType == GameManager.GameType.Retro)
             playerInventory.grenades = 1;
 
         //StartCoroutine(playerInventory.EquipStartingWeapon());
@@ -1077,18 +1054,27 @@ public class Player : MonoBehaviourPunCallbacks
                 string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
 
-
+                if (GameManager.instance.gameType == GameManager.GameType.GunGame
+                        && deathNature == DeathNature.Melee)
+                {
+                    if (isMine)
+                        playerInventory.playerGunGameManager.index--;
+                }
 
                 foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
                 {
                     string f = $"{lastPlayerSource.nickName} killed {nickName}";
+
 
                     if (_damageSource != null && _damageSource != "")
                     {
                         f = $"{lastPlayerSource.nickName} [ {_damageSource} ] {nickName}";
                     }
 
-                    if (deathNature == DeathNature.Sniped)
+                    if (GameManager.instance.gameType == GameManager.GameType.GunGame
+                        && deathNature == DeathNature.Melee)
+                        f = $"{lastPlayerSource.nickName} <color=\"red\"> Humiliated </color> {nickName}";
+                    else if (deathNature == DeathNature.Sniped)
                         f = $"{lastPlayerSource.nickName} <color=\"yellow\">!!! Sniped !!!</color> {nickName}";
                     else if (deathByHeadshot)
                         f += $" with a <color=\"red\">Headshot</color>!";
@@ -1193,14 +1179,9 @@ public class Player : MonoBehaviourPunCallbacks
 
             try
             {
-                Debug.Log("Processing medals");
-                Debug.Log(deathNature);
                 PlayerMedals sourcePlayerMedals = lastPlayerSource._playerMedals;
                 if (sourcePlayerMedals != this._playerMedals)
                 {
-                    Debug.Log(_lastPID);
-                    Debug.Log(this.pid);
-
                     if (deathNature == DeathNature.Sniped)
                     {
                         if (_lastPID != this.pid)
@@ -1228,8 +1209,6 @@ public class Player : MonoBehaviourPunCallbacks
                     }
                     else if (deathNature == DeathNature.Stuck)
                     {
-                        Debug.Log(_lastPID);
-                        Debug.Log(this.pid);
                         if (_lastPID != this.pid)
                             sourcePlayerMedals.SpawnStuckKillMedal();
                     }
@@ -1440,7 +1419,6 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = true)
     {
-        Debug.Log("UpdateAmmo");
         try
         {
             playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateAmmo(wIndex, ammo, isSpare, false);
@@ -1451,8 +1429,6 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void Teleport_RPC(Vector3 t, Vector3 r)
     {
-        Debug.Log("Teleport_RPC");
-        Debug.Log(t);
         GetComponent<CharacterController>().enabled = false;
         transform.position = t;
         GetComponent<CharacterController>().enabled = true;
@@ -1468,11 +1444,8 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     void DropWeapon_RPC(int wi, Vector3 spp, Vector3 fDir, Dictionary<string, int> param)
     {
-        Debug.Log("DropWeapon_RPC");
         GameObject wo = Instantiate(playerInventory.allWeaponsInInventory[wi].GetComponent<WeaponProperties>().weaponRessource, spp, Quaternion.identity);
         wo.name = wo.name.Replace("(Clone)", "");
-
-        Debug.Log(spp);
 
         try { wo.GetComponent<LootableWeapon>().networkAmmo = param["ammo"]; } catch (System.Exception e) { Debug.Log(e); }
         try { wo.GetComponent<LootableWeapon>().spareAmmo = param["spareammo"]; } catch (System.Exception e) { Debug.Log(e); }
@@ -1481,8 +1454,6 @@ public class Player : MonoBehaviourPunCallbacks
 
         //StartCoroutine(UpdateWeaponSpawnPosition_Coroutine(wo, spp));
         wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
-        Debug.Log($"DropWeapon_RPC: {wo.GetComponent<LootableWeapon>().spawnPointPosition}");
-
     }
 
     [PunRPC]

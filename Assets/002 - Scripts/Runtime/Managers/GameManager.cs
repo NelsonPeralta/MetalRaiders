@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum GameType
     {
         Fiesta, Rockets, Slayer, Pro, Snipers, Unassgined,
-        Shotguns, Swat, Hill,
+        Shotguns, Swat, Retro, GunGame, Hill,
 
         // Swarm Game Types
         Survival
@@ -68,13 +68,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             int previousCount = _pid_player_Dict.Count;
             _pid_player_Dict = value;
 
-            Debug.Log($"_pid_player_Dict previous count:{previousCount}");
-            Debug.Log($"_pid_player_Dict NEW count:{_pid_player_Dict.Count}");
-
             if (pid_player_Dict.Count != previousCount)
             {
-                Debug.Log($"New Player Joined out of {PhotonNetwork.CurrentRoom.PlayerCount} total");
-
                 if (pid_player_Dict.Count == PhotonNetwork.CurrentRoom.PlayerCount)
                     GetComponent<GameManagerEvents>().allPlayersJoined = true;
             }
@@ -131,7 +126,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             Debug.Log("sadfsfgfgd");
+
             _gameType = value;
+            if (_gameType == GameType.GunGame)
+                teamMode = TeamMode.None;
+
             Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
         }
     }

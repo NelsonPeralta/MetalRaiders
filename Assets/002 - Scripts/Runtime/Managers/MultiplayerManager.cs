@@ -21,11 +21,14 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         {
             if (GameManager.instance.gameType == GameManager.GameType.Hill)
                 return 60;
-
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                 return 15;
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 return 25;
+
+            if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+                return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count;
+
 
             return 5;
         }
@@ -111,8 +114,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (highestScore >= scoreToWin)
                 return;
 
+
             if (winningPlayerMS != losingPlayerMS)
             {
+                if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+                    if (winningPlayerMS.player == GameManager.GetLocalPlayer(winningPlayerMS.player.rid))
+                        winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
+
                 winningPlayerMS.kills++;
 
                 if (struc.headshot)
@@ -140,7 +148,21 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             losingPlayerMS.deaths++;
 
             if (PhotonNetwork.IsMasterClient)
+            {
+                if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+                {
+                    int c = winningPlayerMS.player.playerInventory.playerGunGameManager.gunIndex.Count;
+                    WeaponProperties lastGun = winningPlayerMS.player.playerInventory.playerGunGameManager.gunIndex[c - 1];
+                    if ((winningPlayerMS.player.playerInventory.activeWeapon == lastGun) || (winningPlayerMS.player.playerInventory.holsteredWeapon == lastGun))
+                    {
+                        FindObjectOfType<NetworkGameManager>().EndGame();
+                        return;
+                    }
+                }
+
+
                 CheckForEndGame();
+            }
         }
         catch (Exception e)
         {
@@ -182,7 +204,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         if (highestScore == scoreToWin)
             FindObjectOfType<NetworkGameManager>().EndGame();
-            //EndGame();
+        //EndGame();
     }
     public void EndGame(bool saveXp = true)
     {

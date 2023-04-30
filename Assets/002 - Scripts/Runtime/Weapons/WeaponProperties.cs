@@ -319,12 +319,10 @@ public class WeaponProperties : MonoBehaviour
 
     public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = false)
     {
-        Debug.Log($"UpdateAmmo");
         if (player.isMine)
         {
             if (sender)
             {
-                Debug.Log($"UpdateAmmo Sender");
                 player.PV.RPC("UpdateAmmo", Photon.Pun.RpcTarget.All, wIndex, ammo, isSpare, sender);
             }
         }

@@ -187,7 +187,8 @@ public class PlayerUI : MonoBehaviour
             EnableMultiplayerUIComponents();
             GetComponent<PlayerMultiplayerMatchStats>().OnPlayerScoreChanged += OnPlayerScoreChanged_Delegate;
         }
-        if(GameManager.instance.gameType == GameManager.GameType.Swat)
+        if(GameManager.instance.gameType == GameManager.GameType.Swat
+             || GameManager.instance.gameType == GameManager.GameType.Retro)
             barsHolder.SetActive(false);
 
         OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);

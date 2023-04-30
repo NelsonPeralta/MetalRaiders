@@ -119,8 +119,6 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
     {
-        Debug.Log("OnAllPlayersJoinedRoom_Delegate");
-
         try
         {
             foreach (LootableWeapon weapon in networkLootableWeaponPrefabs)
@@ -165,7 +163,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             codeName = "deagle";
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
+            if ((GameManager.instance.gameType.ToString().Contains("Slayer"))
+                || GameManager.instance.gameType == GameManager.GameType.Retro)
             {
                 if (codeName == "scar")
                     codeName = "m4";
@@ -220,7 +219,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                         codeName = "m1100";
             }
 
-        if ((GameManager.instance.gameType.ToString().Contains("Fiesta")))
+        if ((GameManager.instance.gameType.ToString().Contains("Fiesta")) || GameManager.instance.gameType == GameManager.GameType.GunGame)
         {
             Destroy(gameObject);
         }

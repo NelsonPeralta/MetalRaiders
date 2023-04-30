@@ -17,6 +17,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Debug.Log("NetworkGameManager Awake");
+        _pv = GetComponent<PhotonView>();
         if (instance)
             Destroy(instance.gameObject);
 
@@ -30,7 +31,6 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         //    Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
-        _pv = GetComponent<PhotonView>();
     }
 
     public Overshield overshield

@@ -10,6 +10,13 @@ public class PlayerInventory : MonoBehaviourPun
     public delegate void PlayerInventoryEvent(PlayerInventory playerInventory);
     public PlayerInventoryEvent OnWeaponsSwitched, OnGrenadeChanged, OnActiveWeaponChanged,
         OnActiveWeaponChangedLate, OnHolsteredWeaponChanged, OnAmmoChanged;
+
+
+    public PlayerGunGameManager playerGunGameManager { get { return _playerGunGameManager; } }
+    public Dictionary<string, WeaponProperties> weaponCodeNameDict { get { return _weaponCodeNameDict; } }
+
+
+
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
     public PlayerSFXs sfxManager;
@@ -51,6 +58,8 @@ public class PlayerInventory : MonoBehaviourPun
                 catch { }
 
                 _activeWeapon = value;
+                pController.ScopeOut();
+                Debug.Log(_activeWeapon);
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 _activeWeapon.gameObject.SetActive(true);
 
@@ -197,6 +206,18 @@ public class PlayerInventory : MonoBehaviourPun
     [SerializeField] Transform _fakeBulletTrailHolder;
     [SerializeField] Transform _fakeBulleTrailPrefab;
     [SerializeField] List<Transform> _fakeBulletTrailPool = new List<Transform>();
+    [SerializeField] PlayerGunGameManager _playerGunGameManager;
+
+
+
+
+
+
+    List<WeaponProperties> _allWeapons = new List<WeaponProperties>(); // To replace allWeaponsInInventory variable
+    Dictionary<string, WeaponProperties> _weaponCodeNameDict = new Dictionary<string, WeaponProperties>();
+
+
+
 
     private void Awake()
     {
@@ -227,6 +248,9 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public void Start()
     {
+        foreach (GameObject wp in allWeaponsInInventory)
+            _weaponCodeNameDict.Add(wp.GetComponent<WeaponProperties>().codeName, wp.GetComponent<WeaponProperties>());
+
         //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
         OnActiveWeaponChanged += aimAssistCone.OnActiveWeaponChanged;
         player.OnPlayerRespawnEarly += OnPlayerRespawnEarly_Delegate;
@@ -260,7 +284,8 @@ public class PlayerInventory : MonoBehaviourPun
         {
             grenades = maxGrenades;
         }
-        else if (GameManager.instance.gameType == GameManager.GameType.Swat)
+        else if (GameManager.instance.gameType == GameManager.GameType.Swat
+                || GameManager.instance.gameType == GameManager.GameType.Retro)
             grenades = 1;
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
@@ -449,10 +474,20 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "m4";
         }
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm
+             || GameManager.instance.gameType == GameManager.GameType.Retro)
         {
             StartingWeapon = "p90";
             StartingWeapon2 = "m1911";
+        }
+
+        if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+        {
+            StartingWeapon = _playerGunGameManager.gunIndex[_playerGunGameManager.index].codeName;
+            StartingWeapon2 = "nailgun";
+
+            Debug.Log(_playerGunGameManager.index);
+            Debug.Log(StartingWeapon);
         }
 
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;

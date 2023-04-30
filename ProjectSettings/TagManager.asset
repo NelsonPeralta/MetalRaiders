@@ -3,42 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - ammo_pack_spawn_point
-  - CoopMenu
-  - Weapon
-  - Crosshairs
-  - Weapon Sounds
-  - Scope BG
-  - Player Inventory
-  - Player Camera
-  - Player Informer
-  - Components
-  - Pickable
-  - Weapon Binder
-  - Casing Spawn Point
-  - Grenade Spawn Point
-  - Attachment
-  - Bullet Renderer
-  - Bullet Spawn Point
-  - ObjectPool
-  - Ammo Pickup Sound
-  - SFX
-  - Grenade Pickup Sound
-  - Shooting Scripts
-  - Frag Grenade Ammo Text
-  - Current Ammo Text
-  - Pickup Collider
-  - Total Ammo Text
-  - player
-  - Muzzleflash Light
-  - Muzzleflash Particles
-  - Spark Particles
-  - Raycast Origin
-  - Spawn Point
-  - Spawn Manager
-  - Level Manager
-  - health_pack
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -75,7 +40,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: New Layer
-    uniqueID: 229720111
     locked: 0

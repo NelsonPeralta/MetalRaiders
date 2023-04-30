@@ -18,7 +18,9 @@ public class PlayerShieldBar : PlayerBar
     }
     private void Start()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm || GameManager.instance.gameType == GameManager.GameType.Swat)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm
+            || GameManager.instance.gameType == GameManager.GameType.Swat
+            || GameManager.instance.gameType ==  GameManager.GameType.Retro)
             healingSlider.gameObject.SetActive(false);
         healingSlider.maxValue = player.defaultHealingCountdown + ((player.maxHealthPoints - player.hitPoints) / player.healthHealingIncrement);
         GetComponent<Slider>().maxValue = player.maxShieldPoints;

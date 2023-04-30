@@ -17,7 +17,6 @@ public class GameManagerEvents : MonoBehaviour
             _allPlayersJoined = value;
             if (value)
             {
-                Debug.Log("allPlayersJoined");
                 OnAllPlayersJoinedRoom?.Invoke(this);
             }
         }

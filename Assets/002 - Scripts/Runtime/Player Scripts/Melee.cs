@@ -74,7 +74,9 @@ public class Melee : MonoBehaviour
 
                         audioSource.Play();
 
-                        playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee");
+                        Vector3 dir = (playerToDamage.transform.position - player.transform.position);
+
+                        playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
                     }
                 }
             }

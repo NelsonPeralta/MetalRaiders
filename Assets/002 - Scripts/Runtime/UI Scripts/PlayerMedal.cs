@@ -22,8 +22,6 @@ public class PlayerMedal : MonoBehaviour
 
     private void Update()
     {
-            Debug.Log(transform.localScale);
-
             //https://forum.unity.com/threads/slowly-scale-object.91659/
             //var newScale = Mathf.Lerp(1, 5, Time.time);
             //transform.localScale = new Vector3(newScale, newScale, 1);

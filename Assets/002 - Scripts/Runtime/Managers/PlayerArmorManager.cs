@@ -48,13 +48,6 @@ public class PlayerArmorManager : MonoBehaviour
     {
         try
         {
-            Debug.Log("PlayerArmorManager");
-            Debug.Log(GameManager.instance.roomPlayerData[player.nickName].armorDataString);
-        }
-        catch { }
-
-        try
-        {
             if (player)
             {
                 if (player.isMine)

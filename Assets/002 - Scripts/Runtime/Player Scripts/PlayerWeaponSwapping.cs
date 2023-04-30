@@ -171,7 +171,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             //    (pInventory.holsteredWeapon && other.GetComponent<LootableWeapon>().codeName == pInventory.holsteredWeapon.codeName))
             //    return;
 
-            if (player.isDead || weaponsInRange.Contains(other.GetComponent<LootableWeapon>()))
+            if (player.isDead || weaponsInRange.Contains(other.GetComponent<LootableWeapon>()) || GameManager.instance.gameType == GameManager.GameType.GunGame)
                 return;
 
             try

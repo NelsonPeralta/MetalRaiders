@@ -141,6 +141,8 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
     public Team networkTeam { get { return _team; } set { _team = value; } }
 
+    public Player player { get { return _player; } }
+
     // private variables
     [SerializeField] int _score;
     [SerializeField] int _kills;
@@ -152,8 +154,12 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     [SerializeField] float _kd;
     [SerializeField] Team _team;
 
+
+    Player _player;
+
     private void Start()
     {
+        _player = GetComponent<Player>();
         this.OnPlayerScoreChanged += this.OnKillsChange;
         kills = 0;
         deaths = 0;
