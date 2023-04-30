@@ -54,7 +54,6 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
             try
             {
 
-                Debug.Log($"PlayerThirdPersonModelManager game mode: {GameManager.instance.gameMode}");
                 if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 {
                 }
@@ -99,8 +98,6 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                                 l = 29;
                             else if (player.rid == 3)
                                 l = 31;
-
-                            Debug.Log($"PlayerThirdPersonModelManager {l}");
 
                             GameManager.SetLayerRecursively(model, l, ignoreList);
                         }

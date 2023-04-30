@@ -59,7 +59,6 @@ public class PlayerInventory : MonoBehaviourPun
 
                 _activeWeapon = value;
                 pController.ScopeOut();
-                Debug.Log(_activeWeapon);
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 _activeWeapon.gameObject.SetActive(true);
 
@@ -257,7 +256,6 @@ public class PlayerInventory : MonoBehaviourPun
         OnAmmoChanged += OnAmmoChanged_Delegate;
         OnActiveWeaponChangedLate += OnActiveWeaponChangedLate_Delegate;
 
-        Debug.Log($"{player.name} PlayerInventory Start");
         StartCoroutine(EquipStartingWeapon());
 
         try
@@ -494,9 +492,6 @@ public class PlayerInventory : MonoBehaviourPun
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
 
 
-        Debug.Log($"Starting Active weapon: {player.name} {StartingWeapon}");
-        Debug.Log($"Starting Active weapon: {player.name} {StartingWeapon2}");
-
         for (int i = 0; i < allWeaponsInInventory.Length; i++)
         {
             if (allWeaponsInInventory[i] != null)
@@ -510,7 +505,6 @@ public class PlayerInventory : MonoBehaviourPun
                     activeWeapIs = 0;
                     activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                     allWeaponsInInventory[i].gameObject.SetActive(true);
-                    Debug.Log($"Starting Active weapon: {player.name} {activeWeapon.name}");
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
                 else if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon2)
@@ -519,7 +513,6 @@ public class PlayerInventory : MonoBehaviourPun
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
                     weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
                     holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
-                    Debug.Log($"Starting Secondary weapon: {player.name} {holsteredWeapon.name}");
                     hasSecWeap = true;
                 }
                 else if (allWeaponsInInventory[i].name != StartingWeapon)

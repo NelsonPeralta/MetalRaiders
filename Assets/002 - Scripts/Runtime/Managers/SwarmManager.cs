@@ -243,7 +243,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
     {
-        Debug.Log("SWARM MANAGER: OnAllPlayersJoinedRoom_Delegate");
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             Begin();
     }

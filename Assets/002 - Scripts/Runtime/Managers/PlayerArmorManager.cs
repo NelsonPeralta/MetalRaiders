@@ -70,7 +70,6 @@ public class PlayerArmorManager : MonoBehaviour
             }
         }
         catch { }
-        Debug.Log(armorDataString);
 
         DisableAllArmor();
         EnableAllArmorsInDataString();

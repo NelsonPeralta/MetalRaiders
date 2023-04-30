@@ -271,8 +271,6 @@ public class AimAssistCone : MonoBehaviour
 
     public void OnActiveWeaponChanged(PlayerInventory playerInventory)
     {
-        Debug.Log($"Weapon Range: {playerInventory.activeWeapon.range}");
-
         try
         {
             WeaponProperties activeWeapon = playerInventory.activeWeapon;

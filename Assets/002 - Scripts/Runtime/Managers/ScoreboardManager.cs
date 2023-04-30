@@ -72,7 +72,7 @@ public class ScoreboardManager : MonoBehaviour
         {
             List<PlayerMultiplayerMatchStats> allPlayersMS = new List<PlayerMultiplayerMatchStats>();
 
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
                 allPlayersMS.Add(go.GetComponent<PlayerMultiplayerMatchStats>());
 
             for (int i = 0; i < allPlayersMS.Count; i++)

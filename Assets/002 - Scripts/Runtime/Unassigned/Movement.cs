@@ -115,8 +115,6 @@ public class Movement : MonoBehaviour
                 }
                 else if (value && _canMoveWhileJumpingCooldown <= 0)
                     _canMoveWhileJumping = value;
-
-                Debug.Log($"Can move while jumping: {canMoveWhileJumping}");
             }
         }
     }

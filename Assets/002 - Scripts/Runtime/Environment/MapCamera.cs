@@ -49,10 +49,7 @@ public class MapCamera : MonoBehaviour
             if ((_gameStartDelay <= GameManager.GameStartDelay * 0.5f) && !_announcementPLayed)
             {
                 _announcementPLayed = true;
-                Debug.Log("OnAllPlayersJoinedRoom_Coroutine");
-                Debug.Log(AudioListener.volume);
                 AudioListener.volume = 1f;
-                Debug.Log(AudioListener.volume);
 
                 try
                 {

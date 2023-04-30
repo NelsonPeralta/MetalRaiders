@@ -63,7 +63,6 @@ public class SpawnManager : MonoBehaviour
                 if (availableSpawnPoints[ran].players.Count == 0)
                 {
                     //try { GameManager.GetMyPlayer(controllerId).GetComponent<KillFeedManager>().EnterNewFeed($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform.position})"); } catch { }
-                    Debug.Log($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform})");
                     return availableSpawnPoints[ran].transform;
                 }
             }

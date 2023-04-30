@@ -91,7 +91,6 @@ public class PlayerWorldUIMarker : MonoBehaviour
         {
             _greenMarker.gameObject.SetActive(false);
 
-            Debug.Log("PlayerWorldUIMarker");
             _holder.gameObject.SetActive(false);
         }
     }

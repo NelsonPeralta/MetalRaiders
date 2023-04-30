@@ -22,7 +22,6 @@ public class AmmoPickup : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"AmmoPickup {other.name}");
         if (!playerProperties.PV.IsMine || !other.GetComponent<AmmoPack>())
             return;
         LootAmmo(other.transform.position, other.GetComponent<AmmoPack>());

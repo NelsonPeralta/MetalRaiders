@@ -1070,7 +1070,6 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButtonDown("Start") || rewiredPlayer.GetButtonDown("Escape"))
         {
-            Debug.Log($"Pausing game");
             TogglePauseGame();
         }
     }
@@ -1089,7 +1088,6 @@ public class PlayerController : MonoBehaviourPun
 
     public void TogglePauseGame()
     {
-        Debug.Log("Toggling Pause Menu");
         if (!pauseMenuOpen)
         {
             Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons

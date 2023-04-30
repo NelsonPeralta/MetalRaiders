@@ -129,7 +129,6 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("PlayerUI Start");
         try { gameType.text = GameManager.instance.gameType.ToString(); }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
@@ -326,7 +325,6 @@ public class PlayerUI : MonoBehaviour
     void OnHolsteredWeaponChanged_Delegate(PlayerInventory playerInventory)
     {
         WeaponProperties wp = playerInventory.holsteredWeapon;
-        Debug.Log(wp.name);
         try { holsteredWeaponIcon.sprite = wp.weaponIcon; } catch { holsteredWeaponIcon.sprite = null; }
     }
     void OnGrenadeChanged_Delegate(PlayerInventory playerInventory)
