@@ -940,7 +940,7 @@ MonoBehaviour:
   _currentMaxSpeed: 0
   _currentSpeed: 0
   _speedRatio: 0
-  _jumpForce: 4
+  _jumpForce: 7
   defaultGravity: -9.81
   _maxRightSpeed: 0
   _maxForwardSpeed: 0
