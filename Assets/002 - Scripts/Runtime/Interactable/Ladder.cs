@@ -14,7 +14,7 @@ public class Ladder : MonoBehaviour
 
         other.GetComponent<CharacterController>().slopeLimit = 180;
         other.GetComponent<CharacterController>().stepOffset = 1;
-        other.GetComponent<Movement>().speed = other.GetComponent<Movement>().GetDefaultSpeed() / 20;
+        other.GetComponent<Movement>().currentMaxSpeed = other.GetComponent<Movement>().GetDefaultSpeed() / 20;
         other.GetComponent<Movement>().isOnLadder = true; ;
     }
 

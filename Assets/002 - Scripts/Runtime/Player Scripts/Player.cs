@@ -685,7 +685,7 @@ public class Player : MonoBehaviourPunCallbacks
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         //Debug.Log("Player OnControllerColliderHit");
-        float movementSpeedRatio = GetComponent<Movement>().playerSpeedPercent;
+        float movementSpeedRatio = GetComponent<Movement>().speedRatio;
         Rigidbody rb = hit.collider.attachedRigidbody;
         if (rb && !rb.isKinematic)
         {

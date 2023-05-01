@@ -191,9 +191,7 @@ public class NewMovement : MonoBehaviour
 
 
         Vector3 currentMovementInput = (transform.forward * _correctedForwardInput + transform.right * -_correctedRightInput);
-        Vector3 motion = new Vector3(0, 0, 0);
-        motion = currentMovementInput * currentMaxSpeed;
-        motion = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
+        Vector3 motion = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
             (transform.right * Mathf.Abs(_correctedRightInput) * _correctedRightSpeed));
 
         _cController.Move(_verticalVector * Time.deltaTime);
