@@ -37,7 +37,6 @@ public class PlayerHitbox : Hitbox, IDamageable
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        Debug.Log($"PlayerHitbox: {damage}");
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 

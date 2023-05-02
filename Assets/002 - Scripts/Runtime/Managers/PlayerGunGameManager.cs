@@ -17,10 +17,16 @@ public class PlayerGunGameManager : MonoBehaviour
             _index = value;
 
             WeaponProperties _preActiveWeapon = playerInventory.activeWeapon;
-            playerInventory.activeWeapon = _gunIndex[_index];
 
+            playerInventory.activeWeapon = _gunIndex[_index];
             playerInventory.activeWeapon.currentAmmo = playerInventory.activeWeapon.ammoCapacity;
             playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxAmmo;
+
+
+
+            //playerInventory.holsteredWeapon = playerInventory.weaponCodeNameDict["nailgun"];
+            //playerInventory.holsteredWeapon.currentAmmo = playerInventory.activeWeapon.ammoCapacity;
+            //playerInventory.holsteredWeapon.spareAmmo = playerInventory.activeWeapon.maxAmmo;
 
             _preActiveWeapon.gameObject.SetActive(false);
             //playerInventory.holsteredWeapon = 

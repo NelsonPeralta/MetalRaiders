@@ -19,16 +19,20 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         get
         {
+            if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+            {
+                {
+                    Debug.Log("scoreToWin");
+                    Debug.Log(GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count);
+                }
+                return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count;
+            }
             if (GameManager.instance.gameType == GameManager.GameType.Hill)
                 return 60;
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                 return 15;
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 return 25;
-
-            if (GameManager.instance.gameType == GameManager.GameType.GunGame)
-                return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count;
-
 
             return 5;
         }
@@ -38,6 +42,15 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         get
         {
             int hs = 0;
+
+            if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+            {
+                {
+                    Debug.Log("highestScore");
+                    Debug.Log(GameManager.GetRootPlayer().playerInventory.playerGunGameManager.index);
+                }
+                return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.index;
+            }
 
             if (GameManager.instance.gameType == GameManager.GameType.Hill)
             {
@@ -74,8 +87,6 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     int _initialRoomPlayercount;
 
     // private variables
-    PhotonView PV;
-
     private void Awake()
     {
         if (instance)
@@ -89,8 +100,6 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PV = GetComponent<PhotonView>();
-
         _initialRoomPlayercount = PhotonNetwork.CurrentRoom.PlayerCount;
 
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
@@ -119,7 +128,14 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame)
                     if (winningPlayerMS.player == GameManager.GetLocalPlayer(winningPlayerMS.player.rid))
-                        winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
+                    {
+                        if (!struc.cleanDamageSource.Contains("elee") && !struc.cleanDamageSource.Contains("renade")
+                            && !struc.cleanDamageSource.Contains("tuck"))
+                            winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
+
+                        if (struc.cleanDamageSource.Contains("ailgun"))
+                            NetworkGameManager.instance.EndGame();
+                    }
 
                 winningPlayerMS.kills++;
 
@@ -149,45 +165,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
-                if (GameManager.instance.gameType == GameManager.GameType.GunGame)
-                {
-                    int c = winningPlayerMS.player.playerInventory.playerGunGameManager.gunIndex.Count;
-                    WeaponProperties lastGun = winningPlayerMS.player.playerInventory.playerGunGameManager.gunIndex[c - 1];
-                    if ((winningPlayerMS.player.playerInventory.activeWeapon == lastGun) || (winningPlayerMS.player.playerInventory.holsteredWeapon == lastGun))
-                    {
-                        FindObjectOfType<NetworkGameManager>().EndGame();
-                        return;
-                    }
-                }
-
-
                 CheckForEndGame();
             }
         }
         catch (Exception e)
         {
-            MailMessage newMail = new MailMessage();
-            // use the Gmail SMTP Host
-            SmtpClient client = new SmtpClient("smtp.office365.com");
-
-            // Follow the RFS 5321 Email Standard
-            newMail.From = new MailAddress("nelson@peralta.tech", "Nelson");
-
-            newMail.To.Add("nperalta@hilotech.ca");// declare the email subject
-
-            newMail.Subject = "Space Wackos Error Report"; // use HTML for the email body
-
-            newMail.IsBodyHtml = true; newMail.Body = $"<h1> Space Wackos </h1><br><br><h2>Error</h2><br>=====<br><p>${e}</p>";
-
-            // enable SSL for encryption across channels
-            client.EnableSsl = true;
-            // Port 465 for SSL communication
-            client.Port = 587;
-            // Provide authentication information with Gmail SMTP server to authenticate your sender account
-            client.Credentials = new System.Net.NetworkCredential("nelson@peralta.tech", "Cazadores1!");
-
-            client.Send(newMail); // Send the constructed mail
-            Debug.Log("Email Sent");
+            Debug.LogWarning(e);
         }
     }
 
@@ -202,6 +185,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void CheckForEndGame()
     {
+
         if (highestScore == scoreToWin)
             FindObjectOfType<NetworkGameManager>().EndGame();
         //EndGame();
@@ -264,8 +248,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         public readonly bool headshot;
         public readonly bool melee;
         public readonly bool grenade;
+        public readonly string cleanDamageSource;
 
-        public AddPlayerKillStruct(int winningPlayerPhotonId, int losingPlayerPhotonId, Player.DeathNature kn)
+        public AddPlayerKillStruct(int winningPlayerPhotonId, int losingPlayerPhotonId, Player.DeathNature kn, string damageSource)
         {
             this.headshot = false;
             this.melee = false;
@@ -273,6 +258,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             this.winningPlayerPhotonId = winningPlayerPhotonId;
             this.losingPlayerPhotonId = losingPlayerPhotonId;
+
+            this.cleanDamageSource = damageSource;
 
             if (kn == Player.DeathNature.Headshot || kn == Player.DeathNature.Sniped)
                 this.headshot = true;

@@ -14,6 +14,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     public PlayerGunGameManager playerGunGameManager { get { return _playerGunGameManager; } }
     public Dictionary<string, WeaponProperties> weaponCodeNameDict { get { return _weaponCodeNameDict; } }
+    public Dictionary<string, WeaponProperties> weaponCleanNameDict { get { return _weaponCleanNameDict; } }
 
 
 
@@ -214,6 +215,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     List<WeaponProperties> _allWeapons = new List<WeaponProperties>(); // To replace allWeaponsInInventory variable
     Dictionary<string, WeaponProperties> _weaponCodeNameDict = new Dictionary<string, WeaponProperties>();
+    Dictionary<string, WeaponProperties> _weaponCleanNameDict = new Dictionary<string, WeaponProperties>();
 
 
 
@@ -248,7 +250,11 @@ public class PlayerInventory : MonoBehaviourPun
     public void Start()
     {
         foreach (GameObject wp in allWeaponsInInventory)
+        {
             _weaponCodeNameDict.Add(wp.GetComponent<WeaponProperties>().codeName, wp.GetComponent<WeaponProperties>());
+            _weaponCleanNameDict.Add(wp.GetComponent<WeaponProperties>().cleanName, wp.GetComponent<WeaponProperties>());
+        }
+
 
         //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
         OnActiveWeaponChanged += aimAssistCone.OnActiveWeaponChanged;
@@ -483,6 +489,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             StartingWeapon = _playerGunGameManager.gunIndex[_playerGunGameManager.index].codeName;
             StartingWeapon2 = "nailgun";
+            grenades = 0;
 
             Debug.Log(_playerGunGameManager.index);
             Debug.Log(StartingWeapon);
