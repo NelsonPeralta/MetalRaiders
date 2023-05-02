@@ -110,11 +110,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void EndGame(bool caller = true)
     {
-        if (caller)
+        if (caller && PhotonNetwork.IsMasterClient)
         {
             _pv.RPC("EndGame", RpcTarget.AllViaServer, false);
         }
-        else
+        else if (!caller)
         {
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 MultiplayerManager.instance.EndGame();

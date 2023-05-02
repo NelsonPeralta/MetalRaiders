@@ -608,6 +608,10 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
+        if (GameManager.instance.gameType == GameManager.GameType.GunGame
+            && player.playerInventory.playerGunGameManager.index + 1 != player.playerInventory.playerGunGameManager.gunIndex.Count)
+            return;
+
         if (rewiredPlayer.GetButtonDown("Throw Grenade") && !isDualWielding &&
             !isHoldingShootBtn && /*!isFiring &&*/ !isMeleeing && !isSprinting /* && !isInspecting */)
         {
@@ -685,11 +689,12 @@ public class PlayerController : MonoBehaviourPun
 
     void SwitchWeapons()
     {
-        if (rewiredPlayer.GetButtonDown("Switch Weapons"))
-        {
-            weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
-            OnPlayerSwitchWeapons?.Invoke(this);
-        }
+        if (GameManager.instance.gameType != GameManager.GameType.GunGame)
+            if (rewiredPlayer.GetButtonDown("Switch Weapons"))
+            {
+                weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
+                OnPlayerSwitchWeapons?.Invoke(this);
+            }
     }
     void SwitchGrenades()
     {

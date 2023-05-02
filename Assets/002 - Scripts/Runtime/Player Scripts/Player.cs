@@ -1164,8 +1164,9 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (isMine)
                 {
-
-                    PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature);
+                    Debug.Log("AddPlayerKill_RPC");
+                    Debug.Log(_damageSource);
+                    PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSource);
 
                     //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                     //    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathNature));
@@ -1472,10 +1473,10 @@ public class Player : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    void AddPlayerKill_RPC(int wpid, int lpid, int dni)
+    void AddPlayerKill_RPC(int wpid, int lpid, int dni, string dSource)
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni));
+            MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, dSource));
     }
 
     #endregion
