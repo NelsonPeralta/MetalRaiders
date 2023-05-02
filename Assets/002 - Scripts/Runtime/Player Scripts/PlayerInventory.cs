@@ -61,7 +61,8 @@ public class PlayerInventory : MonoBehaviourPun
                 _activeWeapon = value;
                 pController.ScopeOut();
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
-                _activeWeapon.gameObject.SetActive(true);
+                if (!player.isDead && player.isRespawning)
+                    _activeWeapon.gameObject.SetActive(true);
 
                 pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
 
