@@ -135,6 +135,11 @@ public class WeaponProperties : MonoBehaviour
         get { return _spareAmmo; }
         set
         {
+            int preVal = _spareAmmo; int newVal = value;
+
+            if (GameManager.instance.gameType == GameManager.GameType.GunGame && newVal < preVal) return;
+
+
             _spareAmmo = Mathf.Clamp(value, 0, _maxAmmo);
             OnSpareAmmoChanged?.Invoke(this);
 
