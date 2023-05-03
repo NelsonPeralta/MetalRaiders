@@ -144,12 +144,13 @@ public class Movement : MonoBehaviour
     [SerializeField] float _rawRightInput, _rawForwardInput;
     [SerializeField] float _correctedRightInput, _correctedForwardInput;
 
-    [SerializeField] Vector3 _direction, _worldMovementVect, _verticalVector, _calulatedVelocity;
+    [SerializeField] Vector3 _direction, _movementInput, _verticalVector, _calulatedVelocity;
 
     [SerializeField] float _defaultMaxSpeed, _currentMaxSpeed, _currentSpeed, _speedRatio, _jumpForce = 8f, defaultGravity = -13;
     [SerializeField] float _maxRightSpeed, _maxForwardSpeed;
     [SerializeField] float _correctedRightSpeed, _correctedForwardSpeed;
     [SerializeField] float _acceleration = 7f, _deceleration = 7f;
+    [SerializeField] PlayerMovementDirection _playerMovementDirection;
 
 
 
@@ -167,7 +168,6 @@ public class Movement : MonoBehaviour
         _defaultTestMaxSpeed = 4f, _currentGravity = -9.81f;
     float defaultSlopeLimit, defaultStepOffset, _crouchJumpTime = 0.2f, crouchJumpTime = 0.2f, _lastCalulatedGroundedSpeed;
     int _directionIndicator = 0, _terminalVelocity = -200;
-    PlayerMovementDirection _playerMovementDirection;
     Vector3 _lastPos;
 
 
@@ -227,7 +227,7 @@ public class Movement : MonoBehaviour
     {
         if (!GameManager.instance.gameStarted) return;
         if (!_pController.PV.IsMine) return;
-        if (_player.isDead || _player.isRespawning) { _worldMovementVect = Vector3.zero; _verticalVector = Vector3.zero; return; }
+        if (_player.isDead || _player.isRespawning) { _movementInput = Vector3.zero; _verticalVector = Vector3.zero; return; }
 
         ManCannonJumpCooldwon(); CalculateCurrentSpeed();
 
@@ -237,14 +237,14 @@ public class Movement : MonoBehaviour
 
 
 
-        CheckDirection(_rawForwardInput, _rawForwardInput);
+        CheckDirection(_rawRightInput, _rawForwardInput);
         WalkAnimation();
         LadderMaxSpeedChange();
         ControlAnimationSpeed();
 
         CrouchJump();
 
-        ResidualMovementWhileNotGrounded();
+        ApplyResidualMovementWhileNotGrounded();
         ApplyInAirMovement();
         ApplyMovement();
     }
@@ -265,7 +265,7 @@ public class Movement : MonoBehaviour
             if (isGrounded)
             {
 
-                _worldMovementVect = transform.right * _rawRightInput + transform.forward * _rawForwardInput;
+                _movementInput = transform.right * _rawRightInput + transform.forward * _rawForwardInput;
                 if (!_pController.isCrouching)
                 {
                     if (_pController.isSprinting)
@@ -280,22 +280,22 @@ public class Movement : MonoBehaviour
                 }
                 else
                 {
-                    Vector3 motion = _worldMovementVect = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
+                    Vector3 motion = _movementInput = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
             (transform.right * Mathf.Abs(_correctedRightInput) * _correctedRightSpeed));
-                    _cController.Move(_worldMovementVect * Time.deltaTime);
+                    _cController.Move(_movementInput * Time.deltaTime);
                 }
             }
             else if (!isGrounded && canMoveWhileJumping)
             {
                 currentMovementInput = transform.right * _correctedRightInput + transform.forward * _correctedForwardInput;
 
-                if (Mathf.Sign(_worldMovementVect.x) == Mathf.Sign(currentMovementInput.x))
+                if (Mathf.Sign(_movementInput.x) == Mathf.Sign(currentMovementInput.x))
                     currentMovementInput.x = 0;
-                if (Mathf.Sign(_worldMovementVect.z) == Mathf.Sign(currentMovementInput.z))
+                if (Mathf.Sign(_movementInput.z) == Mathf.Sign(currentMovementInput.z))
                     currentMovementInput.z = 0;
 
-                _cController.Move(_worldMovementVect * _currentMaxSpeed * Time.deltaTime);
-                _cController.Move(_worldMovementVect * 0.65f * _currentMaxSpeed * Time.deltaTime);
+                _cController.Move(_movementInput * _currentMaxSpeed * Time.deltaTime);
+                _cController.Move(_movementInput * 0.65f * _currentMaxSpeed * Time.deltaTime);
             }
         }
 
@@ -329,6 +329,11 @@ public class Movement : MonoBehaviour
             _maxRightSpeed = Mathf.Abs(_correctedRightInput * _defaultMaxSpeed);
             _maxForwardSpeed = Mathf.Abs(_correctedForwardInput * _defaultMaxSpeed);
         }
+        else
+        {
+            _rawRightInput = 0;
+            _rawForwardInput = 0;
+        }
     }
     void CalculateCurrentSpeed()
     {
@@ -346,40 +351,49 @@ public class Movement : MonoBehaviour
     void CalculateSpeedRatio()
     {
         _speedRatio = Mathf.Clamp(Mathf.Round((_currentSpeed / _currentMaxSpeed) * 10f) / 10f, 0, 1);
+        if (_pController.pauseMenuOpen && isGrounded) _speedRatio = 1;
     }
 
     void CalculateCorrectedDirectionSpeeds()
     {
-        if (_correctedRightInput < 0 && (_correctedRightSpeed < _maxRightSpeed))
+        if (!_pController.pauseMenuOpen)
         {
-            _correctedRightSpeed = Mathf.Clamp(_correctedRightSpeed - _acceleration * Time.deltaTime, -_maxRightSpeed, _maxRightSpeed);
-        }
-        else if (_correctedRightInput > 0 && (_correctedRightSpeed > -_maxRightSpeed))
-        {
-            _correctedRightSpeed = Mathf.Clamp(_correctedRightSpeed + _acceleration * Time.deltaTime, -_maxRightSpeed, _maxRightSpeed);
-        }
-        else if (_correctedRightInput == 0)
-        {
-            if (_correctedRightSpeed > _deceleration * Time.deltaTime)
-                _correctedRightSpeed = _correctedRightSpeed - _deceleration * Time.deltaTime;
-            else if (_correctedRightSpeed < -_deceleration * Time.deltaTime)
-                _correctedRightSpeed = _correctedRightSpeed + _deceleration * Time.deltaTime;
-            else
-                _correctedRightSpeed = 0;
-        }
+            if (_correctedRightInput < 0 && (_correctedRightSpeed < _maxRightSpeed))
+            {
+                _correctedRightSpeed = Mathf.Clamp(_correctedRightSpeed - _acceleration * Time.deltaTime, -_maxRightSpeed, _maxRightSpeed);
+            }
+            else if (_correctedRightInput > 0 && (_correctedRightSpeed > -_maxRightSpeed))
+            {
+                _correctedRightSpeed = Mathf.Clamp(_correctedRightSpeed + _acceleration * Time.deltaTime, -_maxRightSpeed, _maxRightSpeed);
+            }
+            else if (_correctedRightInput == 0)
+            {
+                if (_correctedRightSpeed > _deceleration * Time.deltaTime)
+                    _correctedRightSpeed = _correctedRightSpeed - _deceleration * Time.deltaTime;
+                else if (_correctedRightSpeed < -_deceleration * Time.deltaTime)
+                    _correctedRightSpeed = _correctedRightSpeed + _deceleration * Time.deltaTime;
+                else
+                    _correctedRightSpeed = 0;
+            }
 
-        if (_correctedForwardInput < 0 && (_correctedForwardSpeed < _maxForwardSpeed))
-            _correctedForwardSpeed = Mathf.Clamp(_correctedForwardSpeed - _acceleration * Time.deltaTime, -_maxForwardSpeed, _maxForwardSpeed);
-        else if (_correctedForwardInput > 0 && (_correctedForwardSpeed > -_maxForwardSpeed))
-            _correctedForwardSpeed = Mathf.Clamp(_correctedForwardSpeed + _acceleration * Time.deltaTime, -_maxForwardSpeed, _maxForwardSpeed);
-        else if (_correctedForwardInput == 0)
+            if (_correctedForwardInput < 0 && (_correctedForwardSpeed < _maxForwardSpeed))
+                _correctedForwardSpeed = Mathf.Clamp(_correctedForwardSpeed - _acceleration * Time.deltaTime, -_maxForwardSpeed, _maxForwardSpeed);
+            else if (_correctedForwardInput > 0 && (_correctedForwardSpeed > -_maxForwardSpeed))
+                _correctedForwardSpeed = Mathf.Clamp(_correctedForwardSpeed + _acceleration * Time.deltaTime, -_maxForwardSpeed, _maxForwardSpeed);
+            else if (_correctedForwardInput == 0)
+            {
+                if (_correctedForwardSpeed > _deceleration * Time.deltaTime)
+                    _correctedForwardSpeed = _correctedForwardSpeed - _deceleration * Time.deltaTime;
+                else if (_correctedForwardSpeed < -_deceleration * Time.deltaTime)
+                    _correctedForwardSpeed = _correctedForwardSpeed + _deceleration * Time.deltaTime;
+                else
+                    _correctedForwardSpeed = 0;
+            }
+        }
+        else
         {
-            if (_correctedForwardSpeed > _deceleration * Time.deltaTime)
-                _correctedForwardSpeed = _correctedForwardSpeed - _deceleration * Time.deltaTime;
-            else if (_correctedForwardSpeed < -_deceleration * Time.deltaTime)
-                _correctedForwardSpeed = _correctedForwardSpeed + _deceleration * Time.deltaTime;
-            else
-                _correctedForwardSpeed = 0;
+            _correctedForwardInput = 0;
+            _correctedRightInput = 0;
         }
     }
 
@@ -460,19 +474,23 @@ public class Movement : MonoBehaviour
         {
             directionIndicator = 1;
             direction = "Left";
+            movementDirection = PlayerMovementDirection.Left;
         }
         else if (xValue == 0 && zValue == 1)
         {
+            movementDirection = PlayerMovementDirection.Forward;
             directionIndicator = 3;
             direction = "Forward";
         }
         else if (xValue == 1 && zValue == 0)
         {
+            movementDirection = PlayerMovementDirection.Right;
             directionIndicator = 5;
             direction = "Right";
         }
         else if (xValue == 0 && zValue == -1)
         {
+            movementDirection = PlayerMovementDirection.Backwards;
             directionIndicator = 7;
             direction = "Backwards";
         }
@@ -485,16 +503,19 @@ public class Movement : MonoBehaviour
                 {
                     directionIndicator = 1;
                     direction = "Left";
+                    movementDirection = PlayerMovementDirection.Left;
                 }
                 else if (zValue > -0.5 * xValue && zValue < -2 * xValue)
                 {
                     directionIndicator = 2;
                     direction = "Forward-Left";
+                    movementDirection = PlayerMovementDirection.ForwardLeft;
                 }
                 else if (zValue >= -2 * xValue)
                 {
                     directionIndicator = 3;
                     direction = "Forward";
+                    movementDirection = PlayerMovementDirection.Forward;
                 }
             }
             else if (xValue > 0) //First Quarter of Cartesian Map
@@ -504,16 +525,19 @@ public class Movement : MonoBehaviour
                 {
                     directionIndicator = 3;
                     direction = "Forward";
+                    movementDirection = PlayerMovementDirection.Forward;
                 }
                 else if (zValue > 0.5 * xValue && zValue < 2 * xValue)
                 {
                     directionIndicator = 4;
                     direction = "Forward-Right";
+                    movementDirection = PlayerMovementDirection.ForwardRight;
                 }
                 else if (zValue <= 0.5 * xValue)
                 {
                     directionIndicator = 5;
                     direction = "Right";
+                    movementDirection = PlayerMovementDirection.Right;
                 }
             }
 
@@ -525,17 +549,20 @@ public class Movement : MonoBehaviour
                 if (zValue >= 0.5 * xValue)
                 {
                     directionIndicator = 1;
+                    movementDirection = PlayerMovementDirection.Left;
                     direction = "Left";
                 }
                 else if (zValue < 0.5 * xValue && zValue > 2 * xValue)
                 {
                     directionIndicator = 8;
                     direction = "Backwards-Left";
+                    movementDirection = PlayerMovementDirection.BackwardsLeft;
                 }
                 else if (zValue <= 2 * xValue)
                 {
                     directionIndicator = 7;
                     direction = "Backwards";
+                    movementDirection = PlayerMovementDirection.Backwards;
                 }
             }
             else if (xValue > 0) //Fourth Quarter of Cartesian Map
@@ -545,16 +572,19 @@ public class Movement : MonoBehaviour
                 {
                     directionIndicator = 7;
                     direction = "Backwards";
+                    movementDirection = PlayerMovementDirection.Backwards;
                 }
                 else if (zValue < -0.5 * xValue && zValue > -2 * xValue)
                 {
                     directionIndicator = 6;
                     direction = "Backwards-Right";
+                    movementDirection = PlayerMovementDirection.BackwardsRight;
                 }
                 else if (zValue >= -0.5 * xValue)
                 {
                     directionIndicator = 5;
                     direction = "Right";
+                    movementDirection = PlayerMovementDirection.Right;
                 }
             }
         }
@@ -562,6 +592,7 @@ public class Movement : MonoBehaviour
         {
             directionIndicator = 0;
             direction = "Idle";
+            movementDirection = PlayerMovementDirection.Idle;
         }
 
         if (zValue > 0 || xValue > 0)
@@ -657,18 +688,20 @@ public class Movement : MonoBehaviour
         currentMaxSpeed = _defaultMaxSpeed;
         isOnLadder = false;
     }
-    public void ResidualMovementWhileNotGrounded()
+    public void ApplyResidualMovementWhileNotGrounded()
     {
-        if (!isGrounded && _worldMovementVect.magnitude > 0)
-            _cController.Move(_worldMovementVect * 0.9f * _lastCalulatedGroundedSpeed * Time.deltaTime);
+        if (!isGrounded && _movementInput.magnitude > 0)
+            _cController.Move(_movementInput * 0.9f * _lastCalulatedGroundedSpeed * Time.deltaTime);
     }
     void ApplyInAirMovement()
     {
-        if (!_groundCheckScript.isGrounded)
-        {
-            Vector3 currentMovementInput = transform.right * _correctedRightInput + transform.forward * _correctedForwardInput;
-            _cController.Move(currentMovementInput * 0.3f * _defaultMaxSpeed * Time.deltaTime);
-        }
+        //if (!_groundCheckScript.isGrounded)
+        //{
+        //    Vector3 currentMovementInput = transform.right * _correctedRightInput + transform.forward * _correctedForwardInput;
+        //    if (_movementInput.z + currentMovementInput.z > 1)
+        //        currentMovementInput.z = 0;
+        //    _cController.Move(currentMovementInput * 0.3f * _defaultMaxSpeed * Time.deltaTime);
+        //}
     }
     public void ApplyGravityOnGravityVector()
     {
@@ -689,7 +722,7 @@ public class Movement : MonoBehaviour
             Vector3 edgeFallMovement = transform.position - hit.point;
             edgeFallMovement.y = 0;
             float edgeFallFactor = 1;
-            _worldMovementVect += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
+            _movementInput += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
         }
     }
 
