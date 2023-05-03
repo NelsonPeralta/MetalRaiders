@@ -257,7 +257,7 @@ public class PlayerController : MonoBehaviourPun
     //TODO Make the player controller handle the third person script and models instead of the movement script
     void Sprint()
     {
-        if (movement.direction == "Forward")
+        if (movement.movementDirection == Movement.PlayerMovementDirection.Forward)
         {
             if (!movement.isGrounded || isReloading)
                 return;

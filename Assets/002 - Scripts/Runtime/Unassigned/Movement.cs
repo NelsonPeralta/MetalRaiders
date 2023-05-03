@@ -15,7 +15,6 @@ public class Movement : MonoBehaviour
     Vector3 jumpMovementCorrector;
 
 
-    public string direction;
 
 
 
@@ -82,34 +81,6 @@ public class Movement : MonoBehaviour
         }
     }
 
-    public int directionIndicator
-    {
-        get { return _directionIndicator; }
-        set
-        {
-            _directionIndicator = value;
-
-            if (value == 0)
-                movementDirection = PlayerMovementDirection.Idle;
-            else if (value == 1)
-                movementDirection = PlayerMovementDirection.Left;
-            else if (value == 2)
-                movementDirection = PlayerMovementDirection.ForwardLeft;
-            else if (value == 3)
-                movementDirection = PlayerMovementDirection.Forward;
-            else if (value == 4)
-                movementDirection = PlayerMovementDirection.ForwardRight;
-            else if (value == 5)
-                movementDirection = PlayerMovementDirection.Right;
-            else if (value == 6)
-                movementDirection = PlayerMovementDirection.BackwardsRight;
-            else if (value == 7)
-                movementDirection = PlayerMovementDirection.Backwards;
-            else if (value == 8)
-                movementDirection = PlayerMovementDirection.BackwardsLeft;
-
-        }
-    }
 
     public float currentMaxSpeed { get { return _currentMaxSpeed; } set { _currentMaxSpeed = value; } }
     public float defaultMaxSpeed { get { return _defaultMaxSpeed; } }
@@ -167,7 +138,7 @@ public class Movement : MonoBehaviour
         _rightDeadzone = 0.2f, _forwardDeadzone = 0.2f,
         _defaultTestMaxSpeed = 4f, _currentGravity = -9.81f;
     float defaultSlopeLimit, defaultStepOffset, _crouchJumpTime = 0.2f, crouchJumpTime = 0.2f, _lastCalulatedGroundedSpeed;
-    int _directionIndicator = 0, _terminalVelocity = -200;
+    int _terminalVelocity = -200;
     Vector3 _lastPos;
 
 
@@ -468,31 +439,25 @@ public class Movement : MonoBehaviour
             _currentGravity = defaultGravity;
     }
 
-    int CheckDirection(float xValue, float zValue)
+    PlayerMovementDirection CheckDirection(float xValue, float zValue)
     {
+        PlayerMovementDirection pmd = PlayerMovementDirection.Idle;
+
         if (xValue == -1 && zValue == 0)
         {
-            directionIndicator = 1;
-            direction = "Left";
             movementDirection = PlayerMovementDirection.Left;
         }
         else if (xValue == 0 && zValue == 1)
         {
             movementDirection = PlayerMovementDirection.Forward;
-            directionIndicator = 3;
-            direction = "Forward";
         }
         else if (xValue == 1 && zValue == 0)
         {
             movementDirection = PlayerMovementDirection.Right;
-            directionIndicator = 5;
-            direction = "Right";
         }
         else if (xValue == 0 && zValue == -1)
         {
             movementDirection = PlayerMovementDirection.Backwards;
-            directionIndicator = 7;
-            direction = "Backwards";
         }
 
         else if (zValue > 0)
@@ -501,20 +466,14 @@ public class Movement : MonoBehaviour
             {
                 if (zValue <= -0.5 * xValue)
                 {
-                    directionIndicator = 1;
-                    direction = "Left";
                     movementDirection = PlayerMovementDirection.Left;
                 }
                 else if (zValue > -0.5 * xValue && zValue < -2 * xValue)
                 {
-                    directionIndicator = 2;
-                    direction = "Forward-Left";
                     movementDirection = PlayerMovementDirection.ForwardLeft;
                 }
                 else if (zValue >= -2 * xValue)
                 {
-                    directionIndicator = 3;
-                    direction = "Forward";
                     movementDirection = PlayerMovementDirection.Forward;
                 }
             }
@@ -523,20 +482,14 @@ public class Movement : MonoBehaviour
 
                 if (zValue >= 2 * xValue)
                 {
-                    directionIndicator = 3;
-                    direction = "Forward";
                     movementDirection = PlayerMovementDirection.Forward;
                 }
                 else if (zValue > 0.5 * xValue && zValue < 2 * xValue)
                 {
-                    directionIndicator = 4;
-                    direction = "Forward-Right";
                     movementDirection = PlayerMovementDirection.ForwardRight;
                 }
                 else if (zValue <= 0.5 * xValue)
                 {
-                    directionIndicator = 5;
-                    direction = "Right";
                     movementDirection = PlayerMovementDirection.Right;
                 }
             }
@@ -548,20 +501,14 @@ public class Movement : MonoBehaviour
             {
                 if (zValue >= 0.5 * xValue)
                 {
-                    directionIndicator = 1;
                     movementDirection = PlayerMovementDirection.Left;
-                    direction = "Left";
                 }
                 else if (zValue < 0.5 * xValue && zValue > 2 * xValue)
                 {
-                    directionIndicator = 8;
-                    direction = "Backwards-Left";
                     movementDirection = PlayerMovementDirection.BackwardsLeft;
                 }
                 else if (zValue <= 2 * xValue)
                 {
-                    directionIndicator = 7;
-                    direction = "Backwards";
                     movementDirection = PlayerMovementDirection.Backwards;
                 }
             }
@@ -570,28 +517,20 @@ public class Movement : MonoBehaviour
 
                 if (zValue <= -2 * xValue)
                 {
-                    directionIndicator = 7;
-                    direction = "Backwards";
                     movementDirection = PlayerMovementDirection.Backwards;
                 }
                 else if (zValue < -0.5 * xValue && zValue > -2 * xValue)
                 {
-                    directionIndicator = 6;
-                    direction = "Backwards-Right";
                     movementDirection = PlayerMovementDirection.BackwardsRight;
                 }
                 else if (zValue >= -0.5 * xValue)
                 {
-                    directionIndicator = 5;
-                    direction = "Right";
                     movementDirection = PlayerMovementDirection.Right;
                 }
             }
         }
         else if (zValue == 0 && xValue == 0)
         {
-            directionIndicator = 0;
-            direction = "Idle";
             movementDirection = PlayerMovementDirection.Idle;
         }
 
@@ -613,7 +552,7 @@ public class Movement : MonoBehaviour
         }
 
 
-        return directionIndicator;
+        return pmd;
     }
 
     void ControlAnimationSpeed()

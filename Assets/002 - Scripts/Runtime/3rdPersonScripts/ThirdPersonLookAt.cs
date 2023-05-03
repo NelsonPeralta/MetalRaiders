@@ -11,8 +11,6 @@ public class ThirdPersonLookAt : MonoBehaviour
     public Movement movement;
     //public PhotonView photonView;
 
-    public int directionIndicator;
-
     [Header("Offsets")]
     public Vector3 currentOffset;
     public Vector3 iddleOffset;
@@ -64,57 +62,38 @@ public class ThirdPersonLookAt : MonoBehaviour
     {
         if (movement.GetComponent<PlayerController>().isSprinting)
             return;
-        UpdateOffset(movement.directionIndicator);
+        UpdateOffset(movement.movementDirection);
         PlayerChestRotation();
         //photonView.RPC("UpdateOffset", RpcTarget.All, movement.directionIndicator);
         //photonView.RPC("PlayerChestRotation", RpcTarget.All);
     }
-    
+
     void PlayerChestRotation()
     {
         //Debug.Log(lookAtGO.position);
         chest.LookAt(lookAtGO.position);
         chest.rotation = chest.rotation * Quaternion.Euler(currentOffset);
     }
-    
-    void UpdateOffset(int directionIndicator)
-    {
-        if (directionIndicator == 0) // Idle
-        {
-            currentOffset = iddleOffset;
-        }
-        else if (directionIndicator == 1) // Left
-        {
-            currentOffset = LeftOffset;
-        }
-        else if (directionIndicator == 2) // Left Forward
-        {
-            currentOffset = LeftForwardOffset;
-        }
-        else if (directionIndicator == 3) // Forward
-        {
-            currentOffset = ForwardOffset;
-        }
-        else if (directionIndicator == 4)// Right Forward
-        {
-            currentOffset = RightForwardOffest;
-        }
-        else if (directionIndicator == 5)// Right
-        {
-            currentOffset = RightOffset;
-        }
-        else if (directionIndicator == 6)// Right Backwards
-        {
-            currentOffset = RightBackwardsOffset;
-        }
-        else if (directionIndicator == 7)// Backwards
-        {
-            currentOffset = BackwardsOffset;
-        }
-        else if (directionIndicator == 8)// Left Backwards
-        {
-            currentOffset = LeftBackwardsOffset;
-        }
-    }
 
+    void UpdateOffset(Movement.PlayerMovementDirection pmd)
+    {
+        if (pmd == Movement.PlayerMovementDirection.Idle) // Idle
+            currentOffset = iddleOffset;
+        else if (pmd == Movement.PlayerMovementDirection.Left) // Left
+            currentOffset = LeftOffset;
+        else if (pmd == Movement.PlayerMovementDirection.ForwardLeft) // Left Forward
+            currentOffset = LeftForwardOffset;
+        else if (pmd == Movement.PlayerMovementDirection.Forward) // Forward
+            currentOffset = ForwardOffset;
+        else if (pmd == Movement.PlayerMovementDirection.ForwardRight)// Right Forward
+            currentOffset = RightForwardOffest;
+        else if (pmd == Movement.PlayerMovementDirection.Right)// Right
+            currentOffset = RightOffset;
+        else if (pmd == Movement.PlayerMovementDirection.BackwardsRight)// Right Backwards
+            currentOffset = RightBackwardsOffset;
+        else if (pmd == Movement.PlayerMovementDirection.Backwards)// Backwards
+            currentOffset = BackwardsOffset;
+        else if (pmd == Movement.PlayerMovementDirection.BackwardsLeft)// Left Backwards
+            currentOffset = LeftBackwardsOffset;
+    }
 }
