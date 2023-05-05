@@ -96,7 +96,6 @@ public class KillFeedManager : MonoBehaviour
 
         // Calculates in pixels the width of text
         // TODO: Modular Kill Feed without Sprite Sheet
-        Debug.Log(nkf.GetComponent<TMP_Text>().textBounds.size.x);
 
         yield return new WaitForSeconds(5);
         Destroy(nkf);

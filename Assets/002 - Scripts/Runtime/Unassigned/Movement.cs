@@ -53,7 +53,7 @@ public class Movement : MonoBehaviour
     }
     public bool isGrounded
     {
-        get { return _groundCheckScript.isGrounded; }
+        get { Debug.Log(_groundCheckScript.touch); return _groundCheckScript.isGrounded; }
         set
         {
             if (value != _isGrounded)
@@ -82,7 +82,19 @@ public class Movement : MonoBehaviour
     }
 
 
-    public float currentMaxSpeed { get { return _currentMaxSpeed; } set { _currentMaxSpeed = value; } }
+    public float currentMaxSpeed
+    {
+        get { return _currentMaxSpeed; }
+        set
+        {
+            _currentMaxSpeed = value;
+            if (_pController.isCrouching)
+                _currentMaxSpeed = defaultMaxSpeed * 0.5f;
+
+            if (_pController.isSprinting)
+                _currentMaxSpeed = defaultMaxSpeed * 1.5f;
+        }
+    }
     public float defaultMaxSpeed { get { return _defaultMaxSpeed; } }
     public float jumpForce { get { return _jumpForce; } }
     public float manCannonCooldown
@@ -200,7 +212,7 @@ public class Movement : MonoBehaviour
         if (!_pController.PV.IsMine) return;
         if (_player.isDead || _player.isRespawning) { _movementInput = Vector3.zero; _verticalVector = Vector3.zero; return; }
 
-        ManCannonJumpCooldwon(); CalculateCurrentSpeed();
+        CalculateCrouchSpeed(); CalculateSprintSpeed(); ManCannonJumpCooldwon(); CalculateCurrentSpeed();
 
         ApplyGravityOnGravityVector();
 
@@ -240,7 +252,12 @@ public class Movement : MonoBehaviour
                 if (!_pController.isCrouching)
                 {
                     if (_pController.isSprinting)
-                        _cController.Move(currentMovementInput * (_currentMaxSpeed * 1.5f) * Time.deltaTime);
+                    {
+                        currentMaxSpeed = 6;
+                        Vector3 motion = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
+            (transform.right * Mathf.Abs(_correctedRightInput) * _correctedRightSpeed));
+                        _cController.Move(motion * Time.deltaTime);
+                    }
                     else
                     {
 
@@ -297,8 +314,8 @@ public class Movement : MonoBehaviour
             if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
             if (Mathf.Abs(_correctedForwardInput) <= _forwardDeadzone) _correctedForwardInput = 0;
 
-            _maxRightSpeed = Mathf.Abs(_correctedRightInput * _defaultMaxSpeed);
-            _maxForwardSpeed = Mathf.Abs(_correctedForwardInput * _defaultMaxSpeed);
+            _maxRightSpeed = Mathf.Abs(_correctedRightInput * currentMaxSpeed);
+            _maxForwardSpeed = Mathf.Abs(_correctedForwardInput * currentMaxSpeed);
         }
         else
         {
@@ -381,8 +398,16 @@ public class Movement : MonoBehaviour
 
 
 
-
-
+    void CalculateSprintSpeed()
+    {
+        if (_pController.isSprinting)
+            currentMaxSpeed *= 2;
+    }
+    void CalculateCrouchSpeed()
+    {
+        if (_pController.isCrouching)
+            currentMaxSpeed *= 0.5f;
+    }
 
     void CrouchJump()
     {
@@ -409,6 +434,8 @@ public class Movement : MonoBehaviour
     {
         if (manCannonCooldown > 0 || _pController.pauseMenuOpen)
             return;
+
+        Debug.Log("Jump");
 
         ThirdPersonScript thirdPersonScript = null;
         thirdPersonScript = _pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;

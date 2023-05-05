@@ -879,7 +879,6 @@ public class Player : MonoBehaviourPunCallbacks
     void SpawnRagdoll()
     {
         var ragdoll = GameObjectPool.instance.SpawnPooledPlayerRagdoll();
-        Debug.Log(ragdoll.name);
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.SetActive(true);

@@ -97,7 +97,6 @@ public class PlayerShieldBar : PlayerBar
         if (isOvershield)
             return;
 
-        Debug.Log("OnShieldBroken_Delegate");
         healingSlider.maxValue = player.defaultHealingCountdown + ((player.maxHealthPoints - player.hitPoints) / player.healthHealingIncrement);
         redAlertBarCountdown = redAlertInterval;
     }
