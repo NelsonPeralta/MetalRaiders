@@ -20,8 +20,23 @@ public class Melee : MonoBehaviour
     public AudioClip knifeFailSound;
 
 
+
+
+
+    public Movement movement { get { return _movement; } }
+
+
+
+
+    [SerializeField] Movement _movement;
+
+    float _maxDis;
+
+
     private void Start()
     {
+        _maxDis = GetComponent<BoxCollider>().size.z;
+
         player.OnPlayerDeath -= OnPlayerDeadth_Delegate;
         player.OnPlayerDeath += OnPlayerDeadth_Delegate;
 
@@ -76,6 +91,9 @@ public class Melee : MonoBehaviour
 
                         Vector3 dir = (playerToDamage.transform.position - player.transform.position);
 
+                        print(_maxDis);
+                        Debug.Log(Vector3.Distance(playerToDamage.transform.position, movement.transform.position));
+                        movement.Push(playerToDamage.transform.position - movement.transform.position, 100, PushSource.Melee, true);
                         playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
                     }
                 }

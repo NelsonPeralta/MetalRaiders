@@ -127,6 +127,12 @@ public class PlayerController : MonoBehaviourPun
     public AudioSource meleeAudioSource;
 
 
+
+
+
+    PlayerThirdPersonModelManager _playerThirdPersonModelManager;
+
+
     public bool isMeleeing { get { return _isMeleeing; } set { _isMeleeing = value; if (value) _meleeCooldown = 0.9f; } }
 
 
@@ -136,6 +142,7 @@ public class PlayerController : MonoBehaviourPun
     void Awake()
     {
         PV = GetComponent<PhotonView>();
+        _playerThirdPersonModelManager = GetComponent<PlayerThirdPersonModelManager>();
         OnPlayerTestButton += OnTestButton_Delegate;
     }
     public void Start()
@@ -257,6 +264,24 @@ public class PlayerController : MonoBehaviourPun
     //TODO Make the player controller handle the third person script and models instead of the movement script
     void Sprint()
     {
+        if (isSprinting)
+        {
+            weaponAnimator.SetBool("Run", true);
+
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
+
+
+            if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
+                _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
+            else
+                _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
+
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Rifle", true);
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Pistol", true);
+        }
+
+
         if (movement.movementDirection == Movement.PlayerMovementDirection.Forward)
         {
             if (!movement.isGrounded || isReloading)
@@ -290,9 +315,18 @@ public class PlayerController : MonoBehaviourPun
         OnSprintStart?.Invoke(this);
         ScopeOut();
         weaponAnimator.SetBool("Run", true);
-        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Sprint", true);
-        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Rifle", false);
-        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Pistol", false);
+
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
+
+
+        if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
+        else
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
+
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Rifle", false);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Pistol", false);
         //GetComponent<Player>().playerVoice.volume = 0.1f;
         //GetComponent<Player>().PlaySprintingSound();
     }
@@ -309,7 +343,8 @@ public class PlayerController : MonoBehaviourPun
             return;
         isSprinting = false;
         weaponAnimator.SetBool("Run", false);
-        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Sprint", false);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Rifle Sprint", false);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Pistol Sprint", false);
 
         if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
@@ -534,9 +569,8 @@ public class PlayerController : MonoBehaviourPun
                 !isHoldingShootBtn && /*!isFiring &&*/ !isThrowingGrenade && !isSprinting)
             {
                 isMeleeing = true;
-                _meleeCount = melee.playersInMeleeZone.Count;
-                Debug.Log("RPC Call: Melee");
-                meleeMovementFactor = 1;
+                //_meleeCount = melee.playersInMeleeZone.Count;
+                //meleeMovementFactor = 1;
 
                 rScript.reloadIsCanceled = true;
 
@@ -544,22 +578,22 @@ public class PlayerController : MonoBehaviourPun
             }
         }
 
-        if (meleeMovementFactor > 0)
-        {
-            if (_meleeCount > 0)
-            {
-                Vector3 move = transform.forward * meleeMovementFactor;
-                GetComponent<CharacterController>().Move(move * movement.defaultMaxSpeed * 6 * Time.deltaTime);
-            }
+        //if (meleeMovementFactor > 0)
+        //{
+        //    if (_meleeCount > 0)
+        //    {
+        //        Vector3 move = transform.forward * meleeMovementFactor;
+        //        GetComponent<CharacterController>().Move(move * movement.defaultMaxSpeed * 6 * Time.deltaTime);
+        //    }
 
-            meleeMovementFactor -= Time.deltaTime * 5f;
+        //    meleeMovementFactor -= Time.deltaTime * 5f;
 
-            if (meleeMovementFactor <= 0)
-            {
-                _meleeCount = 0;
-                meleeMovementFactor = 0;
-            }
-        }
+        //    if (meleeMovementFactor <= 0)
+        //    {
+        //        _meleeCount = 0;
+        //        meleeMovementFactor = 0;
+        //    }
+        //}
     }
 
 

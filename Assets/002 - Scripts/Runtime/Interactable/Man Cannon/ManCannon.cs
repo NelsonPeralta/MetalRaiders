@@ -46,7 +46,7 @@ public class ManCannon : MonoBehaviour
                 cc.GetComponent<Movement>().manCannonCooldown = 1;
 
                 if (_blockMovement)
-                    cc.GetComponent<Movement>().canMoveWhileJumping = false;
+                    cc.GetComponent<Movement>().canMove = false;
 
                 GetComponent<AudioSource>().clip = onTriggerAudioClip;
                 GetComponent<AudioSource>().Play();

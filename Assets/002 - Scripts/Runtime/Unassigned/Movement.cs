@@ -32,7 +32,7 @@ public class Movement : MonoBehaviour, IMoveable
     public Rewired.Player _rewiredplayer { get { return _pController.rewiredPlayer; } }
 
     public bool isOnLadder { get { return _isOnLadder; } set { _isOnLadder = value; } }
-    public bool canMoveWhileJumping
+    public bool canMove
     {
         get { return _canMoveWhileJumping; }
         set
@@ -47,7 +47,7 @@ public class Movement : MonoBehaviour, IMoveable
                 else if (value && _canMoveWhileJumpingCooldown <= 0)
                     _canMoveWhileJumping = value;
 
-                Debug.Log($"Can move while jumping: {canMoveWhileJumping}");
+                Debug.Log($"Can move while jumping: {canMove}");
             }
         }
     }
@@ -62,7 +62,7 @@ public class Movement : MonoBehaviour, IMoveable
             if (value != _isGrounded)
             {
                 _isGrounded = value;
-                canMoveWhileJumping = true;
+                canMove = true;
             }
         }
     }
@@ -279,7 +279,7 @@ public class Movement : MonoBehaviour, IMoveable
                     _cController.Move(_movementInput * Time.deltaTime);
                 }
             }
-            else if (!isGrounded && canMoveWhileJumping)
+            else if (!isGrounded && canMove)
             {
                 currentMovementInput = transform.right * _correctedRightInput + transform.forward * _correctedForwardInput;
 
@@ -747,7 +747,7 @@ public class Movement : MonoBehaviour, IMoveable
             manCannonCooldown = 1f;
 
         if (blockMovement)
-            canMoveWhileJumping = false;
+            canMove = false;
     }
 }
 

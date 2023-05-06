@@ -8,8 +8,15 @@ public class ThirdPersonScript : MonoBehaviour
     public List<SkinnedMeshRenderer> meshes = new List<SkinnedMeshRenderer>();
     public Transform handBone;
 
+
+    public Animator animator { get { return _animator; } }
+
+
+    Animator _animator;
+
     private void Start()
     {
+        _animator = GetComponent<Animator>();
         //if (!player.PV.IsMine)
         //    meshes[0].gameObject.layer = 0;
         //else
