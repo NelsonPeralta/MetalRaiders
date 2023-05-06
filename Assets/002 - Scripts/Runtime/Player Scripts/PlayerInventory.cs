@@ -89,7 +89,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                 try
                 {
-                    preVal.equippedModelB.SetActive(false);
+                    //preVal.equippedModelB.SetActive(false);  DO NOT ENABLE THIS LINE. IT WILL HIDE THE 3PS MODEL
                     preVal.holsteredModel.SetActive(false);
                 }
                 catch { }
