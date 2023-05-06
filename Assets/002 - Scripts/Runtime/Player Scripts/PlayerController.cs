@@ -633,7 +633,7 @@ public class PlayerController : MonoBehaviourPun
 
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Crouch", false);
         isCrouching = false;
-        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .35f, 0);
+        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .30f, 0);
         gwProperties.bulletSpawnPoint.localPosition = gwProperties.defaultBulletSpawnPoint;
 
         GetComponent<CharacterController>().height = 1.7f; // Default values on the prefab

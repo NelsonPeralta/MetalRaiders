@@ -633,22 +633,25 @@ public class Player : MonoBehaviourPunCallbacks
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
 
-        try
-        {
-            Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.pid_player_Dict);
-            if (!t.ContainsKey(pid))
-            {
-                t.Add(pid, this);
-            }
-            GameManager.instance.pid_player_Dict = t;
-        }
-        catch { }
+
+
         try
         {
             if (isMine)
             {
-                GameManager.instance.localPlayers.Add(controllerId, this);
+                Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.localPlayers);
+                if (!t.ContainsKey(pid))
+                    t.Add(pid, this);
+                GameManager.instance.localPlayers = t;
             }
+        }
+        catch { }
+        try
+        {
+            Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.pid_player_Dict);
+            if (!t.ContainsKey(pid))
+                t.Add(pid, this);
+            GameManager.instance.pid_player_Dict = t;
         }
         catch { }
         try { team = GameManager.instance.onlineTeam; } catch { }
@@ -695,6 +698,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
     {
+        Debug.Log("OnAllPlayersJoinedRoom_Delegate");
         _allPlayersJoined = true;
         _gameStartDelay = GameManager.GameStartDelay * 0.99f;
     }
@@ -883,10 +887,10 @@ public class Player : MonoBehaviourPunCallbacks
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.SetActive(true);
 
-        if (deathByHeadshot) {  ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.Grenade) {  ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
-        else if (deathNature == DeathNature.Melee) {  ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 500); }
-        else if (!deathByHeadshot) {  ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+        if (deathByHeadshot) { ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+        else if (deathNature == DeathNature.Grenade) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
+        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 500); }
+        else if (!deathByHeadshot) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 
     void HitPointsRecharge()

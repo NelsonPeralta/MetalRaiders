@@ -10,13 +10,15 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
     public enum CameraType { Main, Gun, UI, World }
     public CameraType cameraType;
 
+    [SerializeField] AudioListener _audioListener;
+
     // Start is called before the first frame update
     void Start()
     {
         player = transform.root.GetComponent<Player>();
         camera = GetComponent<Camera>();
 
-        if(!player.isMine)
+        if (!player.isMine)
         {
             gameObject.SetActive(false);
             return;
@@ -49,14 +51,12 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
             if (playerRewiredId == 1)
             {
                 camera.rect = new Rect(0, 0f, camera.rect.width, camera.rect.height);
-                try { Destroy(GetComponent<AudioListener>()); } catch { }
+
+                //if (cameraType == CameraType.Main || cameraType == CameraType.Gun)
+                //    camera.enabled = true;
+
+                try { _audioListener.gameObject.SetActive(false); } catch { }
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

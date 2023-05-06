@@ -70,7 +70,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (pid_player_Dict.Count != previousCount)
             {
-                if (pid_player_Dict.Count == PhotonNetwork.CurrentRoom.PlayerCount)
+                Debug.Log(pid_player_Dict.Count);
+                Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+                Debug.Log(instance.localPlayers.Count);
+
+                if (pid_player_Dict.Count == (PhotonNetwork.CurrentRoom.PlayerCount + GameManager.instance.localPlayers.Count - 1))
                     GetComponent<GameManagerEvents>().allPlayersJoined = true;
             }
         }

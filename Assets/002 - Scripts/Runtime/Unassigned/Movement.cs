@@ -116,7 +116,7 @@ public class Movement : MonoBehaviour, IMoveable
 
     public Vector3 verticalVector { get { return _verticalVector; } set { _verticalVector = value; } }
 
-    public Rewired.Player rewiredPlayer { get { return _rewiredPlayer; } }
+    public Rewired.Player rewiredPlayer { get { if (_rewiredPlayer == null) _rewiredPlayer = _pController.rewiredPlayer; return _rewiredPlayer; } }
     public PlayerMovementDirection movementDirection { get { return _playerMovementDirection; } private set { _playerMovementDirection = value; } }
 
     public PlayerImpactReceiver playerImpactReceiver { get { return _playerImpactReceiver; } }
@@ -192,7 +192,7 @@ public class Movement : MonoBehaviour, IMoveable
         _playerImpactReceiver = GetComponent<PlayerImpactReceiver>();
 
         _currentMaxSpeed = defaultMaxSpeed;
-        _rewiredPlayer = ReInput.players.GetPlayer(0);
+        _rewiredPlayer = _pController.rewiredPlayer;
         _verticalVector = new Vector3(0, defaultGravity, 0);
     }
     void Start()
@@ -311,22 +311,26 @@ public class Movement : MonoBehaviour, IMoveable
 
     void CalculateInput()
     {
-        if (!_pController.pauseMenuOpen)
+        try
         {
-            _rawRightInput = _correctedRightInput = rewiredPlayer.GetAxis("Move Horizontal");
-            _rawForwardInput = _correctedForwardInput = rewiredPlayer.GetAxis("Move Vertical");
+            if (!_pController.pauseMenuOpen)
+            {
+                _rawRightInput = _correctedRightInput = rewiredPlayer.GetAxis("Move Horizontal");
+                _rawForwardInput = _correctedForwardInput = rewiredPlayer.GetAxis("Move Vertical");
 
-            if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
-            if (Mathf.Abs(_correctedForwardInput) <= _forwardDeadzone) _correctedForwardInput = 0;
+                if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
+                if (Mathf.Abs(_correctedForwardInput) <= _forwardDeadzone) _correctedForwardInput = 0;
 
-            _maxRightSpeed = Mathf.Abs(_correctedRightInput * currentMaxSpeed);
-            _maxForwardSpeed = Mathf.Abs(_correctedForwardInput * currentMaxSpeed);
+                _maxRightSpeed = Mathf.Abs(_correctedRightInput * currentMaxSpeed);
+                _maxForwardSpeed = Mathf.Abs(_correctedForwardInput * currentMaxSpeed);
+            }
+            else
+            {
+                _rawRightInput = 0;
+                _rawForwardInput = 0;
+            }
         }
-        else
-        {
-            _rawRightInput = 0;
-            _rawForwardInput = 0;
-        }
+        catch { }
     }
     void CalculateCurrentSpeed()
     {
@@ -707,7 +711,7 @@ public class Movement : MonoBehaviour, IMoveable
             //Debug.Log("OnControllerColliderHit");
             Vector3 edgeFallMovement = transform.position - hit.point;
             edgeFallMovement.y = 0;
-            float edgeFallFactor = 1;
+            float edgeFallFactor = 10;
             _movementInput += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
         }
     }
