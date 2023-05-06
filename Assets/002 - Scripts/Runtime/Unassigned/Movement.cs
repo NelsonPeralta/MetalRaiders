@@ -4,7 +4,7 @@ using UnityEngine;
 using Rewired;
 using Photon.Pun;
 
-public class Movement : MonoBehaviour
+public class Movement : MonoBehaviour, IMoveable
 {
     public delegate void PlayerMovementEvent(Movement _movementVect);
     public PlayerMovementEvent OnPlayerStartedMoving, OnPlayerStoppedMoving;
@@ -27,7 +27,7 @@ public class Movement : MonoBehaviour
 
 
 
-
+    public Player player { get { return _player; } }
     public LayerMask groundMask { get { return _groundMask; } }
     public Rewired.Player _rewiredplayer { get { return _pController.rewiredPlayer; } }
 
@@ -53,7 +53,10 @@ public class Movement : MonoBehaviour
     }
     public bool isGrounded
     {
-        get { Debug.Log(_groundCheckScript.touch); return _groundCheckScript.isGrounded; }
+        get
+        {
+            return _groundCheckScript.isGrounded;
+        }
         set
         {
             if (value != _isGrounded)
@@ -103,6 +106,7 @@ public class Movement : MonoBehaviour
         set
         {
             Debug.Log("Man Cannon Cooldown");
+            verticalVector = Vector3.zero;
             _manCannonCooldown = 0.5f;
         }
     }
@@ -115,7 +119,7 @@ public class Movement : MonoBehaviour
     public Rewired.Player rewiredPlayer { get { return _rewiredPlayer; } }
     public PlayerMovementDirection movementDirection { get { return _playerMovementDirection; } private set { _playerMovementDirection = value; } }
 
-
+    public PlayerImpactReceiver playerImpactReceiver { get { return _playerImpactReceiver; } }
 
 
 
@@ -143,6 +147,7 @@ public class Movement : MonoBehaviour
     Player _player;
     CharacterController _cController;
     PlayerController _pController;
+    PlayerImpactReceiver _playerImpactReceiver;
     Rewired.Player _rewiredPlayer;
 
     bool _canMoveWhileJumping, _isGrounded, _isMoving, _isOnLadder;
@@ -184,6 +189,7 @@ public class Movement : MonoBehaviour
         _player = GetComponent<Player>();
         _cController = GetComponent<CharacterController>();
         _pController = GetComponent<PlayerController>();
+        _playerImpactReceiver = GetComponent<PlayerImpactReceiver>();
 
         _currentMaxSpeed = defaultMaxSpeed;
         _rewiredPlayer = ReInput.players.GetPlayer(0);
@@ -286,7 +292,6 @@ public class Movement : MonoBehaviour
                 _cController.Move(_movementInput * 0.65f * _currentMaxSpeed * Time.deltaTime);
             }
         }
-
 
 
         _cController.Move(_verticalVector * Time.deltaTime);
@@ -435,8 +440,6 @@ public class Movement : MonoBehaviour
         if (manCannonCooldown > 0 || _pController.pauseMenuOpen)
             return;
 
-        Debug.Log("Jump");
-
         ThirdPersonScript thirdPersonScript = null;
         thirdPersonScript = _pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
 
@@ -453,9 +456,14 @@ public class Movement : MonoBehaviour
         if (isGrounded && _rewiredplayer.GetButtonDown("Jump"))
         {
             float _jumpForce = jumpForce;
+            Debug.Log("Jump");
+            Debug.Log(_groundCheckScript.touch);
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) { _jumpForce = jumpForce * 0.7f; }
-            _verticalVector.y = _jumpForce;
+
+            Vector3 v = verticalVector;
+            v.y = _jumpForce;
+            verticalVector = v;
         }
 
 
@@ -720,6 +728,29 @@ public class Movement : MonoBehaviour
 
         if (_manCannonCooldown > 0)
             _manCannonCooldown -= Time.deltaTime;
+    }
+
+
+
+
+
+
+
+
+    /// <summary>
+    ///                         IMoveable
+    /// </summary>
+    public void Push(Vector3 dir, int pow, PushSource ps, bool blockMovement)
+    {
+        if (player.isDead || player.isRespawning || !player.isMine)
+            return;
+
+        playerImpactReceiver.AddImpact(dir, pow);
+        if (ps == PushSource.ManCannon)
+            manCannonCooldown = 1f;
+
+        if (blockMovement)
+            canMoveWhileJumping = false;
     }
 }
 

@@ -24,6 +24,17 @@ public class ThirdPersonLookAt : MonoBehaviour
     public Vector3 BackwardsOffset;
     public Vector3 LeftBackwardsOffset;
 
+
+
+
+    [SerializeField] PlayerController _playerController;
+    [SerializeField] Movement _movement;
+
+    Vector3 _crouchRotationFix = new Vector3(0, 30, 0);
+
+
+
+
     //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     //{
     //    //Debug.Log("In OPSV");
@@ -56,6 +67,18 @@ public class ThirdPersonLookAt : MonoBehaviour
         if (!chest)
             chest = anim.GetBoneTransform(HumanBodyBones.Chest);
         currentOffset = iddleOffset;
+    }
+
+    private void Update()
+    {
+        try
+        {
+            if (_playerController.isCrouching)
+                transform.localRotation = Quaternion.Euler(_crouchRotationFix);
+            else
+                transform.localRotation = Quaternion.Euler(Vector3.zero);
+        }
+        catch { }
     }
 
     private void LateUpdate()
