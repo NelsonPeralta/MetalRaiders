@@ -257,7 +257,7 @@ public class PlayerController : MonoBehaviourPun
     //TODO Make the player controller handle the third person script and models instead of the movement script
     void Sprint()
     {
-        if (movement.direction == "Forward")
+        if (movement.movementDirection == Movement.PlayerMovementDirection.Forward)
         {
             if (!movement.isGrounded || isReloading)
                 return;
@@ -549,7 +549,7 @@ public class PlayerController : MonoBehaviourPun
             if (_meleeCount > 0)
             {
                 Vector3 move = transform.forward * meleeMovementFactor;
-                GetComponent<CharacterController>().Move(move * movement.defaultSpeed * 6 * Time.deltaTime);
+                GetComponent<CharacterController>().Move(move * movement.defaultMaxSpeed * 6 * Time.deltaTime);
             }
 
             meleeMovementFactor -= Time.deltaTime * 5f;

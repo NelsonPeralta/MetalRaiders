@@ -123,7 +123,8 @@ public class WeaponProperties : MonoBehaviour
                 player.GetComponent<PlayerUI>().leftSpareAmmoText.text = spareAmmo.ToString();
             }
 
-            if (player.isMine && (_currentAmmo == 0 || _currentAmmo == ammoCapacity))
+            if (player.isMine && ((_currentAmmo == 0 || _currentAmmo == ammoCapacity)
+                || ammoReloadType == AmmoReloadType.Shell))
             {
                 UpdateAmmo(index, _currentAmmo, sender: true);
             }
@@ -137,7 +138,7 @@ public class WeaponProperties : MonoBehaviour
         {
             int preVal = _spareAmmo; int newVal = value;
 
-            if (GameManager.instance.gameType == GameManager.GameType.GunGame && newVal < preVal) return;
+            try { if (GameManager.instance.gameType == GameManager.GameType.GunGame && newVal < preVal) return; } catch { }
 
 
             _spareAmmo = Mathf.Clamp(value, 0, _maxAmmo);

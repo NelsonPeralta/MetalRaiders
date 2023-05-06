@@ -14,6 +14,18 @@ public class ManCannon : MonoBehaviour
         {
             try
             {
+                if (other.GetComponent<IMoveable>() != null)
+                {
+                    Debug.Log("Found IMoveable");
+                    other.GetComponent<IMoveable>().Push(transform.up, power, PushSource.ManCannon, _blockMovement);
+                    return;
+                }
+            }
+            catch { }
+
+
+            try
+            {
                 if (!other.GetComponent<PhotonView>().IsMine)
                     return;
                 Rigidbody rb = other.GetComponent<Rigidbody>();

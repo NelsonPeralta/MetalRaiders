@@ -4,76 +4,59 @@ using UnityEngine;
 using Rewired;
 using Photon.Pun;
 
-public class Movement : MonoBehaviour
+public class Movement : MonoBehaviour, IMoveable
 {
-    public delegate void PlayerMovementEvent(Movement movement);
+    public delegate void PlayerMovementEvent(Movement _movementVect);
     public PlayerMovementEvent OnPlayerStartedMoving, OnPlayerStoppedMoving;
+    public enum PlayerMovementDirection { Idle, Left, Right, Forward, Backwards, ForwardLeft, ForwardRight, BackwardsLeft, BackwardsRight }
 
-    public PhotonView PV;
-    public AllPlayerScripts allPlayerScripts;
-    public CharacterController cController;
-    public Rigidbody rBody;
-    public PlayerController pController;
-    public GameObject thirdPersonRoot;
-    public GameObject thirdPersonModels;
-    public ThirdPersonLookAt tpLookAt;
-    public Player pProperties;
-    public PlayerSFXs sfx;
-    public GroundCheck groundCheckScript;
-    public GroundCheck roofCheckScript;
-    public float defaultSpeed; // Default = 5
-    public float speed;
-    public float playerSpeedPercent;
-    public float jumpForce = 6f;
-
-    public float _defaultGravity = -9.81f;
-    public float defaultGravity = -9.81f;
-    float gravity = -9.81f;
-
-    public Vector3 movement;
-    public Vector3 velocity;
-    public Vector3 calulatedVelocity;
-    public Vector3 lastPos;
 
     [SerializeField]
     Vector3 jumpMovementCorrector;
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
 
-    public bool isMovingForward;
-    public bool isOnLadder;
-    bool CalculatingPlayerSpeed;
 
-    public string direction;
-    public int directionIndicator;
 
-    public Rewired.Player player
+
+
+
+
+
+
+
+
+
+
+    public Player player { get { return _player; } }
+    public LayerMask groundMask { get { return _groundMask; } }
+    public Rewired.Player _rewiredplayer { get { return _pController.rewiredPlayer; } }
+
+    public bool isOnLadder { get { return _isOnLadder; } set { _isOnLadder = value; } }
+    public bool canMoveWhileJumping
     {
-        get { return pController.rewiredPlayer; }
+        get { return _canMoveWhileJumping; }
+        set
+        {
+            if (value != _canMoveWhileJumping)
+            {
+                if (!value)
+                {
+                    _canMoveWhileJumpingCooldown = 0.5f;
+                    _canMoveWhileJumping = value;
+                }
+                else if (value && _canMoveWhileJumpingCooldown <= 0)
+                    _canMoveWhileJumping = value;
+
+                Debug.Log($"Can move while jumping: {canMoveWhileJumping}");
+            }
+        }
     }
-
-    [Header("Audio")]
-    public AudioSource walkingSoundAS;
-    public bool walkingSoundPlaying;
-
-    //Velocity variables
-    Vector3 previousPosition;
-
-    // Characater Controller Default Properties
-    float defaultSlopeLimit;
-    float defaultStepOffset;
-
-    [Header("Third Person Models")]
-    public ThirdPersonScript noArmorThirdPersonScript;
-    public ThirdPersonScript armorThirdPersonScript;
-
-    bool _isMoving;
-
     public bool isGrounded
     {
-        get { return _isGrounded; }
+        get
+        {
+            return _groundCheckScript.isGrounded;
+        }
         set
         {
             if (value != _isGrounded)
@@ -101,95 +84,126 @@ public class Movement : MonoBehaviour
         }
     }
 
-    public bool canMoveWhileJumping
+
+    public float currentMaxSpeed
     {
-        get { return _canMoveWhileJumping; }
+        get { return _currentMaxSpeed; }
         set
         {
-            if (value != _canMoveWhileJumping)
-            {
-                if (!value)
-                {
-                    _canMoveWhileJumpingCooldown = 0.5f;
-                    _canMoveWhileJumping = value;
-                }
-                else if (value && _canMoveWhileJumpingCooldown <= 0)
-                    _canMoveWhileJumping = value;
-            }
+            _currentMaxSpeed = value;
+            if (_pController.isCrouching)
+                _currentMaxSpeed = defaultMaxSpeed * 0.5f;
+
+            if (_pController.isSprinting)
+                _currentMaxSpeed = defaultMaxSpeed * 1.5f;
         }
     }
-
+    public float defaultMaxSpeed { get { return _defaultMaxSpeed; } }
+    public float jumpForce { get { return _jumpForce; } }
     public float manCannonCooldown
     {
         get { return _manCannonCooldown; }
         set
         {
             Debug.Log("Man Cannon Cooldown");
+            verticalVector = Vector3.zero;
             _manCannonCooldown = 0.5f;
         }
     }
+    public float speedRatio { get { return _speedRatio; } }
+    public float correctedXInput { get { return _correctedRightInput; } set { _correctedRightInput = value; } }
+    public float correctedZInput { get { return _correctedForwardInput; } set { _correctedForwardInput = value; } }
 
-    [SerializeField] float _rawXInput;
-    [SerializeField] float _rawZInput;
+    public Vector3 verticalVector { get { return _verticalVector; } set { _verticalVector = value; } }
 
-    public float xDirection;
-    public float zDirection;
+    public Rewired.Player rewiredPlayer { get { return _rewiredPlayer; } }
+    public PlayerMovementDirection movementDirection { get { return _playerMovementDirection; } private set { _playerMovementDirection = value; } }
 
-    float _defaultMaxSpeed = 4f;
+    public PlayerImpactReceiver playerImpactReceiver { get { return _playerImpactReceiver; } }
 
-    [SerializeField] float _testXSpeed, _testZSpeed;
-    [SerializeField] float _maxXSpeed;
-    [SerializeField] float _maxZSpeed;
-    float _acceleration = 7f;
-    float _deceleration = 7f;
 
-    float _xDeadzone = 0.2f;
-    float _zDeadzone = 0.2f;
-    float _canMoveWhileJumpingCooldown, _manCannonCooldown = 0.5f;
-    bool _canMoveWhileJumping, _isGrounded;
+    [SerializeField] ThirdPersonScript _thirdPersonScript;
+    [SerializeField] ThirdPersonLookAt _tpLookAt;
+    [SerializeField] GroundCheck _groundCheckScript;
+    [SerializeField] GroundCheck _roofCheckScript;
+    [SerializeField] LayerMask _groundMask;
+
+    [SerializeField] float _rawRightInput, _rawForwardInput;
+    [SerializeField] float _correctedRightInput, _correctedForwardInput;
+
+    [SerializeField] Vector3 _direction, _movementInput, _verticalVector, _calulatedVelocity;
+
+    [SerializeField] float _defaultMaxSpeed, _currentMaxSpeed, _currentSpeed, _speedRatio, _jumpForce = 8f, defaultGravity = -13;
+    [SerializeField] float _maxRightSpeed, _maxForwardSpeed;
+    [SerializeField] float _correctedRightSpeed, _correctedForwardSpeed;
+    [SerializeField] float _acceleration = 7f, _deceleration = 7f;
+    [SerializeField] PlayerMovementDirection _playerMovementDirection;
+
+
+
+
+
+
+    Player _player;
+    CharacterController _cController;
+    PlayerController _pController;
+    PlayerImpactReceiver _playerImpactReceiver;
+    Rewired.Player _rewiredPlayer;
+
+    bool _canMoveWhileJumping, _isGrounded, _isMoving, _isOnLadder;
+    float _defaultSlopeLimit, _defaultStepOffset, _canMoveWhileJumpingCooldown, _manCannonCooldown = 0.5f,
+        _rightDeadzone = 0.2f, _forwardDeadzone = 0.2f,
+        _defaultTestMaxSpeed = 4f, _currentGravity = -9.81f;
+    float defaultSlopeLimit, defaultStepOffset, _crouchJumpTime = 0.2f, crouchJumpTime = 0.2f, _lastCalulatedGroundedSpeed;
+    int _terminalVelocity = -200;
+    Vector3 _lastPos;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void OnEnable()
+    {
+        _manCannonCooldown = 0;
+        _canMoveWhileJumpingCooldown = 0;
+    }
 
     private void Awake()
     {
-        //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-        {
-            armorThirdPersonScript.gameObject.SetActive(true);
-            armorThirdPersonScript.EnableSkinnedMeshes();
-            //noArmorThirdPersonScript.DisableSkinnedMeshes();
-            if (!PV.IsMine)
-            {
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.gameObject.layer = 0;
+        _player = GetComponent<Player>();
+        _cController = GetComponent<CharacterController>();
+        _pController = GetComponent<PlayerController>();
+        _playerImpactReceiver = GetComponent<PlayerImpactReceiver>();
 
-                foreach (SkinnedMeshRenderer s in pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.meshes)
-                    s.gameObject.layer = 0;
-            }
-        }
-        //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        //{
-        //    armorThirdPersonScript.DisableSkinnedMeshes();
-        //    noArmorThirdPersonScript.EnableSkinnedMeshes();
-        //}
+        _currentMaxSpeed = defaultMaxSpeed;
+        _rewiredPlayer = ReInput.players.GetPlayer(0);
+        _verticalVector = new Vector3(0, defaultGravity, 0);
     }
     void Start()
     {
-        _defaultMaxSpeed = 1f;
-        _maxXSpeed = 1f;
-        _maxZSpeed = 1f;
-
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            speed *= 0.7f;
+            _defaultMaxSpeed *= 0.7f;
 
-        gravity = defaultGravity;
-        //tPersonScripts = cManager.FindChildWithTagScript("Third Person GO").GetComponent<ThirdPersonScript>();
-        cController = gameObject.GetComponent<CharacterController>();
-        rBody = gameObject.GetComponent<Rigidbody>();
-        pController = gameObject.GetComponent<PlayerController>();
-        pProperties = GetComponent<Player>();
-        defaultSpeed = speed;
+        _cController = gameObject.GetComponent<CharacterController>();
+        _pController = gameObject.GetComponent<PlayerController>();
         defaultSlopeLimit = GetComponent<CharacterController>().slopeLimit;
         defaultStepOffset = GetComponent<CharacterController>().stepOffset;
-        //StartCoroutine(CalcVelocity());
-        StartCoroutine(CalculatePlayerSpeed());
-
     }
 
     // IMPORTANT
@@ -200,313 +214,282 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_canMoveWhileJumpingCooldown > 0)
-        {
-            _canMoveWhileJumpingCooldown -= Time.deltaTime;
+        if (!GameManager.instance.gameStarted) return;
+        if (!_pController.PV.IsMine) return;
+        if (_player.isDead || _player.isRespawning) { _movementInput = Vector3.zero; _verticalVector = Vector3.zero; return; }
 
-            if (_canMoveWhileJumpingCooldown < 0)
-                _canMoveWhileJumpingCooldown = 0;
-        }
+        CalculateCrouchSpeed(); CalculateSprintSpeed(); ManCannonJumpCooldwon(); CalculateCurrentSpeed();
 
-        if (_manCannonCooldown > 0)
-            _manCannonCooldown -= Time.deltaTime;
+        ApplyGravityOnGravityVector();
 
-        if (!GameManager.instance.gameStarted)
-            return;
-
-        {
-            var rotationVector = transform.rotation.eulerAngles;
-            rotationVector.z = 0;
-            rotationVector.x = 0;
-            gameObject.transform.rotation = Quaternion.Euler(rotationVector);
-        }
-
-        isGrounded = groundCheckScript.isGrounded;
-        CalculateVelocity();
-
-        if (!pController.PV.IsMine)
-            return;
-
-        if (pProperties.isDead || pProperties.isRespawning)
-        {
-            movement = Vector3.zero;
-            velocity = Vector3.zero;
-
-            _maxXSpeed = 0f;
-            _maxZSpeed = 0f;
-
-            _testXSpeed = 0f;
-            _testZSpeed = 0f;
-
-            return;
-        }
-
-        if (isGrounded && velocity.y < 0)
-            velocity.y = -3f;
-
-        velocity.y += Mathf.Clamp(gravity * Time.deltaTime, -3f, 100);
-
-        if (cController.gameObject.activeSelf)
-            cController.Move(velocity * Time.deltaTime);
-
-        // Axis Calculation
-        #region
-        float xAxis = 0;
-        float zAxis = 0;
-        Vector3 direction = Vector3.zero;
-
-        if (!pController.pauseMenuOpen)
-        {
-            xAxis = player.GetAxis("Move Horizontal");
-            zAxis = player.GetAxis("Move Vertical");
-
-            _rawXInput = player.GetAxis("Move Horizontal");
-            _rawZInput = player.GetAxis("Move Vertical");
-
-            if (Mathf.Abs(xAxis) <= _xDeadzone)
-                xAxis = 0;
-            if (Mathf.Abs(zAxis) <= _zDeadzone)
-                zAxis = 0;
-
-
-            // DO NOT TOUCH
-            {
-                // Returns a Vector3 with whole numbers (no floats). Used for animation
-                direction = new Vector3(xAxis, 0f, zAxis).normalized;
-                xDirection = direction.x;
-                zDirection = direction.z;
-            }
+        Jump(); CalculateInput(); CalculateCorrectedDirectionSpeeds();
 
 
 
-            _maxXSpeed = Mathf.Abs(xAxis * _defaultMaxSpeed);
-            _maxZSpeed = Mathf.Abs(zAxis * _defaultMaxSpeed);
+        CheckDirection(_rawRightInput, _rawForwardInput);
+        WalkAnimation();
+        LadderMaxSpeedChange();
+        ControlAnimationSpeed();
+
+        CrouchJump();
+
+        ApplyResidualMovementWhileNotGrounded();
+        ApplyInAirMovement();
+        ApplyMovement();
+    }
 
 
 
 
 
 
-
-
-
-
-
-
-            if (xDirection < 0 && (_testXSpeed < _maxXSpeed))
-            {
-                //if(_testXSpeed > 0)
-                //    _testXSpeed = 0;
-                _testXSpeed = Mathf.Clamp(_testXSpeed - _acceleration * Time.deltaTime, -_maxXSpeed, _maxXSpeed);
-            }
-            else if (xDirection > 0 && (_testXSpeed > -_maxXSpeed))
-            {
-                //if (_testXSpeed < 0)
-                //    _testXSpeed = 0;
-                _testXSpeed = Mathf.Clamp(_testXSpeed + _acceleration * Time.deltaTime, -_maxXSpeed, _maxXSpeed);
-            }
-            else if (xDirection == 0)
-            {
-                if (_testXSpeed > _deceleration * Time.deltaTime)
-                    _testXSpeed = _testXSpeed - _deceleration * Time.deltaTime;
-                else if (_testXSpeed < -_deceleration * Time.deltaTime)
-                    _testXSpeed = _testXSpeed + _deceleration * Time.deltaTime;
-                else
-                    _testXSpeed = 0;
-            }
-
-            if (zDirection < 0 && (_testZSpeed < _maxZSpeed))
-                _testZSpeed = Mathf.Clamp(_testZSpeed - _acceleration * Time.deltaTime, -_maxZSpeed, _maxZSpeed);
-            else if (zDirection > 0 && (_testZSpeed > -_maxZSpeed))
-                _testZSpeed = Mathf.Clamp(_testZSpeed + _acceleration * Time.deltaTime, -_maxZSpeed, _maxZSpeed);
-            else if (zDirection == 0)
-            {
-                if (_testZSpeed > _deceleration * Time.deltaTime)
-                    _testZSpeed = _testZSpeed - _deceleration * Time.deltaTime;
-                else if (_testZSpeed < -_deceleration * Time.deltaTime)
-                    _testZSpeed = _testZSpeed + _deceleration * Time.deltaTime;
-                else
-                    _testZSpeed = 0;
-            }
-        }
-        #endregion
-
-
-        // Walk animation
-        #region
-        if (xAxis != 0 || zAxis != 0)
-        {
-            if (isGrounded)
-            {
-                if (pController.weaponAnimator)
-                    pController.weaponAnimator.SetBool("Walk", true);
-            }
-            else
-                try { pController.weaponAnimator.SetBool("Walk", false); } catch { }
-        }
-        else
-            try { pController.weaponAnimator.SetBool("Walk", false); } catch { }
-        #endregion
-        if (!pController.pauseMenuOpen)
-            if (isOnLadder)
-                speed = defaultSpeed / 8;
-
+    void ApplyMovement()
+    {
         // Movement
         #region
-        if (!pProperties.isDead && !pProperties.isRespawning)
+        if (!_player.isDead && !_player.isRespawning)
         {
-            Vector3 currentMovementInput = transform.right * xAxis + transform.forward * zAxis;
-            currentMovementInput = transform.right * Mathf.Abs(xAxis) * _testXSpeed + transform.forward * Mathf.Abs(zAxis) * _testZSpeed;
+            Vector3 currentMovementInput = transform.right * _correctedRightInput + transform.forward * _correctedForwardInput;
+            currentMovementInput = transform.right * Mathf.Abs(_correctedRightInput) * _maxRightSpeed + transform.forward * Mathf.Abs(_correctedForwardInput) * _maxForwardSpeed;
             if (isGrounded)
             {
 
-                movement = transform.right * xAxis + transform.forward * zAxis;
-                if (!pController.isCrouching)
+                _movementInput = transform.right * _rawRightInput + transform.forward * _rawForwardInput;
+                if (!_pController.isCrouching)
                 {
-                    if (pController.isSprinting)
-                        cController.Move(currentMovementInput * (speed * 1.5f) * Time.deltaTime);
+                    if (_pController.isSprinting)
+                    {
+                        currentMaxSpeed = 6;
+                        Vector3 motion = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
+            (transform.right * Mathf.Abs(_correctedRightInput) * _correctedRightSpeed));
+                        _cController.Move(motion * Time.deltaTime);
+                    }
                     else
                     {
-                        cController.Move(currentMovementInput * speed * Time.deltaTime);
+
+                        Vector3 motion = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
+            (transform.right * Mathf.Abs(_correctedRightInput) * _correctedRightSpeed));
+                        _cController.Move(motion * Time.deltaTime);
                     }
                 }
                 else
-                    cController.Move(currentMovementInput * speed * .5f * Time.deltaTime);
+                {
+                    Vector3 motion = _movementInput = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
+            (transform.right * Mathf.Abs(_correctedRightInput) * _correctedRightSpeed));
+                    _cController.Move(_movementInput * Time.deltaTime);
+                }
             }
             else if (!isGrounded && canMoveWhileJumping)
             {
-                currentMovementInput = transform.right * xAxis + transform.forward * zAxis;
+                currentMovementInput = transform.right * _correctedRightInput + transform.forward * _correctedForwardInput;
 
-                if (Mathf.Sign(movement.x) == Mathf.Sign(currentMovementInput.x))
+                if (Mathf.Sign(_movementInput.x) == Mathf.Sign(currentMovementInput.x))
                     currentMovementInput.x = 0;
-                if (Mathf.Sign(movement.z) == Mathf.Sign(currentMovementInput.z))
+                if (Mathf.Sign(_movementInput.z) == Mathf.Sign(currentMovementInput.z))
                     currentMovementInput.z = 0;
 
-                cController.Move(movement * speed * Time.deltaTime);
-                cController.Move(currentMovementInput * 0.65f * speed * Time.deltaTime);
+                _cController.Move(_movementInput * _currentMaxSpeed * Time.deltaTime);
+                _cController.Move(_movementInput * 0.65f * _currentMaxSpeed * Time.deltaTime);
             }
         }
+
+
+        _cController.Move(_verticalVector * Time.deltaTime);
+
         #endregion
-
-        if (pController.pauseMenuOpen)
-            return;
-
-        CheckDirection(direction.x, direction.z);
-
-        if (manCannonCooldown <= 0) Jump();
-
-        CrouchJump();
-        CheckMovingForward();
-        ControlAnimationSpeed();
     }
 
-    void CalculateVelocity()
+
+
+
+
+
+
+
+
+
+
+    void CalculateInput()
     {
-        calulatedVelocity = ((transform.position - previousPosition)) / Time.deltaTime;
-        previousPosition = transform.position;
+        if (!_pController.pauseMenuOpen)
+        {
+            _rawRightInput = _correctedRightInput = rewiredPlayer.GetAxis("Move Horizontal");
+            _rawForwardInput = _correctedForwardInput = rewiredPlayer.GetAxis("Move Vertical");
 
-        if (calulatedVelocity.magnitude > 0f)
-            isMoving = true;
+            if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
+            if (Mathf.Abs(_correctedForwardInput) <= _forwardDeadzone) _correctedForwardInput = 0;
+
+            _maxRightSpeed = Mathf.Abs(_correctedRightInput * currentMaxSpeed);
+            _maxForwardSpeed = Mathf.Abs(_correctedForwardInput * currentMaxSpeed);
+        }
         else
-            isMoving = false;
+        {
+            _rawRightInput = 0;
+            _rawForwardInput = 0;
+        }
+    }
+    void CalculateCurrentSpeed()
+    {
+        Vector3 curPos = transform.position; curPos.y = 0;
+        Vector3 lasPos = _lastPos; lasPos.y = 0;
+
+        _currentSpeed = ((curPos - lasPos).magnitude / Time.deltaTime);
+        _currentSpeed = Mathf.Clamp(Mathf.Round(_currentSpeed * 10f) / 10f, 0, _currentMaxSpeed);
+        if (isGrounded)
+            _lastCalulatedGroundedSpeed = _currentSpeed;
+        _lastPos = transform.position;
+        CalculateSpeedRatio();
+    }
+
+    void CalculateSpeedRatio()
+    {
+        _speedRatio = Mathf.Clamp(Mathf.Round((_currentSpeed / _currentMaxSpeed) * 10f) / 10f, 0, 1);
+        if (_pController.pauseMenuOpen && isGrounded) _speedRatio = 1;
+    }
+
+    void CalculateCorrectedDirectionSpeeds()
+    {
+        if (!_pController.pauseMenuOpen)
+        {
+            if (_correctedRightInput < 0 && (_correctedRightSpeed < _maxRightSpeed))
+            {
+                _correctedRightSpeed = Mathf.Clamp(_correctedRightSpeed - _acceleration * Time.deltaTime, -_maxRightSpeed, _maxRightSpeed);
+            }
+            else if (_correctedRightInput > 0 && (_correctedRightSpeed > -_maxRightSpeed))
+            {
+                _correctedRightSpeed = Mathf.Clamp(_correctedRightSpeed + _acceleration * Time.deltaTime, -_maxRightSpeed, _maxRightSpeed);
+            }
+            else if (_correctedRightInput == 0)
+            {
+                if (_correctedRightSpeed > _deceleration * Time.deltaTime)
+                    _correctedRightSpeed = _correctedRightSpeed - _deceleration * Time.deltaTime;
+                else if (_correctedRightSpeed < -_deceleration * Time.deltaTime)
+                    _correctedRightSpeed = _correctedRightSpeed + _deceleration * Time.deltaTime;
+                else
+                    _correctedRightSpeed = 0;
+            }
+
+            if (_correctedForwardInput < 0 && (_correctedForwardSpeed < _maxForwardSpeed))
+                _correctedForwardSpeed = Mathf.Clamp(_correctedForwardSpeed - _acceleration * Time.deltaTime, -_maxForwardSpeed, _maxForwardSpeed);
+            else if (_correctedForwardInput > 0 && (_correctedForwardSpeed > -_maxForwardSpeed))
+                _correctedForwardSpeed = Mathf.Clamp(_correctedForwardSpeed + _acceleration * Time.deltaTime, -_maxForwardSpeed, _maxForwardSpeed);
+            else if (_correctedForwardInput == 0)
+            {
+                if (_correctedForwardSpeed > _deceleration * Time.deltaTime)
+                    _correctedForwardSpeed = _correctedForwardSpeed - _deceleration * Time.deltaTime;
+                else if (_correctedForwardSpeed < -_deceleration * Time.deltaTime)
+                    _correctedForwardSpeed = _correctedForwardSpeed + _deceleration * Time.deltaTime;
+                else
+                    _correctedForwardSpeed = 0;
+            }
+        }
+        else
+        {
+            _correctedForwardInput = 0;
+            _correctedRightInput = 0;
+        }
     }
 
 
-    float _crouchJumpTime = 0.2f;
-    float crouchJumpTime = 0.2f;
+
+
+
+
+
+
+
+
+
+
+
+
+    void CalculateSprintSpeed()
+    {
+        if (_pController.isSprinting)
+            currentMaxSpeed *= 2;
+    }
+    void CalculateCrouchSpeed()
+    {
+        if (_pController.isCrouching)
+            currentMaxSpeed *= 0.5f;
+    }
+
     void CrouchJump()
     {
-        if (!isGrounded && player.GetButton("Crouch"))
+        if (!isGrounded && _rewiredplayer.GetButton("Crouch"))
         {
             crouchJumpTime -= Time.deltaTime;
             if (crouchJumpTime > 0)
             {
-                gravity = 0;
+                _currentGravity = 0;
             }
         }
         else
         {
-            gravity = _defaultGravity;
+            _currentGravity = defaultGravity;
         }
 
-        if (player.GetButtonUp("Crouch"))
+        if (_rewiredplayer.GetButtonUp("Crouch"))
         {
             crouchJumpTime = _crouchJumpTime;
         }
-
-        //if (!isGrounded && player.GetButtonDown("Crouch"))
-        //{
-        //    Debug.Log("Crouch jumping");
-        //    Debug.Log(velocity.y);
-
-        //    float newForce = Mathf.Ceil(velocity.y + jumpForce;
-        //    velocity.y += jumpForce;
-        //    Debug.Log(velocity.y);
-        //}
     }
 
     void Jump()
     {
-        ThirdPersonScript thirdPersonScript = null;
-        //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-        thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
-        //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        //    thirdPersonScript = pController.GetComponent<PlayerThirdPersonModelManager>().humanModel;
+        _thirdPersonScript = _pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
 
         if (isGrounded)
         {
-            thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
-            speed = defaultSpeed;
+            _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
+            currentMaxSpeed = _defaultMaxSpeed;
         }
-        else if (!isGrounded && thirdPersonScript.GetComponent<Animator>() && !thirdPersonScript.GetComponent<Animator>().GetBool("Crouch"))
+        else if (!isGrounded && _thirdPersonScript.GetComponent<Animator>() && !_thirdPersonScript.GetComponent<Animator>().GetBool("Crouch"))
         {
-            thirdPersonScript.GetComponent<Animator>().SetBool("Jump", true);
-            //speed = defaultSpeed * 2 / 3;
-            /*
-            Vector3 move = transform.right * 0 + transform.forward * 1;
-            cController.Move(move * speed * Time.deltaTime);
-            */
+            _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", true);
         }
 
-        if (isGrounded && player.GetButtonDown("Jump"))
+        if (isGrounded && _rewiredplayer.GetButtonDown("Jump"))
         {
+            if (manCannonCooldown > 0 || _pController.pauseMenuOpen)
+                return;
+
             float _jumpForce = jumpForce;
+            Debug.Log("Jump");
+            Debug.Log(_groundCheckScript.touch);
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) { _jumpForce = jumpForce * 0.7f; }
-            velocity.y = _jumpForce;
-            Debug.Log(groundCheckScript.touch);
-            //rBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            Vector3 v = verticalVector;
+            v.y = _jumpForce;
+            verticalVector = v;
         }
 
 
 
-        if (roofCheckScript.isGrounded)
-            gravity = defaultGravity * 10;
-        else
-            gravity = defaultGravity;
+        if (_roofCheckScript.touch && _verticalVector.y > 0)
+            _verticalVector.y = 0;
     }
 
-    int CheckDirection(float xValue, float zValue)
+    PlayerMovementDirection CheckDirection(float xValue, float zValue)
     {
+        PlayerMovementDirection pmd = PlayerMovementDirection.Idle;
+
         if (xValue == -1 && zValue == 0)
         {
-            directionIndicator = 1;
-            direction = "Left";
+            movementDirection = PlayerMovementDirection.Left;
         }
         else if (xValue == 0 && zValue == 1)
         {
-            directionIndicator = 3;
-            direction = "Forward";
+            movementDirection = PlayerMovementDirection.Forward;
         }
         else if (xValue == 1 && zValue == 0)
         {
-            directionIndicator = 5;
-            direction = "Right";
+            movementDirection = PlayerMovementDirection.Right;
         }
         else if (xValue == 0 && zValue == -1)
         {
-            directionIndicator = 7;
-            direction = "Backwards";
+            movementDirection = PlayerMovementDirection.Backwards;
         }
 
         else if (zValue > 0)
@@ -515,18 +498,15 @@ public class Movement : MonoBehaviour
             {
                 if (zValue <= -0.5 * xValue)
                 {
-                    directionIndicator = 1;
-                    direction = "Left";
+                    movementDirection = PlayerMovementDirection.Left;
                 }
                 else if (zValue > -0.5 * xValue && zValue < -2 * xValue)
                 {
-                    directionIndicator = 2;
-                    direction = "Forward-Left";
+                    movementDirection = PlayerMovementDirection.ForwardLeft;
                 }
                 else if (zValue >= -2 * xValue)
                 {
-                    directionIndicator = 3;
-                    direction = "Forward";
+                    movementDirection = PlayerMovementDirection.Forward;
                 }
             }
             else if (xValue > 0) //First Quarter of Cartesian Map
@@ -534,18 +514,15 @@ public class Movement : MonoBehaviour
 
                 if (zValue >= 2 * xValue)
                 {
-                    directionIndicator = 3;
-                    direction = "Forward";
+                    movementDirection = PlayerMovementDirection.Forward;
                 }
                 else if (zValue > 0.5 * xValue && zValue < 2 * xValue)
                 {
-                    directionIndicator = 4;
-                    direction = "Forward-Right";
+                    movementDirection = PlayerMovementDirection.ForwardRight;
                 }
                 else if (zValue <= 0.5 * xValue)
                 {
-                    directionIndicator = 5;
-                    direction = "Right";
+                    movementDirection = PlayerMovementDirection.Right;
                 }
             }
 
@@ -556,18 +533,15 @@ public class Movement : MonoBehaviour
             {
                 if (zValue >= 0.5 * xValue)
                 {
-                    directionIndicator = 1;
-                    direction = "Left";
+                    movementDirection = PlayerMovementDirection.Left;
                 }
                 else if (zValue < 0.5 * xValue && zValue > 2 * xValue)
                 {
-                    directionIndicator = 8;
-                    direction = "Backwards-Left";
+                    movementDirection = PlayerMovementDirection.BackwardsLeft;
                 }
                 else if (zValue <= 2 * xValue)
                 {
-                    directionIndicator = 7;
-                    direction = "Backwards";
+                    movementDirection = PlayerMovementDirection.Backwards;
                 }
             }
             else if (xValue > 0) //Fourth Quarter of Cartesian Map
@@ -575,32 +549,26 @@ public class Movement : MonoBehaviour
 
                 if (zValue <= -2 * xValue)
                 {
-                    directionIndicator = 7;
-                    direction = "Backwards";
+                    movementDirection = PlayerMovementDirection.Backwards;
                 }
                 else if (zValue < -0.5 * xValue && zValue > -2 * xValue)
                 {
-                    directionIndicator = 6;
-                    direction = "Backwards-Right";
+                    movementDirection = PlayerMovementDirection.BackwardsRight;
                 }
                 else if (zValue >= -0.5 * xValue)
                 {
-                    directionIndicator = 5;
-                    direction = "Right";
+                    movementDirection = PlayerMovementDirection.Right;
                 }
             }
         }
         else if (zValue == 0 && xValue == 0)
         {
-            directionIndicator = 0;
-            direction = "Idle";
-            //PauseWalkingSound();
-            walkingSoundPlaying = false;
+            movementDirection = PlayerMovementDirection.Idle;
         }
 
         if (zValue > 0 || xValue > 0)
         {
-            //if (isGrounded && !pController.isCrouching)
+            //if (isGrounded && !_pController.isCrouching)
             //{
             //    if (!walkingSoundPlaying)
             //    {
@@ -616,102 +584,105 @@ public class Movement : MonoBehaviour
         }
 
 
-        return directionIndicator;
-    }
-
-    void CheckMovingForward()
-    {
-        if (directionIndicator == 2 || directionIndicator == 3 || directionIndicator == 4)
-        {
-            isMovingForward = true;
-        }
-        else
-        {
-            isMovingForward = false;
-        }
+        return pmd;
     }
 
     void ControlAnimationSpeed()
     {
-        if (pController != null)
+        if (_pController != null)
         {
-            if (pController.weaponAnimator != null)
+            if (_pController.weaponAnimator != null)
             {
                 if (isGrounded)
                 {
 
-                    if (pController.weaponAnimator.GetBool("Walk"))
+                    if (_pController.weaponAnimator.GetBool("Walk"))
                     {
                         //Debug.Log("Here");
-                        if (!pController.isReloading && !pController.isDrawingWeapon && !pController.isThrowingGrenade &&
-                            !pController.isMeleeing && !pController.isFiring)
+                        if (!_pController.isReloading && !_pController.isDrawingWeapon && !_pController.isThrowingGrenade &&
+                            !_pController.isMeleeing && !_pController.isFiring)
                         {
-                            pController.weaponAnimator.speed = playerSpeedPercent;
-                            if (pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
-                                pController.weaponAnimator.speed = 1;
-                            tpLookAt.anim.speed = playerSpeedPercent;
+                            _pController.weaponAnimator.speed = _speedRatio;
+                            if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
+                                _pController.weaponAnimator.speed = 1;
+                            _tpLookAt.anim.speed = _speedRatio;
                         }
-                        else if (pController.isReloading || pController.isDrawingWeapon || pController.isThrowingGrenade ||
-                            pController.isMeleeing || pController.isFiring)
+                        else if (_pController.isReloading || _pController.isDrawingWeapon || _pController.isThrowingGrenade ||
+                            _pController.isMeleeing || _pController.isFiring)
                         {
-                            playerSpeedPercent = 1;
-                            pController.weaponAnimator.speed = 1;
-                            tpLookAt.anim.speed = 1;
+                            _speedRatio = 1;
+                            _pController.weaponAnimator.speed = 1;
+                            _tpLookAt.anim.speed = 1;
                         }
                     }
                     else
                     {
-                        playerSpeedPercent = 1;
-                        pController.weaponAnimator.speed = 1;
-                        if (tpLookAt.anim)
-                            tpLookAt.anim.speed = 1;
+                        _speedRatio = 1;
+                        _pController.weaponAnimator.speed = 1;
+                        if (_tpLookAt.anim)
+                            _tpLookAt.anim.speed = 1;
                     }
                 }
-                else if (!isGrounded && pController.weaponAnimator.GetBool("Run"))
+                else if (!isGrounded && _pController.weaponAnimator.GetBool("Run"))
                 {
-                    pController.weaponAnimator.speed = 0.1f;
+                    _pController.weaponAnimator.speed = 0.1f;
 
                 }
             }
         }
     }
-
-    IEnumerator CalculatePlayerSpeed()
+    void WalkAnimation()
     {
-        //Debug.Log("Calculating Player Speed");
-        CalculatingPlayerSpeed = true;
-        lastPos = gameObject.transform.position;
-        yield return new WaitForSeconds(0.1f);
-        playerSpeedPercent = (Mathf.Ceil(Vector3.Distance(gameObject.transform.position, lastPos) / 0.1f)) / 5f;
-
-        if (playerSpeedPercent > 1)
+        if (_rawRightInput != 0 || _rawForwardInput != 0)
         {
-            playerSpeedPercent = 1;
+            if (isGrounded)
+            {
+                if (_pController.weaponAnimator)
+                    _pController.weaponAnimator.SetBool("Walk", true);
+            }
+            else
+                try { _pController.weaponAnimator.SetBool("Walk", false); } catch { }
         }
-        if (pController.isCrouching)
-        {
-            playerSpeedPercent *= 2;
-
-            if (playerSpeedPercent > 1)
-                playerSpeedPercent = 1;
-        }
-        CalculatingPlayerSpeed = false;
-        StartCoroutine(CalculatePlayerSpeed());
+        else
+            try { _pController.weaponAnimator.SetBool("Walk", false); } catch { }
     }
-
-
-
+    void LadderMaxSpeedChange()
+    {
+        if (!_pController.pauseMenuOpen)
+            if (isOnLadder)
+                _currentMaxSpeed = _defaultMaxSpeed / 8;
+    }
     public void ResetCharacterControllerProperties()
     {
-        cController.slopeLimit = defaultSlopeLimit;
-        cController.stepOffset = defaultStepOffset;
-        speed = defaultSpeed;
+        _cController.slopeLimit = defaultSlopeLimit;
+        _cController.stepOffset = defaultStepOffset;
+        currentMaxSpeed = _defaultMaxSpeed;
         isOnLadder = false;
     }
-
+    public void ApplyResidualMovementWhileNotGrounded()
+    {
+        if (!isGrounded && _movementInput.magnitude > 0)
+            _cController.Move(_movementInput * 0.9f * _lastCalulatedGroundedSpeed * Time.deltaTime);
+    }
+    void ApplyInAirMovement()
+    {
+        //if (!_groundCheckScript.isGrounded)
+        //{
+        //    Vector3 currentMovementInput = transform.right * _correctedRightInput + transform.forward * _correctedForwardInput;
+        //    if (_movementInput.z + currentMovementInput.z > 1)
+        //        currentMovementInput.z = 0;
+        //    _cController.Move(currentMovementInput * 0.3f * _defaultMaxSpeed * Time.deltaTime);
+        //}
+    }
+    public void ApplyGravityOnGravityVector()
+    {
+        _verticalVector.y += Mathf.Clamp(defaultGravity * Time.deltaTime, _terminalVelocity, 100);
+        if (_verticalVector.y < 0 && isGrounded)
+            _verticalVector.y = 0;
+    }
     public float GetDefaultSpeed()
     {
-        return defaultSpeed;
+        return _defaultMaxSpeed;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -722,7 +693,7 @@ public class Movement : MonoBehaviour
             Vector3 edgeFallMovement = transform.position - hit.point;
             edgeFallMovement.y = 0;
             float edgeFallFactor = 1;
-            movement += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
+            _movementInput += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
         }
     }
 
@@ -740,6 +711,43 @@ public class Movement : MonoBehaviour
         float groundRayLength = 0.5f;
         RaycastHit[] rayResults = new RaycastHit[5];
         return Physics.RaycastNonAlloc(ray, rayResults, groundRayLength, groundMask) < 1;
+    }
+
+    void ManCannonJumpCooldwon()
+    {
+        if (_canMoveWhileJumpingCooldown > 0)
+        {
+            _canMoveWhileJumpingCooldown -= Time.deltaTime;
+
+            if (_canMoveWhileJumpingCooldown < 0)
+                _canMoveWhileJumpingCooldown = 0;
+        }
+
+        if (_manCannonCooldown > 0)
+            _manCannonCooldown -= Time.deltaTime;
+    }
+
+
+
+
+
+
+
+
+    /// <summary>
+    ///                         IMoveable
+    /// </summary>
+    public void Push(Vector3 dir, int pow, PushSource ps, bool blockMovement)
+    {
+        if (player.isDead || player.isRespawning || !player.isMine)
+            return;
+
+        playerImpactReceiver.AddImpact(dir, pow);
+        if (ps == PushSource.ManCannon)
+            manCannonCooldown = 1f;
+
+        if (blockMovement)
+            canMoveWhileJumping = false;
     }
 }
 

@@ -15218,7 +15218,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!82 &7209461666461803123
 AudioSource:
   m_ObjectHideFlags: 0

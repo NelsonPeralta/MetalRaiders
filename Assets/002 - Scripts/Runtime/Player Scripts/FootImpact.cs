@@ -9,7 +9,7 @@ public class FootImpact : MonoBehaviour
     public AudioClip footStepClip;
     public void PlayFootImpactClip()
     {
-        if (movement.direction == "Idle")
+        if (movement.movementDirection == Movement.PlayerMovementDirection.Idle)
             return;
         audioSource.clip = footStepClip;
         audioSource.Play();

@@ -354,23 +354,17 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void SpawnNetworkWeapon_RPC(int wi, Vector3 spp, Vector3 fDir, Dictionary<string, int> param)
     {
-        Debug.Log("SpawnNetworkWeapon_RPC");
         GameObject wo = Instantiate(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[wi].GetComponent<WeaponProperties>().weaponRessource, spp, Quaternion.identity);
         wo.name = wo.name.Replace("(Clone)", "");
-
-        Debug.Log(spp);
 
         try { wo.GetComponent<LootableWeapon>().networkAmmo = param["ammo"]; } catch (System.Exception e) { Debug.Log(e); }
         try { wo.GetComponent<LootableWeapon>().spareAmmo = param["spareammo"]; } catch (System.Exception e) { Debug.Log(e); }
         try { wo.GetComponent<LootableWeapon>().tts = param["tts"]; } catch (System.Exception e) { Debug.Log(e); }
-        //wo.GetComponent<LootableWeapon>().GetComponent<Rigidbody>().AddForce(fDir * 200);
 
-        //StartCoroutine(UpdateWeaponSpawnPosition_Coroutine(wo, spp));
         wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
 
         if (fDir != Vector3.zero)
             wo.GetComponent<Rigidbody>().AddForce(fDir * 200);
-        Debug.Log($"DropWeapon_RPC: {wo.GetComponent<LootableWeapon>().spawnPointPosition}");
     }
     #endregion
 
