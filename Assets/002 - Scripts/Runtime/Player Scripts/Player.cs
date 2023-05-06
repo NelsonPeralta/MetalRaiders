@@ -640,8 +640,8 @@ public class Player : MonoBehaviourPunCallbacks
             if (isMine)
             {
                 Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.localPlayers);
-                if (!t.ContainsKey(pid))
-                    t.Add(pid, this);
+                if (!t.ContainsKey(controllerId))
+                    t.Add(controllerId, this);
                 GameManager.instance.localPlayers = t;
             }
         }
