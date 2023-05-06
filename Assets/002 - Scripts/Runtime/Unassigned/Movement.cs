@@ -122,7 +122,7 @@ public class Movement : MonoBehaviour, IMoveable
     public PlayerImpactReceiver playerImpactReceiver { get { return _playerImpactReceiver; } }
 
 
-
+    [SerializeField] ThirdPersonScript _thirdPersonScript;
     [SerializeField] ThirdPersonLookAt _tpLookAt;
     [SerializeField] GroundCheck _groundCheckScript;
     [SerializeField] GroundCheck _roofCheckScript;
@@ -437,24 +437,23 @@ public class Movement : MonoBehaviour, IMoveable
 
     void Jump()
     {
-        if (manCannonCooldown > 0 || _pController.pauseMenuOpen)
-            return;
-
-        ThirdPersonScript thirdPersonScript = null;
-        thirdPersonScript = _pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
+        _thirdPersonScript = _pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
 
         if (isGrounded)
         {
-            thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
+            _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
             currentMaxSpeed = _defaultMaxSpeed;
         }
-        else if (!isGrounded && thirdPersonScript.GetComponent<Animator>() && !thirdPersonScript.GetComponent<Animator>().GetBool("Crouch"))
+        else if (!isGrounded && _thirdPersonScript.GetComponent<Animator>() && !_thirdPersonScript.GetComponent<Animator>().GetBool("Crouch"))
         {
-            thirdPersonScript.GetComponent<Animator>().SetBool("Jump", true);
+            _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", true);
         }
 
         if (isGrounded && _rewiredplayer.GetButtonDown("Jump"))
         {
+            if (manCannonCooldown > 0 || _pController.pauseMenuOpen)
+                return;
+
             float _jumpForce = jumpForce;
             Debug.Log("Jump");
             Debug.Log(_groundCheckScript.touch);
@@ -468,10 +467,8 @@ public class Movement : MonoBehaviour, IMoveable
 
 
 
-        if (_roofCheckScript.isGrounded)
-            _currentGravity = defaultGravity * 10;
-        else
-            _currentGravity = defaultGravity;
+        if (_roofCheckScript.touch && _verticalVector.y > 0)
+            _verticalVector.y = 0;
     }
 
     PlayerMovementDirection CheckDirection(float xValue, float zValue)

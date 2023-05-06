@@ -408,6 +408,7 @@ public class PlayerInventory : MonoBehaviourPun
                     if (actWeap) // activeWeapon
                     {
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
+                        _activeWeapon.currentAmmo = _activeWeapon.ammoCapacity;
 
                         _activeWeapon.gameObject.SetActive(true);
                         _previousActiveWeapon.gameObject.SetActive(false);
