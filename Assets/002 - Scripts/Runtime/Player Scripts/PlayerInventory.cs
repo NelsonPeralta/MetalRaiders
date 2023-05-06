@@ -60,6 +60,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                 _activeWeapon = value;
                 pController.ScopeOut();
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 if (!player.isDead && !player.isRespawning)
                     _activeWeapon.gameObject.SetActive(true);
@@ -409,6 +410,7 @@ public class PlayerInventory : MonoBehaviourPun
                     {
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
                         _activeWeapon.currentAmmo = _activeWeapon.ammoCapacity;
+                        pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
 
                         _activeWeapon.gameObject.SetActive(true);
                         _previousActiveWeapon.gameObject.SetActive(false);
