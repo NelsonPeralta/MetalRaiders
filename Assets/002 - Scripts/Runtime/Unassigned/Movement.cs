@@ -416,23 +416,38 @@ public class Movement : MonoBehaviour, IMoveable
 
     void CrouchJump()
     {
+        if (crouchJumpTime > 0)
+            crouchJumpTime -= Time.deltaTime;
+
         if (!isGrounded && _rewiredplayer.GetButton("Crouch"))
         {
-            crouchJumpTime -= Time.deltaTime;
-            if (crouchJumpTime > 0)
-            {
-                _currentGravity = 0;
-            }
-        }
-        else
-        {
-            _currentGravity = defaultGravity;
+            if (crouchJumpTime <= 0)
+                if (verticalVector.y > jumpForce * 0.6f)
+                {
+                    _verticalVector.y += 1;
+                    crouchJumpTime = 1;
+                    print("Courch Jump");
+                }
         }
 
-        if (_rewiredplayer.GetButtonUp("Crouch"))
-        {
-            crouchJumpTime = _crouchJumpTime;
-        }
+
+        //if (!isGrounded && _rewiredplayer.GetButton("Crouch"))
+        //{
+        //    crouchJumpTime -= Time.deltaTime;
+        //    if (crouchJumpTime > 0)
+        //    {
+        //        _currentGravity = 0;
+        //    }
+        //}
+        //else
+        //{
+        //    _currentGravity = defaultGravity;
+        //}
+
+        //if (_rewiredplayer.GetButtonUp("Crouch"))
+        //{
+        //    crouchJumpTime = _crouchJumpTime;
+        //}
     }
 
     void Jump()
