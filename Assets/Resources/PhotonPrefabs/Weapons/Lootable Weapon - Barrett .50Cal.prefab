@@ -740,6 +740,7 @@ MonoBehaviour:
   cleanName: Barrett .50 Cal
   codeName: barrett50cal
   spriteId: 0
+  isDw: 0
   _ammo: 3
   _spareAmmo: 3
   _defaultAmmo: 3

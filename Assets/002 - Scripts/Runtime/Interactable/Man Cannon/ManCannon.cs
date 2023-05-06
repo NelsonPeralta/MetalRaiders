@@ -18,6 +18,9 @@ public class ManCannon : MonoBehaviour
                 {
                     Debug.Log("Found IMoveable");
                     other.GetComponent<IMoveable>().Push(transform.up, power, PushSource.ManCannon, _blockMovement);
+
+                    GetComponent<AudioSource>().clip = onTriggerAudioClip;
+                    GetComponent<AudioSource>().Play();
                     return;
                 }
             }

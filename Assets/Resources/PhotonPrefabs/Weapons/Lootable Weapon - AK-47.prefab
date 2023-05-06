@@ -155,6 +155,7 @@ MonoBehaviour:
   cleanName: AK-47
   codeName: ak47
   spriteId: 3
+  isDw: 0
   _ammo: 30
   _spareAmmo: 60
   _defaultAmmo: 30

@@ -322,6 +322,7 @@ MonoBehaviour:
   cleanName: R700
   codeName: r700
   spriteId: 0
+  isDw: 0
   _ammo: 8
   _spareAmmo: 0
   _defaultAmmo: 8

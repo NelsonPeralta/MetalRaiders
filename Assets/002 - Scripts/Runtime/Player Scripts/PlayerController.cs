@@ -621,8 +621,8 @@ public class PlayerController : MonoBehaviourPun
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Crouch", true);
         isCrouching = true;
-        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.35f, 0);
-        gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.35f, 0);
+        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.30f, 0);
+        gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.30f, 0);
         GetComponent<CharacterController>().height = 1.25f;
         GetComponent<CharacterController>().center = new Vector3(0, -0.7f, 0);
     }

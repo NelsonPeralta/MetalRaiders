@@ -216,6 +216,7 @@ MonoBehaviour:
   cleanName: MK14
   codeName: mk14
   spriteId: 0
+  isDw: 0
   _ammo: 15
   _spareAmmo: 30
   _defaultAmmo: 15

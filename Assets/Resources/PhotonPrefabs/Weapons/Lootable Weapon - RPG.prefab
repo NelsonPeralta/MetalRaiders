@@ -154,6 +154,7 @@ MonoBehaviour:
   cleanName: RPG
   codeName: rpg
   spriteId: 0
+  isDw: 0
   _ammo: 1
   _spareAmmo: 2
   _defaultAmmo: 1

@@ -322,6 +322,7 @@ MonoBehaviour:
   cleanName: M4
   codeName: m4
   spriteId: 4
+  isDw: 0
   _ammo: 30
   _spareAmmo: 60
   _defaultAmmo: 30

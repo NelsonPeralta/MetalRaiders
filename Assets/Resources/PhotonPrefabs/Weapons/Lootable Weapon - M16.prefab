@@ -719,6 +719,7 @@ MonoBehaviour:
   cleanName: M16
   codeName: m16
   spriteId: 0
+  isDw: 0
   _ammo: 36
   _spareAmmo: 72
   _defaultAmmo: 36

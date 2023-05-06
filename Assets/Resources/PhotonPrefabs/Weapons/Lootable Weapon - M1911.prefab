@@ -404,6 +404,7 @@ MonoBehaviour:
   cleanName: M1911
   codeName: m1911
   spriteId: 0
+  isDw: 0
   _ammo: 12
   _spareAmmo: 24
   _defaultAmmo: 12

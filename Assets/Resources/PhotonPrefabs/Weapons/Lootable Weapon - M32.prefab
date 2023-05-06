@@ -101,6 +101,7 @@ MonoBehaviour:
   cleanName: M32
   codeName: m32
   spriteId: 0
+  isDw: 0
   _ammo: 6
   _spareAmmo: 6
   _defaultAmmo: 6

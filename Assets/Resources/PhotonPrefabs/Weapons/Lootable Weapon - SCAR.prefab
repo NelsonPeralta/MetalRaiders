@@ -405,6 +405,7 @@ MonoBehaviour:
   cleanName: SCAR
   codeName: scar
   spriteId: 0
+  isDw: 0
   _ammo: 20
   _spareAmmo: 40
   _defaultAmmo: 20

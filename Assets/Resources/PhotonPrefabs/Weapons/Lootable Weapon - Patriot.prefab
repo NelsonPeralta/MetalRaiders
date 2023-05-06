@@ -240,6 +240,7 @@ MonoBehaviour:
   cleanName: Patriot
   codeName: patriot
   spriteId: 0
+  isDw: 0
   _ammo: 0
   _spareAmmo: 0
   _defaultAmmo: 0

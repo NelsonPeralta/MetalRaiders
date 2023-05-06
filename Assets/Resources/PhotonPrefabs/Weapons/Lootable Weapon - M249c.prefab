@@ -524,6 +524,7 @@ MonoBehaviour:
   cleanName: M249c
   codeName: m249c
   spriteId: 0
+  isDw: 0
   _ammo: 100
   _spareAmmo: 0
   _defaultAmmo: 100

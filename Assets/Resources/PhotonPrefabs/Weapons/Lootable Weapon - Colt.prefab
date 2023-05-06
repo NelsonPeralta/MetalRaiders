@@ -376,6 +376,7 @@ MonoBehaviour:
   cleanName: Colt
   codeName: colt
   spriteId: 0
+  isDw: 0
   _ammo: 6
   _spareAmmo: 12
   _defaultAmmo: 6
