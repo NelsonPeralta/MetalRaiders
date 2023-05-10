@@ -134,6 +134,8 @@ public class Movement : MonoBehaviour, IMoveable
             if (_c > 0)
                 _animationSpeed /= _c;
 
+            Mathf.Clamp(_c * 1.3f, _c, 1);
+
             return Mathf.Abs(_animationSpeed);
         }
     }
