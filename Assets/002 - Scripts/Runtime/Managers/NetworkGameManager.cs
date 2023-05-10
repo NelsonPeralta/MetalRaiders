@@ -110,7 +110,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void EndGame(bool caller = true)
     {
-        if (caller && PhotonNetwork.IsMasterClient)
+        if (caller)
         {
             _pv.RPC("EndGame", RpcTarget.AllViaServer, false);
         }

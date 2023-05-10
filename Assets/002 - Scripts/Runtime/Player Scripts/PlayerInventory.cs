@@ -413,7 +413,8 @@ public class PlayerInventory : MonoBehaviourPun
                         pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
 
                         _activeWeapon.gameObject.SetActive(true);
-                        _previousActiveWeapon.gameObject.SetActive(false);
+                        try { _previousActiveWeapon.gameObject.SetActive(false); } catch { }
+
 
                         pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
                         //UpdateThirdPersonGunModelsOnCharacter();

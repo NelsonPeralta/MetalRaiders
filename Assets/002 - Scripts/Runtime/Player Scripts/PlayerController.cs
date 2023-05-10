@@ -170,6 +170,7 @@ public class PlayerController : MonoBehaviourPun
             _isMeleeing = false;
         }
 
+        try { weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>(); } catch { }
 
 
         if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !isSprinting && !pauseMenuOpen)
@@ -316,6 +317,7 @@ public class PlayerController : MonoBehaviourPun
         ScopeOut();
         weaponAnimator.SetBool("Run", true);
 
+
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
 
@@ -343,6 +345,7 @@ public class PlayerController : MonoBehaviourPun
             return;
         isSprinting = false;
         weaponAnimator.SetBool("Run", false);
+
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Rifle Sprint", false);
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Pistol Sprint", false);
 
@@ -726,8 +729,12 @@ public class PlayerController : MonoBehaviourPun
         if (GameManager.instance.gameType != GameManager.GameType.GunGame)
             if (rewiredPlayer.GetButtonDown("Switch Weapons"))
             {
-                weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
-                OnPlayerSwitchWeapons?.Invoke(this);
+                try
+                {
+                    weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
+                    OnPlayerSwitchWeapons?.Invoke(this);
+                }
+                catch { }
             }
     }
     void SwitchGrenades()

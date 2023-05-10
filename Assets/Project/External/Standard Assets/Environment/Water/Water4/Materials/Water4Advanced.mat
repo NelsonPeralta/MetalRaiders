@@ -2,20 +2,24 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water4Advanced
   m_Shader: {fileID: 4800000, guid: 475c4a4e617a8401b84ca7b32c7cc460, type: 3}
-  m_ShaderKeywords: 
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -127,7 +131,7 @@ Material:
     - WaveSpeed: {r: 1.086165, g: 4.440575, b: 12.105146, a: -3.0206447}
     - _AnimationDirection: {r: 2, g: 4, b: 2, a: -1}
     - _AnimationTiling: {r: 0.04582553, g: 0.0182, b: 0.045714468, a: 0.027129691}
-    - _BaseColor: {r: 0.15364057, g: 0.26805788, b: 0.2984352, a: 0.82}
+    - _BaseColor: {r: 0.15363413, g: 0.2680511, b: 0.29842842, a: 0.82}
     - _BumpDirection: {r: 40, g: 40, b: 40, a: -40}
     - _BumpMap_ST: {r: 1, g: 1, b: 0, a: 0}
     - _BumpTiling: {r: 0.12, g: 0.07, b: 0.08, a: 0.06}

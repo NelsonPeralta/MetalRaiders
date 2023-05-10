@@ -64,7 +64,7 @@ public class ArmorPieceListing : MonoBehaviour
 
 
             if (playerArmorPiece.cost > 0)
-                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost)
+                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost && pda.level >= playerArmorPiece.minimumLevel)
                 {
                     buyButton.gameObject.SetActive(true);
                     buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";

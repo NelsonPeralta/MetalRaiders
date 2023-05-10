@@ -95,7 +95,7 @@ public class Movement : MonoBehaviour, IMoveable
                 _currentMaxSpeed = defaultMaxSpeed * 0.5f;
 
             if (_pController.isSprinting)
-                _currentMaxSpeed = defaultMaxSpeed * 1.5f;
+                _currentMaxSpeed = defaultMaxSpeed * 1.33f;
         }
     }
     public float defaultMaxSpeed { get { return _defaultMaxSpeed; } }
@@ -121,6 +121,23 @@ public class Movement : MonoBehaviour, IMoveable
 
     public PlayerImpactReceiver playerImpactReceiver { get { return _playerImpactReceiver; } }
 
+    public float animationSpeed
+    {
+        get
+        {
+            _animationSpeed = 0;
+            int _c = 0;
+
+            if (correctedXInput != 0) { _c++; _animationSpeed += Mathf.Abs(correctedXInput); }
+            if (correctedZInput != 0) { _c++; _animationSpeed += Mathf.Abs(correctedZInput); }
+
+            if (_c > 0)
+                _animationSpeed /= _c;
+
+            return Mathf.Abs(_animationSpeed);
+        }
+    }
+
 
     [SerializeField] ThirdPersonScript _thirdPersonScript;
     [SerializeField] ThirdPersonLookAt _tpLookAt;
@@ -137,6 +154,7 @@ public class Movement : MonoBehaviour, IMoveable
     [SerializeField] float _maxRightSpeed, _maxForwardSpeed;
     [SerializeField] float _correctedRightSpeed, _correctedForwardSpeed;
     [SerializeField] float _acceleration = 7f, _deceleration = 7f;
+    [SerializeField] float _animationSpeed;
     [SerializeField] PlayerMovementDirection _playerMovementDirection;
 
 
@@ -621,10 +639,10 @@ public class Movement : MonoBehaviour, IMoveable
                         if (!_pController.isReloading && !_pController.isDrawingWeapon && !_pController.isThrowingGrenade &&
                             !_pController.isMeleeing && !_pController.isFiring)
                         {
-                            _pController.weaponAnimator.speed = _speedRatio;
+                            _pController.weaponAnimator.speed = animationSpeed;
                             if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
                                 _pController.weaponAnimator.speed = 1;
-                            _tpLookAt.anim.speed = _speedRatio;
+                            _tpLookAt.anim.speed = animationSpeed;
                         }
                         else if (_pController.isReloading || _pController.isDrawingWeapon || _pController.isThrowingGrenade ||
                             _pController.isMeleeing || _pController.isFiring)
@@ -696,8 +714,8 @@ public class Movement : MonoBehaviour, IMoveable
     public void ApplyGravityOnGravityVector()
     {
         _verticalVector.y += Mathf.Clamp(defaultGravity * Time.deltaTime, _terminalVelocity, 100);
-        if (_verticalVector.y < 0 && isGrounded)
-            _verticalVector.y = 0;
+        if (_verticalVector.y < -3 && isGrounded)
+            _verticalVector.y = -3;
     }
     public float GetDefaultSpeed()
     {

@@ -43,6 +43,9 @@ public class ReticuleMagnetism : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!player.isMine)
+            return;
+
         if (player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Keyboard ||
             player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Mouse)
             return;

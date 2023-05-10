@@ -93,7 +93,7 @@ public class Melee : MonoBehaviour
 
                         print(_maxDis);
                         Debug.Log(Vector3.Distance(playerToDamage.transform.position, movement.transform.position));
-                        movement.Push(playerToDamage.transform.position - movement.transform.position, 100, PushSource.Melee, true);
+                        movement.Push(playerToDamage.transform.position - movement.transform.position, 200, PushSource.Melee, true);
                         playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
                     }
                 }

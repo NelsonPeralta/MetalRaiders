@@ -9844,7 +9844,7 @@ MonoBehaviour:
   damageSource: Frag Grenade
   damage: 250
   radius: 7
-  explosionPower: 700
+  explosionPower: 300
   _obsLayerMask:
     serializedVersion: 2
     m_Bits: 1

@@ -18,9 +18,13 @@ public class Announcer : MonoBehaviour
 
             if (_clips.Count > 0)
             {
-                StartCoroutine(PlayClip_Coroutine(_clipTimeRemaining, _clips.Last()));
-                _clipTimeRemaining += _clips.Last().length + 0.1f;
-                StartCoroutine(RemoveClip_Coroutine(_clipTimeRemaining * 0.95f, _clips.Last()));
+                try
+                {
+                    StartCoroutine(PlayClip_Coroutine(_clipTimeRemaining, _clips.Last()));
+                    _clipTimeRemaining += _clips.Last().length + 0.1f;
+                    StartCoroutine(RemoveClip_Coroutine(_clipTimeRemaining * 0.95f, _clips.Last()));
+                }
+                catch { }
 
             }
         }

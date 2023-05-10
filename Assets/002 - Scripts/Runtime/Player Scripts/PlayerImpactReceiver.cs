@@ -5,9 +5,13 @@ using Photon.Pun;
 
 public class PlayerImpactReceiver : MonoBehaviour
 {
+
     [SerializeField] float mass = 60f; // defines the character mass
     public Vector3 impact = Vector3.zero;
     CharacterController character = new CharacterController();
+
+
+    [SerializeField] Player _player;
     [SerializeField] GroundCheck groundCheck;
 
     float _groundCheckCountdown;
@@ -20,18 +24,18 @@ public class PlayerImpactReceiver : MonoBehaviour
     // call this function to add an impact force:
     public void AddImpact(Player ogPlayer, Vector3 dir, float force)
     {
-        if (!ogPlayer.GetComponent<PhotonView>().IsMine)
+        if (!ogPlayer.isMine)
             return;
 
-        if (!GetComponent<PhotonView>().IsMine)
-            GetComponent<PhotonView>().RPC("AddImpact_RPC", RpcTarget.All, dir, force);
+        if (!_player.isMine)
+            _player.PV.RPC("AddImpact_RPC", RpcTarget.All, dir, force);
         else
             Impact(dir, force);
     }
 
     public void AddImpact(Vector3 dir, float force)
     {
-        if (GetComponent<PhotonView>().IsMine)
+        if (_player.isMine)
         {
             _groundCheckCountdown = 1f;
             Impact(dir, force);
@@ -41,7 +45,7 @@ public class PlayerImpactReceiver : MonoBehaviour
     [PunRPC]
     void AddImpact_RPC(Vector3 dir, float force)
     {
-        if (!GetComponent<PhotonView>().IsMine)
+        if (!_player.isMine)
             return;
 
         Debug.Log("AddImpact_RPC");
@@ -57,7 +61,7 @@ public class PlayerImpactReceiver : MonoBehaviour
 
     void Update()
     {
-        if (GetComponent<Player>().isDead || GetComponent<Player>().isRespawning)
+        if (_player.isDead || _player.isRespawning)
             impact = Vector3.zero;
 
         // apply the impact force:

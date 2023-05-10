@@ -49,4 +49,10 @@ public class PlayerArmorPiece : MonoBehaviour
     public string cleanName;
 
     public int cost;
+
+
+
+    public int minimumLevel { get { return _minimumLevel; } }
+
+    [SerializeField] int _minimumLevel;
 }

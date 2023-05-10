@@ -16,9 +16,14 @@ public class ExplosiveBarrelSpawnPoint : MonoBehaviour
     public int index { get { return barrel.index; } }
     public float tts { get { return _tts; } private set { _tts = value; } }
 
+    private void OnDisable()
+    {
+        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+    }
     private void OnDestroy()
     {
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+
     }
 
     private void Start()

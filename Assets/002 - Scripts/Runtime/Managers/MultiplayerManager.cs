@@ -100,8 +100,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        _initialRoomPlayercount = PhotonNetwork.CurrentRoom.PlayerCount;
+        try { _initialRoomPlayercount = PhotonNetwork.CurrentRoom.PlayerCount; } catch { }
 
+        GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
     }
 

@@ -10,7 +10,7 @@ using System;
 
 public class GameTime : MonoBehaviourPunCallbacks
 {
-    public static GameTime instance { get { return FindObjectOfType<GameTime>(); } }
+    public static GameTime instance { get { return _instance; } }
     public delegate void GameTimeEvent(GameTime gameTime);
     public GameTimeEvent OnGameTimeChanged;
 
@@ -36,17 +36,19 @@ public class GameTime : MonoBehaviourPunCallbacks
     bool waitingTimedOut;
 
     NetworkGameTime _networkGameTime;
+    static GameTime _instance;
 
     private void Awake()
     {
-        Debug.Log("OnlineGameTime Awake");
-        //if (instance)
-        //{
-        //    //Destroy(gameObject);
-        //    return;
-        //}
-        //DontDestroyOnLoad(gameObject);
-        //instance = this;
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     private void OnEnable()

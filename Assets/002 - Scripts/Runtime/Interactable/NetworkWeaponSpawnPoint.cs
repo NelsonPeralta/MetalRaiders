@@ -19,6 +19,10 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     float _respawnListenerDelay = 1;
 
+    private void OnDisable()
+    {
+        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+    }
     private void OnDestroy()
     {
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
