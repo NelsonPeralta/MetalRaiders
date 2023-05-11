@@ -236,7 +236,13 @@ public class Movement : MonoBehaviour, IMoveable
     {
         if (!GameManager.instance.gameStarted) return;
         if (!_pController.PV.IsMine) return;
-        if (_player.isDead || _player.isRespawning) { _movementInput = Vector3.zero; _verticalVector = Vector3.zero; return; }
+        if (_player.isDead || _player.isRespawning)
+        {
+            _correctedRightInput = _correctedForwardInput = _maxRightSpeed = _maxForwardSpeed = _correctedRightSpeed = _correctedForwardSpeed = 0;
+
+            _movementInput = _verticalVector = _direction = Vector3.zero;
+            return;
+        }
 
         CalculateCrouchSpeed(); CalculateSprintSpeed(); ManCannonJumpCooldwon(); CalculateCurrentSpeed();
 
@@ -281,7 +287,7 @@ public class Movement : MonoBehaviour, IMoveable
                     {
                         currentMaxSpeed = 6;
                         Vector3 motion = ((transform.forward * Mathf.Abs(_correctedForwardInput) * _correctedForwardSpeed) +
-            (transform.right * Mathf.Abs(_correctedRightInput) * _correctedRightSpeed));
+            (transform.right * Mathf.Abs(correctedXInput) * _correctedRightSpeed));
                         _cController.Move(motion * Time.deltaTime);
                     }
                     else
@@ -318,8 +324,6 @@ public class Movement : MonoBehaviour, IMoveable
 
         #endregion
     }
-
-
 
 
 
