@@ -8,21 +8,22 @@ public class SpawnPoint : MonoBehaviour
     public enum SpawnPointType { Player, Computer }
     public SpawnPointType spawnPointType;
 
+    [SerializeField] GameObject _witness;
+
     private void OnTriggerStay(Collider other)
     {
         if (other.GetComponent<Player>())
         {
-            if (!players.Contains(other.GetComponent<Player>()))
+            Player player = (Player)other.GetComponent<Player>();
+
+            if (!players.Contains(player))
             {
                 if (GameManager.instance.isDev)
-                {
-                    GameObject wit = gameObject.transform.Find("Witness").gameObject;
-                    wit.SetActive(true);
-                }
+                    _witness.SetActive(true);
 
-                other.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
-                other.GetComponent<Player>().OnPlayerDeath += OnPLayerDeath;
-                players.Add(other.GetComponent<Player>());
+                player.OnPlayerDeath -= OnPLayerDeath;
+                player.OnPlayerDeath += OnPLayerDeath;
+                players.Add(player);
             }
         }
     }

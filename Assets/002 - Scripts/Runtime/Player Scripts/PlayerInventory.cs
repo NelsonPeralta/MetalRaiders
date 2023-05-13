@@ -373,7 +373,8 @@ public class PlayerInventory : MonoBehaviourPun
             }
             else
             {
-                player.DropWeapon(leftWeapon);
+                NetworkGameManager.SpawnNetworkWeapon(leftWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
+                //player.DropWeaponOnDeath(leftWeapon);
                 leftWeapon = null;
             }
         }

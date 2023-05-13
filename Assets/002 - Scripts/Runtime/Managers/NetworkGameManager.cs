@@ -9,20 +9,26 @@ using Newtonsoft.Json;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
-    public static NetworkGameManager instance;
+    public static NetworkGameManager instance { get { return _instance; } }
 
     Overshield _overshield;
     PhotonView _pv;
 
-    private void Awake()
-    {
-        Debug.Log("NetworkGameManager Awake");
-        _pv = GetComponent<PhotonView>();
-        if (instance)
-            Destroy(instance.gameObject);
+    static NetworkGameManager _instance;
 
-        DontDestroyOnLoad(gameObject);
-        instance = this;
+    void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Debug.Log($"NetworkGameManager Awake");
+            _pv = GetComponent<PhotonView>();
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
     private void Start()
     {
@@ -172,9 +178,35 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         _pv.RPC("AddForceLootableWeapon_RPC", RpcTarget.All, spp, dir);
     }
 
-    public static void SpawnNetworkWeapon(int wi, Vector3 spp, Vector3 fDir, Dictionary<string, int> param)
+    public static void SpawnNetworkWeapon(WeaponProperties weap, Vector3 spp, Vector3 fDir, int? currAmmo = null, int? spareAmmo = null)
     {
-        FindObjectOfType<NetworkGameManager>()._pv.RPC("SpawnNetworkWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
+        GameObject[] allWeap = weap.player.playerInventory.allWeaponsInInventory;
+        int firstWeapIndex = Array.IndexOf(allWeap, weap.gameObject);
+        int firstWeapCurrAmmo = weap.currentAmmo; int firstWeapSpareAmmo = weap.spareAmmo;
+
+        if (currAmmo != null) firstWeapCurrAmmo = (int)currAmmo;
+        if (spareAmmo != null) firstWeapSpareAmmo = (int)spareAmmo;
+
+
+        FindObjectOfType<NetworkGameManager>()._pv.RPC("SpawnNetworkWeapon_RPC",
+            RpcTarget.All, firstWeapIndex, spp, fDir, firstWeapCurrAmmo, firstWeapSpareAmmo);
+    }
+
+    public static void SpawnNetworkWeaponOnPlayerDeath(WeaponProperties firstWeapon, WeaponProperties secondWeapon,
+         Vector3 firstWeapSpp, Vector3 firstWeapSdir, Vector3 secondWeapSpp)
+    {
+        GameObject[] allWeap = firstWeapon.player.playerInventory.allWeaponsInInventory;
+        int firstWeapIndex = Array.IndexOf(allWeap, firstWeapon.gameObject);
+        int secondtWeapIndex = Array.IndexOf(allWeap, secondWeapon.gameObject);
+
+        int firstWeapCurrAmmo = firstWeapon.currentAmmo; int secondWeapCurrAmmo = secondWeapon.currentAmmo;
+        int firstWeapSpareAmmo = firstWeapon.spareAmmo; int secondWeapSpareAmmo = secondWeapon.spareAmmo;
+
+        Debug.Log(firstWeapIndex); Debug.Log(secondtWeapIndex);
+
+        FindObjectOfType<NetworkGameManager>()._pv.RPC("SpawnNetworkWeaponOnPlayerDeath_RPC",
+            RpcTarget.All, firstWeapIndex, secondtWeapIndex, firstWeapCurrAmmo, firstWeapSpareAmmo,
+            secondWeapCurrAmmo, secondWeapSpareAmmo, firstWeapSpp, firstWeapSdir, secondWeapSpp);
     }
 
 
@@ -352,19 +384,44 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void SpawnNetworkWeapon_RPC(int wi, Vector3 spp, Vector3 fDir, Dictionary<string, int> param)
+    void SpawnNetworkWeapon_RPC(int firstWeapIndex, Vector3 spp, Vector3 fDir, int firstWeapCurrAmmo, int firstWeapSpareAmmo)
     {
-        GameObject wo = Instantiate(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[wi].GetComponent<WeaponProperties>().weaponRessource, spp, Quaternion.identity);
-        wo.name = wo.name.Replace("(Clone)", "");
+        GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
+        LootableWeapon firstWeapon = Instantiate(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
+         spp, Quaternion.identity).GetComponent<LootableWeapon>();
 
-        try { wo.GetComponent<LootableWeapon>().networkAmmo = param["ammo"]; } catch (System.Exception e) { Debug.Log(e); }
-        try { wo.GetComponent<LootableWeapon>().spareAmmo = param["spareammo"]; } catch (System.Exception e) { Debug.Log(e); }
-        try { wo.GetComponent<LootableWeapon>().tts = param["tts"]; } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.transform.position = spp; } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.GetComponent<Rigidbody>().AddForce(fDir * 200); } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+    }
 
-        wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
+    [PunRPC]
+    void SpawnNetworkWeaponOnPlayerDeath_RPC(int firstWeapIndex, int secondtWeapIndex, int firstWeapCurrAmmo, int firstWeapSpareAmmo,
+       int secondWeapCurrAmmo, int secondWeapSpareAmmo, Vector3 firstWeapSpp, Vector3 firstWeapSdir, Vector3 secondWeapSpp)
+    {
+        Debug.Log("SpawnNetworkWeaponOnPlayerDeath_RPC");
+        GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
 
-        if (fDir != Vector3.zero)
-            wo.GetComponent<Rigidbody>().AddForce(fDir * 200);
+        LootableWeapon firstWeapon = Instantiate(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
+         firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
+
+        try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+
+
+        LootableWeapon secondWeapon = Instantiate(weapInv[secondtWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
+         firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
+
+        try { secondWeapon.name = secondWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
+        try { secondWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
+        try { secondWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.Log(e); }
+        try { secondWeapon.localAmmo = secondWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
+        try { secondWeapon.spareAmmo = secondWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
     }
     #endregion
 

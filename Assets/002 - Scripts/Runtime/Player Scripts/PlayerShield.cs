@@ -26,6 +26,8 @@ public class PlayerShield : MonoBehaviour
 
     float _maxShield;
     float _shield;
+
+    Player _player;
     public float shield
     {
         get { return _shield; }
@@ -51,20 +53,20 @@ public class PlayerShield : MonoBehaviour
     }
     private void Awake()
     {
-        //shield = (float)GetComponent<Player>().maxShield;
-
+        //shield = (float)_player.maxShield;
+        _player = GetComponent<Player>();
         GetComponent<PlayerController>().OnPlayerTestButton += OnPlayerTestButton_Delegate;
     }
 
     private void Start()
     {
-        GetComponent<Player>().OnPlayerShieldDamaged += OnPlayerShieldDamaged_Delegate;
-        GetComponent<Player>().OnPlayerShieldDamaged += PlayShieldHitSound;
-        GetComponent<Player>().OnPlayerShieldRechargeStarted += PlayShieldStartSound;
-        GetComponent<Player>().OnPlayerShieldBroken += PlayShieldDownSound;
+        _player.OnPlayerShieldDamaged += OnPlayerShieldDamaged_Delegate;
+        _player.OnPlayerShieldDamaged += PlayShieldHitSound;
+        _player.OnPlayerShieldRechargeStarted += PlayShieldStartSound;
+        _player.OnPlayerShieldBroken += PlayShieldDownSound;
 
-        GetComponent<Player>().OnPlayerDeath += OnPlayerDeath_Delegate;
-        GetComponent<Player>().OnPlayerRespawned += OnPlayerRespawned_Delegate;
+        _player.OnPlayerDeath += OnPlayerDeath_Delegate;
+        _player.OnPlayerRespawned += OnPlayerRespawned_Delegate;
     }
 
     void OnPlayerShieldDamaged_Delegate(Player player)
@@ -73,7 +75,8 @@ public class PlayerShield : MonoBehaviour
         {
             var a = Instantiate(shieldImpactPrefab, (Vector3)player.impactPos, Quaternion.identity);
             Destroy(a, 0.5f);
-        }catch { }
+        }
+        catch { }
     }
 
 
@@ -86,6 +89,7 @@ public class PlayerShield : MonoBehaviour
 
     void OnPlayerDeath_Delegate(Player player)
     {
+        Debug.Log("PlayerShield OnPlayerDeath_Delegate");
         player.GetComponent<PlayerUI>().shieldBar.SetActive(false);
         StopShieldAlarmSound();
         HideThirdPersionShieldElectricityModel();

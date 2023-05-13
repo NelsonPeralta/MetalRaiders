@@ -53,9 +53,6 @@ public class ReticuleMagnetism : MonoBehaviour
         if (player.GetComponent<PlayerController>().isAiming)
             return;
 
-        if (!player.aimAssist.redReticuleIsOn)
-            return;
-
         Ray();
         CalculateDirection();
         Magnetism();

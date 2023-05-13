@@ -116,7 +116,7 @@ Transform:
   - {fileID: 5338454617668365945}
   - {fileID: 7072432366430488137}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &926446499709091165
 MonoBehaviour:
@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 0
+  _witness: {fileID: 5559020412961890716}
 --- !u!135 &16571891261673449
 SphereCollider:
   m_ObjectHideFlags: 0

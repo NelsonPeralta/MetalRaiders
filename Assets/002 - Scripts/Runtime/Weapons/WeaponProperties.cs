@@ -19,7 +19,7 @@ public class WeaponProperties : MonoBehaviour
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
 
-    public Player player { get { return pController.GetComponent<Player>(); } }
+    public Player player { get { return pController.player; } }
 
     public Crosshair crosshair;
 

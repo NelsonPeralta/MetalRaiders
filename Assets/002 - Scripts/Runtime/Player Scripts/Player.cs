@@ -806,65 +806,24 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     // https://stackoverflow.com/questions/30294216/unity3d-c-sharp-vector3-as-default-parameter
-    public void DropWeapon(WeaponProperties weapon, Vector3? offset = null)
+    public void DropWeaponOnDeath(WeaponProperties firstWeapon, WeaponProperties secondWeapon, Vector3 secondWeaponOffset)
     {
-        if (!GetComponent<PhotonView>().IsMine || weapon.currentAmmo <= 0)
+        if (!GetComponent<PhotonView>().IsMine || GameManager.instance.gameType == GameManager.GameType.GunGame)
             return;
 
-        if (weapon.codeName == null)
-            return;
-
-        if (GameManager.instance.gameType == GameManager.GameType.GunGame)
-            return;
-
-        WeaponProperties wp = null;
-        int wi = 0;
-
-        if (offset == null)
-            offset = new Vector3(0, 0, 0);
-
-        foreach (GameObject w in playerInventory.allWeaponsInInventory)
-        {
-            if (w.GetComponent<WeaponProperties>().codeName == weapon.codeName)
-            {
-                wp = w.GetComponent<WeaponProperties>();
-                break;
-            }
-            wi++;
-        }
-
-        try
-        {
-            //GameObject wo = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", wp.weaponRessource.name), weaponDropPoint.position + (Vector3)offset, Quaternion.identity);
-            //wo.name = wo.name.Replace("(Clone)", "");
-            ////wo.GetComponent<LootableWeapon>().UpdateSpawnPointPosition(weaponDropPoint.position);
-
-            //wo.GetComponent<LootableWeapon>().ammo = wp.currentAmmo;
-            //wo.GetComponent<LootableWeapon>().spareAmmo = wp.spareAmmo;
-            //wo.GetComponent<LootableWeapon>().AddForce(weaponDropPoint.transform.forward);
-
-            //wp.currentAmmo = 0;
-            //wp.spareAmmo = 0;
+        if (firstWeapon.codeName == null || firstWeapon.currentAmmo <= 0) firstWeapon = null;
+        if (secondWeapon.codeName == null || secondWeapon.currentAmmo <= 0) secondWeapon = null;
 
 
-            Dictionary<string, int> param = new Dictionary<string, int>();
-            param["ammo"] = wp.currentAmmo;
-            param["spareammo"] = wp.spareAmmo;
-            Vector3 spp = weaponDropPoint.position + (Vector3)offset;
-            Vector3 fDir = weaponDropPoint.transform.forward;
+        if (secondWeaponOffset == null)
+            secondWeaponOffset = new Vector3(0, 0, 0);
 
-            wp.currentAmmo = 0;
-            wp.spareAmmo = 0;
 
-            NetworkGameManager.SpawnNetworkWeapon(wi, spp, fDir, param);
-            //GetComponent<PhotonView>().RPC("DropWeapon_RPC", RpcTarget.All, wi, spp, fDir, param);
-        }
-        catch (System.Exception e)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning(e);
-#endif
-        }
+        Vector3 spp = weaponDropPoint.position + (Vector3)secondWeaponOffset;
+        Vector3 dir = weaponDropPoint.transform.forward;
+
+        NetworkGameManager.SpawnNetworkWeaponOnPlayerDeath(firstWeapon, secondWeapon,
+           weaponDropPoint.position, dir, weaponDropPoint.position + (Vector3)secondWeaponOffset);
     }
 
 
@@ -1258,8 +1217,7 @@ public class Player : MonoBehaviourPunCallbacks
         try { StartCoroutine(Respawn_Coroutine()); } catch { }
         try { StartCoroutine(MidRespawnAction()); } catch { }
 
-        DropWeapon(playerInventory.activeWeapon);
-        DropWeapon(playerInventory.holsteredWeapon, offset: new Vector3(0.5f, 0.5f, 0));
+        DropWeaponOnDeath(playerInventory.activeWeapon, playerInventory.holsteredWeapon, secondWeaponOffset: new Vector3(0.5f, 0.5f, 0));
     }
 
     void OnPlayerDamaged_Delegate(Player player)

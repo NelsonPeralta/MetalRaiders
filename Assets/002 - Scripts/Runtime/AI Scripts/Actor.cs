@@ -292,12 +292,12 @@ abstract public class Actor : MonoBehaviour
 
 
 
-                Dictionary<string, int> param = new Dictionary<string, int>();
-                param["ammo"] = (int)(wp.ammoCapacity * ranAmmoFactor);
-                param["spareammo"] = (int)(wp.maxAmmo * ranCapFactor);
                 Vector3 spp = transform.position;
                 Vector3 fDir = losSpawn.transform.forward + new Vector3(0, 2f, 0);
-                NetworkGameManager.SpawnNetworkWeapon(randomWeaponInd, spp, fDir, param);
+
+                GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
+                NetworkGameManager.SpawnNetworkWeapon(weapInv[randomWeaponInd].GetComponent<WeaponProperties>(),
+                spp, fDir, currAmmo: (int)(wp.ammoCapacity * ranAmmoFactor), spareAmmo: (int)(wp.maxAmmo * ranCapFactor));
             }
             catch { }
         }

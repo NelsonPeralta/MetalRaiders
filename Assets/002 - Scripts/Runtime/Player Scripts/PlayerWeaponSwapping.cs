@@ -236,6 +236,8 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     {
         gameObject.layer = _originalLayer;
     }
+
+    //TODO: Optimize this
     void OnPlayerLongInteract_Delegate(PlayerController playerController)
     {
         if (!PV.IsMine)
@@ -281,7 +283,9 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     if (player.GetComponent<PhotonView>().IsMine)
                     {
                         //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
-                        player.DropWeapon(pInventory.activeWeapon);
+                        //player.DropWeaponOnDeath(pInventory.activeWeapon);
+                        NetworkGameManager.SpawnNetworkWeapon(
+                            pInventory.activeWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
                     }
                     PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
                     OnWeaponPickup?.Invoke(this);

@@ -730,14 +730,15 @@ public class Movement : MonoBehaviour, IMoveable
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (RayGrounded(GetRayAtPos(0, 0)) && GetComponent<CharacterController>().isGrounded)
-        {
-            //Debug.Log("OnControllerColliderHit");
-            Vector3 edgeFallMovement = transform.position - hit.point;
-            edgeFallMovement.y = 0;
-            float edgeFallFactor = 10;
-            _movementInput += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
-        }
+        // TODO: Redo this, causes lagspikes
+        //if (RayGrounded(GetRayAtPos(0, 0)) && GetComponent<CharacterController>().isGrounded)
+        //{
+        //    //Debug.Log("OnControllerColliderHit");
+        //    Vector3 edgeFallMovement = transform.position - hit.point;
+        //    edgeFallMovement.y = 0;
+        //    float edgeFallFactor = 10;
+        //    _movementInput += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
+        //}
     }
 
     private Ray GetRayAtPos(float x, float z)
