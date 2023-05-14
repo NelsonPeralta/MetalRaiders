@@ -4,58 +4,132 @@ using UnityEngine;
 
 public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
 {
-    Player player;
-    Camera camera;
-
     public enum CameraType { Main, Gun, UI, World }
     public CameraType cameraType;
 
+    Player _player;
+    Camera _camera;
+
     [SerializeField] AudioListener _audioListener;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        player = transform.root.GetComponent<Player>();
-        camera = GetComponent<Camera>();
+        _player = transform.root.GetComponent<Player>();
+        _camera = GetComponent<Camera>();
 
-        if (!player.isMine)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
+        if (!_player.isMine) { gameObject.SetActive(false); return; }
+        int playerRewiredId = _player.GetComponent<PlayerController>().rid;
 
-        int playerRewiredId = player.GetComponent<PlayerController>().rid;
+
+
+
 
         if (cameraType == CameraType.Main)
         {
             if (playerRewiredId == 0)
-                GameManager.instance.DisableCameraMaskLayer(camera, "Player 1 TPS Models (LOS Ray)");
+                GameManager.instance.DisableCameraMaskLayer(_camera, "Player 1 TPS Models (LOS Ray)");
             else if (playerRewiredId == 1)
-                GameManager.instance.DisableCameraMaskLayer(camera, "Player 2 TPS Models");
+                GameManager.instance.DisableCameraMaskLayer(_camera, "Player 2 TPS Models");
+            else if (playerRewiredId == 2)
+                GameManager.instance.DisableCameraMaskLayer(_camera, "Player 3 TPS Models");
+            else if (playerRewiredId == 3)
+                GameManager.instance.DisableCameraMaskLayer(_camera, "Player 4 TPS Models");
         }
         else if (cameraType == CameraType.Gun)
         {
             if (playerRewiredId == 0)
-                GameManager.instance.EnableCameraMaskLayer(camera, "Player 1 FPS Models (Physical Loot)");
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 1 FPS Models (Physical Loot)");
             else if (playerRewiredId == 1)
-                GameManager.instance.EnableCameraMaskLayer(camera, "Player 2 FPS Models");
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 2 FPS Models");
+            else if (playerRewiredId == 2)
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 3 FPS Models");
+            else if (playerRewiredId == 3)
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 4 FPS Models");
         }
+        else if (cameraType == CameraType.UI)
+        {
+            if (playerRewiredId == 0)
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 1 UI (Motion Tracker)");
+            else if (playerRewiredId == 1)
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 2 UI (Reticule Friction)");
+            else if (playerRewiredId == 2)
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 3 UI (Frag Grenade)");
+            else if (playerRewiredId == 3)
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 4 UI (PlayerMelee)");
+        }
+
+
+
+
+
+
+
 
         if (GameManager.instance.NbPlayers > 1)
         {
-            camera.rect = new Rect(0, 0, 1, 0.5f);
+            _camera.farClipPlane = 100;
 
-            if (playerRewiredId == 0)
-                camera.rect = new Rect(0, 0.5f, camera.rect.width, camera.rect.height);
-
-            if (playerRewiredId == 1)
+            if (GameManager.instance.NbPlayers == 2)
             {
-                camera.rect = new Rect(0, 0f, camera.rect.width, camera.rect.height);
+                _camera.rect = new Rect(0, 0, 1, 0.5f);
 
-                //if (cameraType == CameraType.Main || cameraType == CameraType.Gun)
-                //    camera.enabled = true;
+                if (playerRewiredId == 0)
+                    _camera.rect = new Rect(0, 0.5f, _camera.rect.width, _camera.rect.height);
 
-                try { _audioListener.gameObject.SetActive(false); } catch { }
+                if (playerRewiredId == 1)
+                {
+                    _camera.rect = new Rect(0, 0f, _camera.rect.width, _camera.rect.height);
+                    try { _audioListener.gameObject.SetActive(false); } catch { }
+                }
+            }
+
+
+
+
+
+            if (GameManager.instance.NbPlayers == 3)
+            {
+                if (playerRewiredId == 0)
+                    _camera.rect = new Rect(0, 0, 1, 0.5f);
+                else
+                    _camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+
+                if (playerRewiredId == 0)
+                    _camera.rect = new Rect(0, 0.5f, _camera.rect.width, _camera.rect.height);
+                else
+                    try { _audioListener.gameObject.SetActive(false); } catch { }
+
+                if (playerRewiredId == 1)
+                    _camera.rect = new Rect(0, 0, _camera.rect.width, _camera.rect.height);
+
+                if (playerRewiredId == 2)
+                    _camera.rect = new Rect(0.5f, 0f, _camera.rect.width, _camera.rect.height);
+            }
+
+
+
+
+
+
+            if (GameManager.instance.NbPlayers == 4)
+            {
+                _camera.rect = new Rect(0, 0, 0.5f, 0.5f);
+
+                if (playerRewiredId == 0)
+                    _camera.rect = new Rect(0, 0.5f, _camera.rect.width, _camera.rect.height);
+                else
+                    try { _audioListener.gameObject.SetActive(false); } catch { }
+
+                if (playerRewiredId == 1)
+                    _camera.rect = new Rect(0.5f, 0.5f, _camera.rect.width, _camera.rect.height);
+
+                if (playerRewiredId == 2)
+                    _camera.rect = new Rect(0f, 0f, _camera.rect.width, _camera.rect.height);
+
+                if (playerRewiredId == 3)
+                    _camera.rect = new Rect(0.5f, 0f, _camera.rect.width, _camera.rect.height);
             }
         }
     }
