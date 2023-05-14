@@ -27,13 +27,18 @@ public class RadarPulse : MonoBehaviour
         AssignCorrectMinimap();
     }
 
+    private void Start()
+    {
+        AssignCorrectMinimap();
+    }
+
     // Update is called once per frame
     void Update()
     {
         //AssignCorrectMinimap();
 
         range += rangeSpeed * Time.deltaTime;
-        if(range > maxRange)
+        if (range > maxRange)
         {
             range = 0f;
         }
@@ -43,7 +48,10 @@ public class RadarPulse : MonoBehaviour
 
     void AssignCorrectMinimap()
     {
-        if(pProperties.controllerId == 0)
+        if (!pProperties.isMine)
+            return;
+
+        if (pProperties.controllerId == 0)
         {
             //Debug.Log("Gave Player 0 good minimap");
             minimapCamera.targetTexture = player0RT;

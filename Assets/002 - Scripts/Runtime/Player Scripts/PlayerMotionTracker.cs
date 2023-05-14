@@ -18,7 +18,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
         }
         else
         {
-            minimapCamera.enabled = false;
+            minimapCamera.gameObject.SetActive(false);
             friendlyDot.SetActive(false);
             ennemyDot.SetActive(true);
         }
@@ -42,6 +42,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
 
     void OnPlayerStartedMoving_Delegate(Movement movement)
     {
+        Debug.Log("OnPlayerStartedMoving_Delegate");
         if (!movement.GetComponent<PlayerController>().isCrouching)
             if (GetComponent<PhotonView>().IsMine)
                 GetComponent<PhotonView>().RPC("ShowDot_RPC", RpcTarget.All);
@@ -70,10 +71,20 @@ public class PlayerMotionTracker : MonoBehaviourPun
     [PunRPC]
     void ShowDot_RPC()
     {
-        if (player.GetComponent<PhotonView>().IsMine)
-            friendlyDot.SetActive(true);
-        else
+        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+        {
             ennemyDot.SetActive(true);
+        }
+        else
+        {
+            if (player.GetComponent<PhotonView>().IsMine)
+                friendlyDot.SetActive(true);
+            else
+            {
+                if (player.team != GameManager.GetRootPlayer().team)
+                    ennemyDot.SetActive(true);
+            }
+        }
     }
 
     [PunRPC]

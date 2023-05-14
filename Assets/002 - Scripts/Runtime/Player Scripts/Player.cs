@@ -681,6 +681,9 @@ public class Player : MonoBehaviourPunCallbacks
 
                 uiCamera.enabled = false;
                 uiCamera.enabled = true;
+
+                GetComponent<Movement>().playerMotionTracker.minimapCamera.enabled = false;
+                GetComponent<Movement>().playerMotionTracker.minimapCamera.enabled = true;
             }
         }
     }

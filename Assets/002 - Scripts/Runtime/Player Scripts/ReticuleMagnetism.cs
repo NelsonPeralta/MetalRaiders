@@ -76,6 +76,10 @@ public class ReticuleMagnetism : MonoBehaviour
                         firstRayHit = hit.transform.gameObject;
                     }
 
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                        if (firstRayHit.GetComponent<ReticuleFriction>().player && (firstRayHit.GetComponent<Player>().team == player.team))
+                            return;
+
                     //if(movement.speed == 0)
                     _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
                                                                    //_hitScreenPosList.Add(hit.point); // When player moves and target does not

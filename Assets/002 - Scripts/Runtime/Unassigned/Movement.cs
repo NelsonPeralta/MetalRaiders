@@ -71,20 +71,34 @@ public class Movement : MonoBehaviour, IMoveable
         get { return _isMoving; }
         private set
         {
-            if (value && !_isMoving)
+            if (value != _isMoving)
             {
-                _isMoving = true;
-                OnPlayerStartedMoving?.Invoke(this);
-            }
-            else if (!value && _isMoving)
-            {
-                _isMoving = false;
-                OnPlayerStoppedMoving?.Invoke(this);
+                if (value)
+                {
+                    _isMoving = true;
+                    OnPlayerStartedMoving?.Invoke(this);
+                }
+                else
+                {
+                    _isMoving = false;
+                    OnPlayerStoppedMoving?.Invoke(this);
+                }
             }
         }
     }
 
-
+    public float currentSpeed
+    {
+        get { return _currentSpeed; }
+        private set
+        {
+            _currentSpeed = value;
+            if (value <= 0.15 * currentMaxSpeed)
+                isMoving = false;
+            else
+                isMoving = true;
+        }
+    }
     public float currentMaxSpeed
     {
         get { return _currentMaxSpeed; }
@@ -118,7 +132,7 @@ public class Movement : MonoBehaviour, IMoveable
 
     public Rewired.Player rewiredPlayer { get { if (_rewiredPlayer == null) _rewiredPlayer = _pController.rewiredPlayer; return _rewiredPlayer; } }
     public PlayerMovementDirection movementDirection { get { return _playerMovementDirection; } private set { _playerMovementDirection = value; } }
-
+    public PlayerMotionTracker playerMotionTracker { get { return _playerMotionTracker; } }
     public PlayerImpactReceiver playerImpactReceiver { get { return _playerImpactReceiver; } }
 
     public float animationSpeed
@@ -141,6 +155,7 @@ public class Movement : MonoBehaviour, IMoveable
     }
 
 
+    [SerializeField] PlayerMotionTracker _playerMotionTracker;
     [SerializeField] ThirdPersonScript _thirdPersonScript;
     [SerializeField] ThirdPersonLookAt _tpLookAt;
     [SerializeField] GroundCheck _groundCheckScript;
@@ -361,17 +376,17 @@ public class Movement : MonoBehaviour, IMoveable
         Vector3 curPos = transform.position; curPos.y = 0;
         Vector3 lasPos = _lastPos; lasPos.y = 0;
 
-        _currentSpeed = ((curPos - lasPos).magnitude / Time.deltaTime);
-        _currentSpeed = Mathf.Clamp(Mathf.Round(_currentSpeed * 10f) / 10f, 0, _currentMaxSpeed);
+        currentSpeed = ((curPos - lasPos).magnitude / Time.deltaTime);
+        currentSpeed = Mathf.Clamp(Mathf.Round(currentSpeed * 10f) / 10f, 0, _currentMaxSpeed);
         if (isGrounded)
-            _lastCalulatedGroundedSpeed = _currentSpeed;
+            _lastCalulatedGroundedSpeed = currentSpeed;
         _lastPos = transform.position;
         CalculateSpeedRatio();
     }
 
     void CalculateSpeedRatio()
     {
-        _speedRatio = Mathf.Clamp(Mathf.Round((_currentSpeed / _currentMaxSpeed) * 10f) / 10f, 0, 1);
+        _speedRatio = Mathf.Clamp(Mathf.Round((currentSpeed / _currentMaxSpeed) * 10f) / 10f, 0, 1);
         if (_pController.pauseMenuOpen && isGrounded) _speedRatio = 1;
     }
 
@@ -707,6 +722,7 @@ public class Movement : MonoBehaviour, IMoveable
         if (!isGrounded && _movementInput.magnitude > 0)
             _cController.Move(_movementInput * 0.9f * _lastCalulatedGroundedSpeed * Time.deltaTime);
     }
+
     void ApplyInAirMovement()
     {
         //if (!_groundCheckScript.isGrounded)
