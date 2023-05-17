@@ -187,9 +187,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         if (currAmmo != null) firstWeapCurrAmmo = (int)currAmmo;
         if (spareAmmo != null) firstWeapSpareAmmo = (int)spareAmmo;
 
-
-        FindObjectOfType<NetworkGameManager>()._pv.RPC("SpawnNetworkWeapon_RPC",
-            RpcTarget.All, firstWeapIndex, spp, fDir, firstWeapCurrAmmo, firstWeapSpareAmmo);
+        if (firstWeapCurrAmmo + firstWeapSpareAmmo > 0)
+            NetworkGameManager.instance._pv.RPC("SpawnNetworkWeapon_RPC",
+                RpcTarget.All, firstWeapIndex, spp, fDir, firstWeapCurrAmmo, firstWeapSpareAmmo);
     }
 
     public static void SpawnNetworkWeaponOnPlayerDeath(WeaponProperties firstWeapon, WeaponProperties secondWeapon,
@@ -392,6 +392,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
         try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
         try { firstWeapon.transform.position = spp; } catch (System.Exception e) { Debug.Log(e); }
+        try { firstWeapon.spawnPointPosition = spp; } catch (System.Exception e) { Debug.Log(e); }
         try { firstWeapon.GetComponent<Rigidbody>().AddForce(fDir * 200); } catch (System.Exception e) { Debug.Log(e); }
         try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
         try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
@@ -407,21 +408,29 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         LootableWeapon firstWeapon = Instantiate(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
          firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
 
-        try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-        try { firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-        try { firstWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.Log(e); }
-        try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
-        try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+        if (firstWeapCurrAmmo + firstWeapSpareAmmo > 0)
+        {
+            try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
+            try { firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
+            try { firstWeapon.spawnPointPosition = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
+            try { firstWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.Log(e); }
+            try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
+            try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+        }
 
 
         LootableWeapon secondWeapon = Instantiate(weapInv[secondtWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
          firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
 
-        try { secondWeapon.name = secondWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-        try { secondWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-        try { secondWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.Log(e); }
-        try { secondWeapon.localAmmo = secondWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
-        try { secondWeapon.spareAmmo = secondWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+        if (secondWeapCurrAmmo + secondWeapSpareAmmo > 0)
+        {
+            try { secondWeapon.name = secondWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
+            try { secondWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
+            try { secondWeapon.spawnPointPosition = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
+            try { secondWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.Log(e); }
+            try { secondWeapon.localAmmo = secondWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
+            try { secondWeapon.spareAmmo = secondWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+        }
     }
     #endregion
 

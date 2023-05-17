@@ -277,8 +277,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: fa16bd6cbe8bcba40ad0f5c9644c9607, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: 6b5e159827c094241b52d2ffc5aa80c0, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -323,7 +323,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.75
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -394,8 +394,9 @@ MonoBehaviour:
   _explosionDelayOnImpact: 1
   explosionPrefab: {fileID: 9198120252748331428, guid: 133e7e85df7e0964ca94128ae8063fb0,
     type: 3}
-  _collisionSound: {fileID: 8300000, guid: bc6805e0645c59c4b91a979d862f3b21, type: 3}
+  _collisionSound: {fileID: 8300000, guid: 6b5e159827c094241b52d2ffc5aa80c0, type: 3}
   _sticky: 1
+  _stuck: 0
   _stickyLayerMask:
     serializedVersion: 2
     m_Bits: 129

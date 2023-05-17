@@ -341,6 +341,14 @@ public class WeaponProperties : MonoBehaviour
                 _spareAmmo = ammo;
         }
     }
+
+
+
+
+    public struct WeaponPropertiesSpawnStruc
+    {
+
+    }
 }
 
 #if UNITY_EDITOR // Reference: https://answers.unity.com/questions/1169764/type-or-namespace-unityeditor-could-not-be-found-w.html
@@ -439,3 +447,5 @@ public class WeaponPropertiesEditor : Editor
     }
 }
 #endif
+
+

@@ -36,6 +36,9 @@ public class GroundCheck : MonoBehaviour
 
     private void Update()
     {
+        if (_touch != null && !_touch.activeSelf)
+            _touch = null;
+
         if (!_touch)
             isGrounded = false;
     }

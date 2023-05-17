@@ -160,6 +160,7 @@ public class Movement : MonoBehaviour, IMoveable
     [SerializeField] ThirdPersonLookAt _tpLookAt;
     [SerializeField] GroundCheck _groundCheckScript;
     [SerializeField] GroundCheck _roofCheckScript;
+    [SerializeField] GroundCheck _edgeCheck;
     [SerializeField] LayerMask _groundMask;
 
     [SerializeField] float _rawRightInput, _rawForwardInput;
@@ -173,7 +174,6 @@ public class Movement : MonoBehaviour, IMoveable
     [SerializeField] float _acceleration = 7f, _deceleration = 7f;
     [SerializeField] float _animationSpeed;
     [SerializeField] PlayerMovementDirection _playerMovementDirection;
-
 
 
 
@@ -259,6 +259,9 @@ public class Movement : MonoBehaviour, IMoveable
             return;
         }
 
+
+        CheckIfStuckInEdge();
+
         CalculateCrouchSpeed(); CalculateSprintSpeed(); ManCannonJumpCooldwon(); CalculateCurrentSpeed();
 
         ApplyGravityOnGravityVector();
@@ -281,9 +284,47 @@ public class Movement : MonoBehaviour, IMoveable
 
 
 
+    float noSlipDistance = .05f, edgeFallFactor = 5;
+    private void LateUpdate()
+    {
+        //RaycastHit hitInfo;
+        //if (Physics.SphereCast(transform.position + _cController.center, _cController.radius - _cController.skinWidth, Vector3.down, out hitInfo, _cController.height * 0.7f))
+        //{
+        //    Vector3 relativeHitPoint = hitInfo.point - (transform.position + _cController.center);
+        //    float hitHeight = relativeHitPoint.y;
+        //    relativeHitPoint.y = 0;
+        //    if (relativeHitPoint.magnitude > noSlipDistance)
+        //    {
+        //        Vector3 edgeFallMovement = transform.position - hitInfo.point;
+        //        edgeFallMovement.y = 0;
+        //        _movementInput += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
+        //    }
+        //}
+    }
 
 
+    float _edgePushCountdown;
+    void CheckIfStuckInEdge()
+    {
+        if (_edgeCheck.touch && !isGrounded)
+        {
+            Debug.Log("Edge");
+            Vector3 _dir = transform.position - _edgeCheck.touch.transform.position;
+            _dir.y = 0;
 
+            if (_edgePushCountdown > 0)
+                _edgePushCountdown -= Time.deltaTime;
+
+            if (_edgePushCountdown <= 0)
+            {
+                Push(_dir, 20, PushSource.Edge, true);
+                _edgePushCountdown = 0.1f;
+            }
+
+            //_cController.Move(_dir * 10 * Time.deltaTime);
+        }
+
+    }
     void ApplyMovement()
     {
         // Movement
@@ -746,6 +787,7 @@ public class Movement : MonoBehaviour, IMoveable
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+
         // TODO: Redo this, causes lagspikes
         //if (RayGrounded(GetRayAtPos(0, 0)) && GetComponent<CharacterController>().isGrounded)
         //{
@@ -753,9 +795,11 @@ public class Movement : MonoBehaviour, IMoveable
         //    Vector3 edgeFallMovement = transform.position - hit.point;
         //    edgeFallMovement.y = 0;
         //    float edgeFallFactor = 10;
-        //    _movementInput += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
+        //    _direction += (edgeFallMovement * Time.deltaTime * edgeFallFactor);
         //}
     }
+
+
 
     private Ray GetRayAtPos(float x, float z)
     {

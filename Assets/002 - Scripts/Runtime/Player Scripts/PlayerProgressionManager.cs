@@ -27,7 +27,7 @@ public class PlayerProgressionManager : MonoBehaviour
 
     }
 
-    public Dictionary<int, int> playerLevelToXpDic = new Dictionary<int, int>()
+    public static Dictionary<int, int> playerLevelToXpDic = new Dictionary<int, int>()
     {
         {1, 1000 }, {2, 1250 }, {3, 1750 }, {4, 2500 }, {5, 5000 },
 

@@ -128,7 +128,7 @@ public partial class WebManager
         int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
         int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
 
-        int dbXpToLevel = PlayerProgressionManager.instance.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
+        int dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
 
         if (dbXpToLevel < newXp)
             newLevel = pda.playerBasicOnlineStats.level + 1;
@@ -186,7 +186,7 @@ public partial class WebManager
         int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
         int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
 
-        int dbXpToLevel = PlayerProgressionManager.instance.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
+        int dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
 
         Debug.Log($"XP to level: {dbXpToLevel}. New XP: {newXp}");
         if (dbXpToLevel < newXp)

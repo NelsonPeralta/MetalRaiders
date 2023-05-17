@@ -32,6 +32,11 @@ public class ServiceRecordMenu : MonoBehaviour
         levelText.text = $"Level: {pda.level.ToString()}";
         xpText.text = $"Xp: {pda.xp.ToString()}";
         creditsText.text = $"Credits: {pda.credits.ToString()}";
+
+        int xpNeeded = 0;
+        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.level + 1)) xpNeeded = PlayerProgressionManager.playerLevelToXpDic[pda.level + 1];
+
+        if (xpNeeded > 0) xpText.text += $" / {xpNeeded}";
     }
 
     private void OnDisable()

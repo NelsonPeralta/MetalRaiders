@@ -15,7 +15,7 @@ using static Player;
 public class Player : MonoBehaviourPunCallbacks
 {
     public delegate void PlayerEvent(Player playerProperties);
-    public PlayerEvent OnPlayerDeath, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage,
+    public PlayerEvent OnPlayerDeath, OnPlayerDeathLate, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage,
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
         OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged;
 
@@ -312,7 +312,10 @@ public class Player : MonoBehaviourPunCallbacks
             _isDead = value;
 
             if (value && !previousValue)
+            {
                 OnPlayerDeath?.Invoke(this);
+                OnPlayerDeathLate?.Invoke(this);
+            }
         }
     }
 
@@ -629,6 +632,7 @@ public class Player : MonoBehaviourPunCallbacks
         //foreach (PlayerMarker pm in GetComponentsInChildren<PlayerMarker>())
         //    OnPlayerTeamChanged += pm.OnPlayerTeamDelegate;
         OnPlayerDeath += OnPlayerDeath_Delegate;
+        OnPlayerDeathLate += OnPlayerDeath_DelegateLate;
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
@@ -814,19 +818,10 @@ public class Player : MonoBehaviourPunCallbacks
         if (!GetComponent<PhotonView>().IsMine || GameManager.instance.gameType == GameManager.GameType.GunGame)
             return;
 
-        if (firstWeapon.codeName == null || firstWeapon.currentAmmo <= 0) firstWeapon = null;
-        if (secondWeapon.codeName == null || secondWeapon.currentAmmo <= 0) secondWeapon = null;
-
-
-        if (secondWeaponOffset == null)
-            secondWeaponOffset = new Vector3(0, 0, 0);
-
-
-        Vector3 spp = weaponDropPoint.position + (Vector3)secondWeaponOffset;
-        Vector3 dir = weaponDropPoint.transform.forward;
-
         NetworkGameManager.SpawnNetworkWeaponOnPlayerDeath(firstWeapon, secondWeapon,
-           weaponDropPoint.position, dir, weaponDropPoint.position + (Vector3)secondWeaponOffset);
+           weaponDropPoint.position, weaponDropPoint.transform.forward, weaponDropPoint.position + new Vector3(0, 1, 0));
+
+        GC.Collect();
     }
 
 
@@ -1220,8 +1215,13 @@ public class Player : MonoBehaviourPunCallbacks
         try { StartCoroutine(Respawn_Coroutine()); } catch { }
         try { StartCoroutine(MidRespawnAction()); } catch { }
 
+
+    }
+    void OnPlayerDeath_DelegateLate(Player playerProperties)
+    {
         DropWeaponOnDeath(playerInventory.activeWeapon, playerInventory.holsteredWeapon, secondWeaponOffset: new Vector3(0.5f, 0.5f, 0));
     }
+
 
     void OnPlayerDamaged_Delegate(Player player)
     {

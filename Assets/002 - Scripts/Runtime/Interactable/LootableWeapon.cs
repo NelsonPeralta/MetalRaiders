@@ -50,6 +50,11 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         {
             Vector3 spp = new Vector3((float)System.Math.Round(value.x, 1), (float)System.Math.Round(value.y, 1), (float)System.Math.Round(value.z, 1));
             _spawnPointPosition = spp;
+            try
+            {
+                MultiplayerManager.instance.lootableWeaponsDict.Add(_spawnPointPosition, this);
+            }
+            catch (System.Exception e) { Debug.LogWarning(e); }
         }
     }
 
@@ -93,7 +98,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     private void Awake()
     {
-        spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
+        //spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
         spawnPointRotation = transform.rotation;
     }
     private void OnEnable()
@@ -115,11 +120,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     }
     private void Start()
     {
-        try
-        {
-            MultiplayerManager.instance.lootableWeaponsDict.Add(spawnPointPosition, this);
-        }
-        catch (System.Exception e) { Debug.LogWarning(e); }
+        
     }
 
     private void Update()
