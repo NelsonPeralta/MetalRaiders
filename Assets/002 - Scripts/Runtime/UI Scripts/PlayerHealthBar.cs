@@ -11,7 +11,7 @@ public class PlayerHealthBar : PlayerBar
     {
         GetComponent<Slider>().maxValue = 100;
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm || GameManager.instance.gameType == GameManager.GameType.Swat || GameManager.instance.gameType == GameManager.GameType.Retro)
             holder.SetActive(true);
         else
             holder.SetActive(false);

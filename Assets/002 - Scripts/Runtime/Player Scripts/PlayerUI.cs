@@ -188,7 +188,10 @@ public class PlayerUI : MonoBehaviour
         }
         if(GameManager.instance.gameType == GameManager.GameType.Swat
              || GameManager.instance.gameType == GameManager.GameType.Retro)
+        {
+            healthBar.SetActive(true);
             barsHolder.SetActive(false);
+        }
 
         OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);
     }

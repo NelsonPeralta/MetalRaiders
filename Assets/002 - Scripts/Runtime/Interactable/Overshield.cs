@@ -10,6 +10,11 @@ public class Overshield : MonoBehaviour
     private void Start()
     {
         try { NetworkGameManager.instance.overshield = this; } catch { }
+        try
+        {
+            if (GameManager.instance.gameType == GameManager.GameType.Retro || GameManager.instance.gameType == GameManager.GameType.Swat)
+                gameObject.SetActive(false);
+        }catch { }
     }
     private void OnTriggerEnter(Collider other)
     {

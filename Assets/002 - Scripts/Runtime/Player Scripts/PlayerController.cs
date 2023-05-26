@@ -726,7 +726,9 @@ public class PlayerController : MonoBehaviourPun
 
     void SwitchWeapons()
     {
-        if (GameManager.instance.gameType != GameManager.GameType.GunGame)
+        if (GameManager.instance.gameType != GameManager.GameType.GunGame &&
+            GameManager.instance.gameType != GameManager.GameType.Shotguns &&
+            GameManager.instance.gameType != GameManager.GameType.Snipers)
             if (rewiredPlayer.GetButtonDown("Switch Weapons"))
             {
                 try
