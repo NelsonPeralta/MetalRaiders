@@ -85,7 +85,7 @@ public class Melee : MonoBehaviour
                     {
                         audioSource.clip = knifeSuccessSound;
                         audioSource.volume = 1;
-                        audioSource.spatialBlend = 1;
+                        audioSource.spatialBlend = 0.9f;
 
                         audioSource.Play();
 

@@ -484,7 +484,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     #region
 
-    int _meleeDamage = 150;
+    int _meleeDamage = 125;
     bool _isHealing;
     bool _overshieldRecharge;
     int _respawnTime = 5;
