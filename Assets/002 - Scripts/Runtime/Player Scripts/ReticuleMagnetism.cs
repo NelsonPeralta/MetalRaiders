@@ -39,6 +39,13 @@ public class ReticuleMagnetism : MonoBehaviour
     [SerializeField] int xFact;
     [SerializeField] int yFact;
 
+    [SerializeField] LayerMask obstructionMask;
+    [SerializeField] bool _obstruction;
+
+
+    Vector3 _obsDir;
+    float _obsDis;
+
 
     // Update is called once per frame
     void Update()
@@ -76,9 +83,42 @@ public class ReticuleMagnetism : MonoBehaviour
                         firstRayHit = hit.transform.gameObject;
                     }
 
-                    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-                        if (firstRayHit.GetComponent<ReticuleFriction>().player && (firstRayHit.GetComponent<Player>().team == player.team))
+
+
+                    try
+                    {
+
+                        ReticuleFriction rf = firstRayHit.GetComponent<ReticuleFriction>();
+
+
+                        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                            if (rf.player && (rf.player.team == player.team))
+                                return;
+
+                        _obstruction = false;
+                        _obsDir = (firstRayHit.transform.position - player.mainCamera.transform.position).normalized;
+                        _obsDis = Vector3.Distance(player.mainCamera.transform.position, firstRayHit.transform.position);
+
+                        if (Physics.Raycast(player.mainCamera.transform.position, _obsDir, _obsDis, obstructionMask))
+                            _obstruction = true;
+
+                        if (_obstruction)
+                        {
+                            rf = null;
+                            _hitScreenPosList.Clear();
                             return;
+                        }
+
+                    }
+                    catch { }
+
+
+
+
+
+
+
+
 
                     //if(movement.speed == 0)
                     _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves

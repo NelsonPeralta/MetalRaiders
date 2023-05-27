@@ -96,11 +96,11 @@ public class PlayerCamera : MonoBehaviour
         }
 
         if (aimAssistCapsule.reticuleFriction)
-            mouseSensitivity /= 2;
+            mouseSensitivity *= 0.65f;
 
         if (pController.isAiming)
         {
-            mouseSensitivity /= 2;
+            mouseSensitivity *= 0.65f;
 
             if (_controllerType == ControllerType.Joystick && player.playerInventory.activeWeapon.scopeFov == 20)
                 mouseSensitivity *= 0.6f;
