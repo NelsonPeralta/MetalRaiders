@@ -261,6 +261,7 @@ public class PlayerInventory : MonoBehaviourPun
         //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
         OnActiveWeaponChanged += aimAssistCone.OnActiveWeaponChanged;
         player.OnPlayerRespawnEarly += OnPlayerRespawnEarly_Delegate;
+        player.OnPlayerDeath += OnPLayerDeath_Delegate;
         OnAmmoChanged += OnAmmoChanged_Delegate;
         OnActiveWeaponChangedLate += OnActiveWeaponChangedLate_Delegate;
 
@@ -538,6 +539,8 @@ public class PlayerInventory : MonoBehaviourPun
         ChangeActiveAmmoCounter();
         if (PV.IsMine)
             PlayDrawSound();
+
+        try { activeWeapon.animator.SetBool("Run", false); } catch { }
     }
 
     void AssignRandomWeapons()
@@ -664,6 +667,11 @@ public class PlayerInventory : MonoBehaviourPun
     void OnPlayerRespawnEarly_Delegate(Player player)
     {
         StartCoroutine(EquipStartingWeapon());
+    }
+
+    void OnPLayerDeath_Delegate(Player player)
+    {
+        try { activeWeapon.animator.SetBool("Run", false); } catch { }
     }
 
     void OnActiveWeaponChangedLate_Delegate(PlayerInventory playerInventory)

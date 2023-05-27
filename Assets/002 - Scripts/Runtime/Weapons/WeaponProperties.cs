@@ -175,11 +175,14 @@ public class WeaponProperties : MonoBehaviour
     public int previousLayer { get { return _preLayer; } set { _preLayer = value; } }
     public bool isActiveWeapon { get { return this == player.playerInventory.activeWeapon; } }
     public bool isLeftWeapon { get { return this == player.playerInventory.leftWeapon; } }
+    public Animator animator { get { return _animator; } }
 
     int _index, _preLayer;
+    Animator _animator;
 
     private void Start()
     {
+        _animator = GetComponent<Animator>();
         if (fireRate <= 0)
             fireRate = 600;
         //delayBetweenBullets = 1f / fireRate;

@@ -405,11 +405,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         Debug.Log("SpawnNetworkWeaponOnPlayerDeath_RPC");
         GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
 
-        LootableWeapon firstWeapon = Instantiate(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
-         firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
-
         if (firstWeapCurrAmmo + firstWeapSpareAmmo > 0)
         {
+            LootableWeapon firstWeapon = Instantiate(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
+             firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
+
             try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
             try { firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
             try { firstWeapon.spawnPointPosition = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
@@ -419,11 +419,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
 
 
-        LootableWeapon secondWeapon = Instantiate(weapInv[secondtWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
-         firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
-
         if (secondWeapCurrAmmo + secondWeapSpareAmmo > 0)
         {
+            LootableWeapon secondWeapon = Instantiate(weapInv[secondtWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
+             firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
+
             try { secondWeapon.name = secondWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
             try { secondWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
             try { secondWeapon.spawnPointPosition = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
