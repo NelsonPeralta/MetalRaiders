@@ -224,7 +224,10 @@ public class Bullet : MonoBehaviourPunCallbacks
             }
 
             _spawnDir = finalHitPoint - _spawnDir;
-            Debug.Log("asdf");
+            Debug.Log("BULLET CheckForFinalHit");
+
+            if (weaponProperties.degradingDamage && finalHitDistance >= weaponProperties.degradingDamageStart)
+                damage = weaponProperties.degradedDamage;
 
             try
             {

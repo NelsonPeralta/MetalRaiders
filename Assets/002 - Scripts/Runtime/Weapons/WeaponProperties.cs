@@ -103,6 +103,8 @@ public class WeaponProperties : MonoBehaviour
     public GameObject weaponRessource;
     public GameObject muzzleFlash;
 
+    public int degradingDamageStart, degradedDamage;
+
 
     public int currentAmmo
     {
@@ -177,11 +179,12 @@ public class WeaponProperties : MonoBehaviour
     public bool isLeftWeapon { get { return this == player.playerInventory.leftWeapon; } }
     public Animator animator { get { return _animator; } }
     public bool hipSprayOnly { get { return _hipSprayOnly; } set { _hipSprayOnly = value; } }
+    public bool degradingDamage;
 
     int _index, _preLayer;
     Animator _animator;
 
-    bool _hipSprayOnly;
+    bool _hipSprayOnly, _degradingDamage;
 
     private void Start()
     {
@@ -405,6 +408,17 @@ public class WeaponPropertiesEditor : Editor
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);
         wp.hipSprayOnly = GUILayout.Toggle(wp.hipSprayOnly, "Hip Spray Only");
 
+        
+        EditorGUILayout.Space();
+        wp.degradingDamage = GUILayout.Toggle(wp.degradingDamage, "Degrading Damage");
+        if (wp.degradingDamage)
+        {
+            wp.degradingDamageStart = EditorGUILayout.IntField("Degraded damage start:", wp.degradingDamageStart);
+            wp.degradedDamage = EditorGUILayout.IntField("Degraded damage:", wp.degradedDamage);
+        }
+
+
+        EditorGUILayout.Space();
         wp.isHeadshotCapable = GUILayout.Toggle(wp.isHeadshotCapable, "Is Headshot Capable");
         if (wp.isHeadshotCapable)
             wp.headshotMultiplier = EditorGUILayout.FloatField("Headshot Multiplier:", wp.headshotMultiplier);

@@ -506,7 +506,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             for (int i = 0; i < NbPlayers; i++)
             {
                 Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Online Player Test"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation).GetComponent<Player>();
+                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation).GetComponent<Player>();
                 player.GetComponent<PlayerController>().rid = i;
             }
         }
