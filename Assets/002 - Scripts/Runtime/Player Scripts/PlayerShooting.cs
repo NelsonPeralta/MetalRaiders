@@ -203,6 +203,9 @@ public class PlayerShooting : MonoBehaviourPun
                 Player player = playerController.GetComponent<Player>();
                 Quaternion ranSprayQuat = activeWeapon.GetRandomSprayRotation();
 
+                if (playerController.isAiming && activeWeapon.hipSprayOnly)
+                    ranSprayQuat = Quaternion.identity;
+
                 if (!player.isMine)
                 {
                     RaycastHit hit;

@@ -176,9 +176,12 @@ public class WeaponProperties : MonoBehaviour
     public bool isActiveWeapon { get { return this == player.playerInventory.activeWeapon; } }
     public bool isLeftWeapon { get { return this == player.playerInventory.leftWeapon; } }
     public Animator animator { get { return _animator; } }
+    public bool hipSprayOnly { get { return _hipSprayOnly; } set { _hipSprayOnly = value; } }
 
     int _index, _preLayer;
     Animator _animator;
+
+    bool _hipSprayOnly;
 
     private void Start()
     {
@@ -400,6 +403,7 @@ public class WeaponPropertiesEditor : Editor
         wp.bulletSpeed = EditorGUILayout.IntField("Bullet speed:", wp.bulletSpeed);
         wp.range = EditorGUILayout.FloatField("Bullet range:", wp.range);
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);
+        wp.hipSprayOnly = GUILayout.Toggle(wp.hipSprayOnly, "Hip Spray Only");
 
         wp.isHeadshotCapable = GUILayout.Toggle(wp.isHeadshotCapable, "Is Headshot Capable");
         if (wp.isHeadshotCapable)
