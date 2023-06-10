@@ -493,6 +493,7 @@ public class PlayerInventory : MonoBehaviourPun
         }
 
         if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+
         {
             StartingWeapon = _playerGunGameManager.gunIndex[_playerGunGameManager.index].codeName;
             StartingWeapon2 = "nailgun";

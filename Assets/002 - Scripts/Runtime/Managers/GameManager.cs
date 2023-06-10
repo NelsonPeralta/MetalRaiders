@@ -437,19 +437,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.Alpha5))
             camSens += 10;
 
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-            SendReport();
-
-        if (Input.GetKeyDown(KeyCode.Alpha9))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            try
-            {
-                GetRootPlayer().playerMedals.SpawnHeadshotMedal();
-            }
-            catch { }
-            //Transform sp = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-            //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", "ShooterAI"), sp.position + new Vector3(0, 2, 0), sp.rotation);
+            if (instance.localPlayers.Count == 1 && instance.pid_player_Dict.Count == 1)
+                Debug.Log("Alpha0");
         }
+
+        //if (Input.GetKeyDown(KeyCode.Alpha6))
+        //    SendReport();
+
+        //if (Input.GetKeyDown(KeyCode.Alpha9))
+        //{
+        //    try
+        //    {
+        //        GetRootPlayer().playerMedals.SpawnHeadshotMedal();
+        //    }
+        //    catch { }
+        //    //Transform sp = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+        //    //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", "ShooterAI"), sp.position + new Vector3(0, 2, 0), sp.rotation);
+        //}
     }
 
     void OnCreateSwarmRoomButton_Delegate(Launcher launcher)

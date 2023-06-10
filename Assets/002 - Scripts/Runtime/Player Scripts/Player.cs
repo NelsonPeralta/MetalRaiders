@@ -1033,7 +1033,10 @@ public class Player : MonoBehaviourPunCallbacks
 
                     if (GameManager.instance.gameType == GameManager.GameType.GunGame
                         && deathNature == DeathNature.Melee)
+                    {
+
                         f = $"{lastPlayerSource.nickName} <color=\"red\"> Humiliated </color> {nickName}";
+                    }
                     else if (deathNature == DeathNature.Sniped)
                         f = $"{lastPlayerSource.nickName} <color=\"yellow\">!!! Sniped !!!</color> {nickName}";
                     else if (deathByHeadshot)

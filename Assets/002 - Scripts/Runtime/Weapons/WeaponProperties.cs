@@ -178,13 +178,11 @@ public class WeaponProperties : MonoBehaviour
     public bool isActiveWeapon { get { return this == player.playerInventory.activeWeapon; } }
     public bool isLeftWeapon { get { return this == player.playerInventory.leftWeapon; } }
     public Animator animator { get { return _animator; } }
-    public bool hipSprayOnly { get { return _hipSprayOnly; } set { _hipSprayOnly = value; } }
+    public bool hipSprayOnly;
     public bool degradingDamage;
 
     int _index, _preLayer;
     Animator _animator;
-
-    bool _hipSprayOnly, _degradingDamage;
 
     private void Start()
     {

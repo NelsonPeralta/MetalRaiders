@@ -127,6 +127,8 @@ public class PlayerController : MonoBehaviourPun
     public AudioSource meleeAudioSource;
 
 
+    [SerializeField] LayerMask floatinCameraLayerMask;
+
 
 
 
@@ -134,14 +136,19 @@ public class PlayerController : MonoBehaviourPun
 
 
     public bool isMeleeing { get { return _isMeleeing; } set { _isMeleeing = value; if (value) _meleeCooldown = 0.9f; } }
+    public bool cameraisFloating { get { return _cameraIsFloating; } }
 
-
-    bool _isMeleeing;
+    bool _isMeleeing, _cameraIsFloating;
     float _meleeCooldown;
+    Transform _mainCamParent;
+    Vector3 _lastMainCamLocalPos;
+    Quaternion _lasMainCamLocalQuat;
+    LayerMask _lastMainCamLayerMask;
 
     void Awake()
     {
         PV = GetComponent<PhotonView>();
+        _mainCamParent = mainCam.transform.parent;
         _playerThirdPersonModelManager = GetComponent<PlayerThirdPersonModelManager>();
         OnPlayerTestButton += OnTestButton_Delegate;
     }
@@ -209,6 +216,7 @@ public class PlayerController : MonoBehaviourPun
                     Grenade(); //TO DO: Spawn Grenades the same way as bullets
                     HolsterAndInspect();
                     CheckDrawingWeapon();
+                    FloatingCamera();
                 }
             }
 
@@ -745,6 +753,39 @@ public class PlayerController : MonoBehaviourPun
         {
             grenadeSwitchAudioSource.Play();
             PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
+        }
+    }
+
+    void FloatingCamera()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            if (GameManager.instance.localPlayers.Count == 1 && GameManager.instance.pid_player_Dict.Count == 1)
+                if (!cameraisFloating)
+                {
+                    _lastMainCamLayerMask = mainCam.cullingMask;
+                    _lastMainCamLocalPos = mainCam.transform.localPosition;
+                    _lasMainCamLocalQuat = mainCam.transform.localRotation;
+
+                    mainCam.transform.parent = null;
+                    mainCam.cullingMask = floatinCameraLayerMask;
+                    _cameraIsFloating = true;
+                    Debug.Log("Alpha0");
+                    uiCam.enabled = false;
+                    gunCam.enabled = false;
+                }
+                else
+                {
+                    mainCam.cullingMask = _lastMainCamLayerMask;
+                    mainCam.transform.parent = _mainCamParent;
+                    mainCam.transform.localPosition = _lastMainCamLocalPos;
+                    mainCam.transform.localRotation = _lasMainCamLocalQuat;
+
+                    _cameraIsFloating = false;
+                    Debug.Log("Alpha0");
+                    uiCam.enabled = true;
+                    gunCam.enabled = true;
+                }
         }
     }
 

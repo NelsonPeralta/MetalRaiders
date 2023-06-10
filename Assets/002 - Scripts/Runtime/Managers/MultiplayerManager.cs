@@ -30,7 +30,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameType == GameManager.GameType.Hill)
                 return 60;
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                return 15;
+                return 10;
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 return 25;
 

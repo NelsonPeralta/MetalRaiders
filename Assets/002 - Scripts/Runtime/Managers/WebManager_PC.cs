@@ -27,8 +27,8 @@ public partial class WebManager
             }
             else
             {
-                //Debug.Log(www.result);
-                //Debug.Log(www.downloadHandler.text);
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
