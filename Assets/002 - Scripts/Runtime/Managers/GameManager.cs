@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public delegate void GameManagerEvent();
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
+    public enum Connection {Offline, Online }
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum GameType
     {
@@ -87,11 +88,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Dictionary<int, Player> localPlayers = new Dictionary<int, Player>();
 
+    [SerializeField] Connection _connection;
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
     [SerializeField] TeamMode _teamMode;
     [SerializeField] PlayerMultiplayerMatchStats.Team _onlineTeam;
     // Public variables
+
+    public Connection connection
+    {
+        get { return _connection; }set { _connection = value; }
+    }
     public GameMode gameMode
     {
         get { return _gameMode; }
@@ -306,6 +313,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void Awake()
     {
+        connection = Connection.Offline;
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         Debug.Log("GameManager Awake");
         if (instance)
@@ -757,5 +765,18 @@ public class GameManager : MonoBehaviourPunCallbacks
         return timeLeft;
     }
 
+
+
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        GameManager.instance.connection = GameManager.Connection.Offline;
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        GameManager.instance.connection = GameManager.Connection.Online;
+
+    }
 
 }

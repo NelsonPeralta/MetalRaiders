@@ -152,20 +152,37 @@ public class Launcher : MonoBehaviourPunCallbacks
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        ChangeLevelToLoadWithIndex(levelToLoadIndex);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+        GameManager.instance.connection = GameManager.Connection.Offline;
         base.OnDisconnected(cause);
         Debug.Log($"Disconnected: {cause}");
         //ShowPlayerMessage($"Disconnected from Server: {cause}.\nReconnecting...");
+        _tries++;
+
+        if (_tries < 4) StartCoroutine(TryToConnectAgain());
+        else
+        {
+            MenuManager.Instance.OpenMenu("online title");
+
+        }
+    }
+    int _tries = 0;
+
+    IEnumerator TryToConnectAgain()
+    {
+        yield return new WaitForSeconds(1);
         ConnectToPhotonMasterServer(false);
+
     }
 
     public override void OnConnectedToMaster()
     {
+        GameManager.instance.connection = GameManager.Connection.Online;
         Debug.Log("Connected to Master");
+        try { ChangeLevelToLoadWithIndex(levelToLoadIndex); } catch { }
         //ShowPlayerMessage("Conneected To Master Server!");
         PhotonNetwork.JoinLobby();
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -525,6 +542,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
+
         Launcher.instance.levelToLoadIndex = index;
         NetworkGameManager.instance.SendGameParams();
         return;

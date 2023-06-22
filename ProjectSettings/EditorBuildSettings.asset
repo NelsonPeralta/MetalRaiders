@@ -27,6 +27,9 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Placeholders/Placeholder 2.unity
     guid: 4a42e724317d1a644a7d544d54a68683
   - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Cargo.unity
+    guid: 987b1a0f2fdaece46b8d2f4459e4ee2d
+  - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Lighthouse.unity
     guid: 38cf578bd469df6449ce6788067dd73f
   - enabled: 1
