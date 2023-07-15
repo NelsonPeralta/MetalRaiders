@@ -541,7 +541,7 @@ public class PlayerController : MonoBehaviourPun
                     if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
                         gunCam.enabled = false;
                     else
-                        gunCam.fieldOfView = 40;
+                        gunCam.fieldOfView = 50;
 
                     allPlayerScripts.aimingScript.playAimSound();
                 }

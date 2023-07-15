@@ -43,6 +43,7 @@ public class ManCannon : MonoBehaviour
             {
                 if (other.GetComponent<Player>().isDead || other.GetComponent<Player>().isRespawning || !other.GetComponent<Player>().isMine)
                     return;
+                Debug.Log("Found Player");
 
                 CharacterController cc = other.GetComponent<CharacterController>();
                 cc.GetComponent<PlayerImpactReceiver>().AddImpact(transform.up, power);

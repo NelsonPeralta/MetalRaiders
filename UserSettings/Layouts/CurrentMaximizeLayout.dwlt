@@ -23,7 +23,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 15176
+  controlID: 766
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 15177
+  controlID: 767
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -212,9 +212,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: c8110100
       m_LastClickedID: 0
-      m_ExpandedIDs: eae290fffae290ff7ae390ff8ed995ff66f296ff76f296fff6f296ff0ae99bff90f5a6ffe684a7fff684a7ff7685a7ff8a7bacff48b2aeff58b2aeffd8b2aeffeca8b3ff2c18b4ffe21fb4ff0836b4ff4e36b4ff5037b4ff6037b4ffe037b4fff42db9ffb0cebafff8cfbaff08d0baff88d0baff9cc6bfff147bc1ff247bc1ffa47bc1ffb871c6ff824ac8ff924ac8ff124bc8ff2641cdff145cceff245cceffa45cceffb852d3ffcae0d3ffdae0d3ff5ae1d3ff6ed7d8ff7650d9ffbe5ed9ff9c66d9ffe467d9fff467d9ff7468d9ff885edeff40acedff50acedffd0acedffe4a2f2ff88bff3ffcac0f3ffd0c0f3ffe0c0f3ff60c1f3ff74b7f8ff72d3faff98e9fafff0eafaff70ebfaff86e1ffff0cfbfffff0d30000aed700008adc0000
+      m_ExpandedIDs: 
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 15129
+  controlID: 719
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -325,7 +325,7 @@ MonoBehaviour:
   - {fileID: 10}
   - {fileID: 11}
   m_Selected: 0
-  m_LastSelected: 1
+  m_LastSelected: 3
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -2024,23 +2024,23 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/002 - Scripts/Runtime/Managers
+    - Assets/002 - Scripts/Runtime/Player Scripts
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/002 - Scripts/Runtime/Managers
+  - Assets/002 - Scripts/Runtime/Player Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Repos\MetalRaiders
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 335}
-    m_SelectedIDs: c8220100
-    m_LastClickedID: 74440
-    m_ExpandedIDs: 00000000502201005a220100b022010000ca9a3bffffff7f
+    m_SelectedIDs: e6220100
+    m_LastClickedID: 74470
+    m_ExpandedIDs: 00000000502201006e220100c422010000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2093,8 +2093,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: c8110100
+    m_LastClickedInstanceID: 70088
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: 8abf180000000000261b060022f10000e6c2020028550200
     m_RenameOverlay:
@@ -2120,7 +2120,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 337}
     m_GridSize: 16
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 200
@@ -2143,8 +2143,8 @@ MonoBehaviour:
     y: 0
     width: 340.80005
     height: 722.8
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
