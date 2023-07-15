@@ -66,6 +66,7 @@ public class WeaponProperties : MonoBehaviour
     public bool hasBloom;
     public float bloomIncrement;
     public float bloomDecrement;
+    public float maxBloom;
     public float bloom;
     float bloomCooldown;
     [Tooltip("In Degrees")]
@@ -265,7 +266,7 @@ public class WeaponProperties : MonoBehaviour
     {
         float currentSpray = bulletSpray + bloom;
         if (hasBloom)
-            bloom += bloomIncrement;
+            bloom = Mathf.Clamp(bloom + bloomIncrement, 0, maxBloom);
 
         if (pController.isCrouching)
             currentSpray *= 0.75f;
@@ -453,6 +454,7 @@ public class WeaponPropertiesEditor : Editor
         wp.hasBloom = GUILayout.Toggle(wp.hasBloom, "Has bloom");
         if (wp.hasBloom)
         {
+            wp.maxBloom = EditorGUILayout.FloatField("Max Bloom:", wp.maxBloom);
             wp.bloom = EditorGUILayout.FloatField("Bloom:", wp.bloom);
             wp.bloomIncrement = EditorGUILayout.FloatField("Bloom Increment:", wp.bloomIncrement);
             wp.bloomDecrement = EditorGUILayout.FloatField("Bloom Decrement:", wp.bloomDecrement);
