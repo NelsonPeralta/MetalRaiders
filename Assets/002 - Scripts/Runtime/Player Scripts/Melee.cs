@@ -30,7 +30,7 @@ public class Melee : MonoBehaviour
 
     [SerializeField] Movement _movement;
 
-    float _maxDis;
+    float _maxDis; // Does NOT take into account the radius of player character controller
 
 
     private void Start()
@@ -67,6 +67,7 @@ public class Melee : MonoBehaviour
         catch { }
     }
 
+    int _pushForce;
     public void Knife()
     {
 
@@ -91,9 +92,19 @@ public class Melee : MonoBehaviour
 
                         Vector3 dir = (playerToDamage.transform.position - player.transform.position);
 
+                        print("Melee");
                         print(_maxDis);
+
+                        Vector3 targetPostition = new Vector3(playerToDamage.transform.position.x,
+                                                    movement.transform.position.y,
+                                                    playerToDamage.transform.position.z);
+                        movement.transform.LookAt(targetPostition);
+
+                        if (Vector3.Distance(playerToDamage.transform.position, movement.transform.position) > _maxDis) _pushForce = 200;
+                        else _pushForce = 100;
+
                         Debug.Log(Vector3.Distance(playerToDamage.transform.position, movement.transform.position));
-                        movement.Push(playerToDamage.transform.position - movement.transform.position, 200, PushSource.Melee, true);
+                        movement.Push(playerToDamage.transform.position - movement.transform.position, _pushForce, PushSource.Melee, true);
                         playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
                     }
                 }

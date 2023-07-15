@@ -114,14 +114,13 @@ public class Movement : MonoBehaviour, IMoveable
     }
     public float defaultMaxSpeed { get { return _defaultMaxSpeed; } }
     public float jumpForce { get { return _jumpForce; } }
-    public float manCannonCooldown
+    public float blockMovementCooldown
     {
-        get { return _manCannonCooldown; }
+        get { return _blockMovementCooldown; }
         set
         {
             Debug.Log("Man Cannon Cooldown");
-            verticalVector = Vector3.zero;
-            _manCannonCooldown = 0.5f;
+            _blockMovementCooldown = value;
         }
     }
     public float speedRatio { get { return _speedRatio; } }
@@ -174,7 +173,7 @@ public class Movement : MonoBehaviour, IMoveable
     [SerializeField] float _acceleration = 7f, _deceleration = 7f;
     [SerializeField] float _animationSpeed;
     [SerializeField] PlayerMovementDirection _playerMovementDirection;
-
+    [SerializeField] float _blockMovementCooldown;
 
 
 
@@ -186,7 +185,7 @@ public class Movement : MonoBehaviour, IMoveable
     Rewired.Player _rewiredPlayer;
 
     bool _canMoveWhileJumping, _isGrounded, _isMoving, _isOnLadder;
-    float _defaultSlopeLimit, _defaultStepOffset, _canMoveWhileJumpingCooldown, _manCannonCooldown = 0.5f,
+    float _defaultSlopeLimit, _defaultStepOffset, _canMoveWhileJumpingCooldown,
         _rightDeadzone = 0.2f, _forwardDeadzone = 0.2f,
         _defaultTestMaxSpeed = 4f, _currentGravity = -9.81f;
     float defaultSlopeLimit, defaultStepOffset, _crouchJumpTime = 0.2f, crouchJumpTime = 0.2f, _lastCalulatedGroundedSpeed;
@@ -215,7 +214,7 @@ public class Movement : MonoBehaviour, IMoveable
 
     private void OnEnable()
     {
-        _manCannonCooldown = 0;
+        _blockMovementCooldown = 0;
         _canMoveWhileJumpingCooldown = 0;
     }
 
@@ -335,7 +334,7 @@ public class Movement : MonoBehaviour, IMoveable
         {
             Vector3 currentMovementInput = transform.right * _correctedRightInput + transform.forward * _correctedForwardInput;
             currentMovementInput = transform.right * Mathf.Abs(_correctedRightInput) * _maxRightSpeed + transform.forward * Mathf.Abs(_correctedForwardInput) * _maxForwardSpeed;
-            if (isGrounded)
+            if (isGrounded && blockMovementCooldown <= 0)
             {
 
                 _movementInput = transform.right * _rawRightInput + transform.forward * _rawForwardInput;
@@ -552,7 +551,7 @@ public class Movement : MonoBehaviour, IMoveable
 
         if (isGrounded && _rewiredplayer.GetButtonDown("Jump"))
         {
-            if (manCannonCooldown > 0 || _pController.pauseMenuOpen)
+            if (blockMovementCooldown > 0 || _pController.pauseMenuOpen)
                 return;
 
             float _jumpForce = jumpForce;
@@ -829,8 +828,8 @@ public class Movement : MonoBehaviour, IMoveable
                 _canMoveWhileJumpingCooldown = 0;
         }
 
-        if (_manCannonCooldown > 0)
-            _manCannonCooldown -= Time.deltaTime;
+        if (_blockMovementCooldown > 0)
+            _blockMovementCooldown -= Time.deltaTime;
     }
 
 
@@ -850,10 +849,15 @@ public class Movement : MonoBehaviour, IMoveable
 
         playerImpactReceiver.AddImpact(dir, pow);
         if (ps == PushSource.ManCannon)
-            manCannonCooldown = 1f;
+            verticalVector = Vector3.zero;
 
-        if (blockMovement)
-            canMove = false;
+        if (ps == PushSource.Melee)
+            blockMovementCooldown = 1f;
+
+        //    manCannonCooldown = 1f;
+
+        //if (blockMovement)
+        //    canMove = false;
     }
 }
 

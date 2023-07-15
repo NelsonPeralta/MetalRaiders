@@ -877,6 +877,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void SpawnRagdoll()
     {
+        print(_deathNature);
         var ragdoll = GameObjectPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
@@ -884,7 +885,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (deathByHeadshot) { ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
         else if (deathNature == DeathNature.Grenade) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
-        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 500); }
+        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 8000); }
         else if (!deathByHeadshot) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 

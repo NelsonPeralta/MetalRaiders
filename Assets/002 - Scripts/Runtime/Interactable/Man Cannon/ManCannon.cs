@@ -38,24 +38,6 @@ public class ManCannon : MonoBehaviour
                 GetComponent<AudioSource>().Play();
             }
             catch { }
-
-            try
-            {
-                if (other.GetComponent<Player>().isDead || other.GetComponent<Player>().isRespawning || !other.GetComponent<Player>().isMine)
-                    return;
-                Debug.Log("Found Player");
-
-                CharacterController cc = other.GetComponent<CharacterController>();
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(transform.up, power);
-                cc.GetComponent<Movement>().manCannonCooldown = 1;
-
-                if (_blockMovement)
-                    cc.GetComponent<Movement>().canMove = false;
-
-                GetComponent<AudioSource>().clip = onTriggerAudioClip;
-                GetComponent<AudioSource>().Play();
-            }
-            catch { }
         }
     }
 }
