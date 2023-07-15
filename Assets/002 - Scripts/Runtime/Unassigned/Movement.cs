@@ -852,7 +852,7 @@ public class Movement : MonoBehaviour, IMoveable
             verticalVector = Vector3.zero;
 
         if (ps == PushSource.Melee)
-            blockMovementCooldown = 1f;
+            blockMovementCooldown = 0.6f;
 
         //    manCannonCooldown = 1f;
 
