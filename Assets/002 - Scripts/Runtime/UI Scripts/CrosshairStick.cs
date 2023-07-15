@@ -17,7 +17,8 @@ public class CrosshairStick : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _bloomFactor = 1;
+        if (_bloomFactor <= 0)
+            _bloomFactor = 1;
         _originalPosition = transform.localPosition;
         _originalScale = transform.localScale;
     }
