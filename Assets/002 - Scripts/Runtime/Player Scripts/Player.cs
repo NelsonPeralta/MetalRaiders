@@ -453,6 +453,40 @@ public class Player : MonoBehaviourPunCallbacks
     public Announcer announcer { get { return _announcer; } }
     public DeathNature deathNature { get { return _deathNature; } private set { _deathNature = value; } }
     public PlayerMedals playerMedals { get { return _playerMedals; } }
+    public float defaultFov
+    {
+        get { return _defaultFov; }
+        private set
+        {
+
+            //60  91.49
+            //40  65.81
+            //20  34.81
+
+            //90  31.42
+            //65.81   20.63
+            //34.81   10.08
+
+
+
+            //90  58.72
+            //60  35.98
+            //30  17.14
+
+            //90  31.42
+            //60  18.45
+            //30  8.62
+
+            Debug.Log($"localPlayers.Keys.Count: {GameManager.instance.localPlayers.Keys.Count}");
+            if (GameManager.instance.localNbPresetPlayers % 2 == 0) _defaultFov = 31.42f;
+            else if (GameManager.instance.localNbPresetPlayers == 1) _defaultFov = 58.72f;
+
+
+            GetComponent<PlayerController>().mainCam.fieldOfView = defaultFov;
+            GetComponent<PlayerController>().uiCam.fieldOfView = defaultFov;
+            GetComponent<PlayerController>().gunCam.fieldOfView = 60;
+        }
+    }
 
     #endregion
 
@@ -527,7 +561,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     [Header("Camera Options")]
     [Tooltip("Default value for camera field of view (40 is recommended).")]
-    public float defaultFov = 60.0f;
+    [SerializeField] float _defaultFov;
+
 
     [Header("Cameras")]
     public Camera mainCamera;
@@ -650,6 +685,9 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
         catch { }
+
+        defaultFov = 0; GetComponent<PlayerController>().ScopeOut();
+
         try
         {
             Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.pid_player_Dict);

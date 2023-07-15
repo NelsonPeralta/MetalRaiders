@@ -18,6 +18,7 @@ public class WeaponProperties : MonoBehaviour
     public enum AmmoProjectileType { Bullet, Grenade, Rocket }
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
+    public enum ScopeMagnification { None, Close, Medium, Long }
 
     public Player player { get { return pController.player; } }
 
@@ -57,6 +58,7 @@ public class WeaponProperties : MonoBehaviour
 
     [Header("Aiming")]
     public AimingMechanic aimingMechanic;
+    public ScopeMagnification scopeMagnification;
     public float scopeFov;
     public float scopeRRR;
     public bool isHeadshotCapable;
@@ -262,7 +264,8 @@ public class WeaponProperties : MonoBehaviour
     public Quaternion GetRandomSprayRotation()
     {
         float currentSpray = bulletSpray + bloom;
-        bloom += bloomIncrement;
+        if (hasBloom)
+            bloom += bloomIncrement;
 
         if (pController.isCrouching)
             currentSpray *= 0.75f;
@@ -444,6 +447,8 @@ public class WeaponPropertiesEditor : Editor
         wp.isHeadshotCapable = GUILayout.Toggle(wp.isHeadshotCapable, "Is Headshot Capable");
         if (wp.isHeadshotCapable)
             wp.headshotMultiplier = EditorGUILayout.FloatField("Headshot Multiplier:", wp.headshotMultiplier);
+
+        wp.scopeMagnification = (WeaponProperties.ScopeMagnification)EditorGUILayout.EnumPopup("Scope Magnification", wp.scopeMagnification);
 
         wp.hasBloom = GUILayout.Toggle(wp.hasBloom, "Has bloom");
         if (wp.hasBloom)

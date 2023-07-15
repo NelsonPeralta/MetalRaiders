@@ -204,7 +204,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform powerAmmoPack;
 
     [SerializeField] int _nbPlayers;
-    public int NbPlayers { get { return _nbPlayers; } set { _nbPlayers = value; } }
+    public int localNbPresetPlayers { get { return _nbPlayers; } set { _nbPlayers = value; } }
 
     int _camSens = 100;
 
@@ -517,7 +517,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         try
         {
-            for (int i = 0; i < NbPlayers; i++)
+            for (int i = 0; i < localNbPresetPlayers; i++)
             {
                 Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
                 Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation).GetComponent<Player>();
@@ -747,7 +747,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ChangeNbLocalPlayers(string n)
     {
-        NbPlayers = int.Parse(n);
+        localNbPresetPlayers = int.Parse(n);
     }
 
     public static int GetNextTiming(int tts)

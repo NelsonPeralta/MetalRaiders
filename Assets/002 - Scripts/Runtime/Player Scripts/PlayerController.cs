@@ -497,10 +497,23 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    float _tempFov;
     void ScopeIn()
     {
-        if (isDualWielding)
+        if (isDualWielding || pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.None)
             return;
+
+        if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Close ||
+            pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Medium)
+        {
+            _tempFov = 35.98f;
+            if (GameManager.instance.localNbPresetPlayers % 2 == 0) _tempFov = 18.45f;
+        }
+        else if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
+        {
+            _tempFov = 17.14f;
+            if (GameManager.instance.localNbPresetPlayers % 2 == 0) _tempFov = 8.62f;
+        }
 
         if (isAiming)
         {
@@ -523,12 +536,12 @@ public class PlayerController : MonoBehaviourPun
                 if (isAiming == false)
                 {
                     isAiming = true;
-                    mainCam.fieldOfView = pInventory.activeWeapon.scopeFov;
-                    uiCam.fieldOfView = pInventory.activeWeapon.scopeFov;
+                    mainCam.fieldOfView = _tempFov;
+                    uiCam.fieldOfView = _tempFov;
                     if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
                         gunCam.enabled = false;
                     else
-                        gunCam.fieldOfView = pInventory.activeWeapon.scopeFov;
+                        gunCam.fieldOfView = 40;
 
                     allPlayerScripts.aimingScript.playAimSound();
                 }
