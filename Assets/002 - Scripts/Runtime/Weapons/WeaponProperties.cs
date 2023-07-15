@@ -61,6 +61,11 @@ public class WeaponProperties : MonoBehaviour
     public float scopeRRR;
     public bool isHeadshotCapable;
     public float headshotMultiplier;
+    public bool hasBloom;
+    public float bloomIncrement;
+    public float bloomDecrement;
+    public float bloom;
+    float bloomCooldown;
     [Tooltip("In Degrees")]
     public int scopeSway; // Weapon sway is the weapon moving all on its own while you just aim down sight.
 
@@ -205,6 +210,10 @@ public class WeaponProperties : MonoBehaviour
         pController.OnControllerTypeChangedToMouseAndKeyboard += OnControllerTypeChanged;
     }
 
+    private void Update()
+    {
+        BloomDecrease();
+    }
     public void Recoil()
     {
         if (camScript)
@@ -224,6 +233,20 @@ public class WeaponProperties : MonoBehaviour
             }
     }
 
+    void BloomDecrease()
+    {
+        if (bloom <= 0) bloom = 0;
+
+        bloomCooldown -= Time.deltaTime;
+
+        if (bloomCooldown <= 0)
+        {
+            if (bloom > 0)
+                bloom -= bloomDecrement;
+
+            bloomCooldown = 0.1f;
+        }
+    }
     public void SpawnMuzzleflash()
     {
         StartCoroutine(SpawnMuzzleflash_Coroutine());
@@ -238,13 +261,14 @@ public class WeaponProperties : MonoBehaviour
 
     public Quaternion GetRandomSprayRotation()
     {
-        float currentBulletSpray = bulletSpray;
+        float currentSpray = bulletSpray + bloom;
+        bloom += bloomIncrement;
 
         if (pController.isCrouching)
-            currentBulletSpray *= 0.75f;
+            currentSpray *= 0.75f;
 
-        float ranX = Random.Range(-currentBulletSpray, currentBulletSpray);
-        float ranY = Random.Range(-currentBulletSpray, currentBulletSpray);
+        float ranX = Random.Range(-currentSpray, currentSpray);
+        float ranY = Random.Range(-currentSpray, currentSpray);
 
         Quaternion ranSprayRotation = new Quaternion();
         ranSprayRotation.eulerAngles = new Vector3(ranX, ranY, 0);
@@ -406,7 +430,7 @@ public class WeaponPropertiesEditor : Editor
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);
         wp.hipSprayOnly = GUILayout.Toggle(wp.hipSprayOnly, "Hip Spray Only");
 
-        
+
         EditorGUILayout.Space();
         wp.degradingDamage = GUILayout.Toggle(wp.degradingDamage, "Degrading Damage");
         if (wp.degradingDamage)
@@ -420,6 +444,14 @@ public class WeaponPropertiesEditor : Editor
         wp.isHeadshotCapable = GUILayout.Toggle(wp.isHeadshotCapable, "Is Headshot Capable");
         if (wp.isHeadshotCapable)
             wp.headshotMultiplier = EditorGUILayout.FloatField("Headshot Multiplier:", wp.headshotMultiplier);
+
+        wp.hasBloom = GUILayout.Toggle(wp.hasBloom, "Has bloom");
+        if (wp.hasBloom)
+        {
+            wp.bloom = EditorGUILayout.FloatField("Bloom:", wp.bloom);
+            wp.bloomIncrement = EditorGUILayout.FloatField("Bloom Increment:", wp.bloomIncrement);
+            wp.bloomDecrement = EditorGUILayout.FloatField("Bloom Decrement:", wp.bloomDecrement);
+        }
 
         wp.isDualWieldable = GUILayout.Toggle(wp.isDualWieldable, "Is Dual WieldAble");
         if (wp.isDualWieldable)
