@@ -739,12 +739,36 @@ public class Movement : MonoBehaviour, IMoveable
             {
                 if (_pController.weaponAnimator)
                     _pController.weaponAnimator.SetBool("Walk", true);
+
+                if (_pController.pInventory.isDualWielding)
+                {
+                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", true);
+                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", true);
+                }
             }
             else
+            {
                 try { _pController.weaponAnimator.SetBool("Walk", false); } catch { }
+
+                if (_pController.pInventory.isDualWielding)
+                {
+                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", false);
+                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
+                }
+            }
         }
         else
-            try { _pController.weaponAnimator.SetBool("Walk", false); } catch { }
+            try
+            {
+                _pController.weaponAnimator.SetBool("Walk", false);
+
+                if (_pController.pInventory.isDualWielding)
+                {
+                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", false);
+                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
+                }
+            }
+            catch { }
     }
     void LadderMaxSpeedChange()
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class CrosshairStick : MonoBehaviour
 {
     public enum BloomBehaviour { position, scale }
-    public enum BloomDirection { left, right, up, down, lu, ru, ld, rd }
+    public enum BloomDirection { left, right, up, down, lu, ru, ld, rd, t1, t2 }
 
     [SerializeField] WeaponProperties _weaponProperties;
     [SerializeField] BloomBehaviour _bloomBehaviour;
@@ -103,6 +103,20 @@ public class CrosshairStick : MonoBehaviour
                 catch { }
 
 
+            if (_bloomDirection == BloomDirection.t1)
+                try
+                {
+                    transform.localPosition = new Vector3(_originalPosition.x - (_weaponProperties.bloom * _bloomFactor * 1.154f),
+                        _originalPosition.y - (_weaponProperties.bloom * _bloomFactor * .5f), 0);
+                }
+                catch { }
+            if (_bloomDirection == BloomDirection.t2)
+                try
+                {
+                    transform.localPosition = new Vector3(_originalPosition.x + (_weaponProperties.bloom * _bloomFactor * 1.154f),
+                        _originalPosition.y - (_weaponProperties.bloom * _bloomFactor * .5f), 0);
+                }
+                catch { }
 
 
 
