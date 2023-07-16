@@ -465,6 +465,8 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
+
+    float _leftShootCooldown;
     void LeftShooting()
     {
         if (!isDualWielding)
@@ -472,28 +474,17 @@ public class PlayerController : MonoBehaviourPun
         if (GetComponent<Player>().isDead || isSprinting || player.isRespawning)
             return;
 
-
-
-        if ((rewiredPlayer.GetButtonDown("Aim") || rewiredPlayer.GetButton("Aim")) && !isHoldingScopeBtn)
+        if (_leftShootCooldown > 0)
         {
-            if (!pInventory.activeWeapon.leftWeapon.isOutOfAmmo && !isReloadingLeft &&
-            !isHoldingScopeBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
-            {
-                isHoldingScopeBtn = true;
-            }
-            else
-            {
-                isHoldingScopeBtn = false;
-            }
+            _leftShootCooldown -= Time.deltaTime;
         }
-
-        if (isHoldingScopeBtn)
-            OnPlayerScopeBtnDown?.Invoke(this);
-
-        if (rewiredPlayer.GetButtonUp("Aim"))
+        else
         {
-            isHoldingScopeBtn = false;
-            OnPlayerScopeBtnUp?.Invoke(this);
+            if (rewiredPlayer.GetButton("Aim"))
+            {
+                pInventory.activeWeapon.leftWeapon.animator.Play("Fire", 0, 0f);
+                _leftShootCooldown = 0.1f;
+            }
         }
     }
 
