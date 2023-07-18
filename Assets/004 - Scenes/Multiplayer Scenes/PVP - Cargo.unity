@@ -570,10 +570,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -2271,10 +2276,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (18)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -4188,10 +4198,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (16)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -5149,10 +5164,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -5384,10 +5404,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -5679,10 +5704,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -6155,10 +6185,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -8336,10 +8371,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -8414,10 +8454,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (20)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -8831,10 +8876,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Weapon Spawn Point (19)
       objectReference: {fileID: 0}
+    - target: {fileID: 8628595011434998436, guid: ca7cbd80bf478c6498ef0309c99b2da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: mp5
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}

@@ -449,7 +449,7 @@ public class WeaponPropertiesEditor : Editor
         if (wp.isHeadshotCapable)
             wp.headshotMultiplier = EditorGUILayout.FloatField("Headshot Multiplier:", wp.headshotMultiplier);
 
-        wp.scopeMagnification = (WeaponProperties.ScopeMagnification)EditorGUILayout.EnumPopup("Scope Magnification", wp.scopeMagnification);
+        
 
         wp.hasBloom = GUILayout.Toggle(wp.hasBloom, "Has bloom");
         if (wp.hasBloom)
@@ -476,9 +476,10 @@ public class WeaponPropertiesEditor : Editor
 
         if (wp.aimingMechanic != WeaponProperties.AimingMechanic.None)
         {
-            wp.scopeFov = EditorGUILayout.FloatField("Scope FOV:", wp.scopeFov);
+            wp.scopeMagnification = (WeaponProperties.ScopeMagnification)EditorGUILayout.EnumPopup("Scope Magnification", wp.scopeMagnification);
+            //wp.scopeFov = EditorGUILayout.FloatField("Scope FOV:", wp.scopeFov);
             wp.scopeRRR = EditorGUILayout.FloatField("Scope RRR:", wp.scopeRRR);
-            wp.scopeSway = EditorGUILayout.IntField("Scope sway:", wp.scopeSway);
+            //wp.scopeSway = EditorGUILayout.IntField("Scope sway:", wp.scopeSway);
         }
 
         EditorGUILayout.Space();

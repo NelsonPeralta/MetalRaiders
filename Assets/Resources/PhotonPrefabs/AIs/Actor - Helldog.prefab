@@ -1148,6 +1148,7 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: 5efd42fa3e58a3e4984b3bad2586a754, type: 3}
   _deathClip: {fileID: 8300000, guid: f06a1d4f5ac04074c9c5583b0f75fca7, type: 3}
   _tauntClip: {fileID: 0}
+  _useHeadshotMultiplierInstead: 0
   _defaultHitpoints: 0
   _flinchCooldown: 0
 --- !u!195 &4212620777855583801

@@ -235,8 +235,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cleanName: M1100
-  codeName: m1100
+  cleanName: Shotgun
+  codeName: shotgun
   spriteId: 0
   isDw: 0
   _ammo: 6

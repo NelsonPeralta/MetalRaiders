@@ -69,7 +69,7 @@ abstract public class Actor : MonoBehaviour
     public int longRange { get { return _longRange; } }
     public int midRange { get { return _midRange; } }
     public int closeRange { get { return _closeRange; } }
-
+    public bool useHeadshotMultiplierInstead { get { return _useHeadshotMultiplierInstead; } }
 
     [SerializeField] protected int _hitPoints;
     [SerializeField] Transform _target;
@@ -79,7 +79,7 @@ abstract public class Actor : MonoBehaviour
     [SerializeField] int _closeRange, _midRange, _longRange;
     [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown;
     [SerializeField] protected AudioClip _attackClip, _deathClip, _tauntClip;
-
+    [SerializeField] bool _useHeadshotMultiplierInstead;
 
 
     protected NavMeshAgent _nma;

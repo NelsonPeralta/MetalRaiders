@@ -737,14 +737,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cleanName: Barrett .50 Cal
-  codeName: barrett50cal
+  cleanName: Sniper
+  codeName: sniper
   spriteId: 0
   isDw: 0
-  _ammo: 3
-  _spareAmmo: 3
-  _defaultAmmo: 3
-  _defaultSpareAmmo: 3
+  _ammo: 4
+  _spareAmmo: 4
+  _defaultAmmo: 4
+  _defaultSpareAmmo: 4
   _tts: 180
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}
