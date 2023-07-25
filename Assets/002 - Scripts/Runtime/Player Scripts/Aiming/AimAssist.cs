@@ -38,6 +38,9 @@ public class AimAssist : MonoBehaviour
 
     public Camera mainCam;
 
+
+    [SerializeField] PlayerHitboxDetector _invisibleHitboxDetector;
+
     private void Start()
     {
         originalBbulletSpawnPointRelativePos = bulletSpawnPoint.transform.localRotation;
@@ -62,6 +65,15 @@ public class AimAssist : MonoBehaviour
             bulletSpawnPoint.forward = (middleDir);
 
             //bulletSpawnPoint.LookAt(target.transform);
+        }
+        else if (_invisibleHitboxDetector.collidingHitboxes.Count > 0)
+        {
+            Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+            Vector3 targetDir = (_invisibleHitboxDetector.collidingHitboxes[0].transform.position - bulletSpawnPoint.position);
+
+            Vector3 newDir = bspDir + (targetDir * 0.25f);
+
+            bulletSpawnPoint.forward = newDir;
         }
         else
         {

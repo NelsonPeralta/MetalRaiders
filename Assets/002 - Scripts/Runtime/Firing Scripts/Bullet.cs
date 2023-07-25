@@ -241,15 +241,13 @@ public class Bullet : MonoBehaviourPunCallbacks
                             ih = true;
 
                             if (weaponProperties.isHeadshotCapable)
-                                if (finalHitObject.GetComponent<ActorHitbox>().actor.useHeadshotMultiplierInstead)
+                                if (finalHitObject.GetComponent<ActorHitbox>().actor.oneShotHeadshot)
                                 {
                                     ih = true;
-                                    damage = (int)(damage * weaponProperties.headshotMultiplier);
-                                }
-                                else
-                                {
                                     damage = finalHitObject.GetComponent<ActorHitbox>().actor.hitPoints;
                                 }
+                                else
+                                    damage = (int)(damage * weaponProperties.headshotMultiplier);
                         }
                         finalHitDamageable.Damage(damage, ih, sourcePlayer.pid);
 

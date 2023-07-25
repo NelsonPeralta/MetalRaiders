@@ -57,6 +57,8 @@ public class AimAssistCone : MonoBehaviour
         }
     }
 
+    public PlayerHitboxDetector invisibleHitboxDetector { get { return invisibleHitboxDetector; } }
+
     Vector3? _firstHitPoint;
     public Vector3? firstHitPoint
     {
@@ -65,6 +67,7 @@ public class AimAssistCone : MonoBehaviour
     }
 
     [SerializeField] LayerMask obstructionMask;
+    [SerializeField] PlayerHitboxDetector _invisibleHitboxDetector;
 
     int _reticuleFrictionLayer = 19;
 
@@ -109,13 +112,17 @@ public class AimAssistCone : MonoBehaviour
         try
         {
             WeaponProperties activeWeapon = playerInventory.activeWeapon;
-            float h = activeWeapon.redReticuleHint;
 
-            Vector3 v = new Vector3(h * 10, transform.localScale.y, h * 10);
+            Vector3 v = new Vector3(activeWeapon.redReticuleHint * 10, transform.localScale.y, activeWeapon.redReticuleHint * 10);
             transform.localScale = v;
 
             v = new Vector3(1, 1, activeWeapon.currentRedReticuleRange);
             transform.parent.localScale = v;
+
+
+
+            v = new Vector3(2f, 1, 2f);
+            _invisibleHitboxDetector.transform.localScale = v;
         }
         catch (System.Exception e) { }
 

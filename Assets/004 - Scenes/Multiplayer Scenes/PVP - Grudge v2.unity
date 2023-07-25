@@ -5278,7 +5278,7 @@ PrefabInstance:
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: m1100
+      value: shotgun
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -12804,7 +12804,7 @@ PrefabInstance:
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: r700
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}

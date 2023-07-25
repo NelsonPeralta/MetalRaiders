@@ -978,6 +978,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &53868024
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2221,6 +2222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &114785267
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5768,7 +5770,7 @@ PrefabInstance:
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: r700
+      value: sniper
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -7571,6 +7573,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &371911880
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8266,8 +8269,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398077860}
-  m_LocalRotation: {x: -0.050764564, y: 0.89408815, z: 0.10545005, w: 0.43233064}
-  m_LocalPosition: {x: -34.787373, y: 0.6351595, z: 21.61968}
+  m_LocalRotation: {x: -0.17377956, y: 0.6064261, z: 0.13806905, w: 0.7635346}
+  m_LocalPosition: {x: -12.320345, y: -3.8012161, z: -41.936375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20370,6 +20373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &905992118
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20813,6 +20817,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &941000735
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -28176,6 +28181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &1277927969
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -30182,6 +30188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &1370038405
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -37888,6 +37895,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &1707835648
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -41310,7 +41318,7 @@ PrefabInstance:
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: m1100
+      value: shotgun
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -44433,6 +44441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &2009657001
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -45018,6 +45027,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &2032688534
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -46350,6 +46360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &2097572498
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -48070,6 +48081,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &3967360721820777400
 MeshRenderer:
   m_ObjectHideFlags: 0

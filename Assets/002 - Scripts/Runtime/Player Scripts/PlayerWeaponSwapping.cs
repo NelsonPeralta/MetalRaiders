@@ -360,7 +360,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         pInventory.activeWeapon = newActiveWeapon;
         pInventory.activeWeapon.currentAmmo = weaponToLoot.networkAmmo;
         pInventory.activeWeapon.spareAmmo = weaponToLoot.spareAmmo;
-        pInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up an {pInventory.activeWeapon.cleanName}");
+        pInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up a {pInventory.activeWeapon.cleanName}");
         //pInventory.holsteredWeapon = previousActiveWeapon;
 
         //StartCoroutine(pInventory.ToggleTPPistolIdle(1));
