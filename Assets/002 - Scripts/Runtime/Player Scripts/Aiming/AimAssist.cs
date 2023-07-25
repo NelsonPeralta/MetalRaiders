@@ -39,6 +39,10 @@ public class AimAssist : MonoBehaviour
     public Camera mainCam;
 
 
+    public bool invisibleAimAssistOn { get { if (_invisibleHitboxDetector.collidingHitboxes.Count > 0) return true; else return false; } }
+
+
+    [SerializeField] LayerMask obstructionMask;
     [SerializeField] PlayerHitboxDetector _invisibleHitboxDetector;
 
     private void Start()
@@ -68,12 +72,94 @@ public class AimAssist : MonoBehaviour
         }
         else if (_invisibleHitboxDetector.collidingHitboxes.Count > 0)
         {
-            Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-            Vector3 targetDir = (_invisibleHitboxDetector.collidingHitboxes[0].transform.position - bulletSpawnPoint.position);
+            try { if (player.isDead || player.isRespawning) { return; } } catch { }
 
-            Vector3 newDir = bspDir + (targetDir * 0.25f);
+            var targetHitbox = _invisibleHitboxDetector.collidingHitboxes[0];
 
-            bulletSpawnPoint.forward = newDir;
+            foreach (var item in _invisibleHitboxDetector.collidingHitboxes)
+                if (GameManager.instance.teamMode.ToString().Contains("Classic"))
+                {
+                    try
+                    {
+                        if (targetHitbox.GetComponent<ActorHitbox>() || (targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+                            if (item.GetComponent<Hitbox>().isHead)
+                            {
+                                targetHitbox = item;
+                                break;
+                            }
+                            else
+                            {
+                                if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
+                                    targetHitbox = item;
+                            }
+                    }
+                    catch
+                    {
+                        if (item.GetComponent<Hitbox>().isHead)
+                        {
+                            targetHitbox = item;
+                            break;
+                        }
+                        else
+                        {
+                            if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
+                                targetHitbox = item;
+                        }
+                    }
+                }
+                else
+                {
+
+                    if (item.GetComponent<Hitbox>().isHead)
+                    {
+                        targetHitbox = item;
+                        break;
+                    }
+                    else
+                    {
+                        if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
+                            targetHitbox = item;
+                    }
+                }
+
+            Vector3 targetHitboxDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
+            float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, bulletSpawnPoint.position);
+
+
+
+
+            if (!Physics.Raycast(player.mainCamera.transform.position, targetHitboxDir, targetHitboxDistance, obstructionMask))
+            {
+                Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+                Vector3 targetDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
+
+                Vector3 newDir = bspDir + (targetDir * 0.2f);
+
+                bulletSpawnPoint.forward = newDir;
+            }
+            else
+            {
+                if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                    bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
+            }
+
+
+
+
+            //if (collidingHitbox && !obstruction)
+            //{
+            //    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+            //    Vector3 targetDir = (collidingHitbox.transform.position - bulletSpawnPoint.position);
+
+            //    Vector3 newDir = bspDir + (targetDir * 0.25f);
+
+            //    bulletSpawnPoint.forward = newDir;
+            //}
+            //else
+            //{
+            //    if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
+            //        bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
+            //}
         }
         else
         {
@@ -227,5 +313,7 @@ public class AimAssist : MonoBehaviour
             targetDistance = raycastRange;
         }
     }
+
+
 }
 

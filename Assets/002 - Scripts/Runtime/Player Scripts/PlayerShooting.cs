@@ -227,7 +227,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                     try
                     {
-                        if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn)
+                        if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
                             playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
 
 
