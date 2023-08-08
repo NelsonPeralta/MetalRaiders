@@ -22,8 +22,9 @@ public class PlayerHitboxDetector : MonoBehaviour
         if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
             return;
 
-        if (!_collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
-            _collidingHitboxes.Add(other.gameObject);
+        if (other.GetComponent<Hitbox>())
+            if (!_collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+                _collidingHitboxes.Add(other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)

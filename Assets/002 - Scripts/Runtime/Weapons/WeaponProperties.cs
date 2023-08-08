@@ -65,10 +65,11 @@ public class WeaponProperties : MonoBehaviour
     public float headshotMultiplier;
     public bool hasBloom;
     public float bloomIncrement;
-    public float bloomDecrement;
+    public float bloomIncrease;
+    public float bloomDecrease;
     public float maxBloom;
     public float bloom;
-    float bloomCooldown;
+    float bloomDecreaseTick, bloomIncreaseTick;
     [Tooltip("In Degrees")]
     public int scopeSway; // Weapon sway is the weapon moving all on its own while you just aim down sight.
 
@@ -215,6 +216,7 @@ public class WeaponProperties : MonoBehaviour
 
     private void Update()
     {
+        BloomIncrease();
         BloomDecrease();
     }
     public void Recoil()
@@ -236,18 +238,36 @@ public class WeaponProperties : MonoBehaviour
             }
     }
 
+    void BloomIncrease()
+    {
+        if (bloom <= 0) bloom = 0;
+
+        bloomIncreaseTick -= Time.deltaTime;
+
+        if (bloomIncreaseTick <= 0)
+        {
+            bloom = Mathf.Clamp(bloom + bloomIncrease, 0, maxBloom);
+            bloomIncreaseTick = 0.05f;
+        }
+    }
+
     void BloomDecrease()
     {
         if (bloom <= 0) bloom = 0;
 
-        bloomCooldown -= Time.deltaTime;
+        bloomDecreaseTick -= Time.deltaTime;
 
-        if (bloomCooldown <= 0)
+        if (bloomDecreaseTick <= 0)
         {
             if (bloom > 0)
-                bloom -= bloomDecrement;
+            {
+                bloom -= bloomDecrease;
+                bloomIncrease -= bloomDecrease;
 
-            bloomCooldown = 0.1f;
+                if (bloomIncrease < 0)  bloomIncrease = 0;
+            }
+
+            bloomDecreaseTick = 0.05f;
         }
     }
     public void SpawnMuzzleflash()
@@ -266,7 +286,10 @@ public class WeaponProperties : MonoBehaviour
     {
         float currentSpray = bulletSpray + bloom;
         if (hasBloom)
-            bloom = Mathf.Clamp(bloom + bloomIncrement, 0, maxBloom);
+        {
+            //bloom = Mathf.Clamp(bloom + bloomIncreaseRate, 0, maxBloom);
+            bloomIncrease += bloomIncrement;
+        }
 
         if (pController.isCrouching)
             currentSpray *= 0.75f;
@@ -344,6 +367,7 @@ public class WeaponProperties : MonoBehaviour
         if (playerController.activeControllerType == Rewired.ControllerType.Joystick)
         {
             redReticuleHint = _previousRedReticuleHint * 1.2f;
+            redReticuleHint = _previousRedReticuleHint * 1f;
         }
         else
         {
@@ -449,7 +473,7 @@ public class WeaponPropertiesEditor : Editor
         if (wp.isHeadshotCapable)
             wp.headshotMultiplier = EditorGUILayout.FloatField("Headshot Multiplier:", wp.headshotMultiplier);
 
-        
+
 
         wp.hasBloom = GUILayout.Toggle(wp.hasBloom, "Has bloom");
         if (wp.hasBloom)
@@ -457,7 +481,8 @@ public class WeaponPropertiesEditor : Editor
             wp.maxBloom = EditorGUILayout.FloatField("Max Bloom:", wp.maxBloom);
             wp.bloom = EditorGUILayout.FloatField("Bloom:", wp.bloom);
             wp.bloomIncrement = EditorGUILayout.FloatField("Bloom Increment:", wp.bloomIncrement);
-            wp.bloomDecrement = EditorGUILayout.FloatField("Bloom Decrement:", wp.bloomDecrement);
+            wp.bloomIncrease = EditorGUILayout.FloatField("Bloom Increase:", wp.bloomIncrease);
+            wp.bloomDecrease = EditorGUILayout.FloatField("Bloom Decrease:", wp.bloomDecrease);
         }
 
         wp.isDualWieldable = GUILayout.Toggle(wp.isDualWieldable, "Is Dual WieldAble");

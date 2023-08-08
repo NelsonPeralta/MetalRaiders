@@ -121,7 +121,13 @@ public class AimAssistCone : MonoBehaviour
 
 
 
-            v = new Vector3(2f, 1, 2f);
+
+
+
+            v = new Vector3(1, 1, 1);
+            if (player.allPlayerScripts.playerController.activeControllerType == Rewired.ControllerType.Joystick)
+                v = new Vector3(2f, 1, 2f);
+
             _invisibleHitboxDetector.transform.localScale = v;
         }
         catch (System.Exception e) { }
