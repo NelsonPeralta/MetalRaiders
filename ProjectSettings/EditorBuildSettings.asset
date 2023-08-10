@@ -39,7 +39,7 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Hacksaw.unity
     guid: 5cc21329d6f6b204a97e5b2b2ebec810
   - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Grudge v2.unity
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Showdown.unity
     guid: e4421bab1e4778946b585d915575ec84
   - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Grudge.unity
