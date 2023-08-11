@@ -65,8 +65,8 @@ public class WeaponProperties : MonoBehaviour
     public float headshotMultiplier;
     public bool hasBloom;
     public float bloomIncrement;
-    public float bloomIncrease;
-    public float bloomDecrease;
+    public float bloomAcceleration;
+    public float bloomDecceleration;
     public float maxBloom;
     public float bloom;
     float bloomDecreaseTick, bloomIncreaseTick;
@@ -240,13 +240,16 @@ public class WeaponProperties : MonoBehaviour
 
     void BloomIncrease()
     {
+        if (pController.pInventory.activeWeapon.firingMode == FiringMode.Auto)
+            return;
+
         if (bloom <= 0) bloom = 0;
 
         bloomIncreaseTick -= Time.deltaTime;
 
         if (bloomIncreaseTick <= 0)
         {
-            bloom = Mathf.Clamp(bloom + bloomIncrease, 0, maxBloom);
+            bloom = Mathf.Clamp(bloom + bloomAcceleration, 0, maxBloom);
             bloomIncreaseTick = 0.05f;
         }
     }
@@ -261,10 +264,10 @@ public class WeaponProperties : MonoBehaviour
         {
             if (bloom > 0)
             {
-                bloom -= bloomDecrease;
-                bloomIncrease -= bloomDecrease;
+                bloom -= bloomDecceleration;
+                bloomAcceleration -= bloomDecceleration;
 
-                if (bloomIncrease < 0)  bloomIncrease = 0;
+                if (bloomAcceleration < 0) bloomAcceleration = 0;
             }
 
             bloomDecreaseTick = 0.05f;
@@ -287,8 +290,10 @@ public class WeaponProperties : MonoBehaviour
         float currentSpray = bulletSpray + bloom;
         if (hasBloom)
         {
-            //bloom = Mathf.Clamp(bloom + bloomIncreaseRate, 0, maxBloom);
-            bloomIncrease += bloomIncrement;
+            if (pController.pInventory.activeWeapon.firingMode == FiringMode.Auto)
+                bloom = Mathf.Clamp(bloom + bloomIncrement, 0, maxBloom);
+            else
+                bloomAcceleration += bloomIncrement;
         }
 
         if (pController.isCrouching)
@@ -481,8 +486,8 @@ public class WeaponPropertiesEditor : Editor
             wp.maxBloom = EditorGUILayout.FloatField("Max Bloom:", wp.maxBloom);
             wp.bloom = EditorGUILayout.FloatField("Bloom:", wp.bloom);
             wp.bloomIncrement = EditorGUILayout.FloatField("Bloom Increment:", wp.bloomIncrement);
-            wp.bloomIncrease = EditorGUILayout.FloatField("Bloom Increase:", wp.bloomIncrease);
-            wp.bloomDecrease = EditorGUILayout.FloatField("Bloom Decrease:", wp.bloomDecrease);
+            //wp.bloomAcceleration = EditorGUILayout.FloatField("Bloom Increase:", wp.bloomAcceleration);
+            wp.bloomDecceleration = EditorGUILayout.FloatField("Bloom Decceleration:", wp.bloomDecceleration);
         }
 
         wp.isDualWieldable = GUILayout.Toggle(wp.isDualWieldable, "Is Dual WieldAble");

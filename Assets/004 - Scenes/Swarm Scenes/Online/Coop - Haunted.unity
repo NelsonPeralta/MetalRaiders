@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0036790755, g: 0.0051774327, b: 0.0072589843, a: 1}
+  m_IndirectSpecularColor: {r: 0.0032267817, g: 0.004724315, b: 0.006680477, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: caf02e9ae5f343942bf16d95ad74a441, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 9a9b0a16364fee84192e0df70fb8e7e0, type: 2}
 --- !u!1 &4054580
 GameObject:
   m_ObjectHideFlags: 0
@@ -3063,6 +3063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &164673027
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11796,6 +11797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &509544129
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -23148,6 +23150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &1092384320
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -35453,6 +35456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &1731854139
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36410,6 +36414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &1778819433
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36515,6 +36520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   spawnPointType: 1
+  _witness: {fileID: 0}
 --- !u!23 &1792283876
 MeshRenderer:
   m_ObjectHideFlags: 0
