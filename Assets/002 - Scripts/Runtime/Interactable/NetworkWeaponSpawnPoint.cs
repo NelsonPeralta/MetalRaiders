@@ -185,15 +185,15 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             {
                 foreach (string weaponCode in powerWeaponCodeNames)
                     if (weaponCode == codeName)
-                        codeName = "r700";
+                        codeName = "sniper";
 
                 foreach (string weaponCode in lightWeaponCodeNames)
                     if (weaponCode == codeName)
-                        codeName = "r700";
+                        codeName = "sniper";
 
                 foreach (string weaponCode in heavyWeaponCodeNames)
                     if (weaponCode == codeName)
-                        codeName = "r700";
+                        codeName = "sniper";
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Rockets")))
             {
@@ -217,11 +217,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
                 foreach (string weaponCode in powerWeaponCodeNames)
                     if (weaponCode == codeName)
-                        codeName = "m1100";
+                        codeName = "shotgun";
 
                 foreach (string weaponCode in heavyWeaponCodeNames)
                     if (weaponCode == codeName)
-                        codeName = "m1100";
+                        codeName = "shotgun";
             }
 
         if ((GameManager.instance.gameType.ToString().Contains("Fiesta")) || GameManager.instance.gameType == GameManager.GameType.GunGame)

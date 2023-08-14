@@ -458,7 +458,7 @@ public class PlayerInventory : MonoBehaviourPun
         }
         if (GameManager.instance.gameType.ToString().Contains("Snipers"))
         {
-            StartingWeapon = "r700";
+            StartingWeapon = "sniper";
             StartingWeapon2 = "nailgun";
         }
 
@@ -470,7 +470,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType.ToString().Contains("Shotguns"))
         {
-            StartingWeapon = "m1100";
+            StartingWeapon = "shotgun";
             StartingWeapon2 = "nailgun";
         }
 
