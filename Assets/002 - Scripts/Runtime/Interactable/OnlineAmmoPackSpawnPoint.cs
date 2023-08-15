@@ -8,7 +8,7 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
     public bool randomAmmo;
     public string ammoType;
     public GameObject Placeholder;
-    public AmmoPack ammoPack;
+    public NetworkGrenadeSpawnPoint ammoPack;
     public int timeToSpawn;
 
 
@@ -28,7 +28,7 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
             StartCoroutine(SpawnNewAmmoPackFromWeaponPool(0.1f));
         else if (!ammoPack)
         {
-            var newAmmoPack = FindObjectOfType<WeaponPool>().GetAmmoPackFromList(ammoType).GetComponent<AmmoPack>();
+            var newAmmoPack = FindObjectOfType<WeaponPool>().GetAmmoPackFromList(ammoType).GetComponent<NetworkGrenadeSpawnPoint>();
             newAmmoPack.onlineAmmoPackSpawnPoint = this;
             newAmmoPack.transform.position = transform.position;
             newAmmoPack.transform.rotation = transform.rotation;

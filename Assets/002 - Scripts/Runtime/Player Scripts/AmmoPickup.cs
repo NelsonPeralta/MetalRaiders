@@ -22,12 +22,12 @@ public class AmmoPickup : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (!playerProperties.PV.IsMine || !other.GetComponent<AmmoPack>())
+        if (!playerProperties.PV.IsMine || !other.GetComponent<NetworkGrenadeSpawnPoint>())
             return;
-        LootAmmo(other.transform.position, other.GetComponent<AmmoPack>());
+        LootAmmo(other.transform.position, other.GetComponent<NetworkGrenadeSpawnPoint>());
     }
 
-    void LootAmmo(Vector3 ammoPackPosition, AmmoPack ammoPackScript)
+    void LootAmmo(Vector3 ammoPackPosition, NetworkGrenadeSpawnPoint ammoPackScript)
     {
         PlayerInventory pInventory = playerProperties.playerInventory;
         AudioSource aSource = playerProperties.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
@@ -75,7 +75,7 @@ public class AmmoPickup : MonoBehaviour
     {
         try
         {
-            foreach (AmmoPack ap in FindObjectsOfType<AmmoPack>())
+            foreach (NetworkGrenadeSpawnPoint ap in FindObjectsOfType<NetworkGrenadeSpawnPoint>())
             {
                 Debug.Log("Destroying ammo pack");
                 if (ap.transform.position == ammoPackPosition)

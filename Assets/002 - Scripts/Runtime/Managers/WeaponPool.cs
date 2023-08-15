@@ -50,7 +50,7 @@ public class WeaponPool : MonoBehaviourPun
             {
                 //GameObject newAmmoPack = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AmmoPacks", ammoPackPrefabs[i].name), new Vector3(0 - 100, 0), Quaternion.identity);
                 GameObject newAmmoPack = Instantiate(ammoPackPrefabs[i], transform.position + new Vector3(0 - 100, 0), transform.rotation);
-                newAmmoPack.GetComponent<AmmoPack>().weaponPool = this;
+                newAmmoPack.GetComponent<NetworkGrenadeSpawnPoint>().weaponPool = this;
                 newAmmoPack.SetActive(false);
                 allAmmoPacks.Add(newAmmoPack);
                 newAmmoPack.transform.parent = gameObject.transform;
@@ -109,7 +109,7 @@ public class WeaponPool : MonoBehaviourPun
     {
         for (int i = 0; i < allAmmoPacks.Count; i++)
         {
-            if (allAmmoPacks[i].GetComponent<AmmoPack>().ammoType == ammoType && !allAmmoPacks[i].GetComponent<AmmoPack>().onlineAmmoPackSpawnPoint)
+            if (allAmmoPacks[i].GetComponent<NetworkGrenadeSpawnPoint>().ammoType == ammoType && !allAmmoPacks[i].GetComponent<NetworkGrenadeSpawnPoint>().onlineAmmoPackSpawnPoint)
                 return allAmmoPacks[i];
         }
         return null;
@@ -140,9 +140,9 @@ public class WeaponPool : MonoBehaviourPun
             int ammoPackIndex = 99;
 
             for (int j = 0; j < allAmmoPacks.Count; j++)
-                if (allAmmoPacks[j].GetComponent<AmmoPack>().ammoType == ammoType && !allAmmoPacks[j].GetComponent<AmmoPack>().onlineAmmoPackSpawnPoint && !allAmmoPackSpawnPoints[i].ammoPack)
+                if (allAmmoPacks[j].GetComponent<NetworkGrenadeSpawnPoint>().ammoType == ammoType && !allAmmoPacks[j].GetComponent<NetworkGrenadeSpawnPoint>().onlineAmmoPackSpawnPoint && !allAmmoPackSpawnPoints[i].ammoPack)
                 {
-                    allAmmoPacks[j].GetComponent<AmmoPack>().onlineAmmoPackSpawnPoint = allAmmoPackSpawnPoints[i];
+                    allAmmoPacks[j].GetComponent<NetworkGrenadeSpawnPoint>().onlineAmmoPackSpawnPoint = allAmmoPackSpawnPoints[i];
                     ammoPackPhotonId = allAmmoPacks[j].GetComponent<PhotonView>().ViewID;
                     ammoPackIndex = j;
                 }
@@ -155,7 +155,7 @@ public class WeaponPool : MonoBehaviourPun
     [PunRPC]
     void GiveAmmoPackSpawnPointAnAmmoPack_RPC(Vector3 spawnPointPosition, int ammoPackIndex)
     {
-        AmmoPack ap = allAmmoPacks[ammoPackIndex].GetComponent<AmmoPack>();
+        NetworkGrenadeSpawnPoint ap = allAmmoPacks[ammoPackIndex].GetComponent<NetworkGrenadeSpawnPoint>();
         for (int i = 0; i < allAmmoPackSpawnPoints.Count; i++)
         {
             if (allAmmoPackSpawnPoints[i].transform.position == spawnPointPosition)

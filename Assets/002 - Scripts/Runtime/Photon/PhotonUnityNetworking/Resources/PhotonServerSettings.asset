@@ -153,6 +153,9 @@ MonoBehaviour:
   - EndGame
   - SpawnKillHitMarker_RPC
   - SpawnNetworkWeaponOnPlayerDeath_RPC
+  - SendLocalPlayerData
+  - SendLocalPlayerDataToEveryone
+  - SendLocalPlayerDataToMasterClient
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

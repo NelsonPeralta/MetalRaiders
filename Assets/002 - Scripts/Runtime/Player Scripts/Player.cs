@@ -478,8 +478,8 @@ public class Player : MonoBehaviourPunCallbacks
             //30  8.62
 
             Debug.Log($"localPlayers.Keys.Count: {GameManager.instance.localPlayers.Keys.Count}");
-            if (GameManager.instance.localNbPresetPlayers % 2 == 0) _defaultFov = 31.42f;
-            else if (GameManager.instance.localNbPresetPlayers == 1) _defaultFov = 58.72f;
+            if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _defaultFov = 31.42f;
+            else if (GameManager.instance.nbLocalPlayersPreset == 1) _defaultFov = 58.72f;
 
 
             GetComponent<PlayerController>().mainCam.fieldOfView = defaultFov;
@@ -632,8 +632,8 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
 
         lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
@@ -741,7 +741,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
+    void OnAllPlayersJoinedRoom_Delegate(CurrentRoomManager gme)
     {
         Debug.Log("OnAllPlayersJoinedRoom_Delegate");
         _allPlayersJoined = true;

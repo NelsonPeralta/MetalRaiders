@@ -52,9 +52,20 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
         for (int i = 0; i < players.Count(); i++)
         {
             Debug.Log(players[i].NickName);
+
+
+
             GameObject plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
             plt.GetComponent<PlayerListItem>().SetUp(players[i]);
             plt.GetComponent<PlayerListItem>().levelText.text = pda.playerBasicOnlineStats.level.ToString();
+
+            if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(players[i].NickName)
+                && CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[players[i].NickName] > 1)
+                for (int j = 1; j < CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[players[i].NickName]; j++)
+                {
+                    GameObject _plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
+                    _plt.GetComponent<PlayerListItem>().SetUp(players[i].NickName + $" ({j})");
+                }
         }
     }
 

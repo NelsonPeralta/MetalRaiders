@@ -7460,6 +7460,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 1352993268692100059, guid: 22708a3c9b14bbb47a8449fcf2c58a5d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

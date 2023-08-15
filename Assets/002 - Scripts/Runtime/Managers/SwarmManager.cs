@@ -230,8 +230,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
 
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
     }
 
     NetworkSwarmManager _networkSwarmManager;
@@ -241,7 +241,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         NewWaveCountdown();
     }
 
-    public void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
+    public void OnAllPlayersJoinedRoom_Delegate(CurrentRoomManager gme)
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             Begin();

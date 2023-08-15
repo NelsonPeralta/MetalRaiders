@@ -31,8 +31,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     {
         _respawnListenerDelay = 1;
 
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
+        SpawnWeapon();
 
 
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
@@ -121,7 +120,13 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         //    weaponSpawned.ShowWeapon();
     }
 
-    void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
+    void OnAllPlayersJoinedRoom_Delegate(CurrentRoomManager gme)
+    {
+        SpawnWeapon();
+
+    }
+
+    void SpawnWeapon()
     {
         try
         {
@@ -145,7 +150,6 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             }
         }
         catch { }
-
     }
 
     void OnWaveStart(SwarmManager swarmManager)

@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 
-public class ExplosiveBarrelSpawnPoint : MonoBehaviour
+public class ExplosiveBarrelSpawnPoint : Hazard
 {
     [SerializeField] float _defaultTts;
     [SerializeField] float _tts;

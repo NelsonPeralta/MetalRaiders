@@ -75,6 +75,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             ps.Add("teammode", GameManager.instance.teamMode.ToString());
             //ps.Add("teamdict", string.Join(Environment.NewLine, GameManager.instance.teamDict));
             ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));
+            ps.Add("nbLocalPlayersDict", JsonConvert.SerializeObject(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict));
+
 
             Debug.Log($"SendGameParams {GameManager.instance.teamDict}");
 
@@ -92,6 +94,16 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 Debug.Log(GameManager.instance.teamDict);
             }
             catch { }
+
+            try
+            {
+                CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["nbLocalPlayersDict"]);
+                Debug.Log(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict);
+            }
+            catch { }
+
+            NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
+
         }
     }
 
@@ -110,6 +122,57 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 GameManager.instance.teamDict = d;
             }
             catch { }
+        }
+    }
+
+    void Update() { if (Input.GetKeyDown(KeyCode.Alpha0)) { SendLocalPlayerDataToMasterClient(); } }
+
+
+    [PunRPC]
+    public void SendLocalPlayerDataToMasterClient(Dictionary<string, int> d = null, bool caller = true)
+    {
+        if (caller && !PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("SendLocalPlayerData");
+            Dictionary<string, int> _d = new Dictionary<string, int>();
+
+            _d.Add(PhotonNetwork.NickName, GameManager.instance.nbLocalPlayersPreset);
+            _pv.RPC("SendLocalPlayerDataToMasterClient", RpcTarget.MasterClient, _d, false);
+        }
+        else if (!caller && PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("Received SendLocalPlayerData");
+            Debug.Log(d.Keys.First());
+            Debug.Log(d[d.Keys.First()]);
+
+            if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(d.Keys.First()))
+                CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[d.Keys.First()] = d[d.Keys.First()];
+            else
+                CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Add(d.Keys.First(), d[d.Keys.First()]);
+
+            CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
+
+            Debug.Log(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict);
+
+            SendLocalPlayerDataToEveryone();
+            //SendGameParams();
+        }
+    }
+
+    [PunRPC]
+    public void SendLocalPlayerDataToEveryone(Dictionary<string, int> d = null, bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("SendLocalPlayerData TO EVERYONE");
+
+            _pv.RPC("SendLocalPlayerDataToEveryone", RpcTarget.All, CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict, false);
+        }
+        else if (!caller && !PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("SendLocalPlayerData FROM MASTER CLIENT");
+
+            CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = d;
         }
     }
 
@@ -518,7 +581,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void DisableAmmoPack_RPC(Vector3 sp)
     {
-        foreach (AmmoPack ap in FindObjectsOfType<AmmoPack>())
+        foreach (NetworkGrenadeSpawnPoint ap in FindObjectsOfType<NetworkGrenadeSpawnPoint>())
             if (ap.spawnPoint == sp)
                 ap.enable = false;
     }
@@ -526,7 +589,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void ResetAllAmmoPacks_RPC()
     {
-        foreach (AmmoPack ap in FindObjectsOfType<AmmoPack>())
+        foreach (NetworkGrenadeSpawnPoint ap in FindObjectsOfType<NetworkGrenadeSpawnPoint>())
             ap.enable = true;
     }
 

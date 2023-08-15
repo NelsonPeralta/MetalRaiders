@@ -120,7 +120,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     }
     private void Start()
     {
-        
+        CurrentRoomManager.instance.spawnedMapAddOns++;
     }
 
     private void Update()

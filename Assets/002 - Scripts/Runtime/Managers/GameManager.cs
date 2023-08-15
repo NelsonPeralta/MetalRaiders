@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public delegate void GameManagerEvent();
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
-    public enum Connection {Offline, Online }
+    public enum Connection { Offline, Online }
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum GameType
     {
@@ -76,14 +76,14 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.Log(instance.localPlayers.Count);
 
                 if (pid_player_Dict.Count == (PhotonNetwork.CurrentRoom.PlayerCount + GameManager.instance.localPlayers.Count - 1))
-                    GetComponent<GameManagerEvents>().allPlayersJoined = true;
+                    GetComponent<CurrentRoomManager>().allPlayersJoined = true;
             }
         }
     }
 
     public bool gameStarted
     {
-        get { return GetComponent<GameManagerEvents>().gameStarted; }
+        get { return GetComponent<CurrentRoomManager>().gameStarted; }
     }
 
     public Dictionary<int, Player> localPlayers = new Dictionary<int, Player>();
@@ -97,7 +97,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Connection connection
     {
-        get { return _connection; }set { _connection = value; }
+        get { return _connection; }
+        set { _connection = value; }
     }
     public GameMode gameMode
     {
@@ -203,8 +204,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform heavyAmmoPack;
     public Transform powerAmmoPack;
 
-    [SerializeField] int _nbPlayers;
-    public int localNbPresetPlayers { get { return _nbPlayers; } set { _nbPlayers = value; } }
+    [SerializeField] int _nbLocalPlayersPreset;
+    public int nbLocalPlayersPreset { get { return _nbLocalPlayersPreset; } set { _nbLocalPlayersPreset = value; } }
 
     int _camSens = 100;
 
@@ -336,7 +337,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
@@ -377,7 +377,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 }
                 catch (Exception e) { Debug.LogWarning(e.Message); }
 
-            StartCoroutine(SpawnPlayers_Coroutine());
+            //StartCoroutine(SpawnPlayers_Coroutine());
 
             try
             {
@@ -415,6 +415,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
 
+        nbLocalPlayersPreset = 1;
         Debug.Log("GameManager Start called");
 
         QualitySettings.vSyncCount = 0;
@@ -510,14 +511,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    IEnumerator SpawnPlayers_Coroutine()
+    public IEnumerator SpawnPlayers_Coroutine()
     {
         Debug.Log("SpawnPlayers_Coroutine");
         yield return new WaitForSeconds(1);
 
         try
         {
-            for (int i = 0; i < localNbPresetPlayers; i++)
+            for (int i = 0; i < nbLocalPlayersPreset; i++)
             {
                 Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
                 Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation).GetComponent<Player>();
@@ -747,7 +748,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ChangeNbLocalPlayers(string n)
     {
-        localNbPresetPlayers = int.Parse(n);
+        nbLocalPlayersPreset = int.Parse(n);
     }
 
     public static int GetNextTiming(int tts)

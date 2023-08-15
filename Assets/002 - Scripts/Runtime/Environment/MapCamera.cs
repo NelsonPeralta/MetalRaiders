@@ -19,8 +19,8 @@ public class MapCamera : MonoBehaviour
         AudioListener.volume = 0f;
         Debug.Log(AudioListener.volume);
 
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
-        FindObjectOfType<GameManagerEvents>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
+        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
     }
 
     private void Update()
@@ -28,7 +28,7 @@ public class MapCamera : MonoBehaviour
         DisableObject();
     }
 
-    void OnAllPlayersJoinedRoom_Delegate(GameManagerEvents gme)
+    void OnAllPlayersJoinedRoom_Delegate(CurrentRoomManager gme)
     {
         try
         {

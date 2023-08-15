@@ -67,11 +67,11 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
 
 
 
-        if (GameManager.instance.localNbPresetPlayers > 1)
+        if (GameManager.instance.nbLocalPlayersPreset > 1)
         {
             _camera.farClipPlane = 100;
 
-            if (GameManager.instance.localNbPresetPlayers == 2)
+            if (GameManager.instance.nbLocalPlayersPreset == 2)
             {
                 _camera.rect = new Rect(0, 0, 1, 0.5f);
 
@@ -89,7 +89,7 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
 
 
 
-            if (GameManager.instance.localNbPresetPlayers == 3)
+            if (GameManager.instance.nbLocalPlayersPreset == 3)
             {
                 if (playerRewiredId == 0)
                     _camera.rect = new Rect(0, 0, 1, 0.5f);
@@ -113,7 +113,7 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
 
 
 
-            if (GameManager.instance.localNbPresetPlayers == 4)
+            if (GameManager.instance.nbLocalPlayersPreset == 4)
             {
                 _camera.rect = new Rect(0, 0, 0.5f, 0.5f);
 
