@@ -170,6 +170,9 @@ public class CurrentRoomManager : MonoBehaviour
                 MapCamera.instance.gameObject.SetActive(false);
                 foreach (Player p in GameManager.instance.localPlayers.Values)
                     p.TriggerGameStartBehaviour();
+
+                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    SwarmManager.instance.Begin();
             }
         }
     }
@@ -217,7 +220,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     private void Update()
     {
-        if (gameStart)
+        if (gameStart && !gameStarted)
         {
             _gameStartCountdown -= Time.deltaTime;
 

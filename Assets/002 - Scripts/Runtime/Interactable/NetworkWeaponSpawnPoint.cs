@@ -215,7 +215,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             {
                 foreach (string weaponCode in lightWeaponCodeNames)
                     if (weaponCode == codeName)
-                        codeName = "nailgun";
+                        codeName = "shotgun";
 
                 foreach (string weaponCode in powerWeaponCodeNames)
                     if (weaponCode == codeName)

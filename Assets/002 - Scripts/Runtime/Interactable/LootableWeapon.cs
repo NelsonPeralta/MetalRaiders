@@ -151,7 +151,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     public void LootWeapon(Player player)
     {
-        Debug.Log("OnLooted");
         PlayerInventory playerInventory = player.playerInventory;
         WeaponProperties w = playerInventory.activeWeapon;
         if (playerInventory.holsteredWeapon.codeName == codeName)
