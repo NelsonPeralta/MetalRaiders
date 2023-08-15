@@ -15,7 +15,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public SwarmManagerEvent OnBegin, OnWaveIncrease, OnWaveStart, OnWaveEnd, OnAiDeath, OnPlayerLivesChanged, OnAiSpawn, OnAIsCalculated;
 
     // public variables
-    public static SwarmManager instance;
+    public static SwarmManager instance { get { return _instance; } }
+    static SwarmManager _instance;
+
 
     public enum Difficulty { Normal, Heroic, Legendary }
     public enum AiType { Undead, AlienShooter, Breather, Helldog, FlameTyrant }
@@ -215,13 +217,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     private void Awake()
     {
-        if (instance)
+        if (_instance != null && _instance != this)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(this.gameObject);
         }
-        instance = this;
-        DontDestroyOnLoad(gameObject);
+        else
+        {
+            Debug.Log($"SwarmManager Instance");
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     private void Start()
@@ -230,8 +235,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
 
-        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
-        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
     }
 
     NetworkSwarmManager _networkSwarmManager;
@@ -274,7 +277,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
                 return;
 
-            instance = this;
+            _instance = this;
             if (PhotonNetwork.IsMasterClient)
             {
                 _networkSwarmManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkSwarmManager"), Vector3.zero, Quaternion.identity).GetComponent<NetworkSwarmManager>();
@@ -373,7 +376,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             PV.RPC("CreateAIPool", RpcTarget.All);
     }
 
-    void Begin()
+    public void Begin()
     {
 
         _maxBreathersEnabled = 2 + FindObjectsOfType<Player>().Count();

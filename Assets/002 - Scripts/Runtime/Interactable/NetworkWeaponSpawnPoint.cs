@@ -31,12 +31,10 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     {
         _respawnListenerDelay = 1;
 
-        SpawnWeapon();
-
-
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
         GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
         ReplaceWeaponsByGametype();
+        SpawnWeapon();
 
         if (placeHolder)
             placeHolder.gameObject.SetActive(false);

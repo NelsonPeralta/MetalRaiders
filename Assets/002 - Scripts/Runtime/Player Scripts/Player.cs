@@ -535,7 +535,6 @@ public class Player : MonoBehaviourPunCallbacks
     Vector3 _impactPos;
     Vector3 _impactDir;
     float _gameStartDelay;
-    bool _allPlayersJoined;
 
     private bool deathByHeadshot { get { if (deathNature == DeathNature.Headshot || deathNature == DeathNature.Sniped) return true; else return false; } }
     private bool deathByGroin { get { if (deathNature == DeathNature.Groin) return true; else return false; } }
@@ -575,6 +574,7 @@ public class Player : MonoBehaviourPunCallbacks
     public List<PlayerHitbox> hitboxes = new List<PlayerHitbox>();
 
     [Header("Player Voice")]
+    public AudioListener audioListener;
     public AudioSource playerVoice;
     public AudioClip sprintingClip;
     public AudioClip[] meleeClips;
@@ -632,9 +632,6 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
-        FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
-
         lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
         gameObjectPool = GameObjectPool.instance;
@@ -694,6 +691,7 @@ public class Player : MonoBehaviourPunCallbacks
             if (!t.ContainsKey(pid))
                 t.Add(pid, this);
             GameManager.instance.pid_player_Dict = t;
+            CurrentRoomManager.instance.nbPlayersJoined++;
         }
         catch { }
         try { team = GameManager.instance.onlineTeam; } catch { }
@@ -708,26 +706,6 @@ public class Player : MonoBehaviourPunCallbacks
     {
         HitPointsRecharge();
         OvershieldPointsRecharge();
-
-        if (_gameStartDelay > 0)
-        {
-            _gameStartDelay -= Time.deltaTime;
-
-            if (_gameStartDelay < 0)
-            {
-                mainCamera.enabled = false;
-                mainCamera.enabled = true;
-
-                gunCamera.enabled = false;
-                gunCamera.enabled = true;
-
-                uiCamera.enabled = false;
-                uiCamera.enabled = true;
-
-                GetComponent<Movement>().playerMotionTracker.minimapCamera.enabled = false;
-                GetComponent<Movement>().playerMotionTracker.minimapCamera.enabled = true;
-            }
-        }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -744,7 +722,6 @@ public class Player : MonoBehaviourPunCallbacks
     void OnAllPlayersJoinedRoom_Delegate(CurrentRoomManager gme)
     {
         Debug.Log("OnAllPlayersJoinedRoom_Delegate");
-        _allPlayersJoined = true;
         _gameStartDelay = GameManager.GameStartDelay * 0.99f;
     }
 
@@ -762,6 +739,23 @@ public class Player : MonoBehaviourPunCallbacks
     // public functions
     #region
 
+    public void TriggerGameStartBehaviour()
+    {
+        if (rid == 0)
+            audioListener.enabled = true;
+
+        mainCamera.enabled = false;
+        mainCamera.enabled = true;
+
+        gunCamera.enabled = false;
+        gunCamera.enabled = true;
+
+        uiCamera.enabled = false;
+        uiCamera.enabled = true;
+
+        GetComponent<Movement>().playerMotionTracker.minimapCamera.enabled = false;
+        GetComponent<Movement>().playerMotionTracker.minimapCamera.enabled = true;
+    }
     public bool CanBeDamaged()
     {
         if (hitPoints <= 0 || isDead || isRespawning)

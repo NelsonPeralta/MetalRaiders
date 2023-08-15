@@ -22,8 +22,8 @@ public class HillManager : MonoBehaviour
         {
             _hill.gameObject.transform.position = _locations[0].transform.position;
             _moveTimer = _hillTtl;
-            FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom -= OnAllPlayersJoinedRoom_Delegate;
-            FindObjectOfType<CurrentRoomManager>().OnAllPlayersJoinedRoom += OnAllPlayersJoinedRoom_Delegate;
+            CurrentRoomManager.instance.OnGameStartedEarly -= OnAllPlayersJoinedRoom_Delegate;
+            CurrentRoomManager.instance.OnGameStartedEarly += OnAllPlayersJoinedRoom_Delegate;
         }
     }
 

@@ -37,6 +37,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         //    Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
+
+        NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
+
     }
 
     public Overshield overshield
@@ -102,7 +105,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             }
             catch { }
 
-            NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
+            //NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
 
         }
     }

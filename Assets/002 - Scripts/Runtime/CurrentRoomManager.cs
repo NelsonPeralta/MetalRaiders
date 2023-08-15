@@ -10,39 +10,13 @@ public class CurrentRoomManager : MonoBehaviour
 
     // Events
     public delegate void GameManagerEvent(CurrentRoomManager gme);
-    public GameManagerEvent OnAllPlayersJoinedRoom, OnGameStarted;
+    public GameManagerEvent OnGameStartedEarly, OnGameStarted, OnGameStartedLate;
 
-    public bool allPlayersJoined
-    {
-        get { return _allPlayersJoined; }
-        set
-        {
-            bool _preVal = _allPlayersJoined;
-            _allPlayersJoined = value;
-            if (value && _preVal != value)
-            {
-                Debug.Log("OnAllPlayersJoinedRoom");
-                OnAllPlayersJoinedRoom?.Invoke(this);
-            }
-        }
-    }
 
-    public bool gameStarted
-    {
-        get { return _gameStarted; }
-        private set
-        {
-            _gameStarted = value;
-            if (value)
-                OnGameStarted?.Invoke(this);
-            else
-            {
-                _gameStartedTime = GameManager.GameStartDelay;
-                allPlayersJoined = false;
-            }
-        }
-    }
 
+    /// <summary>
+    /// Lobby
+    /// </summary>
     public Dictionary<string, int> playerNicknameNbLocalPlayersDict
     {
         get { return _playerNicknameNbLocalPlayersDict; }
@@ -60,6 +34,17 @@ public class CurrentRoomManager : MonoBehaviour
             expectedNbPlayers = c;
         }
     }
+    public int expectedNbPlayers { get { return _expectedNbPlayers; } private set { _expectedNbPlayers = value; } }
+
+
+    /// <summary>
+    /// Step 1: Caluclate expected Map Add-Ons
+    /// </summary>
+    int expectedMapAddOns { get { return _expectedMapAddOns; } set { _expectedMapAddOns = value; } }
+
+    /// <summary>
+    /// Step 2: Wait for spawned items to tell this when they are spawned. When all add-ons are spawned, tell GameManager to spawn local players
+    /// </summary>
     public int spawnedMapAddOns
     {
         get { return _spawnedMapAddOns; }
@@ -90,15 +75,114 @@ public class CurrentRoomManager : MonoBehaviour
             }
         }
     }
-    public int expectedNbPlayers { get { return _expectedNbPlayers; } private set { _expectedNbPlayers = value; } }
+
+    /// <summary>
+    /// Step 3: Wait for players to tell this when they have spawned
+    /// </summary>
+    public int nbPlayersJoined
+    {
+        get { return _nbPlayersJoined; }
+        set
+        {
+            _nbPlayersJoined = value;
+
+            if (nbPlayersJoined == expectedNbPlayers)
+                allPlayersJoined = true;
+        }
+    }
+
+    public bool allPlayersJoined
+    {
+        get { return _allPlayersJoined; }
+        set
+        {
+            bool _preVal = _allPlayersJoined;
+            _allPlayersJoined = value;
+            if (value && _preVal != value)
+            {
+                Debug.Log("OnAllPlayersJoinedRoom");
+                gameIsReady = true;
+                //OnAllPlayersJoinedRoom?.Invoke(this);
+            }
+        }
+    }
+
+    bool gameIsReady
+    {
+        get { return _gameIsReady; }
+        set
+        {
+            bool _preVal = _gameIsReady;
+            _gameIsReady = value;
+
+            if (value && _preVal != value)
+            {
+                Debug.Log("gameIsReady");
+                _gameIsReady = true;
+                gameStart = true;
+            }
+        }
+    }
+
+    bool gameStart
+    {
+        get { return _gameStart; }
+        set
+        {
+            bool _preVal = _gameStart;
+            _gameStart = value;
+
+            if (value && _preVal != value)
+            {
+                OnGameStartedEarly?.Invoke(this);
+                _gameStartCountdown = GameManager.GameStartDelay;
+            }
+            _gameStart = value;
+        }
+    }
+
+    bool reachedHalwayGameStartCountdown
+    {
+        get { return _reachedHalwayGameStartCountdown; }
+        set
+        {
+            bool _preVal = _reachedHalwayGameStartCountdown;
+            _reachedHalwayGameStartCountdown = value;
+
+            if (value && _preVal != value)
+            {
+                MapCamera.instance.TriggerGameStartBehaviour();
+            }
+        }
+    }
+
+    public bool gameStarted
+    {
+        get { return _gameStarted; }
+        private set
+        {
+            bool _preVal = _gameStarted;
+            _gameStarted = value;
+
+            if (value && _preVal != value)
+            {
+                _gameStarted = true;
+                MapCamera.instance.gameObject.SetActive(false);
+                foreach (Player p in GameManager.instance.localPlayers.Values)
+                    p.TriggerGameStartBehaviour();
+            }
+        }
+    }
 
 
-    int expectedMapAddOns { get { return _expectedMapAddOns; } set { _expectedMapAddOns = value; } }
 
-    [SerializeField] bool _gameStarted;
-    [SerializeField] bool _mapIsReady;
-    [SerializeField] bool _allPlayersJoined;
-    [SerializeField] float _gameStartedTime;
+
+
+
+
+    [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
+    [SerializeField] bool _gameStart, _gameStarted;
+    [SerializeField] float _gameStartCountdown;
 
     [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _nbPlayersJoined;
 
@@ -107,7 +191,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     Dictionary<string, int> _playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
-
+    bool _reachedHalwayGameStartCountdown;
 
 
 
@@ -131,18 +215,16 @@ public class CurrentRoomManager : MonoBehaviour
     }
 
 
-    private void Start()
-    {
-        OnAllPlayersJoinedRoom += OnAllPlayersJoinedGame;
-    }
-
     private void Update()
     {
-        if (allPlayersJoined && !gameStarted)
+        if (gameStart)
         {
-            _gameStartedTime -= Time.deltaTime;
+            _gameStartCountdown -= Time.deltaTime;
 
-            if (_gameStartedTime <= 0)
+            if (!reachedHalwayGameStartCountdown && _gameStartCountdown <= GameManager.GameStartDelay)
+                reachedHalwayGameStartCountdown = true;
+
+            if (_gameStartCountdown <= 0)
                 gameStarted = true;
         }
     }
@@ -157,7 +239,7 @@ public class CurrentRoomManager : MonoBehaviour
         Debug.Log("GAME MANAGER EVENTS: OnSceneLoaded");
 
         gameStarted = false;
-
+        _reachedHalwayGameStartCountdown = false;
 
         if (scene.buildIndex == 0)
         {
@@ -165,11 +247,6 @@ public class CurrentRoomManager : MonoBehaviour
 
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
             allPlayersJoined = false;
-            OnAllPlayersJoinedRoom = null;
-
-
-            OnAllPlayersJoinedRoom -= FindObjectOfType<SwarmManager>().OnAllPlayersJoinedRoom_Delegate;
-            OnAllPlayersJoinedRoom += FindObjectOfType<SwarmManager>().OnAllPlayersJoinedRoom_Delegate;
         }
         else
         {
@@ -180,7 +257,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     void OnAllPlayersJoinedGame(CurrentRoomManager gme)
     {
-        _gameStartedTime = GameManager.GameStartDelay;
+        _gameStartCountdown = GameManager.GameStartDelay;
     }
 
 }
