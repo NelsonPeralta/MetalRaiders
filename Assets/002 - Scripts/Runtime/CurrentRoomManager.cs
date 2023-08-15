@@ -243,10 +243,10 @@ public class CurrentRoomManager : MonoBehaviour
 
         if (scene.buildIndex == 0)
         {
-            expectedMapAddOns = 0; spawnedMapAddOns = 0;
 
+            _mapIsReady = _allPlayersJoined = _gameIsReady = _gameStart = _gameStarted = _reachedHalwayGameStartCountdown = false;
+            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = 0;
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
-            allPlayersJoined = false;
         }
         else
         {
