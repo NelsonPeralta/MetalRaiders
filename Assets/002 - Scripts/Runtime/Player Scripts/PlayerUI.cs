@@ -186,7 +186,7 @@ public class PlayerUI : MonoBehaviour
             EnableMultiplayerUIComponents();
             GetComponent<PlayerMultiplayerMatchStats>().OnPlayerScoreChanged += OnPlayerScoreChanged_Delegate;
         }
-        if(GameManager.instance.gameType == GameManager.GameType.Swat
+        if (GameManager.instance.gameType == GameManager.GameType.Swat
              || GameManager.instance.gameType == GameManager.GameType.Retro)
         {
             healthBar.SetActive(true);
@@ -294,7 +294,7 @@ public class PlayerUI : MonoBehaviour
         objectiveInformerText.gameObject.SetActive(false);
 
         objectiveInformerText.text = $"{message}";
-        
+
         yield return new WaitForSeconds(0.2f);
         objectiveInformerText.gameObject.SetActive(true);
         yield return new WaitForSeconds(0.2f);
@@ -340,11 +340,11 @@ public class PlayerUI : MonoBehaviour
         //swarmAisLeftText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} K: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
 
         Debug.Log("Here");
+        swarmAisLeftText.text = $"Aliens: {swarmManager.watchersLeft + swarmManager.watchersAlive}\nBreathers: {swarmManager.knightsLeft + swarmManager.knightsAlive}\nZombies: {swarmManager.zombiesLeft + swarmManager.zombiesAlive}";
         if (!swarmManager.waveEnded)
         {
             try
             {
-                swarmAisLeftText.text = $"Aliens: {swarmManager.watchersLeft + swarmManager.watchersAlive}\nBreathers: {swarmManager.knightsLeft + swarmManager.knightsAlive}\nZombies: {swarmManager.zombiesLeft + swarmManager.zombiesAlive}";
 
                 if (swarmManager.currentWave % 5 == 0)
                     swarmAisLeftText.text = $"Tyrants: {swarmManager.tyrantsLeft + swarmManager.tyrantsAlive}";

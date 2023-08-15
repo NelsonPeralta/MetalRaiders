@@ -89,7 +89,7 @@ public class ScoreboardManager : MonoBehaviour
                 else
                     scoreboardRows[i].playerCurrentPointsText.text = "0";
 
-                if(GameManager.instance.gameType == GameManager.GameType.Hill)
+                if (GameManager.instance.gameType == GameManager.GameType.Hill)
                     scoreboardRows[i].playerKillsText.text = allPlayersMS[i].score.ToString();
 
                 scoreboardRows[i].gameObject.SetActive(true);
@@ -99,8 +99,12 @@ public class ScoreboardManager : MonoBehaviour
         {
             List<PlayerSwarmMatchStats> allPlayersMS = new List<PlayerSwarmMatchStats>();
 
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
-                allPlayersMS.Add(go.GetComponent<PlayerSwarmMatchStats>());
+            try
+            {
+                foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
+                    allPlayersMS.Add(go.GetComponent<PlayerSwarmMatchStats>());
+            }
+            catch { }
 
             for (int i = 0; i < allPlayersMS.Count; i++)
             {

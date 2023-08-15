@@ -265,11 +265,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         Scene currentScene = SceneManager.GetActiveScene();
 
-        //currentWave = 0;
+        currentWave = 0;
         nextWaveDelay = 5;
-
-        if (editMode)
-            currentWave = 9;
 
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
@@ -855,6 +852,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
 
         }
+
         waveEnded = true;
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
         foreach (Player p in FindObjectsOfType<Player>())

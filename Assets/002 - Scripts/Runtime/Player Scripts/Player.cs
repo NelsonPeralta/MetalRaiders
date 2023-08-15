@@ -310,6 +310,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             bool previousValue = _isDead;
             _isDead = value;
+            Debug.Log("Is Dead: " + _isDead);
 
             if (value && !previousValue)
             {
@@ -1357,7 +1358,21 @@ public class Player : MonoBehaviourPunCallbacks
         try { this.impactDir = impDir; } catch { }
         try { _damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try { deathNature = (DeathNature)dn; } catch { }
-        try { lastPID = sourcePid; } catch { }
+        try
+        {
+            if (lastPID > 0)// If a source already damaged this player
+            {
+                if (lastPID == pid && hitPoints <= maxHitPoints * 0.1f)
+                {
+                    // Do nothing, if players tries to kill himself with only 10% health left, the player that damaged this one before will get the kill
+                }
+                else
+                    lastPID = sourcePid;
+            }
+            else // No source has damaged this player yet
+                lastPID = sourcePid;
+        }
+        catch { }
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
