@@ -105,8 +105,8 @@ public class PlayerCamera : MonoBehaviour
                 mouseSensitivity *= 0.6f;
         }
 
-        //if (pProperties.aimAssist.redReticuleIsOn && (pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Custom || pProperties.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
-        //    mouseSensitivity /= 3;
+        if (player.aimAssist.redReticuleIsOn && (pController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
+            mouseSensitivity *= 0.3f;
 
         if (!pController.pauseMenuOpen)
         {

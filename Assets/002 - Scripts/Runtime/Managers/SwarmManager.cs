@@ -776,7 +776,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         else if (aiType == AiType.FlameTyrant)
             delay = TYRANT_SPAWN_DELAY;
 
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(1);
 
         SpawnAi(aiType);
     }
@@ -997,6 +997,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (saveXp)
             {
+                pp.allPlayerScripts.announcer.PlayGameOverClip();
                 pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER!");
                 WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>());
                 pp.LeaveRoomWithDelay();

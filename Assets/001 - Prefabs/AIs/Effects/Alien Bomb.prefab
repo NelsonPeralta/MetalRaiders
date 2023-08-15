@@ -25147,7 +25147,7 @@ MonoBehaviour:
   power: 100
   grenadeTimer: 1
   throwForce: 625
-  explosionPrefab: {fileID: 4934833856949886, guid: 5ed0a013702bd9f42847584f2fba7b21,
+  explosionPrefab: {fileID: 9198120252748331428, guid: 3c1eff407d038d54d9a246f516d299bc,
     type: 3}
   playerWhoThrewGrenade: {fileID: 0}
   playerRewiredID: 0
