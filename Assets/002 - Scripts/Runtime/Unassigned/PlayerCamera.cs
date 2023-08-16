@@ -87,7 +87,7 @@ public class PlayerCamera : MonoBehaviour
 
         if (_controllerType == ControllerType.Joystick)
         {
-            mouseSensitivity = defaultMouseSensitivy * 1.15f;
+            mouseSensitivity = defaultMouseSensitivy * 1.1f;
         }
         else
         {
@@ -106,7 +106,7 @@ public class PlayerCamera : MonoBehaviour
         }
 
         if (player.aimAssist.redReticuleIsOn && (pController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
-            mouseSensitivity *= 0.3f;
+            mouseSensitivity *= 0.5f;
 
         if (!pController.pauseMenuOpen)
         {
@@ -129,11 +129,11 @@ public class PlayerCamera : MonoBehaviour
 
             if (Mathf.Abs(xAxisInput) >= xExtremeDeadzone)
                 //if (Mathf.Abs(yAxisInput) <= 0.2f || yAxisInput == 0)
-                _xAxisInput *= 1.8f;
+                _xAxisInput *= 1.6f;
 
             if (Mathf.Abs(yAxisInput) >= yExtremeDeadzone)
                 //if (Mathf.Abs(xAxisInput) <= 0.2f || yAxisInput == 0)
-                _yAxisInput *= 1.8f;
+                _yAxisInput *= 1.6f;
 
             mouseX = _xAxisInput * mouseSensitivity * Time.deltaTime + HorizontalSway();
             mouseY = _yAxisInput * mouseSensitivity * 0.75f * Time.deltaTime;

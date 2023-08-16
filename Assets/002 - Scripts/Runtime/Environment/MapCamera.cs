@@ -12,7 +12,7 @@ public class MapCamera : MonoBehaviour
     [SerializeField] AudioClip _KingOfTheHillClip;
     [SerializeField] AudioClip _FirefightClip;
 
-    float _gameStartDelay;
+    float _announcerDelay;
     bool _allPlayersJoined;
     bool _announcementPLayed;
 
@@ -34,14 +34,26 @@ public class MapCamera : MonoBehaviour
 
     private void Update()
     {
+        if (_announcerDelay > 0)
+        {
+            _announcerDelay -= Time.deltaTime;
 
+            if (_announcerDelay <= 0)
+            {
+                PlayAnnouncer();
+            }
+        }
     }
     public void TriggerGameStartBehaviour()
     {
         _canvas.gameObject.SetActive(false);
         _announcementPLayed = true;
         AudioListener.volume = 1f;
+        _announcerDelay = 2;
+    }
 
+    void PlayAnnouncer()
+    {
         try
         {
             GetComponent<AudioSource>().clip = _slayerClip;

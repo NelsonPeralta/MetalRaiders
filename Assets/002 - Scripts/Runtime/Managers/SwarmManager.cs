@@ -431,7 +431,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         else
         {
             int nbPlayers = FindObjectsOfType<Player>().Length;
-            tyrantsLeft = 2;
+            tyrantsLeft = nbPlayers;
             if (tyrantsLeft > tyrantPool.Count)
                 tyrantsLeft = nbPlayers;
         }

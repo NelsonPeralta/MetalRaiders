@@ -442,9 +442,9 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public IEnumerator EquipStartingWeapon()
     {
+        Debug.Log("EquipStartingWeapon");
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
 
-        Debug.Log("EquipStartingWeapon");
 
         if (GameManager.instance.gameType.ToString().Contains("Slayer") || GameManager.instance.gameType == GameManager.GameType.Survival)
         {
@@ -647,6 +647,9 @@ public class PlayerInventory : MonoBehaviourPun
 
     public void PlayDrawSound()
     {
+        if (MapCamera.instance.gameObject.activeSelf)
+            return;
+        Debug.Log("Play Draw Sound");
         weaponDrawAudioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
         weaponDrawAudioSource.Play();
     }

@@ -436,10 +436,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
-        commonRoomTexts.SetActive(false);
+        Debug.Log("Leaving room");
+        try { commonRoomTexts.SetActive(false); } catch { }
         try { PhotonNetwork.LeaveRoom(); } catch (System.Exception e) { Debug.LogWarning(e); }
-        GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
-        //MenuManager.Instance.OpenMenu("loading");
+        try { GameManager.instance.gameMode = GameManager.GameMode.Multiplayer; } catch { }
+        MenuManager.Instance.OpenMenu("loading");
     }
 
     public void JoinRoom(RoomInfo info)
