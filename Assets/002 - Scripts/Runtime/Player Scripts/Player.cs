@@ -878,6 +878,8 @@ public class Player : MonoBehaviourPunCallbacks
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.SetActive(true);
 
+        mainCamera.transform.parent = ragdoll.transform;
+
         if (deathByHeadshot) { ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
         else if (deathNature == DeathNature.Grenade) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
         else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2500); }

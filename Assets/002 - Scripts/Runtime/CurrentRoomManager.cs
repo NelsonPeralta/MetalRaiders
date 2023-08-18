@@ -177,14 +177,27 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    public bool gameOver
+    {
+        get { return _gameOver; }
+        set
+        {
+            bool _preVal = _gameOver;
+            _gameOver = value;
 
+            if (value && _preVal != value)
+            {
+                _gameOver = false;
+            }
+        }
+    }
 
 
 
 
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
-    [SerializeField] bool _gameStart, _gameStarted;
+    [SerializeField] bool _gameStart, _gameStarted, _gameOver;
     [SerializeField] float _gameStartCountdown;
 
     [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _nbPlayersJoined;
@@ -247,7 +260,7 @@ public class CurrentRoomManager : MonoBehaviour
         if (scene.buildIndex == 0)
         {
 
-            _mapIsReady = _allPlayersJoined = _gameIsReady = _gameStart = _gameStarted = _reachedHalwayGameStartCountdown = false;
+            _mapIsReady = _allPlayersJoined = _gameIsReady = _gameStart = _gameOver = _gameStarted = _reachedHalwayGameStartCountdown = false;
             _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = 0;
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
         }

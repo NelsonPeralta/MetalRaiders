@@ -54,6 +54,7 @@ public class Announcer : MonoBehaviour
 
     public void PlayGameOverClip()
     {
+        CurrentRoomManager.instance.gameOver = true;
         AddClip(gameOverClip);
     }
 

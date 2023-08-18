@@ -69,8 +69,6 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
 
         if (GameManager.instance.nbLocalPlayersPreset > 1)
         {
-            _camera.farClipPlane = 100;
-
             if (GameManager.instance.nbLocalPlayersPreset == 2)
             {
                 _camera.rect = new Rect(0, 0, 1, 0.5f);

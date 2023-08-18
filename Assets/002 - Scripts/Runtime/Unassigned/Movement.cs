@@ -149,6 +149,9 @@ public class Movement : MonoBehaviour, IMoveable
 
             Mathf.Clamp(_c * 1.3f, _c, 1);
 
+            if (Mathf.Abs(correctedXInput) == 1 || Mathf.Abs(correctedZInput) == 1)
+                _animationSpeed = 1;
+
             return Mathf.Abs(_animationSpeed);
         }
     }
@@ -698,10 +701,10 @@ public class Movement : MonoBehaviour, IMoveable
 
                     if (_pController.weaponAnimator.GetBool("Walk"))
                     {
-                        //Debug.Log("Here");
                         if (!_pController.isReloading && !_pController.isDrawingWeapon && !_pController.isThrowingGrenade &&
                             !_pController.isMeleeing && !_pController.isFiring)
                         {
+                            Debug.Log("Here");
                             _pController.weaponAnimator.speed = animationSpeed;
                             if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
                                 _pController.weaponAnimator.speed = 1;
