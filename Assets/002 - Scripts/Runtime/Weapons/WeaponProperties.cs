@@ -224,17 +224,17 @@ public class WeaponProperties : MonoBehaviour
         if (camScript)
             if (xRecoil > 0 || yRecoil > 0)
             {
-                float ranHorRecoil = Random.Range(-xRecoil, xRecoil);
+                float horRecoil = Random.Range(-xRecoil, xRecoil);
+                float verRecoil = -yRecoil;
+
                 if (pController.isCrouching)
                 {
-                    camScript.xRotation -= yRecoil / 2f;
-                    camScript.yRotation -= ranHorRecoil / 2;
+                    verRecoil *= 0.8f;
+                    horRecoil *= 0.8f;
                 }
-                else if (!pController.movement.isGrounded || !pController.isCrouching)
-                {
-                    camScript.xRotation -= yRecoil;
-                    camScript.RotateCameraBy(ranHorRecoil);
-                }
+
+                player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * verRecoil);
+                player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
             }
     }
 

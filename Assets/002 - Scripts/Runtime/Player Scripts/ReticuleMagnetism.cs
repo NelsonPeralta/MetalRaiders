@@ -184,7 +184,7 @@ public class ReticuleMagnetism : MonoBehaviour
         if (Mathf.Abs(xDiff) > 0)
         {
             float xMag = (Mathf.Abs(xDiff) / xFact) * Mathf.Sign(xDiff);
-            player.transform.Rotate(Vector3.up * xMag);
+            player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * xMag);
         }
     }
 }
