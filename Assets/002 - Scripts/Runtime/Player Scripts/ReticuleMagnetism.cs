@@ -177,12 +177,7 @@ public class ReticuleMagnetism : MonoBehaviour
         if (Mathf.Abs(yDiff) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
         {
             float yMag = (Mathf.Abs(yDiff) / yFact) * -Mathf.Sign(yDiff);
-
-            Vector3 locRot = player.mainCamera.transform.localRotation.eulerAngles;
-            locRot += new Vector3(yMag, 0, 0);
-
-            //cameraParent.transform.localRotation = Quaternion.Euler(locRot);
-            player.playerInventory.transform.Rotate(Vector3.right * yMag);
+            player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * yMag);
         }
 
         //if (Mathf.Abs(xDiff) > 0.5f)

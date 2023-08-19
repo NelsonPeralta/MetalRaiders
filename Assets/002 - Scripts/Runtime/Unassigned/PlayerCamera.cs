@@ -28,7 +28,7 @@ public class PlayerCamera : MonoBehaviour
     public Vector3 mainCamDefaultLocalPosition;
     public Quaternion mainCamDefaultLocalRotation;
 
-    [SerializeField] float xAxisInput, yAxisInput, mouseX, mouseY;
+    [SerializeField] float xAxisInput, yAxisInput, mouseX, mouseY, _clampedMouseY;
 
     // Weapon Sway
     Quaternion defaultLocalRotation;
@@ -164,7 +164,10 @@ public class PlayerCamera : MonoBehaviour
             xRotation -= mouseY + VerticalSway();
             xRotation = Mathf.Clamp(xRotation, minXClamp, maxXClamp);
 
-            verticalAxisTarget.localRotation = Quaternion.Euler(xRotation, 0, 0f);
+            _clampedMouseY = Mathf.Clamp(mouseY, minXClamp, maxXClamp);
+
+            //verticalAxisTarget.localRotation = Quaternion.Euler(xRotation, 0, 0f); // OLD, prevents other script from changing localRotation
+            verticalAxisTarget.Rotate(Vector3.left * _clampedMouseY); // NEW, multiple scripts can now interact with local rotation
 
             if (horizontalAxisTarget.transform.root == horizontalAxisTarget)
                 horizontalAxisTarget.Rotate(Vector3.up * mouseX);
