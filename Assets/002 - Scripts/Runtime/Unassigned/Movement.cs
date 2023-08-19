@@ -563,6 +563,7 @@ public class Movement : MonoBehaviour, IMoveable
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) { _jumpForce = jumpForce * 0.7f; }
 
+
             Vector3 v = verticalVector;
             v.y = _jumpForce;
             verticalVector = v;

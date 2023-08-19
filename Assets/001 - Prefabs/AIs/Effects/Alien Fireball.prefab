@@ -4980,12 +4980,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerWhoThrewGrenade: {fileID: 0}
   damage: 23
-  force: 5
+  force: 3
   radius: 2
   power: 50
   deSpawnTime: 10
   useConstantForce: 1
-  explosionPrefab: {fileID: 4752123170018852, guid: 8c988011ae9fc604a8a3761a0ac3d8a8,
+  explosionPrefab: {fileID: 4752123170018852, guid: 4e7356f81b3eef046a23680709d20683,
     type: 3}
 --- !u!1 &1418886582916154
 GameObject:

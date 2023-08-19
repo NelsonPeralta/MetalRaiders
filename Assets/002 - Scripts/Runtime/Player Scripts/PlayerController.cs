@@ -539,8 +539,8 @@ public class PlayerController : MonoBehaviourPun
                 else
                 {
                     isAiming = false;
-                    mainCam.fieldOfView = GetComponent<Player>().defaultFov;
-                    uiCam.fieldOfView = GetComponent<Player>().defaultFov;
+                    mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+                    uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
                     camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
                     gunCam.enabled = true;
                     gunCam.fieldOfView = 60;
@@ -564,9 +564,9 @@ public class PlayerController : MonoBehaviourPun
             return;
         Debug.Log("Unscope Script");
         isAiming = false;
-        mainCam.fieldOfView = GetComponent<Player>().defaultFov;
+        mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
         gunCam.fieldOfView = 60;
-        uiCam.fieldOfView = GetComponent<Player>().defaultFov;
+        uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
         camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
         allPlayerScripts.aimingScript.playAimSound();
 

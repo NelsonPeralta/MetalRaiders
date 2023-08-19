@@ -454,9 +454,9 @@ public class Player : MonoBehaviourPunCallbacks
     public Announcer announcer { get { return _announcer; } }
     public DeathNature deathNature { get { return _deathNature; } private set { _deathNature = value; } }
     public PlayerMedals playerMedals { get { return _playerMedals; } }
-    public float defaultFov
+    public float defaultVerticalFov
     {
-        get { return _defaultFov; }
+        get { return _defaultVerticalFov; }
         private set
         {
 
@@ -479,12 +479,12 @@ public class Player : MonoBehaviourPunCallbacks
             //30  8.62
 
             Debug.Log($"localPlayers.Keys.Count: {GameManager.instance.localPlayers.Keys.Count}");
-            if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _defaultFov = 31.42f;
-            else if (GameManager.instance.nbLocalPlayersPreset == 1) _defaultFov = 58.72f;
+            if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _defaultVerticalFov = 31.42f;
+            else if (GameManager.instance.nbLocalPlayersPreset == 1) _defaultVerticalFov = 58.72f;
 
 
-            GetComponent<PlayerController>().mainCam.fieldOfView = defaultFov;
-            GetComponent<PlayerController>().uiCam.fieldOfView = defaultFov;
+            GetComponent<PlayerController>().mainCam.fieldOfView = defaultVerticalFov;
+            GetComponent<PlayerController>().uiCam.fieldOfView = defaultVerticalFov;
             GetComponent<PlayerController>().gunCam.fieldOfView = 60;
         }
     }
@@ -555,13 +555,14 @@ public class Player : MonoBehaviourPunCallbacks
 
     [Header("Other Scripts")]
     public PlayerInventory playerInventory;
+    public PlayerController playerController;
     public CrosshairManager cScript;
     public AimAssist aimAssist;
     public PlayerSurroundings playerSurroundings;
 
     [Header("Camera Options")]
     [Tooltip("Default value for camera field of view (40 is recommended).")]
-    [SerializeField] float _defaultFov;
+    [SerializeField] float _defaultVerticalFov;
 
 
     [Header("Cameras")]
@@ -685,7 +686,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
         catch { }
 
-        defaultFov = 0; GetComponent<PlayerController>().ScopeOut();
+        defaultVerticalFov = 0; GetComponent<PlayerController>().ScopeOut();
 
         try
         {

@@ -281,9 +281,9 @@ abstract public class Actor : MonoBehaviour
             {
                 WeaponProperties wp = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
 
-                if (wp.weaponType == WeaponProperties.WeaponType.LMG ||
+                if (/*wp.weaponType == WeaponProperties.WeaponType.LMG ||*/
                     wp.weaponType == WeaponProperties.WeaponType.Launcher ||
-                    wp.weaponType == WeaponProperties.WeaponType.Shotgun ||
+                    //wp.weaponType == WeaponProperties.WeaponType.Shotgun ||
                     wp.weaponType == WeaponProperties.WeaponType.Sniper ||
                     wp.weaponType == WeaponProperties.WeaponType.DMR)
                     return;
