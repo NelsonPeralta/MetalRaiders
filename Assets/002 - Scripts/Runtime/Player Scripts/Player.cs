@@ -568,6 +568,7 @@ public class Player : MonoBehaviourPunCallbacks
     public Camera mainCamera;
     public Camera gunCamera;
     public Camera deathCamera;
+    public PlayerCamera playerCamera;
 
     public Vector3 mainOriginalCameraPosition;
 
@@ -876,9 +877,10 @@ public class Player : MonoBehaviourPunCallbacks
         var ragdoll = GameObjectPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
-        ragdoll.SetActive(true);
 
-        mainCamera.transform.parent = ragdoll.transform;
+        ragdoll.GetComponent<RagdollPrefab>().SetPlayerCamera(playerCamera, mainCamera);
+
+        ragdoll.SetActive(true);
 
         if (deathByHeadshot) { ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
         else if (deathNature == DeathNature.Grenade) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
@@ -1030,6 +1032,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
+        playerInventory.transform.localRotation = Quaternion.Euler(0, 0, 0f);
 
         if (isDead)
         {
@@ -1243,6 +1246,8 @@ public class Player : MonoBehaviourPunCallbacks
         {
             mainCamera.gameObject.GetComponent<Transform>().transform.Rotate(30, 0, 0);
             mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = new Vector3(mainOriginalCameraPosition.x, 2, -2.5f);
+
+
             gunCamera.enabled = false;
         }
         catch { }

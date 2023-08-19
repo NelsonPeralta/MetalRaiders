@@ -5,9 +5,13 @@ using Rewired;
 
 public class PlayerCamera : MonoBehaviour
 {
+    public RagdollPrefab ragdollPrefab { get { return _ragdollPrefab; } set { _ragdollPrefab = value; } }
+
     public float defaultMouseSensitivy;
     public float mouseSensitivity;
-    public Transform playerBody;
+    public Transform playerCameraScriptParent;
+    public Transform horizontalAxisTarget;
+    public Transform verticalAxisTarget;
     public float xRotation = 0f;
     public float yRotation = 0f;
     float minXClamp = -90;
@@ -34,10 +38,10 @@ public class PlayerCamera : MonoBehaviour
     float targetHorizontalSway;
     float currentHorizontalSway;
     float sway;
+    RagdollPrefab _ragdollPrefab;
 
     //public AimAssistCapsule aimAssistCapsule;
     public AimAssistCone aimAssistCapsule;
-
 
 
 
@@ -55,6 +59,9 @@ public class PlayerCamera : MonoBehaviour
 
     void Start()
     {
+        player.OnPlayerRespawnEarly -= OnRespawnEarly_Delegate;
+        player.OnPlayerRespawnEarly += OnRespawnEarly_Delegate;
+
         try
         {
             defaultMouseSensitivy = GameManager.instance.camSens;
@@ -81,6 +88,13 @@ public class PlayerCamera : MonoBehaviour
         if (!GameManager.instance.gameStarted) return;
         if (!pController.PV.IsMine) return;
         if (pController.cameraisFloating) return;
+
+        try
+        {
+            if (ragdollPrefab)
+                ragdollPrefab.cameraHolderParent.transform.localPosition = ragdollPrefab.ragdollRigidBody.transform.localPosition + new Vector3(0, 1, 0);
+        }
+        catch { }
 
 
         _controllerType = pController.activeControllerType;
@@ -150,8 +164,13 @@ public class PlayerCamera : MonoBehaviour
             xRotation -= mouseY + VerticalSway();
             xRotation = Mathf.Clamp(xRotation, minXClamp, maxXClamp);
 
-            transform.localRotation = Quaternion.Euler(xRotation, 0, 0f);
-            playerBody.Rotate(Vector3.up * mouseX);
+            verticalAxisTarget.localRotation = Quaternion.Euler(xRotation, 0, 0f);
+
+            if (horizontalAxisTarget.transform.root == horizontalAxisTarget)
+                horizontalAxisTarget.Rotate(Vector3.up * mouseX);
+            else
+                horizontalAxisTarget.localRotation = Quaternion.Euler(0, yRotation, 0f);
+
         }
 
         //WeaponSway();
@@ -269,11 +288,24 @@ public class PlayerCamera : MonoBehaviour
 
     public void RotateCameraBy(float rotationAmount)
     {
-        playerBody.Rotate(Vector3.up * rotationAmount);
+        horizontalAxisTarget.Rotate(Vector3.up * rotationAmount);
     }
 
     void OnCameraSensitivityChanged()
     {
         defaultMouseSensitivy = GameManager.instance.camSens;
+    }
+
+    void OnRespawnEarly_Delegate(Player p)
+    {
+        xRotation = yRotation = 0;
+        ragdollPrefab = null;
+        player.mainCamera.transform.parent = player.mainCamera.GetComponent<PlayerCameraSplitScreenBehaviour>().orignalParent;
+
+        this.transform.parent = playerCameraScriptParent;
+        horizontalAxisTarget = player.transform;
+        verticalAxisTarget = player.playerInventory.transform;
+
+        verticalAxisTarget.localRotation = Quaternion.Euler(0, 0, 0f);
     }
 }

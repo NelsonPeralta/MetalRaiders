@@ -7,11 +7,18 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
     public enum CameraType { Main, Gun, UI, World }
     public CameraType cameraType;
 
+    public Transform orignalParent { get { return _originalParent; } }
+
     Player _player;
     Camera _camera;
 
+    [SerializeField] Transform _originalParent;
     [SerializeField] AudioListener _audioListener;
 
+    private void Awake()
+    {
+        _originalParent = transform.parent;
+    }
 
     // Start is called before the first frame update
     void Start()
