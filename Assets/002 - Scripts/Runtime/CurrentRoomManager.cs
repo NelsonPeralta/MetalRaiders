@@ -187,7 +187,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
-                _gameOver = false;
+                _gameOver = true;
             }
         }
     }
