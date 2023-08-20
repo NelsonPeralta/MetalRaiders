@@ -432,7 +432,7 @@ public class Movement : MonoBehaviour, IMoveable
     void CalculateSpeedRatio()
     {
         _speedRatio = Mathf.Clamp(Mathf.Round((currentSpeed / _currentMaxSpeed) * 10f) / 10f, 0, 1);
-        if (_pController.pauseMenuOpen && isGrounded) _speedRatio = 1;
+        //if (_pController.pauseMenuOpen && isGrounded) _speedRatio = 1;
     }
 
     void CalculateCorrectedDirectionSpeeds()
@@ -714,14 +714,14 @@ public class Movement : MonoBehaviour, IMoveable
                         else if (_pController.isReloading || _pController.isDrawingWeapon || _pController.isThrowingGrenade ||
                             _pController.isMeleeing || _pController.isFiring)
                         {
-                            _speedRatio = 1;
+                            //_speedRatio = 1;
                             _pController.weaponAnimator.speed = 1;
                             _tpLookAt.anim.speed = 1;
                         }
                     }
                     else
                     {
-                        _speedRatio = 1;
+                        //_speedRatio = 1;
                         _pController.weaponAnimator.speed = 1;
                         if (_tpLookAt.anim)
                             _tpLookAt.anim.speed = 1;

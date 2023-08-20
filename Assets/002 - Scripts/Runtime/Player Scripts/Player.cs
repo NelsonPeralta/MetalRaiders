@@ -559,6 +559,7 @@ public class Player : MonoBehaviourPunCallbacks
     public CrosshairManager cScript;
     public AimAssist aimAssist;
     public PlayerSurroundings playerSurroundings;
+    public Movement movement;
 
     [Header("Camera Options")]
     [Tooltip("Default value for camera field of view (40 is recommended).")]

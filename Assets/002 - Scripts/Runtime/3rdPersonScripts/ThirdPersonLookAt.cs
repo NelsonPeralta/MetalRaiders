@@ -73,10 +73,10 @@ public class ThirdPersonLookAt : MonoBehaviour
     {
         try
         {
-            if (_playerController.isCrouching)
-                transform.localRotation = Quaternion.Euler(_crouchRotationFix);
-            else
-                transform.localRotation = Quaternion.Euler(Vector3.zero);
+            //if (_playerController.isCrouching)
+            //    transform.localRotation = Quaternion.Euler(_crouchRotationFix);
+            //else
+            //    transform.localRotation = Quaternion.Euler(Vector3.zero);
         }
         catch { }
     }
