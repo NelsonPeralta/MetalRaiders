@@ -17,7 +17,7 @@ public class ArmoryManager : MonoBehaviour
 
     public ArmorPieceListing armorPieceListingPrefab;
     public List<ArmorPieceListing> armorPieceListingList = new List<ArmorPieceListing>();
-    
+
 
     void Awake()
     {
@@ -42,11 +42,15 @@ public class ArmoryManager : MonoBehaviour
         int i = 1;
         foreach (PlayerArmorPiece playerArmorPiece in playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
         {
-            GameObject pal = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
-            armorPieceListingList.Add(pal.GetComponent<ArmorPieceListing>());
-            pal.GetComponent<ArmorPieceListing>().playerArmorPiece = playerArmorPiece;
-            pal.name += $" ({i})";
-            i++;
+            if (!playerArmorPiece.hideFromArmory)
+            {
+
+                GameObject pal = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
+                armorPieceListingList.Add(pal.GetComponent<ArmorPieceListing>());
+                pal.GetComponent<ArmorPieceListing>().playerArmorPiece = playerArmorPiece;
+                pal.name += $" ({i})";
+                i++;
+            }
         }
         PlayerArmorPiece ppp = new PlayerArmorPiece() { entity = "filler" };
         GameObject ppppp = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);

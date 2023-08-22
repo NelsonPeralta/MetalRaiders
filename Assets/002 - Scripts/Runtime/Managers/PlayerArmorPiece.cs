@@ -53,6 +53,8 @@ public class PlayerArmorPiece : MonoBehaviour
 
 
     public int minimumLevel { get { return _minimumLevel; } }
+    public bool hideFromArmory { get { return _hideFromArmory; } }
 
     [SerializeField] int _minimumLevel;
+    [SerializeField] bool _hideFromArmory;
 }
