@@ -17,6 +17,7 @@ public class ArmoryManager : MonoBehaviour
 
     public ArmorPieceListing armorPieceListingPrefab;
     public List<ArmorPieceListing> armorPieceListingList = new List<ArmorPieceListing>();
+    
 
     void Awake()
     {

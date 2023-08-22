@@ -506,7 +506,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
     {
         Player player = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         string nickName = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI).nickName;
-        string teamColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
+        string teamColorCode = GameManager.colorDict["blue"];
 
 
         int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
@@ -515,11 +515,11 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
         string colorCode = "";
 
         if (className == "Watcher")
-            colorCode = KillFeedManager.killFeedColorCodeDict["green"];
+            colorCode = GameManager.colorDict["green"];
         if (className == "Knight")
-            colorCode = KillFeedManager.killFeedColorCodeDict["blue"];
+            colorCode = GameManager.colorDict["blue"];
         if (className == "Tyrant")
-            colorCode = KillFeedManager.killFeedColorCodeDict["purple"];
+            colorCode = GameManager.colorDict["purple"];
 
         foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
         {

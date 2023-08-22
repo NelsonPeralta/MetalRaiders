@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Intances
     public static GameManager instance;
     public static int GameStartDelay = 6;
+    public static Dictionary<string, string> colorDict = new Dictionary<string, string>();
+
 
     public Dictionary<int, PlayerMultiplayerMatchStats.Team> controllerId_TeamDict;
     public Dictionary<int, Player> pid_player_Dict
@@ -300,7 +302,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             _roomPlayerData = value;
         }
     }
-
+    public Material armorMaterial { get { return _armorMaterial; } }
+    public List<Texture> colorPaletteTextures { get { return _colorPaletteTextures; } }
 
     // called zero
 
@@ -308,12 +311,29 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
-
+    [SerializeField] Material _armorMaterial;
+    [SerializeField] List<Texture> _colorPaletteTextures = new List<Texture>();
 
     SwarmManager.Difficulty _difficulty;
 
     void Awake()
     {
+        colorDict.Add("red", "#FF0000");
+        colorDict.Add("lightred", "#ffcccb");
+        colorDict.Add("darkred", "#8B0000");
+
+        colorDict.Add("blue", "#00B0FF");
+        colorDict.Add("lightblue", "#0080ff");
+        colorDict.Add("darkblue", "#00008B");
+
+        colorDict.Add("yellow", "#FFFB00");
+
+        colorDict.Add("green", "#08c50f");
+
+        colorDict.Add("purple", "#ff00ff");
+
+        colorDict.Add("orange", "#ff8000");
+
         connection = Connection.Offline;
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         Debug.Log("GameManager Awake");
@@ -414,9 +434,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called third
     private void Start()
     {
-
         nbLocalPlayersPreset = 1;
         Debug.Log("GameManager Start called");
+        //Debug.Log(colorPaletteTextures.Count);
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 100;

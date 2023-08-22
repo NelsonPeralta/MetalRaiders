@@ -1051,7 +1051,7 @@ public class Player : MonoBehaviourPunCallbacks
 
                 int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
                 int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
-                string youColorCode = KillFeedManager.killFeedColorCodeDict["blue"];
+                string youColorCode = GameManager.colorDict["blue"];
                 string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
 

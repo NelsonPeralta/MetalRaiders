@@ -39,7 +39,7 @@ public partial class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine(username, password));
     }
 
-    public void GetPlayerPublicData(string username, PlayerListItem pli)
+    public void SetPlayerListItemInRoom(string username, PlayerListItem pli)
     {
         StartCoroutine(GetPlayerPublicData_Coroutine(username, pli));
 

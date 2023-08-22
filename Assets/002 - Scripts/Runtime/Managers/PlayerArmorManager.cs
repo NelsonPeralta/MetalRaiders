@@ -8,7 +8,7 @@ public class PlayerArmorManager : MonoBehaviour
 {
     public Player player;
     public List<PlayerArmorPiece> playerArmorPieces;
-
+    
     public string armorDataString
     {
         get { return _armorDataString; }

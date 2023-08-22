@@ -22,18 +22,16 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 
     PlayerDatabaseAdaptor _pda;
 
-    public void SetUp(Photon.Realtime.Player _player)
+    public void SetUp(Photon.Realtime.Player _player) // MAIN
     {
         player = _player;
-        text.text = _player.NickName;
-
-        //if (PhotonNetwork.NickName != _player.NickName)
-            WebManager.webManagerInstance.GetPlayerPublicData(_player.NickName, this);
+        WebManager.webManagerInstance.SetPlayerListItemInRoom(_player.NickName, this);
     }
 
     public void SetUp(string s)
     {
-        text.text = s;
+        Debug.Log($"Setup {s}");
+        //text.text = s;
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)

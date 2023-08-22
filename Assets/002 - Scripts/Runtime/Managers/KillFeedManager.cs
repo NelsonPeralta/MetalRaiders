@@ -6,7 +6,6 @@ using TMPro;
 
 public class KillFeedManager : MonoBehaviour
 {
-    public static Dictionary<string, string> killFeedColorCodeDict = new Dictionary<string, string>();
     public static Dictionary<string, int> killFeedWeaponCodeDict = new Dictionary<string, int>();
     public static Dictionary<string, int> killFeedSpecialCodeDict = new Dictionary<string, int>();
 
@@ -19,14 +18,6 @@ public class KillFeedManager : MonoBehaviour
 
     private void Start()
     {
-        killFeedColorCodeDict.Add("green", "#06FF00");
-        killFeedColorCodeDict.Add("blue", "#00B0FF");
-        killFeedColorCodeDict.Add("purple", "#FF00B0");
-        killFeedColorCodeDict.Add("orange", "#FF9000");
-        killFeedColorCodeDict.Add("red", "#FF0000");
-        killFeedColorCodeDict.Add("yellow", "#FFFB00");
-
-
         killFeedWeaponCodeDict.Add("m1911", 8);
         killFeedWeaponCodeDict.Add("colt", 20);
         killFeedWeaponCodeDict.Add("mp5", 13);

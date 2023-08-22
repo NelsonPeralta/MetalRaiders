@@ -60,6 +60,9 @@ public partial class WebManager
 
     IEnumerator GetPlayerPublicData_Coroutine(string username, PlayerListItem pli = null)
     {
+        // DISCLAIMER
+        // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
+        
         PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
         if (pli)
             pda.playerListItem = pli;

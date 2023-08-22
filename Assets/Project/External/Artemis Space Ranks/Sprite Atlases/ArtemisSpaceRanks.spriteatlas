@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ArtemisSpaceRanks
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 2
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 4096
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: d81d05d458aa78f439c3e406144d98e9, type: 3}
+    - {fileID: 102900000, guid: 59f48a06e5ecce0418cca02e21e1ec86, type: 3}
+    - {fileID: 102900000, guid: bc360d17b06ee8c4fbc316af71dd78e6, type: 3}
+    - {fileID: 102900000, guid: 6778031f91ca5b4419cba89b9e11fa82, type: 3}
+    - {fileID: 102900000, guid: 1cc5fb11b885a29439e17f9cbeb1858c, type: 3}
+    totalSpriteSurfaceArea: 0
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 2897dbf03807eac45bed2eba23f03418, type: 3}
+  - {fileID: 21300000, guid: c041d321319e1d142bd1894d6bf782f2, type: 3}
+  - {fileID: 21300000, guid: 9b6f0e521945e7946b5b77dc5f593194, type: 3}
+  - {fileID: 21300000, guid: bb6512f217acdf443b4e474f7db2e11f, type: 3}
+  - {fileID: 21300000, guid: 92e4860373b2cbf4ab16ee3ae03e75f7, type: 3}
+  - {fileID: 21300000, guid: b11fe1d4d2006b946aff5b6a15cf2df8, type: 3}
+  - {fileID: 21300000, guid: 69e2256594f4173478d82e4b6228b4f9, type: 3}
+  - {fileID: 21300000, guid: 57c67e9544a86a841a1832ee055432f7, type: 3}
+  - {fileID: 21300000, guid: afa1b2461e67748469b541bf9c24340f, type: 3}
+  - {fileID: 21300000, guid: ff9451b608832994c9ac2a0758cec7c0, type: 3}
+  - {fileID: 21300000, guid: e89cfd3782b4c0e4485610ff56e8e69f, type: 3}
+  - {fileID: 21300000, guid: d87b6c776253d8244ae1a4e9b61abc56, type: 3}
+  - {fileID: 21300000, guid: 89f00368580ed85438cfcfd72e2e9624, type: 3}
+  - {fileID: 21300000, guid: 145b8c68f829c0442a6329111e7ea4c3, type: 3}
+  - {fileID: 21300000, guid: e8767e984f5f5754c82ab9f4804834ed, type: 3}
+  - {fileID: 21300000, guid: 6b6a38d848f187146ba4162c337f9276, type: 3}
+  - {fileID: 21300000, guid: c1999b49f97b8694db853754ab37096f, type: 3}
+  - {fileID: 21300000, guid: 7e7db1b978aaa5a4ebcd3e481853c004, type: 3}
+  - {fileID: 21300000, guid: 252032b9a8b606d4f9ebc3209315265b, type: 3}
+  - {fileID: 21300000, guid: ce73772a00368da4b98a189640c304aa, type: 3}
+  - {fileID: 21300000, guid: 7aadbd8a786d48542abdd8b7fdda8f9a, type: 3}
+  - {fileID: 21300000, guid: da8a379afd4d1e94cacfe19a48627aa4, type: 3}
+  - {fileID: 21300000, guid: 44c323eadc064ac498c85d16e996248f, type: 3}
+  - {fileID: 21300000, guid: 534e262b35a99144b9438cb75321cae0, type: 3}
+  - {fileID: 21300000, guid: 61258b6be85ee4448910fb013fb5fee2, type: 3}
+  - {fileID: 21300000, guid: 7d7175cb01cd12a49a578c2015b8f934, type: 3}
+  - {fileID: 21300000, guid: 2c11251c56efea54eb8dee30497c72bb, type: 3}
+  - {fileID: 21300000, guid: e4a16e2c807eb1a40b4666f24f143702, type: 3}
+  - {fileID: 21300000, guid: 6ec43a3c6b9cd0d42adaa61a36543341, type: 3}
+  - {fileID: 21300000, guid: 2875008c9676dcd449832be40933a84b, type: 3}
+  - {fileID: 21300000, guid: 14e8cf3d8c5d361479ab9fd9878d14f5, type: 3}
+  - {fileID: 21300000, guid: d7c540dd459ed8f479a74b396703f8d3, type: 3}
+  - {fileID: 21300000, guid: a3b0857e94a013442bdc2381e4d21f97, type: 3}
+  - {fileID: 21300000, guid: e50dfe8e882eb4348a2e463b697cd15b, type: 3}
+  - {fileID: 21300000, guid: d6eab15fc7cd54b4f826e234073b150a, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Rank_8
+  - Star_02
+  - GlowingBorder_Red
+  - Rank_12
+  - Frame_InnerFrame
+  - Rank_10
+  - Rank_5
+  - Rank_4
+  - GlowingBorder_Green
+  - GlowingBorder_Blue
+  - Ribbon_01
+  - Frame_Top_Silver
+  - Rank_3
+  - Rank_11
+  - Frame_Background
+  - Frame_Top_Gold
+  - Bar
+  - Rank_1
+  - GlowingBorder_Yellow
+  - Rank_6
+  - Rank_9
+  - Frame_Top_Bronze
+  - Swords
+  - Tower
+  - Crown
+  - Skull
+  - Shield
+  - Rank_7
+  - Rank_2
+  - Flag
+  - Wings
+  - Dice
+  - Ribbon_02
+  - Star_01
+  - Rank_13
+  m_Tag: ArtemisSpaceRanks
+  m_IsVariant: 0
