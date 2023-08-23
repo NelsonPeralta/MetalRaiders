@@ -54,7 +54,8 @@ public class PlayerArmorPiece : MonoBehaviour
 
     public int minimumLevel { get { return _minimumLevel; } }
     public bool hideFromArmory { get { return _hideFromArmory; } }
+    public bool canChangeColorPalette { get { return _canChangeColorPalette; } }
 
     [SerializeField] int _minimumLevel;
-    [SerializeField] bool _hideFromArmory;
+    [SerializeField] bool _hideFromArmory, _canChangeColorPalette;
 }

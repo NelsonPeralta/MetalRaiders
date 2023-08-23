@@ -316,6 +316,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     SwarmManager.Difficulty _difficulty;
 
+    public Texture armorTex;
     void Awake()
     {
         colorDict.Add("red", "#FF0000");

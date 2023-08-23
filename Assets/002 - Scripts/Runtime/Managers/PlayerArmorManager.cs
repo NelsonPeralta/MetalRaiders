@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public class PlayerArmorManager : MonoBehaviour
 {
     public Player player;
-    public List<PlayerArmorPiece> playerArmorPieces;
-    
+    public List<PlayerArmorPiece> playerArmorPieces = new List<PlayerArmorPiece>();
+
     public string armorDataString
     {
         get { return _armorDataString; }
@@ -36,7 +36,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void Awake()
     {
-        //ReloadArmor();
+        playerArmorPieces.Clear(); playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
     }
 
     private void Start()
@@ -73,6 +73,7 @@ public class PlayerArmorManager : MonoBehaviour
 
         DisableAllArmor();
         EnableAllArmorsInDataString();
+        UpdateColorPalette();
     }
 
     void DisableAllArmor()
@@ -92,7 +93,19 @@ public class PlayerArmorManager : MonoBehaviour
             foreach (PlayerArmorPiece piece in playerArmorPieces)
                 piece.gameObject.SetActive(armorDataString.Contains(piece.entity));
         }
-        catch {  }
+        catch { }
+    }
+
+    void UpdateColorPalette()
+    {
+        foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
+            if (playerArmorPiece.canChangeColorPalette)
+                try
+                {
+                    if (GameManager.instance.armorTex)
+                        playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", GameManager.instance.armorTex);
+                }
+                catch { }
     }
 
     IEnumerator ReloadArmor_Coroutine()
