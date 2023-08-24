@@ -18,5 +18,16 @@ public class ColorPaletteButton : MonoBehaviour
                     playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
                 }
                 catch { }
+
+        SaveColorPalette(colorName);
+    }
+
+    void SaveColorPalette(string name)
+    {
+        Debug.Log($"SaveColorPalette: {name}");
+        WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette = name;
+
+        StartCoroutine(WebManager.webManagerInstance.SaveArmorColorPalette_Coroutine(name));
+
     }
 }

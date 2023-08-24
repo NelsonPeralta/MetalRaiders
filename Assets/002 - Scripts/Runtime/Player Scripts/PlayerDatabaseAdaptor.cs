@@ -153,7 +153,7 @@ public class PlayerDatabaseAdaptor
 
         int _id;
         public int level, xp, credits;
-        public string armor_data_string, unlocked_armor_data_string;
+        public string armor_data_string, unlocked_armor_data_string, armor_color_palette;
 
         public static PlayerCommonData CreateFromJSON(string jsonString)
         {

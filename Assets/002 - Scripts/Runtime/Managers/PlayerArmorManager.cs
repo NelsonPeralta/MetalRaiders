@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -98,12 +99,15 @@ public class PlayerArmorManager : MonoBehaviour
 
     void UpdateColorPalette()
     {
+        Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette}")).SingleOrDefault();
+        Debug.Log(_tex.name);
+
         foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
             if (playerArmorPiece.canChangeColorPalette)
                 try
                 {
                     if (GameManager.instance.armorTex)
-                        playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", GameManager.instance.armorTex);
+                        playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
                 }
                 catch { }
     }

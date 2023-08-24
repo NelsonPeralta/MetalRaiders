@@ -596,4 +596,42 @@ public partial class WebManager
             }
         }
     }
+
+
+
+    public IEnumerator SaveArmorColorPalette_Coroutine(string colorName)
+    {
+        Debug.Log("SaveArmorColorPalette_Coroutine");
+        WWWForm form = new WWWForm();
+        form.AddField("service", "SaveArmorColorPalette");
+        form.AddField("playerId", pda.id);
+
+        form.AddField("newArmorColorPaletteData", colorName);
+
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                if (www.downloadHandler.text.Contains("Could not save SaveEquippedArmorDataString"))
+                {
+                    Debug.LogError("Could not save SaveEquippedArmorDataString");
+
+                }
+                else if (www.downloadHandler.text.Contains("SaveEquippedArmorDataString saved successfully"))
+                {
+                    Debug.Log("SaveEquippedArmorDataString saved successfully");
+                }
+            }
+        }
+    }
 }
