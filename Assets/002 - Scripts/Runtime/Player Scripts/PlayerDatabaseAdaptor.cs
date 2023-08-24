@@ -115,6 +115,7 @@ public class PlayerDatabaseAdaptor
         get { return playerBasicOnlineStats.unlocked_armor_data_string; }
     }
 
+    Color _tCol;
     public PlayerCommonData playerBasicOnlineStats
     {
         get { return _playerCommonData; }
@@ -123,7 +124,19 @@ public class PlayerDatabaseAdaptor
             _playerCommonData = value;
 
             if (playerListItem)
+            {
                 playerListItem.text.text = $"{username} ({level})";
+
+                playerListItem.levelText.text = $"{level}";
+
+
+                ColorUtility.TryParseHtmlString(GameManager.colorDict[playerBasicOnlineStats.armor_color_palette], out _tCol);
+                playerListItem.mainBg.color = _tCol;
+
+
+                _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
+                playerListItem.secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
+            }
 
             //if(_playerBasicOnlineStats == null)
             //    _playerBasicOnlineStats = value;

@@ -410,7 +410,7 @@ public partial class WebManager
                     if (www.result.ToString().Contains("Success"))
                     {
                         Debug.Log("Login_Coroutine_Set_Online_Stats SUCCESS");
-                        Debug.Log(pda.playerBasicOnlineStats.xp);
+                        Debug.Log(pda.playerBasicOnlineStats.armor_color_palette);
                     }
                 }
                 catch (Exception e)

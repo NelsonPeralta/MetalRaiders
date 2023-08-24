@@ -16,17 +16,29 @@ public class PlayerArmorManager : MonoBehaviour
         set
         {
             _armorDataString = value;
+            SoftReloadArmor();
         }
     }
 
+    public string colorPalette
+    {
+        get { return _colorPalette; }
+        private set
+        {
+            _colorPalette = value;
+            UpdateColorPalette();
+        }
+    }
 
-    [SerializeField] string _armorDataString;
+    [SerializeField] string _armorDataString, _colorPalette;
 
     int tries = 0;
 
     private void OnEnable()
     {
-        ReloadArmor();
+        colorPalette = "grey";
+
+        HardReloadArmor();
 
         if (armorDataString == null || armorDataString == "")
         {
@@ -37,6 +49,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void Awake()
     {
+        colorPalette = "grey";
         playerArmorPieces.Clear(); playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
     }
 
@@ -45,7 +58,7 @@ public class PlayerArmorManager : MonoBehaviour
         //ReloadArmor();
     }
 
-    void ReloadArmor()
+    void HardReloadArmor()
     {
         try
         {
@@ -54,9 +67,16 @@ public class PlayerArmorManager : MonoBehaviour
                 if (player.isMine)
                 {
                     if (player.rid == 0)
+                    {
                         armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
+                        colorPalette = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette;
+                    }
                     else
+                    {
+                        Debug.Log("PlayerArmorManager RID 0");
                         armorDataString = "helmet1";
+                        colorPalette = "grey";
+                    }
                 }
                 else
                 {
@@ -65,9 +85,10 @@ public class PlayerArmorManager : MonoBehaviour
                     armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
                 }
             }
-            else
+            else // You are in the menu
             {
                 armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
+                colorPalette = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette;
             }
         }
         catch { }
@@ -75,6 +96,12 @@ public class PlayerArmorManager : MonoBehaviour
         DisableAllArmor();
         EnableAllArmorsInDataString();
         UpdateColorPalette();
+    }
+
+    void SoftReloadArmor()
+    {
+        DisableAllArmor();
+        EnableAllArmorsInDataString();
     }
 
     void DisableAllArmor()
@@ -99,15 +126,15 @@ public class PlayerArmorManager : MonoBehaviour
 
     void UpdateColorPalette()
     {
-        Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette}")).SingleOrDefault();
+        Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
         Debug.Log(_tex.name);
+        //Debug.Log(player.rid);
 
         foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
             if (playerArmorPiece.canChangeColorPalette)
                 try
                 {
-                    if (GameManager.instance.armorTex)
-                        playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
+                    playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
                 }
                 catch { }
     }
@@ -115,7 +142,7 @@ public class PlayerArmorManager : MonoBehaviour
     IEnumerator ReloadArmor_Coroutine()
     {
         yield return new WaitForSeconds(0.1f);
-        ReloadArmor();
+        HardReloadArmor();
         tries++;
 
         if (tries < 10 && (armorDataString == null || armorDataString == ""))
