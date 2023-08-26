@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerDatabaseAdaptor
@@ -125,7 +126,7 @@ public class PlayerDatabaseAdaptor
 
             if (playerListItem)
             {
-                playerListItem.text.text = $"{username} ({level})";
+                playerListItem.playerText.text = $"{username}";
 
                 playerListItem.levelText.text = $"{level}";
 
@@ -136,6 +137,23 @@ public class PlayerDatabaseAdaptor
 
                 _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
                 playerListItem.secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
+
+                PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.xp, 0);
+
+
+                Debug.Log(rank.color);
+                if (GameManager.colorDict.ContainsKey(rank.color))
+                {
+                    Debug.Log($"{rank.spriteName}");
+                    playerListItem.rankIm.enabled = true;
+
+                    Debug.Log(playerListItem.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
+
+                    playerListItem.rankIm.sprite = playerListItem.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
+
+                    ColorUtility.TryParseHtmlString(GameManager.colorDict[rank.color], out _tCol);
+                    playerListItem.rankIm.color = _tCol;
+                }
             }
 
             //if(_playerBasicOnlineStats == null)

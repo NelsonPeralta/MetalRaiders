@@ -6,6 +6,11 @@ public class PlayerProgressionManager : MonoBehaviour
 {
     public static PlayerProgressionManager instance;
 
+
+
+
+    List<Rank> ranks = new List<Rank>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +23,9 @@ public class PlayerProgressionManager : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject);
             instance = this;
+
+            ranks.Add(new Rank(0, 0, "r", "Private", "invisible"));
+            ranks.Add(new Rank(100, 0, "pvt", "Private", "yellow"));
         }
     }
 
@@ -25,6 +33,21 @@ public class PlayerProgressionManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+
+    public static Rank GetClosestRank(int xp, int h)
+    {
+        Rank r = instance.ranks[0];
+        foreach (Rank rank in instance.ranks)
+        {
+            if (xp >= rank.xpRequired && h >= rank.honorRequired)
+                r = rank;
+            else
+                break;
+        }
+
+        return r;
     }
 
     public static Dictionary<int, int> playerLevelToXpDic = new Dictionary<int, int>()
@@ -49,4 +72,46 @@ public class PlayerProgressionManager : MonoBehaviour
 
         {46, 86000 }, {47, 87000 }, {48, 87500 }, {49, 88500 }, {50, 100000 }
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public struct Rank
+    {
+
+        public int xpRequired { get { return _xpRequired; } }
+        public int honorRequired { get { return _honorRequired; } }
+        public string spriteName { get { return _spriteName; } }
+        public string cleanName { get { return _cleanName; } }
+        public string color { get { return _color; } }
+
+
+
+        int _xpRequired, _honorRequired;
+        string _spriteName, _cleanName, _color;
+
+
+        public Rank(int xpReq, int hReq, string n, string cn, string color)
+        {
+            _xpRequired = xpReq;
+            _honorRequired = hReq;
+            _spriteName = n;
+            _cleanName = cn;
+            _color = color;
+        }
+    }
 }

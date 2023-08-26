@@ -334,6 +334,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         colorDict.Add("orange", "#ff8000");
 
+        colorDict.Add("brown", "#964B00");
+
         connection = Connection.Offline;
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         Debug.Log("GameManager Awake");

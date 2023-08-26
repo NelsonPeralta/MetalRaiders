@@ -8,11 +8,10 @@ using UnityEngine.UI;
 
 public class PlayerListItem : MonoBehaviourPunCallbacks
 {
-    public TMP_Text text;
+    public TMP_Text playerText;
     public TMP_Text levelText;
     Photon.Realtime.Player player;
 
-    [SerializeField] Image _mainBg, _secBg;
 
     public PlayerDatabaseAdaptor pda
     {
@@ -25,6 +24,15 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 
     public Image mainBg { get { return _mainBg; } }
     public Image secBg { get { return _secBg; } }
+    public Image rankIm
+    {
+        get { return _rankIm; }
+        set { _rankIm = value; }
+    }
+    public List<Sprite> rankSprites { get { return _rankImages; } }
+
+    [SerializeField] Image _mainBg, _secBg, _rankIm;
+    [SerializeField] List<Sprite> _rankImages;
 
     PlayerDatabaseAdaptor _pda;
 
