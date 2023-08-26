@@ -27,7 +27,6 @@ public class PlayerArmorManager : MonoBehaviour
         {
             if (!name.Contains("Ragdoll"))
             {
-                Debug.Log($"Color Palette: {value}");
                 _colorPalette = value;
             }
             UpdateColorPalette();
@@ -127,8 +126,6 @@ public class PlayerArmorManager : MonoBehaviour
         if (name.Contains("Ragdoll"))
             return;
 
-        if (player.rid > 0)
-            return;
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
         //Debug.Log(_tex.name);
 
