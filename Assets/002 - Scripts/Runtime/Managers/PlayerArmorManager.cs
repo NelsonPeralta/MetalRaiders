@@ -73,15 +73,15 @@ public class PlayerArmorManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("PlayerArmorManager RID 0");
+                        //Debug.Log("PlayerArmorManager RID 0");
                         armorDataString = "helmet1";
                         colorPalette = "grey";
                     }
                 }
                 else
                 {
-                    Debug.Log("PlayerArmorManager NOT MINE");
-                    Debug.Log(GameManager.instance.roomPlayerData[player.nickName].armorDataString);
+                    //Debug.Log("PlayerArmorManager NOT MINE");
+                    //Debug.Log(GameManager.instance.roomPlayerData[player.nickName].armorDataString);
                     armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
                 }
             }
@@ -127,7 +127,6 @@ public class PlayerArmorManager : MonoBehaviour
     void UpdateColorPalette()
     {
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
-        Debug.Log(_tex.name);
         //Debug.Log(player.rid);
 
         foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)

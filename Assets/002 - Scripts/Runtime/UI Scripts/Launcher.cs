@@ -68,7 +68,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject _multiplayerMcComponentsHolder;
     [SerializeField] GameObject _swarmMcComponentsHolder;
 
-    public string quickMatchRoomName = "quick_match_room";
+    public static string quickMatchRoomName = "quick_match_room";
 
     public TMP_InputField loginUsernameText
     {

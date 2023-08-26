@@ -745,6 +745,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public void TriggerGameStartBehaviour()
     {
+        Debug.Log("TriggerGameStartBehaviour");
         if (rid == 0)
             audioListener.enabled = true;
 
@@ -979,7 +980,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         int levelToLoad = 0;
 
-        if (PhotonNetwork.CurrentRoom.Name == Launcher.instance.quickMatchRoomName)
+        if (PhotonNetwork.CurrentRoom.Name == Launcher.quickMatchRoomName)
             levelToLoad = Launcher.instance.waitingRoomLevelIndex;
         else
         {

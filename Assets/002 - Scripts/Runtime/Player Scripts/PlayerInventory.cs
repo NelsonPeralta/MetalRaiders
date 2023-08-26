@@ -513,14 +513,18 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon)
                 {
-                    //DisableAmmoHUDCounters();
-                    weaponsEquiped[0] = allWeaponsInInventory[i].gameObject;
-                    activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
-                    weaponsEquiped[0] = activeWeapon.gameObject;
-                    activeWeapIs = 0;
-                    activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
-                    allWeaponsInInventory[i].gameObject.SetActive(true);
-                    StartCoroutine(ToggleTPPistolIdle(1));
+                    try
+                    {
+                        //DisableAmmoHUDCounters();
+                        weaponsEquiped[0] = allWeaponsInInventory[i].gameObject;
+                        activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
+                        weaponsEquiped[0] = activeWeapon.gameObject;
+                        activeWeapIs = 0;
+                        activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
+                        allWeaponsInInventory[i].gameObject.SetActive(true);
+                        StartCoroutine(ToggleTPPistolIdle(1));
+                    }
+                    catch { }
                 }
                 else if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon2)
                 {
