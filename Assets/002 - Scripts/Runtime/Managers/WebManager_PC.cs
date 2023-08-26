@@ -62,7 +62,7 @@ public partial class WebManager
     {
         // DISCLAIMER
         // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
-        
+
         PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
         if (pli)
             pda.playerListItem = pli;
@@ -172,26 +172,29 @@ public partial class WebManager
         StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
 
-    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null)
+    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<Player> winPlayers = null)
     {
-        int xpAndCreditGain = PlayerProgressionManager.baseXpGainPerMatch;
-
-        var date = DateTime.Now;
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
-            xpAndCreditGain *= 2;
+        int xpAndCreditGain = PlayerProgressionManager.xpGainPerMatch;
 
         Debug.Log("SaveBasicOnlineStats_Coroutine");
-        Debug.Log(pda.playerBasicOnlineStats.xp);
-        Debug.Log(pda.playerBasicOnlineStats.credits);
 
         int playerId = pda.id;
         int newLevel = pda.playerBasicOnlineStats.level;
         int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
         int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
+        int newHonor = pda.playerBasicOnlineStats.honor;
 
-        int dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
+        int dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level];
 
-        Debug.Log($"XP to level: {dbXpToLevel}. New XP: {newXp}");
+        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
+            dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
+
+
+        if (winPlayers != null)
+            if (winPlayers.Contains(GameManager.GetLocalMasterPlayer()))
+                newHonor += PlayerProgressionManager.honorGainPerMatch;
+
+
         if (dbXpToLevel < newXp)
         {
             Debug.Log("LEVEL UP");
@@ -205,6 +208,8 @@ public partial class WebManager
         form.AddField("newLevel", newLevel);
         form.AddField("newXp", newXp);
         form.AddField("newCredits", newCredits);
+        form.AddField("newHonor", newHonor);
+
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {

@@ -80,9 +80,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public int redTeamScore { get { return _redTeamScore; } private set { _redTeamScore = value; } }
     public int blueTeamScore { get { return _blueTeamScore; } private set { _blueTeamScore = value; } }
+    public List<Player> winningPlayers { get { return _winningPlayers; } }
 
     [SerializeField] int _redTeamScore;
     [SerializeField] int _blueTeamScore;
+
+    [SerializeField] List<Player> _winningPlayers = new List<Player>();
 
     int _initialRoomPlayercount;
 
@@ -111,6 +114,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         Scene currentScene = SceneManager.GetActiveScene();
         Debug.Log("Multiplayer Manager OnSceneLoaded");
 
+        winningPlayers.Clear();
         redTeamScore = 0;
         blueTeamScore = 0;
     }
@@ -210,7 +214,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 {
                     foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
                         if (pms.score >= scoreToWin)
+                        {
                             pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {pms.GetComponent<Player>().nickName} wins!");
+                            winningPlayers.Add(pp);
+                        }
                 }
                 else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 {
@@ -230,7 +237,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 if (pp.controllerId == 0)
                 {
                     pp.allPlayerScripts.announcer.PlayGameOverClip();
-                    WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>());
+                    WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), winningPlayers);
 
                     pp.LeaveRoomWithDelay();
                 }

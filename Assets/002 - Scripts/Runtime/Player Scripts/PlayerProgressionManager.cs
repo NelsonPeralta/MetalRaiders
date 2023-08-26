@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,12 +6,35 @@ using UnityEngine;
 public class PlayerProgressionManager : MonoBehaviour
 {
     public static PlayerProgressionManager instance;
-    public static int baseXpGainPerMatch
+    public static int xpGainPerMatch
     {
         get
         {
             int r = UnityEngine.Random.Range(160, 240); // Reach Credits divided by 5
+
+            DateTime today = DateTime.Now;
+            if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
+                r *= 2;
+
+            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private)
+                r = 0;
             return r;
+        }
+    }
+
+    public static int honorGainPerMatch
+    {
+        get
+        {
+            int h = 1;
+
+            DateTime today = DateTime.Now;
+            if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
+                h *= 2;
+
+            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private)
+                h = 0;
+            return h;
         }
     }
     public List<Sprite> rankSprites { get { return _rankImages; } }
@@ -18,6 +42,7 @@ public class PlayerProgressionManager : MonoBehaviour
     [SerializeField] List<Sprite> _rankImages;
 
     List<Rank> ranks = new List<Rank>();
+
 
     // Start is called before the first frame update
     void Start()

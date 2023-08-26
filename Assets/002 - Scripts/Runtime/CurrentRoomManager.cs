@@ -48,7 +48,7 @@ public class CurrentRoomManager : MonoBehaviour
             expectedNbPlayers = c;
             _roomGameStartCountdown = 3;
 
-            if (expectedNbPlayers > 0 && !_randomQuickMatchSeetingsChosen)
+            if (expectedNbPlayers > 1 && !_randomQuickMatchSeetingsChosen)
             {
                 ChooseRandomMatchSettingsForQuickMatch();
             }

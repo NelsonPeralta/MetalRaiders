@@ -980,13 +980,8 @@ public class Player : MonoBehaviourPunCallbacks
 
         int levelToLoad = 0;
 
-        if (PhotonNetwork.CurrentRoom.Name == Launcher.quickMatchRoomName)
-            levelToLoad = Launcher.instance.waitingRoomLevelIndex;
-        else
-        {
-            Cursor.visible = true;
-            PhotonNetwork.LeaveRoom();
-        }
+        Cursor.visible = true;
+        PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(levelToLoad);
     }
 
