@@ -221,8 +221,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxRandomRoomPlayers;
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
-        roomOptions.CustomRoomProperties.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
-        roomOptions.CustomRoomProperties.Add("gametype", GameManager.GameType.Fiesta.ToString());
+        //roomOptions.CustomRoomProperties.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
+        //roomOptions.CustomRoomProperties.Add("gametype", GameManager.GameType.Fiesta.ToString());
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, typedLobby);
         //PhotonNetwork.JoinRandomRoom();
     }
@@ -304,29 +304,50 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log($"{listPlayersDiff[0].NickName} Joined room");
 
 
-        if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
-        { // Room is Random
-            GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
-            GameManager.instance.gameType = GameManager.GameType.Fiesta;
-            PhotonNetwork.LoadLevel(waitingRoomLevelIndex);
-        }
-        else
+        //if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
+        //{ // Room is Random
+        //    GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+        //    GameManager.instance.gameType = GameManager.GameType.Fiesta;
+        //    //PhotonNetwork.LoadLevel(waitingRoomLevelIndex);
+        //}
+        //else
         { // Room is private
 
             commonRoomTexts.SetActive(true);
             MenuManager.Instance.OpenMenu("multiplayer_room"); // Show the "room" menu
-            roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
+
+            if (PhotonNetwork.CurrentRoom.Name != quickMatchRoomName)
+            {
+                roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
+            }
+
+
+            if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
+                CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.QuickMatch;
+            else
+                CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
 
             //try { Destroy(FindObjectOfType<NetworkGameManager>().gameObject); } catch { } finally { Debug.Log("Destroying NetworkGameManager"); }
 
-            _startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+
+            _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
 
             if (PhotonNetwork.IsMasterClient)
             {
+
                 Debug.Log("Joined room IsMasterClient");
 
                 if (listPlayersDiff[0].NickName.Contains(GameManager.instance.rootPlayerNickname))
                     GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+
+
+
+                if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
+                {
+
+                }
+
+
 
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
 
@@ -407,7 +428,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
     {
-        _startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -485,8 +506,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             if (roomList[i].RemovedFromList)
                 continue;
-            if (roomList[i].Name != quickMatchRoomName)
-                Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
+            //if (roomList[i].Name != quickMatchRoomName)
+            Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
         }
     }
 

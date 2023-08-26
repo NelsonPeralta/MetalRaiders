@@ -99,7 +99,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             _gameMode = value;
             Debug.Log($"Game Mode: {gameMode}");
-            FindObjectOfType<Launcher>().gameModeBtns.SetActive(PhotonNetwork.IsMasterClient);
+
+
+            if (CurrentRoomManager.instance.roomType != CurrentRoomManager.RoomType.QuickMatch)
+                FindObjectOfType<Launcher>().gameModeBtns.SetActive(PhotonNetwork.IsMasterClient);
+            else
+                FindObjectOfType<Launcher>().gameModeBtns.SetActive(false);
+
+
             if (_gameMode == GameMode.Swarm)
             {
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
@@ -112,8 +119,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else if (_gameMode == GameMode.Multiplayer)
             {
+                if (CurrentRoomManager.instance.roomType != CurrentRoomManager.RoomType.QuickMatch)
+                    FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
+                else
+                    FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
+
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
-                FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
                 FindObjectOfType<Launcher>().levelToLoadIndex = 5;
 
 

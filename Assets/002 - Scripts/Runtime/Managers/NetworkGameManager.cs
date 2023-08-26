@@ -72,6 +72,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             Dictionary<string, string> ps = new Dictionary<string, string>();
 
+            ps.Add("roomtype", CurrentRoomManager.instance.roomType.ToString());
+
+
             ps.Add("gamemode", GameManager.instance.gameMode.ToString());
             ps.Add("gametype", GameManager.instance.gameType.ToString());
             ps.Add("leveltoloadindex", Launcher.instance.levelToLoadIndex.ToString());
@@ -104,6 +107,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 Debug.Log(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict);
             }
             catch { }
+
+            CurrentRoomManager.instance.roomType = JsonConvert.DeserializeObject<CurrentRoomManager.RoomType>(p["roomType"]);
+
 
             //NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
 
