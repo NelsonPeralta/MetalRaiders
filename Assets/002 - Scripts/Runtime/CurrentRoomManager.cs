@@ -50,7 +50,8 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (expectedNbPlayers > 1 && !_randomQuickMatchSeetingsChosen)
             {
-                ChooseRandomMatchSettingsForQuickMatch();
+                if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                    ChooseRandomMatchSettingsForQuickMatch();
             }
         }
     }
@@ -269,8 +270,9 @@ public class CurrentRoomManager : MonoBehaviour
         {
             _roomGameStartCountdown -= Time.deltaTime;
 
-            if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
-                Launcher.instance.StartGame();
+            if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
+                    Launcher.instance.StartGame();
         }
     }
 

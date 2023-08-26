@@ -22,7 +22,7 @@ public class PlayerThirdPersonModelHipRotationFix : MonoBehaviour
 
     private void Update()
     {
-        if (_player.movement.speedRatio > 0)
+        if (_player.movement.currentWorldSpeed > 0.1f)
             currentRotationFix -= Time.deltaTime * _rotationTarget * 5;
         else
             currentRotationFix += Time.deltaTime * _rotationTarget * 5;

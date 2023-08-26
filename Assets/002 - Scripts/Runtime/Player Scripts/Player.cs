@@ -409,6 +409,8 @@ public class Player : MonoBehaviourPunCallbacks
 
                 PV.RPC("UpdateNickName_RPC", RpcTarget.All, nickName);
             }
+
+            _playerArmorManager.HardReloadArmor();
         }
 
     }
@@ -512,6 +514,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] int _defaultRespawnTime = 4;
     [SerializeField] int _pushForce = 7;
     [SerializeField] Announcer _announcer;
+    [SerializeField] PlayerArmorManager _playerArmorManager;
     #endregion
 
 

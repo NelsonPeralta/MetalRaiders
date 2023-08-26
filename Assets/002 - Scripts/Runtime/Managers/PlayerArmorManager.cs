@@ -25,7 +25,11 @@ public class PlayerArmorManager : MonoBehaviour
         get { return _colorPalette; }
         private set
         {
-            _colorPalette = value;
+            if (!name.Contains("Ragdoll"))
+            {
+                Debug.Log($"Color Palette: {value}");
+                _colorPalette = value;
+            }
             UpdateColorPalette();
         }
     }
@@ -36,11 +40,8 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void OnEnable()
     {
-        colorPalette = "grey";
-
         HardReloadArmor();
 
-        if (armorDataString == null || armorDataString == "")
         {
             tries = 0;
             StartCoroutine(ReloadArmor_Coroutine());
@@ -49,7 +50,6 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void Awake()
     {
-        colorPalette = "grey";
         playerArmorPieces.Clear(); playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
     }
 
@@ -58,7 +58,7 @@ public class PlayerArmorManager : MonoBehaviour
         //ReloadArmor();
     }
 
-    void HardReloadArmor()
+    public void HardReloadArmor()
     {
         try
         {
@@ -71,18 +71,16 @@ public class PlayerArmorManager : MonoBehaviour
                         armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
                         colorPalette = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette;
                     }
-                    else
-                    {
-                        //Debug.Log("PlayerArmorManager RID 0");
-                        armorDataString = "helmet1";
-                        colorPalette = "grey";
-                    }
                 }
                 else
                 {
-                    //Debug.Log("PlayerArmorManager NOT MINE");
-                    //Debug.Log(GameManager.instance.roomPlayerData[player.nickName].armorDataString);
-                    armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
+                    if (GameManager.instance.roomPlayerData.ContainsKey(player.nickName))
+                    {
+                        Debug.Log($"PlayerArmorManager NOT MINE");
+                        Debug.Log($"PlayerArmorManager NOT MINE + {GameManager.instance.roomPlayerData[player.nickName].armorDataString}");
+                        armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
+                        colorPalette = GameManager.instance.roomPlayerData[player.nickName].playerBasicOnlineStats.armor_color_palette;
+                    }
                 }
             }
             else // You are in the menu
@@ -126,8 +124,13 @@ public class PlayerArmorManager : MonoBehaviour
 
     void UpdateColorPalette()
     {
+        if (name.Contains("Ragdoll"))
+            return;
+
+        if (player.rid > 0)
+            return;
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
-        //Debug.Log(player.rid);
+        //Debug.Log(_tex.name);
 
         foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
             if (playerArmorPiece.canChangeColorPalette)
@@ -140,11 +143,11 @@ public class PlayerArmorManager : MonoBehaviour
 
     IEnumerator ReloadArmor_Coroutine()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.3f);
         HardReloadArmor();
         tries++;
 
-        if (tries < 10 && (armorDataString == null || armorDataString == ""))
+        if (tries < 10 /*&& (armorDataString == null || armorDataString == "")*/)
             StartCoroutine(ReloadArmor_Coroutine());
     }
 }

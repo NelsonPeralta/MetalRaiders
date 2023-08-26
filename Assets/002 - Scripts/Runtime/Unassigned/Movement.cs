@@ -87,7 +87,7 @@ public class Movement : MonoBehaviour, IMoveable
         }
     }
 
-    public float currentSpeed
+    public float currentWorldSpeed
     {
         get { return _currentSpeed; }
         private set
@@ -252,6 +252,8 @@ public class Movement : MonoBehaviour, IMoveable
     void Update()
     {
         if (!GameManager.instance.gameStarted) return;
+
+        CalculateCurrentSpeed();
         if (!_pController.PV.IsMine) return;
         if (_player.isDead || _player.isRespawning)
         {
@@ -264,7 +266,7 @@ public class Movement : MonoBehaviour, IMoveable
 
         CheckIfStuckInEdge();
 
-        CalculateCrouchSpeed(); CalculateSprintSpeed(); ManCannonJumpCooldwon(); CalculateCurrentSpeed();
+        CalculateCrouchSpeed(); CalculateSprintSpeed(); ManCannonJumpCooldwon(); /*CalculateCurrentSpeed();*/
 
         ApplyGravityOnGravityVector();
 
@@ -421,17 +423,17 @@ public class Movement : MonoBehaviour, IMoveable
         Vector3 curPos = transform.position; curPos.y = 0;
         Vector3 lasPos = _lastPos; lasPos.y = 0;
 
-        currentSpeed = ((curPos - lasPos).magnitude / Time.deltaTime);
-        currentSpeed = Mathf.Clamp(Mathf.Round(currentSpeed * 10f) / 10f, 0, _currentMaxSpeed);
+        currentWorldSpeed = ((curPos - lasPos).magnitude / Time.deltaTime);
+        currentWorldSpeed = Mathf.Clamp(Mathf.Round(currentWorldSpeed * 10f) / 10f, 0, defaultMaxSpeed);
         if (isGrounded)
-            _lastCalulatedGroundedSpeed = currentSpeed;
+            _lastCalulatedGroundedSpeed = currentWorldSpeed;
         _lastPos = transform.position;
         CalculateSpeedRatio();
     }
 
     void CalculateSpeedRatio()
     {
-        _speedRatio = Mathf.Clamp(Mathf.Round((currentSpeed / _currentMaxSpeed) * 10f) / 10f, 0, 1);
+        _speedRatio = Mathf.Clamp(Mathf.Round((currentWorldSpeed / _currentMaxSpeed) * 10f) / 10f, 0, 1);
         //if (_pController.pauseMenuOpen && isGrounded) _speedRatio = 1;
     }
 
