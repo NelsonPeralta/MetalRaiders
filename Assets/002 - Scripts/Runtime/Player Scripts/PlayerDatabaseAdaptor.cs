@@ -100,6 +100,11 @@ public class PlayerDatabaseAdaptor
         get { return playerBasicOnlineStats.credits; }
     }
 
+    public int honor {
+
+        set { _playerCommonData.honor = value; }
+        get { return playerBasicOnlineStats.honor; }
+    }
     public string armorDataString
     {
         set
@@ -122,6 +127,7 @@ public class PlayerDatabaseAdaptor
         get { return _playerCommonData; }
         set
         {
+            Debug.Log("PlayerCommonData");
             _playerCommonData = value;
 
             if (playerListItem)
@@ -138,18 +144,19 @@ public class PlayerDatabaseAdaptor
                 _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
                 playerListItem.secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
 
-                PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.xp, 0);
+                PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.xp, playerBasicOnlineStats.honor);
 
 
-                Debug.Log(rank.color);
+                Debug.Log(playerBasicOnlineStats.honor);
                 if (GameManager.colorDict.ContainsKey(rank.color))
                 {
                     Debug.Log($"{rank.spriteName}");
+                    Debug.Log(playerBasicOnlineStats.honor);
                     playerListItem.rankIm.enabled = true;
 
-                    Debug.Log(playerListItem.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
+                    Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
 
-                    playerListItem.rankIm.sprite = playerListItem.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
+                    playerListItem.rankIm.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
 
                     ColorUtility.TryParseHtmlString(GameManager.colorDict[rank.color], out _tCol);
                     playerListItem.rankIm.color = _tCol;
@@ -183,7 +190,7 @@ public class PlayerDatabaseAdaptor
     {
 
         int _id;
-        public int level, xp, credits;
+        public int level, xp, credits, honor;
         public string armor_data_string, unlocked_armor_data_string, armor_color_palette;
 
         public static PlayerCommonData CreateFromJSON(string jsonString)

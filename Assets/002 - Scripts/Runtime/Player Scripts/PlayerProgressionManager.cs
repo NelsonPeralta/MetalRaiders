@@ -5,9 +5,17 @@ using UnityEngine;
 public class PlayerProgressionManager : MonoBehaviour
 {
     public static PlayerProgressionManager instance;
+    public static int baseXpGainPerMatch
+    {
+        get
+        {
+            int r = UnityEngine.Random.Range(160, 240); // Reach Credits divided by 5
+            return r;
+        }
+    }
+    public List<Sprite> rankSprites { get { return _rankImages; } }
 
-
-
+    [SerializeField] List<Sprite> _rankImages;
 
     List<Rank> ranks = new List<Rank>();
 
@@ -24,8 +32,28 @@ public class PlayerProgressionManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             instance = this;
 
-            ranks.Add(new Rank(0, 0, "r", "Private", "invisible"));
-            ranks.Add(new Rank(100, 0, "pvt", "Private", "yellow"));
+            ranks.Add(new Rank(0, 0, "r", "Recruit", "invisible"));
+
+            ranks.Add(new Rank(playerLevelToXpDic[5], 5, "pvt", "Private", "brown"));
+            ranks.Add(new Rank(playerLevelToXpDic[10], 10, "cpl", "Corporal", "brown"));
+            ranks.Add(new Rank(playerLevelToXpDic[10], 15, "mcpl", "Master Corporal", "brown"));
+            ranks.Add(new Rank(playerLevelToXpDic[15], 20, "sgt", "Sergeant", "brown"));
+
+            ranks.Add(new Rank(playerLevelToXpDic[20], 30, "wo", "Warrant Officer", "black"));
+            ranks.Add(new Rank(playerLevelToXpDic[22], 40, "mwo", "Master Warrant Officer", "black"));
+            ranks.Add(new Rank(playerLevelToXpDic[25], 50, "cwo", "Chief Warrant Officer", "black"));
+
+            ranks.Add(new Rank(playerLevelToXpDic[30], 60, "2lt", "Second Lieutenant", "white"));
+            ranks.Add(new Rank(playerLevelToXpDic[32], 65, "lt", "Lieutenant", "white"));
+            ranks.Add(new Rank(playerLevelToXpDic[35], 75, "capt", "Captain", "white"));
+
+            ranks.Add(new Rank(playerLevelToXpDic[40], 100, "maj", "Major", "lightblue"));
+            ranks.Add(new Rank(playerLevelToXpDic[42], 125, "cmdt", "Commander", "lightblue"));
+            ranks.Add(new Rank(playerLevelToXpDic[45], 150, "col", "Colonel", "lightblue"));
+
+            ranks.Add(new Rank(playerLevelToXpDic[45], 200, "bg", "Brigadier", "yellow"));
+            ranks.Add(new Rank(playerLevelToXpDic[50], 250, "gen", "General", "yellow"));
+
         }
     }
 
@@ -41,6 +69,7 @@ public class PlayerProgressionManager : MonoBehaviour
         Rank r = instance.ranks[0];
         foreach (Rank rank in instance.ranks)
         {
+            Debug.Log($"Rank search: {xp} {h} \n {rank.xpRequired} {rank.honorRequired}");
             if (xp >= rank.xpRequired && h >= rank.honorRequired)
                 r = rank;
             else

@@ -29,10 +29,8 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         get { return _rankIm; }
         set { _rankIm = value; }
     }
-    public List<Sprite> rankSprites { get { return _rankImages; } }
 
     [SerializeField] Image _mainBg, _secBg, _rankIm;
-    [SerializeField] List<Sprite> _rankImages;
 
     PlayerDatabaseAdaptor _pda;
 

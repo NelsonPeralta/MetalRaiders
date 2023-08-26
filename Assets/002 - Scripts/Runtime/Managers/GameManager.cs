@@ -26,16 +26,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     // https://stackoverflow.com/questions/150479/order-of-items-in-classes-fields-properties-constructors-methods
 
-    public static int baseXpGainPerMatch
-    {
-        get
-        {
-            int r = UnityEngine.Random.Range(160, 240); // Reach Credits divided by 5
-            return r;
-        }
-    }
-
-
     // Events
     public delegate void GameManagerEvent();
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
@@ -318,13 +308,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        colorDict.Add("red", "#FF0000");
-        colorDict.Add("lightred", "#ffcccb");
-        colorDict.Add("darkred", "#8B0000");
+        colorDict.Add("white", "#FFFFFF");
+        colorDict.Add("grey", "#B3B3B3");
+        colorDict.Add("black", "#333333");
+
+        colorDict.Add("red", "#FF3939");
+        colorDict.Add("lightred", "#FF7C7C");
+        colorDict.Add("darkred", "#FF0000");
 
         colorDict.Add("blue", "#00B0FF");
-        colorDict.Add("lightblue", "#0080ff");
-        colorDict.Add("darkblue", "#00008B");
+        colorDict.Add("lightblue", "#77D5FF");
+        colorDict.Add("darkblue", "#0080ff");
 
         colorDict.Add("yellow", "#FFFB00");
 

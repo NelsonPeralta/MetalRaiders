@@ -2,17 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using System.Linq;
 
 public class ServiceRecordMenu : MonoBehaviour
 {
     public TMP_Text levelText;
     public TMP_Text xpText;
     public TMP_Text creditsText;
+    [SerializeField] TMP_Text _honorText;
+    [SerializeField] TMP_Text _rankCleanNameText;
 
     public TMP_Text multiplayerStatsText;
     public TMP_Text swarmStatsText;
 
+    [SerializeField] Image _rankImage;
+
     public GameObject playerModel;
+
+
+
+
+    Color _tCol;
+
 
     private void OnEnable()
     {
@@ -32,12 +44,32 @@ public class ServiceRecordMenu : MonoBehaviour
         levelText.text = $"Level: {pda.level.ToString()}";
         xpText.text = $"Xp: {pda.xp.ToString()}";
         creditsText.text = $"Credits: {pda.credits.ToString()}";
+        _honorText.text = $"Honor: {pda.honor.ToString()}";
 
         int xpNeeded = 0;
         if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.level + 1)) xpNeeded = PlayerProgressionManager.playerLevelToXpDic[pda.level + 1];
 
         if (xpNeeded > 0) xpText.text += $" / {xpNeeded}";
+
+
+
+        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.xp, pda.honor);
+        _rankCleanNameText.text = $"Rank: {rank.cleanName}";
+
+        Debug.Log(rank.cleanName);
+        if (GameManager.colorDict.ContainsKey(rank.color))
+        {
+            _rankImage.enabled = true;
+
+            Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
+
+            _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
+
+            ColorUtility.TryParseHtmlString(GameManager.colorDict[rank.color], out _tCol);
+            _rankImage.color = _tCol;
+        }
     }
+
 
     private void OnDisable()
     {

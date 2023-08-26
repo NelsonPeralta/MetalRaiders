@@ -174,7 +174,7 @@ public partial class WebManager
 
     IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null)
     {
-        int xpAndCreditGain = GameManager.baseXpGainPerMatch;
+        int xpAndCreditGain = PlayerProgressionManager.baseXpGainPerMatch;
 
         var date = DateTime.Now;
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
