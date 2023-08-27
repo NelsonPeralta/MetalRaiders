@@ -127,6 +127,17 @@ public class PlayerArmorManager : MonoBehaviour
             return;
 
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
+
+
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            {
+                string c = ((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[player.nickName]).ToString().ToLower();
+                _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{c}")).SingleOrDefault();
+            }
+        }
+
         //Debug.Log(_tex.name);
 
         foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
