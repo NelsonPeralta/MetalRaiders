@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 FindObjectOfType<Launcher>().levelToLoadIndex = 5;
 
 
-
+                //teamDict = new Dictionary<string, int>();
                 gameType = GameType.Slayer;
                 teamMode = TeamMode.None;
             }
@@ -248,6 +248,14 @@ public class GameManager : MonoBehaviourPunCallbacks
                     FindObjectOfType<Launcher>().teamText.text = $"Team: ({_onlineTeam.ToString()})";
             }
             catch { }
+
+            if(value == PlayerMultiplayerMatchStats.Team.None)
+            {
+                foreach (Transform child in Launcher.instance.playerListContent)
+                {
+                    child.GetComponent<PlayerListItem>().UpdateColorPalette();
+                }
+            }
         }
     }
 
@@ -261,7 +269,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _teamDict; }
         set
         {
+            Debug.Log("teamDict");
             _teamDict = value;
+            foreach (Transform child in Launcher.instance.playerListContent)
+            {
+                child.GetComponent<PlayerListItem>().UpdateColorPalette();
+            }
 
             if (_teamDict.ContainsKey(rootPlayerNickname))
             {
@@ -270,18 +283,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-                foreach (Transform child in Launcher.instance.playerListContent)
-                    Destroy(child.gameObject);
+                //    Destroy(child.gameObject);
 
-                Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
-                for (int i = 1; i < PhotonNetwork.CurrentRoom.PlayerCount + 1; i++)
-                {
-                    string n = PhotonNetwork.CurrentRoom.Players[i].NickName;
-                    Debug.Log(n);
+                //Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+                //for (int i = 1; i < PhotonNetwork.CurrentRoom.PlayerCount + 1; i++)
+                //{
+                //    string n = PhotonNetwork.CurrentRoom.Players[i].NickName;
+                //    Debug.Log(n);
 
-                    GameObject plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
-                    plt.GetComponent<PlayerListItem>().SetUp($"{n} ({(PlayerMultiplayerMatchStats.Team)(_teamDict[n])})");
-                }
+                //    GameObject plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
+                //    plt.GetComponent<PlayerListItem>().SetUp($"{n} ({(PlayerMultiplayerMatchStats.Team)(_teamDict[n])})");
+                //}
             }
             else
             {

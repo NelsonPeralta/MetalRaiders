@@ -64,7 +64,7 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
                 for (int j = 1; j < CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[players[i].NickName]; j++)
                 {
                     GameObject _plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
-                    _plt.GetComponent<PlayerListItem>().SetUp(players[i].NickName + $" ({j})");
+                    _plt.GetComponent<PlayerListItem>().SetUp(players[i].NickName + $" ({j})"); // DEPRECATED
                 }
         }
     }

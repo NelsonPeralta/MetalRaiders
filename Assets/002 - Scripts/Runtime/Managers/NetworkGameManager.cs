@@ -126,6 +126,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
+            Debug.Log("SendNewTeamDict");
             try
             {
                 GameManager.instance.teamDict = d;
