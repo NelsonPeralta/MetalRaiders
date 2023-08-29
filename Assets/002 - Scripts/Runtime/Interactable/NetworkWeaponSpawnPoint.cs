@@ -185,17 +185,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
             {
-                foreach (string weaponCode in powerWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "sniper";
-
-                foreach (string weaponCode in lightWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "sniper";
-
-                foreach (string weaponCode in heavyWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "sniper";
+                codeName = "sniper";
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Rockets")))
             {
@@ -213,17 +203,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Shotguns")))
             {
-                foreach (string weaponCode in lightWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "shotgun";
-
-                foreach (string weaponCode in powerWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "shotgun";
-
-                foreach (string weaponCode in heavyWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "shotgun";
+                codeName = "shotgun";
             }
 
         if ((GameManager.instance.gameType.ToString().Contains("Fiesta")) || GameManager.instance.gameType == GameManager.GameType.GunGame)
