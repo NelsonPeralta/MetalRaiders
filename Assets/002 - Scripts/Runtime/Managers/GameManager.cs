@@ -343,11 +343,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         colorDict.Add("lightblue", "#77D5FF");
         colorDict.Add("darkblue", "#0080ff");
 
-        colorDict.Add("yellow", "#FFFB00");
+        colorDict.Add("yellow", "#ABA80E");
 
         colorDict.Add("green", "#08c50f");
 
-        colorDict.Add("purple", "#ff00ff");
+        colorDict.Add("purple", "#A6327E");
 
         colorDict.Add("orange", "#ff8000");
 
