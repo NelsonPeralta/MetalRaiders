@@ -491,6 +491,8 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    public PlayerArmorManager playerArmorManager { get { return _playerArmorManager; } }    
+
     #endregion
 
     // serialized variables

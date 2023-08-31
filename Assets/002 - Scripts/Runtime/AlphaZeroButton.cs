@@ -16,7 +16,7 @@ public class AlphaZeroButton : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            GameObject rag = Instantiate(GameManager.GetRootPlayer().thirdPersonModels, position: new Vector3(0, 0, 0), Quaternion.identity, null);
+            GameObject rag = Instantiate(GameManager.GetRootPlayer().playerArmorManager.gameObject, position: new Vector3(0, 0, 0), Quaternion.identity, null);
 
             var components = rag.GetComponents<Component>().Concat(rag.GetComponentsInChildren<Component>()).ToArray();
             foreach (var t in components)
@@ -25,12 +25,6 @@ public class AlphaZeroButton : MonoBehaviour
                     t is UnityEngine.ProBuilder.ProBuilderMesh)
                     continue;
                 Destroy(t);
-
-                try
-                {
-                    t.GetComponent<Renderer>().material.SetTexture("_MainTex", t.GetComponent<Renderer>().material.mainTexture);
-                }
-                catch { }
             }
         }
     }
