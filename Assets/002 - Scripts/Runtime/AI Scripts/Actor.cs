@@ -370,6 +370,7 @@ abstract public class Actor : MonoBehaviour
             try
             {
                 pp.GetComponent<PlayerSwarmMatchStats>().kills++;
+                pp.playerMedals.kills++;
                 //pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
 
                 //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);

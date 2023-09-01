@@ -49,6 +49,18 @@ public class KillFeedManager : MonoBehaviour
 
     public void EnterNewFeed(string feed)
     {
+        Debug.Log("EnterNewFeed");
+        int numChild = gridLayout.transform.childCount;
+        Debug.Log(numChild);
+        while (numChild > 3)
+        {
+            numChild--;
+            Destroy(gridLayout.transform.GetChild(numChild).gameObject);
+            Debug.Log(numChild);
+        }
+
+
+
         try { StartCoroutine(SpawnNewFeed_Coroutine(feed)); } catch { }
     }
 

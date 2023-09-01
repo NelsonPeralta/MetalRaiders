@@ -492,6 +492,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
 
     public PlayerArmorManager playerArmorManager { get { return _playerArmorManager; } }    
+    public PlayerThirdPersonModel playerThirdPersonModel { get { return _playerThirdPersonModel; } }
 
     #endregion
 
@@ -517,6 +518,7 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] int _pushForce = 7;
     [SerializeField] Announcer _announcer;
     [SerializeField] PlayerArmorManager _playerArmorManager;
+    [SerializeField] PlayerThirdPersonModel _playerThirdPersonModel;
     #endregion
 
 
@@ -605,6 +607,7 @@ public class Player : MonoBehaviourPunCallbacks
     public Transform weaponDropPoint;
 
     [SerializeField] GameObject headhunterSkullPrefab;
+    
 
     private void Awake()
     {

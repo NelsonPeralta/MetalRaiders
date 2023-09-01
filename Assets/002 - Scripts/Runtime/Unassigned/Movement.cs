@@ -707,7 +707,7 @@ public class Movement : MonoBehaviour, IMoveable
                         if (!_pController.isReloading && !_pController.isDrawingWeapon && !_pController.isThrowingGrenade &&
                             !_pController.isMeleeing && !_pController.isFiring)
                         {
-                            Debug.Log("Here");
+                            
                             _pController.weaponAnimator.speed = animationSpeed;
                             if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
                                 _pController.weaponAnimator.speed = 1;

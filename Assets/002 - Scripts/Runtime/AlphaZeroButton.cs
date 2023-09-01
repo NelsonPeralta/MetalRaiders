@@ -14,9 +14,10 @@ public class AlphaZeroButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        return;
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            GameObject rag = Instantiate(GameManager.GetRootPlayer().playerArmorManager.gameObject, position: new Vector3(0, 0, 0), Quaternion.identity, null);
+            GameObject rag = Instantiate(GameManager.GetRootPlayer().playerThirdPersonModel.gameObject, position: new Vector3(0, 0, 0), Quaternion.identity, null);
 
             var components = rag.GetComponents<Component>().Concat(rag.GetComponentsInChildren<Component>()).ToArray();
             foreach (var t in components)

@@ -9,20 +9,45 @@ public class PlayerMedals : MonoBehaviour
     public int spree { get { return _spree; } }
     public int kills
     {
-        get { return _shortKillSpree; }
+        get { return shortKillSpree; }
         set
         {
             _spree++;
-            _shortKillSpree = value;
+            shortKillSpree = value;
             _spreeTtl = 4;
 
-            if (_shortKillSpree == 2)
-                SpawnDoubleKillMedal();
-            if (_shortKillSpree == 3)
-                SpawnTripleKillMedal();
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                _spreeTtl = 2;
 
-            if (_spree == 5)
-                SpawnKillingSpreeMedal();
+            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            {
+
+                if (shortKillSpree == 2)
+                    SpawnDoubleKillMedal();
+                if (shortKillSpree == 3)
+                    SpawnTripleKillMedal();
+
+                if (_spree == 5)
+                    SpawnKillingSpreeMedal();
+            }
+        }
+    }
+
+    int shortKillSpree
+    {
+        get { return _shortKillSpree; }
+        set
+        {
+            int _preVal = _shortKillSpree;
+            _shortKillSpree = value;
+
+            if (value == 0 && GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            {
+                if (_preVal == 2)
+                    SpawnDoubleKillMedal();
+                else if (_preVal == 3)
+                    SpawnTripleKillMedal();
+            }
         }
     }
 
@@ -54,7 +79,7 @@ public class PlayerMedals : MonoBehaviour
         player.OnPlayerRespawned += OnPlayerRespawn_Delegate;
 
         announcer = player.allPlayerScripts.announcer;
-        if(!player.isMine)
+        if (!player.isMine)
             announcer.gameObject.SetActive(false);
     }
 
@@ -65,7 +90,7 @@ public class PlayerMedals : MonoBehaviour
             _spreeTtl -= Time.deltaTime;
 
             if (_spreeTtl <= 0)
-                _shortKillSpree = 0;
+                shortKillSpree = 0;
         }
     }
 
@@ -164,6 +189,6 @@ public class PlayerMedals : MonoBehaviour
     void OnPlayerRespawn_Delegate(Player player)
     {
         _spree = 0;
-        _shortKillSpree = 0;
+        shortKillSpree = 0;
     }
 }
