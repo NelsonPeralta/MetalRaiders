@@ -100,13 +100,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             _gameMode = value;
             Debug.Log($"Game Mode: {gameMode}");
 
-
-            if (CurrentRoomManager.instance.roomType != CurrentRoomManager.RoomType.QuickMatch)
-                FindObjectOfType<Launcher>().gameModeBtns.SetActive(PhotonNetwork.IsMasterClient);
-            else
-                FindObjectOfType<Launcher>().gameModeBtns.SetActive(false);
-
-
             if (_gameMode == GameMode.Swarm)
             {
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
@@ -133,6 +126,16 @@ public class GameManager : MonoBehaviourPunCallbacks
                 teamMode = TeamMode.None;
             }
             Launcher.instance.gameModeText.text = $"Game Mode: {_gameMode}";
+
+            if (CurrentRoomManager.instance.roomType != CurrentRoomManager.RoomType.QuickMatch)
+                FindObjectOfType<Launcher>().gameModeBtns.SetActive(PhotonNetwork.IsMasterClient);
+            else
+            {
+                Launcher.instance.multiplayerMcComponentsHolder.SetActive(false);
+                FindObjectOfType<Launcher>().gameModeBtns.SetActive(false);
+                FindObjectOfType<Launcher>().swarmModeBtns.SetActive(false);
+                FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
+            }
         }
     }
     public GameType gameType
@@ -249,7 +252,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             catch { }
 
-            if(value == PlayerMultiplayerMatchStats.Team.None)
+            if (value == PlayerMultiplayerMatchStats.Team.None)
             {
                 foreach (Transform child in Launcher.instance.playerListContent)
                 {
@@ -343,6 +346,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         colorDict.Add("lightblue", "#77D5FF");
         colorDict.Add("darkblue", "#0080ff");
 
+        colorDict.Add("lightyellow", "#FFFF00");
         colorDict.Add("yellow", "#ABA80E");
 
         colorDict.Add("green", "#08c50f");

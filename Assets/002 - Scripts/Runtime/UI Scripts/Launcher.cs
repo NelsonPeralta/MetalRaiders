@@ -56,6 +56,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text _teamText;
     [SerializeField] GameObject _teamModeBtns;
     [SerializeField] GameObject _swarmDifficultyBtns;
+    [SerializeField] GameObject _vetoBtn;
+    [SerializeField] TMP_Text _matchStartCountdownText;
 
     [SerializeField] TMP_InputField _loginUsernameText;
     [SerializeField] TMP_InputField registerUsernameText;
@@ -100,8 +102,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public GameObject swarmModeBtns { get { return _swarmDifficultyBtns; } }
     public GameObject multiplayerMcComponentsHolder { get { return _multiplayerMcComponentsHolder; } }
     public GameObject swarmMcComponentsHolder { get { return _swarmMcComponentsHolder; } }
-
-
+    public TMP_Text gameCountdownText { get { return _matchStartCountdownText; } }
+    public GameObject vetoBtn { get { return _vetoBtn; } }
 
     List<Photon.Realtime.Player> _previousListOfPlayersInRoom = new List<Photon.Realtime.Player>();
 
@@ -319,6 +321,14 @@ public class Launcher : MonoBehaviourPunCallbacks
             if (PhotonNetwork.CurrentRoom.Name != quickMatchRoomName)
             {
                 roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
+                _vetoBtn.SetActive(false);
+                _matchStartCountdownText.gameObject.SetActive(false);
+            }
+            else
+            {
+                CurrentRoomManager.instance.ResetRoomCountdowns();
+                _vetoBtn.SetActive(true);
+                _matchStartCountdownText.gameObject.SetActive(true);
             }
 
 
@@ -696,6 +706,12 @@ public class Launcher : MonoBehaviourPunCallbacks
                 }
             }
         }
+    }
+
+    public void SendVetoToMaster()
+    {
+        NetworkGameManager.instance.SendVetoToMaster(GameManager.instance.nbLocalPlayersPreset);
+        _vetoBtn.SetActive(false);
     }
 
     public void ChangeSwarmDifficulty(int enumI)

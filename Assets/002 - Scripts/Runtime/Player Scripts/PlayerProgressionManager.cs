@@ -76,8 +76,8 @@ public class PlayerProgressionManager : MonoBehaviour
             ranks.Add(new Rank(playerLevelToXpDic[42], 125, "cmdt", "Commander", "lightblue"));
             ranks.Add(new Rank(playerLevelToXpDic[45], 150, "col", "Colonel", "lightblue"));
 
-            ranks.Add(new Rank(playerLevelToXpDic[45], 200, "bg", "Brigadier", "yellow"));
-            ranks.Add(new Rank(playerLevelToXpDic[50], 250, "gen", "General", "yellow"));
+            ranks.Add(new Rank(playerLevelToXpDic[45], 200, "bg", "Brigadier", "lightyellow"));
+            ranks.Add(new Rank(playerLevelToXpDic[50], 250, "gen", "General", "lightyellow"));
 
         }
     }

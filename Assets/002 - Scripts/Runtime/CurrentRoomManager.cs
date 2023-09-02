@@ -46,7 +46,10 @@ public class CurrentRoomManager : MonoBehaviour
                 c += items.Value;
             }
             expectedNbPlayers = c;
-            _roomGameStartCountdown = 3;
+
+            if (_vetoCountdown > 0) // Make sure this variable if greater than 0 by default
+                _vetoCountdown = 9;
+            _roomGameStartCountdown = 9;
 
             if (expectedNbPlayers > 1 && !_randomQuickMatchSeetingsChosen)
             {
@@ -213,15 +216,27 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    public int vetos
+    {
+        get { return _vetos; }
+        set
+        {
+            _vetos = value;
 
+            if (_vetos > _expectedNbPlayers * 0.5f && PhotonNetwork.IsMasterClient)
+            {
+                ChooseRandomMatchSettingsForQuickMatch();
+            }
+        }
+    }
 
 
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
     [SerializeField] bool _gameStart, _gameStarted, _gameOver;
-    [SerializeField] float _gameStartCountdown, _roomGameStartCountdown;
+    [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9;
 
-    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _nbPlayersJoined;
+    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _nbPlayersJoined, _vetos;
 
     [SerializeField] RoomType _roomType;
 
@@ -229,7 +244,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     Dictionary<string, int> _playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
-    bool _reachedHalwayGameStartCountdown, _randomQuickMatchSeetingsChosen;
+    [SerializeField] bool _reachedHalwayGameStartCountdown, _randomQuickMatchSeetingsChosen;
 
 
 
@@ -240,6 +255,8 @@ public class CurrentRoomManager : MonoBehaviour
 
     void Awake()
     {
+        _vetoCountdown = 9;
+
         if (_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
@@ -252,6 +269,10 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        _vetoCountdown = 9;
+    }
 
     private void Update()
     {
@@ -266,13 +287,32 @@ public class CurrentRoomManager : MonoBehaviour
                 gameStarted = true;
         }
 
-        if (_randomQuickMatchSeetingsChosen && _roomGameStartCountdown > 0)
-        {
-            _roomGameStartCountdown -= Time.deltaTime;
 
-            if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
-                if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
-                    Launcher.instance.StartGame();
+        if (PhotonNetwork.InRoom)
+        {
+            if (_randomQuickMatchSeetingsChosen && _vetoCountdown > 0)
+            {
+                _vetoCountdown -= Time.deltaTime;
+
+                Launcher.instance.gameCountdownText.text = $"VETO COUNTDOWN: {((int)_vetoCountdown)} seconds\nVetos: {instance.vetos} out of {instance.expectedNbPlayers}";
+
+                if (_vetoCountdown <= 0)
+                    Launcher.instance.vetoBtn.SetActive(false);
+            }
+
+
+
+
+            if (_randomQuickMatchSeetingsChosen && _roomGameStartCountdown > 0 && _vetoCountdown <= 0)
+            {
+                _roomGameStartCountdown -= Time.deltaTime;
+
+                Launcher.instance.gameCountdownText.text = $"Game Starts in: {((int)_roomGameStartCountdown)}";
+
+                if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
+                        Launcher.instance.StartGame();
+            }
         }
     }
 
@@ -311,54 +351,71 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void ChooseRandomMatchSettingsForQuickMatch()
     {
-        var ran = Random.Range(0, 100);
+        Debug.Log("ChooseRandomMatchSettingsForQuickMatch");
+        var ran = Random.Range(0, 5);
 
-        if (ran <= 25)
-            GameManager.instance.gameType = GameManager.GameType.Slayer;
-        else if (ran <= 60)
-            GameManager.instance.gameType = GameManager.GameType.Pro;
-        else if (ran <= 70)
-            GameManager.instance.gameType = GameManager.GameType.Swat;
-        else if (ran <= 80)
-            GameManager.instance.gameType = GameManager.GameType.Hill;
-        else if (ran <= 90)
-            GameManager.instance.gameType = GameManager.GameType.Retro;
-        else if (ran <= 100)
-            GameManager.instance.gameType = GameManager.GameType.Snipers;
+        if (ran > 1) // PvP
+        {
+            ran = Random.Range(0, 100);
+
+            if (ran <= 25)
+                GameManager.instance.gameType = GameManager.GameType.Slayer;
+            else if (ran <= 60)
+                GameManager.instance.gameType = GameManager.GameType.Pro;
+            else if (ran <= 70)
+                GameManager.instance.gameType = GameManager.GameType.Swat;
+            else if (ran <= 80)
+                GameManager.instance.gameType = GameManager.GameType.Hill;
+            else if (ran <= 90)
+                GameManager.instance.gameType = GameManager.GameType.Retro;
+            else if (ran <= 100)
+                GameManager.instance.gameType = GameManager.GameType.Snipers;
 
 
 
 
 
-        ran = Random.Range(0, 100);
+            ran = Random.Range(0, 100);
 
-        if (ran <= 10)
-            Launcher.instance.ChangeLevelToLoadWithIndex(5);// Cargo
-        else if (ran <= 20)
-            Launcher.instance.ChangeLevelToLoadWithIndex(6);// Oasis
-        else if (ran <= 30)
-            Launcher.instance.ChangeLevelToLoadWithIndex(7);// Showdown
-        else if (ran <= 40)
-            Launcher.instance.ChangeLevelToLoadWithIndex(8);// Babylon
-        else if (ran <= 50)
-            Launcher.instance.ChangeLevelToLoadWithIndex(9);// Starship
-        else if (ran <= 60)
-            Launcher.instance.ChangeLevelToLoadWithIndex(10);// Temple
-        else if (ran <= 70)
-            Launcher.instance.ChangeLevelToLoadWithIndex(11);// Blizzard
-        else if (ran <= 80)
-            Launcher.instance.ChangeLevelToLoadWithIndex(12);// Factory
-        else if (ran <= 90)
-            Launcher.instance.ChangeLevelToLoadWithIndex(17);// Parasite
-        else if (ran <= 100)
-            Launcher.instance.ChangeLevelToLoadWithIndex(18);// Shaman
+            if (ran <= 10)
+                Launcher.instance.ChangeLevelToLoadWithIndex(5);// Cargo
+            else if (ran <= 20)
+                Launcher.instance.ChangeLevelToLoadWithIndex(6);// Oasis
+            else if (ran <= 30)
+                Launcher.instance.ChangeLevelToLoadWithIndex(7);// Showdown
+            else if (ran <= 40)
+                Launcher.instance.ChangeLevelToLoadWithIndex(8);// Babylon
+            else if (ran <= 50)
+                Launcher.instance.ChangeLevelToLoadWithIndex(9);// Starship
+            else if (ran <= 60)
+                Launcher.instance.ChangeLevelToLoadWithIndex(10);// Temple
+            else if (ran <= 70)
+                Launcher.instance.ChangeLevelToLoadWithIndex(11);// Blizzard
+            else if (ran <= 80)
+                Launcher.instance.ChangeLevelToLoadWithIndex(12);// Factory
+            else if (ran <= 90)
+                Launcher.instance.ChangeLevelToLoadWithIndex(17);// Parasite
+            else if (ran <= 100)
+                Launcher.instance.ChangeLevelToLoadWithIndex(18);// Shaman
+
+        }
+        else // PvE
+        {
+            GameManager.instance.gameMode = GameManager.GameMode.Swarm;
+            GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
+        }
+
 
 
         _randomQuickMatchSeetingsChosen = true;
 
 
         FindObjectOfType<NetworkGameManager>().SendGameParams();
+    }
 
-
+    public void ResetRoomCountdowns()
+    {
+        _vetoCountdown = 9;
+        _gameStartCountdown = 9;
     }
 }

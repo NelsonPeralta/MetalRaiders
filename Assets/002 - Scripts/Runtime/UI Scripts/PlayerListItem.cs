@@ -53,24 +53,35 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
+            try
+            {
+                Debug.Log(((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower());
+                Debug.Log(GameManager.colorDict[GameManager.instance.roomPlayerData[playerText.text].playerBasicOnlineStats.armor_color_palette]);
+            }
+            catch { }
 
-            Debug.Log(((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower());
-            Debug.Log(GameManager.colorDict[GameManager.instance.roomPlayerData[playerText.text].playerBasicOnlineStats.armor_color_palette]);
-
-            ColorUtility.TryParseHtmlString(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()], out _tCol);
-            mainBg.color = _tCol;
-            secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
+            try
+            {
+                ColorUtility.TryParseHtmlString(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()], out _tCol);
+                mainBg.color = _tCol;
+                secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
+            }
+            catch { }
             //WebManager.webManagerInstance.SetPlayerListItemInRoom(, this);
         }
         else
         {
             if (GameManager.instance.roomPlayerData.ContainsKey(playerText.text))
             {
-                ColorUtility.TryParseHtmlString(GameManager.colorDict[GameManager.instance.roomPlayerData[playerText.text].playerBasicOnlineStats.armor_color_palette], out _tCol);
-                mainBg.color = _tCol;
+                try
+                {
+                    ColorUtility.TryParseHtmlString(GameManager.colorDict[GameManager.instance.roomPlayerData[playerText.text].playerBasicOnlineStats.armor_color_palette], out _tCol);
+                    mainBg.color = _tCol;
 
-                _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
-                secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
+                    _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
+                    secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
+                }
+                catch { }
             }
         }
     }

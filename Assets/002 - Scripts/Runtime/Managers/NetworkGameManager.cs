@@ -671,10 +671,34 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void SendVetoToMaster(int nbVetos, bool caller = true)
+    {
+        if (caller)
+        {
+            _pv.RPC("SendVetoToMaster", RpcTarget.MasterClient, nbVetos, false);
+        }
+        else if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log($"Received: {nbVetos} vetoes");
+            CurrentRoomManager.instance.vetos += nbVetos;
 
+            SendVetoToClients();
+        }
+    }
 
-
-
+    [PunRPC]
+    public void SendVetoToClients(int nbVetos = 0, bool caller = true)
+    {
+        if (caller)
+        {
+            _pv.RPC("SendVetoToClients", RpcTarget.All, CurrentRoomManager.instance.vetos, false);
+        }
+        else if (!PhotonNetwork.IsMasterClient)
+        {
+            CurrentRoomManager.instance.vetos = nbVetos;
+        }
+    }
 
 
     IEnumerator StartOverShieldRespawn_Coroutine(int t)
