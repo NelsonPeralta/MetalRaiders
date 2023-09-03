@@ -62,21 +62,51 @@ public class ArmorPieceListing : MonoBehaviour
                 return;
             }
 
+            if (playerArmorPiece.minLvl > 0 || playerArmorPiece.minHonor > 0)
+            {
+                Debug.Log(pda.playerBasicOnlineStats.credits);
+                Debug.Log(playerArmorPiece.cost);
+                Debug.Log(pda.level);
+                Debug.Log(playerArmorPiece.minLvl);
+                Debug.Log(pda.honor);
+                Debug.Log(playerArmorPiece.minHonor);
+
+                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost)
+                    Debug.Log("Here1");
+                if (pda.level >= playerArmorPiece.minLvl)
+                    Debug.Log("Here2");
+                if (pda.honor >= playerArmorPiece.minHonor)
+                    Debug.Log("Her3");
+
+                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost &&
+                    (pda.level >= playerArmorPiece.minLvl && pda.honor >= playerArmorPiece.minHonor))
+                    Debug.Log("Her4");
+            }
 
             if (playerArmorPiece.cost > 0)
-                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost && pda.level >= playerArmorPiece.minimumLevel)
+                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost &&
+                    (pda.level >= playerArmorPiece.minLvl && pda.honor >= playerArmorPiece.minHonor))
                 {
                     buyButton.gameObject.SetActive(true);
                     buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
+                    Debug.Log("Her5");
                 }
                 else
                 {
+                    Debug.Log("Her6");
                     buyButton.gameObject.SetActive(false);
                     equipButton.gameObject.SetActive(false);
 
 
                     notEnoughCreditsButton.gameObject.SetActive(true);
                     notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
+
+                    if (pda.honor < playerArmorPiece.minLvl)
+                        notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"lvl {playerArmorPiece.minLvl}";
+
+                    if (pda.honor < playerArmorPiece.minHonor)
+                        notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.minHonor}hr";
+
                 }
 
         }
@@ -107,14 +137,15 @@ public class ArmorPieceListing : MonoBehaviour
                 {
                     if (WebManager.webManagerInstance.pda.unlockedArmorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
                     {
-                        Debug.Log($"asdfrhjfghjyhetywrtyert");
+                        Debug.Log($"Replacing string");
                         Debug.Log(armorPieceListing.playerArmorPiece.entity);
 
                         armorPieceListing.model.gameObject.SetActive(false);
                         armorPieceListing.equipButton.gameObject.SetActive(true);
                         armorPieceListing.unequipButton.gameObject.SetActive(false);
 
-                        newData = WebManager.webManagerInstance.pda.armorDataString.Replace($"{armorPieceListing.playerArmorPiece.entity}", "");
+                        newData = newData.Replace($"{armorPieceListing.playerArmorPiece.entity}", "");
+                        Debug.Log(newData);
                     }
                 }
 

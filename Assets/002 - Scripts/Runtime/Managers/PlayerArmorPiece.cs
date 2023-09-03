@@ -52,10 +52,11 @@ public class PlayerArmorPiece : MonoBehaviour
 
 
 
-    public int minimumLevel { get { return _minimumLevel; } }
+    public int minLvl { get { return _minimumLevel; } }
+    public int minHonor { get { return _minHonor; } }
     public bool hideFromArmory { get { return _hideFromArmory; } }
     public bool canChangeColorPalette { get { return _canChangeColorPalette; } }
 
-    [SerializeField] int _minimumLevel;
+    [SerializeField] int _minimumLevel, _minHonor;
     [SerializeField] bool _hideFromArmory, _canChangeColorPalette;
 }

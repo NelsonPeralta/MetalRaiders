@@ -89,6 +89,24 @@ public class PlayerDatabaseAdaptor
         get { return _playerCommonData.level; }
     }
 
+    public string rank
+    {
+        get
+        {
+            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.xp, playerBasicOnlineStats.honor);
+            return rank.spriteName;
+        }
+    }
+
+    public string cleanRank
+    {
+        get
+        {
+            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.xp, playerBasicOnlineStats.honor);
+            return rank.cleanName;
+        }
+    }
+
     public int xp
     {
         get { return _playerCommonData.xp; }
@@ -100,7 +118,8 @@ public class PlayerDatabaseAdaptor
         get { return playerBasicOnlineStats.credits; }
     }
 
-    public int honor {
+    public int honor
+    {
 
         set { _playerCommonData.honor = value; }
         get { return playerBasicOnlineStats.honor; }

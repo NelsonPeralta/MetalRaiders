@@ -130,11 +130,16 @@ public partial class WebManager
         int newLevel = pda.playerBasicOnlineStats.level;
         int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
         int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
+        int dbXpToLevel = 0;
 
-        int dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
+        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
+        {
+            dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
 
-        if (dbXpToLevel < newXp)
-            newLevel = pda.playerBasicOnlineStats.level + 1;
+            if (dbXpToLevel < newXp)
+                newLevel = pda.playerBasicOnlineStats.level + 1;
+        }
+
 
 
         WWWForm form = new WWWForm();

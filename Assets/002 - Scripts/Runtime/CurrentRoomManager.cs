@@ -51,7 +51,7 @@ public class CurrentRoomManager : MonoBehaviour
                 _vetoCountdown = 9;
             _roomGameStartCountdown = 9;
 
-            if (expectedNbPlayers > 1 && !_randomQuickMatchSeetingsChosen)
+            if (expectedNbPlayers > 0 && !_randomQuickMatchSeetingsChosen)
             {
                 if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
                     ChooseRandomMatchSettingsForQuickMatch();
@@ -223,10 +223,6 @@ public class CurrentRoomManager : MonoBehaviour
         {
             _vetos = value;
 
-            if (_vetos > _expectedNbPlayers * 0.5f && PhotonNetwork.IsMasterClient)
-            {
-                ChooseRandomMatchSettingsForQuickMatch();
-            }
         }
     }
 
@@ -297,7 +293,12 @@ public class CurrentRoomManager : MonoBehaviour
                 Launcher.instance.gameCountdownText.text = $"VETO COUNTDOWN: {((int)_vetoCountdown)} seconds\nVetos: {instance.vetos} out of {instance.expectedNbPlayers}";
 
                 if (_vetoCountdown <= 0)
+                {
                     Launcher.instance.vetoBtn.SetActive(false);
+
+                    if (_vetos > _expectedNbPlayers * 0.5f && PhotonNetwork.IsMasterClient)
+                        ChooseRandomMatchSettingsForQuickMatch();
+                }
             }
 
 
@@ -356,6 +357,8 @@ public class CurrentRoomManager : MonoBehaviour
 
         if (ran > 1) // PvP
         {
+            GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+
             ran = Random.Range(0, 100);
 
             if (ran <= 25)
