@@ -297,7 +297,11 @@ public class CurrentRoomManager : MonoBehaviour
                     Launcher.instance.vetoBtn.SetActive(false);
 
                     if (_vetos > _expectedNbPlayers * 0.5f && PhotonNetwork.IsMasterClient)
+                    {
+                        _vetoedMapIndex = Launcher.instance.levelToLoadIndex;
+                        _vetoedGameType = GameManager.instance.gameType;
                         ChooseRandomMatchSettingsForQuickMatch();
+                    }
                 }
             }
 
@@ -336,6 +340,8 @@ public class CurrentRoomManager : MonoBehaviour
                 _reachedHalwayGameStartCountdown = _randomQuickMatchSeetingsChosen = false;
             _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = 0;
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
+
+            _vetoedGameType = GameManager.GameType.Unassgined; _vetoedMapIndex = 0;
         }
         else
         {
@@ -350,62 +356,49 @@ public class CurrentRoomManager : MonoBehaviour
     }
 
 
+
+    [SerializeField] GameManager.GameType _vetoedGameType;
+    [SerializeField] int _ran, _vetoedMapIndex;
+
     public void ChooseRandomMatchSettingsForQuickMatch()
     {
         Debug.Log("ChooseRandomMatchSettingsForQuickMatch");
-        var ran = Random.Range(0, 5);
+        _ran = Random.Range(0, 5);
 
-        if (ran > 1) // PvP
+        if (_ran > 1) // PvP
         {
             GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 
-            ran = Random.Range(0, 100);
+            ChooseRandomPvPGameType();
 
-            if (ran <= 25)
-                GameManager.instance.gameType = GameManager.GameType.Slayer;
-            else if (ran <= 60)
-                GameManager.instance.gameType = GameManager.GameType.Pro;
-            else if (ran <= 70)
-                GameManager.instance.gameType = GameManager.GameType.Swat;
-            else if (ran <= 80)
-                GameManager.instance.gameType = GameManager.GameType.Hill;
-            else if (ran <= 90)
-                GameManager.instance.gameType = GameManager.GameType.Retro;
-            else if (ran <= 100)
-                GameManager.instance.gameType = GameManager.GameType.Snipers;
+            if (_vetoedGameType != GameManager.GameType.Unassgined)
+                while (_vetoedGameType == GameManager.instance.gameType)
+                {
+                    ChooseRandomPvPGameType();
+                }
 
 
 
+            ChooseRandomPvPMap();
 
-
-            ran = Random.Range(0, 100);
-
-            if (ran <= 10)
-                Launcher.instance.ChangeLevelToLoadWithIndex(5);// Cargo
-            else if (ran <= 20)
-                Launcher.instance.ChangeLevelToLoadWithIndex(6);// Oasis
-            else if (ran <= 30)
-                Launcher.instance.ChangeLevelToLoadWithIndex(7);// Showdown
-            else if (ran <= 40)
-                Launcher.instance.ChangeLevelToLoadWithIndex(8);// Babylon
-            else if (ran <= 50)
-                Launcher.instance.ChangeLevelToLoadWithIndex(9);// Starship
-            else if (ran <= 60)
-                Launcher.instance.ChangeLevelToLoadWithIndex(10);// Temple
-            else if (ran <= 70)
-                Launcher.instance.ChangeLevelToLoadWithIndex(11);// Blizzard
-            else if (ran <= 80)
-                Launcher.instance.ChangeLevelToLoadWithIndex(12);// Factory
-            else if (ran <= 90)
-                Launcher.instance.ChangeLevelToLoadWithIndex(17);// Parasite
-            else if (ran <= 100)
-                Launcher.instance.ChangeLevelToLoadWithIndex(18);// Shaman
+            if (_vetoedMapIndex != 0)
+                while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
+                {
+                    ChooseRandomPvPGameType();
+                }
 
         }
         else // PvE
         {
             GameManager.instance.gameMode = GameManager.GameMode.Swarm;
             GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
+
+            ChooseRandomPvEMap();
+            if (_vetoedMapIndex != 0)
+                while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
+                {
+                    ChooseRandomPvEMap();
+                }
         }
 
 
@@ -414,6 +407,60 @@ public class CurrentRoomManager : MonoBehaviour
 
 
         FindObjectOfType<NetworkGameManager>().SendGameParams();
+    }
+
+    void ChooseRandomPvPGameType()
+    {
+        _ran = Random.Range(0, 100);
+
+        if (_ran <= 25)
+            GameManager.instance.gameType = GameManager.GameType.Slayer;
+        else if (_ran <= 60)
+            GameManager.instance.gameType = GameManager.GameType.Pro;
+        else if (_ran <= 70)
+            GameManager.instance.gameType = GameManager.GameType.Swat;
+        else if (_ran <= 80)
+            GameManager.instance.gameType = GameManager.GameType.Hill;
+        else if (_ran <= 90)
+            GameManager.instance.gameType = GameManager.GameType.Retro;
+        else if (_ran <= 100)
+            GameManager.instance.gameType = GameManager.GameType.Snipers;
+    }
+
+    void ChooseRandomPvPMap()
+    {
+        _ran = Random.Range(0, 100);
+
+        if (_ran <= 10)
+            Launcher.instance.ChangeLevelToLoadWithIndex(5);// Cargo
+        else if (_ran <= 20)
+            Launcher.instance.ChangeLevelToLoadWithIndex(6);// Oasis
+        else if (_ran <= 30)
+            Launcher.instance.ChangeLevelToLoadWithIndex(7);// Showdown
+        else if (_ran <= 40)
+            Launcher.instance.ChangeLevelToLoadWithIndex(8);// Babylon
+        else if (_ran <= 50)
+            Launcher.instance.ChangeLevelToLoadWithIndex(9);// Starship
+        else if (_ran <= 60)
+            Launcher.instance.ChangeLevelToLoadWithIndex(10);// Temple
+        else if (_ran <= 70)
+            Launcher.instance.ChangeLevelToLoadWithIndex(11);// Blizzard
+        else if (_ran <= 80)
+            Launcher.instance.ChangeLevelToLoadWithIndex(12);// Factory
+        else if (_ran <= 90)
+            Launcher.instance.ChangeLevelToLoadWithIndex(17);// Parasite
+        else if (_ran <= 100)
+            Launcher.instance.ChangeLevelToLoadWithIndex(18);// Shaman
+    }
+
+    void ChooseRandomPvEMap()
+    {
+        _ran = Random.Range(0, 2);
+
+        if (_ran <= 1)
+            Launcher.instance.ChangeLevelToLoadWithIndex(14);// Downpoor
+        else if (_ran <= 2)
+            Launcher.instance.ChangeLevelToLoadWithIndex(15);// Haunted
     }
 
     public void ResetRoomCountdowns()
