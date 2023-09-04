@@ -251,12 +251,21 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public void Start()
     {
+        Debug.Log("PlayerInventory Start");
         foreach (GameObject wp in allWeaponsInInventory)
         {
-            _weaponCodeNameDict.Add(wp.GetComponent<WeaponProperties>().codeName, wp.GetComponent<WeaponProperties>());
-            _weaponCleanNameDict.Add(wp.GetComponent<WeaponProperties>().cleanName, wp.GetComponent<WeaponProperties>());
+            try
+            {
+                _weaponCodeNameDict.Add(wp.GetComponent<WeaponProperties>().codeName, wp.GetComponent<WeaponProperties>());
+                _weaponCleanNameDict.Add(wp.GetComponent<WeaponProperties>().cleanName, wp.GetComponent<WeaponProperties>());
+            }
+            catch
+            {
+                Debug.LogError("YOU HAVE 2 GUNS WITH THE SAME CODENAME. THIS MAY STOP THE FOLLOWING CODE");
+            }
         }
 
+        Debug.Log("PlayerInventory Start 2");
 
         //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
         OnActiveWeaponChanged += aimAssistCone.OnActiveWeaponChanged;
@@ -503,6 +512,7 @@ public class PlayerInventory : MonoBehaviourPun
             Debug.Log(StartingWeapon);
         }
 
+        Debug.Log(GetWeaponProperties(StartingWeapon));
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
 
@@ -550,6 +560,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void AssignRandomWeapons()
     {
+        Debug.Log("AssignRandomWeapons");
         var random = new System.Random();
         int ind = random.Next(allWeaponsInInventory.Length);
         StartingWeapon = allWeaponsInInventory[ind].GetComponent<WeaponProperties>().codeName;
@@ -558,6 +569,9 @@ public class PlayerInventory : MonoBehaviourPun
         while (ind2 == ind) { ind2 = random.Next(allWeaponsInInventory.Length); }
 
         StartingWeapon2 = allWeaponsInInventory[ind2].GetComponent<WeaponProperties>().codeName;
+
+        Debug.Log(allWeaponsInInventory[ind].GetComponent<WeaponProperties>().codeName);
+        Debug.Log(allWeaponsInInventory[ind2].GetComponent<WeaponProperties>().codeName);
     }
     void UpdateDualWieldedWeaponAmmo()
     {
