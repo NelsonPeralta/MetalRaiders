@@ -32,7 +32,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             mapSelectedText.text = $"Map: {Launcher.NameFromIndex(_levelToLoadIndex).Replace("PVP - ", "")}";
         }
     }
-    int _levelToLoadIndex;
+    [SerializeField] int _levelToLoadIndex;
     [SerializeField] int testingRoomLevelIndex;
     public int waitingRoomLevelIndex;
     #endregion

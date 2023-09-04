@@ -26,12 +26,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/004 - Scenes/Placeholders/Placeholder 2.unity
     guid: 4a42e724317d1a644a7d544d54a68683
-  - enabled: 1
+  - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Cargo.unity
     guid: 987b1a0f2fdaece46b8d2f4459e4ee2d
   - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Lighthouse.unity
     guid: 38cf578bd469df6449ce6788067dd73f
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Nova.unity
+    guid: b4802909db501a143a6f78077850f0a7
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Oasis.unity
     guid: dbcf95cb10f4af34186b9d0e5b64a468
@@ -95,4 +98,25 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/020 - Staging/Movement/Staging.unity
     guid: 60d40d7a2cba4244abf6b4581463aecc
+  - enabled: 1
+    path: Assets/Project/External/UI - Modern_GUI_Skin/Demo_Assets/Demo.unity
+    guid: 13070929f2d2dc3468bb951653444db6
+  - enabled: 1
+    path: Assets/Scene.unity
+    guid: 7abaf621ae176d04eb513451ac08c2f5
+  - enabled: 1
+    path: Assets/Resources/SCI-FI UI Pack_Components v1/Scenes/Demo V1.unity
+    guid: aa1037c4de98cc144b3b51074b7e3010
+  - enabled: 1
+    path: Assets/Project/External/Artemis Space Ranks/Scenes/Demo.unity
+    guid: b0449b7497fef5e4bb6e76996f80e67f
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Power.unity
+    guid: ddac0b19f3f858346aa6097f6c23afab
+  - enabled: 1
+    path: Assets/LowPolyWater_Pack/_Demo/DemoScene.unity
+    guid: 5af012a8b7991a84fb99a854db8dfc21
+  - enabled: 1
+    path: Assets/Project/External/Polygon Assets/PolygonMilitary/Scenes/Demo_01.unity
+    guid: 93195e8f68a149f49a51512a91091643
   m_configObjects: {}
