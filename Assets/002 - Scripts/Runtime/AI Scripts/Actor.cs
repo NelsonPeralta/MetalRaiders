@@ -297,7 +297,7 @@ abstract public class Actor : MonoBehaviour
 
                 GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
                 NetworkGameManager.SpawnNetworkWeapon(weapInv[randomWeaponInd].GetComponent<WeaponProperties>(),
-                spp, fDir, currAmmo: (int)(wp.ammoCapacity * ranAmmoFactor), spareAmmo: (int)(wp.maxAmmo * ranCapFactor));
+                spp, fDir, currAmmo: (int)(wp.ammoCapacity * ranAmmoFactor), spareAmmo: (int)(wp.maxSpareAmmo * ranCapFactor));
             }
             catch { }
         }

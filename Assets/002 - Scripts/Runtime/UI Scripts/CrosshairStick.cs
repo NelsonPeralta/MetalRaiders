@@ -7,6 +7,8 @@ public class CrosshairStick : MonoBehaviour
     public enum BloomBehaviour { position, scale }
     public enum BloomDirection { left, right, up, down, lu, ru, ld, rd, t1, t2 }
 
+    public WeaponProperties weaponProperties { get { return _weaponProperties; } set { _weaponProperties = value; } }
+
     [SerializeField] WeaponProperties _weaponProperties;
     [SerializeField] BloomBehaviour _bloomBehaviour;
     [SerializeField] BloomDirection _bloomDirection;

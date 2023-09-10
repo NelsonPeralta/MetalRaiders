@@ -19,8 +19,8 @@ public class PlayerGunGameManager : MonoBehaviour
             WeaponProperties _preActiveWeapon = playerInventory.activeWeapon;
 
             playerInventory.activeWeapon = _gunIndex[_index];
-            playerInventory.activeWeapon.currentAmmo = playerInventory.activeWeapon.ammoCapacity;
-            playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxAmmo;
+            playerInventory.activeWeapon.loadedAmmo = playerInventory.activeWeapon.ammoCapacity;
+            playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxSpareAmmo;
 
 
 

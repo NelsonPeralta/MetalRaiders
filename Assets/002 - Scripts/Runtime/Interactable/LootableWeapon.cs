@@ -78,6 +78,8 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             //GetComponent<PhotonView>().RPC("UpdateData", RpcTarget.All, param);
         }
     }
+
+    public float ttl { set { _ttl = value; } }
     public int defaultAmmo { get { return _defaultAmmo; } }
     public int defaultSpareAmmo { get { return _defaultSpareAmmo; } }
 
@@ -127,10 +129,14 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     {
         if (!networkWeaponSpawnPoint)
         {
-            _ttl -= Time.deltaTime;
+            if (_ttl > 0 && _ttl < 999)
+            {
 
-            if (_ttl <= 0)
-                Destroy(gameObject);
+                _ttl -= Time.deltaTime;
+
+                if (_ttl <= 0)
+                    Destroy(gameObject);
+            }
         }
     }
 
@@ -156,8 +162,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         if (playerInventory.holsteredWeapon.codeName == codeName)
             w = playerInventory.holsteredWeapon;
 
-        int ammoNeeded = w.maxAmmo - w.spareAmmo;
+        int ammoNeeded = w.maxSpareAmmo - w.spareAmmo;
         int ammoAvailable = (localAmmo + spareAmmo);
+        int totalAmmoAvailable = _ammo + _spareAmmo;
 
         if (ammoNeeded <= 0)
             return;
@@ -167,22 +174,22 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         if (ammoNeeded >= ammoAvailable)
             ammoToLoot = ammoAvailable;
 
-        foreach (GameObject wp in playerInventory.allWeaponsInInventory)
-            if (wp.GetComponent<WeaponProperties>().codeName == codeName)
-            {
-                int pre = wp.GetComponent<WeaponProperties>().spareAmmo;
-                int newVal = wp.GetComponent<WeaponProperties>().spareAmmo + ammoToLoot;
 
-                wp.GetComponent<WeaponProperties>().spareAmmo += ammoToLoot;
+        int diff = w.spareAmmo - ammoToLoot;
 
-                if (newVal > pre)
-                {
-                    int diff = newVal - pre;
-                    playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({diff})");
-                }
-            }
 
-        if (ammoNeeded >= ammoAvailable)
+        if (w.GetComponent<WeaponProperties>().injectLootedAmmo)
+        {
+            ammoToLoot = diff = w.ammoCapacity - w.loadedAmmo;
+            w.loadedAmmo += ammoToLoot;
+        }
+        else
+        {
+            w.spareAmmo += ammoToLoot;
+        }
+        playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({diff})");
+
+        if (ammoNeeded >= ammoAvailable || w.injectLootedAmmo)
             HideWeapon();
         else
         {

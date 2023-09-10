@@ -319,7 +319,7 @@ public class PlayerUI : MonoBehaviour
 
     void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
     {
-        activeAmmoText.text = playerInventory.activeWeapon.currentAmmo.ToString();
+        activeAmmoText.text = playerInventory.activeWeapon.loadedAmmo.ToString();
         spareAmmoText.text = playerInventory.activeWeapon.spareAmmo.ToString();
 
         try { activeWeaponIcon.sprite = playerInventory.activeWeapon.weaponIcon; } catch { activeWeaponIcon.sprite = null; }

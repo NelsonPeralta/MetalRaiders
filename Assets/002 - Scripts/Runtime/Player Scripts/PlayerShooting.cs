@@ -132,7 +132,7 @@ public class PlayerShooting : MonoBehaviourPun
     {
         for (int i = 0; i < 3; i++)
         {
-            if (activeWeapon.currentAmmo > 0)
+            if (activeWeapon.loadedAmmo > 0)
                 StartCoroutine(ShootBurst_Coroutine(defaultBurstInterval * i));
         }
     }
@@ -155,7 +155,7 @@ public class PlayerShooting : MonoBehaviourPun
         if (isLeftWeapon)
             activeWeapon = pInventory.activeWeapon.leftWeapon;
 
-        if (activeWeapon.currentAmmo <= 0 || playerController.isReloading)
+        if (activeWeapon.loadedAmmo <= 0 || playerController.isReloading)
             return;
 
         shoooo(isLeftWeapon);
@@ -312,7 +312,7 @@ public class PlayerShooting : MonoBehaviourPun
             _ignoreShootCounter++;
 
         if (PV.IsMine)
-            activeWeapon.currentAmmo -= 1;
+            activeWeapon.loadedAmmo -= 1;
 
         try
         {

@@ -64,7 +64,15 @@ public class CurrentRoomManager : MonoBehaviour
     /// <summary>
     /// Step 1: Caluclate expected Map Add-Ons
     /// </summary>
-    int expectedMapAddOns { get { return _expectedMapAddOns; } set { _expectedMapAddOns = value; } }
+    int expectedMapAddOns
+    {
+        get { return _expectedMapAddOns; }
+        set
+        {
+            _expectedMapAddOns = value;
+            Debug.Log(expectedMapAddOns);
+        }
+    }
 
     /// <summary>
     /// Step 2: Wait for spawned items to tell this when they are spawned. When all add-ons are spawned, tell GameManager to spawn local players
@@ -76,6 +84,7 @@ public class CurrentRoomManager : MonoBehaviour
         {
             int _preVal = _spawnedMapAddOns;
             _spawnedMapAddOns = value;
+            Debug.Log($"spawnedMapAddOns: {value}");
 
             if (_spawnedMapAddOns == expectedMapAddOns)
             {
@@ -333,6 +342,8 @@ public class CurrentRoomManager : MonoBehaviour
         gameStarted = false;
         _reachedHalwayGameStartCountdown = false;
 
+        _expectedMapAddOns = 0;
+
         if (scene.buildIndex == 0)
         {
 
@@ -346,7 +357,16 @@ public class CurrentRoomManager : MonoBehaviour
         else
         {
             expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length
-                + FindObjectsOfType<NetworkWeaponSpawnPoint>().Length + FindObjectsOfType<Hazard>().Length;
+                + FindObjectsOfType<Hazard>().Length;
+            Debug.Log(expectedMapAddOns);
+
+
+            foreach (NetworkWeaponSpawnPoint nwsp in FindObjectsOfType<NetworkWeaponSpawnPoint>())
+                if (nwsp.transform.root.GetComponent<Player>() == null)
+                {
+                    Debug.Log(nwsp.name);
+                    expectedMapAddOns += 1;
+                }
         }
     }
 

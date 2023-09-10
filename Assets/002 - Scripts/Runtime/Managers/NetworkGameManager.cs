@@ -255,7 +255,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         GameObject[] allWeap = weap.player.playerInventory.allWeaponsInInventory;
         int firstWeapIndex = Array.IndexOf(allWeap, weap.gameObject);
-        int firstWeapCurrAmmo = weap.currentAmmo; int firstWeapSpareAmmo = weap.spareAmmo;
+        int firstWeapCurrAmmo = weap.loadedAmmo; int firstWeapSpareAmmo = weap.spareAmmo;
 
         if (currAmmo != null) firstWeapCurrAmmo = (int)currAmmo;
         if (spareAmmo != null) firstWeapSpareAmmo = (int)spareAmmo;
@@ -272,7 +272,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         int firstWeapIndex = Array.IndexOf(allWeap, firstWeapon.gameObject);
         int secondtWeapIndex = Array.IndexOf(allWeap, secondWeapon.gameObject);
 
-        int firstWeapCurrAmmo = firstWeapon.currentAmmo; int secondWeapCurrAmmo = secondWeapon.currentAmmo;
+        int firstWeapCurrAmmo = firstWeapon.loadedAmmo; int secondWeapCurrAmmo = secondWeapon.loadedAmmo;
         int firstWeapSpareAmmo = firstWeapon.spareAmmo; int secondWeapSpareAmmo = secondWeapon.spareAmmo;
 
         Debug.Log(firstWeapIndex); Debug.Log(secondtWeapIndex);

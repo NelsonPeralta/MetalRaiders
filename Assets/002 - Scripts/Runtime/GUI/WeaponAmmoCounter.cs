@@ -37,7 +37,7 @@ public class WeaponAmmoCounter : MonoBehaviour
         {
             try
             {
-                _tmp.text = _weaponProperties.currentAmmo.ToString();
+                _tmp.text = _weaponProperties.loadedAmmo.ToString();
             }
             catch
             {

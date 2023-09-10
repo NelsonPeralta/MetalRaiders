@@ -259,7 +259,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     if (w.GetComponent<WeaponProperties>().codeName == closestLootableWeapon.GetComponent<LootableWeapon>().codeName)
                     {
                         pInventory.leftWeapon = w.GetComponent<WeaponProperties>().leftWeapon;
-                        pInventory.leftWeapon.currentAmmo = closestLootableWeapon.networkAmmo;
+                        pInventory.leftWeapon.loadedAmmo = closestLootableWeapon.networkAmmo;
                         pInventory.leftWeapon.spareAmmo = closestLootableWeapon.spareAmmo;
                     }
             }
@@ -273,7 +273,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     OnWeaponPickup?.Invoke(this);
 
                     pInventory.hasSecWeap = true;
-                    pInventory.activeWeapon.GetComponent<WeaponProperties>().currentAmmo = closestLootableWeapon.networkAmmo;
+                    pInventory.activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = closestLootableWeapon.networkAmmo;
                     pInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestLootableWeapon.spareAmmo;
 
                     pInventory.PlayDrawSound();
@@ -358,7 +358,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         //newActiveWeapon.currentAmmo = lw.ammoInThisWeapon;
 
         pInventory.activeWeapon = newActiveWeapon;
-        pInventory.activeWeapon.currentAmmo = weaponToLoot.networkAmmo;
+        pInventory.activeWeapon.loadedAmmo = weaponToLoot.networkAmmo;
         pInventory.activeWeapon.spareAmmo = weaponToLoot.spareAmmo;
         pInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up a {pInventory.activeWeapon.cleanName}");
         //pInventory.holsteredWeapon = previousActiveWeapon;
@@ -391,7 +391,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         pInventory.activeWeapIs = 1;
         pInventory.hasSecWeap = true;
 
-        weaponCollidingWithInInventory.GetComponent<WeaponProperties>().currentAmmo = lws.networkAmmo;
+        weaponCollidingWithInInventory.GetComponent<WeaponProperties>().loadedAmmo = lws.networkAmmo;
         //pickupExtraAmmoFromWeapon(closestLootableWeapon);
 
         //Debug.Log("Replace Weapon 1");
@@ -425,7 +425,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             LootableWeapon weaponScript = weapon.GetComponent<LootableWeapon>();
 
             //pickupExtraAmmoFromWeapon(weaponScript);
-            int ammoAllowedToRemoveFromWeapon = pInventory.activeWeapon.maxAmmo - pInventory.activeWeapon.spareAmmo;
+            int ammoAllowedToRemoveFromWeapon = pInventory.activeWeapon.maxSpareAmmo - pInventory.activeWeapon.spareAmmo;
 
             if (weaponScript.networkAmmo <= ammoAllowedToRemoveFromWeapon)
             {

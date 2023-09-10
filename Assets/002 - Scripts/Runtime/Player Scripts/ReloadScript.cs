@@ -190,7 +190,7 @@ public class ReloadScript : MonoBehaviourPun
         if (wp)
             activeWeapon = wp;
 
-        if (activeWeapon.currentAmmo < activeWeapon.ammoCapacity && activeWeapon.spareAmmo > 0)
+        if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity && activeWeapon.spareAmmo > 0)
         {
             ReloadAnimation(isOutOfAmmo, activeWeapon);
         }
@@ -238,7 +238,7 @@ public class ReloadScript : MonoBehaviourPun
 
         if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
-            int ammoNeededToReload = pController.pInventory.activeWeapon.ammoCapacity - pController.pInventory.activeWeapon.currentAmmo;
+            int ammoNeededToReload = pController.pInventory.activeWeapon.ammoCapacity - pController.pInventory.activeWeapon.loadedAmmo;
             int ammoToReload = 0;
 
             if (ammoNeededToReload > pController.pInventory.activeWeapon.spareAmmo)

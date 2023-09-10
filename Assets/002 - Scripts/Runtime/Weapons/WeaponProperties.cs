@@ -50,6 +50,7 @@ public class WeaponProperties : MonoBehaviour
     [SerializeField] int _maxAmmo;
     public int ammoCapacity;
     public float bulletSpray;
+    public bool injectLootedAmmo;
 
     [Header("Range")]
     public bool fakeRRR;
@@ -115,7 +116,7 @@ public class WeaponProperties : MonoBehaviour
     public int degradingDamageStart, degradedDamage;
 
 
-    public int currentAmmo
+    public int loadedAmmo
     {
         get { return _currentAmmo; }
         set
@@ -126,11 +127,11 @@ public class WeaponProperties : MonoBehaviour
             {
                 OnCurrentAmmoChanged?.Invoke(this);
                 if (this == player.playerInventory.activeWeapon)
-                    pController.GetComponent<PlayerUI>().activeAmmoText.text = currentAmmo.ToString();
+                    pController.GetComponent<PlayerUI>().activeAmmoText.text = loadedAmmo.ToString();
             }
             else if (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon == this)
             {
-                player.GetComponent<PlayerUI>().leftActiveAmmoText.text = currentAmmo.ToString();
+                player.GetComponent<PlayerUI>().leftActiveAmmoText.text = loadedAmmo.ToString();
                 player.GetComponent<PlayerUI>().leftSpareAmmoText.text = spareAmmo.ToString();
             }
 
@@ -165,7 +166,7 @@ public class WeaponProperties : MonoBehaviour
         }
     }
 
-    public int maxAmmo
+    public int maxSpareAmmo
     {
         get { return _maxAmmo; }
         set { _maxAmmo = value; }
@@ -173,7 +174,7 @@ public class WeaponProperties : MonoBehaviour
 
     public bool isOutOfAmmo
     {
-        get { return currentAmmo <= 0; }
+        get { return loadedAmmo <= 0; }
     }
 
     public float aimAssistRadius
@@ -212,6 +213,14 @@ public class WeaponProperties : MonoBehaviour
 
         pController.OnControllerTypeChangedToController += OnControllerTypeChanged;
         pController.OnControllerTypeChangedToMouseAndKeyboard += OnControllerTypeChanged;
+
+
+        try
+        {
+            foreach (CrosshairStick cs in crosshair.GetComponentsInChildren<CrosshairStick>())
+                cs.weaponProperties = this;
+        }
+        catch { }
     }
 
     private void Update()
@@ -433,8 +442,8 @@ public class WeaponPropertiesEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Info", EditorStyles.boldLabel);
-        wp.codeName = EditorGUILayout.TextField("Code Name:", wp.codeName);
         wp.cleanName = EditorGUILayout.TextField("Clean Name:", wp.cleanName);
+        wp.codeName = EditorGUILayout.TextField("Code Name:", wp.codeName);
         wp.fireRate = EditorGUILayout.IntField("Fire Rate:", wp.fireRate);
         wp.weaponType = (WeaponProperties.WeaponType)EditorGUILayout.EnumPopup("Weapon Type", wp.weaponType);
         wp.firingMode = (WeaponProperties.FiringMode)EditorGUILayout.EnumPopup("Firing mode", wp.firingMode);
@@ -451,10 +460,16 @@ public class WeaponPropertiesEditor : Editor
         wp.ammoType = (WeaponProperties.AmmoType)EditorGUILayout.EnumPopup("Ammo type", wp.ammoType);
         wp.ammoReloadType = (WeaponProperties.AmmoReloadType)EditorGUILayout.EnumPopup("Ammo reload type", wp.ammoReloadType);
         wp.ammoProjectileType = (WeaponProperties.AmmoProjectileType)EditorGUILayout.EnumPopup("Ammo projectile type", wp.ammoProjectileType);
-        wp.currentAmmo = EditorGUILayout.IntField("Ammo:", wp.currentAmmo);
-        wp.spareAmmo = EditorGUILayout.IntField("Spare Ammo:", wp.spareAmmo);
-        wp.maxAmmo = EditorGUILayout.IntField("Max Ammo:", wp.maxAmmo);
+        wp.loadedAmmo = EditorGUILayout.IntField("Loaded Ammo:", wp.loadedAmmo);
         wp.ammoCapacity = EditorGUILayout.IntField("Ammo Capacity:", wp.ammoCapacity);
+
+        wp.injectLootedAmmo = GUILayout.Toggle(wp.injectLootedAmmo, "Inject Looted Ammo");
+
+        if (!wp.injectLootedAmmo)
+        {
+            wp.spareAmmo = EditorGUILayout.IntField("Spare Ammo:", wp.spareAmmo);
+            wp.maxSpareAmmo = EditorGUILayout.IntField("Max Spare Ammo:", wp.maxSpareAmmo);
+        }
         wp.damage = EditorGUILayout.IntField("Bullet damage:", wp.damage);
         if (wp.bulletSize <= 0) wp.bulletSize = 1;
         wp.bulletSize = EditorGUILayout.IntField("Bullet size:", wp.bulletSize);

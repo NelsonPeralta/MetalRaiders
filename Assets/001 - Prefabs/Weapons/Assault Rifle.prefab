@@ -20248,37 +20248,9 @@ MonoBehaviour:
   m_Mesh: {fileID: 0}
   m_VersionIndex: 4473
   m_IsSelectable: 1
-  m_SelectedFaces: a8010000a90100002f0000002e000000
-  m_SelectedEdges:
-  - a: 1557
-    b: 1558
-  - a: 1558
-    b: 1556
-  - a: 1556
-    b: 1559
-  - a: 1559
-    b: 1557
-  - a: 1561
-    b: 1562
-  - a: 1562
-    b: 1560
-  - a: 1560
-    b: 1563
-  - a: 1563
-    b: 1561
-  - a: 1553
-    b: 1554
-  - a: 1554
-    b: 1555
-  - a: 1555
-    b: 1553
-  - a: 1550
-    b: 1551
-  - a: 1551
-    b: 1552
-  - a: 1552
-    b: 1550
-  m_SelectedVertices: 1406000015060000160600001706000018060000190600001a0600001b0600001106000012060000130600000e0600000f06000010060000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!1 &8041669930544550083
 GameObject:
   m_ObjectHideFlags: 0
@@ -20354,8 +20326,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4294956407
+  m_fontColor: {r: 0.46666667, g: 0.8352941, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

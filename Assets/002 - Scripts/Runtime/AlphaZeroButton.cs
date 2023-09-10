@@ -14,9 +14,19 @@ public class AlphaZeroButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        return;
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
+
+            //Debug.Log(GameManager.GetRootPlayer().playerThirdPersonModel.transform.GetChild(1).name);
+           // GameManager.SetupMaterialWithBlendMode(GameManager.GetRootPlayer().playerThirdPersonModel.transform.GetChild(1).GetComponent<Renderer>().material, GameManager.MaterialBlendMode.Transparent, true);
+           // GameObject ar = GameManager.GetRootPlayer().playerThirdPersonModel.transform.GetChild(1).gameObject;
+
+           //ar.GetComponent<Renderer>().material.color = new Color(ar.GetComponent<Renderer>().material.color.r, 
+           //    ar.GetComponent<Renderer>().material.color.g, ar.GetComponent<Renderer>().material.color.b, 0.1f);
+
+
+
+            return;
             GameObject rag = Instantiate(GameManager.GetRootPlayer().playerThirdPersonModel.gameObject, position: new Vector3(0, 0, 0), Quaternion.identity, null);
 
             var components = rag.GetComponents<Component>().Concat(rag.GetComponentsInChildren<Component>()).ToArray();

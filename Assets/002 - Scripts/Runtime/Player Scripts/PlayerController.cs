@@ -702,7 +702,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if (pInventory.activeWeapon)
             {
-                if (pInventory.activeWeapon.currentAmmo <= 0)
+                if (pInventory.activeWeapon.loadedAmmo <= 0)
                 {
                     rScript.CheckAmmoTypeType(true);
                 }
@@ -714,7 +714,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isDualWielding)
         {
-            if (pInventory.activeWeapon.currentAmmo <= 0)
+            if (pInventory.activeWeapon.loadedAmmo <= 0)
             {
                 rScript.CheckAmmoTypeType(true);
 
@@ -1117,35 +1117,35 @@ public class PlayerController : MonoBehaviourPun
         if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
             pInventory.activeWeapon.spareAmmo -= 1;
-            pInventory.activeWeapon.currentAmmo += 1;
+            pInventory.activeWeapon.loadedAmmo += 1;
         }
         else
         {
-            ammoWeaponIsMissing = pInventory.activeWeapon.ammoCapacity - pInventory.activeWeapon.currentAmmo;
+            ammoWeaponIsMissing = pInventory.activeWeapon.ammoCapacity - pInventory.activeWeapon.loadedAmmo;
 
             if (pInventory.activeWeapon.spareAmmo >= ammoWeaponIsMissing)
             {
-                pInventory.activeWeapon.currentAmmo = pInventory.activeWeapon.ammoCapacity;
+                pInventory.activeWeapon.loadedAmmo = pInventory.activeWeapon.ammoCapacity;
                 pInventory.activeWeapon.spareAmmo -= ammoWeaponIsMissing;
             }
             else if (pInventory.activeWeapon.spareAmmo < ammoWeaponIsMissing)
             {
-                pInventory.activeWeapon.currentAmmo += pInventory.activeWeapon.spareAmmo;
+                pInventory.activeWeapon.loadedAmmo += pInventory.activeWeapon.spareAmmo;
                 pInventory.activeWeapon.spareAmmo = 0;
             }
 
             if (pInventory.leftWeapon)
             {
-                ammoWeaponIsMissing = pInventory.leftWeapon.ammoCapacity - pInventory.leftWeapon.currentAmmo;
+                ammoWeaponIsMissing = pInventory.leftWeapon.ammoCapacity - pInventory.leftWeapon.loadedAmmo;
 
                 if (pInventory.leftWeapon.spareAmmo >= ammoWeaponIsMissing)
                 {
-                    pInventory.leftWeapon.currentAmmo = pInventory.leftWeapon.ammoCapacity;
+                    pInventory.leftWeapon.loadedAmmo = pInventory.leftWeapon.ammoCapacity;
                     pInventory.leftWeapon.spareAmmo -= ammoWeaponIsMissing;
                 }
                 else if (pInventory.leftWeapon.spareAmmo < ammoWeaponIsMissing)
                 {
-                    pInventory.leftWeapon.currentAmmo += pInventory.leftWeapon.spareAmmo;
+                    pInventory.leftWeapon.loadedAmmo += pInventory.leftWeapon.spareAmmo;
                     pInventory.leftWeapon.spareAmmo = 0;
                 }
             }

@@ -118,7 +118,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                 PlayerUI pui = player.GetComponent<PlayerUI>();
                 pui.leftWeaponUiHolder.SetActive(true);
-                pui.leftActiveAmmoText.text = value.currentAmmo.ToString();
+                pui.leftActiveAmmoText.text = value.loadedAmmo.ToString();
                 pui.leftSpareAmmoText.text = value.spareAmmo.ToString();
                 pui.leftWeaponIcon.sprite = value.weaponIcon;
             }
@@ -319,12 +319,12 @@ public class PlayerInventory : MonoBehaviourPun
         lowAmmoIndicator.SetActive(false);
         noAmmoIndicator.SetActive(false);
 
-        if (activeWeapon.currentAmmo < activeWeapon.ammoCapacity * 0.4f)
+        if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
         {
             lowAmmoIndicator.SetActive(true);
             noAmmoIndicator.SetActive(false);
         }
-        if (activeWeapon.currentAmmo == 0 && activeWeapon.spareAmmo == 0)
+        if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
         {
             lowAmmoIndicator.SetActive(false);
             noAmmoIndicator.SetActive(true);
@@ -420,7 +420,7 @@ public class PlayerInventory : MonoBehaviourPun
                     if (actWeap) // activeWeapon
                     {
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
-                        _activeWeapon.currentAmmo = _activeWeapon.ammoCapacity;
+                        _activeWeapon.loadedAmmo = _activeWeapon.ammoCapacity;
                         pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
 
                         _activeWeapon.gameObject.SetActive(true);
@@ -457,8 +457,8 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType.ToString().Contains("Slayer") || GameManager.instance.gameType == GameManager.GameType.Survival)
         {
-            StartingWeapon = "p90";
-            StartingWeapon2 = "m1911";
+            StartingWeapon = "smg";
+            StartingWeapon2 = "pistol";
         }
         if (GameManager.instance.gameType.ToString().Contains("Pro"))
         {
@@ -530,7 +530,7 @@ public class PlayerInventory : MonoBehaviourPun
                         activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
                         weaponsEquiped[0] = activeWeapon.gameObject;
                         activeWeapIs = 0;
-                        activeWeapon.GetComponent<WeaponProperties>().currentAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
+                        activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
                         allWeaponsInInventory[i].gameObject.SetActive(true);
                         StartCoroutine(ToggleTPPistolIdle(1));
                     }
@@ -540,7 +540,7 @@ public class PlayerInventory : MonoBehaviourPun
                 {
                     allWeaponsInInventory[i].gameObject.SetActive(false);
                     weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
-                    weaponsEquiped[1].GetComponent<WeaponProperties>().currentAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
+                    weaponsEquiped[1].GetComponent<WeaponProperties>().loadedAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
                     holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
                     hasSecWeap = true;
                 }
@@ -575,8 +575,8 @@ public class PlayerInventory : MonoBehaviourPun
     }
     void UpdateDualWieldedWeaponAmmo()
     {
-        rightWeaponCurrentAmmo = rightWeapon.GetComponent<WeaponProperties>().currentAmmo;
-        leftWeaponCurrentAmmo = leftWeapon.GetComponent<WeaponProperties>().currentAmmo;
+        rightWeaponCurrentAmmo = rightWeapon.GetComponent<WeaponProperties>().loadedAmmo;
+        leftWeaponCurrentAmmo = leftWeapon.GetComponent<WeaponProperties>().loadedAmmo;
     }
 
     void UpdateThirdPersonGunModelsOnCharacter()
