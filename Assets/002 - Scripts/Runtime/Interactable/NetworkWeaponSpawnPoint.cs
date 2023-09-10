@@ -160,14 +160,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     void ReplaceWeaponsByGametype()
     {
         string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal", "m32", "sniper", "shotgun" };
-        string[] heavyWeaponCodeNames = { "m16", "c7", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
-        string[] lightWeaponCodeNames = { "m1911", "colt", "mp5", "p90", "deagle" };
-
-        if (codeName == "mk14")
-            codeName = "c7";
-
-        if (codeName == "colt")
-            codeName = "deagle";
+        string[] heavyWeaponCodeNames = { "ar", "br", "m16", "c7", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
+        string[] lightWeaponCodeNames = { "pistol", "smg", "m1911", "colt", "mp5", "p90", "deagle" };
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             if ((GameManager.instance.gameType.ToString().Contains("Slayer"))

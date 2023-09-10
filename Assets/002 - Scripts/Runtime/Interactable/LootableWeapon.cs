@@ -175,19 +175,18 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             ammoToLoot = ammoAvailable;
 
 
-        int diff = w.spareAmmo - ammoToLoot;
 
 
         if (w.GetComponent<WeaponProperties>().injectLootedAmmo)
         {
-            ammoToLoot = diff = w.ammoCapacity - w.loadedAmmo;
+            ammoToLoot = w.ammoCapacity - w.loadedAmmo;
             w.loadedAmmo += ammoToLoot;
         }
         else
         {
             w.spareAmmo += ammoToLoot;
         }
-        playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({diff})");
+        playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({ammoToLoot})");
 
         if (ammoNeeded >= ammoAvailable || w.injectLootedAmmo)
             HideWeapon();

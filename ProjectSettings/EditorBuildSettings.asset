@@ -89,34 +89,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/004 - Scenes/Swarm Scenes/Coop - 001 - Downpour.unity
     guid: a93b5d263042c224cb5e592853df0d71
-  - enabled: 0
-    path: Assets/PolygonNature/Scenes/DemoScene_01.unity
-    guid: d5673b812d5fa6d4abc53777e9b3fa6b
-  - enabled: 1
-    path: Assets/004 - Scenes/EmptyScene.unity
-    guid: 0d9681976c6c61d4a8161e6a788dc524
-  - enabled: 1
-    path: Assets/020 - Staging/Movement/Staging.unity
-    guid: 60d40d7a2cba4244abf6b4581463aecc
-  - enabled: 1
-    path: Assets/Project/External/UI - Modern_GUI_Skin/Demo_Assets/Demo.unity
-    guid: 13070929f2d2dc3468bb951653444db6
-  - enabled: 1
-    path: Assets/Scene.unity
-    guid: 7abaf621ae176d04eb513451ac08c2f5
-  - enabled: 1
-    path: Assets/Resources/SCI-FI UI Pack_Components v1/Scenes/Demo V1.unity
-    guid: aa1037c4de98cc144b3b51074b7e3010
-  - enabled: 1
-    path: Assets/Project/External/Artemis Space Ranks/Scenes/Demo.unity
-    guid: b0449b7497fef5e4bb6e76996f80e67f
-  - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Power.unity
-    guid: ddac0b19f3f858346aa6097f6c23afab
-  - enabled: 1
-    path: Assets/LowPolyWater_Pack/_Demo/DemoScene.unity
-    guid: 5af012a8b7991a84fb99a854db8dfc21
-  - enabled: 1
-    path: Assets/Project/External/Polygon Assets/PolygonMilitary/Scenes/Demo_01.unity
-    guid: 93195e8f68a149f49a51512a91091643
   m_configObjects: {}

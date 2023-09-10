@@ -497,8 +497,8 @@ public class PlayerInventory : MonoBehaviourPun
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm
              || GameManager.instance.gameType == GameManager.GameType.Retro)
         {
-            StartingWeapon = "p90";
-            StartingWeapon2 = "m1911";
+            StartingWeapon = "smg";
+            StartingWeapon2 = "pistol";
         }
 
         if (GameManager.instance.gameType == GameManager.GameType.GunGame)
