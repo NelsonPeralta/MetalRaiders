@@ -189,7 +189,7 @@ public partial class WebManager
         int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
         int newHonor = pda.playerBasicOnlineStats.honor;
 
-        int dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level];
+        int dbXpToLevel = 999999999;
 
         if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
             dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];

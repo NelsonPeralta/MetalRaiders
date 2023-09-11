@@ -109,7 +109,12 @@ public class Movement : MonoBehaviour, IMoveable
                 _currentMaxSpeed = defaultMaxSpeed * 0.5f;
 
             if (_pController.isSprinting)
-                _currentMaxSpeed = defaultMaxSpeed * 1.33f;
+            {
+                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                    _currentMaxSpeed = defaultMaxSpeed * 1.33f;
+                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    _currentMaxSpeed = defaultMaxSpeed * 1.8f;
+            }
         }
     }
     public float defaultMaxSpeed { get { return _defaultMaxSpeed; } }
@@ -707,7 +712,7 @@ public class Movement : MonoBehaviour, IMoveable
                         if (!_pController.isReloading && !_pController.isDrawingWeapon && !_pController.isThrowingGrenade &&
                             !_pController.isMeleeing && !_pController.isFiring)
                         {
-                            
+
                             _pController.weaponAnimator.speed = animationSpeed;
                             if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
                                 _pController.weaponAnimator.speed = 1;
