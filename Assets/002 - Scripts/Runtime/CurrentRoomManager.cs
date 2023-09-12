@@ -295,24 +295,25 @@ public class CurrentRoomManager : MonoBehaviour
 
         if (PhotonNetwork.InRoom)
         {
-            if (_randomQuickMatchSeetingsChosen && _vetoCountdown > 0)
-            {
-                _vetoCountdown -= Time.deltaTime;
-
-                Launcher.instance.gameCountdownText.text = $"VETO COUNTDOWN: {((int)_vetoCountdown)} seconds\nVetos: {instance.vetos} out of {instance.expectedNbPlayers}";
-
-                if (_vetoCountdown <= 0)
+            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) > 1)
+                if (_randomQuickMatchSeetingsChosen && _vetoCountdown > 0)
                 {
-                    Launcher.instance.vetoBtn.SetActive(false);
+                    _vetoCountdown -= Time.deltaTime;
 
-                    if (_vetos > _expectedNbPlayers * 0.5f && PhotonNetwork.IsMasterClient)
+                    Launcher.instance.gameCountdownText.text = $"VETO COUNTDOWN: {((int)_vetoCountdown)} seconds\nVetos: {instance.vetos} out of {instance.expectedNbPlayers}";
+
+                    if (_vetoCountdown <= 0)
                     {
-                        _vetoedMapIndex = Launcher.instance.levelToLoadIndex;
-                        _vetoedGameType = GameManager.instance.gameType;
-                        ChooseRandomMatchSettingsForQuickMatch();
+                        Launcher.instance.vetoBtn.SetActive(false);
+
+                        if (_vetos > _expectedNbPlayers * 0.5f && PhotonNetwork.IsMasterClient)
+                        {
+                            _vetoedMapIndex = Launcher.instance.levelToLoadIndex;
+                            _vetoedGameType = GameManager.instance.gameType;
+                            ChooseRandomMatchSettingsForQuickMatch();
+                        }
                     }
                 }
-            }
 
 
 

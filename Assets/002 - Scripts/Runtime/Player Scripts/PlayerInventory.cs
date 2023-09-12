@@ -462,25 +462,25 @@ public class PlayerInventory : MonoBehaviourPun
         }
         if (GameManager.instance.gameType.ToString().Contains("Pro"))
         {
-            StartingWeapon = "m16";
-            StartingWeapon2 = "m4";
+            StartingWeapon = "br";
+            StartingWeapon2 = "ar";
         }
         if (GameManager.instance.gameType.ToString().Contains("Snipers"))
         {
             StartingWeapon = "sniper";
-            StartingWeapon2 = "nailgun";
+            StartingWeapon2 = "pistol";
         }
 
         if (GameManager.instance.gameType.ToString().Contains("Rockets"))
         {
             StartingWeapon = "rpg";
-            StartingWeapon2 = "m32";
+            StartingWeapon2 = "pistol";
         }
 
         if (GameManager.instance.gameType.ToString().Contains("Shotguns"))
         {
             StartingWeapon = "shotgun";
-            StartingWeapon2 = "nailgun";
+            StartingWeapon2 = "pistol";
         }
 
         if (GameManager.instance.gameType.ToString().Contains("Fiesta"))
@@ -490,8 +490,8 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType.ToString().Contains("Swat"))
         {
-            StartingWeapon = "m16";
-            StartingWeapon2 = "m4";
+            StartingWeapon = "br";
+            StartingWeapon2 = "ar";
         }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm
@@ -505,7 +505,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         {
             StartingWeapon = _playerGunGameManager.gunIndex[_playerGunGameManager.index].codeName;
-            StartingWeapon2 = "nailgun";
+            StartingWeapon2 = "pistol";
             grenades = 0;
 
             Debug.Log(_playerGunGameManager.index);

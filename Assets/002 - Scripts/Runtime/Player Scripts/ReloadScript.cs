@@ -215,7 +215,8 @@ public class ReloadScript : MonoBehaviourPun
                     }
                     else
                     {
-                        pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
+                        pController.weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                        //pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
                         PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Out Of Ammo");
                     }
                 else
