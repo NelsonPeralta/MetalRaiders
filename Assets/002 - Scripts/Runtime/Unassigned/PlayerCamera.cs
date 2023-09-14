@@ -6,7 +6,9 @@ using Rewired;
 public class PlayerCamera : MonoBehaviour
 {
     public RagdollPrefab ragdollPrefab { get { return _ragdollPrefab; } set { _ragdollPrefab = value; } }
+    public Transform mainCameraHolder { get { return _mainCameraHolder; } }
 
+    [SerializeField] Transform _camerasHolder, _mainCameraHolder;
     public float defaultMouseSensitivy;
     public float mouseSensitivity;
     public Transform playerCameraScriptParent;
@@ -80,6 +82,10 @@ public class PlayerCamera : MonoBehaviour
         mainCamDefaultLocalPosition = mainCam.transform.localPosition;
         mainCamDefaultLocalRotation = mainCam.transform.localRotation;
         Cursor.lockState = CursorLockMode.Locked;
+
+
+        mainCam.transform.parent.name = $"Player {player.nickName} Main Camera Holder";
+        mainCam.transform.parent.parent = null;
     }
 
     // Update is called once per frame
@@ -88,6 +94,24 @@ public class PlayerCamera : MonoBehaviour
         if (!GameManager.instance.gameStarted) return;
         if (!pController.PV.IsMine) return;
         if (pController.cameraisFloating) return;
+
+        mainCam.transform.parent.position = _camerasHolder.transform.position;
+        mainCam.transform.forward = _camerasHolder.transform.forward;
+
+        mouseX = rewiredPlayer.GetAxis("Mouse X") * Time.deltaTime * mouseSensitivity;
+        mouseY = rewiredPlayer.GetAxis("Mouse Y") * Time.deltaTime * mouseSensitivity;
+
+        yRotation += mouseX;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90, 90);
+
+        horizontalAxisTarget.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        verticalAxisTarget.rotation = Quaternion.Euler(0, yRotation, 0);
+
+
+
+        return;
 
         try
         {
