@@ -182,7 +182,7 @@ public class Movement : MonoBehaviour, IMoveable
     [SerializeField] float _animationSpeed;
     [SerializeField] PlayerMovementDirection _playerMovementDirection;
     [SerializeField] float _blockMovementCooldown;
-    [SerializeField] Transform _edgeHitPosition;
+
 
 
 
@@ -317,7 +317,6 @@ public class Movement : MonoBehaviour, IMoveable
     float _edgePushCountdown;
     void CheckIfStuckInEdge()
     {
-        return;
         if (_edgeCheck.touch && !isGrounded)
         {
             Debug.Log("Edge");
@@ -824,31 +823,7 @@ public class Movement : MonoBehaviour, IMoveable
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //Debug.Log(hit.gameObject.name);
 
-        if (_edgeCheck.touch && !isGrounded)
-        {
-            //_movementInput = Vector3.zero;
-            _edgeHitPosition.position = hit.point;
-            Debug.Log("Edge OnControllerColliderHit");
-            //return;
-            Vector3 _dir = transform.position - new Vector3(hit.point.x, transform.position.y, hit.point.z);
-            //_dir = hit.normal;
-            if (_dir.y < 0)
-                _dir.y = Mathf.Abs(_dir.y);
-            //_dir.y = 0;
-
-            if (_edgePushCountdown > 0)
-                _edgePushCountdown -= Time.deltaTime;
-
-            if (_edgePushCountdown <= 0)
-            {
-                Push(_dir, 100, PushSource.Edge, true);
-                _edgePushCountdown = 0.3f;
-            }
-
-            //_cController.Move(_dir * 10 * Time.deltaTime);
-        }
         // TODO: Redo this, causes lagspikes
         //if (RayGrounded(GetRayAtPos(0, 0)) && GetComponent<CharacterController>().isGrounded)
         //{
