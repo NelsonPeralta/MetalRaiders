@@ -6,99 +6,152 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public bool isGrounded
+    public enum PlayerMovementDirection { Idle, Left, Right, Forward, Backwards, ForwardLeft, ForwardRight, BackwardsLeft, BackwardsRight }
+
+    public Player player { get { return _player; } }
+    public Rewired.Player rewiredPlayer { get { return _pController.rewiredPlayer; } }
+    public PlayerMovementDirection movementDirection { get { return _playerMovementDirection; } private set { _playerMovementDirection = value; } }
+    public float correctedXInput { get { return _correctedRightInput; } set { _correctedRightInput = value; } }
+    public float correctedZInput { get { return _correctedForwardInput; } set { _correctedForwardInput = value; } }
+    public bool isGrounded { get { return grounded; } }
+    public Rigidbody rb { get { return _rb; } }
+    public float animationSpeed
     {
         get
         {
-            return _isGrounded = _groundCheckScript.isGrounded;
-        }
-    }
-    public Rewired.Player rewiredPlayer { get { if (_rewiredPlayer == null) _rewiredPlayer = _playerController.rewiredPlayer; return _rewiredPlayer; } }
+            _animationSpeed = 0;
+            int _c = 0;
 
-    public bool onSlope
-    {
-        get
-        {
-            if (Physics.Raycast(transform.position, Vector3.down, out _slopeHit, _playerHeight * 0.5f + 0.5f, _slopeLayerMask))
-            {
-                _slopeHitTransform = _slopeHit.transform;
-                _slopeAngle = Vector3.Angle(Vector3.up, _slopeHit.normal);
-                _onSlope = _slopeAngle < _maxSlopeAngle && _slopeAngle != 0;
-                return _onSlope;
-            }
-            else
-            {
-                _onSlope = false;
-                _slopeAngle = 0;
-                _slopeHitTransform = null;
-            }
-            return false;
+            if (correctedXInput != 0) { _c++; _animationSpeed += Mathf.Abs(correctedXInput); }
+            if (correctedZInput != 0) { _c++; _animationSpeed += Mathf.Abs(correctedZInput); }
+
+            if (_c > 0)
+                _animationSpeed /= _c;
+
+            Mathf.Clamp(_c * 1.3f, _c, 1);
+
+            if (Mathf.Abs(correctedXInput) == 1 || Mathf.Abs(correctedZInput) == 1)
+                _animationSpeed = 1;
+
+            return Mathf.Abs(_animationSpeed);
         }
     }
 
+    [SerializeField] ThirdPersonLookAt _tpLookAt;
 
 
+    [Header("Movement")]
+    private float moveSpeed;
+    public float walkSpeed;
+    public float sprintSpeed;
+
+    private float desiredMoveSpeed;
+    private float lastDesiredMoveSpeed;
+
+    public float speedIncreaseMultiplier;
+    public float slopeIncreaseMultiplier;
+
+    public float groundDrag;
+    [SerializeField] Vector3 moveDirection;
+    [SerializeField] PlayerMovementDirection _playerMovementDirection;
 
 
+    [Header("Jumping")]
+    public float jumpForce;
+    public float jumpCooldown;
+    public float airMultiplier;
+    bool readyToJump;
 
-    Vector3 SlopeMoveDirection
-    {
-        get
-        {
-            try
-            {
-                _slopeHitTransform = _slopeHit.transform;
-            }
-            catch { }
-            return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
-        }
-    }
+    [Header("Crouching")]
+    public float crouchSpeed;
+    public float crouchYScale;
+    private float startYScale;
+
+    [Header("Keybinds")]
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode crouchKey = KeyCode.LeftControl;
+
+    [Header("Ground Check")]
+    public float playerHeight;
+    public LayerMask whatIsGround;
+    [SerializeField] bool grounded;
+
+    [Header("Slope Handling")]
+    public float maxSlopeAngle, currentSlope;
+    private RaycastHit slopeHit;
+    private bool exitingSlope;
+    public Vector3 slopeMovement;
 
 
+    public Transform orientation, slopeOrientation, playerCapsule;
 
 
-    [SerializeField] GroundCheck _groundCheckScript;
+    [SerializeField] float _animationSpeed;
+    [SerializeField] float _rawRightInput, _rawForwardInput, _correctedRightInput, _correctedForwardInput;
 
-    [SerializeField] float _playerHeight, _moveSpeed, _groundDrag, _jumpForce;
 
-    [SerializeField] Transform _orientation;
-
-    [SerializeField] float _horizontalInput, _verticalInput;
-
-    [SerializeField] float _maxSlopeAngle, _slopeAngle;
-    [SerializeField] Transform _slopeHitTransform;
-    [SerializeField] LayerMask _slopeLayerMask;
-
-    RaycastHit _slopeHit;
-
-    [SerializeField] bool _isGrounded, _onSlope;
-
-    Vector3 _moveDirection;
+    float _rightDeadzone = 0.2f, _forwardDeadzone = 0.2f;
 
     Rigidbody _rb;
-
-    PlayerController _playerController;
-
+    Player _player;
+    PlayerController _pController;
     Rewired.Player _rewiredPlayer;
 
-
-
-
-    // Start is called before the first frame update
-    void Start()
+    public MovementState state;
+    public enum MovementState
     {
-        _playerController = GetComponent<PlayerController>();
-        _rb = GetComponent<Rigidbody>();
-        _rb.freezeRotation = true;
+        walking,
+        sprinting,
+        crouching,
+        air
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        Input();
-        DragCheck();
-        SpeedCheck();
-        Jump();
+        _player = GetComponent<Player>();
+        _pController = GetComponent<PlayerController>();
+        _rewiredPlayer = _pController.rewiredPlayer;
+    }
+
+    private void Start()
+    {
+        _rb = GetComponent<Rigidbody>();
+        _rb.freezeRotation = true;
+
+        readyToJump = true;
+
+        startYScale = transform.localScale.y;
+    }
+
+    private void Update()
+    {
+        try
+        {
+            if (OnSlope())
+                slopeOrientation.forward = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+        }
+        catch { }
+
+        // ground check
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+
+        MyInput();
+        SpeedControl();
+        StateHandler();
+
+        // handle drag
+        if (grounded)
+            _rb.drag = groundDrag;
+        else
+            _rb.drag = 0;
+
+
+
+
+        CheckDirection(_rawRightInput, _rawForwardInput);
+        WalkAnimation();
+        ControlAnimationSpeed();
     }
 
     private void FixedUpdate()
@@ -106,73 +159,434 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
     }
 
-    void Input()
+    private void MyInput()
     {
-        _horizontalInput = rewiredPlayer.GetAxis("Move Horizontal");
-        _verticalInput = rewiredPlayer.GetAxis("Move Vertical");
+        _rawRightInput = _correctedRightInput = rewiredPlayer.GetAxis("Move Horizontal");
+        _rawForwardInput = _correctedForwardInput = rewiredPlayer.GetAxis("Move Vertical");
 
-        if (_playerController.activeControllerType == Rewired.ControllerType.Keyboard
-            || _playerController.activeControllerType == Rewired.ControllerType.Mouse)
+        if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
+        if (Mathf.Abs(_correctedForwardInput) <= _forwardDeadzone) _correctedForwardInput = 0;
+
+        // when to jump
+        if (rewiredPlayer.GetButtonDown("Jump") && readyToJump && grounded)
         {
+            readyToJump = false;
 
-            if (rewiredPlayer.GetAxis("Move Horizontal") != 0)
-                _horizontalInput = Mathf.Clamp(3 * rewiredPlayer.GetAxis("Move Horizontal"), -1, 1);
-            if (rewiredPlayer.GetAxis("Move Vertical") != 0)
-                _verticalInput = Mathf.Clamp(3 * rewiredPlayer.GetAxis("Move Vertical"), -1, 1);
+            Jump();
 
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
 
-            //if (rewiredPlayer.GetAxis("Move Horizontal") != 0)
-            //    _horizontalInput = 1 * Mathf.Sign(rewiredPlayer.GetAxis("Move Horizontal"));
-            //if (rewiredPlayer.GetAxis("Move Vertical") != 0)
-            //    _verticalInput = 1 * Mathf.Sign(rewiredPlayer.GetAxis("Move Vertical"));
+        // start crouch
+        if (rewiredPlayer.GetButtonDown("Crouch"))
+        {
+            playerCapsule.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            player.playerThirdPersonModel.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + 0.5f, transform.localPosition.z);
+
+            if (grounded)
+                _rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        }
+
+        // stop crouch
+        if (rewiredPlayer.GetButtonUp("Crouch"))
+        {
+            playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
+            player.playerThirdPersonModel.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - 0.5f, transform.localPosition.z);
         }
     }
 
-    void MovePlayer()
+    private void StateHandler()
     {
-        try
+        // Mode - Crouching
+        if (rewiredPlayer.GetButton("Crouch"))
         {
+            state = MovementState.crouching;
             if (isGrounded)
+                desiredMoveSpeed = crouchSpeed;
+        }
+        // Mode - Sprinting
+        else if (movementDirection == PlayerMovementDirection.Forward &&
+            (_pController.activeControllerType == Rewired.ControllerType.Keyboard ||
+            _pController.activeControllerType == Rewired.ControllerType.Mouse) &&
+            grounded && rewiredPlayer.GetButton("Sprint"))
+        {
+            state = MovementState.sprinting;
+            desiredMoveSpeed = sprintSpeed;
+        }
+        else if (movementDirection == PlayerMovementDirection.Forward &&
+            _pController.activeControllerType == Rewired.ControllerType.Joystick &&
+            rewiredPlayer.GetButtonDown("Sprint"))
+        {
+            state = MovementState.sprinting;
+            desiredMoveSpeed = sprintSpeed;
+        }
+
+        // Mode - Walking
+        else if (grounded)
+        {
+            state = MovementState.walking;
+            desiredMoveSpeed = walkSpeed;
+        }
+
+        // Mode - Air
+        else
+        {
+            state = MovementState.air;
+        }
+
+        // check if desiredMoveSpeed has changed drastically
+        if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
+        {
+            StopAllCoroutines();
+            StartCoroutine(SmoothlyLerpMoveSpeed());
+        }
+        else
+        {
+            moveSpeed = desiredMoveSpeed;
+        }
+
+        lastDesiredMoveSpeed = desiredMoveSpeed;
+    }
+
+    private IEnumerator SmoothlyLerpMoveSpeed()
+    {
+        // smoothly lerp movementSpeed to desired value
+        float time = 0;
+        float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
+        float startValue = moveSpeed;
+
+        while (time < difference)
+        {
+            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
+
+            if (OnSlope())
             {
-                _moveDirection = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
+                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
+                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
 
-                if (onSlope)
-                    _moveDirection = SlopeMoveDirection;
+                time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
+            }
+            else
+                time += Time.deltaTime * speedIncreaseMultiplier;
 
-                _rb.AddForce(_moveDirection.normalized * _moveSpeed * 10f, ForceMode.Force);
+            yield return null;
+        }
+
+        moveSpeed = desiredMoveSpeed;
+    }
+
+    private void MovePlayer()
+    {
+        // calculate movement direction
+        moveDirection = orientation.forward * _rawForwardInput + orientation.right * _rawRightInput;
+
+        // on slope
+        if (OnSlope() && !exitingSlope)
+        {
+            //slopeOrientation.forward = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+            GetSlopeMoveDirection(moveDirection);
+
+            Vector3 slopeOrientationMovementFix = Vector3.zero;
+
+            if (slopeMovement.magnitude > 0)
+                slopeOrientationMovementFix = slopeOrientation.forward.normalized * moveSpeed * 10;
+
+            _rb.AddForce((slopeMovement * moveSpeed * 10f) + slopeOrientationMovementFix, ForceMode.Force);
+
+            if (_rb.velocity.y > 0)
+                _rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+        }
+
+        // on ground
+        else if (grounded)
+            _rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+
+        // in air
+        else if (!grounded)
+            _rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+
+        // turn gravity off while on slope
+        _rb.useGravity = !OnSlope();
+    }
+
+    private void SpeedControl()
+    {
+        // limiting speed on slope
+        if (OnSlope() && !exitingSlope)
+        {
+            if (_rb.velocity.magnitude > moveSpeed)
+                _rb.velocity = _rb.velocity.normalized * moveSpeed;
+        }
+
+        // limiting speed on ground or in air
+        else
+        {
+            Vector3 flatVel = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+
+            // limit velocity if needed
+            if (flatVel.magnitude > moveSpeed)
+            {
+                Vector3 limitedVel = flatVel.normalized * moveSpeed;
+                _rb.velocity = new Vector3(limitedVel.x, _rb.velocity.y, limitedVel.z);
             }
         }
-        catch { }
     }
 
-    void DragCheck()
+    private void Jump()
     {
-        if (isGrounded)
-            _rb.drag = _groundDrag;
+        exitingSlope = true;
+
+        // reset y velocity
+        _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+
+
+        _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+    private void ResetJump()
+    {
+        readyToJump = true;
+
+        exitingSlope = false;
+    }
+
+    public bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f, whatIsGround))
+        {
+            currentSlope = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return currentSlope < maxSlopeAngle && currentSlope != 0;
+        }
+
+        return false;
+    }
+
+    public Vector3 GetSlopeMoveDirection(Vector3 direction)
+    {
+        slopeMovement = Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
+        slopeOrientation.forward = slopeMovement;
+
+        return slopeMovement;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    PlayerMovementDirection CheckDirection(float xValue, float zValue)
+    {
+        PlayerMovementDirection pmd = PlayerMovementDirection.Idle;
+
+        if (xValue == -1 && zValue == 0)
+        {
+            movementDirection = PlayerMovementDirection.Left;
+        }
+        else if (xValue == 0 && zValue == 1)
+        {
+            movementDirection = PlayerMovementDirection.Forward;
+        }
+        else if (xValue == 1 && zValue == 0)
+        {
+            movementDirection = PlayerMovementDirection.Right;
+        }
+        else if (xValue == 0 && zValue == -1)
+        {
+            movementDirection = PlayerMovementDirection.Backwards;
+        }
+
+        else if (zValue > 0)
+        {
+            if (xValue < 0) //Second Quarter of Cartesian Map
+            {
+                if (zValue <= -0.5 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.Left;
+                }
+                else if (zValue > -0.5 * xValue && zValue < -2 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.ForwardLeft;
+                }
+                else if (zValue >= -2 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.Forward;
+                }
+            }
+            else if (xValue > 0) //First Quarter of Cartesian Map
+            {
+
+                if (zValue >= 2 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.Forward;
+                }
+                else if (zValue > 0.5 * xValue && zValue < 2 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.ForwardRight;
+                }
+                else if (zValue <= 0.5 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.Right;
+                }
+            }
+
+        }
+        if (zValue < 0)
+        {
+            if (xValue < 0) //Third Quarter of Cartesian Map
+            {
+                if (zValue >= 0.5 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.Left;
+                }
+                else if (zValue < 0.5 * xValue && zValue > 2 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.BackwardsLeft;
+                }
+                else if (zValue <= 2 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.Backwards;
+                }
+            }
+            else if (xValue > 0) //Fourth Quarter of Cartesian Map
+            {
+
+                if (zValue <= -2 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.Backwards;
+                }
+                else if (zValue < -0.5 * xValue && zValue > -2 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.BackwardsRight;
+                }
+                else if (zValue >= -0.5 * xValue)
+                {
+                    movementDirection = PlayerMovementDirection.Right;
+                }
+            }
+        }
+        else if (zValue == 0 && xValue == 0)
+        {
+            movementDirection = PlayerMovementDirection.Idle;
+        }
+
+        if (zValue > 0 || xValue > 0)
+        {
+            //if (isGrounded && !_pController.isCrouching)
+            //{
+            //    if (!walkingSoundPlaying)
+            //    {
+            //        PlayWalkingSound();
+            //        walkingSoundPlaying = true; ;
+            //    }
+            //}
+            //else
+            //{
+            //    PauseWalkingSound();
+            //    walkingSoundPlaying = false;
+            //}
+        }
+
+
+        return pmd;
+    }
+
+
+
+    void ControlAnimationSpeed()
+    {
+        if (_pController != null)
+        {
+            if (_pController.weaponAnimator != null)
+            {
+                if (grounded)
+                {
+
+                    if (_pController.weaponAnimator.GetBool("Walk"))
+                    {
+                        if (!_pController.isReloading && !_pController.isDrawingWeapon && !_pController.isThrowingGrenade &&
+                            !_pController.isMeleeing && !_pController.isFiring)
+                        {
+
+                            _pController.weaponAnimator.speed = animationSpeed;
+                            if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
+                                _pController.weaponAnimator.speed = 1;
+                            _tpLookAt.anim.speed = animationSpeed;
+                        }
+                        else if (_pController.isReloading || _pController.isDrawingWeapon || _pController.isThrowingGrenade ||
+                            _pController.isMeleeing || _pController.isFiring)
+                        {
+                            //_speedRatio = 1;
+                            _pController.weaponAnimator.speed = 1;
+                            _tpLookAt.anim.speed = 1;
+                        }
+                    }
+                    else
+                    {
+                        //_speedRatio = 1;
+                        _pController.weaponAnimator.speed = 1;
+                        if (_tpLookAt.anim)
+                            _tpLookAt.anim.speed = 1;
+                    }
+                }
+                else if (!grounded && _pController.weaponAnimator.GetBool("Run"))
+                {
+                    _pController.weaponAnimator.speed = 0.1f;
+
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+    void WalkAnimation()
+    {
+        if (_rawRightInput != 0 || _rawForwardInput != 0)
+        {
+            if (grounded)
+            {
+                if (_pController.weaponAnimator)
+                    _pController.weaponAnimator.SetBool("Walk", true);
+
+                if (_pController.pInventory.isDualWielding)
+                {
+                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", true);
+                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", true);
+                }
+            }
+            else
+            {
+                try { _pController.weaponAnimator.SetBool("Walk", false); } catch { }
+
+                if (_pController.pInventory.isDualWielding)
+                {
+                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", false);
+                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
+                }
+            }
+        }
         else
-            _rb.drag = 0;
-    }
+            try
+            {
+                _pController.weaponAnimator.SetBool("Walk", false);
 
-    void SpeedCheck()
-    {
-        Vector3 flatVelVect = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
-
-        // limit velocity if needed
-        if (flatVelVect.magnitude > _moveSpeed)
-        {
-            Vector3 limitedVelVect = flatVelVect.normalized * _moveSpeed;
-            _rb.velocity = new Vector3(limitedVelVect.x, _rb.velocity.y, limitedVelVect.z);
-        }
-    }
-
-    void Jump()
-    {
-        if (isGrounded && rewiredPlayer.GetButtonDown("Jump"))
-        {
-            // reset y velocity
-            _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
-
-            _rb.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
-        }
+                if (_pController.pInventory.isDualWielding)
+                {
+                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", false);
+                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
+                }
+            }
+            catch { }
     }
 }
