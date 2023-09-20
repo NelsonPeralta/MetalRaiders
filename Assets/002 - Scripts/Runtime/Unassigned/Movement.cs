@@ -827,8 +827,6 @@ public class Movement : MonoBehaviour, IMoveable
 
         if (_edgeCheck.touch && !isGrounded)
         {
-            _movementInput *= 0.4f;
-            //_movementInput = Vector3.zero;
             Debug.Log("Edge OnControllerColliderHit");
             //return;
             Vector3 _dir = transform.position - new Vector3(hit.point.x, transform.position.y, hit.point.z);
@@ -842,7 +840,9 @@ public class Movement : MonoBehaviour, IMoveable
 
             if (_edgePushCountdown <= 0)
             {
-                Push(_dir, 100, PushSource.Edge, true);
+                _movementInput *= 0.4f;
+
+                Push(_dir, 80, PushSource.Edge, true);
                 _edgePushCountdown = 0.3f;
             }
 
