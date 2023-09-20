@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4428336139568596}
   - component: {fileID: 198829711441321964}
   - component: {fileID: 199837359349459086}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Smoke_Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4852,7 +4852,7 @@ GameObject:
   - component: {fileID: 65241015956886496}
   - component: {fileID: 5475986707326753178}
   - component: {fileID: -7073348559253931452}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player Rocket Launcher Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4963,7 +4963,7 @@ GameObject:
   - component: {fileID: 4928305188069760}
   - component: {fileID: 198299060017700864}
   - component: {fileID: 199308310197852024}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Flame_Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9729,7 +9729,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3936497938336720503}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9764,7 +9764,7 @@ GameObject:
   - component: {fileID: 5311900331019684041}
   - component: {fileID: 4600185347845585440}
   - component: {fileID: 234200362700105820}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Smoke_Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14604,7 +14604,7 @@ GameObject:
   - component: {fileID: 1501454736286246126}
   - component: {fileID: 1209105948863542976}
   - component: {fileID: 8415185805331736708}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Flame_Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19370,7 +19370,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6353747418508964721}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FX (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19405,6 +19405,10 @@ PrefabInstance:
     - target: {fileID: 1522281578874904, guid: 50e54b72b68a75b4db0d0ce7dc107312, type: 3}
       propertyPath: m_Name
       value: Model (SM_Wep_Missile_01)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522281578874904, guid: 50e54b72b68a75b4db0d0ce7dc107312, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4010284150734868, guid: 50e54b72b68a75b4db0d0ce7dc107312, type: 3}
       propertyPath: m_RootOrder

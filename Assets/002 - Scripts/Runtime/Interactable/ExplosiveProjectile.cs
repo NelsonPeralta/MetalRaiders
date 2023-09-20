@@ -55,6 +55,7 @@ public class ExplosiveProjectile : MonoBehaviour
     {
         if (collision.gameObject.layer != 9)
         {
+            Debug.Log($"Collided with: {collision.gameObject.name}");
             _collided = true;
             try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
 

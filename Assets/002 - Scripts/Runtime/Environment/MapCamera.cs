@@ -27,7 +27,7 @@ public class MapCamera : MonoBehaviour
     }
     private void Awake()
     {
-        _loadingTimeOut = 10;
+        _loadingTimeOut = 30;
         _instance = this;
     }
     private void Start()

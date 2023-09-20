@@ -167,15 +167,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             if ((GameManager.instance.gameType.ToString().Contains("Slayer"))
                 || GameManager.instance.gameType == GameManager.GameType.Retro)
             {
-                if (codeName == "scar")
-                    codeName = "m4";
-
-                if (codeName == "m16")
-                    codeName = "m1911";
-
-                if (codeName == "c7" || codeName == "mk14")
-                    //codeName = "mp5";
-                    codeName = "p90";
+                if (codeName == "br")
+                    codeName = "pistol";
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
             {
@@ -183,17 +176,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Rockets")))
             {
-                foreach (string weaponCode in powerWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "rpg";
-
-                foreach (string weaponCode in lightWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "rpg";
-
-                foreach (string weaponCode in heavyWeaponCodeNames)
-                    if (weaponCode == codeName)
-                        codeName = "m32";
+                codeName = "rpg";
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Shotguns")))
             {

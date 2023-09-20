@@ -471,7 +471,7 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "pistol";
         }
 
-        if (GameManager.instance.gameType.ToString().Contains("Rockets"))
+        if (GameManager.instance.gameType == GameManager.GameType.Rockets)
         {
             StartingWeapon = "rpg";
             StartingWeapon2 = "pistol";

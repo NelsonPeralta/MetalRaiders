@@ -277,35 +277,36 @@ public class PlayerShooting : MonoBehaviourPun
                 // Projectile does not spawn if ammo left is 0, lag
                 if (playerController.player.isMine)
                     PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.All);
-                Debug.Log($"{playerController.name} PlayerShooting: AmmoProjectileType.Rocket");
-                ExplosiveProjectile rocket = null;
 
-                if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
-                {
-                    //rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<Rocket>();
-                    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<ExplosiveProjectile>();
-                }
-                else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
-                    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
+                //Debug.Log($"{playerController.name} PlayerShooting: AmmoProjectileType.Rocket");
+                //ExplosiveProjectile rocket = null;
 
-                Debug.Log($"{playerController.name} PlayerShooting: {rocket.name}");
-                rocket.player = playerController.player;
+                //if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+                //{
+                //    //rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<Rocket>();
+                //    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().rocketProjectilePrefab).GetComponent<ExplosiveProjectile>();
+                //}
+                //else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+                //    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
+
+                //Debug.Log($"{playerController.name} PlayerShooting: {rocket.name}");
+                //rocket.player = playerController.player;
 
 
-                if (PV.IsMine)
-                    rocket.gameObject.layer = 8;
-                else
-                    rocket.gameObject.layer = 0;
+                ////if (PV.IsMine)
+                ////    rocket.gameObject.layer = 8;
+                ////else
+                ////    rocket.gameObject.layer = 0;
 
-                rocket.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-                rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+                //rocket.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                //rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
 
-                rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
+                //rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
 
-                if (activeWeapon.muzzleFlash)
-                    activeWeapon.SpawnMuzzleflash();
-                else
-                    GetComponent<CommonFiringActions>().SpawnMuzzleflash();
+                //if (activeWeapon.muzzleFlash)
+                //    activeWeapon.SpawnMuzzleflash();
+                //else
+                //    GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }
 
         if (!PV.IsMine)
@@ -333,8 +334,6 @@ public class PlayerShooting : MonoBehaviourPun
     [PunRPC]
     void SpawnFakeExplosiveProjectile_RPC()
     {
-        if (playerController.player.isMine)
-            return;
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
         ExplosiveProjectile rocket = null;
 
