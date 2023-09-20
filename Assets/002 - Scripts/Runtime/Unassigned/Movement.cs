@@ -227,6 +227,8 @@ public class Movement : MonoBehaviour, IMoveable
 
     private void Awake()
     {
+        _edgePushCountdown = 0.3f;
+
         _player = GetComponent<Player>();
         _cController = GetComponent<CharacterController>();
         _pController = GetComponent<PlayerController>();
