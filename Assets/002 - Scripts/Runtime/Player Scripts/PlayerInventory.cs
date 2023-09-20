@@ -512,6 +512,12 @@ public class PlayerInventory : MonoBehaviourPun
             Debug.Log(StartingWeapon);
         }
 
+        if (GameManager.instance.gameType == GameManager.GameType.Hill)
+        {
+            StartingWeapon = "smg";
+            StartingWeapon2 = "pistol";
+        }
+
         Debug.Log(GetWeaponProperties(StartingWeapon));
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }

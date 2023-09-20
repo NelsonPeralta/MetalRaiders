@@ -469,9 +469,12 @@ public class WeaponPropertiesEditor : Editor
         {
             wp.spareAmmo = EditorGUILayout.IntField("Spare Ammo:", wp.spareAmmo);
             wp.maxSpareAmmo = EditorGUILayout.IntField("Max Spare Ammo:", wp.maxSpareAmmo);
-
+        }
+        else
+        {
             wp.spareAmmo = wp.maxSpareAmmo = 0;
         }
+
         wp.damage = EditorGUILayout.IntField("Bullet damage:", wp.damage);
         if (wp.bulletSize <= 0) wp.bulletSize = 1;
         wp.bulletSize = EditorGUILayout.IntField("Bullet size:", wp.bulletSize);

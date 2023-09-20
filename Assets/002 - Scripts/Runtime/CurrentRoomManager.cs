@@ -295,7 +295,8 @@ public class CurrentRoomManager : MonoBehaviour
 
         if (PhotonNetwork.InRoom)
         {
-            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) > 1)
+
+            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) >= 1) // At least one more stranger player is in the room
                 if (_randomQuickMatchSeetingsChosen && _vetoCountdown > 0)
                 {
                     _vetoCountdown -= Time.deltaTime;
@@ -385,6 +386,7 @@ public class CurrentRoomManager : MonoBehaviour
     {
         Debug.Log("ChooseRandomMatchSettingsForQuickMatch");
         _ran = Random.Range(0, 5);
+        _ran = 2;
 
         if (_ran > 1) // PvP
         {
@@ -409,18 +411,18 @@ public class CurrentRoomManager : MonoBehaviour
                 }
 
         }
-        else // PvE
-        {
-            GameManager.instance.gameMode = GameManager.GameMode.Swarm;
-            GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
+        //else // PvE
+        //{
+        //    GameManager.instance.gameMode = GameManager.GameMode.Swarm;
+        //    GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
 
-            ChooseRandomPvEMap();
-            if (_vetoedMapIndex != 0)
-                while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
-                {
-                    ChooseRandomPvEMap();
-                }
-        }
+        //    ChooseRandomPvEMap();
+        //    if (_vetoedMapIndex != 0)
+        //        while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
+        //        {
+        //            ChooseRandomPvEMap();
+        //        }
+        //}
 
 
 

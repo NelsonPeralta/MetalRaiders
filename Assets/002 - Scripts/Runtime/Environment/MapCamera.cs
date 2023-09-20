@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class MapCamera : MonoBehaviour
 {
@@ -16,12 +17,17 @@ public class MapCamera : MonoBehaviour
     bool _allPlayersJoined;
     bool _announcementPLayed;
 
+
+    float _loadingTimeOut;
+
+
     private void OnDestroy()
     {
         _instance = null;
     }
     private void Awake()
     {
+        _loadingTimeOut = 10;
         _instance = this;
     }
     private void Start()
@@ -41,6 +47,21 @@ public class MapCamera : MonoBehaviour
             if (_announcerDelay <= 0)
             {
                 PlayAnnouncer();
+            }
+        }
+
+
+        if (_loadingTimeOut > 0)
+        {
+            _loadingTimeOut -= Time.deltaTime;
+            if (_loadingTimeOut <= 0)
+            {
+                try
+                {
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LoadLevel(0);
+                }
+                catch { }
             }
         }
     }

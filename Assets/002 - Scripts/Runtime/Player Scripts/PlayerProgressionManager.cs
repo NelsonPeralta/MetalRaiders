@@ -38,10 +38,11 @@ public class PlayerProgressionManager : MonoBehaviour
         }
     }
     public List<Sprite> rankSprites { get { return _rankImages; } }
+    public List<Rank> ranks { get { return _ranks; } }
 
     [SerializeField] List<Sprite> _rankImages;
 
-    List<Rank> ranks = new List<Rank>();
+    List<Rank> _ranks = new List<Rank>();
 
 
     // Start is called before the first frame update
@@ -57,27 +58,27 @@ public class PlayerProgressionManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             instance = this;
 
-            ranks.Add(new Rank(0, 0, "r", "Recruit", "invisible"));
+            _ranks.Add(new Rank(0, 0, "r", "Recruit", "invisible"));
 
-            ranks.Add(new Rank(playerLevelToXpDic[5], 5, "pvt", "Private", "brown"));
-            ranks.Add(new Rank(playerLevelToXpDic[10], 10, "cpl", "Corporal", "brown"));
-            ranks.Add(new Rank(playerLevelToXpDic[10], 15, "mcpl", "Master Corporal", "brown"));
-            ranks.Add(new Rank(playerLevelToXpDic[15], 20, "sgt", "Sergeant", "brown"));
+            _ranks.Add(new Rank(5, 5, "pvt", "Private", "brown"));
+            _ranks.Add(new Rank(10, 10, "cpl", "Corporal", "brown"));
+            _ranks.Add(new Rank(10, 15, "mcpl", "Master Corporal", "brown"));
+            _ranks.Add(new Rank(15, 20, "sgt", "Sergeant", "brown"));
 
-            ranks.Add(new Rank(playerLevelToXpDic[20], 30, "wo", "Warrant Officer", "black"));
-            ranks.Add(new Rank(playerLevelToXpDic[22], 40, "mwo", "Master Warrant Officer", "black"));
-            ranks.Add(new Rank(playerLevelToXpDic[25], 50, "cwo", "Chief Warrant Officer", "black"));
+            _ranks.Add(new Rank(20, 30, "wo", "Warrant Officer", "black"));
+            _ranks.Add(new Rank(22, 40, "mwo", "Master Warrant Officer", "black"));
+            _ranks.Add(new Rank(25, 50, "cwo", "Chief Warrant Officer", "black"));
 
-            ranks.Add(new Rank(playerLevelToXpDic[30], 60, "2lt", "Second Lieutenant", "white"));
-            ranks.Add(new Rank(playerLevelToXpDic[32], 65, "lt", "Lieutenant", "white"));
-            ranks.Add(new Rank(playerLevelToXpDic[35], 75, "capt", "Captain", "white"));
+            _ranks.Add(new Rank(30, 60, "2lt", "Second Lieutenant", "white"));
+            _ranks.Add(new Rank(32, 65, "lt", "Lieutenant", "white"));
+            _ranks.Add(new Rank(35, 75, "capt", "Captain", "white"));
 
-            ranks.Add(new Rank(playerLevelToXpDic[40], 100, "maj", "Major", "lightblue"));
-            ranks.Add(new Rank(playerLevelToXpDic[42], 125, "cmdt", "Commander", "lightblue"));
-            ranks.Add(new Rank(playerLevelToXpDic[45], 150, "col", "Colonel", "lightblue"));
+            _ranks.Add(new Rank(40, 100, "maj", "Major", "lightblue"));
+            _ranks.Add(new Rank(42, 125, "cmdt", "Commander", "lightblue"));
+            _ranks.Add(new Rank(45, 150, "col", "Colonel", "lightblue"));
 
-            ranks.Add(new Rank(playerLevelToXpDic[45], 200, "bg", "Brigadier", "lightyellow"));
-            ranks.Add(new Rank(playerLevelToXpDic[50], 250, "gen", "General", "lightyellow"));
+            _ranks.Add(new Rank(45, 200, "bg", "Brigadier", "lightyellow"));
+            _ranks.Add(new Rank(50, 250, "gen", "General", "lightyellow"));
 
         }
     }
@@ -91,11 +92,11 @@ public class PlayerProgressionManager : MonoBehaviour
 
     public static Rank GetClosestRank(int xp, int h)
     {
-        Rank r = instance.ranks[0];
-        foreach (Rank rank in instance.ranks)
+        Rank r = instance._ranks[0];
+        foreach (Rank rank in instance._ranks)
         {
-            Debug.Log($"Rank search: {xp} {h} \n {rank.xpRequired} {rank.honorRequired}");
-            if (xp >= rank.xpRequired && h >= rank.honorRequired)
+            Debug.Log($"Rank search: {xp} {h} \n {rank.lvlRequired} {rank.honorRequired}");
+            if (xp >= rank.lvlRequired && h >= rank.honorRequired)
                 r = rank;
             else
                 break;
@@ -106,7 +107,7 @@ public class PlayerProgressionManager : MonoBehaviour
 
     public static Dictionary<int, int> playerLevelToXpDic = new Dictionary<int, int>()
     {
-        {1, 1000 }, {2, 1250 }, {3, 1750 }, {4, 2500 }, {5, 5000 },
+        {1, 0 }, {2, 1000 }, {3, 1750 }, {4, 2500 }, {5, 5000 },
 
         {6, 6000 }, {7, 7000 }, {8, 10000 }, {9, 13000 }, {10, 20000 },
 
@@ -147,7 +148,7 @@ public class PlayerProgressionManager : MonoBehaviour
     public struct Rank
     {
 
-        public int xpRequired { get { return _xpRequired; } }
+        public int lvlRequired { get { return _lvlRequired; } }
         public int honorRequired { get { return _honorRequired; } }
         public string spriteName { get { return _spriteName; } }
         public string cleanName { get { return _cleanName; } }
@@ -155,13 +156,13 @@ public class PlayerProgressionManager : MonoBehaviour
 
 
 
-        int _xpRequired, _honorRequired;
+        int _lvlRequired, _honorRequired;
         string _spriteName, _cleanName, _color;
 
 
         public Rank(int xpReq, int hReq, string n, string cn, string color)
         {
-            _xpRequired = xpReq;
+            _lvlRequired = xpReq;
             _honorRequired = hReq;
             _spriteName = n;
             _cleanName = cn;

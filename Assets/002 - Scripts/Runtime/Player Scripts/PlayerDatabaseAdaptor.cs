@@ -93,7 +93,7 @@ public class PlayerDatabaseAdaptor
     {
         get
         {
-            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.xp, playerBasicOnlineStats.honor);
+            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.level, playerBasicOnlineStats.honor);
             return rank.spriteName;
         }
     }
@@ -102,7 +102,7 @@ public class PlayerDatabaseAdaptor
     {
         get
         {
-            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.xp, playerBasicOnlineStats.honor);
+            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.level, playerBasicOnlineStats.honor);
             return rank.cleanName;
         }
     }
@@ -163,7 +163,7 @@ public class PlayerDatabaseAdaptor
                 _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
                 playerListItem.secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
 
-                PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.xp, playerBasicOnlineStats.honor);
+                PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.level, playerBasicOnlineStats.honor);
 
 
                 Debug.Log(playerBasicOnlineStats.honor);

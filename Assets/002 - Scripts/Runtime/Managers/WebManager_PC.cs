@@ -188,10 +188,10 @@ public partial class WebManager
         int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
         int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
         int newHonor = pda.playerBasicOnlineStats.honor;
-        int dbXpToLevel = 999999999;
+        int minXpToLevelUp = 999999999;
 
         if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
-            dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
+            minXpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
 
 
         if (winPlayers != null)
@@ -199,7 +199,7 @@ public partial class WebManager
                 newHonor += PlayerProgressionManager.honorGainPerMatch;
 
 
-        if (dbXpToLevel < newXp)
+        if (newXp >= minXpToLevelUp)
         {
             Debug.Log("LEVEL UP");
             newLevel = pda.playerBasicOnlineStats.level + 1;
@@ -234,7 +234,7 @@ public partial class WebManager
                         GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Credits");
                 //else
                 //    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
-                if (dbXpToLevel < newXp)
+                if (newXp >= minXpToLevelUp)
                 {
                     GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
                 }

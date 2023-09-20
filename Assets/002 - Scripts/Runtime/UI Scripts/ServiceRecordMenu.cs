@@ -44,7 +44,6 @@ public class ServiceRecordMenu : MonoBehaviour
         levelText.text = $"Level: {pda.level.ToString()}";
         xpText.text = $"Xp: {pda.xp.ToString()}";
         creditsText.text = $"Credits: {pda.credits.ToString()}";
-        _honorText.text = $"Honor: {pda.honor.ToString()}";
 
         int xpNeeded = 0;
         if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.level + 1)) xpNeeded = PlayerProgressionManager.playerLevelToXpDic[pda.level + 1];
@@ -53,8 +52,10 @@ public class ServiceRecordMenu : MonoBehaviour
 
 
 
-        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.xp, pda.honor);
+        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.level, pda.honor);
+        PlayerProgressionManager.Rank nextRank = PlayerProgressionManager.instance.ranks.ElementAt(PlayerProgressionManager.instance.ranks.IndexOf(PlayerProgressionManager.GetClosestRank(pda.level, pda.honor)) + 1);
         _rankCleanNameText.text = $"Rank: {rank.cleanName}";
+        _honorText.text = $"Honor: {pda.honor.ToString()}\n\nNext rank: {nextRank.cleanName} at Level {nextRank.lvlRequired} and {nextRank.honorRequired} honor";
 
         Debug.Log(rank.cleanName);
         if (GameManager.colorDict.ContainsKey(rank.color))
