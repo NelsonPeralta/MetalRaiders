@@ -166,6 +166,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         int ammoAvailable = (localAmmo + spareAmmo);
         int totalAmmoAvailable = _ammo + _spareAmmo;
 
+        if (w.injectLootedAmmo)
+            ammoNeeded = 999;
+
         if (ammoNeeded <= 0)
             return;
 
@@ -174,13 +177,13 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         if (ammoNeeded >= ammoAvailable)
             ammoToLoot = ammoAvailable;
 
-
-
-
-        if (w.GetComponent<WeaponProperties>().injectLootedAmmo)
+        if (w.injectLootedAmmo)
         {
-            ammoToLoot = w.ammoCapacity - w.loadedAmmo;
-            w.loadedAmmo += ammoToLoot;
+            w.loadedAmmo += ammoAvailable;
+            HideWeapon();
+            NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
+            playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();
+            return;
         }
         else
         {
@@ -188,7 +191,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         }
         playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({ammoToLoot})");
 
-        if (ammoNeeded >= ammoAvailable || w.injectLootedAmmo)
+        if (ammoNeeded >= ammoAvailable)
             HideWeapon();
         else
         {

@@ -121,7 +121,7 @@ public class WeaponProperties : MonoBehaviour
         get { return _currentAmmo; }
         set
         {
-            _currentAmmo = value;
+            _currentAmmo = Mathf.Clamp(value, 0, ammoCapacity);
 
             if ((!player.playerInventory.leftWeapon) || (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon != this))
             {
