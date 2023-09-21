@@ -344,7 +344,7 @@ public class CurrentRoomManager : MonoBehaviour
         gameStarted = false;
         _reachedHalwayGameStartCountdown = false;
 
-        _expectedMapAddOns = 0;
+        _expectedMapAddOns = _vetos = 0;
 
         if (scene.buildIndex == 0)
         {

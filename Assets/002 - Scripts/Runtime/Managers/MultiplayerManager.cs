@@ -216,7 +216,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         if (pms.score >= scoreToWin)
                         {
                             pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {pms.GetComponent<Player>().nickName} wins!");
-                            winningPlayers.Add(pp);
+                            winningPlayers.Add(pms.GetComponent<Player>());
                         }
                 }
                 else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
