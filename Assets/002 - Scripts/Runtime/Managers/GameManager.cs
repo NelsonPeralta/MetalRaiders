@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static GameManager instance;
     public static int GameStartDelay = 6;
     public static Dictionary<string, string> colorDict = new Dictionary<string, string>();
-
+    public CarnageReport carnageReport { get { return _carnageReport; } set { _carnageReport = value; } }
 
     public Dictionary<int, PlayerMultiplayerMatchStats.Team> controllerId_TeamDict;
     public Dictionary<int, Player> pid_player_Dict
@@ -332,6 +332,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] List<Texture> _colorPaletteTextures = new List<Texture>();
 
     SwarmManager.Difficulty _difficulty;
+    CarnageReport _carnageReport;
 
     void Awake()
     {

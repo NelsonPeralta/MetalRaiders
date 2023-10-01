@@ -189,6 +189,7 @@ public partial class WebManager
         int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
         int newHonor = pda.playerBasicOnlineStats.honor;
         int minXpToLevelUp = 999999999;
+        int honorGained = 0;
 
         if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
             minXpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
@@ -196,7 +197,12 @@ public partial class WebManager
 
         if (winPlayers != null)
             if (winPlayers.Contains(GameManager.GetLocalMasterPlayer()))
-                newHonor += PlayerProgressionManager.honorGainPerMatch;
+            {
+                honorGained = PlayerProgressionManager.honorGainPerMatch;
+                newHonor += honorGained;
+            }
+
+        GameManager.instance.carnageReport = new CarnageReport(xpAndCreditGain, newXp, honorGained, newHonor);
 
 
         if (newXp >= minXpToLevelUp)

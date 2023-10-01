@@ -164,11 +164,10 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         string[] lightWeaponCodeNames = { "pistol", "smg", "m1911", "colt", "mp5", "p90", "deagle" };
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            if ((GameManager.instance.gameType.ToString().Contains("Slayer"))
-                || GameManager.instance.gameType == GameManager.GameType.Retro)
+            if ((GameManager.instance.gameType.ToString().Contains("Slayer")))
             {
                 if (codeName == "br")
-                    codeName = "pistol";
+                    codeName = "ar";
             }
             else if ((GameManager.instance.gameType.ToString().Contains("Snipers")))
             {

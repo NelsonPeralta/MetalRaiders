@@ -243,7 +243,11 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 }
             }
             else
+            {
+                GameManager.instance.carnageReport = new CarnageReport(1234, 2000, 32, 40);
+
                 GameManager.instance.LeaveRoom();
+            }
         }
     }
 

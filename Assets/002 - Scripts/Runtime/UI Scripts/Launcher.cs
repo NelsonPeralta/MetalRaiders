@@ -204,7 +204,16 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (WebManager.webManagerInstance)
         {
             if (WebManager.webManagerInstance.pda.PlayerDataIsSet())
-                MenuManager.Instance.OpenMenu("online title");
+            {
+                Debug.Log(GameManager.instance.carnageReport.xpGained);
+                if (GameManager.instance.carnageReport == null)
+                    Debug.Log("Carnage report is NULL");
+
+                if (GameManager.instance.carnageReport.xpGained <= 0)
+                    MenuManager.Instance.OpenMenu("online title"); // Runs this line if quit game an returning to menu
+                else
+                    MenuManager.Instance.OpenMenu("carnage report");
+            }
             else
                 MenuManager.Instance.OpenMenu("offline title");
         }

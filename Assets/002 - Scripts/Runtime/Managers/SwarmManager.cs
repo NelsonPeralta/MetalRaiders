@@ -1003,7 +1003,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 pp.LeaveRoomWithDelay();
             }
             else
+            {
                 GameManager.instance.LeaveRoom();
+            }
         }
     }
 }

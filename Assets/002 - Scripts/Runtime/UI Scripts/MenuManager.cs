@@ -30,7 +30,7 @@ public class MenuManager : MonoBehaviour
     private void OnEnable()
     {
         Debug.Log("MenuManager OnEnable");
-        this.menus = GetComponentsInChildren<Menu>(true);
+        //this.menus = GetComponentsInChildren<Menu>(true);
 
         //GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         //GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
@@ -45,6 +45,9 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(string menuName) // Open a menu GO using the name from its Menu script
     {
+        if (menuName == "online title")
+            Debug.Log("Opening Online Title");
+
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName == menuName)
