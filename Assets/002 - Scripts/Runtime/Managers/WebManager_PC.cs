@@ -202,7 +202,9 @@ public partial class WebManager
                 newHonor += honorGained;
             }
 
-        GameManager.instance.carnageReport = new CarnageReport(xpAndCreditGain, newXp, honorGained, newHonor);
+        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.playerBasicOnlineStats.level, pda.playerBasicOnlineStats.honor);
+
+        GameManager.instance.carnageReport = new CarnageReport(rank,pda.level, pda.xp, xpAndCreditGain, pda.honor, honorGained);
 
 
         if (newXp >= minXpToLevelUp)

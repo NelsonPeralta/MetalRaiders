@@ -5,24 +5,29 @@ using UnityEngine;
 
 public class CarnageReport : MonoBehaviour
 {
+    public PlayerProgressionManager.Rank rank { get { return _rank; } }
+    public int playerLevel { get { return _pLvl; } }
     public int xpGained { get { return _xpGained; } }
-    public int finalXp { get { return _finalXp; } }
+    public int currentXp { get { return _currentXp; } }
 
     public int honorGained
     {
         get { return _honorGained; }
-        set { _finalHonor = value; }
+        set { _currentHonor = value; }
     }
 
-    public int finalHonor { get {  return _finalHonor; } }
+    PlayerProgressionManager.Rank _rank;
+    public int currentHonor { get {  return _currentHonor; } }
 
 
-    int _xpGained, _finalXp, _honorGained, _finalHonor;
+    int _xpGained, _currentXp, _honorGained, _currentHonor, _pLvl;
 
-    public CarnageReport(int xpg, int fxp, int hg, int fh)
+    public CarnageReport(PlayerProgressionManager.Rank prank,int pLvl, int curXp, int gxp, int curH, int gh)
     {
-        _xpGained = xpg; _finalXp = fxp;
+        _rank = prank;
+        _pLvl = pLvl;
+        _xpGained = gxp; _currentXp = curXp;
 
-        _honorGained = hg; _finalHonor = fh;
+        _honorGained = gh; _currentHonor = curH;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using System.Linq;
 
 public class CarnageReportMenu : MonoBehaviour
 {
@@ -13,8 +13,18 @@ public class CarnageReportMenu : MonoBehaviour
         set
         {
             _xpTimer = Mathf.Clamp(value, 0, 1);
-            _xpSlider.value = GameManager.instance.carnageReport.finalXp - GameManager.instance.carnageReport.xpGained + (int)(_xpTimer * GameManager.instance.carnageReport.xpGained);
-            _xpText.text = $"{_xpSlider.value} / {GameManager.instance.carnageReport.finalXp}";
+            Debug.Log((int)(_xpTimer * GameManager.instance.carnageReport.xpGained));
+            _xpSlider.value = _xpBase + (int)(_xpTimer * GameManager.instance.carnageReport.xpGained);
+            _xpText.text = $"{_xpSlider.value} / {_xpToLevelUp}";
+
+            if (_xpSlider.value >= _xpToLevelUp)
+            {
+                _xpBase = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + _lvlAddCount];
+
+                _lvlAddCount++;
+                _xpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + _lvlAddCount];
+                _xpSlider.maxValue = _xpToLevelUp;
+            }
         }
     }
 
@@ -24,8 +34,8 @@ public class CarnageReportMenu : MonoBehaviour
         set
         {
             _hnrTimer = Mathf.Clamp(value, 0, 1);
-            _hnrSlider.value = GameManager.instance.carnageReport.finalHonor - GameManager.instance.carnageReport.honorGained + (int)(_hnrTimer * GameManager.instance.carnageReport.honorGained);
-            _hnrText.text = $"{_hnrSlider.value} / {GameManager.instance.carnageReport.finalHonor}";
+            _hnrSlider.value = GameManager.instance.carnageReport.currentHonor - GameManager.instance.carnageReport.honorGained + (int)(_hnrTimer * GameManager.instance.carnageReport.honorGained);
+            _hnrText.text = $"{_hnrSlider.value} / {_hnrToLevelUp}";
         }
     }
 
@@ -33,18 +43,26 @@ public class CarnageReportMenu : MonoBehaviour
     Image _rankImage;
     [SerializeField]
     TMP_Text _lvlText, _xpText, _hnrText;
-    [SerializeField] int _targetXp, _targetHonor;
     [SerializeField] Slider _xpSlider, _hnrSlider;
 
     float _xpTimer, _hnrTimer;
+    int _xpToLevelUp, _hnrToLevelUp;
 
+    int _lvlAddCount = 1, _xpBase;
 
     private void OnEnable()
     {
         _xpTimer = _hnrTimer = 0;
-        _xpSlider.maxValue = GameManager.instance.carnageReport.finalXp; _hnrSlider.maxValue = GameManager.instance.carnageReport.finalHonor;
 
-        _targetXp = GameManager.instance.carnageReport.xpGained; _targetHonor = GameManager.instance.carnageReport.honorGained;
+        _xpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + 1];
+        PlayerProgressionManager.Rank nextRank = PlayerProgressionManager.instance.ranks.ElementAt(PlayerProgressionManager.instance.ranks.IndexOf(PlayerProgressionManager.GetClosestRank(WebManager.webManagerInstance.pda.level, WebManager.webManagerInstance.pda.honor)) + 1);
+        _hnrToLevelUp = nextRank.honorRequired;
+
+        _xpSlider.maxValue = _xpToLevelUp; _hnrSlider.maxValue = _hnrToLevelUp;
+       _xpSlider.value = GameManager.instance.carnageReport.currentXp; _hnrSlider.value = GameManager.instance.carnageReport.currentHonor;
+        _xpBase = GameManager.instance.carnageReport.currentXp;
+
+        _hnrText.text = $"0 / {_hnrToLevelUp}";
     }
 
     // Start is called before the first frame update
@@ -56,9 +74,9 @@ public class CarnageReportMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_targetXp > 0)
+        if (_xpToLevelUp > 0 && xpTimer < 1)
         {
-            xpTimer += (float)(Time.deltaTime);
+            xpTimer += (float)(Time.deltaTime) * 0.5f;
         }
 
         if (_xpTimer == 1)
