@@ -10,6 +10,13 @@ public class MapAiWaypoints : MonoBehaviour
     [SerializeField] List<WaypointAssignment> _assignments = new List<WaypointAssignment>();
 
 
+    int randomNumber;
+
+    private void Awake()
+    {
+        randomNumber = Random.Range(0, waypoints.Count);
+    }
+
     public struct WaypointAssignment
     {
         public GameObject user;
@@ -30,5 +37,13 @@ public class MapAiWaypoints : MonoBehaviour
         _assignments.Add(wa);
 
         return wa;
+    }
+
+
+    public Transform GetRandomWaypoint()
+    {
+        randomNumber = Random.Range(0, waypoints.Count);
+
+        return _waypoint[randomNumber];
     }
 }

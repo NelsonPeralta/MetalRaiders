@@ -37,9 +37,9 @@ public class Tyrant : Actor
     {
         if (!GetComponent<PhotonView>().IsMine)
             return;
-        if (target)
+        if (targetTransform)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
             if (distanceToTarget <= closeRange)
             {
                 nma.enabled = false;
@@ -91,7 +91,7 @@ public class Tyrant : Actor
                         FlameTyrantRun();
                     }
                     nma.enabled = true;
-                    nma.SetDestination(target.position);
+                    nma.SetDestination(targetTransform.position);
                 }
             }
             else if (distanceToTarget > longRange)
@@ -105,7 +105,7 @@ public class Tyrant : Actor
                     FlameTyrantRun();
                 }
                 nma.enabled = true;
-                nma.SetDestination(target.position);
+                nma.SetDestination(targetTransform.position);
             }
 
 
@@ -138,7 +138,7 @@ public class Tyrant : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("FlameTyrantMelee", RpcTarget.AllViaServer, false);
-            target.GetComponent<Player>().Damage(4, false, pid);
+            targetTransform.GetComponent<Player>().Damage(4, false, pid);
         }
         else
         {
@@ -170,7 +170,7 @@ public class Tyrant : Actor
             nma.enabled = false;
             _animator.Play("Throw Fireball");
 
-            Vector3 dir = (target.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
             var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
                 , Quaternion.LookRotation(dir));
             foreach (ActorHitbox c in actorHitboxes)

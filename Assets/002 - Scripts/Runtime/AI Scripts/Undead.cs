@@ -26,9 +26,9 @@ public class Undead : Actor
     public override void AnalyzeNextAction()
     {
         //if (fieldOfView.canSeePlayer) // Chase Player
-        if (target)
+        if (targetTransform)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
             if (distanceToTarget <= closeRange)
             {
                 //Debug.Log("Punch Player");
@@ -52,7 +52,7 @@ public class Undead : Actor
                     UndeadRun();
                 }
                 nma.enabled = true;
-                nma.SetDestination(target.position);
+                nma.SetDestination(targetTransform.position);
             }
 
             //float distanceToTarget = Vector3.Distance(transform.position, target.position);
@@ -100,7 +100,7 @@ public class Undead : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("UndeadAttack", RpcTarget.All, false);
-            target.GetComponent<Player>().Damage(4, false, pid);
+            targetTransform.GetComponent<Player>().Damage(4, false, pid);
         }
         else
         {

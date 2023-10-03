@@ -57,9 +57,9 @@ public class FieldOfView : MonoBehaviour
             //}
             //catch { }
 
-            if (rangeChecks.ToList().Contains(GetComponent<Actor>().target.gameObject.GetComponent<Collider>()))
+            if (rangeChecks.ToList().Contains(GetComponent<Actor>().targetTransform.gameObject.GetComponent<Collider>()))
             {
-                Transform target = GetComponent<Actor>().target;
+                Transform target = GetComponent<Actor>().targetTransform;
                 Vector3 directionToTarget = (target.position - or.position).normalized;
 
                 if (Vector3.Angle(or.forward, directionToTarget) < angle / 2)

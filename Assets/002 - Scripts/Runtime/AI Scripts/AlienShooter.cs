@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.ProBuilder.MeshOperations;
 
 public class AlienShooter : Actor
 {
@@ -52,9 +53,10 @@ public class AlienShooter : Actor
 
     public override void AnalyzeNextAction()
     {
-        if (target)
+        Debug.Log("AnalyzeNextAction");
+        if (targetTransform)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
             if (distanceToTarget <= closeRange)
             {
                 nma.enabled = false;
@@ -86,7 +88,14 @@ public class AlienShooter : Actor
                         if (_throwFireballCooldown <= 0 && !isTaunting && !isFlinching)
                         {
                             Debug.Log("Throw Fireball to Player");
-                            AlienShooterShoot();
+
+                            if (!targetPlayer)
+                                targetTransform = null;
+                            else if (PhotonNetwork.InRoom)
+                                AlienShooterShoot();
+                            else
+                                AlienShooterShoot(false);
+
                         }
                     }
                     else
@@ -94,7 +103,13 @@ public class AlienShooter : Actor
                         if (_throwGrenadeCooldown <= 0 && !isTaunting && !isFlinching)
                         {
                             Debug.Log("Throw Fireball to Player");
-                            AlienShooterThrowGrenade();
+
+                            if (!targetPlayer)
+                                targetTransform = null;
+                            else if (PhotonNetwork.InRoom)
+                                AlienShooterThrowGrenade();
+                            else
+                                AlienShooterThrowGrenade(false);
                         }
                     }
                 }
@@ -103,13 +118,17 @@ public class AlienShooter : Actor
                     if (!isRunning && !isFlinching && !isTaunting)
                     {
                         Debug.Log("Chase Player");
-                        AlienShooterRun();
+
+                        if (PhotonNetwork.InRoom)
+                            AlienShooterRun();
+                        else
+                            AlienShooterRun(false);
                     }
 
                     if (isRunning && !isFlinching && !isTaunting)
                     {
                         nma.enabled = true;
-                        nma.SetDestination(target.position);
+                        nma.SetDestination(targetTransform.position);
                     }
                     else if (isFlinching || isTaunting)
                         nma.enabled = false;
@@ -123,13 +142,16 @@ public class AlienShooter : Actor
                 if (!isRunning)
                 {
                     //Debug.Log("Chase Player");
-                    AlienShooterRun();
+                    if (PhotonNetwork.InRoom)
+                        AlienShooterRun();
+                    else
+                        AlienShooterRun(false);
                 }
 
                 if (isRunning && !isFlinching && !isTaunting)
                 {
                     nma.enabled = true;
-                    nma.SetDestination(target.position);
+                    nma.SetDestination(targetTransform.position);
                 }
                 else if (isFlinching || isTaunting)
                     nma.enabled = false;
@@ -141,7 +163,10 @@ public class AlienShooter : Actor
         {
             if (hitPoints > 0)
                 if (!isIdling)
-                    AlienShooterIdle();
+                    if (PhotonNetwork.InRoom)
+                        AlienShooterIdle();
+                    else
+                        AlienShooterIdle(false);
             //nma.isStopped = true;
         }
     }
@@ -164,7 +189,7 @@ public class AlienShooter : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("BreatherAttack", RpcTarget.All, false);
-            target.GetComponent<Player>().Damage(4, false, pid);
+            targetTransform.GetComponent<Player>().Damage(4, false, pid);
         }
         else
         {
@@ -195,7 +220,7 @@ public class AlienShooter : Actor
             nma.enabled = false;
             _animator.Play("Shoot");
 
-            Vector3 dir = (target.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
             var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
                 , Quaternion.LookRotation(dir));
             foreach (ActorHitbox c in actorHitboxes)
@@ -224,7 +249,7 @@ public class AlienShooter : Actor
             nma.enabled = false;
             _animator.Play("Throw Grenade");
 
-            Vector3 dir = (target.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
             var potionBomb = Instantiate(_grenadePrefab.gameObject, losSpawn.transform.position, Quaternion.LookRotation(dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(potionBomb.GetComponent<Collider>(), c.GetComponent<Collider>());

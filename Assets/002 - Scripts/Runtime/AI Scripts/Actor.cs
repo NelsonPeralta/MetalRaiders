@@ -48,18 +48,31 @@ abstract public class Actor : MonoBehaviour
 
         }
     }
-    public Transform target
+    public Transform targetTransform
     {
-        get { return _target; }
+        get { return _targetPosition; }
         set
         {
-            _target = value;
+            _targetPosition = value;
 
-            if (_target)
-                if (_target.GetComponent<Player>())
-                    _target.GetComponent<Player>().OnPlayerDeath += OnPlayerDeath;
+            if (_targetPosition)
+                if (_targetPosition.GetComponent<Player>())
+                {
+                    _targetPosition.GetComponent<Player>().OnPlayerDeath += OnPlayerDeath;
+                    _targetPlayer = _targetPosition.GetComponent<Player>();
+                }
         }
     }
+
+    public Player targetPlayer
+    {
+        get { return _targetPlayer; }
+        set
+        {
+            targetTransform = value.transform;
+        }
+    }
+
     public Vector3 destination { get { return _destination; } set { _destination = value; } }
     public Transform losSpawn { get { return _losSpawn; } set { _losSpawn = value; } }
     public virtual FieldOfView fieldOfView { get { return _fieldOfView; } private set { _fieldOfView = value; } }
@@ -72,7 +85,8 @@ abstract public class Actor : MonoBehaviour
     public bool oneShotHeadshot { get { return _oneShotHeadshot; } }
 
     [SerializeField] protected int _hitPoints;
-    [SerializeField] Transform _target;
+    [SerializeField] Transform _targetPosition;
+    [SerializeField] Player _targetPlayer;
     [SerializeField] Vector3 _destination;
     [SerializeField] Transform _losSpawn;
 
@@ -97,14 +111,19 @@ abstract public class Actor : MonoBehaviour
     {
         _diffHpMult = _diffAttMult = 1;
 
-        if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic)
+        try
         {
-            _diffHpMult = _diffAttMult = 1.5f;
+
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic)
+            {
+                _diffHpMult = _diffAttMult = 1.5f;
+            }
+            else if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary)
+            {
+                _diffHpMult = _diffAttMult = 2f;
+            }
         }
-        else if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary)
-        {
-            _diffHpMult = _diffAttMult = 2f;
-        }
+        catch (Exception e) { Debug.LogWarning(e); }
 
         _defaultHitpoints = _hitPoints;
         _analyzeNextActionCooldown = _findNewTargetCooldown = 0.5f;
@@ -150,8 +169,15 @@ abstract public class Actor : MonoBehaviour
 
                 if (_analyzeNextActionCooldown <= 0)
                 {
-                    if (PhotonNetwork.IsMasterClient)
+                    if (PhotonNetwork.InRoom)
+                        if (PhotonNetwork.IsMasterClient)
+                        {
+                            AnalyzeNextAction();
+                        }
+                        else;
+                    else
                         AnalyzeNextAction();
+
                     _analyzeNextActionCooldown = 0.3f;
                 }
             }
@@ -182,7 +208,7 @@ abstract public class Actor : MonoBehaviour
         transform.rotation = spawnPointRotation;
 
         if (targetPhotonId > 0)
-            target = PhotonView.Find(targetPhotonId).transform;
+            targetTransform = PhotonView.Find(targetPhotonId).transform;
 
         gameObject.SetActive(true);
     }
@@ -246,19 +272,19 @@ abstract public class Actor : MonoBehaviour
     void TargetStateCheck()
     {
         if (hitPoints > 0)
-            if (target)
-                if (target.GetComponent<Player>())
-                    if (target.GetComponent<Player>().isRespawning || target.GetComponent<Player>().isDead)
-                        target = null;
+            if (targetTransform)
+                if (targetTransform.GetComponent<Player>())
+                    if (targetTransform.GetComponent<Player>().isRespawning || targetTransform.GetComponent<Player>().isDead)
+                        targetTransform = null;
     }
     protected void LookAtTarget()
     {
         if (PhotonNetwork.IsMasterClient)
-            if (target && (isIdling || isMeleeing))
+            if (targetTransform && (isIdling || isMeleeing))
             {
-                Vector3 targetPostition = new Vector3(target.position.x,
+                Vector3 targetPostition = new Vector3(targetTransform.position.x,
                                                     this.transform.position.y,
-                                                    target.position.z);
+                                                    targetTransform.position.z);
                 this.transform.LookAt(targetPostition);
             }
     }
@@ -311,15 +337,36 @@ abstract public class Actor : MonoBehaviour
 
             if (_findNewTargetCooldown <= 0)
             {
-                if (!target)
+                if (!targetTransform)
                 {
-                    int pid = FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId();
+                    Debug.Log("Finding new Target Transform");
 
-                    if (pid > 0)
-                        SetNewTargetWithPid(pid);
+                    try
+                    {
+                        Transform tp = FindObjectOfType<MapAiWaypoints>().GetRandomWaypoint();
+
+
+                        while (targetTransform == tp)
+                        {
+                            tp = FindObjectOfType<MapAiWaypoints>().GetRandomWaypoint();
+                        }
+
+                        targetTransform = tp;
+                    }
+                    catch
+                    {
+
+                    }
+
+                    if (FindObjectOfType<NetworkSwarmManager>())
+                    {
+                        int pid = FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId();
+                        if (pid > 0)
+                            SetNewTargetWithPid(pid);
+                    }
                 }
 
-                _findNewTargetCooldown = 1;
+                _findNewTargetCooldown = 2;
             }
         }
     }
@@ -388,7 +435,7 @@ abstract public class Actor : MonoBehaviour
         }
         else
         {
-            target = PhotonView.Find(pid).transform;
+            targetTransform = PhotonView.Find(pid).transform;
         }
     }
 
@@ -412,7 +459,7 @@ abstract public class Actor : MonoBehaviour
             nma.enabled = false;
             SwarmManager.instance.InvokeOnAiDeath();
             StartCoroutine(Hide());
-            target = null;
+            targetTransform = null;
         }
     }
 }

@@ -19,6 +19,9 @@ scopes = {
 	"last_search.8BEC98E7" = "AmmoPickup"
 	"OpenInspectorPreview.8BEC98E7" = "0"
 	"currentGroup.8BEC98E7" = "scene"
+	"last_search.E8DA15E5" = "waypoin"
+	"OpenInspectorPreview.E8DA15E5" = "0"
+	"currentGroup.E8DA15E5" = "all"
 }
 providers = {
 	asset = {
@@ -70,6 +73,7 @@ providers = {
 objectSelectors = {
 }
 recentSearches = [
+	"waypoin"
 	"AmmoPickup"
 	"Movement"
 	"minigun seller"
@@ -85,6 +89,7 @@ searchItemFavorites = [
 ]
 savedSearchesSortOrder = 0
 showSavedSearchPanel = false
+hideTabs = false
 expandedQueries = [
 ]
 queryBuilder = false

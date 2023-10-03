@@ -44,9 +44,9 @@ public class Breather : Actor
 
     public override void AnalyzeNextAction()
     {
-        if (target)
+        if (targetTransform)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
             if (distanceToTarget <= closeRange)
             {
                 nma.enabled = false;
@@ -85,7 +85,7 @@ public class Breather : Actor
                         BreatherRun();
                     }
                     nma.enabled = true;
-                    nma.SetDestination(target.position);
+                    nma.SetDestination(targetTransform.position);
                 }
             }
             else if (distanceToTarget > longRange)
@@ -99,7 +99,7 @@ public class Breather : Actor
                     BreatherRun();
                 }
                 nma.enabled = true;
-                nma.SetDestination(target.position);
+                nma.SetDestination(targetTransform.position);
             }
 
 
@@ -132,7 +132,7 @@ public class Breather : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("BreatherAttack", RpcTarget.All, false);
-            target.GetComponent<Player>().Damage(4, false, pid);
+            targetTransform.GetComponent<Player>().Damage(4, false, pid);
         }
         else
         {
@@ -163,7 +163,7 @@ public class Breather : Actor
             nma.enabled = false;
             _animator.Play("Throw Fireball");
 
-            Vector3 dir = (target.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
             var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
                 , Quaternion.LookRotation(dir));
             foreach (ActorHitbox c in actorHitboxes)
