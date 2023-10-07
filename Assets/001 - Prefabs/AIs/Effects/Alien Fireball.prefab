@@ -4980,7 +4980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerWhoThrewGrenade: {fileID: 0}
   damage: 23
-  force: 3
+  force: 1
   radius: 2
   power: 50
   deSpawnTime: 10

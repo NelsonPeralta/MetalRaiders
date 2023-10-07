@@ -53,7 +53,7 @@ public class AlienShooter : Actor
 
     public override void AnalyzeNextAction()
     {
-        Debug.Log("AnalyzeNextAction");
+        //Debug.Log("AnalyzeNextAction");
         if (targetTransform)
         {
             float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
@@ -89,7 +89,7 @@ public class AlienShooter : Actor
                         {
                             Debug.Log("Throw Fireball to Player");
 
-                            if (!targetPlayer)
+                            if (!targetTransform.GetComponent<Player>())
                                 targetTransform = null;
                             else if (PhotonNetwork.InRoom)
                                 AlienShooterShoot();
@@ -104,7 +104,7 @@ public class AlienShooter : Actor
                         {
                             Debug.Log("Throw Fireball to Player");
 
-                            if (!targetPlayer)
+                            if (!targetTransform.GetComponent<Player>())
                                 targetTransform = null;
                             else if (PhotonNetwork.InRoom)
                                 AlienShooterThrowGrenade();

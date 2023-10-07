@@ -3379,15 +3379,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cb4d220f4364f844a3471dfba69fab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0
-  angle: 0
+  radius: 10
+  angle: 80
   playerRef: {fileID: 0}
   targetMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   canSeePlayer: 0
   _firstCollision: {fileID: 0}
 --- !u!95 &8516912798924777548
@@ -3423,7 +3423,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitPoints: 250
-  _target: {fileID: 0}
+  _targetPosition: {fileID: 0}
+  _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 3976385901426164958}
   _closeRange: 0

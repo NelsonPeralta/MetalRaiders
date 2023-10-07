@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MapAiWaypoints : MonoBehaviour
 {
-    public List<Transform> waypoints { get { return _waypoint; } }
+    public List<Transform> waypoints { get { return _waypoints; } }
 
-    [SerializeField] List<Transform> _waypoint;
+    [SerializeField] List<Transform> _waypoints;
     [SerializeField] List<WaypointAssignment> _assignments = new List<WaypointAssignment>();
 
 
@@ -15,6 +16,7 @@ public class MapAiWaypoints : MonoBehaviour
     private void Awake()
     {
         randomNumber = Random.Range(0, waypoints.Count);
+        _waypoints = GetComponentsInChildren<Transform>().ToList();
     }
 
     public struct WaypointAssignment
@@ -44,6 +46,6 @@ public class MapAiWaypoints : MonoBehaviour
     {
         randomNumber = Random.Range(0, waypoints.Count);
 
-        return _waypoint[randomNumber];
+        return _waypoints[randomNumber];
     }
 }

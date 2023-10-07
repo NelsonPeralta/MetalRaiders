@@ -57,9 +57,9 @@ public class FieldOfView : MonoBehaviour
             //}
             //catch { }
 
-            if (rangeChecks.ToList().Contains(GetComponent<Actor>().targetTransform.gameObject.GetComponent<Collider>()))
+            if (rangeChecks.ToList().Contains(GetComponent<Actor>().targetPlayer.gameObject.GetComponent<Collider>()))
             {
-                Transform target = GetComponent<Actor>().targetTransform;
+                Transform target = GetComponent<Actor>().targetPlayer.transform;
                 Vector3 directionToTarget = (target.position - or.position).normalized;
 
                 if (Vector3.Angle(or.forward, directionToTarget) < angle / 2)
@@ -67,7 +67,10 @@ public class FieldOfView : MonoBehaviour
                     float distanceToTarget = Vector3.Distance(or.position, target.position);
 
                     if (!Physics.Raycast(or.position, directionToTarget, distanceToTarget, obstructionMask))
+                    {
                         canSeePlayer = true;
+                        GetComponent<Actor>().targetTransform = target;
+                    }
                     else
                     {
                         try
@@ -88,8 +91,8 @@ public class FieldOfView : MonoBehaviour
             }
             else
             {
+                Debug.Log("Cant see at all");
                 canSeePlayer = false;
-
             }
 
 

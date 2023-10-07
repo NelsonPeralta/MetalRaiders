@@ -55,12 +55,17 @@ abstract public class Actor : MonoBehaviour
         {
             _targetPosition = value;
 
-            if (_targetPosition)
-                if (_targetPosition.GetComponent<Player>())
-                {
-                    _targetPosition.GetComponent<Player>().OnPlayerDeath += OnPlayerDeath;
-                    _targetPlayer = _targetPosition.GetComponent<Player>();
-                }
+            //if (_targetPosition)
+            //    if (_targetPosition.GetComponent<Player>())
+            //    {
+            //        _targetPosition.GetComponent<Player>().OnPlayerDeath += OnPlayerDeath;
+            //        _targetPlayer = _targetPosition.GetComponent<Player>();
+            //    }
+            //    else
+            //    {
+            //        try { _targetPosition.GetComponent<Player>().OnPlayerDeath -= OnPlayerDeath; } catch { }
+            //        try { _targetPlayer = _targetPosition.GetComponent<Player>(); } catch { }
+            //    }
         }
     }
 
@@ -69,7 +74,7 @@ abstract public class Actor : MonoBehaviour
         get { return _targetPlayer; }
         set
         {
-            targetTransform = value.transform;
+            _targetPlayer = value;
         }
     }
 
@@ -362,7 +367,7 @@ abstract public class Actor : MonoBehaviour
                     {
                         int pid = FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId();
                         if (pid > 0)
-                            SetNewTargetWithPid(pid);
+                            SetNewTargetPlayerWithPid(pid);
                     }
                 }
 
@@ -427,15 +432,15 @@ abstract public class Actor : MonoBehaviour
     }
 
     [PunRPC]
-    public void SetNewTargetWithPid(int pid, bool caller = true)
+    public void SetNewTargetPlayerWithPid(int pid, bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("SetNewTargetWithPid", RpcTarget.AllViaServer, pid, false);
+            GetComponent<PhotonView>().RPC("SetNewTargetPlayerWithPid", RpcTarget.AllViaServer, pid, false);
         }
         else
         {
-            targetTransform = PhotonView.Find(pid).transform;
+            targetPlayer = PhotonView.Find(pid).GetComponent<Player>();
         }
     }
 
