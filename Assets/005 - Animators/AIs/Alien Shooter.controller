@@ -905,7 +905,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Flinch
-  m_Speed: 0.7
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3415115685636438915}
@@ -1145,8 +1145,8 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Throw Grenade
-  m_Speed: 1.7
+  m_Name: Throw
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 96369503705464963}

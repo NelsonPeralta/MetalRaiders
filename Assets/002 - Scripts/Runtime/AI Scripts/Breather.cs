@@ -8,12 +8,7 @@ public class Breather : Actor
 {
     [SerializeField] Fireball _fireBallPrefab;
 
-    [SerializeField] AudioClip _hurtClip;
 
-    float _meleeCooldown;
-    float _throwFireballCooldown;
-
-    bool isInRange;
 
     protected override void ChildOnEnable()
     {
@@ -78,7 +73,7 @@ public class Breather : Actor
             proj.GetComponent<Fireball>().force = 250;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
-            _throwFireballCooldown = 2f;
+            _throwExplosiveCooldown = 2f;
         }
     }
 

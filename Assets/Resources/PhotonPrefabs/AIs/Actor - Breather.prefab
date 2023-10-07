@@ -4033,7 +4033,6 @@ MonoBehaviour:
   _isInRange: 0
   _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
     type: 3}
-  _hurtClip: {fileID: 8300000, guid: 881598fd05821d44786ee69b0cb084ab, type: 3}
 --- !u!82 &7575627652589808186
 AudioSource:
   m_ObjectHideFlags: 0

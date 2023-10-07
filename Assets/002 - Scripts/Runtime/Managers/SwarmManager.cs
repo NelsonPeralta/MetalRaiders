@@ -494,7 +494,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int targetPhotonId = 0;
         try
         {
-            //targetPhotonId = GetRandomPlayerPhotonId();
+            targetPhotonId = GetRandomPlayerPhotonId();
         }
         catch { targetPhotonId = 0; }
         int pdelay = -1;

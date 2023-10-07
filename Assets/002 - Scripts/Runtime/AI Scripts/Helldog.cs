@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Helldog : Actor
 {
-    float _meleeCooldown;
     float _targetLostCooldown;
 
     protected override void ChildOnEnable()

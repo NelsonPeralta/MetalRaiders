@@ -8,7 +8,6 @@ public class Tyrant : Actor
     [SerializeField] Fireball _fireBallPrefab;
     [SerializeField] List<Transform> _minionSpawnPoints = new List<Transform>();
 
-    float _meleeCooldown;
     float _throwFireballCooldown;
     float _summonlCooldown;
 

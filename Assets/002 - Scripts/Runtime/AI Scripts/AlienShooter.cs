@@ -140,11 +140,16 @@ public class AlienShooter : Actor
                 , Quaternion.LookRotation(dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
+
             proj.GetComponent<Fireball>().damage = 8;
-            proj.GetComponent<Fireball>().force = 200;
+            proj.GetComponent<Fireball>().force = 100;
+            if (SwarmManager.instance.editMode)
+            {
+                proj.GetComponent<Fireball>().damage = 1;
+            }
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
-            _throwExplosiveCooldown = 0.4f;
+            _shootProjectileCooldown = 0.4f;
         }
     }
 
@@ -162,21 +167,24 @@ public class AlienShooter : Actor
 
             _animator.SetBool("Run", false);
             nma.enabled = false;
-            _animator.Play("Throw Grenade");
+            _animator.Play("Throw");
 
             Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
             var potionBomb = Instantiate(_grenadePrefab.gameObject, losSpawn.transform.position, Quaternion.LookRotation(dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(potionBomb.GetComponent<Collider>(), c.GetComponent<Collider>());
 
-            potionBomb.GetComponent<Rigidbody>().AddForce(losSpawn.transform.forward * 500);
+            potionBomb.GetComponent<Rigidbody>().AddForce(losSpawn.transform.forward * 600);
 
             potionBomb.GetComponent<AIGrenade>().radius = 6;
-            potionBomb.GetComponent<AIGrenade>().damage = 16;
+            potionBomb.GetComponent<AIGrenade>().damage = 25;
+            if (SwarmManager.instance.editMode)
+            {
+                potionBomb.GetComponent<AIGrenade>().damage = 1;
+            }
             potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
 
             _throwExplosiveCooldown = 1.5f;
-            _throwExplosiveCooldown = 1f;
         }
     }
 }

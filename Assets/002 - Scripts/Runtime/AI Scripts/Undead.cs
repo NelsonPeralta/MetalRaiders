@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Undead : Actor
 {
-    float _meleeCooldown;
     float _targetLostCooldown;
 
 

@@ -1,6 +1,5 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
-using Rewired.Editor.Libraries.Ionic.Zlib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,22 +54,10 @@ abstract public class Actor : MonoBehaviour
     }
     public Transform targetTransform
     {
-        get { return _targetPosition; }
+        get { return _targetTransform; }
         set
         {
-            _targetPosition = value;
-
-            //if (_targetPosition)
-            //    if (_targetPosition.GetComponent<Player>())
-            //    {
-            //        _targetPosition.GetComponent<Player>().OnPlayerDeath += OnPlayerDeath;
-            //        _targetPlayer = _targetPosition.GetComponent<Player>();
-            //    }
-            //    else
-            //    {
-            //        try { _targetPosition.GetComponent<Player>().OnPlayerDeath -= OnPlayerDeath; } catch { }
-            //        try { _targetPlayer = _targetPosition.GetComponent<Player>(); } catch { }
-            //    }
+            _targetTransform = value;
         }
     }
 
@@ -95,7 +82,7 @@ abstract public class Actor : MonoBehaviour
     public bool oneShotHeadshot { get { return _oneShotHeadshot; } }
 
     [SerializeField] protected int _hitPoints, _defaultHitpoints;
-    [SerializeField] Transform _targetPosition;
+    [SerializeField] Transform _targetTransform;
     [SerializeField] Player _targetPlayer;
     [SerializeField] Vector3 _destination;
     [SerializeField] Transform _losSpawn;
@@ -109,10 +96,10 @@ abstract public class Actor : MonoBehaviour
     protected NavMeshAgent _nma;
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
-    protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching;
+    protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isShooting, isThrowing;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
-    [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown;
+    [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown, _switchPlayerCooldown;
     [SerializeField] protected bool _isInRange;
 
     protected float _diffHpMult, _diffAttMult;
@@ -171,7 +158,6 @@ abstract public class Actor : MonoBehaviour
 
         AnimationCheck();
         ActionCooldowns();
-        //CooldownsUpdate();
 
         if (hitPoints > 0)
             if (_analyzeNextActionCooldown > 0)
@@ -180,17 +166,7 @@ abstract public class Actor : MonoBehaviour
 
                 if (_analyzeNextActionCooldown <= 0)
                 {
-                    if (PhotonNetwork.InRoom)
-                        if (PhotonNetwork.IsMasterClient)
-                        {
-                            //AnalyzeNextAction();
-                            CalculateNextAction();
-                        }
-                        else;
-                    else
-                        CalculateNextAction();
-                    //AnalyzeNextAction();
-
+                    CalculateNextAction();
                     _analyzeNextActionCooldown = 0.3f;
                 }
             }
@@ -203,6 +179,7 @@ abstract public class Actor : MonoBehaviour
     {
         // See Prepare() for resetting hitpoints on Spawn
         _flinchCooldown = _defaultFlinchCooldown;
+        _switchPlayerCooldown = 0;
         _isInRange = false;
         ChildOnEnable();
     }
@@ -230,6 +207,7 @@ abstract public class Actor : MonoBehaviour
 
     protected void Prepare()
     {
+        _switchPlayerCooldown = 0;
         _isInRange = false;
         transform.position = new Vector3(0, -10, 0);
         _hitPoints = (int)(_defaultHitpoints * _diffHpMult);
@@ -258,7 +236,8 @@ abstract public class Actor : MonoBehaviour
 
     void AnimationCheck()
     {
-        //currentAnimatorClipName = _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+        // Not networked
+
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             isIdling = true;
         else
@@ -283,10 +262,22 @@ abstract public class Actor : MonoBehaviour
             isFlinching = true;
         else
             isFlinching = false;
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot"))
+            isFlinching = true;
+        else
+            isFlinching = false;
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Throw"))
+            isFlinching = true;
+        else
+            isFlinching = false;
     }
 
     void TargetStateCheck()
     {
+        // Not networked
+
         if (hitPoints > 0)
             if (targetTransform)
                 if (targetTransform.GetComponent<Player>())
@@ -295,20 +286,29 @@ abstract public class Actor : MonoBehaviour
     }
     protected void LookAtTarget()
     {
-        if (PhotonNetwork.IsMasterClient)
-            if (targetTransform && (isIdling || isMeleeing))
+        // If we are in a room and we are not the Host, stop
+        if (PhotonNetwork.InRoom)
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
+        try
+        {
+            if (targetTransform.GetComponent<Player>() && (isIdling || isMeleeing || isShooting))
             {
                 Vector3 targetPostition = new Vector3(targetTransform.position.x,
                                                     this.transform.position.y,
                                                     targetTransform.position.z);
                 this.transform.LookAt(targetPostition);
             }
+        }
+        catch { }
     }
 
     void DropRandomWeapon()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
+
+        // If we are in a room and we are not the Host, stop
+        if (PhotonNetwork.InRoom) if (!PhotonNetwork.IsMasterClient) return;
 
         int ChanceToDrop = UnityEngine.Random.Range(0, 10);
         int cap = 6;
@@ -347,6 +347,9 @@ abstract public class Actor : MonoBehaviour
 
     void FindNewTarget()
     {
+        // If we are in a room and we are not the Host, stop
+        if (PhotonNetwork.InRoom) if (!PhotonNetwork.IsMasterClient) return;
+
         if (_findNewTargetCooldown > 0)
         {
             _findNewTargetCooldown -= Time.deltaTime;
@@ -399,6 +402,8 @@ abstract public class Actor : MonoBehaviour
 
     void ActionCooldowns()
     {
+        // Not networked
+
         if (_meleeCooldown > 0)
             _meleeCooldown -= Time.deltaTime;
 
@@ -410,11 +415,19 @@ abstract public class Actor : MonoBehaviour
 
         if (_flinchCooldown > 0 && hitPoints < _defaultHitpoints)
             _flinchCooldown -= Time.deltaTime;
+
+        if (_switchPlayerCooldown > 0 && hitPoints < _defaultHitpoints)
+            _switchPlayerCooldown -= Time.deltaTime;
     }
 
 
     void CalculateNextAction()
     {
+        // If we are in a room and we are not the Host, stop
+        if (PhotonNetwork.InRoom) if (!PhotonNetwork.IsMasterClient) return;
+
+        // This is where the Nav Mesh Agent is mainly controlled
+
         if (targetTransform)
         {
             float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
@@ -560,9 +573,14 @@ abstract public class Actor : MonoBehaviour
         Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
+        //if (!targetPlayer)
+        if (_switchPlayerCooldown <= 0)
+        {
+            targetTransform = pp.transform;
+            targetPlayer = pp;
 
-        targetTransform = pp.transform;
-        targetPlayer = pp;
+            _switchPlayerCooldown = 5;
+        }
 
         hitPoints -= damage;
         if (hitPoints <= 0)
