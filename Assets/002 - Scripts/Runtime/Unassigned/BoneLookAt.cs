@@ -4,34 +4,18 @@ using UnityEngine;
 
 public class BoneLookAt : MonoBehaviour
 {
-    public Animator anim;
-    public Transform lookAtGO;
-    public Transform head;
-    public bool disactive;
-
-    public int directionIndicator;
+    public Transform target;
 
     [Header("Offsets")]
-    public Vector3 currentOffset;
-    public Vector3 iddleOffset;
-
-    private void Start()
-    {
-        head = anim.GetBoneTransform(HumanBodyBones.Neck);
-        currentOffset = iddleOffset;
-    }
+    public Vector3 offset;
 
     private void LateUpdate()
     {
-        if (!disactive)
+        try
         {
-            head.LookAt(lookAtGO.position);
-            head.rotation = head.rotation * Quaternion.Euler(currentOffset);
+            transform.LookAt(target.position);
+            transform.rotation *= Quaternion.Euler(offset);
         }
-    }
-
-    public void UpdateOffset()
-    {
-        currentOffset = iddleOffset;
+        catch { }
     }
 }

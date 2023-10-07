@@ -3424,7 +3424,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitPoints: 400
   _defaultHitpoints: 400
-  _targetPosition: {fileID: 0}
+  _targetTransform: {fileID: 0}
   _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 3976385901426164958}
@@ -3443,6 +3443,7 @@ MonoBehaviour:
   _meleeCooldown: 0
   _shootProjectileCooldown: 0
   _throwExplosiveCooldown: 0
+  _switchPlayerCooldown: 0
   _isInRange: 0
   _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
     type: 3}

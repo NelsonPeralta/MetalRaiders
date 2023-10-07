@@ -836,16 +836,31 @@ public class PlayerController : MonoBehaviourPun
         }
 
         //Holster anim toggle
-        if (holstered == true)
+        if (weaponAnimator)
         {
-            if (weaponAnimator)
-                weaponAnimator.SetBool("Holster", true);
+            weaponAnimator.SetBool("Holster", holstered);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", holstered);
+
         }
-        else
-        {
-            if (weaponAnimator)
-                weaponAnimator.SetBool("Holster", false);
-        }
+
+        //if (holstered == true)
+        //{
+        //    if (weaponAnimator)
+        //    {
+        //        weaponAnimator.SetBool("Holster", true);
+        //        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", true);
+
+        //    }
+        //}
+        //else
+        //{
+        //    if (weaponAnimator)
+        //    {
+        //        weaponAnimator.SetBool("Holster", false);
+        //        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
+
+        //    }
+        //}
 
 
         //Inspect weapon when T key is pressed

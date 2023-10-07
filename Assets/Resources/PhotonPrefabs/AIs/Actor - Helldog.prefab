@@ -1138,7 +1138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitPoints: 100
   _defaultHitpoints: 0
-  _targetPosition: {fileID: 0}
+  _targetTransform: {fileID: 0}
   _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 2668905060350366582}
@@ -1157,6 +1157,7 @@ MonoBehaviour:
   _meleeCooldown: 0
   _shootProjectileCooldown: 0
   _throwExplosiveCooldown: 0
+  _switchPlayerCooldown: 0
   _isInRange: 0
 --- !u!195 &4212620777855583801
 NavMeshAgent:

@@ -223,7 +223,7 @@ public class Troll : MonoBehaviour
 
         if (boneLookAt != null)
         {
-            boneLookAt.disactive = true;
+            //boneLookAt.disactive = true;
         }
 
         target = null;
