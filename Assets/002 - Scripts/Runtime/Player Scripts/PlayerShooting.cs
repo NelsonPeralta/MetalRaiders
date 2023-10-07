@@ -318,9 +318,10 @@ public class PlayerShooting : MonoBehaviourPun
         try
         {
             activeWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
+            tPersonController.GetComponent<Animator>().SetTrigger("Fire");
             if (pInventory.isDualWielding)
                 activeWeapon.rightWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
-            StartCoroutine(Player3PSFiringAnimation());
+            //StartCoroutine(Player3PSFiringAnimation());
             activeWeapon.Recoil();
             if (pInventory.isDualWielding)
                 activeWeapon.rightWeapon.Recoil();

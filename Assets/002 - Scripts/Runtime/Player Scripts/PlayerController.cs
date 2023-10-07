@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviourPun
     Quaternion savedCamRotation;
 
     [HideInInspector]
-    public bool hasBeenHolstered = false, holstered, isRunning, isWalking;
+    public bool holstered, isRunning, isWalking;
     [HideInInspector]
     public bool isInspecting, aimSoundHasPlayed = false;
 
@@ -389,7 +389,11 @@ public class PlayerController : MonoBehaviourPun
         if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading &&
             !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
         {
+            Debug.Log("_StartShoot_RPC");
             isHoldingShootBtn = true;
+            holstered = false;
+            weaponAnimator.SetBool("Holster", false);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
         }
         else
         {
@@ -816,31 +820,14 @@ public class PlayerController : MonoBehaviourPun
 
     void HolsterAndInspect()
     {
-        if (Input.GetKeyDown(KeyCode.Z) && !hasBeenHolstered)
-        {
-            holstered = true;
-
-            //sfxManager.mainAudioSource.clip = weapSounds.holsterSound;
-            //sfxManager.mainAudioSource.Play();
-
-            hasBeenHolstered = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.Z) && hasBeenHolstered)
-        {
-            holstered = false;
-
-            //sfxManager.mainAudioSource.clip = weapSounds.drawWeaponSound;
-            //sfxManager.mainAudioSource.Play();
-
-            hasBeenHolstered = false;
-        }
+        if (Input.GetKeyDown(KeyCode.Z))
+            holstered = !holstered;
 
         //Holster anim toggle
         if (weaponAnimator)
         {
             weaponAnimator.SetBool("Holster", holstered);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", holstered);
-
         }
 
         //if (holstered == true)
