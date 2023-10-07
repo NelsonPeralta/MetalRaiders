@@ -4010,6 +4010,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitPoints: 150
+  _defaultHitpoints: 0
   _targetPosition: {fileID: 0}
   _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
@@ -4019,12 +4020,17 @@ MonoBehaviour:
   _longRange: 20
   _analyzeNextActionCooldown: 0
   _findNewTargetCooldown: 0
+  _defaultFlinchCooldown: 0
   _attackClip: {fileID: 8300000, guid: f2350706efe6ac14d8484a2a3d88aea7, type: 3}
   _deathClip: {fileID: 8300000, guid: cd6a399cf21af214ebcaa9d5132927b4, type: 3}
   _tauntClip: {fileID: 0}
+  _hurtClip: {fileID: 8300000, guid: 881598fd05821d44786ee69b0cb084ab, type: 3}
   _oneShotHeadshot: 1
-  _defaultHitpoints: 0
   _flinchCooldown: 0
+  _meleeCooldown: 0
+  _shootProjectileCooldown: 0
+  _throwExplosiveCooldown: 0
+  _isInRange: 0
   _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
     type: 3}
   _hurtClip: {fileID: 8300000, guid: 881598fd05821d44786ee69b0cb084ab, type: 3}

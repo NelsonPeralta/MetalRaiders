@@ -9,186 +9,101 @@ public class AlienShooter : Actor
     [SerializeField] Fireball _fireBallPrefab;
     [SerializeField] AIGrenade _grenadePrefab;
 
-    [SerializeField] AudioClip _hurtClip;
-
-
-    float _meleeCooldown;
-    float _throwFireballCooldown;
-    float _throwGrenadeCooldown;
-
-    bool isInRange;
-
-
     protected override void ChildOnEnable()
     {
         Debug.Log("Alien Shooter ChildOnEnable " + hitPoints);
-        _flinchCooldown = 2.2f;
         _hitPoints += (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length);
         Debug.Log("Alien Shooter ChildOnEnable " + hitPoints + (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length));
     }
 
-    public override void CooldownsUpdate()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public override void Idle(bool callRPC = true)
     {
-        if (_meleeCooldown > 0)
-            _meleeCooldown -= Time.deltaTime;
-
-        if (_throwFireballCooldown > 0)
-            _throwFireballCooldown -= Time.deltaTime;
-
-        if (_throwGrenadeCooldown > 0)
-            _throwGrenadeCooldown -= Time.deltaTime;
-
-        if (_flinchCooldown > 0 && hitPoints < _defaultHitpoints)
-            _flinchCooldown -= Time.deltaTime;
+        RibbianIdle(callRPC);
     }
 
-    protected override void ChildOnActorDamaged()
+    public override void Run(bool callRPC = true)
     {
-        if (PhotonNetwork.IsMasterClient)
-            if (_flinchCooldown <= 0)
-            {
-                AlienShooterFlinch();
-            }
+        RibbianRun(callRPC);
+    }
+    public override void Melee(bool callRPC = true)
+    {
+        RibbianMelee(callRPC);
     }
 
-    public override void AnalyzeNextAction()
+    public override void ShootProjectile(bool callRPC = true)
     {
-        //Debug.Log("AnalyzeNextAction");
-        if (targetTransform)
-        {
-            float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
-            if (distanceToTarget <= closeRange)
-            {
-                nma.enabled = false;
+        RibbianShoot(callRPC);
+    }
 
-                if (_meleeCooldown <= 0 && !isFlinching)
-                {
-                    AlienShooterMelee();
-                }
-                else
-                {
-
-                }
-            }
-            else if (distanceToTarget > closeRange && distanceToTarget <= longRange)
-            {
-                if (distanceToTarget > closeRange && distanceToTarget <= midRange)
-                {
-                    if (!isInRange)
-                        isInRange = true;
-                }
-
-
-                if (isInRange)
-                {
-                    int ran = Random.Range(0, 4);
-
-                    if (ran != 0)
-                    {
-                        if (_throwFireballCooldown <= 0 && !isTaunting && !isFlinching)
-                        {
-                            Debug.Log("Throw Fireball to Player");
-
-                            if (!targetTransform.GetComponent<Player>())
-                                targetTransform = null;
-                            else if (PhotonNetwork.InRoom)
-                                AlienShooterShoot();
-                            else
-                                AlienShooterShoot(false);
-
-                        }
-                    }
-                    else
-                    {
-                        if (_throwGrenadeCooldown <= 0 && !isTaunting && !isFlinching)
-                        {
-                            Debug.Log("Throw Fireball to Player");
-
-                            if (!targetTransform.GetComponent<Player>())
-                                targetTransform = null;
-                            else if (PhotonNetwork.InRoom)
-                                AlienShooterThrowGrenade();
-                            else
-                                AlienShooterThrowGrenade(false);
-                        }
-                    }
-                }
-                else
-                {
-                    if (!isRunning && !isFlinching && !isTaunting)
-                    {
-                        Debug.Log("Chase Player");
-
-                        if (PhotonNetwork.InRoom)
-                            AlienShooterRun();
-                        else
-                            AlienShooterRun(false);
-                    }
-
-                    if (isRunning && !isFlinching && !isTaunting)
-                    {
-                        nma.enabled = true;
-                        nma.SetDestination(targetTransform.position);
-                    }
-                    else if (isFlinching || isTaunting)
-                        nma.enabled = false;
-                }
-            }
-            else if (distanceToTarget > longRange)
-            {
-                if (isInRange)
-                    isInRange = false;
-
-                if (!isRunning)
-                {
-                    //Debug.Log("Chase Player");
-                    if (PhotonNetwork.InRoom)
-                        AlienShooterRun();
-                    else
-                        AlienShooterRun(false);
-                }
-
-                if (isRunning && !isFlinching && !isTaunting)
-                {
-                    nma.enabled = true;
-                    nma.SetDestination(targetTransform.position);
-                }
-                else if (isFlinching || isTaunting)
-                    nma.enabled = false;
-            }
-
-
-        }
-        else // Stop Chasing
-        {
-            if (hitPoints > 0)
-                if (!isIdling)
-                    if (PhotonNetwork.InRoom)
-                        AlienShooterIdle();
-                    else
-                        AlienShooterIdle(false);
-            //nma.isStopped = true;
-        }
+    public override void ThrowExplosive(bool callRPC = true)
+    {
+        RibbianThrow(callRPC);
     }
 
 
 
-
-
-    public override void ChildPrepare()
-    {
-        isInRange = false;
-    }
 
 
 
 
     [PunRPC]
-    void AlienShooterMelee(bool caller = true)
+    void RibbianIdle(bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("BreatherAttack", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("RibbianIdle", RpcTarget.All, false);
+        }
+        else
+        {
+            //Debug.Log("UndeadIdle RPC");
+
+            nma.enabled = false;
+            _animator.SetBool("Run", false);
+        }
+    }
+
+    [PunRPC]
+    void RibbianRun(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("RibbianRun", RpcTarget.All, false);
+        }
+        else
+        {
+            //Debug.Log("UndeadRun RPC");
+
+            //_animator.Play("Run");
+            _animator.SetBool("Run", true);
+        }
+    }
+
+
+    [PunRPC]
+    void RibbianMelee(bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("RibbianMelee", RpcTarget.All, false);
             targetTransform.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -205,11 +120,11 @@ public class AlienShooter : Actor
     }
 
     [PunRPC]
-    void AlienShooterShoot(bool caller = true)
+    void RibbianShoot(bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("AlienShooterShoot", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("RibbianShoot", RpcTarget.All, false);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -229,16 +144,16 @@ public class AlienShooter : Actor
             proj.GetComponent<Fireball>().force = 200;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
-            _throwFireballCooldown = 0.4f;
+            _throwExplosiveCooldown = 0.4f;
         }
     }
 
     [PunRPC]
-    void AlienShooterThrowGrenade(bool caller = true)
+    void RibbianThrow(bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("AlienShooterThrowGrenade", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("RibbianThrow", RpcTarget.All, false);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -260,62 +175,8 @@ public class AlienShooter : Actor
             potionBomb.GetComponent<AIGrenade>().damage = 16;
             potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
 
-            _throwGrenadeCooldown = 1.5f;
-            _throwFireballCooldown = 1f;
-        }
-    }
-
-    [PunRPC]
-    void AlienShooterIdle(bool caller = true)
-    {
-        if (caller)
-        {
-            GetComponent<PhotonView>().RPC("AlienShooterIdle", RpcTarget.All, false);
-        }
-        else
-        {
-            //Debug.Log("UndeadIdle RPC");
-
-            nma.enabled = false;
-            _animator.SetBool("Run", false);
-        }
-    }
-
-    [PunRPC]
-    void AlienShooterRun(bool caller = true)
-    {
-        if (caller)
-        {
-            GetComponent<PhotonView>().RPC("AlienShooterRun", RpcTarget.All, false);
-        }
-        else
-        {
-            //Debug.Log("UndeadRun RPC");
-
-            //_animator.Play("Run");
-            _animator.SetBool("Run", true);
-        }
-    }
-
-    [PunRPC]
-    void AlienShooterFlinch(bool caller = true)
-    {
-        if (caller)
-        {
-            GetComponent<PhotonView>().RPC("AlienShooterFlinch", RpcTarget.All, false);
-        }
-        else
-        {
-            try
-            {
-                GetComponent<AudioSource>().clip = _hurtClip;
-                GetComponent<AudioSource>().Play();
-
-                nma.enabled = false;
-                _animator.Play("Flinch");
-                _flinchCooldown = 2.2f;
-            }
-            catch { }
+            _throwExplosiveCooldown = 1.5f;
+            _throwExplosiveCooldown = 1f;
         }
     }
 }

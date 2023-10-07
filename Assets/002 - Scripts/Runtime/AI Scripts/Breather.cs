@@ -29,100 +29,6 @@ public class Breather : Actor
             }
     }
 
-    public override void CooldownsUpdate()
-    {
-        if (_meleeCooldown > 0)
-            _meleeCooldown -= Time.deltaTime;
-
-        if (_throwFireballCooldown > 0)
-            _throwFireballCooldown -= Time.deltaTime;
-
-        if (_flinchCooldown > 0)
-            _flinchCooldown -= Time.deltaTime;
-    }
-
-
-    public override void AnalyzeNextAction()
-    {
-        if (targetTransform)
-        {
-            float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
-            if (distanceToTarget <= closeRange)
-            {
-                nma.enabled = false;
-
-                if (_meleeCooldown <= 0 && !isFlinching)
-                {
-                    BreatherMelee();
-                }
-                else
-                {
-
-                }
-            }
-            else if (distanceToTarget > closeRange && distanceToTarget <= longRange)
-            {
-                if (distanceToTarget > closeRange && distanceToTarget <= midRange)
-                {
-                    if (!isInRange)
-                        isInRange = true;
-                }
-
-
-                if (isInRange)
-                {
-                    if (_throwFireballCooldown <= 0 && !isFlinching)
-                    {
-                        Debug.Log("Throw Fireball to Player");
-                        BreatherThrowFireBall();
-                    }
-                }
-                else
-                {
-                    if (!isRunning)
-                    {
-                        Debug.Log("Chase Player");
-                        BreatherRun();
-                    }
-                    nma.enabled = true;
-                    nma.SetDestination(targetTransform.position);
-                }
-            }
-            else if (distanceToTarget > longRange)
-            {
-                if (isInRange)
-                    isInRange = false;
-
-                if (!isRunning)
-                {
-                    //Debug.Log("Chase Player");
-                    BreatherRun();
-                }
-                nma.enabled = true;
-                nma.SetDestination(targetTransform.position);
-            }
-
-
-        }
-        else // Stop Chasing
-        {
-            if (hitPoints > 0)
-                if (!isIdling)
-                    BreatherIdle();
-            //nma.isStopped = true;
-        }
-    }
-
-
-
-
-
-    public override void ChildPrepare()
-    {
-        isInRange = false;
-    }
-
-
 
 
 
@@ -228,5 +134,30 @@ public class Breather : Actor
             }
             catch { }
         }
+    }
+
+    public override void Idle(bool callRPC = true)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Run(bool callRPC = true)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Melee(bool callRPC = true)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void ShootProjectile(bool callRPC = true)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void ThrowExplosive(bool callRPC = true)
+    {
+        throw new System.NotImplementedException();
     }
 }

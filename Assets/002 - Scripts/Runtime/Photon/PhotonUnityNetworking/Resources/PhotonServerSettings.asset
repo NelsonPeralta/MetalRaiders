@@ -159,6 +159,13 @@ MonoBehaviour:
   - SendVetoToClients
   - SendVetoToMaster
   - SetNewTargetPlayerWithPid
+  - ActorDie
+  - Flinch
+  - RibbianIdle
+  - RibbianMelee
+  - RibbianRun
+  - RibbianShoot
+  - RibbianThrow
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

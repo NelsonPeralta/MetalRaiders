@@ -1,5 +1,6 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using Rewired.Editor.Libraries.Ionic.Zlib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +28,11 @@ abstract public class Actor : MonoBehaviour
             _hitPoints = nv;
 
             if (nv < pv)
-                ChildOnActorDamaged();
+            {
+                if (_flinchCooldown <= 0)
+                    Flinch();
+                //ChildOnActorDamaged();
+            }
 
             if ((nv <= 0.5f * _defaultHitpoints) && (pv > 0.5f * _defaultHitpoints))
                 try
@@ -43,7 +48,7 @@ abstract public class Actor : MonoBehaviour
             {
                 //target = null; \\DO NOT REMOVE TARGET HERE
                 DropRandomWeapon();
-                ActorDeath();
+                ActorDie();
             }
 
         }
@@ -89,26 +94,26 @@ abstract public class Actor : MonoBehaviour
     public int closeRange { get { return _closeRange; } }
     public bool oneShotHeadshot { get { return _oneShotHeadshot; } }
 
-    [SerializeField] protected int _hitPoints;
+    [SerializeField] protected int _hitPoints, _defaultHitpoints;
     [SerializeField] Transform _targetPosition;
     [SerializeField] Player _targetPlayer;
     [SerializeField] Vector3 _destination;
     [SerializeField] Transform _losSpawn;
 
     [SerializeField] int _closeRange, _midRange, _longRange;
-    [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown;
-    [SerializeField] protected AudioClip _attackClip, _deathClip, _tauntClip;
+    [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown, _defaultFlinchCooldown;
+    [SerializeField] protected AudioClip _attackClip, _deathClip, _tauntClip, _hurtClip;
     [SerializeField] bool _oneShotHeadshot;
 
 
     protected NavMeshAgent _nma;
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
-    [SerializeField] protected int _defaultHitpoints;
     protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
-    [SerializeField] protected float _flinchCooldown;
+    [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown;
+    [SerializeField] protected bool _isInRange;
 
     protected float _diffHpMult, _diffAttMult;
 
@@ -165,7 +170,8 @@ abstract public class Actor : MonoBehaviour
         TargetStateCheck();
 
         AnimationCheck();
-        CooldownsUpdate();
+        ActionCooldowns();
+        //CooldownsUpdate();
 
         if (hitPoints > 0)
             if (_analyzeNextActionCooldown > 0)
@@ -177,11 +183,13 @@ abstract public class Actor : MonoBehaviour
                     if (PhotonNetwork.InRoom)
                         if (PhotonNetwork.IsMasterClient)
                         {
-                            AnalyzeNextAction();
+                            //AnalyzeNextAction();
+                            CalculateNextAction();
                         }
                         else;
                     else
-                        AnalyzeNextAction();
+                        CalculateNextAction();
+                    //AnalyzeNextAction();
 
                     _analyzeNextActionCooldown = 0.3f;
                 }
@@ -194,6 +202,8 @@ abstract public class Actor : MonoBehaviour
     private void OnEnable()
     {
         // See Prepare() for resetting hitpoints on Spawn
+        _flinchCooldown = _defaultFlinchCooldown;
+        _isInRange = false;
         ChildOnEnable();
     }
 
@@ -220,6 +230,7 @@ abstract public class Actor : MonoBehaviour
 
     protected void Prepare()
     {
+        _isInRange = false;
         transform.position = new Vector3(0, -10, 0);
         _hitPoints = (int)(_defaultHitpoints * _diffHpMult);
         foreach (ActorHitbox hitbox in GetComponentsInChildren<ActorHitbox>(true))
@@ -324,7 +335,7 @@ abstract public class Actor : MonoBehaviour
 
 
                 Vector3 spp = transform.position + new Vector3(0, 1, 0);
-                Vector3 fDir = losSpawn.transform.forward + new Vector3(0, 2f, 0);
+                Vector3 fDir = losSpawn.transform.forward + new Vector3(0, 1f, 0);
 
                 GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
                 NetworkGameManager.SpawnNetworkWeapon(weapInv[randomWeaponInd].GetComponent<WeaponProperties>(),
@@ -376,10 +387,6 @@ abstract public class Actor : MonoBehaviour
         }
     }
 
-    public virtual void OnHealthHitEarly() { }
-
-
-
 
 
     IEnumerator Hide()
@@ -390,13 +397,149 @@ abstract public class Actor : MonoBehaviour
 
 
 
+    void ActionCooldowns()
+    {
+        if (_meleeCooldown > 0)
+            _meleeCooldown -= Time.deltaTime;
+
+        if (_shootProjectileCooldown > 0)
+            _shootProjectileCooldown -= Time.deltaTime;
+
+        if (_throwExplosiveCooldown > 0)
+            _throwExplosiveCooldown -= Time.deltaTime;
+
+        if (_flinchCooldown > 0 && hitPoints < _defaultHitpoints)
+            _flinchCooldown -= Time.deltaTime;
+    }
 
 
+    void CalculateNextAction()
+    {
+        if (targetTransform)
+        {
+            float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
+            if (distanceToTarget <= closeRange)
+            {
+                nma.enabled = false;
+
+                if (_meleeCooldown <= 0 && !isFlinching)
+                {
+                    ShootProjectile();
+                }
+                else
+                {
+
+                }
+            }
+            else if (distanceToTarget > closeRange && distanceToTarget <= longRange)
+            {
+                if (distanceToTarget > closeRange && distanceToTarget <= midRange)
+                {
+                    if (!_isInRange)
+                        _isInRange = true;
+                }
 
 
-    public abstract void AnalyzeNextAction();
-    public abstract void CooldownsUpdate();
-    public abstract void ChildPrepare();
+                if (_isInRange)
+                {
+                    int ran = UnityEngine.Random.Range(0, 4);
+
+                    if (ran != 0)
+                    {
+                        if (_shootProjectileCooldown <= 0 && !isTaunting && !isFlinching)
+                        {
+                            Debug.Log("Throw Fireball to Player");
+
+                            if (!targetTransform.GetComponent<Player>())
+                                targetTransform = null;
+                            else if (PhotonNetwork.InRoom)
+                                ShootProjectile();
+                            else
+                                ShootProjectile(false);
+
+                        }
+                    }
+                    else
+                    {
+                        if (_throwExplosiveCooldown <= 0 && !isTaunting && !isFlinching)
+                        {
+                            Debug.Log("Throw Fireball to Player");
+
+                            if (!targetTransform.GetComponent<Player>())
+                                targetTransform = null;
+                            else if (PhotonNetwork.InRoom)
+                                ThrowExplosive();
+                            else
+                                ThrowExplosive(false);
+                        }
+                    }
+                }
+                else
+                {
+                    if (!isRunning && !isFlinching && !isTaunting)
+                    {
+                        Debug.Log("Chase Player");
+
+                        if (PhotonNetwork.InRoom)
+                            Run();
+                        else
+                            Run(false);
+                    }
+
+                    if (isRunning && !isFlinching && !isTaunting)
+                    {
+                        nma.enabled = true;
+                        nma.SetDestination(targetTransform.position);
+                    }
+                    else if (isFlinching || isTaunting)
+                        nma.enabled = false;
+                }
+            }
+            else if (distanceToTarget > longRange)
+            {
+                if (_isInRange)
+                    _isInRange = false;
+
+                if (!isRunning)
+                {
+                    //Debug.Log("Chase Player");
+                    if (PhotonNetwork.InRoom)
+                        Run();
+                    else
+                        Run(false);
+                }
+
+                if (isRunning && !isFlinching && !isTaunting)
+                {
+                    nma.enabled = true;
+                    nma.SetDestination(targetTransform.position);
+                }
+                else if (isFlinching || isTaunting)
+                    nma.enabled = false;
+            }
+
+
+        }
+        else // Stop Chasing
+        {
+            if (hitPoints > 0)
+                if (!isIdling)
+                    if (PhotonNetwork.InRoom)
+                        Idle();
+                    else
+                        Idle(false);
+            //nma.isStopped = true;
+        }
+    }
+
+
+    public abstract void Idle(bool callRPC = true);
+    public abstract void Run(bool callRPC = true);
+    public abstract void Melee(bool callRPC = true);
+    public abstract void ShootProjectile(bool callRPC = true);
+    public abstract void ThrowExplosive(bool callRPC = true);
+
+
 
 
     protected virtual void ChildOnActorDamaged() { }
@@ -413,8 +556,13 @@ abstract public class Actor : MonoBehaviour
         if (hitPoints <= 0)
             return;
 
+
         Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
+
+
+        targetTransform = pp.transform;
+        targetPlayer = pp;
 
         hitPoints -= damage;
         if (hitPoints <= 0)
@@ -426,6 +574,28 @@ abstract public class Actor : MonoBehaviour
                 //pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
 
                 //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
+            }
+            catch { }
+        }
+    }
+
+    [PunRPC]
+    public void Flinch(bool callRPC = true)
+    {
+        if (callRPC)
+        {
+            GetComponent<PhotonView>().RPC("Flinch", RpcTarget.All, false);
+        }
+        else
+        {
+            try
+            {
+                GetComponent<AudioSource>().clip = _hurtClip;
+                GetComponent<AudioSource>().Play();
+
+                nma.enabled = false;
+                _animator.Play("Flinch");
+                _flinchCooldown = _defaultFlinchCooldown;
             }
             catch { }
         }
@@ -446,11 +616,11 @@ abstract public class Actor : MonoBehaviour
 
 
     [PunRPC]
-    public void ActorDeath(bool caller = true)
+    public void ActorDie(bool caller = true)
     {
         if (caller && PhotonNetwork.IsMasterClient)
         {
-            GetComponent<PhotonView>().RPC("ActorDeath", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("ActorDie", RpcTarget.All, false);
         }
         else if (!caller)
         {
