@@ -12,7 +12,7 @@ using System.Net.Mail;
 using TMPro;
 using static Player;
 
-public class Player : MonoBehaviourPunCallbacks
+public class Player : Biped
 {
     public delegate void PlayerEvent(Player playerProperties);
     public PlayerEvent OnPlayerDeath, OnPlayerDeathLate, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage,
@@ -491,7 +491,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    public PlayerArmorManager playerArmorManager { get { return _playerArmorManager; } }    
+    public PlayerArmorManager playerArmorManager { get { return _playerArmorManager; } }
     public PlayerThirdPersonModel playerThirdPersonModel { get { return _playerThirdPersonModel; } }
 
     #endregion
@@ -607,7 +607,7 @@ public class Player : MonoBehaviourPunCallbacks
     public Transform weaponDropPoint;
 
     [SerializeField] GameObject headhunterSkullPrefab;
-    
+
 
     private void Awake()
     {

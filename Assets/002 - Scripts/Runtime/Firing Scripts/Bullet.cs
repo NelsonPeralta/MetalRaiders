@@ -231,6 +231,12 @@ public class Bullet : MonoBehaviourPunCallbacks
 
             try
             {
+                finalHitObject.GetComponent<PropHitbox>().Damage(damage);
+            }
+            catch { }
+
+            try
+            {
                 if (finalHitObject.GetComponent<ActorHitbox>())
                 {
                     try
