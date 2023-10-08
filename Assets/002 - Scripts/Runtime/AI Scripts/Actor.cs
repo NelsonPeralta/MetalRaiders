@@ -96,7 +96,7 @@ abstract public class Actor : MonoBehaviour
     protected NavMeshAgent _nma;
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
-    protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isShooting, isThrowing;
+    [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isShooting, isThrowing;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown, _switchPlayerCooldown;
@@ -192,6 +192,7 @@ abstract public class Actor : MonoBehaviour
         //p.OnPlayerDeath -= OnPlayerDeath;
     }
 
+
     public void Spawn(int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation)
     {
         Prepare();
@@ -199,8 +200,8 @@ abstract public class Actor : MonoBehaviour
         transform.position = spawnPointPosition;
         transform.rotation = spawnPointRotation;
 
-        if (targetPhotonId > 0)
-            targetTransform = PhotonView.Find(targetPhotonId).transform;
+        //if (targetPhotonId > 0)
+        //    targetTransform = PhotonView.Find(targetPhotonId).transform;
 
         gameObject.SetActive(true);
     }
@@ -238,40 +239,13 @@ abstract public class Actor : MonoBehaviour
     {
         // Not networked
 
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-            isIdling = true;
-        else
-            isIdling = false;
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
-            isMeleeing = true;
-        else
-            isMeleeing = false;
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
-            isRunning = true;
-        else
-            isRunning = false;
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Taunt"))
-            isTaunting = true;
-        else
-            isTaunting = false;
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Flinch"))
-            isFlinching = true;
-        else
-            isFlinching = false;
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot"))
-            isFlinching = true;
-        else
-            isFlinching = false;
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Throw"))
-            isFlinching = true;
-        else
-            isFlinching = false;
+        isIdling = _animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
+        isMeleeing = _animator.GetCurrentAnimatorStateInfo(0).IsName("Melee");
+        isRunning = _animator.GetCurrentAnimatorStateInfo(0).IsName("Run");
+        isTaunting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Taunt");
+        isFlinching = _animator.GetCurrentAnimatorStateInfo(0).IsName("Flinch");
+        isShooting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot");
+        isThrowing = _animator.GetCurrentAnimatorStateInfo(0).IsName("Throw");
     }
 
     void TargetStateCheck()
@@ -557,6 +531,7 @@ abstract public class Actor : MonoBehaviour
 
     protected virtual void ChildOnActorDamaged() { }
     protected virtual void ChildOnEnable() { }
+
 
 
 

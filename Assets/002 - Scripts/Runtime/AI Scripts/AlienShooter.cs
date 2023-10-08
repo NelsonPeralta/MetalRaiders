@@ -120,11 +120,14 @@ public class AlienShooter : Actor
     }
 
     [PunRPC]
-    void RibbianShoot(bool caller = true)
+    void RibbianShoot(bool caller = true, Vector3? dir = null)
     {
+        Vector3? _dir = dir;
+
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("RibbianShoot", RpcTarget.All, false);
+            _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position;
+            GetComponent<PhotonView>().RPC("RibbianShoot", RpcTarget.All, false, _dir);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -135,9 +138,9 @@ public class AlienShooter : Actor
             nma.enabled = false;
             _animator.Play("Shoot");
 
-            Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            //Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
             var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
-                , Quaternion.LookRotation(dir));
+                , Quaternion.LookRotation((Vector3)_dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
 
@@ -154,11 +157,13 @@ public class AlienShooter : Actor
     }
 
     [PunRPC]
-    void RibbianThrow(bool caller = true)
+    void RibbianThrow(bool caller = true, Vector3? dir = null)
     {
+        Vector3? _dir = dir;
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("RibbianThrow", RpcTarget.All, false);
+            _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position;
+            GetComponent<PhotonView>().RPC("RibbianThrow", RpcTarget.All, false, _dir);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -169,8 +174,8 @@ public class AlienShooter : Actor
             nma.enabled = false;
             _animator.Play("Throw");
 
-            Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
-            var potionBomb = Instantiate(_grenadePrefab.gameObject, losSpawn.transform.position, Quaternion.LookRotation(dir));
+            //Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            var potionBomb = Instantiate(_grenadePrefab.gameObject, losSpawn.transform.position, Quaternion.LookRotation((Vector3)_dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(potionBomb.GetComponent<Collider>(), c.GetComponent<Collider>());
 
