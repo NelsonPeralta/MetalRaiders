@@ -10,7 +10,7 @@ public class FieldOfView : MonoBehaviour
     [Range(0, 360)]
     public float angle;
 
-    public GameObject playerRef;
+    public GameObject playerRef { get { return _actor.targetPlayer.gameObject; } }
 
     public LayerMask targetMask;
     public LayerMask obstructionMask;
@@ -19,10 +19,17 @@ public class FieldOfView : MonoBehaviour
 
     [SerializeField] GameObject _firstCollision;
 
+
+    Actor _actor;
+
+    private void OnEnable()
+    {
+        StartCoroutine(FOVRoutine()); // Stops when obj is disabled
+    }
+
     private void Start()
     {
-        playerRef = GameManager.GetRootPlayer().gameObject;
-        StartCoroutine(FOVRoutine());
+        _actor = GetComponent<Actor>();
     }
 
     private IEnumerator FOVRoutine()
@@ -42,6 +49,13 @@ public class FieldOfView : MonoBehaviour
 
     private void FieldOfViewCheck()
     {
+        if (_actor.hitPoints <= 0)
+        {
+            canSeePlayer = false;
+
+            return;
+        }
+
         try { radius = GetComponent<Actor>().longRange; } catch { }
         Transform or = GetComponent<Actor>().losSpawn;
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
@@ -68,6 +82,8 @@ public class FieldOfView : MonoBehaviour
 
                     if (!Physics.Raycast(or.position, directionToTarget, distanceToTarget, obstructionMask))
                     {
+                        Debug.Log("CAN SEE PLAYER");
+
                         canSeePlayer = true;
                         GetComponent<Actor>().targetTransform = target;
                     }
@@ -81,12 +97,17 @@ public class FieldOfView : MonoBehaviour
                                 _firstCollision = hit.transform.gameObject;
                         }
                         catch { }
+                        Debug.Log("Cant see at all");
 
                         canSeePlayer = false;
                     }
                 }
                 else
+                {
+                    Debug.Log("Cant see at all");
+
                     canSeePlayer = false;
+                }
 
             }
             else
@@ -116,6 +137,10 @@ public class FieldOfView : MonoBehaviour
             }
         }
         else if (canSeePlayer)
+        {
+            Debug.Log("Cant see at all");
+
             canSeePlayer = false;
+        }
     }
 }

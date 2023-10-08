@@ -8163,7 +8163,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 0
   angle: 90
-  playerRef: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 64
