@@ -387,7 +387,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
 
         _maxBreathersEnabled = 2 + FindObjectsOfType<Player>().Count();
-        _maxAliensEnabled = 1 + FindObjectsOfType<Player>().Count();
+        _maxAliensEnabled = 6;
         _maxZombieEnabled = 3 + FindObjectsOfType<Player>().Count();
         //if (editMode)
         //    return;
