@@ -9,7 +9,7 @@ public class Melee : MonoBehaviour
     public Player player;
 
     [Header("Players in Melee Zone")]
-    public List<Player> playersInMeleeZone;
+    public List<HitPoints> hitPointsInMeleeZone;
 
     [Header("Components")]
     bool meleeReady = true;
@@ -45,14 +45,14 @@ public class Melee : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (!other.GetComponent<Player>() || this.player.isDead || this.player.isRespawning)
+        if (!other.GetComponent<HitPoints>() || this.player.isDead || this.player.isRespawning || other.transform == player.transform)
             return;
 
-        Player player = (Player)other.GetComponent<Player>();
+        HitPoints hp = other.GetComponent<HitPoints>();
 
-        if (!playersInMeleeZone.Contains(player) && player != this.player)
+        if (!hitPointsInMeleeZone.Contains(hp))
         {
-            playersInMeleeZone.Add(player);
+            hitPointsInMeleeZone.Add(hp);
             player.OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
             player.OnPlayerDeath += OnForeignPlayerDeath_Delegate;
         }
@@ -62,7 +62,7 @@ public class Melee : MonoBehaviour
     {
         try
         {
-            playersInMeleeZone.Remove(other.GetComponent<Player>());
+            hitPointsInMeleeZone.Remove(other.GetComponent<HitPoints>());
         }
         catch { }
     }
@@ -71,15 +71,15 @@ public class Melee : MonoBehaviour
     public void Knife()
     {
 
-        if (playersInMeleeZone.Count > 0)
+        if (hitPointsInMeleeZone.Count > 0)
         {
             StartCoroutine(EnableMeleeIndicator());
 
-            for (int i = 0; i < playersInMeleeZone.Count; i++)
+            for (int i = 0; i < hitPointsInMeleeZone.Count; i++)
             {
-                Player playerToDamage = playersInMeleeZone[i];
-                if (playerToDamage.hitPoints <= 0 || playerToDamage.isDead || playerToDamage.isRespawning)
-                    playersInMeleeZone.Remove(playerToDamage);
+                HitPoints hp = hitPointsInMeleeZone[i];
+                if (hp.hitPoints <= 0 || hp.isDead || !hp.gameObject.activeInHierarchy)
+                    hitPointsInMeleeZone.Remove(hp);
                 else
                 {
                     if (player.isMine)
@@ -90,22 +90,38 @@ public class Melee : MonoBehaviour
 
                         audioSource.Play();
 
-                        Vector3 dir = (playerToDamage.transform.position - player.transform.position);
+                        Vector3 dir = (hp.transform.position - player.transform.position);
 
                         print("Melee");
                         print(_maxDis);
 
-                        Vector3 targetPostition = new Vector3(playerToDamage.transform.position.x,
-                                                    movement.transform.position.y,
-                                                    playerToDamage.transform.position.z);
-                        movement.transform.LookAt(targetPostition);
+                        if (hp.meleeMagnetism)
+                        {
 
-                        if (Vector3.Distance(playerToDamage.transform.position, movement.transform.position) > _maxDis) _pushForce = 200;
-                        else _pushForce = 100;
+                            Vector3 targetPostition = new Vector3(hp.transform.position.x,
+                                                        movement.transform.position.y,
+                                                        hp.transform.position.z);
+                            movement.transform.LookAt(targetPostition);
 
-                        Debug.Log(Vector3.Distance(playerToDamage.transform.position, movement.transform.position));
-                        movement.Push(playerToDamage.transform.position - movement.transform.position, _pushForce, PushSource.Melee, true);
-                        playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
+                            if (Vector3.Distance(hp.transform.position, movement.transform.position) > _maxDis) _pushForce = 200;
+                            else _pushForce = 100;
+
+                            Debug.Log(Vector3.Distance(hp.transform.position, movement.transform.position));
+                            movement.Push(hp.transform.position - movement.transform.position, _pushForce, PushSource.Melee, true);
+                        }
+
+                        try
+                        {
+                            hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
+                        }
+                        catch { }
+
+                        try
+                        {
+                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
+                        }
+                        catch { }
+                        //playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
                     }
                 }
             }
@@ -122,12 +138,12 @@ public class Melee : MonoBehaviour
 
     void OnForeignPlayerDeath_Delegate(Player player)
     {
-        playersInMeleeZone.Remove(player);
+        hitPointsInMeleeZone.Remove(player.GetComponent<HitPoints>());
     }
 
     void OnPlayerDeadth_Delegate(Player player)
     {
-        playersInMeleeZone.Clear();
+        hitPointsInMeleeZone.Clear();
     }
 
     IEnumerator EnableMeleeIndicator()

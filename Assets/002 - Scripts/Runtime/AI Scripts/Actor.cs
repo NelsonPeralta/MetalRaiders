@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(FieldOfView))]
 [RequireComponent(typeof(NavMeshAgent))]
-abstract public class Actor : MonoBehaviour
+abstract public class Actor : Biped
 {
     public enum Action { Idle, Roam, Melee, Fireball, Grenade, Seek }
 

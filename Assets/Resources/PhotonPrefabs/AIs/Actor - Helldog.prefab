@@ -1073,6 +1073,7 @@ GameObject:
   - component: {fileID: 6243022877615324611}
   - component: {fileID: 3534955771103142248}
   - component: {fileID: 5409517497531652611}
+  - component: {fileID: 6416200152909402962}
   m_Layer: 0
   m_Name: Actor - Helldog
   m_TagString: Untagged
@@ -1346,6 +1347,33 @@ MonoBehaviour:
     m_Bits: 1
   canSeePlayer: 0
   _firstCollision: {fileID: 0}
+--- !u!114 &6416200152909402962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4212620777855583802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  meleeMagnetism: 0
+  needsHealthPack: 0
+  _hitPoints: 0
+  _healthPoints: 0
+  _shieldPoints: 0
+  _overshieldPoints: 0
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  _maxOvershieldPoints: 0
+  _isDead: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1 &4212620777855583804
 GameObject:
   m_ObjectHideFlags: 0

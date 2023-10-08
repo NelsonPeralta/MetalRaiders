@@ -15,6 +15,7 @@ public class HitPoints : MonoBehaviour
 
     public Biped biped;
     public List<Hitbox> hitboxes = new List<Hitbox>();
+    public bool meleeMagnetism;
     public bool needsHealthPack;
 
 

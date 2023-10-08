@@ -82,7 +82,6 @@ public class FieldOfView : MonoBehaviour
 
                     if (!Physics.Raycast(or.position, directionToTarget, distanceToTarget, obstructionMask))
                     {
-                        Debug.Log("CAN SEE PLAYER");
 
                         canSeePlayer = true;
                         GetComponent<Actor>().targetTransform = target;
@@ -97,14 +96,12 @@ public class FieldOfView : MonoBehaviour
                                 _firstCollision = hit.transform.gameObject;
                         }
                         catch { }
-                        Debug.Log("Cant see at all");
 
                         canSeePlayer = false;
                     }
                 }
                 else
                 {
-                    Debug.Log("Cant see at all");
 
                     canSeePlayer = false;
                 }
@@ -112,7 +109,6 @@ public class FieldOfView : MonoBehaviour
             }
             else
             {
-                Debug.Log("Cant see at all");
                 canSeePlayer = false;
             }
 
@@ -138,7 +134,6 @@ public class FieldOfView : MonoBehaviour
         }
         else if (canSeePlayer)
         {
-            Debug.Log("Cant see at all");
 
             canSeePlayer = false;
         }

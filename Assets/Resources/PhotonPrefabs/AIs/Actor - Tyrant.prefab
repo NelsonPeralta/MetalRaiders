@@ -1048,6 +1048,7 @@ GameObject:
   - component: {fileID: 3629236708809263233}
   - component: {fileID: 7162056336772379004}
   - component: {fileID: 8520982176928637584}
+  - component: {fileID: 7437884237803036733}
   m_Layer: 0
   m_Name: Actor - Tyrant
   m_TagString: Untagged
@@ -1328,6 +1329,33 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &7437884237803036733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3039395898336096143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  meleeMagnetism: 0
+  needsHealthPack: 0
+  _hitPoints: 0
+  _healthPoints: 0
+  _shieldPoints: 0
+  _overshieldPoints: 0
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  _maxOvershieldPoints: 0
+  _isDead: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1 &3039428637902615507
 GameObject:
   m_ObjectHideFlags: 0
