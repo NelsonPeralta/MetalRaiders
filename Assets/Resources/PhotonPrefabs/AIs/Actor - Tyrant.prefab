@@ -1114,7 +1114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitPoints: 800
-  _defaultHitpoints: 0
+  _defaultHitpoints: 800
   _targetTransform: {fileID: 0}
   _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
@@ -1124,7 +1124,7 @@ MonoBehaviour:
   _longRange: 0
   _analyzeNextActionCooldown: 0
   _findNewTargetCooldown: 0
-  _defaultFlinchCooldown: 0
+  _defaultFlinchCooldown: 3
   _lostTargetBipedStopwatch: 0
   _attackClip: {fileID: 8300000, guid: 205b3d2d7b6f63b48aaa14ffff125125, type: 3}
   _deathClip: {fileID: 8300000, guid: b979c8b17b61fe041bf88ab821639874, type: 3}
@@ -1280,13 +1280,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0
-  angle: 0
+  angle: 120
   targetMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   canSeePlayer: 0
   _firstCollision: {fileID: 0}
 --- !u!114 &7162056336772379004

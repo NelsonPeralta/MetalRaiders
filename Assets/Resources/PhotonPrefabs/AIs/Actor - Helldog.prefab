@@ -1337,13 +1337,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0
-  angle: 0
+  angle: 120
   targetMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   canSeePlayer: 0
   _firstCollision: {fileID: 0}
 --- !u!1 &4212620777855583804

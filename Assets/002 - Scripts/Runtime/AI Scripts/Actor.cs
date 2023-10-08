@@ -448,7 +448,7 @@ abstract public class Actor : MonoBehaviour
 
                 if (_meleeCooldown <= 0 && !isFlinching)
                 {
-                    ShootProjectile();
+                    Melee();
                 }
                 else
                 {

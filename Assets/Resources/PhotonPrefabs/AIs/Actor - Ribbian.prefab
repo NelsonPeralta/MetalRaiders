@@ -3433,7 +3433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitPoints: 400
-  _defaultHitpoints: 400
+  _defaultHitpoints: 500
   _targetTransform: {fileID: 0}
   _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
@@ -3443,7 +3443,7 @@ MonoBehaviour:
   _longRange: 0
   _analyzeNextActionCooldown: 0
   _findNewTargetCooldown: 0
-  _defaultFlinchCooldown: 3
+  _defaultFlinchCooldown: 2.2
   _lostTargetBipedStopwatch: 0
   _attackClip: {fileID: 8300000, guid: fdc8080df366feb43805c05300069c0e, type: 3}
   _deathClip: {fileID: 8300000, guid: 94f300b380dc25f44b40e75fb5931bf8, type: 3}

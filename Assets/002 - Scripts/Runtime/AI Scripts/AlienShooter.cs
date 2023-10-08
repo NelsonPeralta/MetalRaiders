@@ -12,7 +12,7 @@ public class AlienShooter : Actor
     protected override void ChildOnEnable()
     {
         Debug.Log("Alien Shooter ChildOnEnable " + hitPoints);
-        _hitPoints += (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length);
+        //_hitPoints += (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length);
         Debug.Log("Alien Shooter ChildOnEnable " + hitPoints + (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length));
     }
 
@@ -145,14 +145,14 @@ public class AlienShooter : Actor
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
 
             proj.GetComponent<Fireball>().damage = 8;
-            proj.GetComponent<Fireball>().force = 100;
+            proj.GetComponent<Fireball>().force = 50;
             if (SwarmManager.instance.editMode)
             {
                 proj.GetComponent<Fireball>().damage = 1;
             }
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
-            _shootProjectileCooldown = 0.4f;
+            _shootProjectileCooldown = 0.7f;
         }
     }
 
@@ -189,7 +189,7 @@ public class AlienShooter : Actor
             }
             potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
 
-            _throwExplosiveCooldown = 1.5f;
+            _throwExplosiveCooldown = 2.1f;
         }
     }
 }

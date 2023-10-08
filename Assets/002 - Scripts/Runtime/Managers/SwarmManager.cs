@@ -138,7 +138,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public int knightsLeft
+    public int breathersLeft
     {
         get { return _knightsLeft; }
         private set
@@ -389,6 +389,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         _maxBreathersEnabled = 2 + FindObjectsOfType<Player>().Count();
         _maxAliensEnabled = 6;
         _maxZombieEnabled = 3 + FindObjectsOfType<Player>().Count();
+        _maxBreathersEnabled = 6;
         //if (editMode)
         //    return;
 
@@ -426,15 +427,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
 
 
-            knightsLeft = nbPlayers * 3 + (int)(currentWave * 1.4f);
-            if (knightsLeft > knightPool.Count)
-                knightsLeft = knightPool.Count;
+            breathersLeft = nbPlayers * 3 + (int)(currentWave * 1.4f);
+            if (breathersLeft > knightPool.Count)
+                breathersLeft = knightPool.Count;
 
-            zombiesLeft = knightsLeft = 0;
 
             ribbiansLeft = nbPlayers * 2 + (int)(currentWave * 1.1f);
             if (ribbiansLeft > watcherPool.Count)
                 ribbiansLeft = watcherPool.Count;
+
+            zombiesLeft = breathersLeft = ribbiansLeft = 0;
+            tyrantsLeft = 1;
 
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)
@@ -452,7 +455,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (editMode)
         {
             zombiesLeft = 0;
-            knightsLeft = 0;
+            breathersLeft = 0;
             hellhoundsLeft = 0;
             ribbiansLeft = 1;
             tyrantsLeft = 0;
@@ -566,7 +569,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         else if (aiType == AiType.Breather)
         {
-            if (knightsLeft <= 0)
+            if (breathersLeft <= 0)
             {
                 OnAiDeath?.Invoke(this);
                 return;
@@ -676,7 +679,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 else if (aiTypeEnum == AiType.AlienShooter)
                     ribbiansLeft--;
                 else if (aiTypeEnum == AiType.Breather)
-                    knightsLeft--;
+                    breathersLeft--;
                 else if (aiTypeEnum == AiType.Helldog)
                     hellhoundsLeft--;
                 else if (aiTypeEnum == AiType.FlameTyrant)
@@ -832,7 +835,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         knightsAlive = __knightsAlive;
         tyrantsAlive = __tyrantsAlive;
 
-        if (ribbiansLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0 && tyrantsLeft <= 0 && tyrantsAlive <= 0 && zombiesLeft <= 0 && zombiesAlive <= 0)
+        if (ribbiansLeft <= 0 && watchersAlive <= 0 && breathersLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0 && tyrantsLeft <= 0 && tyrantsAlive <= 0 && zombiesLeft <= 0 && zombiesAlive <= 0)
             if (PhotonNetwork.IsMasterClient)
             {
                 Debug.Log("Swarm Manager EndWave");

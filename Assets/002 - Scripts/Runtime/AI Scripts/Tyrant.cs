@@ -8,16 +8,56 @@ public class Tyrant : Actor
     [SerializeField] Fireball _fireBallPrefab;
     [SerializeField] List<Transform> _minionSpawnPoints = new List<Transform>();
 
-    float _throwFireballCooldown;
-    float _summonlCooldown;
-
-    bool isInRange;
-
     protected override void ChildOnEnable()
     {
-        _flinchCooldown = 2.8f;
-        _hitPoints += FindObjectOfType<SwarmManager>().currentWave * 24;
+        //_hitPoints += FindObjectOfType<SwarmManager>().currentWave * 24;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public override void Idle(bool callRPC = true)
+    {
+        FlameTyrantIdle(callRPC);
+    }
+
+    public override void Run(bool callRPC = true)
+    {
+        FlameTyrantRun(callRPC);
+    }
+    public override void Melee(bool callRPC = true)
+    {
+        FlameTyrantMelee(callRPC);
+    }
+
+    public override void ShootProjectile(bool callRPC = true)
+    {
+        FlameTyrantFireBall(callRPC);
+    }
+
+    public override void ThrowExplosive(bool callRPC = true)
+    {
+        FlameTyrantSummon(callRPC);
+    }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -32,7 +72,7 @@ public class Tyrant : Actor
         }
         else
         {
-            //Debug.Log("Punch Player RPC");
+            Debug.Log("Punch Player RPC");
 
             GetComponent<AudioSource>().clip = _attackClip;
             GetComponent<AudioSource>().Play();
@@ -44,12 +84,14 @@ public class Tyrant : Actor
     }
 
     [PunRPC]
-    void FlameTyrantFireBall(bool caller = true)
+    void FlameTyrantFireBall(bool caller = true, Vector3? dir = null)
     {
+        Vector3? _dir = dir;
         if (caller)
         {
             Debug.Log("CALLER FlameTyrantFireBall");
-            GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.AllViaServer, false);
+            _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position;
+            GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.AllViaServer, false, _dir);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
@@ -60,16 +102,16 @@ public class Tyrant : Actor
             nma.enabled = false;
             _animator.Play("Throw Fireball");
 
-            Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            //Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
             var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
-                , Quaternion.LookRotation(dir));
+                , Quaternion.LookRotation((Vector3)_dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
             proj.GetComponent<Fireball>().damage = 14;
             proj.GetComponent<Fireball>().force = 150;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
-            _throwFireballCooldown = 2f;
+            _shootProjectileCooldown = 2f;
         }
     }
 
@@ -91,8 +133,7 @@ public class Tyrant : Actor
 
             SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, _minionSpawnPoints[0]);
             SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, _minionSpawnPoints[1]);
-
-            _summonlCooldown = 4f;
+            _throwExplosiveCooldown = 3;
         }
     }
 
@@ -126,28 +167,4 @@ public class Tyrant : Actor
         }
     }
 
-    public override void Idle(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void Run(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void Melee(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void ShootProjectile(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void ThrowExplosive(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
 }

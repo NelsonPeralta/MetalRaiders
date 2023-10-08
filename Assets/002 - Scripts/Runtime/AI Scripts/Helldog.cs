@@ -5,48 +5,66 @@ using UnityEngine;
 
 public class Helldog : Actor
 {
-    float _targetLostCooldown;
-
-    protected override void ChildOnEnable()
+    public override void Idle(bool callRPC = true)
     {
-        _hitPoints += FindObjectOfType<SwarmManager>().currentWave * 4;
+        HellhoundIdle(callRPC);
+    }
+
+    public override void Melee(bool callRPC = true)
+    {
+        HellhoundMelee(callRPC);
+    }
+
+    public override void Run(bool callRPC = true)
+    {
+        HellhoundRun(callRPC);
+    }
+
+    public override void ShootProjectile(bool callRPC = true)
+    {
+        HellhoundRun(callRPC);
+    }
+
+    public override void ThrowExplosive(bool callRPC = true)
+    {
+        HellhoundRun(callRPC);
     }
 
 
+
+
+
+
+
+
+
+
     [PunRPC]
-    void HelldogAttack(bool caller = true)
+    void HellhoundMelee(bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("HelldogAttack", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("HellhoundMelee", RpcTarget.AllViaServer, false);
             targetTransform.GetComponent<Player>().Damage(4, false, pid);
         }
         else
         {
-            //Debug.Log("Punch Player RPC");
-
             GetComponent<AudioSource>().clip = _attackClip;
             GetComponent<AudioSource>().Play();
-
             _animator.SetBool("Run", false);
             _animator.Play("Bite");
-            _meleeCooldown = 1;
+            _meleeCooldown = 0.8f;
+
         }
     }
 
 
-
-
-
-
-
-
     [PunRPC]
-    void HelldogIdle(bool caller = true)
+    void HellhoundIdle(bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("HelldogIdle", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("HellhoundIdle", RpcTarget.AllViaServer, false);
         }
         else
         {
@@ -58,43 +76,20 @@ public class Helldog : Actor
     }
 
     [PunRPC]
-    void HelldogRun(bool caller = true)
+    void HellhoundRun(bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("HelldogRun", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("HellhoundRun", RpcTarget.AllViaServer, false);
+            if (isRunning && !isFlinching && !isTaunting)
+            {
+                nma.enabled = true;
+                nma.SetDestination(targetTransform.position);
+            }
         }
         else
         {
-            //Debug.Log("UndeadRun RPC");
-
-            //_animator.Play("Run");
             _animator.SetBool("Run", true);
         }
-    }
-
-    public override void Idle(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void Run(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void Melee(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void ShootProjectile(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void ThrowExplosive(bool callRPC = true)
-    {
-        throw new System.NotImplementedException();
     }
 }
