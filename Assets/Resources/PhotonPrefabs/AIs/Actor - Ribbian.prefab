@@ -3439,6 +3439,13 @@ MonoBehaviour:
   _tauntClip: {fileID: 8300000, guid: 98e43a47e797e4941a04a53e0c6f192e, type: 3}
   _hurtClip: {fileID: 8300000, guid: a5cf47b8c1aa8c14bb232e34edbda1b9, type: 3}
   _oneShotHeadshot: 0
+  isIdling: 0
+  isRunning: 0
+  isMeleeing: 0
+  isTaunting: 0
+  isFlinching: 0
+  isShooting: 0
+  isThrowing: 0
   _flinchCooldown: 0
   _meleeCooldown: 0
   _shootProjectileCooldown: 0
@@ -3527,7 +3534,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.9
       inSlope: 0
       outSlope: 0
       tangentMode: 0

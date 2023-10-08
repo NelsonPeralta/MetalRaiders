@@ -71,6 +71,8 @@ public class MapCamera : MonoBehaviour
         _announcementPLayed = true;
         AudioListener.volume = 1f;
         _announcerDelay = 2;
+
+        try { SwarmManager.instance.PlayOpeningMusic(); } catch { }
     }
 
     void PlayAnnouncer()

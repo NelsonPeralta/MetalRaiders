@@ -45,6 +45,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject alienShooterPrefab;
     [SerializeField] GameObject tyrantPrefab;
     [SerializeField] GameObject helldogPrefab;
+    int _ranClipInt;
 
     public List<Undead> zombieList { get { return _zombieList; } set { _zombieList = value; } }
     public List<Breather> knightPool { get { return _knightPool; } set { _knightPool = value; } }
@@ -84,7 +85,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public List<HealthPack> healthPacks = new List<HealthPack>();
 
-    [SerializeField] AudioClip _ambiantMusic;
+    [SerializeField] AudioSource _musicAudioSource;
+    [SerializeField] List<AudioClip> _openingClips;
+    [SerializeField] List<AudioClip> _ambiantClips;
     [SerializeField] AudioClip _waveStartClip;
     [SerializeField] AudioClip _weaponDropClip;
     [SerializeField] AudioClip _livesAddedClip;
@@ -323,6 +326,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         //Begin();
     }
 
+    public void PlayOpeningMusic()
+    {
+        _ranClipInt = Random.Range(0, _openingClips.Count);
+        _musicAudioSource.clip = _openingClips[_ranClipInt];
+        _musicAudioSource.Play();
+    }
+
     public void CreateAIPool(bool caller = true)
     {
         if (!caller)
@@ -460,9 +470,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(delay);
         try
         {
-            GetComponent<AudioSource>().clip = _ambiantMusic;
-            GetComponent<AudioSource>().Play();
-
+            if (currentWave % 5 == 3)
+            {
+                _ranClipInt = Random.Range(0, _ambiantClips.Count);
+                _musicAudioSource.clip = _ambiantClips[_ranClipInt];
+                _musicAudioSource.Play();
+            }
         }
         catch (System.Exception ex)
         {
@@ -875,18 +888,25 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         else if (currentWave % 5 == 0)
         {
+            FindObjectOfType<NetworkSwarmManager>().EnableStartingNetworkWeapons();
+
             int livesToAdd = FindObjectsOfType<Player>().Length;
             livesLeft += livesToAdd;
             foreach (KillFeedManager p in FindObjectsOfType<KillFeedManager>())
             {
+                GameManager.GetRootPlayer().announcer.AddClip(_livesAddedClip);
+                GameManager.GetRootPlayer().announcer.AddClip(_weaponDropClip);
+
+
                 p.EnterNewFeed($"Lives added: {livesToAdd}");
                 p.EnterNewFeed("Health Packs Respawned");
+                p.EnterNewFeed("Weapons respawned");
             }
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)
                     hp.gameObject.SetActive(true);
 
-            FindObjectOfType<NetworkSwarmManager>().EnableStartingNetworkWeapons();
+
 
             try
             {
