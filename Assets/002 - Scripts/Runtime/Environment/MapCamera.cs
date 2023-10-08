@@ -72,7 +72,7 @@ public class MapCamera : MonoBehaviour
         AudioListener.volume = 1f;
         _announcerDelay = 2;
 
-        try { SwarmManager.instance.PlayOpeningMusic(); } catch { }
+        try { if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) SwarmManager.instance.PlayOpeningMusic(); } catch { }
     }
 
     void PlayAnnouncer()
