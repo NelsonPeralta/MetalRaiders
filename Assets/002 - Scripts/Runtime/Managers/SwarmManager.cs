@@ -436,8 +436,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (ribbiansLeft > watcherPool.Count)
                 ribbiansLeft = watcherPool.Count;
 
-            zombiesLeft = breathersLeft = ribbiansLeft = 0;
-            ribbiansLeft = 1;
+            //zombiesLeft = breathersLeft = ribbiansLeft = 0;
+            zombiesLeft = 0;
 
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)
