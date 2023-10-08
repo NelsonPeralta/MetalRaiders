@@ -3642,7 +3642,7 @@ MonoBehaviour:
   hitboxes: []
   meleeMagnetism: 1
   needsHealthPack: 0
-  _hitPoints: 250
+  _hitPoints: 1
   _healthPoints: 100
   _shieldPoints: 150
   _overshieldPoints: 0

@@ -1361,9 +1361,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biped: {fileID: 0}
   hitboxes: []
-  meleeMagnetism: 0
+  meleeMagnetism: 1
   needsHealthPack: 0
-  _hitPoints: 0
+  _hitPoints: 1
   _healthPoints: 0
   _shieldPoints: 0
   _overshieldPoints: 0

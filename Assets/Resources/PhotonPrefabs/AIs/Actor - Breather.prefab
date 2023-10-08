@@ -3919,7 +3919,7 @@ GameObject:
   - component: {fileID: 8448585316378270687}
   - component: {fileID: -9038763875858074809}
   - component: {fileID: 6214594568080097122}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Actor - Breather
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4202,9 +4202,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biped: {fileID: 0}
   hitboxes: []
-  meleeMagnetism: 0
+  meleeMagnetism: 1
   needsHealthPack: 0
-  _hitPoints: 0
+  _hitPoints: 1
   _healthPoints: 0
   _shieldPoints: 0
   _overshieldPoints: 0
