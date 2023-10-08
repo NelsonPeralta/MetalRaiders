@@ -1148,6 +1148,7 @@ MonoBehaviour:
   _analyzeNextActionCooldown: 0
   _findNewTargetCooldown: 0
   _defaultFlinchCooldown: 0
+  _lostTargetBipedStopwatch: 0
   _attackClip: {fileID: 8300000, guid: 5efd42fa3e58a3e4984b3bad2586a754, type: 3}
   _deathClip: {fileID: 8300000, guid: f06a1d4f5ac04074c9c5583b0f75fca7, type: 3}
   _tauntClip: {fileID: 0}
@@ -1604,6 +1605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 1383793292360974688}
@@ -1831,6 +1833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 1383793292360974688}
@@ -2030,6 +2033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 1
   isNuts: 0
   actor: {fileID: 1383793292360974688}
@@ -2101,6 +2105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 1383793292360974688}
@@ -2235,6 +2240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 1383793292360974688}
@@ -2404,6 +2410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 1383793292360974688}
@@ -2730,6 +2737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 1383793292360974688}
@@ -3054,6 +3062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 1383793292360974688}
@@ -3253,6 +3262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 1383793292360974688}

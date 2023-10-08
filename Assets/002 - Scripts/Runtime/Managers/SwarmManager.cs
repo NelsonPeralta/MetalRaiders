@@ -125,7 +125,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 _hellhoundsAlive++;
         }
     }
-    public int watchersLeft
+    public int ribbiansLeft
     {
         get { return _watchersLeft; }
         private set
@@ -430,9 +430,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (knightsLeft > knightPool.Count)
                 knightsLeft = knightPool.Count;
 
-            watchersLeft = nbPlayers * 2 + (int)(currentWave * 1.1f);
-            if (watchersLeft > watcherPool.Count)
-                watchersLeft = watcherPool.Count;
+            zombiesLeft = knightsLeft = 0;
+
+            ribbiansLeft = nbPlayers * 2 + (int)(currentWave * 1.1f);
+            if (ribbiansLeft > watcherPool.Count)
+                ribbiansLeft = watcherPool.Count;
 
             //hellhoundsLeft = FindObjectsOfType<Player>().Length + (currentWave * 3);
             //if (hellhoundsLeft > hellhoundPool.Length)
@@ -452,7 +454,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             zombiesLeft = 0;
             knightsLeft = 0;
             hellhoundsLeft = 0;
-            watchersLeft = 1;
+            ribbiansLeft = 1;
             tyrantsLeft = 0;
         }
 
@@ -543,7 +545,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         else if (aiType == AiType.AlienShooter)
         {
-            if (watchersLeft <= 0)
+            if (ribbiansLeft <= 0)
             {
                 OnAiDeath?.Invoke(this);
                 return;
@@ -672,7 +674,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 if (aiTypeEnum == AiType.Undead)
                     zombiesLeft--;
                 else if (aiTypeEnum == AiType.AlienShooter)
-                    watchersLeft--;
+                    ribbiansLeft--;
                 else if (aiTypeEnum == AiType.Breather)
                     knightsLeft--;
                 else if (aiTypeEnum == AiType.Helldog)
@@ -830,7 +832,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         knightsAlive = __knightsAlive;
         tyrantsAlive = __tyrantsAlive;
 
-        if (watchersLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0 && tyrantsLeft <= 0 && tyrantsAlive <= 0 && zombiesLeft <= 0 && zombiesAlive <= 0)
+        if (ribbiansLeft <= 0 && watchersAlive <= 0 && knightsLeft <= 0 && knightsAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0 && tyrantsLeft <= 0 && tyrantsAlive <= 0 && zombiesLeft <= 0 && zombiesAlive <= 0)
             if (PhotonNetwork.IsMasterClient)
             {
                 Debug.Log("Swarm Manager EndWave");

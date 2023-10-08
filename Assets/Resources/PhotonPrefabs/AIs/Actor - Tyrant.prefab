@@ -781,6 +781,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 1
   isNuts: 0
   actor: {fileID: 4734507890800927446}
@@ -1124,6 +1125,7 @@ MonoBehaviour:
   _analyzeNextActionCooldown: 0
   _findNewTargetCooldown: 0
   _defaultFlinchCooldown: 0
+  _lostTargetBipedStopwatch: 0
   _attackClip: {fileID: 8300000, guid: 205b3d2d7b6f63b48aaa14ffff125125, type: 3}
   _deathClip: {fileID: 8300000, guid: b979c8b17b61fe041bf88ab821639874, type: 3}
   _tauntClip: {fileID: 0}
@@ -27702,6 +27704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPoints: {fileID: 0}
   isHead: 0
   isNuts: 0
   actor: {fileID: 4734507890800927446}

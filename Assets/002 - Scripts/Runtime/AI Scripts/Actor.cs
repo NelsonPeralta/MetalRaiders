@@ -57,7 +57,15 @@ abstract public class Actor : MonoBehaviour
         get { return _targetTransform; }
         set
         {
-            _targetTransform = value;
+            if (_targetTransform != value)
+            {
+                //if (value)
+                //    Debug.Log($"Target Transform set {value.name}");
+                //else
+                //    Debug.Log($"Target Transform set to NULL");
+
+                _targetTransform = value;
+            }
         }
     }
 
@@ -66,7 +74,14 @@ abstract public class Actor : MonoBehaviour
         get { return _targetPlayer; }
         set
         {
-            _targetPlayer = value;
+            if (_targetPlayer != value)
+            {
+                //if (value)
+                //    Debug.Log($"Target Player set {value.name}");
+                //else
+                //    Debug.Log($"Target Player set to NULL");
+                _targetPlayer = value;
+            }
         }
     }
 
@@ -88,7 +103,7 @@ abstract public class Actor : MonoBehaviour
     [SerializeField] Transform _losSpawn;
 
     [SerializeField] int _closeRange, _midRange, _longRange;
-    [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown, _defaultFlinchCooldown;
+    [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown, _defaultFlinchCooldown, _lostTargetBipedStopwatch;
     [SerializeField] protected AudioClip _attackClip, _deathClip, _tauntClip, _hurtClip;
     [SerializeField] bool _oneShotHeadshot;
 
@@ -155,6 +170,7 @@ abstract public class Actor : MonoBehaviour
     void Update()
     {
         TargetStateCheck();
+        LostTarget();
 
         AnimationCheck();
         ActionCooldowns();
@@ -208,6 +224,7 @@ abstract public class Actor : MonoBehaviour
 
     protected void Prepare()
     {
+
         _switchPlayerCooldown = 0;
         _isInRange = false;
         transform.position = new Vector3(0, -10, 0);
@@ -330,7 +347,7 @@ abstract public class Actor : MonoBehaviour
 
             if (_findNewTargetCooldown <= 0)
             {
-                if (!targetTransform)
+                if (!targetTransform && hitPoints > 0)
                 {
                     Debug.Log("Finding new Target Transform");
 
@@ -372,7 +389,25 @@ abstract public class Actor : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    void LostTarget()
+    {
+        try
+        {
+            if (!_fieldOfView.canSeePlayer && targetPlayer.transform == targetTransform && _isInRange)
+                _lostTargetBipedStopwatch = Mathf.Clamp(_lostTargetBipedStopwatch + Time.deltaTime, 0, 3);
+            else if (_lostTargetBipedStopwatch > 0)
+                _lostTargetBipedStopwatch = Mathf.Clamp(_lostTargetBipedStopwatch - Time.deltaTime, 0, 3);
+        }
+        catch { }
 
+        if (_lostTargetBipedStopwatch >= 3)
+        {
+            // This will trigger FindNewTarget()
+            targetTransform = null;
+            targetPlayer = null;
+            //FindNewTarget(true);
+        }
+    }
 
     void ActionCooldowns()
     {
@@ -392,6 +427,8 @@ abstract public class Actor : MonoBehaviour
 
         if (_switchPlayerCooldown > 0 && hitPoints < _defaultHitpoints)
             _switchPlayerCooldown -= Time.deltaTime;
+
+
     }
 
 
@@ -628,6 +665,7 @@ abstract public class Actor : MonoBehaviour
             SwarmManager.instance.InvokeOnAiDeath();
             StartCoroutine(Hide());
             targetTransform = null;
+            targetPlayer = null;
         }
     }
 }
