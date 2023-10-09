@@ -58,6 +58,7 @@ public class MapCamera : MonoBehaviour
             {
                 try
                 {
+                    Debug.Log("MapCamera TimeOut");
                     PhotonNetwork.LeaveRoom();
                     PhotonNetwork.LoadLevel(0);
                 }

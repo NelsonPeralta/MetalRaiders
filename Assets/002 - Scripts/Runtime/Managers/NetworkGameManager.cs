@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.Linq;
-using UnityEngine.UIElements;
 using System;
 using Newtonsoft.Json;
+using Photon.Realtime;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -59,6 +59,13 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         //base.OnLeftRoom();
 
         //Destroy(gameObject);
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        GameManager.instance.connection = GameManager.Connection.Offline;
+        base.OnDisconnected(cause);
+        Debug.Log($"Disconnected: {cause}");
     }
 
 
@@ -351,8 +358,17 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         _pv.RPC("NextHillLocation_RPC", RpcTarget.All);
     }
 
-
-
+    public void AskHostToTriggerInteractableObject(Vector3 pos, int? pid = null)
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            _pv.RPC("AskHostToTriggerInteractableObject_RPC", RpcTarget.MasterClient, pos, pid);
+        }
+        else
+        {
+            TriggerInteractableObject_RPC(pos, pid);
+        }
+    }
 
 
 
@@ -700,6 +716,21 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void AskHostToTriggerInteractableObject_RPC(Vector3 pos, int? pid = null)
+    {
+        _pv.RPC("TriggerInteractableObject_RPC", RpcTarget.All, pos, pid);
+    }
+
+    [PunRPC]
+    public void TriggerInteractableObject_RPC(Vector3 pos, int? pid = null)
+    {
+        foreach (InteractableObject eet in FindObjectsOfType<InteractableObject>())
+        {
+            if (eet.transform.position == pos)
+                eet.Trigger(pid);
+        }
+    }
 
     IEnumerator StartOverShieldRespawn_Coroutine(int t)
     {

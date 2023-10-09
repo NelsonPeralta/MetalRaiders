@@ -170,6 +170,10 @@ MonoBehaviour:
   - HellhoundMelee
   - HellhoundIdle
   - HellhoundRun
+  - AskHostToTriggerEasterEggTrigger_RPC
+  - TriggerEasterEggTrigger_RPC
+  - AskHostToTriggerInteractableObject_RPC
+  - TriggerInteractableObject_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

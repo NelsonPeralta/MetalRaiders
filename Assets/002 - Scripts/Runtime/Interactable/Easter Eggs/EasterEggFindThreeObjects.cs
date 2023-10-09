@@ -18,7 +18,7 @@ public class EasterEggFindThreeObjects : MonoBehaviour
     public bool allobjectsHaveBeenActivated;
     
 
-    public void updateActivatedObjects(FindableObject fo)
+    public void updateActivatedObjects(EasterEggTreasure fo)
     {
         foreach(GameObject go in objects)
         {

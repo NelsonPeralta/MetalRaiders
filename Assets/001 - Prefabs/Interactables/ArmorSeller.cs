@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.ProBuilder.Shapes;
 
-public class ArmorSeller : MonoBehaviour
+public class ArmorSeller : InteractableObject
 {
     public GameObject armorModel;
 
@@ -14,7 +14,7 @@ public class ArmorSeller : MonoBehaviour
     [Header("Players in Range")]
     public List<Player> playersInRange = new List<Player>();
 
-    [SerializeField] List<FindableObject> _findableObjects = new List<FindableObject>();
+    [SerializeField] List<EasterEggTreasure> _findableObjects = new List<EasterEggTreasure>();
 
     [SerializeField] bool _allFindableObjectsFound;
     [SerializeField] AudioClip _findableObjectsFoundClip;
@@ -37,10 +37,10 @@ public class ArmorSeller : MonoBehaviour
     private void Start()
     {
         if (SwarmManager.instance.editMode)
-            cost = 100;
+            cost = 0;
         armorModel.SetActive(false);
 
-        foreach (FindableObject fo in _findableObjects)
+        foreach (EasterEggTreasure fo in _findableObjects)
             fo.OnFound += OnFindableObjectFound;
     }
     private void OnTriggerStay(Collider other)
@@ -81,30 +81,15 @@ public class ArmorSeller : MonoBehaviour
     {
         if (playerController.GetComponent<PlayerSwarmMatchStats>().points >= cost)
         {
-            Debug.Log($"Player {playerController.GetComponent<PhotonView>().Owner.NickName} bought armor");
-            playerController.player.maxHitPoints = 250;
-            playerController.player.maxShieldPoints = 150;
-            playerController.player.maxHealthPoints = 100;
-            playerController.player.hitPoints = 250;
-
-            playerController.player.playerArmorManager.HardReloadArmor();
-
-            playerController.GetComponent<Player>().hasArmor = true;
-
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                foreach (PlayerArmorPiece pap in playerController.player.playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
-                    pap.gameObject.SetActive(playerController.player.playerArmorManager.armorDataString.Contains(pap.entity));
-
-            playersInRange.Remove(playerController.GetComponent<Player>());
-            playerController.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+            NetworkGameManager.instance.AskHostToTriggerInteractableObject(transform.position, playerController.player.pid);
         }
     }
 
-    void OnFindableObjectFound(FindableObject findableObject)
+    void OnFindableObjectFound(EasterEggTreasure findableObject)
     {
         Debug.Log($"OnFindableObjectFound");
         bool _allFound = true;
-        foreach (FindableObject fo in _findableObjects)
+        foreach (EasterEggTreasure fo in _findableObjects)
             if (!fo.found)
                 _allFound = false;
 
@@ -115,5 +100,32 @@ public class ArmorSeller : MonoBehaviour
         }
 
         allFindableObjectsFound = _allFound;
+    }
+
+    public override void Trigger(int? pid)
+    {
+        Debug.Log($"Player {pid} bought armor");
+        Player p = GameManager.instance.pid_player_Dict[(int)pid];
+        Debug.Log($"Player {p.nickName} bought armor");
+
+        p.maxHitPoints = 250;
+        p.maxShieldPoints = 150;
+        p.maxHealthPoints = 100;
+        p.hitPoints = 250;
+
+        p.hasArmor = true;
+
+
+        p.playerArmorManager.HardReloadArmor(true);
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            Debug.Log(p.playerArmorManager.armorDataString);
+            foreach (PlayerArmorPiece pap in p.playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
+                pap.gameObject.SetActive(p.playerArmorManager.armorDataString.Contains(pap.entity));
+        }
+
+        playersInRange.Remove(p);
+        p.GetComponent<PlayerUI>().weaponInformerText.text = $"";
     }
 }

@@ -105,7 +105,8 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     }
     private void OnEnable()
     {
-        GetComponent<Rigidbody>().velocity *= 0;
+
+        try { GetComponent<Rigidbody>().velocity *= 0; } catch { }
 
         try
         {
