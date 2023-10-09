@@ -42,6 +42,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     }
 
+
     public Overshield overshield
     {
         get { return _overshield; }
@@ -142,7 +143,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    void Update() { if (Input.GetKeyDown(KeyCode.Alpha0)) { SendLocalPlayerDataToMasterClient(); } }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha0)) { SendLocalPlayerDataToMasterClient(); }
+    }
 
 
     [PunRPC]

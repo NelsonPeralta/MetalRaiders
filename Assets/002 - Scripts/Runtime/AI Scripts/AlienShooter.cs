@@ -123,10 +123,10 @@ public class AlienShooter : Actor
     void RibbianShoot(bool caller = true, Vector3? dir = null)
     {
         Vector3? _dir = dir;
+        try { _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position; } catch { }
 
         if (caller)
         {
-            _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position;
             GetComponent<PhotonView>().RPC("RibbianShoot", RpcTarget.All, false, _dir);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
@@ -139,6 +139,7 @@ public class AlienShooter : Actor
             _animator.Play("Shoot");
 
             //Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
+            Debug.Log(_dir);
             var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
                 , Quaternion.LookRotation((Vector3)_dir));
             foreach (ActorHitbox c in actorHitboxes)
@@ -146,10 +147,15 @@ public class AlienShooter : Actor
 
             proj.GetComponent<Fireball>().damage = 16;
             proj.GetComponent<Fireball>().force = 50;
-            if (SwarmManager.instance.editMode)
+
+            try
             {
-                proj.GetComponent<Fireball>().damage = 1;
+                if (SwarmManager.instance.editMode)
+                    proj.GetComponent<Fireball>().damage = 1;
             }
+            catch { }
+
+
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
             _shootProjectileCooldown = 0.7f;
@@ -160,9 +166,9 @@ public class AlienShooter : Actor
     void RibbianThrow(bool caller = true, Vector3? dir = null)
     {
         Vector3? _dir = dir;
+        try { _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position; } catch { }
         if (caller)
         {
-            _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position;
             GetComponent<PhotonView>().RPC("RibbianThrow", RpcTarget.All, false, _dir);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
@@ -183,10 +189,12 @@ public class AlienShooter : Actor
 
             //potionBomb.GetComponent<AIGrenade>().radius = 6;
             //potionBomb.GetComponent<AIGrenade>().damage = 25;
-            if (SwarmManager.instance.editMode)
+            try
             {
-                potionBomb.GetComponent<AIGrenade>().damage = 1;
+                if (SwarmManager.instance.editMode)
+                    potionBomb.GetComponent<AIGrenade>().damage = 1;
             }
+            catch { }
             potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
 
             _throwExplosiveCooldown = 2.1f;

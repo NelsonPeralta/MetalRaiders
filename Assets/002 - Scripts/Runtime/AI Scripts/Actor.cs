@@ -69,7 +69,7 @@ abstract public class Actor : Biped
         }
     }
 
-    public Player targetPlayer
+    public HitPoints targetHitpoints
     {
         get { return _targetPlayer; }
         set
@@ -98,7 +98,7 @@ abstract public class Actor : Biped
 
     [SerializeField] protected int _hitPoints, _defaultHitpoints;
     [SerializeField] Transform _targetTransform;
-    [SerializeField] Player _targetPlayer;
+    [SerializeField] HitPoints _targetPlayer;
     [SerializeField] Vector3 _destination;
     [SerializeField] Transform _losSpawn;
 
@@ -393,7 +393,7 @@ abstract public class Actor : Biped
     {
         try
         {
-            if (!_fieldOfView.canSeePlayer && targetPlayer.transform == targetTransform && _isInRange)
+            if (!_fieldOfView.canSeePlayer && targetHitpoints.transform == targetTransform && _isInRange)
                 _lostTargetBipedStopwatch = Mathf.Clamp(_lostTargetBipedStopwatch + Time.deltaTime, 0, 3);
             else if (_lostTargetBipedStopwatch > 0)
                 _lostTargetBipedStopwatch = Mathf.Clamp(_lostTargetBipedStopwatch - Time.deltaTime, 0, 3);
@@ -404,7 +404,7 @@ abstract public class Actor : Biped
         {
             // This will trigger FindNewTarget()
             targetTransform = null;
-            targetPlayer = null;
+            targetHitpoints = null;
             //FindNewTarget(true);
         }
     }
@@ -474,12 +474,10 @@ abstract public class Actor : Biped
                         {
                             Debug.Log("Throw Fireball to Player");
 
-                            if (!targetTransform.GetComponent<Player>())
+                            if (!targetTransform.GetComponent<HitPoints>())
                                 targetTransform = null;
-                            else if (PhotonNetwork.InRoom)
-                                ShootProjectile();
                             else
-                                ShootProjectile(false);
+                                ShootProjectile(PhotonNetwork.InRoom);
 
                         }
                     }
@@ -489,12 +487,10 @@ abstract public class Actor : Biped
                         {
                             Debug.Log("Throw Fireball to Player");
 
-                            if (!targetTransform.GetComponent<Player>())
+                            if (!targetTransform.GetComponent<HitPoints>())
                                 targetTransform = null;
-                            else if (PhotonNetwork.InRoom)
-                                ThrowExplosive();
                             else
-                                ThrowExplosive(false);
+                                ThrowExplosive(PhotonNetwork.InRoom);
                         }
                     }
                 }
@@ -504,10 +500,7 @@ abstract public class Actor : Biped
                     {
                         Debug.Log("Chase Player");
 
-                        if (PhotonNetwork.InRoom)
-                            Run();
-                        else
-                            Run(false);
+                        Run(PhotonNetwork.InRoom);
                     }
 
                     if (isRunning && !isFlinching && !isTaunting)
@@ -527,10 +520,7 @@ abstract public class Actor : Biped
                 if (!isRunning)
                 {
                     //Debug.Log("Chase Player");
-                    if (PhotonNetwork.InRoom)
-                        Run();
-                    else
-                        Run(false);
+                    Run(PhotonNetwork.InRoom);
                 }
 
                 if (isRunning && !isFlinching && !isTaunting)
@@ -548,10 +538,7 @@ abstract public class Actor : Biped
         {
             if (hitPoints > 0)
                 if (!isIdling)
-                    if (PhotonNetwork.InRoom)
-                        Idle();
-                    else
-                        Idle(false);
+                    Idle(PhotonNetwork.InRoom);
             //nma.isStopped = true;
         }
     }
@@ -589,7 +576,7 @@ abstract public class Actor : Biped
         if (_switchPlayerCooldown <= 0)
         {
             targetTransform = pp.transform;
-            targetPlayer = pp;
+            targetHitpoints = pp.GetComponent<HitPoints>();
 
             _switchPlayerCooldown = 5;
         }
@@ -640,7 +627,7 @@ abstract public class Actor : Biped
         }
         else
         {
-            targetPlayer = PhotonView.Find(pid).GetComponent<Player>();
+            targetHitpoints = PhotonView.Find(pid).GetComponent<Player>().GetComponent<HitPoints>();
         }
     }
 
@@ -665,7 +652,7 @@ abstract public class Actor : Biped
             SwarmManager.instance.InvokeOnAiDeath();
             StartCoroutine(Hide());
             targetTransform = null;
-            targetPlayer = null;
+            targetHitpoints = null;
         }
     }
 }

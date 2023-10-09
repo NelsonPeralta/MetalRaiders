@@ -8171,7 +8171,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   canSeePlayer: 0
-  _firstCollision: {fileID: 0}
+  _obstruction: {fileID: 0}
+  _state: 
 --- !u!114 &9042670209459653102
 MonoBehaviour:
   m_ObjectHideFlags: 0
