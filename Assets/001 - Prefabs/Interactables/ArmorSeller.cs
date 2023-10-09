@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.ProBuilder.Shapes;
 
 public class ArmorSeller : MonoBehaviour
 {
@@ -35,6 +36,8 @@ public class ArmorSeller : MonoBehaviour
     }
     private void Start()
     {
+        if (SwarmManager.instance.editMode)
+            cost = 100;
         armorModel.SetActive(false);
 
         foreach (FindableObject fo in _findableObjects)
@@ -79,7 +82,18 @@ public class ArmorSeller : MonoBehaviour
         if (playerController.GetComponent<PlayerSwarmMatchStats>().points >= cost)
         {
             Debug.Log($"Player {playerController.GetComponent<PhotonView>().Owner.NickName} bought armor");
+            playerController.player.maxHitPoints = 250;
+            playerController.player.maxShieldPoints = 150;
+            playerController.player.maxHealthPoints = 100;
+            playerController.player.hitPoints = 250;
+
+            playerController.player.playerArmorManager.HardReloadArmor();
+
             playerController.GetComponent<Player>().hasArmor = true;
+
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                foreach (PlayerArmorPiece pap in playerController.player.playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
+                    pap.gameObject.SetActive(playerController.player.playerArmorManager.armorDataString.Contains(pap.entity));
 
             playersInRange.Remove(playerController.GetComponent<Player>());
             playerController.GetComponent<PlayerUI>().weaponInformerText.text = $"";

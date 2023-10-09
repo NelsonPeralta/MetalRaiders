@@ -33,18 +33,22 @@ public class PlayerArmorManager : MonoBehaviour
         }
     }
 
+    [SerializeField] GameObject _helmetlessHead;
     [SerializeField] string _armorDataString, _colorPalette;
 
     int tries = 0;
 
     private void OnEnable()
     {
+        _helmetlessHead.SetActive(false);
         HardReloadArmor();
 
         {
             tries = 0;
             StartCoroutine(ReloadArmor_Coroutine());
         }
+
+
     }
 
     private void Awake()
@@ -59,6 +63,8 @@ public class PlayerArmorManager : MonoBehaviour
 
     public void HardReloadArmor()
     {
+        Debug.Log("HardReloadArmor");
+
         try
         {
             if (player)
@@ -101,18 +107,23 @@ public class PlayerArmorManager : MonoBehaviour
         EnableAllArmorsInDataString();
     }
 
-    void DisableAllArmor()
+    public void DisableAllArmor()
     {
+        Debug.Log("DisableAllArmor");
         try
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
                 piece.gameObject.SetActive(false);
         }
         catch { }
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            _helmetlessHead.SetActive(true);
     }
 
     void EnableAllArmorsInDataString()
     {
+        Debug.Log("EnableAllArmorsInDataString");
         try
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)

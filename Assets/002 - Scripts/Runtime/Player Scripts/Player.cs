@@ -247,7 +247,7 @@ public class Player : Biped
     public int maxHealthPoints
     {
         get { return _maxHealthPoints; }
-        private set { _maxHealthPoints = value; }
+        set { _maxHealthPoints = value; }
     }
     public int maxOvershieldPoints
     {
@@ -267,7 +267,7 @@ public class Player : Biped
     public int maxShieldPoints
     {
         get { return _maxShieldPoints; }
-        private set { _maxShieldPoints = value; }
+        set { _maxShieldPoints = value; }
     }
     public int meleeDamage
     {
@@ -633,7 +633,7 @@ public class Player : Biped
             _defaultRespawnTime = 7;
             _overshieldPoints = 0;
             _maxShieldPoints = 0;
-            _maxHitPoints = 100;
+            _maxHitPoints = _maxHealthPoints = 250;
             _networkHitPoints = maxHitPoints;
             _hitPoints = maxHitPoints;
             needsHealthPack = true;
@@ -713,6 +713,8 @@ public class Player : Biped
         mainCamera.enabled = false;
         gunCamera.enabled = false;
         uiCamera.enabled = false;
+
+        _playerArmorManager.DisableAllArmor();
     }
     private void Update()
     {

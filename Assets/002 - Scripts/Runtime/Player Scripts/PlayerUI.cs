@@ -53,7 +53,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject headshotIndicator;
     Coroutine showHeadshotIndicatorCoroutine;
     Coroutine hideHeadshotIndicatorCoroutine;
-    public Text weaponInformerText;
+    public TMP_Text weaponInformerText;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;

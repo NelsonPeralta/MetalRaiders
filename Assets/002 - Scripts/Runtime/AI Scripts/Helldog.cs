@@ -45,7 +45,7 @@ public class Helldog : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("HellhoundMelee", RpcTarget.AllViaServer, false);
-            targetTransform.GetComponent<Player>().Damage(4, false, pid);
+            targetTransform.GetComponent<Player>().Damage(8, false, pid);
         }
         else
         {

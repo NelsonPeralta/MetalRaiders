@@ -65,7 +65,7 @@ public class Breather : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("BreatherAttack", RpcTarget.All, false);
-            targetTransform.GetComponent<Player>().Damage(4, false, pid);
+            targetTransform.GetComponent<Player>().Damage(22, false, pid);
         }
         else
         {
@@ -103,7 +103,7 @@ public class Breather : Actor
                 , Quaternion.LookRotation((Vector3)_dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
-            proj.GetComponent<Fireball>().damage = 8;
+            proj.GetComponent<Fireball>().damage = 16;
             proj.GetComponent<Fireball>().force = 250;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);

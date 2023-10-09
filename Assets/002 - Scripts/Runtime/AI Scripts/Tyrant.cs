@@ -68,7 +68,7 @@ public class Tyrant : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("FlameTyrantMelee", RpcTarget.AllViaServer, false);
-            targetTransform.GetComponent<Player>().Damage(4, false, pid);
+            targetTransform.GetComponent<Player>().Damage(62, false, pid);
         }
         else
         {
@@ -79,7 +79,7 @@ public class Tyrant : Actor
 
             _animator.SetBool("Run", false);
             _animator.Play("Melee");
-            _meleeCooldown = 1;
+            _meleeCooldown = 1.5f;
         }
     }
 
@@ -107,7 +107,7 @@ public class Tyrant : Actor
                 , Quaternion.LookRotation((Vector3)_dir));
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
-            proj.GetComponent<Fireball>().damage = 14;
+            proj.GetComponent<Fireball>().damage = 32;
             proj.GetComponent<Fireball>().force = 50;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);

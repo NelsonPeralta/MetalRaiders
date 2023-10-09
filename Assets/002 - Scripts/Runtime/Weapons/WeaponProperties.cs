@@ -360,6 +360,14 @@ public class WeaponProperties : MonoBehaviour
         {
 
         }
+
+        try
+        {
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                foreach (PlayerArmorPiece pap in GetComponentsInChildren<PlayerArmorPiece>(true))
+                    pap.gameObject.SetActive(player.hasArmor && player.playerArmorManager.armorDataString.Contains(pap.entity));
+        }
+        catch { }
     }
 
     private void OnDisable()

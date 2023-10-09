@@ -104,7 +104,7 @@ public class AlienShooter : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("RibbianMelee", RpcTarget.All, false);
-            targetTransform.GetComponent<Player>().Damage(4, false, pid);
+            targetTransform.GetComponent<Player>().Damage(33, false, pid);
         }
         else
         {
@@ -144,7 +144,7 @@ public class AlienShooter : Actor
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
 
-            proj.GetComponent<Fireball>().damage = 8;
+            proj.GetComponent<Fireball>().damage = 16;
             proj.GetComponent<Fireball>().force = 50;
             if (SwarmManager.instance.editMode)
             {
@@ -181,8 +181,8 @@ public class AlienShooter : Actor
 
             potionBomb.GetComponent<Rigidbody>().AddForce(losSpawn.transform.forward * 600);
 
-            potionBomb.GetComponent<AIGrenade>().radius = 6;
-            potionBomb.GetComponent<AIGrenade>().damage = 25;
+            //potionBomb.GetComponent<AIGrenade>().radius = 6;
+            //potionBomb.GetComponent<AIGrenade>().damage = 25;
             if (SwarmManager.instance.editMode)
             {
                 potionBomb.GetComponent<AIGrenade>().damage = 1;

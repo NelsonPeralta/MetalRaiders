@@ -9,7 +9,8 @@ public class PlayerHealthBar : PlayerBar
 
     private void Start()
     {
-        GetComponent<Slider>().maxValue = 100;
+        GetComponent<Slider>().maxValue = player.maxHitPoints;
+        GetComponent<Slider>().value = player.maxHitPoints;
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm || GameManager.instance.gameType == GameManager.GameType.Swat || GameManager.instance.gameType == GameManager.GameType.Retro)
             holder.SetActive(true);
@@ -18,7 +19,7 @@ public class PlayerHealthBar : PlayerBar
     }
     public override void OnPlayerHitPointsChanged_Delegate(Player player)
     {
-        GetComponent<Slider>().value = Mathf.Clamp(player.hitPoints, 0, 100);
+        GetComponent<Slider>().value = Mathf.Clamp(player.hitPoints, 0, player.maxHitPoints);
     }
     void Update()
     {

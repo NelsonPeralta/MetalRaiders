@@ -34,7 +34,6 @@ public class FindableObject : MonoBehaviour
             playersInRange.Add(other.GetComponent<Player>());
             other.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
             other.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-            other.GetComponent<PlayerUI>().weaponInformerText.text = $"Interact";
         }
     }
 
@@ -43,7 +42,6 @@ public class FindableObject : MonoBehaviour
         if (other.GetComponent<Player>() && playersInRange.Contains(other.GetComponent<Player>()))
         {
             playersInRange.Remove(other.GetComponent<Player>());
-            other.GetComponent<PlayerUI>().weaponInformerText.text = $"";
         }
     }
 
@@ -52,7 +50,6 @@ public class FindableObject : MonoBehaviour
         if (!found)
         {
             playersInRange.Remove(playerController.GetComponent<Player>());
-            playerController.GetComponent<PlayerUI>().weaponInformerText.text = $"";
 
             found = true;
         }
