@@ -41,7 +41,7 @@ public class RagdollPrefab : MonoBehaviour
 
     public void SetPlayerCamera(PlayerCamera playerCameraScript, Camera playerMainCamera)
     {
-        playerCameraScript.ragdollPrefab = this;
+        //playerCameraScript.ragdollPrefab = this;
 
         playerMainCamera.transform.parent = _cameraHolder.transform;
 

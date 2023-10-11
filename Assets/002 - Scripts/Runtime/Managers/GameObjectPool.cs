@@ -19,6 +19,7 @@ public class GameObjectPool : MonoBehaviour
     public GameObject genericHitPrefab;
     public List<GameObject> ragdolls = new List<GameObject>();
     public GameObject ragdollPrefab;
+    public PlayerRagdoll playerRagdoll;
 
     [Header("Testing Object")]
     public List<GameObject> testingObjects = new List<GameObject>();

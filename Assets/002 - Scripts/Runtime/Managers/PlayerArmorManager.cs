@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,38 +10,60 @@ public class PlayerArmorManager : MonoBehaviour
 {
     public Player player;
     public List<PlayerArmorPiece> playerArmorPieces = new List<PlayerArmorPiece>();
+    public List<MarineArmorPiece> marineArmorPieces = new List<MarineArmorPiece>();
 
     public string armorDataString
     {
         get { return _armorDataString; }
         set
         {
-            _armorDataString = value;
-            SoftReloadArmor();
+            if (_armorDataString != value)
+            {
+                Debug.Log(_armorDataString);
+
+                _armorDataString = value;
+
+                if (value == null || value == "")
+                {
+                    ToggleMarinePieces(true);
+                    DisableAllArmor();
+                }
+                else
+                {
+                    SoftReloadArmor();
+                }
+            }
         }
     }
 
     public string colorPalette
     {
         get { return _colorPalette; }
-        private set
+        set
         {
-            if (!name.Contains("Ragdoll"))
-            {
-                _colorPalette = value;
-            }
-            UpdateColorPalette();
+
+            if (_colorPalette != value)
+                if (value != null && value != "")
+                {
+                    Debug.Log(colorPalette);
+                    UpdateColorPalette();
+                    _colorPalette = value;
+                }
         }
     }
 
-    [SerializeField] GameObject _helmetlessHead;
+    public bool isRagdoll;
+
     [SerializeField] string _armorDataString, _colorPalette;
 
     int tries = 0;
 
     private void OnEnable()
     {
-        try { _helmetlessHead.SetActive(false); } catch { }
+        if (marineArmorPieces.Count == 0)
+            marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
+        ToggleMarinePieces(false);
+
         try { HardReloadArmor(); } catch { }
 
         {
@@ -53,6 +76,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void Awake()
     {
+        marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
         playerArmorPieces.Clear(); playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
     }
 
@@ -61,9 +85,20 @@ public class PlayerArmorManager : MonoBehaviour
         //ReloadArmor();
     }
 
+    void ToggleMarinePieces(bool t)
+    {
+
+        try
+        {
+            foreach (MarineArmorPiece map in marineArmorPieces)
+                map.gameObject.SetActive(t);
+        }
+        catch { }
+    }
+
     public void HardReloadArmor(bool forceEnable = false)
     {
-        //Debug.Log("HardReloadArmor");
+        Debug.Log("HardReloadArmor");
 
         try
         {
@@ -103,13 +138,14 @@ public class PlayerArmorManager : MonoBehaviour
 
     void SoftReloadArmor()
     {
+
         DisableAllArmor();
         EnableAllArmorsInDataString();
     }
 
     public void DisableAllArmor()
     {
-        //Debug.Log("DisableAllArmor");
+        Debug.Log("DisableAllArmor");
         try
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
@@ -118,14 +154,19 @@ public class PlayerArmorManager : MonoBehaviour
         catch { }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            _helmetlessHead.SetActive(true);
+            try
+            {
+                foreach (MarineArmorPiece map in marineArmorPieces)
+                    map.gameObject.SetActive(true);
+            }
+            catch { }
     }
 
     void EnableAllArmorsInDataString(bool force = false)
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !force) return;
 
-        //Debug.Log("EnableAllArmorsInDataString");
+        Debug.Log("EnableAllArmorsInDataString");
         try
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
@@ -136,8 +177,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     void UpdateColorPalette()
     {
-        if (name.Contains("Ragdoll"))
-            return;
+        Debug.Log(colorPalette);
 
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
 
@@ -151,7 +191,7 @@ public class PlayerArmorManager : MonoBehaviour
             }
         }
 
-        //Debug.Log(_tex.name);
+        Debug.Log(_tex.name);
 
         foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
             if (playerArmorPiece.canChangeColorPalette)
@@ -159,16 +199,28 @@ public class PlayerArmorManager : MonoBehaviour
                 {
                     playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
                 }
-                catch { }
+                catch (Exception e) { Debug.Log(e); }
+    }
+
+
+    public void ReloadFpsArmor()
+    {
+        Debug.Log(player.playerArmorManager.armorDataString);
+        foreach (PlayerArmorPiece pap in player.playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
+            pap.gameObject.SetActive(player.playerArmorManager.armorDataString.Contains(pap.entity));
     }
 
     IEnumerator ReloadArmor_Coroutine()
     {
-        yield return new WaitForSeconds(0.3f);
-        HardReloadArmor();
-        tries++;
+        yield return new WaitForSeconds(1f);
 
-        if (tries < 10 /*&& (armorDataString == null || armorDataString == "")*/)
-            StartCoroutine(ReloadArmor_Coroutine());
+        if (!isRagdoll)
+        {
+            HardReloadArmor();
+            tries++;
+
+            if (tries < 3 /*&& (armorDataString == null || armorDataString == "")*/)
+                StartCoroutine(ReloadArmor_Coroutine());
+        }
     }
 }

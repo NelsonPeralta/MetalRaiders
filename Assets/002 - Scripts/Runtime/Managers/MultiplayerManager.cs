@@ -246,7 +246,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
                 PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
                 PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.playerBasicOnlineStats.level, pda.playerBasicOnlineStats.honor);
-                GameManager.instance.carnageReport = new CarnageReport(rank,pda.level, pda.xp, 1234, pda.honor, 1);
+                GameManager.instance.carnageReport = new CarnageReport(rank,pda.level, pda.xp, 0, pda.honor, 0);
 
                 GameManager.instance.LeaveRoom();
             }

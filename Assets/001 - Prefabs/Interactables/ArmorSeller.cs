@@ -117,13 +117,9 @@ public class ArmorSeller : InteractableObject
 
 
         p.playerArmorManager.HardReloadArmor(true);
+        p.playerArmorManager.ReloadFpsArmor();
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        {
-            Debug.Log(p.playerArmorManager.armorDataString);
-            foreach (PlayerArmorPiece pap in p.playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
-                pap.gameObject.SetActive(p.playerArmorManager.armorDataString.Contains(pap.entity));
-        }
+
 
         playersInRange.Remove(p);
         p.GetComponent<PlayerUI>().weaponInformerText.text = $"";

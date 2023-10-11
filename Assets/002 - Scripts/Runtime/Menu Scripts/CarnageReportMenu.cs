@@ -52,6 +52,8 @@ public class CarnageReportMenu : MonoBehaviour
 
     private void OnEnable()
     {
+        FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(true);
+
         _xpTimer = _hnrTimer = 0;
 
         _xpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + 1];
@@ -59,7 +61,7 @@ public class CarnageReportMenu : MonoBehaviour
         _hnrToLevelUp = nextRank.honorRequired;
 
         _xpSlider.maxValue = _xpToLevelUp; _hnrSlider.maxValue = _hnrToLevelUp;
-       _xpSlider.value = GameManager.instance.carnageReport.currentXp; _hnrSlider.value = GameManager.instance.carnageReport.currentHonor;
+        _xpSlider.value = GameManager.instance.carnageReport.currentXp; _hnrSlider.value = GameManager.instance.carnageReport.currentHonor;
         _xpBase = GameManager.instance.carnageReport.currentXp;
 
         _hnrText.text = $"0 / {_hnrToLevelUp}";
@@ -88,5 +90,7 @@ public class CarnageReportMenu : MonoBehaviour
     private void OnDisable()
     {
         //GameManager.carnageReport = null;
+        FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(false);
+
     }
 }

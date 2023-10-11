@@ -5,7 +5,7 @@ using Rewired;
 
 public class PlayerCamera : MonoBehaviour
 {
-    public RagdollPrefab ragdollPrefab { get { return _ragdollPrefab; } set { _ragdollPrefab = value; } }
+    public PlayerRagdoll ragdollPrefab { get { return _ragdollPrefab; } set { _ragdollPrefab = value; } }
 
     public float defaultMouseSensitivy;
     public float mouseSensitivity;
@@ -38,7 +38,7 @@ public class PlayerCamera : MonoBehaviour
     float targetHorizontalSway;
     float currentHorizontalSway;
     float sway;
-    RagdollPrefab _ragdollPrefab;
+    PlayerRagdoll _ragdollPrefab;
 
     //public AimAssistCapsule aimAssistCapsule;
     public AimAssistCone aimAssistCapsule;
@@ -91,8 +91,8 @@ public class PlayerCamera : MonoBehaviour
 
         try
         {
-            if (ragdollPrefab)
-                ragdollPrefab.cameraHolderParent.transform.localPosition = ragdollPrefab.ragdollRigidBody.transform.localPosition + new Vector3(0, 1, 0);
+            //if (ragdollPrefab)
+            //    ragdollPrefab.cameraHolderParent.transform.localPosition = ragdollPrefab.ragdollRigidBody.transform.localPosition + new Vector3(0, 1, 0);
         }
         catch { }
 
@@ -168,11 +168,16 @@ public class PlayerCamera : MonoBehaviour
 
             //verticalAxisTarget.localRotation = Quaternion.Euler(xRotation, 0, 0f); // OLD, prevents other script from changing localRotation
             verticalAxisTarget.Rotate(Vector3.left * _clampedMouseY); // NEW, multiple scripts can now interact with local rotation
+            //Debug.Log(_clampedMouseY);
+
 
             if (horizontalAxisTarget.transform.root == horizontalAxisTarget)
                 horizontalAxisTarget.Rotate(Vector3.up * mouseX);
             else
+            {
+                //Debug.Log(yRotation);
                 horizontalAxisTarget.localRotation = Quaternion.Euler(0, yRotation, 0f);
+            }
 
         }
 

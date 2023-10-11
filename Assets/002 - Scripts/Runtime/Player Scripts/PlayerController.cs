@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using UnityEngine.EventSystems;
 using ExitGames.Client.Photon.StructWrapping;
+using System.Security.Cryptography;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -1219,7 +1220,40 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        player.BasicDamage(50);
+        //player.BasicDamage(50);
+
+        return;
+
+        Transform pr = Instantiate(GameObjectPool.instance.playerRagdoll.gameObject, transform.position + new Vector3(0, 0.5f, 1), transform.rotation).transform;
+
+        Debug.Log(player.playerArmorManager.colorPalette);
+        pr.GetComponent<PlayerArmorManager>().isRagdoll = true;
+        pr.GetComponent<PlayerArmorManager>().armorDataString = player.playerArmorManager.armorDataString;
+        //pr.GetComponent<PlayerArmorManager>().armorDataString = "";
+        pr.GetComponent<PlayerArmorManager>().colorPalette = player.playerArmorManager.colorPalette;
+
+        //ConfigureRagdollPosition(player.playerArmorManager.transform, pr.transform);
+    }
+
+    public void ConfigureRagdollPosition(Transform reference, Transform ragdollPart)
+    {
+        if (!ragdollPart.GetComponent<CharacterJoint>())
+        {
+            Debug.Log(ragdollPart.name);
+            ragdollPart.localPosition = reference.localPosition;
+            ragdollPart.localPosition = reference.localPosition;
+        }
+
+        ragdollPart.gameObject.layer = 0;
+
+        for (int i = 0; i < reference.childCount; i++)
+        {
+            Transform ref_t = reference.GetChild(i);
+            Transform rag_t = ragdollPart.GetChild(i);
+
+            if (ref_t != null && rag_t != null)
+                ConfigureRagdollPosition(ref_t, rag_t);
+        }
     }
     public void OnDeath_Delegate(Player player)
     {

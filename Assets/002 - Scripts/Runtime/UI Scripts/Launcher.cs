@@ -141,6 +141,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (levelToLoadIndex == 0)
             levelToLoadIndex = 1;
 
+        //TODO: PhotonNetwork.OfflineMode = true;
         ConnectToPhotonMasterServer();
         //GetComponent<MenuManager>().OpenMainMenu();
     }
@@ -186,7 +187,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("Connected to Master");
         try { ChangeLevelToLoadWithIndex(levelToLoadIndex); } catch { }
         //ShowPlayerMessage("Conneected To Master Server!");
-        PhotonNetwork.JoinLobby();
+        if (!PhotonNetwork.OfflineMode)
+            PhotonNetwork.JoinLobby();
         PhotonNetwork.AutomaticallySyncScene = true;
         GetComponent<MenuManager>().OpenMainMenu();
 
@@ -764,6 +766,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         WebManager.webManagerInstance.Login(loginUsernameText.text, _loginPasswordText.text);
 
         Debug.Log(PhotonNetwork.NetworkClientState);
+        Debug.Log(PhotonNetwork.OfflineMode);
         //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
         //    ConnectToPhotonMasterServer();
 

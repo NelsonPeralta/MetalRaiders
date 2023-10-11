@@ -891,14 +891,25 @@ public class Player : Biped
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
 
-        ragdoll.GetComponent<RagdollPrefab>().SetPlayerCamera(playerCamera, mainCamera);
+        ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
 
+        if (!hasArmor)
+        {
+            ragdoll.GetComponent<PlayerArmorManager>().armorDataString = "";
+
+        }
+        else
+        {
+            ragdoll.GetComponent<PlayerArmorManager>().armorDataString = playerArmorManager.armorDataString;
+            ragdoll.GetComponent<PlayerArmorManager>().colorPalette = playerArmorManager.colorPalette;
+        }
         ragdoll.SetActive(true);
 
-        if (deathByHeadshot) { ragdoll.GetComponent<RagdollPrefab>().ragdollHead.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.Grenade) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
-        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2500); }
-        else if (!deathByHeadshot) { ragdoll.GetComponent<RagdollPrefab>().ragdollHips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+
+        if (deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+        else if (deathNature == DeathNature.Grenade) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 100); }
+        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2500); }
+        else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 
     void HitPointsRecharge()
