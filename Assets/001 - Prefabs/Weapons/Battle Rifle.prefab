@@ -51007,6 +51007,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: LootEssenceWhite
       objectReference: {fileID: 0}
+    - target: {fileID: 1958294894950398207, guid: 40f6fb70121258342af06186538f5bde,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

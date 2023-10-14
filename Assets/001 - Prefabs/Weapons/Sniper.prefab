@@ -608,6 +608,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LootEssenceWhite
       objectReference: {fileID: 0}
+    - target: {fileID: 1780108520312974, guid: ca97d3903f5a95e4f9176b90a8021415, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4176904567174286, guid: ca97d3903f5a95e4f9176b90a8021415, type: 3}
       propertyPath: m_RootOrder
       value: 0

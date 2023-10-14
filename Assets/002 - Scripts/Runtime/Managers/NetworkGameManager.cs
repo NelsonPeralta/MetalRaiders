@@ -344,9 +344,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         _pv.RPC("DisableAmmoPack_RPC", RpcTarget.All, sp);
     }
 
-    public void ResetAllAmmoPacks()
+    public void EnableGrenadePacks()
     {
-        _pv.RPC("ResetAllAmmoPacks_RPC", RpcTarget.All);
+        _pv.RPC("EnableGrenadePacks_RPC", RpcTarget.All);
     }
 
     #endregion
@@ -611,7 +611,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void ResetAllAmmoPacks_RPC()
+    void EnableGrenadePacks_RPC()
     {
         foreach (NetworkGrenadeSpawnPoint ap in FindObjectsOfType<NetworkGrenadeSpawnPoint>())
             ap.enable = true;

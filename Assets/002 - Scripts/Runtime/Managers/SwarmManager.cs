@@ -882,6 +882,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         else if (currentWave % 5 == 0)
         {
             NetworkSwarmManager.instance.EnableStartingNetworkWeapons();
+            NetworkGameManager.instance.EnableGrenadePacks();
 
             int livesToAdd = GameManager.instance.pid_player_Dict.Count;
             livesLeft += livesToAdd;

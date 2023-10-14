@@ -322,6 +322,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Material armorMaterial { get { return _armorMaterial; } }
     public List<Texture> colorPaletteTextures { get { return _colorPaletteTextures; } }
     public List<LootableWeapon> lootableWeapons { get { return _lootableWeapons; } }
+    public List<NetworkGrenadeSpawnPoint> networkGrenadeSpawnPoints { get { return _networkGrenadeSpawnPoints; } }
 
     // called zero
 
@@ -335,6 +336,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     SwarmManager.Difficulty _difficulty;
     CarnageReport _carnageReport;
     List<LootableWeapon> _lootableWeapons = new List<LootableWeapon>();
+    List<NetworkGrenadeSpawnPoint> _networkGrenadeSpawnPoints = new List<NetworkGrenadeSpawnPoint>();
 
     void Awake()
     {
@@ -414,6 +416,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { teamMode = TeamMode.None; } catch { }
             try { onlineTeam = PlayerMultiplayerMatchStats.Team.None; } catch { }
             _lootableWeapons.Clear();
+            _networkGrenadeSpawnPoints.Clear();
         }
         else if (scene.buildIndex > 0) // We're in the game scene
         {

@@ -8,7 +8,7 @@ public class HealthPack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Player>())
+        if (other.GetComponent<Player>() && other.GetComponent<Player>().hitPoints <= 0.7f * other.GetComponent<Player>().maxHitPoints)
         {
             Player p = other.GetComponent<Player>();
 

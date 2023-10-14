@@ -77,12 +77,15 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
         if (index != 0)
             return;
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            return;
+
         _tts -= Time.deltaTime;
 
         if (_tts < 0)
         {
             if (PhotonNetwork.IsMasterClient)
-                NetworkGameManager.instance.ResetAllAmmoPacks();
+                NetworkGameManager.instance.EnableGrenadePacks();
             _tts = _defaultTts;
         }
     }

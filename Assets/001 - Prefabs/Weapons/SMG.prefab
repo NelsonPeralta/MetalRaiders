@@ -49309,17 +49309,9 @@ MonoBehaviour:
   m_Mesh: {fileID: 0}
   m_VersionIndex: 3292
   m_IsSelectable: 1
-  m_SelectedFaces: 1f030000
-  m_SelectedEdges:
-  - a: 1736
-    b: 1737
-  - a: 1737
-    b: 1738
-  - a: 1738
-    b: 1739
-  - a: 1739
-    b: 1736
-  m_SelectedVertices: c8060000c9060000ca060000cb060000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!1 &1326492427891245112
 GameObject:
   m_ObjectHideFlags: 0
@@ -126882,6 +126874,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LootEssenceWhite
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958294894950398207, guid: 40f6fb70121258342af06186538f5bde,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

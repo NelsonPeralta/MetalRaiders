@@ -15,6 +15,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     [SerializeField] float _tts;
     [SerializeField] LootableWeapon _weaponSpawned;
+    [SerializeField] bool _inGunRack;
     bool _auth;
 
     float _respawnListenerDelay = 1;
@@ -136,6 +137,15 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                     {
                         //LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
                         LootableWeapon lw = Instantiate(networkLootableWeaponPrefabs.Where(x => x.name == weapon.name).SingleOrDefault(), transform.position, transform.rotation);
+
+                        if (_inGunRack)
+                        {
+                            lw.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                            lw.GetComponent<Rigidbody>().isKinematic = true;
+                            lw.GetComponent<Rigidbody>().useGravity = false;
+                            //Destroy(lw.GetComponent<Rigidbody>());
+                        }
+
                         lw.transform.parent = transform;
                         lw.spawnPointPosition = this.transform.position;
                         lw.gameObject.SetActive(true);
