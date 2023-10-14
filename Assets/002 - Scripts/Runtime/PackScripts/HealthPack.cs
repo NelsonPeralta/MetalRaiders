@@ -13,6 +13,8 @@ public class HealthPack : MonoBehaviour
             Player p = other.GetComponent<Player>();
 
             p.hitPoints = p.maxHitPoints;
+            p.playerShield.ShowShieldRechargeEffect();
+            p.playerShield.PlayShieldStartSound(p);
             SwarmManager.instance.DisableHealthPack_MasterCall(transform.position);
         }
     }
