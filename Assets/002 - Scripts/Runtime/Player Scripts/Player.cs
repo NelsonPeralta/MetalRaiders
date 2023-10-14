@@ -37,6 +37,8 @@ public class Player : Biped
             {
                 _hasArmor = true;
                 maxHitPoints = 250;
+                maxShieldPoints = 150;
+                maxHealthPoints = 100;
                 hitPoints = 250;
 
                 needsHealthPack = false;
@@ -493,6 +495,8 @@ public class Player : Biped
 
     public PlayerArmorManager playerArmorManager { get { return _playerArmorManager; } }
     public PlayerThirdPersonModel playerThirdPersonModel { get { return _playerThirdPersonModel; } }
+    public PlayerShield playerShield { get { return _playerShield; } }
+    public KillFeedManager killFeedManager { get { return _killFeedManager; } }
 
     #endregion
 
@@ -519,6 +523,8 @@ public class Player : Biped
     [SerializeField] Announcer _announcer;
     [SerializeField] PlayerArmorManager _playerArmorManager;
     [SerializeField] PlayerThirdPersonModel _playerThirdPersonModel;
+    [SerializeField] PlayerShield _playerShield;
+    [SerializeField] KillFeedManager _killFeedManager;
     #endregion
 
 

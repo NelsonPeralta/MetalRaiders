@@ -283,6 +283,8 @@ public class PlayerUI : MonoBehaviour
         else
             motionTracker.SetActive(false);
 
+        shieldBar.GetComponent<Slider>().maxValue = GetComponent<Player>().maxShieldPoints;
+        shieldBar.GetComponent<Slider>().value = GetComponent<Player>().shieldPoints;
     }
     public void AddInformerText(string message)
     {

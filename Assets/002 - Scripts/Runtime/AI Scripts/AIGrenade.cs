@@ -31,9 +31,11 @@ public class AIGrenade : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer != 22 && !hasHitObject) // Non-Interactable Layer
+        if (collision.gameObject.layer != 22) // Non-Interactable Layer
         {
-            StartCoroutine(ExplosionCountdown());
+            impactSound.Play();
+            if (!hasHitObject)
+                StartCoroutine(ExplosionCountdown());
         }
     }
 

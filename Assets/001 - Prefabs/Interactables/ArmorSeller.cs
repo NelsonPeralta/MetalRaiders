@@ -108,16 +108,12 @@ public class ArmorSeller : InteractableObject
         Player p = GameManager.instance.pid_player_Dict[(int)pid];
         Debug.Log($"Player {p.nickName} bought armor");
 
-        p.maxHitPoints = 250;
-        p.maxShieldPoints = 150;
-        p.maxHealthPoints = 100;
-        p.hitPoints = 250;
-
         p.hasArmor = true;
-
 
         p.playerArmorManager.HardReloadArmor(true);
         p.playerArmorManager.ReloadFpsArmor();
+        p.playerShield.ShowShieldRechargeEffect();
+        p.playerShield.PlayShieldStartSound(p);
 
 
 

@@ -176,7 +176,7 @@ public class PlayerCamera : MonoBehaviour
             else
             {
                 //Debug.Log(yRotation);
-                horizontalAxisTarget.localRotation = Quaternion.Euler(0, yRotation, 0f);
+                horizontalAxisTarget.localRotation = Quaternion.Euler(0, -yRotation, 0f);
             }
 
         }

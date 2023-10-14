@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PlayerRagdoll : MonoBehaviour
+public class PlayerRagdoll : Ragdoll
 {
     public Transform head;
     public Transform hips;
@@ -15,6 +15,12 @@ public class PlayerRagdoll : MonoBehaviour
 
     Vector3 _v = new Vector3(0, 0.5f, 0);
 
+   
+    private void Update()
+    {
+        _cameraHolder.localPosition = hips.localPosition - _v;
+    }
+
     public void SetPlayerCamera(PlayerCamera playerCameraScript, Camera playerMainCamera)
     {
         playerCameraScript.ragdollPrefab = this;
@@ -24,10 +30,5 @@ public class PlayerRagdoll : MonoBehaviour
         playerCameraScript.transform.parent = _cameraAnchor.transform;
         playerCameraScript.horizontalAxisTarget = _cameraHorAxis.transform;
         playerCameraScript.verticalAxisTarget = _cameraVerAxis.transform;
-    }
-
-    private void Update()
-    {
-        _cameraHolder.localPosition = hips.localPosition - _v;
     }
 }

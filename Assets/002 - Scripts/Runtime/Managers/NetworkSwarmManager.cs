@@ -6,6 +6,7 @@ using System.Linq;
 
 public class NetworkSwarmManager : MonoBehaviourPun
 {
+    public static NetworkSwarmManager instance;
     SwarmManager _swarmManager;
     SwarmManager swarmManager
     {
@@ -16,6 +17,11 @@ public class NetworkSwarmManager : MonoBehaviourPun
 
             return _swarmManager;
         }
+    }
+
+    private void Awake()
+    {
+        instance = this;
     }
 
 

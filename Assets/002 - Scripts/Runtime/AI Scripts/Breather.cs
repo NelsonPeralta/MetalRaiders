@@ -13,6 +13,7 @@ public class Breather : Actor
     protected override void ChildOnEnable()
     {
         //_hitPoints += (SwarmManager.instance.currentWave * 12 * FindObjectsOfType<Player>().Length);
+        _flinchCooldown = 0;
     }
 
 

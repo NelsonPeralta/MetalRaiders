@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MapAiWaypoints : MonoBehaviour
 {
+    public static MapAiWaypoints instance;
     public List<Transform> waypoints { get { return _waypoints; } }
 
     [SerializeField] List<Transform> _waypoints;
@@ -17,6 +18,11 @@ public class MapAiWaypoints : MonoBehaviour
     {
         randomNumber = Random.Range(0, waypoints.Count);
         _waypoints = GetComponentsInChildren<Transform>().ToList();
+    }
+
+    private void Start()
+    {
+        instance = this;
     }
 
     public struct WaypointAssignment

@@ -17,7 +17,7 @@ public class PlayerArmorManager : MonoBehaviour
         get { return _armorDataString; }
         set
         {
-            if (_armorDataString != value)
+            //if (_armorDataString != value)
             {
                 Debug.Log(_armorDataString);
 
@@ -42,7 +42,7 @@ public class PlayerArmorManager : MonoBehaviour
         set
         {
 
-            if (_colorPalette != value)
+            //if (_colorPalette != value)
                 if (value != null && value != "")
                 {
                     Debug.Log(colorPalette);
@@ -71,7 +71,8 @@ public class PlayerArmorManager : MonoBehaviour
             StartCoroutine(ReloadArmor_Coroutine());
         }
 
-
+        
+        //player.playerShield.ShowShieldRechargeEffect();
     }
 
     private void Awake()

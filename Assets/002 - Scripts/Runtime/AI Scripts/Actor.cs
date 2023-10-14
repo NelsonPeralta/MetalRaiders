@@ -353,12 +353,12 @@ abstract public class Actor : Biped
 
                     try
                     {
-                        Transform tp = FindObjectOfType<MapAiWaypoints>().GetRandomWaypoint();
+                        Transform tp = MapAiWaypoints.instance.GetRandomWaypoint();
 
 
                         while (targetTransform == tp)
                         {
-                            tp = FindObjectOfType<MapAiWaypoints>().GetRandomWaypoint();
+                            tp = MapAiWaypoints.instance.GetRandomWaypoint();
                         }
 
                         targetTransform = tp;
@@ -368,9 +368,9 @@ abstract public class Actor : Biped
 
                     }
 
-                    if (FindObjectOfType<NetworkSwarmManager>())
+                    if (NetworkSwarmManager.instance)
                     {
-                        int pid = FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId();
+                        int pid = NetworkSwarmManager.instance.GetRandomAlivePlayerPhotonId();
                         if (pid > 0)
                             SetNewTargetPlayerWithPid(pid);
                     }

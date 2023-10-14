@@ -148,6 +148,13 @@ public class PlayerShield : MonoBehaviour
     {
         if (shieldElectricityThirdPersonModel.activeSelf)
             shieldElectricityThirdPersonModel.SetActive(false);
+        ShowShieldRechargeEffect();
+    }
+
+    public void ShowShieldRechargeEffect()
+    {
+        shieldRechargeThirdPersonModel.SetActive(false);
         shieldRechargeThirdPersonModel.SetActive(true);
+
     }
 }

@@ -1220,7 +1220,7 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        //player.BasicDamage(50);
+        player.BasicDamage(18);
 
         return;
 

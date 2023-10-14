@@ -135,6 +135,7 @@ public class GameObjectPool : MonoBehaviour
             if (!obj.activeSelf)
                 if (!obj.activeSelf)
                 {
+                    obj.transform.parent = null;
                     ragdolls.Remove(obj);
                     StartCoroutine(DisableObjectAfterTime(obj, 30));
                     return obj;

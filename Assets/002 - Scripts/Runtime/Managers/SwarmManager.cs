@@ -47,15 +47,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject helldogPrefab;
     int _ranClipInt;
 
-    public List<Undead> zombieList { get { return _zombieList; } set { _zombieList = value; } }
-    public List<Breather> knightPool { get { return _knightPool; } set { _knightPool = value; } }
-    public List<AlienShooter> watcherPool { get { return _watcherPool; } set { _watcherPool = value; } }
+    public List<Undead> zombieList { get { return _zombiesPool; } set { _zombiesPool = value; } }
+    public List<Breather> breathersPool { get { return _breathersPool; } set { _breathersPool = value; } }
+    public List<AlienShooter> ribbiansPool { get { return _ribbianPool; } set { _ribbianPool = value; } }
 
 
     [Header("AI Pools")]
-    List<Undead> _zombieList = new List<Undead>();
-    public List<Breather> _knightPool = new List<Breather>();
-    public List<AlienShooter> _watcherPool = new List<AlienShooter>();
+    List<Undead> _zombiesPool = new List<Undead>();
+    public List<Breather> _breathersPool = new List<Breather>();
+    public List<AlienShooter> _ribbianPool = new List<AlienShooter>();
     public List<Helldog> hellhoundPool = new List<Helldog>();
     public List<Tyrant> tyrantPool = new List<Tyrant>();
 
@@ -63,21 +63,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     PhotonView PV;
     int maxWave;
     int _livesLeft = 4;
-    float _newWaveCountdown;
+    float _newWaveCountdown, _waveEndCountdown;
     bool _waveEnded;
 
 
-    [SerializeField] int _zombiesLeft;
-    int _watchersLeft;
-    int _knightsLeft;
-    int _hellhoundsLeft;
-    [SerializeField] int _tyrantsLeft;
+    int _zombiesLeft, _watchersLeft, _knightsLeft, _hellhoundsLeft, _tyrantsLeft;
 
-    int _zombiesAlive;
-    int _watchersAlive;
-    int _knightsAlive;
-    int _hellhoundsAlive;
-    int _tyrantsAlive;
+    [SerializeField] int _zombiesAlive, _watchersAlive, _knightsAlive, _hellhoundsAlive, _tyrantsAlive;
 
     int _maxAliensEnabled;
     int _maxBreathersEnabled;
@@ -234,10 +226,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-
         GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
         GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
-
     }
 
     NetworkSwarmManager _networkSwarmManager;
@@ -255,14 +245,27 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void NewWaveCountdown()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            if (_newWaveCountdown > 0)
-            {
-                _newWaveCountdown -= Time.deltaTime;
+        if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
+            return;
+        if (_newWaveCountdown > 0)
+        {
+            _newWaveCountdown -= Time.deltaTime;
 
-                if (_newWaveCountdown <= 0)
-                    IncreaseWave();
+            if (_newWaveCountdown <= 0)
+                IncreaseWave();
+        }
+
+        if (_waveEndCountdown > 0)
+        {
+            _waveEndCountdown -= Time.deltaTime;
+
+            if (_waveEndCountdown <= 0)
+            {
+                _networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
+
+                //EndWave();
             }
+        }
     }
     void OnSceneLoaded()
     {
@@ -287,10 +290,30 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 {
                     //Transform sp = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
                     GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
+                    _zombiesPool.Add(z.GetComponent<Undead>());
+                    z.transform.parent = transform;
+                    z.gameObject.SetActive(false);
+
                     GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero, Quaternion.identity);
+                    _breathersPool.Add(w.GetComponent<Breather>());
+                    w.transform.parent = transform;
+                    w.gameObject.SetActive(false);
+
                     GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero, Quaternion.identity);
-                    GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero, Quaternion.identity);
-                    GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero, Quaternion.identity);
+                    _ribbianPool.Add(a.GetComponent<AlienShooter>());
+                    a.transform.parent = transform;
+                    a.gameObject.SetActive(false);
+
+
+                    GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero, Quaternion.identity);
+                    hellhoundPool.Add(t.GetComponent<Helldog>());
+                    t.transform.parent = transform;
+                    t.gameObject.SetActive(false);
+
+                    GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero, Quaternion.identity);
+                    tyrantPool.Add(h.GetComponent<Tyrant>());
+                    h.transform.parent = transform;
+                    h.gameObject.SetActive(false);
                     //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
                     //_zombieList.Add(z.GetComponent<Undead>());
                     //z.transform.parent = transform;
@@ -338,46 +361,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (!caller)
         {
             Debug.Log("Creating AI Pool");
-            foreach (Undead z in FindObjectsOfType<Undead>().ToList())
-            {
-                //z.transform.position = new Vector3(0, -10, 0);
-                _zombieList.Add(z);
-                z.transform.parent = transform;
-                z.gameObject.SetActive(false);
-            }
-            //_zombieList = FindObjectsOfType<Undead>();
-            //foreach (Undead w in _zombieList)
-            //    w.gameObject.SetActive(false);
-
-            // Watcher GameObject must be active in order to be found with FindObjectsOfType
-            foreach (AlienShooter w in FindObjectsOfType<AlienShooter>().ToList())
-            {
-                _watcherPool.Add(w);
-                w.transform.parent = transform;
-                w.gameObject.SetActive(false);
-            }
-
-            foreach (Breather w in FindObjectsOfType<Breather>(true).ToList())
-            {
-                _knightPool.Add(w);
-                w.transform.parent = transform;
-                w.gameObject.SetActive(false);
-            }
-
-            foreach (Helldog w in FindObjectsOfType<Helldog>(true).ToList())
-            {
-                hellhoundPool.Add(w);
-                w.transform.parent = transform;
-                w.gameObject.SetActive(false);
-            }
-
-
-            foreach (Tyrant w in FindObjectsOfType<Tyrant>(true).ToList())
-            {
-                tyrantPool.Add(w);
-                w.transform.parent = transform;
-                w.gameObject.SetActive(false);
-            }
         }
         else
             PV.RPC("CreateAIPool", RpcTarget.All);
@@ -386,9 +369,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void Begin()
     {
 
-        _maxBreathersEnabled = 2 + FindObjectsOfType<Player>().Count();
+        _maxBreathersEnabled = 6;
         _maxAliensEnabled = 6;
-        _maxZombieEnabled = 3 + FindObjectsOfType<Player>().Count();
+        _maxZombieEnabled = 3;
         _maxBreathersEnabled = 6;
         //if (editMode)
         //    return;
@@ -416,25 +399,25 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if (currentWave % 5 != 0)
         {
-            int nbPlayers = FindObjectsOfType<Player>().Length;
-            if (nbPlayers <= 0)
-                nbPlayers = 1;
+            //int nbPlayers = FindObjectsOfType<Player>().Length;
+            //if (nbPlayers <= 0)
+            //    nbPlayers = 1;
 
-            zombiesLeft = (nbPlayers * currentWave) + (int)Mathf.Floor((currentWave * 2.5f));
-            if (zombiesLeft > _zombieList.Count)
-                zombiesLeft = _zombieList.Count;
+            zombiesLeft = (currentWave) + (int)Mathf.Floor((currentWave * 2.5f));
+            if (zombiesLeft > _zombiesPool.Count)
+                zombiesLeft = _zombiesPool.Count;
 
             Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
 
 
-            breathersLeft = nbPlayers * 3 + (int)(currentWave * 1.4f);
-            if (breathersLeft > knightPool.Count)
-                breathersLeft = knightPool.Count;
+            breathersLeft = 3 + (int)(currentWave * 1.4f);
+            if (breathersLeft > breathersPool.Count)
+                breathersLeft = breathersPool.Count;
 
 
-            ribbiansLeft = nbPlayers * 2 + (int)(currentWave * 1.1f);
-            if (ribbiansLeft > watcherPool.Count)
-                ribbiansLeft = watcherPool.Count;
+            ribbiansLeft = 2 + (int)(currentWave * 1.1f);
+            if (ribbiansLeft > ribbiansPool.Count)
+                ribbiansLeft = ribbiansPool.Count;
 
             //zombiesLeft = breathersLeft = ribbiansLeft = 0;
             zombiesLeft = 0;
@@ -445,10 +428,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            int nbPlayers = FindObjectsOfType<Player>().Length;
-            tyrantsLeft = nbPlayers;
+            tyrantsLeft = 1;
             if (tyrantsLeft > tyrantPool.Count)
-                tyrantsLeft = nbPlayers;
+                tyrantsLeft = 1;
         }
 
 
@@ -471,8 +453,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     IEnumerator StartNewWave_Coroutine()
     {
-        int delay = FindObjectsOfType<Player>().Length * 3;
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(0);
         try
         {
             if (currentWave % 5 == 3)
@@ -533,14 +514,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 return;
             }
 
-            int breathersEnabled = FindObjectsOfType<Undead>().Count();
-            if (breathersEnabled >= _maxZombieEnabled)
+
+            int zombiesEnabled = 0; foreach (Undead u in zombieList) if (u.gameObject.activeInHierarchy) zombiesEnabled++;
+
+            if (zombiesEnabled >= _maxZombieEnabled)
             {
                 StartCoroutine(SpawnAISkip_Coroutine(aiType));
                 return;
             }
 
-            foreach (Undead w in _zombieList)
+            foreach (Undead w in _zombiesPool)
                 if (!w.gameObject.activeSelf)
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
 
@@ -554,14 +537,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 return;
             }
 
-            int breathersEnabled = FindObjectsOfType<AlienShooter>().Count();
-            if (breathersEnabled >= _maxAliensEnabled)
+            int ribbiansEnabled = 0; foreach (AlienShooter u in ribbiansPool) if (u.gameObject.activeInHierarchy) ribbiansEnabled++;
+
+            if (ribbiansEnabled >= _maxAliensEnabled)
             {
                 StartCoroutine(SpawnAISkip_Coroutine(aiType));
                 return;
             }
 
-            foreach (AlienShooter w in watcherPool)
+            foreach (AlienShooter w in ribbiansPool)
                 if (!w.gameObject.activeSelf)
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
 
@@ -575,14 +559,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 return;
             }
 
-            int breathersEnabled = FindObjectsOfType<Breather>().Count();
+            int breathersEnabled = 0; foreach (Breather u in breathersPool) if (u.gameObject.activeInHierarchy) breathersEnabled++;
             if (breathersEnabled >= _maxBreathersEnabled)
             {
                 StartCoroutine(SpawnAISkip_Coroutine(aiType));
                 return;
             }
 
-            foreach (Breather w in knightPool)
+            foreach (Breather w in breathersPool)
                 if (!w.gameObject.activeSelf)
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
 
@@ -809,21 +793,25 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int __tyrantsAlive = 0;
 
 
-        foreach (Undead w in _zombieList)
+        foreach (Undead w in _zombiesPool)
             if (w.gameObject.activeSelf && w.hitPoints > 0)
                 __zombiesAlive++;
 
-        foreach (AlienShooter w in watcherPool)
+        foreach (AlienShooter w in ribbiansPool)
             if (w.gameObject.activeSelf && w.hitPoints > 0)
                 __watchersAlive++;
 
-        foreach (Breather w in knightPool)
+        foreach (Breather w in breathersPool)
             if (w.gameObject.activeSelf && w.hitPoints > 0)
                 __knightsAlive++;
 
-        foreach (Helldog w in hellhoundPool)
-            if (w.gameObject.activeSelf && w.hitPoints > 0)
-                __hellhoundsAlive++;
+        try
+        {
+            foreach (Helldog w in hellhoundPool)
+                if (w.gameObject.activeSelf && w.hitPoints > 0)
+                    __hellhoundsAlive++;
+        }
+        catch { }
 
         foreach (Tyrant w in tyrantPool)
             if (w.gameObject.activeSelf && w.hitPoints > 0)
@@ -839,7 +827,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient)
             {
                 Debug.Log("Swarm Manager EndWave");
-                _networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
+                _waveEndCountdown = nextWaveDelay;
+                //_networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
             }
     }
 
@@ -852,7 +841,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void EndWave()
     {
         Debug.Log("EndWave_RPC");
-        nextWaveDelay = FindObjectsOfType<Player>().Length * 10;
         OnWaveEnd?.Invoke(this);
         _newWaveCountdown = nextWaveDelay;
 
@@ -873,7 +861,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         waveEnded = true;
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
-        foreach (Player p in FindObjectsOfType<Player>())
+        foreach (Player p in GameManager.instance.pid_player_Dict.Values)
             p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
         RespawnHealthPacks_MasterCall();
     }
@@ -893,19 +881,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         else if (currentWave % 5 == 0)
         {
-            FindObjectOfType<NetworkSwarmManager>().EnableStartingNetworkWeapons();
+            NetworkSwarmManager.instance.EnableStartingNetworkWeapons();
 
-            int livesToAdd = FindObjectsOfType<Player>().Length;
+            int livesToAdd = GameManager.instance.pid_player_Dict.Count;
             livesLeft += livesToAdd;
-            foreach (KillFeedManager p in FindObjectsOfType<KillFeedManager>())
+            GameManager.GetRootPlayer().announcer.AddClip(_livesAddedClip);
+            GameManager.GetRootPlayer().announcer.AddClip(_weaponDropClip);
+            foreach (Player p in GameManager.instance.pid_player_Dict.Values)
             {
-                GameManager.GetRootPlayer().announcer.AddClip(_livesAddedClip);
-                GameManager.GetRootPlayer().announcer.AddClip(_weaponDropClip);
-
-
-                p.EnterNewFeed($"Lives added: {livesToAdd}");
-                p.EnterNewFeed("Health Packs Respawned");
-                p.EnterNewFeed("Weapons respawned");
+                p.killFeedManager.EnterNewFeed($"Lives added: {livesToAdd}");
+                p.killFeedManager.EnterNewFeed("Health Packs Respawned");
+                p.killFeedManager.EnterNewFeed("Weapons respawned");
             }
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)
@@ -922,7 +908,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     int GetRandomPlayerPhotonId()
     {
-        List<Player> allPlayers = FindObjectsOfType<Player>().ToList();
+        List<Player> allPlayers = GameManager.instance.pid_player_Dict.Values.ToList();
         List<Player> allAlivePlayers = new List<Player>();
         foreach (Player p in allPlayers)
             if (!p.isDead && !p.isRespawning)
@@ -1012,7 +998,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void EndGame(bool saveXp = true)
     {
-        foreach (Player pp in FindObjectsOfType<Player>())
+        foreach (Player pp in GameManager.instance.pid_player_Dict.Values)
         {
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
             // return will stop this method, break will stop the loop, continue will stop the current iteration
