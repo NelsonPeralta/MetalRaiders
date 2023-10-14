@@ -409,7 +409,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void DisableLootableWeapon_RPC(Vector3 position)
     {
-        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>().ToList())
+        foreach (LootableWeapon lw in GameManager.instance.lootableWeapons)
         {
             if (lw.spawnPointPosition == position)
                 lw.gameObject.SetActive(false);
@@ -419,7 +419,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void EnableLootableWeapon_RPC(Vector3 position)
     {
-        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>(true).ToList())
+        foreach (LootableWeapon lw in GameManager.instance.lootableWeapons)
         {
             if (lw.spawnPointPosition == position)
             {
@@ -433,7 +433,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void RelocateLootableWeapon_RPC(Vector3 position, Quaternion rotation)
     {
-        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>(true).ToList())
+        foreach (LootableWeapon lw in GameManager.instance.lootableWeapons)
         {
             if (lw.spawnPointPosition == position)
             {
@@ -448,17 +448,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateLootableWeaponData_RPC(Vector3 spp, Dictionary<string, string> param)
     {
-        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>(true).ToList())
+        foreach (LootableWeapon lw in GameManager.instance.lootableWeapons)
         {
             if (lw.spawnPointPosition == spp)
             {
                 lw.UpdateData(param);
-                //if (param.ContainsKey("ammo"))
-                //    lw.ammo = int.Parse(param["ammo"]);
-
-                //if (param.ContainsKey("ttl"))
-                //    lw.tts = int.Parse(param["ttl"]);
-
                 break;
             }
         }
@@ -467,7 +461,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void AddForceLootableWeapon_RPC(Vector3 spp, Vector3 dir)
     {
-        foreach (LootableWeapon lw in FindObjectsOfType<LootableWeapon>(true).ToList())
+        foreach (LootableWeapon lw in GameManager.instance.lootableWeapons)
         {
             if (lw.spawnPointPosition == spp)
             {

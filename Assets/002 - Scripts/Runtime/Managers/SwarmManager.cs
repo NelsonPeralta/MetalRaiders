@@ -69,7 +69,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     int _zombiesLeft, _watchersLeft, _knightsLeft, _hellhoundsLeft, _tyrantsLeft;
 
-    [SerializeField] int _zombiesAlive, _watchersAlive, _knightsAlive, _hellhoundsAlive, _tyrantsAlive;
+    int _zombiesAlive, _watchersAlive, _knightsAlive, _hellhoundsAlive, _tyrantsAlive;
 
     int _maxAliensEnabled;
     int _maxBreathersEnabled;

@@ -7,15 +7,11 @@ using System.Linq;
 public class NetworkSwarmManager : MonoBehaviourPun
 {
     public static NetworkSwarmManager instance;
-    SwarmManager _swarmManager;
     SwarmManager swarmManager
     {
         get
         {
-            if (!_swarmManager)
-                _swarmManager = FindObjectOfType<SwarmManager>();
-
-            return _swarmManager;
+            return SwarmManager.instance;
         }
     }
 
