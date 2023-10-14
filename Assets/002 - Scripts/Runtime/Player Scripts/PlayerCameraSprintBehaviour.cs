@@ -38,6 +38,7 @@ public class PlayerCameraSprintBehaviour : MonoBehaviour
 
         //_player.mainCamera.fieldOfView = Camera.HorizontalToVerticalFieldOfView(Camera.VerticalToHorizontalFieldOfView(_player.mainCamera.fieldOfView, _player.mainCamera.aspect) + hint, _player.mainCamera.aspect);
 
-        _player.mainCamera.fieldOfView = _player.defaultVerticalFov + hint;
+        //_player.mainCamera.fieldOfView = _player.defaultVerticalFov + hint;
+        _player.mainCamera.fieldOfView += hint;
     }
 }

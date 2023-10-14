@@ -10238,7 +10238,7 @@ GameObject:
   - component: {fileID: 6006436695546708996}
   - component: {fileID: 6003369996789523853}
   - component: {fileID: 6003369996789523852}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Med Pack
   m_TagString: health_pack
   m_Icon: {fileID: 0}

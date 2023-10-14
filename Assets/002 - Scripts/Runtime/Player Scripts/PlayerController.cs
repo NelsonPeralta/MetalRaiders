@@ -138,9 +138,25 @@ public class PlayerController : MonoBehaviourPun
 
     public bool isMeleeing { get { return _isMeleeing; } set { _isMeleeing = value; if (value) _meleeCooldown = 0.9f; } }
     public bool cameraisFloating { get { return _cameraIsFloating; } }
+    float currentadsCounter
+    {
+        get { return _adsCounter; }
+        set
+        {
+            //_currentRotationFix = Mathf.RoundToInt(value / 10) * 10;
+
+            _adsCounter = Mathf.Clamp(value, 0, 1);
+
+            {
+                mainCam.fieldOfView = player.defaultVerticalFov - (Mathf.Abs(player.defaultVerticalFov - _tempFov) * _adsCounter);
+                uiCam.fieldOfView = player.defaultVerticalFov - (Mathf.Abs(player.defaultVerticalFov - _tempFov) * _adsCounter);
+                gunCam.fieldOfView = 60 - (10 * _adsCounter);
+            }
+        }
+    }
 
     bool _isMeleeing, _cameraIsFloating;
-    float _meleeCooldown;
+    float _meleeCooldown, _adsCounter;
     Transform _mainCamParent;
     Vector3 _lastMainCamLocalPos;
     Quaternion _lasMainCamLocalQuat;
@@ -197,6 +213,11 @@ public class PlayerController : MonoBehaviourPun
         {
             StartButton();
             BackButton();
+
+            if (isAiming)
+                currentadsCounter += Time.deltaTime * 6;
+            else
+                currentadsCounter -= Time.deltaTime * 6;
 
             if (!GameManager.instance.gameStarted)
                 return;
@@ -532,25 +553,26 @@ public class PlayerController : MonoBehaviourPun
                 if (isAiming == false)
                 {
                     isAiming = true;
-                    mainCam.fieldOfView = _tempFov;
-                    uiCam.fieldOfView = _tempFov;
+                    //mainCam.fieldOfView = _tempFov;
+                    //uiCam.fieldOfView = _tempFov;
                     if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
                         gunCam.enabled = false;
-                    else
-                        gunCam.fieldOfView = 50;
+                    //else
+                    //    gunCam.fieldOfView = 50;
 
                     allPlayerScripts.aimingScript.playAimSound();
                 }
                 else
                 {
                     isAiming = false;
-                    mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
-                    uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+                    //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+                    //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
                     camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
                     gunCam.enabled = true;
-                    gunCam.fieldOfView = 60;
+                    //gunCam.fieldOfView = 60;
 
                     allPlayerScripts.aimingScript.playAimSound();
+
                 }
             }
         }
@@ -569,14 +591,15 @@ public class PlayerController : MonoBehaviourPun
             return;
         Debug.Log("Unscope Script");
         isAiming = false;
-        mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
-        gunCam.fieldOfView = 60;
-        uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+        //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+        //gunCam.fieldOfView = 60;
+        //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
         camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
         allPlayerScripts.aimingScript.playAimSound();
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
         gunCam.enabled = true;
+
     }
 
     int _meleeCount = 0;
