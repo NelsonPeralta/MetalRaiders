@@ -108,7 +108,7 @@ public class Breather : Actor
             proj.GetComponent<Fireball>().force = 250;
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
-            _shootProjectileCooldown = 2f;
+            _shootProjectileCooldown = 2.4f;
         }
     }
 

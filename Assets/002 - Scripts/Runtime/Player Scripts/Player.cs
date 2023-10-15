@@ -1058,6 +1058,8 @@ public class Player : Biped
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
         playerInventory.transform.localRotation = Quaternion.Euler(0, 0, 0f);
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) hasArmor = false;
+
 
         if (isDead)
         {

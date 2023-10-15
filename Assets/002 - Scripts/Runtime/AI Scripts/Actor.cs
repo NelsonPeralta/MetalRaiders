@@ -466,7 +466,7 @@ abstract public class Actor : Biped
 
                 if (_isInRange)
                 {
-                    int ran = UnityEngine.Random.Range(0, 4);
+                    int ran = UnityEngine.Random.Range(0, 6);
 
                     if (ran != 0)
                     {

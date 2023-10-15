@@ -158,7 +158,7 @@ public class AlienShooter : Actor
 
             proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
             Destroy(proj, 5);
-            _shootProjectileCooldown = 0.7f;
+            _shootProjectileCooldown = 1.2f;
         }
     }
 
@@ -197,7 +197,7 @@ public class AlienShooter : Actor
             catch { }
             potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
 
-            _throwExplosiveCooldown = 2.1f;
+            _throwExplosiveCooldown = 3.1f;
         }
     }
 }
