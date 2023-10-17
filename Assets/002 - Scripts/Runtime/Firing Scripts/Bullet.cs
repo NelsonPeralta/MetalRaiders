@@ -224,14 +224,15 @@ public class Bullet : MonoBehaviourPunCallbacks
             }
 
             _spawnDir = finalHitPoint - _spawnDir;
-            Debug.Log("BULLET CheckForFinalHit");
+            Debug.Log($"BULLET CheckForFinalHit {finalHitObject.name}");
 
             if (weaponProperties.degradingDamage && finalHitDistance >= weaponProperties.degradingDamageStart)
                 damage = weaponProperties.degradedDamage;
 
             try
             {
-                finalHitObject.GetComponent<PropHitbox>().Damage(damage);
+                finalHitObject.GetComponent<PropHitbox>().hitPoints.Damage(damage, finalHitObject.GetComponent<PropHitbox>().isHead && weaponProperties.isHeadshotCapable, playerRewiredID, finalHitPoint, spawnDir, weaponProperties.cleanName, finalHitObject.GetComponent<PropHitbox>().isGroin && weaponProperties.isHeadshotCapable);
+                damageDealt = true;
             }
             catch { }
 
@@ -287,7 +288,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 Player player = hitbox.player.GetComponent<Player>();
                                 bool wasHeadshot = false;
                                 bool wasNutshot = false;
-                                if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+                                if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isGroin))
                                 {
                                     int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
@@ -298,7 +299,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                         damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                                     wasHeadshot = hitbox.isHead;
-                                    wasNutshot = hitbox.isNuts;
+                                    wasNutshot = hitbox.isGroin;
 
                                 }
 
@@ -375,7 +376,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         bool wasHeadshot = false;
                         bool wasNutshot = false;
 
-                        if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+                        if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isGroin))
                         {
                             Debug.Log("asdf5");
 
@@ -391,7 +392,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 damage = 999;
 
                             wasHeadshot = hitbox.isHead;
-                            wasNutshot = hitbox.isNuts;
+                            wasNutshot = hitbox.isGroin;
                         }
 
                         //if (sourcePlayer.PV.IsMine)

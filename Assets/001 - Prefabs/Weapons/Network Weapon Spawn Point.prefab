@@ -789,8 +789,10 @@ MonoBehaviour:
   - {fileID: 6583879716112079941, guid: 340284f3d51676c48b10e03bf02c5e69, type: 3}
   - {fileID: 7368614592611344181, guid: 5e9b3a441417e8448903c7387c946492, type: 3}
   - {fileID: 2711562721274824091, guid: ed5485212b7417f4688761d6f5a197b7, type: 3}
+  - {fileID: 3618829932361751299, guid: b299923608cf2904482df26a7edc0d2a, type: 3}
   _tts: 0
   _weaponSpawned: {fileID: 0}
+  _inGunRack: 0
 --- !u!1 &8653035526785288482
 GameObject:
   m_ObjectHideFlags: 0

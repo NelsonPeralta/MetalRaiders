@@ -2,55 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(HitPoints))]
 public class DestroyableObject : MonoBehaviour
 {
-    public float Health;
+    public HitPoints hitPoints;
 
-    [Header("Settings")]
-    public bool canBeDestroyed;
-    public bool canExplode;
-    public bool objectHasBeenDestroyed;
-    public bool dropsLoot;
-    public MeshRenderer objectBeforeDestruction;
-    public MeshRenderer objectAfterDestruction;
-    public GameObject explosionPrefab;
-    public GameObject fireEffect;
-    public GameObject playerWhoShotLast;
-    public GameObject lootPrefab;
-
-
-    private void Update()
+    private void Awake()
     {
-        if(canExplode)
-        {
-            if(Health <= 0 && !objectHasBeenDestroyed)
-            {
-                explodeDestroyableObject();
-            }
-        }
+        hitPoints = GetComponent<HitPoints>();
+    }
+    private void Start()
+    {
+        hitPoints.OnDeath -= OnDeath_Delegate;
+        hitPoints.OnDeath += OnDeath_Delegate;
     }
 
-    public void explodeDestroyableObject()
+
+    void OnDeath_Delegate(HitPoints hp)
     {
-        var explosion = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
-        explosion.GetComponent<AIGrenade>().playerWhoThrewGrenade = playerWhoShotLast;
-        Destroy(explosion, 2);
-        var fire = Instantiate(fireEffect, transform.position, transform.rotation);
-
-        if (objectAfterDestruction != null)
-        {
-            objectAfterDestruction.enabled = true;
-
-            objectBeforeDestruction.enabled = false;
-        }
-        else if(dropsLoot)
-        {
-            var loot = Instantiate(lootPrefab, transform.position + new Vector3(0, 0, 0), transform.rotation);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        
+        Debug.Log("DestroyableObject");
+        Destroy(gameObject);
     }
 }

@@ -122,7 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 1
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &961539259325224515
 GameObject:
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &1682980692499644888
 GameObject:
@@ -476,7 +476,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &2761527059285005743
 GameObject:
@@ -600,7 +600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &3015794419834766593
 GameObject:
@@ -724,7 +724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &3229518949740572605
 GameObject:
@@ -848,7 +848,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &3503499303395659360
 GameObject:
@@ -972,7 +972,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &3512012615773341270
 GameObject:
@@ -1127,7 +1127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &4359710379829453840
 GameObject:
@@ -1251,7 +1251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &5313002324760540522
 GameObject:
@@ -1694,7 +1694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &6230396879781840136
 GameObject:
@@ -1818,7 +1818,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &7708910824420299270
 GameObject:
@@ -4203,17 +4203,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biped: {fileID: 0}
   hitboxes: []
-  meleeMagnetism: 1
-  needsHealthPack: 0
-  _hitPoints: 1
-  _healthPoints: 0
-  _shieldPoints: 0
-  _overshieldPoints: 0
   _maxHitPoints: 0
   _maxHealthPoints: 0
   _maxShieldPoints: 0
-  _maxOvershieldPoints: 0
+  meleeMagnetism: 1
+  healthRegenaration: 0
   _isDead: 0
+  _hitPoints: 0
   _healingCountdown: 0
   _shieldRechargeCountdown: 0
 --- !u!1 &7709671546980749050
@@ -5360,7 +5356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &8265789180224555147
 GameObject:
@@ -5484,7 +5480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &8309157059218366251
 GameObject:
@@ -5608,5 +5604,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7758678447683965873}

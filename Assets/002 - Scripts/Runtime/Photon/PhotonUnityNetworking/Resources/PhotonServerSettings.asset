@@ -175,6 +175,7 @@ MonoBehaviour:
   - AskHostToTriggerInteractableObject_RPC
   - TriggerInteractableObject_RPC
   - EnableGrenadePacks_RPC
+  - SetTurretTarget
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

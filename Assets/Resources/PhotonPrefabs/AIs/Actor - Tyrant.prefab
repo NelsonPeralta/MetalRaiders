@@ -783,7 +783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 1
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 4734507890800927446}
 --- !u!1 &3039051408407167475
 GameObject:
@@ -1344,17 +1344,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biped: {fileID: 0}
   hitboxes: []
-  meleeMagnetism: 1
-  needsHealthPack: 0
-  _hitPoints: 1
-  _healthPoints: 0
-  _shieldPoints: 0
-  _overshieldPoints: 0
   _maxHitPoints: 0
   _maxHealthPoints: 0
   _maxShieldPoints: 0
-  _maxOvershieldPoints: 0
+  meleeMagnetism: 1
+  healthRegenaration: 0
   _isDead: 0
+  _hitPoints: 0
   _healingCountdown: 0
   _shieldRechargeCountdown: 0
 --- !u!1 &3039428637902615507
@@ -27734,7 +27730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 4734507890800927446}
 --- !u!1 &8416555634619597648
 GameObject:

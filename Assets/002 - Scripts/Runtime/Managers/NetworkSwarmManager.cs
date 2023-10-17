@@ -113,4 +113,38 @@ public class NetworkSwarmManager : MonoBehaviourPun
 
         return -1;
     }
+
+
+
+    public int GetRandomAliveActorId()
+    {
+        {
+            foreach (Actor nsp in FindObjectsOfType<Actor>().ToList())
+            {
+                if (nsp.hitPoints > 0)
+                    return nsp.GetComponent<PhotonView>().ViewID;
+            }
+        }
+
+        return -1;
+    }
+
+
+
+    [PunRPC]
+    public void SetTurretTarget(Vector3 turretpos, int pid, bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("SetTurretTarget", RpcTarget.AllViaServer, turretpos, pid, false);
+        }
+        else
+        {
+            foreach (TurretHead th in FindObjectsOfType<TurretHead>().ToList())
+            {
+                if (th.transform.position == turretpos)
+                    th.GetComponent<TurretHead>().hitPoints = PhotonView.Find(pid).GetComponent<HitPoints>();
+            }
+        }
+    }
 }

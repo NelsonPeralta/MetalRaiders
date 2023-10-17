@@ -10,7 +10,6 @@ using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using System.Text;
 using System.Net.Mail;
 using TMPro;
-using static Player;
 
 public class Player : Biped
 {

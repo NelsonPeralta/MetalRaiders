@@ -119,5 +119,6 @@ public class ArmorSeller : InteractableObject
 
         playersInRange.Remove(p);
         p.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+        p.GetComponent<PlayerSwarmMatchStats>().RemovePoints(cost);
     }
 }

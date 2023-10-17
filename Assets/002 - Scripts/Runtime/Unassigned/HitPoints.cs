@@ -4,8 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-using static Player;
 
 public class HitPoints : MonoBehaviour
 {
@@ -15,18 +15,17 @@ public class HitPoints : MonoBehaviour
 
     public Biped biped;
     public List<Hitbox> hitboxes = new List<Hitbox>();
+    [SerializeField] int _maxHitPoints, _maxHealthPoints, _maxShieldPoints;
     public bool meleeMagnetism;
-    public bool needsHealthPack;
+    public bool healthRegenaration;
 
 
-    [SerializeField] float _hitPoints, _healthPoints, _shieldPoints, _overshieldPoints;
-    [SerializeField] int _maxHitPoints, _maxHealthPoints, _maxShieldPoints, _maxOvershieldPoints;
     [SerializeField] bool _isDead;
 
-    [SerializeField] float _healingCountdown, _shieldRechargeCountdown;
+    [SerializeField] float _hitPoints, _healingCountdown, _shieldRechargeCountdown;
 
-    int _defaultHealingCountdown = 4;
-    float _healthHealingIncrement = (100 * 2), _shieldHealingIncrement = (150 * 0.5f);
+    int _defaultHealingCountdown = 4, _maxOvershieldPoints;
+    float _healthHealingIncrement = (100 * 2), _shieldHealingIncrement = (150 * 0.5f), _healthPoints, _shieldPoints, _overshieldPoints;
     bool _isHealing, _overshieldRecharge, _isInvincible;
     Vector3 _impactPos;
 
@@ -35,10 +34,12 @@ public class HitPoints : MonoBehaviour
     {
         get { return _hitPoints + _overshieldPoints; }
 
-        set
+        private set
         {
             float _previousValue = hitPoints;
             float _damage = _previousValue - value;
+
+            Debug.Log($"Hitpoints damage:{_damage}");
 
             if (_damage > 0 && (_isInvincible || hitPoints <= 0))
                 return;
@@ -58,12 +59,16 @@ public class HitPoints : MonoBehaviour
             float newValue = hitPoints - _damage;
 
             if (overshieldPoints <= 0)
-                _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+            {
+                Debug.Log(newValue);
+                Debug.Log(Mathf.Clamp(newValue, 0, (maxHealthPoints + maxShieldPoints)));
+                _hitPoints = Mathf.Clamp(newValue, 0, (maxHealthPoints + maxShieldPoints));
+            }
 
             if (_previousValue > newValue)
             {
                 _isHealing = false;
-                if (!needsHealthPack)
+                if (healthRegenaration)
                 {
                     healingCountdown = _defaultHealingCountdown;
                     shieldRechargeCountdown = _defaultHealingCountdown;
@@ -117,7 +122,10 @@ public class HitPoints : MonoBehaviour
             _isDead = value;
 
             if (value && !previousValue)
+            {
+                Debug.Log("OnDeath");
                 OnDeath?.Invoke(this);
+            }
         }
     }
 
@@ -196,20 +204,21 @@ public class HitPoints : MonoBehaviour
         try { biped = GetComponent<Biped>(); } catch { }
         hitboxes = GetComponentsInChildren<Hitbox>().ToList();
         foreach (Hitbox hitbox in hitboxes) { hitbox.hitPoints = this; }
+
+        _hitPoints = maxHitPoints; _maxHealthPoints = maxHitPoints - maxShieldPoints;
     }
 
     private void Start()
     {
-
     }
 
     private void Update()
     {
-        HitPointsRecharge();
+        HitPointsRegeneration();
         OvershieldPointsRecharge();
     }
 
-    void HitPointsRecharge()
+    void HitPointsRegeneration()
     {
 
         if (healingCountdown > 0)
@@ -217,7 +226,7 @@ public class HitPoints : MonoBehaviour
             healingCountdown -= Time.deltaTime;
         }
 
-        if (healingCountdown <= 0 && hitPoints < maxHitPoints && !needsHealthPack)
+        if (healingCountdown <= 0 && hitPoints < maxHitPoints && healthRegenaration)
         {
             if (!_isHealing)
                 OnShieldRechargeStarted?.Invoke(this);
@@ -248,4 +257,28 @@ public class HitPoints : MonoBehaviour
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // -999 = Guardians
+    public void Damage(int dam, bool head, int pid, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool groin = false)
+    {
+        hitPoints -= dam;
+    }
 }

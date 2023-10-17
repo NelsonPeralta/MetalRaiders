@@ -29,8 +29,12 @@ public class ExplosiveProjectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        foreach (PlayerHitbox ph in player.GetComponent<PlayerHitboxes>().playerHitboxes)
-            Physics.IgnoreCollision(GetComponent<Collider>(), ph.GetComponent<Collider>());
+        try
+        {
+            foreach (PlayerHitbox ph in player.GetComponent<PlayerHitboxes>().playerHitboxes)
+                Physics.IgnoreCollision(GetComponent<Collider>(), ph.GetComponent<Collider>());
+        }
+        catch { }
 
         if (!useConstantForce)
             GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * force);

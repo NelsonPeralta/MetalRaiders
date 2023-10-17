@@ -99,7 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &5604566087043634979
 CapsuleCollider:
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &4363479198765174235
 CapsuleCollider:
@@ -347,7 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &975205894146559295
 CapsuleCollider:
@@ -471,7 +471,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &3233377440403640273
 CapsuleCollider:
@@ -595,7 +595,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &2803191624416841372
 CapsuleCollider:
@@ -719,7 +719,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 1
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &8500896809394472960
 CapsuleCollider:
@@ -843,7 +843,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &5376829885828539024
 CapsuleCollider:
@@ -967,7 +967,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &5124091385959645406
 CapsuleCollider:
@@ -1869,7 +1869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &5978113023542645519
 CapsuleCollider:
@@ -2024,7 +2024,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &4481840513000574782
 CapsuleCollider:
@@ -2148,7 +2148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: {fileID: 0}
   isHead: 0
-  isNuts: 0
+  isGroin: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &3479202933920941802
 CapsuleCollider:
@@ -3641,17 +3641,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biped: {fileID: 0}
   hitboxes: []
-  meleeMagnetism: 1
-  needsHealthPack: 0
-  _hitPoints: 1
-  _healthPoints: 100
-  _shieldPoints: 150
-  _overshieldPoints: 0
   _maxHitPoints: 250
-  _maxHealthPoints: 100
+  _maxHealthPoints: 0
   _maxShieldPoints: 150
-  _maxOvershieldPoints: 0
+  meleeMagnetism: 1
+  healthRegenaration: 0
   _isDead: 0
+  _hitPoints: 0
   _healingCountdown: 3
   _shieldRechargeCountdown: 3
 --- !u!136 &7800766456072135830

@@ -6,5 +6,5 @@ public abstract class Hitbox : MonoBehaviour
 {
     public HitPoints hitPoints;
     public bool isHead = false;
-    public bool isNuts = false;
+    public bool isGroin = false;
 }

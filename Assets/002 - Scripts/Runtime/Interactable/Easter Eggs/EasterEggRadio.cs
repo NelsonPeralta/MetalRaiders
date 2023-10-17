@@ -11,8 +11,9 @@ public class EasterEggRadio : InteractableObject
 
     public override void Trigger(int? pid)
     {
+        Player mp = GameManager.instance.pid_player_Dict[(int) pid];
         _radioLight.SetActive(false);
-        found = true;
+        consumed = true;
         GetComponent<AudioSource>().Play();
 
         foreach (Transform t in _artillerySpawnPoint)
@@ -20,6 +21,8 @@ public class EasterEggRadio : InteractableObject
             GameObject a = Instantiate(_artilleryPrefab, t.position, t.rotation);
             a.GetComponent<ExplosiveProjectile>().player = GameManager.instance.pid_player_Dict[(int)pid];
         }
+
+        mp.GetComponent<PlayerSwarmMatchStats>().RemovePoints(cost);
     }
 
 
@@ -36,14 +39,14 @@ public class EasterEggRadio : InteractableObject
     [Header("Players in Range")]
     public List<Player> playersInRange = new List<Player>();
 
-    [SerializeField] bool _found;
-    public bool found
+    [SerializeField] bool _consumed;
+    public bool consumed
     {
-        get { return _found; }
+        get { return _consumed; }
         private set
         {
-            bool previousValue = _found;
-            _found = value;
+            bool previousValue = _consumed;
+            _consumed = value;
 
             if (value && !previousValue)
             {
@@ -59,13 +62,13 @@ public class EasterEggRadio : InteractableObject
 
     private void Update()
     {
-        if(_reset > 0)
+        if (_reset > 0)
         {
             _reset -= Time.deltaTime;
 
-            if(_reset <= 0)
+            if (_reset <= 0)
             {
-                _found = false;
+                _consumed = false;
                 _radioLight.SetActive(true);
             }
         }
@@ -82,26 +85,26 @@ public class EasterEggRadio : InteractableObject
 
     private void OnTriggerStay(Collider other)
     {
-        if (found)
+        if (consumed)
             return;
 
         if (other.GetComponent<Player>() && !other.GetComponent<Player>().isDead && !playersInRange.Contains(other.GetComponent<Player>()))
         {
             playersInRange.Add(other.GetComponent<Player>());
 
-            if (!other.GetComponent<Player>().hasArmor)
+            if (other.GetComponent<PlayerSwarmMatchStats>().points >= cost && !consumed)
             {
-                if (other.GetComponent<PlayerSwarmMatchStats>().points >= cost)
-                {
-                    other.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
-                    other.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Buy armor for {cost} points";
-                }
-                else
-                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({cost})";
+                other.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
+                other.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
+                other.GetComponent<PlayerUI>().weaponInformerText.text = $"Mortar Strike ({cost})";
             }
             else
-                other.GetComponent<PlayerUI>().weaponInformerText.text = $"You already have an armor";
+            {
+                if (other.GetComponent<PlayerSwarmMatchStats>().points < cost)
+                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({cost})";
+                else
+                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Recharging...";
+            }
         }
     }
 

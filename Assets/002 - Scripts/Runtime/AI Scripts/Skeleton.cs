@@ -327,13 +327,13 @@ public class Skeleton : MonoBehaviour
 
     public void ShieldBreack()
     {
-        if (shield.Health <= 0 && !shieldIsBroken)
-        {
-            Destroy(shield.gameObject);
-            anim.Play("Shield Break");
-            anim.SetBool("Guard", false);
-            shieldIsBroken = true;
-        }
+        //if (shield.Health <= 0 && !shieldIsBroken)
+        //{
+        //    Destroy(shield.gameObject);
+        //    anim.Play("Shield Break");
+        //    anim.SetBool("Guard", false);
+        //    shieldIsBroken = true;
+        //}
     }
 
     void AnimationCheck()

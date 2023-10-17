@@ -36,9 +36,17 @@ abstract public class Actor : Biped
             if ((nv <= 0.5f * _defaultHitpoints) && (pv > 0.5f * _defaultHitpoints))
                 try
                 {
-                    GetComponent<AudioSource>().clip = _tauntClip;
-                    GetComponent<AudioSource>().Play();
-                    _animator.Play("Taunt");
+                    if (_isInRange)
+                    {
+                        GetComponent<AudioSource>().clip = _tauntClip;
+                        GetComponent<AudioSource>().Play();
+                        _animator.Play("Taunt");
+                    }
+                    else
+                    {
+                        if (_flinchCooldown <= 0)
+                            Flinch();
+                    }
                 }
                 catch { }
 
@@ -317,8 +325,7 @@ abstract public class Actor : Biped
                 if (/*wp.weaponType == WeaponProperties.WeaponType.LMG ||*/
                     wp.weaponType == WeaponProperties.WeaponType.Launcher ||
                     wp.weaponType == WeaponProperties.WeaponType.Shotgun ||
-                    wp.weaponType == WeaponProperties.WeaponType.Sniper ||
-                    wp.weaponType == WeaponProperties.WeaponType.DMR)
+                    wp.weaponType == WeaponProperties.WeaponType.Sniper)
                     return;
                 Debug.Log($"DropRandomWeapon: {wp.cleanName}");
 
@@ -570,7 +577,7 @@ abstract public class Actor : Biped
 
 
         Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
-        pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
+        //pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         //if (!targetPlayer)
         if (_switchPlayerCooldown <= 0)
@@ -588,7 +595,7 @@ abstract public class Actor : Biped
             {
                 pp.GetComponent<PlayerSwarmMatchStats>().kills++;
                 pp.playerMedals.kills++;
-                //pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(defaultHealth);
+                pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(_defaultHitpoints);
 
                 //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
             }

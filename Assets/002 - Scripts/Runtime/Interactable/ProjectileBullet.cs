@@ -66,7 +66,7 @@ public class ProjectileBullet : MonoBehaviour
                             Player player = hitbox.player.GetComponent<Player>();
                             bool wasHeadshot = false;
                             bool wasNutshot = false;
-                            if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+                            if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isGroin))
                             {
                                 int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
@@ -77,7 +77,7 @@ public class ProjectileBullet : MonoBehaviour
                                     damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                                 wasHeadshot = hitbox.isHead;
-                                wasNutshot = hitbox.isNuts;
+                                wasNutshot = hitbox.isGroin;
 
                             }
 
@@ -133,7 +133,7 @@ public class ProjectileBullet : MonoBehaviour
                     Player player = hitbox.player.GetComponent<Player>();
                     bool wasHeadshot = false;
                     bool wasNutshot = false;
-                    if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isNuts))
+                    if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isGroin))
                     {
                         int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
@@ -144,7 +144,7 @@ public class ProjectileBullet : MonoBehaviour
                             damage = (int)(damage * weaponProperties.headshotMultiplier);
 
                         wasHeadshot = hitbox.isHead;
-                        wasNutshot = hitbox.isNuts;
+                        wasNutshot = hitbox.isGroin;
                     }
 
                     if (player.PV.IsMine)
