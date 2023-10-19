@@ -7221,6 +7221,7 @@ GameObject:
   - component: {fileID: 329131564}
   - component: {fileID: 329131563}
   - component: {fileID: 329131562}
+  - component: {fileID: 329131567}
   m_Layer: 16
   m_Name: DestroyableBarrel (1)
   m_TagString: Untagged
@@ -7262,19 +7263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &329131564
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7340,6 +7329,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &329131567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 329131561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &331587278
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9253,8 +9265,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398077860}
-  m_LocalRotation: {x: 0.1250696, y: -0.79413575, z: -0.15959483, w: -0.5729184}
-  m_LocalPosition: {x: 25.741299, y: -3.229578, z: -21.561548}
+  m_LocalRotation: {x: -0.10256952, y: -0.5907874, z: -0.08767754, w: 0.7954636}
+  m_LocalPosition: {x: 7.609427, y: -8.896302, z: -36.74559}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11398,6 +11410,7 @@ GameObject:
   - component: {fileID: 471973226}
   - component: {fileID: 471973225}
   - component: {fileID: 471973224}
+  - component: {fileID: 471973229}
   m_Layer: 16
   m_Name: DestroyableBarrel (5)
   m_TagString: Untagged
@@ -11439,19 +11452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &471973226
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11517,6 +11518,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &471973229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 471973223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &477539354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39048,6 +39072,7 @@ GameObject:
   - component: {fileID: 986788078}
   - component: {fileID: 986788077}
   - component: {fileID: 986788076}
+  - component: {fileID: 986788081}
   m_Layer: 16
   m_Name: DestroyableBarrel (3)
   m_TagString: Untagged
@@ -39089,19 +39114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &986788078
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -39167,6 +39180,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &986788081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986788075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &988818565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47819,6 +47855,7 @@ GameObject:
   - component: {fileID: 1331273473}
   - component: {fileID: 1331273472}
   - component: {fileID: 1331273471}
+  - component: {fileID: 1331273476}
   m_Layer: 16
   m_Name: DestroyableBarrel (7)
   m_TagString: Untagged
@@ -47860,19 +47897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &1331273473
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -47938,6 +47963,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1331273476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331273470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &1335379560
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48028,6 +48076,7 @@ GameObject:
   - component: {fileID: 1341570551}
   - component: {fileID: 1341570550}
   - component: {fileID: 1341570549}
+  - component: {fileID: 1341570554}
   m_Layer: 16
   m_Name: DestroyableBarrel (6)
   m_TagString: Untagged
@@ -48069,19 +48118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &1341570551
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -48147,6 +48184,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1341570554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341570548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &1341895737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49176,6 +49236,7 @@ GameObject:
   - component: {fileID: 1392582735}
   - component: {fileID: 1395121163}
   - component: {fileID: 1395121162}
+  - component: {fileID: 1395121164}
   m_Layer: 16
   m_Name: DestroyableBarrel
   m_TagString: Untagged
@@ -49217,19 +49278,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
+--- !u!114 &1395121164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395121161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!4 &1401978595 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 452096, guid: ae2654206a887034ab7fa253a7619efe,
@@ -49555,6 +49627,7 @@ GameObject:
   - component: {fileID: 1411068645}
   - component: {fileID: 1411068644}
   - component: {fileID: 1411068643}
+  - component: {fileID: 1411068648}
   m_Layer: 16
   m_Name: DestroyableBarrel (10)
   m_TagString: Untagged
@@ -49596,19 +49669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &1411068645
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -49674,6 +49735,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1411068648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411068642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &1411702736
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50210,6 +50294,7 @@ GameObject:
   - component: {fileID: 1438376753}
   - component: {fileID: 1438376752}
   - component: {fileID: 1438376751}
+  - component: {fileID: 1438376756}
   m_Layer: 16
   m_Name: DestroyableBarrel (8)
   m_TagString: Untagged
@@ -50251,19 +50336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &1438376753
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -50329,6 +50402,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1438376756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438376750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1 &1441466467
 GameObject:
   m_ObjectHideFlags: 0
@@ -51271,6 +51367,7 @@ GameObject:
   - component: {fileID: 1468711508}
   - component: {fileID: 1468711507}
   - component: {fileID: 1468711506}
+  - component: {fileID: 1468711511}
   m_Layer: 16
   m_Name: DestroyableBarrel (4)
   m_TagString: Untagged
@@ -51312,19 +51409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &1468711508
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -51390,6 +51475,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1468711511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468711505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &1470914358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -51944,6 +52052,7 @@ GameObject:
   - component: {fileID: 1490744559}
   - component: {fileID: 1490744558}
   - component: {fileID: 1490744557}
+  - component: {fileID: 1490744562}
   m_Layer: 16
   m_Name: DestroyableBarrel (2)
   m_TagString: Untagged
@@ -51985,19 +52094,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &1490744559
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -52063,6 +52160,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1490744562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1490744556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1 &1497949580 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 177632, guid: ea1005eee93229642a97e7e4f3d01e00,
@@ -60446,6 +60566,7 @@ GameObject:
   - component: {fileID: 1840502428}
   - component: {fileID: 1840502427}
   - component: {fileID: 1840502426}
+  - component: {fileID: 1840502431}
   m_Layer: 16
   m_Name: DestroyableBarrel (9)
   m_TagString: Untagged
@@ -60487,19 +60608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &1840502428
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60565,6 +60674,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1840502431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840502425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &1841234052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65770,6 +65902,7 @@ GameObject:
   - component: {fileID: 2048395255}
   - component: {fileID: 2048395254}
   - component: {fileID: 2048395253}
+  - component: {fileID: 2048395258}
   m_Layer: 16
   m_Name: DestroyableBarrel (13)
   m_TagString: Untagged
@@ -65811,19 +65944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62aa6ffe5eb593841b8ba50bf50336bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 50
-  canBeDestroyed: 0
-  canExplode: 1
-  objectHasBeenDestroyed: 0
-  dropsLoot: 0
-  objectBeforeDestruction: {fileID: 0}
-  objectAfterDestruction: {fileID: 0}
-  explosionPrefab: {fileID: 2772727233522592539, guid: 5273f6a3646f2774b84a42473c0f3aac,
-    type: 3}
-  fireEffect: {fileID: 2129999989035952750, guid: 5709742c043c2334aa32d5334cfc4aa9,
-    type: 3}
-  playerWhoShotLast: {fileID: 0}
-  lootPrefab: {fileID: 0}
+  hitPoints: {fileID: 0}
 --- !u!23 &2048395255
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -65889,6 +66010,29 @@ Transform:
   m_Father: {fileID: 2091687175}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2048395258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048395252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d8e9801a8df049bf77dcfbe00bf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biped: {fileID: 0}
+  hitboxes: []
+  _maxHitPoints: 0
+  _maxHealthPoints: 0
+  _maxShieldPoints: 0
+  meleeMagnetism: 0
+  healthRegenaration: 0
+  _isDead: 0
+  _hitPoints: 0
+  _healingCountdown: 0
+  _shieldRechargeCountdown: 0
 --- !u!1001 &2050498947
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67836,6 +67980,41 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 78.862
       objectReference: {fileID: 0}
+    - target: {fileID: 5644542344431351986, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.318
+      objectReference: {fileID: 0}
+    - target: {fileID: 5644542344431351986, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5644542344431351986, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -29.206
+      objectReference: {fileID: 0}
+    - target: {fileID: 5644542344431351986, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5644542344431351986, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5644542344431351986, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5644542344431351986, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 6731030255344970995, guid: d202e197c3bca794ba53b72860a8f310,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -67866,6 +68045,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 6735548371686890532, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.085
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735548371686890532, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735548371686890532, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 68.867
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735548371686890532, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735548371686890532, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735548371686890532, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6735548371686890532, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 7395616004633746192, guid: d202e197c3bca794ba53b72860a8f310,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -67895,6 +68109,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7400140169858689991, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -24.935
+      objectReference: {fileID: 0}
+    - target: {fileID: 7400140169858689991, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 7400140169858689991, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 54.839
+      objectReference: {fileID: 0}
+    - target: {fileID: 7400140169858689991, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7400140169858689991, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7400140169858689991, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7400140169858689991, guid: d202e197c3bca794ba53b72860a8f310,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

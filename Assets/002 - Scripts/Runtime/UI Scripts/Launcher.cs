@@ -212,8 +212,10 @@ public class Launcher : MonoBehaviourPunCallbacks
                     Debug.Log("Carnage report is NULL");
 
                 if (GameManager.instance.carnageReport.xpGained <= 0)
-                    MenuManager.Instance.OpenMenu("online title"); // Runs this line if quit game an returning to menu
-                else
+                {
+                    //MenuManager.Instance.OpenMenu("online title"); // Runs this line if quit game an returning to menu
+                }
+                //else
                     MenuManager.Instance.OpenMenu("carnage report");
             }
             else

@@ -11,7 +11,7 @@ public class EasterEggRadio : InteractableObject
 
     public override void Trigger(int? pid)
     {
-        Player mp = GameManager.instance.pid_player_Dict[(int) pid];
+        Player mp = GameManager.instance.pid_player_Dict[(int)pid];
         _radioLight.SetActive(false);
         consumed = true;
         GetComponent<AudioSource>().Play();
@@ -50,7 +50,9 @@ public class EasterEggRadio : InteractableObject
 
             if (value && !previousValue)
             {
-                _reset = 3;
+                _reset = 30;
+
+                if (SwarmManager.instance.editMode) _reset = 5;
             }
         }
     }

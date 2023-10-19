@@ -397,6 +397,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void CalculateNumberOfAIsForNextWave()
     {
+
         if (currentWave % 5 != 0)
         {
             //int nbPlayers = FindObjectsOfType<Player>().Length;
@@ -874,9 +875,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPacks()
     {
-        Debug.Log("Respawn Health Packs RPC");
-        if (currentWave % 10 == 0)
+        Debug.Log(currentWave % 1);
+        if (currentWave % 1 == 0)
         {
+            Debug.Log("Respawn Health Packs RPC");
             EndGame();
         }
         else if (currentWave % 5 == 0)
