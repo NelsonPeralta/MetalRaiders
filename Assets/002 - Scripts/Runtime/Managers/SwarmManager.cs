@@ -875,8 +875,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPacks()
     {
-        Debug.Log(currentWave % 1);
-        if (currentWave % 1 == 0)
+        if (currentWave % 10 == 0)
         {
             Debug.Log("Respawn Health Packs RPC");
             EndGame();
