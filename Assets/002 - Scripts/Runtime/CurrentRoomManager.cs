@@ -23,6 +23,7 @@ public class CurrentRoomManager : MonoBehaviour
         get { return _roomType; }
         set
         {
+            Debug.Log($"ROOM TYPE {value}");
             _roomType = value;
         }
     }
@@ -235,6 +236,14 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    public Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData> extendedPlayerData
+    {
+        get { return _extendedPlayerData; }
+        set
+        {
+            _extendedPlayerData = value;
+        }
+    }
 
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
@@ -250,6 +259,7 @@ public class CurrentRoomManager : MonoBehaviour
     Dictionary<string, int> _playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
     [SerializeField] bool _reachedHalwayGameStartCountdown, _randomQuickMatchSeetingsChosen;
+    [SerializeField] Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData> _extendedPlayerData = new Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData>();
 
 
 
@@ -296,7 +306,7 @@ public class CurrentRoomManager : MonoBehaviour
         if (PhotonNetwork.InRoom)
         {
 
-            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) >= 1) // At least one more stranger player is in the room
+            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) >= 0) // At least one more stranger player is in the room
                 if (_randomQuickMatchSeetingsChosen && _vetoCountdown > 0)
                 {
                     _vetoCountdown -= Time.deltaTime;
@@ -388,7 +398,19 @@ public class CurrentRoomManager : MonoBehaviour
         _ran = Random.Range(0, 5);
         _ran = 2;
 
-        if (_ran > 1) // PvP
+        if (expectedNbPlayers == 1)
+        {
+            GameManager.instance.gameMode = GameManager.GameMode.Swarm;
+            GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
+
+            ChooseRandomPvEMap();
+            if (_vetoedMapIndex != 0)
+                while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
+                {
+                    ChooseRandomPvEMap();
+                }
+        }
+        else // PvP
         {
             GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 

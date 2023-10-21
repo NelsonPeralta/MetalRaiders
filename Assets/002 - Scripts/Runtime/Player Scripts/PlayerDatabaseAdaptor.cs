@@ -7,8 +7,6 @@ public class PlayerDatabaseAdaptor
 {
     public delegate void OnAnyPlayerDataChanged(string log);
 
-    public PlayerListItem playerListItem;
-
     PlayerLoginData _playerLoginData;
     PlayerCommonData _playerCommonData;
     PlayerBasicPvPStats _playerBasicPvPStats;
@@ -149,38 +147,38 @@ public class PlayerDatabaseAdaptor
             Debug.Log("PlayerCommonData");
             _playerCommonData = value;
 
-            if (playerListItem)
-            {
-                playerListItem.playerText.text = $"{username}";
+            //if (playerListItem)
+            //{
+            //    playerListItem.playerName = $"{username}";
 
-                playerListItem.levelText.text = $"{level}";
-
-
-                ColorUtility.TryParseHtmlString(GameManager.colorDict[playerBasicOnlineStats.armor_color_palette], out _tCol);
-                playerListItem.mainBg.color = _tCol;
+            //    playerListItem.playerLevel = level;
 
 
-                _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
-                playerListItem.secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
-
-                PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.level, playerBasicOnlineStats.honor);
+            //    //ColorUtility.TryParseHtmlString(GameManager.colorDict[playerBasicOnlineStats.armor_color_palette], out _tCol);
+            //    //playerListItem.mainBg.color = _tCol;
 
 
-                Debug.Log(playerBasicOnlineStats.honor);
-                if (GameManager.colorDict.ContainsKey(rank.color))
-                {
-                    Debug.Log($"{rank.spriteName}");
-                    Debug.Log(playerBasicOnlineStats.honor);
-                    playerListItem.rankIm.enabled = true;
+            //    //_tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
+            //    //playerListItem.secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
 
-                    Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
+            //    PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.level, playerBasicOnlineStats.honor);
 
-                    playerListItem.rankIm.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
 
-                    ColorUtility.TryParseHtmlString(GameManager.colorDict[rank.color], out _tCol);
-                    playerListItem.rankIm.color = _tCol;
-                }
-            }
+            //    Debug.Log(playerBasicOnlineStats.honor);
+            //    if (GameManager.colorDict.ContainsKey(rank.color))
+            //    {
+            //        Debug.Log($"{rank.spriteName}");
+            //        Debug.Log(playerBasicOnlineStats.honor);
+            //        playerListItem.rankIm.enabled = true;
+
+            //        Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
+
+            //        playerListItem.rankIm.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
+
+            //        ColorUtility.TryParseHtmlString(GameManager.colorDict[rank.color], out _tCol);
+            //        playerListItem.rankIm.color = _tCol;
+            //    }
+            //}
 
             //if(_playerBasicOnlineStats == null)
             //    _playerBasicOnlineStats = value;
@@ -240,6 +238,21 @@ public class PlayerDatabaseAdaptor
         public static PlayerBasicPvEStats CreateFromJSON(string jsonString)
         {
             return JsonUtility.FromJson<PlayerBasicPvEStats>(jsonString);
+        }
+    }
+
+
+    [System.Serializable]
+    public class PlayerExtendedPublicData
+    {
+        public string username;
+        public int player_id;
+        public int level, xp, rank, honor, credits;
+        public string armor_data_string, unlocked_armor_data_string, armor_color_palette;
+
+        public static PlayerExtendedPublicData CreateFromJSON(string jsonString)
+        {
+            return JsonUtility.FromJson<PlayerExtendedPublicData>(jsonString);
         }
     }
 }

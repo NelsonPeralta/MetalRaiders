@@ -91,7 +91,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Connection connection
     {
         get { return _connection; }
-        set { _connection = value; }
+        set
+        {
+            _connection = value;
+
+            if (value == Connection.Online)
+            {
+                Launcher.instance.LoginWithSteamName();
+            }
+        }
     }
     public GameMode gameMode
     {
@@ -144,7 +152,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _gameType; }
         set
         {
-            Debug.Log("sadfsfgfgd");
+            Debug.Log($"GAME TYPE: {value}");
 
             _gameType = value;
             if (_gameType == GameType.GunGame)
@@ -161,7 +169,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             TeamMode _prev = _teamMode;
 
-            Debug.Log("teamMode: " + value);
+            Debug.Log("GAMEMANAGE Team Mode: " + value);
             _teamMode = value;
             Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
@@ -190,6 +198,11 @@ public class GameManager : MonoBehaviourPunCallbacks
                         Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
                     }
                 GameManager.instance.teamDict = _teamDict;
+            }
+
+            foreach (Transform child in Launcher.instance.playerListContent)
+            {
+                child.GetComponent<PlayerListItem>().UpdateColorPalette();
             }
         }
     }
@@ -314,9 +327,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _roomPlayerData; }
         set
         {
-            Debug.Log("roomPlayerData");
+            //Debug.Log($"roomPlayerData {}");
             Debug.Log(value);
             _roomPlayerData = value;
+
+
+
         }
     }
     public Material armorMaterial { get { return _armorMaterial; } }
@@ -338,6 +354,25 @@ public class GameManager : MonoBehaviourPunCallbacks
     List<LootableWeapon> _lootableWeapons = new List<LootableWeapon>();
     List<NetworkGrenadeSpawnPoint> _networkGrenadeSpawnPoints = new List<NetworkGrenadeSpawnPoint>();
 
+
+
+    public bool playerDataRetrieved
+    {
+        get { return _playerDataRetrieved; }
+        set
+        {
+            if (value && !playerDataRetrieved)
+            {
+                try
+                {
+                    MenuManager.Instance.OpenMenu("online title");
+                }
+                catch { }
+            }
+            _playerDataRetrieved = true;
+        }
+    }
+    bool _playerDataRetrieved;
     void Awake()
     {
         colorDict.Add("white", "#FFFFFF");
@@ -480,7 +515,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         //SceneManager.sceneLoaded += OnSceneLoaded;
+        Debug.Log(PhotonNetwork.IsConnected);
+        Debug.Log(PhotonNetwork.IsConnectedAndReady);
 
+        Launcher.instance.ConnectToPhotonMasterServer();
     }
 
     // called when the game is terminated
