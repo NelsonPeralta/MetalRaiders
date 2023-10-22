@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     // https://stackoverflow.com/questions/150479/order-of-items-in-classes-fields-properties-constructors-methods
 
+    public static string ROOT_PLAYER_NAME;
+
     // Events
     public delegate void GameManagerEvent();
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
@@ -322,19 +324,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public Dictionary<string, PlayerDatabaseAdaptor> roomPlayerData
-    {
-        get { return _roomPlayerData; }
-        set
-        {
-            //Debug.Log($"roomPlayerData {}");
-            Debug.Log(value);
-            _roomPlayerData = value;
-
-
-
-        }
-    }
     public Material armorMaterial { get { return _armorMaterial; } }
     public List<Texture> colorPaletteTextures { get { return _colorPaletteTextures; } }
     public List<LootableWeapon> lootableWeapons { get { return _lootableWeapons; } }

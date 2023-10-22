@@ -516,9 +516,9 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void AddExtendedPlayerData(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
     {
-        Debug.Log(pepd.username.Equals(Steamworks.SteamFriends.GetPersonaName()));
+        Debug.Log(pepd.username.Equals(GameManager.ROOT_PLAYER_NAME));
 
-        if (pepd.username.Equals(Steamworks.SteamFriends.GetPersonaName()))
+        if (pepd.username.Equals(GameManager.ROOT_PLAYER_NAME))
             instance._extendedPlayerData[0].playerExtendedPublicData = pepd;
         else
             for (int i = 0; i < CurrentRoomManager.instance._extendedPlayerData.Count; i++)

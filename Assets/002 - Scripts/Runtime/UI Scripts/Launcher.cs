@@ -791,6 +791,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void Login()
     {
+        GameManager.ROOT_PLAYER_NAME = loginUsernameText.text;
         WebManager.webManagerInstance.Login(loginUsernameText.text, _loginPasswordText.text);
 
         Debug.Log(PhotonNetwork.NetworkClientState);

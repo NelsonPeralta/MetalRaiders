@@ -891,6 +891,7 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
+            Debug.Log($"Spawning Player Ragdoll");
         print(_deathNature);
         var ragdoll = GameObjectPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
@@ -905,6 +906,7 @@ public class Player : Biped
         }
         else
         {
+            Debug.Log($"Player {name} has color palette: {playerArmorManager.colorPalette}");
             ragdoll.GetComponent<PlayerArmorManager>().armorDataString = playerArmorManager.armorDataString;
             ragdoll.GetComponent<PlayerArmorManager>().colorPalette = playerArmorManager.colorPalette;
         }

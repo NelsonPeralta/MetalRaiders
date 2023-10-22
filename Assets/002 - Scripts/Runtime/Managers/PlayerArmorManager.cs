@@ -19,7 +19,7 @@ public class PlayerArmorManager : MonoBehaviour
         {
             //if (_armorDataString != value)
             {
-                Debug.Log(_armorDataString);
+                Debug.Log($"Changing ArmorDataString from {_armorDataString} to {value}");
 
                 _armorDataString = value;
 
@@ -45,9 +45,9 @@ public class PlayerArmorManager : MonoBehaviour
             //if (_colorPalette != value)
             if (value != null && value != "")
             {
-                Debug.Log(colorPalette);
-                UpdateColorPalette();
+                Debug.Log($"Changing ColorPalette from {_colorPalette} to {value}");
                 _colorPalette = value;
+                UpdateColorPalette();
             }
         }
     }
@@ -60,9 +60,12 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void OnEnable()
     {
+
         if (marineArmorPieces.Count == 0)
             marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
         ToggleMarinePieces(false);
+
+        if (GetComponent<PlayerRagdoll>()) return;
 
         try { HardReloadArmor(); } catch { }
 

@@ -146,7 +146,7 @@ public class SteamManager : MonoBehaviour
         }
         else
         {
-            string name = SteamFriends.GetPersonaName();
+            GameManager.ROOT_PLAYER_NAME = SteamFriends.GetPersonaName();
             Debug.Log(name);
         }
 
