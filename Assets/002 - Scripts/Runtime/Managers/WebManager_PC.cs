@@ -43,6 +43,7 @@ public partial class WebManager
                     PhotonNetwork.NickName = pda.username;
 
                     StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id));
+                    StartCoroutine(GetPlayerExtendedPublicData_Coroutine(username));
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id));
 
@@ -91,28 +92,38 @@ public partial class WebManager
 
                 string jsonarray = www.downloadHandler.text;
 
+                Debug.Log(jsonarray);
+                PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
                 try
                 {
-                    Debug.Log(jsonarray);
-                    pli.playerExtendedPublicData = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
+                    CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
+                }
+                catch (Exception e) { Debug.LogWarning(e); }
 
+                try
+                {
+                    pli.playerExtendedPublicData = pepd;
+                }
+                catch (Exception e) { Debug.LogWarning(e); }
 
+                try
+                {
                     //pda.player = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
 
                     //StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id, pda));
                     //StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
                     //StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
 
-                    var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
-                    if (!d.ContainsKey(pda.username))
-                    {
-                        //Debug.Log($"Adding key {}")
-                        d.Add(pda.username, pda);
-                    }
-                    else
-                        d[pda.username] = pda;
+                    //var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
+                    //if (!d.ContainsKey(pda.username))
+                    //{
+                    //    //Debug.Log($"Adding key {}")
+                    //    d.Add(pda.username, pda);
+                    //}
+                    //else
+                    //    d[pda.username] = pda;
 
-                    GameManager.instance.roomPlayerData = d;
+                    //GameManager.instance.roomPlayerData = d;
 
                     //if (pli)
                     //    pli.pda = pda;

@@ -236,15 +236,6 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
-    public Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData> extendedPlayerData
-    {
-        get { return _extendedPlayerData; }
-        set
-        {
-            _extendedPlayerData = value;
-        }
-    }
-
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
     [SerializeField] bool _gameStart, _gameStarted, _gameOver;
@@ -259,9 +250,14 @@ public class CurrentRoomManager : MonoBehaviour
     Dictionary<string, int> _playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
     [SerializeField] bool _reachedHalwayGameStartCountdown, _randomQuickMatchSeetingsChosen;
-    [SerializeField] Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData> _extendedPlayerData = new Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData>();
+    //[SerializeField] Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData> _extendedPlayerData = new Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData>();
 
+    [SerializeField] GameManager.GameType _vetoedGameType;
+    [SerializeField] int _ran, _vetoedMapIndex;
 
+    [SerializeField] List<ScriptObjPlayerData> _extendedPlayerData = new List<ScriptObjPlayerData>();
+
+    int ran;
 
 
 
@@ -287,6 +283,11 @@ public class CurrentRoomManager : MonoBehaviour
     private void Start()
     {
         _vetoCountdown = 9;
+
+        foreach (ScriptObjPlayerData sod in instance._extendedPlayerData)
+        {
+            sod.playerExtendedPublicData = null;
+        }
     }
 
     private void Update()
@@ -389,8 +390,7 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
-    [SerializeField] GameManager.GameType _vetoedGameType;
-    [SerializeField] int _ran, _vetoedMapIndex;
+
 
     public void ChooseRandomMatchSettingsForQuickMatch()
     {
@@ -512,5 +512,82 @@ public class CurrentRoomManager : MonoBehaviour
     {
         _vetoCountdown = 9;
         _gameStartCountdown = 9;
+    }
+
+    public void AddExtendedPlayerData(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
+    {
+        Debug.Log(pepd.username.Equals(Steamworks.SteamFriends.GetPersonaName()));
+
+        if (pepd.username.Equals(Steamworks.SteamFriends.GetPersonaName()))
+            instance._extendedPlayerData[0].playerExtendedPublicData = pepd;
+        else
+            for (int i = 0; i < CurrentRoomManager.instance._extendedPlayerData.Count; i++)
+            {
+                Debug.Log($"Player Extended Public Data {CurrentRoomManager.instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
+                if (i > 0 && !instance._extendedPlayerData[i].occupied)
+                {
+                    Debug.Log("Player Extended Public Data");
+                    CurrentRoomManager.instance._extendedPlayerData[i].playerExtendedPublicData = pepd;
+                    break;
+                }
+            }
+    }
+
+    public void RemoveExtendedPlayerData(string n)
+    {
+        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        {
+            if (instance._extendedPlayerData[i].occupied)
+                if (instance._extendedPlayerData[i].playerExtendedPublicData.username.Equals(n))
+                {
+                    instance._extendedPlayerData[i].playerExtendedPublicData = null;
+                }
+        }
+    }
+
+    public bool PlayerExtendedDataContainsPlayerName(string n)
+    {
+        //foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
+        //    if (pepd.playerExtendedPublicData.username.Equals(n))
+        //        return true;
+
+
+        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        {
+            //Debug.Log(n == null);
+            //Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i] == null}");
+            //Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData == null}");
+            Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData.username == null}");
+            if (instance._extendedPlayerData[i].occupied)
+                if (instance._extendedPlayerData[i].playerExtendedPublicData.username != null)
+                    if (instance._extendedPlayerData[i].playerExtendedPublicData.username.Equals(n))
+                    {
+                        return true;
+                    }
+
+        }
+
+
+
+        return false;
+    }
+
+    public void SoftResetPlayerExtendedData()
+    {
+        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+            if (i > 0)
+            {
+                instance._extendedPlayerData[i].playerExtendedPublicData = null;
+            }
+    }
+
+    public PlayerDatabaseAdaptor.PlayerExtendedPublicData GetPLayerExtendedData(string u)
+    {
+        foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
+            if (pepd.occupied)
+                if (pepd.playerExtendedPublicData.username.Equals(u))
+                    return pepd.playerExtendedPublicData;
+
+        return null;
     }
 }

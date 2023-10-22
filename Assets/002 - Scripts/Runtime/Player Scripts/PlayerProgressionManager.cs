@@ -95,7 +95,7 @@ public class PlayerProgressionManager : MonoBehaviour
         Rank r = instance._ranks[0];
         foreach (Rank rank in instance._ranks)
         {
-            Debug.Log($"Rank search: {xp} {h} \n {rank.lvlRequired} {rank.honorRequired}");
+            //Debug.Log($"Rank search: {xp} {h} \n {rank.lvlRequired} {rank.honorRequired}");
             if (xp >= rank.lvlRequired && h >= rank.honorRequired)
                 r = rank;
             else

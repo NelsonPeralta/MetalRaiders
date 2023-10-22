@@ -38,8 +38,8 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         get { return _playerExtendedPublicData; }
         set
         {
-            _playerExtendedPublicData = value;
             Debug.Log($"PlayerExtendedPublicData {_playerExtendedPublicData}");
+            _playerExtendedPublicData = value;
 
 
 
@@ -83,7 +83,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     [SerializeField] Image _mainBg, _secBg, _rankIm;
 
     Color _tCol;
-    PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
+    [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
 
 
 
@@ -126,7 +126,6 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
             {
                 Debug.Log(((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower());
                 Debug.Log(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()]);
-                Debug.Log(GameManager.colorDict[GameManager.instance.roomPlayerData[playerText.text].playerBasicOnlineStats.armor_color_palette]);
             }
             catch { }
 
@@ -144,17 +143,18 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.Log($"Setup Solo Color: {playerText.text}");
-            Debug.Log(GameManager.instance.roomPlayerData.Keys);
+            //Debug.Log($"Setup Solo Color: {playerText.text}");
+            //Debug.Log($"Setup Solo Color: {_playerName}");
+            Debug.Log($"Setup Solo Color: {playerName}");
 
             //foreach (KeyValuePair<string, KeyCode> kvp in GameManager.instance.roomPlayerData)
             //    Debug.Log(Debug.Log("Key = {0},Value = {1}" + kvp.Key + kvp.Value);)
-            if (GameManager.instance.roomPlayerData.ContainsKey(playerText.text))
+            if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(playerName))
             {
                 try
                 {
-                    ColorUtility.TryParseHtmlString(GameManager.colorDict[GameManager.instance.roomPlayerData[playerText.text].playerBasicOnlineStats.armor_color_palette], out _tCol);
-                    Debug.Log($"Setup Solo Color: {GameManager.colorDict[GameManager.instance.roomPlayerData[playerText.text].playerBasicOnlineStats.armor_color_palette]}");
+                    ColorUtility.TryParseHtmlString(GameManager.colorDict[CurrentRoomManager.instance.GetPLayerExtendedData(_playerName).armor_color_palette], out _tCol);
+                    Debug.Log($"Setup Solo Color: {GameManager.colorDict[CurrentRoomManager.instance.GetPLayerExtendedData(_playerName).armor_color_palette]}");
                     mainBg.color = _tCol;
 
                     _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);

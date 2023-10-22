@@ -497,6 +497,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         try { PhotonNetwork.LeaveRoom(); } catch (System.Exception e) { Debug.LogWarning(e); }
         try { GameManager.instance.gameMode = GameManager.GameMode.Multiplayer; } catch { }
 
+        CurrentRoomManager.instance.SoftResetPlayerExtendedData();
+
         //MenuManager.Instance.OpenMenu("loading");
     }
 
@@ -505,6 +507,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(info.Name);
         MenuManager.Instance.OpenLoadingMenu("Joining Room...");
     }
+
+    // Triggers when YOU left room
 
     public override void OnLeftRoom()
     {
@@ -519,6 +523,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         //MenuManager.Instance.OpenMenu("offline title");
     }
 
+    // Triggers when other player left room
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         try
@@ -527,6 +532,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
         }
         catch { }
+
+        if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(otherPlayer.NickName))
+            CurrentRoomManager.instance.RemoveExtendedPlayerData(otherPlayer.NickName);
+
+
     }
 
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();

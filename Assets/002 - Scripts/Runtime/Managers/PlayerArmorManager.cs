@@ -43,12 +43,12 @@ public class PlayerArmorManager : MonoBehaviour
         {
 
             //if (_colorPalette != value)
-                if (value != null && value != "")
-                {
-                    Debug.Log(colorPalette);
-                    UpdateColorPalette();
-                    _colorPalette = value;
-                }
+            if (value != null && value != "")
+            {
+                Debug.Log(colorPalette);
+                UpdateColorPalette();
+                _colorPalette = value;
+            }
         }
     }
 
@@ -71,7 +71,7 @@ public class PlayerArmorManager : MonoBehaviour
             StartCoroutine(ReloadArmor_Coroutine());
         }
 
-        
+
         //player.playerShield.ShowShieldRechargeEffect();
     }
 
@@ -115,12 +115,18 @@ public class PlayerArmorManager : MonoBehaviour
                 }
                 else
                 {
-                    if (GameManager.instance.roomPlayerData.ContainsKey(player.nickName))
+                    if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(player.nickName))
+                    //if (GameManager.instance.roomPlayerData.ContainsKey(player.nickName))
                     {
-                        Debug.Log($"PlayerArmorManager NOT MINE");
-                        Debug.Log($"PlayerArmorManager NOT MINE + {GameManager.instance.roomPlayerData[player.nickName].armorDataString}");
-                        armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
-                        colorPalette = GameManager.instance.roomPlayerData[player.nickName].playerBasicOnlineStats.armor_color_palette;
+                        //Debug.Log($"PlayerArmorManager NOT MINE");
+                        //Debug.Log($"PlayerArmorManager NOT MINE + {GameManager.instance.roomPlayerData[player.nickName].armorDataString}");
+                        //armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
+                        //colorPalette = GameManager.instance.roomPlayerData[player.nickName].playerBasicOnlineStats.armor_color_palette;
+
+
+                        Debug.Log($"PlayerArmorManager NOT MINE + {CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName)}");
+                        armorDataString = CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName).armor_data_string;
+                        colorPalette = CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName).armor_color_palette;
                     }
                 }
             }

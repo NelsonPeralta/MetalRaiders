@@ -254,5 +254,6 @@ public class PlayerDatabaseAdaptor
         {
             return JsonUtility.FromJson<PlayerExtendedPublicData>(jsonString);
         }
+
     }
 }
