@@ -237,6 +237,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("Click QuickMatch");
         CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.QuickMatch;
+        CurrentRoomManager.instance.vetos = 0;
 
         string roomName = quickMatchRoomName;
         RoomOptions roomOptions = new RoomOptions();
@@ -244,7 +245,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
         //roomOptions.CustomRoomProperties.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
         //roomOptions.CustomRoomProperties.Add("gametype", GameManager.GameType.Fiesta.ToString());
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, typedLobby);
+        //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, typedLobby);
+        CreateRoom(roomName, roomOptions, typedLobby);
         //PhotonNetwork.JoinRandomRoom();
     }
 
@@ -288,11 +290,24 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
 
         // else
-        PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
+        //PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
+        CreateRoom(roomNameInputField.text, options);
         MenuManager.Instance.OpenLoadingMenu("Creating Multiplayer Room..."); // Show the loading menu/message
 
         // When creating a room is done, OnJoinedRoom() will automatically trigger
         OnCreateMultiplayerRoomButton?.Invoke(this);
+    }
+
+    void CreateRoom(string roomNam, RoomOptions ro, TypedLobby tl = null)
+    {
+        CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Clear();
+        CurrentRoomManager.instance.expectedNbPlayers = 0;
+        CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = 9;
+
+        if (tl == null)
+            PhotonNetwork.CreateRoom(roomNam, ro);
+        else
+            PhotonNetwork.JoinOrCreateRoom(roomNam, ro, typedLobby);
     }
 
     public void CreateSwarmRoom()
@@ -408,7 +423,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
         Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
 
-
         if (PhotonNetwork.IsMasterClient)
         {
             //Dictionary<string, string> roomParams = new Dictionary<string, string>();
@@ -513,6 +527,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         Debug.Log("LAUNCHER: OnLeftRoom");
+        CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Clear();
+        CurrentRoomManager.instance.expectedNbPlayers = 0;
         try
         {
             Destroy(FindObjectOfType<NetworkGameManager>().gameObject);

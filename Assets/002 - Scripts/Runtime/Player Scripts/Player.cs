@@ -873,7 +873,7 @@ public class Player : Biped
         NetworkGameManager.SpawnNetworkWeaponOnPlayerDeath(firstWeapon, secondWeapon,
            weaponDropPoint.position, weaponDropPoint.transform.forward, weaponDropPoint.position + new Vector3(0, 1, 0));
 
-        GC.Collect();
+        //GC.Collect(); // LAG SPIKE
     }
 
 

@@ -61,13 +61,13 @@ public class AmmoPickup : MonoBehaviour
     [PunRPC]
     void DisableAmmoPack(Vector3 ammoPackPosition)
     {
-        for (int i = 0; i < playerProperties.weaponPool.allAmmoPackSpawnPoints.Count; i++)
-            if (playerProperties.weaponPool.allAmmoPackSpawnPoints[i].transform.position == ammoPackPosition)
-            {
-                Debug.Log("Disabling ammo pack");
-                playerProperties.weaponPool.allAmmoPackSpawnPoints[i].ammoPack.gameObject.SetActive(false);
-                playerProperties.weaponPool.allAmmoPackSpawnPoints[i].StartRespawn();
-            }
+        //for (int i = 0; i < playerProperties.weaponPool.allAmmoPackSpawnPoints.Count; i++)
+        //    if (playerProperties.weaponPool.allAmmoPackSpawnPoints[i].transform.position == ammoPackPosition)
+        //    {
+        //        Debug.Log("Disabling ammo pack");
+        //        playerProperties.weaponPool.allAmmoPackSpawnPoints[i].ammoPack.gameObject.SetActive(false);
+        //        playerProperties.weaponPool.allAmmoPackSpawnPoints[i].StartRespawn();
+        //    }
     }
 
     [PunRPC]

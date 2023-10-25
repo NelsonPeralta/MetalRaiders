@@ -52,7 +52,7 @@ public class PlayerArmorManager : MonoBehaviour
         }
     }
 
-    public bool isRagdoll;
+    public bool isRagdoll { get { return GetComponent<PlayerRagdoll>(); } }
 
     [SerializeField] string _armorDataString, _colorPalette;
 

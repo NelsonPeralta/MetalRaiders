@@ -332,6 +332,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called zero
 
     // private Variables
+    [SerializeField] WeaponPool _weaponPoolPrefab;
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
@@ -342,6 +343,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     CarnageReport _carnageReport;
     List<LootableWeapon> _lootableWeapons = new List<LootableWeapon>();
     List<NetworkGrenadeSpawnPoint> _networkGrenadeSpawnPoints = new List<NetworkGrenadeSpawnPoint>();
+
 
 
 
@@ -441,6 +443,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { onlineTeam = PlayerMultiplayerMatchStats.Team.None; } catch { }
             _lootableWeapons.Clear();
             _networkGrenadeSpawnPoints.Clear();
+
+
+            WeaponPool.instance = null;
         }
         else if (scene.buildIndex > 0) // We're in the game scene
         {
@@ -466,6 +471,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
             }
             catch (Exception e) { Debug.LogWarning(e.Message); }
+
+            Instantiate(_weaponPoolPrefab);
 
             try
             {

@@ -46,11 +46,16 @@ public class CurrentRoomManager : MonoBehaviour
                 print("You have " + items.Value + " " + items.Key);
                 c += items.Value;
             }
+
+            int _preExpNbPl = expectedNbPlayers;
             expectedNbPlayers = c;
 
-            if (_vetoCountdown > 0) // Make sure this variable if greater than 0 by default
-                _vetoCountdown = 9;
-            _roomGameStartCountdown = 9;
+            if (_preExpNbPl > expectedNbPlayers)
+            {
+                if (vetoCountdown > 0) // Make sure this variable if greater than 0 by default
+                    vetoCountdown = 9;
+                roomGameStartCountdown = 9;
+            }
 
             if (expectedNbPlayers > 0 && !_randomQuickMatchSeetingsChosen)
             {
@@ -59,7 +64,7 @@ public class CurrentRoomManager : MonoBehaviour
             }
         }
     }
-    public int expectedNbPlayers { get { return _expectedNbPlayers; } private set { _expectedNbPlayers = value; } }
+    public int expectedNbPlayers { get { return _expectedNbPlayers; } set { _expectedNbPlayers = value; } }
 
 
     /// <summary>
@@ -236,10 +241,28 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    public float vetoCountdown
+    {
+        get { return _vetoCountdown; }
+        set
+        {
+            _vetoCountdown = value;
+        }
+    }
+
+    public float roomGameStartCountdown
+    {
+        get { return _roomGameStartCountdown; }
+        set
+        {
+            _roomGameStartCountdown = value;
+        }
+    }
+
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
     [SerializeField] bool _gameStart, _gameStarted, _gameOver;
-    [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9;
+    [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9, _rpcCooldown;
 
     [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _nbPlayersJoined, _vetos;
 
@@ -266,7 +289,8 @@ public class CurrentRoomManager : MonoBehaviour
 
     void Awake()
     {
-        _vetoCountdown = 9;
+        _rpcCooldown = 0.3f;
+        vetoCountdown = roomGameStartCountdown = 9;
 
         if (_instance != null && _instance != this)
         {
@@ -282,7 +306,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     private void Start()
     {
-        _vetoCountdown = 9;
+        vetoCountdown = 9;
 
         foreach (ScriptObjPlayerData sod in instance._extendedPlayerData)
         {
@@ -292,6 +316,8 @@ public class CurrentRoomManager : MonoBehaviour
 
     private void Update()
     {
+
+
         if (gameStart && !gameStarted)
         {
             _gameStartCountdown -= Time.deltaTime;
@@ -303,18 +329,39 @@ public class CurrentRoomManager : MonoBehaviour
                 gameStarted = true;
         }
 
+        if (SceneManager.GetActiveScene().buildIndex > 0) return;
+
+
+        if (_rpcCooldown > 0)
+        {
+            _rpcCooldown -= Time.deltaTime;
+
+
+        }
+
 
         if (PhotonNetwork.InRoom)
         {
 
             if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) >= 0) // At least one more stranger player is in the room
-                if (_randomQuickMatchSeetingsChosen && _vetoCountdown > 0)
+                if (_randomQuickMatchSeetingsChosen && vetoCountdown > 0)
                 {
-                    _vetoCountdown -= Time.deltaTime;
 
-                    Launcher.instance.gameCountdownText.text = $"VETO COUNTDOWN: {((int)_vetoCountdown)} seconds\nVetos: {instance.vetos} out of {instance.expectedNbPlayers}";
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        vetoCountdown -= Time.deltaTime;
 
-                    if (_vetoCountdown <= 0)
+                        if (_rpcCooldown <= 0)
+                        {
+                            // TODO
+
+                            NetworkGameManager.instance.UpdateRoomCountdowns((int)vetoCountdown, (int)roomGameStartCountdown);
+                        }
+                    }
+
+                    Launcher.instance.gameCountdownText.text = $"VETO COUNTDOWN: {((int)vetoCountdown)} seconds\nVetos: {instance.vetos} out of {instance.expectedNbPlayers}";
+
+                    if (vetoCountdown <= 0)
                     {
                         Launcher.instance.vetoBtn.SetActive(false);
 
@@ -330,16 +377,30 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
-            if (_randomQuickMatchSeetingsChosen && _roomGameStartCountdown > 0 && _vetoCountdown <= 0)
+            if (_randomQuickMatchSeetingsChosen && roomGameStartCountdown > 0 && vetoCountdown <= 0)
             {
-                _roomGameStartCountdown -= Time.deltaTime;
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    roomGameStartCountdown -= Time.deltaTime;
 
-                Launcher.instance.gameCountdownText.text = $"Game Starts in: {((int)_roomGameStartCountdown)}";
+                    if (_rpcCooldown <= 0)
+                    {
+                        // TODO
+                        NetworkGameManager.instance.UpdateRoomCountdowns((int)vetoCountdown, (int)roomGameStartCountdown);
+                    }
+                }
 
-                if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
-                    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
-                        Launcher.instance.StartGame();
+                Launcher.instance.gameCountdownText.text = $"Game Starts in: {((int)roomGameStartCountdown)}";
+
+                //if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                //    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
+                //        Launcher.instance.StartGame();
             }
+        }
+
+        if (_rpcCooldown <= 0)
+        {
+            _rpcCooldown = 0.3f;
         }
     }
 
@@ -510,7 +571,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void ResetRoomCountdowns()
     {
-        _vetoCountdown = 9;
+        vetoCountdown = 9;
         _gameStartCountdown = 9;
     }
 
@@ -589,5 +650,11 @@ public class CurrentRoomManager : MonoBehaviour
                     return pepd.playerExtendedPublicData;
 
         return null;
+    }
+
+    public void UpdateCountdowns(int vetoC, int roomGameStartC)
+    {
+        _vetoCountdown = vetoC;
+        _roomGameStartCountdown = roomGameStartC;
     }
 }

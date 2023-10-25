@@ -122,12 +122,19 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         {
             Debug.Log($"SetupWithTeam: {playerText.text}");
 
+            foreach (KeyValuePair<string, int> items in GameManager.instance.teamDict)
+            {
+                print("You have " + items.Value + " " + items.Key);
+            }
+
             try
             {
                 Debug.Log(((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower());
                 Debug.Log(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()]);
             }
             catch { }
+
+            Debug.Log((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]);
 
             try
             {
@@ -138,7 +145,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
                 mainBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
                 secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
             }
-            catch { }
+            catch (System.Exception e) { Debug.LogWarning(e); }
             //WebManager.webManagerInstance.SetPlayerListItemInRoom(, this);
         }
         else

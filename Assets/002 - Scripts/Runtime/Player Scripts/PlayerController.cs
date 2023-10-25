@@ -1243,14 +1243,31 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        player.BasicDamage(18);
+        {
+            //LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(player.playerInventory.allWeaponsInInventory[3].GetComponent<WeaponProperties>().codeName);
+            //Debug.Log($"First Weapon: {_firstWeapon.name}");
+            //try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
+            ////try { _firstWeapon.transform.parent = null; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.transform.position = player.weaponDropPoint.position; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.spawnPointPosition = player.weaponDropPoint.position; } catch (System.Exception e) { Debug.Log(e); }
+            ////try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Debug.Log(e); }
+            //Debug.Log($"First Weapon: {_firstWeapon.GetComponent<Rigidbody>()}");
+            //_firstWeapon.GetComponent<Rigidbody>().AddForce(player.weaponDropPoint.forward * 2000, ForceMode.Impulse);
+            //try { _firstWeapon.localAmmo = 10; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.spareAmmo = 10; } catch (System.Exception e) { Debug.Log(e); }
+
+
+            //try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Debug.Log(e); }
+            //_firstWeapon.GetComponent<Rigidbody>().AddForce(player.weaponDropPoint.forward * 200, ForceMode.Impulse);
+
+        }
 
         return;
 
         Transform pr = Instantiate(GameObjectPool.instance.playerRagdoll.gameObject, transform.position + new Vector3(0, 0.5f, 1), transform.rotation).transform;
 
         Debug.Log(player.playerArmorManager.colorPalette);
-        pr.GetComponent<PlayerArmorManager>().isRagdoll = true;
         pr.GetComponent<PlayerArmorManager>().armorDataString = player.playerArmorManager.armorDataString;
         //pr.GetComponent<PlayerArmorManager>().armorDataString = "";
         pr.GetComponent<PlayerArmorManager>().colorPalette = player.playerArmorManager.colorPalette;

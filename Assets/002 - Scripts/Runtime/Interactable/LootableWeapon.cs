@@ -8,6 +8,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public delegate void LootableWeaponEvent(LootableWeapon lootableWeapon);
     public LootableWeaponEvent OnLooted;
 
+    public Transform parent { get { return transform.parent; } }
     public string cleanName;
     public string codeName;
     public int spriteId;
@@ -80,6 +81,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     }
 
     public float ttl { set { _ttl = value; } }
+    public float defaultTtl { get { return _defaultTtl; } }
     public int defaultAmmo { get { return _defaultAmmo; } }
     public int defaultSpareAmmo { get { return _defaultSpareAmmo; } }
 
@@ -94,12 +96,13 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     [SerializeField] NetworkWeaponSpawnPoint _networkWeaponSpawnPoint;
 
     [SerializeField] Vector3 _spawnPointPosition;
-    [SerializeField] float _ttl;
+    [SerializeField] float _ttl, _defaultTtl;
 
     Quaternion _spawnPointRotation;
 
     private void Awake()
     {
+        _defaultTtl = _ttl;
         //spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
         spawnPointRotation = transform.rotation;
         GameManager.instance.lootableWeapons.Add(this);
@@ -119,12 +122,17 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         }
         catch { }
 
-        _ammo = defaultAmmo;
-        _spareAmmo = defaultSpareAmmo;
+
+        if (parent != null && WeaponPool.instance != null && parent != WeaponPool.instance.transform)
+        {
+            _ammo = defaultAmmo;
+            _spareAmmo = defaultSpareAmmo;
+        }
     }
     private void Start()
     {
-        CurrentRoomManager.instance.spawnedMapAddOns++;
+        if (parent != WeaponPool.instance.transform)
+            CurrentRoomManager.instance.spawnedMapAddOns++;
     }
 
     private void Update()
@@ -137,7 +145,11 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
                 _ttl -= Time.deltaTime;
 
                 if (_ttl <= 0)
-                    Destroy(gameObject);
+                {
+                    transform.position = new Vector3(0, -100, 0);
+                    gameObject.SetActive(false);
+                    //Destroy(gameObject);
+                }
             }
         }
     }

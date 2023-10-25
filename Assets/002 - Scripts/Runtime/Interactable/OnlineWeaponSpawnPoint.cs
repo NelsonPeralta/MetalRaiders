@@ -22,19 +22,19 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
     IEnumerator SpawnNewWeaponFromWeaponPool(float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (FindObjectOfType<WeaponPool>().allWeapons.Count <= 0)
-            StartCoroutine(SpawnNewWeaponFromWeaponPool(0.1f));
-        if (!weaponSpawned)
-        {
-            //Debug.Log("Spawning New Weapon");
-            var newWeap = FindObjectOfType<WeaponPool>().GetWeaponFromList(codeName).GetComponent<LootableWeapon>();
-            newWeap.transform.position = transform.position;
-            newWeap.transform.rotation = transform.rotation;
-            newWeap.gameObject.SetActive(true);
-            weaponSpawned = newWeap;
-        }
-        else
-            weaponSpawned.EnableWeapon();
+        //if (FindObjectOfType<WeaponPool>()._weapons.Count <= 0)
+        //    StartCoroutine(SpawnNewWeaponFromWeaponPool(0.1f));
+        //if (!weaponSpawned)
+        //{
+        //    //Debug.Log("Spawning New Weapon");
+        //    var newWeap = FindObjectOfType<WeaponPool>().GetWeaponFromList(codeName).GetComponent<LootableWeapon>();
+        //    newWeap.transform.position = transform.position;
+        //    newWeap.transform.rotation = transform.rotation;
+        //    newWeap.gameObject.SetActive(true);
+        //    weaponSpawned = newWeap;
+        //}
+        //else
+        //    weaponSpawned.EnableWeapon();
     }
 
     public void StartRespawn()
