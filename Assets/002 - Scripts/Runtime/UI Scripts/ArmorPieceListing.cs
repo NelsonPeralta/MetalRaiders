@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Linq;
+using System;
 
 public class ArmorPieceListing : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class ArmorPieceListing : MonoBehaviour
     }
 
     public TMP_Text armorPieceNameText;
+    public TMP_Text armorPieceBodyPartText;
 
     public Button buyButton;
     public Button equipButton;
@@ -46,6 +49,9 @@ public class ArmorPieceListing : MonoBehaviour
             _playerArmorPiece = value;
 
             armorPieceNameText.text = playerArmorPiece.cleanName;
+            //armorPieceBodyPartText.text = playerArmorPiece.bodyPart.ToString();
+            armorPieceBodyPartText.text = string.Concat(playerArmorPiece.bodyPart.ToString().Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
+            //armorPieceNameText.text = $"{playerArmorPiece.bodyPart} {playerArmorPiece.cleanName}";
 
             if (pda.playerBasicOnlineStats.unlocked_armor_data_string.Contains(playerArmorPiece.entity))
             {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class ArmoryManager : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class ArmoryManager : MonoBehaviour
     }
     private void OnEnable()
     {
+        Debug.Log("OnEnable ArmoryManager");
         playerModel.SetActive(true);
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
@@ -52,6 +54,8 @@ public class ArmoryManager : MonoBehaviour
                 i++;
             }
         }
+
+
         PlayerArmorPiece ppp = new PlayerArmorPiece() { entity = "filler" };
         GameObject ppppp = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
         armorPieceListingList.Add(ppppp.GetComponent<ArmorPieceListing>());

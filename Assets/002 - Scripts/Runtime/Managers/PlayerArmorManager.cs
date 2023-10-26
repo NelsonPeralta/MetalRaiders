@@ -82,6 +82,8 @@ public class PlayerArmorManager : MonoBehaviour
     {
         marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
         playerArmorPieces.Clear(); playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
+        playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
+
     }
 
     private void Start()
