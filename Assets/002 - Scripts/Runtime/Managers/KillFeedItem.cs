@@ -33,6 +33,6 @@ public class KillFeedItem : MonoBehaviour
     }
     private void Update()
     {
-        oScaleCounter += Time.deltaTime * 4 * _oLocalScale.x;
+        oScaleCounter += Time.deltaTime * 3 * _oLocalScale.x;
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 
 // Used to spawn weapons at runtime
@@ -18,12 +19,13 @@ public class WeaponPool : MonoBehaviourPun
 
     private void Awake()
     {
-        amountOfWeaponsToPool = 50;
+        amountOfWeaponsToPool = 100;
         instance = this;
     }
 
     private void Start()
     {
+        Debug.Log("WeaponPool");
         foreach (var weapon in _weaponPrefabs)
             for (int j = 0; j < amountOfWeaponsToPool; j++)
             {
@@ -35,6 +37,20 @@ public class WeaponPool : MonoBehaviourPun
 
                 _spawnedWeapons.Add(newWeap);
             }
+    }
+
+
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        if (scene.buildIndex == 0)
+        {
+            foreach (LootableWeapon weapon in _spawnedWeapons) weapon.gameObject.SetActive(false);
+        }
+        else
+        {
+
+        }
     }
 
 

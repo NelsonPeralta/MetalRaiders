@@ -333,6 +333,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     // private Variables
     [SerializeField] WeaponPool _weaponPoolPrefab;
+    [SerializeField] RagdollPool _ragdollPoolPrefab;
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
@@ -473,6 +474,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             catch (Exception e) { Debug.LogWarning(e.Message); }
 
             Instantiate(_weaponPoolPrefab);
+            Instantiate(_ragdollPoolPrefab);
 
             try
             {

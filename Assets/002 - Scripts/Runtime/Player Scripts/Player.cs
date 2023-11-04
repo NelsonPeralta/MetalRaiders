@@ -893,7 +893,7 @@ public class Player : Biped
     {
             Debug.Log($"Spawning Player Ragdoll");
         print(_deathNature);
-        var ragdoll = GameObjectPool.instance.SpawnPooledPlayerRagdoll();
+        var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
 
@@ -1008,6 +1008,7 @@ public class Player : Biped
 
         int levelToLoad = 0;
 
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(levelToLoad);

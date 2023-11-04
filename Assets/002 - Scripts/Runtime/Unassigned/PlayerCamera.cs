@@ -17,6 +17,7 @@ public class PlayerCamera : MonoBehaviour
     float minXClamp = -90;
     float maxXClamp = 90;
 
+
     public Rewired.Player rewiredPlayer
     {
         get { return pController.rewiredPlayer; }
@@ -37,7 +38,7 @@ public class PlayerCamera : MonoBehaviour
     float currentVerticalSway;
     float targetHorizontalSway;
     float currentHorizontalSway;
-    float sway;
+    float sway, _deathCameraLookAtTimer;
     PlayerRagdoll _ragdollPrefab;
 
     //public AimAssistCapsule aimAssistCapsule;
@@ -61,6 +62,9 @@ public class PlayerCamera : MonoBehaviour
     {
         player.OnPlayerRespawnEarly -= OnRespawnEarly_Delegate;
         player.OnPlayerRespawnEarly += OnRespawnEarly_Delegate;
+
+        player.OnPlayerDeath -= OnDeath_Delegate;
+        player.OnPlayerDeath += OnDeath_Delegate;
 
         try
         {
@@ -166,18 +170,49 @@ public class PlayerCamera : MonoBehaviour
 
             _clampedMouseY = Mathf.Clamp(mouseY, minXClamp, maxXClamp);
 
-            //verticalAxisTarget.localRotation = Quaternion.Euler(xRotation, 0, 0f); // OLD, prevents other script from changing localRotation
-            verticalAxisTarget.Rotate(Vector3.left * _clampedMouseY); // NEW, multiple scripts can now interact with local rotation
-            //Debug.Log(_clampedMouseY);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // PROCESS PLAYER INPUT
+            if (player.isDead)
+            {
+                _deathCameraLookAtTimer -= Time.deltaTime;
+                if (_deathCameraLookAtTimer > 0)
+                {
+                    //var lookDir = player.lastPlayerSource.transform.position - transform.position;
+                    //lookDir.y = 0; // keep only the horizontal direction
+                    //verticalAxisTarget.rotation = Quaternion.LookRotation(lookDir);
+                    var p = player.lastPlayerSource.transform.position + new Vector3(0, 2, 0); /*p.y = 0;*/
+                    //playerCameraScriptParent.LookAt(p);
+                    verticalAxisTarget.LookAt(p);
+
+                    //p = player.lastPlayerSource.transform.position; 
+                    //horizontalAxisTarget.LookAt(p);
+
+                    return;
+                }
+            }
+
+
+
+
+            verticalAxisTarget.Rotate(Vector3.left * _clampedMouseY); // NEW, multiple scripts can now interact with local rotation
 
             if (horizontalAxisTarget.transform.root == horizontalAxisTarget)
                 horizontalAxisTarget.Rotate(Vector3.up * mouseX);
             else
-            {
-                //Debug.Log(yRotation);
                 horizontalAxisTarget.localRotation = Quaternion.Euler(0, -yRotation, 0f);
-            }
 
         }
 
@@ -302,6 +337,11 @@ public class PlayerCamera : MonoBehaviour
     void OnCameraSensitivityChanged()
     {
         defaultMouseSensitivy = GameManager.instance.camSens;
+    }
+
+    void OnDeath_Delegate(Player p)
+    {
+        _deathCameraLookAtTimer = 2;
     }
 
     void OnRespawnEarly_Delegate(Player p)

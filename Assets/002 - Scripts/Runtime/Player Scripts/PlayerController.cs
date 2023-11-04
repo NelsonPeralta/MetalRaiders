@@ -1243,6 +1243,9 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
+        WebManager.webManagerInstance.SaveMultiplayerStats(player.GetComponent<PlayerMultiplayerMatchStats>(), new List<Player>());
+
+        player.LeaveRoomWithDelay();
         {
             //LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(player.playerInventory.allWeaponsInInventory[3].GetComponent<WeaponProperties>().codeName);
             //Debug.Log($"First Weapon: {_firstWeapon.name}");
@@ -1265,12 +1268,12 @@ public class PlayerController : MonoBehaviourPun
 
         return;
 
-        Transform pr = Instantiate(GameObjectPool.instance.playerRagdoll.gameObject, transform.position + new Vector3(0, 0.5f, 1), transform.rotation).transform;
+        //Transform pr = Instantiate(GameObjectPool.instance.playerRagdoll.gameObject, transform.position + new Vector3(0, 0.5f, 1), transform.rotation).transform;
 
-        Debug.Log(player.playerArmorManager.colorPalette);
-        pr.GetComponent<PlayerArmorManager>().armorDataString = player.playerArmorManager.armorDataString;
-        //pr.GetComponent<PlayerArmorManager>().armorDataString = "";
-        pr.GetComponent<PlayerArmorManager>().colorPalette = player.playerArmorManager.colorPalette;
+        //Debug.Log(player.playerArmorManager.colorPalette);
+        //pr.GetComponent<PlayerArmorManager>().armorDataString = player.playerArmorManager.armorDataString;
+        ////pr.GetComponent<PlayerArmorManager>().armorDataString = "";
+        //pr.GetComponent<PlayerArmorManager>().colorPalette = player.playerArmorManager.colorPalette;
 
         //ConfigureRagdollPosition(player.playerArmorManager.transform, pr.transform);
     }

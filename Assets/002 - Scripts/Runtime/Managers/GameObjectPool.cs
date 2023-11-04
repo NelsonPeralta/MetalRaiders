@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class GameObjectPool : MonoBehaviour
 {
@@ -17,9 +18,6 @@ public class GameObjectPool : MonoBehaviour
     public GameObject bloodHitPrefab;
     public List<GameObject> genericHits = new List<GameObject>();
     public GameObject genericHitPrefab;
-    public List<GameObject> ragdolls = new List<GameObject>();
-    public GameObject ragdollPrefab;
-    public PlayerRagdoll playerRagdoll;
 
     [Header("Testing Object")]
     public List<GameObject> testingObjects = new List<GameObject>();
@@ -70,10 +68,7 @@ public class GameObjectPool : MonoBehaviour
             genericHits.Add(obj);
             obj.transform.parent = gameObject.transform;
 
-            obj = Instantiate(ragdollPrefab, transform.position, transform.rotation);
-            obj.SetActive(false);
-            ragdolls.Add(obj);
-            obj.transform.parent = gameObject.transform;
+
 
             obj = Instantiate(testingObjectPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
@@ -129,19 +124,6 @@ public class GameObjectPool : MonoBehaviour
         return null;
     }
 
-    public GameObject SpawnPooledPlayerRagdoll()
-    {
-        foreach (GameObject obj in ragdolls)
-            if (!obj.activeSelf)
-                if (!obj.activeSelf)
-                {
-                    obj.transform.parent = null;
-                    ragdolls.Remove(obj);
-                    StartCoroutine(DisableObjectAfterTime(obj, 30));
-                    return obj;
-                }
-        return null;
-    }
 
     public GameObject SpawnPooledTestingObject()
     {
@@ -175,9 +157,6 @@ public class GameObjectPool : MonoBehaviour
             Destroy(go);
 
         foreach (GameObject go in genericHits)
-            Destroy(go);
-
-        foreach (GameObject go in ragdolls)
             Destroy(go);
 
         foreach (GameObject go in testingObjects)

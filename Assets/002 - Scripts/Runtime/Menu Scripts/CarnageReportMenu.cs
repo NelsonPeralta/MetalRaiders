@@ -54,17 +54,17 @@ public class CarnageReportMenu : MonoBehaviour
     {
         FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(true);
 
-        _xpTimer = _hnrTimer = 0;
+        //_xpTimer = _hnrTimer = 0;
 
-        _xpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + 1];
-        PlayerProgressionManager.Rank nextRank = PlayerProgressionManager.instance.ranks.ElementAt(PlayerProgressionManager.instance.ranks.IndexOf(PlayerProgressionManager.GetClosestRank(WebManager.webManagerInstance.pda.level, WebManager.webManagerInstance.pda.honor)) + 1);
-        _hnrToLevelUp = nextRank.honorRequired;
+        //_xpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + 1];
+        //PlayerProgressionManager.Rank nextRank = PlayerProgressionManager.instance.ranks.ElementAt(PlayerProgressionManager.instance.ranks.IndexOf(PlayerProgressionManager.GetClosestRank(WebManager.webManagerInstance.pda.level, WebManager.webManagerInstance.pda.honor)) + 1);
+        //_hnrToLevelUp = nextRank.honorRequired;
 
-        _xpSlider.maxValue = _xpToLevelUp; _hnrSlider.maxValue = _hnrToLevelUp;
-        _xpSlider.value = GameManager.instance.carnageReport.currentXp; _hnrSlider.value = GameManager.instance.carnageReport.currentHonor;
-        _xpBase = GameManager.instance.carnageReport.currentXp;
+        //_xpSlider.maxValue = _xpToLevelUp; _hnrSlider.maxValue = _hnrToLevelUp;
+        //_xpSlider.value = GameManager.instance.carnageReport.currentXp; _hnrSlider.value = GameManager.instance.carnageReport.currentHonor;
+        //_xpBase = GameManager.instance.carnageReport.currentXp;
 
-        _hnrText.text = $"0 / {_hnrToLevelUp}";
+        //_hnrText.text = $"0 / {_hnrToLevelUp}";
     }
 
     // Start is called before the first frame update

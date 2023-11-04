@@ -233,6 +233,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     {
         Debug.Log("DisableWeapon");
         OnLooted?.Invoke(this);
+        gameObject.SetActive(false);
+
+        return;
 
         if (networkWeaponSpawnPoint)
         {

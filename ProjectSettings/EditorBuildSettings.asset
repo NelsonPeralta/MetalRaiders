@@ -32,9 +32,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Lighthouse.unity
     guid: 38cf578bd469df6449ce6788067dd73f
-  - enabled: 1
+  - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Plaza.unity
     guid: b4802909db501a143a6f78077850f0a7
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Lighthouse V2.unity
+    guid: 974d14875f785b84b9b2286dd2396afe
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Oasis.unity
     guid: dbcf95cb10f4af34186b9d0e5b64a468
@@ -42,7 +45,7 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Hacksaw.unity
     guid: 5cc21329d6f6b204a97e5b2b2ebec810
   - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Showdown.unity
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Canyon.unity
     guid: e4421bab1e4778946b585d915575ec84
   - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Grudge.unity
@@ -89,4 +92,34 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/004 - Scenes/Swarm Scenes/Coop - 001 - Downpour.unity
     guid: a93b5d263042c224cb5e592853df0d71
+  - enabled: 0
+    path: Assets/004 - Scenes/EmptyScene.unity
+    guid: 0d9681976c6c61d4a8161e6a788dc524
+  - enabled: 0
+    path: Assets/020 - Staging/Movement/Staging.unity
+    guid: 60d40d7a2cba4244abf6b4581463aecc
+  - enabled: 0
+    path: Assets/Project/External/UI - Modern_GUI_Skin/Demo_Assets/Demo.unity
+    guid: 13070929f2d2dc3468bb951653444db6
+  - enabled: 0
+    path: Assets/Resources/SCI-FI UI Pack_Components v1/Scenes/Demo V1.unity
+    guid: aa1037c4de98cc144b3b51074b7e3010
+  - enabled: 0
+    path: Assets/Project/External/Artemis Space Ranks/Scenes/Demo.unity
+    guid: b0449b7497fef5e4bb6e76996f80e67f
+  - enabled: 0
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Power.unity
+    guid: ddac0b19f3f858346aa6097f6c23afab
+  - enabled: 0
+    path: Assets/LowPolyWater_Pack/_Demo/DemoScene.unity
+    guid: 5af012a8b7991a84fb99a854db8dfc21
+  - enabled: 0
+    path: Assets/Project/External/Polygon Assets/PolygonMilitary/Scenes/PolygonMilitary_Demo_01.unity
+    guid: 93195e8f68a149f49a51512a91091643
+  - enabled: 0
+    path: Assets/AI Testing.unity
+    guid: d03ca81e08db3554e8a57d9cf266d8a3
+  - enabled: 0
+    path: Assets/004 - Scenes/Testing Rooms/Ragdolls.unity
+    guid: 1fc4377b507157444ace54f5882023c6
   m_configObjects: {}
