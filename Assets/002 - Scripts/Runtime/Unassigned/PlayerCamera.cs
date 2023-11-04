@@ -185,10 +185,10 @@ public class PlayerCamera : MonoBehaviour
 
 
             // PROCESS PLAYER INPUT
-            if (player.isDead)
+            if (player.isDead || player.isRespawning)
             {
                 _deathCameraLookAtTimer -= Time.deltaTime;
-                if (_deathCameraLookAtTimer > 0)
+                //if (_deathCameraLookAtTimer > 0)
                 {
                     //var lookDir = player.lastPlayerSource.transform.position - transform.position;
                     //lookDir.y = 0; // keep only the horizontal direction
@@ -196,6 +196,7 @@ public class PlayerCamera : MonoBehaviour
                     var p = player.lastPlayerSource.transform.position + new Vector3(0, 2, 0); /*p.y = 0;*/
                     //playerCameraScriptParent.LookAt(p);
                     verticalAxisTarget.LookAt(p);
+                    //verticalAxisTarget.rotation = Quaternion.Euler(0, verticalAxisTarget.rotation.y, verticalAxisTarget.rotation.z);
 
                     //p = player.lastPlayerSource.transform.position; 
                     //horizontalAxisTarget.LookAt(p);
