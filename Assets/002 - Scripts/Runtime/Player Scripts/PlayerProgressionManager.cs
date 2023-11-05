@@ -17,7 +17,7 @@ public class PlayerProgressionManager : MonoBehaviour
                 r *= 2;
 
             if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private)
-                r = 0;
+                r = (int)(r * 0.7f);
             return r;
         }
     }

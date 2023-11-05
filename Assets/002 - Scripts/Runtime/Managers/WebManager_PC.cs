@@ -205,7 +205,7 @@ public partial class WebManager
     {
         int xpAndCreditGain = PlayerProgressionManager.xpGainPerMatch;
 
-        Debug.Log("SaveBasicOnlineStats_Coroutine");
+        Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {pda.playerBasicOnlineStats.xp} -> {pda.playerBasicOnlineStats.xp + xpAndCreditGain}");
 
         int playerId = pda.id;
         int newLevel = pda.playerBasicOnlineStats.level;
@@ -228,7 +228,6 @@ public partial class WebManager
 
         PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.playerBasicOnlineStats.level, pda.playerBasicOnlineStats.honor);
 
-        GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, xpAndCreditGain, pda.honor, honorGained);
 
 
         if (newXp >= minXpToLevelUp)
@@ -236,6 +235,7 @@ public partial class WebManager
             Debug.Log("LEVEL UP");
             newLevel = pda.playerBasicOnlineStats.level + 1;
         }
+        GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, xpAndCreditGain, pda.honor, honorGained, newXp >= minXpToLevelUp, newLevel);
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveBasicOnlineStats");

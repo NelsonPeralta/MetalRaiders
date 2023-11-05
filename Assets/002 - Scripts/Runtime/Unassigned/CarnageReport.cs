@@ -16,17 +16,22 @@ public class CarnageReport : MonoBehaviour
         set { _currentHonor = value; }
     }
 
+    public bool leveledUp { get { return _leveledUp; } }
+
     PlayerProgressionManager.Rank _rank;
-    public int currentHonor { get {  return _currentHonor; } }
+    public int currentHonor { get { return _currentHonor; } }
+    public int newLevel { get { return _newLevel; } }
 
+    int _xpGained, _currentXp, _honorGained, _currentHonor, _pLvl, _newLevel;
+    bool _leveledUp;
 
-    int _xpGained, _currentXp, _honorGained, _currentHonor, _pLvl;
-
-    public CarnageReport(PlayerProgressionManager.Rank prank,int pLvl, int curXp, int gxp, int curH, int gh)
+    public CarnageReport(PlayerProgressionManager.Rank prank, int pLvl, int curXp, int gxp, int curH, int gh, bool lvledUp, int nLevel)
     {
         _rank = prank;
         _pLvl = pLvl;
         _xpGained = gxp; _currentXp = curXp;
+        _leveledUp = lvledUp;
+        _newLevel = nLevel;
 
         _honorGained = gh; _currentHonor = curH;
     }

@@ -1243,9 +1243,12 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
+#if (UNITY_EDITOR)
+        allPlayerScripts.announcer.PlayGameOverClip();
         WebManager.webManagerInstance.SaveMultiplayerStats(player.GetComponent<PlayerMultiplayerMatchStats>(), new List<Player>());
-
         player.LeaveRoomWithDelay();
+#endif
+
         {
             //LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(player.playerInventory.allWeaponsInInventory[3].GetComponent<WeaponProperties>().codeName);
             //Debug.Log($"First Weapon: {_firstWeapon.name}");

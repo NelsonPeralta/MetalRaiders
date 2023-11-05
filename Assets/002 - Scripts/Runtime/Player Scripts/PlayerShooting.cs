@@ -320,13 +320,17 @@ public class PlayerShooting : MonoBehaviourPun
             activeWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
             tPersonController.GetComponent<Animator>().SetTrigger("Fire");
             if (pInventory.isDualWielding)
-                activeWeapon.rightWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
+                activeWeapon.leftWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
             //StartCoroutine(Player3PSFiringAnimation());
-            activeWeapon.Recoil();
-            if (pInventory.isDualWielding)
-                activeWeapon.rightWeapon.Recoil();
         }
-        catch { }
+        catch (System.Exception e) { Debug.LogError(e); }
+        Debug.Log("Calling Recoil()");
+        activeWeapon.Recoil();
+        if (pInventory.isDualWielding)
+            activeWeapon.rightWeapon.Recoil();
+
+
+
         GetComponent<AudioSource>().clip = activeWeapon.Fire;
         GetComponent<AudioSource>().Play();
         OnBulletSpawned?.Invoke(this);

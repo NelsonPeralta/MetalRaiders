@@ -50,6 +50,10 @@ public class CarnageReportMenu : MonoBehaviour
 
     int _lvlAddCount = 1, _xpBase;
 
+
+
+    [SerializeField] TMP_Text _thankYouExtraText;
+
     private void OnEnable()
     {
         FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(true);
@@ -65,6 +69,23 @@ public class CarnageReportMenu : MonoBehaviour
         //_xpBase = GameManager.instance.carnageReport.currentXp;
 
         //_hnrText.text = $"0 / {_hnrToLevelUp}";
+
+        Debug.Log($"CarnageReportMenu {GameManager.instance.carnageReport.xpGained}");
+        if (GameManager.instance.carnageReport.xpGained > 0)
+        {
+            _thankYouExtraText.text = $"PS: You gained {GameManager.instance.carnageReport.xpGained} xp and credits";
+            if (GameManager.instance.carnageReport.leveledUp)
+                _thankYouExtraText.text += $" AND leveled up ({GameManager.instance.carnageReport.newLevel}), congrats! :D";
+            else
+            {
+                try
+                {
+                    _xpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + _lvlAddCount];
+                    _thankYouExtraText.text += $", only {_xpToLevelUp - (GameManager.instance.carnageReport.currentXp + GameManager.instance.carnageReport.xpGained)} xp to go! :)";
+                }
+                catch (System.Exception e) { Debug.LogException(e); }
+            }
+        }
     }
 
     // Start is called before the first frame update
