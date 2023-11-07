@@ -92,4 +92,9 @@ public class Helldog : Actor
             _animator.SetBool("Run", true);
         }
     }
+
+    protected override void ChildAwake()
+    {
+        SwarmManager.instance.hellhoundPool.Add(this);
+    }
 }

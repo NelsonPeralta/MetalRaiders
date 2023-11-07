@@ -22,7 +22,7 @@ public class Player : Biped
 
     // public variables
     #region
-    public bool isInvincible { get { return _isInvincible; } }
+    public bool isInvincible { get { return _isInvincible; } set { _isInvincible = value; } }
     public int controllerId
     {
         get { return GetComponent<PlayerController>().rid; }
@@ -891,7 +891,7 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
-            Debug.Log($"Spawning Player Ragdoll");
+        Debug.Log($"Spawning Player Ragdoll");
         print(_deathNature);
         var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
@@ -1413,7 +1413,9 @@ public class Player : Biped
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
-        try { hitPoints = newHealth; } catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
+        if (newHealth <= 0 && isInvincible) newHealth = 1;
+
+        try { hitPoints = newHealth; } catch (Exception e) { Debug.LogError(e); }
 
 
         try

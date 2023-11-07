@@ -200,4 +200,9 @@ public class AlienShooter : Actor
             _throwExplosiveCooldown = 3.1f;
         }
     }
+
+    protected override void ChildAwake()
+    {
+        SwarmManager.instance._ribbianPool.Add(this);
+    }
 }

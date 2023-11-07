@@ -143,4 +143,9 @@ public class Breather : Actor
             _animator.SetBool("Run", true);
         }
     }
+
+    protected override void ChildAwake()
+    {
+        SwarmManager.instance._breathersPool.Add(this);
+    }
 }

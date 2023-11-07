@@ -22,7 +22,7 @@ public class FloatingCamera : MonoBehaviour
 
     [Space]
 
-    public float MaximumMovementSpeed = 1f;
+    public float MaximumMovementSpeed = 0.7f;
 
     [Header("Controls")]
 

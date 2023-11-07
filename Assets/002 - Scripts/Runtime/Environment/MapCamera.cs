@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using TMPro;
 
 public class MapCamera : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class MapCamera : MonoBehaviour
     [SerializeField] AudioClip _slayerClip;
     [SerializeField] AudioClip _KingOfTheHillClip;
     [SerializeField] AudioClip _FirefightClip;
+    [SerializeField] TMP_Text _text;
 
     float _announcerDelay;
     bool _allPlayersJoined;
@@ -40,6 +42,13 @@ public class MapCamera : MonoBehaviour
 
     private void Update()
     {
+        _text.text = $"expectedMapAddOns {CurrentRoomManager.instance.expectedMapAddOns} - spawnedMapAddOns {CurrentRoomManager.instance.spawnedMapAddOns}";
+        _text.text += $"\nmapIsReady {CurrentRoomManager.instance.mapIsReady}";
+        _text.text += $"\nnbPlayersJoined {CurrentRoomManager.instance.nbPlayersJoined} - expectedNbPlayers {CurrentRoomManager.instance.expectedNbPlayers}";
+        _text.text += $"\nallPlayersJoined {CurrentRoomManager.instance.allPlayersJoined}";
+        _text.text += $"\ngameIsReady {CurrentRoomManager.instance.gameIsReady}";
+
+
         if (_announcerDelay > 0)
         {
             _announcerDelay -= Time.deltaTime;
@@ -59,6 +68,10 @@ public class MapCamera : MonoBehaviour
                 try
                 {
                     Debug.Log("MapCamera TimeOut");
+
+                    GameManager.SendErrorEmailReport(_text.text);
+
+
                     PhotonNetwork.LeaveRoom();
                     PhotonNetwork.LoadLevel(0);
                 }

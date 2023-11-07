@@ -663,28 +663,29 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public static void SendErrorEmailReport(string m)
     {
-        //MailMessage newMail = new MailMessage();
-        //// use the Gmail SMTP Host
-        //SmtpClient client = new SmtpClient("smtp.office365.com");
+        MailMessage newMail = new MailMessage();
+        // use the Gmail SMTP Host
+        SmtpClient client = new SmtpClient("smtp.office365.com");
 
-        //// Follow the RFS 5321 Email Standard
-        //newMail.From = new MailAddress("nelson@peralta.tech", "Nelson");
+        // Follow the RFS 5321 Email Standard
+        newMail.From = new MailAddress("nelson@peralta.tech", "Nelson");
 
-        //newMail.To.Add("development@spacewackos.com");// declare the email subject
+        newMail.To.Add("development@spacewackos.com");// declare the email subject
+        newMail.To.Add("nelson@peralta.tech");// declare the email subject
 
-        //newMail.Subject = "Space Wackos Error Report"; // use HTML for the email body
+        newMail.Subject = "Space Wackos Error Report"; // use HTML for the email body
 
-        //newMail.IsBodyHtml = true; newMail.Body = $"<h1> Space Wackos </h1><br><h2>Error</h2><br>=====<br><p>${m}</p>";
+        newMail.IsBodyHtml = true; newMail.Body = $"<h1> Space Wackos </h1><br><h2>Error</h2><br>=====<br><p>${m}</p>";
 
-        //// enable SSL for encryption across channels
-        //client.EnableSsl = true;
-        //// Port 465 for SSL communication
-        //client.Port = 587;
-        //// Provide authentication information with Gmail SMTP server to authenticate your sender account
-        //client.Credentials = new System.Net.NetworkCredential("nelson@peralta.tech", "br0wn!c375");
+        // enable SSL for encryption across channels
+        client.EnableSsl = true;
+        // Port 465 for SSL communication
+        client.Port = 587;
+        // Provide authentication information with Gmail SMTP server to authenticate your sender account
+        client.Credentials = new System.Net.NetworkCredential("nelson@peralta.tech", "br0wn!c375");
 
-        //client.Send(newMail); // Send the constructed mail
-        //Debug.Log("SenErrorEmailReport Sent");
+        client.Send(newMail); // Send the constructed mail
+        Debug.Log("SenErrorEmailReport Sent");
     }
 
     public void EnableCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask |= 1 << LayerMask.NameToLayer($"{layerName}"); }

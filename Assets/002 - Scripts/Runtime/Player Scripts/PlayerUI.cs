@@ -71,6 +71,7 @@ public class PlayerUI : MonoBehaviour
     public Text multiplayerPointsBlue;
     public GameObject swarmPointsHolder;
     public Text swarmPointsText;
+    public GameObject invincibleIcon;
 
     [Header("General", order = 7)]
     public GameObject singlePlayerPauseMenu;

@@ -11,7 +11,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     // Events
     public delegate void GameManagerEvent(CurrentRoomManager gme);
-    public GameManagerEvent OnGameStartedEarly, OnGameStarted, OnGameStartedLate;
+    public GameManagerEvent OnGameIsReady, OnGameStarted, OnGameStartedLate;
 
     public enum RoomType
     {
@@ -70,10 +70,10 @@ public class CurrentRoomManager : MonoBehaviour
     /// <summary>
     /// Step 1: Caluclate expected Map Add-Ons
     /// </summary>
-    int expectedMapAddOns
+    public int expectedMapAddOns
     {
         get { return _expectedMapAddOns; }
-        set
+        private set
         {
             _expectedMapAddOns = value;
             Debug.Log(expectedMapAddOns);
@@ -110,6 +110,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
+                Debug.Log($"mapIsReady");
                 StartCoroutine(GameManager.instance.SpawnPlayers_Coroutine());
             }
         }
@@ -141,15 +142,17 @@ public class CurrentRoomManager : MonoBehaviour
             {
                 Debug.Log("OnAllPlayersJoinedRoom");
                 gameIsReady = true;
+                //StartCoroutine(GameIsReadyDelay_Coroutine());
+
                 //OnAllPlayersJoinedRoom?.Invoke(this);
             }
         }
     }
 
-    bool gameIsReady
+    public bool gameIsReady
     {
         get { return _gameIsReady; }
-        set
+        private set
         {
             bool _preVal = _gameIsReady;
             _gameIsReady = value;
@@ -158,42 +161,50 @@ public class CurrentRoomManager : MonoBehaviour
             {
                 Debug.Log("gameIsReady");
                 _gameIsReady = true;
-                gameStart = true;
+
+                OnGameIsReady?.Invoke(this);
+
+
+                StartCoroutine(GameStartDelayMapCamera_Coroutine());
+                StartCoroutine(GameStartDelay_Coroutine());
             }
         }
     }
 
-    bool gameStart
-    {
-        get { return _gameStart; }
-        set
-        {
-            bool _preVal = _gameStart;
-            _gameStart = value;
+    //public bool gameStart
+    //{
+    //    get { return _gameStart; }
+    //    private set
+    //    {
+    //        bool _preVal = _gameStart;
+    //        _gameStart = value;
 
-            if (value && _preVal != value)
-            {
-                OnGameStartedEarly?.Invoke(this);
-                _gameStartCountdown = GameManager.GameStartDelay;
-            }
-            _gameStart = value;
-        }
-    }
+    //        if (value && _preVal != value)
+    //        {
+    //            Debug.Log("gameStart");
+    //            OnGameStartedEarly?.Invoke(this);
+    //            _gameStartCountdown = GameManager.GameStartDelay;
+    //        }
+    //        _gameStart = value;
+    //    }
+    //}
 
-    bool reachedHalwayGameStartCountdown
-    {
-        get { return _reachedHalwayGameStartCountdown; }
-        set
-        {
-            bool _preVal = _reachedHalwayGameStartCountdown;
-            _reachedHalwayGameStartCountdown = value;
+    //bool reachedHalwayGameStartCountdown
+    //{
+    //    get { return _reachedHalwayGameStartCountdown; }
+    //    set
+    //    {
+    //        bool _preVal = _reachedHalwayGameStartCountdown;
+    //        _reachedHalwayGameStartCountdown = value;
 
-            if (value && _preVal != value)
-            {
-                MapCamera.instance.TriggerGameStartBehaviour();
-            }
-        }
-    }
+    //        if (value && _preVal != value)
+    //        {
+    //            Debug.Log("reachedHalwayGameStartCountdown");
+    //            //MapCamera.instance.TriggerGameStartBehaviour();
+
+    //        }
+    //    }
+    //}
 
     public bool gameStarted
     {
@@ -205,13 +216,19 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
+                Debug.Log("gameStarted");
                 _gameStarted = true;
-                MapCamera.instance.gameObject.SetActive(false);
-                foreach (Player p in GameManager.instance.localPlayers.Values)
-                    p.TriggerGameStartBehaviour();
 
-                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                    SwarmManager.instance.Begin();
+                //StartCoroutine(GameStartDelayMapCamera_Coroutine());
+                //StartCoroutine(GameStartDelay_Coroutine());
+
+
+                //MapCamera.instance.gameObject.SetActive(false);
+                //foreach (Player p in GameManager.instance.localPlayers.Values)
+                //    p.TriggerGameStartBehaviour();
+
+                //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                //    SwarmManager.instance.Begin();
             }
         }
     }
@@ -318,16 +335,16 @@ public class CurrentRoomManager : MonoBehaviour
     {
 
 
-        if (gameStart && !gameStarted)
-        {
-            _gameStartCountdown -= Time.deltaTime;
+        //if (gameStart && !gameStarted)
+        //{
+        //    _gameStartCountdown -= Time.deltaTime;
 
-            if (!reachedHalwayGameStartCountdown && _gameStartCountdown <= GameManager.GameStartDelay)
-                reachedHalwayGameStartCountdown = true;
+        //    if (!reachedHalwayGameStartCountdown && _gameStartCountdown <= GameManager.GameStartDelay)
+        //        reachedHalwayGameStartCountdown = true;
 
-            if (_gameStartCountdown <= 0)
-                gameStarted = true;
-        }
+        //    if (_gameStartCountdown <= 0)
+        //        gameStarted = true;
+        //}
 
         if (SceneManager.GetActiveScene().buildIndex > 0) return;
 
@@ -656,5 +673,27 @@ public class CurrentRoomManager : MonoBehaviour
     {
         _vetoCountdown = vetoC;
         _roomGameStartCountdown = roomGameStartC;
+    }
+
+    IEnumerator GameStartDelayMapCamera_Coroutine()
+    {
+        yield return new WaitForSeconds(2);
+
+        MapCamera.instance.TriggerGameStartBehaviour();
+    }
+
+
+    IEnumerator GameStartDelay_Coroutine()
+    {
+        yield return new WaitForSeconds(8);
+
+        MapCamera.instance.gameObject.SetActive(false);
+        foreach (Player p in GameManager.instance.localPlayers.Values)
+            p.TriggerGameStartBehaviour();
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            SwarmManager.instance.Begin();
+
+        gameStarted = true;
     }
 }

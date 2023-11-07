@@ -332,34 +332,34 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 _networkSwarmManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkSwarmManager"), Vector3.zero, Quaternion.identity).GetComponent<NetworkSwarmManager>();
                 PV = _networkSwarmManager.GetComponent<PhotonView>();
 
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < 32; i++)
                 {
                     //Transform sp = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
-                    GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
-                    _zombiesPool.Add(z.GetComponent<Undead>());
-                    z.transform.parent = transform;
-                    z.gameObject.SetActive(false);
+                    //GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
+                    //_zombiesPool.Add(z.GetComponent<Undead>());
+                    //z.transform.parent = transform;
+                    //z.gameObject.SetActive(false);
 
                     GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero, Quaternion.identity);
-                    _breathersPool.Add(w.GetComponent<Breather>());
-                    w.transform.parent = transform;
-                    w.gameObject.SetActive(false);
+                    //_breathersPool.Add(w.GetComponent<Breather>());
+                    //w.transform.parent = transform;
+                    //w.gameObject.SetActive(false);
 
                     GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero, Quaternion.identity);
-                    _ribbianPool.Add(a.GetComponent<AlienShooter>());
-                    a.transform.parent = transform;
-                    a.gameObject.SetActive(false);
+                    //_ribbianPool.Add(a.GetComponent<AlienShooter>());
+                    //a.transform.parent = transform;
+                    //a.gameObject.SetActive(false);
 
 
                     GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero, Quaternion.identity);
-                    hellhoundPool.Add(t.GetComponent<Helldog>());
-                    t.transform.parent = transform;
-                    t.gameObject.SetActive(false);
+                    //hellhoundPool.Add(t.GetComponent<Helldog>());
+                    //t.transform.parent = transform;
+                    //t.gameObject.SetActive(false);
 
                     GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero, Quaternion.identity);
-                    tyrantPool.Add(h.GetComponent<Tyrant>());
-                    h.transform.parent = transform;
-                    h.gameObject.SetActive(false);
+                    //tyrantPool.Add(h.GetComponent<Tyrant>());
+                    //h.transform.parent = transform;
+                    //h.gameObject.SetActive(false);
                     //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
                     //_zombieList.Add(z.GetComponent<Undead>());
                     //z.transform.parent = transform;
@@ -383,8 +383,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             OnWaveEnd -= OnWaveEnd_Delegate;
             OnWaveEnd += OnWaveEnd_Delegate;
 
-            if (PhotonNetwork.IsMasterClient)
-                CreateAIPool();
+            //if (PhotonNetwork.IsMasterClient)
+            //    CreateAIPool();
         }
         else // We are in the menu
         {

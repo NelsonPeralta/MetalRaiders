@@ -155,6 +155,7 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+
     bool _isMeleeing, _cameraIsFloating;
     float _meleeCooldown, _adsCounter;
     Transform _mainCamParent;
@@ -226,6 +227,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 if (!pauseMenuOpen)
                 {
+                    ToggleInvincible();
                     Sprint();
                     SwitchGrenades();
                     SwitchWeapons();
@@ -248,6 +250,16 @@ public class PlayerController : MonoBehaviourPun
         }
 
     }
+
+    void ToggleInvincible()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            player.isInvincible = !player.isInvincible;
+            GetComponent<PlayerUI>().invincibleIcon.SetActive(player.isInvincible);
+        }
+    }
+
     void UpdateWeaponPropertiesAndAnimator()
     {
         if (!isDualWielding)
@@ -792,7 +804,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            if (GameManager.instance.localPlayers.Count == 1 && GameManager.instance.pid_player_Dict.Count == 1)
+            if (GameManager.instance.localPlayers.Count == 1)
                 if (!cameraisFloating)
                 {
                     _lastMainCamLayerMask = mainCam.cullingMask;
