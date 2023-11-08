@@ -708,7 +708,14 @@ public class Player : Biped
             if (!t.ContainsKey(pid))
                 t.Add(pid, this);
             GameManager.instance.pid_player_Dict = t;
-            CurrentRoomManager.instance.nbPlayersJoined++;
+            //CurrentRoomManager.instance.nbPlayersJoined++;
+        }
+        catch { }
+
+        try
+        {
+            if (isMine)
+                NetworkGameManager.instance.AddPlayerJoinedCount();
         }
         catch { }
         try { team = GameManager.instance.onlineTeam; } catch { }

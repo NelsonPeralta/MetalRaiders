@@ -123,10 +123,10 @@ public class AlienShooter : Actor
     void RibbianShoot(bool caller = true, Vector3? dir = null)
     {
         Vector3? _dir = dir;
-        try { _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position; } catch { }
 
         if (caller)
         {
+            try { _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position; } catch { }
             GetComponent<PhotonView>().RPC("RibbianShoot", RpcTarget.All, false, _dir);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
@@ -166,9 +166,9 @@ public class AlienShooter : Actor
     void RibbianThrow(bool caller = true, Vector3? dir = null)
     {
         Vector3? _dir = dir;
-        try { _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position; } catch { }
         if (caller)
         {
+            try { _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position; } catch { }
             GetComponent<PhotonView>().RPC("RibbianThrow", RpcTarget.All, false, _dir);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }

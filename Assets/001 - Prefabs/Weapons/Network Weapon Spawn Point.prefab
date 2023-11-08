@@ -765,7 +765,7 @@ Transform:
   - {fileID: 7018294377465490732}
   - {fileID: 7871783252917751709}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8628595011434998437
 MonoBehaviour:
@@ -790,6 +790,7 @@ MonoBehaviour:
   - {fileID: 7368614592611344181, guid: 5e9b3a441417e8448903c7387c946492, type: 3}
   - {fileID: 2711562721274824091, guid: ed5485212b7417f4688761d6f5a197b7, type: 3}
   - {fileID: 3618829932361751299, guid: b299923608cf2904482df26a7edc0d2a, type: 3}
+  - {fileID: 7327557961540528252, guid: d77918f186366c34689c0ba167aaeecb, type: 3}
   _tts: 0
   _weaponSpawned: {fileID: 0}
   _inGunRack: 0
@@ -1040,6 +1041,7 @@ MonoBehaviour:
   _networkWeaponSpawnPoint: {fileID: 0}
   _spawnPointPosition: {x: 0, y: 0, z: 0}
   _ttl: 0
+  _defaultTtl: 0
 --- !u!1001 &5425998958598396845
 PrefabInstance:
   m_ObjectHideFlags: 0

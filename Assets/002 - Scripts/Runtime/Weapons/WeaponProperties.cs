@@ -15,7 +15,7 @@ public class WeaponProperties : MonoBehaviour
     public enum FiringMode { Auto, Burst, Single }
     public enum AmmoType { Heavy, Light, Power }
     public enum AmmoReloadType { Magazine, Shell, Single }
-    public enum AmmoProjectileType { Bullet, Grenade, Rocket }
+    public enum AmmoProjectileType { Bullet, Grenade, Rocket, Plasma }
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
     public enum ScopeMagnification { None, Close, Medium, Long }

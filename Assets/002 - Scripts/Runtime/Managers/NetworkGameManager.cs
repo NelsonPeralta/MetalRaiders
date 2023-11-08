@@ -214,6 +214,20 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     }
 
+    [PunRPC]
+    public void AddPlayerJoinedCount(bool caller = true)
+    {
+        if (caller)
+        {
+            _pv.RPC("AddPlayerJoinedCount", RpcTarget.AllViaServer, false);
+        }
+        else if (!caller)
+        {
+            CurrentRoomManager.instance.nbPlayersJoined++;
+        }
+
+    }
+
     #endregion
 
 
