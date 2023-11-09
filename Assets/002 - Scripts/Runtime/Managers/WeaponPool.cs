@@ -11,6 +11,8 @@ public class WeaponPool : MonoBehaviourPun
 {
     public static WeaponPool instance;
 
+    public GameObject weaponCollisionSmoke;
+
     int amountOfWeaponsToPool;
 
     [SerializeField] List<LootableWeapon> _weaponPrefabs = new List<LootableWeapon>();

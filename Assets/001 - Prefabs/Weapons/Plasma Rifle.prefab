@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 7327557961540528252}
   - component: {fileID: 3676310777345466918}
   - component: {fileID: 6836107663832724675}
-  - component: {fileID: 5429611541842684459}
   m_Layer: 10
   m_Name: Plasma Rifle
   m_TagString: Untagged
@@ -60,14 +59,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2344462965162654968}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.104517, y: 0, z: 9.363299}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 514334854932465667}
   - {fileID: 8690854524755291521}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7327557961540528252
 MonoBehaviour:
@@ -143,21 +142,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5429611541842684459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2344462965162654968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e24439b47620ea040b0b3599e2c1ba61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _weaponProperties: {fileID: 0}
-  _lootableWeapon: {fileID: 0}
-  _tmp: {fileID: 0}
 --- !u!1 &7092751728304007380
 GameObject:
   m_ObjectHideFlags: 0

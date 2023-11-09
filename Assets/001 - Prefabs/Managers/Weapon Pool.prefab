@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32847b4cd33ab694eb46869766b70ac6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponCollisionSmoke: {fileID: 3153810699896921423, guid: 70421fc0a47ec0545a6cc52aa1ae17ea,
+    type: 3}
   _weaponPrefabs:
   - {fileID: 3067933976528617592, guid: 0ff12ac0e97f2964d8f0a19b69f0d314, type: 3}
   - {fileID: 2681464930839355766, guid: c45a501cd8fc0624eb34d6127238a31f, type: 3}
@@ -54,4 +56,5 @@ MonoBehaviour:
   - {fileID: 6583879716112079941, guid: 340284f3d51676c48b10e03bf02c5e69, type: 3}
   - {fileID: 7368614592611344181, guid: 5e9b3a441417e8448903c7387c946492, type: 3}
   - {fileID: 7327557961540528252, guid: d77918f186366c34689c0ba167aaeecb, type: 3}
+  - {fileID: 6552356763530869521, guid: caf9c3869017bc2479c2e3e233f9b1bf, type: 3}
   _spawnedWeapons: []
