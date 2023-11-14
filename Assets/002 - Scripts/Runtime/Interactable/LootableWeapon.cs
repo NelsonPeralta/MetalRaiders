@@ -303,10 +303,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         {
             //GetComponent<AudioSource>().clip = _collisionAudioClip;
             //GetComponent<AudioSource>().Play();
-
-            Instantiate(WeaponPool.instance.weaponCollisionSmoke, transform.position, transform.rotation);
+            GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(transform.position);
         }
-        catch { }
+        catch (System.Exception e) { Debug.LogError(e); }
     }
 
     private void OnDisable()

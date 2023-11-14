@@ -64,7 +64,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public GameObject organicBlood;
     public GameObject magicBlood;
     public GameObject shieldHit;
-    public GameObject bluePlasma;
+    public GameObject bluePlasma, greenPlasma, redPlasma;
 
     int frameCounter;
     List<ObjectHit> objectsHit = new List<ObjectHit>();

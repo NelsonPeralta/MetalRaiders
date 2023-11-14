@@ -903,6 +903,7 @@ public class Player : Biped
         var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
+        ragdoll.GetComponent<PlayerArmorManager>().player = this;
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
 
@@ -1291,7 +1292,7 @@ public class Player : Biped
 
         hitboxesEnabled = false;
 
-        try { SpawnRagdoll(); } catch (System.Exception e) { Debug.Log(e); }
+        SpawnRagdoll();
         try { StartCoroutine(Respawn_Coroutine()); } catch { }
         try { StartCoroutine(MidRespawnAction()); } catch { }
 
@@ -1422,7 +1423,7 @@ public class Player : Biped
 
         if (newHealth <= 0 && isInvincible) newHealth = 1;
 
-        try { hitPoints = newHealth; } catch (Exception e) { Debug.LogError(e); }
+        hitPoints = newHealth;
 
 
         try

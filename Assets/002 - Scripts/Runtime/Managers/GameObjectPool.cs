@@ -18,6 +18,8 @@ public class GameObjectPool : MonoBehaviour
     public GameObject bloodHitPrefab;
     public List<GameObject> genericHits = new List<GameObject>();
     public GameObject genericHitPrefab;
+    public List<GameObject> weaponSmokeCollisions = new List<GameObject>();
+    public GameObject weaponSmokeCollisionPrefab;
 
     [Header("Testing Object")]
     public List<GameObject> testingObjects = new List<GameObject>();
@@ -78,6 +80,11 @@ public class GameObjectPool : MonoBehaviour
             obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             bulletMetalImpactList.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+            obj = Instantiate(weaponSmokeCollisionPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            weaponSmokeCollisions.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
 
@@ -146,6 +153,18 @@ public class GameObjectPool : MonoBehaviour
                     StartCoroutine(DisableObjectAfterTime(obj, 10));
                     return obj;
                 }
+        return null;
+    }
+    public GameObject SpawnWeaponSmokeCollisionObject(Vector3 pos)
+    {
+        foreach (GameObject obj in weaponSmokeCollisions)
+            if (!obj.activeInHierarchy)
+            {
+                obj.transform.position = pos;
+                obj.SetActive(true);
+                StartCoroutine(DisableObjectAfterTime(obj, 10));
+                return obj;
+            }
         return null;
     }
     private void OnDestroy()

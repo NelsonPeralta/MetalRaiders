@@ -226,12 +226,16 @@ public class PlayerShooting : MonoBehaviourPun
 
                 }
 
-                if (player.isMine)
+                if (player.isMine || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
                     Debug.Log("shoooo 2");
                     var bullet = _gameObjectPool.SpawnPooledBullet();
 
-                    bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                    {
+                        bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Blue && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().redPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Red && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().greenPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Green && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                    }
 
                     try
                     {

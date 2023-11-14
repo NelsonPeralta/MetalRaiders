@@ -19,6 +19,7 @@ public class WeaponProperties : MonoBehaviour
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
     public enum ScopeMagnification { None, Close, Medium, Long }
+    public enum PlasmaColor { Red, Green, Blue }
 
     public Player player { get { return pController.player; } }
 
@@ -33,6 +34,7 @@ public class WeaponProperties : MonoBehaviour
     public WeaponType weaponType;
     public FiringMode firingMode;
     public int damage = 50;
+    public float shieldDamageMultiplier;
     public int bulletSize;
     public int numberOfPellets = 1;
     public int bulletSpeed = 250;
@@ -44,6 +46,7 @@ public class WeaponProperties : MonoBehaviour
     [Header("Ammo")]
     public AmmoType ammoType;
     public AmmoProjectileType ammoProjectileType;
+    public PlasmaColor plasmaColor;
     public AmmoReloadType ammoReloadType;
     [SerializeField] int _currentAmmo;
     [SerializeField] int _spareAmmo;
@@ -468,6 +471,15 @@ public class WeaponPropertiesEditor : Editor
         wp.ammoType = (WeaponProperties.AmmoType)EditorGUILayout.EnumPopup("Ammo type", wp.ammoType);
         wp.ammoReloadType = (WeaponProperties.AmmoReloadType)EditorGUILayout.EnumPopup("Ammo reload type", wp.ammoReloadType);
         wp.ammoProjectileType = (WeaponProperties.AmmoProjectileType)EditorGUILayout.EnumPopup("Ammo projectile type", wp.ammoProjectileType);
+
+        if (wp.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
+        {
+            //wp.shieldDamageMultiplier = 1;
+
+            wp.plasmaColor = (WeaponProperties.PlasmaColor)EditorGUILayout.EnumPopup("Plasma Color", wp.plasmaColor);
+            wp.shieldDamageMultiplier = EditorGUILayout.FloatField("Shield Damage Mult:", wp.shieldDamageMultiplier);
+        }
+
         wp.loadedAmmo = EditorGUILayout.IntField("Loaded Ammo:", wp.loadedAmmo);
         wp.ammoCapacity = EditorGUILayout.IntField("Ammo Capacity:", wp.ammoCapacity);
 

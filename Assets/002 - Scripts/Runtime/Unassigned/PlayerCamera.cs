@@ -60,6 +60,7 @@ public class PlayerCamera : MonoBehaviour
 
     void Start()
     {
+        //transform.parent = null;
         player.OnPlayerRespawnEarly -= OnRespawnEarly_Delegate;
         player.OnPlayerRespawnEarly += OnRespawnEarly_Delegate;
 

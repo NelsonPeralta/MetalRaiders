@@ -1,8 +1,10 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Progress;
 
 public class CurrentRoomManager : MonoBehaviour
 {
@@ -276,6 +278,7 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
     [SerializeField] bool _gameStart, _gameStarted, _gameOver;
@@ -296,6 +299,8 @@ public class CurrentRoomManager : MonoBehaviour
     [SerializeField] int _ran, _vetoedMapIndex;
 
     [SerializeField] List<ScriptObjPlayerData> _extendedPlayerData = new List<ScriptObjPlayerData>();
+    [SerializeField] List<ScriptObjBipedTeam> _bipedTeams;
+
 
     int ran;
 
@@ -360,7 +365,7 @@ public class CurrentRoomManager : MonoBehaviour
         if (PhotonNetwork.InRoom)
         {
 
-            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) >= 0) // At least one more stranger player is in the room
+            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) > 0) // At least one more stranger player is in the room
                 if (_randomQuickMatchSeetingsChosen && vetoCountdown > 0)
                 {
 
@@ -476,19 +481,19 @@ public class CurrentRoomManager : MonoBehaviour
         _ran = Random.Range(0, 5);
         _ran = 2;
 
-        if (expectedNbPlayers == 1)
-        {
-            GameManager.instance.gameMode = GameManager.GameMode.Swarm;
-            GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
+        //if (expectedNbPlayers == 1)
+        //{
+        //    GameManager.instance.gameMode = GameManager.GameMode.Swarm;
+        //    GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
 
-            ChooseRandomPvEMap();
-            if (_vetoedMapIndex != 0)
-                while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
-                {
-                    ChooseRandomPvEMap();
-                }
-        }
-        else // PvP
+        //    ChooseRandomPvEMap();
+        //    if (_vetoedMapIndex != 0)
+        //        while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
+        //        {
+        //            ChooseRandomPvEMap();
+        //        }
+        //}
+        //else // PvP
         {
             GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 
@@ -536,16 +541,12 @@ public class CurrentRoomManager : MonoBehaviour
     {
         _ran = Random.Range(0, 100);
 
-        if (_ran <= 25)
-            GameManager.instance.gameType = GameManager.GameType.Slayer;
-        else if (_ran <= 60)
+        if (_ran <= 50)
             GameManager.instance.gameType = GameManager.GameType.Pro;
-        else if (_ran <= 70)
+        else if (_ran <= 60)
             GameManager.instance.gameType = GameManager.GameType.Swat;
         else if (_ran <= 80)
             GameManager.instance.gameType = GameManager.GameType.Hill;
-        else if (_ran <= 90)
-            GameManager.instance.gameType = GameManager.GameType.Retro;
         else if (_ran <= 100)
             GameManager.instance.gameType = GameManager.GameType.Snipers;
     }
@@ -554,26 +555,37 @@ public class CurrentRoomManager : MonoBehaviour
     {
         _ran = Random.Range(0, 100);
 
-        if (_ran <= 10)
-            Launcher.instance.ChangeLevelToLoadWithIndex(5);// Cargo
-        else if (_ran <= 20)
-            Launcher.instance.ChangeLevelToLoadWithIndex(6);// Oasis
-        else if (_ran <= 30)
-            Launcher.instance.ChangeLevelToLoadWithIndex(7);// Showdown
-        else if (_ran <= 40)
-            Launcher.instance.ChangeLevelToLoadWithIndex(8);// Babylon
+        //if (_ran <= 10)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(5);// Lightouse
+        //else if (_ran <= 20)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(6);// Oasis
+        //else if (_ran <= 30)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(7);// Canyon
+        //else if (_ran <= 40)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(8);// Babylon
+        //else if (_ran <= 50)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(9);// Starship
+        //else if (_ran <= 60)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(10);// Temple
+        //else if (_ran <= 70)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(11);// Blizzard
+        //else if (_ran <= 80)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(12);// Factory
+        //else if (_ran <= 90)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(17);// Parasite
+        //else if (_ran <= 100)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(18);// Shaman
+
+
+
+        if (_ran <= 25)
+            Launcher.instance.ChangeLevelToLoadWithIndex(2);// Oasis
         else if (_ran <= 50)
-            Launcher.instance.ChangeLevelToLoadWithIndex(9);// Starship
-        else if (_ran <= 60)
-            Launcher.instance.ChangeLevelToLoadWithIndex(10);// Temple
-        else if (_ran <= 70)
-            Launcher.instance.ChangeLevelToLoadWithIndex(11);// Blizzard
-        else if (_ran <= 80)
-            Launcher.instance.ChangeLevelToLoadWithIndex(12);// Factory
-        else if (_ran <= 90)
-            Launcher.instance.ChangeLevelToLoadWithIndex(17);// Parasite
+            Launcher.instance.ChangeLevelToLoadWithIndex(3);// Factory
+        else if (_ran <= 75)
+            Launcher.instance.ChangeLevelToLoadWithIndex(9);// Factory
         else if (_ran <= 100)
-            Launcher.instance.ChangeLevelToLoadWithIndex(18);// Shaman
+            Launcher.instance.ChangeLevelToLoadWithIndex(10);// Shaman
     }
 
     void ChooseRandomPvEMap()
@@ -650,6 +662,19 @@ public class CurrentRoomManager : MonoBehaviour
         return false;
     }
 
+    public void AddTeamData(string pn, GameManager.Team t)
+    {
+        ScriptObjBipedTeam bt = _bipedTeams.FirstOrDefault(i => i.playerName == pn);
+        if (bt != null)
+        {
+            bt.team = t;
+        }
+        else
+        {
+            bt = _bipedTeams.FirstOrDefault(i => i.playerName == "");
+            bt.playerName = pn; bt.team = t;
+        }
+    }
     public void SoftResetPlayerExtendedData()
     {
         for (int i = 0; i < instance._extendedPlayerData.Count; i++)

@@ -9,47 +9,23 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Main Menu.unity
     guid: 95ef80117ce58714d8d65b0ee07e4c5c
   - enabled: 1
-    path: Assets/004 - Scenes/Testing Room 2.unity
-    guid: b36f86ced13373f4bab43f9d875ebb3e
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Vertigo.unity
-    guid: 259bca2e8df9dfd4991ae2a59076a883
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Frost.unity
-    guid: f2c0429d453be4745b1dbef8bb0b258a
-  - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Waiting.unity
-    guid: 0627d17b61772164a9898d67aa6c9120
-  - enabled: 1
-    path: Assets/004 - Scenes/Placeholders/Placeholder 1.unity
-    guid: aa7ddece2912a1548b13fefa9770afcf
-  - enabled: 1
-    path: Assets/004 - Scenes/Placeholders/Placeholder 2.unity
-    guid: 4a42e724317d1a644a7d544d54a68683
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Cargo.unity
-    guid: 987b1a0f2fdaece46b8d2f4459e4ee2d
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Lighthouse.unity
-    guid: 38cf578bd469df6449ce6788067dd73f
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Plaza.unity
-    guid: b4802909db501a143a6f78077850f0a7
-  - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Lighthouse V2.unity
     guid: 974d14875f785b84b9b2286dd2396afe
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Oasis.unity
     guid: dbcf95cb10f4af34186b9d0e5b64a468
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Hacksaw.unity
-    guid: 5cc21329d6f6b204a97e5b2b2ebec810
   - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Canyon.unity
-    guid: e4421bab1e4778946b585d915575ec84
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple V2.unity
+    guid: 23aa249cb5877b548bf7ee659810862b
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Blizzard.unity
+    guid: 4245d0132b4fe14488b413289d52143f
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Parasite.unity
+    guid: ede4a57eee3218f48a8f59668eb1ba08
   - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Grudge.unity
-    guid: 05d13dfdff6862447934b6dc6502b378
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple.unity
+    guid: b0cdc5e69480f4a4eb87099f24318b3a
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Babylon.unity
     guid: ffa1a3962a4fe1c4d96dd6e27b371baf
@@ -57,69 +33,21 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Starship.unity
     guid: 887ccbafd09e0cd43ac225973bdb7b20
   - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple.unity
-    guid: b0cdc5e69480f4a4eb87099f24318b3a
-  - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Blizzard.unity
-    guid: 4245d0132b4fe14488b413289d52143f
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Canyon.unity
+    guid: e4421bab1e4778946b585d915575ec84
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Factory.unity
     guid: cea931439210b1c4bbb050121647d39d
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Shaman.unity
+    guid: 248a209aa1b529248a00946da3614c61
   - enabled: 1
     path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Drowned.unity
     guid: 02297af730643fe4f9b4bf60fda3ea46
   - enabled: 1
     path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Haunted.unity
     guid: a7388a39adc1e844db4caad949ea62d4
-  - enabled: 1
+  - enabled: 0
     path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Capital.unity
     guid: 3f15ce470c12a5a4fba04de30307022f
-  - enabled: 1
-    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Terror.unity
-    guid: b834aa7fc5f00cd498879a0243322fbf
-  - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Parasite.unity
-    guid: ede4a57eee3218f48a8f59668eb1ba08
-  - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Shaman.unity
-    guid: 248a209aa1b529248a00946da3614c61
-  - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Saloon.unity
-    guid: 7fab52c9bf50e99408f5efb3b528bf8e
-  - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Plasmid.unity
-    guid: 5d2a582b1ad58104ea2246f26a792daf
-  - enabled: 1
-    path: Assets/004 - Scenes/Swarm Scenes/Coop - 001 - Downpour.unity
-    guid: a93b5d263042c224cb5e592853df0d71
-  - enabled: 0
-    path: Assets/004 - Scenes/EmptyScene.unity
-    guid: 0d9681976c6c61d4a8161e6a788dc524
-  - enabled: 0
-    path: Assets/020 - Staging/Movement/Staging.unity
-    guid: 60d40d7a2cba4244abf6b4581463aecc
-  - enabled: 0
-    path: Assets/Project/External/UI - Modern_GUI_Skin/Demo_Assets/Demo.unity
-    guid: 13070929f2d2dc3468bb951653444db6
-  - enabled: 0
-    path: Assets/Resources/SCI-FI UI Pack_Components v1/Scenes/Demo V1.unity
-    guid: aa1037c4de98cc144b3b51074b7e3010
-  - enabled: 0
-    path: Assets/Project/External/Artemis Space Ranks/Scenes/Demo.unity
-    guid: b0449b7497fef5e4bb6e76996f80e67f
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Power.unity
-    guid: ddac0b19f3f858346aa6097f6c23afab
-  - enabled: 0
-    path: Assets/LowPolyWater_Pack/_Demo/DemoScene.unity
-    guid: 5af012a8b7991a84fb99a854db8dfc21
-  - enabled: 0
-    path: Assets/Project/External/Polygon Assets/PolygonMilitary/Scenes/PolygonMilitary_Demo_01.unity
-    guid: 93195e8f68a149f49a51512a91091643
-  - enabled: 0
-    path: Assets/AI Testing.unity
-    guid: d03ca81e08db3554e8a57d9cf266d8a3
-  - enabled: 0
-    path: Assets/004 - Scenes/Testing Rooms/Ragdolls.unity
-    guid: 1fc4377b507157444ace54f5882023c6
   m_configObjects: {}

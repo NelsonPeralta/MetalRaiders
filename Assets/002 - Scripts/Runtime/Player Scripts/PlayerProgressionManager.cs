@@ -26,14 +26,14 @@ public class PlayerProgressionManager : MonoBehaviour
     {
         get
         {
-            int h = 1;
+            int h = 2;
 
             DateTime today = DateTime.Now;
             if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
-                h *= 2;
+                h *= 3;
 
             if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private)
-                h = 0;
+                h = 1;
             return h;
         }
     }

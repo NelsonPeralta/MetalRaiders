@@ -1256,9 +1256,14 @@ public class PlayerController : MonoBehaviourPun
     void OnTestButton_Delegate(PlayerController playerController)
     {
 #if (UNITY_EDITOR)
-        allPlayerScripts.announcer.PlayGameOverClip();
-        WebManager.webManagerInstance.SaveMultiplayerStats(player.GetComponent<PlayerMultiplayerMatchStats>(), new List<Player>());
-        player.LeaveRoomWithDelay();
+
+        player.Damage(250, false, player.pid);
+
+
+
+        //allPlayerScripts.announcer.PlayGameOverClip();
+        //WebManager.webManagerInstance.SaveMultiplayerStats(player.GetComponent<PlayerMultiplayerMatchStats>(), new List<Player>());
+        //player.LeaveRoomWithDelay();
 #endif
 
         {

@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public delegate void GameManagerEvent();
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
+    public enum Team { None, Red, Blue }
     public enum Connection { Offline, Online }
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum GameType
@@ -285,11 +286,27 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Dictionary<string, int> teamDict
     {
-        get { return _teamDict; }
+        get
+        {
+            foreach (KeyValuePair<string, int> attachStat in _teamDict)
+                Debug.Log($"Team Dict entry: Key {attachStat.Key} has value {attachStat.Value}");
+
+
+            return _teamDict;
+        }
         set
         {
             Debug.Log("teamDict");
             _teamDict = value;
+
+            foreach (KeyValuePair<string, int> attachStat in _teamDict)
+            {
+
+
+                //Debug.Log(attachStat.Key);
+                //Debug.Log(attachStat.Value);
+            }
+
             foreach (Transform child in Launcher.instance.playerListContent)
             {
                 child.GetComponent<PlayerListItem>().UpdateColorPalette();
@@ -339,6 +356,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
     [SerializeField] Material _armorMaterial;
     [SerializeField] List<Texture> _colorPaletteTextures = new List<Texture>();
+    [SerializeField] List<ScriptObjBipedTeam> _teamsData;
 
     SwarmManager.Difficulty _difficulty;
     CarnageReport _carnageReport;
