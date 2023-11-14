@@ -27,10 +27,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     // https://stackoverflow.com/questions/150479/order-of-items-in-classes-fields-properties-constructors-methods
 
+    public static string ROOT_PLAYER_NAME;
+
     // Events
     public delegate void GameManagerEvent();
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
+    public enum Team { None, Red, Blue }
     public enum Connection { Offline, Online }
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum GameType
@@ -91,7 +94,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Connection connection
     {
         get { return _connection; }
-        set { _connection = value; }
+        set
+        {
+            _connection = value;
+
+            if (value == Connection.Online)
+            {
+                Launcher.instance.LoginWithSteamName();
+            }
+        }
     }
     public GameMode gameMode
     {
@@ -144,7 +155,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _gameType; }
         set
         {
-            Debug.Log("sadfsfgfgd");
+            Debug.Log($"GAME TYPE: {value}");
 
             _gameType = value;
             if (_gameType == GameType.GunGame)
@@ -161,7 +172,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             TeamMode _prev = _teamMode;
 
-            Debug.Log("teamMode: " + value);
+            Debug.Log("GAMEMANAGE Team Mode: " + value);
             _teamMode = value;
             Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
@@ -190,6 +201,11 @@ public class GameManager : MonoBehaviourPunCallbacks
                         Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
                     }
                 GameManager.instance.teamDict = _teamDict;
+            }
+
+            foreach (Transform child in Launcher.instance.playerListContent)
+            {
+                child.GetComponent<PlayerListItem>().UpdateColorPalette();
             }
         }
     }
@@ -270,11 +286,27 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Dictionary<string, int> teamDict
     {
-        get { return _teamDict; }
+        get
+        {
+            foreach (KeyValuePair<string, int> attachStat in _teamDict)
+                Debug.Log($"Team Dict entry: Key {attachStat.Key} has value {attachStat.Value}");
+
+
+            return _teamDict;
+        }
         set
         {
             Debug.Log("teamDict");
             _teamDict = value;
+
+            foreach (KeyValuePair<string, int> attachStat in _teamDict)
+            {
+
+
+                //Debug.Log(attachStat.Key);
+                //Debug.Log(attachStat.Value);
+            }
+
             foreach (Transform child in Launcher.instance.playerListContent)
             {
                 child.GetComponent<PlayerListItem>().UpdateColorPalette();
@@ -309,16 +341,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public Dictionary<string, PlayerDatabaseAdaptor> roomPlayerData
-    {
-        get { return _roomPlayerData; }
-        set
-        {
-            Debug.Log("roomPlayerData");
-            Debug.Log(value);
-            _roomPlayerData = value;
-        }
-    }
     public Material armorMaterial { get { return _armorMaterial; } }
     public List<Texture> colorPaletteTextures { get { return _colorPaletteTextures; } }
     public List<LootableWeapon> lootableWeapons { get { return _lootableWeapons; } }
@@ -327,17 +349,40 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called zero
 
     // private Variables
+    [SerializeField] WeaponPool _weaponPoolPrefab;
+    [SerializeField] RagdollPool _ragdollPoolPrefab;
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
     [SerializeField] Material _armorMaterial;
     [SerializeField] List<Texture> _colorPaletteTextures = new List<Texture>();
+    [SerializeField] List<ScriptObjBipedTeam> _teamsData;
 
     SwarmManager.Difficulty _difficulty;
     CarnageReport _carnageReport;
     List<LootableWeapon> _lootableWeapons = new List<LootableWeapon>();
     List<NetworkGrenadeSpawnPoint> _networkGrenadeSpawnPoints = new List<NetworkGrenadeSpawnPoint>();
 
+
+
+
+    public bool playerDataRetrieved
+    {
+        get { return _playerDataRetrieved; }
+        set
+        {
+            if (value && !playerDataRetrieved)
+            {
+                try
+                {
+                    MenuManager.Instance.OpenMenu("online title");
+                }
+                catch { }
+            }
+            _playerDataRetrieved = true;
+        }
+    }
+    bool _playerDataRetrieved;
     void Awake()
     {
         colorDict.Add("white", "#FFFFFF");
@@ -417,6 +462,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { onlineTeam = PlayerMultiplayerMatchStats.Team.None; } catch { }
             _lootableWeapons.Clear();
             _networkGrenadeSpawnPoints.Clear();
+
+
+            WeaponPool.instance = null;
         }
         else if (scene.buildIndex > 0) // We're in the game scene
         {
@@ -442,6 +490,9 @@ public class GameManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
             }
             catch (Exception e) { Debug.LogWarning(e.Message); }
+
+            Instantiate(_weaponPoolPrefab);
+            Instantiate(_ragdollPoolPrefab);
 
             try
             {
@@ -480,7 +531,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         //SceneManager.sceneLoaded += OnSceneLoaded;
+        Debug.Log(PhotonNetwork.IsConnected);
+        Debug.Log(PhotonNetwork.IsConnectedAndReady);
 
+        Launcher.instance.ConnectToPhotonMasterServer();
     }
 
     // called when the game is terminated
@@ -627,28 +681,29 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public static void SendErrorEmailReport(string m)
     {
-        //MailMessage newMail = new MailMessage();
-        //// use the Gmail SMTP Host
-        //SmtpClient client = new SmtpClient("smtp.office365.com");
+        MailMessage newMail = new MailMessage();
+        // use the Gmail SMTP Host
+        SmtpClient client = new SmtpClient("smtp.office365.com");
 
-        //// Follow the RFS 5321 Email Standard
-        //newMail.From = new MailAddress("nelson@peralta.tech", "Nelson");
+        // Follow the RFS 5321 Email Standard
+        newMail.From = new MailAddress("nelson@peralta.tech", "Nelson");
 
-        //newMail.To.Add("development@spacewackos.com");// declare the email subject
+        newMail.To.Add("development@spacewackos.com");// declare the email subject
+        newMail.To.Add("nelson@peralta.tech");// declare the email subject
 
-        //newMail.Subject = "Space Wackos Error Report"; // use HTML for the email body
+        newMail.Subject = "Space Wackos Error Report"; // use HTML for the email body
 
-        //newMail.IsBodyHtml = true; newMail.Body = $"<h1> Space Wackos </h1><br><h2>Error</h2><br>=====<br><p>${m}</p>";
+        newMail.IsBodyHtml = true; newMail.Body = $"<h1> Space Wackos </h1><br><h2>Error</h2><br>=====<br><p>${m}</p>";
 
-        //// enable SSL for encryption across channels
-        //client.EnableSsl = true;
-        //// Port 465 for SSL communication
-        //client.Port = 587;
-        //// Provide authentication information with Gmail SMTP server to authenticate your sender account
-        //client.Credentials = new System.Net.NetworkCredential("nelson@peralta.tech", "br0wn!c375");
+        // enable SSL for encryption across channels
+        client.EnableSsl = true;
+        // Port 465 for SSL communication
+        client.Port = 587;
+        // Provide authentication information with Gmail SMTP server to authenticate your sender account
+        client.Credentials = new System.Net.NetworkCredential("nelson@peralta.tech", "br0wn!c375");
 
-        //client.Send(newMail); // Send the constructed mail
-        //Debug.Log("SenErrorEmailReport Sent");
+        client.Send(newMail); // Send the constructed mail
+        Debug.Log("SenErrorEmailReport Sent");
     }
 
     public void EnableCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask |= 1 << LayerMask.NameToLayer($"{layerName}"); }

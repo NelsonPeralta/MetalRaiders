@@ -166,7 +166,13 @@ abstract public class Actor : Biped
             ah.actor = this;
             _actorHitboxes.Add(ah);
         }
+
+        ChildAwake();
+        transform.parent = SwarmManager.instance.transform;
+        gameObject.SetActive(false);
     }
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -551,6 +557,9 @@ abstract public class Actor : Biped
         }
     }
 
+
+
+    protected abstract void ChildAwake();
 
     public abstract void Idle(bool callRPC = true);
     public abstract void Run(bool callRPC = true);

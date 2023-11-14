@@ -198,7 +198,7 @@ public class PlayerShooting : MonoBehaviourPun
         }
 
         for (int i = 0; i < counter; i++)
-            if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
+            if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
             {
                 Player player = playerController.GetComponent<Player>();
                 Quaternion ranSprayQuat = activeWeapon.GetRandomSprayRotation();
@@ -206,24 +206,36 @@ public class PlayerShooting : MonoBehaviourPun
                 if (playerController.isAiming && activeWeapon.hipSprayOnly)
                     ranSprayQuat = Quaternion.identity;
 
-                if (!player.isMine)
+                if (activeWeapon.ammoProjectileType != WeaponProperties.AmmoProjectileType.Plasma)
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
+                    if (!player.isMine)
                     {
-                        int d = (int)Vector3.Distance(player.mainCamera.transform.position, hit.point);
-                        StartCoroutine(pInventory.SpawnFakeBulletTrail(d, ranSprayQuat));
-                    }
-                    else
+                        RaycastHit hit;
+                        if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
+                        {
+                            int d = (int)Vector3.Distance(player.mainCamera.transform.position, hit.point);
+                            StartCoroutine(pInventory.SpawnFakeBulletTrail(d, ranSprayQuat));
+                        }
+                        else
 
-                        StartCoroutine(pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat));
+                            StartCoroutine(pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat));
+                    }
+                }
+                else
+                {
+
                 }
 
-                if (player.isMine)
+                if (player.isMine || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
                     Debug.Log("shoooo 2");
                     var bullet = _gameObjectPool.SpawnPooledBullet();
 
+                    {
+                        bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Blue && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().redPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Red && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().greenPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Green && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                    }
 
                     try
                     {
@@ -319,14 +331,18 @@ public class PlayerShooting : MonoBehaviourPun
         {
             activeWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
             tPersonController.GetComponent<Animator>().SetTrigger("Fire");
-            if (pInventory.isDualWielding)
-                activeWeapon.rightWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
+            //if (pInventory.isDualWielding)
+            //    activeWeapon.leftWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
             //StartCoroutine(Player3PSFiringAnimation());
-            activeWeapon.Recoil();
-            if (pInventory.isDualWielding)
-                activeWeapon.rightWeapon.Recoil();
         }
-        catch { }
+        catch (System.Exception e) { Debug.LogError(e); }
+        Debug.Log("Calling Recoil()");
+        activeWeapon.Recoil();
+        //if (pInventory.isDualWielding)
+        //    activeWeapon.rightWeapon.Recoil();
+
+
+
         GetComponent<AudioSource>().clip = activeWeapon.Fire;
         GetComponent<AudioSource>().Play();
         OnBulletSpawned?.Invoke(this);

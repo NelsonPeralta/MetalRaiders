@@ -36,8 +36,11 @@ public class ArmorSeller : InteractableObject
     }
     private void Start()
     {
-        if (SwarmManager.instance.editMode)
-            cost = 0;
+#if UNITY_EDITOR
+        cost = 1;
+#endif
+
+
         armorModel.SetActive(false);
 
         foreach (EasterEggTreasure fo in _findableObjects)

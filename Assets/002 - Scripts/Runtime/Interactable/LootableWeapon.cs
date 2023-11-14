@@ -8,6 +8,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     public delegate void LootableWeaponEvent(LootableWeapon lootableWeapon);
     public LootableWeaponEvent OnLooted;
 
+    public Transform parent { get { return transform.parent; } }
     public string cleanName;
     public string codeName;
     public int spriteId;
@@ -80,6 +81,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     }
 
     public float ttl { set { _ttl = value; } }
+    public float defaultTtl { get { return _defaultTtl; } }
     public int defaultAmmo { get { return _defaultAmmo; } }
     public int defaultSpareAmmo { get { return _defaultSpareAmmo; } }
 
@@ -94,12 +96,13 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     [SerializeField] NetworkWeaponSpawnPoint _networkWeaponSpawnPoint;
 
     [SerializeField] Vector3 _spawnPointPosition;
-    [SerializeField] float _ttl;
+    [SerializeField] float _ttl, _defaultTtl;
 
     Quaternion _spawnPointRotation;
 
     private void Awake()
     {
+        _defaultTtl = _ttl;
         //spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
         spawnPointRotation = transform.rotation;
         GameManager.instance.lootableWeapons.Add(this);
@@ -119,12 +122,17 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         }
         catch { }
 
-        _ammo = defaultAmmo;
-        _spareAmmo = defaultSpareAmmo;
+
+        if (parent != null && WeaponPool.instance != null && parent != WeaponPool.instance.transform)
+        {
+            _ammo = defaultAmmo;
+            _spareAmmo = defaultSpareAmmo;
+        }
     }
     private void Start()
     {
-        CurrentRoomManager.instance.spawnedMapAddOns++;
+        if (parent != WeaponPool.instance.transform)
+            CurrentRoomManager.instance.spawnedMapAddOns++;
     }
 
     private void Update()
@@ -137,7 +145,11 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
                 _ttl -= Time.deltaTime;
 
                 if (_ttl <= 0)
-                    Destroy(gameObject);
+                {
+                    transform.position = new Vector3(0, -100, 0);
+                    gameObject.SetActive(false);
+                    //Destroy(gameObject);
+                }
             }
         }
     }
@@ -169,7 +181,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         int totalAmmoAvailable = _ammo + _spareAmmo;
 
         if (w.injectLootedAmmo)
-            ammoNeeded = 999;
+            ammoNeeded = w.ammoCapacity - w.loadedAmmo;
 
         if (ammoNeeded <= 0)
             return;
@@ -185,6 +197,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             HideWeapon();
             NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
             playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();
+            playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({ammoNeeded})");
             return;
         }
         else
@@ -221,6 +234,9 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
     {
         Debug.Log("DisableWeapon");
         OnLooted?.Invoke(this);
+        gameObject.SetActive(false);
+
+        return;
 
         if (networkWeaponSpawnPoint)
         {
@@ -281,13 +297,15 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("Lootable Weapon OnCollisionEnter");
         GetComponent<Rigidbody>().velocity /= 2;
         try
         {
-            GetComponent<AudioSource>().clip = _collisionAudioClip;
-            GetComponent<AudioSource>().Play();
+            //GetComponent<AudioSource>().clip = _collisionAudioClip;
+            //GetComponent<AudioSource>().Play();
+            GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(transform.position);
         }
-        catch { }
+        catch (System.Exception e) { Debug.LogError(e); }
     }
 
     private void OnDisable()

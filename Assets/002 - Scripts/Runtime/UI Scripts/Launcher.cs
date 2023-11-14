@@ -8,6 +8,7 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.IO;
+using Steamworks;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -142,7 +143,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             levelToLoadIndex = 1;
 
         //TODO: PhotonNetwork.OfflineMode = true;
-        ConnectToPhotonMasterServer();
+        //ConnectToPhotonMasterServer();
         //GetComponent<MenuManager>().OpenMainMenu();
     }
 
@@ -183,14 +184,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        GameManager.instance.connection = GameManager.Connection.Online;
         Debug.Log("Connected to Master");
         try { ChangeLevelToLoadWithIndex(levelToLoadIndex); } catch { }
         //ShowPlayerMessage("Conneected To Master Server!");
         if (!PhotonNetwork.OfflineMode)
             PhotonNetwork.JoinLobby();
         PhotonNetwork.AutomaticallySyncScene = true;
-        GetComponent<MenuManager>().OpenMainMenu();
+        //GetComponent<MenuManager>().OpenMainMenu();
 
     }
 
@@ -216,10 +216,13 @@ public class Launcher : MonoBehaviourPunCallbacks
                     //MenuManager.Instance.OpenMenu("online title"); // Runs this line if quit game an returning to menu
                 }
                 //else
-                    MenuManager.Instance.OpenMenu("carnage report");
+                MenuManager.Instance.OpenMenu("carnage report");
             }
             else
-                MenuManager.Instance.OpenMenu("offline title");
+            {
+
+                //MenuManager.Instance.OpenMenu("offline title");
+            }
         }
         else
         {
@@ -232,13 +235,18 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void QuickMatch()
     {
+        Debug.Log("Click QuickMatch");
+        CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.QuickMatch;
+        CurrentRoomManager.instance.vetos = 0;
+
         string roomName = quickMatchRoomName;
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxRandomRoomPlayers;
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
         //roomOptions.CustomRoomProperties.Add("gamemode", GameManager.GameMode.Multiplayer.ToString());
         //roomOptions.CustomRoomProperties.Add("gametype", GameManager.GameType.Fiesta.ToString());
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, typedLobby);
+        //PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, typedLobby);
+        CreateRoom(roomName, roomOptions, typedLobby);
         //PhotonNetwork.JoinRandomRoom();
     }
 
@@ -251,9 +259,15 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField]
     private byte maxRandomRoomPlayers = 6;
 
-    public void CreateMultiplayerRoom()
+    public void CreatePrivateRoom()
     {
         Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
+
+        CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
+        GameManager.instance.teamMode = GameManager.TeamMode.None;
+        GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+
+
         RoomOptions options = new RoomOptions();
         options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
@@ -276,11 +290,24 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
 
         // else
-        PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
+        //PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
+        CreateRoom(roomNameInputField.text, options);
         MenuManager.Instance.OpenLoadingMenu("Creating Multiplayer Room..."); // Show the loading menu/message
 
         // When creating a room is done, OnJoinedRoom() will automatically trigger
         OnCreateMultiplayerRoomButton?.Invoke(this);
+    }
+
+    void CreateRoom(string roomNam, RoomOptions ro, TypedLobby tl = null)
+    {
+        CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Clear();
+        CurrentRoomManager.instance.expectedNbPlayers = 0;
+        CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = 9;
+
+        if (tl == null)
+            PhotonNetwork.CreateRoom(roomNam, ro);
+        else
+            PhotonNetwork.JoinOrCreateRoom(roomNam, ro, typedLobby);
     }
 
     public void CreateSwarmRoom()
@@ -360,8 +387,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
                 Debug.Log("Joined room IsMasterClient");
 
-                if (listPlayersDiff[0].NickName.Contains(GameManager.instance.rootPlayerNickname))
-                    GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+                //if (listPlayersDiff[0].NickName.Contains(GameManager.instance.rootPlayerNickname))
+                //    GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 
 
 
@@ -395,7 +422,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
         Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
-
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -484,7 +510,10 @@ public class Launcher : MonoBehaviourPunCallbacks
         try { commonRoomTexts.SetActive(false); } catch { }
         try { PhotonNetwork.LeaveRoom(); } catch (System.Exception e) { Debug.LogWarning(e); }
         try { GameManager.instance.gameMode = GameManager.GameMode.Multiplayer; } catch { }
-        MenuManager.Instance.OpenMenu("loading");
+
+        CurrentRoomManager.instance.SoftResetPlayerExtendedData();
+
+        //MenuManager.Instance.OpenMenu("loading");
     }
 
     public void JoinRoom(RoomInfo info)
@@ -493,17 +522,24 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenLoadingMenu("Joining Room...");
     }
 
+    // Triggers when YOU left room
+
     public override void OnLeftRoom()
     {
         Debug.Log("LAUNCHER: OnLeftRoom");
+        CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Clear();
+        CurrentRoomManager.instance.expectedNbPlayers = 0;
         try
         {
             Destroy(FindObjectOfType<NetworkGameManager>().gameObject);
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
-        MenuManager.Instance.OpenMenu("offline title");
+        if (PhotonNetwork.IsConnected) MenuManager.Instance.OpenMenu("online title");
+
+        //MenuManager.Instance.OpenMenu("offline title");
     }
 
+    // Triggers when other player left room
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         try
@@ -512,6 +548,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
         }
         catch { }
+
+        if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(otherPlayer.NickName))
+            CurrentRoomManager.instance.RemoveExtendedPlayerData(otherPlayer.NickName);
+
+
     }
 
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
@@ -596,6 +637,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeTeamMode(string tm)
     {
+        Debug.Log("ChangeTeamMode Btn");
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
 
         try
@@ -765,6 +807,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void Login()
     {
+        GameManager.ROOT_PLAYER_NAME = loginUsernameText.text;
         WebManager.webManagerInstance.Login(loginUsernameText.text, _loginPasswordText.text);
 
         Debug.Log(PhotonNetwork.NetworkClientState);
@@ -773,6 +816,19 @@ public class Launcher : MonoBehaviourPunCallbacks
         //    ConnectToPhotonMasterServer();
 
         MenuManager.Instance.OpenLoadingMenu();
+        //loginButton.SetActive(false);
+    }
+
+    public void LoginWithSteamName()
+    {
+        WebManager.webManagerInstance.Login(SteamFriends.GetPersonaName(), "steam");
+
+        Debug.Log(PhotonNetwork.NetworkClientState);
+        Debug.Log(PhotonNetwork.OfflineMode);
+        //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
+        //    ConnectToPhotonMasterServer();
+
+        //MenuManager.Instance.OpenLoadingMenu();
         //loginButton.SetActive(false);
     }
 

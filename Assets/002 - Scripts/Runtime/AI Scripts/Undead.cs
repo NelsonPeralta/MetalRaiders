@@ -7,7 +7,7 @@ public class Undead : Actor
 {
     float _targetLostCooldown;
 
-
+    
     protected override void ChildOnEnable()
     {
         _hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
@@ -95,6 +95,11 @@ public class Undead : Actor
     }
 
     public override void ThrowExplosive(bool callRPC = true)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    protected override void ChildAwake()
     {
         throw new System.NotImplementedException();
     }

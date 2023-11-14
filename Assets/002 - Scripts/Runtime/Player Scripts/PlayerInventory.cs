@@ -259,9 +259,10 @@ public class PlayerInventory : MonoBehaviourPun
                 _weaponCodeNameDict.Add(wp.GetComponent<WeaponProperties>().codeName, wp.GetComponent<WeaponProperties>());
                 _weaponCleanNameDict.Add(wp.GetComponent<WeaponProperties>().cleanName, wp.GetComponent<WeaponProperties>());
             }
-            catch
+            catch (System.Exception e)
             {
-                Debug.LogError("YOU HAVE 2 GUNS WITH THE SAME CODENAME. THIS MAY STOP THE FOLLOWING CODE");
+                Debug.LogError($"{e}");
+                Debug.LogError($"YOU MAY HAVE 2 GUNS WITH THE SAME CODENAME {wp.name} {wp.GetComponent<WeaponProperties>().codeName}. THIS MAY STOP THE FOLLOWING CODE");
             }
         }
 

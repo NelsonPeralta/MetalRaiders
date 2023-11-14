@@ -77,6 +77,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public List<HealthPack> healthPacks = new List<HealthPack>();
 
+    public List<ScriptObjSwarmBossMusic> bossMusics = new List<ScriptObjSwarmBossMusic>();
+
     [SerializeField] AudioSource _musicAudioSource;
     [SerializeField] List<AudioClip> _openingClips;
     [SerializeField] List<AudioClip> _ambiantClips;
@@ -205,6 +207,43 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         private set { _waveEnded = value; }
     }
 
+    protected List<AudioClip> clips
+    {
+        get { return _clips; }
+        set
+        {
+            Debug.Log(_clips.Count);
+            int preCount = _clips.Count - 1;
+            Debug.Log(preCount);
+            _clips = value;
+
+            if (_clips.Count > 0)
+            {
+                try
+                {
+                    StartCoroutine(PlayClip_Coroutine(_clipTimeRemaining, _clips.Last()));
+                    _clipTimeRemaining += _clips.Last().length + 0.1f;
+                    StartCoroutine(RemoveClip_Coroutine(_clipTimeRemaining * 0.95f, _clips.Last()));
+                }
+                catch { }
+
+            }
+        }
+    }
+
+    List<AudioClip> _clips;
+
+    float _clipTimeRemaining;
+
+
+
+
+
+
+
+
+
+
     private void OnEnable()
     {
         //currentWave = 0;
@@ -234,6 +273,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (_clipTimeRemaining > 0)
+        {
+            _clipTimeRemaining -= Time.deltaTime;
+            if (_clipTimeRemaining <= 0)
+                _clipTimeRemaining = 0;
+        }
+
         NewWaveCountdown();
     }
 
@@ -286,34 +332,34 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 _networkSwarmManager = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkSwarmManager"), Vector3.zero, Quaternion.identity).GetComponent<NetworkSwarmManager>();
                 PV = _networkSwarmManager.GetComponent<PhotonView>();
 
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < 32; i++)
                 {
                     //Transform sp = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
-                    GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
-                    _zombiesPool.Add(z.GetComponent<Undead>());
-                    z.transform.parent = transform;
-                    z.gameObject.SetActive(false);
+                    //GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
+                    //_zombiesPool.Add(z.GetComponent<Undead>());
+                    //z.transform.parent = transform;
+                    //z.gameObject.SetActive(false);
 
                     GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero, Quaternion.identity);
-                    _breathersPool.Add(w.GetComponent<Breather>());
-                    w.transform.parent = transform;
-                    w.gameObject.SetActive(false);
+                    //_breathersPool.Add(w.GetComponent<Breather>());
+                    //w.transform.parent = transform;
+                    //w.gameObject.SetActive(false);
 
                     GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero, Quaternion.identity);
-                    _ribbianPool.Add(a.GetComponent<AlienShooter>());
-                    a.transform.parent = transform;
-                    a.gameObject.SetActive(false);
+                    //_ribbianPool.Add(a.GetComponent<AlienShooter>());
+                    //a.transform.parent = transform;
+                    //a.gameObject.SetActive(false);
 
 
                     GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero, Quaternion.identity);
-                    hellhoundPool.Add(t.GetComponent<Helldog>());
-                    t.transform.parent = transform;
-                    t.gameObject.SetActive(false);
+                    //hellhoundPool.Add(t.GetComponent<Helldog>());
+                    //t.transform.parent = transform;
+                    //t.gameObject.SetActive(false);
 
                     GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero, Quaternion.identity);
-                    tyrantPool.Add(h.GetComponent<Tyrant>());
-                    h.transform.parent = transform;
-                    h.gameObject.SetActive(false);
+                    //tyrantPool.Add(h.GetComponent<Tyrant>());
+                    //h.transform.parent = transform;
+                    //h.gameObject.SetActive(false);
                     //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
                     //_zombieList.Add(z.GetComponent<Undead>());
                     //z.transform.parent = transform;
@@ -337,8 +383,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             OnWaveEnd -= OnWaveEnd_Delegate;
             OnWaveEnd += OnWaveEnd_Delegate;
 
-            if (PhotonNetwork.IsMasterClient)
-                CreateAIPool();
+            //if (PhotonNetwork.IsMasterClient)
+            //    CreateAIPool();
         }
         else // We are in the menu
         {
@@ -462,6 +508,13 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 _ranClipInt = Random.Range(0, _ambiantClips.Count);
                 _musicAudioSource.clip = _ambiantClips[_ranClipInt];
                 _musicAudioSource.Play();
+            }
+            else if (currentWave % 5 == 0)
+            {
+                int ran = Random.Range(0, bossMusics.Count);
+
+                AddClip(bossMusics[_ranClipInt].intro);
+                AddClip(bossMusics[_ranClipInt].loop);
             }
         }
         catch (System.Exception ex)
@@ -842,6 +895,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void EndWave()
     {
         Debug.Log("EndWave_RPC");
+        if (currentWave % 5 == 0)
+            AddClip(bossMusics[_ranClipInt].intro);
+
         OnWaveEnd?.Invoke(this);
         _newWaveCountdown = nextWaveDelay;
 
@@ -1020,5 +1076,38 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 GameManager.instance.LeaveRoom();
             }
         }
+    }
+
+
+
+
+
+    public void AddClip(AudioClip ac)
+    {
+        List<AudioClip> c = clips;
+        c.Add(ac);
+        clips = c;
+    }
+
+    IEnumerator PlayClip_Coroutine(float delay, AudioClip clip)
+    {
+        yield return new WaitForSeconds(delay);
+        try
+        {
+            _musicAudioSource.clip = clip;
+            _musicAudioSource.Play();
+        }
+        catch (System.Exception ex) { Debug.Log(ex); }
+
+    }
+
+    IEnumerator RemoveClip_Coroutine(float delay, AudioClip clip)
+    {
+        yield return new WaitForSeconds(delay);
+        try
+        {
+            clips.Remove(clip);
+        }
+        catch (System.Exception ex) { Debug.Log(ex); }
     }
 }

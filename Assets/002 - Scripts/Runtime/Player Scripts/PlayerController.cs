@@ -155,6 +155,7 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+
     bool _isMeleeing, _cameraIsFloating;
     float _meleeCooldown, _adsCounter;
     Transform _mainCamParent;
@@ -226,6 +227,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 if (!pauseMenuOpen)
                 {
+                    ToggleInvincible();
                     Sprint();
                     SwitchGrenades();
                     SwitchWeapons();
@@ -248,6 +250,16 @@ public class PlayerController : MonoBehaviourPun
         }
 
     }
+
+    void ToggleInvincible()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            player.isInvincible = !player.isInvincible;
+            GetComponent<PlayerUI>().invincibleIcon.SetActive(player.isInvincible);
+        }
+    }
+
     void UpdateWeaponPropertiesAndAnimator()
     {
         if (!isDualWielding)
@@ -792,7 +804,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            if (GameManager.instance.localPlayers.Count == 1 && GameManager.instance.pid_player_Dict.Count == 1)
+            if (GameManager.instance.localPlayers.Count == 1)
                 if (!cameraisFloating)
                 {
                     _lastMainCamLayerMask = mainCam.cullingMask;
@@ -1243,17 +1255,45 @@ public class PlayerController : MonoBehaviourPun
 
     void OnTestButton_Delegate(PlayerController playerController)
     {
-        player.BasicDamage(18);
+#if (UNITY_EDITOR)
+
+        player.Damage(250, false, player.pid);
+
+
+
+        //allPlayerScripts.announcer.PlayGameOverClip();
+        //WebManager.webManagerInstance.SaveMultiplayerStats(player.GetComponent<PlayerMultiplayerMatchStats>(), new List<Player>());
+        //player.LeaveRoomWithDelay();
+#endif
+
+        {
+            //LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(player.playerInventory.allWeaponsInInventory[3].GetComponent<WeaponProperties>().codeName);
+            //Debug.Log($"First Weapon: {_firstWeapon.name}");
+            //try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
+            ////try { _firstWeapon.transform.parent = null; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.transform.position = player.weaponDropPoint.position; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.spawnPointPosition = player.weaponDropPoint.position; } catch (System.Exception e) { Debug.Log(e); }
+            ////try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Debug.Log(e); }
+            //Debug.Log($"First Weapon: {_firstWeapon.GetComponent<Rigidbody>()}");
+            //_firstWeapon.GetComponent<Rigidbody>().AddForce(player.weaponDropPoint.forward * 2000, ForceMode.Impulse);
+            //try { _firstWeapon.localAmmo = 10; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.spareAmmo = 10; } catch (System.Exception e) { Debug.Log(e); }
+
+
+            //try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Debug.Log(e); }
+            //_firstWeapon.GetComponent<Rigidbody>().AddForce(player.weaponDropPoint.forward * 200, ForceMode.Impulse);
+
+        }
 
         return;
 
-        Transform pr = Instantiate(GameObjectPool.instance.playerRagdoll.gameObject, transform.position + new Vector3(0, 0.5f, 1), transform.rotation).transform;
+        //Transform pr = Instantiate(GameObjectPool.instance.playerRagdoll.gameObject, transform.position + new Vector3(0, 0.5f, 1), transform.rotation).transform;
 
-        Debug.Log(player.playerArmorManager.colorPalette);
-        pr.GetComponent<PlayerArmorManager>().isRagdoll = true;
-        pr.GetComponent<PlayerArmorManager>().armorDataString = player.playerArmorManager.armorDataString;
-        //pr.GetComponent<PlayerArmorManager>().armorDataString = "";
-        pr.GetComponent<PlayerArmorManager>().colorPalette = player.playerArmorManager.colorPalette;
+        //Debug.Log(player.playerArmorManager.colorPalette);
+        //pr.GetComponent<PlayerArmorManager>().armorDataString = player.playerArmorManager.armorDataString;
+        ////pr.GetComponent<PlayerArmorManager>().armorDataString = "";
+        //pr.GetComponent<PlayerArmorManager>().colorPalette = player.playerArmorManager.colorPalette;
 
         //ConfigureRagdollPosition(player.playerArmorManager.transform, pr.transform);
     }

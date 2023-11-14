@@ -53,8 +53,8 @@ public class Melee : MonoBehaviour
         if (!hitPointsInMeleeZone.Contains(hp))
         {
             hitPointsInMeleeZone.Add(hp);
-            player.OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
-            player.OnPlayerDeath += OnForeignPlayerDeath_Delegate;
+            other.GetComponent<Player>().OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
+            other.GetComponent<Player>().OnPlayerDeath += OnForeignPlayerDeath_Delegate;
         }
     }
 
@@ -85,9 +85,6 @@ public class Melee : MonoBehaviour
                     if (player.isMine)
                     {
                         audioSource.clip = knifeSuccessSound;
-                        audioSource.volume = 1;
-                        audioSource.spatialBlend = 0.9f;
-
                         audioSource.Play();
 
                         Vector3 dir = (hp.transform.position - player.transform.position);
@@ -138,7 +135,11 @@ public class Melee : MonoBehaviour
 
     void OnForeignPlayerDeath_Delegate(Player player)
     {
-        hitPointsInMeleeZone.Remove(player.GetComponent<HitPoints>());
+        try
+        {
+            hitPointsInMeleeZone.Remove(player.GetComponent<HitPoints>());
+        }
+        catch { }
     }
 
     void OnPlayerDeadth_Delegate(Player player)

@@ -167,4 +167,8 @@ public class Tyrant : Actor
         }
     }
 
+    protected override void ChildAwake()
+    {
+        SwarmManager.instance.tyrantPool.Add(this);
+    }
 }

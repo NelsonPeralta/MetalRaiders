@@ -176,6 +176,8 @@ MonoBehaviour:
   - TriggerInteractableObject_RPC
   - EnableGrenadePacks_RPC
   - SetTurretTarget
+  - UpdateRoomCountdowns
+  - AddPlayerJoinedCount
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -56,10 +56,8 @@ MonoBehaviour:
   genericHits: []
   genericHitPrefab: {fileID: 8649884254006485902, guid: 8ea603131d195f2438c4eafba1c9f895,
     type: 3}
-  ragdolls: []
-  ragdollPrefab: {fileID: 8660350978819016066, guid: 9e288eb19b5bf9e46a1cf92e78bd0b3f,
-    type: 3}
-  playerRagdoll: {fileID: 175997721530317911, guid: 0f0734a2ade57ad4593658adf69c870a,
+  weaponSmokeCollisions: []
+  weaponSmokeCollisionPrefab: {fileID: 3153810699896921423, guid: 70421fc0a47ec0545a6cc52aa1ae17ea,
     type: 3}
   testingObjects: []
   testingObjectPrefab: {fileID: 4932562514326571089, guid: 58cf38eb4faf0504abb19237fdc480ef,

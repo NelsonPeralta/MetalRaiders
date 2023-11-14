@@ -19,7 +19,7 @@ public class PlayerArmorManager : MonoBehaviour
         {
             //if (_armorDataString != value)
             {
-                Debug.Log(_armorDataString);
+                Debug.Log($"Changing ArmorDataString from {_armorDataString} to {value}");
 
                 _armorDataString = value;
 
@@ -43,16 +43,16 @@ public class PlayerArmorManager : MonoBehaviour
         {
 
             //if (_colorPalette != value)
-                if (value != null && value != "")
-                {
-                    Debug.Log(colorPalette);
-                    UpdateColorPalette();
-                    _colorPalette = value;
-                }
+            if (value != null && value != "")
+            {
+                Debug.Log($"Changing ColorPalette from {_colorPalette} to {value}");
+                _colorPalette = value;
+                UpdateColorPalette();
+            }
         }
     }
 
-    public bool isRagdoll;
+    public bool isRagdoll { get { return GetComponent<PlayerRagdoll>(); } }
 
     [SerializeField] string _armorDataString, _colorPalette;
 
@@ -60,9 +60,12 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void OnEnable()
     {
+
         if (marineArmorPieces.Count == 0)
             marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
         ToggleMarinePieces(false);
+
+        if (GetComponent<PlayerRagdoll>()) return;
 
         try { HardReloadArmor(); } catch { }
 
@@ -71,7 +74,7 @@ public class PlayerArmorManager : MonoBehaviour
             StartCoroutine(ReloadArmor_Coroutine());
         }
 
-        
+
         //player.playerShield.ShowShieldRechargeEffect();
     }
 
@@ -79,6 +82,8 @@ public class PlayerArmorManager : MonoBehaviour
     {
         marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
         playerArmorPieces.Clear(); playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
+        playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
+
     }
 
     private void Start()
@@ -115,12 +120,18 @@ public class PlayerArmorManager : MonoBehaviour
                 }
                 else
                 {
-                    if (GameManager.instance.roomPlayerData.ContainsKey(player.nickName))
+                    if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(player.nickName))
+                    //if (GameManager.instance.roomPlayerData.ContainsKey(player.nickName))
                     {
-                        Debug.Log($"PlayerArmorManager NOT MINE");
-                        Debug.Log($"PlayerArmorManager NOT MINE + {GameManager.instance.roomPlayerData[player.nickName].armorDataString}");
-                        armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
-                        colorPalette = GameManager.instance.roomPlayerData[player.nickName].playerBasicOnlineStats.armor_color_palette;
+                        //Debug.Log($"PlayerArmorManager NOT MINE");
+                        //Debug.Log($"PlayerArmorManager NOT MINE + {GameManager.instance.roomPlayerData[player.nickName].armorDataString}");
+                        //armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
+                        //colorPalette = GameManager.instance.roomPlayerData[player.nickName].playerBasicOnlineStats.armor_color_palette;
+
+
+                        Debug.Log($"PlayerArmorManager NOT MINE + {CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName)}");
+                        armorDataString = CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName).armor_data_string;
+                        colorPalette = CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName).armor_color_palette;
                     }
                 }
             }
@@ -178,6 +189,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     void UpdateColorPalette()
     {
+        Debug.Log("UpdateColorPalette");
         Debug.Log(colorPalette);
 
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
@@ -187,6 +199,9 @@ public class PlayerArmorManager : MonoBehaviour
         {
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
+                Debug.Log($"{player.nickName}");
+                Debug.Log($"{GameManager.instance.teamDict}");
+
                 string c = ((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[player.nickName]).ToString().ToLower();
                 _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{c}")).SingleOrDefault();
             }

@@ -17,7 +17,7 @@ public class PlayerProgressionManager : MonoBehaviour
                 r *= 2;
 
             if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private)
-                r = 0;
+                r = (int)(r * 0.7f);
             return r;
         }
     }
@@ -26,14 +26,14 @@ public class PlayerProgressionManager : MonoBehaviour
     {
         get
         {
-            int h = 1;
+            int h = 2;
 
             DateTime today = DateTime.Now;
             if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
-                h *= 2;
+                h *= 3;
 
             if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private)
-                h = 0;
+                h = 1;
             return h;
         }
     }
@@ -95,7 +95,7 @@ public class PlayerProgressionManager : MonoBehaviour
         Rank r = instance._ranks[0];
         foreach (Rank rank in instance._ranks)
         {
-            Debug.Log($"Rank search: {xp} {h} \n {rank.lvlRequired} {rank.honorRequired}");
+            //Debug.Log($"Rank search: {xp} {h} \n {rank.lvlRequired} {rank.honorRequired}");
             if (xp >= rank.lvlRequired && h >= rank.honorRequired)
                 r = rank;
             else

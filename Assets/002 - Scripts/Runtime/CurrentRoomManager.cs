@@ -1,8 +1,10 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Progress;
 
 public class CurrentRoomManager : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     // Events
     public delegate void GameManagerEvent(CurrentRoomManager gme);
-    public GameManagerEvent OnGameStartedEarly, OnGameStarted, OnGameStartedLate;
+    public GameManagerEvent OnGameIsReady, OnGameStarted, OnGameStartedLate;
 
     public enum RoomType
     {
@@ -23,6 +25,7 @@ public class CurrentRoomManager : MonoBehaviour
         get { return _roomType; }
         set
         {
+            Debug.Log($"ROOM TYPE {value}");
             _roomType = value;
         }
     }
@@ -45,11 +48,16 @@ public class CurrentRoomManager : MonoBehaviour
                 print("You have " + items.Value + " " + items.Key);
                 c += items.Value;
             }
+
+            int _preExpNbPl = expectedNbPlayers;
             expectedNbPlayers = c;
 
-            if (_vetoCountdown > 0) // Make sure this variable if greater than 0 by default
-                _vetoCountdown = 9;
-            _roomGameStartCountdown = 9;
+            if (_preExpNbPl > expectedNbPlayers)
+            {
+                if (vetoCountdown > 0) // Make sure this variable if greater than 0 by default
+                    vetoCountdown = 9;
+                roomGameStartCountdown = 9;
+            }
 
             if (expectedNbPlayers > 0 && !_randomQuickMatchSeetingsChosen)
             {
@@ -58,16 +66,16 @@ public class CurrentRoomManager : MonoBehaviour
             }
         }
     }
-    public int expectedNbPlayers { get { return _expectedNbPlayers; } private set { _expectedNbPlayers = value; } }
+    public int expectedNbPlayers { get { return _expectedNbPlayers; } set { _expectedNbPlayers = value; } }
 
 
     /// <summary>
     /// Step 1: Caluclate expected Map Add-Ons
     /// </summary>
-    int expectedMapAddOns
+    public int expectedMapAddOns
     {
         get { return _expectedMapAddOns; }
-        set
+        private set
         {
             _expectedMapAddOns = value;
             Debug.Log(expectedMapAddOns);
@@ -104,6 +112,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
+                Debug.Log($"mapIsReady");
                 StartCoroutine(GameManager.instance.SpawnPlayers_Coroutine());
             }
         }
@@ -135,15 +144,17 @@ public class CurrentRoomManager : MonoBehaviour
             {
                 Debug.Log("OnAllPlayersJoinedRoom");
                 gameIsReady = true;
+                //StartCoroutine(GameIsReadyDelay_Coroutine());
+
                 //OnAllPlayersJoinedRoom?.Invoke(this);
             }
         }
     }
 
-    bool gameIsReady
+    public bool gameIsReady
     {
         get { return _gameIsReady; }
-        set
+        private set
         {
             bool _preVal = _gameIsReady;
             _gameIsReady = value;
@@ -152,42 +163,50 @@ public class CurrentRoomManager : MonoBehaviour
             {
                 Debug.Log("gameIsReady");
                 _gameIsReady = true;
-                gameStart = true;
+
+                OnGameIsReady?.Invoke(this);
+
+
+                StartCoroutine(GameStartDelayMapCamera_Coroutine());
+                StartCoroutine(GameStartDelay_Coroutine());
             }
         }
     }
 
-    bool gameStart
-    {
-        get { return _gameStart; }
-        set
-        {
-            bool _preVal = _gameStart;
-            _gameStart = value;
+    //public bool gameStart
+    //{
+    //    get { return _gameStart; }
+    //    private set
+    //    {
+    //        bool _preVal = _gameStart;
+    //        _gameStart = value;
 
-            if (value && _preVal != value)
-            {
-                OnGameStartedEarly?.Invoke(this);
-                _gameStartCountdown = GameManager.GameStartDelay;
-            }
-            _gameStart = value;
-        }
-    }
+    //        if (value && _preVal != value)
+    //        {
+    //            Debug.Log("gameStart");
+    //            OnGameStartedEarly?.Invoke(this);
+    //            _gameStartCountdown = GameManager.GameStartDelay;
+    //        }
+    //        _gameStart = value;
+    //    }
+    //}
 
-    bool reachedHalwayGameStartCountdown
-    {
-        get { return _reachedHalwayGameStartCountdown; }
-        set
-        {
-            bool _preVal = _reachedHalwayGameStartCountdown;
-            _reachedHalwayGameStartCountdown = value;
+    //bool reachedHalwayGameStartCountdown
+    //{
+    //    get { return _reachedHalwayGameStartCountdown; }
+    //    set
+    //    {
+    //        bool _preVal = _reachedHalwayGameStartCountdown;
+    //        _reachedHalwayGameStartCountdown = value;
 
-            if (value && _preVal != value)
-            {
-                MapCamera.instance.TriggerGameStartBehaviour();
-            }
-        }
-    }
+    //        if (value && _preVal != value)
+    //        {
+    //            Debug.Log("reachedHalwayGameStartCountdown");
+    //            //MapCamera.instance.TriggerGameStartBehaviour();
+
+    //        }
+    //    }
+    //}
 
     public bool gameStarted
     {
@@ -199,13 +218,19 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
+                Debug.Log("gameStarted");
                 _gameStarted = true;
-                MapCamera.instance.gameObject.SetActive(false);
-                foreach (Player p in GameManager.instance.localPlayers.Values)
-                    p.TriggerGameStartBehaviour();
 
-                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                    SwarmManager.instance.Begin();
+                //StartCoroutine(GameStartDelayMapCamera_Coroutine());
+                //StartCoroutine(GameStartDelay_Coroutine());
+
+
+                //MapCamera.instance.gameObject.SetActive(false);
+                //foreach (Player p in GameManager.instance.localPlayers.Values)
+                //    p.TriggerGameStartBehaviour();
+
+                //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                //    SwarmManager.instance.Begin();
             }
         }
     }
@@ -235,11 +260,29 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    public float vetoCountdown
+    {
+        get { return _vetoCountdown; }
+        set
+        {
+            _vetoCountdown = value;
+        }
+    }
 
+    public float roomGameStartCountdown
+    {
+        get { return _roomGameStartCountdown; }
+        set
+        {
+            _roomGameStartCountdown = value;
+        }
+    }
+
+    public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
     [SerializeField] bool _gameStart, _gameStarted, _gameOver;
-    [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9;
+    [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9, _rpcCooldown;
 
     [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _nbPlayersJoined, _vetos;
 
@@ -250,8 +293,16 @@ public class CurrentRoomManager : MonoBehaviour
     Dictionary<string, int> _playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
     [SerializeField] bool _reachedHalwayGameStartCountdown, _randomQuickMatchSeetingsChosen;
+    //[SerializeField] Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData> _extendedPlayerData = new Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData>();
+
+    [SerializeField] GameManager.GameType _vetoedGameType;
+    [SerializeField] int _ran, _vetoedMapIndex;
+
+    [SerializeField] List<ScriptObjPlayerData> _extendedPlayerData = new List<ScriptObjPlayerData>();
+    [SerializeField] List<ScriptObjBipedTeam> _bipedTeams;
 
 
+    int ran;
 
 
 
@@ -260,7 +311,8 @@ public class CurrentRoomManager : MonoBehaviour
 
     void Awake()
     {
-        _vetoCountdown = 9;
+        _rpcCooldown = 0.3f;
+        vetoCountdown = roomGameStartCountdown = 9;
 
         if (_instance != null && _instance != this)
         {
@@ -276,34 +328,62 @@ public class CurrentRoomManager : MonoBehaviour
 
     private void Start()
     {
-        _vetoCountdown = 9;
+        vetoCountdown = 9;
+
+        foreach (ScriptObjPlayerData sod in instance._extendedPlayerData)
+        {
+            sod.playerExtendedPublicData = null;
+        }
     }
 
     private void Update()
     {
-        if (gameStart && !gameStarted)
+
+
+        //if (gameStart && !gameStarted)
+        //{
+        //    _gameStartCountdown -= Time.deltaTime;
+
+        //    if (!reachedHalwayGameStartCountdown && _gameStartCountdown <= GameManager.GameStartDelay)
+        //        reachedHalwayGameStartCountdown = true;
+
+        //    if (_gameStartCountdown <= 0)
+        //        gameStarted = true;
+        //}
+
+        if (SceneManager.GetActiveScene().buildIndex > 0) return;
+
+
+        if (_rpcCooldown > 0)
         {
-            _gameStartCountdown -= Time.deltaTime;
+            _rpcCooldown -= Time.deltaTime;
 
-            if (!reachedHalwayGameStartCountdown && _gameStartCountdown <= GameManager.GameStartDelay)
-                reachedHalwayGameStartCountdown = true;
 
-            if (_gameStartCountdown <= 0)
-                gameStarted = true;
         }
 
 
         if (PhotonNetwork.InRoom)
         {
 
-            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) >= 1) // At least one more stranger player is in the room
-                if (_randomQuickMatchSeetingsChosen && _vetoCountdown > 0)
+            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) > 0) // At least one more stranger player is in the room
+                if (_randomQuickMatchSeetingsChosen && vetoCountdown > 0)
                 {
-                    _vetoCountdown -= Time.deltaTime;
 
-                    Launcher.instance.gameCountdownText.text = $"VETO COUNTDOWN: {((int)_vetoCountdown)} seconds\nVetos: {instance.vetos} out of {instance.expectedNbPlayers}";
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        vetoCountdown -= Time.deltaTime;
 
-                    if (_vetoCountdown <= 0)
+                        if (_rpcCooldown <= 0)
+                        {
+                            // TODO
+
+                            NetworkGameManager.instance.UpdateRoomCountdowns((int)vetoCountdown, (int)roomGameStartCountdown);
+                        }
+                    }
+
+                    Launcher.instance.gameCountdownText.text = $"VETO COUNTDOWN: {((int)vetoCountdown)} seconds\nVetos: {instance.vetos} out of {instance.expectedNbPlayers}";
+
+                    if (vetoCountdown <= 0)
                     {
                         Launcher.instance.vetoBtn.SetActive(false);
 
@@ -319,16 +399,30 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
-            if (_randomQuickMatchSeetingsChosen && _roomGameStartCountdown > 0 && _vetoCountdown <= 0)
+            if (_randomQuickMatchSeetingsChosen && roomGameStartCountdown > 0 && vetoCountdown <= 0)
             {
-                _roomGameStartCountdown -= Time.deltaTime;
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    roomGameStartCountdown -= Time.deltaTime;
 
-                Launcher.instance.gameCountdownText.text = $"Game Starts in: {((int)_roomGameStartCountdown)}";
+                    if (_rpcCooldown <= 0)
+                    {
+                        // TODO
+                        NetworkGameManager.instance.UpdateRoomCountdowns((int)vetoCountdown, (int)roomGameStartCountdown);
+                    }
+                }
 
-                if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
-                    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
-                        Launcher.instance.StartGame();
+                Launcher.instance.gameCountdownText.text = $"Game Starts in: {((int)roomGameStartCountdown)}";
+
+                //if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                //    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
+                //        Launcher.instance.StartGame();
             }
+        }
+
+        if (_rpcCooldown <= 0)
+        {
+            _rpcCooldown = 0.3f;
         }
     }
 
@@ -379,8 +473,7 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
-    [SerializeField] GameManager.GameType _vetoedGameType;
-    [SerializeField] int _ran, _vetoedMapIndex;
+
 
     public void ChooseRandomMatchSettingsForQuickMatch()
     {
@@ -388,7 +481,19 @@ public class CurrentRoomManager : MonoBehaviour
         _ran = Random.Range(0, 5);
         _ran = 2;
 
-        if (_ran > 1) // PvP
+        //if (expectedNbPlayers == 1)
+        //{
+        //    GameManager.instance.gameMode = GameManager.GameMode.Swarm;
+        //    GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
+
+        //    ChooseRandomPvEMap();
+        //    if (_vetoedMapIndex != 0)
+        //        while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
+        //        {
+        //            ChooseRandomPvEMap();
+        //        }
+        //}
+        //else // PvP
         {
             GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 
@@ -436,16 +541,12 @@ public class CurrentRoomManager : MonoBehaviour
     {
         _ran = Random.Range(0, 100);
 
-        if (_ran <= 25)
-            GameManager.instance.gameType = GameManager.GameType.Slayer;
-        else if (_ran <= 60)
+        if (_ran <= 50)
             GameManager.instance.gameType = GameManager.GameType.Pro;
-        else if (_ran <= 70)
+        else if (_ran <= 60)
             GameManager.instance.gameType = GameManager.GameType.Swat;
         else if (_ran <= 80)
             GameManager.instance.gameType = GameManager.GameType.Hill;
-        else if (_ran <= 90)
-            GameManager.instance.gameType = GameManager.GameType.Retro;
         else if (_ran <= 100)
             GameManager.instance.gameType = GameManager.GameType.Snipers;
     }
@@ -454,26 +555,37 @@ public class CurrentRoomManager : MonoBehaviour
     {
         _ran = Random.Range(0, 100);
 
-        if (_ran <= 10)
-            Launcher.instance.ChangeLevelToLoadWithIndex(5);// Cargo
-        else if (_ran <= 20)
-            Launcher.instance.ChangeLevelToLoadWithIndex(6);// Oasis
-        else if (_ran <= 30)
-            Launcher.instance.ChangeLevelToLoadWithIndex(7);// Showdown
-        else if (_ran <= 40)
-            Launcher.instance.ChangeLevelToLoadWithIndex(8);// Babylon
+        //if (_ran <= 10)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(5);// Lightouse
+        //else if (_ran <= 20)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(6);// Oasis
+        //else if (_ran <= 30)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(7);// Canyon
+        //else if (_ran <= 40)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(8);// Babylon
+        //else if (_ran <= 50)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(9);// Starship
+        //else if (_ran <= 60)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(10);// Temple
+        //else if (_ran <= 70)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(11);// Blizzard
+        //else if (_ran <= 80)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(12);// Factory
+        //else if (_ran <= 90)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(17);// Parasite
+        //else if (_ran <= 100)
+        //    Launcher.instance.ChangeLevelToLoadWithIndex(18);// Shaman
+
+
+
+        if (_ran <= 25)
+            Launcher.instance.ChangeLevelToLoadWithIndex(2);// Oasis
         else if (_ran <= 50)
-            Launcher.instance.ChangeLevelToLoadWithIndex(9);// Starship
-        else if (_ran <= 60)
-            Launcher.instance.ChangeLevelToLoadWithIndex(10);// Temple
-        else if (_ran <= 70)
-            Launcher.instance.ChangeLevelToLoadWithIndex(11);// Blizzard
-        else if (_ran <= 80)
-            Launcher.instance.ChangeLevelToLoadWithIndex(12);// Factory
-        else if (_ran <= 90)
-            Launcher.instance.ChangeLevelToLoadWithIndex(17);// Parasite
+            Launcher.instance.ChangeLevelToLoadWithIndex(3);// Factory
+        else if (_ran <= 75)
+            Launcher.instance.ChangeLevelToLoadWithIndex(9);// Factory
         else if (_ran <= 100)
-            Launcher.instance.ChangeLevelToLoadWithIndex(18);// Shaman
+            Launcher.instance.ChangeLevelToLoadWithIndex(10);// Shaman
     }
 
     void ChooseRandomPvEMap()
@@ -488,7 +600,125 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void ResetRoomCountdowns()
     {
-        _vetoCountdown = 9;
+        vetoCountdown = 9;
         _gameStartCountdown = 9;
+    }
+
+    public void AddExtendedPlayerData(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
+    {
+        Debug.Log(pepd.username.Equals(GameManager.ROOT_PLAYER_NAME));
+
+        if (pepd.username.Equals(GameManager.ROOT_PLAYER_NAME))
+            instance._extendedPlayerData[0].playerExtendedPublicData = pepd;
+        else
+            for (int i = 0; i < CurrentRoomManager.instance._extendedPlayerData.Count; i++)
+            {
+                Debug.Log($"Player Extended Public Data {CurrentRoomManager.instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
+                if (i > 0 && !instance._extendedPlayerData[i].occupied)
+                {
+                    Debug.Log("Player Extended Public Data");
+                    CurrentRoomManager.instance._extendedPlayerData[i].playerExtendedPublicData = pepd;
+                    break;
+                }
+            }
+    }
+
+    public void RemoveExtendedPlayerData(string n)
+    {
+        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        {
+            if (instance._extendedPlayerData[i].occupied)
+                if (instance._extendedPlayerData[i].playerExtendedPublicData.username.Equals(n))
+                {
+                    instance._extendedPlayerData[i].playerExtendedPublicData = null;
+                }
+        }
+    }
+
+    public bool PlayerExtendedDataContainsPlayerName(string n)
+    {
+        //foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
+        //    if (pepd.playerExtendedPublicData.username.Equals(n))
+        //        return true;
+
+
+        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        {
+            //Debug.Log(n == null);
+            //Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i] == null}");
+            //Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData == null}");
+            Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData.username == null}");
+            if (instance._extendedPlayerData[i].occupied)
+                if (instance._extendedPlayerData[i].playerExtendedPublicData.username != null)
+                    if (instance._extendedPlayerData[i].playerExtendedPublicData.username.Equals(n))
+                    {
+                        return true;
+                    }
+
+        }
+
+
+
+        return false;
+    }
+
+    public void AddTeamData(string pn, GameManager.Team t)
+    {
+        ScriptObjBipedTeam bt = _bipedTeams.FirstOrDefault(i => i.playerName == pn);
+        if (bt != null)
+        {
+            bt.team = t;
+        }
+        else
+        {
+            bt = _bipedTeams.FirstOrDefault(i => i.playerName == "");
+            bt.playerName = pn; bt.team = t;
+        }
+    }
+    public void SoftResetPlayerExtendedData()
+    {
+        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+            if (i > 0)
+            {
+                instance._extendedPlayerData[i].playerExtendedPublicData = null;
+            }
+    }
+
+    public PlayerDatabaseAdaptor.PlayerExtendedPublicData GetPLayerExtendedData(string u)
+    {
+        foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
+            if (pepd.occupied)
+                if (pepd.playerExtendedPublicData.username.Equals(u))
+                    return pepd.playerExtendedPublicData;
+
+        return null;
+    }
+
+    public void UpdateCountdowns(int vetoC, int roomGameStartC)
+    {
+        _vetoCountdown = vetoC;
+        _roomGameStartCountdown = roomGameStartC;
+    }
+
+    IEnumerator GameStartDelayMapCamera_Coroutine()
+    {
+        yield return new WaitForSeconds(2);
+
+        MapCamera.instance.TriggerGameStartBehaviour();
+    }
+
+
+    IEnumerator GameStartDelay_Coroutine()
+    {
+        yield return new WaitForSeconds(8);
+
+        MapCamera.instance.gameObject.SetActive(false);
+        foreach (Player p in GameManager.instance.localPlayers.Values)
+            p.TriggerGameStartBehaviour();
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            SwarmManager.instance.Begin();
+
+        gameStarted = true;
     }
 }

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4451450385135287663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4451450385135287661}
+  - component: {fileID: 4451450385135287662}
+  m_Layer: 0
+  m_Name: Weapon Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4451450385135287661
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4451450385135287663}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4451450385135287662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4451450385135287663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32847b4cd33ab694eb46869766b70ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponCollisionSmoke: {fileID: 3153810699896921423, guid: 70421fc0a47ec0545a6cc52aa1ae17ea,
+    type: 3}
+  _weaponPrefabs:
+  - {fileID: 3067933976528617592, guid: 0ff12ac0e97f2964d8f0a19b69f0d314, type: 3}
+  - {fileID: 2681464930839355766, guid: c45a501cd8fc0624eb34d6127238a31f, type: 3}
+  - {fileID: 4872683641760828623, guid: 06c33ff6616c7c34691663fec2c5d32e, type: 3}
+  - {fileID: 4058944795677157354, guid: d498d0b5eb055254ea1ff537012e552b, type: 3}
+  - {fileID: 3618829932361751299, guid: b299923608cf2904482df26a7edc0d2a, type: 3}
+  - {fileID: 2711562721274824091, guid: ed5485212b7417f4688761d6f5a197b7, type: 3}
+  - {fileID: 6583879716112079941, guid: 340284f3d51676c48b10e03bf02c5e69, type: 3}
+  - {fileID: 7368614592611344181, guid: 5e9b3a441417e8448903c7387c946492, type: 3}
+  - {fileID: 7327557961540528252, guid: d77918f186366c34689c0ba167aaeecb, type: 3}
+  - {fileID: 6552356763530869521, guid: caf9c3869017bc2479c2e3e233f9b1bf, type: 3}
+  _spawnedWeapons: []

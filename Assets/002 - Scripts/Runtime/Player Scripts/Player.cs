@@ -22,7 +22,7 @@ public class Player : Biped
 
     // public variables
     #region
-    public bool isInvincible { get { return _isInvincible; } }
+    public bool isInvincible { get { return _isInvincible; } set { _isInvincible = value; } }
     public int controllerId
     {
         get { return GetComponent<PlayerController>().rid; }
@@ -708,7 +708,14 @@ public class Player : Biped
             if (!t.ContainsKey(pid))
                 t.Add(pid, this);
             GameManager.instance.pid_player_Dict = t;
-            CurrentRoomManager.instance.nbPlayersJoined++;
+            //CurrentRoomManager.instance.nbPlayersJoined++;
+        }
+        catch { }
+
+        try
+        {
+            if (isMine)
+                NetworkGameManager.instance.AddPlayerJoinedCount();
         }
         catch { }
         try { team = GameManager.instance.onlineTeam; } catch { }
@@ -873,7 +880,7 @@ public class Player : Biped
         NetworkGameManager.SpawnNetworkWeaponOnPlayerDeath(firstWeapon, secondWeapon,
            weaponDropPoint.position, weaponDropPoint.transform.forward, weaponDropPoint.position + new Vector3(0, 1, 0));
 
-        GC.Collect();
+        //GC.Collect(); // LAG SPIKE
     }
 
 
@@ -891,10 +898,12 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
+        Debug.Log($"Spawning Player Ragdoll");
         print(_deathNature);
-        var ragdoll = GameObjectPool.instance.SpawnPooledPlayerRagdoll();
+        var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
+        ragdoll.GetComponent<PlayerArmorManager>().player = this;
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
 
@@ -905,6 +914,7 @@ public class Player : Biped
         }
         else
         {
+            Debug.Log($"Player {name} has color palette: {playerArmorManager.colorPalette}");
             ragdoll.GetComponent<PlayerArmorManager>().armorDataString = playerArmorManager.armorDataString;
             ragdoll.GetComponent<PlayerArmorManager>().colorPalette = playerArmorManager.colorPalette;
         }
@@ -1006,6 +1016,7 @@ public class Player : Biped
 
         int levelToLoad = 0;
 
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(levelToLoad);
@@ -1281,7 +1292,7 @@ public class Player : Biped
 
         hitboxesEnabled = false;
 
-        try { SpawnRagdoll(); } catch (System.Exception e) { Debug.Log(e); }
+        SpawnRagdoll();
         try { StartCoroutine(Respawn_Coroutine()); } catch { }
         try { StartCoroutine(MidRespawnAction()); } catch { }
 
@@ -1410,7 +1421,9 @@ public class Player : Biped
         try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
-        try { hitPoints = newHealth; } catch (Exception e) { GameManager.SendErrorEmailReport(e.ToString()); }
+        if (newHealth <= 0 && isInvincible) newHealth = 1;
+
+        hitPoints = newHealth;
 
 
         try

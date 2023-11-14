@@ -45,14 +45,12 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(string menuName) // Open a menu GO using the name from its Menu script
     {
-        if (menuName == "online title")
-            Debug.Log("Opening Online Title");
 
+        Debug.Log($"Opem {menuName}");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName == menuName)
             {
-                Debug.Log($"Opem {menuName}");
                 menus[i].Open();
             }
             else if (menus[i].open)
@@ -67,6 +65,7 @@ public class MenuManager : MonoBehaviour
     {
         ResetLoadingMenu();
 
+        Debug.Log($"Opem {menu.menuName}");
         // Close all menus first
         for (int i = 0; i < menus.Length; i++)
         {
@@ -76,7 +75,6 @@ public class MenuManager : MonoBehaviour
                 CloseMenu(menus[i]);
             }
         }
-        Debug.Log($"Opem {menu.menuName}");
         menu.Open(); // Then open the one we need
     }
 

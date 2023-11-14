@@ -473,7 +473,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     [PunRPC]
     void DespawnAmmoPack_RPC(int index)
     {
-        weaponPool.allAmmoPacks[index].GetComponent<NetworkGrenadeSpawnPoint>().onlineAmmoPackSpawnPoint.StartRespawn();
-        weaponPool.allAmmoPacks[index].SetActive(false);
+        //weaponPool.allAmmoPacks[index].GetComponent<NetworkGrenadeSpawnPoint>().onlineAmmoPackSpawnPoint.StartRespawn();
+        //weaponPool.allAmmoPacks[index].SetActive(false);
     }
 }

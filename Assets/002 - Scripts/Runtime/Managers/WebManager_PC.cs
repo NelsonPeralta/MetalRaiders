@@ -11,7 +11,9 @@ public partial class WebManager
     IEnumerator Login_Coroutine(string username, string password)
     {
         WWWForm form = new WWWForm();
-        form.AddField("service", "login");
+        string m = "login";
+        if (password.Equals("steam")) m = "loginwithsteam";
+        form.AddField("service", m);
         form.AddField("username", username);
         form.AddField("password", password);
         Debug.Log($"Password: {password}");
@@ -24,6 +26,8 @@ public partial class WebManager
             if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.Log(www.error);
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
             }
             else
             {
@@ -39,11 +43,13 @@ public partial class WebManager
                     PhotonNetwork.NickName = pda.username;
 
                     StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id));
+                    StartCoroutine(GetPlayerExtendedPublicData_Coroutine(username));
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id));
 
                     //Launcher.instance.ShowPlayerMessage("Logged in successfully!");
-                    MenuManager.Instance.OpenMenu("online title");
+                    //MenuManager.Instance.OpenMenu("online title");
+                    GameManager.instance.playerDataRetrieved = true;
                 }
                 catch (Exception e)
                 {
@@ -58,14 +64,15 @@ public partial class WebManager
         }
     }
 
-    IEnumerator GetPlayerPublicData_Coroutine(string username, PlayerListItem pli = null)
+    IEnumerator GetPlayerExtendedPublicData_Coroutine(string username, PlayerListItem pli = null)
     {
+        Debug.Log("GetPlayerExtendedPublicData_Coroutine");
         // DISCLAIMER
         // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
 
         PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
-        if (pli)
-            pda.playerListItem = pli;
+        //if (pli)
+        //    pda.playerListItem = pli;
         WWWForm form = new WWWForm();
         form.AddField("service", "getplayerpublicdata");
         form.AddField("username", username);
@@ -85,33 +92,50 @@ public partial class WebManager
 
                 string jsonarray = www.downloadHandler.text;
 
+                Debug.Log(jsonarray);
+                PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
                 try
                 {
-                    pda.playerLoginData = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
+                    CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
+                }
+                catch (Exception e) { Debug.LogWarning(e); }
 
-                    StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id, pda));
-                    StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
-                    StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
+                try
+                {
+                    pli.playerExtendedPublicData = pepd;
+                }
+                catch (Exception e) { Debug.LogWarning(e); }
 
-                    var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
-                    if (!d.ContainsKey(pda.username))
-                        d.Add(pda.username, pda);
-                    else
-                        d[pda.username] = pda;
+                try
+                {
+                    //pda.player = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
 
-                    GameManager.instance.roomPlayerData = d;
+                    //StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id, pda));
+                    //StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
+                    //StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
 
-                    if (pli)
-                        pli.pda = pda;
+                    //var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
+                    //if (!d.ContainsKey(pda.username))
+                    //{
+                    //    //Debug.Log($"Adding key {}")
+                    //    d.Add(pda.username, pda);
+                    //}
+                    //else
+                    //    d[pda.username] = pda;
+
+                    //GameManager.instance.roomPlayerData = d;
+
+                    //if (pli)
+                    //    pli.pda = pda;
 
 
-                    //Launcher.instance.ShowPlayerMessage("Logged in successfully!");
-                    if (!pli)
-                        MenuManager.Instance.OpenMenu("online title");
+                    //Launcher.instance.ShowPlayerMessage("Fetched player extended data successfully!");
+                    //if (!pli)
+                    //    MenuManager.Instance.OpenMenu("online title");
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
+                    Debug.LogWarning(e);
                     if (www.downloadHandler.text.Contains("wrong credentials"))
                     {
                         Launcher.instance.OnCreateRoomFailed(0, "Wrong credentials");
@@ -181,7 +205,7 @@ public partial class WebManager
     {
         int xpAndCreditGain = PlayerProgressionManager.xpGainPerMatch;
 
-        Debug.Log("SaveBasicOnlineStats_Coroutine");
+        Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {pda.playerBasicOnlineStats.xp} -> {pda.playerBasicOnlineStats.xp + xpAndCreditGain}");
 
         int playerId = pda.id;
         int newLevel = pda.playerBasicOnlineStats.level;
@@ -204,7 +228,6 @@ public partial class WebManager
 
         PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.playerBasicOnlineStats.level, pda.playerBasicOnlineStats.honor);
 
-        GameManager.instance.carnageReport = new CarnageReport(rank,pda.level, pda.xp, xpAndCreditGain, pda.honor, honorGained);
 
 
         if (newXp >= minXpToLevelUp)
@@ -212,6 +235,7 @@ public partial class WebManager
             Debug.Log("LEVEL UP");
             newLevel = pda.playerBasicOnlineStats.level + 1;
         }
+        GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, xpAndCreditGain, pda.honor, honorGained, newXp >= minXpToLevelUp, newLevel);
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveBasicOnlineStats");
