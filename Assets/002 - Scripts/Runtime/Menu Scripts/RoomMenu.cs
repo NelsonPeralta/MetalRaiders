@@ -14,7 +14,7 @@ public class RoomMenu : MonoBehaviour
         {
             FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
             FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
-            FindObjectOfType<Launcher>().levelToLoadIndex = 13;
+            FindObjectOfType<Launcher>().levelToLoadIndex = 11;
         }
         else if (GameManager.instance.gameMode == GameMode.Multiplayer)
         {
@@ -24,7 +24,7 @@ public class RoomMenu : MonoBehaviour
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
 
             FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
-            FindObjectOfType<Launcher>().levelToLoadIndex = 5;
+            FindObjectOfType<Launcher>().levelToLoadIndex = 1;
         }
         Launcher.instance.gameModeText.text = $"Game Mode: {GameManager.instance.gameMode}";
 
