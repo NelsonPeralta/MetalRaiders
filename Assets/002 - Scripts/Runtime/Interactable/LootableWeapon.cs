@@ -301,8 +301,8 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         GetComponent<Rigidbody>().velocity /= 2;
         try
         {
-            //GetComponent<AudioSource>().clip = _collisionAudioClip;
-            //GetComponent<AudioSource>().Play();
+            GetComponent<AudioSource>().clip = _collisionAudioClip;
+            GetComponent<AudioSource>().Play();
             GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(transform.position);
         }
         catch (System.Exception e) { Debug.LogError(e); }

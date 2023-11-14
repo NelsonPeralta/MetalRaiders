@@ -5,18 +5,16 @@ using UnityEngine;
 
 public class PlayerRagdoll : Ragdoll
 {
-    public Transform head;
-    public Transform hips;
-
+    
     [SerializeField] Transform _cameraHolder;
     [SerializeField] Transform _cameraAnchor;
     [SerializeField] Transform _cameraHorAxis;
     [SerializeField] Transform _cameraVerAxis;
 
+
     Vector3 _v = new Vector3(0, 0.5f, 0);
 
-   
-    private void Update()
+    public override void ChildUpdate()
     {
         _cameraHolder.localPosition = hips.localPosition - _v;
     }
