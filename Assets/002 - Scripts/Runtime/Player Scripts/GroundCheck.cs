@@ -16,7 +16,6 @@ public class GroundCheck : MonoBehaviour
 
     private void Start()
     {
-        OnGrounded += player.GetComponent<PlayerImpactReceiver>().OnGrounded_Event;
     }
 
     private void OnTriggerExit(Collider other)

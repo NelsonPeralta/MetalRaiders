@@ -59,7 +59,6 @@ public class Explosion : MonoBehaviour
 
 
             Rigidbody rb = col.GetComponent<Rigidbody>();
-            CharacterController cc = col.GetComponent<CharacterController>();
 
 
             float disRatio = 1 - (hitDistance / radius);
@@ -72,12 +71,7 @@ public class Explosion : MonoBehaviour
             if (rb != null)
                 rb.AddExplosionForce(calculatedPower, explosionPos, radius, 3.0F);
 
-            if (cc)
-            {
-                Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(exDir, calculatedPower / characterControllerDivider);
-            }
-
+            
             if (col.GetComponent<PlayerHitbox>() && !col.GetComponent<PlayerHitbox>().player.isDead && !col.GetComponent<PlayerHitbox>().player.isRespawning)
             {
                 GameObject playerHit = col.GetComponent<PlayerHitbox>().player.gameObject;

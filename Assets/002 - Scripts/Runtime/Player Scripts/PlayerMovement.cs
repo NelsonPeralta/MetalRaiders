@@ -37,16 +37,29 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public float currentWorldSpeed
+    {
+        get { return _currentWorldSpeed; }
+        private set
+        {
+            _currentWorldSpeed = value;
+            //if (value <= 0.15 * currentMaxSpeed)
+            //    isMoving = false;
+            //else
+            //    isMoving = true;
+        }
+    }
+
     [SerializeField] ThirdPersonLookAt _tpLookAt;
 
 
     [Header("Movement")]
-    private float moveSpeed;
+    public float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
 
-    private float desiredMoveSpeed;
-    private float lastDesiredMoveSpeed;
+    public float desiredMoveSpeed;
+    public float lastDesiredMoveSpeed;
 
     public float speedIncreaseMultiplier;
     public float slopeIncreaseMultiplier;
@@ -87,20 +100,23 @@ public class PlayerMovement : MonoBehaviour
     public Transform orientation, slopeOrientation, playerCapsule;
 
 
-    [SerializeField] float _animationSpeed;
+    [SerializeField] float _animationSpeed, _currentWorldSpeed;
     [SerializeField] float _rawRightInput, _rawForwardInput, _correctedRightInput, _correctedForwardInput;
 
 
-    float _rightDeadzone = 0.2f, _forwardDeadzone = 0.2f;
+    float _rightDeadzone = 0.2f, _forwardDeadzone = 0.2f, _lastCalulatedGroundedSpeed;
 
     Rigidbody _rb;
     Player _player;
     PlayerController _pController;
     Rewired.Player _rewiredPlayer;
 
+    Vector3 _lastPos;
+
     public MovementState state;
     public enum MovementState
     {
+        idling,
         walking,
         sprinting,
         crouching,
@@ -126,6 +142,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        CalculateCurrentSpeed();
+
         try
         {
             if (OnSlope())
@@ -197,8 +215,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
+        // Mode = Idling
+
+        if (correctedXInput == 0 && correctedZInput == 0)
+        {
+            state = MovementState.idling;
+            desiredMoveSpeed = 0;
+        }
+
         // Mode - Crouching
-        if (rewiredPlayer.GetButton("Crouch"))
+        else if (rewiredPlayer.GetButton("Crouch"))
         {
             state = MovementState.crouching;
             if (isGrounded)
@@ -235,28 +261,35 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // check if desiredMoveSpeed has changed drastically
-        if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
-        {
-            StopAllCoroutines();
-            StartCoroutine(SmoothlyLerpMoveSpeed());
-        }
-        else
-        {
-            moveSpeed = desiredMoveSpeed;
-        }
+        //if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
+        //{
+        //    StopAllCoroutines();
+        //    StartCoroutine(SmoothlyLerpMoveSpeed());
+        //}
+        //else
+        //{
+        //    moveSpeed = desiredMoveSpeed;
+        //}
+
+        StartCoroutine(SmoothlyLerpMoveSpeed());
 
         lastDesiredMoveSpeed = desiredMoveSpeed;
     }
 
+    [SerializeField] float time, difference, startValue;
+    [SerializeField] bool processingMoveSpeed;
+
     private IEnumerator SmoothlyLerpMoveSpeed()
     {
         // smoothly lerp movementSpeed to desired value
-        float time = 0;
-        float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
-        float startValue = moveSpeed;
+        time = 0;
+        difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
+        startValue = moveSpeed;
+        processingMoveSpeed = true;
 
         while (time < difference)
         {
+            processingMoveSpeed = true;
             moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
 
             if (OnSlope())
@@ -588,5 +621,20 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
             catch { }
+    }
+
+
+
+    void CalculateCurrentSpeed()
+    {
+        Vector3 curPos = transform.position; curPos.y = 0;
+        Vector3 lasPos = _lastPos; lasPos.y = 0;
+
+        currentWorldSpeed = ((curPos - lasPos).magnitude / Time.deltaTime);
+        currentWorldSpeed = Mathf.Clamp(Mathf.Round(currentWorldSpeed * 10f) / 10f, 0, walkSpeed);
+        if (isGrounded)
+            _lastCalulatedGroundedSpeed = currentWorldSpeed;
+        _lastPos = transform.position;
+        //CalculateSpeedRatio();
     }
 }

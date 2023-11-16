@@ -140,12 +140,7 @@ public class StickyGrenade : MonoBehaviour
             if (rb != null)
                 rb.AddExplosionForce(power * 5, explosionPos, radius, 3.0F);
 
-            CharacterController cc = hit.GetComponent<CharacterController>();
-            if (cc)
-            {
-                Vector3 exDir = (cc.transform.position - this.transform.position).normalized;
-                cc.GetComponent<PlayerImpactReceiver>().AddImpact(player, exDir, power * 5);
-            }
+            
 
             if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
             {

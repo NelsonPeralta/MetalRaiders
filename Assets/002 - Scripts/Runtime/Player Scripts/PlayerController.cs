@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviourPun
     public ReloadScript rScript;
     public PlayerWeaponSwapping wPickup;
     public DualWieldingReload dwReload;
-    public Movement movement;
+    public PlayerMovement movement;
     public Melee melee;
     public ControllerType activeControllerType
     {
@@ -325,7 +325,7 @@ public class PlayerController : MonoBehaviourPun
         }
 
 
-        if (movement.movementDirection == Movement.PlayerMovementDirection.Forward)
+        if (movement.movementDirection == PlayerMovement.PlayerMovementDirection.Forward)
         {
             if (!movement.isGrounded || isReloading)
                 return;
