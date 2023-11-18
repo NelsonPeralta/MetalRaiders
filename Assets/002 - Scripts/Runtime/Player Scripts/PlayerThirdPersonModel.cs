@@ -5,17 +5,12 @@ using UnityEngine;
 
 public class PlayerThirdPersonModel : MonoBehaviour
 {
+    [SerializeField] Transform _playerCapsuleFeet;
+
+    Vector3 _vect;
     private void Awake()
     {
-        return;
-        var components = GetComponents<Component>().Concat(GetComponentsInChildren<Component>()).ToArray();
-        foreach (var t in components)
-        {
-            if (t is Rigidbody || t is Renderer || t is MeshFilter || t is MeshRenderer || t is SkinnedMeshRenderer ||
-                t is UnityEngine.ProBuilder.ProBuilderMesh)
-                continue;
-            Destroy(t);
-        }
+        
     }
 
     // Start is called before the first frame update
@@ -27,6 +22,10 @@ public class PlayerThirdPersonModel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        try
+        {
+            transform.position = new Vector3(_playerCapsuleFeet.transform.position.x, _playerCapsuleFeet.transform.position.y, _playerCapsuleFeet.transform.position.z);
+        }
+        catch { }
     }
 }

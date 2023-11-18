@@ -227,6 +227,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
     void OnPLayerDeath(Player p)
     {
+        Debug.Log("OnPLayerDeath");
         gameObject.layer = 3;
         weaponsInRange.Clear();
         weaponsInRange = weaponsInRange;

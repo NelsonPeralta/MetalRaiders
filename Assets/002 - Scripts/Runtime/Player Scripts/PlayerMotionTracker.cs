@@ -5,6 +5,7 @@ using Photon.Pun;
 
 public class PlayerMotionTracker : MonoBehaviourPun
 {
+
     public Player player;
     public Camera minimapCamera;
     public GameObject friendlyDot;
@@ -28,10 +29,10 @@ public class PlayerMotionTracker : MonoBehaviourPun
     {
         friendlyDot.SetActive(false);
 
-        player.GetComponent<Movement>().OnPlayerStartedMoving -= OnPlayerStartedMoving_Delegate;
-        player.GetComponent<Movement>().OnPlayerStartedMoving += OnPlayerStartedMoving_Delegate;
-        player.GetComponent<Movement>().OnPlayerStoppedMoving -= OnPlayerStoppedMoving_Delegate;
-        player.GetComponent<Movement>().OnPlayerStoppedMoving += OnPlayerStoppedMoving_Delegate;
+        player.GetComponent<PlayerMovement>().OnPlayerStartedMoving -= OnPlayerStartedMoving_Delegate;
+        player.GetComponent<PlayerMovement>().OnPlayerStartedMoving += OnPlayerStartedMoving_Delegate;
+        player.GetComponent<PlayerMovement>().OnPlayerStoppedMoving -= OnPlayerStoppedMoving_Delegate;
+        player.GetComponent<PlayerMovement>().OnPlayerStoppedMoving += OnPlayerStoppedMoving_Delegate;
 
         player.GetComponent<PlayerController>().OnCrouchDown -= OnCrouchDown_Delegate;
         player.GetComponent<PlayerController>().OnCrouchDown += OnCrouchDown_Delegate;
@@ -40,7 +41,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
         player.GetComponent<PlayerController>().OnCrouchUp += OnCrouchUp_Delegate;
     }
 
-    void OnPlayerStartedMoving_Delegate(Movement movement)
+    void OnPlayerStartedMoving_Delegate(PlayerMovement movement)
     {
         Debug.Log("OnPlayerStartedMoving_Delegate");
         if (!movement.GetComponent<PlayerController>().isCrouching)
@@ -49,7 +50,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
         //friendlyDot.SetActive(true);
     }
 
-    void OnPlayerStoppedMoving_Delegate(Movement movement)
+    void OnPlayerStoppedMoving_Delegate(PlayerMovement movement)
     {
         if (GetComponent<PhotonView>().IsMine)
             GetComponent<PhotonView>().RPC("HideDot_RPC", RpcTarget.All);
@@ -57,7 +58,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
 
     void OnCrouchUp_Delegate(PlayerController playerController)
     {
-        if (player.GetComponent<Movement>().isMoving)
+        if (player.GetComponent<PlayerMovement>().moveSpeed > 0.5f)
             if (GetComponent<PhotonView>().IsMine)
                 GetComponent<PhotonView>().RPC("ShowDot_RPC", RpcTarget.All);
     }

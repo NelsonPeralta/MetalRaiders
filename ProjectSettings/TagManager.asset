@@ -3,7 +3,25 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Pickable
+  - Attachment
+  - Player Inventory
+  - Player Camera
+  - Weapon Binder
+  - Weapon
+  - Casing Spawn Point
+  - Muzzleflash Light
+  - Muzzleflash Particles
+  - Spark Particles
+  - Bullet Spawn Point
+  - Bullet Renderer
+  - Grenade Spawn Point
+  - Player Informer
+  - Crosshairs
+  - Scope BG
+  - Weapon Sounds
+  - ObjectPool
   layers:
   - Default
   - TransparentFX
@@ -13,7 +31,7 @@ TagManager:
   - UI
   - Player
   - Hitbox
-  - Player Bullet
+  - Bullet/Grenade
   - Player Ground Check
   - Physical Loot (Player Feet)
   - AI
@@ -22,7 +40,7 @@ TagManager:
   - AI Shield
   - Aim Assist
   - Interactable
-  - Player/HB Detector
+  - Player/HB Detect
   - Motion Tracker (Player FPS Models)
   - Reticule Friction (Player TPS Models)
   - Player 1 UI (Motion Tracker)

@@ -8,7 +8,7 @@ public class ThirdPersonLookAt : MonoBehaviour
     public Animator anim;
     public Transform lookAtGO;
     public Transform chest;
-    public Movement movement;
+    public PlayerMovement movement;
     //public PhotonView photonView;
 
     [Header("Offsets")]
@@ -28,7 +28,7 @@ public class ThirdPersonLookAt : MonoBehaviour
 
 
     [SerializeField] PlayerController _playerController;
-    [SerializeField] Movement _movement;
+    [SerializeField] PlayerMovement _movement;
 
     Vector3 _crouchRotationFix = new Vector3(0, 30, 0);
 
@@ -98,25 +98,25 @@ public class ThirdPersonLookAt : MonoBehaviour
         chest.rotation = chest.rotation * Quaternion.Euler(currentOffset);
     }
 
-    void UpdateOffset(Movement.PlayerMovementDirection pmd)
+    void UpdateOffset(PlayerMovement.PlayerMovementDirection pmd)
     {
-        if (pmd == Movement.PlayerMovementDirection.Idle) // Idle
+        if (pmd == PlayerMovement.PlayerMovementDirection.Idle) // Idle
             currentOffset = iddleOffset;
-        else if (pmd == Movement.PlayerMovementDirection.Left) // Left
+        else if (pmd == PlayerMovement.PlayerMovementDirection.Left) // Left
             currentOffset = LeftOffset;
-        else if (pmd == Movement.PlayerMovementDirection.ForwardLeft) // Left Forward
+        else if (pmd == PlayerMovement.PlayerMovementDirection.ForwardLeft) // Left Forward
             currentOffset = LeftForwardOffset;
-        else if (pmd == Movement.PlayerMovementDirection.Forward) // Forward
+        else if (pmd == PlayerMovement.PlayerMovementDirection.Forward) // Forward
             currentOffset = ForwardOffset;
-        else if (pmd == Movement.PlayerMovementDirection.ForwardRight)// Right Forward
+        else if (pmd == PlayerMovement.PlayerMovementDirection.ForwardRight)// Right Forward
             currentOffset = RightForwardOffest;
-        else if (pmd == Movement.PlayerMovementDirection.Right)// Right
+        else if (pmd == PlayerMovement.PlayerMovementDirection.Right)// Right
             currentOffset = RightOffset;
-        else if (pmd == Movement.PlayerMovementDirection.BackwardsRight)// Right Backwards
+        else if (pmd == PlayerMovement.PlayerMovementDirection.BackwardsRight)// Right Backwards
             currentOffset = RightBackwardsOffset;
-        else if (pmd == Movement.PlayerMovementDirection.Backwards)// Backwards
+        else if (pmd == PlayerMovement.PlayerMovementDirection.Backwards)// Backwards
             currentOffset = BackwardsOffset;
-        else if (pmd == Movement.PlayerMovementDirection.BackwardsLeft)// Left Backwards
+        else if (pmd == PlayerMovement.PlayerMovementDirection.BackwardsLeft)// Left Backwards
             currentOffset = LeftBackwardsOffset;
     }
 }

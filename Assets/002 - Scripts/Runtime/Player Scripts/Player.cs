@@ -293,7 +293,6 @@ public class Player : Biped
                 if (ph.GetComponent<SphereCollider>() != null)
                     ph.GetComponent<SphereCollider>().enabled = value;
 
-                GetComponent<CharacterController>().enabled = value;
             }
         }
     }
@@ -301,7 +300,10 @@ public class Player : Biped
     public bool isRespawning
     {
         get { return _isRespawning; }
-        set { _isRespawning = value; }
+        set
+        {
+            _isRespawning = value;
+        }
     }
 
     public bool isDead
@@ -315,9 +317,11 @@ public class Player : Biped
 
             if (value && !previousValue)
             {
+                _rb.isKinematic = true;
                 OnPlayerDeath?.Invoke(this);
                 OnPlayerDeathLate?.Invoke(this);
             }
+
         }
     }
 
@@ -613,9 +617,12 @@ public class Player : Biped
 
     [SerializeField] GameObject headhunterSkullPrefab;
 
+    Rigidbody _rb;
 
     private void Awake()
     {
+        _rb = GetComponent<Rigidbody>(); if (!PV.IsMine) _rb.isKinematic = true;
+
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
             hasArmor = true;
@@ -730,20 +737,21 @@ public class Player : Biped
     }
     private void Update()
     {
+        if (!PV.IsMine) _rb.isKinematic = true;
         HitPointsRecharge();
         OvershieldPointsRecharge();
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        //Debug.Log("Player OnControllerColliderHit");
-        float movementSpeedRatio = GetComponent<Movement>().speedRatio;
-        Rigidbody rb = hit.collider.attachedRigidbody;
-        if (rb && !rb.isKinematic)
-        {
-            rb.velocity = hit.moveDirection * _pushForce * movementSpeedRatio;
-        }
-    }
+    //private void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    //Debug.Log("Player OnControllerColliderHit");
+    //    float movementSpeedRatio = GetComponent<PlayerMovement>().speedRatio;
+    //    Rigidbody rb = hit.collider.attachedRigidbody;
+    //    if (rb && !rb.isKinematic)
+    //    {
+    //        rb.velocity = hit.moveDirection * _pushForce * movementSpeedRatio;
+    //    }
+    //}
 
     void OnAllPlayersJoinedRoom_Delegate(CurrentRoomManager gme)
     {
@@ -780,8 +788,8 @@ public class Player : Biped
         uiCamera.enabled = false;
         uiCamera.enabled = true;
 
-        GetComponent<Movement>().playerMotionTracker.minimapCamera.enabled = false;
-        GetComponent<Movement>().playerMotionTracker.minimapCamera.enabled = true;
+        movement.playerMotionTracker.minimapCamera.enabled = false;
+        movement.playerMotionTracker.minimapCamera.enabled = true;
     }
     public bool CanBeDamaged()
     {
@@ -958,6 +966,7 @@ public class Player : Biped
 
     void Respawn()
     {
+        Debug.Log("Respawn");
         if (!isRespawning)
             return;
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
@@ -966,7 +975,6 @@ public class Player : Biped
         _damageSource = null;
         OnPlayerRespawnEarly?.Invoke(this);
 
-        GetComponent<Movement>().ResetCharacterControllerProperties();
         isRespawning = false;
         GetComponent<PlayerController>().ScopeOut();
 
@@ -989,6 +997,8 @@ public class Player : Biped
         hitboxesEnabled = true;
         impactDir = Vector3.zero;
         OnPlayerRespawned?.Invoke(this);
+
+        _rb.isKinematic = false;
     }
 
     public void PlaySprintingSound()
@@ -1035,6 +1045,7 @@ public class Player : Biped
 
     IEnumerator MidRespawnAction()
     {
+        Debug.Log("MidRespawnAction");
         yield return new WaitForSeconds(_defaultRespawnTime * 0.7f);
         GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         hitPoints = maxHitPoints;
@@ -1048,7 +1059,7 @@ public class Player : Biped
 
     IEnumerator Respawn_Coroutine()
     {
-
+        Debug.Log("Respawn_Coroutine");
         yield return new WaitForSeconds(_defaultRespawnTime);
         Respawn();
     }
@@ -1197,25 +1208,16 @@ public class Player : Biped
                     }
                 }
             }
-            catch (Exception e) { }
+            catch (System.Exception e) { Debug.LogException(e); }
 
-            try
+            if (isMine)
             {
-                if (isMine)
-                {
-                    Debug.Log("AddPlayerKill_RPC");
-                    Debug.Log(_damageSource);
-                    PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSource);
-
-                    //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-                    //    MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(_lastPID, PV.ViewID, _deathNature));
-                    //else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                    //    GetComponent<PlayerSwarmMatchStats>().deaths++;
-                }
-                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                    GetComponent<PlayerSwarmMatchStats>().deaths++;
+                Debug.Log("AddPlayerKill_RPC");
+                Debug.Log(_damageSource);
+                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSource);
             }
-            catch (Exception e) { }
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                GetComponent<PlayerSwarmMatchStats>().deaths++;
 
             try
             {
@@ -1263,13 +1265,16 @@ public class Player : Biped
                             sourcePlayerMedals.SpawnKilljoySpreeMedal();
                 }
             }
-            catch { }
+            catch (System.Exception e) { Debug.LogException(e); }
         }
 
-
+        Debug.Log("sdfg");
         isRespawning = true;
+        Debug.Log("sdfg");
         hitboxesEnabled = false;
+        Debug.Log("sdfg");
         thirdPersonModels.SetActive(false);
+        Debug.Log("sdfg");
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             SwarmManager.instance.livesLeft--;
@@ -1278,6 +1283,7 @@ public class Player : Biped
         GetComponent<PlayerController>().isHoldingShootBtn = false;
         GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
         gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
+        Debug.Log("sdfg");
 
         try
         {
@@ -1287,16 +1293,19 @@ public class Player : Biped
 
             gunCamera.enabled = false;
         }
-        catch { }
+        catch (System.Exception e) { Debug.LogException(e); }
         finally { gunCamera.enabled = false; }
+        Debug.Log("sdfg");
 
         hitboxesEnabled = false;
+        Debug.Log("sdfg");
 
+        Debug.Log("sdfg");
         SpawnRagdoll();
-        try { StartCoroutine(Respawn_Coroutine()); } catch { }
-        try { StartCoroutine(MidRespawnAction()); } catch { }
-
-
+        Debug.Log("sdfg");
+        try { StartCoroutine(Respawn_Coroutine()); } catch (System.Exception e) { Debug.LogException(e); }
+        Debug.Log("sdfg");
+        try { StartCoroutine(MidRespawnAction()); } catch (System.Exception e) { Debug.LogException(e); }
     }
     void OnPlayerDeath_DelegateLate(Player playerProperties)
     {
@@ -1491,9 +1500,7 @@ public class Player : Biped
     [PunRPC]
     void Teleport_RPC(Vector3 t, Vector3 r)
     {
-        GetComponent<CharacterController>().enabled = false;
         transform.position = t;
-        GetComponent<CharacterController>().enabled = true;
         transform.eulerAngles = r;
     }
 

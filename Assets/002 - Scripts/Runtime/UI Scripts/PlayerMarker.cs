@@ -54,6 +54,7 @@ public class PlayerMarker : MonoBehaviour
     }
     public void OnPLayerDeath_Delegate(Player player)
     {
+        Debug.Log("OnPLayerDeath_Delegate");
         GetComponent<MeshRenderer>().enabled = false;
     }
 

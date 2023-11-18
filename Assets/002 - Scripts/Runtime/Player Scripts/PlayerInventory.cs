@@ -700,6 +700,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPLayerDeath_Delegate(Player player)
     {
+        Debug.Log("OnPLayerDeath_Delegate");
         try { activeWeapon.animator.SetBool("Run", false); } catch { }
     }
 

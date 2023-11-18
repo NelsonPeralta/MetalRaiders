@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviourPun
 
     public Player player { get { return GetComponent<Player>(); } }
 
-    Vector3 _originalCharacterControllerCenter;
 
     [Header("Other Scripts")]
     public AllPlayerScripts allPlayerScripts;
@@ -172,7 +171,6 @@ public class PlayerController : MonoBehaviourPun
     }
     public void Start()
     {
-        _originalCharacterControllerCenter = GetComponent<CharacterController>().center;
         rewiredPlayer = ReInput.players.GetPlayer(rid);
 
         if (!PV.IsMine)
@@ -678,8 +676,6 @@ public class PlayerController : MonoBehaviourPun
         isCrouching = true;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.30f, 0);
         gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.30f, 0);
-        GetComponent<CharacterController>().height = 1.25f;
-        GetComponent<CharacterController>().center = new Vector3(0, -0.7f, 0);
     }
 
     public void DisableCrouch()
@@ -690,9 +686,6 @@ public class PlayerController : MonoBehaviourPun
         isCrouching = false;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .30f, 0);
         gwProperties.bulletSpawnPoint.localPosition = gwProperties.defaultBulletSpawnPoint;
-
-        GetComponent<CharacterController>().height = 1.7f; // Default values on the prefab
-        GetComponent<CharacterController>().center = _originalCharacterControllerCenter; // Default values on the prefab 
     }
 
     void Grenade()
@@ -1320,6 +1313,7 @@ public class PlayerController : MonoBehaviourPun
     }
     public void OnDeath_Delegate(Player player)
     {
+        Debug.Log("OnDeath_Delegate");
         isSprinting = false;
         isHoldingShootBtn = false;
     }

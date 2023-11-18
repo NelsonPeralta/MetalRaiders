@@ -1,16 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 // https://www.youtube.com/watch?v=f473C43s8nE&ab_channel=Dave%2FGameDevelopment
 
 public class PlayerMovement : MonoBehaviour
 {
+    public delegate void PlayerMovementEvent(PlayerMovement _movementVect);
+    public PlayerMovementEvent OnPlayerStartedMoving, OnPlayerStoppedMoving;
+
+
     public enum PlayerMovementDirection { Idle, Left, Right, Forward, Backwards, ForwardLeft, ForwardRight, BackwardsLeft, BackwardsRight }
 
     public Player player { get { return _player; } }
     public Rewired.Player rewiredPlayer { get { return _pController.rewiredPlayer; } }
-    public PlayerMovementDirection movementDirection { get { return _playerMovementDirection; } private set { _playerMovementDirection = value; } }
+    public PlayerMovementDirection movementDirection
+    {
+        get { return _playerMovementDirection; }
+        private set
+        {
+            if (!isGrounded) return;
+
+            _previousMovementDirEnum = _playerMovementDirection;
+            _playerMovementDirection = value;
+
+            if ((_previousMovementDirEnum == PlayerMovementDirection.Left && _playerMovementDirection == PlayerMovementDirection.Right) ||
+                (_previousMovementDirEnum == PlayerMovementDirection.Right && _playerMovementDirection == PlayerMovementDirection.Left) ||
+                (_previousMovementDirEnum == PlayerMovementDirection.Forward && _playerMovementDirection == PlayerMovementDirection.Backwards) ||
+                (_previousMovementDirEnum == PlayerMovementDirection.Right && _playerMovementDirection == PlayerMovementDirection.Left))
+            {
+                Debug.Log("Player changed direction drastically");
+                moveSpeed = Mathf.Clamp(moveSpeed, 0, 1);
+            }
+        }
+    }
     public float correctedXInput { get { return _correctedRightInput; } set { _correctedRightInput = value; } }
     public float correctedZInput { get { return _correctedForwardInput; } set { _correctedForwardInput = value; } }
     public bool isGrounded { get { return grounded; } }
@@ -49,12 +73,26 @@ public class PlayerMovement : MonoBehaviour
             //    isMoving = true;
         }
     }
+    public PlayerMotionTracker playerMotionTracker { get { return _playerMotionTracker; } }
+
 
     [SerializeField] ThirdPersonLookAt _tpLookAt;
+    public float moveSpeed
+    {
+        get { return _moveSpeed; }
+        set
+        {
+            _moveSpeed = value;
 
+            if (movementDirection == PlayerMovementDirection.Idle)
+                _moveSpeed = 0;
+            else
+                _moveSpeed = Mathf.Clamp(_moveSpeed, 1, _moveSpeed);
+        }
+    }
 
     [Header("Movement")]
-    public float moveSpeed;
+    [SerializeField] float _moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
 
@@ -66,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float groundDrag;
     [SerializeField] Vector3 moveDirection;
-    [SerializeField] PlayerMovementDirection _playerMovementDirection;
+    [SerializeField] PlayerMovementDirection _playerMovementDirection, _previousMovementDirEnum;
 
 
     [Header("Jumping")]
@@ -86,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
-    public float playerHeight;
+    public float playerHeight, slopeRayLenght;
     public LayerMask whatIsGround;
     [SerializeField] bool grounded;
 
@@ -102,6 +140,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] float _animationSpeed, _currentWorldSpeed;
     [SerializeField] float _rawRightInput, _rawForwardInput, _correctedRightInput, _correctedForwardInput;
+    [SerializeField] PlayerMotionTracker _playerMotionTracker;
 
 
     float _rightDeadzone = 0.2f, _forwardDeadzone = 0.2f, _lastCalulatedGroundedSpeed;
@@ -110,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
     Player _player;
     PlayerController _pController;
     Rewired.Player _rewiredPlayer;
+    ThirdPersonScript _thirdPersonScript;
 
     Vector3 _lastPos;
 
@@ -125,9 +165,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+
         _player = GetComponent<Player>();
         _pController = GetComponent<PlayerController>();
         _rewiredPlayer = _pController.rewiredPlayer;
+        _thirdPersonScript = _pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel;
+
+        _previousMovementDirEnum = PlayerMovementDirection.Idle;
     }
 
     private void Start()
@@ -142,6 +186,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", !isGrounded);
         CalculateCurrentSpeed();
 
         try
@@ -155,7 +200,6 @@ public class PlayerMovement : MonoBehaviour
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         MyInput();
-        SpeedControl();
         StateHandler();
 
         // handle drag
@@ -166,10 +210,22 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-
         CheckDirection(_rawRightInput, _rawForwardInput);
         WalkAnimation();
         ControlAnimationSpeed();
+
+        if (blockPlayerMoveInput > 0)
+        {
+            moveSpeed = 1;
+            blockPlayerMoveInput -= Time.deltaTime;
+
+            return;
+        }
+        else
+        {
+            SpeedControl();
+        }
+
     }
 
     private void FixedUpdate()
@@ -199,7 +255,7 @@ public class PlayerMovement : MonoBehaviour
         if (rewiredPlayer.GetButtonDown("Crouch"))
         {
             playerCapsule.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            player.playerThirdPersonModel.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + 0.5f, transform.localPosition.z);
+            //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y + 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
 
             if (grounded)
                 _rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -209,7 +265,7 @@ public class PlayerMovement : MonoBehaviour
         if (rewiredPlayer.GetButtonUp("Crouch"))
         {
             playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
-            player.playerThirdPersonModel.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - 0.5f, transform.localPosition.z);
+            //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y - 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
         }
     }
 
@@ -281,37 +337,42 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator SmoothlyLerpMoveSpeed()
     {
-        // smoothly lerp movementSpeed to desired value
-        time = 0;
-        difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
-        startValue = moveSpeed;
-        processingMoveSpeed = true;
-
-        while (time < difference)
+        if (isGrounded)
         {
+            // smoothly lerp movementSpeed to desired value
+            time = 0;
+            difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
+            startValue = moveSpeed;
             processingMoveSpeed = true;
-            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
 
-            if (OnSlope())
+            while (time < difference)
             {
-                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
+                processingMoveSpeed = true;
+                moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, (time / difference) * 2f);
 
-                time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
+                if (OnSlope())
+                {
+                    float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
+                    float slopeAngleIncrease = 1 + (slopeAngle / 90f);
+
+                    time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
+                }
+                else
+                    time += Time.deltaTime * speedIncreaseMultiplier;
+
+                yield return null;
             }
-            else
-                time += Time.deltaTime * speedIncreaseMultiplier;
 
-            yield return null;
+            moveSpeed = desiredMoveSpeed;
         }
-
-        moveSpeed = desiredMoveSpeed;
     }
-
+    public float blockPlayerMoveInput;
     private void MovePlayer()
     {
+        if (blockPlayerMoveInput > 0) return;
         // calculate movement direction
-        moveDirection = orientation.forward * _rawForwardInput + orientation.right * _rawRightInput;
+        if (isGrounded)
+            moveDirection = orientation.forward * _rawForwardInput + orientation.right * _rawRightInput;
 
         // on slope
         if (OnSlope() && !exitingSlope)
@@ -338,8 +399,13 @@ public class PlayerMovement : MonoBehaviour
         else if (!grounded)
             _rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
+        if (!isGrounded)
+            _rb.AddForce((orientation.forward * _rawForwardInput + orientation.right * _rawRightInput).normalized * moveSpeed * 1f, ForceMode.Force);
+
+
         // turn gravity off while on slope
-        _rb.useGravity = !OnSlope();
+        if (!player.isDead && !player.isRespawning)
+            _rb.useGravity = !OnSlope();
     }
 
     private void SpeedControl()
@@ -384,7 +450,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f, whatIsGround))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, slopeRayLenght, whatIsGround))
         {
             currentSlope = Vector3.Angle(Vector3.up, slopeHit.normal);
             return currentSlope < maxSlopeAngle && currentSlope != 0;
@@ -417,19 +483,19 @@ public class PlayerMovement : MonoBehaviour
     {
         PlayerMovementDirection pmd = PlayerMovementDirection.Idle;
 
-        if (xValue == -1 && zValue == 0)
+        if (xValue < 0 && zValue == 0)
         {
             movementDirection = PlayerMovementDirection.Left;
         }
-        else if (xValue == 0 && zValue == 1)
+        else if (xValue == 0 && zValue > 0)
         {
             movementDirection = PlayerMovementDirection.Forward;
         }
-        else if (xValue == 1 && zValue == 0)
+        else if (xValue > 0 && zValue == 0)
         {
             movementDirection = PlayerMovementDirection.Right;
         }
-        else if (xValue == 0 && zValue == -1)
+        else if (xValue == 0 && zValue < 0)
         {
             movementDirection = PlayerMovementDirection.Backwards;
         }
@@ -637,4 +703,5 @@ public class PlayerMovement : MonoBehaviour
         _lastPos = transform.position;
         //CalculateSpeedRatio();
     }
+
 }

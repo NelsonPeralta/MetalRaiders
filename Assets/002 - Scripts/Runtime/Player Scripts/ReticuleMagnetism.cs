@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 
 public class ReticuleMagnetism : MonoBehaviour
 {
     public Player player;
-    public Movement movement;
+    public PlayerMovement movement;
 
     RaycastHit hit;
     public LayerMask layerMask;

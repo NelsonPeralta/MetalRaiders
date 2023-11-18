@@ -183,6 +183,7 @@ public class PlayerMedals : MonoBehaviour
 
     void OnPlayerDeath_Delegate(Player player)
     {
+        Debug.Log("OnPlayerDeath_Delegate");
         _spree = 0;
     }
 

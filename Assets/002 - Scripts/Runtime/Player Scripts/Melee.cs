@@ -23,12 +23,12 @@ public class Melee : MonoBehaviour
 
 
 
-    public Movement movement { get { return _movement; } }
+    public PlayerMovement movement { get { return _movement; } }
 
 
 
 
-    [SerializeField] Movement _movement;
+    [SerializeField] PlayerMovement _movement;
 
     float _maxDis; // Does NOT take into account the radius of player character controller
 
@@ -104,7 +104,7 @@ public class Melee : MonoBehaviour
                             else _pushForce = 100;
 
                             Debug.Log(Vector3.Distance(hp.transform.position, movement.transform.position));
-                            movement.Push(hp.transform.position - movement.transform.position, _pushForce, PushSource.Melee, true);
+                            //movement.Push(hp.transform.position - movement.transform.position, _pushForce, PushSource.Melee, true);
                         }
 
                         try
@@ -135,6 +135,7 @@ public class Melee : MonoBehaviour
 
     void OnForeignPlayerDeath_Delegate(Player player)
     {
+        Debug.Log("OnForeignPlayerDeath_Delegate");
         try
         {
             hitPointsInMeleeZone.Remove(player.GetComponent<HitPoints>());
@@ -144,6 +145,7 @@ public class Melee : MonoBehaviour
 
     void OnPlayerDeadth_Delegate(Player player)
     {
+        Debug.Log("OnPlayerDeadth_Delegate");
         hitPointsInMeleeZone.Clear();
     }
 

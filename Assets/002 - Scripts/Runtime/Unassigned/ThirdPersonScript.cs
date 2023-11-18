@@ -31,8 +31,8 @@ public class ThirdPersonScript : MonoBehaviour
 
     private void Update()
     {
-        GetComponent<Animator>().SetFloat("Vertical", player.GetComponent<Movement>().correctedZInput, 1f, Time.deltaTime * 10f);
-        GetComponent<Animator>().SetFloat("Horizontal", player.GetComponent<Movement>().correctedXInput, 1f, Time.deltaTime * 10f);
+        _animator.SetFloat("Vertical", player.movement.correctedZInput, 1f, Time.deltaTime * 10f);
+        _animator.SetFloat("Horizontal", player.movement.correctedXInput, 1f, Time.deltaTime * 10f);
     }
 
     public void EnableSkinnedMeshes()
