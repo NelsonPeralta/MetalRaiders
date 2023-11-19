@@ -718,6 +718,8 @@ public class CurrentRoomManager : MonoBehaviour
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             SwarmManager.instance.Begin();
 
+        foreach (Player p in GameManager.instance.localPlayers.Values) p.playerInventory.TriggerStartGameBehaviour();
+
         gameStarted = true;
     }
 }

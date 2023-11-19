@@ -52,21 +52,19 @@ public class ServiceRecordMenu : MonoBehaviour
 
 
 
-        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.level, pda.honor);
-        PlayerProgressionManager.Rank nextRank = PlayerProgressionManager.instance.ranks.ElementAt(PlayerProgressionManager.instance.ranks.IndexOf(PlayerProgressionManager.GetClosestRank(pda.level, pda.honor)) + 1);
-        _rankCleanNameText.text = $"Rank: {rank.cleanName}";
-        _honorText.text = $"Honor: {pda.honor.ToString()}\n\nNext rank: {nextRank.cleanName} at Level {nextRank.lvlRequired} and {nextRank.honorRequired} honor";
+        PlayerProgressionManager.Rank[] rank = PlayerProgressionManager.GetClosestAndNextRank(pda.honor);
+        _rankCleanNameText.text = $"Rank: {rank[0].cleanName}";
+        _honorText.text = $"Honor: {pda.honor.ToString()}\n\nNext rank: {rank[1].cleanName} at {rank[1].honorRequired} honor";
 
-        Debug.Log(rank.cleanName);
-        if (GameManager.colorDict.ContainsKey(rank.color))
+        if (GameManager.colorDict.ContainsKey(rank[0].color))
         {
             _rankImage.enabled = true;
 
-            Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
+            Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].spriteName).SingleOrDefault().name);
 
-            _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
+            _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].spriteName).SingleOrDefault();
 
-            ColorUtility.TryParseHtmlString(GameManager.colorDict[rank.color], out _tCol);
+            ColorUtility.TryParseHtmlString(GameManager.colorDict[rank[0].color], out _tCol);
             _rankImage.color = _tCol;
         }
     }

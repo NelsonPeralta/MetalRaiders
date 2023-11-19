@@ -784,6 +784,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 try
                 {
+        Debug.Log("SwitchWeapons");
                     weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
                     OnPlayerSwitchWeapons?.Invoke(this);
                 }

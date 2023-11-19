@@ -10,51 +10,62 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
         set
         {
             GameObject _previous = _rayHit;
+            _rayHit = value;
+
+            //try
+            //{
+            //    if (value.GetComponent<ReticuleFriction>() || value.GetComponent<Player>().reticuleFriction)
+            //    {
+            //        _rayHit = value;
+            //        if (GameManager.instance.teamMode.ToString().Contains("Classic"))
+            //        {
+            //            if (_rayHit.GetComponent<Player>().team != _player.team)
+            //                _rayHit.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(true);
+            //        }
+            //        else
+            //        {
+            //            _rayHit.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(true);
+            //        }
+            //    }
+            //}
+            //catch (System.Exception e) { /*Debug.LogWarning(e);*/ }
+
+
+
+
+            //try
+            //{
+            //    if (value != _previous && (_previous.GetComponent<ReticuleFriction>() || value.GetComponent<Player>().reticuleFriction))
+            //        if (GameManager.instance.teamMode.ToString().Contains("Classic"))
+            //        {
+            //            if (_previous.GetComponent<Player>().team != _player.team)
+            //                _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
+            //        }
+            //        else
+            //        {
+            //            _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
+            //        }
+            //}
+            //catch (System.Exception e) { /*Debug.LogWarning(e);*/ }
+
+            //if (value == null)
+            //{
+            //    try
+            //    {
+            //        _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
+            //    }
+            //    catch { }
+            //}
+
+
 
             try
             {
-                if (value.GetComponent<ReticuleFriction>() || value.GetComponent<Player>().reticuleFriction)
-                {
-                    _rayHit = value;
-                    if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-                    {
-                        if (_rayHit.GetComponent<Player>().team != _player.team)
-                            _rayHit.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        _rayHit.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(true);
-                    }
-                }
+                _retfric = value.GetComponent<ReticuleFriction>(); if (_retfric == null) _retfric = value.GetComponent<Player>().reticuleFriction;
+                if (_retfric)
+                    _retfric.player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].seen = true;
             }
             catch (System.Exception e) { /*Debug.LogWarning(e);*/ }
-
-
-
-
-            try
-            {
-                if (value != _previous && (_previous.GetComponent<ReticuleFriction>() || value.GetComponent<Player>().reticuleFriction))
-                    if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-                    {
-                        if (_previous.GetComponent<Player>().team != _player.team)
-                            _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
-                    }
-                    else
-                    {
-                        _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
-                    }
-            }
-            catch (System.Exception e) { /*Debug.LogWarning(e);*/ }
-
-            if (value == null)
-            {
-                try
-                {
-                    _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
-                }
-                catch { }
-            }
         }
     }
 
@@ -65,6 +76,8 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
     [SerializeField] LayerMask _obsLayerMask;
 
     [SerializeField] int _distance = 25;
+
+    ReticuleFriction _retfric;
 
     private void Update()
     {

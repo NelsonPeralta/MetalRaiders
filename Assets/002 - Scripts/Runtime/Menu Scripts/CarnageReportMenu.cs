@@ -13,7 +13,6 @@ public class CarnageReportMenu : MonoBehaviour
         set
         {
             _xpTimer = Mathf.Clamp(value, 0, 1);
-            Debug.Log((int)(_xpTimer * GameManager.instance.carnageReport.xpGained));
             _xpSlider.value = _xpBase + (int)(_xpTimer * GameManager.instance.carnageReport.xpGained);
             _xpText.text = $"{_xpSlider.value} / {_xpToLevelUp}";
 
@@ -53,9 +52,12 @@ public class CarnageReportMenu : MonoBehaviour
 
 
     [SerializeField] TMP_Text _thankYouExtraText;
+    [SerializeField] GameObject _backBtn;
 
     private void OnEnable()
     {
+        _backBtn.SetActive(false);
+        StartCoroutine(EnableBackBtn_Coroutine());
         FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(true);
 
         //_xpTimer = _hnrTimer = 0;
@@ -75,7 +77,7 @@ public class CarnageReportMenu : MonoBehaviour
         {
             _thankYouExtraText.text = $"PS: You gained {GameManager.instance.carnageReport.xpGained} xp and credits";
             if (GameManager.instance.carnageReport.leveledUp)
-                _thankYouExtraText.text += $" AND leveled up ({GameManager.instance.carnageReport.newLevel}), congrats! :D";
+                _thankYouExtraText.text += $" AND leveled up ({GameManager.instance.carnageReport.newLevel}).";
             else
             {
                 try
@@ -85,6 +87,21 @@ public class CarnageReportMenu : MonoBehaviour
                 }
                 catch (System.Exception e) { Debug.LogException(e); }
             }
+        }
+
+
+        if (GameManager.instance.carnageReport.honorGained > 0)
+        {
+            _thankYouExtraText.text += $"\n\nAlso, you gained {GameManager.instance.carnageReport.honorGained} Honor";
+
+            PlayerProgressionManager.Rank[] rs = PlayerProgressionManager.GetClosestAndNextRank(GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained);
+
+            if (!GameManager.instance.carnageReport.rankedUp)
+                _thankYouExtraText.text += $". You will be promoted to {rs[1].cleanName} in {rs[1].honorRequired - (GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained)} more points.";
+            else
+                _thankYouExtraText.text += $" and have been PROMOTED to {rs[0].cleanName}!!! Congrats :D";
+
+            _thankYouExtraText.text += $" \n\nPlay more games to earn Honor points, win games to speed up your progress.";
         }
     }
 
@@ -113,5 +130,11 @@ public class CarnageReportMenu : MonoBehaviour
         //GameManager.carnageReport = null;
         FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(false);
 
+    }
+
+    IEnumerator EnableBackBtn_Coroutine()
+    {
+        yield return new WaitForSeconds(3);
+        _backBtn.SetActive(true);
     }
 }

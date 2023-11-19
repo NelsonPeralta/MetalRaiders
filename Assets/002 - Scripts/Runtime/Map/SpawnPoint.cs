@@ -12,9 +12,9 @@ public class SpawnPoint : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<Player>())
+        if (other.GetComponent<PlayerCapsule>())
         {
-            Player player = (Player)other.GetComponent<Player>();
+            Player player = (Player)other.transform.root.GetComponent<Player>();
 
             if (!players.Contains(player))
             {
@@ -30,10 +30,11 @@ public class SpawnPoint : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Player>() && players.Contains(other.GetComponent<Player>()))
+        Debug.Log($"SpawnPoint {other.name}");
+        if (other.GetComponent<PlayerCapsule>() && players.Contains(other.transform.root.GetComponent<Player>()))
         {
-            other.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
-            players.Remove(other.GetComponent<Player>());
+            other.transform.root.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
+            players.Remove(other.transform.root.GetComponent<Player>());
 
             if (players.Count == 0 && GameManager.instance.isDev)
             {

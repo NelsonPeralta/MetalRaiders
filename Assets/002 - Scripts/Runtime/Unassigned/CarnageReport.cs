@@ -21,9 +21,10 @@ public class CarnageReport : MonoBehaviour
     PlayerProgressionManager.Rank _rank;
     public int currentHonor { get { return _currentHonor; } }
     public int newLevel { get { return _newLevel; } }
+    public bool rankedUp { get { return _rankedUp; } }
 
     int _xpGained, _currentXp, _honorGained, _currentHonor, _pLvl, _newLevel;
-    bool _leveledUp;
+    bool _leveledUp, _rankedUp;
 
     public CarnageReport(PlayerProgressionManager.Rank prank, int pLvl, int curXp, int gxp, int curH, int gh, bool lvledUp, int nLevel)
     {
@@ -34,5 +35,7 @@ public class CarnageReport : MonoBehaviour
         _newLevel = nLevel;
 
         _honorGained = gh; _currentHonor = curH;
+
+        _rankedUp = (_honorGained + _currentHonor) >= PlayerProgressionManager.GetClosestAndNextRank(currentHonor)[1].honorRequired;
     }
 }

@@ -388,6 +388,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         else // We are in the menu
         {
+            breathersPool.Clear(); ribbiansPool.Clear(); hellhoundPool.Clear(); tyrantPool.Clear(); healthPacks.Clear();
+
+
             maxWave = 0;
             return;
         }
@@ -496,7 +499,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void StartNewWave()
     {
         Debug.Log($"StartNewWave_RPC");
-        StartCoroutine(StartNewWave_Coroutine());
+        if (!CurrentRoomManager.instance.gameOver)
+            StartCoroutine(StartNewWave_Coroutine());
     }
     IEnumerator StartNewWave_Coroutine()
     {
@@ -573,7 +577,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (zombiesEnabled >= _maxZombieEnabled)
             {
-                StartCoroutine(SpawnAISkip_Coroutine(aiType));
+                if (!CurrentRoomManager.instance.gameOver)
+                    StartCoroutine(SpawnAISkip_Coroutine(aiType));
                 return;
             }
 
@@ -663,7 +668,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void SpawnAi(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
         //Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
-        StartCoroutine(SpawnAI_Coroutine(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation, aiType, pdelay));
+        if (!CurrentRoomManager.instance.gameOver)
+            StartCoroutine(SpawnAI_Coroutine(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation, aiType, pdelay));
     }
     IEnumerator SpawnAI_Coroutine(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
@@ -931,9 +937,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPacks()
     {
-        if (currentWave % 10 == 0)
+        if ((currentWave % 10 == 0 && !editMode) || (currentWave % 1 == 0 && editMode))
         {
-            Debug.Log("Respawn Health Packs RPC");
             EndGame();
         }
         else if (currentWave % 5 == 0)
@@ -989,7 +994,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPack(Vector3 hpPosition, int time)
     {
-        StartCoroutine(RespawnHealthPack_Coroutine(hpPosition, time));
+        if (!CurrentRoomManager.instance.gameOver)
+            StartCoroutine(RespawnHealthPack_Coroutine(hpPosition, time));
     }
 
     IEnumerator RespawnHealthPack_Coroutine(Vector3 hpPosition, int time)
@@ -1056,12 +1062,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void EndGame(bool saveXp = true)
     {
+        StopAllCoroutines();
         foreach (Player pp in GameManager.instance.pid_player_Dict.Values)
         {
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
             // return will stop this method, break will stop the loop, continue will stop the current iteration
             if (!pp.PV.IsMine)
                 continue;
+
+            CurrentRoomManager.instance.gameOver = true;
 
 
             if (saveXp)

@@ -49,7 +49,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
             UpdateColorPalette();
 
 
-            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerExtendedPublicData.xp, playerExtendedPublicData.honor);
+            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(playerExtendedPublicData.honor)[0];
 
 
             if (GameManager.colorDict.ContainsKey(rank.color))

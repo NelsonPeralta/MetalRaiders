@@ -1,11 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 public class PlayerWorldUIMarker : MonoBehaviour
 {
+    public bool seen
+    {
+        get { return _seen; }
+        set
+        {
+            _seen = value;
+            if (value) _seenCd = 0.2f;
+
+            _redMarker.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team != GameManager.GetRootPlayer().team)));
+            _text.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team != GameManager.GetRootPlayer().team)));
+        }
+    }
+
+    public TMP_Text text { get { return _text; } }
     public GameObject holder { get { return _holder; } }
 
     [SerializeField] Player _player;
@@ -17,6 +32,8 @@ public class PlayerWorldUIMarker : MonoBehaviour
     [SerializeField] TMP_Text _text;
     [SerializeField] GameObject _redMarker;
     [SerializeField] GameObject _greenMarker;
+    [SerializeField] bool _seen;
+    [SerializeField] float _seenCd;
 
     int damping = 1, tries = 0;
 
@@ -24,78 +41,80 @@ public class PlayerWorldUIMarker : MonoBehaviour
     {
         _player.OnPlayerTeamChanged += OnPlayerTeamDelegate;
         _player.OnPlayerHitPointsChanged += OnPlayerHitPointsChanged;
+
+        _redMarker.gameObject.SetActive(false);
+        _greenMarker.gameObject.SetActive(false);
+        _text.gameObject.SetActive(false);
     }
     private void Start()
     {
-        StartCoroutine(LateStart());
         _holderScript.OnEnabledThis += OnHolderEnabled;
+
+        _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
     }
 
     private void Update()
     {
         if (!_targetPlayer)
+        {
+            try
+            {
+                _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
+            }
+            catch { }
             return;
-
-        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-            _greenMarker.gameObject.SetActive(_player.team == GameManager.GetRootPlayer().team);
+        }
 
         Vector3 targetPostition = new Vector3(_targetPlayer.transform.position.x,
                                         this.transform.position.y,
                                         _targetPlayer.transform.position.z);
         this.transform.LookAt(targetPostition);
-    }
 
-    IEnumerator LateStart()
-    {
-        yield return new WaitForSeconds(1);
 
-        try
+        if (_seenCd > 0)
         {
-            _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
-            _text.text = _player.nickName;
+            _seenCd -= Time.deltaTime;
 
-            _targetPlayer.OnPlayerDeath -= OnPlayerDeath;
-            _targetPlayer.OnPlayerDeath += OnPlayerDeath;
+            if (_seenCd < 0)
+                if (seen) seen = false;
         }
-        catch (System.Exception e)
-        {
-            StartCoroutine(LateStart());
-            tries++;
 
-            if (tries == 15)
-                gameObject.SetActive(false);
-        }
+
+        _greenMarker.gameObject.SetActive(_player.team == GameManager.GetRootPlayer().team && GameManager.instance.teamMode == GameManager.TeamMode.Classic);
+
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            _text.gameObject.SetActive(_player.team == GameManager.GetRootPlayer().team);
     }
 
     public void OnPlayerTeamDelegate(Player player)
     {
-        if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-        {
-            Debug.Log("Player Marker");
-            if (!player.isMine)
-            {
-                try
-                {
-                    if (player.team != GameManager.GetRootPlayer().team)
-                    {
-                        _greenMarker.gameObject.SetActive(false);
-                        _holder.gameObject.SetActive(false);
-                    }
-                    if (player.team == GameManager.GetRootPlayer().team)
-                    {
-                        _greenMarker.gameObject.SetActive(true);
-                        _redMarker.gameObject.SetActive(false);
-                    }
-                }
-                catch (System.Exception e) { Debug.LogWarning(e); }
-            }
-        }
-        else
-        {
-            _greenMarker.gameObject.SetActive(false);
+        //if (GameManager.instance.teamMode.ToString().Contains("Classic"))
+        //{
+        //    Debug.Log("Player Marker");
+        //    if (!player.isMine)
+        //    {
+        //        try
+        //        {
+        //            if (player.team != GameManager.GetRootPlayer().team)
+        //            {
+        //                _greenMarker.gameObject.SetActive(false);
+        //                _holder.gameObject.SetActive(false);
+        //            }
+        //            if (player.team == GameManager.GetRootPlayer().team)
+        //            {
+        //                _greenMarker.gameObject.SetActive(true);
+        //                _redMarker.gameObject.SetActive(false);
+        //            }
+        //        }
+        //        catch (System.Exception e) { Debug.LogWarning(e); }
+        //    }
+        //}
+        //else
+        //{
+        //    _greenMarker.gameObject.SetActive(false);
 
-            _holder.gameObject.SetActive(false);
-        }
+        //    _holder.gameObject.SetActive(false);
+        //}
     }
 
     public void OnPlayerHitPointsChanged(Player player)
@@ -112,22 +131,22 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
     void OnHolderEnabled(PlayerWorldUIMarkerHolder playerWorldUIMarkerHolder)
     {
-        try
-        {
-            Debug.Log("PlayerWorldUIMarker OnEnable");
-            Debug.Log(_player.nickName);
+        //try
+        //{
+        //    Debug.Log("PlayerWorldUIMarker OnEnable");
+        //    Debug.Log(_player.nickName);
 
-            _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
-            //_text.text = _player.nickName + "\n" + _player.hitPoints;
-            _text.text = _player.nickName;
-        }
-        catch (System.Exception e)
-        {
-            Debug.Log("Error with PlayerWorldUIMarker");
-            Debug.LogWarning(e);
+        //    _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
+        //    //_text.text = _player.nickName + "\n" + _player.hitPoints;
+        //    _text.text = _player.nickName;
+        //}
+        //catch (System.Exception e)
+        //{
+        //    Debug.Log("Error with PlayerWorldUIMarker");
+        //    Debug.LogWarning(e);
 
-            gameObject.SetActive(false);
-        }
+        //    gameObject.SetActive(false);
+        //}
     }
 
     void OnPlayerDeath(Player player)

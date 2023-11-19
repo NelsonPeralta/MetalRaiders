@@ -91,7 +91,7 @@ public class PlayerDatabaseAdaptor
     {
         get
         {
-            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.level, playerBasicOnlineStats.honor);
+            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(playerBasicOnlineStats.honor)[0];
             return rank.spriteName;
         }
     }
@@ -100,7 +100,7 @@ public class PlayerDatabaseAdaptor
     {
         get
         {
-            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.level, playerBasicOnlineStats.honor);
+            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(playerBasicOnlineStats.honor)[0];
             return rank.cleanName;
         }
     }

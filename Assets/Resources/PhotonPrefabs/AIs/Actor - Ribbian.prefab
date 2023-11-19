@@ -3403,6 +3403,7 @@ MonoBehaviour:
   canSeePlayer: 0
   _obstruction: {fileID: 0}
   _state: 
+  rangeChecks: []
 --- !u!95 &8516912798924777548
 Animator:
   serializedVersion: 5

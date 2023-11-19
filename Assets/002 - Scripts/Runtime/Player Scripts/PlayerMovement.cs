@@ -88,6 +88,8 @@ public class PlayerMovement : MonoBehaviour
                 _moveSpeed = 0;
             else
                 _moveSpeed = Mathf.Clamp(_moveSpeed, 1, _moveSpeed);
+
+            //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !player.hasArmor) Mathf.Clamp(_moveSpeed * 0.7f, 1, _moveSpeed);
         }
     }
 
@@ -322,6 +324,9 @@ public class PlayerMovement : MonoBehaviour
             desiredMoveSpeed = walkSpeed;
         }
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !player.hasArmor) desiredMoveSpeed *= 0.7f;
+
+
         // check if desiredMoveSpeed has changed drastically
         //if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
         //{
@@ -436,7 +441,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-
+    float _tempSpeedVal;
     private void Jump()
     {
         exitingSlope = true;
@@ -444,8 +449,8 @@ public class PlayerMovement : MonoBehaviour
         // reset y velocity
         _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
 
-
-        _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        _tempSpeedVal = jumpForce; if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !player.hasArmor) _tempSpeedVal = jumpForce * 0.7f;
+        _rb.AddForce(transform.up * _tempSpeedVal, ForceMode.Impulse);
     }
     private void ResetJump()
     {

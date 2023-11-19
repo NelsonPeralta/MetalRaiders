@@ -1349,6 +1349,7 @@ MonoBehaviour:
   canSeePlayer: 0
   _obstruction: {fileID: 0}
   _state: 
+  rangeChecks: []
 --- !u!114 &6416200152909402962
 MonoBehaviour:
   m_ObjectHideFlags: 0

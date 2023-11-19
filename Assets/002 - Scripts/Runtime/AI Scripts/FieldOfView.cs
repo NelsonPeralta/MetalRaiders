@@ -19,6 +19,7 @@ public class FieldOfView : MonoBehaviour
 
     [SerializeField] GameObject _obstruction;
     [SerializeField] string _state;
+    [SerializeField] List<Collider> rangeChecks = new List<Collider>();
 
     Actor _actor;
     RaycastHit hit;
@@ -57,12 +58,12 @@ public class FieldOfView : MonoBehaviour
 
         try { radius = GetComponent<Actor>().longRange; } catch { }
         Transform or = GetComponent<Actor>().losSpawn;
-        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
+        rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask).ToList();
 
-        if (rangeChecks.Length > 0)
+        if (rangeChecks.Count > 0)
         {
             if (_actor.targetHitpoints)
-                if (rangeChecks.ToList().Contains(_actor.targetHitpoints.gameObject.GetComponent<Collider>()))
+                if (rangeChecks.ToList().Contains(_actor.targetHitpoints.GetComponent<Player>().playerCapsule.GetComponent<Collider>()))
                 {
                     Transform target = GetComponent<Actor>().targetHitpoints.transform;
                     Vector3 directionToTarget = (target.position - or.position).normalized;

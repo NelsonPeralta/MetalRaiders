@@ -343,6 +343,8 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!PV.IsMine)
             return;
+        Debug.Log("SwitchWeapons");
+
 
         pController.ScopeOut();
         allPlayerScripts.aimAssist.ResetRedReticule();
@@ -351,9 +353,11 @@ public class PlayerInventory : MonoBehaviourPun
         {
             rScript.reloadIsCanceled = true;
         }
+        Debug.Log("SwitchWeapons");
 
-        if (pController.pInventory.weaponsEquiped[1] != null && !player.isDead && !player.isRespawning)
+        if (pController.pInventory.holsteredWeapon != null && !player.isDead && !player.isRespawning)
         {
+            Debug.Log("SwitchWeapons");
             PV.RPC("SwitchWeapons_RPC", RpcTarget.All);
         }
 
@@ -376,8 +380,10 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (!isDualWielding)
             {
+                Debug.Log("SwitchWeapons");
                 WeaponProperties previousActiveWeapon = activeWeapon;
                 WeaponProperties newActiveWeapon = holsteredWeapon;
+                Debug.Log("SwitchWeapons");
 
                 activeWeapon = newActiveWeapon;
                 holsteredWeapon = previousActiveWeapon;
@@ -453,7 +459,11 @@ public class PlayerInventory : MonoBehaviourPun
     public IEnumerator EquipStartingWeapon()
     {
         Debug.Log("EquipStartingWeapon");
+        StartingWeapon = "smg";
+        StartingWeapon2 = "pistol";
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
+        StartingWeapon = "smg";
+        StartingWeapon2 = "pistol";
 
 
         if (GameManager.instance.gameType.ToString().Contains("Slayer") || GameManager.instance.gameType == GameManager.GameType.Survival)
@@ -484,10 +494,7 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "pistol";
         }
 
-        if (GameManager.instance.gameType.ToString().Contains("Fiesta"))
-        {
-            AssignRandomWeapons();
-        }
+
 
         if (GameManager.instance.gameType.ToString().Contains("Swat"))
         {
@@ -502,16 +509,7 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "pistol";
         }
 
-        if (GameManager.instance.gameType == GameManager.GameType.GunGame)
 
-        {
-            StartingWeapon = _playerGunGameManager.gunIndex[_playerGunGameManager.index].codeName;
-            StartingWeapon2 = "pistol";
-            grenades = 0;
-
-            Debug.Log(_playerGunGameManager.index);
-            Debug.Log(StartingWeapon);
-        }
 
         if (GameManager.instance.gameType == GameManager.GameType.Hill)
         {
@@ -577,8 +575,6 @@ public class PlayerInventory : MonoBehaviourPun
 
         StartingWeapon2 = allWeaponsInInventory[ind2].GetComponent<WeaponProperties>().codeName;
 
-        Debug.Log(allWeaponsInInventory[ind].GetComponent<WeaponProperties>().codeName);
-        Debug.Log(allWeaponsInInventory[ind2].GetComponent<WeaponProperties>().codeName);
     }
     void UpdateDualWieldedWeaponAmmo()
     {
@@ -695,7 +691,10 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPlayerRespawnEarly_Delegate(Player player)
     {
-        StartCoroutine(EquipStartingWeapon());
+        if (GameManager.instance.gameType != GameManager.GameType.Fiesta && GameManager.instance.gameType != GameManager.GameType.GunGame)
+            StartCoroutine(EquipStartingWeapon());
+        else
+            TriggerStartGameBehaviour();
     }
 
     void OnPLayerDeath_Delegate(Player player)
@@ -748,5 +747,58 @@ public class PlayerInventory : MonoBehaviourPun
                 break;
             }
         }
+    }
+
+    public void TriggerStartGameBehaviour()
+    {
+        if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+        {
+            StartingWeapon = _playerGunGameManager.gunIndex[_playerGunGameManager.index].codeName;
+            StartingWeapon2 = "pistol";
+            grenades = 0;
+        }
+
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta)
+            AssignRandomWeapons();
+
+
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta || GameManager.instance.gameType == GameManager.GameType.GunGame)
+            for (int i = 0; i < allWeaponsInInventory.Length; i++)
+            {
+                if (allWeaponsInInventory[i] != null)
+                {
+                    if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon)
+                    {
+                        try
+                        {
+                            //DisableAmmoHUDCounters();
+                            weaponsEquiped[0] = allWeaponsInInventory[i].gameObject;
+                            activeWeapon = weaponsEquiped[0].GetComponent<WeaponProperties>();
+                            weaponsEquiped[0] = activeWeapon.gameObject;
+                            activeWeapIs = 0;
+                            activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
+                            allWeaponsInInventory[i].gameObject.SetActive(true);
+                            StartCoroutine(ToggleTPPistolIdle(1));
+                        }
+                        catch { }
+                    }
+                    else if (allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName == StartingWeapon2)
+                    {
+                        allWeaponsInInventory[i].gameObject.SetActive(false);
+                        weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
+                        weaponsEquiped[1].GetComponent<WeaponProperties>().loadedAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
+                        holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
+                        hasSecWeap = true;
+                    }
+                    else if (allWeaponsInInventory[i].name != StartingWeapon)
+                    {
+                        allWeaponsInInventory[i].gameObject.SetActive(false);
+                    }
+                }
+            }
+        UpdateThirdPersonGunModelsOnCharacter();
+        ChangeActiveAmmoCounter();
+        if (PV.IsMine)
+            PlayDrawSound();
     }
 }

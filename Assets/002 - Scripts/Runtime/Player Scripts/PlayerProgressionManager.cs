@@ -26,14 +26,12 @@ public class PlayerProgressionManager : MonoBehaviour
     {
         get
         {
-            int h = 2;
+            int h = 1;
 
             DateTime today = DateTime.Now;
             if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
-                h *= 3;
+                h *= 2;
 
-            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private)
-                h = 1;
             return h;
         }
     }
@@ -58,27 +56,27 @@ public class PlayerProgressionManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             instance = this;
 
-            _ranks.Add(new Rank(0, 0, "r", "Recruit", "invisible"));
+            _ranks.Add(new Rank(0, "r", "Recruit", "invisible"));
 
-            _ranks.Add(new Rank(5, 5, "pvt", "Private", "brown"));
-            _ranks.Add(new Rank(10, 10, "cpl", "Corporal", "brown"));
-            _ranks.Add(new Rank(10, 15, "mcpl", "Master Corporal", "brown"));
-            _ranks.Add(new Rank(15, 20, "sgt", "Sergeant", "brown"));
+            _ranks.Add(new Rank(5, "pvt", "Private", "brown"));
+            _ranks.Add(new Rank(10, "cpl", "Corporal", "brown"));
+            _ranks.Add(new Rank(15, "mcpl", "Master Corporal", "brown"));
+            _ranks.Add(new Rank(20, "sgt", "Sergeant", "brown"));
 
-            _ranks.Add(new Rank(20, 30, "wo", "Warrant Officer", "black"));
-            _ranks.Add(new Rank(22, 40, "mwo", "Master Warrant Officer", "black"));
-            _ranks.Add(new Rank(25, 50, "cwo", "Chief Warrant Officer", "black"));
+            _ranks.Add(new Rank(30, "wo", "Warrant Officer", "black"));
+            _ranks.Add(new Rank(40, "mwo", "Master Warrant Officer", "black"));
+            _ranks.Add(new Rank(50, "cwo", "Chief Warrant Officer", "black"));
 
-            _ranks.Add(new Rank(30, 60, "2lt", "Second Lieutenant", "white"));
-            _ranks.Add(new Rank(32, 65, "lt", "Lieutenant", "white"));
-            _ranks.Add(new Rank(35, 75, "capt", "Captain", "white"));
+            _ranks.Add(new Rank(60, "2lt", "Second Lieutenant", "white"));
+            _ranks.Add(new Rank(65, "lt", "Lieutenant", "white"));
+            _ranks.Add(new Rank(75, "capt", "Captain", "white"));
 
-            _ranks.Add(new Rank(40, 100, "maj", "Major", "lightblue"));
-            _ranks.Add(new Rank(42, 125, "cmdt", "Commander", "lightblue"));
-            _ranks.Add(new Rank(45, 150, "col", "Colonel", "lightblue"));
+            _ranks.Add(new Rank(100, "maj", "Major", "lightblue"));
+            _ranks.Add(new Rank(125, "cmdt", "Commander", "lightblue"));
+            _ranks.Add(new Rank(150, "col", "Colonel", "lightblue"));
 
-            _ranks.Add(new Rank(45, 200, "bg", "Brigadier", "lightyellow"));
-            _ranks.Add(new Rank(50, 250, "gen", "General", "lightyellow"));
+            _ranks.Add(new Rank(200, "bg", "Brigadier", "lightyellow"));
+            _ranks.Add(new Rank(250, "gen", "General", "lightyellow"));
 
         }
     }
@@ -90,14 +88,17 @@ public class PlayerProgressionManager : MonoBehaviour
     }
 
 
-    public static Rank GetClosestRank(int xp, int h)
+    public static Rank[] GetClosestAndNextRank(int h)
     {
-        Rank r = instance._ranks[0];
-        foreach (Rank rank in instance._ranks)
+        Rank[] r = new Rank[2];
+        for (int i = 0; i < instance._ranks.Count; i++)
         {
             //Debug.Log($"Rank search: {xp} {h} \n {rank.lvlRequired} {rank.honorRequired}");
-            if (xp >= rank.lvlRequired && h >= rank.honorRequired)
-                r = rank;
+            if (h >= instance._ranks[i].honorRequired)
+            {
+                r[0] = instance._ranks[i];
+                try { r[1] = instance._ranks[i + 1]; } catch { }
+            }
             else
                 break;
         }
@@ -148,7 +149,6 @@ public class PlayerProgressionManager : MonoBehaviour
     public struct Rank
     {
 
-        public int lvlRequired { get { return _lvlRequired; } }
         public int honorRequired { get { return _honorRequired; } }
         public string spriteName { get { return _spriteName; } }
         public string cleanName { get { return _cleanName; } }
@@ -156,13 +156,12 @@ public class PlayerProgressionManager : MonoBehaviour
 
 
 
-        int _lvlRequired, _honorRequired;
+        int _honorRequired;
         string _spriteName, _cleanName, _color;
 
 
-        public Rank(int xpReq, int hReq, string n, string cn, string color)
+        public Rank(int hReq, string n, string cn, string color)
         {
-            _lvlRequired = xpReq;
             _honorRequired = hReq;
             _spriteName = n;
             _cleanName = cn;

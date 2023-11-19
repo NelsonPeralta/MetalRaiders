@@ -501,6 +501,7 @@ public class Player : Biped
     public PlayerShield playerShield { get { return _playerShield; } }
     public KillFeedManager killFeedManager { get { return _killFeedManager; } }
     public ReticuleFriction reticuleFriction { get { return _reticuleFriction; } }
+    public PlayerCapsule playerCapsule { get { return _playerCapsule; } }   
 
     #endregion
 
@@ -530,6 +531,7 @@ public class Player : Biped
     [SerializeField] PlayerShield _playerShield;
     [SerializeField] KillFeedManager _killFeedManager;
     [SerializeField] ReticuleFriction _reticuleFriction;
+    [SerializeField] PlayerCapsule _playerCapsule;
     #endregion
 
 
@@ -670,6 +672,7 @@ public class Player : Biped
             nickName = PV.Owner.NickName;
         GetComponent<PlayerUI>().isMineText.text = $"IM: {PV.IsMine}";
         gameObject.name = $"{PV.Owner.NickName} ({rid}). IM: {PV.IsMine}";
+        foreach (PlayerWorldUIMarker p in allPlayerScripts.worldUis) p.text.text = nickName;
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
 

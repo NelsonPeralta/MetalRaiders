@@ -85,9 +85,9 @@ public class Hill : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<Player>())
+        if (other.GetComponent<PlayerCapsule>())
         {
-            Player p = other.GetComponent<Player>();
+            Player p = other.transform.root.GetComponent<Player>();
 
             if (!p.isDead && !p.isRespawning && !playersInRange.Contains(p))
             {
@@ -102,9 +102,9 @@ public class Hill : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Player>())
+        if (other.GetComponent<PlayerCapsule>())
         {
-            Player p = other.GetComponent<Player>();
+            Player p = other.transform.root.GetComponent<Player>();
 
             if (playersInRange.Contains(p))
             {

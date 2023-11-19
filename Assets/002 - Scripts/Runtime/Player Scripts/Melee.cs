@@ -83,12 +83,15 @@ public class Melee : MonoBehaviour
     private void Update()
     {
         if (hitPointsInMeleeZone.Count > 0)
+        {
+            ii = 0;
             for (ii = 0; ii < hitPointsInMeleeZone.Count; ii++)
             {
                 hpii = hitPointsInMeleeZone[ii];
                 if (hpii.hitPoints <= 0 || hpii.isDead || !hpii.gameObject.activeInHierarchy)
                     hitPointsInMeleeZone.Remove(hpii);
             }
+        }
     }
 
     int _pushForce;

@@ -219,14 +219,20 @@ public partial class WebManager
             minXpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
 
 
-        if (winPlayers != null)
-            if (winPlayers.Contains(GameManager.GetLocalMasterPlayer()))
-            {
-                honorGained = PlayerProgressionManager.honorGainPerMatch;
-                newHonor += honorGained;
-            }
 
-        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(pda.playerBasicOnlineStats.level, pda.playerBasicOnlineStats.honor);
+
+
+
+        honorGained = PlayerProgressionManager.honorGainPerMatch;
+
+        if (winPlayers != null || CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
+            if (winPlayers.Contains(GameManager.GetLocalMasterPlayer()))
+                honorGained = PlayerProgressionManager.honorGainPerMatch * 2;
+
+        newHonor += honorGained;
+
+
+        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(pda.playerBasicOnlineStats.honor)[0];
 
 
 
