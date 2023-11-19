@@ -183,7 +183,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             {
                 codeName = "sniper";
             }
-            else if ((GameManager.instance.gameType.ToString().Contains("Rockets")))
+            else if (GameManager.instance.gameType == GameManager.GameType.Rockets)
             {
                 codeName = "rpg";
             }

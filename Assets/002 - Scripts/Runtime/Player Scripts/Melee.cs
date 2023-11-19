@@ -45,17 +45,21 @@ public class Melee : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (!other.GetComponent<HitPoints>() || this.player.isDead || this.player.isRespawning || other.transform == player.transform)
+        if (this.player.isDead || this.player.isRespawning || other.transform == player.transform || other.transform.root == player.transform)
             return;
 
-        HitPoints hp = other.GetComponent<HitPoints>();
+        HitPoints hps = null;
+        hps = other.GetComponent<HitPoints>();
 
-        if (!hitPointsInMeleeZone.Contains(hp))
-        {
-            hitPointsInMeleeZone.Add(hp);
-            other.GetComponent<Player>().OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
-            other.GetComponent<Player>().OnPlayerDeath += OnForeignPlayerDeath_Delegate;
-        }
+        if (hps == null && other.GetComponent<PlayerCapsule>()) { hps = other.transform.root.GetComponent<HitPoints>(); }
+
+        if (hps)
+            if (!hitPointsInMeleeZone.Contains(hps))
+            {
+                hitPointsInMeleeZone.Add(hps);
+                other.GetComponent<Player>().OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
+                other.GetComponent<Player>().OnPlayerDeath += OnForeignPlayerDeath_Delegate;
+            }
     }
 
     private void OnTriggerExit(Collider other)
@@ -65,6 +69,26 @@ public class Melee : MonoBehaviour
             hitPointsInMeleeZone.Remove(other.GetComponent<HitPoints>());
         }
         catch { }
+
+        try
+        {
+            if (other.GetComponent<PlayerCapsule>())
+                hitPointsInMeleeZone.Remove(other.transform.root.GetComponent<HitPoints>());
+        }
+        catch { }
+    }
+
+
+    int ii; HitPoints hpii;
+    private void Update()
+    {
+        if (hitPointsInMeleeZone.Count > 0)
+            for (ii = 0; ii < hitPointsInMeleeZone.Count; ii++)
+            {
+                hpii = hitPointsInMeleeZone[ii];
+                if (hpii.hitPoints <= 0 || hpii.isDead || !hpii.gameObject.activeInHierarchy)
+                    hitPointsInMeleeZone.Remove(hpii);
+            }
     }
 
     int _pushForce;
@@ -104,7 +128,8 @@ public class Melee : MonoBehaviour
                             else _pushForce = 100;
 
                             Debug.Log(Vector3.Distance(hp.transform.position, movement.transform.position));
-                            //movement.Push(hp.transform.position - movement.transform.position, _pushForce, PushSource.Melee, true);
+                            player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * 10, ForceMode.Impulse);
+                            player.movement.blockPlayerMoveInput = 0.5f;
                         }
 
                         try

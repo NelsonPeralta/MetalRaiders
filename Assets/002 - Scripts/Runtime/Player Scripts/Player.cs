@@ -500,6 +500,7 @@ public class Player : Biped
     public PlayerThirdPersonModel playerThirdPersonModel { get { return _playerThirdPersonModel; } }
     public PlayerShield playerShield { get { return _playerShield; } }
     public KillFeedManager killFeedManager { get { return _killFeedManager; } }
+    public ReticuleFriction reticuleFriction { get { return _reticuleFriction; } }
 
     #endregion
 
@@ -528,6 +529,7 @@ public class Player : Biped
     [SerializeField] PlayerThirdPersonModel _playerThirdPersonModel;
     [SerializeField] PlayerShield _playerShield;
     [SerializeField] KillFeedManager _killFeedManager;
+    [SerializeField] ReticuleFriction _reticuleFriction;
     #endregion
 
 

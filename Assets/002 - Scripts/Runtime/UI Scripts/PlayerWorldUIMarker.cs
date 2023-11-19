@@ -36,6 +36,9 @@ public class PlayerWorldUIMarker : MonoBehaviour
         if (!_targetPlayer)
             return;
 
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            _greenMarker.gameObject.SetActive(_player.team == GameManager.GetRootPlayer().team);
+
         Vector3 targetPostition = new Vector3(_targetPlayer.transform.position.x,
                                         this.transform.position.y,
                                         _targetPlayer.transform.position.z);

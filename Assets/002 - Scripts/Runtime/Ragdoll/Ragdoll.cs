@@ -49,7 +49,7 @@ abstract public class Ragdoll : MonoBehaviour
 
             _timeSinceLastThud = 0;
             //AudioDirector.Instance.PlayPooledAudioClipAtPosition(PlayerDeathRagdollAudioSettings.ThudAudioClipDefinitions, this.transform.position);
-            if (!_collisionAudioSource.isPlaying)
+            if (!_deathClipAudioSource.isPlaying)
             {
                 _ran = Random.Range(0, _collisionClips.Count);
                 _collisionAudioSource.clip = _collisionClips[_ran];

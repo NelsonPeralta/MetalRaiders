@@ -196,15 +196,18 @@ public class PlayerController : MonoBehaviourPun
         try { weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>(); } catch { }
 
 
-        if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !isSprinting && !pauseMenuOpen)
+        if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !pauseMenuOpen)
         {
             if (GameManager.instance.gameStarted)
             {
                 Shooting();
-                LeftShooting();
-                CheckReloadButton();
-                CheckAmmoForAutoReload();
-                AnimationCheck();
+                if (!isSprinting)
+                {
+                    LeftShooting();
+                    CheckReloadButton();
+                    CheckAmmoForAutoReload();
+                    AnimationCheck();
+                }
             }
         }
 
@@ -305,6 +308,7 @@ public class PlayerController : MonoBehaviourPun
     //TODO Make the player controller handle the third person script and models instead of the movement script
     void Sprint()
     {
+        if (isHoldingShootBtn) return;
         if (isSprinting)
         {
             weaponAnimator.SetBool("Run", true);
@@ -444,13 +448,14 @@ public class PlayerController : MonoBehaviourPun
 
     void Shooting()
     {
-        if (GetComponent<Player>().isDead || isSprinting || player.isRespawning)
+        if (GetComponent<Player>().isDead || player.isRespawning)
             return;
 
 
 
         if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
         {
+            DisableSprint();
             _StartShoot();
         }
 
@@ -773,7 +778,8 @@ public class PlayerController : MonoBehaviourPun
     {
         if (GameManager.instance.gameType != GameManager.GameType.GunGame &&
             GameManager.instance.gameType != GameManager.GameType.Shotguns &&
-            GameManager.instance.gameType != GameManager.GameType.Snipers)
+            GameManager.instance.gameType != GameManager.GameType.Snipers &&
+            GameManager.instance.gameType != GameManager.GameType.Rockets)
             if (rewiredPlayer.GetButtonDown("Switch Weapons"))
             {
                 try

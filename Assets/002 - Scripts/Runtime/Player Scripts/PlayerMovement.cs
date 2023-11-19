@@ -316,6 +316,12 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.air;
         }
 
+        if ((player.playerController.isHoldingShootBtn) || state == MovementState.sprinting)
+        {
+            state = MovementState.walking;
+            desiredMoveSpeed = walkSpeed;
+        }
+
         // check if desiredMoveSpeed has changed drastically
         //if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
         //{

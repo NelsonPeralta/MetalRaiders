@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class PlayerWorldUIMarkerDetector : MonoBehaviour
 {
-    GameObject obstruction
+    GameObject rayHit
     {
-        get { return _obstruction; }
+        get { return _rayHit; }
         set
         {
-            GameObject _previous = _obstruction;
+            GameObject _previous = _rayHit;
 
             try
             {
-                if (value.GetComponent<ReticuleFriction>())
+                if (value.GetComponent<ReticuleFriction>() || value.GetComponent<Player>().reticuleFriction)
                 {
-                    _obstruction = value;
+                    _rayHit = value;
                     if (GameManager.instance.teamMode.ToString().Contains("Classic"))
                     {
-                        if (_obstruction.GetComponent<ReticuleFriction>().player.team != _player.team)
-                            _obstruction.GetComponent<ReticuleFriction>().player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(true);
+                        if (_rayHit.GetComponent<Player>().team != _player.team)
+                            _rayHit.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(true);
                     }
                     else
                     {
-                        _obstruction.GetComponent<ReticuleFriction>().player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(true);
+                        _rayHit.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(true);
                     }
                 }
             }
@@ -34,35 +34,44 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
 
             try
             {
-                if (value != _previous && _previous.GetComponent<ReticuleFriction>())
+                if (value != _previous && (_previous.GetComponent<ReticuleFriction>() || value.GetComponent<Player>().reticuleFriction))
                     if (GameManager.instance.teamMode.ToString().Contains("Classic"))
                     {
-                        if (_previous.GetComponent<ReticuleFriction>().player.team != _player.team)
-                            _previous.GetComponent<ReticuleFriction>().player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
+                        if (_previous.GetComponent<Player>().team != _player.team)
+                            _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
                     }
                     else
                     {
-                        _previous.GetComponent<ReticuleFriction>().player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
+                        _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
                     }
             }
             catch (System.Exception e) { /*Debug.LogWarning(e);*/ }
+
+            if (value == null)
+            {
+                try
+                {
+                    _previous.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].holder.gameObject.SetActive(false);
+                }
+                catch { }
+            }
         }
     }
 
     [SerializeField] Player _player;
-    [SerializeField] GameObject _obstruction;
+    [SerializeField] GameObject _rayHit;
 
     [SerializeField] LayerMask _targetLayerMask;
     [SerializeField] LayerMask _obsLayerMask;
 
-    [SerializeField]  int _distance = 25;
+    [SerializeField] int _distance = 25;
 
     private void Update()
     {
         if (!_player.isMine)
             return;
 
-        try { if (_player.isDead || _player.isRespawning) { obstruction = null; return; } } catch { }
+        try { if (_player.isDead || _player.isRespawning) { rayHit = null; return; } } catch { }
         try { _distance = (int)_player.playerInventory.activeWeapon.currentRedReticuleRange; } catch { _distance = 15; }
 
         var hit = new RaycastHit();
@@ -83,11 +92,12 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
 
             if (canSeePlayer)
             {
-                obstruction = hit.transform.gameObject;
+                Debug.Log($"PlayerWorldUIMarkerDetector: {hit.transform.gameObject.name}");
+                rayHit = hit.transform.gameObject;
             }
             else
             {
-                obstruction = null;
+                rayHit = null;
 
             }
 
@@ -102,7 +112,7 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
         }
         else
         {
-            obstruction = null;
+            rayHit = null;
         }
 
 
