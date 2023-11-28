@@ -308,8 +308,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
         try
         {
-            foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-                hitbox.gameObject.SetActive(true);
+            //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+            //    hitbox.gameObject.SetActive(true);
         }
         catch { }
 
@@ -356,8 +356,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         GetComponent<Animator>().Play("Die");
 
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-            hitbox.gameObject.SetActive(false);
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //    hitbox.gameObject.SetActive(false);
 
         SwarmManager.instance.InvokeOnAiDeath();
 

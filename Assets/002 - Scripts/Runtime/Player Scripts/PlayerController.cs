@@ -784,7 +784,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 try
                 {
-        Debug.Log("SwitchWeapons");
+                    Debug.Log("SwitchWeapons");
                     weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
                     OnPlayerSwitchWeapons?.Invoke(this);
                 }
@@ -1366,6 +1366,8 @@ public class PlayerController : MonoBehaviourPun
 
         foreach (PlayerHitbox hb in GetComponent<Player>().hitboxes)
             Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+
+        foreach (Player p in GameManager.instance.pid_player_Dict.Values) Physics.IgnoreCollision(grenade.GetComponent<Collider>(), p.playerCapsule.GetComponent<Collider>());
 
         grenade.GetComponent<Rigidbody>().AddForce(forw * grenadeThrowForce);
         Destroy(grenade.gameObject, 10);

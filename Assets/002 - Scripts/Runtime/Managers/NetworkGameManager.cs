@@ -819,4 +819,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(t);
         overshield.gameObject.SetActive(true);
     }
+
+
+
+
+
+
+    //public void AskHostToStickGrenade
 }

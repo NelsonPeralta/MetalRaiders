@@ -901,8 +901,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void EndWave()
     {
         Debug.Log("EndWave_RPC");
-        if (currentWave % 5 == 0)
-            AddClip(bossMusics[_ranClipInt].intro);
+        try
+        {
+            if (currentWave % 5 == 0)
+                AddClip(bossMusics[_ranClipInt].intro);
+        }
+        catch (System.Exception e) { Debug.LogWarning(e); }
 
         OnWaveEnd?.Invoke(this);
         _newWaveCountdown = nextWaveDelay;

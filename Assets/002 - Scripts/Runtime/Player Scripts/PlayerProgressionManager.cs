@@ -26,7 +26,7 @@ public class PlayerProgressionManager : MonoBehaviour
     {
         get
         {
-            int h = 1;
+            int h = 2;
 
             DateTime today = DateTime.Now;
             if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
@@ -56,28 +56,29 @@ public class PlayerProgressionManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             instance = this;
 
+
             _ranks.Add(new Rank(0, "r", "Recruit", "invisible"));
 
-            _ranks.Add(new Rank(5, "pvt", "Private", "brown"));
-            _ranks.Add(new Rank(10, "cpl", "Corporal", "brown"));
-            _ranks.Add(new Rank(15, "mcpl", "Master Corporal", "brown"));
-            _ranks.Add(new Rank(20, "sgt", "Sergeant", "brown"));
+            _ranks.Add(new Rank(10, "pvt", "Private", "brown"));
+            _ranks.Add(new Rank(20, "cpl", "Corporal", "brown"));
 
-            _ranks.Add(new Rank(30, "wo", "Warrant Officer", "black"));
-            _ranks.Add(new Rank(40, "mwo", "Master Warrant Officer", "black"));
-            _ranks.Add(new Rank(50, "cwo", "Chief Warrant Officer", "black"));
+            _ranks.Add(new Rank(40, "mcpl", "Master Corporal", "brown"));
+            _ranks.Add(new Rank(80, "sgt", "Sergeant", "brown"));
 
-            _ranks.Add(new Rank(60, "2lt", "Second Lieutenant", "white"));
-            _ranks.Add(new Rank(65, "lt", "Lieutenant", "white"));
-            _ranks.Add(new Rank(75, "capt", "Captain", "white"));
+            _ranks.Add(new Rank(120, "wo", "Warrant Officer", "black"));
+            _ranks.Add(new Rank(160, "mwo", "Master Warrant Officer", "black"));
+            _ranks.Add(new Rank(200, "cwo", "Chief Warrant Officer", "black"));
 
-            _ranks.Add(new Rank(100, "maj", "Major", "lightblue"));
-            _ranks.Add(new Rank(125, "cmdt", "Commander", "lightblue"));
-            _ranks.Add(new Rank(150, "col", "Colonel", "lightblue"));
+            _ranks.Add(new Rank(250, "2lt", "Second Lieutenant", "white"));
+            _ranks.Add(new Rank(300, "lt", "Lieutenant", "white"));
+            _ranks.Add(new Rank(350, "capt", "Captain", "white"));
 
-            _ranks.Add(new Rank(200, "bg", "Brigadier", "lightyellow"));
-            _ranks.Add(new Rank(250, "gen", "General", "lightyellow"));
+            _ranks.Add(new Rank(400, "maj", "Major", "lightblue"));
+            _ranks.Add(new Rank(500, "cmd", "Commander", "lightblue"));
+            _ranks.Add(new Rank(600, "col", "Colonel", "lightblue"));
 
+            _ranks.Add(new Rank(800, "bg", "Brigadier", "lightyellow"));
+            _ranks.Add(new Rank(1000, "gen", "General", "lightyellow"));
         }
     }
 

@@ -126,8 +126,8 @@ public class Knight : AiAbstractClass
                     {
                         var proj = Instantiate(projectile.gameObject, projectileSpawnPoint.transform.position
                             , projectileSpawnPoint.transform.rotation);
-                        foreach (AIHitbox c in hitboxes.AIHitboxes)
-                            Physics.IgnoreCollision(projectile.GetComponent<Collider>(), c.GetComponent<Collider>());
+                        //foreach (AIHitbox c in hitboxes.AIHitboxes)
+                        //    Physics.IgnoreCollision(projectile.GetComponent<Collider>(), c.GetComponent<Collider>());
                         proj.GetComponent<Fireball>().damage = projectileDamage;
                         proj.GetComponent<Fireball>().force = projectileSpeed;
                         proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
@@ -147,8 +147,8 @@ public class Knight : AiAbstractClass
 
                     {
                         var potionBomb = Instantiate(grenade.gameObject, projectileSpawnPoint.transform.position, projectileSpawnPoint.transform.rotation);
-                        foreach (AIHitbox c in hitboxes.AIHitboxes)
-                            Physics.IgnoreCollision(potionBomb.GetComponent<Collider>(), c.GetComponent<Collider>());
+                        //foreach (AIHitbox c in hitboxes.AIHitboxes)
+                        //    Physics.IgnoreCollision(potionBomb.GetComponent<Collider>(), c.GetComponent<Collider>());
 
                         potionBomb.GetComponent<Rigidbody>().AddForce(projectileSpawnPoint.transform.forward * 300);
 

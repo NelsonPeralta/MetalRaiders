@@ -272,8 +272,8 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
         playerRange = AiAbstractClass.PlayerRange.Out;
         previousPlayerRange = AiAbstractClass.PlayerRange.Out;
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-            hitbox.gameObject.SetActive(true);
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //    hitbox.gameObject.SetActive(true);
 
         foreach (AiRangeTrigger arc in rangeColliders)
             arc.playersInRange.Clear();
@@ -307,8 +307,8 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
         GetComponent<Animator>().Play("Die");
 
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-            hitbox.gameObject.SetActive(false);
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //    hitbox.gameObject.SetActive(false);
 
         SwarmManager.instance.InvokeOnAiDeath();
 

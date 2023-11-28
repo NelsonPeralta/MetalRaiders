@@ -193,8 +193,8 @@ public class PlayerMovement : MonoBehaviour
 
         try
         {
-            if (OnSlope())
-                slopeOrientation.forward = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+            //if (OnSlope())
+            //    slopeOrientation.forward = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
         }
         catch { }
 
@@ -444,6 +444,7 @@ public class PlayerMovement : MonoBehaviour
     float _tempSpeedVal;
     private void Jump()
     {
+        if (blockPlayerMoveInput > 0) return;
         exitingSlope = true;
 
         // reset y velocity
@@ -473,7 +474,9 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 GetSlopeMoveDirection(Vector3 direction)
     {
         slopeMovement = Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
-        slopeOrientation.forward = slopeMovement;
+
+        if (slopeMovement != Vector3.zero)
+            slopeOrientation.forward = slopeMovement;
 
         return slopeMovement;
     }

@@ -29,9 +29,10 @@ public class ExplosiveProjectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!player.PV.IsMine) _explosionDelayOnImpact *= 0.9f;
         try
         {
-            foreach (PlayerHitbox ph in player.GetComponent<PlayerHitboxes>().playerHitboxes)
+            foreach (PlayerHitbox ph in player.GetComponent<PlayerHitboxes>().hitboxes)
                 Physics.IgnoreCollision(GetComponent<Collider>(), ph.GetComponent<Collider>());
         }
         catch { }
@@ -57,9 +58,11 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (GetComponent<Collider>().isTrigger) return;
+
         if (collision.gameObject.layer != 9)
         {
-            Debug.Log($"Collided with: {collision.gameObject.name}");
+            Debug.Log($"Collided with: {collision.gameObject.name} {collision.gameObject.GetComponent<Collider>()}");
             _collided = true;
             try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
 
@@ -69,6 +72,7 @@ public class ExplosiveProjectile : MonoBehaviour
                 {
                     if (_stickyLayerMask == (_stickyLayerMask | (1 << collision.gameObject.layer)))
                     {
+                        Debug.Log($"Collided with: {collision.gameObject.name} {collision.gameObject.layer}");
                         gameObject.transform.parent = collision.gameObject.transform;
 
                         GetComponent<Rigidbody>().useGravity = false;
@@ -77,6 +81,41 @@ public class ExplosiveProjectile : MonoBehaviour
                         if (collision.gameObject.GetComponent<PlayerHitbox>())
                         {
                             Debug.Log("STUCK!");
+                            _stuck = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (GetComponent<Collider>().isTrigger)
+        {
+            Debug.Log($"Collided with: {other.gameObject.name} {other.gameObject.layer}");
+
+            if (GameManager.LayerIsPartOfLayerMask(other.gameObject.layer, _stickyLayerMask))
+            {
+                _collided = true;
+                try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
+
+                if (_sticky)
+                {
+                    if (other.GetComponent<Hitbox>())
+                        Debug.Log($" blabla {other.GetComponent<Hitbox>().hitboxesScript.hitboxes.Contains(other.GetComponent<Hitbox>())} {other.GetComponent<Hitbox>().hitboxesScript.hitboxes.IndexOf(other.GetComponent<Hitbox>())}");
+
+                    _sticky = false;
+                    {
+                        gameObject.transform.SetParent(other.gameObject.transform, true);
+
+                        GetComponent<Rigidbody>().useGravity = false;
+                        GetComponent<Rigidbody>().isKinematic = true;
+
+                        if (other.gameObject.GetComponent<PlayerHitbox>())
+                        {
+                            Debug.Log("STUCK!");
+                            visualIndicator.transform.localScale *= 3;
                             _stuck = true;
                         }
                     }

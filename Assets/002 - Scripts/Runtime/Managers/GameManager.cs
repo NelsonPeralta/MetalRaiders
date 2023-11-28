@@ -960,4 +960,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             material.renderQueue = defaultRenderQueue;
         }
     }
+
+    // https://discussions.unity.com/t/check-if-layer-is-in-layermask/16007
+    public static bool LayerIsPartOfLayerMask(int lay, LayerMask lm)
+    {
+        return lm == (lm | (1 << lay));
+    }
 }

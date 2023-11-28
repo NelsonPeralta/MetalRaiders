@@ -382,13 +382,13 @@ public class AIHitbox : Hitbox, IDamageable
 
     void UpdateAIHealthOnHitboxes(float newHealth)
     {
-        foreach (AIHitbox hitbox in otherHitboxes.AIHitboxes)
-        {
-            if (hitbox != null)
-            {
-                hitbox.aiHealth = newHealth;
-            }
-        }
+        //foreach (AIHitbox hitbox in otherHitboxes.AIHitboxes)
+        //{
+        //    if (hitbox != null)
+        //    {
+        //        hitbox.aiHealth = newHealth;
+        //    }
+        //}
     }
 
     public void Damage(int damage)

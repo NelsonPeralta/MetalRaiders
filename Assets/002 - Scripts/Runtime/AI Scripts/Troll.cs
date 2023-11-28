@@ -209,11 +209,11 @@ public class Troll : MonoBehaviour
         //    swarmMode.trollsAlive = swarmMode.trollsAlive - 1;
         //}
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-        {
-            //hitbox.gameObject.layer = 23; //Ground
-            hitbox.gameObject.SetActive(false);
-        }
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //{
+        //    //hitbox.gameObject.layer = 23; //Ground
+        //    hitbox.gameObject.SetActive(false);
+        //}
 
         motionTrackerDot.SetActive(false);
 
@@ -452,8 +452,8 @@ public class Troll : MonoBehaviour
         IsInMeleeRange = false;
         isReadyToAttack = true;
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-            hitbox.gameObject.SetActive(true);
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //    hitbox.gameObject.SetActive(true);
 
         motionTrackerDot.SetActive(true);
 

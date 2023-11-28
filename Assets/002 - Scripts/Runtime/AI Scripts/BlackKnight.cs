@@ -291,7 +291,7 @@ public class BlackKnight : MonoBehaviour
 
                             potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
                             potionBomb.GetComponent<AIGrenade>().playerRewiredID = 99;
-                            potionBomb.GetComponent<AIGrenade>().team = hitboxes.AIHitboxes[0].team;
+                            //potionBomb.GetComponent<AIGrenade>().team = hitboxes.AIHitboxes[0].team;
                         }
                     }
                     if (nextActionInRange == "Summon")
@@ -403,11 +403,11 @@ public class BlackKnight : MonoBehaviour
         //    swarmMode.blackKnightsAlive = swarmMode.blackKnightsAlive - 1;
         //}
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-        {
-            hitbox.gameObject.layer = 23; //Ground
-            hitbox.gameObject.SetActive(false);
-        }
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //{
+        //    hitbox.gameObject.layer = 23; //Ground
+        //    hitbox.gameObject.SetActive(false);
+        //}
 
         if (lastPlayerWhoShot != null)
         {

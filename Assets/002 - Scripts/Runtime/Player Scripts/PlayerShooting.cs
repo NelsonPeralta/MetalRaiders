@@ -51,6 +51,8 @@ public class PlayerShooting : MonoBehaviourPun
 
     void OnPlayerControllerFire_Delegate(PlayerController playerController)
     {
+        if (!_gameObjectPool) _gameObjectPool = FindObjectOfType<GameObjectPool>();
+
         if (playerController.isDrawingWeapon)
             return;
 
@@ -229,9 +231,13 @@ public class PlayerShooting : MonoBehaviourPun
                 if (player.isMine || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
                     Debug.Log("shoooo 2");
+                    if(!_gameObjectPool) _gameObjectPool = FindObjectOfType<GameObjectPool>();
                     var bullet = _gameObjectPool.SpawnPooledBullet();
 
                     {
+                        Debug.Log(_gameObjectPool);
+                        Debug.Log(bullet);
+                        Debug.Log(activeWeapon);
                         bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Blue && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                         bullet.GetComponent<Bullet>().redPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Red && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                         bullet.GetComponent<Bullet>().greenPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Green && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);

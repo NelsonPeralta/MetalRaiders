@@ -216,7 +216,7 @@ public class Skeleton : MonoBehaviour
 
                         potionBomb.GetComponent<AIStickyGrenade>().playerWhoThrewGrenade = gameObject;
                         potionBomb.GetComponent<AIStickyGrenade>().playerRewiredID = 99;
-                        potionBomb.GetComponent<AIStickyGrenade>().team = hitboxes.AIHitboxes[0].team;
+                        //potionBomb.GetComponent<AIStickyGrenade>().team = hitboxes.AIHitboxes[0].team;
                     }
 
                     int randomSound = Random.Range(0, attackClips.Length - 1);
@@ -297,11 +297,11 @@ public class Skeleton : MonoBehaviour
         //if (swarmMode != null)
         //    swarmMode.skeletonsAlive = swarmMode.skeletonsAlive - 1;
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-        {
-            //hitbox.gameObject.layer = 23; //Ground
-            hitbox.gameObject.SetActive(false);
-        }
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //{
+        //    //hitbox.gameObject.layer = 23; //Ground
+        //    hitbox.gameObject.SetActive(false);
+        //}
 
         motionTrackerDot.SetActive(false);
         if (lastPlayerWhoShot)
@@ -626,10 +626,10 @@ public class Skeleton : MonoBehaviour
         targetInLOS = false;
         isReadyToAttack = true;
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-        {
-            hitbox.gameObject.SetActive(true);
-        }
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //{
+        //    hitbox.gameObject.SetActive(true);
+        //}
 
         motionTrackerDot.SetActive(true);
 

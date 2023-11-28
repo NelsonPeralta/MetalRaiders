@@ -49,8 +49,6 @@ public class PlayerWorldUIMarker : MonoBehaviour
     private void Start()
     {
         _holderScript.OnEnabledThis += OnHolderEnabled;
-
-        _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
     }
 
     private void Update()

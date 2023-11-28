@@ -199,11 +199,11 @@ public class SkeletonBackup : MonoBehaviour
         //    swarmMode.skeletonsAlive = swarmMode.skeletonsAlive - 1;
         //}
 
-        foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
-        {
-            hitbox.gameObject.layer = 23; //Ground
-            hitbox.gameObject.SetActive(false);
-        }
+        //foreach (AIHitbox hitbox in hitboxes.AIHitboxes)
+        //{
+        //    hitbox.gameObject.layer = 23; //Ground
+        //    hitbox.gameObject.SetActive(false);
+        //}
 
         if(lastPlayerWhoShot != null)
         {

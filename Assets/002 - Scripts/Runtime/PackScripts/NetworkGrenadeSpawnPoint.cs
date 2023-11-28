@@ -49,6 +49,13 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
     [Header("Other Classes")]
     public Player playerProperties;
 
+    private void Awake()
+    {
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta || GameManager.instance.gameType == GameManager.GameType.GunGame)
+        {
+            gameObject.SetActive(false);
+        }
+    }
     private void Start()
     {
         _tts = _defaultTts;

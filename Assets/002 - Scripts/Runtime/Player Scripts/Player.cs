@@ -501,7 +501,7 @@ public class Player : Biped
     public PlayerShield playerShield { get { return _playerShield; } }
     public KillFeedManager killFeedManager { get { return _killFeedManager; } }
     public ReticuleFriction reticuleFriction { get { return _reticuleFriction; } }
-    public PlayerCapsule playerCapsule { get { return _playerCapsule; } }   
+    public PlayerCapsule playerCapsule { get { return _playerCapsule; } }
 
     #endregion
 
@@ -974,6 +974,7 @@ public class Player : Biped
         Debug.Log("Respawn");
         if (!isRespawning)
             return;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         lastPID = -1;
         deathNature = DeathNature.None;

@@ -28,6 +28,14 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     {
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
     }
+
+    private void Awake()
+    {
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta || GameManager.instance.gameType == GameManager.GameType.GunGame)
+        {
+            gameObject.SetActive(false);
+        }
+    }
     private void Start()
     {
         _respawnListenerDelay = 1;
@@ -194,7 +202,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
         if ((GameManager.instance.gameType.ToString().Contains("Fiesta")) || GameManager.instance.gameType == GameManager.GameType.GunGame)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+            //Destroy(gameObject);
         }
     }
     #endregion

@@ -413,9 +413,9 @@ public class CurrentRoomManager : MonoBehaviour
 
                 Launcher.instance.gameCountdownText.text = $"Game Starts in: {((int)roomGameStartCountdown)}";
 
-                //if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
-                //    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
-                //        Launcher.instance.StartGame();
+                if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
+                        Launcher.instance.StartGame();
             }
         }
 
@@ -451,17 +451,19 @@ public class CurrentRoomManager : MonoBehaviour
         }
         else
         {
-            expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length
+            if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
+                expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length
                 + FindObjectsOfType<Hazard>().Length;
             Debug.Log(expectedMapAddOns);
 
 
-            foreach (NetworkWeaponSpawnPoint nwsp in FindObjectsOfType<NetworkWeaponSpawnPoint>())
-                if (nwsp.transform.root.GetComponent<Player>() == null)
-                {
-                    Debug.Log(nwsp.name);
-                    expectedMapAddOns += 1;
-                }
+            if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
+                foreach (NetworkWeaponSpawnPoint nwsp in FindObjectsOfType<NetworkWeaponSpawnPoint>())
+                    if (nwsp.transform.root.GetComponent<Player>() == null)
+                    {
+                        Debug.Log(nwsp.name);
+                        expectedMapAddOns += 1;
+                    }
         }
     }
 

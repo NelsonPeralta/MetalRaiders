@@ -1,22 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class Hitboxes : MonoBehaviour
+public abstract class Hitboxes : MonoBehaviour
 {
-    public PlayerHitbox[] playerHitboxes;
-    public AIHitbox[] AIHitboxes;
+    public List<Hitbox> hitboxes { get { return _hitboxes; } }
+    [SerializeField] protected List<Hitbox> _hitboxes = null;
 
-    private void Start()
+    private void Awake()
     {
-        playerHitboxes = GetComponentsInChildren<PlayerHitbox>();
-        AIHitboxes = GetComponentsInChildren<AIHitbox>();
-
-        try
-        {
-            foreach (AIHitbox aIHitbox in AIHitboxes)
-                aIHitbox.aiAbstractClass = GetComponent<AiAbstractClass>();
-        }
-        catch { }
+        _hitboxes = GetComponentsInChildren<Hitbox>().ToList();
+        foreach (Hitbox hb in _hitboxes)
+            hb.hitboxesScript = this;
     }
 }
