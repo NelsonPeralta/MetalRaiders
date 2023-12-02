@@ -238,13 +238,14 @@ GameObject:
   m_Component:
   - component: {fileID: 7037346880252022619}
   - component: {fileID: 8696116580191110935}
+  - component: {fileID: 2756911671756334167}
   m_Layer: 5
   m_Name: Hit Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7037346880252022619
 RectTransform:
   m_ObjectHideFlags: 0
@@ -255,7 +256,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7003365937073419676}
   - {fileID: 2143446895112303019}
@@ -281,7 +282,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 90a5a1c1516b03a43b2ad10ba346b350, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -365,6 +366,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2756911671756334167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6863975650904918001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f0d6c975fcf00d41af09e37f08e78f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7843282282975071243
 GameObject:
   m_ObjectHideFlags: 0

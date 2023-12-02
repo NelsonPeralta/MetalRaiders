@@ -43,7 +43,7 @@ public class MapCamera : MonoBehaviour
     private void Update()
     {
         _text.text = $"expectedMapAddOns {CurrentRoomManager.instance.expectedMapAddOns} - spawnedMapAddOns {CurrentRoomManager.instance.spawnedMapAddOns}";
-        _text.text += $"\nmapIsReady {CurrentRoomManager.instance.mapIsReady}";
+        _text.text += $"\nmapIsReady {CurrentRoomManager.instance.mapIsReady} - playersLoadedScene {CurrentRoomManager.instance.playersLoadedScene}";
         _text.text += $"\nnbPlayersJoined {CurrentRoomManager.instance.nbPlayersJoined} - expectedNbPlayers {CurrentRoomManager.instance.expectedNbPlayers}";
         _text.text += $"\nallPlayersJoined {CurrentRoomManager.instance.allPlayersJoined}";
         _text.text += $"\ngameIsReady {CurrentRoomManager.instance.gameIsReady}";

@@ -318,6 +318,7 @@ public class Player : Biped
             if (value && !previousValue)
             {
                 _rb.isKinematic = true;
+                GetComponent<HitPoints>().OnDeath?.Invoke(GetComponent<HitPoints>()); // Needed for melee script
                 OnPlayerDeath?.Invoke(this);
                 OnPlayerDeathLate?.Invoke(this);
             }
@@ -502,6 +503,7 @@ public class Player : Biped
     public KillFeedManager killFeedManager { get { return _killFeedManager; } }
     public ReticuleFriction reticuleFriction { get { return _reticuleFriction; } }
     public PlayerCapsule playerCapsule { get { return _playerCapsule; } }
+    public PlayerShooting playerShooting { get { return _playerShooting; } }
 
     #endregion
 
@@ -532,6 +534,7 @@ public class Player : Biped
     [SerializeField] KillFeedManager _killFeedManager;
     [SerializeField] ReticuleFriction _reticuleFriction;
     [SerializeField] PlayerCapsule _playerCapsule;
+    [SerializeField] PlayerShooting _playerShooting;
     #endregion
 
 
@@ -711,6 +714,10 @@ public class Player : Biped
             }
         }
         catch { }
+
+        originalSpawnPosition = transform.position;
+        GameManager.instance.orSpPos_Biped_Dict.Add(transform.position, this); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
+
 
         defaultVerticalFov = 0; GetComponent<PlayerController>().ScopeOut();
 

@@ -91,7 +91,6 @@ public class CurrentRoomManager : MonoBehaviour
         {
             int _preVal = _spawnedMapAddOns;
             _spawnedMapAddOns = value;
-            Debug.Log($"spawnedMapAddOns: {value}");
 
             if (_spawnedMapAddOns == expectedMapAddOns)
             {
@@ -112,8 +111,21 @@ public class CurrentRoomManager : MonoBehaviour
             if (value && _preVal != value)
             {
                 Debug.Log($"mapIsReady");
-                StartCoroutine(GameManager.instance.SpawnPlayers_Coroutine());
+                //StartCoroutine(GameManager.instance.SpawnPlayers_Coroutine());
+
             }
+        }
+    }
+
+    public int playersLoadedScene
+    {
+        get { return _playersLoadedScene; }
+        set
+        {
+            _playersLoadedScene = value;
+
+            if (_playersLoadedScene == expectedNbPlayers)
+                StartCoroutine(GameManager.instance.SpawnPlayers_Coroutine());
         }
     }
 
@@ -283,7 +295,7 @@ public class CurrentRoomManager : MonoBehaviour
     [SerializeField] bool _gameStart, _gameStarted, _gameOver;
     [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9, _rpcCooldown;
 
-    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _nbPlayersJoined, _vetos;
+    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersJoined, _vetos;
 
     [SerializeField] RoomType _roomType;
 
@@ -444,13 +456,17 @@ public class CurrentRoomManager : MonoBehaviour
 
             _mapIsReady = _allPlayersJoined = _gameIsReady = _gameStart = _gameOver = _gameStarted =
                 _reachedHalwayGameStartCountdown = _randomQuickMatchSeetingsChosen = false;
-            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = 0;
+            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _playersLoadedScene = 0;
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
             _vetoedGameType = GameManager.GameType.Unassgined; _vetoedMapIndex = 0;
         }
         else
         {
+            for (int i = 0; i < GameManager.instance.nbLocalPlayersPreset; i++)
+                NetworkGameManager.instance.AddPlayerLoadedScene();
+
+
             if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
                 expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length
                 + FindObjectsOfType<Hazard>().Length;

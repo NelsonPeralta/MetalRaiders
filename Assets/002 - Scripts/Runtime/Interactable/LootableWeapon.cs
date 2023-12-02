@@ -297,7 +297,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Lootable Weapon OnCollisionEnter");
         GetComponent<Rigidbody>().velocity /= 2;
         try
         {

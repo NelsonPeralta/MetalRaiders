@@ -77,6 +77,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+    public Dictionary<Vector3, Biped> orSpPos_Biped_Dict
+    {
+        get { return _orSpPos_Biped_Dict; }
+        set
+        {
+            _orSpPos_Biped_Dict = value;
+
+            //foreach (KeyValuePair<Vector3, Biped> attachStat in _orSpPos_Biped_Dict)
+            //    Debug.Log($"orSpPos_Biped_Dict: Key {attachStat.Key} has value {attachStat.Value.name}");
+        }
+    }
+
     public bool gameStarted
     {
         get { return GetComponent<CurrentRoomManager>().gameStarted; }
@@ -352,6 +365,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] WeaponPool _weaponPoolPrefab;
     [SerializeField] RagdollPool _ragdollPoolPrefab;
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
+    [SerializeField] Dictionary<Vector3, Biped> _orSpPos_Biped_Dict = new Dictionary<Vector3, Biped>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
     [SerializeField] Material _armorMaterial;
@@ -615,19 +629,28 @@ public class GameManager : MonoBehaviourPunCallbacks
         FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
     }
 
-
+    List<Vector3> _orSpPts = new List<Vector3>();
     public IEnumerator SpawnPlayers_Coroutine()
     {
         Debug.Log("SpawnPlayers_Coroutine");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
 
         try
         {
             for (int i = 0; i < nbLocalPlayersPreset; i++)
             {
-                Transform spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2, 0), spawnpoint.rotation).GetComponent<Player>();
+                Transform spawnpoint = null;
+                do
+                {
+                    spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+                } while (_orSpPts.Contains(spawnpoint.position));
+
+
+                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f ), 0 + (i * 0.0001f)), spawnpoint.rotation).GetComponent<Player>();
                 player.GetComponent<PlayerController>().rid = i;
+
+                //player.originalSpawnPosition = spawnpoint.position;
+                //GameManager.instance.orSpPos_Biped_Dict.Add(spawnpoint.position, player); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
             }
         }
         catch (Exception e) { Debug.LogWarning(e.Message); }

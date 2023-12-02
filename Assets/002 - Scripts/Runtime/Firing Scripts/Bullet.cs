@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     Vector3 _nextPos;
 
     public PhotonView PV;
+    public Biped trackingTarget;
     [Header("Other Scripts")]
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
@@ -199,7 +200,18 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void Travel()
     {
+
+
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        if (weaponProperties.targetTracking && trackingTarget)
+        {
+            Vector3 dir = trackingTarget.transform.position - transform.position;
+            Quaternion rot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rot, weaponProperties.trackingSpeed * Time.deltaTime);
+
+            if (trackingTarget.GetComponent<Player>().isDead) trackingTarget = null;
+        }
+
         //prePos = transform.position;
     }
 

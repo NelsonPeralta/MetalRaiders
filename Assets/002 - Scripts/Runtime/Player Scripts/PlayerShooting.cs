@@ -8,6 +8,8 @@ public class PlayerShooting : MonoBehaviourPun
     public delegate void PlayerShootingEvent(PlayerShooting playerShooting);
     public PlayerShootingEvent OnBulletSpawned;
 
+    public Biped trackingTarget;
+
     [Header("Other Scripts")]
     public PhotonView PV;
     public PlayerController playerController;
@@ -233,6 +235,8 @@ public class PlayerShooting : MonoBehaviourPun
                     Debug.Log("shoooo 2");
                     if(!_gameObjectPool) _gameObjectPool = FindObjectOfType<GameObjectPool>();
                     var bullet = _gameObjectPool.SpawnPooledBullet();
+
+                    if (activeWeapon.targetTracking) bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
 
                     {
                         Debug.Log(_gameObjectPool);

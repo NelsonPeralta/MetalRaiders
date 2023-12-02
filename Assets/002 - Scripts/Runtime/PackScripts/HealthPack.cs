@@ -8,9 +8,10 @@ public class HealthPack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Player>() && other.GetComponent<Player>().hitPoints <= 0.7f * other.GetComponent<Player>().maxHitPoints)
+        Debug.Log($"Health Pack {other.name}");
+        if (other.GetComponent<PlayerCapsule>() && other.GetComponent<PlayerCapsule>().transform.root.GetComponent<Player>().hitPoints <= 0.7f * other.GetComponent<PlayerCapsule>().transform.root.GetComponent<Player>().maxHitPoints)
         {
-            Player p = other.GetComponent<Player>();
+            Player p = other.GetComponent<PlayerCapsule>().transform.root.GetComponent<Player>();
 
             p.hitPoints = p.maxHitPoints;
             p.playerShield.ShowShieldRechargeEffect();

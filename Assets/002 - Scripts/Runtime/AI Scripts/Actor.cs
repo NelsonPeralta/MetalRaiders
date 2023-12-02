@@ -164,15 +164,18 @@ abstract public class Actor : Biped
         foreach (ActorHitbox ah in GetComponentsInChildren<ActorHitbox>())
         {
             ah.actor = this;
+            ah.biped = this;
             _actorHitboxes.Add(ah);
         }
 
         ChildAwake();
         transform.parent = SwarmManager.instance.transform;
         gameObject.SetActive(false);
+
+        GameManager.instance.orSpPos_Biped_Dict.Add(transform.position, this); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
     }
 
-    
+
 
     // Start is called before the first frame update
     void Start()

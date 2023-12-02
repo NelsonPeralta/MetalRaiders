@@ -34,9 +34,15 @@ public class AimAssistCone : MonoBehaviour
         get { return _collidingHitbox; }
         set
         {
-            if (collidingHitbox && !value)
-                aimAssist.ResetRedReticule();
-            _collidingHitbox = value;
+            if (value != _collidingHitbox)
+            {
+                _preCollidingHitbox = _collidingHitbox;
+                if (collidingHitbox && !value)
+                    aimAssist.ResetRedReticule();
+                _collidingHitbox = value;
+                Debug.Log($"AimAssistCone {_preCollidingHitbox} {_collidingHitbox}");
+
+            }
         }
     }
 
@@ -70,6 +76,7 @@ public class AimAssistCone : MonoBehaviour
     [SerializeField] PlayerHitboxDetector _invisibleHitboxDetector;
 
     int _reticuleFrictionLayer = 19;
+    GameObject _preCollidingHitbox;
 
     private void Update()
     {
@@ -178,7 +185,7 @@ public class AimAssistCone : MonoBehaviour
             {
                 try
                 {
-                    if (!chb.GetComponent<Hitbox>().isHead)
+                    if (!chb.GetComponent<Hitbox>().isHead && firstRayHit.GetComponent<Hitbox>())
                         chb = firstRayHit;
                 }
                 catch { }
@@ -194,19 +201,19 @@ public class AimAssistCone : MonoBehaviour
                 {
                     if (collidingHitbox.GetComponent<ActorHitbox>())
                     {
-                        aimAssist.target = collidingHitbox;
+                        aimAssist.targetHitbox = collidingHitbox;
                         aimAssist.redReticuleIsOn = true;
                         playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
                     }
                     else if (collidingHitbox.GetComponent<PlayerHitbox>().player.team == player.team)
                     {
-                        aimAssist.target = null;
+                        aimAssist.targetHitbox = null;
                         aimAssist.redReticuleIsOn = false;
                         playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Green;
                     }
                     else
                     {
-                        aimAssist.target = collidingHitbox;
+                        aimAssist.targetHitbox = collidingHitbox;
                         aimAssist.redReticuleIsOn = true;
                         playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
                     }
@@ -215,7 +222,7 @@ public class AimAssistCone : MonoBehaviour
             }
             else
             {
-                aimAssist.target = collidingHitbox;
+                aimAssist.targetHitbox = collidingHitbox;
                 aimAssist.redReticuleIsOn = true;
                 playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
             }
@@ -224,7 +231,7 @@ public class AimAssistCone : MonoBehaviour
         }
         else
         {
-            aimAssist.target = null;
+            aimAssist.targetHitbox = null;
             collidingHitbox = null;
             try { playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Blue; } catch { }
             //aimAssist.ResetRedReticule();

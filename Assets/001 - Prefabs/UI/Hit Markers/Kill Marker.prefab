@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3632724458436213672}
   - component: {fileID: -7699722250313742719}
+  - component: {fileID: 2969903723441305919}
   m_Layer: 5
   m_Name: Kill Marker
   m_TagString: Untagged
@@ -53,7 +54,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e888d05226779dc419b3b957d5438d17, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -137,6 +138,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2969903723441305919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751256149781012501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f0d6c975fcf00d41af09e37f08e78f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3606301611441189033
 GameObject:
   m_ObjectHideFlags: 0

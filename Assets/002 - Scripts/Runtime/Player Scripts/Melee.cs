@@ -37,13 +37,32 @@ public class Melee : MonoBehaviour
     {
         _maxDis = GetComponent<BoxCollider>().size.z;
 
-        player.OnPlayerDeath -= OnPlayerDeadth_Delegate;
-        player.OnPlayerDeath += OnPlayerDeadth_Delegate;
+        player.OnPlayerDeath -= OnPlayerDeath_Delegate;
+        player.OnPlayerDeath += OnPlayerDeath_Delegate;
 
         meleeIndicator.SetActive(false);
     }
 
     private void OnTriggerStay(Collider other)
+    {
+        //if (this.player.isDead || this.player.isRespawning || other.transform == player.transform || other.transform.root == player.transform)
+        //    return;
+
+        //HitPoints hps = null;
+        //hps = other.GetComponent<HitPoints>();
+
+        //if (hps == null && other.GetComponent<PlayerCapsule>()) { hps = other.transform.root.GetComponent<HitPoints>(); }
+
+        //if (hps)
+        //    if (!hitPointsInMeleeZone.Contains(hps))
+        //    {
+        //        hitPointsInMeleeZone.Add(hps);
+        //        other.GetComponent<Player>().OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
+        //        other.GetComponent<Player>().OnPlayerDeath += OnForeignPlayerDeath_Delegate;
+        //    }
+    }
+
+    private void OnTriggerEnter(Collider other)
     {
         if (this.player.isDead || this.player.isRespawning || other.transform == player.transform || other.transform.root == player.transform)
             return;
@@ -54,12 +73,18 @@ public class Melee : MonoBehaviour
         if (hps == null && other.GetComponent<PlayerCapsule>()) { hps = other.transform.root.GetComponent<HitPoints>(); }
 
         if (hps)
+        {
+            Debug.Log($"Melee OnTriggerEnter {other.name}");
+
             if (!hitPointsInMeleeZone.Contains(hps))
             {
                 hitPointsInMeleeZone.Add(hps);
-                other.GetComponent<Player>().OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
-                other.GetComponent<Player>().OnPlayerDeath += OnForeignPlayerDeath_Delegate;
+                hps.OnDeath -= OnHitPointsDeath_Delegate;
+                hps.OnDeath += OnHitPointsDeath_Delegate;
+                //other.GetComponent<Player>().OnPlayerDeath -= OnForeignPlayerDeath_Delegate;
+                //other.GetComponent<Player>().OnPlayerDeath += OnForeignPlayerDeath_Delegate;
             }
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -79,20 +104,6 @@ public class Melee : MonoBehaviour
     }
 
 
-    int ii; HitPoints hpii;
-    private void Update()
-    {
-        if (hitPointsInMeleeZone.Count > 0)
-        {
-            ii = 0;
-            for (ii = 0; ii < hitPointsInMeleeZone.Count; ii++)
-            {
-                hpii = hitPointsInMeleeZone[ii];
-                if (hpii.hitPoints <= 0 || hpii.isDead || !hpii.gameObject.activeInHierarchy)
-                    hitPointsInMeleeZone.Remove(hpii);
-            }
-        }
-    }
 
     int _pushForce;
     public void Knife()
@@ -105,9 +116,9 @@ public class Melee : MonoBehaviour
             for (int i = 0; i < hitPointsInMeleeZone.Count; i++)
             {
                 HitPoints hp = hitPointsInMeleeZone[i];
-                if (hp.hitPoints <= 0 || hp.isDead || !hp.gameObject.activeInHierarchy)
-                    hitPointsInMeleeZone.Remove(hp);
-                else
+                //if (hp.hitPoints <= 0 || hp.isDead || !hp.gameObject.activeInHierarchy)
+                //    hitPointsInMeleeZone.Remove(hp);
+                //else
                 {
                     if (player.isMine)
                     {
@@ -161,19 +172,21 @@ public class Melee : MonoBehaviour
         }
     }
 
-    void OnForeignPlayerDeath_Delegate(Player player)
+
+
+    void OnHitPointsDeath_Delegate(HitPoints hp)
     {
-        Debug.Log("OnForeignPlayerDeath_Delegate");
+        Debug.Log($"OnHitPointsDeath_Delegate {hp.name}");
         try
         {
-            hitPointsInMeleeZone.Remove(player.GetComponent<HitPoints>());
+            hitPointsInMeleeZone.Remove(hp);
         }
         catch { }
     }
 
-    void OnPlayerDeadth_Delegate(Player player)
+    void OnPlayerDeath_Delegate(Player player)
     {
-        Debug.Log("OnPlayerDeadth_Delegate");
+        Debug.Log($"OnPlayerDeadth_Delegate {player.name}");
         hitPointsInMeleeZone.Clear();
     }
 

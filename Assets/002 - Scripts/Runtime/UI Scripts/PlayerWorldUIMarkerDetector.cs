@@ -105,7 +105,7 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
 
             if (canSeePlayer)
             {
-                Debug.Log($"PlayerWorldUIMarkerDetector: {hit.transform.gameObject.name}");
+                //Debug.Log($"PlayerWorldUIMarkerDetector: {hit.transform.gameObject.name}");
                 rayHit = hit.transform.gameObject;
             }
             else

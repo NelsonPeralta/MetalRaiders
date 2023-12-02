@@ -192,10 +192,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         get { return _livesLeft; }
         set
         {
-            _livesLeft = value;
+            //_livesLeft = value;
 
-            if (_livesLeft <= 0)
-                EndGame();
+            //if (_livesLeft <= 0)
+            //    EndGame();
 
             OnPlayerLivesChanged?.Invoke(this);
         }
@@ -313,6 +313,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
+
+
     void OnSceneLoaded()
     {
         Scene currentScene = SceneManager.GetActiveScene();
@@ -340,23 +343,23 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     //z.transform.parent = transform;
                     //z.gameObject.SetActive(false);
 
-                    GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero, Quaternion.identity);
+                    GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -1), Quaternion.identity);
                     //_breathersPool.Add(w.GetComponent<Breather>());
                     //w.transform.parent = transform;
                     //w.gameObject.SetActive(false);
 
-                    GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero, Quaternion.identity);
+                    GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -2), Quaternion.identity);
                     //_ribbianPool.Add(a.GetComponent<AlienShooter>());
                     //a.transform.parent = transform;
                     //a.gameObject.SetActive(false);
 
 
-                    GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero, Quaternion.identity);
+                    GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -3), Quaternion.identity);
                     //hellhoundPool.Add(t.GetComponent<Helldog>());
                     //t.transform.parent = transform;
                     //t.gameObject.SetActive(false);
 
-                    GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero, Quaternion.identity);
+                    GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -4), Quaternion.identity);
                     //tyrantPool.Add(h.GetComponent<Tyrant>());
                     //h.transform.parent = transform;
                     //h.gameObject.SetActive(false);

@@ -228,6 +228,20 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     }
 
+    [PunRPC]
+    public void AddPlayerLoadedScene(bool caller = true)
+    {
+        if (caller)
+        {
+            _pv.RPC("AddPlayerLoadedScene", RpcTarget.AllViaServer, false);
+        }
+        else if (!caller)
+        {
+            CurrentRoomManager.instance.playersLoadedScene++;
+        }
+
+    }
+
     #endregion
 
 

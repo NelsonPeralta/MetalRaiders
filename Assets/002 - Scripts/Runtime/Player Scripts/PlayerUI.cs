@@ -84,6 +84,9 @@ public class PlayerUI : MonoBehaviour
     public Transform headshotMarker;
     public Transform killMarker;
     public Transform headshotKill;
+
+    [SerializeField] List<GameObject> _hitMarkers = new List<GameObject>(); [SerializeField] List<GameObject> _killMarkers = new List<GameObject>();
+    [SerializeField] GameObject _hitMarkerPrefab, _killMarkerPrefab;
     private void OnEnable()
     {
         try
@@ -130,6 +133,13 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        GameObject thm = null;
+        for (int i = 0; i < 32; i++)
+        {
+            thm = Instantiate(_hitMarkerPrefab, hitMarkerSpawnPoint.transform); _hitMarkers.Add(thm); thm.SetActive(false);
+            thm = Instantiate(_killMarkerPrefab, hitMarkerSpawnPoint.transform); _killMarkers.Add(thm); thm.SetActive(false);
+        }
+
         try { gameType.text = GameManager.instance.gameType.ToString(); }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
@@ -372,21 +382,28 @@ public class PlayerUI : MonoBehaviour
     {
         if (!GetComponent<PhotonView>().IsMine)
             return;
-        Transform hm = null;
-        if (hitMarkerType == HitMarkerType.Hit)
-            hm = Instantiate(hitMarker, hitMarkerSpawnPoint.transform);
-        else if (hitMarkerType == HitMarkerType.Headshot)
-            hm = Instantiate(headshotMarker, hitMarkerSpawnPoint.transform);
-        else if (hitMarkerType == HitMarkerType.Kill)
-            hm = Instantiate(killMarker, hitMarkerSpawnPoint.transform);
-        else if (hitMarkerType == HitMarkerType.HeadshotKill)
-            hm = Instantiate(headshotKill, hitMarkerSpawnPoint.transform);
 
-        try
-        {
-            Destroy(hm.gameObject, 0.5f);
-        }
-        catch { }
+
+        if (hitMarkerType == HitMarkerType.Hit)
+            foreach (GameObject hm in _hitMarkers) { if (!hm.activeInHierarchy) { hm.SetActive(true); break; } }
+        else if (hitMarkerType == HitMarkerType.Kill)
+            foreach (GameObject hm in _killMarkers) { if (!hm.activeInHierarchy) { hm.SetActive(true); break; } }
+
+        //Transform hm = null;
+        //if (hitMarkerType == HitMarkerType.Hit)
+        //    hm = Instantiate(hitMarker, hitMarkerSpawnPoint.transform);
+        //else if (hitMarkerType == HitMarkerType.Headshot)
+        //    hm = Instantiate(headshotMarker, hitMarkerSpawnPoint.transform);
+        //else if (hitMarkerType == HitMarkerType.Kill)
+        //    hm = Instantiate(killMarker, hitMarkerSpawnPoint.transform);
+        //else if (hitMarkerType == HitMarkerType.HeadshotKill)
+        //    hm = Instantiate(headshotKill, hitMarkerSpawnPoint.transform);
+
+        //try
+        //{
+        //    Destroy(hm.gameObject, 0.5f);
+        //}
+        //catch { }
     }
 
     void OnPlayerScoreChanged_Delegate(PlayerMultiplayerMatchStats playerMultiplayerMatchStats)

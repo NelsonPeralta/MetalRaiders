@@ -26,7 +26,6 @@ abstract public class Ragdoll : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Ragdoll Awake");
         foreach (RagdollLimbCollisionDetection rb2 in GetComponentsInChildren<RagdollLimbCollisionDetection>().ToList())
         {
             _limbCollisionDetection.Add(rb2.GetComponent<RagdollLimbCollisionDetection>());

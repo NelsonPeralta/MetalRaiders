@@ -30,6 +30,10 @@ public class NetworkGameTime : MonoBehaviour
     [PunRPC]
     public void UpdateTime_RPC(int newTotalTime)
     {
-        FindObjectOfType<GameTime>().totalTime = newTotalTime;
+        try
+        {
+            GameTime.instance.totalTime = newTotalTime;
+        }
+        catch { }
     }
 }

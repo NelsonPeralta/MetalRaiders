@@ -5,6 +5,20 @@ using UnityEngine.UI;
 
 public class AimAssist : MonoBehaviour
 {
+    public GameObject targetHitbox
+    {
+        get { return _targetHitboxRoot; }
+        set
+        {
+            if (value != _targetHitboxRoot)
+            {
+                _preTargetHitboxRoot = _targetHitboxRoot;
+                _targetHitboxRoot = value;
+                Debug.Log($"targetHitboxRoot {_preTargetHitboxRoot} {_targetHitboxRoot}");
+            }
+        }
+    }
+
     public GameObject firstRayHit;
     public Player player;
     public bool redReticuleIsOn;
@@ -12,9 +26,9 @@ public class AimAssist : MonoBehaviour
     public int playerRewiredID;
     public Transform puCollider;
     public CrosshairManager crosshairScript;
-    public GameObject target;
+    [SerializeField] GameObject _targetHitboxRoot;
     public ActorHitbox ActorHitbox;
-    public PlayerHitbox targetHitbox;
+    public PlayerHitbox targetHitb;
     public LayerMask layerMask;
 
     public PlayerInventory pInventory;
@@ -45,6 +59,9 @@ public class AimAssist : MonoBehaviour
     [SerializeField] LayerMask obstructionMask;
     [SerializeField] PlayerHitboxDetector _invisibleHitboxDetector;
 
+
+    GameObject _preTargetHitboxRoot;
+
     private void Start()
     {
         originalBbulletSpawnPointRelativePos = bulletSpawnPoint.transform.localRotation;
@@ -62,7 +79,7 @@ public class AimAssist : MonoBehaviour
             //Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
 
             Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-            Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position);
+            Vector3 targetDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
 
             Vector3 middleDir = bspDir + targetDir;
 
@@ -212,12 +229,12 @@ public class AimAssist : MonoBehaviour
     public void ActivateRedReticule()
     {
         redReticuleIsOn = true;
-        target = hit.transform.gameObject;
+        targetHitbox = hit.transform.gameObject;
     }
     public void ResetRedReticule()
     {
         redReticuleIsOn = false;
-        target = null;
+        targetHitbox = null;
     }
 
     void ShootInspectorRay()
@@ -239,15 +256,15 @@ public class AimAssist : MonoBehaviour
             if (hit.transform.gameObject.GetComponent<ActorHitbox>() != null && hit.transform.gameObject.GetComponent<ActorHitbox>().gameObject.layer == 13)
             {
                 //Debug.Log("Hitting AI Hitbox");
-                target = hit.transform.gameObject.GetComponent<ActorHitbox>().actor.gameObject;
+                targetHitbox = hit.transform.gameObject.GetComponent<ActorHitbox>().actor.gameObject;
                 ActorHitbox = hit.transform.gameObject.GetComponent<ActorHitbox>();
                 targetDistance = hit.distance;
             }
             else if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null && hit.transform.gameObject.GetComponent<PlayerHitbox>().gameObject.layer == 13)
             {
 
-                target = hit.transform.gameObject.GetComponent<PlayerHitbox>().player.gameObject;
-                targetHitbox = hit.transform.gameObject.GetComponent<PlayerHitbox>();
+                targetHitbox = hit.transform.gameObject.GetComponent<PlayerHitbox>().player.gameObject;
+                targetHitb = hit.transform.gameObject.GetComponent<PlayerHitbox>();
                 targetDistance = hit.distance;
             }
         }
@@ -263,11 +280,11 @@ public class AimAssist : MonoBehaviour
                 targetDistance = hit.distance;
                 //Debug.Log("Detecting Player Hitbox. Target distance: " + targetDistance + ". RRR: + " + wProperties.RedReticuleRange);
 
-                if (targetDistance <= wProperties.currentRedReticuleRange && target != null)
+                if (targetDistance <= wProperties.currentRedReticuleRange && targetHitbox != null)
                 {
 
                 }
-                else if (targetDistance > wProperties.currentRedReticuleRange && target != null)
+                else if (targetDistance > wProperties.currentRedReticuleRange && targetHitbox != null)
                 {
 
                 }
@@ -282,7 +299,7 @@ public class AimAssist : MonoBehaviour
 
                 if (wProperties != null)
                 {
-                    if (targetDistance <= wProperties.currentRedReticuleRange && target != null)
+                    if (targetDistance <= wProperties.currentRedReticuleRange && targetHitbox != null)
                     {
                         //Debug.Log("Here 2");
                         //if (string.Equals(hit.transform.gameObject.GetComponent<ActorHitbox>().team.Trim(), playerMPProperties.team.Trim()))
@@ -297,7 +314,7 @@ public class AimAssist : MonoBehaviour
                         //    crosshairScript.RRisActive = true;
                         //}
                     }
-                    else if (targetDistance > wProperties.currentRedReticuleRange && target != null)
+                    else if (targetDistance > wProperties.currentRedReticuleRange && targetHitbox != null)
                     {
                     }
 
@@ -307,9 +324,9 @@ public class AimAssist : MonoBehaviour
         else
         {
             //Debug.Log("No hit");
-            target = null;
-            ActorHitbox = null;
             targetHitbox = null;
+            ActorHitbox = null;
+            targetHitb = null;
             targetDistance = raycastRange;
         }
     }

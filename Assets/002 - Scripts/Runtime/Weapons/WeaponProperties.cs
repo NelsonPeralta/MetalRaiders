@@ -42,6 +42,9 @@ public class WeaponProperties : MonoBehaviour
     public bool isShotgun;
     public float redReticuleHint;
     float _previousRedReticuleHint;
+    public bool targetTracking;
+    public float trackingSpeed;
+    public Transform trackingTarget;
 
     [Header("Ammo")]
     public AmmoType ammoType;
@@ -464,6 +467,13 @@ public class WeaponPropertiesEditor : Editor
             wp.numberOfPellets = EditorGUILayout.IntField("Pellets:", wp.numberOfPellets);
         }
         wp.redReticuleHint = EditorGUILayout.FloatField("Red reticule hint:", wp.redReticuleHint);
+
+        wp.targetTracking = GUILayout.Toggle(wp.targetTracking, "Target Tracking");
+        if (wp.targetTracking)
+        {
+            wp.trackingTarget = EditorGUILayout.ObjectField(wp.trackingTarget, typeof(Transform), false) as Transform;
+            wp.trackingSpeed = EditorGUILayout.FloatField("Tracking speed:", wp.trackingSpeed);
+        }
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Ammo", EditorStyles.boldLabel);

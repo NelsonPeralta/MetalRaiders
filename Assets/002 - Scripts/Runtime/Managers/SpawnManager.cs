@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public static SpawnManager spawnManagerInstance;
+    public List<SpawnPoint> initialSpawnPoints = new List<SpawnPoint>();
     public List<SpawnPoint> genericSpawnPoints = new List<SpawnPoint>();
     void Awake()
     {

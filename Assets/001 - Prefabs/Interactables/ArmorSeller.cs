@@ -41,7 +41,7 @@ public class ArmorSeller : InteractableObject
 #endif
 
 
-        armorModel.SetActive(false);
+        //armorModel.SetActive(false);
 
         foreach (EasterEggTreasure fo in _findableObjects)
             fo.OnFound += OnFindableObjectFound;
@@ -51,33 +51,34 @@ public class ArmorSeller : InteractableObject
         if (!allFindableObjectsFound)
             return;
 
-        if (other.GetComponent<Player>() && !other.GetComponent<Player>().isDead && !playersInRange.Contains(other.GetComponent<Player>()))
+        if (other.GetComponent<PlayerCapsule>() && !other.transform.root.GetComponent<Player>().isDead && !playersInRange.Contains(other.transform.root.GetComponent<Player>()))
         {
-            playersInRange.Add(other.GetComponent<Player>());
+            playersInRange.Add(other.transform.root.GetComponent<Player>());
 
-            if (!other.GetComponent<Player>().hasArmor)
+            if (!other.transform.root.GetComponent<Player>().hasArmor)
             {
-                if (other.GetComponent<PlayerSwarmMatchStats>().points >= cost)
+                if (other.transform.root.GetComponent<PlayerSwarmMatchStats>().points >= cost)
                 {
-                    other.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
-                    other.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Buy armor for {cost} points";
+                    other.transform.root.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
+                    other.transform.root.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
+                    other.transform.root.GetComponent<PlayerUI>().weaponInformerText.text = $"Buy armor for {cost} points";
                 }
                 else
-                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({cost})";
+                    other.transform.root.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({cost})";
             }
             else
-                other.GetComponent<PlayerUI>().weaponInformerText.text = $"You already have an armor";
+                other.transform.root.GetComponent<PlayerUI>().weaponInformerText.text = $"You already have an armor";
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Player>() && playersInRange.Contains(other.GetComponent<Player>()))
+        try
         {
-            playersInRange.Remove(other.GetComponent<Player>());
-            other.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+            playersInRange.Remove(other.transform.root.GetComponent<Player>());
+            other.transform.root.GetComponent<PlayerUI>().weaponInformerText.text = $"";
         }
+        catch { }
     }
 
     void OnPlayerLongInteract_Delegate(PlayerController playerController)

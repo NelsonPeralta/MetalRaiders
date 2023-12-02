@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 1
@@ -245,6 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -476,6 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -601,6 +604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -726,6 +730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -851,6 +856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -976,6 +982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -1132,6 +1139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -1257,6 +1265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -1701,6 +1710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -1826,6 +1836,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -4033,6 +4044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc497c84cef3b7f41ac49d1a84030501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  originalSpawnPosition: {x: 0, y: 0, z: 0}
   _hitPoints: 150
   _defaultHitpoints: 200
   _targetTransform: {fileID: 0}
@@ -5366,6 +5378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -5491,6 +5504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -5616,6 +5630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0

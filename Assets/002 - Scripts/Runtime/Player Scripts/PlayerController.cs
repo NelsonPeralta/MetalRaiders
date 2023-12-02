@@ -7,6 +7,7 @@ using Photon.Pun;
 using UnityEngine.EventSystems;
 using ExitGames.Client.Photon.StructWrapping;
 using System.Security.Cryptography;
+using Photon.Realtime;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -410,7 +411,16 @@ public class PlayerController : MonoBehaviourPun
     void _StartShoot()
     {
         if (PV.IsMine)
-            PV.RPC("_StartShoot_RPC", RpcTarget.All);
+        {
+            try { Debug.Log("_StartShoot"); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Debug.Log(player.aimAssist); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Debug.Log(player.aimAssist.targetHitbox); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Debug.Log(player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Debug.Log(player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition); } catch (System.Exception e) { Debug.LogWarning(e); }
+
+            if (player.aimAssist.targetHitbox) PV.RPC("_StartShoot_RPC", RpcTarget.All, player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition);
+            else PV.RPC("_StartShoot_RPC", RpcTarget.All, Vector3.zero);
+        }
     }
     void _StopShoot()
     {
@@ -419,17 +429,24 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    void _StartShoot_RPC()
+    void _StartShoot_RPC(Vector3 bipedOrSpp)
     {
 
         if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading &&
             !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
         {
             Debug.Log("_StartShoot_RPC");
+            try
+            {
+                Debug.Log(GameManager.instance.orSpPos_Biped_Dict[bipedOrSpp]);
+            }
+            catch { }
+            player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.orSpPos_Biped_Dict[bipedOrSpp];
             isHoldingShootBtn = true;
             holstered = false;
             weaponAnimator.SetBool("Holster", false);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
+
         }
         else
         {
@@ -709,7 +726,7 @@ public class PlayerController : MonoBehaviourPun
                 pInventory.grenades = pInventory.grenades - 1;
                 weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
                 StartCoroutine(GrenadeSpawnDelay());
-                //PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
+                PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
                 OnPLayerThrewGrenade?.Invoke(this);
                 //StartCoroutine(GrenadeSpawnDelay());
                 //StartCoroutine(ThrowGrenade3PS());

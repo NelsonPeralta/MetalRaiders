@@ -14,6 +14,7 @@ public class PlayerHitboxes : Hitboxes
         {
             playerHitbox.GetComponent<MeshRenderer>().enabled = false;
             playerHitbox.player = GetComponent<Player>();
+            playerHitbox.biped = playerHitbox.player;
             playerHitbox.gameObject.layer = 7;
         }
     }

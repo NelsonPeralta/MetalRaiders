@@ -1096,6 +1096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1cadaab7fe231f4b8b7159002097d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  originalSpawnPosition: {x: 0, y: 0, z: 0}
   _hitPoints: 100
   _defaultHitpoints: 0
   _targetTransform: {fileID: 0}
@@ -1589,6 +1590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -1818,6 +1820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -2019,6 +2022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 1
@@ -2092,6 +2096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -2228,6 +2233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -2399,6 +2405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -2727,6 +2734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -3053,6 +3061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
@@ -3254,6 +3263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af34466d914492438c44dbfe963ecae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biped: {fileID: 0}
   hitboxesScript: {fileID: 0}
   hitPoints: {fileID: 0}
   isHead: 0
