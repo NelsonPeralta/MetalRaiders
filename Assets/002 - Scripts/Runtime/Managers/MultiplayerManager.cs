@@ -138,7 +138,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                             && !struc.cleanDamageSource.Contains("tuck"))
                             winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
 
-                        if (struc.cleanDamageSource.Contains("ailgun"))
+                        if (struc.cleanDamageSource.Contains("pistol"))
                             NetworkGameManager.instance.EndGame();
                     }
 

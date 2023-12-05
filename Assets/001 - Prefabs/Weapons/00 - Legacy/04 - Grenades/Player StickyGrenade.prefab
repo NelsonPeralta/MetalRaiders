@@ -211,7 +211,7 @@ MonoBehaviour:
   _player: {fileID: 0}
   _force: 0
   _useConstantForce: 0
-  _explosionDelayOnImpact: 1
+  _defaultExplosionDelayOnImpact: 1
   explosionPrefab: {fileID: 9198120252748331428, guid: 133e7e85df7e0964ca94128ae8063fb0,
     type: 3}
   _collisionSound: {fileID: 8300000, guid: 6b5e159827c094241b52d2ffc5aa80c0, type: 3}

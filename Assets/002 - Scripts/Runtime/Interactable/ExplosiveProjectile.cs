@@ -14,7 +14,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] Player _player;
     [SerializeField] int _force;
     [SerializeField] bool _useConstantForce;
-    [SerializeField] float _explosionDelayOnImpact;
+    [SerializeField] float _defaultExplosionDelayOnImpact;
     [SerializeField] Transform explosionPrefab;
     [SerializeField] AudioClip _collisionSound;
     [SerializeField] bool _sticky;
@@ -25,6 +25,17 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] GameObject _visualIndicatorDuplicate;
 
     bool _collided;
+    float _explosionDelayOnImpact;
+
+
+
+
+    private void OnEnable()
+    {
+        _collided = false; _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        gameObject.layer = 8;
+    }
 
     // Start is called before the first frame update
     void Start()
