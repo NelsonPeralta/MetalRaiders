@@ -497,8 +497,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.Log($"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
                 //if (!PlayerManager.playerManagerInstance)
                 //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
-                if (!GameObjectPool.instance)
-                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
+                //if (!GameObjectPool.instance)
+                //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
                 //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineWeaponPool"), Vector3.zero + new Vector3(0, 5, 0), Quaternion.identity);
                 //if (!OnlineGameTime.onlineGameTimeInstance)
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);

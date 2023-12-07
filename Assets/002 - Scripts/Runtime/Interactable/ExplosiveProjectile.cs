@@ -10,8 +10,10 @@ public class ExplosiveProjectile : MonoBehaviour
     public GameObject model { get { return _model; } }
     public GameObject visualIndicator { get { return _visualIndicator; } }
     public GameObject visualIndicatorDuplicate { get { return _visualIndicatorDuplicate; } }
+    public Collider collid { get { return _collider; } }
 
     [SerializeField] Player _player;
+    [SerializeField] int _damage;
     [SerializeField] int _force;
     [SerializeField] bool _useConstantForce;
     [SerializeField] float _defaultExplosionDelayOnImpact;
@@ -23,6 +25,8 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] GameObject _model;
     [SerializeField] GameObject _visualIndicator;
     [SerializeField] GameObject _visualIndicatorDuplicate;
+    [SerializeField] GameObject _explosionFx;
+    [SerializeField] Collider _collider;
 
     bool _collided;
     float _explosionDelayOnImpact;
@@ -44,7 +48,7 @@ public class ExplosiveProjectile : MonoBehaviour
         try
         {
             foreach (PlayerHitbox ph in player.GetComponent<PlayerHitboxes>().hitboxes)
-                Physics.IgnoreCollision(GetComponent<Collider>(), ph.GetComponent<Collider>());
+                Physics.IgnoreCollision(collid, ph.GetComponent<Collider>());
         }
         catch { }
 
@@ -69,7 +73,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (GetComponent<Collider>().isTrigger) return;
+        if (collid.isTrigger) return;
 
         if (collision.gameObject.layer != 9)
         {
@@ -102,7 +106,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (GetComponent<Collider>().isTrigger)
+        if (collid.isTrigger)
         {
             Debug.Log($"Collided with: {other.gameObject.name} {other.gameObject.layer}");
 
@@ -137,9 +141,14 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        Transform e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
-        e.GetComponent<Explosion>().player = player;
-        e.GetComponent<Explosion>().stuck = _stuck;
+        GameObject ex = GameObjectPool.instance.SpawnExplosion();
+        ex.SetActive(true); ex.transform.position = transform.position;
+        ex.GetComponent<Explosion>().player = player;
+        ex.GetComponent<Explosion>().damage = _damage;
+        ex.GetComponent<Explosion>().stuck = _stuck;
+
+
+        //Transform e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
         gameObject.SetActive(false);
     }
 }

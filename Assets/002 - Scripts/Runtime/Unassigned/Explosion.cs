@@ -116,7 +116,7 @@ public class Explosion : MonoBehaviour
                 }
             }
         }
-        Destroy(gameObject, 10);
+        //Destroy(gameObject, 10);
     }
 
 }

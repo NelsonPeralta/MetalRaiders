@@ -7,26 +7,28 @@ using UnityEngine.SceneManagement;
 
 public class GameObjectPool : MonoBehaviour
 {
-    public PhotonView PV;
     public int amountToPool;
     bool objectsSpawned = false;
 
-    [Header("Base Objects")]
-    public List<GameObject> bullets = new List<GameObject>();
     public GameObject bulletPrefab;
-    public List<GameObject> bloodHits = new List<GameObject>();
     public GameObject bloodHitPrefab;
-    public List<GameObject> genericHits = new List<GameObject>();
     public GameObject genericHitPrefab;
-    public List<GameObject> weaponSmokeCollisions = new List<GameObject>();
     public GameObject weaponSmokeCollisionPrefab;
-
-    [Header("Testing Object")]
-    public List<GameObject> testingObjects = new List<GameObject>();
-    public GameObject testingObjectPrefab;
-
-    public List<GameObject> bulletMetalImpactList = new List<GameObject>();
     [SerializeField] GameObject bulletMetalImpactPrefab;
+    public GameObject fragGrenadePrefab;
+    public GameObject stickyGrenadePrefab;
+    public GameObject explosionPrefab;
+
+    public List<GameObject> bullets = new List<GameObject>();
+    public List<GameObject> bloodHits = new List<GameObject>();
+    public List<GameObject> genericHits = new List<GameObject>();
+    public List<GameObject> weaponSmokeCollisions = new List<GameObject>();
+    public List<GameObject> bulletMetalImpactList = new List<GameObject>();
+    public List<GameObject> fragGrenades = new List<GameObject>();
+    public List<GameObject> stickyGrenades = new List<GameObject>();
+    public List<GameObject> explosions = new List<GameObject>();
+
+
 
 
 
@@ -72,10 +74,6 @@ public class GameObjectPool : MonoBehaviour
 
 
 
-            obj = Instantiate(testingObjectPrefab, transform.position, transform.rotation);
-            obj.SetActive(false);
-            testingObjects.Add(obj);
-            obj.transform.parent = gameObject.transform;
 
             obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
@@ -85,6 +83,19 @@ public class GameObjectPool : MonoBehaviour
             obj = Instantiate(weaponSmokeCollisionPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             weaponSmokeCollisions.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+
+
+
+            obj = Instantiate(fragGrenadePrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            fragGrenades.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+            obj = Instantiate(explosionPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            explosions.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
 
@@ -132,17 +143,6 @@ public class GameObjectPool : MonoBehaviour
     }
 
 
-    public GameObject SpawnPooledTestingObject()
-    {
-        foreach (GameObject obj in testingObjects)
-            if (!obj.activeSelf)
-                if (!obj.activeSelf)
-                {
-                    StartCoroutine(DisableObjectAfterTime(obj));
-                    return obj;
-                }
-        return null;
-    }
 
     public GameObject SpawnBulletMetalImpactObject()
     {
@@ -167,20 +167,37 @@ public class GameObjectPool : MonoBehaviour
             }
         return null;
     }
-    private void OnDestroy()
+    public GameObject SpawnFragGrenade()
     {
-        foreach (GameObject go in bullets)
-            Destroy(go);
-
-        foreach (GameObject go in bloodHits)
-            Destroy(go);
-
-        foreach (GameObject go in genericHits)
-            Destroy(go);
-
-        foreach (GameObject go in testingObjects)
-            Destroy(go);
+        foreach (GameObject obj in fragGrenades)
+            if (!obj.activeInHierarchy)
+            {
+                return obj;
+            }
+        return null;
     }
+
+    public GameObject SpawnStickyGrenade()
+    {
+        foreach (GameObject obj in stickyGrenades)
+            if (!obj.activeInHierarchy)
+            {
+                return obj;
+            }
+        return null;
+    }
+
+    public GameObject SpawnExplosion()
+    {
+        foreach (GameObject obj in explosions)
+            if (!obj.activeInHierarchy)
+            {
+                StartCoroutine(DisableObjectAfterTime(obj, 5));
+                return obj;
+            }
+        return null;
+    }
+
 
     IEnumerator DisableObjectAfterTime(GameObject obj, int time = 1)
     {

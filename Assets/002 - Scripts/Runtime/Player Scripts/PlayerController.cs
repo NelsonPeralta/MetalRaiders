@@ -1361,33 +1361,40 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void SpawnGrenade_RPC(Vector3 sp, Quaternion sr, Vector3 forw)
     {
-        var grenade = Instantiate(pInventory.grenadePrefab);
-        Destroy(grenade.gameObject);
+        var grenade = GameObjectPool.instance.SpawnFragGrenade();
 
-        if (fragGrenadesActive)
-        {
-            grenade = Instantiate(pInventory.grenadePrefab,
-               sp,
-               sr);
-            grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
-            //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
-        }
-        else if (stickyGrenadesActive)
-        {
-            grenade = Instantiate(pInventory.stickyGrenadePrefab,
-               sp,
-               sr);
-            grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
-            //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
-        }
+        if(stickyGrenadesActive) grenade = GameObjectPool.instance.SpawnStickyGrenade();
+        grenade.transform.position = sp; grenade.transform.rotation = sr;
+        grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
+
+
+        grenade.SetActive(true);
+        //Destroy(grenade.gameObject);
+
+        //if (fragGrenadesActive)
+        //{
+        //    grenade = Instantiate(pInventory.grenadePrefab,
+        //       sp,
+        //       sr);
+        //    grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
+        //    //grenade.GetComponent<FragGrenade>().team = allPlayerScripts.playerMPProperties.team;
+        //}
+        //else if (stickyGrenadesActive)
+        //{
+        //    grenade = Instantiate(pInventory.stickyGrenadePrefab,
+        //       sp,
+        //       sr);
+        //    grenade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
+        //    //grenade.GetComponent<StickyGrenade>().team = allPlayerScripts.playerMPProperties.team;
+        //}
 
         foreach (PlayerHitbox hb in GetComponent<Player>().hitboxes)
-            Physics.IgnoreCollision(grenade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+            Physics.IgnoreCollision(grenade.GetComponent<ExplosiveProjectile>().collid, hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
 
-        foreach (Player p in GameManager.instance.pid_player_Dict.Values) Physics.IgnoreCollision(grenade.GetComponent<Collider>(), p.playerCapsule.GetComponent<Collider>());
+        foreach (Player p in GameManager.instance.pid_player_Dict.Values) Physics.IgnoreCollision(grenade.GetComponent<ExplosiveProjectile>().collid, p.playerCapsule.GetComponent<Collider>());
 
+        grenade.GetComponent<Rigidbody>().velocity = Vector3.zero;
         grenade.GetComponent<Rigidbody>().AddForce(forw * grenadeThrowForce);
-        Destroy(grenade.gameObject, 10);
     }
 }
 
