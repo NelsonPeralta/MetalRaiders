@@ -208,6 +208,7 @@ MonoBehaviour:
   _visualIndicator: {fileID: 6747657518199121430}
   _visualIndicatorDuplicate: {fileID: 3820320581482264771, guid: 041f7d6ce7617f6438dc32ea2ba530a7,
     type: 3}
+  _explosionDelayOnImpact: 0.8
 --- !u!1 &1935643046630226788
 GameObject:
   m_ObjectHideFlags: 0

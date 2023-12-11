@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -288,7 +289,7 @@ public class CurrentRoomManager : MonoBehaviour
             _roomGameStartCountdown = value;
         }
     }
-
+    public List<ScriptObjPlayerData> extendedPlayerData { get { return _extendedPlayerData; } }
     public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
@@ -342,9 +343,7 @@ public class CurrentRoomManager : MonoBehaviour
         vetoCountdown = 9;
 
         foreach (ScriptObjPlayerData sod in instance._extendedPlayerData)
-        {
-            sod.playerExtendedPublicData = null;
-        }
+            sod.Reset();
     }
 
     private void Update()
@@ -701,15 +700,7 @@ public class CurrentRoomManager : MonoBehaviour
             }
     }
 
-    public PlayerDatabaseAdaptor.PlayerExtendedPublicData GetPLayerExtendedData(string u)
-    {
-        foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
-            if (pepd.occupied)
-                if (pepd.playerExtendedPublicData.username.Equals(u))
-                    return pepd.playerExtendedPublicData;
-
-        return null;
-    }
+    
 
     public void UpdateCountdowns(int vetoC, int roomGameStartC)
     {
@@ -739,5 +730,21 @@ public class CurrentRoomManager : MonoBehaviour
         foreach (Player p in GameManager.instance.localPlayers.Values) p.playerInventory.TriggerStartGameBehaviour();
 
         gameStarted = true;
+    }
+
+
+
+    public PlayerDatabaseAdaptor.PlayerExtendedPublicData GetPLayerExtendedData(string u)
+    {
+        foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
+            if (pepd.occupied)
+                if (pepd.playerExtendedPublicData.username.Equals(u))
+                    return pepd.playerExtendedPublicData;
+
+        return null;
+    }
+    public ScriptObjPlayerData GetPlayerDataWithId(int playerId)
+    {
+        return instance.extendedPlayerData.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId);
     }
 }

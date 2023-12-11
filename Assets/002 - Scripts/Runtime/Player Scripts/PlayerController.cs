@@ -196,7 +196,6 @@ public class PlayerController : MonoBehaviourPun
 
         try { weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>(); } catch { }
 
-
         if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !pauseMenuOpen)
         {
             if (GameManager.instance.gameStarted)
@@ -640,7 +639,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead)
         {
-            if (rewiredPlayer.GetButtonDown("Melee") && !isMeleeing &&
+            if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing &&
                 !isHoldingShootBtn && /*!isFiring &&*/ !isThrowingGrenade && !isSprinting)
             {
                 isMeleeing = true;
@@ -716,7 +715,7 @@ public class PlayerController : MonoBehaviourPun
             && player.playerInventory.playerGunGameManager.index + 1 != player.playerInventory.playerGunGameManager.gunIndex.Count)
             return;
 
-        if (rewiredPlayer.GetButtonDown("Throw Grenade") && !isDualWielding &&
+        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding &&
             !isHoldingShootBtn && /*!isFiring &&*/ !isMeleeing && !isSprinting /* && !isInspecting */)
         {
             if (pInventory.grenades > 0 && !isThrowingGrenade)

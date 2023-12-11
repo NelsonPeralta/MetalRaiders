@@ -808,7 +808,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void Login()
     {
         GameManager.ROOT_PLAYER_NAME = loginUsernameText.text;
-        WebManager.webManagerInstance.Login(loginUsernameText.text, _loginPasswordText.text);
+        WebManager.webManagerInstance.Login("0", loginUsernameText.text, _loginPasswordText.text);
 
         Debug.Log(PhotonNetwork.NetworkClientState);
         Debug.Log(PhotonNetwork.OfflineMode);
@@ -821,7 +821,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void LoginWithSteamName()
     {
-        WebManager.webManagerInstance.Login(SteamFriends.GetPersonaName(), "steam");
+        WebManager.webManagerInstance.Login(SteamUser.GetSteamID().m_SteamID.ToString(), SteamFriends.GetPersonaName(), "steam");
 
         Debug.Log(PhotonNetwork.NetworkClientState);
         Debug.Log(PhotonNetwork.OfflineMode);

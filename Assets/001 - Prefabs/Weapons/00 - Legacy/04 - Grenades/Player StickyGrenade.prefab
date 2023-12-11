@@ -223,6 +223,7 @@ MonoBehaviour:
   _model: {fileID: 0}
   _visualIndicator: {fileID: 4587119406375788777}
   _visualIndicatorDuplicate: {fileID: 7389506557342063797}
+  _explosionDelayOnImpact: 1
 --- !u!33 &3330426199547648510
 MeshFilter:
   m_ObjectHideFlags: 0

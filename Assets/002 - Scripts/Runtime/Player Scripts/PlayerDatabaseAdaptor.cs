@@ -246,7 +246,7 @@ public class PlayerDatabaseAdaptor
     public class PlayerExtendedPublicData
     {
         public string username;
-        public int player_id;
+        public int player_id, invites;
         public int level, xp, rank, honor, credits;
         public string armor_data_string, unlocked_armor_data_string, armor_color_palette;
 

@@ -104,8 +104,9 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 
     public void SetUp(Photon.Realtime.Player _player) // MAIN
     {
-        player = _player;
-        WebManager.webManagerInstance.SetPlayerListItemInRoom(_player.NickName, this);
+        Debug.Log($"{_player.NickName}");
+        Debug.Log($"{_player.NickName.Split(char.Parse("-"))[0]}");
+        WebManager.webManagerInstance.SetPlayerListItemInRoom(int.Parse(_player.NickName.Split(char.Parse("-"))[0]), this);
     }
 
     public void SetUp(string s)
@@ -120,25 +121,28 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
-            Debug.Log($"SetupWithTeam: {playerText.text}");
+            //Debug.Log($"SetupWithTeam: {playerText.text}");
 
-            foreach (KeyValuePair<string, int> items in GameManager.instance.teamDict)
-            {
-                print("You have " + items.Value + " " + items.Key);
-            }
+            //foreach (KeyValuePair<string, int> items in GameManager.instance.teamDict)
+            //{
+            //    print("You have " + items.Value + " " + items.Key);
+            //}
+
+            //try
+            //{
+            //    Debug.Log(((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower());
+            //    Debug.Log(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()]);
+            //}
+            //catch { }
+
+            //Debug.Log((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]);
 
             try
             {
-                Debug.Log(((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower());
-                Debug.Log(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()]);
-            }
-            catch { }
-
-            Debug.Log((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]);
-
-            try
-            {
-                ColorUtility.TryParseHtmlString(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()], out _tCol);
+                ScriptObjPlayerData spd = CurrentRoomManager.instance.GetPlayerDataWithId(_playerExtendedPublicData.player_id);
+                Debug.Log(spd);
+                //ColorUtility.TryParseHtmlString(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()], out _tCol);
+                ColorUtility.TryParseHtmlString(GameManager.colorDict[spd.team.ToString().ToLower()], out _tCol);
 
                 Debug.Log(_tCol);
                 //mainBg.color = _tCol;
@@ -187,5 +191,10 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         Destroy(gameObject);
+    }
+
+    public void OnClick()
+    {
+        Debug.Log("PlayerListItem OnClick");
     }
 }

@@ -190,6 +190,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
             {
+                foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.extendedPlayerData) s.team = Team.None;
+
+
                 onlineTeam = PlayerMultiplayerMatchStats.Team.None;
                 FindObjectOfType<Launcher>().teamRoomUI.SetActive(false);
                 _teamDict = new Dictionary<string, int>();
@@ -204,22 +207,29 @@ public class GameManager : MonoBehaviourPunCallbacks
                 foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
                     if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                     {
-                        PlayerMultiplayerMatchStats.Team t = PlayerMultiplayerMatchStats.Team.Red;
+                        Team t = Team.Red;
 
                         if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
-                            t = PlayerMultiplayerMatchStats.Team.Blue;
+                            t = Team.Blue;
+
+                        //ScriptObjPlayerData spd = CurrentRoomManager.instance.extendedPlayerData.FirstOrDefault(item => item.playerExtendedPublicData.player_id.ToString().Equals( kvp.Value.NickName.Split(char.Parse("-"))[0]));
+                        //Debug.Log(spd);
+                        //spd.team = t;
+
+                        CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName.Split(char.Parse("-"))[0])).team = t;
 
                         _teamDict.Add(kvp.Value.NickName, (int)t);
 
                         Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
                     }
-                GameManager.instance.teamDict = _teamDict;
+                //GameManager.instance.teamDict = _teamDict;
             }
 
             foreach (Transform child in Launcher.instance.playerListContent)
             {
                 child.GetComponent<PlayerListItem>().UpdateColorPalette();
             }
+            //FindObjectOfType<NetworkMainMenu>().UpdatePlayerList();
         }
     }
 
@@ -314,10 +324,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             foreach (KeyValuePair<string, int> attachStat in _teamDict)
             {
-
-
-                //Debug.Log(attachStat.Key);
-                //Debug.Log(attachStat.Value);
+                Debug.Log(attachStat.Key);
+                Debug.Log(attachStat.Value);
             }
 
             foreach (Transform child in Launcher.instance.playerListContent)

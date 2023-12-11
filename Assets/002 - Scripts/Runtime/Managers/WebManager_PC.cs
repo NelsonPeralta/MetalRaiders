@@ -8,12 +8,13 @@ using System.Collections.Generic;
 
 public partial class WebManager
 {
-    IEnumerator Login_Coroutine(string username, string password)
+    IEnumerator Login_Coroutine(string steamid, string username, string password)
     {
         WWWForm form = new WWWForm();
         string m = "login";
         if (password.Equals("steam")) m = "loginwithsteam";
         form.AddField("service", m);
+        form.AddField("steamid", steamid);
         form.AddField("username", username);
         form.AddField("password", password);
         Debug.Log($"Password: {password}");
@@ -31,6 +32,7 @@ public partial class WebManager
             }
             else
             {
+                Debug.Log("Login_Coroutine");
                 Debug.Log(www.result);
                 Debug.Log(www.downloadHandler.text);
 
@@ -40,15 +42,18 @@ public partial class WebManager
                 {
                     PlayerDatabaseAdaptor.PlayerLoginData pld = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
                     pda.playerLoginData = pld;
-                    PhotonNetwork.NickName = pda.username;
+                    PhotonNetwork.NickName = $"{pda.id}-{pda.username}";
 
                     StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id));
-                    StartCoroutine(GetPlayerExtendedPublicData_Coroutine(username));
+                    StartCoroutine(GetPlayerExtendedPublicData_Coroutine(pda.id));
                     StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id));
                     StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id));
 
                     //Launcher.instance.ShowPlayerMessage("Logged in successfully!");
                     //MenuManager.Instance.OpenMenu("online title");
+
+
+
                     GameManager.instance.playerDataRetrieved = true;
                 }
                 catch (Exception e)
@@ -64,7 +69,7 @@ public partial class WebManager
         }
     }
 
-    IEnumerator GetPlayerExtendedPublicData_Coroutine(string username, PlayerListItem pli = null)
+    IEnumerator GetPlayerExtendedPublicData_Coroutine(int playerid, PlayerListItem pli = null)
     {
         Debug.Log("GetPlayerExtendedPublicData_Coroutine");
         // DISCLAIMER
@@ -75,7 +80,7 @@ public partial class WebManager
         //    pda.playerListItem = pli;
         WWWForm form = new WWWForm();
         form.AddField("service", "getplayerpublicdata");
-        form.AddField("username", username);
+        form.AddField("playerid", playerid);
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -145,6 +150,90 @@ public partial class WebManager
             }
         }
     }
+
+
+    IEnumerator GetForeignPlayerExtendedPublicData_Coroutine(string steamid, PlayerListItem pli = null)
+    {
+        Debug.Log("GetPlayerExtendedPublicData_Coroutine");
+        // DISCLAIMER
+        // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
+
+        PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
+        //if (pli)
+        //    pda.playerListItem = pli;
+        WWWForm form = new WWWForm();
+        form.AddField("service", "getplayerpublicdata");
+        form.AddField("steamid", steamid);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                string jsonarray = www.downloadHandler.text;
+
+                Debug.Log(jsonarray);
+                PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
+                try
+                {
+                    CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
+                }
+                catch (Exception e) { Debug.LogWarning(e); }
+
+                try
+                {
+                    pli.playerExtendedPublicData = pepd;
+                }
+                catch (Exception e) { Debug.LogWarning(e); }
+
+                try
+                {
+                    //pda.player = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
+
+                    //StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id, pda));
+                    //StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
+                    //StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
+
+                    //var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
+                    //if (!d.ContainsKey(pda.username))
+                    //{
+                    //    //Debug.Log($"Adding key {}")
+                    //    d.Add(pda.username, pda);
+                    //}
+                    //else
+                    //    d[pda.username] = pda;
+
+                    //GameManager.instance.roomPlayerData = d;
+
+                    //if (pli)
+                    //    pli.pda = pda;
+
+
+                    //Launcher.instance.ShowPlayerMessage("Fetched player extended data successfully!");
+                    //if (!pli)
+                    //    MenuManager.Instance.OpenMenu("online title");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning(e);
+                    if (www.downloadHandler.text.Contains("wrong credentials"))
+                    {
+                        Launcher.instance.OnCreateRoomFailed(0, "Wrong credentials");
+                        Launcher.instance.loginButton.SetActive(true);
+                    }
+                }
+            }
+        }
+    }
+
 
     IEnumerator SaveArmorData_Coroutine(string newDataString)
     {
@@ -426,6 +515,7 @@ public partial class WebManager
 
     IEnumerator Login_Coroutine_Set_Online_Stats(int playerId, PlayerDatabaseAdaptor _pda = null)
     {
+        Debug.Log("Login_Coroutine_Set_Online_Stats");
         WWWForm form = new WWWForm();
         form.AddField("service", "getBasicOnlineData");
         form.AddField("playerId", playerId);

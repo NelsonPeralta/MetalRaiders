@@ -5,6 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ScriptObjPlayerData", menuName = "ScriptableObjects/PlayerData", order = 1)]
 public class ScriptObjPlayerData : ScriptableObject
 {
+    [SerializeField] bool _occupied;
+    [SerializeField] GameManager.Team _team;
+    [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
+
+
+
+
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData playerExtendedPublicData
     {
         get { return _playerExtendedPublicData; }
@@ -20,9 +27,17 @@ public class ScriptObjPlayerData : ScriptableObject
     }
 
     public bool occupied { get { return _occupied; } }
+    public GameManager.Team team { get { return _team; } set { _team = value; } }
 
-    [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
-    [SerializeField] bool _occupied;
+    public void Reset()
+    {
+        _occupied = false;
+        _team = GameManager.Team.None;
+        _playerExtendedPublicData = null;
+    }
+
+
+
 
     //ran = Random.Range(1, 2147483646);
     //        sod.playerExtendedPublicData.username = ran.ToString();
