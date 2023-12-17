@@ -184,8 +184,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             if (GameManager.instance.gameType == GameManager.GameType.Slayer)
             {
-                if (codeName == "br" || codeName == "pb")
-                    codeName = "smg";
+                if (codeName == "br")
+                    codeName = "ar";
+
+                if (codeName == "pb")
+                    codeName = "pr";
             }
             else if (GameManager.instance.gameType == GameManager.GameType.Snipers)
             {

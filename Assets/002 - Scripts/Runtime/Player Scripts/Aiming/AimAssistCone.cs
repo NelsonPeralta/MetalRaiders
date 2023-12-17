@@ -40,7 +40,7 @@ public class AimAssistCone : MonoBehaviour
                 if (collidingHitbox && !value)
                     aimAssist.ResetRedReticule();
                 _collidingHitbox = value;
-                Debug.Log($"AimAssistCone {_preCollidingHitbox} {_collidingHitbox}");
+                //Debug.Log($"AimAssistCone {_preCollidingHitbox} {_collidingHitbox}");
 
             }
         }

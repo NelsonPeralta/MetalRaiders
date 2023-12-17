@@ -451,7 +451,7 @@ public class PlayerController : MonoBehaviourPun
         {
             isHoldingShootBtn = false;
         }
-        Debug.Log($"{GetComponent<Player>().nickName}: _StartShoot_RPC {isHoldingShootBtn}");
+        Debug.Log($"{GetComponent<Player>().username}: _StartShoot_RPC {isHoldingShootBtn}");
     }
 
     [PunRPC]
@@ -459,7 +459,7 @@ public class PlayerController : MonoBehaviourPun
     {
         isHoldingShootBtn = false;
         OnPlayerFireButtonUp?.Invoke(this);
-        Debug.Log($"{GetComponent<Player>().nickName}: _StopShoot_RPC {isHoldingShootBtn}");
+        Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
     }
 
     void Shooting()
@@ -1273,7 +1273,7 @@ public class PlayerController : MonoBehaviourPun
     {
 #if (UNITY_EDITOR)
 
-        player.Damage(250, false, player.pid);
+        player.Damage(250, false, player.photonId);
 
 
 

@@ -123,7 +123,7 @@ public class EasterEggRadio : InteractableObject
     {
         if (playerController.GetComponent<PlayerSwarmMatchStats>().points >= cost)
         {
-            NetworkGameManager.instance.AskHostToTriggerInteractableObject(transform.position, playerController.player.pid);
+            NetworkGameManager.instance.AskHostToTriggerInteractableObject(transform.position, playerController.player.photonId);
         }
     }
 }

@@ -42,7 +42,8 @@ public partial class WebManager
                 {
                     PlayerDatabaseAdaptor.PlayerLoginData pld = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
                     pda.playerLoginData = pld;
-                    PhotonNetwork.NickName = $"{pda.id}-{pda.username}";
+                    //PhotonNetwork.NickName = $"{pda.id}-{pda.username}";
+                    PhotonNetwork.NickName = $"{pda.id}";
 
                     StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id));
                     StartCoroutine(GetPlayerExtendedPublicData_Coroutine(pda.id));
@@ -99,11 +100,8 @@ public partial class WebManager
 
                 Debug.Log(jsonarray);
                 PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
-                try
-                {
-                    CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
-                }
-                catch (Exception e) { Debug.LogWarning(e); }
+                
+                CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
 
                 try
                 {

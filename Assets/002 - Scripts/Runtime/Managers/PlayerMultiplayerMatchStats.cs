@@ -14,7 +14,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
     public string username
     {
-        get { return GetComponent<Player>().nickName; }
+        get { return GetComponent<Player>().username; }
     }
 
     public int score
@@ -136,7 +136,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     public Team team
     {
         get { return _team; }
-        set { NetworkGameManager.instance.UpdatePlayerTeam(value.ToString(), GetComponent<Player>().nickName); }
+        //set { NetworkGameManager.instance.UpdatePlayerTeam(value.ToString(), GetComponent<Player>().username); }
     }
 
     public Team networkTeam { get { return _team; } set { _team = value; } }
@@ -165,8 +165,8 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         deaths = 0;
         headshots = 0;
 
-        if (GetComponent<Player>().isMine)
-            team = GameManager.instance.onlineTeam;
+        //if (GetComponent<Player>().isMine)
+        //    team = GameManager.instance.onlineTeam;
     }
 
     void OnKillsChange(PlayerMultiplayerMatchStats playerMultiplayerStats)

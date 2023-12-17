@@ -595,63 +595,63 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     protected void SpawnKillFeed(string className, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
-        Player player = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
-        string nickName = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI).nickName;
-        string teamColorCode = GameManager.colorDict["blue"];
+        //Player player = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        //string nickName = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI).playerId;
+        //string teamColorCode = GameManager.colorDict["blue"];
 
 
-        int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
-        string weaponColorCode = player.playerInventory.activeWeapon.ammoType.ToString().ToLower();
+        //int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
+        //string weaponColorCode = player.playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
-        string colorCode = "";
+        //string colorCode = "";
 
-        if (className == "Watcher")
-            colorCode = GameManager.colorDict["green"];
-        if (className == "Knight")
-            colorCode = GameManager.colorDict["blue"];
-        if (className == "Tyrant")
-            colorCode = GameManager.colorDict["purple"];
+        //if (className == "Watcher")
+        //    colorCode = GameManager.colorDict["green"];
+        //if (className == "Knight")
+        //    colorCode = GameManager.colorDict["blue"];
+        //if (className == "Tyrant")
+        //    colorCode = GameManager.colorDict["purple"];
 
-        foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
-        {
-            string feed = $"{nickName} killed";
-            if (kfm.GetComponent<Player>() == this)
-            {
-                try
-                {
-                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                    feed = $"<color={teamColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
+        //foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+        //{
+        //    string feed = $"{nickName} killed";
+        //    if (kfm.GetComponent<Player>() == this)
+        //    {
+        //        try
+        //        {
+        //            int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+        //            feed = $"<color={teamColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
-                    if (isHeadshot)
-                        feed += $"<sprite={hsCode}>";
+        //            if (isHeadshot)
+        //                feed += $"<sprite={hsCode}>";
 
-                    feed += $" <color={colorCode}>{className}";
-                    kfm.EnterNewFeed(feed);
-                }
-                catch
-                {
-                    kfm.EnterNewFeed($"<color={teamColorCode}>You <color=\"white\">killed a <color={colorCode}>{className}");
-                }
-            }
-            else
-            {
-                try
-                {
-                    int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
-                    feed = $"<color={teamColorCode}>{nickName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
+        //            feed += $" <color={colorCode}>{className}";
+        //            kfm.EnterNewFeed(feed);
+        //        }
+        //        catch
+        //        {
+        //            kfm.EnterNewFeed($"<color={teamColorCode}>You <color=\"white\">killed a <color={colorCode}>{className}");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        try
+        //        {
+        //            int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[damageSource];
+        //            feed = $"<color={teamColorCode}>{nickName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
 
-                    if (isHeadshot)
-                        feed += $"<sprite={hsCode}>";
+        //            if (isHeadshot)
+        //                feed += $"<sprite={hsCode}>";
 
-                    feed += $" <color={colorCode}>{className}";
-                    kfm.EnterNewFeed(feed);
-                }
-                catch
-                {
-                    kfm.EnterNewFeed($"<color={teamColorCode}>{nickName} <color=\"white\">killed a <color={colorCode}>{className}");
-                }
-            }
-        }
+        //            feed += $" <color={colorCode}>{className}";
+        //            kfm.EnterNewFeed(feed);
+        //        }
+        //        catch
+        //        {
+        //            kfm.EnterNewFeed($"<color={teamColorCode}>{nickName} <color=\"white\">killed a <color={colorCode}>{className}");
+        //        }
+        //    }
+        //}
     }
     public abstract void ChangeAction_RPC(string actionString);
 

@@ -85,7 +85,7 @@ public class ArmorSeller : InteractableObject
     {
         if (playerController.GetComponent<PlayerSwarmMatchStats>().points >= cost)
         {
-            NetworkGameManager.instance.AskHostToTriggerInteractableObject(transform.position, playerController.player.pid);
+            NetworkGameManager.instance.AskHostToTriggerInteractableObject(transform.position, playerController.player.photonId);
         }
     }
 
@@ -110,7 +110,7 @@ public class ArmorSeller : InteractableObject
     {
         Debug.Log($"Player {pid} bought armor");
         Player p = GameManager.instance.pid_player_Dict[(int)pid];
-        Debug.Log($"Player {p.nickName} bought armor");
+        Debug.Log($"Player {p.playerId} bought armor");
 
         p.hasArmor = true;
 

@@ -81,14 +81,20 @@ public class PlayerArmorManager : MonoBehaviour
     private void Awake()
     {
         marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
-        playerArmorPieces.Clear(); playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
-        playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
+        playerArmorPieces.Clear();
+        CreateArmorPiecesList();
 
     }
 
     private void Start()
     {
         //ReloadArmor();
+    }
+
+    void CreateArmorPiecesList()
+    {
+        playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
+        playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
     }
 
     void ToggleMarinePieces(bool t)
@@ -120,7 +126,7 @@ public class PlayerArmorManager : MonoBehaviour
                 }
                 else
                 {
-                    if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(player.nickName))
+                    if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(player.username))
                     //if (GameManager.instance.roomPlayerData.ContainsKey(player.nickName))
                     {
                         //Debug.Log($"PlayerArmorManager NOT MINE");
@@ -129,9 +135,9 @@ public class PlayerArmorManager : MonoBehaviour
                         //colorPalette = GameManager.instance.roomPlayerData[player.nickName].playerBasicOnlineStats.armor_color_palette;
 
 
-                        Debug.Log($"PlayerArmorManager NOT MINE + {CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName)}");
-                        armorDataString = CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName).armor_data_string;
-                        colorPalette = CurrentRoomManager.instance.GetPLayerExtendedData(player.nickName).armor_color_palette;
+                        Debug.Log($"PlayerArmorManager NOT MINE + {CurrentRoomManager.instance.GetPLayerExtendedData(player.username)}");
+                        armorDataString = CurrentRoomManager.instance.GetPLayerExtendedData(player.username).armor_data_string;
+                        colorPalette = CurrentRoomManager.instance.GetPLayerExtendedData(player.username).armor_color_palette;
                     }
                 }
             }
@@ -199,23 +205,26 @@ public class PlayerArmorManager : MonoBehaviour
         {
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
-                Debug.Log($"{player.nickName}");
+                Debug.Log($"{player.username}");
                 Debug.Log($"{GameManager.instance.teamDict}");
 
-                string c = ((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[player.nickName]).ToString().ToLower();
+                string c = CurrentRoomManager.instance.GetPlayerDataWithId(player.playerId).team.ToString().ToLower();
                 _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{c}")).SingleOrDefault();
             }
         }
 
         Debug.Log(_tex.name);
 
-        foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
-            if (playerArmorPiece.canChangeColorPalette)
-                try
-                {
-                    playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
-                }
-                catch (Exception e) { Debug.Log(e); }
+        if (playerArmorPieces.Count > 0)
+            foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
+            {
+                if (playerArmorPiece.canChangeColorPalette)
+                    try
+                    {
+                        playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
+                    }
+                    catch (Exception e) { Debug.Log(e); }
+            }
     }
 
 

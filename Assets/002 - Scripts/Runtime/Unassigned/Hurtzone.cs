@@ -39,7 +39,7 @@ public class Hurtzone : MonoBehaviour
                 if (player.lastPID > 0)
                     player.Damage((int)player.hitPoints, false, player.lastPID);
                 else
-                    player.Damage((int)player.hitPoints, false, player.pid);
+                    player.Damage((int)player.hitPoints, false, player.photonId);
                 return;
             }
             playersInRange.Add(other.GetComponent<Player>());

@@ -108,7 +108,7 @@ public class ProjectileBullet : MonoBehaviour
                         if (!finalHitObject.GetComponent<PlayerHitbox>())
                             try
                             {
-                                finalHitDamageable.Damage(damage, false, player.pid);
+                                finalHitDamageable.Damage(damage, false, player.photonId);
 
                             }
                             catch
@@ -164,7 +164,7 @@ public class ProjectileBullet : MonoBehaviour
                         if (!finalHitObject.GetComponent<PlayerHitbox>())
                             try
                             {
-                                finalHitDamageable.Damage(damage, false, player.pid);
+                                finalHitDamageable.Damage(damage, false, player.photonId);
 
                             }
                             catch

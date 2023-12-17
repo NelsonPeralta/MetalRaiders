@@ -289,21 +289,18 @@ public class PlayerMovement : MonoBehaviour
                 desiredMoveSpeed = crouchSpeed;
         }
         // Mode - Sprinting
-        else if (movementDirection == PlayerMovementDirection.Forward &&
-            (_pController.activeControllerType == Rewired.ControllerType.Keyboard ||
-            _pController.activeControllerType == Rewired.ControllerType.Mouse) &&
-            grounded && rewiredPlayer.GetButton("Sprint"))
+        else if (player.playerController.isSprinting)
         {
             state = MovementState.sprinting;
             desiredMoveSpeed = sprintSpeed;
         }
-        else if (movementDirection == PlayerMovementDirection.Forward &&
-            _pController.activeControllerType == Rewired.ControllerType.Joystick &&
-            rewiredPlayer.GetButtonDown("Sprint"))
-        {
-            state = MovementState.sprinting;
-            desiredMoveSpeed = sprintSpeed;
-        }
+        //else if (movementDirection == PlayerMovementDirection.Forward &&
+        //    _pController.activeControllerType == Rewired.ControllerType.Joystick &&
+        //    rewiredPlayer.GetButtonDown("Sprint"))
+        //{
+        //    state = MovementState.sprinting;
+        //    desiredMoveSpeed = sprintSpeed;
+        //}
 
         // Mode - Walking
         else if (grounded)
@@ -318,7 +315,7 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.air;
         }
 
-        if ((player.playerController.isHoldingShootBtn) || state == MovementState.sprinting)
+        if ((player.playerController.isHoldingShootBtn) && state == MovementState.sprinting)
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;

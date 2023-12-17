@@ -215,7 +215,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
                         if (pms.score >= scoreToWin)
                         {
-                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {pms.GetComponent<Player>().nickName} wins!");
+                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {pms.GetComponent<Player>().username} wins!");
                             winningPlayers.Add(pms.GetComponent<Player>());
                         }
                 }

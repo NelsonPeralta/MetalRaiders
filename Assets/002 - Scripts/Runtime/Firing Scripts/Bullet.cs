@@ -269,7 +269,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 else
                                     damage = (int)(damage * weaponProperties.headshotMultiplier);
                         }
-                        finalHitDamageable.Damage(damage, ih, sourcePlayer.pid);
+                        finalHitDamageable.Damage(damage, ih, sourcePlayer.photonId);
 
                     }
                     catch
@@ -351,7 +351,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 {
                                     if (finalHitObject.GetComponent<ActorHitbox>() && finalHitObject.GetComponent<ActorHitbox>().isHead)
                                         damage = (int)(damage * weaponProperties.headshotMultiplier);
-                                    finalHitDamageable.Damage(damage, false, sourcePlayer.pid);
+                                    finalHitDamageable.Damage(damage, false, sourcePlayer.photonId);
 
                                 }
                                 catch
@@ -429,7 +429,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
                                 try
                                 {
-                                    finalHitDamageable.Damage(damage, false, sourcePlayer.pid);
+                                    finalHitDamageable.Damage(damage, false, sourcePlayer.photonId);
 
                                 }
                                 catch

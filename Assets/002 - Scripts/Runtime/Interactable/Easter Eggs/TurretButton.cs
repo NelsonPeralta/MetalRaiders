@@ -45,7 +45,7 @@ public class TurretButton : InteractableObject
     {
         if (playerController.GetComponent<PlayerSwarmMatchStats>().points >= _cost)
         {
-            NetworkGameManager.instance.AskHostToTriggerInteractableObject(transform.position, playerController.player.pid);
+            NetworkGameManager.instance.AskHostToTriggerInteractableObject(transform.position, playerController.player.photonId);
         }
     }
 }

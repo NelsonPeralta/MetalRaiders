@@ -26,7 +26,7 @@ public class ScriptObjPlayerData : ScriptableObject
         }
     }
 
-    public bool occupied { get { return _occupied; } }
+    public bool occupied { get { return _occupied; } set { _occupied = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
 
     public void Reset()

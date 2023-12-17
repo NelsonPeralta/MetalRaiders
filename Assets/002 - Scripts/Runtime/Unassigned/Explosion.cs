@@ -85,7 +85,7 @@ public class Explosion : MonoBehaviour
                         if (stuck)
                             damageSource = "Stuck";
                         if (player.isMine)
-                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.pid, damageSource: this.damageSource, impactDir: (col.transform.position - transform.position));
+                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.photonId, damageSource: this.damageSource, impactDir: (col.transform.position - transform.position));
                     }
                     catch { if (col.GetComponent<PlayerHitbox>().player.isMine) col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }
@@ -110,7 +110,7 @@ public class Explosion : MonoBehaviour
                     OnObjectAdded?.Invoke(this);
                     try
                     {
-                        col.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.pid, impactDir: (col.transform.position - transform.position));
+                        col.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.photonId, impactDir: (col.transform.position - transform.position));
                     }
                     catch (System.Exception e) { Debug.LogWarning(e); col.GetComponent<IDamageable>().Damage(calculatedDamage); }
                 }

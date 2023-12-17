@@ -16,7 +16,7 @@ public class PlayerCameraSprintBehaviour : MonoBehaviour
     [SerializeField] Player _player;
     [SerializeField] float _hint;
 
-    int _fovSubstractionTarget = 10;
+    int _fovSubstractionTarget = 4;
 
     private void Update()
     {
@@ -40,5 +40,6 @@ public class PlayerCameraSprintBehaviour : MonoBehaviour
 
         //_player.mainCamera.fieldOfView = _player.defaultVerticalFov + hint;
         _player.mainCamera.fieldOfView += hint;
+        _player.uiCamera.fieldOfView += hint;
     }
 }

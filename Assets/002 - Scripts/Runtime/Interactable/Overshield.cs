@@ -46,7 +46,7 @@ public class Overshield : MonoBehaviour
                     {
                         Debug.Log($"ManCannon LAUNCH!");
                         if (other.transform.root.GetComponent<Player>().isMine)
-                            NetworkGameManager.instance.LootOvershield(other.transform.root.GetComponent<Player>().pid);
+                            NetworkGameManager.instance.LootOvershield(other.transform.root.GetComponent<Player>().photonId);
                     }
             }
             catch (System.Exception e) { Debug.LogWarning(e); }

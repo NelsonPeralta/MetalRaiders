@@ -216,7 +216,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                         //Debug.Log(spd);
                         //spd.team = t;
 
-                        CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName.Split(char.Parse("-"))[0])).team = t;
+                        //CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName.Split(char.Parse("-"))[0])).team = t;
+                        CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
 
                         _teamDict.Add(kvp.Value.NickName, (int)t);
 
@@ -640,8 +641,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     List<Vector3> _orSpPts = new List<Vector3>();
     public IEnumerator SpawnPlayers_Coroutine()
     {
+        float o = 2; if (PhotonNetwork.IsMasterClient) o = 0.5f;
         Debug.Log("SpawnPlayers_Coroutine");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(o);
 
         try
         {
@@ -654,7 +656,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 } while (_orSpPts.Contains(spawnpoint.position));
 
 
-                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f ), 0 + (i * 0.0001f)), spawnpoint.rotation).GetComponent<Player>();
+                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.rotation).GetComponent<Player>();
                 player.GetComponent<PlayerController>().rid = i;
 
                 //player.originalSpawnPosition = spawnpoint.position;

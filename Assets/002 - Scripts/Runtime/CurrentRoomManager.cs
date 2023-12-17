@@ -622,18 +622,23 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void AddExtendedPlayerData(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
     {
-        Debug.Log(pepd.username.Equals(GameManager.ROOT_PLAYER_NAME));
+        Debug.Log($"AddExtendedPlayerData {pepd.player_id} {pepd.username}");
+        Debug.Log(GameManager.ROOT_PLAYER_NAME);
+
 
         if (pepd.username.Equals(GameManager.ROOT_PLAYER_NAME))
             instance._extendedPlayerData[0].playerExtendedPublicData = pepd;
         else
-            for (int i = 0; i < CurrentRoomManager.instance._extendedPlayerData.Count; i++)
+            for (int i = 0; i < instance._extendedPlayerData.Count; i++)
             {
-                Debug.Log($"Player Extended Public Data {CurrentRoomManager.instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
+                //Debug.Log($"Player Extended Public Data {i}");
+                //Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].occupied}");
+                //if (instance._extendedPlayerData[i].occupied)
+                //    Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
+
                 if (i > 0 && !instance._extendedPlayerData[i].occupied)
                 {
-                    Debug.Log("Player Extended Public Data");
-                    CurrentRoomManager.instance._extendedPlayerData[i].playerExtendedPublicData = pepd;
+                    instance._extendedPlayerData[i].playerExtendedPublicData = pepd;
                     break;
                 }
             }
@@ -696,11 +701,13 @@ public class CurrentRoomManager : MonoBehaviour
         for (int i = 0; i < instance._extendedPlayerData.Count; i++)
             if (i > 0)
             {
+                instance._extendedPlayerData[i].occupied = false;
+                instance._extendedPlayerData[i].team = GameManager.Team.None;
                 instance._extendedPlayerData[i].playerExtendedPublicData = null;
             }
     }
 
-    
+
 
     public void UpdateCountdowns(int vetoC, int roomGameStartC)
     {
@@ -745,6 +752,7 @@ public class CurrentRoomManager : MonoBehaviour
     }
     public ScriptObjPlayerData GetPlayerDataWithId(int playerId)
     {
+        Debug.Log($"GetPlayerDataWithId {playerId}");
         return instance.extendedPlayerData.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId);
     }
 }

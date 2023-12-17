@@ -104,9 +104,9 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 
     public void SetUp(Photon.Realtime.Player _player) // MAIN
     {
-        Debug.Log($"{_player.NickName}");
-        Debug.Log($"{_player.NickName.Split(char.Parse("-"))[0]}");
-        WebManager.webManagerInstance.SetPlayerListItemInRoom(int.Parse(_player.NickName.Split(char.Parse("-"))[0]), this);
+        Debug.Log($"SetUp PlayerListItem {_player.NickName}");
+        //Debug.Log($"{_player.NickName.Split(char.Parse("-"))[0]}");
+        WebManager.webManagerInstance.SetPlayerListItemInRoom(int.Parse(_player.NickName), this);
     }
 
     public void SetUp(string s)

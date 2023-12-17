@@ -14,7 +14,7 @@ public class AIPhotonIdWorldUIWitness : MonoBehaviour
         try
         {
             GetComponent<Text>().text = aiAbstractClass.GetComponent<PhotonView>().ViewID.ToString();
-            GetComponent<Text>().text += "\n" + aiAbstractClass.targetPlayer.GetComponent<Player>().nickName;
+            GetComponent<Text>().text += "\n" + aiAbstractClass.targetPlayer.GetComponent<Player>().playerId;
         }
         catch { }
     }
