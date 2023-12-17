@@ -3382,7 +3382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armorModel: {fileID: 257102834313342281}
-  cost: 1000
+  cost: 0
   playersInRange: []
   _findableObjects:
   - {fileID: 1010026336777627977}
