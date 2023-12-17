@@ -683,6 +683,32 @@ public class CurrentRoomManager : MonoBehaviour
         return false;
     }
 
+    public bool PlayerExtendedDataContainsPlayerName(int id)
+    {
+        //foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
+        //    if (pepd.playerExtendedPublicData.username.Equals(n))
+        //        return true;
+
+
+        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        {
+            Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData.username == null}");
+            if (instance._extendedPlayerData[i].occupied)
+                if (instance._extendedPlayerData[i].playerExtendedPublicData.player_id == id)
+                    return true;
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
     public void AddTeamData(string pn, GameManager.Team t)
     {
         ScriptObjBipedTeam bt = _bipedTeams.FirstOrDefault(i => i.playerName == pn);

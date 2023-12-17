@@ -547,9 +547,9 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Remove(otherPlayer.NickName);
             CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
         }
-        catch { }
+        catch (System.Exception e) { Debug.LogWarning(e); }
 
-        if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(otherPlayer.NickName))
+        if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(int.Parse(otherPlayer.NickName)))
             CurrentRoomManager.instance.RemoveExtendedPlayerData(otherPlayer.NickName);
 
 
