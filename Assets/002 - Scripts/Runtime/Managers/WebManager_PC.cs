@@ -70,7 +70,7 @@ public partial class WebManager
         }
     }
 
-    IEnumerator GetPlayerExtendedPublicData_Coroutine(int playerid, PlayerListItem pli = null)
+    IEnumerator GetPlayerExtendedPublicData_Coroutine(int playerid, PlayerNamePlate pli = null)
     {
         Debug.Log("GetPlayerExtendedPublicData_Coroutine");
         // DISCLAIMER
@@ -100,12 +100,12 @@ public partial class WebManager
 
                 Debug.Log(jsonarray);
                 PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
-                
+
                 CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
 
                 try
                 {
-                    pli.playerExtendedPublicData = pepd;
+                    pli.playerData = CurrentRoomManager.instance.GetPlayerDataWithId(pepd.player_id);
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 
@@ -150,7 +150,7 @@ public partial class WebManager
     }
 
 
-    IEnumerator GetForeignPlayerExtendedPublicData_Coroutine(string steamid, PlayerListItem pli = null)
+    IEnumerator GetForeignPlayerExtendedPublicData_Coroutine(string steamid, PlayerNamePlate pli = null)
     {
         Debug.Log("GetPlayerExtendedPublicData_Coroutine");
         // DISCLAIMER
@@ -188,7 +188,7 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerExtendedPublicData = pepd;
+                    pli.playerData = CurrentRoomManager.instance.GetPlayerDataWithId(pepd.player_id);
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 

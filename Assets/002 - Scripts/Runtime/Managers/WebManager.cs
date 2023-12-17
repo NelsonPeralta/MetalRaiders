@@ -39,7 +39,7 @@ public partial class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine(steamid, username, password));
     }
 
-    public void SetPlayerListItemInRoom(int playerid, PlayerListItem pli)
+    public void SetPlayerListItemInRoom(int playerid, PlayerNamePlate pli)
     {
         Debug.Log("SetPlayerListItemInRoom");
         StartCoroutine(GetPlayerExtendedPublicData_Coroutine(playerid, pli));

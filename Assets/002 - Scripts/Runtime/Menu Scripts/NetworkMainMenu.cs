@@ -44,7 +44,7 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
         Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
 
-        foreach (Transform child in Launcher.instance.playerListContent)
+        foreach (Transform child in Launcher.instance.namePlatesParent)
         {
             Destroy(child.gameObject);
         }
@@ -55,16 +55,16 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
 
 
 
-            GameObject plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
-            plt.GetComponent<PlayerListItem>().SetUp(players[i]);
-            plt.GetComponent<PlayerListItem>().playerLevel = pda.playerBasicOnlineStats.level;
+            GameObject plt = Instantiate(Launcher.instance.namePlatePrefab, Launcher.instance.namePlatesParent);
+            plt.GetComponent<PlayerNamePlate>().SetUp(players[i]);
+            //plt.GetComponent<PlayerNamePlate>().playerLevel = pda.playerBasicOnlineStats.level;
 
             if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(players[i].NickName)
                 && CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[players[i].NickName] > 1)
                 for (int j = 1; j < CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[players[i].NickName]; j++)
                 {
-                    GameObject _plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
-                    _plt.GetComponent<PlayerListItem>().SetUp(players[i].NickName + $" ({j})"); // DEPRECATED
+                    GameObject _plt = Instantiate(Launcher.instance.namePlatePrefab, Launcher.instance.namePlatesParent);
+                    _plt.GetComponent<PlayerNamePlate>().SetUp(players[i].NickName + $" ({j})"); // DEPRECATED
                 }
         }
     }

@@ -226,9 +226,9 @@ public class GameManager : MonoBehaviourPunCallbacks
                 //GameManager.instance.teamDict = _teamDict;
             }
 
-            foreach (Transform child in Launcher.instance.playerListContent)
+            foreach (Transform child in Launcher.instance.namePlatesParent)
             {
-                child.GetComponent<PlayerListItem>().UpdateColorPalette();
+                child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
             }
             //FindObjectOfType<NetworkMainMenu>().UpdatePlayerList();
         }
@@ -295,9 +295,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (value == PlayerMultiplayerMatchStats.Team.None)
             {
-                foreach (Transform child in Launcher.instance.playerListContent)
+                foreach (Transform child in Launcher.instance.namePlatesParent)
                 {
-                    child.GetComponent<PlayerListItem>().UpdateColorPalette();
+                    child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
                 }
             }
         }
@@ -329,9 +329,9 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.Log(attachStat.Value);
             }
 
-            foreach (Transform child in Launcher.instance.playerListContent)
+            foreach (Transform child in Launcher.instance.namePlatesParent)
             {
-                child.GetComponent<PlayerListItem>().UpdateColorPalette();
+                child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
             }
 
             if (_teamDict.ContainsKey(rootPlayerNickname))

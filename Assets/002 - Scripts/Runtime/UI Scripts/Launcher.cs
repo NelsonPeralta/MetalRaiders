@@ -48,8 +48,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
-    [SerializeField] Transform _playerListContent;
-    [SerializeField] GameObject _playerListItemPrefab;
+    [SerializeField] Transform _namePlatesParent;
+    [SerializeField] GameObject _namePlatePrefab;
     [SerializeField] TMP_Text _mapSelectedText;
     [SerializeField] TMP_Text _gametypeSelectedText;
     [SerializeField] TMP_Text _gameModeSelectedText;
@@ -83,14 +83,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         get { return _loginPasswordText; }
     }
 
-    public Transform playerListContent
+    public Transform namePlatesParent
     {
-        get { return _playerListContent; }
+        get { return _namePlatesParent; }
     }
 
-    public GameObject playerListItemPrefab
+    public GameObject namePlatePrefab
     {
-        get { return _playerListItemPrefab; }
+        get { return _namePlatePrefab; }
     }
 
     public TMP_Text gameModeText { get { return _gameModeSelectedText; } }
@@ -333,14 +333,14 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() // Runs only when THIS player joins room
     {
         Debug.Log("Joined room");
-        foreach (Transform child in _playerListContent)
+        foreach (Transform child in _namePlatesParent)
             Destroy(child.gameObject);
         //foreach (var kvp in PhotonNetwork.CurrentRoom.Players) { Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}"); }
 
         List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
 
         foreach (Photon.Realtime.Player player in newListPlayers)
-            Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(player);
+            Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player);
 
         var listPlayersDiff = newListPlayers.Except(_previousListOfPlayersInRoom).ToList();
         Debug.Log($"{listPlayersDiff[0].NickName} Joined room");
@@ -421,7 +421,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
-        Instantiate(_playerListItemPrefab, _playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+        Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(newPlayer);
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -511,7 +511,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         try { PhotonNetwork.LeaveRoom(); } catch (System.Exception e) { Debug.LogWarning(e); }
         try { GameManager.instance.gameMode = GameManager.GameMode.Multiplayer; } catch { }
 
-        CurrentRoomManager.instance.SoftResetPlayerExtendedData();
+        CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
 
         //MenuManager.Instance.OpenMenu("loading");
     }
@@ -549,10 +549,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
 
-        if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(int.Parse(otherPlayer.NickName)))
-            CurrentRoomManager.instance.RemoveExtendedPlayerData(otherPlayer.NickName);
+        if (CurrentRoomManager.instance.PlayerDataContains(int.Parse(otherPlayer.NickName)))
+        {
+            foreach (Transform child in instance.namePlatesParent)
+                if (child.GetComponent<PlayerNamePlate>().playerData.playerExtendedPublicData.player_id == int.Parse(otherPlayer.NickName))
+                    Destroy(child.gameObject);
 
-
+            CurrentRoomManager.instance.RemoveExtendedPlayerData(int.Parse(otherPlayer.NickName));
+        }
     }
 
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();

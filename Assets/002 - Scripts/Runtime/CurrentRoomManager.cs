@@ -656,6 +656,20 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    public void RemoveExtendedPlayerData(int id)
+    {
+        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        {
+            if (instance._extendedPlayerData[i].occupied)
+                if (instance._extendedPlayerData[i].playerExtendedPublicData.player_id == id)
+                {
+                    instance._extendedPlayerData[i].occupied = false;
+                    instance._extendedPlayerData[i].team = GameManager.Team.None;
+                    instance._extendedPlayerData[i].playerExtendedPublicData = null;
+                }
+        }
+    }
+
     public bool PlayerExtendedDataContainsPlayerName(string n)
     {
         //foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
@@ -683,16 +697,11 @@ public class CurrentRoomManager : MonoBehaviour
         return false;
     }
 
-    public bool PlayerExtendedDataContainsPlayerName(int id)
+    public bool PlayerDataContains(int id)
     {
-        //foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
-        //    if (pepd.playerExtendedPublicData.username.Equals(n))
-        //        return true;
-
-
         for (int i = 0; i < instance._extendedPlayerData.Count; i++)
         {
-            Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData.username == null}");
+            Debug.Log($"PlayerDataContains [{instance._extendedPlayerData[i].playerExtendedPublicData.player_id}:{id}]");
             if (instance._extendedPlayerData[i].occupied)
                 if (instance._extendedPlayerData[i].playerExtendedPublicData.player_id == id)
                     return true;
@@ -722,7 +731,7 @@ public class CurrentRoomManager : MonoBehaviour
             bt.playerName = pn; bt.team = t;
         }
     }
-    public void SoftResetPlayerExtendedData()
+    public void ResetAllPlayerDataExceptMine() // Called when leaving a room, so no need to destroy player
     {
         for (int i = 0; i < instance._extendedPlayerData.Count; i++)
             if (i > 0)
