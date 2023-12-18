@@ -74,8 +74,8 @@ public class Fireball : MonoBehaviour
             float calculatedDamage = damage * (1 - (hitDistance / radius));
 
             //Add force to nearby rigidbodies
-            if (rb != null && rb.gameObject.layer != gameObject.layer)
-                rb.AddExplosionForce(power, explosionPos, radius, 3.0F);
+            //if (rb != null && rb.gameObject.layer != gameObject.layer)
+            //    rb.AddExplosionForce(power, explosionPos, radius, 3.0F);
 
             if (hit.GetComponent<PlayerHitbox>() && !playersHit.Contains(hit.GetComponent<PlayerHitbox>().player))
             {
