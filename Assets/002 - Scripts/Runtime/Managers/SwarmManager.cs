@@ -1069,6 +1069,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void EndGame(bool saveXp = true)
     {
+        CurrentRoomManager.instance.gameOver = true;
         StopAllCoroutines();
         foreach (Player pp in GameManager.instance.pid_player_Dict.Values)
         {
@@ -1076,9 +1077,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             // return will stop this method, break will stop the loop, continue will stop the current iteration
             if (!pp.PV.IsMine)
                 continue;
-
-            CurrentRoomManager.instance.gameOver = true;
-
 
             if (saveXp)
             {

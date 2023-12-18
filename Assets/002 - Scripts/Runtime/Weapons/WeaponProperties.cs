@@ -202,6 +202,8 @@ public class WeaponProperties : MonoBehaviour
 
     private void Start()
     {
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta) { ammoCapacity = 1; }
+
         _animator = GetComponent<Animator>();
         if (fireRate <= 0)
             fireRate = 600;

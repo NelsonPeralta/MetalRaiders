@@ -197,6 +197,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void EndGame(bool saveXp = true)
     {
+        CurrentRoomManager.instance.gameOver = true;
         string winningEntity = "";
         foreach (Player pp in FindObjectsOfType<Player>())
         {

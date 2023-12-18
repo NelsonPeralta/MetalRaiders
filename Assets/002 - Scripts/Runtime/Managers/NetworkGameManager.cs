@@ -202,10 +202,13 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller)
         {
+            Debug.Log("NetworkGameManager EndGame");
             _pv.RPC("EndGame", RpcTarget.AllViaServer, false);
         }
         else if (!caller)
         {
+            if (CurrentRoomManager.instance.gameOver) return;
+
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 MultiplayerManager.instance.EndGame();
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
