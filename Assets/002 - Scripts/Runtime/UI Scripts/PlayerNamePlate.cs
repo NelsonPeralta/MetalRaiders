@@ -38,8 +38,6 @@ public class PlayerNamePlate : MonoBehaviour
 
 
 
-            MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>().playerModel.GetComponent<PlayerArmorManager>().colorPalette = _playerData.playerExtendedPublicData.armor_color_palette;
-            MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>().playerModel.GetComponent<PlayerArmorManager>().armorDataString = _playerData.playerExtendedPublicData.armor_data_string;
         }
     }
 
@@ -145,7 +143,12 @@ public class PlayerNamePlate : MonoBehaviour
     public void OnClick()
     {
         MenuManager.Instance.OpenMenu("service_record", false);
-        ServiceRecordMenu.instance.playerData = _playerData;
+        ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
+
+        s.playerData = _playerData;
+        s.playerModel.GetComponent<PlayerArmorManager>().colorPalette = _playerData.playerExtendedPublicData.armor_color_palette;
+        s.playerModel.GetComponent<PlayerArmorManager>().armorDataString = _playerData.playerExtendedPublicData.armor_data_string;
+
     }
 
     public void OnPointerEnter()

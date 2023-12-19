@@ -7,7 +7,6 @@ using System.Linq;
 
 public class ServiceRecordMenu : MonoBehaviour
 {
-    public static ServiceRecordMenu instance { get; private set; }
     public ScriptObjPlayerData playerData
     {
         get { return _playerData; }
