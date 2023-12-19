@@ -121,6 +121,16 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    public Menu GetMenu(string n)
+    {
+        for (int i = 0; i < menus.Length; i++)
+        {
+            if (menus[i].menuName.Equals(n))
+                return menus[i];
+        }
+        return null;
+    }
+
     public void OpenLoadingMenu(string message = "Loading...")
     {
         loadingMenuText.text = message;

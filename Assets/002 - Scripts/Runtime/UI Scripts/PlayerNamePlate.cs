@@ -33,6 +33,13 @@ public class PlayerNamePlate : MonoBehaviour
                 ColorUtility.TryParseHtmlString(GameManager.colorDict[rank.color], out _tCol);
                 rankIm.color = _tCol;
             }
+
+
+
+
+
+            MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>().playerModel.GetComponent<PlayerArmorManager>().colorPalette = _playerData.playerExtendedPublicData.armor_color_palette;
+            MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>().playerModel.GetComponent<PlayerArmorManager>().armorDataString = _playerData.playerExtendedPublicData.armor_data_string;
         }
     }
 
