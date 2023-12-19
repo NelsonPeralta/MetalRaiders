@@ -6,6 +6,7 @@ using Photon.Pun;
 using System.IO;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
 
 public class MenuManager : MonoBehaviour
 {
@@ -43,7 +44,7 @@ public class MenuManager : MonoBehaviour
         //OnSceneLoaded();
     }
 
-    public void OpenMenu(string menuName) // Open a menu GO using the name from its Menu script
+    public void OpenMenu(string menuName, bool closeOthers = true) // Open a menu GO using the name from its Menu script
     {
 
         Debug.Log($"Opem {menuName}");
@@ -53,7 +54,7 @@ public class MenuManager : MonoBehaviour
             {
                 menus[i].Open();
             }
-            else if (menus[i].open)
+            else if (menus[i].open && closeOthers)
             {
                 Debug.Log($"Closing {menuName}");
                 CloseMenu(menus[i]);
@@ -76,6 +77,15 @@ public class MenuManager : MonoBehaviour
             }
         }
         menu.Open(); // Then open the one we need
+    }
+
+    public void OpenPopUpMenu(Menu menu) // Open a menu GO using the Menu script itself, used for connecting with buttons
+    {
+        for (int i = 0; i < menus.Length; i++)
+        {
+            if (menus[i] == menu)
+                menus[i].Open();
+        }
     }
 
     public void CloseMenu(Menu menu)

@@ -49,7 +49,7 @@ public class PlayerNamePlate : MonoBehaviour
     [SerializeField] ScriptObjPlayerData _playerData;
     [SerializeField] TMP_Text playerText, levelText;
     [SerializeField] Image _mainBg, _secBg, _rankIm;
-
+    [SerializeField] GameObject _pointerEnterIndicator;
 
     Color _tCol;
 
@@ -137,6 +137,17 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void OnClick()
     {
-        Debug.Log("PlayerListItem OnClick");
+        MenuManager.Instance.OpenMenu("service_record", false);
+        ServiceRecordMenu.instance.playerData = _playerData;
+    }
+
+    public void OnPointerEnter()
+    {
+        _pointerEnterIndicator.SetActive(true);
+    }
+
+    public void OnPointerExit()
+    {
+        _pointerEnterIndicator.SetActive(false);
     }
 }
