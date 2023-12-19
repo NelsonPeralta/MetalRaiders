@@ -84,11 +84,6 @@ public class ServiceRecordMenu : MonoBehaviour
     Color _tCol;
 
 
-    private void Awake()
-    {
-        instance = this;
-    }
-
     private void OnEnable()
     {
         playerModel.SetActive(true);
