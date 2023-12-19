@@ -52,11 +52,13 @@ public class PlayerArmorManager : MonoBehaviour
         }
     }
 
+
     public bool isRagdoll { get { return GetComponent<PlayerRagdoll>(); } }
 
     [SerializeField] string _armorDataString, _colorPalette;
 
-    int tries = 0;
+    public int ReloadArmorTries { get; set; }
+    public bool PreventReloadArmor { get; set; }
 
     private void OnEnable()
     {
@@ -70,7 +72,7 @@ public class PlayerArmorManager : MonoBehaviour
         try { HardReloadArmor(); } catch { }
 
         {
-            tries = 0;
+            ReloadArmorTries = 0;
             StartCoroutine(ReloadArmor_Coroutine());
         }
 
@@ -239,13 +241,14 @@ public class PlayerArmorManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
-        if (!isRagdoll)
-        {
-            HardReloadArmor();
-            tries++;
+        if (!PreventReloadArmor)
+            if (!isRagdoll)
+            {
+                HardReloadArmor();
+                ReloadArmorTries++;
 
-            if (tries < 3 /*&& (armorDataString == null || armorDataString == "")*/)
-                StartCoroutine(ReloadArmor_Coroutine());
-        }
+                if (ReloadArmorTries >= 0 && ReloadArmorTries < 3 /*&& (armorDataString == null || armorDataString == "")*/)
+                    StartCoroutine(ReloadArmor_Coroutine());
+            }
     }
 }

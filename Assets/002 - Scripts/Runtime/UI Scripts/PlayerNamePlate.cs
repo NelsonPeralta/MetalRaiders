@@ -148,6 +148,7 @@ public class PlayerNamePlate : MonoBehaviour
         s.playerData = _playerData;
         s.playerModel.GetComponent<PlayerArmorManager>().colorPalette = _playerData.playerExtendedPublicData.armor_color_palette;
         s.playerModel.GetComponent<PlayerArmorManager>().armorDataString = _playerData.playerExtendedPublicData.armor_data_string;
+        s.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
 
     }
 
