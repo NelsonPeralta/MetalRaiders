@@ -202,8 +202,6 @@ public class WeaponProperties : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.instance.gameType == GameManager.GameType.Fiesta) { ammoCapacity = 1; }
-
         _animator = GetComponent<Animator>();
         if (fireRate <= 0)
             fireRate = 600;
@@ -376,6 +374,9 @@ public class WeaponProperties : MonoBehaviour
                     pap.gameObject.SetActive(player.hasArmor && player.playerArmorManager.armorDataString.Contains(pap.entity));
         }
         catch { }
+
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta && codeName.Equals("rpg") && ammoCapacity > 0) { ammoCapacity = 1; }
+
     }
 
     private void OnDisable()

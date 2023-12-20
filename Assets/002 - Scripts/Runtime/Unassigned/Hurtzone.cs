@@ -2,59 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Linq;
 
 public class Hurtzone : MonoBehaviour
 {
+    public bool instantKillzone;
     public AudioSource audioSource;
-    float exitTriggerRadius;
 
     [Header("Damage Over Time")]
-    public bool damageOverTime;
     public int damage;
-    public float damageDelay;
-    float damageCountdown;
-    bool playersReceivingDamage;
-
-    [Header("Other")]
-    public bool instantKillzone;
 
     [Header("Players in Range")]
-    public List<Player> playersInRange = new List<Player>();
+    public List<PlayerCapsule> playersInRange = new List<PlayerCapsule>();
+
+    float damageCountdown;
 
     private void Start()
     {
         if (instantKillzone)
             damage = 9999;
-        //StartCoroutine(DamagePlayersInRange_Coroutine());
     }
 
-    private void OnTriggerStay(Collider other)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<Player>() && !playersInRange.Contains(other.GetComponent<Player>()))
+        if (other.gameObject.GetComponent<PlayerCapsule>() && !playersInRange.Contains(other.GetComponent<PlayerCapsule>()))
         {
+            Player player = other.GetComponent<PlayerCapsule>().player;
+
             if (instantKillzone)
             {
-                Player player = other.GetComponent<Player>();
-                //other.gameObject.GetComponent<Player>().BasicDamage(999);
                 if (player.lastPID > 0)
                     player.Damage((int)player.hitPoints, false, player.lastPID);
                 else
                     player.Damage((int)player.hitPoints, false, player.photonId);
-                return;
             }
-            playersInRange.Add(other.GetComponent<Player>());
-            //if (!instantKillzone)
-            //    other.GetComponent<ScreenEffects>().orangeScreen.SetActive(true);
+            else
+            {
+                player.OnPlayerDeath -= OnPLayerDeath;
+                player.OnPlayerDeath += OnPLayerDeath;
+                playersInRange.Add(other.GetComponent<PlayerCapsule>());
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.GetComponent<Player>())
-        {
-            //other.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
-            try { playersInRange.Remove(other.gameObject.GetComponent<Player>()); } catch { }
-        }
+        if (other.gameObject.GetComponent<PlayerCapsule>())
+            try { playersInRange.Remove(other.gameObject.GetComponent<PlayerCapsule>()); } catch { }
     }
 
     private void Update()
@@ -67,18 +62,27 @@ public class Hurtzone : MonoBehaviour
 
         if (damageCountdown <= 0)
         {
-            foreach (Player player in playersInRange)
+            foreach (PlayerCapsule pcap in playersInRange)
             {
-                if (player.isDead || player.isRespawning)
-                    playersInRange.Remove(player);
+                if (pcap.player.isDead || pcap.player.isRespawning)
+                    playersInRange.Remove(pcap);
             }
 
             for (int i = 0; i < playersInRange.Count; i++)
             {
-                playersInRange[i].BasicDamage(damage);
+                playersInRange[i].player.BasicDamage(damage);
             }
 
-            damageCountdown = 0.35f;
+            damageCountdown = 0.33f;
         }
+    }
+
+
+
+    void OnPLayerDeath(Player p)
+    {
+        p.OnPlayerDeath -= OnPLayerDeath;
+
+        if (playersInRange.Contains(p.playerCapsule)) playersInRange.Remove(p.playerCapsule);
     }
 }
