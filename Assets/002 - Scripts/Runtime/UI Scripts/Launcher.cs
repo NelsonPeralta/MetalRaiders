@@ -673,23 +673,21 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeTeam()
     {
-        if (GameManager.instance.onlineTeam != PlayerMultiplayerMatchStats.Team.None)
-            try
-            {
-                PlayerMultiplayerMatchStats.Team nt = PlayerMultiplayerMatchStats.Team.None;
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        {
+            GameManager.Team nt = CurrentRoomManager.instance.extendedPlayerData[0].team;
 
-                if (GameManager.instance.onlineTeam == PlayerMultiplayerMatchStats.Team.Blue)
-                    nt = PlayerMultiplayerMatchStats.Team.Red;
-                else if (GameManager.instance.onlineTeam == PlayerMultiplayerMatchStats.Team.Red)
-                    nt = PlayerMultiplayerMatchStats.Team.Blue;
+            if (nt == GameManager.Team.Blue)
+                nt = GameManager.Team.Red;
+            else if (nt == GameManager.Team.Red)
+                nt = GameManager.Team.Blue;
 
-                Dictionary<string, int> nd = new Dictionary<string, int>(GameManager.instance.teamDict);
+            Dictionary<int, int> nd = new Dictionary<int, int>();
 
-                nd[GameManager.instance.rootPlayerNickname] = (int)nt;
+            nd[CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.player_id] = (int)nt;
 
-                NetworkGameManager.instance.SendNewTeamDict(nd);
-            }
-            catch { }
+            NetworkGameManager.instance.ChangePlayerTeam(nd);
+        }
     }
 
     public void ChangeGameType(string gt)

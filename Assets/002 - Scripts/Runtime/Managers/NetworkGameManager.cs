@@ -126,20 +126,20 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     [PunRPC]
 
-    public void SendNewTeamDict(Dictionary<string, int> d, bool caller = true)
+    public void ChangePlayerTeam(Dictionary<int, int> d, bool caller = true)
     {
         if (caller)
         {
-            _pv.RPC("SendNewTeamDict", RpcTarget.AllViaServer, d, false);
+            _pv.RPC("ChangePlayerTeam", RpcTarget.AllViaServer, d, false);
         }
         else
         {
-            Debug.Log("SendNewTeamDict");
-            try
+            foreach (KeyValuePair<int, int> kvp in d)
             {
-                GameManager.instance.teamDict = d;
+                Debug.Log($"Player {kvp.Key} wants to change team: {(GameManager.Team)kvp.Value}");
+                CurrentRoomManager.instance.GetPlayerDataWithId(kvp.Key).team = (GameManager.Team)kvp.Value;
             }
-            catch { }
+            foreach (Transform child in Launcher.instance.namePlatesParent) child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
         }
     }
 
