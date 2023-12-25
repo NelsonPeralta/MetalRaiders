@@ -151,18 +151,18 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 if (struc.grenade)
                     winningPlayerMS.grenadeKills++;
 
-                if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Red)
+                if (winningPlayerMS.team == GameManager.Team.Red)
                     redTeamScore++;
-                else if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Blue)
+                else if (winningPlayerMS.team == GameManager.Team.Blue)
                     blueTeamScore++;
             }
             else
             {
                 losingPlayerMS.kills--;
 
-                if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Red)
+                if (winningPlayerMS.team == GameManager.Team.Red)
                     redTeamScore--;
-                else if (winningPlayerMS.team == PlayerMultiplayerMatchStats.Team.Blue)
+                else if (winningPlayerMS.team == GameManager.Team.Blue)
                     blueTeamScore--;
             }
 

@@ -208,7 +208,6 @@ public class PlayerArmorManager : MonoBehaviour
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
                 Debug.Log($"{player.username}");
-                Debug.Log($"{GameManager.instance.teamDict}");
 
                 string c = CurrentRoomManager.instance.GetPlayerDataWithId(player.playerId).team.ToString().ToLower();
                 _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{c}")).SingleOrDefault();

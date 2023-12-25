@@ -613,7 +613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponProperties: {fileID: 0}
   _lootableWeapon: {fileID: 0}
-  _tmp: {fileID: 0}
+  _tmp: {fileID: 7362743845569031979}
 --- !u!82 &4968679501868270370
 AudioSource:
   m_ObjectHideFlags: 0

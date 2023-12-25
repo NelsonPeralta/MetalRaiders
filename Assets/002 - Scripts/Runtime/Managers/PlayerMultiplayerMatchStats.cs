@@ -10,7 +10,14 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     public delegate void PlayerMultiplayerStatsEvent(PlayerMultiplayerMatchStats playerMultiplayerStats);
     // Events
     public PlayerMultiplayerStatsEvent OnPlayerScoreChanged, OnDeathsChanged, OnHeadshotsChanged, OnKDRatioChanged;
-    public enum Team { None, Red, Blue }
+
+    public GameManager.Team team
+    {
+        get
+        {
+            return _player.team;
+        }
+    }
 
     public string username
     {
@@ -133,13 +140,6 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         }
     }
 
-    public Team team
-    {
-        get { return _team; }
-        //set { NetworkGameManager.instance.UpdatePlayerTeam(value.ToString(), GetComponent<Player>().username); }
-    }
-
-    public Team networkTeam { get { return _team; } set { _team = value; } }
 
     public Player player { get { return _player; } }
 
@@ -152,7 +152,6 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     [SerializeField] int _meleeKills;
     [SerializeField] int _grenadeKills;
     [SerializeField] float _kd;
-    [SerializeField] Team _team;
 
 
     Player _player;

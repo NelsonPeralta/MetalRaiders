@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static Dictionary<string, string> colorDict = new Dictionary<string, string>();
     public CarnageReport carnageReport { get { return _carnageReport; } set { _carnageReport = value; } }
 
-    public Dictionary<int, PlayerMultiplayerMatchStats.Team> controllerId_TeamDict;
+    public Dictionary<int, GameManager.Team> controllerId_TeamDict;
     public Dictionary<int, Player> pid_player_Dict
     {
         get { return _pid_player_Dict; }
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
     [SerializeField] TeamMode _teamMode;
-    [SerializeField] PlayerMultiplayerMatchStats.Team _onlineTeam;
+    [SerializeField] GameManager.Team _onlineTeam;
     // Public variables
 
     public Connection connection
@@ -193,7 +193,6 @@ public class GameManager : MonoBehaviourPunCallbacks
                 foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.extendedPlayerData) s.team = Team.None;
 
 
-                onlineTeam = PlayerMultiplayerMatchStats.Team.None;
                 FindObjectOfType<Launcher>().teamRoomUI.SetActive(false);
                 _teamDict = new Dictionary<string, int>();
             }
@@ -212,25 +211,16 @@ public class GameManager : MonoBehaviourPunCallbacks
                         if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
                             t = Team.Blue;
 
-                        //ScriptObjPlayerData spd = CurrentRoomManager.instance.extendedPlayerData.FirstOrDefault(item => item.playerExtendedPublicData.player_id.ToString().Equals( kvp.Value.NickName.Split(char.Parse("-"))[0]));
-                        //Debug.Log(spd);
-                        //spd.team = t;
-
-                        //CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName.Split(char.Parse("-"))[0])).team = t;
                         CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
 
                         _teamDict.Add(kvp.Value.NickName, (int)t);
 
                         Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
                     }
-                //GameManager.instance.teamDict = _teamDict;
             }
 
             foreach (Transform child in Launcher.instance.namePlatesParent)
-            {
                 child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
-            }
-            //FindObjectOfType<NetworkMainMenu>().UpdatePlayerList();
         }
     }
 
@@ -277,91 +267,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
     }
-    public PlayerMultiplayerMatchStats.Team onlineTeam
-    {
-        get { return instance._onlineTeam; }
-        set
-        {
-            _onlineTeam = value;
-            Debug.Log("onlineTeam: " + value);
-
-            try
-            {
-                FindObjectOfType<Launcher>().teamModeText.text = $"Team Mode: {teamMode}";
-                if (teamMode == TeamMode.Classic)
-                    FindObjectOfType<Launcher>().teamText.text = $"Team: ({_onlineTeam.ToString()})";
-            }
-            catch { }
-
-            if (value == PlayerMultiplayerMatchStats.Team.None)
-            {
-                foreach (Transform child in Launcher.instance.namePlatesParent)
-                {
-                    child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
-                }
-            }
-        }
-    }
-
     public string rootPlayerNickname
     {
         get { return WebManager.webManagerInstance.pda.username; }
     }
 
-    public Dictionary<string, int> teamDict
-    {
-        get
-        {
-            foreach (KeyValuePair<string, int> attachStat in _teamDict)
-                Debug.Log($"Team Dict entry: Key {attachStat.Key} has value {attachStat.Value}");
-
-
-            return _teamDict;
-        }
-        set
-        {
-            Debug.Log("teamDict");
-            _teamDict = value;
-
-            foreach (KeyValuePair<string, int> attachStat in _teamDict)
-            {
-                Debug.Log(attachStat.Key);
-                Debug.Log(attachStat.Value);
-            }
-
-            foreach (Transform child in Launcher.instance.namePlatesParent)
-            {
-                child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
-            }
-
-            if (_teamDict.ContainsKey(rootPlayerNickname))
-            {
-                Debug.Log("Contains my name");
-                onlineTeam = (PlayerMultiplayerMatchStats.Team)_teamDict[rootPlayerNickname];
-
-
-
-                //    Destroy(child.gameObject);
-
-                //Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
-                //for (int i = 1; i < PhotonNetwork.CurrentRoom.PlayerCount + 1; i++)
-                //{
-                //    string n = PhotonNetwork.CurrentRoom.Players[i].NickName;
-                //    Debug.Log(n);
-
-                //    GameObject plt = Instantiate(Launcher.instance.playerListItemPrefab, Launcher.instance.playerListContent);
-                //    plt.GetComponent<PlayerListItem>().SetUp($"{n} ({(PlayerMultiplayerMatchStats.Team)(_teamDict[n])})");
-                //}
-            }
-            else
-            {
-                _teamDict = new Dictionary<string, int>();
-                onlineTeam = PlayerMultiplayerMatchStats.Team.None;
-
-                FindObjectOfType<NetworkMainMenu>().UpdatePlayerList();
-            }
-        }
-    }
 
     public Material armorMaterial { get { return _armorMaterial; } }
     public List<Texture> colorPaletteTextures { get { return _colorPaletteTextures; } }
@@ -482,7 +392,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { gameMode = GameMode.Multiplayer; } catch { }
             try { gameType = GameType.Fiesta; } catch { }
             try { teamMode = TeamMode.None; } catch { }
-            try { onlineTeam = PlayerMultiplayerMatchStats.Team.None; } catch { }
             _lootableWeapons.Clear();
             _networkGrenadeSpawnPoints.Clear();
 

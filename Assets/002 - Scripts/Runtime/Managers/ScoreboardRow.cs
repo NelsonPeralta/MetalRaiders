@@ -5,17 +5,17 @@ using TMPro;
 
 public class ScoreboardRow : MonoBehaviour
 {
-    public PlayerMultiplayerMatchStats.Team team
+    public GameManager.Team team
     {
         get { return _team; }
         set
         {
             _team = value;
 
-            if(team == PlayerMultiplayerMatchStats.Team.Red)
+            if(team == GameManager.Team.Red)
             {
                 redBg.SetActive(true);
-            }else if(team == PlayerMultiplayerMatchStats.Team.Blue)
+            }else if(team == GameManager.Team.Blue)
             {
                 blueBg.SetActive(true);
             }
@@ -25,7 +25,7 @@ public class ScoreboardRow : MonoBehaviour
     [SerializeField] GameObject redBg;
     [SerializeField] GameObject blueBg;
 
-    PlayerMultiplayerMatchStats.Team _team;
+    GameManager.Team _team;
 
 
     [Header("UI Texts")]

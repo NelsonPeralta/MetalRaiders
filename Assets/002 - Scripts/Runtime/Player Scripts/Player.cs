@@ -22,6 +22,11 @@ public class Player : Biped
 
     // public variables
     #region
+
+    public ScriptObjPlayerData playerData;
+
+
+
     public bool isInvincible { get { return _isInvincible; } set { _isInvincible = value; } }
     public int controllerId
     {
@@ -449,19 +454,11 @@ public class Player : Biped
         get { return GetComponent<PlayerController>().rid; }
     }
 
-    public PlayerMultiplayerMatchStats.Team team
+    public GameManager.Team team
     {
-        get { return _team; }
-        private set
+        get
         {
-            if (isMine)
-            {
-                _team = value;
-                OnPlayerTeamChanged?.Invoke(this);
-                PV.RPC("UpdateTeam_RPC", RpcTarget.All, _team.ToString());
-
-                name += $" {_team} team";
-            }
+            return playerData.team;
         }
     }
     public int lastPID
@@ -533,7 +530,6 @@ public class Player : Biped
     #region
 
     [SerializeField] NetworkPlayer _networkPlayer;
-    [SerializeField] PlayerMultiplayerMatchStats.Team _team;
     [SerializeField] PlayerMedals _playerMedals;
     [SerializeField] int _playerId;
     [SerializeField] Player _lastPlayerSource;
@@ -652,6 +648,7 @@ public class Player : Biped
     {
         Debug.Log($"Player Owner: {PV.Owner.NickName}");
         _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
+        playerData = CurrentRoomManager.instance.GetPlayerDataWithId(_playerId);
         if (_playerId > 0)
         {
             OnPlayerIdAssigned?.Invoke(this);
@@ -715,7 +712,7 @@ public class Player : Biped
         //else
         //    username = CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(PV.Owner.NickName)).playerExtendedPublicData.username;
         GetComponent<PlayerUI>().isMineText.text = $"IM: {PV.IsMine}";
-        gameObject.name = $"Player {PV.Owner.NickName} ({rid})"; if (PV.IsMine) gameObject.name += " Is Mine";
+        gameObject.name = $"Player {PV.Owner.NickName} - {username} - ({rid})"; if (PV.IsMine) gameObject.name += " - IM";
         //PhotonNetwork.SendRate = 100;
         //PhotonNetwork.SerializationRate = 50;
 
@@ -1394,10 +1391,10 @@ public class Player : Biped
     {
         if (!PV.IsMine)
         {
-            Debug.Log(nn);
-            _team = (PlayerMultiplayerMatchStats.Team)Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), nn);
-            OnPlayerTeamChanged?.Invoke(this);
-            name += $" {_team.ToString()} team";
+            //Debug.Log(nn);
+            //_team = (PlayerMultiplayerMatchStats.Team)Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), nn);
+            //OnPlayerTeamChanged?.Invoke(this);
+            //name += $" {_team.ToString()} team";
         }
     }
 

@@ -88,11 +88,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             ps.Add("leveltoloadindex", Launcher.instance.levelToLoadIndex.ToString());
             ps.Add("teammode", GameManager.instance.teamMode.ToString());
             //ps.Add("teamdict", string.Join(Environment.NewLine, GameManager.instance.teamDict));
-            ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));
+            //ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));
             ps.Add("nbLocalPlayersDict", JsonConvert.SerializeObject(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict));
 
 
-            Debug.Log($"SendGameParams {GameManager.instance.teamDict}");
+            //Debug.Log($"SendGameParams {GameManager.instance.teamDict}");
 
             _pv.RPC("SendGameParams", RpcTarget.All, ps, false);
         }
@@ -102,12 +102,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             try { GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), p["gametype"]); } catch (System.Exception e) { Debug.Log(e); }
             try { Launcher.instance.levelToLoadIndex = (System.Int16.Parse(p["leveltoloadindex"])); } catch (System.Exception e) { Debug.Log(e); }
             try { GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), p["teammode"]); } catch (System.Exception e) { Debug.Log(e); }
-            try
-            {
-                GameManager.instance.teamDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["teamdict"]);
-                Debug.Log(GameManager.instance.teamDict);
-            }
-            catch { }
+            //try
+            //{
+            //    GameManager.instance.teamDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["teamdict"]);
+            //    Debug.Log(GameManager.instance.teamDict);
+            //}
+            //catch { }
 
             try
             {
@@ -255,10 +255,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
     }
-    public void UpdateTeam(string t, string playerNickName)
-    {
-        _pv.RPC("UpdateTeam_RPC", RpcTarget.All, t.ToString(), playerNickName);
-    }
+
 
     public void UpdateSwarmDifficulty(int ei)
     {
@@ -414,17 +411,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     // RPCs
     #region
-    [PunRPC]
-    void UpdateTeam_RPC(string t, string playerNickName)
-    {
 
-        if (PhotonNetwork.NickName == playerNickName)
-        {
-            Debug.Log($"UpdateTeam_RPC: {t}, {playerNickName}");
-            PlayerMultiplayerMatchStats.Team te = (PlayerMultiplayerMatchStats.Team)System.Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), t);
-            GameManager.instance.onlineTeam = te;
-        }
-    }
 
     [PunRPC]
     void UpdateTeamMode_RPC(string t)
@@ -677,9 +664,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdatePlayerTeam_RPC(string t, string pn)
     {
-        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
-            if (pms.username == pn)
-                pms.networkTeam = (PlayerMultiplayerMatchStats.Team)System.Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), t);
+        Debug.Log("UpdatePlayerTeam_RPC");
+        //foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
+        //    if (pms.username == pn)
+        //        pms.networkTeam = (GameManager.Team)System.Enum.Parse(typeof(GameManager.Team), t);
     }
 
 

@@ -2866,11 +2866,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78bba407e0a7d8d479c87ecc6db1d21e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
-  damageOverTime: 1
-  damage: 5
-  damageDelay: 0.5
   instantKillzone: 0
+  audioSource: {fileID: 0}
+  damage: 5
   playersInRange: []
 --- !u!135 &7551232833788158598
 SphereCollider:
