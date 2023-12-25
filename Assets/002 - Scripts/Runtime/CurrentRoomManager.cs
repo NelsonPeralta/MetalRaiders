@@ -293,7 +293,7 @@ public class CurrentRoomManager : MonoBehaviour
     public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
-    [SerializeField] bool _gameStart, _gameStarted, _gameOver;
+    [SerializeField] bool _gameStarted, _gameOver;
     [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9, _rpcCooldown;
 
     [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersJoined, _vetos;
@@ -453,7 +453,7 @@ public class CurrentRoomManager : MonoBehaviour
         if (scene.buildIndex == 0)
         {
 
-            _mapIsReady = _allPlayersJoined = _gameIsReady = _gameStart = _gameOver = _gameStarted =
+            _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
                 _reachedHalwayGameStartCountdown = _randomQuickMatchSeetingsChosen = false;
             _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _playersLoadedScene = 0;
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();

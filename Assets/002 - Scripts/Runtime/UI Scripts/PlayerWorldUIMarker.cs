@@ -81,7 +81,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         _greenMarker.gameObject.SetActive(_player.team == GameManager.GetRootPlayer().team && GameManager.instance.teamMode == GameManager.TeamMode.Classic);
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-            _text.gameObject.SetActive(_player.team == GameManager.GetRootPlayer().team);
+            if (_player.team == GameManager.GetRootPlayer().team) _text.gameObject.SetActive(true);
     }
 
     public void OnPlayerTeamDelegate(Player player)

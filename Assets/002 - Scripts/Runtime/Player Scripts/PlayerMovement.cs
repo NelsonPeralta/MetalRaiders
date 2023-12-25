@@ -188,6 +188,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!CurrentRoomManager.instance.gameStarted) return;
+
         _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", !isGrounded);
         CalculateCurrentSpeed();
 

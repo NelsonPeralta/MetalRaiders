@@ -134,7 +134,7 @@ public class Hill : MonoBehaviour
 
                 if (_timer >= 1)
                 {
-                    if (playersInRange[0].isMine)
+                    if (playersInRange[0].isMine && CurrentRoomManager.instance.gameStarted)
                     {
                         NetworkGameManager.instance.AddPlayerPoint(playersInRange[0].photonId);
                     }

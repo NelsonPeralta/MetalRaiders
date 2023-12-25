@@ -54,20 +54,21 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             if (GameManager.instance.gameType == GameManager.GameType.Hill)
             {
-                foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
+
+                foreach(Player p in GameManager.instance.pid_player_Dict.Values)
                 {
-                    if (pms.score > hs)
-                        hs = pms.score;
+                    if(p.GetComponent<PlayerMultiplayerMatchStats>().score > hs)
+                        hs = p.GetComponent<PlayerMultiplayerMatchStats>().score;
                 }
             }
 
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
-                foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
+                foreach (Player p in GameManager.instance.pid_player_Dict.Values)
                 {
-                    if (pms.kills > hs)
-                        hs = pms.kills;
+                    if (p.GetComponent<PlayerMultiplayerMatchStats>().kills > hs)
+                        hs = p.GetComponent<PlayerMultiplayerMatchStats>().kills;
                 }
             }
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
