@@ -116,7 +116,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             }
             catch { }
 
-            CurrentRoomManager.instance.roomType = JsonConvert.DeserializeObject<CurrentRoomManager.RoomType>(p["roomType"]);
+            //CurrentRoomManager.instance.roomType = JsonConvert.DeserializeObject<CurrentRoomManager.RoomType>(p["roomType"]);
 
 
             //NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
