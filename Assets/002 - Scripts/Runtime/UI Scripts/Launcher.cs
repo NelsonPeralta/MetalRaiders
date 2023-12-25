@@ -642,6 +642,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void ChangeGameMode(string gt)
     {
         GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gt);
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer) GameManager.instance.teamMode = GameManager.TeamMode.None;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) GameManager.instance.teamMode = GameManager.TeamMode.Classic;
+
         FindObjectOfType<NetworkGameManager>().SendGameParams();
     }
 

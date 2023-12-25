@@ -132,7 +132,6 @@ public class GameManager : MonoBehaviourPunCallbacks
                 FindObjectOfType<Launcher>().levelToLoadIndex = 13;
 
                 gameType = GameType.Survival;
-                teamMode = TeamMode.Classic;
                 difficulty = SwarmManager.Difficulty.Normal;
             }
             else if (_gameMode == GameMode.Multiplayer)
@@ -148,7 +147,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
                 //teamDict = new Dictionary<string, int>();
                 gameType = GameType.Slayer;
-                teamMode = TeamMode.None;
             }
             Launcher.instance.gameModeText.text = $"Game Mode: {_gameMode}";
 
