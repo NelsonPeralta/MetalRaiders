@@ -201,22 +201,25 @@ public class GameManager : MonoBehaviourPunCallbacks
                 if (gameMode == GameMode.Multiplayer)
                     FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
 
-                Dictionary<string, int> _teamDict = new Dictionary<string, int>();
+                if (_prev != value)
+                {
+                    Dictionary<string, int> _teamDict = new Dictionary<string, int>();
 
-                foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
-                    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-                    {
-                        Team t = Team.Red;
+                    foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
+                        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                        {
+                            Team t = Team.Red;
 
-                        if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
-                            t = Team.Blue;
+                            if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
+                                t = Team.Blue;
 
-                        CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
+                            CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
 
-                        _teamDict.Add(kvp.Value.NickName, (int)t);
+                            _teamDict.Add(kvp.Value.NickName, (int)t);
 
-                        Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
-                    }
+                            Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
+                        }
+                }
             }
 
             foreach (Transform child in Launcher.instance.namePlatesParent)
