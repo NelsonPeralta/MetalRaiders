@@ -424,9 +424,9 @@ public class CurrentRoomManager : MonoBehaviour
 
                 Launcher.instance.gameCountdownText.text = $"Game Starts in: {((int)roomGameStartCountdown)}";
 
-                if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
-                    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
-                        Launcher.instance.StartGame();
+                //if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                //    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
+                //        Launcher.instance.StartGame();
             }
         }
 
@@ -497,19 +497,20 @@ public class CurrentRoomManager : MonoBehaviour
         _ran = Random.Range(0, 5);
         _ran = 2;
 
-        //if (expectedNbPlayers == 1)
-        //{
-        //    GameManager.instance.gameMode = GameManager.GameMode.Swarm;
-        //    GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
+        if (expectedNbPlayers == 1)
+        {
+            GameManager.instance.gameMode = GameManager.GameMode.Swarm;
+            GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
+            GameManager.instance.teamMode = GameManager.TeamMode.Classic;
 
-        //    ChooseRandomPvEMap();
-        //    if (_vetoedMapIndex != 0)
-        //        while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
-        //        {
-        //            ChooseRandomPvEMap();
-        //        }
-        //}
-        //else // PvP
+            ChooseRandomPvEMap();
+            if (_vetoedMapIndex != 0)
+                while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
+                {
+                    ChooseRandomPvEMap();
+                }
+        }
+        else // PvP
         {
             GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 

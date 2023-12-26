@@ -510,6 +510,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         try { commonRoomTexts.SetActive(false); } catch { }
         try { PhotonNetwork.LeaveRoom(); } catch (System.Exception e) { Debug.LogWarning(e); }
         try { GameManager.instance.gameMode = GameManager.GameMode.Multiplayer; } catch { }
+        try { GameManager.instance.teamMode = GameManager.TeamMode.None; } catch { }
 
         CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
 
