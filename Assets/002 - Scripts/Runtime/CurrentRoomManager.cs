@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon.Encryption;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -49,24 +50,42 @@ public class CurrentRoomManager : MonoBehaviour
                 c += items.Value;
             }
 
-            int _preExpNbPl = expectedNbPlayers;
             expectedNbPlayers = c;
-
-            if (_preExpNbPl > expectedNbPlayers)
-            {
-                if (vetoCountdown > 0) // Make sure this variable if greater than 0 by default
-                    vetoCountdown = 9;
-                roomGameStartCountdown = 9;
-            }
-
-            if (expectedNbPlayers > 0 && !_randomQuickMatchSeetingsChosen)
-            {
-                if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
-                    ChooseRandomMatchSettingsForQuickMatch();
-            }
         }
     }
-    public int expectedNbPlayers { get { return _expectedNbPlayers; } set { _expectedNbPlayers = value; } }
+    public int expectedNbPlayers
+    {
+        get { return _expectedNbPlayers; }
+        set
+        {
+            int _preVal = _expectedNbPlayers;
+            _expectedNbPlayers = value;
+            Debug.Log($"expectedNbPlayers: {_preVal} -> {expectedNbPlayers}");
+
+
+            if (PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                if (_preVal == 0 && expectedNbPlayers == 1)
+                {
+                    //if (vetoCountdown > 0) // Make sure this variable if greater than 0 by default
+                    vetoCountdown = 10;
+                    roomGameStartCountdown = 10;
+                    ChooseRandomMatchSettingsForQuickMatch();
+                }
+                else if (expectedNbPlayers > 1)
+                {
+                    if (_preVal < expectedNbPlayers)
+                    {
+                        vetoCountdown = 9;
+                        roomGameStartCountdown = 9;
+                    }
+
+
+                    if (!_randomPvPSettingsChosen)
+                        if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                            ChooseRandomMatchSettingsForQuickMatch();
+                }
+        }
+    }
 
 
     /// <summary>
@@ -304,7 +323,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     Dictionary<string, int> _playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
-    [SerializeField] bool _reachedHalwayGameStartCountdown, _randomQuickMatchSeetingsChosen;
+    [SerializeField] bool _reachedHalwayGameStartCountdown, _randomInitiQuickMatchSettingsChosen, _randomPvPSettingsChosen;
     //[SerializeField] Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData> _extendedPlayerData = new Dictionary<string, PlayerDatabaseAdaptor.PlayerExtendedPublicData>();
 
     [SerializeField] GameManager.GameType _vetoedGameType;
@@ -375,8 +394,8 @@ public class CurrentRoomManager : MonoBehaviour
         if (PhotonNetwork.InRoom)
         {
 
-            if ((expectedNbPlayers - GameManager.instance.nbLocalPlayersPreset) > 0) // At least one more stranger player is in the room
-                if (_randomQuickMatchSeetingsChosen && vetoCountdown > 0)
+            if ((expectedNbPlayers /*- GameManager.instance.nbLocalPlayersPreset*/) > 0) // At least one more stranger player is in the room
+                if (_randomInitiQuickMatchSettingsChosen && vetoCountdown > 0)
                 {
 
                     if (PhotonNetwork.IsMasterClient)
@@ -409,7 +428,7 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
-            if (_randomQuickMatchSeetingsChosen && roomGameStartCountdown > 0 && vetoCountdown <= 0)
+            if (_randomInitiQuickMatchSettingsChosen && roomGameStartCountdown > 0 && vetoCountdown <= 0)
             {
                 if (PhotonNetwork.IsMasterClient)
                 {
@@ -424,9 +443,12 @@ public class CurrentRoomManager : MonoBehaviour
 
                 Launcher.instance.gameCountdownText.text = $"Game Starts in: {((int)roomGameStartCountdown)}";
 
-                //if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
-                //    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
-                //        Launcher.instance.StartGame();
+                if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
+                    if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
+                    {
+                        Debug.Log("START GAME!!!!");
+                        //Launcher.instance.StartGame();
+                    }
             }
         }
 
@@ -454,7 +476,7 @@ public class CurrentRoomManager : MonoBehaviour
         {
 
             _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
-                _reachedHalwayGameStartCountdown = _randomQuickMatchSeetingsChosen = false;
+                _reachedHalwayGameStartCountdown = _randomInitiQuickMatchSettingsChosen = false;
             _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _playersLoadedScene = 0;
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
@@ -493,6 +515,8 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void ChooseRandomMatchSettingsForQuickMatch()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
+
         Debug.Log("ChooseRandomMatchSettingsForQuickMatch");
         _ran = Random.Range(0, 5);
         _ran = 2;
@@ -513,6 +537,8 @@ public class CurrentRoomManager : MonoBehaviour
         else // PvP
         {
             GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+            GameManager.instance.teamMode = GameManager.TeamMode.None;
+
 
             ChooseRandomPvPGameType();
 
@@ -531,25 +557,11 @@ public class CurrentRoomManager : MonoBehaviour
                 {
                     ChooseRandomPvPGameType();
                 }
-
+            _randomPvPSettingsChosen = true;
         }
-        //else // PvE
-        //{
-        //    GameManager.instance.gameMode = GameManager.GameMode.Swarm;
-        //    GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
-
-        //    ChooseRandomPvEMap();
-        //    if (_vetoedMapIndex != 0)
-        //        while (_vetoedMapIndex == Launcher.instance.levelToLoadIndex)
-        //        {
-        //            ChooseRandomPvEMap();
-        //        }
-        //}
 
 
-
-        _randomQuickMatchSeetingsChosen = true;
-
+        _randomInitiQuickMatchSettingsChosen = true;
 
         FindObjectOfType<NetworkGameManager>().SendGameParams();
     }
@@ -610,9 +622,9 @@ public class CurrentRoomManager : MonoBehaviour
         _ran = Random.Range(0, 2);
 
         if (_ran <= 1)
-            Launcher.instance.ChangeLevelToLoadWithIndex(14);// Downpoor
+            Launcher.instance.ChangeLevelToLoadWithIndex(11);// Downpoor
         else if (_ran <= 2)
-            Launcher.instance.ChangeLevelToLoadWithIndex(15);// Haunted
+            Launcher.instance.ChangeLevelToLoadWithIndex(12);// Haunted
     }
 
     public void ResetRoomCountdowns()

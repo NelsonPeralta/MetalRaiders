@@ -106,6 +106,11 @@ public partial class WebManager
                 try
                 {
                     pli.playerData = CurrentRoomManager.instance.GetPlayerDataWithId(pepd.player_id);
+                    if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    {
+                        pli.playerData.team = GameManager.Team.Red;
+                        pli.UpdateColorPalette();
+                    }
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 

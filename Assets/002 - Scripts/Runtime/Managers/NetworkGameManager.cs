@@ -762,12 +762,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient && caller)
         {
-            Debug.Log($"UpdateRoomCountdowns: {vetoC} and {roomGameStartC}");
+            //Debug.Log($"UpdateRoomCountdowns: {vetoC} and {roomGameStartC}");
             _pv.RPC("UpdateRoomCountdowns", RpcTarget.All, vetoC, roomGameStartC, false);
         }
         else if (!PhotonNetwork.IsMasterClient && !caller)
         {
-            Debug.Log($"UpdateRoomCountdowns: {vetoC} and {roomGameStartC}");
+            //Debug.Log($"UpdateRoomCountdowns: {vetoC} and {roomGameStartC}");
             CurrentRoomManager.instance.UpdateCountdowns(vetoC, roomGameStartC);
         }
     }
