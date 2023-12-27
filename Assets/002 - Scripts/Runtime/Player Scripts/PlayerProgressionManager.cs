@@ -16,8 +16,8 @@ public class PlayerProgressionManager : MonoBehaviour
             if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
                 r *= 2;
 
-            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private)
-                r = (int)(r * 0.7f);
+            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
+                r = (int)(r * 1.15f);
             return r;
         }
     }
@@ -31,6 +31,9 @@ public class PlayerProgressionManager : MonoBehaviour
             DateTime today = DateTime.Now;
             if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
                 h *= 2;
+
+            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
+                h++;
 
             return h;
         }
