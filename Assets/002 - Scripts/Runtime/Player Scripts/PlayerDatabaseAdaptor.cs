@@ -34,7 +34,7 @@ public class PlayerDatabaseAdaptor
     public void SetPlayerBasicPvEStats(PlayerBasicPvEStats playerData)
     {
         this._playerBasicPvEStats = playerData;
-        Debug.Log($"Player basic pve stats are set. Kills: {this._playerBasicPvEStats.kills}. Deaths: {this._playerBasicPvEStats.deaths}. Headshots: {this._playerBasicPvEStats.headshots}");
+        Debug.Log($"Player basic pve stats are set. Kills: {this._playerBasicPvEStats.pve_kills}. Deaths: {this._playerBasicPvEStats.pve_deaths}. Headshots: {this._playerBasicPvEStats.pve_headshots}");
     }
 
     //public int id
@@ -72,9 +72,9 @@ public class PlayerDatabaseAdaptor
     public int GetPvPDeaths() { return _playerBasicPvPStats.deaths; }
     public int GetPvPHeadshots() { return _playerBasicPvPStats.headshots; }
     // PvE
-    public int GetPvEKills() { return _playerBasicPvEStats.kills; }
-    public int GetPvEDeaths() { return _playerBasicPvEStats.deaths; }
-    public int GetPvEHeadshots() { return _playerBasicPvEStats.headshots; }
+    public int GetPvEKills() { return _playerBasicPvEStats.pve_kills; }
+    public int GetPvEDeaths() { return _playerBasicPvEStats.pve_deaths; }
+    public int GetPvEHeadshots() { return _playerBasicPvEStats.pve_headshots; }
     public int GetPvEHighestPoints() { return _playerBasicPvEStats.highest_points; }
     public bool PlayerDataIsSet() { return _playerLoginData != null; }
     public int PvPMeleeKills { get { return _playerBasicPvPStats.melee_kills; } }
@@ -233,7 +233,7 @@ public class PlayerDatabaseAdaptor
     public class PlayerBasicPvEStats
     {
         int player_id;
-        public int kills, deaths, headshots, highest_points;
+        public int pve_kills, pve_deaths, pve_headshots, highest_points;
 
         public static PlayerBasicPvEStats CreateFromJSON(string jsonString)
         {
@@ -249,6 +249,7 @@ public class PlayerDatabaseAdaptor
         public int player_id, invites;
         public int level, xp, rank, honor, credits;
         public string armor_data_string, unlocked_armor_data_string, armor_color_palette;
+        public int kills, deaths, headshots, melee_kills, grenade_kills, pve_kills, pve_deaths, pve_headshots, highest_points;
 
         public static PlayerExtendedPublicData CreateFromJSON(string jsonString)
         {

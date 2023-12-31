@@ -20,18 +20,11 @@ public class ServiceRecordMenu : MonoBehaviour
 
             float kd = 0;
 
-            //if (pda.GetPvPDeaths() > 0)
-            //{
-            //    kd = pda.GetPvPKills() / (float)pda.GetPvPDeaths();
-            //}
-            //Debug.Log($"Initializing Service Record Menu. PvE Kills {pda.GetPvEKills()}");
-            //multiplayerStatsText.text = $"MULTIPLAYER\n----------\n\nKills: {pda.GetPvPKills()}\nDeaths: {pda.GetPvPDeaths()}\nK/D: {kd}\nHeadshots: {pda.GetPvPHeadshots()}\nMelee Kills: {pda.PvPMeleeKills}\nGrenade Kills: {pda.PvPGrenadeKills}";
-            //swarmStatsText.text = $"SWARM\n-----\n\nKills: {pda.GetPvEKills()}\nDeaths: {pda.GetPvEDeaths()}\nHeadshots: {pda.GetPvEHeadshots()}\nHighest Score: {pda.GetPvEHighestPoints()}";
+            if (_playerData.playerExtendedPublicData.deaths > 0)
+                kd = _playerData.playerExtendedPublicData.kills / (float)_playerData.playerExtendedPublicData.deaths;
 
-            multiplayerStatsText.text = $"";
-            swarmStatsText.text = $"";
-
-
+            multiplayerStatsText.text = $"MULTIPLAYER\n----------\n\nKills: {_playerData.playerExtendedPublicData.kills}\nDeaths: {_playerData.playerExtendedPublicData.deaths}\nK/D: {kd}\nHeadshots: {_playerData.playerExtendedPublicData.headshots}\nMelee Kills: {_playerData.playerExtendedPublicData.melee_kills}\nGrenade Kills: {_playerData.playerExtendedPublicData.grenade_kills}";
+            swarmStatsText.text = $"SWARM\n-----\n\nKills: {_playerData.playerExtendedPublicData.pve_kills}\nDeaths: {_playerData.playerExtendedPublicData.pve_deaths}\nHeadshots: {_playerData.playerExtendedPublicData.pve_headshots}\nHighest Score: {_playerData.playerExtendedPublicData.highest_points}";
 
             levelText.text = $"Level: {_playerData.playerExtendedPublicData.level}";
             xpText.text = $"Xp: {_playerData.playerExtendedPublicData.xp}";
