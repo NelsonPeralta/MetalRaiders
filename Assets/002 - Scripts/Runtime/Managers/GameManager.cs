@@ -297,7 +297,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     List<LootableWeapon> _lootableWeapons = new List<LootableWeapon>();
     List<NetworkGrenadeSpawnPoint> _networkGrenadeSpawnPoints = new List<NetworkGrenadeSpawnPoint>();
 
-
+    [SerializeField] AudioSource _clickSound, _cancelSound;
 
 
     public bool playerDataRetrieved
@@ -908,5 +908,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static bool LayerIsPartOfLayerMask(int lay, LayerMask lm)
     {
         return lm == (lm | (1 << lay));
+    }
+
+    public static void PlayClickSound()
+    {
+        GameManager.instance._clickSound.Play();
+    }
+
+    public static void PlayCancelSound()
+    {
+        GameManager.instance._cancelSound.Play();
     }
 }

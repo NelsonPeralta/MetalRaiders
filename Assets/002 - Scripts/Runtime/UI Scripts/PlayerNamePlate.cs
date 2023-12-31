@@ -142,6 +142,7 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void OnClick()
     {
+        GameManager.PlayClickSound();
         MenuManager.Instance.OpenMenu("service_record", false);
         ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
 

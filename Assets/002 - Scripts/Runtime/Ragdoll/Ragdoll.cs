@@ -47,14 +47,15 @@ abstract public class Ragdoll : MonoBehaviour
             GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hips.transform.position);
 
             _timeSinceLastThud = 0;
-            //AudioDirector.Instance.PlayPooledAudioClipAtPosition(PlayerDeathRagdollAudioSettings.ThudAudioClipDefinitions, this.transform.position);
-            if (!_deathClipAudioSource.isPlaying)
-            {
-                _ran = Random.Range(0, _collisionClips.Count);
-                _collisionAudioSource.clip = _collisionClips[_ran];
 
-                _collisionAudioSource.Play();
-            }
+            if (!collision.gameObject.GetComponent<PlayerCapsule>() && !collision.gameObject.GetComponent<Player>())
+                if (!_deathClipAudioSource.isPlaying)
+                {
+                    _ran = Random.Range(0, _collisionClips.Count);
+                    _collisionAudioSource.clip = _collisionClips[_ran];
+
+                    _collisionAudioSource.Play();
+                }
         }
 
     }

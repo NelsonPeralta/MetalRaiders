@@ -123,6 +123,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     void BuyArmorPiece()
     {
+        GameManager.PlayClickSound();
         StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(playerArmorPiece));
 
         ArmoryManager.instance.creditsText.text = $"{WebManager.webManagerInstance.pda.playerBasicOnlineStats.credits.ToString()}cr";
@@ -134,6 +135,7 @@ public class ArmorPieceListing : MonoBehaviour
     void EquipArmorPiece()
     {
         Debug.Log($"Previous: {WebManager.webManagerInstance.pda.armorDataString}");
+        GameManager.PlayClickSound();
         string newData = WebManager.webManagerInstance.pda.armorDataString;
 
 
@@ -170,6 +172,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void UnequipArmorPiece()
     {
+        GameManager.PlayCancelSound();
         string newData = WebManager.webManagerInstance.pda.armorDataString.Replace($"{playerArmorPiece.entity}", "");
         newData = newData.Replace($"----", "--");
         newData = newData.Replace($"---", "--");

@@ -381,19 +381,13 @@ public class CurrentRoomManager : MonoBehaviour
         //}
 
         if (SceneManager.GetActiveScene().buildIndex > 0) return;
+        if (roomType == RoomType.Private) return;
 
-
-        if (_rpcCooldown > 0)
-        {
-            _rpcCooldown -= Time.deltaTime;
-
-
-        }
+        if (_rpcCooldown > 0) _rpcCooldown -= Time.deltaTime;
 
 
         if (PhotonNetwork.InRoom)
         {
-
             if ((expectedNbPlayers /*- GameManager.instance.nbLocalPlayersPreset*/) > 0) // At least one more stranger player is in the room
                 if (_randomInitiQuickMatchSettingsChosen && vetoCountdown > 0)
                 {
@@ -452,10 +446,7 @@ public class CurrentRoomManager : MonoBehaviour
             }
         }
 
-        if (_rpcCooldown <= 0)
-        {
-            _rpcCooldown = 0.3f;
-        }
+        if (_rpcCooldown <= 0) _rpcCooldown = 0.3f;
     }
 
     private void OnEnable()
