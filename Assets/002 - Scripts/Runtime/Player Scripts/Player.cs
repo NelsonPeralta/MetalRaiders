@@ -18,7 +18,7 @@ public class Player : Biped
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
         OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged, OnPlayerIdAssigned;
 
-    public enum DeathNature { None, Headshot, Groin, Melee, Grenade, Stuck, Sniped }
+    public enum DeathNature { None, Headshot, Groin, Melee, Grenade, RPG, Stuck, Sniped }
 
     // public variables
     #region
@@ -903,14 +903,18 @@ public class Player : Biped
             {
                 if (damageSource.Contains("renade"))
                     dsn = DeathNature.Grenade;
-
-                if (damageSource.Contains("tuck"))
+                else if (damageSource.Contains("RPG"))
+                    dsn = DeathNature.RPG;
+                else if (damageSource.Contains("tuck"))
                     dsn = DeathNature.Stuck;
-
-                if (damageSource.Contains("elee"))
+                else if (damageSource.Contains("elee"))
                     dsn = DeathNature.Melee;
+                else
+                    Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
+
                 bytes = Encoding.UTF8.GetBytes(damageSource);
             }
+            Debug.LogError($"EMPTY DEATH NATURE");
 
 
             int newHealth = (int)hitPoints - damage;
@@ -945,7 +949,7 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
-        Debug.Log($"Spawning Player Ragdoll");
+        Debug.Log($"SPAWNING PLAYER RAGDOLL");
         print(_deathNature);
         var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
@@ -961,7 +965,7 @@ public class Player : Biped
         }
         else
         {
-            Debug.Log($"Player {name} has color palette: {playerArmorManager.colorPalette}");
+            Debug.Log($"Player {name} has color palette: {playerArmorManager.colorPalette} and armor: {playerArmorManager.armorDataString}");
             ragdoll.GetComponent<PlayerArmorManager>().armorDataString = playerArmorManager.armorDataString;
             ragdoll.GetComponent<PlayerArmorManager>().colorPalette = playerArmorManager.colorPalette;
         }
@@ -969,8 +973,8 @@ public class Player : Biped
 
 
         if (deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.Grenade) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 100); }
-        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2500); }
+        else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.RPG) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
+        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2000); }
         else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 
@@ -1455,7 +1459,7 @@ public class Player : Biped
 
         try { this.impactDir = impDir; } catch { }
         try { _damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
-        try { deathNature = (DeathNature)dn; } catch { }
+        try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}"); }
         try
         {
             if (GameManager.instance.pid_player_Dict.ContainsKey(sourcePid))

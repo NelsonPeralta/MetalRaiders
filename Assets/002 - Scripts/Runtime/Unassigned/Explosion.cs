@@ -82,6 +82,7 @@ public class Explosion : MonoBehaviour
 
                     try
                     {
+                        Debug.Log("EXPLOSION DAMAGING PLAYER");
                         if (stuck)
                             damageSource = "Stuck";
                         if (player.isMine)
