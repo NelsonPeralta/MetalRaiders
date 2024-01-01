@@ -38,8 +38,8 @@ abstract public class Actor : Biped
                 {
                     //if (_isInRange)
                     //{
-                    //    GetComponent<AudioSource>().clip = _tauntClip;
-                    //    GetComponent<AudioSource>().Play();
+                    //    _audioSource.clip = _tauntClip;
+                    //    _audioSource.Play();
                     //    _animator.Play("Taunt");
                     //}
                     //else
@@ -74,8 +74,8 @@ abstract public class Actor : Biped
                     if (pre != _targetTransform && (_targetTransform.GetComponent<Player>() || _targetTransform.GetComponent<PlayerCapsule>()))
                     {
                         _animator.Play("Boost");
-                        GetComponent<AudioSource>().clip = _tauntClip;
-                        GetComponent<AudioSource>().Play();
+                        _audioSource.clip = _tauntClip;
+                        _audioSource.Play();
                     }
             }
         }
@@ -121,7 +121,7 @@ abstract public class Actor : Biped
 
     [SerializeField] int _closeRange, _midRange, _longRange;
     [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown, _defaultFlinchCooldown, _lostTargetBipedStopwatch;
-    [SerializeField] protected AudioClip _attackClip, _deathClip, _tauntClip, _hurtClip;
+    [SerializeField] protected AudioClip _attackClip, _deathClip, _tauntClip, _hurtClip, _gruntClip;
     [SerializeField] bool _oneShotHeadshot;
 
 
@@ -133,11 +133,17 @@ abstract public class Actor : Biped
 
     [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown, _switchPlayerCooldown;
     [SerializeField] protected bool _isInRange;
+    [SerializeField] AudioSource _walkingAudioSource;
 
-    protected float _diffHpMult, _diffAttMult;
+    protected float _diffHpMult, _diffAttMult, _gruntDelay, _defGruntDelay;
+    AudioSource _audioSource;
+
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
+        _gruntDelay = _defGruntDelay = UnityEngine.Random.Range(4f, 8f);
+
         _diffHpMult = _diffAttMult = 1;
 
         try
@@ -215,6 +221,8 @@ abstract public class Actor : Biped
 
         LookAtTarget();
         FindNewTarget();
+        PlayGruntClip();
+        PlayWalkingSound();
     }
 
     private void OnEnable()
@@ -277,6 +285,35 @@ abstract public class Actor : Biped
         catch { }
     }
 
+    void PlayGruntClip()
+    {
+        if (_gruntDelay > 0)
+        {
+            _gruntDelay -= Time.deltaTime;
+
+            if (_gruntDelay <= 0)
+            {
+                try
+                {
+                    if (!_audioSource.isPlaying)
+                    {
+                        _audioSource.clip = _gruntClip;
+                        _audioSource.Play();
+                        _gruntDelay = _defGruntDelay;
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+        }
+    }
+
+    void PlayWalkingSound()
+    {
+        _walkingAudioSource.gameObject.SetActive(isRunning);
+    }
 
     void AnimationCheck()
     {
@@ -637,8 +674,8 @@ abstract public class Actor : Biped
         {
             try
             {
-                GetComponent<AudioSource>().clip = _hurtClip;
-                GetComponent<AudioSource>().Play();
+                _audioSource.clip = _hurtClip;
+                _audioSource.Play();
 
                 nma.enabled = false;
                 _animator.Play("Flinch");
@@ -672,8 +709,8 @@ abstract public class Actor : Biped
         }
         else if (!caller)
         {
-            GetComponent<AudioSource>().clip = _deathClip;
-            GetComponent<AudioSource>().Play();
+            _audioSource.clip = _deathClip;
+            _audioSource.Play();
 
             foreach (ActorHitbox ah in GetComponentsInChildren<ActorHitbox>())
                 ah.gameObject.SetActive(false);

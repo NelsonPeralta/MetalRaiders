@@ -1114,6 +1114,7 @@ MonoBehaviour:
   _deathClip: {fileID: 8300000, guid: f06a1d4f5ac04074c9c5583b0f75fca7, type: 3}
   _tauntClip: {fileID: 0}
   _hurtClip: {fileID: 0}
+  _gruntClip: {fileID: 0}
   _oneShotHeadshot: 1
   isIdling: 0
   isRunning: 0
@@ -1129,6 +1130,7 @@ MonoBehaviour:
   _throwExplosiveCooldown: 0
   _switchPlayerCooldown: 0
   _isInRange: 0
+  _walkingAudioSource: {fileID: 0}
 --- !u!195 &4212620777855583801
 NavMeshAgent:
   m_ObjectHideFlags: 0
