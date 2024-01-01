@@ -81,7 +81,7 @@ public class Helldog : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("HellhoundRun", RpcTarget.AllViaServer, false);
-            if (isRunning && !isFlinching && !isTaunting)
+            if (isRunning && !isFlinching && !isTaunting && !isBoosting)
             {
                 nma.enabled = true;
                 nma.SetDestination(targetTransform.position);

@@ -12,3 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0e47a6d8a8a8af43b290e03a7076894, type: 3}
   m_Name: player0
   m_EditorClassIdentifier: 
+  _occupied: 1
+  _team: 1
+  _playerExtendedPublicData:
+    username: Blazvatan
+    player_id: 131
+    invites: 0
+    level: 19
+    xp: 33633
+    rank: 1
+    honor: 486
+    credits: 68705
+    armor_data_string: -utility-lta--tactical_kit-ca--sidekick-lta--security-rsa--security-lsa--sidekick_lta--jumper_coda--security_rsa--utility_lta--sword1_ca--flaming_helmet--infiltrator_hc--security_lsa-
+    unlocked_armor_data_string: helmet1--flaming_helmet--burning_helmet--security_lsa--security_rsa--utility_lta--tactical_kit_ca--sidekick_lta--grenadier_ca--jumper_coda--sword1_ca--infiltrator_hc--haunted_hc--sentry_hc--sniper_lsa--sniper_rsa--tactical_plus_coda--overwatch_ca--pilot_lsa--pilot_rsa-
+    armor_color_palette: green
+    kills: 11633
+    deaths: 10793
+    headshots: 5031
+    melee_kills: 584
+    grenade_kills: 417
+    pve_kills: 1501
+    pve_deaths: 15
+    pve_headshots: 149
+    highest_points: 187634

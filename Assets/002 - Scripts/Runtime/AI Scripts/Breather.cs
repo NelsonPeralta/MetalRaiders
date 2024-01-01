@@ -102,12 +102,7 @@ public class Breather : Actor
             //Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
             var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
                 , Quaternion.LookRotation((Vector3)_dir));
-            foreach (ActorHitbox c in actorHitboxes)
-                Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
-            proj.GetComponent<Fireball>().damage = 16;
-            proj.GetComponent<Fireball>().force = 250;
-            proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-            Destroy(proj, 5);
+            proj.GetComponent<Fireball>().sourceBiped = gameObject;
             _shootProjectileCooldown = 2.4f;
         }
     }

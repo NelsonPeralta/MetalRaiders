@@ -137,8 +137,7 @@ public class Watcher : AiAbstractClass
                     var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
                         , projectileSpawnPoint.transform.rotation);
                     proj.GetComponent<Fireball>().damage = projectileDamage;
-                    proj.GetComponent<Fireball>().force = projectileSpeed;
-                    proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                    proj.GetComponent<Fireball>().sourceBiped = gameObject;
                     Destroy(proj, 5);
 
                     nextActionCooldown = defaultNextActionCooldown;
@@ -156,8 +155,7 @@ public class Watcher : AiAbstractClass
                     var meteo = Instantiate(meteor, pSurro.top.transform.position + new Vector3(0, 10, 0), pSurro.top.transform.rotation);
                     meteo.GetComponent<Fireball>().radius = meteorRadius;
                     meteo.GetComponent<Fireball>().damage = meteorDamage;
-                    meteo.GetComponent<Fireball>().force = meteorSpeed;
-                    meteo.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                    meteo.GetComponent<Fireball>().sourceBiped = gameObject;
                     meteo.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
                     meteo.transform.Rotate(180, 0, 0);
 

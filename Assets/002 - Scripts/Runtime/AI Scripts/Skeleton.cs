@@ -205,8 +205,7 @@ public class Skeleton : MonoBehaviour
                     {
                         anim.Play("Projectile Attack");
                         var fireball = Instantiate(fireballPrefab, fireballSpawnPoint.transform.position, fireballSpawnPoint.transform.rotation);
-                        fireball.GetComponent<Fireball>().force = 40;
-                        fireball.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                        fireball.GetComponent<Fireball>().sourceBiped = gameObject;
                     }
                     if (nextActionInRange == "Throw Explosive")
                     {

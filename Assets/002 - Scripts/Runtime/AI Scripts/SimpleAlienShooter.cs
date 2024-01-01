@@ -131,8 +131,7 @@ public class SimpleAlienShooter : AiAbstractClass
                         //foreach (AIHitbox c in hitboxes.AIHitboxes)
                         //    Physics.IgnoreCollision(projectile.GetComponent<Collider>(), c.GetComponent<Collider>());
                         proj.GetComponent<Fireball>().damage = projectileDamage;
-                        proj.GetComponent<Fireball>().force = projectileSpeed;
-                        proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                        proj.GetComponent<Fireball>().sourceBiped = gameObject;
                         Destroy(proj, 5);
                     }
 

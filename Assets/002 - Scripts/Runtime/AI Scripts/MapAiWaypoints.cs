@@ -17,7 +17,9 @@ public class MapAiWaypoints : MonoBehaviour
     private void Awake()
     {
         randomNumber = Random.Range(0, waypoints.Count);
-        _waypoints = GetComponentsInChildren<Transform>().ToList();
+
+        foreach(Transform t in transform)
+            _waypoints.Add(t);
     }
 
     private void Start()

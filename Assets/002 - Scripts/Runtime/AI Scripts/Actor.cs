@@ -36,13 +36,13 @@ abstract public class Actor : Biped
             if ((nv <= 0.5f * _defaultHitpoints) && (pv > 0.5f * _defaultHitpoints))
                 try
                 {
-                    if (_isInRange)
-                    {
-                        GetComponent<AudioSource>().clip = _tauntClip;
-                        GetComponent<AudioSource>().Play();
-                        _animator.Play("Taunt");
-                    }
-                    else
+                    //if (_isInRange)
+                    //{
+                    //    GetComponent<AudioSource>().clip = _tauntClip;
+                    //    GetComponent<AudioSource>().Play();
+                    //    _animator.Play("Taunt");
+                    //}
+                    //else
                     {
                         if (_flinchCooldown <= 0)
                             Flinch();
@@ -67,12 +67,16 @@ abstract public class Actor : Biped
         {
             if (_targetTransform != value)
             {
-                //if (value)
-                //    Debug.Log($"Target Transform set {value.name}");
-                //else
-                //    Debug.Log($"Target Transform set to NULL");
-
+                Transform pre = _targetTransform;
                 _targetTransform = value;
+
+                if (_targetTransform)
+                    if (pre != _targetTransform && (_targetTransform.GetComponent<Player>() || _targetTransform.GetComponent<PlayerCapsule>()))
+                    {
+                        _animator.Play("Boost");
+                        GetComponent<AudioSource>().clip = _tauntClip;
+                        GetComponent<AudioSource>().Play();
+                    }
             }
         }
     }
@@ -88,7 +92,12 @@ abstract public class Actor : Biped
                 //    Debug.Log($"Target Player set {value.name}");
                 //else
                 //    Debug.Log($"Target Player set to NULL");
+
+                HitPoints pre = _targetPlayer;
+
                 _targetPlayer = value;
+
+
             }
         }
     }
@@ -119,7 +128,7 @@ abstract public class Actor : Biped
     protected NavMeshAgent _nma;
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
-    [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isShooting, isThrowing;
+    [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isShooting, isThrowing, isBoosting;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown, _switchPlayerCooldown;
@@ -280,6 +289,7 @@ abstract public class Actor : Biped
         isFlinching = _animator.GetCurrentAnimatorStateInfo(0).IsName("Flinch");
         isShooting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot");
         isThrowing = _animator.GetCurrentAnimatorStateInfo(0).IsName("Throw");
+        isBoosting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Boost");
     }
 
     void TargetStateCheck()
@@ -301,7 +311,7 @@ abstract public class Actor : Biped
 
         try
         {
-            if (targetTransform.GetComponent<Player>() && (isIdling || isMeleeing || isShooting))
+            if (targetTransform.GetComponent<Player>() && (isIdling || isMeleeing || isShooting || isBoosting))
             {
                 Vector3 targetPostition = new Vector3(targetTransform.position.x,
                                                     this.transform.position.y,
@@ -463,7 +473,7 @@ abstract public class Actor : Biped
             {
                 nma.enabled = false;
 
-                if (_meleeCooldown <= 0 && !isFlinching)
+                if (_meleeCooldown <= 0 && !isFlinching && !isBoosting)
                 {
                     Melee();
                 }
@@ -487,7 +497,7 @@ abstract public class Actor : Biped
 
                     if (ran != 0)
                     {
-                        if (_shootProjectileCooldown <= 0 && !isTaunting && !isFlinching)
+                        if (_shootProjectileCooldown <= 0 && !isTaunting && !isFlinching && !isBoosting)
                         {
                             Debug.Log("Throw Fireball to Player");
 
@@ -500,7 +510,7 @@ abstract public class Actor : Biped
                     }
                     else
                     {
-                        if (_throwExplosiveCooldown <= 0 && !isTaunting && !isFlinching)
+                        if (_throwExplosiveCooldown <= 0 && !isTaunting && !isFlinching && !isBoosting)
                         {
                             Debug.Log("Throw Fireball to Player");
 
@@ -513,19 +523,19 @@ abstract public class Actor : Biped
                 }
                 else
                 {
-                    if (!isRunning && !isFlinching && !isTaunting)
+                    if (!isRunning && !isFlinching && !isTaunting && !isBoosting)
                     {
                         Debug.Log("Chase Player");
 
                         Run(PhotonNetwork.InRoom);
                     }
 
-                    if (isRunning && !isFlinching && !isTaunting)
+                    if (isRunning && !isFlinching && !isTaunting && !isBoosting)
                     {
                         nma.enabled = true;
                         nma.SetDestination(targetTransform.position);
                     }
-                    else if (isFlinching || isTaunting)
+                    else if (isFlinching || isTaunting || isBoosting)
                         nma.enabled = false;
                 }
             }
@@ -540,12 +550,12 @@ abstract public class Actor : Biped
                     Run(PhotonNetwork.InRoom);
                 }
 
-                if (isRunning && !isFlinching && !isTaunting)
+                if (isRunning && !isFlinching && !isTaunting && !isBoosting)
                 {
                     nma.enabled = true;
                     nma.SetDestination(targetTransform.position);
                 }
-                else if (isFlinching || isTaunting)
+                else if (isFlinching || isTaunting || isBoosting)
                     nma.enabled = false;
             }
 
@@ -647,6 +657,7 @@ abstract public class Actor : Biped
         }
         else
         {
+
             targetHitpoints = PhotonView.Find(pid).GetComponent<Player>().GetComponent<HitPoints>();
         }
     }

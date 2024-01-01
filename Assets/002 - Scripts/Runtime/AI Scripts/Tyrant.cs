@@ -108,8 +108,7 @@ public class Tyrant : Actor
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
             proj.GetComponent<Fireball>().damage = 32;
-            proj.GetComponent<Fireball>().force = 50;
-            proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+            proj.GetComponent<Fireball>().sourceBiped = gameObject;
             Destroy(proj, 5);
             _shootProjectileCooldown = 2f;
         }

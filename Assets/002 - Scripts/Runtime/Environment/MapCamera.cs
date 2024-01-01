@@ -15,6 +15,9 @@ public class MapCamera : MonoBehaviour
     [SerializeField] AudioClip _FirefightClip;
     [SerializeField] TMP_Text _text;
 
+    public Transform disabledJunk;
+
+
     float _announcerDelay;
     bool _allPlayersJoined;
     bool _announcementPLayed;

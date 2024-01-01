@@ -142,11 +142,7 @@ public class AlienShooter : Actor
             Debug.Log(_dir);
             var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
                 , Quaternion.LookRotation((Vector3)_dir));
-            foreach (ActorHitbox c in actorHitboxes)
-                Physics.IgnoreCollision(proj.GetComponent<Collider>(), c.GetComponent<Collider>());
 
-            proj.GetComponent<Fireball>().damage = 16;
-            proj.GetComponent<Fireball>().force = 50;
 
             try
             {
@@ -156,8 +152,7 @@ public class AlienShooter : Actor
             catch { }
 
 
-            proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
-            Destroy(proj, 5);
+            proj.GetComponent<Fireball>().sourceBiped = gameObject;
             _shootProjectileCooldown = 1.2f;
         }
     }

@@ -1122,6 +1122,7 @@ MonoBehaviour:
   isFlinching: 0
   isShooting: 0
   isThrowing: 0
+  isBoosting: 0
   _flinchCooldown: 0
   _meleeCooldown: 0
   _shootProjectileCooldown: 0

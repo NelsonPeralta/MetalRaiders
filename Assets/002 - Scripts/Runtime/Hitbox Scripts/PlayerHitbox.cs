@@ -11,7 +11,7 @@ public class PlayerHitbox : Hitbox, IDamageable
 
     private void Start()
     {
-        if(SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().buildIndex == 0)
             Destroy(gameObject);
     }
 
@@ -41,7 +41,7 @@ public class PlayerHitbox : Hitbox, IDamageable
             return;
 
         if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-            if (GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).team == player.team)
+            if (GameManager.instance.pid_player_Dict.ContainsKey(playerWhoShotThisPlayerPhotonId) && GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).team == player.team)
                 return;
 
         //Debug.Log(healthDamage);

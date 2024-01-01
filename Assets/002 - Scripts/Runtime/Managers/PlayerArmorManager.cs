@@ -184,7 +184,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     void EnableAllArmorsInDataString(bool force = false)
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !force) return;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !force && (SceneManager.GetActiveScene().buildIndex > 0)) return;
 
         Debug.Log("EnableAllArmorsInDataString");
         try

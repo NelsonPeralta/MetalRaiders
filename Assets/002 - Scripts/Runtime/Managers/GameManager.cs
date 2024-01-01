@@ -370,6 +370,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         try { instance.pid_player_Dict.Clear(); } catch { }
         try { instance.localPlayers.Clear(); } catch { }
+        orSpPos_Biped_Dict.Clear();
 
         try { FindObjectOfType<GameTime>().totalTime = 0; }
         catch (Exception e) { Debug.LogWarning(e.Message); }

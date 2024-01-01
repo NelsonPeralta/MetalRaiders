@@ -119,8 +119,7 @@ public class Tyrant_Old : AiAbstractClass
                     var proj = Instantiate(projectile, projectileSpawnPoint.transform.position
                         , projectileSpawnPoint.transform.rotation);
                     proj.GetComponent<Fireball>().damage = projectileDamage;
-                    proj.GetComponent<Fireball>().force = projectileSpeed;
-                    proj.GetComponent<Fireball>().playerWhoThrewGrenade = gameObject;
+                    proj.GetComponent<Fireball>().sourceBiped = gameObject;
                     Destroy(proj, 5);
 
                     nextActionCooldown = defaultNextActionCooldown;

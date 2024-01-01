@@ -3484,13 +3484,14 @@ MonoBehaviour:
   isFlinching: 0
   isShooting: 0
   isThrowing: 0
+  isBoosting: 0
   _flinchCooldown: 0
   _meleeCooldown: 0
   _shootProjectileCooldown: 0
   _throwExplosiveCooldown: 0
   _switchPlayerCooldown: 0
   _isInRange: 0
-  _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
+  _fireBallPrefab: {fileID: 5091089392186072086, guid: b098cbed4f2aee74c81415d00707bc75,
     type: 3}
   _grenadePrefab: {fileID: 6543794610344578356, guid: ace650de0d210f54490f7e347a783c04,
     type: 3}

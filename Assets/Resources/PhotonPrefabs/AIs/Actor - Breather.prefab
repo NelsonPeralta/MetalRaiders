@@ -4060,7 +4060,7 @@ MonoBehaviour:
   _lostTargetBipedStopwatch: 0
   _attackClip: {fileID: 8300000, guid: f2350706efe6ac14d8484a2a3d88aea7, type: 3}
   _deathClip: {fileID: 8300000, guid: cd6a399cf21af214ebcaa9d5132927b4, type: 3}
-  _tauntClip: {fileID: 0}
+  _tauntClip: {fileID: 8300000, guid: b79f4c395db78fe4395779e54f5b1532, type: 3}
   _hurtClip: {fileID: 8300000, guid: 881598fd05821d44786ee69b0cb084ab, type: 3}
   _oneShotHeadshot: 1
   isIdling: 0
@@ -4070,6 +4070,7 @@ MonoBehaviour:
   isFlinching: 0
   isShooting: 0
   isThrowing: 0
+  isBoosting: 0
   _flinchCooldown: 0
   _meleeCooldown: 0
   _shootProjectileCooldown: 0
