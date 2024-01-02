@@ -52,7 +52,7 @@ public class NetworkSwarmManager : MonoBehaviourPun
     void RespawnHealthPacks_RPC()
     {
         Debug.Log("Respawn Health Packs RPC");
-        swarmManager.RespawnHealthPacks();
+        swarmManager.RespawnHealthPacksCheck();
     }
 
     [PunRPC]

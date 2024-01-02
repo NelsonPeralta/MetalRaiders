@@ -450,7 +450,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void CalculateNumberOfAIsForNextWave()
     {
 
-        if (currentWave % 5 != 0)
+        //if (currentWave % 5 != 0)
         {
             //int nbPlayers = FindObjectsOfType<Player>().Length;
             //if (nbPlayers <= 0)
@@ -479,20 +479,20 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //if (hellhoundsLeft > hellhoundPool.Length)
             //    hellhoundsLeft = hellhoundPool.Length;
         }
-        else
-        {
-            tyrantsLeft = 1;
-            if (tyrantsLeft > tyrantPool.Count)
-                tyrantsLeft = 1;
-        }
+        //else
+        //{
+        //    tyrantsLeft = 1;
+        //    if (tyrantsLeft > tyrantPool.Count)
+        //        tyrantsLeft = 1;
+        //}
 
 
         if (editMode)
         {
             zombiesLeft = 0;
-            breathersLeft = 0;
+            breathersLeft = 1;
             hellhoundsLeft = 0;
-            ribbiansLeft = 1;
+            ribbiansLeft = 0;
             tyrantsLeft = 0;
         }
 
@@ -933,7 +933,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
         foreach (Player p in GameManager.instance.pid_player_Dict.Values)
             p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
-        RespawnHealthPacks_MasterCall();
+        RespawnHealthPacksCheck();
     }
 
     void RespawnHealthPacks_MasterCall()
@@ -942,7 +942,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             _networkSwarmManager.GetComponent<PhotonView>().RPC("RespawnHealthPacks_RPC", RpcTarget.All);
     }
 
-    public void RespawnHealthPacks()
+    public void RespawnHealthPacksCheck()
     {
         if ((currentWave % 10 == 0 && !editMode) || (currentWave % 1 == 0 && editMode))
         {

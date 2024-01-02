@@ -66,11 +66,13 @@ public class Melee : MonoBehaviour
     {
         if (this.player.isDead || this.player.isRespawning || other.transform == player.transform || other.transform.root == player.transform)
             return;
+        Debug.Log($"Melee OnTriggerEnter {other.name}");
 
         HitPoints hps = null;
         hps = other.GetComponent<HitPoints>();
 
         if (hps == null && other.GetComponent<PlayerCapsule>()) { hps = other.transform.root.GetComponent<HitPoints>(); }
+        if (hps == null && other.GetComponent<Hitbox>()) { hps = other.GetComponent<Hitbox>().hitPoints; }
 
         if (hps)
         {

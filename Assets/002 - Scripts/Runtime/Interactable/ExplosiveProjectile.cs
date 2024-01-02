@@ -108,6 +108,14 @@ public class ExplosiveProjectile : MonoBehaviour
 
             if (GameManager.LayerIsPartOfLayerMask(other.gameObject.layer, _stickyLayerMask))
             {
+                if (other.gameObject.GetComponent<PlayerHitbox>())
+                {
+                    Debug.Log(other.gameObject.GetComponent<PlayerHitbox>().player.hitboxes.IndexOf(other.gameObject.GetComponent<PlayerHitbox>()));
+                }
+
+
+
+
                 _collided = true;
                 try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
 

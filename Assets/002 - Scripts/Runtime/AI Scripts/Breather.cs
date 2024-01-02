@@ -65,7 +65,7 @@ public class Breather : Actor
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("BreatherAttack", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("BreatherMelee", RpcTarget.All, false);
             targetTransform.GetComponent<Player>().Damage(22, false, pid);
         }
         else
@@ -77,7 +77,7 @@ public class Breather : Actor
 
             _animator.SetBool("Run", false);
             _animator.Play("Melee");
-            _meleeCooldown = 1;
+            _meleeCooldown = 1.5f;
         }
     }
 
