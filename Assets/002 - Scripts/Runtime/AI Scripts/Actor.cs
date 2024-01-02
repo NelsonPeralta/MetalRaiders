@@ -278,11 +278,7 @@ abstract public class Actor : Biped
                 p.GetComponent<PlayerUI>().SpawnHitMarker();
         }
 
-        try
-        {
-            GetComponent<PhotonView>().RPC("DamageActor", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot);
-        }
-        catch { }
+        GetComponent<PhotonView>().RPC("DamageActor", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot);
     }
 
     void PlayGruntClip()
@@ -648,6 +644,7 @@ abstract public class Actor : Biped
             _switchPlayerCooldown = 5;
         }
 
+        Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints -= damage}");
         hitPoints -= damage;
         if (hitPoints <= 0)
         {
@@ -705,10 +702,12 @@ abstract public class Actor : Biped
     {
         if (caller && PhotonNetwork.IsMasterClient)
         {
+            Debug.Log($"ACTORD DIE CALL");
             GetComponent<PhotonView>().RPC("ActorDie", RpcTarget.All, false);
         }
         else if (!caller)
         {
+            Debug.Log($"ACTORD DIE PROCESSING");
             _audioSource.clip = _deathClip;
             _audioSource.Play();
 
