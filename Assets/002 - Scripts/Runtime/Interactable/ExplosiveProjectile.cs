@@ -23,6 +23,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] GameObject _model;
     [SerializeField] GameObject _visualIndicator;
     [SerializeField] GameObject _visualIndicatorDuplicate;
+    [SerializeField] GameObject _fakeModel;
 
     bool _collided;
     float _explosionDelayOnImpact;
@@ -126,6 +127,10 @@ public class ExplosiveProjectile : MonoBehaviour
 
                     _sticky = false;
                     {
+                        GameObject fg = Instantiate(_fakeModel, transform.position, transform.rotation);
+                        fg.transform.SetParent(other.gameObject.transform, true);
+
+
                         gameObject.transform.SetParent(other.gameObject.transform, true);
 
                         GetComponent<Rigidbody>().useGravity = false;
