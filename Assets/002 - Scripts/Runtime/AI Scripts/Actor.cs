@@ -700,6 +700,7 @@ abstract public class Actor : Biped
     [PunRPC]
     public void ActorDie(bool caller = true)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         if (caller && PhotonNetwork.IsMasterClient)
         {
             Debug.Log($"ACTORD DIE CALL");
