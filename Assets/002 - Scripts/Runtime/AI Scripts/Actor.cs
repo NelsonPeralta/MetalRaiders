@@ -646,7 +646,7 @@ abstract public class Actor : Biped
             _switchPlayerCooldown = 5;
         }
 
-        Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints -= damage}");
+        Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage}");
         hitPoints -= damage;
         if (hitPoints <= 0)
         {
