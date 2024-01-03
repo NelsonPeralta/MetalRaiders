@@ -20,6 +20,7 @@ abstract public class Actor : Biped
         {
             int pv = _hitPoints;
             int nv = Mathf.Clamp(value, 0, _defaultHitpoints * 3);
+            Debug.Log($"LOCAL ACTOR HITPOINTS {pv} -> {nv}");
 
             if (nv > pv)
                 return;
@@ -53,6 +54,7 @@ abstract public class Actor : Biped
 
             if (_hitPoints <= 0 && nv != pv)
             {
+                Debug.Log($"ACTORD DIE CALLING");
                 //target = null; \\DO NOT REMOVE TARGET HERE
                 DropRandomWeapon();
                 ActorDie();
@@ -700,7 +702,6 @@ abstract public class Actor : Biped
     [PunRPC]
     public void ActorDie(bool caller = true)
     {
-        if (!PhotonNetwork.IsMasterClient) return;
         if (caller && PhotonNetwork.IsMasterClient)
         {
             Debug.Log($"ACTORD DIE CALL");
