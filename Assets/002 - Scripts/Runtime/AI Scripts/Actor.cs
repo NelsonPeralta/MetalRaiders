@@ -1,5 +1,6 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using Rewired.Editor.Libraries.Ionic.Zlib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ abstract public class Actor : Biped
 
             if (nv < pv)
             {
-                if (_flinchCooldown <= 0)
+                if (_flinchCooldown <= 0 && nv > 0)
                     Flinch();
                 //ChildOnActorDamaged();
             }
@@ -45,7 +46,7 @@ abstract public class Actor : Biped
                     //}
                     //else
                     {
-                        if (_flinchCooldown <= 0)
+                        if (_flinchCooldown <= 0 && nv > 0)
                             Flinch();
                     }
                 }
@@ -665,12 +666,15 @@ abstract public class Actor : Biped
     [PunRPC]
     public void Flinch(bool callRPC = true)
     {
-        if (callRPC)
+        if (callRPC && PhotonNetwork.IsMasterClient)
         {
+            Debug.Log($"ACTORD FLINCH CALL");
             GetComponent<PhotonView>().RPC("Flinch", RpcTarget.All, false);
         }
-        else
+        else if (!callRPC)
         {
+            if (hitPoints > 0) return;
+            Debug.Log($"ACTORD FLINCH CALL PROCESSING");
             try
             {
                 _audioSource.clip = _hurtClip;
