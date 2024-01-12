@@ -41,7 +41,7 @@ public class AchievementManager : MonoBehaviour
             {
                 if (_sticksInCurrentGame >= 3)
                 {
-                    AchievementManager.CheckAchievement("STICKY_FINGERS", _achUnlocked);
+                    Steamworks.SteamUserStats.GetAchievement("STICKY_FINGERS", out _achUnlocked);
 
                     if (!_achUnlocked)
                     {
@@ -57,10 +57,6 @@ public class AchievementManager : MonoBehaviour
     }
 
 
-    public static void CheckAchievement(string an, bool oout)
-    {
-        Steamworks.SteamUserStats.GetAchievement(an, out oout);
-    }
 
     public static void UnlockAchievement(string an)
     {

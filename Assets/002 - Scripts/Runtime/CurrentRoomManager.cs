@@ -643,7 +643,8 @@ public class CurrentRoomManager : MonoBehaviour
             if (instance._extendedPlayerData[0].playerExtendedPublicData.level >= 5)
             {
                 _achievementUnlocked = false; _tempAchievementName = "BABYSTEPS";
-                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
+
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
@@ -655,7 +656,7 @@ public class CurrentRoomManager : MonoBehaviour
             if (instance._extendedPlayerData[0].playerExtendedPublicData.level >= 25)
             {
                 _achievementUnlocked = false; _tempAchievementName = "WHWT";
-                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
@@ -668,7 +669,7 @@ public class CurrentRoomManager : MonoBehaviour
             if (instance._extendedPlayerData[0].playerExtendedPublicData.level == 50)
             {
                 _achievementUnlocked = false; _tempAchievementName = "MAXOUT";
-                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
@@ -682,7 +683,7 @@ public class CurrentRoomManager : MonoBehaviour
             if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
             {
                 _achievementUnlocked = false; _tempAchievementName = "VETERAN";
-                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
@@ -694,7 +695,8 @@ public class CurrentRoomManager : MonoBehaviour
             if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
             {
                 _achievementUnlocked = false; _tempAchievementName = "SIR";
-                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
+                Debug.Log($"Unlocked Achivement {_tempAchievementName} {_achievementUnlocked}");
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
@@ -707,7 +709,7 @@ public class CurrentRoomManager : MonoBehaviour
             if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
             {
                 _achievementUnlocked = false; _tempAchievementName = "LAIC";
-                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");

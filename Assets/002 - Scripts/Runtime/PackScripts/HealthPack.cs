@@ -22,15 +22,12 @@ public class HealthPack : MonoBehaviour
             p.playerShield.PlayShieldStartSound(p);
             SwarmManager.instance.DisableHealthPack_MasterCall(transform.position);
 
-            AchievementManager.CheckAchievement("MEDIC", _achievementUnlocked);
+            Steamworks.SteamUserStats.GetAchievement("MEDIC", out _achievementUnlocked);
+
             if (!_achievementUnlocked)
             {
-                AchievementManager.CheckAchievement("MEDIC", _achievementUnlocked);
-                if (!_achievementUnlocked)
-                {
-                    Debug.Log($"Unlocked Achivement MEDIC");
-                    //AchievementManager.UnlockAchievement(_tempAchievementName);
-                }
+                Debug.Log($"Unlocked Achivement MEDIC");
+                //AchievementManager.UnlockAchievement(_tempAchievementName);
             }
         }
     }
