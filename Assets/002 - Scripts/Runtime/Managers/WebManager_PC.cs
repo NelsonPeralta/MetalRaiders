@@ -10,6 +10,7 @@ public partial class WebManager
 {
     IEnumerator Login_Coroutine(string steamid, string username, string password)
     {
+        Debug.Log("LOGIN COROUTINE");
         WWWForm form = new WWWForm();
         string m = "login";
         if (password.Equals("steam")) m = "loginwithsteam";
@@ -32,7 +33,6 @@ public partial class WebManager
             }
             else
             {
-                Debug.Log("Login_Coroutine");
                 Debug.Log(www.result);
                 Debug.Log(www.downloadHandler.text);
 
@@ -72,7 +72,7 @@ public partial class WebManager
 
     IEnumerator GetPlayerExtendedPublicData_Coroutine(int playerid, PlayerNamePlate pli = null)
     {
-        Debug.Log("GetPlayerExtendedPublicData_Coroutine");
+        Debug.Log("GET PLAYER EXTENDED PUBLIC DATA");
         // DISCLAIMER
         // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
 
@@ -93,6 +93,7 @@ public partial class WebManager
             }
             else
             {
+                Debug.Log("GET PLAYER EXTENDED PUBLIC DATA RESULTS");
                 Debug.Log(www.result);
                 Debug.Log(www.downloadHandler.text);
 
@@ -666,6 +667,46 @@ public partial class WebManager
         pda.unlockedArmorDataString += $"-{playerArmorPiece.entity}-";
         //pda.unlockedArmorDataString.Replace("\n\n", "\n");
         pda.credits -= playerArmorPiece.cost;
+
+        WWWForm form = new WWWForm();
+        form.AddField("service", "SaveUnlockedArmorStringData");
+        form.AddField("playerId", pda.id);
+
+        form.AddField("newUnlockedArmorStringData", pda.unlockedArmorDataString);
+        form.AddField("newPlayerCredits", pda.credits);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                if (www.downloadHandler.text.Contains("Could not save UnlockedArmorStringData"))
+                {
+                    Debug.LogError("Could not save UnlockedArmorStringData");
+
+                }
+                else if (www.downloadHandler.text.Contains("UnlockedArmorStringData saved successfully"))
+                {
+                    Debug.Log("UnlockedArmorStringData saved successfully");
+                }
+            }
+
+            ArmoryManager.instance.OnArmorBuy_Delegate();
+        }
+    }
+
+    public IEnumerator SaveUnlockedArmorStringData_Coroutine(string _armorPieceCodename)
+    {
+        pda.unlockedArmorDataString += $"-{_armorPieceCodename}-";
+        //pda.unlockedArmorDataString.Replace("\n\n", "\n");
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveUnlockedArmorStringData");

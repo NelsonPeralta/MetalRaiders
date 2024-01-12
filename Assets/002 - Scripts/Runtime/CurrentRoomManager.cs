@@ -41,7 +41,6 @@ public class CurrentRoomManager : MonoBehaviour
         set
         {
             _playerNicknameNbLocalPlayersDict = value;
-            Debug.Log($"playerNicknameNbLocalPlayersDict: {playerNicknameNbLocalPlayersDict}");
             int c = 0;
 
             foreach (KeyValuePair<string, int> items in playerNicknameNbLocalPlayersDict)
@@ -60,7 +59,6 @@ public class CurrentRoomManager : MonoBehaviour
         {
             int _preVal = _expectedNbPlayers;
             _expectedNbPlayers = value;
-            Debug.Log($"expectedNbPlayers: {_preVal} -> {expectedNbPlayers}");
 
 
             if (PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
@@ -333,8 +331,9 @@ public class CurrentRoomManager : MonoBehaviour
     [SerializeField] List<ScriptObjBipedTeam> _bipedTeams;
 
 
-    int ran;
-
+    int ran, _minH;
+    bool _achievementUnlocked = false;
+    string _tempAchievementName = "";
 
 
 
@@ -351,7 +350,6 @@ public class CurrentRoomManager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"CurrentRoomManager Instance");
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -456,7 +454,6 @@ public class CurrentRoomManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        Debug.Log("GAME MANAGER EVENTS: OnSceneLoaded");
 
         gameStarted = false;
         _reachedHalwayGameStartCountdown = false;
@@ -631,7 +628,98 @@ public class CurrentRoomManager : MonoBehaviour
 
 
         if (pepd.username.Equals(GameManager.ROOT_PLAYER_NAME))
+        {
+            Debug.Log($"UPDATING ROOT PLAYER DATA");
             instance._extendedPlayerData[0].playerExtendedPublicData = pepd;
+
+
+
+
+
+
+
+
+
+            if (instance._extendedPlayerData[0].playerExtendedPublicData.level >= 5)
+            {
+                _achievementUnlocked = false; _tempAchievementName = "BABYSTEPS";
+                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                if (!_achievementUnlocked)
+                {
+                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                }
+            }
+
+
+            if (instance._extendedPlayerData[0].playerExtendedPublicData.level >= 25)
+            {
+                _achievementUnlocked = false; _tempAchievementName = "WHWT";
+                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                if (!_achievementUnlocked)
+                {
+                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                }
+            }
+
+
+
+            if (instance._extendedPlayerData[0].playerExtendedPublicData.level == 50)
+            {
+                _achievementUnlocked = false; _tempAchievementName = "MAXOUT";
+                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                if (!_achievementUnlocked)
+                {
+                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                }
+            }
+
+
+
+            _minH = PlayerProgressionManager.GetMinHonorForRank("Sergeant");
+            if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
+            {
+                _achievementUnlocked = false; _tempAchievementName = "VETERAN";
+                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                if (!_achievementUnlocked)
+                {
+                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                }
+            }
+
+            _minH = PlayerProgressionManager.GetMinHonorForRank("Second Lieutenant");
+            if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
+            {
+                _achievementUnlocked = false; _tempAchievementName = "SIR";
+                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                if (!_achievementUnlocked)
+                {
+                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                }
+            }
+
+
+            _minH = PlayerProgressionManager.GetMinHonorForRank("General");
+            if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
+            {
+                _achievementUnlocked = false; _tempAchievementName = "LAIC";
+                AchievementManager.CheckAchievement(_tempAchievementName, _achievementUnlocked);
+                if (!_achievementUnlocked)
+                {
+                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                }
+            }
+
+
+
+
+
+        }
         else
             for (int i = 0; i < instance._extendedPlayerData.Count; i++)
             {

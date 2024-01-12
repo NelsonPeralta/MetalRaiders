@@ -111,7 +111,7 @@ public class ArmorPieceListing : MonoBehaviour
                         notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"lvl {playerArmorPiece.minLvl}";
 
                     if (pda.honor < playerArmorPiece.minHonor)
-                        notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.minHonor}hr";
+                        notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.minHonor}ho";
 
                 }
 
@@ -210,5 +210,13 @@ public class ArmorPieceListing : MonoBehaviour
 
 
         model.SetActive(false);
+    }
+
+
+
+
+    public void UnlockArmorPiece(string _codename)
+    {
+        StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(_codename));
     }
 }

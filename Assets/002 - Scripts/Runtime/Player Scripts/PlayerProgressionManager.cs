@@ -110,6 +110,23 @@ public class PlayerProgressionManager : MonoBehaviour
         return r;
     }
 
+    public static int GetMinHonorForRank(string na)
+    {
+        int m = -1;
+
+        for (int i = 0; i < instance._ranks.Count; i++)
+            if (instance._ranks[i].cleanName.Equals(na))
+                m = instance._ranks[i].honorRequired;
+
+        if (m < 0)
+        {
+            m = 99999999;
+            Debug.LogError("THAT RANK DOES NOT EXIST");
+        }
+
+        return m;
+    }
+
     public static Dictionary<int, int> playerLevelToXpDic = new Dictionary<int, int>()
     {
         {1, 0 }, {2, 1000 }, {3, 1750 }, {4, 2500 }, {5, 5000 },

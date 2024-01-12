@@ -123,7 +123,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             _gameMode = value;
-            Debug.Log($"Game Mode: {gameMode}");
 
             if (_gameMode == GameMode.Swarm)
             {
@@ -166,8 +165,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _gameType; }
         set
         {
-            Debug.Log($"GAME TYPE: {value}");
-
             _gameType = value;
             if (_gameType == GameType.GunGame)
                 teamMode = TeamMode.None;
@@ -183,7 +180,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             TeamMode _prev = _teamMode;
 
-            Debug.Log("GAMEMANAGE Team Mode: " + value);
             _teamMode = value;
             Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
@@ -344,7 +340,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         connection = Connection.Offline;
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
-        Debug.Log("GameManager Awake");
         if (instance)
         {
             Destroy(gameObject);
@@ -360,7 +355,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnEnable()
     {
         base.OnEnable(); // need this for OnRoomPropertiesUpdate to work
-        Debug.Log("GameManager OnEnable called");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -375,19 +369,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         try { FindObjectOfType<GameTime>().totalTime = 0; }
         catch (Exception e) { Debug.LogWarning(e.Message); }
 
-        Debug.Log("GameManager OnSceneLoaded called");
 
         instance = this;
         sceneIndex = scene.buildIndex;
 
-        if (PhotonNetwork.InRoom)
-        {
-            Debug.Log("GameManager OnSceneLoaded: in a room");
-        }
-        else
-        {
-            Debug.Log("GameManager OnSceneLoaded: NOT in a room");
-        }
 
         if (scene.buildIndex == 0)
         {
@@ -451,7 +436,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         nbLocalPlayersPreset = 1;
-        Debug.Log("GameManager Start called");
         //Debug.Log(colorPaletteTextures.Count);
 
         QualitySettings.vSyncCount = 0;
@@ -465,16 +449,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         //SceneManager.sceneLoaded += OnSceneLoaded;
-        Debug.Log(PhotonNetwork.IsConnected);
-        Debug.Log(PhotonNetwork.IsConnectedAndReady);
-
         Launcher.instance.ConnectToPhotonMasterServer();
     }
 
     // called when the game is terminated
     void OnDisable()
     {
-        Debug.Log("OnDisable");
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 

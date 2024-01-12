@@ -6,6 +6,10 @@ public class HealthPack : MonoBehaviour
 {
     public GameObject model;
 
+
+
+    bool _achievementUnlocked = false;
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log($"Health Pack {other.name}");
@@ -17,6 +21,22 @@ public class HealthPack : MonoBehaviour
             p.playerShield.ShowShieldRechargeEffect();
             p.playerShield.PlayShieldStartSound(p);
             SwarmManager.instance.DisableHealthPack_MasterCall(transform.position);
+
+            AchievementManager.CheckAchievement("MEDIC", _achievementUnlocked);
+            if (!_achievementUnlocked)
+            {
+                AchievementManager.CheckAchievement("MEDIC", _achievementUnlocked);
+                if (!_achievementUnlocked)
+                {
+                    Debug.Log($"Unlocked Achivement MEDIC");
+                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                }
+            }
         }
+    }
+
+    private void OnDisable()
+    {
+        _achievementUnlocked = false;
     }
 }

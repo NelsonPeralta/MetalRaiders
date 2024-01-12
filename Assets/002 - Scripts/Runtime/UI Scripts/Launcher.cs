@@ -699,7 +699,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         WebManager.webManagerInstance.Login(SteamUser.GetSteamID().m_SteamID.ToString(), SteamFriends.GetPersonaName(), "steam");
 
         Debug.Log(PhotonNetwork.NetworkClientState);
-        Debug.Log(PhotonNetwork.OfflineMode);
         //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
         //    ConnectToPhotonMasterServer();
 

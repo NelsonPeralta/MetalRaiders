@@ -257,7 +257,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.Log($"SwarmManager Instance");
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }

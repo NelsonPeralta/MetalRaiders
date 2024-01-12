@@ -66,7 +66,6 @@ public class GameTime : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Debug.Log("OnlineGameTime Awake");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 

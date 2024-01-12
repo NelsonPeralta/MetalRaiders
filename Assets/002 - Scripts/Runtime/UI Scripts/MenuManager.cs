@@ -30,7 +30,6 @@ public class MenuManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("MenuManager OnEnable");
         //this.menus = GetComponentsInChildren<Menu>(true);
 
         //GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;

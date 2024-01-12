@@ -90,7 +90,6 @@ public class SteamManager : MonoBehaviour
         // We want our SteamManager Instance to persist across scenes.
         DontDestroyOnLoad(gameObject);
 
-        Debug.Log("Steam Manager");
 
         if (!Packsize.Test())
         {
@@ -147,7 +146,6 @@ public class SteamManager : MonoBehaviour
         else
         {
             GameManager.ROOT_PLAYER_NAME = SteamFriends.GetPersonaName();
-            Debug.Log(name);
         }
 
         s_EverInitialized = true;
