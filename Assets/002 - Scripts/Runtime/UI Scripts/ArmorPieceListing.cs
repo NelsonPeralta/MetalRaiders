@@ -24,6 +24,7 @@ public class ArmorPieceListing : MonoBehaviour
     public Button equipButton;
     public Button unequipButton;
     public Button notEnoughCreditsButton;
+    public Button lockedButton;
 
     public ArmorPieceListing(PlayerArmorPiece p_playerArmorPiece)
     {
@@ -114,6 +115,11 @@ public class ArmorPieceListing : MonoBehaviour
                         notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.minHonor}ho";
 
                 }
+
+            if (playerArmorPiece.cost < 0)
+            {
+                lockedButton.gameObject.SetActive(true);
+            }
 
         }
     }
