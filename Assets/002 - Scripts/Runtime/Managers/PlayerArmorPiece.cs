@@ -76,7 +76,8 @@ public class PlayerArmorPiece : MonoBehaviour
             else if (bodyPart == BodyPart.RightBicep) p = 50;
             else if (bodyPart == BodyPart.COD) p = 40;
             else if (bodyPart == BodyPart.LeftThigh) p = 30;
-            else if (bodyPart == BodyPart.Effect) p = 20;
+            else if (bodyPart == BodyPart.RightThigh) p = 20;
+            else if (bodyPart == BodyPart.Effect) p = 10;
 
             return p;
         }
