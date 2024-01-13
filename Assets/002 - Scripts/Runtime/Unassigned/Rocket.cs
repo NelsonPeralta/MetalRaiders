@@ -89,7 +89,7 @@ public class Rocket : MonoBehaviour
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (player.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID, damageSource: "rpg");
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID, damageSourceCleanName: "rpg");
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)

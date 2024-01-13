@@ -12,9 +12,108 @@ public class AchievementManager : MonoBehaviour
 
 
     [SerializeField] int _sticksInCurrentGame = 0;
+    [SerializeField] int _plamaKillsInCurrentGame = 0;
+    [SerializeField] bool _gotAKillByBlowingUpABarrel, _gotANutshotKill;
+
+
+
+
+    public int stickiesThisGame
+    {
+        get { return _sticksInCurrentGame; }
+        set
+        {
+            _sticksInCurrentGame = value;
+
+
+            if (_sticksInCurrentGame == 3)
+            {
+                Steamworks.SteamUserStats.GetAchievement("STICKY_FINGERS", out _achUnlocked);
+
+                if (!_achUnlocked)
+                {
+                    Debug.Log("UNLOCKED ACHIVEMENT STICKY_FINGERS");
+                    //UnlockAchievement("STICKY_FINGERS");
+                }
+            }
+        }
+    }
+
+    public int plasmaKillsInThisGame
+    {
+        get { return _plamaKillsInCurrentGame; }
+        set
+        {
+            _plamaKillsInCurrentGame = value;
+
+
+            if (_plamaKillsInCurrentGame == 5)
+            {
+                Steamworks.SteamUserStats.GetAchievement("MARTIAN_HANDS", out _achUnlocked);
+
+                if (!_achUnlocked)
+                {
+                    Debug.Log("UNLOCKED ACHIVEMENT Martian Hands");
+                    //UnlockAchievement("STICKY_FINGERS");
+                }
+            }
+        }
+    }
+
+    public bool gotAKillByBlowingUpABarrel
+    {
+        get { return _gotAKillByBlowingUpABarrel; }
+        set
+        {
+            _gotAKillByBlowingUpABarrel = value;
+
+
+            if (value)
+            {
+                Steamworks.SteamUserStats.GetAchievement("HZ", out _achUnlocked);
+
+                if (!_achUnlocked)
+                {
+                    Debug.Log("UNLOCKED ACHIVEMENT Hazard");
+                    //UnlockAchievement("STICKY_FINGERS");
+                }
+            }
+        }
+    }
+
+
+    public bool gotANutshotKill
+    {
+        get { return _gotANutshotKill; }
+        set
+        {
+            _gotANutshotKill = value;
+
+
+            if (value)
+            {
+                Steamworks.SteamUserStats.GetAchievement("RWIH", out _achUnlocked);
+
+                if (!_achUnlocked)
+                {
+                    Debug.Log("UNLOCKED ACHIVEMENT RWIH");
+                    //UnlockAchievement("STICKY_FINGERS");
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
 
     float _achievCheckDelay;
     bool _achUnlocked = false;
+
 
 
     // Start is called before the first frame update
@@ -33,27 +132,7 @@ public class AchievementManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_achievCheckDelay > 0)
-        {
-            _achievCheckDelay -= Time.deltaTime;
 
-            if (_achievCheckDelay < 0)
-            {
-                if (_sticksInCurrentGame >= 3)
-                {
-                    Steamworks.SteamUserStats.GetAchievement("STICKY_FINGERS", out _achUnlocked);
-
-                    if (!_achUnlocked)
-                    {
-                        Debug.Log("UNLOCKED ACHIVEMENT STICKY_FINGERS");
-                        //UnlockAchievement("STICKY_FINGERS");
-                    }
-                }
-
-
-                _achievCheckDelay = 0.5f;
-            }
-        }
     }
 
 

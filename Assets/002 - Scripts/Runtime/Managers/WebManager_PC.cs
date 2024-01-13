@@ -5,6 +5,7 @@ using Photon.Pun;
 using System.Collections;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using System.Timers;
 
 public partial class WebManager
 {
@@ -106,7 +107,7 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerData = CurrentRoomManager.instance.GetPlayerDataWithId(pepd.player_id);
+                    pli.playerData = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
                     if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                     {
                         pli.playerData.team = GameManager.Team.Red;
@@ -194,7 +195,7 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerData = CurrentRoomManager.instance.GetPlayerDataWithId(pepd.player_id);
+                    pli.playerData = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 
@@ -294,9 +295,39 @@ public partial class WebManager
         StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
 
-    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<Player> winPlayers = null)
+    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<int> winPlayers = null)
     {
         int xpAndCreditGain = PlayerProgressionManager.xpGainPerMatch;
+        int honorGained = PlayerProgressionManager.honorGainPerMatch;
+
+
+        if (winPlayers != null)
+        {
+            if (winPlayers.Contains(CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.player_id))
+                xpAndCreditGain = (int)(1.15f * xpAndCreditGain);
+            else
+                honorGained--;
+
+            if (GameManager.instance.gameMode != GameManager.GameMode.Multiplayer)
+                honorGained = 0;
+
+            if (honorGained < 0) honorGained = 0;
+        }
+
+        DateTime today = DateTime.Now;
+        if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
+        {
+            honorGained++;
+            xpAndCreditGain *= 2;
+        }
+
+
+
+
+
+
+
+
 
         Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {pda.playerBasicOnlineStats.xp} -> {pda.playerBasicOnlineStats.xp + xpAndCreditGain}");
 
@@ -306,21 +337,10 @@ public partial class WebManager
         int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
         int newHonor = pda.playerBasicOnlineStats.honor;
         int minXpToLevelUp = 999999999;
-        int honorGained = 0;
 
         if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
             minXpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
 
-
-
-
-
-
-        honorGained = PlayerProgressionManager.honorGainPerMatch;
-
-        if (winPlayers != null || CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
-            if (winPlayers.Contains(GameManager.GetLocalMasterPlayer()))
-                honorGained = PlayerProgressionManager.honorGainPerMatch * 2;
 
         newHonor += honorGained;
 
@@ -703,17 +723,19 @@ public partial class WebManager
         }
     }
 
-    public IEnumerator SaveUnlockedArmorStringData_Coroutine(string _armorPieceCodename)
+    [Tooltip ("FOR ACHIEVEMENTS ONLY")]
+    public static IEnumerator UnlockArmorPiece_Coroutine(string _armorPieceCodename)
     {
-        pda.unlockedArmorDataString += $"-{_armorPieceCodename}-";
+        Debug.Log("UnlockArmorPiece_Coroutine");
+        webManagerInstance.pda.unlockedArmorDataString += $"-{_armorPieceCodename}-";
         //pda.unlockedArmorDataString.Replace("\n\n", "\n");
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveUnlockedArmorStringData");
-        form.AddField("playerId", pda.id);
+        form.AddField("playerId", webManagerInstance.pda.id);
 
-        form.AddField("newUnlockedArmorStringData", pda.unlockedArmorDataString);
-        form.AddField("newPlayerCredits", pda.credits);
+        form.AddField("newUnlockedArmorStringData", webManagerInstance.pda.unlockedArmorDataString);
+        form.AddField("newPlayerCredits", webManagerInstance.pda.credits);
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -738,8 +760,6 @@ public partial class WebManager
                     Debug.Log("UnlockedArmorStringData saved successfully");
                 }
             }
-
-            ArmoryManager.instance.OnArmorBuy_Delegate();
         }
     }
 

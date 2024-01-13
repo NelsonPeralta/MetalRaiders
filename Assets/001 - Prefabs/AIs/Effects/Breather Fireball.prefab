@@ -4931,7 +4931,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sourceBiped: {fileID: 0}
   damage: 8
-  speed: 24
+  speed: 34
   radius: 2
   power: 50
   deSpawnTime: 10

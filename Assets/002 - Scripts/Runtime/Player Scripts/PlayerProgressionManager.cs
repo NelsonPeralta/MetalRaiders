@@ -10,32 +10,17 @@ public class PlayerProgressionManager : MonoBehaviour
     {
         get
         {
-            int r = UnityEngine.Random.Range(160, 240); // Reach Credits divided by 5
+            int r = UnityEngine.Random.Range(160, 240); // 500 games
 
-            DateTime today = DateTime.Now;
-            if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
-                r *= 2;
-
-            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
-                r = (int)(r * 1.15f);
             return r;
         }
     }
 
-    public static int honorGainPerMatch
+    public static int honorGainPerMatch // 500 games
     {
         get
         {
-            int h = 2;
-
-            DateTime today = DateTime.Now;
-            if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
-                h *= 2;
-
-            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
-                h++;
-
-            return h;
+            return 2;
         }
     }
     public List<Sprite> rankSprites { get { return _rankImages; } }

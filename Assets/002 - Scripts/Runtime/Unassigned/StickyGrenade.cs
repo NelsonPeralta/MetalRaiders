@@ -153,7 +153,7 @@ public class StickyGrenade : MonoBehaviour
                     Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (player.PV.IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID, damageSource: "stickygrenade");
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID, damageSourceCleanName: "stickygrenade");
                 }
             }
             if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)

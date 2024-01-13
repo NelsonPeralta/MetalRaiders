@@ -139,6 +139,7 @@ public class PlayerMedals : MonoBehaviour
         Transform h = Instantiate(stuckMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
+        AchievementManager.instance.stickiesThisGame++;
     }
 
 
@@ -180,6 +181,18 @@ public class PlayerMedals : MonoBehaviour
         h.SetAsFirstSibling();
 
         announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
+
+
+
+        bool _achUnlocked = false;
+
+        Steamworks.SteamUserStats.GetAchievement("KS", out _achUnlocked);
+
+        if (!_achUnlocked)
+        {
+            Debug.Log("UNLOCKED ACHIVEMENT KS");
+            //UnlockAchievement("STICKY_FINGERS");
+        }
     }
 
 

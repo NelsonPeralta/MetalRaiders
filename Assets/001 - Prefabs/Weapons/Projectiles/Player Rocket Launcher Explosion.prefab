@@ -9841,7 +9841,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  damageSource: RPG
+  _damageSource: RPG
   damage: 500
   radius: 7
   explosionPower: 600

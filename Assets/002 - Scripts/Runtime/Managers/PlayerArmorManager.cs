@@ -197,7 +197,7 @@ public class PlayerArmorManager : MonoBehaviour
             {
                 Debug.Log($"{player.username}");
 
-                string c = CurrentRoomManager.instance.GetPlayerDataWithId(player.playerId).team.ToString().ToLower();
+                string c = CurrentRoomManager.GetPlayerDataWithId(player.playerId).team.ToString().ToLower();
                 _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{c}")).SingleOrDefault();
             }
         }

@@ -360,7 +360,7 @@ public class CurrentRoomManager : MonoBehaviour
         vetoCountdown = 9;
 
         foreach (ScriptObjPlayerData sod in instance._extendedPlayerData)
-            sod.Reset();
+            sod.InitialReset();
     }
 
     private void Update()
@@ -696,7 +696,6 @@ public class CurrentRoomManager : MonoBehaviour
             {
                 _achievementUnlocked = false; _tempAchievementName = "SIR";
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
-                Debug.Log($"Unlocked Achivement {_tempAchievementName} {_achievementUnlocked}");
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
@@ -869,7 +868,6 @@ public class CurrentRoomManager : MonoBehaviour
     }
 
 
-
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData GetPLayerExtendedData(string u)
     {
         foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
@@ -879,9 +877,14 @@ public class CurrentRoomManager : MonoBehaviour
 
         return null;
     }
-    public ScriptObjPlayerData GetPlayerDataWithId(int playerId)
+    public static ScriptObjPlayerData GetPlayerDataWithId(int playerId)
     {
         Debug.Log($"GetPlayerDataWithId {playerId}");
         return instance.extendedPlayerData.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId);
+    }
+
+    public static ScriptObjPlayerData GetLocalPlayerData(int _id)
+    {
+        return instance.extendedPlayerData[_id];
     }
 }

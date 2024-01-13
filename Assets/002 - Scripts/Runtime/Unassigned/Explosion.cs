@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,8 +9,10 @@ public class Explosion : MonoBehaviour
     public Player player { get { return _player; } set { _player = value; } }
     public bool stuck { get { return _stuck; } set { _stuck = value; } }
 
+    public string damageSource { get { return _damageSource; } set { _damageSource = value; } }
+
     [SerializeField] Player _player;
-    [SerializeField] string damageSource;
+    [SerializeField] string _damageSource;
 
     [Header("Settings")]
     public float damage; // Determined in Weapon Properties Script
@@ -71,7 +72,7 @@ public class Explosion : MonoBehaviour
             if (rb != null)
                 rb.AddExplosionForce(calculatedPower, explosionPos, radius, 3.0F);
 
-            
+
             if (col.GetComponent<PlayerHitbox>() && !col.GetComponent<PlayerHitbox>().player.isDead && !col.GetComponent<PlayerHitbox>().player.isRespawning)
             {
                 GameObject playerHit = col.GetComponent<PlayerHitbox>().player.gameObject;
@@ -84,9 +85,9 @@ public class Explosion : MonoBehaviour
                     {
                         Debug.Log("EXPLOSION DAMAGING PLAYER");
                         if (stuck)
-                            damageSource = "Stuck";
+                            _damageSource = "Stuck";
                         if (player.isMine)
-                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.photonId, damageSource: this.damageSource, impactDir: (col.transform.position - transform.position));
+                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.photonId, damageSource: this._damageSource, impactDir: (col.transform.position - transform.position));
                     }
                     catch { if (col.GetComponent<PlayerHitbox>().player.isMine) col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }

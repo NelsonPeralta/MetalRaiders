@@ -13,25 +13,27 @@ MonoBehaviour:
   m_Name: player0
   m_EditorClassIdentifier: 
   _occupied: 1
-  _team: 1
+  _team: 0
   _playerExtendedPublicData:
     username: Blazvatan
     player_id: 131
     invites: 0
-    level: 19
-    xp: 33633
+    level: 22
+    xp: 41443
     rank: 1
-    honor: 486
-    credits: 68705
-    armor_data_string: -utility-lta--tactical_kit-ca--sidekick-lta--security-rsa--security-lsa--sidekick_lta--jumper_coda--security_rsa--utility_lta--sword1_ca--flaming_helmet--infiltrator_hc--security_lsa-
-    unlocked_armor_data_string: helmet1--flaming_helmet--burning_helmet--security_lsa--security_rsa--utility_lta--tactical_kit_ca--sidekick_lta--grenadier_ca--jumper_coda--sword1_ca--infiltrator_hc--haunted_hc--sentry_hc--sniper_lsa--sniper_rsa--tactical_plus_coda--overwatch_ca--pilot_lsa--pilot_rsa-
+    honor: 596
+    credits: 76515
+    armor_data_string: -utility-lta--tactical_kit-ca--sidekick-lta--security-rsa--security-lsa--sidekick_lta--jumper_coda--security_rsa--sword1_ca--security_lsa--utility_lta--infiltrator_hc-
+    unlocked_armor_data_string: helmet1--flaming_helmet--burning_helmet--security_lsa--security_rsa--utility_lta--tactical_kit_ca--sidekick_lta--grenadier_ca--jumper_coda--sword1_ca--infiltrator_hc--haunted_hc--sentry_hc--sniper_lsa--sniper_rsa--tactical_plus_coda--overwatch_ca--pilot_lsa--pilot_rsa--cards--cards_lsa-
     armor_color_palette: green
-    kills: 11633
-    deaths: 10793
-    headshots: 5031
-    melee_kills: 584
-    grenade_kills: 417
-    pve_kills: 1501
+    kills: 11868
+    deaths: 11014
+    headshots: 5106
+    melee_kills: 603
+    grenade_kills: 432
+    pve_kills: 1593
     pve_deaths: 15
     pve_headshots: 149
     highest_points: 187634
+  _cardsFound: red-
+  _armorPiecesPurchased: 21

@@ -9841,7 +9841,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  damageSource: Frag Grenade
+  _damageSource: Frag Grenade
   damage: 250
   radius: 7
   explosionPower: 300

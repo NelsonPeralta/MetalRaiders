@@ -9841,7 +9841,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  damageSource: Sticky Grenade
+  _damageSource: Sticky Grenade
   damage: 400
   radius: 5
   explosionPower: 300

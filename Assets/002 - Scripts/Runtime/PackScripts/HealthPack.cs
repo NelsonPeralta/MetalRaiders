@@ -8,7 +8,6 @@ public class HealthPack : MonoBehaviour
 
 
 
-    bool _achievementUnlocked = false;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -22,6 +21,8 @@ public class HealthPack : MonoBehaviour
             p.playerShield.PlayShieldStartSound(p);
             SwarmManager.instance.DisableHealthPack_MasterCall(transform.position);
 
+
+            bool _achievementUnlocked = false;
             Steamworks.SteamUserStats.GetAchievement("MEDIC", out _achievementUnlocked);
 
             if (!_achievementUnlocked)
@@ -30,10 +31,5 @@ public class HealthPack : MonoBehaviour
                 //AchievementManager.UnlockAchievement(_tempAchievementName);
             }
         }
-    }
-
-    private void OnDisable()
-    {
-        _achievementUnlocked = false;
     }
 }

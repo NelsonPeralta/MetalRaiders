@@ -951,7 +951,17 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if ((currentWave % 10 == 0 && !editMode) || (currentWave % 1 == 0 && editMode))
         {
-            EndGame();
+            bool _achievementUnlocked = false;
+            Steamworks.SteamUserStats.GetAchievement("YAWA", out _achievementUnlocked);
+
+            if (!_achievementUnlocked)
+            {
+                Debug.Log("Unlocked Achievement You and What Army");
+                //AchievementManager.UnlockAchievement("YAWA");
+            }
+
+            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
+                EndGame();
         }
         else if (currentWave % 5 == 0)
         {

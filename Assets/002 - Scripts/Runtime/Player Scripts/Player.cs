@@ -18,7 +18,7 @@ public class Player : Biped
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
         OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged, OnPlayerIdAssigned;
 
-    public enum DeathNature { None, Headshot, Groin, Melee, Grenade, RPG, Stuck, Sniped }
+    public enum DeathNature { None, Barrel, Headshot, Groin, Melee, Grenade, RPG, Stuck, Sniped }
 
     // public variables
     #region
@@ -573,7 +573,7 @@ public class Player : Biped
     bool _hasArmor;
     bool _hasMeleeUpgrade;
 
-    string _damageSource;
+    string _damageSourceCleanName;
     Vector3 _impactPos;
     Vector3 _impactDir;
     float _gameStartDelay;
@@ -648,12 +648,12 @@ public class Player : Biped
     {
         Debug.Log($"Player Owner: {PV.Owner.NickName}");
         _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
-        playerData = CurrentRoomManager.instance.GetPlayerDataWithId(_playerId);
+        playerData = CurrentRoomManager.GetPlayerDataWithId(_playerId);
         if (_playerId > 0)
         {
             OnPlayerIdAssigned?.Invoke(this);
 
-            _username = CurrentRoomManager.instance.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
+            _username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
             foreach (PlayerWorldUIMarker p in allPlayerScripts.worldUis) p.text.text = _username;
 
         }
@@ -853,7 +853,7 @@ public class Player : Biped
     }
 
     public void Damage(int damage, bool headshot, int source_pid,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null,
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSourceCleanName = null,
         bool isGroin = false,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
@@ -899,20 +899,22 @@ public class Player : Biped
 
             byte[] bytes = Encoding.UTF8.GetBytes("");
 
-            if (damageSource != null)
+            if (damageSourceCleanName != null)
             {
-                if (damageSource.Contains("renade"))
+                if (damageSourceCleanName.Contains("renade"))
                     dsn = DeathNature.Grenade;
-                else if (damageSource.Contains("RPG"))
+                else if (damageSourceCleanName.Contains("RPG"))
                     dsn = DeathNature.RPG;
-                else if (damageSource.Contains("tuck"))
+                else if (damageSourceCleanName.Contains("tuck"))
                     dsn = DeathNature.Stuck;
-                else if (damageSource.Contains("elee"))
+                else if (damageSourceCleanName.Contains("elee"))
                     dsn = DeathNature.Melee;
+                else if (damageSourceCleanName.Contains("arrel"))
+                    dsn = DeathNature.Barrel;
                 else
                     Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
 
-                bytes = Encoding.UTF8.GetBytes(damageSource);
+                bytes = Encoding.UTF8.GetBytes(damageSourceCleanName);
             }
             Debug.LogError($"EMPTY DEATH NATURE");
 
@@ -973,10 +975,12 @@ public class Player : Biped
 
 
         if (deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.RPG) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
+        else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.RPG || deathNature == DeathNature.Barrel) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
         else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2000); }
         else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
+
+
 
     void HitPointsRecharge()
     {
@@ -986,16 +990,22 @@ public class Player : Biped
             healingCountdown -= Time.deltaTime;
         }
 
-        if (healingCountdown <= 0 && hitPoints < maxHitPoints && !needsHealthPack)
+        if (healingCountdown <= 0 && hitPoints < maxHitPoints)
         {
-            if (!_isHealing)
+            if (!_isHealing && hasArmor)
                 OnPlayerShieldRechargeStarted?.Invoke(this);
 
             _isHealing = true;
             if (hitPoints < maxHealthPoints)
-                hitPoints += (Time.deltaTime * _healthHealingIncrement);
+            {
+                if (needsHealthPack) hitPoints += (Time.deltaTime * 0.5f);
+                else hitPoints += (Time.deltaTime * _healthHealingIncrement);
+            }
             else
-                hitPoints += (Time.deltaTime * _shieldHealingIncrement);
+            {
+                if (hasArmor)
+                    hitPoints += (Time.deltaTime * _shieldHealingIncrement);
+            }
 
             if (hitPoints == maxHitPoints)
                 _isHealing = false;
@@ -1016,7 +1026,7 @@ public class Player : Biped
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         _lastPID = -1;
         deathNature = DeathNature.None;
-        _damageSource = null;
+        _damageSourceCleanName = null;
         OnPlayerRespawnEarly?.Invoke(this);
 
         isRespawning = false;
@@ -1157,9 +1167,9 @@ public class Player : Biped
                     string f = $"{lastPlayerSource.username} killed {username}";
 
 
-                    if (_damageSource != null && _damageSource != "")
+                    if (_damageSourceCleanName != null && _damageSourceCleanName != "")
                     {
-                        f = $"{lastPlayerSource.username} [ {_damageSource} ] {username}";
+                        f = $"{lastPlayerSource.username} [ {_damageSourceCleanName} ] {username}";
                     }
 
                     if (GameManager.instance.gameType == GameManager.GameType.GunGame
@@ -1257,8 +1267,8 @@ public class Player : Biped
             if (isMine)
             {
                 Debug.Log("AddPlayerKill_RPC");
-                Debug.Log(_damageSource);
-                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSource);
+                Debug.Log(_damageSourceCleanName);
+                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSourceCleanName);
             }
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
@@ -1268,6 +1278,11 @@ public class Player : Biped
                 PlayerMedals sourcePlayerMedals = lastPlayerSource._playerMedals;
                 if (sourcePlayerMedals != this._playerMedals)
                 {
+                    if (deathByGroin)
+                    {
+                        if (_lastPID != this.photonId)
+                            sourcePlayerMedals.SpawnNutshotMedal();
+                    }
                     if (deathNature == DeathNature.Sniped)
                     {
                         if (_lastPID != this.photonId)
@@ -1277,11 +1292,6 @@ public class Player : Biped
                     {
                         if (_lastPID != this.photonId)
                             sourcePlayerMedals.SpawnHeadshotMedal();
-                    }
-                    else if (deathByGroin)
-                    {
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.SpawnNutshotMedal();
                     }
                     else if (deathNature == DeathNature.Melee)
                     {
@@ -1363,10 +1373,10 @@ public class Player : Biped
         try { GetComponent<PlayerController>().ScopeOut(); } catch { }
 
         _isHealing = false;
+        healingCountdown = _defaultHealingCountdown;
         if (!needsHealthPack)
         {
             Debug.Log($"OnPlayerDamaged_Delegate {_defaultHealingCountdown}");
-            healingCountdown = _defaultHealingCountdown;
             shieldRechargeCountdown = _defaultHealingCountdown;
             if (hitPoints <= maxHealthPoints)
                 shieldRechargeCountdown = _defaultHealingCountdown + ((maxHealthPoints - hitPoints) / _healthHealingIncrement);
@@ -1387,7 +1397,7 @@ public class Player : Biped
     void UpdatePlayerId_RPC(int nn)
     {
         _playerId = nn;
-        username = CurrentRoomManager.instance.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
+        username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
     }
 
     [PunRPC]
@@ -1458,7 +1468,7 @@ public class Player : Biped
         Debug.Log($"Damage_RPC: {sourcePid}");
 
         try { this.impactDir = impDir; } catch { }
-        try { _damageSource = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
+        try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}"); }
         try
         {
@@ -1498,6 +1508,26 @@ public class Player : Biped
         }
         catch { }
 
+
+        AchievementCheck(sourcePid);
+    }
+
+
+    void AchievementCheck(int sourcePid)
+    {
+        if (sourcePid == GameManager.GetRootPlayer().photonId)
+            if (_damageSourceCleanName.Contains("Plasma"))
+            {
+                AchievementManager.instance.plasmaKillsInThisGame++;
+            }
+            else if (deathNature == DeathNature.Barrel)
+            {
+                AchievementManager.instance.gotAKillByBlowingUpABarrel = true;
+            }
+            else if (deathNature == DeathNature.Groin)
+            {
+                AchievementManager.instance.gotANutshotKill = true;
+            }
     }
 
     void SpawnDeathKillFeed()

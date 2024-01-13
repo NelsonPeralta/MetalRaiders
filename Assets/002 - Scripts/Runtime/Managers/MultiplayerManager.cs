@@ -55,9 +55,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameType == GameManager.GameType.Hill)
             {
 
-                foreach(Player p in GameManager.instance.pid_player_Dict.Values)
+                foreach (Player p in GameManager.instance.pid_player_Dict.Values)
                 {
-                    if(p.GetComponent<PlayerMultiplayerMatchStats>().score > hs)
+                    if (p.GetComponent<PlayerMultiplayerMatchStats>().score > hs)
                         hs = p.GetComponent<PlayerMultiplayerMatchStats>().score;
                 }
             }
@@ -82,11 +82,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public int redTeamScore { get { return _redTeamScore; } private set { _redTeamScore = value; } }
     public int blueTeamScore { get { return _blueTeamScore; } private set { _blueTeamScore = value; } }
     public List<Player> winningPlayers { get { return _winningPlayers; } }
+    public List<int> winningPlayersId { get { return _winninPlayersId; } }
 
     [SerializeField] int _redTeamScore;
     [SerializeField] int _blueTeamScore;
 
     [SerializeField] List<Player> _winningPlayers = new List<Player>();
+    [SerializeField] List<int> _winninPlayersId = new List<int>();
 
     int _initialRoomPlayercount;
 
@@ -199,11 +201,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public void EndGame(bool saveXp = true)
     {
         CurrentRoomManager.instance.gameOver = true;
-        string winningEntity = "";
         foreach (Player pp in FindObjectsOfType<Player>())
         {
-            if (pp.GetComponent<PlayerMultiplayerMatchStats>().kills >= scoreToWin && GameManager.instance.gameType == GameManager.GameType.Slayer)
-                winningEntity = pp.PV.Owner.NickName;
 
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
             // return will stop this method, break will stop the loop, continue will stop the current iteration
@@ -218,15 +217,35 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         if (pms.score >= scoreToWin)
                         {
                             pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {pms.GetComponent<Player>().username} wins!");
-                            winningPlayers.Add(pms.GetComponent<Player>());
+                            this.winningPlayers.Add(pms.GetComponent<Player>());
+                            this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
                         }
                 }
                 else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 {
                     if (redTeamScore >= scoreToWin)
+                    {
+
                         pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! Red Team wins!");
+
+
+                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                            if (pms.GetComponent<Player>().team == GameManager.Team.Red)
+                            {
+                                this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+                            }
+                    }
                     else if (blueTeamScore >= scoreToWin)
+                    {
+
                         pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! Blue Team wins!");
+
+                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                            if (pms.GetComponent<Player>().team == GameManager.Team.Blue)
+                            {
+                                this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+                            }
+                    }
                 }
             }
             else
@@ -239,7 +258,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 if (pp.controllerId == 0)
                 {
                     pp.allPlayerScripts.announcer.PlayGameOverClip();
-                    WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), winningPlayers);
+                    WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
 
                     pp.LeaveRoomWithDelay();
                 }
@@ -248,7 +267,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
                 PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
                 PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(pda.playerBasicOnlineStats.honor)[0];
-                GameManager.instance.carnageReport = new CarnageReport(rank,pda.level, pda.xp, 0, pda.honor, 0, false, 0);
+                GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, 0, pda.honor, 0, false, 0);
 
                 GameManager.instance.LeaveRoom();
             }

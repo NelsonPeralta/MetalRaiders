@@ -285,9 +285,8 @@ public class Bullet : MonoBehaviourPunCallbacks
                     return;
                 }
 
-                if (GameManager.instance.teamMode.ToString().Contains("Classic"))
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 {
-
                     if (finalHitObject.GetComponent<PlayerHitbox>())
                     {
                         Debug.Log(sourcePlayer.team.ToString());

@@ -207,7 +207,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                             if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
                                 t = Team.Blue;
 
-                            CurrentRoomManager.instance.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
+                            CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
 
                             _teamDict.Add(kvp.Value.NickName, (int)t);
 

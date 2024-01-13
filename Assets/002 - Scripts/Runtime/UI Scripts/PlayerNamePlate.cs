@@ -112,7 +112,7 @@ public class PlayerNamePlate : MonoBehaviour
 
             try
             {
-                ScriptObjPlayerData spd = CurrentRoomManager.instance.GetPlayerDataWithId(_playerData.playerExtendedPublicData.player_id);
+                ScriptObjPlayerData spd = CurrentRoomManager.GetPlayerDataWithId(_playerData.playerExtendedPublicData.player_id);
                 Debug.Log(spd);
                 //ColorUtility.TryParseHtmlString(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()], out _tCol);
                 ColorUtility.TryParseHtmlString(GameManager.colorDict[spd.team.ToString().ToLower()], out _tCol);

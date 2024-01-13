@@ -217,12 +217,4 @@ public class ArmorPieceListing : MonoBehaviour
 
         model.SetActive(false);
     }
-
-
-
-
-    public void UnlockArmorPiece(string _codename)
-    {
-        StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(_codename));
-    }
 }

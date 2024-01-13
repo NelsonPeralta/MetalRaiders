@@ -88,12 +88,12 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     #region
     void OnExplode_Delegate(ExplosiveBarrel explosiveBarrel)
     {
+        Debug.Log("OnExplode_Delegate");
         GameObject e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
-        try
         {
+            e.GetComponent<Explosion>().damageSource = "Barrel";
             e.GetComponent<Explosion>().player = GameManager.GetPlayerWithPhotonViewId(_lastPID);
         }
-        catch { }
         gameObject.SetActive(false);
     }
     #endregion

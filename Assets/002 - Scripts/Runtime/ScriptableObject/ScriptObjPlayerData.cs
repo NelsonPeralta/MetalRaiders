@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ScriptObjPlayerData", menuName = "ScriptableObjects/PlayerData", order = 1)]
@@ -8,9 +10,11 @@ public class ScriptObjPlayerData : ScriptableObject
     [SerializeField] bool _occupied;
     [SerializeField] GameManager.Team _team;
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
+    [SerializeField] string _cardsFound;
+    [SerializeField] int _armorPiecesPurchased;
 
 
-
+    bool _achUnl = false;
 
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData playerExtendedPublicData
     {
@@ -23,48 +27,79 @@ public class ScriptObjPlayerData : ScriptableObject
             {
                 _playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
             }
+            else
+            {
+                StringBuilder sb = new StringBuilder($"-{value.unlocked_armor_data_string}-");
+
+                sb.Replace("helmet1", "");
+                sb.Replace("--", "-");
+                sb.Replace("--", "-");
+                sb.Replace("--", "-");
+                sb.Replace("--", "-");
+
+                UpdateArmorPiecesPurchasedCount(sb.ToString().Split(char.Parse("-")).Count() - 2);
+            }
         }
     }
 
     public bool occupied { get { return _occupied; } set { _occupied = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
 
-    public void Reset()
+    public void InitialReset()
     {
         _occupied = false;
         _team = GameManager.Team.None;
         _playerExtendedPublicData = null;
+        _cardsFound = "";
+        _armorPiecesPurchased = 0;
+
+        if (this == CurrentRoomManager.instance.extendedPlayerData[0])
+            LoadPrefs();
     }
 
+    public void AddFoundCard(string _n)
+    {
+        if (!_cardsFound.Contains(_n))
+        {
+            _cardsFound += $"{_n}-";
+            if ((_cardsFound.ToString().Split(char.Parse("-")).Count() - 1) == 1)
+            {
+                Steamworks.SteamUserStats.GetAchievement("COLLECTOR", out _achUnl);
+                if (!_achUnl)
+                {
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("cards_lsa"));
+                    Debug.Log($"Unlocked Achivement COLLECTOR");
+                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                }
+            }
 
+            SavePrefs();
+        }
+    }
 
+    public void UpdateArmorPiecesPurchasedCount(int n)
+    {
+        _armorPiecesPurchased = n;
 
-    //ran = Random.Range(1, 2147483646);
-    //        sod.playerExtendedPublicData.username = ran.ToString();
-    //public ScriptObjPlayerData(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = null)
-    //{
-    //    if(pepd == null)
-    //    {
+        _achUnl = false;
+        Steamworks.SteamUserStats.GetAchievement("WAYT", out _achUnl);
+        if (_armorPiecesPurchased > 0 && !_achUnl)
+        {
+            Debug.Log($"Unlocked Achivement WAYT");
+            //AchievementManager.UnlockAchievement(_tempAchievementName);
+        }
+    }
 
-    //        _playerExtendedPublicData = null;
+    public void SavePrefs()
+    {
+        PlayerPrefs.SetString("cardsUnlocked", _cardsFound);
+        PlayerPrefs.Save();
+    }
 
-    //        _username = _armor_data_string = _unlocked_armor_data_string = _armor_color_palette = "";
-    //        _level = _xp = _rank = _honor = _credits = 0;
+    public void LoadPrefs()
+    {
+        if (this != CurrentRoomManager.instance.extendedPlayerData[0]) return;
 
-    //        return;
-    //    }
-    //    _playerExtendedPublicData = pepd;
-
-    //    _username = _playerExtendedPublicData.username;
-
-    //    _level = _playerExtendedPublicData.level;
-    //    _xp = _playerExtendedPublicData.xp;
-    //    _rank = _playerExtendedPublicData.rank;
-    //    _honor = _playerExtendedPublicData.honor;
-    //    _credits = _playerExtendedPublicData.credits;
-
-    //    _armor_data_string = _playerExtendedPublicData.armor_data_string;
-    //    _unlocked_armor_data_string = _playerExtendedPublicData.unlocked_armor_data_string;
-    //    _armor_color_palette = _playerExtendedPublicData.armor_color_palette;
-    //}
+        _cardsFound = PlayerPrefs.GetString("cardsUnlocked", "");
+    }
 }

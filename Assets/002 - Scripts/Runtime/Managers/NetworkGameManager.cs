@@ -137,7 +137,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             foreach (KeyValuePair<int, int> kvp in d)
             {
                 Debug.Log($"Player {kvp.Key} wants to change team: {(GameManager.Team)kvp.Value}");
-                CurrentRoomManager.instance.GetPlayerDataWithId(kvp.Key).team = (GameManager.Team)kvp.Value;
+                CurrentRoomManager.GetPlayerDataWithId(kvp.Key).team = (GameManager.Team)kvp.Value;
             }
             foreach (Transform child in Launcher.instance.namePlatesParent) child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
         }

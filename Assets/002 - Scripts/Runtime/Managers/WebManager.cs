@@ -74,7 +74,7 @@ public partial class WebManager : MonoBehaviour
         UpdatePlayerCommonPVEData();
     }
 
-    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<Player> winPlayers)
+    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<int> winPlayers)
     {
         StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
         StartCoroutine(SaveXp_Coroutine(playerMultiplayerStats: playerMultiplayerStats, winPlayers: winPlayers));
