@@ -449,7 +449,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     void CalculateNumberOfAIsForNextWave()
     {
 
-        //if (currentWave % 5 != 0)
+        if (currentWave % 5 != 0)
         {
             //int nbPlayers = FindObjectsOfType<Player>().Length;
             //if (nbPlayers <= 0)
@@ -478,12 +478,18 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //if (hellhoundsLeft > hellhoundPool.Length)
             //    hellhoundsLeft = hellhoundPool.Length;
         }
-        //else
-        //{
-        //    tyrantsLeft = 1;
-        //    if (tyrantsLeft > tyrantPool.Count)
-        //        tyrantsLeft = 1;
-        //}
+        else
+        {
+            //tyrantsLeft = 1;
+            //if (tyrantsLeft > tyrantPool.Count)
+            //    tyrantsLeft = 1;
+
+
+            ribbiansLeft = 2 + (int)(currentWave * 1.1f);
+            ribbiansLeft *= 2;
+            if (ribbiansLeft > ribbiansPool.Count)
+                ribbiansLeft = ribbiansPool.Count;
+        }
 
 
         if (editMode)

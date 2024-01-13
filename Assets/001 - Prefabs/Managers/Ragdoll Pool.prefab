@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1349086170595491923
 MonoBehaviour:
@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa15a50381be00c4d981e1c3d4f1f94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ragdollPrefab: {fileID: 8660350978819016066, guid: 9e288eb19b5bf9e46a1cf92e78bd0b3f,
+  ragdollPrefab: {fileID: 1597401442249639679, guid: 7b616171185c9a94daacc1c69bd16e19,
     type: 3}
   ragdolls: []

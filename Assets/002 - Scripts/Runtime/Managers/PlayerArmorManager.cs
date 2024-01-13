@@ -69,7 +69,7 @@ public class PlayerArmorManager : MonoBehaviour
 
         if (GetComponent<PlayerRagdoll>()) return;
 
-        try { HardReloadArmor(); } catch { }
+        HardReloadArmor();
 
         {
             ReloadArmorTries = 0;
@@ -102,19 +102,14 @@ public class PlayerArmorManager : MonoBehaviour
     void ToggleMarinePieces(bool t)
     {
 
-        try
-        {
-            foreach (MarineArmorPiece map in marineArmorPieces)
-                map.gameObject.SetActive(t);
-        }
-        catch { }
+        foreach (MarineArmorPiece map in marineArmorPieces)
+            map.gameObject.SetActive(t);
     }
 
     public void HardReloadArmor(bool forceEnable = false)
     {
         Debug.Log("HardReloadArmor");
 
-        try
         {
             if (player)
             {
@@ -149,7 +144,6 @@ public class PlayerArmorManager : MonoBehaviour
                 colorPalette = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette;
             }
         }
-        catch { }
 
         DisableAllArmor();
         EnableAllArmorsInDataString(forceEnable);
@@ -166,20 +160,16 @@ public class PlayerArmorManager : MonoBehaviour
     public void DisableAllArmor()
     {
         Debug.Log("DisableAllArmor");
-        try
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
                 piece.gameObject.SetActive(false);
         }
-        catch { }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            try
-            {
-                foreach (MarineArmorPiece map in marineArmorPieces)
-                    map.gameObject.SetActive(true);
-            }
-            catch { }
+        {
+            foreach (MarineArmorPiece map in marineArmorPieces)
+                map.gameObject.SetActive(true);
+        }
     }
 
     void EnableAllArmorsInDataString(bool force = false)
@@ -187,12 +177,10 @@ public class PlayerArmorManager : MonoBehaviour
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !force && (SceneManager.GetActiveScene().buildIndex > 0)) return;
 
         Debug.Log("EnableAllArmorsInDataString");
-        try
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
                 piece.gameObject.SetActive(armorDataString.Contains(piece.entity));
         }
-        catch { }
     }
 
     void UpdateColorPalette()
@@ -220,11 +208,13 @@ public class PlayerArmorManager : MonoBehaviour
             foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
             {
                 if (playerArmorPiece.canChangeColorPalette)
+                {
                     try
                     {
                         playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
                     }
-                    catch (Exception e) { Debug.Log(e); }
+                    catch { Debug.LogWarning("Armor piece may not have a renderer"); }
+                }
             }
     }
 

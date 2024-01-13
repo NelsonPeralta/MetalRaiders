@@ -46,6 +46,7 @@ public class ArmoryManager : MonoBehaviour
         {
             if (!playerArmorPiece.hideFromArmory)
             {
+                if (playerArmorPiece.cost < 0 && !pda.unlockedArmorDataString.Contains(playerArmorPiece.entity)) continue;
 
                 GameObject pal = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
                 armorPieceListingList.Add(pal.GetComponent<ArmorPieceListing>());
