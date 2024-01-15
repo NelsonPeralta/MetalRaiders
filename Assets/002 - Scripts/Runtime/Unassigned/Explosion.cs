@@ -43,8 +43,10 @@ public class Explosion : MonoBehaviour
             if (hitDistance > radius)
                 continue;
 
+            Debug.Log($"EXPLOSION {col.name}");
 
             // Check if the is an obstruction between explosion and the hit
+            if (!col.name.Contains("llectible"))
             {
                 Transform or = transform;
 

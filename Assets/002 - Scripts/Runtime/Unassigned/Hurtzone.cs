@@ -73,7 +73,7 @@ public class Hurtzone : MonoBehaviour
                 playersInRange[i].player.BasicDamage(damage);
             }
 
-            damageCountdown = 0.33f;
+            damageCountdown = 0.22f;
         }
     }
 
