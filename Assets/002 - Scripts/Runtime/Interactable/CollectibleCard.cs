@@ -33,6 +33,8 @@ public class CollectibleCard : MonoBehaviour
 
             if (p == GameManager.GetRootPlayer())
             {
+                //if (Vector3.Distance(p.transform.position, gameObject.transform.position) > 0.25f) return;
+
                 CurrentRoomManager.instance.extendedPlayerData[0].AddFoundCard(_name);
 
                 _foundFx.SetActive(true);

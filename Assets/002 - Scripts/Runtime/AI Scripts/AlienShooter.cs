@@ -180,7 +180,7 @@ public class AlienShooter : Actor
             foreach (ActorHitbox c in actorHitboxes)
                 Physics.IgnoreCollision(potionBomb.GetComponent<Collider>(), c.GetComponent<Collider>());
 
-            potionBomb.GetComponent<Rigidbody>().AddForce(losSpawn.transform.forward * 600);
+            potionBomb.GetComponent<Rigidbody>().AddForce(losSpawn.transform.forward * 700);
 
             //potionBomb.GetComponent<AIGrenade>().radius = 6;
             //potionBomb.GetComponent<AIGrenade>().damage = 25;

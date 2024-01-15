@@ -9844,7 +9844,7 @@ MonoBehaviour:
   _damageSource: Barrel Explosion
   damage: 200
   radius: 6
-  explosionPower: 900
+  explosionPower: 1500
   _obsLayerMask:
     serializedVersion: 2
     m_Bits: 0

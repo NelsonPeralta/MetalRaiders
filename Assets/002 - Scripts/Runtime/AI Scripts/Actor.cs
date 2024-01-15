@@ -28,6 +28,19 @@ abstract public class Actor : Biped
 
             _hitPoints = nv;
 
+
+
+
+            if (_hitPoints <= 0 && nv != pv)
+            {
+                Debug.Log($"ACTORD DIE CALLING");
+                //target = null; \\DO NOT REMOVE TARGET HERE
+                DropRandomWeapon();
+                ActorDie();
+                return;
+            }
+
+
             if (nv < pv)
             {
                 if (_flinchCooldown <= 0 && nv > 0)
@@ -53,13 +66,7 @@ abstract public class Actor : Biped
                 catch { }
 
 
-            if (_hitPoints <= 0 && nv != pv)
-            {
-                Debug.Log($"ACTORD DIE CALLING");
-                //target = null; \\DO NOT REMOVE TARGET HERE
-                DropRandomWeapon();
-                ActorDie();
-            }
+
 
         }
     }
@@ -668,23 +675,21 @@ abstract public class Actor : Biped
     {
         if (callRPC && PhotonNetwork.IsMasterClient)
         {
-            Debug.Log($"ACTORD FLINCH CALL");
-            GetComponent<PhotonView>().RPC("Flinch", RpcTarget.All, false);
+            if (!isBoosting)
+            {
+                Debug.Log($"ACTORD FLINCH CALL");
+                GetComponent<PhotonView>().RPC("Flinch", RpcTarget.All, false);
+            }
         }
         else if (!callRPC)
         {
-            if (hitPoints > 0) return;
             Debug.Log($"ACTORD FLINCH CALL PROCESSING");
-            try
-            {
-                _audioSource.clip = _hurtClip;
-                _audioSource.Play();
+            _audioSource.clip = _hurtClip;
+            _audioSource.Play();
 
-                nma.enabled = false;
-                _animator.Play("Flinch");
-                _flinchCooldown = _defaultFlinchCooldown;
-            }
-            catch { }
+            nma.enabled = false;
+            _animator.Play("Flinch");
+            _flinchCooldown = _defaultFlinchCooldown;
         }
     }
 

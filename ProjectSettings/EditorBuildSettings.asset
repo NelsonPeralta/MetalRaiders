@@ -50,4 +50,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Eerie.unity
     guid: 3f15ce470c12a5a4fba04de30307022f
+  - enabled: 1
+    path: Assets/004 - Scenes/Swarm Scenes/Coop - Uplink.unity
+    guid: 30ff6f0f4a2e7f64f9552ba00a23ad8c
+  - enabled: 1
+    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Scrapyard.unity
+    guid: 50389559b3c6d0948a82e9ffa400d1f0
+  - enabled: 1
+    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Comos.unity
+    guid: 6fc71e3caf712d64ea874f3d5e6c89e8
+  - enabled: 1
+    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Opus.unity
+    guid: 9bb0c8ccf6bbbd24cb47ff136672b917
   m_configObjects: {}
