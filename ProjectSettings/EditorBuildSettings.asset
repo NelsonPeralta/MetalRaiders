@@ -45,13 +45,13 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Drowned.unity
     guid: 02297af730643fe4f9b4bf60fda3ea46
   - enabled: 1
-    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Haunted.unity
+    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Saloon.unity
     guid: a7388a39adc1e844db4caad949ea62d4
   - enabled: 1
-    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Eerie.unity
+    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Capital.unity
     guid: 3f15ce470c12a5a4fba04de30307022f
   - enabled: 1
-    path: Assets/004 - Scenes/Swarm Scenes/Coop - Uplink.unity
+    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Uplink.unity
     guid: 30ff6f0f4a2e7f64f9552ba00a23ad8c
   - enabled: 1
     path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Scrapyard.unity

@@ -6,7 +6,7 @@ using Photon.Pun;
 public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
 {
     [SerializeField] int _points;
-    [SerializeField] int totalPoints;
+    [SerializeField] int _totalPoints;
 
     public delegate void PlayerSwarmEvent(PlayerSwarmMatchStats onlinePlayerSwarmScript);
     public PlayerSwarmEvent OnPointsChanged, OnKillsChanged, OnDeathsChanged, OnHeadshotsChanged;
@@ -25,6 +25,30 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
                 OnPointsChanged?.Invoke(this);
         }
     }
+
+    public int totalPoints
+    {
+        get { return _totalPoints; }
+        private set
+        {
+            _totalPoints = value;
+
+            if (_totalPoints >= 1000000)
+            {
+                bool _achUn = false;
+
+                Steamworks.SteamUserStats.GetAchievement("INAB", out _achUn);
+                if (!_achUn)
+                {
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("trophy_lta"));
+                    Debug.Log($"Unlocked Achivement IM NOT A BROKIE");
+                    AchievementManager.UnlockAchievement("INAB");
+                }
+            }
+        }
+    }
+
+
     public int kills
     {
         get { return _kills; }
@@ -91,7 +115,7 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
     void AddPoints_RPC(int _points)
     {
         points += _points;
-        totalPoints += _points;
+        _totalPoints += _points;
     }
 
     public void RemovePoints(int _points)
@@ -112,11 +136,12 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
 
     public int GetTotalPoints()
     {
-        return totalPoints;
+        return _totalPoints;
     }
 
     void OnPointsChanged_Delegate(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
+
         GetComponent<PlayerUI>().swarmPointsText.text = points.ToString();
     }
 
@@ -130,6 +155,6 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
     void ResetPoints_RPC()
     {
         points = 0;
-        totalPoints = 0;
+        _totalPoints = 0;
     }
 }
