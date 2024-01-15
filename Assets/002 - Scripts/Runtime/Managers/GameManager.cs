@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
-                FindObjectOfType<Launcher>().levelToLoadIndex = 13;
+                FindObjectOfType<Launcher>().levelToLoadIndex = 11;
 
                 gameType = GameType.Survival;
                 difficulty = SwarmManager.Difficulty.Normal;

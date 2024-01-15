@@ -14,6 +14,9 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
     [SerializeField] int _deaths;
     [SerializeField] int _headshots;
 
+    [SerializeField] Player _player;
+
+
     public int points
     {
         get { return _points; }
@@ -37,12 +40,12 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
             {
                 bool _achUn = false;
 
-                Steamworks.SteamUserStats.GetAchievement("INAB", out _achUn);
-                if (!_achUn)
+                Steamworks.SteamUserStats.GetAchievement("OMA", out _achUn);
+                if (!_achUn && !player.hasArmor)
                 {
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("trophy_lta"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-trophy_lsa-trophy_rsa-"));
                     Debug.Log($"Unlocked Achivement IM NOT A BROKIE");
-                    AchievementManager.UnlockAchievement("INAB");
+                    AchievementManager.UnlockAchievement("OMA");
                 }
             }
         }
@@ -95,6 +98,13 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
                 OnHeadshotsChanged?.Invoke(this);
             }
         }
+    }
+
+    public Player player { get { return _player; } }
+
+    private void Awake()
+    {
+        _player = gameObject.GetComponent<Player>();
     }
 
     private void Start()

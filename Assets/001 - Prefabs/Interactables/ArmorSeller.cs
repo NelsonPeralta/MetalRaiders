@@ -124,5 +124,14 @@ public class ArmorSeller : InteractableObject
         playersInRange.Remove(p);
         p.GetComponent<PlayerUI>().weaponInformerText.text = $"";
         p.GetComponent<PlayerSwarmMatchStats>().RemovePoints(cost);
+
+
+
+        bool achUnl;
+        Steamworks.SteamUserStats.GetAchievement("UPGRADE", out achUnl);
+        if (achUnl == false)
+        {
+            Steamworks.SteamUserStats.SetAchievement("UPGRADE");
+        }
     }
 }

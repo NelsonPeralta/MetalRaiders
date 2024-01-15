@@ -668,7 +668,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (instance._extendedPlayerData[0].playerExtendedPublicData.level == 50)
             {
-                _achievementUnlocked = false; _tempAchievementName = "MAXOUT";
+                _achievementUnlocked = false; _tempAchievementName = "MAXEDOUT";
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {

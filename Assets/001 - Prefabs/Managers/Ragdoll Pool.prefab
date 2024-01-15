@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa15a50381be00c4d981e1c3d4f1f94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ragdollPrefab: {fileID: 1597401442249639679, guid: 7b616171185c9a94daacc1c69bd16e19,
+  ragdollPrefab: {fileID: 4865133570714905792, guid: c14020c63205f4148beac576ff9d5f9f,
     type: 3}
   ragdolls: []

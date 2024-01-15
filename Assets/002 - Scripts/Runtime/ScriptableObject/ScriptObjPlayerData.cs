@@ -62,12 +62,12 @@ public class ScriptObjPlayerData : ScriptableObject
         if (!_cardsFound.Contains(_n))
         {
             _cardsFound += $"{_n}-";
-            if ((_cardsFound.ToString().Split(char.Parse("-")).Count() - 1) == 1)
+            if ((_cardsFound.ToString().Split(char.Parse("-")).Count() - 1) == 7)
             {
                 Steamworks.SteamUserStats.GetAchievement("COLLECTOR", out _achUnl);
                 if (!_achUnl)
                 {
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("cards_lsa"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-cards_lsa-cards_rsa-"));
                     Debug.Log($"Unlocked Achivement COLLECTOR");
                     //AchievementManager.UnlockAchievement(_tempAchievementName);
                 }

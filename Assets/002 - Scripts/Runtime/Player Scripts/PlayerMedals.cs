@@ -185,14 +185,6 @@ public class PlayerMedals : MonoBehaviour
 
 
         bool _achUnlocked = false;
-
-        Steamworks.SteamUserStats.GetAchievement("KS", out _achUnlocked);
-
-        if (!_achUnlocked)
-        {
-            Debug.Log("UNLOCKED ACHIVEMENT KS");
-            //UnlockAchievement("STICKY_FINGERS");
-        }
     }
 
 
