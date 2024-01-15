@@ -69,7 +69,7 @@ public class ScriptObjPlayerData : ScriptableObject
                 {
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-cards_lsa-cards_rsa-"));
                     Debug.Log($"Unlocked Achivement COLLECTOR");
-                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                    AchievementManager.UnlockAchievement("COLLECTOR");
                 }
             }
 
@@ -86,7 +86,7 @@ public class ScriptObjPlayerData : ScriptableObject
         if (_armorPiecesPurchased > 0 && !_achUnl)
         {
             Debug.Log($"Unlocked Achivement WAYT");
-            //AchievementManager.UnlockAchievement(_tempAchievementName);
+            AchievementManager.UnlockAchievement("WAYT");
         }
     }
 
