@@ -33,6 +33,7 @@ public class ArmoryManager : MonoBehaviour
     private void OnEnable()
     {
         Debug.Log("OnEnable ArmoryManager");
+        playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
         playerModel.SetActive(true);
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 

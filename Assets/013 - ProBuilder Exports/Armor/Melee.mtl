@@ -1,0 +1,5 @@
+newmtl Armor_Material
+map_Kd Armor Texture - Green.png
+Kd 1 1 1
+d 1
+
