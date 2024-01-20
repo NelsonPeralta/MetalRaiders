@@ -83,7 +83,6 @@ public class PlayerArmorManager : MonoBehaviour
     private void Awake()
     {
         marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
-        playerArmorPieces.Clear();
         CreateArmorPiecesList();
 
     }
@@ -95,6 +94,8 @@ public class PlayerArmorManager : MonoBehaviour
 
     void CreateArmorPiecesList()
     {
+        Debug.Log("CreateArmorPiecesList");
+        playerArmorPieces.Clear();
         playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
         playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
     }
@@ -109,6 +110,7 @@ public class PlayerArmorManager : MonoBehaviour
     public void HardReloadArmor(bool forceEnable = false)
     {
         Debug.Log("HardReloadArmor");
+        CreateArmorPiecesList();
 
         {
             if (player)
@@ -162,7 +164,11 @@ public class PlayerArmorManager : MonoBehaviour
         Debug.Log("DisableAllArmor");
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
-                piece.gameObject.SetActive(false);
+                try
+                {
+                    piece.gameObject.SetActive(false);
+                }
+                catch { Debug.LogError($"NULL ARMOR PIECE {piece.name}"); }
         }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
@@ -176,7 +182,7 @@ public class PlayerArmorManager : MonoBehaviour
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !force && (SceneManager.GetActiveScene().buildIndex > 0)) return;
 
-        Debug.Log("EnableAllArmorsInDataString");
+        Debug.Log($"EnableAllArmorsInDataString: {armorDataString}");
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
                 piece.gameObject.SetActive(armorDataString.Contains(piece.entity));

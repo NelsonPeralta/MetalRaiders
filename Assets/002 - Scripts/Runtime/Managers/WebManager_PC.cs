@@ -41,6 +41,7 @@ public partial class WebManager
 
                 try
                 {
+                    Steamworks.SteamUserStats.ResetAllStats(true);
                     PlayerDatabaseAdaptor.PlayerLoginData pld = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
                     pda.playerLoginData = pld;
                     //PhotonNetwork.NickName = $"{pda.id}-{pda.username}";
@@ -723,7 +724,7 @@ public partial class WebManager
         }
     }
 
-    [Tooltip ("FOR ACHIEVEMENTS ONLY")]
+    [Tooltip("FOR ACHIEVEMENTS ONLY")]
     public static IEnumerator UnlockArmorPiece_Coroutine(string _armorPieceCodename)
     {
         Debug.Log("UnlockArmorPiece_Coroutine");

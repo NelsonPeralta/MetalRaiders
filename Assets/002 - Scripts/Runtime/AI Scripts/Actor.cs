@@ -1,6 +1,5 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
-using Rewired.Editor.Libraries.Ionic.Zlib;
 using System;
 using System.Collections;
 using System.Collections.Generic;

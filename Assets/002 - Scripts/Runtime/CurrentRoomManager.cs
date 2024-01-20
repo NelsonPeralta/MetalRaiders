@@ -439,7 +439,7 @@ public class CurrentRoomManager : MonoBehaviour
                     if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
                     {
                         Debug.Log("START GAME!!!!");
-                        //Launcher.instance.StartGame();
+                        Launcher.instance.StartGame();
                     }
             }
         }
@@ -613,6 +613,16 @@ public class CurrentRoomManager : MonoBehaviour
             Launcher.instance.ChangeLevelToLoadWithIndex(11);// Downpoor
         else if (_ran <= 2)
             Launcher.instance.ChangeLevelToLoadWithIndex(12);// Haunted
+        else if (_ran <= 3)
+            Launcher.instance.ChangeLevelToLoadWithIndex(13);// Haunted
+        else if (_ran <= 4)
+            Launcher.instance.ChangeLevelToLoadWithIndex(14);// Haunted
+        else if (_ran <= 5)
+            Launcher.instance.ChangeLevelToLoadWithIndex(15);// Haunted
+        else if (_ran <= 6)
+            Launcher.instance.ChangeLevelToLoadWithIndex(16);// Haunted
+        else if (_ran <= 7)
+            Launcher.instance.ChangeLevelToLoadWithIndex(17);// Haunted
     }
 
     public void ResetRoomCountdowns()
@@ -648,7 +658,7 @@ public class CurrentRoomManager : MonoBehaviour
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
-                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                    AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
             }
 
@@ -660,8 +670,11 @@ public class CurrentRoomManager : MonoBehaviour
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
-                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                    AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
+
+                if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("burning_helmet"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-burning_helmet-"));
             }
 
 
@@ -673,8 +686,11 @@ public class CurrentRoomManager : MonoBehaviour
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
-                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                    AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
+
+                if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("flaming_helmet"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-flaming_helmet-"));
             }
 
 
@@ -687,7 +703,7 @@ public class CurrentRoomManager : MonoBehaviour
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
-                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                    AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
             }
 
@@ -699,8 +715,11 @@ public class CurrentRoomManager : MonoBehaviour
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
-                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                    AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
+
+                if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("sword1_ca"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-sword1_ca-"));
             }
 
 
@@ -712,8 +731,16 @@ public class CurrentRoomManager : MonoBehaviour
                 if (!_achievementUnlocked)
                 {
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
-                    //AchievementManager.UnlockAchievement(_tempAchievementName);
+                    AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
+
+                if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("katana_ca"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-katana_ca-"));
+
+
+                if (instance._extendedPlayerData[0].playerExtendedPublicData.level == 50)
+                    if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("haunted_hc"))
+                        WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-haunted_hc-"));
             }
 
 

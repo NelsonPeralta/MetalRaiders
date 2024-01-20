@@ -85,9 +85,9 @@ MonoBehaviour:
   codeName: pr
   spriteId: 3
   isDw: 0
-  _ammo: 60
+  _ammo: 30
   _spareAmmo: 0
-  _defaultAmmo: 99
+  _defaultAmmo: 30
   _defaultSpareAmmo: 0
   _tts: 120
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}

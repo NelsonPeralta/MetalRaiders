@@ -33,7 +33,7 @@ public class AchievementManager : MonoBehaviour
                 if (!_achUnlocked)
                 {
                     Debug.Log("UNLOCKED ACHIVEMENT STICKY_FINGERS");
-                    //UnlockAchievement("STICKY_FINGERS");
+                    UnlockAchievement("STICKY_FINGERS");
                 }
             }
         }
@@ -54,7 +54,7 @@ public class AchievementManager : MonoBehaviour
                 if (!_achUnlocked)
                 {
                     Debug.Log("UNLOCKED ACHIVEMENT Martian Hands");
-                    //UnlockAchievement("STICKY_FINGERS");
+                    UnlockAchievement("STICKY_FINGERS");
                 }
             }
         }
@@ -75,7 +75,7 @@ public class AchievementManager : MonoBehaviour
                 if (!_achUnlocked)
                 {
                     Debug.Log("UNLOCKED ACHIVEMENT Hazard");
-                    //UnlockAchievement("STICKY_FINGERS");
+                    UnlockAchievement("STICKY_FINGERS");
                 }
             }
         }
@@ -97,7 +97,7 @@ public class AchievementManager : MonoBehaviour
                 if (!_achUnlocked)
                 {
                     Debug.Log("UNLOCKED ACHIVEMENT RWIH");
-                    //UnlockAchievement("STICKY_FINGERS");
+                    UnlockAchievement("STICKY_FINGERS");
                 }
             }
         }
@@ -140,6 +140,7 @@ public class AchievementManager : MonoBehaviour
     public static void UnlockAchievement(string an)
     {
         Steamworks.SteamUserStats.SetAchievement(an);
+        Steamworks.SteamUserStats.StoreStats();
     }
 
     public static void ResetTempAchivementVariables()

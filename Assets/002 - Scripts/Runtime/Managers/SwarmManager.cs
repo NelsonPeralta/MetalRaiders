@@ -957,7 +957,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (!_achievementUnlocked)
             {
                 Debug.Log("Unlocked Achievement You and What Army");
-                //AchievementManager.UnlockAchievement("YAWA");
+                AchievementManager.UnlockAchievement("YAWA");
             }
 
             if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)

@@ -28,7 +28,7 @@ public class HealthPack : MonoBehaviour
             if (!_achievementUnlocked)
             {
                 Debug.Log($"Unlocked Achivement MEDIC");
-                //AchievementManager.UnlockAchievement(_tempAchievementName);
+                AchievementManager.UnlockAchievement("MEDIC");
             }
         }
     }

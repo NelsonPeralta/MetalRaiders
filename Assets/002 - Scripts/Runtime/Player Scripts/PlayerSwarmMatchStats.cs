@@ -36,17 +36,16 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
         {
             _totalPoints = value;
 
-            if (_totalPoints >= 1000000)
+            if (_totalPoints >= 1000000 && !player.hasArmor)
             {
                 bool _achUn = false;
 
                 Steamworks.SteamUserStats.GetAchievement("OMA", out _achUn);
-                if (!_achUn && !player.hasArmor)
-                {
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-trophy_lsa-trophy_rsa-"));
-                    Debug.Log($"Unlocked Achivement IM NOT A BROKIE");
+                if (!_achUn)
                     AchievementManager.UnlockAchievement("OMA");
-                }
+
+                if (!CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("trophy_lsa-trophy_rsa"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-trophy_lsa-trophy_rsa-"));
             }
         }
     }

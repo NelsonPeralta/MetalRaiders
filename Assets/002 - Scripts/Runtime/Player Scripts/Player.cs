@@ -445,7 +445,7 @@ public class Player : Biped
             _playerArmorManager.HardReloadArmor();
         }
     }
-    string _username;
+    [SerializeField] string _username;
 
     public bool isMine { get { return GetComponent<PhotonView>().IsMine; } }
 
@@ -653,7 +653,7 @@ public class Player : Biped
         {
             OnPlayerIdAssigned?.Invoke(this);
 
-            _username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
+            username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
             foreach (PlayerWorldUIMarker p in allPlayerScripts.worldUis) p.text.text = _username;
 
         }
@@ -771,8 +771,6 @@ public class Player : Biped
         mainCamera.enabled = false;
         gunCamera.enabled = false;
         uiCamera.enabled = false;
-
-        _playerArmorManager.DisableAllArmor();
     }
     private void Update()
     {
