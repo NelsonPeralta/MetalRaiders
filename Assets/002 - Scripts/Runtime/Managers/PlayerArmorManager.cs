@@ -12,201 +12,109 @@ public class PlayerArmorManager : MonoBehaviour
     public List<PlayerArmorPiece> playerArmorPieces = new List<PlayerArmorPiece>();
     public List<MarineArmorPiece> marineArmorPieces = new List<MarineArmorPiece>();
 
-    public string armorDataString
+    public ScriptObjPlayerData playerDataCell
     {
-        get { return _armorDataString; }
+        get { return _playerDataCell; }
         set
         {
-            //if (_armorDataString != value)
+            _playerDataCell = value;
+
+            if (SceneManager.GetActiveScene().buildIndex == 0)
             {
-                Debug.Log($"Changing ArmorDataString from {_armorDataString} to {value}");
-
-                _armorDataString = value;
-
-                if (value == null || value == "")
-                {
-                    ToggleMarinePieces(true);
-                    DisableAllArmor();
-                }
-                else
-                {
-                    SoftReloadArmor();
-                }
-            }
-        }
-    }
-
-    public string colorPalette
-    {
-        get { return _colorPalette; }
-        set
-        {
-
-            //if (_colorPalette != value)
-            if (value != null && value != "")
-            {
-                Debug.Log($"Changing ColorPalette from {_colorPalette} to {value}");
-                _colorPalette = value;
+                EnableAllArmorsInDataString();
                 UpdateColorPalette();
             }
+            else
+            {
+                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                    EnableAllArmorsInDataString();
+                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    ToggleMarinePieces(true);
+
+
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                {
+                    if (player && player.hasArmor)
+                    {
+                        ToggleMarinePieces(false);
+                        EnableAllArmorsInDataString();
+                    }
+                    UpdateColorPalette(CurrentRoomManager.GetPlayerDataWithId(player.playerId).team.ToString().ToLower());
+                }
+                else
+                    UpdateColorPalette();
+            }
         }
     }
+
 
 
     public bool isRagdoll { get { return GetComponent<PlayerRagdoll>(); } }
 
-    [SerializeField] string _armorDataString, _colorPalette;
+    [SerializeField] ScriptObjPlayerData _playerDataCell;
 
     public int ReloadArmorTries { get; set; }
     public bool PreventReloadArmor { get; set; }
 
-    private void OnEnable()
-    {
-
-        if (marineArmorPieces.Count == 0)
-            marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
-        ToggleMarinePieces(false);
-
-        if (GetComponent<PlayerRagdoll>()) return;
-
-        HardReloadArmor();
-
-        {
-            ReloadArmorTries = 0;
-            StartCoroutine(ReloadArmor_Coroutine());
-        }
 
 
-        //player.playerShield.ShowShieldRechargeEffect();
-    }
+
+
+
+
+
+
 
     private void Awake()
     {
-        marineArmorPieces = GetComponentsInChildren<MarineArmorPiece>(true).ToList();
-        CreateArmorPiecesList();
+        Debug.Log("PlayerArmorManager Awake");
+        marineArmorPieces.Clear();
+        marineArmorPieces.AddRange(GetComponentsInChildren<MarineArmorPiece>(true));
 
-    }
 
-    private void Start()
-    {
-        //ReloadArmor();
-    }
-
-    void CreateArmorPiecesList()
-    {
-        Debug.Log("CreateArmorPiecesList");
         playerArmorPieces.Clear();
         playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
         playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
+
+        foreach (MarineArmorPiece map in marineArmorPieces)
+            map.gameObject.SetActive(false);
+
+        foreach (PlayerArmorPiece map in playerArmorPieces)
+            map.gameObject.SetActive(false);
     }
+
+
+
+
+
+
+
 
     void ToggleMarinePieces(bool t)
     {
-
         foreach (MarineArmorPiece map in marineArmorPieces)
             map.gameObject.SetActive(t);
     }
 
-    public void HardReloadArmor(bool forceEnable = false)
+    void EnableAllArmorsInDataString()
     {
-        Debug.Log("HardReloadArmor");
-        CreateArmorPiecesList();
-
-        {
-            if (player)
-            {
-                if (player.isMine)
-                {
-                    if (player.rid == 0)
-                    {
-                        armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
-                        colorPalette = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette;
-                    }
-                }
-                else
-                {
-                    if (CurrentRoomManager.instance.PlayerExtendedDataContainsPlayerName(player.username))
-                    //if (GameManager.instance.roomPlayerData.ContainsKey(player.nickName))
-                    {
-                        //Debug.Log($"PlayerArmorManager NOT MINE");
-                        //Debug.Log($"PlayerArmorManager NOT MINE + {GameManager.instance.roomPlayerData[player.nickName].armorDataString}");
-                        //armorDataString = GameManager.instance.roomPlayerData[player.nickName].armorDataString;
-                        //colorPalette = GameManager.instance.roomPlayerData[player.nickName].playerBasicOnlineStats.armor_color_palette;
-
-
-                        Debug.Log($"PlayerArmorManager NOT MINE + {CurrentRoomManager.instance.GetPLayerExtendedData(player.username)}");
-                        armorDataString = CurrentRoomManager.instance.GetPLayerExtendedData(player.username).armor_data_string;
-                        colorPalette = CurrentRoomManager.instance.GetPLayerExtendedData(player.username).armor_color_palette;
-                    }
-                }
-            }
-            else // You are in the menu
-            {
-                armorDataString = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_data_string;
-                colorPalette = WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette;
-            }
-        }
-
-        DisableAllArmor();
-        EnableAllArmorsInDataString(forceEnable);
-        UpdateColorPalette();
-    }
-
-    void SoftReloadArmor()
-    {
-
-        DisableAllArmor();
-        EnableAllArmorsInDataString();
-    }
-
-    public void DisableAllArmor()
-    {
-        Debug.Log("DisableAllArmor");
+        Debug.Log($"EnableAllArmorsInDataString: {playerDataCell.playerExtendedPublicData.armor_data_string}");
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
-                try
-                {
-                    piece.gameObject.SetActive(false);
-                }
-                catch { Debug.LogError($"NULL ARMOR PIECE {piece.name}"); }
-        }
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        {
-            foreach (MarineArmorPiece map in marineArmorPieces)
-                map.gameObject.SetActive(true);
+                try { piece.gameObject.SetActive(playerDataCell.playerExtendedPublicData.armor_data_string.Contains(piece.entity)); } catch (System.Exception e) { Debug.LogException(e); }
         }
     }
 
-    void EnableAllArmorsInDataString(bool force = false)
-    {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !force && (SceneManager.GetActiveScene().buildIndex > 0)) return;
-
-        Debug.Log($"EnableAllArmorsInDataString: {armorDataString}");
-        {
-            foreach (PlayerArmorPiece piece in playerArmorPieces)
-                piece.gameObject.SetActive(armorDataString.Contains(piece.entity));
-        }
-    }
-
-    void UpdateColorPalette()
+    void UpdateColorPalette(string forcedColor = null)
     {
         Debug.Log("UpdateColorPalette");
-        Debug.Log(colorPalette);
 
-        Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
+        //Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
+        Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains(playerDataCell.playerExtendedPublicData.armor_color_palette)).SingleOrDefault();
 
+        if (forcedColor != null)
+            _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains(forcedColor)).SingleOrDefault();
 
-        if (SceneManager.GetActiveScene().buildIndex > 0)
-        {
-            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-            {
-                Debug.Log($"{player.username}");
-
-                string c = CurrentRoomManager.GetPlayerDataWithId(player.playerId).team.ToString().ToLower();
-                _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{c}")).SingleOrDefault();
-            }
-        }
 
         Debug.Log(_tex.name);
 
@@ -237,23 +145,15 @@ public class PlayerArmorManager : MonoBehaviour
 
     public void ReloadFpsArmor()
     {
-        Debug.Log(player.playerArmorManager.armorDataString);
+        Debug.Log("ReloadFpsArmor");
         foreach (PlayerArmorPiece pap in player.playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
-            pap.gameObject.SetActive(player.playerArmorManager.armorDataString.Contains(pap.entity));
+            pap.gameObject.SetActive(player.playerArmorManager.playerDataCell.playerExtendedPublicData.armor_data_string.Contains(pap.entity));
     }
 
-    IEnumerator ReloadArmor_Coroutine()
+
+
+    public void ReloadArmorData()
     {
-        yield return new WaitForSeconds(1f);
-
-        if (!PreventReloadArmor)
-            if (!isRagdoll)
-            {
-                HardReloadArmor();
-                ReloadArmorTries++;
-
-                if (ReloadArmorTries >= 0 && ReloadArmorTries < 3 /*&& (armorDataString == null || armorDataString == "")*/)
-                    StartCoroutine(ReloadArmor_Coroutine());
-            }
+        playerDataCell = _playerDataCell;
     }
 }

@@ -114,7 +114,7 @@ public class ArmorSeller : InteractableObject
 
         p.hasArmor = true;
 
-        p.playerArmorManager.HardReloadArmor(true);
+        p.playerArmorManager.ReloadArmorData();
         p.playerArmorManager.ReloadFpsArmor();
         p.playerShield.ShowShieldRechargeEffect();
         p.playerShield.PlayShieldStartSound(p);

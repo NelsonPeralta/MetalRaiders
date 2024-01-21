@@ -6,6 +6,7 @@ using System.Collections;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using System.Timers;
+using System.Linq;
 
 public partial class WebManager
 {
@@ -41,7 +42,7 @@ public partial class WebManager
 
                 try
                 {
-                    Steamworks.SteamUserStats.ResetAllStats(true);
+                    //Steamworks.SteamUserStats.ResetAllStats(true);
                     PlayerDatabaseAdaptor.PlayerLoginData pld = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
                     pda.playerLoginData = pld;
                     //PhotonNetwork.NickName = $"{pda.id}-{pda.username}";
@@ -108,11 +109,21 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerData = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
+                    pli.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
                     if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                     {
-                        pli.playerData.team = GameManager.Team.Red;
+                        pli.playerDataCell.team = GameManager.Team.Red;
                         pli.UpdateColorPalette();
+                    }
+                }
+                catch (Exception e) { Debug.LogWarning(e); }
+
+                try
+                {
+                    foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
+                    {
+                        if (int.Parse(p.NickName) == pepd.player_id)
+                            pli.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
                     }
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
@@ -196,7 +207,7 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerData = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
+                    pli.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 

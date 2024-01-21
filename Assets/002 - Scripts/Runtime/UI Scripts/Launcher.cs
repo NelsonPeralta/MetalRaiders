@@ -553,7 +553,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (CurrentRoomManager.instance.PlayerDataContains(int.Parse(otherPlayer.NickName)))
         {
             foreach (Transform child in instance.namePlatesParent)
-                if (child.GetComponent<PlayerNamePlate>().playerData.playerExtendedPublicData.player_id == int.Parse(otherPlayer.NickName))
+                if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(otherPlayer.NickName))
                     Destroy(child.gameObject);
 
             CurrentRoomManager.instance.RemoveExtendedPlayerData(int.Parse(otherPlayer.NickName));

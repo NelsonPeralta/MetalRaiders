@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Explosion : MonoBehaviour
@@ -6,7 +7,7 @@ public class Explosion : MonoBehaviour
     public delegate void ExplosionEvent(Explosion explosion);
     public ExplosionEvent OnObjectAdded;
 
-    public Player player { get { return _player; } set { _player = value; } }
+    public Player player { get { return _player; } set { Debug.Log($"SETTING EXPLOSION PLAYER {value.name}"); _player = value; } }
     public bool stuck { get { return _stuck; } set { _stuck = value; } }
 
     public string damageSource { get { return _damageSource; } set { _damageSource = value; } }
@@ -33,7 +34,7 @@ public class Explosion : MonoBehaviour
     {
         //Use overlapshere to check for nearby colliders
         Vector3 explosionPos = transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius).Distinct().ToArray();
 
         for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
         {
@@ -107,20 +108,25 @@ public class Explosion : MonoBehaviour
 
                 if (!objectsHit.Contains(hitObject))
                 {
-                    //Debug.Log(hitObject.name);
+                    Debug.Log(hitObject.name);
                     //Debug.Log(calculatedDamage);
 
                     objectsHit.Add(hitObject);
                     OnObjectAdded?.Invoke(this);
                     try
                     {
-                        col.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.photonId, impactDir: (col.transform.position - transform.position));
+                        Debug.Log(calculatedDamage);
+                        Debug.Log(player.photonId);
+                        Debug.Log(col.transform.position - transform.position);
+                        hitObject.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.photonId, impactDir: (col.transform.position - transform.position));
                     }
-                    catch (System.Exception e) { Debug.LogWarning(e); col.GetComponent<IDamageable>().Damage(calculatedDamage); }
+                    catch (System.Exception e) { Debug.LogWarning(e + " " + hitObject.name); }
                 }
             }
+
+
         }
-        Destroy(gameObject, 10);
+        //Destroy(gameObject, 10);
     }
 
 }

@@ -371,7 +371,7 @@ public class WeaponProperties : MonoBehaviour
         {
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 foreach (PlayerArmorPiece pap in GetComponentsInChildren<PlayerArmorPiece>(true))
-                    pap.gameObject.SetActive(player.hasArmor && player.playerArmorManager.armorDataString.Contains(pap.entity));
+                    pap.gameObject.SetActive(player.hasArmor && player.playerArmorManager.playerDataCell.playerExtendedPublicData.armor_data_string.Contains(pap.entity));
         }
         catch { }
 

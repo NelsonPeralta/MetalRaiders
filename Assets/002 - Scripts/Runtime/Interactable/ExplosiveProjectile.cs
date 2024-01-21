@@ -24,18 +24,27 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] GameObject _visualIndicator;
     [SerializeField] GameObject _visualIndicatorDuplicate;
     [SerializeField] GameObject _fakeModel;
+    [SerializeField] float _ttl;
 
     bool _collided;
-    float _explosionDelayOnImpact;
+    float _explosionDelayOnImpact, _defaultTtl;
 
 
 
 
     private void OnEnable()
     {
+        _ttl = _defaultTtl;
+
         _collided = false; _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.layer = 8;
+    }
+
+    private void Awake()
+    {
+        if (_ttl <= 0) _ttl = 10;
+        _defaultTtl = _ttl;
     }
 
     // Start is called before the first frame update
@@ -56,6 +65,17 @@ public class ExplosiveProjectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_ttl > 0)
+        {
+            _ttl -= Time.deltaTime;
+
+            if (_ttl <= 0)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+
         if (useConstantForce)
             GetComponent<Rigidbody>().AddForce
                 (gameObject.transform.forward * force);

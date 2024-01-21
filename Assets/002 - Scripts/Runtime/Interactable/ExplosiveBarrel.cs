@@ -14,6 +14,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     public int hitPoints { get { return _networkHitPoints; } set { NetworkGameManager.instance.DamageExplosiveBarrel(spawnPointPosition, value); } }
     public Vector3 spawnPointPosition { get { return _spawnPointPosition; } }
     public Quaternion spawnPointRotation { get { return _spawnPointRotation; } }
+    public int lastPid { get { return _lastPID; } }
 
 
     [SerializeField] int _index;
@@ -88,13 +89,16 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     #region
     void OnExplode_Delegate(ExplosiveBarrel explosiveBarrel)
     {
-        Debug.Log("OnExplode_Delegate");
-        GameObject e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
-        {
-            e.GetComponent<Explosion>().damageSource = "Barrel";
-            e.GetComponent<Explosion>().player = GameManager.GetPlayerWithPhotonViewId(_lastPID);
-        }
-        gameObject.SetActive(false);
+        Debug.Log("EXPLOSIVE BARREL OnExplode_Delegate");
+
+        transform.parent.GetComponent<ExplosiveBarrelSpawnPoint>().TriggerExplosionCoroutine();
+
+        //GameObject e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
+        //{
+        //    e.GetComponent<Explosion>().damageSource = "Barrel";
+        //    e.GetComponent<Explosion>().player = GameManager.GetPlayerWithPhotonViewId(_lastPID);
+        //}
+        //gameObject.SetActive(false);
     }
     #endregion
 

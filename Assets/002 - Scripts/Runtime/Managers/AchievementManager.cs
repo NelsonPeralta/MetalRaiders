@@ -54,7 +54,7 @@ public class AchievementManager : MonoBehaviour
                 if (!_achUnlocked)
                 {
                     Debug.Log("UNLOCKED ACHIVEMENT Martian Hands");
-                    UnlockAchievement("STICKY_FINGERS");
+                    UnlockAchievement("MARTIAN_HANDS");
                 }
             }
         }
@@ -75,7 +75,7 @@ public class AchievementManager : MonoBehaviour
                 if (!_achUnlocked)
                 {
                     Debug.Log("UNLOCKED ACHIVEMENT Hazard");
-                    UnlockAchievement("STICKY_FINGERS");
+                    UnlockAchievement("HZ");
                 }
             }
         }
@@ -97,7 +97,7 @@ public class AchievementManager : MonoBehaviour
                 if (!_achUnlocked)
                 {
                     Debug.Log("UNLOCKED ACHIVEMENT RWIH");
-                    UnlockAchievement("STICKY_FINGERS");
+                    UnlockAchievement("RWIH");
                 }
             }
         }

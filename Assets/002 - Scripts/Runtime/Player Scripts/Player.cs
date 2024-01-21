@@ -23,7 +23,7 @@ public class Player : Biped
     // public variables
     #region
 
-    public ScriptObjPlayerData playerData;
+    public ScriptObjPlayerData playerDataCell;
 
 
 
@@ -442,7 +442,6 @@ public class Player : Biped
         private set
         {
             _username = value;
-            _playerArmorManager.HardReloadArmor();
         }
     }
     [SerializeField] string _username;
@@ -458,7 +457,7 @@ public class Player : Biped
     {
         get
         {
-            return playerData.team;
+            return playerDataCell.team;
         }
     }
     public int lastPID
@@ -648,7 +647,7 @@ public class Player : Biped
     {
         Debug.Log($"Player Owner: {PV.Owner.NickName}");
         _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
-        playerData = CurrentRoomManager.GetPlayerDataWithId(_playerId);
+        playerDataCell = CurrentRoomManager.GetPlayerDataWithId(_playerId);
         if (_playerId > 0)
         {
             OnPlayerIdAssigned?.Invoke(this);
@@ -771,6 +770,10 @@ public class Player : Biped
         mainCamera.enabled = false;
         gunCamera.enabled = false;
         uiCamera.enabled = false;
+
+
+
+        playerArmorManager.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
     }
     private void Update()
     {
@@ -955,20 +958,21 @@ public class Player : Biped
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.GetComponent<PlayerArmorManager>().player = this;
+        ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
 
-        if (!hasArmor)
-        {
-            ragdoll.GetComponent<PlayerArmorManager>().armorDataString = "";
+        //if (!hasArmor)
+        //{
+        //    ragdoll.GetComponent<PlayerArmorManager>().armorDataString = "";
 
-        }
-        else
-        {
-            Debug.Log($"Player {name} has color palette: {playerArmorManager.colorPalette} and armor: {playerArmorManager.armorDataString}");
-            ragdoll.GetComponent<PlayerArmorManager>().armorDataString = playerArmorManager.armorDataString;
-            ragdoll.GetComponent<PlayerArmorManager>().colorPalette = playerArmorManager.colorPalette;
-        }
+        //}
+        //else
+        //{
+        //    Debug.Log($"Player {name} has color palette: {playerArmorManager.colorPalette} and armor: {playerArmorManager.armorDataString}");
+        //    ragdoll.GetComponent<PlayerArmorManager>().armorDataString = playerArmorManager.armorDataString;
+        //    ragdoll.GetComponent<PlayerArmorManager>().colorPalette = playerArmorManager.colorPalette;
+        //}
         ragdoll.SetActive(true);
 
 
@@ -1021,6 +1025,7 @@ public class Player : Biped
         if (!isRespawning)
             return;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         _lastPID = -1;
         deathNature = DeathNature.None;
@@ -1130,6 +1135,10 @@ public class Player : Biped
 
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+
         playerInventory.transform.localRotation = Quaternion.Euler(0, 0, 0f);
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) hasArmor = false;
 
@@ -1358,6 +1367,8 @@ public class Player : Biped
         try { StartCoroutine(Respawn_Coroutine()); } catch (System.Exception e) { Debug.LogException(e); }
         Debug.Log("sdfg");
         try { StartCoroutine(MidRespawnAction()); } catch (System.Exception e) { Debug.LogException(e); }
+
+        AchievementCheck(lastPID);
     }
     void OnPlayerDeath_DelegateLate(Player playerProperties)
     {
@@ -1505,15 +1516,12 @@ public class Player : Biped
                 lastPlayerSource.GetComponent<PlayerUI>().SpawnHitMarker();
         }
         catch { }
-
-
-        AchievementCheck(sourcePid);
     }
 
 
     void AchievementCheck(int sourcePid)
     {
-        if (sourcePid == GameManager.GetRootPlayer().photonId)
+        if (!PV.IsMine && sourcePid == GameManager.GetRootPlayer().photonId)
             if (_damageSourceCleanName.Contains("Plasma"))
             {
                 AchievementManager.instance.plasmaKillsInThisGame++;

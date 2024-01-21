@@ -8,6 +8,7 @@ using UnityEngine;
 public class ScriptObjPlayerData : ScriptableObject
 {
     [SerializeField] bool _occupied;
+    [SerializeField] int _photonRoomIndex;
     [SerializeField] GameManager.Team _team;
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
     [SerializeField] string _cardsFound;
@@ -16,6 +17,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     bool _achUnl = false;
 
+    public int photonRoomIndex { set {  _photonRoomIndex = value; } get { return _photonRoomIndex; } }
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData playerExtendedPublicData
     {
         get { return _playerExtendedPublicData; }
@@ -47,6 +49,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public void InitialReset()
     {
+        _photonRoomIndex = -999;
         _occupied = false;
         _team = GameManager.Team.None;
         _playerExtendedPublicData = null;

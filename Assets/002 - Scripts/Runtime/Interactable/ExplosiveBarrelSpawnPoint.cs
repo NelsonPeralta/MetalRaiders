@@ -11,6 +11,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
     public GameObject placeHolder;
     public ExplosiveBarrel barrel;
+    public GameObject explosion;
     public GameObject prefab;
 
     public int index { get { return barrel.index; } }
@@ -65,10 +66,34 @@ public class ExplosiveBarrelSpawnPoint : Hazard
     {
         if (gameTime.totalTime % tts == 0 && gameTime.totalTime > 0)
         {
-            barrel.gameObject.SetActive(true);
+            Debug.Log("ExplosiveBarrelSpawnPoint OnGameTimeChanged");
+            explosion.gameObject.SetActive(false);
 
             barrel.transform.position = barrel.spawnPointPosition;
             barrel.transform.rotation = barrel.spawnPointRotation;
+            barrel.GetComponent<Rigidbody>().velocity = Vector3.zero; barrel.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+            barrel.gameObject.SetActive(true);
         }
+    }
+
+    public void TriggerExplosionCoroutine()
+    {
+        StartCoroutine(BarrelExplosion_Coroutine());
+    }
+
+    IEnumerator BarrelExplosion_Coroutine()
+    {
+        barrel.gameObject.SetActive(false);
+
+        explosion.transform.position = barrel.transform.position + new Vector3(0, 1, 0);
+        explosion.GetComponent<Explosion>().damageSource = "Barrel";
+        explosion.GetComponent<Explosion>().player = GameManager.GetPlayerWithPhotonViewId(barrel.lastPid);
+
+
+        yield return new WaitForSeconds(0.1f);
+
+
+        explosion.SetActive(true);
     }
 }

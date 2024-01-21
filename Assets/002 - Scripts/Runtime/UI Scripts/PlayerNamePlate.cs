@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerNamePlate : MonoBehaviour
 {
-    public ScriptObjPlayerData playerData
+    public ScriptObjPlayerData playerDataCell
     {
         get { return _playerData; }
         set
@@ -129,8 +129,8 @@ public class PlayerNamePlate : MonoBehaviour
         {
             try
             {
-                Debug.Log($"Setup Solo Color: {playerData.playerExtendedPublicData.armor_color_palette}");
-                ColorUtility.TryParseHtmlString(playerData.playerExtendedPublicData.armor_color_palette, out _tCol);
+                Debug.Log($"Setup Solo Color: {playerDataCell.playerExtendedPublicData.armor_color_palette}");
+                ColorUtility.TryParseHtmlString(playerDataCell.playerExtendedPublicData.armor_color_palette, out _tCol);
                 mainBg.color = _tCol;
 
                 _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
@@ -147,8 +147,7 @@ public class PlayerNamePlate : MonoBehaviour
         ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
 
         s.playerData = _playerData;
-        s.playerModel.GetComponent<PlayerArmorManager>().colorPalette = _playerData.playerExtendedPublicData.armor_color_palette;
-        s.playerModel.GetComponent<PlayerArmorManager>().armorDataString = _playerData.playerExtendedPublicData.armor_data_string;
+        s.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = playerDataCell;
         s.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
 
     }

@@ -35,6 +35,7 @@ public class ArmoryManager : MonoBehaviour
         Debug.Log("OnEnable ArmoryManager");
         playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
         playerModel.SetActive(true);
+        playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
         creditsText.text = $"{pda.playerBasicOnlineStats.credits}cr";
