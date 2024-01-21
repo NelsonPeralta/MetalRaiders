@@ -40,9 +40,9 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
-        if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-            if (GameManager.instance.pid_player_Dict.ContainsKey(playerWhoShotThisPlayerPhotonId) && GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).team == player.team)
-                return;
+        //if (GameManager.instance.teamMode.ToString().Contains("Classic"))
+        //    if (GameManager.instance.pid_player_Dict.ContainsKey(playerWhoShotThisPlayerPhotonId) && GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).team == player.team)
+        //        return;
 
         //Debug.Log(healthDamage);
         //Debug.Log(player.overshieldPoints);
