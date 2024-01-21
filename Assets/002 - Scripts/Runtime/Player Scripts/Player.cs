@@ -1290,7 +1290,7 @@ public class Player : Biped
                         if (_lastPID != this.photonId)
                             sourcePlayerMedals.SpawnNutshotMedal();
                     }
-                    if (deathNature == DeathNature.Sniped)
+                    else if (deathNature == DeathNature.Sniped)
                     {
                         if (_lastPID != this.photonId)
                             sourcePlayerMedals.SpawnSniperHeadshotMedal();

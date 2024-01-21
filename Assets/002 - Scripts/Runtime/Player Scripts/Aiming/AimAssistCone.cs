@@ -151,7 +151,7 @@ public class AimAssistCone : MonoBehaviour
             var hb = collidingHitboxes[0];
 
             foreach (var item in collidingHitboxes)
-                if (item.GetComponent<Hitbox>().isHead)
+                if (item.GetComponent<Hitbox>().isHead || item.GetComponent<Hitbox>().isGroin)
                 {
                     hb = item;
                     break;
@@ -185,7 +185,7 @@ public class AimAssistCone : MonoBehaviour
             {
                 try
                 {
-                    if (!chb.GetComponent<Hitbox>().isHead && firstRayHit.GetComponent<Hitbox>())
+                    if (!(chb.GetComponent<Hitbox>().isHead && chb.GetComponent<Hitbox>().isGroin) && firstRayHit.GetComponent<Hitbox>())
                         chb = firstRayHit;
                 }
                 catch { }
