@@ -43,7 +43,6 @@ abstract public class Ragdoll : MonoBehaviour
         if (_timeSinceLastThud > 0.3f
             && collision.gameObject.transform.root != transform.root)
         {
-            Debug.Log($"Ragdoll collision {collision.gameObject.name}");
             GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hips.transform.position);
 
             _timeSinceLastThud = 0;
@@ -51,6 +50,7 @@ abstract public class Ragdoll : MonoBehaviour
             if (!collision.gameObject.GetComponent<PlayerCapsule>() && !collision.gameObject.GetComponent<Player>())
                 if (!_deathClipAudioSource.isPlaying)
                 {
+                    Debug.Log($"Ragdoll collision {collision.gameObject.name}");
                     _ran = Random.Range(0, _collisionClips.Count);
                     _collisionAudioSource.clip = _collisionClips[_ran];
 
