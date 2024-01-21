@@ -178,6 +178,7 @@ public class ExplosiveProjectile : MonoBehaviour
     public void TriggerStuckBehaviour(int playerId, Vector3 gPos)
     {
         Debug.Log($"TriggerStuckBehaviour. of player {playerId}. gPos {gPos}");
+        GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
         _stuck = true;
