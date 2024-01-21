@@ -109,6 +109,7 @@ public class ExplosiveProjectile : MonoBehaviour
             if (_sticky && !stuck)
                 if (collision.gameObject.transform.root.GetComponent<Player>())
                 {
+                    GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
                         NetworkGameManager.StickGrenadeOnPlayer(GrenadePool.instance.stickyGrenadePool.IndexOf(gameObject), collision.gameObject.transform.root.GetComponent<Player>().playerId, collision.contacts[0].point);
                 }
