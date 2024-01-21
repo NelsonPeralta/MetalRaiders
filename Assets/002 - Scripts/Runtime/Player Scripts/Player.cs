@@ -136,7 +136,7 @@ public class Player : Biped
                     //PV.RPC("SendHitPointsCheck_RPC", RpcTarget.All, (int)hitPoints, isMine, GameTime.instance.totalTime);
                 }
                 //isDead = true;
-                PV.RPC("SetIsDead_RPC", RpcTarget.AllViaServer, value);
+                PV.RPC("SetIsDead_RPC", RpcTarget.AllViaServer);
 
             }
 
@@ -226,7 +226,7 @@ public class Player : Biped
                     OnPlayerHealthDamage?.Invoke(this);
 
                 if (_hitPoints <= 0)
-                    PV.RPC("SetIsDead_RPC", RpcTarget.AllViaServer, value);
+                    PV.RPC("SetIsDead_RPC", RpcTarget.AllViaServer);
                 //isDead = true;
 
                 impactPos = null;
@@ -1337,15 +1337,7 @@ public class Player : Biped
         hitPoints = newHealth;
 
 
-        try
-        { // Hit Marker Handling
-
-            if (isDead)
-                killerPlayer.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-            else
-                killerPlayer.GetComponent<PlayerUI>().SpawnHitMarker();
-        }
-        catch { }
+        if (!isDead) killerPlayer.GetComponent<PlayerUI>().SpawnHitMarker();
     }
 
 
@@ -1424,9 +1416,9 @@ public class Player : Biped
     }
 
     [PunRPC]
-    void SetIsDead_RPC(bool b)
+    void SetIsDead_RPC()
     {
-        isDead = b;
+        isDead = true;
     }
 
     [PunRPC]
@@ -1466,6 +1458,8 @@ public class Player : Biped
         Debug.Log($"PLAYER {username} DIED against {GameManager.GetPlayerWithPhotonViewId(wpid).playerDataCell.playerExtendedPublicData.username}. DN: {(DeathNature)dni}. Source: {dSource}");
 
         killerPlayer = GameManager.GetPlayerWithPhotonViewId(wpid); _damageSourceCleanName = dSource; deathNature = (DeathNature)dni; _lastPID = wpid;
+
+        killerPlayer.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
 
         try
         {
