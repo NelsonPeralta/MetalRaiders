@@ -263,6 +263,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     }
 
+    public static void StickGrenadeOnPLayer(int hitboxIndex, int playerId)
+    {
+        Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. hb {hitboxIndex} of player {playerId}");
+    }
 
     // Lootable Weapons
     #region

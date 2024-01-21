@@ -10,6 +10,7 @@ public class ExplosiveProjectile : MonoBehaviour
     public GameObject model { get { return _model; } }
     public GameObject visualIndicator { get { return _visualIndicator; } }
     public GameObject visualIndicatorDuplicate { get { return _visualIndicatorDuplicate; } }
+    public bool stuck { get { return _stuck; } set {  _stuck = value; } }
 
     [SerializeField] Player _player;
     [SerializeField] int _force;
@@ -98,9 +99,8 @@ public class ExplosiveProjectile : MonoBehaviour
             _collided = true;
             try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
 
-            if (_sticky)
+            if (_sticky && !stuck)
             {
-                _sticky = false;
                 {
                     if (_stickyLayerMask == (_stickyLayerMask | (1 << collision.gameObject.layer)))
                     {
@@ -140,12 +140,11 @@ public class ExplosiveProjectile : MonoBehaviour
                 _collided = true;
                 try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
 
-                if (_sticky)
+                if (_sticky && !stuck)
                 {
                     if (other.GetComponent<Hitbox>())
                         Debug.Log($" blabla {other.GetComponent<Hitbox>().hitboxesScript.hitboxes.Contains(other.GetComponent<Hitbox>())} {other.GetComponent<Hitbox>().hitboxesScript.hitboxes.IndexOf(other.GetComponent<Hitbox>())}");
 
-                    _sticky = false;
                     {
                         GameObject fg = Instantiate(_fakeModel, transform.position, transform.rotation);
                         fg.transform.SetParent(other.gameObject.transform, true);

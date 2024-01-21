@@ -42,6 +42,14 @@ public class GrenadePool : MonoBehaviour
     {
         for (int i = (photonRoomIndex - 1) * 10; i < (photonRoomIndex * 10) - 1; i++)
         {
+            if (!_instance._fragGrenadePool[i].activeInHierarchy) _instance._fragGrenadePool[i].transform.SetParent(instance.transform);
+            if (!_instance._stickyGrenadePool[i].activeInHierarchy)
+            {
+                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().isKinematic = false;
+                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().useGravity = true;
+                _instance._stickyGrenadePool[i].transform.SetParent(instance.transform);
+            }
+
             if (isFrag)
             {
                 if (!_instance._fragGrenadePool[i].activeInHierarchy) return i;
