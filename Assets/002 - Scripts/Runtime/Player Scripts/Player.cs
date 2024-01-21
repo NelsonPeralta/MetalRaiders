@@ -1486,6 +1486,8 @@ public class Player : Biped
                 else if (deathByGroin)
                     f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
 
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && killerPlayer.team == this.team)
+                    f = $"{killerPlayer.username} buddyfucked {username}";
 
 
 
@@ -1501,39 +1503,45 @@ public class Player : Biped
         catch (System.Exception e) { Debug.LogException(e); }
 
 
-
-        try
-        {
-            PlayerMedals sourcePlayerMedals = killerPlayer._playerMedals;
-            if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
-            {
-                if (deathByGroin)
-                    sourcePlayerMedals.SpawnNutshotMedal();
-                else if (deathNature == DeathNature.Sniped)
-                    sourcePlayerMedals.SpawnSniperHeadshotMedal();
-                else if (deathNature == DeathNature.Headshot)
-                    sourcePlayerMedals.SpawnHeadshotMedal();
-                else if (deathNature == DeathNature.Melee)
-                    sourcePlayerMedals.SpawnMeleeMedal();
-                else if (deathNature == DeathNature.Grenade)
-                    sourcePlayerMedals.SpawnGrenadeMedal();
-                else if (deathNature == DeathNature.Stuck)
-                    sourcePlayerMedals.SpawnStuckKillMedal();
-                else
-                    sourcePlayerMedals.kills++;
-
-                if (_playerMedals.spree >= 5)
-                    sourcePlayerMedals.SpawnKilljoySpreeMedal();
-            }
-        }
-        catch (System.Exception e) { Debug.LogException(e); }
-
-
-
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, dSource));
+            if (GameManager.instance.teamMode == GameManager.TeamMode.None ||
+                                (GameManager.instance.teamMode == GameManager.TeamMode.Classic && killerPlayer.team != this.team))
+            {
 
-        AchievementCheck(lastPID);
+                try
+                {
+                    PlayerMedals sourcePlayerMedals = killerPlayer._playerMedals;
+                    if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
+                    {
+                        if (deathByGroin)
+                            sourcePlayerMedals.SpawnNutshotMedal();
+                        else if (deathNature == DeathNature.Sniped)
+                            sourcePlayerMedals.SpawnSniperHeadshotMedal();
+                        else if (deathNature == DeathNature.Headshot)
+                            sourcePlayerMedals.SpawnHeadshotMedal();
+                        else if (deathNature == DeathNature.Melee)
+                            sourcePlayerMedals.SpawnMeleeMedal();
+                        else if (deathNature == DeathNature.Grenade)
+                            sourcePlayerMedals.SpawnGrenadeMedal();
+                        else if (deathNature == DeathNature.Stuck)
+                            sourcePlayerMedals.SpawnStuckKillMedal();
+                        else
+                            sourcePlayerMedals.kills++;
+
+                        if (_playerMedals.spree >= 5)
+                            sourcePlayerMedals.SpawnKilljoySpreeMedal();
+                    }
+                }
+                catch (System.Exception e) { Debug.LogException(e); }
+
+
+
+
+
+                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, dSource));
+                AchievementCheck(lastPID);
+            }
+
     }
 
     #endregion
