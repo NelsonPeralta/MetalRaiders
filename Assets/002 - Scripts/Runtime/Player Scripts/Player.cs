@@ -132,10 +132,11 @@ public class Player : Biped
             {
                 if (isMine)
                 {
-                    //PV.RPC("IsDead_RPC", RpcTarget.All);
+                    //PV.RPC("SetIsDead_RPC", RpcTarget.All);
                     //PV.RPC("SendHitPointsCheck_RPC", RpcTarget.All, (int)hitPoints, isMine, GameTime.instance.totalTime);
                 }
-                isDead = true;
+                //isDead = true;
+                PV.RPC("SetIsDead_RPC", RpcTarget.AllViaServer, value);
 
             }
 
@@ -225,7 +226,8 @@ public class Player : Biped
                     OnPlayerHealthDamage?.Invoke(this);
 
                 if (_hitPoints <= 0)
-                    isDead = true;
+                    PV.RPC("SetIsDead_RPC", RpcTarget.AllViaServer, value);
+                //isDead = true;
 
                 impactPos = null;
             }
@@ -325,6 +327,8 @@ public class Player : Biped
 
             if (value && !previousValue)
             {
+
+
                 _rb.isKinematic = true;
                 GetComponent<HitPoints>().OnDeath?.Invoke(GetComponent<HitPoints>()); // Needed for melee script
                 OnPlayerDeath?.Invoke(this);
@@ -468,11 +472,11 @@ public class Player : Biped
             //if(GameManager.instance.pid_player_Dict.ContainsKey(value)) _lastPID = value;else _lastPID = 0;
             _lastPID = value;
 
-            try { lastPlayerSource = GameManager.GetPlayerWithPhotonViewId(_lastPID); } catch { _lastPID = 0; }
+            try { killerPlayer = GameManager.GetPlayerWithPhotonViewId(_lastPID); } catch { _lastPID = 0; }
         }
     }
 
-    public Player lastPlayerSource { get { return _lastPlayerSource; } private set { _lastPlayerSource = value; } }
+    public Player killerPlayer { get { return _lastPlayerSource; } private set { _lastPlayerSource = value; } }
 
     public Camera uiCamera { get { return _uiCamera; } }
 
@@ -1145,197 +1149,31 @@ public class Player : Biped
 
         if (isDead)
         {
-            try
+
+            if (isMine)
+                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSourceCleanName);
+
+
+
             {
                 // Spawn Skull
                 //GameObject s = Instantiate(headhunterSkullPrefab, weaponDropPoint.position, Quaternion.identity);
                 //s.GetComponent<Rigidbody>().AddForce(new Vector3(0, 800, 0));
             }
-            catch { }
-            try
-            {
-                string sourcePlayerName = lastPlayerSource.username;
-
-                int hsCode = KillFeedManager.killFeedSpecialCodeDict["headshot"];
-                int nsCode = KillFeedManager.killFeedSpecialCodeDict["nutshot"];
-                string youColorCode = GameManager.colorDict["blue"];
-                string weaponColorCode = playerInventory.activeWeapon.ammoType.ToString().ToLower();
 
 
-                if (GameManager.instance.gameType == GameManager.GameType.GunGame
-                        && deathNature == DeathNature.Melee)
-                {
-                    if (isMine)
-                        playerInventory.playerGunGameManager.index--;
-                }
-
-                foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
-                {
-                    string f = $"{lastPlayerSource.username} killed {username}";
 
 
-                    if (_damageSourceCleanName != null && _damageSourceCleanName != "")
-                    {
-                        f = $"{lastPlayerSource.username} [ {_damageSourceCleanName} ] {username}";
-                    }
 
-                    if (GameManager.instance.gameType == GameManager.GameType.GunGame
-                        && deathNature == DeathNature.Melee)
-                    {
-
-                        f = $"{lastPlayerSource.username} <color=\"red\"> Humiliated </color> {username}";
-                    }
-                    else if (deathNature == DeathNature.Sniped)
-                        f = $"{lastPlayerSource.username} <color=\"yellow\">!!! Sniped !!!</color> {username}";
-                    else if (deathByHeadshot)
-                        f += $" with a <color=\"red\">Headshot</color>!";
-                    else if (deathByGroin)
-                        f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
-
-                    {
-                        if (this != lastPlayerSource)
-                        {
-                            kfm.EnterNewFeed(f);
-                            continue;
-
-                            {
-                                //    string feed = $"{lastPlayerSource.playerId} killed";
-                                //    if (kfm.GetComponent<Player>() != this)
-                                //    {
-                                //        if (kfm.GetComponent<Player>().playerId == sourcePlayerName)
-                                //        {
-                                //            try
-                                //            {
-                                //                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
-                                //                feed = $"<color={youColorCode}>You <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                                //                if (deathByHeadshot)
-                                //                    feed += $"<sprite={hsCode}>";
-
-                                //                if (deathByGroin)
-                                //                    feed += $"<sprite={nsCode}>";
-
-                                //                feed += $" <color=\"red\">{playerId}";
-                                //                kfm.EnterNewFeed(feed);
-                                //            }
-                                //            catch
-                                //            {
-                                //                kfm.EnterNewFeed($"<color={youColorCode}>You <color=\"white\"> killed {sourcePlayerName}");
-                                //            }
-                                //        }
-                                //        else
-                                //        {
-                                //            try
-                                //            {
-                                //                int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
-                                //                feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                                //                if (deathByHeadshot)
-                                //                    feed += $"<sprite={hsCode}>";
-
-                                //                feed += $" <color=\"red\">{playerId}";
-                                //                kfm.EnterNewFeed(feed);
-                                //            }
-                                //            catch
-                                //            {
-                                //                kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\">killed <color=\"red\">{playerId}");
-                                //            }
-                                //        }
-                                //    }
-                                //    else
-                                //    {
-                                //        try
-                                //        {
-                                //            int damageSourceSpriteCode = KillFeedManager.killFeedWeaponCodeDict[_damageSource];
-                                //            feed = $"<color=\"red\">{sourcePlayerName} <color=\"white\"><sprite={damageSourceSpriteCode}>";
-
-                                //            if (deathByHeadshot)
-                                //                feed += $"<sprite={hsCode}>";
-
-                                //            feed += $" <color={youColorCode}>You";
-                                //            kfm.EnterNewFeed(feed);
-                                //        }
-                                //        catch
-                                //        {
-                                //            kfm.EnterNewFeed($"<color=\"red\">{sourcePlayerName} <color=\"white\"> killed <color={youColorCode}>You");
-                                //        }
-                                //    }
-                            }
-                        }
-                        else
-                        {
-                            kfm.EnterNewFeed($"<color=\"white\"> {username} committed suicide");
-                        }
-                    }
-                }
-            }
-            catch (System.Exception e) { Debug.LogException(e); }
-
-            if (isMine)
-            {
-                Debug.Log("AddPlayerKill_RPC");
-                Debug.Log(_damageSourceCleanName);
-                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSourceCleanName);
-            }
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
 
-            try
-            {
-                PlayerMedals sourcePlayerMedals = lastPlayerSource._playerMedals;
-                if (sourcePlayerMedals != this._playerMedals)
-                {
-                    if (deathByGroin)
-                    {
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.SpawnNutshotMedal();
-                    }
-                    else if (deathNature == DeathNature.Sniped)
-                    {
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.SpawnSniperHeadshotMedal();
-                    }
-                    else if (deathNature == DeathNature.Headshot)
-                    {
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.SpawnHeadshotMedal();
-                    }
-                    else if (deathNature == DeathNature.Melee)
-                    {
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.SpawnMeleeMedal();
-                    }
-                    else if (deathNature == DeathNature.Grenade)
-                    {
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.SpawnGrenadeMedal();
-                    }
-                    else if (deathNature == DeathNature.Stuck)
-                    {
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.SpawnStuckKillMedal();
-                    }
-                    else
-                    {
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.kills++;
-                    }
 
-                    if (_playerMedals.spree >= 5)
-                        if (_lastPID != this.photonId)
-                            sourcePlayerMedals.SpawnKilljoySpreeMedal();
-                }
-            }
-            catch (System.Exception e) { Debug.LogException(e); }
         }
 
-        Debug.Log("sdfg");
         isRespawning = true;
-        Debug.Log("sdfg");
         hitboxesEnabled = false;
-        Debug.Log("sdfg");
         thirdPersonModels.SetActive(false);
-        Debug.Log("sdfg");
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             SwarmManager.instance.livesLeft--;
@@ -1344,7 +1182,6 @@ public class Player : Biped
         GetComponent<PlayerController>().isHoldingShootBtn = false;
         GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
         gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
-        Debug.Log("sdfg");
 
         try
         {
@@ -1356,19 +1193,13 @@ public class Player : Biped
         }
         catch (System.Exception e) { Debug.LogException(e); }
         finally { gunCamera.enabled = false; }
-        Debug.Log("sdfg");
 
         hitboxesEnabled = false;
-        Debug.Log("sdfg");
 
-        Debug.Log("sdfg");
         SpawnRagdoll();
-        Debug.Log("sdfg");
         try { StartCoroutine(Respawn_Coroutine()); } catch (System.Exception e) { Debug.LogException(e); }
-        Debug.Log("sdfg");
         try { StartCoroutine(MidRespawnAction()); } catch (System.Exception e) { Debug.LogException(e); }
 
-        AchievementCheck(lastPID);
     }
     void OnPlayerDeath_DelegateLate(Player playerProperties)
     {
@@ -1474,7 +1305,6 @@ public class Player : Biped
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
-        Debug.Log($"Damage_RPC: {sourcePid}");
 
         try { this.impactDir = impDir; } catch { }
         try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
@@ -1499,7 +1329,7 @@ public class Player : Biped
         }
         catch { }
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
-        try { if (lastPlayerSource != this) lastPlayerSource.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
+        try { if (killerPlayer != this) killerPlayer.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
         if (newHealth <= 0 && isInvincible) newHealth = 1;
@@ -1511,9 +1341,9 @@ public class Player : Biped
         { // Hit Marker Handling
 
             if (isDead)
-                lastPlayerSource.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+                killerPlayer.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
             else
-                lastPlayerSource.GetComponent<PlayerUI>().SpawnHitMarker();
+                killerPlayer.GetComponent<PlayerUI>().SpawnHitMarker();
         }
         catch { }
     }
@@ -1594,9 +1424,9 @@ public class Player : Biped
     }
 
     [PunRPC]
-    void IsDead_RPC()
+    void SetIsDead_RPC(bool b)
     {
-        isDead = true;
+        isDead = b;
     }
 
     [PunRPC]
@@ -1632,8 +1462,84 @@ public class Player : Biped
     [PunRPC]
     void AddPlayerKill_RPC(int wpid, int lpid, int dni, string dSource)
     {
+        Debug.Log("AddPlayerKill_RPC");
+        Debug.Log($"PLAYER {username} DIED against {GameManager.GetPlayerWithPhotonViewId(wpid).playerDataCell.playerExtendedPublicData.username}. DN: {(DeathNature)dni}. Source: {dSource}");
+
+        killerPlayer = GameManager.GetPlayerWithPhotonViewId(wpid); _damageSourceCleanName = dSource; deathNature = (DeathNature)dni; _lastPID = wpid;
+
+        try
+        {
+            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+            {
+                string f = $"{killerPlayer.username} killed {username}";
+
+                if (_damageSourceCleanName != null && _damageSourceCleanName != "")
+                    f = $"{killerPlayer.username} [ {_damageSourceCleanName} ] {username}";
+                else
+                    Debug.LogWarning("NULL DAMAGE SOURCE CLEAN NAME");
+
+                if (GameManager.instance.gameType == GameManager.GameType.GunGame
+                    && deathNature == DeathNature.Melee)
+                {
+                    f = $"{killerPlayer.username} <color=\"red\"> Humiliated </color> {username}";
+                    if (isMine)
+                        playerInventory.playerGunGameManager.index--;
+                }
+                else if (deathNature == DeathNature.Sniped)
+                    f = $"{killerPlayer.username} <color=\"yellow\">!!! Sniped !!!</color> {username}";
+                else if (deathByHeadshot)
+                    f += $" with a <color=\"red\">Headshot</color>!";
+                else if (deathByGroin)
+                    f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
+
+
+
+
+                if (this != killerPlayer)
+                {
+                    kfm.EnterNewFeed(f);
+                    continue;
+                }
+                else
+                    kfm.EnterNewFeed($"<color=\"white\"> {username} committed suicide");
+            }
+        }
+        catch (System.Exception e) { Debug.LogException(e); }
+
+
+
+        try
+        {
+            PlayerMedals sourcePlayerMedals = killerPlayer._playerMedals;
+            if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
+            {
+                if (deathByGroin)
+                    sourcePlayerMedals.SpawnNutshotMedal();
+                else if (deathNature == DeathNature.Sniped)
+                    sourcePlayerMedals.SpawnSniperHeadshotMedal();
+                else if (deathNature == DeathNature.Headshot)
+                    sourcePlayerMedals.SpawnHeadshotMedal();
+                else if (deathNature == DeathNature.Melee)
+                    sourcePlayerMedals.SpawnMeleeMedal();
+                else if (deathNature == DeathNature.Grenade)
+                    sourcePlayerMedals.SpawnGrenadeMedal();
+                else if (deathNature == DeathNature.Stuck)
+                    sourcePlayerMedals.SpawnStuckKillMedal();
+                else
+                    sourcePlayerMedals.kills++;
+
+                if (_playerMedals.spree >= 5)
+                    sourcePlayerMedals.SpawnKilljoySpreeMedal();
+            }
+        }
+        catch (System.Exception e) { Debug.LogException(e); }
+
+
+
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, dSource));
+
+        AchievementCheck(lastPID);
     }
 
     #endregion
