@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Codice.Client.Common;
 using UnityEngine;
 
 public class Explosion : MonoBehaviour
@@ -129,4 +131,15 @@ public class Explosion : MonoBehaviour
         //Destroy(gameObject, 10);
     }
 
+    public void DisableIn5Seconds()
+    {
+        StartCoroutine(DIsableIn5Seconds_Coroutine());
+    }
+
+    IEnumerator DIsableIn5Seconds_Coroutine()
+    {
+        yield return new WaitForSeconds(5);
+
+        gameObject.SetActive(false);
+    }
 }

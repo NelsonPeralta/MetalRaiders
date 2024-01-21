@@ -40,7 +40,7 @@ public class GrenadePool : MonoBehaviour
 
     public static int GetAvailableGrenadeIndex(bool isFrag, int photonRoomIndex)
     {
-        for (int i = photonRoomIndex - 1; i < (photonRoomIndex * 10) - 1; i++)
+        for (int i = (photonRoomIndex - 1) * 10; i < (photonRoomIndex * 10) - 1; i++)
         {
             if (isFrag)
             {

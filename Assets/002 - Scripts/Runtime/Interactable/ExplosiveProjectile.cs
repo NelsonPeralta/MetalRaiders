@@ -170,9 +170,10 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        Transform e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
-        e.GetComponent<Explosion>().player = player;
-        e.GetComponent<Explosion>().stuck = _stuck;
+        Explosion e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation).GetComponent<Explosion>();
+        e.player = player;
+        e.stuck = _stuck;
+        e.DisableIn5Seconds();
         gameObject.SetActive(false);
     }
 }
