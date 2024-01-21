@@ -1329,7 +1329,12 @@ public class Player : Biped
         }
         catch { }
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
-        try { if (killerPlayer != this) killerPlayer.GetComponent<PlayerMultiplayerMatchStats>().damage += damage; } catch { }
+        try
+        {
+            if ((GameManager.instance.teamMode == GameManager.TeamMode.Classic && killerPlayer.team != this.team) || GameManager.instance.teamMode == GameManager.TeamMode.None)
+                if (killerPlayer != this) killerPlayer.GetComponent<PlayerMultiplayerMatchStats>().damage += damage;
+        }
+        catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
 
         if (newHealth <= 0 && isInvincible) newHealth = 1;

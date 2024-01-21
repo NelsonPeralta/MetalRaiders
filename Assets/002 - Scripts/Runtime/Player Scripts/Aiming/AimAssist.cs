@@ -139,6 +139,16 @@ public class AimAssist : MonoBehaviour
                     }
                 }
 
+            if(targetHitbox.GetComponent<PlayerHitbox>() &&
+                (GameManager.instance.teamMode == GameManager.TeamMode.Classic && 
+                targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+            {
+                if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                    bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
+
+                return;
+            }
+
             Vector3 targetHitboxDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
             float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, bulletSpawnPoint.position);
 
