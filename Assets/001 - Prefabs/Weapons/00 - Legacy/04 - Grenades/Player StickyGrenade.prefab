@@ -225,9 +225,9 @@ GameObject:
   - component: {fileID: 3333303344873822298}
   - component: {fileID: 308888794767148583}
   - component: {fileID: -5392217163931447814}
-  - component: {fileID: 9160456491394204891}
   - component: {fileID: 3248583250224941726}
   - component: {fileID: 5732484404395741313}
+  - component: {fileID: 4846359706036873529}
   m_Layer: 8
   m_Name: Player StickyGrenade
   m_TagString: Untagged
@@ -243,7 +243,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3334927101774382662}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.824943, y: 0.233, z: -10.300198}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -311,27 +311,7 @@ MonoBehaviour:
   _visualIndicatorDuplicate: {fileID: 7389506557342063797}
   _fakeModel: {fileID: 4004369177905539638, guid: 8adb86f207f40c34dbb23c9728e70fdb,
     type: 3}
---- !u!65 &9160456491394204891
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3334927101774382662}
-  m_Material: {fileID: 13400000, guid: 98422cde6324dcf4c8ad2c756e0516c0, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
-  m_Center: {x: 0.000093940645, y: 0.012544222, z: 0.0019112248}
+  _ttl: 0
 --- !u!82 &3248583250224941726
 AudioSource:
   m_ObjectHideFlags: 0
@@ -441,6 +421,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   notes: Radius of 4 and 400 damage gives 256 damage on foot.
+--- !u!135 &4846359706036873529
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3334927101774382662}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4870095945310926146
 GameObject:
   m_ObjectHideFlags: 0

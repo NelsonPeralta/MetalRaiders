@@ -6,6 +6,8 @@ public class GrenadePool : MonoBehaviour
 {
     public static GrenadePool instance { get { return _instance; } }
 
+    public List<GameObject> stickyGrenadePool { get { return _stickyGrenadePool; } }
+
     [SerializeField] GameObject _fragGrenadePrefab, _stickyGrenadePrefab;
     [SerializeField] List<GameObject> _fragGrenadePool = new List<GameObject>();
     [SerializeField] List<GameObject> _stickyGrenadePool = new List<GameObject>();
@@ -47,6 +49,7 @@ public class GrenadePool : MonoBehaviour
             {
                 _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().isKinematic = false;
                 _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().useGravity = true;
+                _instance._stickyGrenadePool[i].GetComponent<ExplosiveProjectile>().stuck = false;
                 _instance._stickyGrenadePool[i].transform.SetParent(instance.transform);
             }
 

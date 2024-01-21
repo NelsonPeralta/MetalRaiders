@@ -263,9 +263,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     }
 
-    public static void StickGrenadeOnPLayer(int hitboxIndex, int playerId)
+    public static void StickGrenadeOnPlayer(int nadeIndex, int playerId, Vector3 gPos)
     {
-        Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. hb {hitboxIndex} of player {playerId}");
+        Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. of player {playerId}");
+        instance._pv.RPC("StickGrenadeOnPlayer_RPC", RpcTarget.All, nadeIndex, playerId, gPos);
     }
 
     // Lootable Weapons
@@ -830,7 +831,13 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
 
+    [PunRPC]
+    public void StickGrenadeOnPlayer_RPC(int nadeIndex, int hitboxIndex, int playerId, Vector3 gPos)
+    {
+        Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. hb {hitboxIndex} of player {playerId}");
 
+        GrenadePool.instance.stickyGrenadePool[nadeIndex].GetComponent<ExplosiveProjectile>().TriggerStuckBehaviour(playerId, gPos);
+    }
 
 
 

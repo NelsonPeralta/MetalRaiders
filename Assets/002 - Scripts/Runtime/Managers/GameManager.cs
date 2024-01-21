@@ -581,6 +581,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         return instance.pid_player_Dict[pid];
     }
 
+    public static Player GetPlayerWithId(int id)
+    {
+        foreach (Player player in instance.pid_player_Dict.Values) { if (player.playerId == id) return player; }
+        return null;
+    }
+
     public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null)
     {
         if (ignoreList == null)

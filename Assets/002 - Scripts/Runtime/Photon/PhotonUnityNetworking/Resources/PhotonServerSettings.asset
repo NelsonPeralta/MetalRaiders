@@ -181,6 +181,8 @@ MonoBehaviour:
   - AddPlayerLoadedScene
   - UpdatePlayerId_RPC
   - ChangePlayerTeam
+  - SetIsDead_RPC
+  - StickGrenadeOnPlayer_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
