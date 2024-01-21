@@ -1137,7 +1137,7 @@ public class PlayerController : MonoBehaviourPun
         yield return new WaitForSeconds(0.25f);
         //Spawn grenade prefab at spawnpoint
 
-        PV.RPC("SpawnGrenade_RPC", RpcTarget.All,fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
+        PV.RPC("SpawnGrenade_RPC", RpcTarget.All, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
             gwProperties.grenadeSpawnPoint.rotation, gwProperties.grenadeSpawnPoint.forward);
 
         //var grenade = Instantiate(pInventory.grenadePrefab);
@@ -1374,8 +1374,9 @@ public class PlayerController : MonoBehaviourPun
         nade.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         nade.SetActive(true);
 
+        int _throwF = (int)grenadeThrowForce; if (!fga) _throwF /= 10;
         foreach (Player p in GameManager.instance.pid_player_Dict.Values) Physics.IgnoreCollision(nade.GetComponent<Collider>(), p.playerCapsule.GetComponent<Collider>());
-        nade.GetComponent<Rigidbody>().AddForce(forw * grenadeThrowForce);
+        nade.GetComponent<Rigidbody>().AddForce(forw * _throwF);
     }
 }
 
