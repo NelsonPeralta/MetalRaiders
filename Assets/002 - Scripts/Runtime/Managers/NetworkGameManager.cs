@@ -832,9 +832,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    public void StickGrenadeOnPlayer_RPC(int nadeIndex, int hitboxIndex, int playerId, Vector3 gPos)
+    public void StickGrenadeOnPlayer_RPC(int nadeIndex, int playerId, Vector3 gPos)
     {
-        Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. hb {hitboxIndex} of player {playerId}");
+        Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. of player {playerId}");
 
         GrenadePool.instance.stickyGrenadePool[nadeIndex].GetComponent<ExplosiveProjectile>().TriggerStuckBehaviour(playerId, gPos);
     }
