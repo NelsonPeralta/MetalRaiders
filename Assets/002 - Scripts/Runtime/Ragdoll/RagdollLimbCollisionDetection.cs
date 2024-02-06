@@ -7,8 +7,7 @@ public class RagdollLimbCollisionDetection : MonoBehaviour
     public Ragdoll ragdoll;
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"RagdollLimbCollisionDetection {collision.relativeVelocity.sqrMagnitude}");
-        if (collision.relativeVelocity.sqrMagnitude > 10)
+        if (collision.relativeVelocity.sqrMagnitude > 15)
         {
             ragdoll.HandleCollision(collision);
         }

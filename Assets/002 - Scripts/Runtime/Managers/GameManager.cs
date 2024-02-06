@@ -280,6 +280,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // private Variables
     [SerializeField] WeaponPool _weaponPoolPrefab;
     [SerializeField] RagdollPool _ragdollPoolPrefab;
+    [SerializeField] GrenadePool _grenadePoolPrefab;
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<Vector3, Biped> _orSpPos_Biped_Dict = new Dictionary<Vector3, Biped>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
@@ -412,6 +413,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             Instantiate(_weaponPoolPrefab);
             Instantiate(_ragdollPoolPrefab);
+            Instantiate(_grenadePoolPrefab);
 
             try
             {

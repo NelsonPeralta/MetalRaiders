@@ -17,19 +17,12 @@ public class GrenadePool : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        _instance = this;
 
 
 
-        for (int i = 0; i < 1000; i++)
+
+        for (int i = 0; i < 200; i++)
         {
             _fragGrenadePool.Add(Instantiate(_fragGrenadePrefab, transform));
             _stickyGrenadePool.Add(Instantiate(_stickyGrenadePrefab, transform));

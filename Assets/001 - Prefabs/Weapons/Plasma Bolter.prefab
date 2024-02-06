@@ -202,7 +202,7 @@ Transform:
   - {fileID: 4070508823915125614}
   - {fileID: 5170709352993357548}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6552356763530869521
 MonoBehaviour:
@@ -249,7 +249,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0425, y: 0.3, z: 1}
+  m_Size: {x: 0.14, y: 0.3, z: 1}
   m_Center: {x: 0.00023280922, y: -0.024052147, z: -0.014078423}
 --- !u!54 &7025801602816862126
 Rigidbody:

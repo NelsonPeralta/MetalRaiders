@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public PlayerMotionTracker playerMotionTracker { get { return _playerMotionTracker; } }
 
-
+    [SerializeField] GroundCheck _groundCheckScript;
     [SerializeField] ThirdPersonLookAt _tpLookAt;
     public float moveSpeed
     {
@@ -202,6 +202,7 @@ public class PlayerMovement : MonoBehaviour
 
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        grounded = _groundCheckScript.isGrounded;
 
         MyInput();
         StateHandler();

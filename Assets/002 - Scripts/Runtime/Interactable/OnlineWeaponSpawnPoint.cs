@@ -100,7 +100,8 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
 
         if ((GameManager.instance.gameType == GameManager.GameType.Fiesta))
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+            //Destroy(gameObject);
         }
     }
 }

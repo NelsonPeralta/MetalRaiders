@@ -104,9 +104,8 @@ public class ExplosiveProjectile : MonoBehaviour
             Debug.Log($"Collided with: {collision.gameObject.name} {collision.gameObject.GetComponent<Collider>()} {collision.gameObject.GetComponent<Player>()}");
 
             try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
-            _collided = true;
 
-            if (_sticky && !stuck)
+            if (_sticky && !_collided)
                 if (collision.gameObject.transform.root.GetComponent<Player>())
                 {
                     GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
@@ -115,11 +114,12 @@ public class ExplosiveProjectile : MonoBehaviour
                 }
                 else
                 {
-                    _stuck = true;
                     gameObject.transform.parent = collision.gameObject.transform;
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
                 }
+
+            _collided = true;
         }
     }
 
@@ -170,6 +170,7 @@ public class ExplosiveProjectile : MonoBehaviour
     void Explosion()
     {
         Explosion e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation).GetComponent<Explosion>();
+        if (_sticky) { transform.parent = GrenadePool.instance.transform; }
         e.player = player;
         e.stuck = _stuck;
         e.DisableIn5Seconds();
@@ -182,7 +183,7 @@ public class ExplosiveProjectile : MonoBehaviour
         GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
-        _stuck = true;
+        stuck = true;
         _collided = true;
 
 
@@ -192,6 +193,6 @@ public class ExplosiveProjectile : MonoBehaviour
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().isKinematic = true;
 
-        _stuck = true;
+        stuck = true;
     }
 }

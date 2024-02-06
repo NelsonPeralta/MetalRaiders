@@ -956,8 +956,7 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
-        Debug.Log($"SPAWNING PLAYER RAGDOLL");
-        print(_deathNature);
+        Debug.Log($"SPAWNING PLAYER RAGDOLL {deathNature}");
         var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
@@ -981,7 +980,7 @@ public class Player : Biped
 
 
         if (deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.RPG || deathNature == DeathNature.Barrel) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
+        else if (deathNature == DeathNature.Grenade /*|| deathNature == DeathNature.Stuck*/ || deathNature == DeathNature.RPG || deathNature == DeathNature.Barrel) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
         else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2000); }
         else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
