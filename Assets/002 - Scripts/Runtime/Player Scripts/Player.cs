@@ -1027,8 +1027,6 @@ public class Player : Biped
         Debug.Log("Respawn");
         if (!isRespawning)
             return;
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         _lastPID = -1;
         deathNature = DeathNature.None;
@@ -1059,6 +1057,8 @@ public class Player : Biped
         OnPlayerRespawned?.Invoke(this);
 
         _rb.isKinematic = false;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
     }
 
     public void PlaySprintingSound()

@@ -1370,6 +1370,8 @@ public class PlayerController : MonoBehaviourPun
             Physics.IgnoreCollision(nade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
 
 
+        nade.GetComponent<Rigidbody>().useGravity = true;
+        nade.GetComponent<Rigidbody>().isKinematic = false;
         nade.GetComponent<Rigidbody>().velocity = Vector3.zero;
         nade.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         nade.SetActive(true);

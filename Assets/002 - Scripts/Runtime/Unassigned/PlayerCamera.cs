@@ -14,8 +14,8 @@ public class PlayerCamera : MonoBehaviour
     public Transform verticalAxisTarget;
     public float xRotation = 0f;
     public float yRotation = 0f;
-    float minXClamp = -90;
-    float maxXClamp = 90;
+    float minXClamp = -85;
+    float maxXClamp = 85;
 
 
     public Rewired.Player rewiredPlayer
@@ -169,7 +169,9 @@ public class PlayerCamera : MonoBehaviour
             xRotation -= mouseY + VerticalSway();
             xRotation = Mathf.Clamp(xRotation, minXClamp, maxXClamp);
 
-            _clampedMouseY = Mathf.Clamp(mouseY, minXClamp, maxXClamp);
+            if (xRotation > minXClamp && xRotation < maxXClamp)
+                _clampedMouseY = Mathf.Clamp(mouseY, minXClamp, maxXClamp);
+            else _clampedMouseY = 0;
 
 
 
