@@ -117,7 +117,7 @@ public class WeaponProperties : MonoBehaviour
     public GameObject holsteredModel;
 
     public GameObject weaponRessource;
-    public GameObject muzzleFlash;
+    public GameObject muzzleFlash, glint;
 
     public int degradingDamageStart, degradedDamage;
 
@@ -584,6 +584,8 @@ public class WeaponPropertiesEditor : Editor
         wp.Fire = EditorGUILayout.ObjectField("Fire", wp.Fire, typeof(AudioClip), true) as AudioClip;
         wp.ReloadShort = EditorGUILayout.ObjectField("Reload short", wp.ReloadShort, typeof(AudioClip), true) as AudioClip;
         wp.draw = EditorGUILayout.ObjectField("Draw", wp.draw, typeof(AudioClip), true) as AudioClip;
+        wp.glint = EditorGUILayout.ObjectField("Glint", wp.glint, typeof(GameObject), true) as GameObject;
+
 
         EditorUtility.SetDirty(wp);
     }

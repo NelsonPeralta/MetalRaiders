@@ -24,6 +24,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] GameObject _model;
     [SerializeField] GameObject _visualIndicator;
     [SerializeField] GameObject _visualIndicatorDuplicate;
+    [SerializeField] GameObject _stuckVfx;
     [SerializeField] GameObject _fakeModel;
     [SerializeField] float _ttl;
 
@@ -35,6 +36,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnEnable()
     {
+        try { _stuckVfx.SetActive(false); } catch { }
         if (_sticky)
             foreach (Player p in GameManager.instance.pid_player_Dict.Values)
             {
@@ -111,12 +113,15 @@ public class ExplosiveProjectile : MonoBehaviour
                     GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
                         NetworkGameManager.StickGrenadeOnPlayer(GrenadePool.instance.stickyGrenadePool.IndexOf(gameObject), collision.gameObject.transform.root.GetComponent<Player>().playerId, collision.contacts[0].point);
+                    _stuckVfx.SetActive(true);
+
                 }
                 else
                 {
                     gameObject.transform.parent = collision.gameObject.transform;
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
+                    try { _stuckVfx.SetActive(true); } catch { }
                 }
 
             _collided = true;
@@ -169,7 +174,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        Explosion e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation).GetComponent<Explosion>();
+        Explosion e = Instantiate(explosionPrefab, transform.position, transform.rotation).GetComponent<Explosion>();
         if (_sticky) { transform.parent = GrenadePool.instance.transform; }
         e.player = player;
         e.stuck = _stuck;

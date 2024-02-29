@@ -584,6 +584,12 @@ public class PlayerController : MonoBehaviourPun
                 if (isAiming == false)
                 {
                     isAiming = true;
+
+
+                    PV.RPC("ToggleGlint_RPC", RpcTarget.AllViaServer, isAiming);
+
+
+
                     //mainCam.fieldOfView = _tempFov;
                     //uiCam.fieldOfView = _tempFov;
                     if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
@@ -603,7 +609,7 @@ public class PlayerController : MonoBehaviourPun
                     //gunCam.fieldOfView = 60;
 
                     allPlayerScripts.aimingScript.playAimSound();
-
+                    PV.RPC("ToggleGlint_RPC", RpcTarget.AllViaServer, isAiming);
                 }
             }
         }
@@ -630,6 +636,7 @@ public class PlayerController : MonoBehaviourPun
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
         gunCam.enabled = true;
+        PV.RPC("ToggleGlint_RPC", RpcTarget.AllViaServer, isAiming);
 
     }
 
@@ -1380,6 +1387,14 @@ public class PlayerController : MonoBehaviourPun
         foreach (Player p in GameManager.instance.pid_player_Dict.Values) Physics.IgnoreCollision(nade.GetComponent<Collider>(), p.playerCapsule.GetComponent<Collider>());
         nade.GetComponent<Rigidbody>().AddForce(forw * grenadeThrowForce);
     }
+
+
+    [PunRPC]
+    void ToggleGlint_RPC(bool fga)
+    {
+        try { pInventory.activeWeapon.glint.SetActive(fga); } catch { }
+    }
+
 }
 
 

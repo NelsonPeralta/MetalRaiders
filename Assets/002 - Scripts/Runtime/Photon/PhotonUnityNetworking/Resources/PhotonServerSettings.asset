@@ -183,6 +183,7 @@ MonoBehaviour:
   - ChangePlayerTeam
   - SetIsDead_RPC
   - StickGrenadeOnPlayer_RPC
+  - ToggleGlint_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
