@@ -426,15 +426,23 @@ public class Bullet : MonoBehaviourPunCallbacks
                         try
                         {
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
-                                try
+                            {
+                                if (finalHitDamageable == null)
+                                    Debug.Log($"No IDamageeable script on {finalHitObject.name}");
+                                else
                                 {
-                                    finalHitDamageable.Damage(damage, false, sourcePlayer.photonId);
-
+                                    try
+                                    {
+                                        finalHitDamageable.Damage(damage, false, sourcePlayer.photonId);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Debug.Log(finalHitObject.name);
+                                        Debug.LogException(e);
+                                        //finalHitDamageable.Damage(damage);
+                                    }
                                 }
-                                catch
-                                {
-                                    finalHitDamageable.Damage(damage);
-                                }
+                            }
                         }
                         catch { }
                         GameObject genericHit = gameObjectPool.SpawnPooledGenericHit();

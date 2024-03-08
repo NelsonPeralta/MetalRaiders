@@ -188,6 +188,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        // ground check
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        grounded = _groundCheckScript.isGrounded;
+
+        // handle drag
+        if (grounded)
+            _rb.drag = groundDrag;
+        else
+            _rb.drag = 0;
+
         if (!CurrentRoomManager.instance.gameStarted) return;
 
         _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", !isGrounded);
@@ -200,19 +210,8 @@ public class PlayerMovement : MonoBehaviour
         }
         catch { }
 
-        // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
-        grounded = _groundCheckScript.isGrounded;
-
         MyInput();
         StateHandler();
-
-        // handle drag
-        if (grounded)
-            _rb.drag = groundDrag;
-        else
-            _rb.drag = 0;
-
 
 
         CheckDirection(_rawRightInput, _rawForwardInput);

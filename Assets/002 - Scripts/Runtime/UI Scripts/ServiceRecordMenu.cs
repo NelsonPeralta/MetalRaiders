@@ -79,7 +79,8 @@ public class ServiceRecordMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        playerModel.SetActive(true);
+        playerModel.SetActive(true); playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
+
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
         float kd = 0;

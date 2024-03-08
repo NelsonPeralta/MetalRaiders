@@ -274,6 +274,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public List<Texture> colorPaletteTextures { get { return _colorPaletteTextures; } }
     public List<LootableWeapon> lootableWeapons { get { return _lootableWeapons; } }
     public List<NetworkGrenadeSpawnPoint> networkGrenadeSpawnPoints { get { return _networkGrenadeSpawnPoints; } }
+    public List<Hazard> hazards = new List<Hazard>();
 
     // called zero
 
@@ -381,6 +382,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { gameType = GameType.Fiesta; } catch { }
             try { teamMode = TeamMode.None; } catch { }
             _lootableWeapons.Clear();
+            hazards.Clear();
             _networkGrenadeSpawnPoints.Clear();
 
 

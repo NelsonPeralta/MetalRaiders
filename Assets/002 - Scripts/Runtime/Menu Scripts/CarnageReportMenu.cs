@@ -58,6 +58,8 @@ public class CarnageReportMenu : MonoBehaviour
     {
         _backBtn.SetActive(false);
         StartCoroutine(EnableBackBtn_Coroutine());
+
+        FindObjectOfType<ArmoryManager>(true).playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
         FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(true);
 
         //_xpTimer = _hnrTimer = 0;

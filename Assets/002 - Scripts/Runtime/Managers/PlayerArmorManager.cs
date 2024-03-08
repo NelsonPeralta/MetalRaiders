@@ -17,6 +17,7 @@ public class PlayerArmorManager : MonoBehaviour
         get { return _playerDataCell; }
         set
         {
+            Debug.Log("set playerDataCell");
             _playerDataCell = value;
 
             if (SceneManager.GetActiveScene().buildIndex == 0)
@@ -81,6 +82,9 @@ public class PlayerArmorManager : MonoBehaviour
 
         foreach (PlayerArmorPiece map in playerArmorPieces)
             map.gameObject.SetActive(false);
+
+        if(SceneManager.GetActiveScene().buildIndex ==0) // If you disable the go in editor, Awake will trigger AFTER setting Data Cell
+            gameObject.SetActive(false);
     }
 
 
@@ -98,10 +102,18 @@ public class PlayerArmorManager : MonoBehaviour
 
     void EnableAllArmorsInDataString()
     {
+        if (playerArmorPieces.Count == 0)
+        {
+            playerArmorPieces.AddRange(GetComponentsInChildren<PlayerArmorPiece>(true));
+            playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
+        }
+
         Debug.Log($"EnableAllArmorsInDataString: {playerDataCell.playerExtendedPublicData.armor_data_string}");
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
+            {
                 try { piece.gameObject.SetActive(playerDataCell.playerExtendedPublicData.armor_data_string.Contains(piece.entity)); } catch (System.Exception e) { Debug.LogException(e); }
+            }
         }
     }
 

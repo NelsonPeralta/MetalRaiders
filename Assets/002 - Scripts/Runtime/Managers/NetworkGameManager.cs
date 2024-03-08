@@ -354,7 +354,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     public void DamageIceChunk(Vector3 position, int val)
     {
         Debug.Log(val);
-        _pv.RPC("DamageIceChunk_RPC", RpcTarget.All, position, val);
+        _pv.RPC("DamageIceChunk_RPC", RpcTarget.AllViaServer, position, val);
     }
 
     public void UpdatePlayerTeam(string t, string pn)
@@ -657,11 +657,19 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void DamageIceChunk_RPC(Vector3 position, int val)
     {
-        foreach (IceChunk ic in FindObjectsOfType<IceChunk>(true).ToList())
+        //foreach (IceChunk ic in FindObjectsOfType<IceChunk>(true).ToList())
+        //{
+        //    if (ic.transform.position == position)
+        //    {
+        //        ic._networkHitPoints = val;
+        //    }
+        //}
+
+        foreach (Hazard ic in GameManager.instance.hazards)
         {
             if (ic.transform.position == position)
             {
-                ic._networkHitPoints = val;
+                ic.GetComponent<IceChunk>().networkHitPoints = val;
             }
         }
     }
