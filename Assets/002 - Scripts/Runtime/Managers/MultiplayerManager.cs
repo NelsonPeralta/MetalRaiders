@@ -142,7 +142,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                             winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
 
                         Debug.Log(struc.cleanDamageSource);
-                        if (struc.cleanDamageSource.Contains("pistol"))
+                        if (struc.cleanDamageSource.Contains("istol"))
                             NetworkGameManager.instance.EndGame();
                     }
 
