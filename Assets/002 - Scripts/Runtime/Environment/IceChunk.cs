@@ -9,8 +9,6 @@ public class IceChunk : Hazard, IDamageable
     public delegate void IceChunkBarrelEvent(IceChunk explosiveBarrel);
     IceChunkBarrelEvent OnExploded;
 
-    [SerializeField] GameObject _model, _explosionModel;
-
     [SerializeField] int _defaultHitPoints;
 
     [SerializeField] int _hitPoints;
@@ -67,40 +65,22 @@ public class IceChunk : Hazard, IDamageable
         Debug.Log("ice chunk " + damage);
         hitPoints -= damage;
     }
+
+    public override void ResetHitPoints()
+    {
+        _hitPoints = _defaultHitPoints;
+    }
     #endregion
 
     // Delegates
     #region
     void OnExplode_Delegate(IceChunk explosiveBarrel)
     {
-
-        GetComponent<MeshRenderer>().enabled = false; GetComponent<Collider>().enabled = false;
-        //_model.gameObject.SetActive(false);
-        _explosionModel.gameObject.SetActive(true);
-
-        StartCoroutine(Reset_Coroutine());
-
-        //GameObject e = Instantiate(explosionPrefab, transform.position + new Vector3(0, 1, 0), transform.rotation);
-        //Destroy(gameObject);
+        hazardSpawnPoint.StartCoroutine(hazardSpawnPoint.Reset_Coroutine());
     }
     #endregion
 
 
-
-    // Coroutines
-    #region
-
-    IEnumerator Reset_Coroutine()
-    {
-        yield return new WaitForSeconds(30);
-
-        //_model.gameObject.SetActive(true);
-        GetComponent<MeshRenderer>().enabled = true; GetComponent<Collider>().enabled = true;
-        _explosionModel.gameObject.SetActive(false);
-        _hitPoints = _defaultHitPoints;
-    }
-
-    #endregion
 
     // RPCs
     #region
