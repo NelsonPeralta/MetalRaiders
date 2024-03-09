@@ -194,7 +194,12 @@ public class PlayerMovement : MonoBehaviour
 
         // handle drag
         if (grounded)
-            _rb.drag = groundDrag;
+        {
+            //if (Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) <= _forwardDeadzone && Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) <= _rightDeadzone)
+            //    _rb.drag = groundDrag * 10;
+            //else
+                _rb.drag = groundDrag;
+        }
         else
             _rb.drag = 0;
 
