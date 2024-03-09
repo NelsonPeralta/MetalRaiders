@@ -551,6 +551,7 @@ public class CurrentRoomManager : MonoBehaviour
 
         _randomInitiQuickMatchSettingsChosen = true;
 
+        Debug.Log("ChooseRandomMatchSettingsForQuickMatch END");
         FindObjectOfType<NetworkGameManager>().SendGameParams();
     }
 
@@ -607,7 +608,8 @@ public class CurrentRoomManager : MonoBehaviour
 
     void ChooseRandomPvEMap()
     {
-        _ran = Random.Range(0, 2);
+        Debug.Log("ChooseRandomPvEMap");
+        _ran = Random.Range(0, 7);
 
         if (_ran <= 1)
             Launcher.instance.ChangeLevelToLoadWithIndex(11);// Downpoor

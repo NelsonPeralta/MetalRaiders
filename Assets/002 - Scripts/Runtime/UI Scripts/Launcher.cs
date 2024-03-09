@@ -30,7 +30,13 @@ public class Launcher : MonoBehaviourPunCallbacks
         set
         {
             _levelToLoadIndex = value;
-            mapSelectedText.text = $"Map: {Launcher.NameFromIndex(_levelToLoadIndex).Replace("PVP - ", "")}";
+            _mapSelectedPreview.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
+            _mapSelectedPreview.gameObject.SetActive(CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch);
+            mapSelectedText.text = $"Map: {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().mapName}";
+            _mapSelectedPreview.sprite = GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().image;
+            //mapSelectedText.text = $"Map: {Launcher.NameFromIndex(_levelToLoadIndex).Replace("PVP - ", "")}";
+
+            Debug.Log($"levelToLoadIndex {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().mapName}");
         }
     }
     [SerializeField] int _levelToLoadIndex;
@@ -51,6 +57,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] Transform _namePlatesParent;
     [SerializeField] GameObject _namePlatePrefab;
     [SerializeField] TMP_Text _mapSelectedText;
+    [SerializeField] Image _mapSelectedPreview;
     [SerializeField] TMP_Text _gametypeSelectedText;
     [SerializeField] TMP_Text _gameModeSelectedText;
     [SerializeField] TMP_Text _teamModeText;

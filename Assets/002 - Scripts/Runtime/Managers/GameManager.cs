@@ -275,6 +275,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public List<LootableWeapon> lootableWeapons { get { return _lootableWeapons; } }
     public List<NetworkGrenadeSpawnPoint> networkGrenadeSpawnPoints { get { return _networkGrenadeSpawnPoints; } }
     public List<Hazard> hazards = new List<Hazard>();
+    public List<ScriptObjMapInfo> mapDataCells { get { return _mapDataCells; } }
 
     // called zero
 
@@ -288,6 +289,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
     [SerializeField] Material _armorMaterial;
     [SerializeField] List<Texture> _colorPaletteTextures = new List<Texture>();
+    [SerializeField] List<ScriptObjMapInfo> _mapDataCells = new List<ScriptObjMapInfo>();
     [SerializeField] List<ScriptObjBipedTeam> _teamsData;
 
     SwarmManager.Difficulty _difficulty;

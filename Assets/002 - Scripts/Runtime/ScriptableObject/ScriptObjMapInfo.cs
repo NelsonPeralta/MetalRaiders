@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[CreateAssetMenu(fileName = "ScriptObjPlayerData", menuName = "ScriptableObjects/MapData", order = 2)]
 public class ScriptObjMapInfo : ScriptableObject
 {
     public string mapName;
-    int sceneBuildId;
-    public Image image;
+    public int sceneBuildIndex;
+    public Sprite image;
 }
