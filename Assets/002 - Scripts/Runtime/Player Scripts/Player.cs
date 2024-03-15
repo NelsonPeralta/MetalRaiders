@@ -1415,6 +1415,7 @@ public class Player : Biped
     [PunRPC]
     void Teleport_RPC(Vector3 t, Vector3 r)
     {
+        Debug.Log("Teleport_RPC");
         transform.position = t;
         transform.eulerAngles = r;
     }

@@ -8,12 +8,14 @@ public class Portal : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<Player>() && other.GetComponent<Player>().isMine && !other.GetComponent<Player>().isDead && !other.GetComponent<Player>().isRespawning)
+        Debug.Log($"PORTAL: {other.name}");
+
+        if(other.GetComponent<PlayerCapsule>() && other.GetComponent<PlayerCapsule>().player.isMine && !other.GetComponent<PlayerCapsule>().player.isDead && !other.GetComponent<PlayerCapsule>().player.isRespawning)
         {
             Vector3 t = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);
             Vector3 r = _endpoint.transform.rotation.eulerAngles;
 
-            other.GetComponent<Player>().Teleport(t, r);
+            other.GetComponent<PlayerCapsule>().player.Teleport(t, r);
 
             //GetComponent<AudioSource>().Play();
             _endpoint.GetComponent<AudioSource>().Play();

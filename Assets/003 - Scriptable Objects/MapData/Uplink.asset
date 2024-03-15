@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 143c2c14ffa1666408f55d64cc8ecd40, type: 3}
   m_Name: Uplink
   m_EditorClassIdentifier: 
-  mapName: Capital
+  mapName: Uplink
   sceneBuildIndex: 14
   image: {fileID: 21300000, guid: 57a5c0dedf7761e48b61b7998e39cd96, type: 3}

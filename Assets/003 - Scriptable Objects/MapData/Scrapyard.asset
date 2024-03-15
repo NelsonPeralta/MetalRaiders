@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 143c2c14ffa1666408f55d64cc8ecd40, type: 3}
   m_Name: Scrapyard
   m_EditorClassIdentifier: 
-  mapName: Capital
+  mapName: Scrapyard
   sceneBuildIndex: 15
   image: {fileID: 21300000, guid: 444153713db6bec48a2a3fd3c1315ba8, type: 3}
