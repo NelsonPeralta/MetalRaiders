@@ -10,7 +10,7 @@ public class Portal : MonoBehaviour
     {
         Debug.Log($"PORTAL: {other.name}");
 
-        if(other.GetComponent<PlayerCapsule>() && other.GetComponent<PlayerCapsule>().player.isMine && !other.GetComponent<PlayerCapsule>().player.isDead && !other.GetComponent<PlayerCapsule>().player.isRespawning)
+        if (other.GetComponent<PlayerCapsule>() && other.GetComponent<PlayerCapsule>().player.isMine && !other.GetComponent<PlayerCapsule>().player.isDead && !other.GetComponent<PlayerCapsule>().player.isRespawning)
         {
             Vector3 t = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);
             Vector3 r = _endpoint.transform.rotation.eulerAngles;
@@ -19,21 +19,20 @@ public class Portal : MonoBehaviour
 
             //GetComponent<AudioSource>().Play();
             _endpoint.GetComponent<AudioSource>().Play();
-        }else if(other.GetComponent<ExplosiveProjectile>())
+        }
+        else if (other.GetComponent<ExplosiveProjectile>())
         {
             Rigidbody rb = other.GetComponent<Rigidbody>();
-            Vector3 vel = rb.velocity;
-
+            rb.velocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
             other.GetComponent<ExplosiveProjectile>().visualIndicator.SetActive(false); // Good
 
-            Vector3 t = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);
-            Vector3 r = _endpoint.transform.rotation.eulerAngles;
-            other.transform.position = t;
-            other.transform.eulerAngles = r;
+            other.transform.position = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);
+            other.transform.eulerAngles = _endpoint.transform.rotation.eulerAngles;
 
-            other.GetComponent<ExplosiveProjectile>().visualIndicatorDuplicate.SetActive(true);
-
-        }else if (other.GetComponent<Bullet>())
+            //other.GetComponent<ExplosiveProjectile>().visualIndicatorDuplicate.SetActive(true);
+            other.GetComponent<Rigidbody>().AddForce(_endpoint.transform.forward * 300);
+        }
+        else if (other.GetComponent<Bullet>())
         {
             Vector3 t = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);
             Vector3 r = _endpoint.transform.rotation.eulerAngles;

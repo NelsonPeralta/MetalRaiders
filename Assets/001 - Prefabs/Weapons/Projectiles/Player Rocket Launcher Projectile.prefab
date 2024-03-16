@@ -4937,7 +4937,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  _force: 1000
+  _force: 1500
   _useConstantForce: 0
   _defaultExplosionDelayOnImpact: 0
   explosionPrefab: {fileID: 9198120252748331428, guid: a6f30146430f6de4f8e53963998c35f2,
@@ -4951,6 +4951,9 @@ MonoBehaviour:
   _model: {fileID: 0}
   _visualIndicator: {fileID: 1381131631527768139}
   _visualIndicatorDuplicate: {fileID: 0}
+  _stuckVfx: {fileID: 0}
+  _fakeModel: {fileID: 0}
+  _ttl: 0
 --- !u!1 &1833708575658552
 GameObject:
   m_ObjectHideFlags: 0

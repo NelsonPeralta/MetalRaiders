@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapName: Shiver
   sceneBuildIndex: 6
-  image: {fileID: 21300000, guid: 2146002b6e0a8a64eb90bdecdc25548e, type: 3}
+  image: {fileID: 21300000, guid: 96425a5103110e540885313aa318b7cc, type: 3}
