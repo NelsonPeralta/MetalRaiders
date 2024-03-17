@@ -36,6 +36,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnEnable()
     {
+        _visualIndicator.SetActive(true);
         try { _stuckVfx.SetActive(false); } catch { }
         if (_sticky)
             foreach (Player p in GameManager.instance.pid_player_Dict.Values)

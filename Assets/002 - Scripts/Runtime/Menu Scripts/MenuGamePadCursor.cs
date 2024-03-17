@@ -4,9 +4,12 @@ using UnityEngine;
 using Rewired;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class MenuGamePadCursor : MonoBehaviour
 {
+    [SerializeField] Camera _camera;
+
 
     public ControllerType controllerType
     {
@@ -102,6 +105,7 @@ public class MenuGamePadCursor : MonoBehaviour
             pointerId = -1,
         };
 
+        pointerData.position = _camera.WorldToScreenPoint(_gamePadCursor.transform.position);
         pointerData.position = _gamePadCursor.transform.position;
 
         List<RaycastResult> results = new List<RaycastResult>();
