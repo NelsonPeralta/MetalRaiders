@@ -11,7 +11,8 @@ public class WeaponPool : MonoBehaviourPun
 {
     public static WeaponPool instance;
 
-    int amountOfWeaponsToPool;
+    public List<LootableWeapon> weaponPool { get { return _spawnedWeapons; } }
+    int amountOfWeaponsToPool, _c;
 
     [SerializeField] List<LootableWeapon> _weaponPrefabs = new List<LootableWeapon>();
     [SerializeField] List<LootableWeapon> _spawnedWeapons = new List<LootableWeapon>();
@@ -25,8 +26,10 @@ public class WeaponPool : MonoBehaviourPun
 
     private void Start()
     {
-        Debug.Log("WeaponPool");
         foreach (var weapon in _weaponPrefabs)
+        {
+            Debug.Log($"WeaponPool {weapon.name}");
+
             for (int j = 0; j < amountOfWeaponsToPool; j++)
             {
                 LootableWeapon newWeap = Instantiate(weapon, transform);
@@ -34,9 +37,12 @@ public class WeaponPool : MonoBehaviourPun
                 newWeap.gameObject.SetActive(false);
                 newWeap.name = newWeap.name.Replace("(Clone)", "");
                 newWeap.transform.parent = gameObject.transform;
+                newWeap.SetSpawnPositionIdentity(Vector3.up * -(_c + 1));
 
                 _spawnedWeapons.Add(newWeap);
+                _c++;
             }
+        }
     }
 
 
@@ -54,11 +60,12 @@ public class WeaponPool : MonoBehaviourPun
     }
 
 
-    public LootableWeapon GetLootableWeapon(string n)
+    public LootableWeapon GetLootableWeapon(string weaponCodeName)
     {
         for (int i = 0; i < _spawnedWeapons.Count; i++)
         {
-            if (_spawnedWeapons[i].codeName.Equals(n) && !_spawnedWeapons[i].gameObject.activeInHierarchy)
+            if (_spawnedWeapons[i].codeName.Equals(weaponCodeName) && !_spawnedWeapons[i].gameObject.activeInHierarchy
+                && _spawnedWeapons[i].transform.parent == transform)
             {
                 Debug.Log($"GetLootableWeapon FOUND!");
                 //_spawnedWeapons.Remove(weapon);

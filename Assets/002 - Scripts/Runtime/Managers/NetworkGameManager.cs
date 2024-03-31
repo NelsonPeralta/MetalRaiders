@@ -512,7 +512,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().codeName);
             try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.transform.position = spp; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.spawnPointPosition = spp; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.spawnPointPosition = spp; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
 
@@ -537,7 +537,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
             //try { _firstWeapon.transform.parent = null; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.spawnPointPosition = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.spawnPointPosition = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
             //try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
@@ -568,7 +568,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             Debug.Log($"Second Weapon: {_firstWeapon.name}");
             try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.spawnPointPosition = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.spawnPointPosition = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
             //try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.localAmmo = secondWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.spareAmmo = secondWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }

@@ -43,7 +43,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
         GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
         ReplaceWeaponsByGametype();
-        SpawnWeapon();
+        //SpawnWeapon();
 
         if (placeHolder)
             placeHolder.gameObject.SetActive(false);
@@ -55,7 +55,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             FindObjectOfType<SwarmManager>().OnWaveStart += OnWaveStart;
         }
         catch { }
-
+        StartCoroutine(SpawnWeaponCoroutine());
     }
 
     private void Update()
@@ -109,63 +109,45 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void EnableWeapon()
     {
+        print("EnableWeapon");
 
+
+        weaponSpawned.transform.localPosition = Vector3.zero;
+        weaponSpawned.transform.localRotation = Quaternion.identity;
         weaponSpawned.localAmmo = weaponSpawned.defaultAmmo;
         weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
-
-        //Vector3 wpp = weaponSpawned.transform.position;
-        //float d = Vector3.Distance(wpp, weaponSpawned.spawnPointPosition);
-
-        //if (d > 2 || !weaponSpawned.gameObject.activeSelf)
-        //{
-        //    weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
-        //    weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
-        //}
-
         weaponSpawned.gameObject.SetActive(true);
-        //if (weaponSpawned.gameObject.layer != 10)
-        //    weaponSpawned.ShowWeapon();
-    }
-
-    void OnAllPlayersJoinedRoom_Delegate(CurrentRoomManager gme)
-    {
-        SpawnWeapon();
-
     }
 
     void SpawnWeapon()
     {
         try
         {
-            foreach (LootableWeapon weapon in networkLootableWeaponPrefabs)
+            //LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
+            //LootableWeapon lw = Instantiate(networkLootableWeaponPrefabs.Where(x => x.name == weapon.name).SingleOrDefault(), transform.position, transform.rotation);
+
+            print($"SpawnWeapon {codeName} {WeaponPool.instance.weaponPool.Count}");
+
+            LootableWeapon lw = WeaponPool.instance.GetLootableWeapon(codeName);
+
+            if (_inGunRack)
             {
-                if (weapon.codeName == codeName)
-                {
-                    try
-                    {
-                        //LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
-                        LootableWeapon lw = Instantiate(networkLootableWeaponPrefabs.Where(x => x.name == weapon.name).SingleOrDefault(), transform.position, transform.rotation);
-
-                        if (_inGunRack)
-                        {
-                            lw.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                            lw.GetComponent<Rigidbody>().isKinematic = true;
-                            lw.GetComponent<Rigidbody>().useGravity = false;
-                            //Destroy(lw.GetComponent<Rigidbody>());
-                        }
-
-                        lw.transform.parent = transform;
-                        lw.spawnPointPosition = this.transform.position;
-                        lw.gameObject.SetActive(true);
-                        lw.networkWeaponSpawnPoint = this;
-                        weaponSpawned = lw;
-                        _tts = lw.tts;
-                    }
-                    catch (System.Exception e) { Debug.LogWarning(e); }
-                }
+                lw.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                lw.GetComponent<Rigidbody>().isKinematic = true;
+                lw.GetComponent<Rigidbody>().useGravity = false;
+                //Destroy(lw.GetComponent<Rigidbody>());
             }
+
+            lw.transform.parent = transform;
+            lw.transform.localPosition = Vector3.zero;
+            lw.transform.localRotation = Quaternion.identity;
+            //lw.spawnPointPosition = this.transform.position;
+            lw.gameObject.SetActive(true);
+            lw.networkWeaponSpawnPoint = this;
+            weaponSpawned = lw;
+            _tts = lw.tts;
         }
-        catch { }
+        catch (System.Exception e) { Debug.LogWarning(e); }
     }
 
     void OnWaveStart(SwarmManager swarmManager)
@@ -222,13 +204,18 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
 
-        Vector3 wpp = weaponSpawned.transform.position;
-        float d = Vector3.Distance(wpp, weaponSpawned.spawnPointPosition);
-
-        if (d > 2 || !weaponSpawned.gameObject.activeSelf)
+        if (Vector3.Distance(weaponSpawned.transform.position, transform.position) > 2 || !weaponSpawned.gameObject.activeSelf)
         {
-            weaponSpawned.transform.position = weaponSpawned.spawnPointPosition;
-            weaponSpawned.transform.rotation = weaponSpawned.spawnPointRotation;
+            print("ResetWeaponPosition_Coroutine");
+            weaponSpawned.transform.position = transform.position;
+            weaponSpawned.transform.rotation = transform.rotation;
         }
+    }
+
+
+    IEnumerator SpawnWeaponCoroutine()
+    {
+        yield return new WaitForSeconds(2);
+        SpawnWeapon();
     }
 }

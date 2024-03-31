@@ -46,17 +46,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     public Vector3 spawnPointPosition
     {
-        get { return _spawnPointPosition; }
-        set
-        {
-            Vector3 spp = new Vector3((float)System.Math.Round(value.x, 1), (float)System.Math.Round(value.y, 1), (float)System.Math.Round(value.z, 1));
-            _spawnPointPosition = spp;
-            try
-            {
-                MultiplayerManager.instance.lootableWeaponsDict.Add(_spawnPointPosition, this);
-            }
-            catch (System.Exception e) { Debug.LogWarning(e); }
-        }
+        get { return _spawnPointPositionIdentity; }
     }
 
     public Quaternion spawnPointRotation
@@ -95,7 +85,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
 
     [SerializeField] NetworkWeaponSpawnPoint _networkWeaponSpawnPoint;
 
-    [SerializeField] Vector3 _spawnPointPosition;
+    [SerializeField] Vector3 _spawnPointPositionIdentity;
     [SerializeField] float _ttl, _defaultTtl;
 
     Quaternion _spawnPointRotation;
@@ -121,13 +111,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
                 spriteId = WeaponProperties.spriteIdDic[cleanName];
         }
         catch { }
-
-
-        if (parent != null && WeaponPool.instance != null && parent != WeaponPool.instance.transform)
-        {
-            _ammo = defaultAmmo;
-            _spareAmmo = defaultSpareAmmo;
-        }
     }
     private void Start()
     {
@@ -152,12 +135,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
                 }
             }
         }
-    }
-
-    public void ResetAmmo()
-    {
-        networkAmmo = _defaultAmmo;
-        spareAmmo = _defaultSpareAmmo;
     }
 
     public void RandomAmmo()
@@ -259,12 +236,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         gameObject.SetActive(true);
     }
 
-    public void EnableWeapon()
-    {
-        gameObject.SetActive(true);
-        ResetAmmo();
-    }
-
     public void AddForce(Vector3 forwardDir)
     {
         //NetworkGameManager.instance.AddForceLootableWeapon(spawnPointPosition, forwardDir);
@@ -283,17 +254,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             _tts = int.Parse(param["ttl"]);
     }
 
-    public void UpdateSpawnPointPosition(Vector3 spp)
-    {
-        GetComponent<PhotonView>().RPC("UpdateSpawnPointPosition_RPC", RpcTarget.All, spp);
-    }
-
-    [PunRPC]
-    public void UpdateSpawnPointPosition_RPC(Vector3 spp)
-    {
-        Debug.Log("UpdateSpawnPointPosition_RPC");
-        _spawnPointPosition = spp;
-    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -313,5 +273,13 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         {
             NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
         }
+    }
+
+    public void SetSpawnPositionIdentity(Vector3 pos)
+    {
+        _spawnPointPositionIdentity = pos;
+        MultiplayerManager.instance.lootableWeaponsDict.Add(_spawnPointPositionIdentity, this);
+        gameObject.SetActive(false);
+        transform.position = pos;
     }
 }

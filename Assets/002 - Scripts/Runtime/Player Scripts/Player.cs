@@ -1438,7 +1438,7 @@ public class Player : Biped
         wo.GetComponent<LootableWeapon>().GetComponent<Rigidbody>().AddForce(fDir * 200);
 
         //StartCoroutine(UpdateWeaponSpawnPosition_Coroutine(wo, spp));
-        wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
+        //wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
     }
 
     [PunRPC]
@@ -1550,10 +1550,4 @@ public class Player : Biped
     }
 
     #endregion
-    IEnumerator UpdateWeaponSpawnPosition_Coroutine(GameObject wo, Vector3 spp)
-    {
-        yield return new WaitForEndOfFrame();
-        wo.GetComponent<LootableWeapon>().spawnPointPosition = spp;
-
-    }
 }
