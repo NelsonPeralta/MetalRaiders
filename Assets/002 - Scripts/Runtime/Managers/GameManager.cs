@@ -241,7 +241,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] int _nbLocalPlayersPreset;
     public int nbLocalPlayersPreset { get { return _nbLocalPlayersPreset; } set { _nbLocalPlayersPreset = value; } }
 
-    int _camSens = 100;
 
     public bool isDev;
     [SerializeField] int _sceneIndex = 0;
@@ -249,20 +248,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         get { return instance._sceneIndex; }
         set { instance._sceneIndex = value; }
-    }
-    public int camSens
-    {
-        get { return instance._camSens; }
-        set
-        {
-            int previousValue = instance._camSens;
-
-            if (previousValue != value)
-            {
-                instance._camSens = value;
-                OnCameraSensitivityChanged?.Invoke();
-            }
-        }
     }
     public string rootPlayerNickname
     {
@@ -319,6 +304,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     bool _playerDataRetrieved;
     void Awake()
     {
+        InitialisePlayerPrefs();
+        Load();
+
         colorDict.Add("white", "#FFFFFF");
         colorDict.Add("grey", "#B3B3B3");
         colorDict.Add("black", "#333333");
@@ -360,6 +348,19 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         base.OnEnable(); // need this for OnRoomPropertiesUpdate to work
         SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void InitialisePlayerPrefs()
+    {
+        if (!PlayerPrefs.HasKey("volume"))
+        {
+            PlayerPrefs.SetFloat("volume", 1);
+        }
+
+        if (!PlayerPrefs.HasKey("sens"))
+        {
+            PlayerPrefs.SetFloat("sens", 3);
+        }
     }
 
 
@@ -466,10 +467,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            camSens -= 10;
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-            camSens += 10;
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -911,5 +908,45 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static void PlayCancelSound()
     {
         GameManager.instance._cancelSound.Play();
+    }
+
+
+
+
+
+
+
+
+
+
+
+    public static void UpdateVolume()
+    {
+        AudioListener.volume = PlayerPrefs.GetFloat("volume") / 100f;
+    }
+
+    public static void Load()
+    {
+        UpdateVolume();
+    }
+
+    public static void SaveOptions(float vol = -1, float sens = -1)
+    {
+        if (vol != -1)
+        {
+            PlayerPrefs.SetFloat("volume", vol);
+            UpdateVolume();
+        }
+        if (sens != -1)
+        {
+            PlayerPrefs.SetFloat("sens", sens);
+
+
+            if (SceneManager.GetActiveScene().buildIndex > 0)
+                foreach (Player p in instance.localPlayers.Values)
+                {
+                    p.playerCamera.frontEndMouseSens = sens;
+                }
+        }
     }
 }

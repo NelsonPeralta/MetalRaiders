@@ -604,7 +604,7 @@ public class PlayerController : MonoBehaviourPun
                     isAiming = false;
                     //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
                     //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
-                    camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
+                    camScript.backEndMouseSens = camScript.frontEndMouseSens;
                     gunCam.enabled = true;
                     //gunCam.fieldOfView = 60;
 
@@ -631,7 +631,7 @@ public class PlayerController : MonoBehaviourPun
         //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
         //gunCam.fieldOfView = 60;
         //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
-        camScript.mouseSensitivity = camScript.defaultMouseSensitivy;
+        camScript.backEndMouseSens = camScript.frontEndMouseSens;
         allPlayerScripts.aimingScript.playAimSound();
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);

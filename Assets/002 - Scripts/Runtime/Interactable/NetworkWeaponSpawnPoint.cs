@@ -215,7 +215,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     IEnumerator SpawnWeaponCoroutine()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(0.5f);
         SpawnWeapon();
     }
 }

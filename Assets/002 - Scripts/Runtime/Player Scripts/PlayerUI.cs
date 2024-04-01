@@ -92,7 +92,6 @@ public class PlayerUI : MonoBehaviour
         try
         {
             //GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
-            GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
         }
         catch { }
 
@@ -118,7 +117,6 @@ public class PlayerUI : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
 
         GetComponent<Player>().playerInventory.OnGrenadeChanged -= OnGrenadeChanged_Delegate;
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
@@ -152,13 +150,6 @@ public class PlayerUI : MonoBehaviour
         try { roomNameText.text = PhotonNetwork.CurrentRoom.Name; }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }
 
-        try
-        {
-            camSensWitnessText.text = $"Sens: {GameManager.instance.camSens.ToString()}";
-            //GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
-            //GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
-        }
-        catch { }
         try
         {
             //onlineGameTimeInstance = OnlineGameTime.onlineGameTimeInstance;
@@ -212,10 +203,6 @@ public class PlayerUI : MonoBehaviour
         // Change the ui using onlinePlayerSwarmScript.kills
     }
 
-    void OnCameraSensitivityChanged()
-    {
-        camSensWitnessText.text = $"Sens: {GameManager.instance.camSens.ToString()}";
-    }
 
     //public void ShowHeadshotIndicator()
     //{
@@ -364,7 +351,6 @@ public class PlayerUI : MonoBehaviour
             }
             catch
             {
-                GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
                 if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 {
                     SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;

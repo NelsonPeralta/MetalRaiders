@@ -7,8 +7,8 @@ public class PlayerCamera : MonoBehaviour
 {
     public PlayerRagdoll ragdollPrefab { get { return _ragdollPrefab; } set { _ragdollPrefab = value; } }
 
-    public float defaultMouseSensitivy;
-    public float mouseSensitivity;
+    public float frontEndMouseSens;
+    public float backEndMouseSens;
     public Transform playerCameraScriptParent;
     public Transform horizontalAxisTarget;
     public Transform verticalAxisTarget;
@@ -53,10 +53,13 @@ public class PlayerCamera : MonoBehaviour
 
 
 
-    ControllerType _controllerType;
+    [SerializeField] ControllerType _controllerType;
 
 
-
+    private void Awake()
+    {
+        frontEndMouseSens = PlayerPrefs.GetFloat("sens");
+    }
 
     void Start()
     {
@@ -69,7 +72,7 @@ public class PlayerCamera : MonoBehaviour
 
         try
         {
-            defaultMouseSensitivy = GameManager.instance.camSens;
+            frontEndMouseSens = PlayerPrefs.GetFloat("sens");
             GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
             GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
         }
@@ -77,7 +80,7 @@ public class PlayerCamera : MonoBehaviour
 
         try
         {
-            defaultMouseSensitivy = GameManager.instance.camSens;
+            frontEndMouseSens = PlayerPrefs.GetFloat("sens");
         }
         catch { }
 
@@ -104,28 +107,30 @@ public class PlayerCamera : MonoBehaviour
 
         _controllerType = pController.activeControllerType;
 
+
+        backEndMouseSens = frontEndMouseSens * 30;
+
+
         if (_controllerType == ControllerType.Joystick)
-        {
-            mouseSensitivity = defaultMouseSensitivy * 1.1f;
-        }
+            backEndMouseSens *= 1.1f;
         else
-        {
-            mouseSensitivity = defaultMouseSensitivy / 10;
-        }
+            backEndMouseSens /= 10;
+
+
 
         if (aimAssistCapsule.reticuleFriction)
-            mouseSensitivity *= 0.65f;
+            backEndMouseSens *= 0.65f;
 
         if (pController.isAiming)
         {
-            mouseSensitivity *= 0.65f;
+            backEndMouseSens *= 0.65f;
 
             if (_controllerType == ControllerType.Joystick && player.playerInventory.activeWeapon.scopeFov == 20)
-                mouseSensitivity *= 0.6f;
+                backEndMouseSens *= 0.6f;
         }
 
         if (player.aimAssist.redReticuleIsOn && (pController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
-            mouseSensitivity *= 0.5f;
+            backEndMouseSens *= 0.5f;
 
         if (!pController.pauseMenuOpen)
         {
@@ -154,8 +159,8 @@ public class PlayerCamera : MonoBehaviour
                 //if (Mathf.Abs(xAxisInput) <= 0.2f || yAxisInput == 0)
                 _yAxisInput *= 1.6f;
 
-            mouseX = _xAxisInput * mouseSensitivity * Time.deltaTime + HorizontalSway();
-            mouseY = _yAxisInput * mouseSensitivity * 0.75f * Time.deltaTime;
+            mouseX = _xAxisInput * backEndMouseSens * Time.deltaTime + HorizontalSway();
+            mouseY = _yAxisInput * backEndMouseSens * 0.75f * Time.deltaTime;
 
             float xDeadzone = mouseX * 0.1f;
             float yDeadzone = mouseY * 0.1f;
@@ -340,7 +345,7 @@ public class PlayerCamera : MonoBehaviour
 
     void OnCameraSensitivityChanged()
     {
-        defaultMouseSensitivy = GameManager.instance.camSens;
+        //frontEndMouseSens = GameManager.instance.camSens;
     }
 
     void OnDeath_Delegate(Player p)

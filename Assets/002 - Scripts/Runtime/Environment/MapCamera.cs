@@ -32,6 +32,7 @@ public class MapCamera : MonoBehaviour
     }
     private void Awake()
     {
+        AudioListener.volume = PlayerPrefs.GetFloat("volume");
         _loadingTimeOut = 30;
         _instance = this;
     }
@@ -86,7 +87,7 @@ public class MapCamera : MonoBehaviour
     {
         _canvas.gameObject.SetActive(false);
         _announcementPLayed = true;
-        AudioListener.volume = 1f;
+        GameManager.UpdateVolume();
         _announcerDelay = 2;
 
         try { if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) SwarmManager.instance.PlayOpeningMusic(); } catch { }
