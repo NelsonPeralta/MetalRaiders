@@ -57,7 +57,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
                 foreach (Player p in GameManager.instance.pid_player_Dict.Values)
                 {
-                    if (p.GetComponent<PlayerMultiplayerMatchStats>().score > hs)
+                    if (p && p.GetComponent<PlayerMultiplayerMatchStats>().score > hs)
                         hs = p.GetComponent<PlayerMultiplayerMatchStats>().score;
                 }
             }
@@ -67,7 +67,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
                 foreach (Player p in GameManager.instance.pid_player_Dict.Values)
                 {
-                    if (p.GetComponent<PlayerMultiplayerMatchStats>().kills > hs)
+                    if (p && p.GetComponent<PlayerMultiplayerMatchStats>().kills > hs)
                         hs = p.GetComponent<PlayerMultiplayerMatchStats>().kills;
                 }
             }
@@ -199,7 +199,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             FindObjectOfType<NetworkGameManager>().EndGame();
         //EndGame();
     }
-    public void EndGame(bool saveXp = true)
+    public void EndGame(bool saveXp = true, bool actuallyQuit = false)
     {
         CurrentRoomManager.instance.gameOver = true;
         foreach (Player pp in FindObjectsOfType<Player>())

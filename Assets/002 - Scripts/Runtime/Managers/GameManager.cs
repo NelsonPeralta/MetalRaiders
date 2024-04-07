@@ -390,6 +390,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
             WeaponPool.instance = null;
+            MultiplayerManager.instance.lootableWeaponsDict.Clear();
         }
         else if (scene.buildIndex > 0) // We're in the game scene
         {

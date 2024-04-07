@@ -1478,7 +1478,7 @@ public class Player : Biped
                     Debug.LogWarning("NULL DAMAGE SOURCE CLEAN NAME");
 
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame
-                    && deathNature == DeathNature.Melee)
+                    && deathNature == DeathNature.Stuck)
                 {
                     f = $"{killerPlayer.username} <color=\"red\"> Humiliated </color> {username}";
                     if (isMine)

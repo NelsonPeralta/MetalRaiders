@@ -718,10 +718,6 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
-        if (GameManager.instance.gameType == GameManager.GameType.GunGame
-            && player.playerInventory.playerGunGameManager.index + 1 != player.playerInventory.playerGunGameManager.gunIndex.Count)
-            return;
-
         if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding &&
             !isHoldingShootBtn && /*!isFiring &&*/ !isMeleeing && !isSprinting /* && !isInspecting */)
         {
