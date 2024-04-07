@@ -375,7 +375,7 @@ public class WeaponProperties : MonoBehaviour
         }
         catch { }
 
-        if (GameManager.instance.gameType == GameManager.GameType.Fiesta && codeName.Equals("rpg") && ammoCapacity > 0) { ammoCapacity = 1; }
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta && codeName.Equals("rpg") && ammoCapacity > 0) { ammoCapacity = 2; }
 
     }
 

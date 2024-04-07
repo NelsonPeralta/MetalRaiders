@@ -97,7 +97,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
         try
         {
-            if (weaponSpawned && (gameTime.totalTime % (weaponSpawned.tts - 5) == 0) && gameTime.totalTime > 0)
+            if (weaponSpawned && (gameTime.totalTime % (weaponSpawned.tts - 1) == 0) && gameTime.totalTime > 0)
             {
                 //EnableWeapon();
                 StartCoroutine(ResetWeaponPosition_Coroutine());

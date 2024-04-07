@@ -307,7 +307,7 @@ public class PlayerInventory : MonoBehaviourPun
         }
         else if (GameManager.instance.gameType == GameManager.GameType.Swat
                 || GameManager.instance.gameType == GameManager.GameType.Retro
-                || GameManager.instance.gameType == GameManager.GameType.GunGame)
+                /*|| GameManager.instance.gameType == GameManager.GameType.GunGame*/)
             grenades = 1;
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
@@ -760,6 +760,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             StartingWeapon = _playerGunGameManager.gunIndex[_playerGunGameManager.index].codeName;
             StartingWeapon2 = "pistol";
+            //grenades = 1;
         }
 
         if (GameManager.instance.gameType == GameManager.GameType.Fiesta)
