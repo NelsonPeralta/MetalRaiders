@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using ExitGames.Client.Photon.StructWrapping;
 using System.Security.Cryptography;
 using Photon.Realtime;
+using Newtonsoft.Json.Bson;
 
 public class PlayerController : MonoBehaviourPun
 {

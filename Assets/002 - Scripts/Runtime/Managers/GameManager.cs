@@ -354,7 +354,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (!PlayerPrefs.HasKey("volume"))
         {
-            PlayerPrefs.SetFloat("volume", 1);
+            PlayerPrefs.SetFloat("volume", 100);
         }
 
         if (!PlayerPrefs.HasKey("sens"))

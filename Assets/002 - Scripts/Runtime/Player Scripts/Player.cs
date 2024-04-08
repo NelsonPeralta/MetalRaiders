@@ -472,11 +472,11 @@ public class Player : Biped
             //if(GameManager.instance.pid_player_Dict.ContainsKey(value)) _lastPID = value;else _lastPID = 0;
             _lastPID = value;
 
-            try { killerPlayer = GameManager.GetPlayerWithPhotonViewId(_lastPID); } catch { _lastPID = 0; }
+            try { playerThatKilledMe = GameManager.GetPlayerWithPhotonViewId(_lastPID); } catch { _lastPID = 0; }
         }
     }
 
-    public Player killerPlayer { get { return _lastPlayerSource; } private set { _lastPlayerSource = value; } }
+    public Player playerThatKilledMe { get { return _lastPlayerSource; } private set { _lastPlayerSource = value; } }
 
     public Camera uiCamera { get { return _uiCamera; } }
 
@@ -1330,8 +1330,8 @@ public class Player : Biped
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         try
         {
-            if ((GameManager.instance.teamMode == GameManager.TeamMode.Classic && killerPlayer.team != this.team) || GameManager.instance.teamMode == GameManager.TeamMode.None)
-                if (killerPlayer != this) killerPlayer.GetComponent<PlayerMultiplayerMatchStats>().damage += damage;
+            if ((GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team != this.team) || GameManager.instance.teamMode == GameManager.TeamMode.None)
+                if (playerThatKilledMe != this) playerThatKilledMe.GetComponent<PlayerMultiplayerMatchStats>().damage += damage;
         }
         catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
@@ -1341,7 +1341,7 @@ public class Player : Biped
         hitPoints = newHealth;
 
 
-        if (!isDead) killerPlayer.GetComponent<PlayerUI>().SpawnHitMarker();
+        if (!isDead && playerThatKilledMe) playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker();
     }
 
 
@@ -1462,41 +1462,41 @@ public class Player : Biped
         Debug.Log("AddPlayerKill_RPC");
         Debug.Log($"PLAYER {username} DIED against {GameManager.GetPlayerWithPhotonViewId(wpid).playerDataCell.playerExtendedPublicData.username}. DN: {(DeathNature)dni}. Source: {dSource}");
 
-        killerPlayer = GameManager.GetPlayerWithPhotonViewId(wpid); _damageSourceCleanName = dSource; deathNature = (DeathNature)dni; _lastPID = wpid;
+        playerThatKilledMe = GameManager.GetPlayerWithPhotonViewId(wpid); _damageSourceCleanName = dSource; deathNature = (DeathNature)dni; _lastPID = wpid;
 
-        killerPlayer.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+        playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
 
         try
         {
             foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
             {
-                string f = $"{killerPlayer.username} killed {username}";
+                string f = $"{playerThatKilledMe.username} killed {username}";
 
                 if (_damageSourceCleanName != null && _damageSourceCleanName != "")
-                    f = $"{killerPlayer.username} [ {_damageSourceCleanName} ] {username}";
+                    f = $"{playerThatKilledMe.username} [ {_damageSourceCleanName} ] {username}";
                 else
                     Debug.LogWarning("NULL DAMAGE SOURCE CLEAN NAME");
 
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame
                     && deathNature == DeathNature.Stuck)
                 {
-                    f = $"{killerPlayer.username} <color=\"red\"> Humiliated </color> {username}";
+                    f = $"{playerThatKilledMe.username} <color=\"red\"> Humiliated </color> {username}";
                     if (isMine)
                         playerInventory.playerGunGameManager.index--;
                 }
                 else if (deathNature == DeathNature.Sniped)
-                    f = $"{killerPlayer.username} <color=\"yellow\">!!! Sniped !!!</color> {username}";
+                    f = $"{playerThatKilledMe.username} <color=\"yellow\">!!! Sniped !!!</color> {username}";
                 else if (deathByHeadshot)
                     f += $" with a <color=\"red\">Headshot</color>!";
                 else if (deathByGroin)
                     f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
 
-                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && killerPlayer.team == this.team)
-                    f = $"{killerPlayer.username} buddyfucked {username}";
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team == this.team)
+                    f = $"{playerThatKilledMe.username} buddyfucked {username}";
 
 
 
-                if (this != killerPlayer)
+                if (this != playerThatKilledMe)
                 {
                     kfm.EnterNewFeed(f);
                     continue;
@@ -1510,12 +1510,12 @@ public class Player : Biped
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             if (GameManager.instance.teamMode == GameManager.TeamMode.None ||
-                                (GameManager.instance.teamMode == GameManager.TeamMode.Classic && killerPlayer.team != this.team))
+                                (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team != this.team))
             {
 
                 try
                 {
-                    PlayerMedals sourcePlayerMedals = killerPlayer._playerMedals;
+                    PlayerMedals sourcePlayerMedals = playerThatKilledMe._playerMedals;
                     if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
                     {
                         if (deathByGroin)

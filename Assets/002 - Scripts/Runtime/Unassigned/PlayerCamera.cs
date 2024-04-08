@@ -201,7 +201,7 @@ public class PlayerCamera : MonoBehaviour
                     //var lookDir = player.lastPlayerSource.transform.position - transform.position;
                     //lookDir.y = 0; // keep only the horizontal direction
                     //verticalAxisTarget.rotation = Quaternion.LookRotation(lookDir);
-                    var p = player.killerPlayer.transform.position + new Vector3(0, 2, 0); /*p.y = 0;*/
+                    var p = player.playerThatKilledMe.transform.position + new Vector3(0, 2, 0); /*p.y = 0;*/
                     //playerCameraScriptParent.LookAt(p);
                     verticalAxisTarget.LookAt(p);
                     //verticalAxisTarget.rotation = Quaternion.Euler(0, verticalAxisTarget.rotation.y, verticalAxisTarget.rotation.z);
