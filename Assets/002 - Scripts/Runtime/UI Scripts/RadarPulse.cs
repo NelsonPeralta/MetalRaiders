@@ -21,6 +21,9 @@ public class RadarPulse : MonoBehaviour
     public RenderTexture player2RT;
     public RenderTexture player3RT;
 
+
+    float wait;
+
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -37,11 +40,19 @@ public class RadarPulse : MonoBehaviour
     {
         //AssignCorrectMinimap();
 
-        range += rangeSpeed * Time.deltaTime;
-        if (range > maxRange)
+
+        if (range < maxRange && wait <= 0)
         {
-            range = 0f;
+            range += rangeSpeed * Time.deltaTime;
+
+            if (range >= maxRange)
+            {
+                range = 0f;
+                wait = 0.6f;
+            }
         }
+
+        if (wait > 0) { wait -= Time.deltaTime; }
 
         pulseTransform.localScale = new Vector3(range, range);
     }

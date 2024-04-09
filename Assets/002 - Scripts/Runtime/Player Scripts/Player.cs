@@ -1470,29 +1470,29 @@ public class Player : Biped
         {
             foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
             {
-                string f = $"{playerThatKilledMe.username} killed {username}";
+                string f = $"<color=#31cff9>{playerThatKilledMe.username} killed {username}";
 
                 if (_damageSourceCleanName != null && _damageSourceCleanName != "")
-                    f = $"{playerThatKilledMe.username} [ {_damageSourceCleanName} ] {username}";
+                    f = $"<color=#31cff9>{playerThatKilledMe.username} [ {_damageSourceCleanName} ] {username}";
                 else
                     Debug.LogWarning("NULL DAMAGE SOURCE CLEAN NAME");
 
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame
                     && deathNature == DeathNature.Stuck)
                 {
-                    f = $"{playerThatKilledMe.username} <color=\"red\"> Humiliated </color> {username}";
+                    f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"red\"> Humiliated </color> <color=#31cff9>{username}";
                     if (isMine)
                         playerInventory.playerGunGameManager.index--;
                 }
                 else if (deathNature == DeathNature.Sniped)
-                    f = $"{playerThatKilledMe.username} <color=\"yellow\">!!! Sniped !!!</color> {username}";
+                    f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"yellow\">!!! Sniped !!!</color> <color=#31cff9>{username}";
                 else if (deathByHeadshot)
                     f += $" with a <color=\"red\">Headshot</color>!";
                 else if (deathByGroin)
                     f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
 
                 if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team == this.team)
-                    f = $"{playerThatKilledMe.username} buddyfucked {username}";
+                    f = $"<color=#31cff9>{playerThatKilledMe.username} buddyfucked {username}";
 
 
 
@@ -1502,7 +1502,7 @@ public class Player : Biped
                     continue;
                 }
                 else
-                    kfm.EnterNewFeed($"<color=\"white\"> {username} committed suicide");
+                    kfm.EnterNewFeed($"<color=#31cff9> {username} committed suicide");
             }
         }
         catch (System.Exception e) { Debug.LogException(e); }

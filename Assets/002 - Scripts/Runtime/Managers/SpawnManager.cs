@@ -37,7 +37,7 @@ public class SpawnManager : MonoBehaviour
 
     Transform GetRandomSpawnpoint(int controllerId)
     {
-        try { GameManager.GetLocalPlayer(controllerId).GetComponent<KillFeedManager>().EnterNewFeed($"Spawning randomly"); } catch { }
+        try { GameManager.GetLocalPlayer(controllerId).GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Spawning randomly"); } catch { }
         return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
     }
 

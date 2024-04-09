@@ -15,6 +15,14 @@ public class HillManager : MonoBehaviour
     int c;
     int _hillTtl = 45;
 
+    private void Awake()
+    {
+        foreach (Transform child in transform)
+        {
+            _locations.Add(child.gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {

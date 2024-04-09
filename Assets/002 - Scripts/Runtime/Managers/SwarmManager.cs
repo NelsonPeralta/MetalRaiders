@@ -974,9 +974,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             GameManager.GetRootPlayer().announcer.AddClip(_weaponDropClip);
             foreach (Player p in GameManager.instance.pid_player_Dict.Values)
             {
-                p.killFeedManager.EnterNewFeed($"Lives added: {livesToAdd}");
-                p.killFeedManager.EnterNewFeed("Health Packs Respawned");
-                p.killFeedManager.EnterNewFeed("Weapons respawned");
+                p.killFeedManager.EnterNewFeed($"<color=#31cff9>Lives added: {livesToAdd}");
+                p.killFeedManager.EnterNewFeed("<color=#31cff9>Health Packs Respawned");
+                p.killFeedManager.EnterNewFeed("<color=#31cff9>Weapons respawned");
             }
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)
@@ -1096,7 +1096,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (saveXp)
             {
                 pp.allPlayerScripts.announcer.PlayGameOverClip();
-                pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER!");
+                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER!");
                 WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>());
                 pp.LeaveRoomWithDelay();
             }

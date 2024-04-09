@@ -174,14 +174,14 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
             HideWeapon();
             NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
             playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();
-            playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({ammoNeeded})");
+            playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up {cleanName} ammo ({ammoNeeded})</color>");
             return;
         }
         else
         {
             w.spareAmmo += ammoToLoot;
         }
-        playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up {cleanName} ammo ({ammoToLoot})");
+        playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up {cleanName} ammo ({ammoToLoot})");
 
         if (ammoNeeded >= ammoAvailable)
             HideWeapon();

@@ -126,6 +126,9 @@ public class Hill : MonoBehaviour
 
     private void Update()
     {
+        if (!CurrentRoomManager.instance.gameStarted) return;
+
+
         if (playersInRange.Count == 1)
         {
             if (_timer < 1)

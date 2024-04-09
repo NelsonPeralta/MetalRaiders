@@ -217,7 +217,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
                         if (pms.score >= scoreToWin)
                         {
-                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! {pms.GetComponent<Player>().username} wins!");
+                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
                             this.winningPlayers.Add(pms.GetComponent<Player>());
                             this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
                         }
@@ -227,7 +227,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     if (redTeamScore >= scoreToWin)
                     {
 
-                        pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! Red Team wins!");
+                        pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Red Team wins!");
 
 
                         foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
@@ -239,7 +239,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     else if (blueTeamScore >= scoreToWin)
                     {
 
-                        pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER! Blue Team wins!");
+                        pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Blue Team wins!");
 
                         foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
                             if (pms.GetComponent<Player>().team == GameManager.Team.Blue)
@@ -251,7 +251,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                pp.GetComponent<KillFeedManager>().EnterNewFeed($"GAME OVER!");
+                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER!");
             }
 
             if (saveXp)

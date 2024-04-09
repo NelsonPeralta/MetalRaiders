@@ -25,7 +25,9 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     public DualWielding dWielding;
     public PlayerController pController;
     public PlayerSFXs sfxManager;
+    public Transform pickupComponents;
     public TMP_Text pickupText;
+    public Image pickupWeaponImage;
     public AudioSource ammoPickupAudioSource;
     public PhotonView PV;
     //public ControllerScript cScript;
@@ -64,11 +66,12 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                 {
                     if (wp.weaponIcon)
                     {
+                        pickupComponents.gameObject.SetActive(true);
                         pickupText.text = $"Hold E to pick up";
-                        pickupText.GetComponentInChildren<Image>().sprite = wp.weaponIcon;
-                        var tempColor = pickupText.GetComponentInChildren<Image>().color;
+                        pickupWeaponImage.sprite = wp.weaponIcon;
+                        var tempColor = pickupWeaponImage.color;
                         tempColor.a = 255;
-                        pickupText.GetComponentInChildren<Image>().color = tempColor;
+                        pickupWeaponImage.color = tempColor;
                     }
                     else
                         pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
@@ -77,10 +80,11 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             else
             {
                 pickupText.text = "";
-                pickupText.GetComponentInChildren<Image>().sprite = null;
-                var tempColor = pickupText.GetComponentInChildren<Image>().color;
+                pickupWeaponImage.sprite = null;
+                var tempColor = pickupWeaponImage.color;
                 tempColor.a = 0;
-                pickupText.GetComponentInChildren<Image>().color = tempColor;
+                pickupWeaponImage.color = tempColor;
+                pickupComponents.gameObject.SetActive(false);
             }
         }
     }
@@ -159,6 +163,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         weaponPool = FindObjectOfType<WeaponPool>();
 
         pController.OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
+        pickupComponents.gameObject.SetActive(false);
     }
 
     private void OnTriggerStay(Collider other)
@@ -361,7 +366,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         pInventory.activeWeapon = newActiveWeapon;
         pInventory.activeWeapon.loadedAmmo = weaponToLoot.networkAmmo;
         pInventory.activeWeapon.spareAmmo = weaponToLoot.spareAmmo;
-        pInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"Picked up a {pInventory.activeWeapon.cleanName}");
+        pInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up a {pInventory.activeWeapon.cleanName}");
         //pInventory.holsteredWeapon = previousActiveWeapon;
 
         //StartCoroutine(pInventory.ToggleTPPistolIdle(1));
