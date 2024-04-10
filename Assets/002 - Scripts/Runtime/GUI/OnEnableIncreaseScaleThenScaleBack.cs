@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using PlasticGui.WorkspaceWindow.PendingChanges;
 using UnityEngine;
 
 public class OnEnableIncreaseScaleThenScaleBack : MonoBehaviour
