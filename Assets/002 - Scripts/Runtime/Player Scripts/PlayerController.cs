@@ -722,11 +722,11 @@ public class PlayerController : MonoBehaviourPun
         if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding &&
             !isHoldingShootBtn && /*!isFiring &&*/ !isMeleeing && !isSprinting /* && !isInspecting */)
         {
-            if (pInventory.grenades > 0 && !isThrowingGrenade)
+            if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
             {
                 rScript.reloadIsCanceled = true;
                 ScopeOut();
-                pInventory.grenades = pInventory.grenades - 1;
+                pInventory.fragGrenades = pInventory.fragGrenades - 1;
                 weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
                 StartCoroutine(GrenadeSpawnDelay());
                 PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
@@ -861,16 +861,23 @@ public class PlayerController : MonoBehaviourPun
             fragGrenadesActive = false;
             stickyGrenadesActive = true;
 
-            GetComponent<PlayerUI>().fragGrenadeIcon.SetActive(false);
-            GetComponent<PlayerUI>().stickyGrenadeIcon.SetActive(true);
+            //GetComponent<PlayerUI>().plasmaGrenadeBox.SetActive(false);
+            GetComponent<PlayerUI>().plasmaGrenadeImage.gameObject.SetActive(true);
+            GetComponent<PlayerUI>().plasmaGrenadeImage.GetComponent<IncreaseScaleThenScaleBackInTime>().Trigger();
+            GetComponent<PlayerUI>().fragGrenadeImage.gameObject.SetActive(false);
+            //GetComponent<PlayerUI>().fragGrenadeBox.SetActive(true);
         }
         else if (stickyGrenadesActive)
         {
             fragGrenadesActive = true;
             stickyGrenadesActive = false;
 
-            GetComponent<PlayerUI>().fragGrenadeIcon.SetActive(true);
-            GetComponent<PlayerUI>().stickyGrenadeIcon.SetActive(false);
+            //GetComponent<PlayerUI>().fragGrenadeBox.SetActive(true);
+            //GetComponent<PlayerUI>().plasmaGrenadeBox.SetActive(false);
+
+            GetComponent<PlayerUI>().plasmaGrenadeImage.gameObject.SetActive(false);
+            GetComponent<PlayerUI>().fragGrenadeImage.gameObject.SetActive(true);
+            GetComponent<PlayerUI>().fragGrenadeImage.GetComponent<IncreaseScaleThenScaleBackInTime>().Trigger();
         }
     }
 

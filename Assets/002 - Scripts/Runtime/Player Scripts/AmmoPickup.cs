@@ -35,7 +35,7 @@ public class AmmoPickup : MonoBehaviour
         int ammoToRemoveFromThisPack = 0;
 
         if (ammoPackScript.ammoType == "grenade")
-            ammoToRemoveFromThisPack = pInventory.maxGrenades - pInventory.grenades;
+            ammoToRemoveFromThisPack = pInventory.maxGrenades - pInventory.fragGrenades;
 
         if (ammoToRemoveFromThisPack > 0 && playerProperties.PV.IsMine)
             aSource.Play();
@@ -47,7 +47,7 @@ public class AmmoPickup : MonoBehaviour
 
         if (ammoPackScript.ammoType == "grenade")
         {
-            pInventory.grenades += ammoToRemoveFromThisPack;
+            pInventory.fragGrenades += ammoToRemoveFromThisPack;
             playerProperties.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up {ammoToRemoveFromThisPack} Grenades");
         }
 

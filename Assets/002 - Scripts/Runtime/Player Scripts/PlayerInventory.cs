@@ -148,7 +148,7 @@ public class PlayerInventory : MonoBehaviourPun
     public GameObject[] weaponsEquiped = new GameObject[2];
 
     [Header("Grenades")]
-    int _grenades;
+    int _fragGrenades, _plasmaGrenades;
     public int maxGrenades = 4;
     public Transform grenadePrefab;
     public Transform stickyGrenadePrefab;
@@ -199,12 +199,22 @@ public class PlayerInventory : MonoBehaviourPun
     /// </summary>
     /// 
 
-    public int grenades
+    public int fragGrenades
     {
-        get { return _grenades; }
+        get { return _fragGrenades; }
         set
         {
-            _grenades = value;
+            _fragGrenades = value;
+            OnGrenadeChanged?.Invoke(this);
+        }
+    }
+
+    public int plasmaGrenades
+    {
+        get { return _plasmaGrenades; }
+        set
+        {
+            _plasmaGrenades = value;
             OnGrenadeChanged?.Invoke(this);
         }
     }
@@ -303,15 +313,15 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
-            grenades = maxGrenades;
+            fragGrenades = maxGrenades;
         }
         else if (GameManager.instance.gameType == GameManager.GameType.Swat
                 || GameManager.instance.gameType == GameManager.GameType.Retro
                 /*|| GameManager.instance.gameType == GameManager.GameType.GunGame*/)
-            grenades = 1;
+            fragGrenades = 1;
         else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         {
-            grenades = 2;
+            fragGrenades = 2;
         }
     }
 

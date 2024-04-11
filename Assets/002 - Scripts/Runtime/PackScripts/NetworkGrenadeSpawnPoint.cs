@@ -6,6 +6,8 @@ using System.Threading;
 
 public class NetworkGrenadeSpawnPoint : MonoBehaviour
 {
+    public enum Type { frag, plasma }
+    public Type type;
     public bool enable
     {
         set

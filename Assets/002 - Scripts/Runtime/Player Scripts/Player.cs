@@ -1044,10 +1044,10 @@ public class Player : Biped
 
         StartCoroutine(MakeThirdPersonModelVisible());
 
-        playerInventory.grenades = 2;
+        playerInventory.fragGrenades = 2;
         if (GameManager.instance.gameType == GameManager.GameType.Swat
                 || GameManager.instance.gameType == GameManager.GameType.Retro)
-            playerInventory.grenades = 1;
+            playerInventory.fragGrenades = 1;
 
         //StartCoroutine(playerInventory.EquipStartingWeapon());
         playerInventory.weaponsEquiped[1] = null;

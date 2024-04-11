@@ -20,9 +20,9 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Top Left", order = 1)]
     public Transform topLeft;
-    public GameObject fragGrenadeIcon;
-    public Text grenadeText;
-    public GameObject stickyGrenadeIcon;
+    public Text fragGrenadeText, plasmaGrenadeText;
+    public GameObject fragGrenadeBox, plasmaGrenadeBox;
+    public Image fragGrenadeImage, plasmaGrenadeImage;
     public GameObject swarmLivesHolder;
     public Text swarmLivesText;
     public Text mapNameText;
@@ -131,6 +131,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        plasmaGrenadeImage.gameObject.SetActive(false);
         GameObject thm = null;
         for (int i = 0; i < 32; i++)
         {
@@ -332,7 +333,8 @@ public class PlayerUI : MonoBehaviour
     }
     void OnGrenadeChanged_Delegate(PlayerInventory playerInventory)
     {
-        grenadeText.text = playerInventory.grenades.ToString();
+        fragGrenadeText.text = playerInventory.fragGrenades.ToString();
+        plasmaGrenadeText.text = playerInventory.plasmaGrenades.ToString();
     }
 
     void OnSwarmAiDeathOrSpawn(SwarmManager swarmManager)

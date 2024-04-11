@@ -43,20 +43,20 @@ public class GrenadeAmmoPack : MonoBehaviour
             pInventory = other.gameObject.GetComponent<Player>().playerInventory;
             aSource = other.gameObject.GetComponent<AllPlayerScripts>().weaponPickUp.ammoPickupAudioSource;
 
-            ammoAllowedToRemoveFromThisPack = pInventory.maxGrenades - pInventory.grenades;
+            ammoAllowedToRemoveFromThisPack = pInventory.maxGrenades - pInventory.fragGrenades;
 
-            if (pInventory.grenades != pInventory.maxGrenades)
+            if (pInventory.fragGrenades != pInventory.maxGrenades)
                 aSource.Play();
 
 
             if (ammoInThisPack <= ammoAllowedToRemoveFromThisPack)
             {
-                pInventory.grenades = pInventory.grenades + ammoInThisPack;
+                pInventory.fragGrenades = pInventory.fragGrenades + ammoInThisPack;
                 ammoInThisPack = 0;
             }
             else if(ammoInThisPack > ammoAllowedToRemoveFromThisPack)
             {
-                pInventory.grenades = pInventory.grenades + ammoAllowedToRemoveFromThisPack;
+                pInventory.fragGrenades = pInventory.fragGrenades + ammoAllowedToRemoveFromThisPack;
                 ammoInThisPack = ammoInThisPack - ammoAllowedToRemoveFromThisPack;
 
                 if (ammoText != null)

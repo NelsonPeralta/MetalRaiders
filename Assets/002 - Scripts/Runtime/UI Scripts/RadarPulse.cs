@@ -48,7 +48,7 @@ public class RadarPulse : MonoBehaviour
             if (range >= maxRange)
             {
                 range = 0f;
-                wait = 0.6f;
+                wait = 1f;
             }
         }
 
