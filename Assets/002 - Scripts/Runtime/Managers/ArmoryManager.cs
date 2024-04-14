@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using UnityEngine.UI;
 
 public class ArmoryManager : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class ArmoryManager : MonoBehaviour
     public ArmorPieceListing armorPieceListingPrefab;
     public List<ArmorPieceListing> armorPieceListingList = new List<ArmorPieceListing>();
 
+    [SerializeField] Slider _rotatePlayerModelScrollbar;
+    Vector3 _defaultPlayerModelRotation;
+
 
     void Awake()
     {
@@ -29,6 +33,9 @@ public class ArmoryManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
         instance = this;
+
+        _defaultPlayerModelRotation = playerModel.transform.localRotation.eulerAngles;
+        _rotatePlayerModelScrollbar.value = 180;
     }
     private void OnEnable()
     {
@@ -69,6 +76,8 @@ public class ArmoryManager : MonoBehaviour
     private void OnDisable()
     {
         playerModel.SetActive(false);
+        playerModel.transform.rotation = Quaternion.Euler(Vector3.zero);
+        if (_defaultPlayerModelRotation.y > 180) playerModel.transform.Rotate(new Vector3(0, 180, 0), relativeTo: Space.Self);
 
         foreach (ArmorPieceListing armorPieceListing in armorPieceListingList)
             Destroy(armorPieceListing.gameObject);
@@ -80,5 +89,18 @@ public class ArmoryManager : MonoBehaviour
         foreach (ArmorPieceListing armorPieceListing in armorPieceListingList)
             armorPieceListing.playerArmorPiece = armorPieceListing.playerArmorPiece;
 
+    }
+
+
+    float previousValue;
+    public void RotateMyObject()
+    {
+        // REFERENCE: https://discussions.unity.com/t/rotate-gameobject-with-gui-slider/204758/2
+        // How much we've changed
+        float delta = (_rotatePlayerModelScrollbar.value - 180) - this.previousValue;
+        this.playerModel.transform.Rotate(Vector3.up * delta);
+
+        // Set our previous value for the next change
+        this.previousValue = _rotatePlayerModelScrollbar.value - 180;
     }
 }
