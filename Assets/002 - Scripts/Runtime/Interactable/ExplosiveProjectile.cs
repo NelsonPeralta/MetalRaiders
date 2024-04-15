@@ -26,16 +26,22 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] GameObject _visualIndicatorDuplicate;
     [SerializeField] GameObject _stuckVfx;
     [SerializeField] GameObject _fakeModel;
-    [SerializeField] float _ttl;
+    [SerializeField] float _ttl, _defaultTtl;
 
     bool _collided;
-    float _explosionDelayOnImpact, _defaultTtl;
+    float _explosionDelayOnImpact;
 
 
-
+    private void Awake()
+    {
+        if (_defaultTtl <= 0) { _defaultTtl = 10; }
+    }
 
     private void OnEnable()
     {
+        if (_defaultTtl <= 0) { _defaultTtl = 10; }
+
+
         _visualIndicator.SetActive(true);
         try { _stuckVfx.SetActive(false); } catch { }
         if (_sticky)
@@ -49,12 +55,6 @@ public class ExplosiveProjectile : MonoBehaviour
         _collided = false; _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.layer = 8;
-    }
-
-    private void Awake()
-    {
-        if (_ttl <= 0) _ttl = 10;
-        _defaultTtl = _ttl;
     }
 
     // Start is called before the first frame update
@@ -81,6 +81,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
             if (_ttl <= 0)
             {
+                print($"{name} disabled due to ttl");
                 gameObject.SetActive(false);
             }
         }

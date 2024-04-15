@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum CoopGameType { Survival }
     public enum TeamMode { Classic, None }
 
+    public enum PreviousScenePayload { None, OpenCarnageReport, ResetPlayerDataCells }
+
     public List<int> arenaLevelIndexes = new List<int>();
 
     // Intances
@@ -283,6 +285,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     List<NetworkGrenadeSpawnPoint> _networkGrenadeSpawnPoints = new List<NetworkGrenadeSpawnPoint>();
 
     [SerializeField] AudioSource _clickSound, _cancelSound;
+    public List<PreviousScenePayload> previousScenePayloads = new List<PreviousScenePayload>();
 
 
     public bool playerDataRetrieved
@@ -381,6 +384,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+
+            print("GAME MANAGER ONSCENELOADED 0");
+
+            if (previousScenePayloads.Contains(PreviousScenePayload.ResetPlayerDataCells))
+            {
+                CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
+                previousScenePayloads.Remove(PreviousScenePayload.ResetPlayerDataCells);
+            }
+
+
+
             try { gameMode = GameMode.Multiplayer; } catch { }
             try { gameType = GameType.Fiesta; } catch { }
             try { teamMode = TeamMode.None; } catch { }

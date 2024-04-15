@@ -113,7 +113,6 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
             foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
             {
-                Debug.Log(lw.name);
                 lw.enabled = false;
                 lw.ttl = 99999;
             }

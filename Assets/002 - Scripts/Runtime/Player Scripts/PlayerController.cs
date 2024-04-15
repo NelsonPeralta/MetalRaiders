@@ -1145,7 +1145,7 @@ public class PlayerController : MonoBehaviourPun
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("Throw Grenade");
 
         //Wait for set amount of time before spawning grenade
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.2f);
         //Spawn grenade prefab at spawnpoint
 
         PV.RPC("SpawnGrenade_RPC", RpcTarget.All, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
@@ -1268,6 +1268,10 @@ public class PlayerController : MonoBehaviourPun
     public void QuitMatch()
     {
         Debug.Log("Returning to Main Menu");
+
+        GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReport);
+        GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
+
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             FindObjectOfType<MultiplayerManager>().EndGame(false);

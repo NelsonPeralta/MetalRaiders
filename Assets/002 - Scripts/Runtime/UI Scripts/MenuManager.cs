@@ -7,6 +7,7 @@ using System.IO;
 using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
+using static GameManager;
 
 public class MenuManager : MonoBehaviour
 {
@@ -46,16 +47,22 @@ public class MenuManager : MonoBehaviour
     public void OpenMenu(string menuName, bool closeOthers = true) // Open a menu GO using the name from its Menu script
     {
 
-        Debug.Log($"Opem {menuName}");
+        Debug.Log($"OPEN MENU: {menuName}");
+
+        if (GameManager.instance.previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReport))
+        { menuName = "carnage report"; print($"Changed to Carnage Report {menuName}"); }
+
+
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName == menuName)
             {
+                Debug.Log($"Open {menus[i].menuName}");
                 menus[i].Open();
             }
             else if (menus[i].open && closeOthers)
             {
-                Debug.Log($"Closing {menuName}");
+                Debug.Log($"Closing {menus[i].menuName}");
                 CloseMenu(menus[i]);
             }
         }

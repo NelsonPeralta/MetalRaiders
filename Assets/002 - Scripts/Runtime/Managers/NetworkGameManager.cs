@@ -209,6 +209,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             if (CurrentRoomManager.instance.gameOver) return;
 
+            GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReport);
+            GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
+
             if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 MultiplayerManager.instance.EndGame();
             else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)

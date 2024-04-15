@@ -4954,6 +4954,7 @@ MonoBehaviour:
   _stuckVfx: {fileID: 0}
   _fakeModel: {fileID: 0}
   _ttl: 0
+  _defaultTtl: 0
 --- !u!1 &1833708575658552
 GameObject:
   m_ObjectHideFlags: 0
@@ -9812,7 +9813,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

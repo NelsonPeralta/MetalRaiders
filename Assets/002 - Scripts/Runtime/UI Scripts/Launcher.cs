@@ -31,7 +31,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             _levelToLoadIndex = value;
             _mapSelectedPreview.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
-            _mapSelectedPreview.gameObject.SetActive(CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch);
+            _mapSelectedPreview.gameObject.SetActive((CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch) ||
+                (!PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private));
             mapSelectedText.text = $"Map: {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().mapName}";
             _mapSelectedPreview.sprite = GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().image;
             //mapSelectedText.text = $"Map: {Launcher.NameFromIndex(_levelToLoadIndex).Replace("PVP - ", "")}";
@@ -203,6 +204,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        print("LAUNCHER OnJoinedLobby");
+
         Scene currentScene = SceneManager.GetActiveScene();
 
         if (currentScene.buildIndex > 0) // We are not in the menu
@@ -210,31 +213,31 @@ public class Launcher : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel(0);
         }
 
-        if (WebManager.webManagerInstance)
-        {
-            if (WebManager.webManagerInstance.pda.PlayerDataIsSet())
-            {
-                Debug.Log(GameManager.instance.carnageReport.xpGained);
-                if (GameManager.instance.carnageReport == null)
-                    Debug.Log("Carnage report is NULL");
+        //if (WebManager.webManagerInstance)
+        //{
+        //    if (WebManager.webManagerInstance.pda.PlayerDataIsSet())
+        //    {
+        //        Debug.Log(GameManager.instance.carnageReport.xpGained);
+        //        if (GameManager.instance.carnageReport == null)
+        //            Debug.Log("Carnage report is NULL");
 
-                if (GameManager.instance.carnageReport.xpGained <= 0)
-                {
-                    //MenuManager.Instance.OpenMenu("online title"); // Runs this line if quit game an returning to menu
-                }
-                //else
-                MenuManager.Instance.OpenMenu("carnage report");
-            }
-            else
-            {
+        //        if (GameManager.instance.carnageReport.xpGained <= 0)
+        //        {
+        //            //MenuManager.Instance.OpenMenu("online title"); // Runs this line if quit game an returning to menu
+        //        }
+        //        //else
+        //        MenuManager.Instance.OpenMenu("carnage report");
+        //    }
+        //    else
+        //    {
 
-                //MenuManager.Instance.OpenMenu("offline title");
-            }
-        }
-        else
-        {
-            MenuManager.Instance.OpenMenu("offline title");
-        }
+        //        //MenuManager.Instance.OpenMenu("offline title");
+        //    }
+        //}
+        //else
+        //{
+        //    MenuManager.Instance.OpenMenu("offline title");
+        //}
         Debug.Log("Joined Lobby");
         if (PhotonNetwork.NickName == "")
             PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
@@ -716,25 +719,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     void OnSceneLoaded()
     {
         Debug.Log($"PhotonNetwork.NetworkClientState: {PhotonNetwork.NetworkClientState}");
-        Scene currentScene = SceneManager.GetActiveScene();
-
-        if (currentScene.buildIndex == 0)
-        {
-            if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer)
-            {
-                // Can Join Room
-                //PhotonNetwork.JoinRandomRoom();
-            }
-            else
-            {
-                //Debug.LogWarning("Can't join random room now, client is not ready");
-            }
-        }
-
-        if (currentScene.buildIndex > 0) // We are not in the menu
-        {
-            //commonRoomTexts.gameObject.SetActive(false);
-        }
     }
 
 

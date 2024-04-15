@@ -130,8 +130,11 @@ public class CarnageReportMenu : MonoBehaviour
     private void OnDisable()
     {
         //GameManager.carnageReport = null;
-        FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(false);
+        if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReport))
+            GameManager.instance.previousScenePayloads.Remove(GameManager.PreviousScenePayload.OpenCarnageReport);
 
+
+        FindObjectOfType<ArmoryManager>(true).playerModel.SetActive(false);
     }
 
     IEnumerator EnableBackBtn_Coroutine()
