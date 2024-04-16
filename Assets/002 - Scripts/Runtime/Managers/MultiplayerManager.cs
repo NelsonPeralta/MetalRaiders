@@ -30,9 +30,18 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameType == GameManager.GameType.Hill)
                 return 60;
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                return 10;
+            {
+                //return 10 + (Mathf.Clamp((CurrentRoomManager.instance.nbPlayersJoined - 2) * 5, 0, 15));
+                return CurrentRoomManager.instance.nbPlayersJoined * 5;
+            }
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 return 25;
+
+
+            // This would return null if the list was empty
+            // Or the first element of the sorted lost -> smallest distance
+            //if (GameTime.instance.timeRemaining == 0)
+            //    return FindObjectsOfType<PlayerMultiplayerMatchStats>().OrderBy(pms => pms.score).FirstOrDefault().score;
 
             return 5;
         }

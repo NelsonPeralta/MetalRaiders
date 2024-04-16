@@ -19,19 +19,19 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
     private void OnDisable()
     {
-        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+        GameTime.instance.OnGameTimeRemainingChanged -= OnGameTimeChanged;
     }
     private void OnDestroy()
     {
-        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+        GameTime.instance.OnGameTimeRemainingChanged -= OnGameTimeChanged;
 
     }
 
     private void Start()
     {
         tts = _defaultTts;
-        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
-        GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
+        GameTime.instance.OnGameTimeRemainingChanged -= OnGameTimeChanged;
+        GameTime.instance.OnGameTimeRemainingChanged += OnGameTimeChanged;
 
         //if (PhotonNetwork.IsMasterClient)
         //{
@@ -64,7 +64,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
     void OnGameTimeChanged(GameTime gameTime)
     {
-        if (gameTime.totalTime % tts == 0 && gameTime.totalTime > 0)
+        if (gameTime.timeRemaining % tts == 0 && gameTime.timeRemaining > 0)
         {
             Debug.Log("ExplosiveBarrelSpawnPoint OnGameTimeChanged");
             explosion.gameObject.SetActive(false);

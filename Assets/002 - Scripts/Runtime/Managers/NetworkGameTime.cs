@@ -24,15 +24,16 @@ public class NetworkGameTime : MonoBehaviour
     [PunRPC]
     public void AddSecond_RPC(int newTotalTime)
     {
-        FindObjectOfType<GameTime>().totalTime = newTotalTime;
+        FindObjectOfType<GameTime>().timeRemaining = newTotalTime;
     }
 
     [PunRPC]
-    public void UpdateTime_RPC(int newTotalTime)
+    public void UpdateTime_RPC(int newTotalTime, int timeElap)
     {
         try
         {
-            GameTime.instance.totalTime = newTotalTime;
+            GameTime.instance.timeRemaining = newTotalTime;
+            GameTime.instance.timeElapsed = timeElap;
         }
         catch { }
     }

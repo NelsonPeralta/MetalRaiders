@@ -184,6 +184,8 @@ MonoBehaviour:
   - SetIsDead_RPC
   - StickGrenadeOnPlayer_RPC
   - ToggleGlint_RPC
+  - DisableCrouch_RPC
+  - EnableCrouch_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

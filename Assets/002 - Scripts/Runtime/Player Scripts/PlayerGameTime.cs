@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,17 +11,18 @@ public class PlayerGameTime : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameTime.instance.OnGameTimeChanged -= OnGameTimeChange;
-        GameTime.instance.OnGameTimeChanged += OnGameTimeChange;
+        GameTime.instance.OnGameTimeRemainingChanged -= OnGameTimeChange;
+        GameTime.instance.OnGameTimeRemainingChanged += OnGameTimeChange;
     }
 
     private void OnDestroy()
     {
-        GameTime.instance.OnGameTimeChanged -= OnGameTimeChange;
+        GameTime.instance.OnGameTimeRemainingChanged -= OnGameTimeChange;
     }
 
     void OnGameTimeChange(GameTime gameTime)
     {
-        _timer.text = $"{(GameTime.instance.totalTime / 60).ToString("00")}:{(GameTime.instance.totalTime % 60).ToString("00")}";
+        //_timer.text = TimeSpan.FromSeconds(GameTime.instance.totalTime).ToString("mm:ss");
+        _timer.text = $"{(GameTime.instance.timeRemaining / 60).ToString("00")}:{(GameTime.instance.timeRemaining % 60).ToString("00")}";
     }
 }

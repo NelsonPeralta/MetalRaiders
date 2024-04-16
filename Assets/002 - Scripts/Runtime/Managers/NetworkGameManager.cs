@@ -757,7 +757,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
             int t = overshield.tts;
-            int _time = FindObjectOfType<GameTime>().totalTime;
+            int _time = FindObjectOfType<GameTime>().timeRemaining;
 
             int timeLeft = 0;
 

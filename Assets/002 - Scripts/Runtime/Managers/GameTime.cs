@@ -12,23 +12,37 @@ public class GameTime : MonoBehaviourPunCallbacks
 {
     public static GameTime instance { get { return _instance; } }
     public delegate void GameTimeEvent(GameTime gameTime);
-    public GameTimeEvent OnGameTimeChanged;
+    public GameTimeEvent OnGameTimeRemainingChanged, OnGameTimeElapsedChanged;
 
-    public int totalTime
+    public int timeRemaining
     {
-        get { return _totalTime; }
+        get { return _timeRemaining; }
         set
         {
-            if (_totalTime != value)
+            if (_timeRemaining != value && value >= 0)
             {
-                _totalTime = value;
-                OnGameTimeChanged?.Invoke(this);
+                _timeRemaining = value;
+                OnGameTimeRemainingChanged?.Invoke(this);
+
+                if (value == 0 && PhotonNetwork.IsMasterClient) NetworkGameManager.instance.EndGame();
             }
         }
     }
 
-    [SerializeField] int _totalTime = 0;
-    [SerializeField] int __totalTime = 0;
+    public int timeElapsed
+    {
+        get { return _timeElapsed; }
+        set
+        {
+            if (_timeElapsed != value)
+            {
+                _timeElapsed = value;
+                OnGameTimeElapsedChanged?.Invoke(this);
+            }
+        }
+    }
+
+    [SerializeField] int _timeRemaining = 0, _timeElapsed, _masterTimeRemaining = 0, _masterTimeElapsed;
     [SerializeField] int minPlayers = 2;
     [SerializeField] int timeOutMultiples = 15;
 
@@ -58,9 +72,14 @@ public class GameTime : MonoBehaviourPunCallbacks
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        OnGameTimeChanged = null;
-        totalTime = 0;
-        __totalTime = 0;
+        OnGameTimeRemainingChanged = null;
+        timeRemaining = 300;
+        _masterTimeRemaining = 300;
+
+        //timeRemaining = 10; _masterTimeRemaining = 10;
+
+        _timeElapsed = 0;
+        _masterTimeElapsed = 0;
         secondCountdown = 1;
     }
 
@@ -71,17 +90,18 @@ public class GameTime : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (GameManager.sceneIndex <= 0)
-            return;
+        if (GameManager.sceneIndex <= 0 || !CurrentRoomManager.instance.gameStarted) return;
+        if (_masterTimeRemaining <= 0) return;
+
         secondCountdown -= Time.deltaTime;
 
         if (secondCountdown < 0)
         {
-            __totalTime++;
+            _masterTimeRemaining--; _masterTimeElapsed++;
 
             if (PhotonNetwork.IsMasterClient)
             {
-                try { NetworkGameTime.instance.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.All, __totalTime); } catch { }
+                try { NetworkGameTime.instance.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.AllViaServer, _masterTimeRemaining, _masterTimeElapsed); } catch { }
             }
 
             secondCountdown = 1;

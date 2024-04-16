@@ -22,11 +22,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     private void OnDisable()
     {
-        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+        GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
     }
     private void OnDestroy()
     {
-        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
+        GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
     }
 
     private void Awake()
@@ -40,8 +40,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     {
         _respawnListenerDelay = 1;
 
-        GameTime.instance.OnGameTimeChanged -= OnGameTimeChanged;
-        GameTime.instance.OnGameTimeChanged += OnGameTimeChanged;
+        GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
+        GameTime.instance.OnGameTimeElapsedChanged += OnGameTimeChanged;
         ReplaceWeaponsByGametype();
         //SpawnWeapon();
 
@@ -97,10 +97,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
         try
         {
-            if (weaponSpawned && (gameTime.totalTime % (weaponSpawned.tts - 1) == 0) && gameTime.totalTime > 0)
+            if (weaponSpawned && (gameTime.timeElapsed % (weaponSpawned.tts - 0) == 0) && gameTime.timeRemaining > 0)
             {
                 //EnableWeapon();
-                StartCoroutine(ResetWeaponPosition_Coroutine());
+
+                ResetWeaponPositionIfTooFar();
                 StartCoroutine(EnableWeapon_Coroutine());
             }
         }
@@ -191,19 +192,10 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             //Destroy(gameObject);
         }
     }
-    #endregion
 
-    IEnumerator EnableWeapon_Coroutine()
+
+    void ResetWeaponPositionIfTooFar()
     {
-        yield return new WaitForSeconds(5);
-
-        EnableWeapon();
-    }
-
-    IEnumerator ResetWeaponPosition_Coroutine()
-    {
-        yield return new WaitForSeconds(2);
-
         if (Vector3.Distance(weaponSpawned.transform.position, transform.position) > 2 || !weaponSpawned.gameObject.activeSelf)
         {
             print("ResetWeaponPosition_Coroutine");
@@ -211,7 +203,14 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             weaponSpawned.transform.rotation = transform.rotation;
         }
     }
+    #endregion
 
+    IEnumerator EnableWeapon_Coroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        EnableWeapon();
+    }
 
     IEnumerator SpawnWeaponCoroutine()
     {

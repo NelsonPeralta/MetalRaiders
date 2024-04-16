@@ -705,6 +705,9 @@ public class PlayerController : MonoBehaviourPun
         isCrouching = true;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.30f, 0);
         gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.30f, 0);
+
+        
+        PV.RPC("EnableCrouch_RPC", RpcTarget.All);
     }
 
     public void DisableCrouch()
@@ -715,7 +718,28 @@ public class PlayerController : MonoBehaviourPun
         isCrouching = false;
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, .30f, 0);
         gwProperties.bulletSpawnPoint.localPosition = gwProperties.defaultBulletSpawnPoint;
+
+
+        PV.RPC("DisableCrouch_RPC", RpcTarget.All);
     }
+
+
+    [PunRPC]
+    void EnableCrouch_RPC()
+    {
+        movement.playerCapsule.localScale = new Vector3(transform.localScale.x, movement.crouchYScale, transform.localScale.z);
+
+        if (movement.isGrounded)
+            movement.rb.AddForce(Vector3.down * 2f, ForceMode.Impulse);
+    }
+
+    [PunRPC]
+    void DisableCrouch_RPC()
+    {
+        movement.playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
+    }
+
+
 
     void Grenade()
     {

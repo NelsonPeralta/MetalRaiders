@@ -40,7 +40,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
     public void StartRespawn()
     {
         GameTime ogt = FindObjectOfType<GameTime>();
-        int timeWeaponWasGrabbed = ogt.totalTime;
+        int timeWeaponWasGrabbed = ogt.timeRemaining;
         int newSpawnTime = timeToSpawn - (timeWeaponWasGrabbed % timeToSpawn);
         //Debug.Log($"Time weapon grabbed: {ogt.totalTime}. New Spawn Time: {newSpawnTime}");
         StartCoroutine(SpawnNewWeaponFromWeaponPool(newSpawnTime));

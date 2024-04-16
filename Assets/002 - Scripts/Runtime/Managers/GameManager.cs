@@ -374,7 +374,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         try { instance.localPlayers.Clear(); } catch { }
         orSpPos_Biped_Dict.Clear();
 
-        try { FindObjectOfType<GameTime>().totalTime = 0; }
+        try { FindObjectOfType<GameTime>().timeRemaining = 0; }
         catch (Exception e) { Debug.LogWarning(e.Message); }
 
 
@@ -449,7 +449,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             FindObjectOfType<Launcher>().OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
             FindObjectOfType<Launcher>().OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
-            FindObjectOfType<GameTime>().totalTime = 0;
+            FindObjectOfType<GameTime>().timeRemaining = 0;
         }
         OnSceneLoadedEvent?.Invoke();
     }
@@ -807,7 +807,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static int GetNextTiming(int tts)
     {
-        int _time = FindObjectOfType<GameTime>().totalTime;
+        int _time = FindObjectOfType<GameTime>().timeRemaining;
 
         int timeLeft = 0;
 

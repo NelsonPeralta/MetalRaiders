@@ -260,22 +260,22 @@ public class PlayerMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
-        // start crouch
-        if (rewiredPlayer.GetButtonDown("Crouch"))
-        {
-            playerCapsule.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y + 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
+        //// start crouch
+        //if (rewiredPlayer.GetButtonDown("Crouch"))
+        //{
+        //    playerCapsule.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+        //    //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y + 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
 
-            if (grounded)
-                _rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-        }
+        //    if (grounded)
+        //        _rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        //}
 
-        // stop crouch
-        if (rewiredPlayer.GetButtonUp("Crouch"))
-        {
-            playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
-            //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y - 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
-        }
+        //// stop crouch
+        //if (rewiredPlayer.GetButtonUp("Crouch"))
+        //{
+        //    playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
+        //    //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y - 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
+        //}
     }
 
     private void StateHandler()
