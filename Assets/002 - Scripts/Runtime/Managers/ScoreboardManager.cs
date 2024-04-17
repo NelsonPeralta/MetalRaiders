@@ -78,7 +78,7 @@ public class ScoreboardManager : MonoBehaviour
             for (int i = 0; i < allPlayersMS.Count; i++)
             {
                 scoreboardRows[i].playerNameText.text = allPlayersMS[i].GetComponent<Player>().username;
-                scoreboardRows[i].playerKillsText.text = allPlayersMS[i].kills.ToString();
+                scoreboardRows[i].playerKillsText.text = allPlayersMS[i].score.ToString();
                 scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
                 //scoreboardRows[i].playerHeadshotsText.text = $"{allPlayersMS[i].headshots.ToString()}/{allPlayersMS[i].meleeKills}/{allPlayersMS[i].grenadeKills}";
                 scoreboardRows[i].playerHeadshotsText.text = $"{allPlayersMS[i].headshots}";
@@ -89,8 +89,6 @@ public class ScoreboardManager : MonoBehaviour
                 else
                     scoreboardRows[i].playerCurrentPointsText.text = "0";
 
-                if (GameManager.instance.gameType == GameManager.GameType.Hill)
-                    scoreboardRows[i].playerKillsText.text = allPlayersMS[i].score.ToString();
 
                 scoreboardRows[i].gameObject.SetActive(true);
             }

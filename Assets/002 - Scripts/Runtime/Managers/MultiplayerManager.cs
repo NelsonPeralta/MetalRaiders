@@ -27,12 +27,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 }
                 return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count;
             }
-            if (GameManager.instance.gameType == GameManager.GameType.Hill)
+            if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
                 return 60;
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
                 //return 10 + (Mathf.Clamp((CurrentRoomManager.instance.nbPlayersJoined - 2) * 5, 0, 15));
-                return CurrentRoomManager.instance.nbPlayersJoined * 5;
+                return CurrentRoomManager.instance.expectedNbPlayers * 5;
             }
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 return 25;
@@ -61,7 +61,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.index;
             }
 
-            if (GameManager.instance.gameType == GameManager.GameType.Hill)
+            if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
             {
 
                 foreach (Player p in GameManager.instance.pid_player_Dict.Values)
@@ -203,7 +203,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void CheckForEndGame()
     {
-
+        print($"CheckForEndGame {highestScore} / {scoreToWin}");
         if (highestScore == scoreToWin)
             FindObjectOfType<NetworkGameManager>().EndGame();
         //EndGame();
@@ -211,6 +211,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public void EndGame(bool saveXp = true, bool actuallyQuit = false)
     {
         CurrentRoomManager.instance.gameOver = true;
+        print("EndGame");
         foreach (Player pp in FindObjectsOfType<Player>())
         {
 
@@ -221,15 +222,19 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             if (highestScore >= scoreToWin)
             {
+                print($"EndGame {highestScore} / {scoreToWin}");
                 if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                 {
                     foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                    {
+                        print($"EndGame {pms.score} / {scoreToWin}");
                         if (pms.score >= scoreToWin)
                         {
                             pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
                             this.winningPlayers.Add(pms.GetComponent<Player>());
                             this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
                         }
+                    }
                 }
                 else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 {

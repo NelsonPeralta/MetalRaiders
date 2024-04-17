@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class OddballSkull : MonoBehaviour
 {
+    public Transform thisRoot;
+    public OddballSpawnPoint spawnPoint;
     public Rigidbody rb;
 
 
     Player _player;
-    float _del;
+    [SerializeField] float _del, _reset;
 
     private void Awake()
     {
@@ -39,12 +41,34 @@ public class OddballSkull : MonoBehaviour
     {
         if (_del > 0)
             _del -= Time.deltaTime;
+
+
+
+        if (Vector3.Distance(spawnPoint.transform.position, rb.transform.position) > 3)
+        {
+            _reset -= Time.deltaTime;
+
+            if (_reset <= 0)
+            {
+                spawnPoint.SpawnOddball();
+                _reset = 10;
+            }
+        }
+        else
+        {
+            _reset = 10;
+        }
+    }
+
+    private void OnEnable()
+    {
+        _reset = 10;
     }
 
 
     public void DisableOddball()
     {
         _del = 0.5f;
-        transform.root.gameObject.SetActive(false);
+        thisRoot.gameObject.SetActive(false);
     }
 }

@@ -139,7 +139,7 @@ public class CarnageReportMenu : MonoBehaviour
 
     IEnumerator EnableBackBtn_Coroutine()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         _backBtn.SetActive(true);
     }
 }

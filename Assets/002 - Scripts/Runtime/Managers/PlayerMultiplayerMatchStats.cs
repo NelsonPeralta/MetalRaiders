@@ -28,7 +28,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     {
         get
         {
-            if (GameManager.instance.gameType == GameManager.GameType.Hill)
+            if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
                 return _score;
 
             return kills;

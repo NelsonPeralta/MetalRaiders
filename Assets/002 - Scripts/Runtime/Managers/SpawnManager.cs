@@ -7,6 +7,8 @@ public class SpawnManager : MonoBehaviour
     public static SpawnManager spawnManagerInstance;
     public List<SpawnPoint> initialSpawnPoints = new List<SpawnPoint>();
     public List<SpawnPoint> genericSpawnPoints = new List<SpawnPoint>();
+
+    public OddballSpawnPoint oddballSpawnPoint;
     void Awake()
     {
         int c = 0;
@@ -20,6 +22,11 @@ public class SpawnManager : MonoBehaviour
             }
 
         spawnManagerInstance = this;
+    }
+
+    private void Start()
+    {
+        oddballSpawnPoint = FindObjectOfType<OddballSpawnPoint>();
     }
 
     public Transform GetRandomComputerSpawnPoint()

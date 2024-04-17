@@ -898,10 +898,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             GameManager.instance.oddballSkull.rb.angularVelocity = Vector3.zero;
 
 
-            GameManager.instance.oddballSkull.transform.root.rotation = Quaternion.identity;
-            GameManager.instance.oddballSkull.transform.root.position = pos;
+            GameManager.instance.oddballSkull.thisRoot.rotation = Quaternion.identity;
+            GameManager.instance.oddballSkull.thisRoot.position = pos;
 
-            GameManager.instance.oddballSkull.transform.root.gameObject.SetActive(true);
+            GameManager.instance.oddballSkull.thisRoot.gameObject.SetActive(true);
             GameManager.instance.oddballSkull.rb.AddForce(dir * 300);
         }
     }

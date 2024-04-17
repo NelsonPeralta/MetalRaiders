@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum GameType
     {
         Fiesta, Rockets, Slayer, Pro, Snipers, Unassgined,
-        Shotguns, Swat, Retro, GunGame, Hill,
+        Shotguns, Swat, Retro, GunGame, Hill, Oddball,
 
         // Swarm Game Types
         Survival
@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             _gameType = value;
-            if (_gameType == GameType.GunGame)
+            if (_gameType == GameType.GunGame || _gameType == GameType.Hill || _gameType == GameType.Oddball)
                 teamMode = TeamMode.None;
 
             Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
