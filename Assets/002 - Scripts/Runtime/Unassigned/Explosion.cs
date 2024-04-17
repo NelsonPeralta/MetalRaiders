@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 
 public class Explosion : MonoBehaviour
@@ -34,8 +35,7 @@ public class Explosion : MonoBehaviour
     void Explode()
     {
         //Use overlapshere to check for nearby colliders
-        Vector3 explosionPos = transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius).Distinct().ToArray();
+        Collider[] colliders = Physics.OverlapSphere(transform.position, radius).Distinct().ToArray();
 
         for (int i = 0; i < colliders.Length; i++) // foreach(Collider hit in colliders)
         {
@@ -45,7 +45,15 @@ public class Explosion : MonoBehaviour
             if (hitDistance > radius)
                 continue;
 
-            Debug.Log($"EXPLOSION {col.name}");
+            float disRatio = 1 - (hitDistance / radius);
+            float calculatedPower = explosionPower * disRatio;
+            int calculatedDamage = (int)(damage * disRatio);
+
+
+
+
+
+            Debug.Log($"EXPLOSION {col.name}. ROOT: {col.transform.root}");
 
             // Check if the is an obstruction between explosion and the hit
             if (!col.name.Contains("llectible"))
@@ -62,19 +70,23 @@ public class Explosion : MonoBehaviour
                 }
             }
 
+            if (col.GetComponent<OddballSkull>() && PhotonNetwork.IsMasterClient)
+            {
+                objectsHit.Add(col.gameObject);
+                NetworkGameManager.instance.AddForceToOddball(calculatedPower, transform.position, radius, 3.0F);
+            }
+
 
             Rigidbody rb = col.GetComponent<Rigidbody>();
 
 
-            float disRatio = 1 - (hitDistance / radius);
-            float calculatedPower = explosionPower * disRatio;
-            int calculatedDamage = (int)(damage * disRatio);
+
 
             int characterControllerDivider = 3;
 
             //Add force to nearby rigidbodies
             if (rb != null)
-                rb.AddExplosionForce(calculatedPower, explosionPos, radius, 3.0F);
+                rb.AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
 
 
             if (col.GetComponent<PlayerHitbox>() && !col.GetComponent<PlayerHitbox>().player.isDead && !col.GetComponent<PlayerHitbox>().player.isRespawning)

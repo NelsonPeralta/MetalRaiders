@@ -264,6 +264,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     public List<Hazard> hazards = new List<Hazard>();
     public List<ScriptObjMapInfo> mapDataCells { get { return _mapDataCells; } }
 
+
+    public OddballSkull oddballSkull;
+
     // called zero
 
     // private Variables

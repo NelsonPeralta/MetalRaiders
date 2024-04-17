@@ -43,7 +43,12 @@ public class PlayerInventory : MonoBehaviourPun
 
     public WeaponProperties activeWeapon
     {
-        get { return _activeWeapon; }
+        get
+        {
+            if (_oddball.gameObject.activeInHierarchy) return _oddball;
+
+            return _activeWeapon;
+        }
         set
         {
             if (PV.IsMine)
@@ -223,7 +228,7 @@ public class PlayerInventory : MonoBehaviourPun
     [SerializeField] Transform _fakeBulleTrailPrefab;
     [SerializeField] List<Transform> _fakeBulletTrailPool = new List<Transform>();
     [SerializeField] PlayerGunGameManager _playerGunGameManager;
-
+    [SerializeField] WeaponProperties _oddball;
 
 
 
@@ -398,10 +403,17 @@ public class PlayerInventory : MonoBehaviourPun
                 Debug.Log("SwitchWeapons");
                 WeaponProperties previousActiveWeapon = activeWeapon;
                 WeaponProperties newActiveWeapon = holsteredWeapon;
-                Debug.Log("SwitchWeapons");
+
+                if (_oddball.gameObject.activeInHierarchy)
+                {
+                    previousActiveWeapon = _activeWeapon;
+                    NetworkGameManager.instance.ShowOddball(player.weaponDropPoint.position, player.weaponDropPoint.forward);
+                }
 
                 activeWeapon = newActiveWeapon;
                 holsteredWeapon = previousActiveWeapon;
+
+                _oddball.gameObject.SetActive(false);
             }
             else
             {
@@ -815,5 +827,14 @@ public class PlayerInventory : MonoBehaviourPun
         ChangeActiveAmmoCounter();
         if (PV.IsMine)
             PlayDrawSound();
+    }
+
+
+    public void EquipOddball()
+    {
+        _oddball.gameObject.SetActive(true);
+        _activeWeapon.gameObject.SetActive(false);
+        UpdateThirdPersonGunModelsOnCharacter();
+        pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
     }
 }

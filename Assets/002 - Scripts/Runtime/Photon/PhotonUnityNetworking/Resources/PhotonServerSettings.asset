@@ -186,6 +186,8 @@ MonoBehaviour:
   - ToggleGlint_RPC
   - DisableCrouch_RPC
   - EnableCrouch_RPC
+  - EquipOddballToPlayer_RPC
+  - AddForceToOddball
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

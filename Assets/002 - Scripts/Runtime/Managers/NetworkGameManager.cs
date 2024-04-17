@@ -6,6 +6,8 @@ using System.Linq;
 using System;
 using Newtonsoft.Json;
 using Photon.Realtime;
+using Rewired.Editor.Libraries.Ionic.Zlib;
+using static UnityEditor.PlayerSettings;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -850,6 +852,59 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         GrenadePool.instance.stickyGrenadePool[nadeIndex].GetComponent<ExplosiveProjectile>().TriggerStuckBehaviour(playerId, gPos);
     }
 
+
+    [PunRPC]
+    public void EquipOddballToPlayer_RPC(int playerId, bool caller = true)
+    {
+
+
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            _pv.RPC("EquipOddballToPlayer_RPC", RpcTarget.All, playerId, false);
+        }
+        else if (!caller)
+        {
+            GameManager.instance.oddballSkull.DisableOddball();
+            GameManager.GetPlayerWithId(playerId).playerInventory.EquipOddball();
+        }
+    }
+
+
+    [PunRPC]
+    public void AddForceToOddball(float calculatedPower, Vector3 pos, float rad, float up, bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            _pv.RPC("AddForceToOddball", RpcTarget.AllViaServer, calculatedPower, pos, rad, up, false);
+        }
+        else if (!caller)
+        {
+            print($"AddForceToOddball {calculatedPower} {rad}");
+            //GameManager.instance.oddballSkull.rb.AddForce(dir * calculatedPower, mode: ForceMode.Impulse);
+            GameManager.instance.oddballSkull.rb.AddExplosionForce(calculatedPower, pos, rad, 3.0F);
+        }
+    }
+
+    [PunRPC]
+    public void ShowOddball(Vector3 pos, Vector3 dir, bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            _pv.RPC("ShowOddball", RpcTarget.AllViaServer, pos, dir, false);
+        }
+        else if (!caller)
+        {
+            GameManager.instance.oddballSkull.rb.velocity = Vector3.zero;
+            GameManager.instance.oddballSkull.rb.angularVelocity = Vector3.zero;
+
+
+            GameManager.instance.oddballSkull.transform.root.rotation = Quaternion.identity;
+            GameManager.instance.oddballSkull.transform.root.position = pos;
+
+            GameManager.instance.oddballSkull.transform.root.gameObject.SetActive(true);
+            GameManager.instance.oddballSkull.rb.AddForce(dir * 300);
+        }
+    }
 
 
     //public void AskHostToStickGrenade

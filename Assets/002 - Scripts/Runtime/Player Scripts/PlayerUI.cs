@@ -77,6 +77,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject singlePlayerPauseMenu;
     public GameObject splitScreenPauseMenu;
     public PlayerDebuggerOnUI PlayerDebuggerOnUI;
+    public GameObject worldKillOnSightMark;
 
     [Header("Hit Markers", order = 8)]
     public Transform hitMarkerSpawnPoint;

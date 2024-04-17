@@ -282,7 +282,7 @@ public class Player : Biped
     }
     public int meleeDamage
     {
-        get { return _meleeDamage; }
+        get { if (playerInventory.activeWeapon.codeName == "oddball") return 250; return _meleeDamage; }
     }
     bool hitboxesEnabled
     {

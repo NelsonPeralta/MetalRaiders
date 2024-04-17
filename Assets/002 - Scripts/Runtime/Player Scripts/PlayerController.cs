@@ -473,10 +473,17 @@ public class PlayerController : MonoBehaviourPun
         if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
         {
             DisableSprint();
-            _StartShoot();
+
+            if (pInventory.activeWeapon.codeName.Equals("oddball"))
+            {
+                isHoldingShootBtn = true;
+                Melee(true);
+                return;
+            }
+            else _StartShoot();
         }
 
-        if (isHoldingShootBtn)
+        if (isHoldingShootBtn && !pInventory.activeWeapon.codeName.Equals("oddball"))
             OnPlayerFire?.Invoke(this);
 
         if (rewiredPlayer.GetButtonUp("Shoot"))
@@ -643,9 +650,19 @@ public class PlayerController : MonoBehaviourPun
 
     int _meleeCount = 0;
     float meleeMovementFactor = 0;
-    void Melee()
+    void Melee(bool overwrite = false)
     {
-        if (!GetComponent<Player>().isDead)
+        if (overwrite)
+        {
+            isMeleeing = true;
+            //_meleeCount = melee.playersInMeleeZone.Count;
+            //meleeMovementFactor = 1;
+
+            rScript.reloadIsCanceled = true;
+
+            PV.RPC("Melee_RPC", RpcTarget.All);
+        }
+        else if (!GetComponent<Player>().isDead)
         {
             if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing &&
                 !isHoldingShootBtn && /*!isFiring &&*/ !isThrowingGrenade && !isSprinting)
@@ -682,6 +699,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee_RPC()
     {
+        print("Melee_RPC");
         if (PV.IsMine)
             melee.Knife();
         weaponAnimator.Play("Knife Attack 2", 0, 0f);
@@ -706,7 +724,7 @@ public class PlayerController : MonoBehaviourPun
         mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.30f, 0);
         gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.30f, 0);
 
-        
+
         PV.RPC("EnableCrouch_RPC", RpcTarget.All);
     }
 
