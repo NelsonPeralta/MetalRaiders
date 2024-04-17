@@ -243,8 +243,10 @@ MonoBehaviour:
   thisRoot: {fileID: 8576106208979078454}
   spawnPoint: {fileID: 0}
   rb: {fileID: 3517156382934049492}
-  _del: 0
-  _reset: 0
+  _intro: {fileID: 8300000, guid: 76bcf90f4cee9ac43858b91926afc1aa, type: 3}
+  _taken: {fileID: 8300000, guid: c73d6e001e0cb9e48bb3d30b5300459e, type: 3}
+  _dropped: {fileID: 8300000, guid: bf42232c75cd8634b911065f957e1724, type: 3}
+  _ballReset: {fileID: 8300000, guid: 61490b13ecfcf1348873e7c71fff3a13, type: 3}
 --- !u!65 &6566072008174391728
 BoxCollider:
   m_ObjectHideFlags: 0

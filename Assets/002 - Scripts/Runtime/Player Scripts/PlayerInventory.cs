@@ -407,7 +407,7 @@ public class PlayerInventory : MonoBehaviourPun
                 if (_oddball.gameObject.activeInHierarchy)
                 {
                     previousActiveWeapon = _activeWeapon;
-                    NetworkGameManager.instance.ShowOddball(player.weaponDropPoint.position, player.weaponDropPoint.forward);
+                    NetworkGameManager.instance.DropOddball(player.weaponDropPoint.position, player.weaponDropPoint.forward);
                 }
 
                 activeWeapon = newActiveWeapon;

@@ -103,6 +103,9 @@ public class MapCamera : MonoBehaviour
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<AudioSource>().clip = _FirefightClip;
 
+            if (GameManager.instance.gameType == GameManager.GameType.Oddball)
+                GetComponent<AudioSource>().clip = GameManager.instance.oddballSkull._intro;
+
             GetComponent<AudioSource>().Play();
         }
         catch { }

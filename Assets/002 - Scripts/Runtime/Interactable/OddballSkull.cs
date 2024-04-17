@@ -7,10 +7,12 @@ public class OddballSkull : MonoBehaviour
     public Transform thisRoot;
     public OddballSpawnPoint spawnPoint;
     public Rigidbody rb;
+    public AudioClip _intro, _taken, _dropped, _ballReset;
 
 
     Player _player;
-    [SerializeField] float _del, _reset;
+    float _del, _reset;
+
 
     private void Awake()
     {
@@ -51,6 +53,8 @@ public class OddballSkull : MonoBehaviour
             if (_reset <= 0)
             {
                 spawnPoint.SpawnOddball();
+                PlayBallResetClip();
+
                 _reset = 10;
             }
         }
@@ -70,5 +74,23 @@ public class OddballSkull : MonoBehaviour
     {
         _del = 0.5f;
         thisRoot.gameObject.SetActive(false);
+    }
+
+    public void PlayBallTakenClip()
+    {
+        print("PlayBallTakenClip");
+        GameManager.GetRootPlayer().announcer.AddClip(_taken);
+    }
+
+    public void PlayBallDroppedClip()
+    {
+        print("PlayBallDroppedClip");
+        GameManager.GetRootPlayer().announcer.AddClip(_dropped);
+    }
+
+    public void PlayBallResetClip()
+    {
+        print("PlayBallResetClip");
+        GameManager.GetRootPlayer().announcer.AddClip(_ballReset);
     }
 }

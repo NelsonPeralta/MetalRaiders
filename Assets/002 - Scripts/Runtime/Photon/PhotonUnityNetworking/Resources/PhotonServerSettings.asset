@@ -189,6 +189,7 @@ MonoBehaviour:
   - EquipOddballToPlayer_RPC
   - AddForceToOddball
   - ShowOddball
+  - DropOddball
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

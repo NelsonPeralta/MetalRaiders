@@ -210,6 +210,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         else if (!caller)
         {
             if (CurrentRoomManager.instance.gameOver) return;
+            print("NetworkGameManager EndGame");
 
             GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReport);
             GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
@@ -865,6 +866,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         else if (!caller)
         {
             GameManager.instance.oddballSkull.DisableOddball();
+            GameManager.instance.oddballSkull.PlayBallTakenClip();
             GameManager.GetPlayerWithId(playerId).playerInventory.EquipOddball();
         }
     }
@@ -886,11 +888,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void ShowOddball(Vector3 pos, Vector3 dir, bool caller = true)
+    public void DropOddball(Vector3 pos, Vector3 dir, bool caller = true)
     {
         if (caller && PhotonNetwork.IsMasterClient)
         {
-            _pv.RPC("ShowOddball", RpcTarget.AllViaServer, pos, dir, false);
+            _pv.RPC("DropOddball", RpcTarget.AllViaServer, pos, dir, false);
         }
         else if (!caller)
         {
@@ -903,6 +905,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
             GameManager.instance.oddballSkull.thisRoot.gameObject.SetActive(true);
             GameManager.instance.oddballSkull.rb.AddForce(dir * 300);
+
+            GameManager.instance.oddballSkull.PlayBallDroppedClip();
         }
     }
 

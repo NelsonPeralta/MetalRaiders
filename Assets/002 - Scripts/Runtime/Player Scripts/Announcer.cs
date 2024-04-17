@@ -60,6 +60,8 @@ public class Announcer : MonoBehaviour
 
     public void AddClip(AudioClip ac)
     {
+        print($"AddClip {ac.name}");
+
         List<AudioClip> c = clips;
         c.Add(ac);
         clips = c;
