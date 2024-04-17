@@ -6,8 +6,6 @@ using System.Linq;
 using System;
 using Newtonsoft.Json;
 using Photon.Realtime;
-using Rewired.Editor.Libraries.Ionic.Zlib;
-using static UnityEditor.PlayerSettings;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
