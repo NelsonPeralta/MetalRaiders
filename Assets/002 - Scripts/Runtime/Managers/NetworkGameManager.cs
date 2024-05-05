@@ -64,7 +64,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        GameManager.instance.connection = GameManager.Connection.Offline;
+        GameManager.instance.network = GameManager.Network.Local;
         base.OnDisconnected(cause);
         Debug.Log($"Disconnected: {cause}");
     }

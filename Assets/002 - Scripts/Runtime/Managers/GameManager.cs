@@ -1,16 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Mail;
+using Photon.Pun;
+using Photon.Realtime;
+using Steamworks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Photon.Pun;
-using System;
-using Photon.Realtime;
-using System.IO;
-using System.Linq;
-using TMPro;
 using UnityEngine.UI;
-using System.Net.Mail;
-using UnityEditor;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -34,7 +32,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum Team { None, Red, Blue }
-    public enum Connection { Offline, Online }
+    public enum Network { Local, Internet }
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum GameType
     {
@@ -99,21 +97,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public Dictionary<int, Player> localPlayers = new Dictionary<int, Player>();
 
-    [SerializeField] Connection _connection;
+    [SerializeField] Network _network;
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
     [SerializeField] TeamMode _teamMode;
     [SerializeField] GameManager.Team _onlineTeam;
     // Public variables
 
-    public Connection connection
+    public Network network
     {
-        get { return _connection; }
+        get { return _network; }
         set
         {
-            _connection = value;
+            _network = value;
 
-            if (value == Connection.Online)
+            if (value == Network.Internet)
             {
                 Launcher.instance.LoginWithSteamName();
             }
@@ -311,7 +309,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void Awake()
     {
         InitialisePlayerPrefs();
-        Load();
+        LoadPlayerPrefs();
 
         colorDict.Add("white", "#FFFFFF");
         colorDict.Add("grey", "#B3B3B3");
@@ -336,7 +334,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         colorDict.Add("brown", "#964B00");
 
-        connection = Connection.Offline;
+        network = Network.Local;
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         if (instance)
         {
@@ -345,6 +343,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         DontDestroyOnLoad(gameObject);
         instance = this;
+
+
+
+        SteamManager.ManuallyInitialize(this);
     }
 
 
@@ -474,7 +476,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         //SceneManager.sceneLoaded += OnSceneLoaded;
-        Launcher.instance.ConnectToPhotonMasterServer();
+        if (SteamAPI.IsSteamRunning())
+            Launcher.instance.ConnectToPhotonMasterServer();
+        else
+        {
+            MenuManager.Instance.OpenMenu("online title");
+        }
     }
 
     // called when the game is terminated
@@ -828,13 +835,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        GameManager.instance.connection = GameManager.Connection.Offline;
+        GameManager.instance.network = GameManager.Network.Local;
     }
 
     public override void OnConnectedToMaster()
     {
-        GameManager.instance.connection = GameManager.Connection.Online;
-
+        print("Connected To Photon Master");
+        GameManager.instance.network = GameManager.Network.Internet;
     }
 
 
@@ -943,7 +950,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         AudioListener.volume = PlayerPrefs.GetFloat("volume") / 100f;
     }
 
-    public static void Load()
+    public static void LoadPlayerPrefs()
     {
         UpdateVolume();
     }
