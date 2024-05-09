@@ -897,11 +897,11 @@ public class CurrentRoomManager : MonoBehaviour
     }
 
 
-    public PlayerDatabaseAdaptor.PlayerExtendedPublicData GetPLayerExtendedData(string u)
+    public PlayerDatabaseAdaptor.PlayerExtendedPublicData GetPLayerExtendedData(string usernam)
     {
         foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
             if (pepd.occupied)
-                if (pepd.playerExtendedPublicData.username.Equals(u))
+                if (pepd.playerExtendedPublicData.username.Equals(usernam))
                     return pepd.playerExtendedPublicData;
 
         return null;

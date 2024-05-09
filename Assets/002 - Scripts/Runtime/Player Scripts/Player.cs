@@ -10,6 +10,7 @@ using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using System.Text;
 using System.Net.Mail;
 using TMPro;
+using Steamworks;
 
 public class Player : Biped
 {
@@ -534,7 +535,7 @@ public class Player : Biped
 
     [SerializeField] NetworkPlayer _networkPlayer;
     [SerializeField] PlayerMedals _playerMedals;
-    [SerializeField] int _playerId;
+    [SerializeField] int _playerId; // Player ID MUST be a number of equal value set to PhotonNetwork.Nickname which is determined by the player's id in the spacewackos.com database
     [SerializeField] Player _lastPlayerSource;
     [SerializeField] DeathNature _deathNature;
     [SerializeField] int _lastPID;
@@ -649,17 +650,13 @@ public class Player : Biped
 
     private void Awake()
     {
+        OnPlayerIdAssigned -= OnPlayerIdAssigned_Delegate;
+        OnPlayerIdAssigned += OnPlayerIdAssigned_Delegate;
+
+
         Debug.Log($"Player Owner: {PV.Owner.NickName}");
         _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
-        playerDataCell = CurrentRoomManager.GetPlayerDataWithId(_playerId);
-        if (_playerId > 0)
-        {
-            OnPlayerIdAssigned?.Invoke(this);
-
-            username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
-            foreach (PlayerWorldUIMarker p in allPlayerScripts.worldUis) p.text.text = _username;
-
-        }
+        if (_playerId >= 0) OnPlayerIdAssigned?.Invoke(this);
 
         _rb = GetComponent<Rigidbody>(); if (!PV.IsMine) _rb.isKinematic = true;
 
@@ -960,11 +957,18 @@ public class Player : Biped
         var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll();
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
+        print("r1");
         ragdoll.GetComponent<PlayerArmorManager>().player = this;
-        ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
+        print("r2");
+        if (SteamAPI.IsSteamRunning())
+            ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
+        else
+            ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(rid);
+        print("r3");
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
-
+        print("r4");
+        print(ragdoll.name);
         //if (!hasArmor)
         //{
         //    ragdoll.GetComponent<PlayerArmorManager>().armorDataString = "";
@@ -1196,7 +1200,7 @@ public class Player : Biped
         hitboxesEnabled = false;
 
         SpawnRagdoll();
-        try { StartCoroutine(Respawn_Coroutine()); } catch (System.Exception e) { Debug.LogException(e); }
+        StartCoroutine(Respawn_Coroutine());
         try { StartCoroutine(MidRespawnAction()); } catch (System.Exception e) { Debug.LogException(e); }
 
     }
@@ -1370,6 +1374,25 @@ public class Player : Biped
     {
         if (isMine)
             PV.RPC("UpdateData_RPC", RpcTarget.All, hitPoints, overshieldPoints);
+    }
+
+
+    public void ChangePlayerId(int id) // Only works when no internet connection
+    {
+        if (!SteamAPI.IsSteamRunning())
+        {
+            _playerId = id;
+            OnPlayerIdAssigned.Invoke(this);
+        }
+    }
+
+
+    void OnPlayerIdAssigned_Delegate(Player p)
+    {
+        print("OnPlayerIdAssigned_Delegate");
+        playerDataCell = CurrentRoomManager.GetPlayerDataWithId(_playerId);
+        username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
+        foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.text.text = _username;
     }
 
     [PunRPC]

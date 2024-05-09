@@ -204,26 +204,6 @@ public class SteamManager : MonoBehaviour
         // Run Steam client callbacks
         SteamAPI.RunCallbacks();
     }
-
-
-    public static void ManuallyInitialize(GameManager gm)
-    {
-        Instance.m_bInitialized = SteamAPI.Init();
-        if (!Instance.m_bInitialized)
-        {
-            Debug.LogError("YOU ARE NOT CONNECTED TO STEAM");
-            Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", Instance);
-
-            return;
-        }
-        else
-        {
-            GameManager.ROOT_PLAYER_NAME = SteamFriends.GetPersonaName();
-        }
-
-        s_EverInitialized = true;
-    }
-
 #else
 	public static bool Initialized {
 		get {

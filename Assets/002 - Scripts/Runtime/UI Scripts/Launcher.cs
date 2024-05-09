@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.IO;
 using Steamworks;
+using Rewired;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -80,6 +81,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject _swarmMcComponentsHolder;
 
     public static string quickMatchRoomName = "quick_match_room";
+
+
+    [SerializeField] GameObject _nbLocalPlayersHolder;
+    [SerializeField] TMP_InputField _nbLocalPlayersInputed;
 
     public TMP_InputField loginUsernameText
     {
@@ -168,7 +173,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        GameManager.instance.network = GameManager.Network.Local;
+        GameManager.instance.connection = GameManager.Connection.Offline;
         base.OnDisconnected(cause);
         Debug.Log($"Disconnected: {cause}");
         //ShowPlayerMessage($"Disconnected from Server: {cause}.\nReconnecting...");
@@ -177,8 +182,10 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (_tries < 4) StartCoroutine(TryToConnectAgain());
         else
         {
+            print("YOU ARE PROLLY NOT CONNECTED TO THE INTERNET");
+            CreateLocalModePlayerDataCells();
             MenuManager.Instance.OpenMenu("online title");
-
+            _nbLocalPlayersHolder.SetActive(true);
         }
     }
     int _tries = 0;
@@ -277,35 +284,70 @@ public class Launcher : MonoBehaviourPunCallbacks
         GameManager.instance.teamMode = GameManager.TeamMode.None;
         GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
 
-
         RoomOptions options = new RoomOptions();
         options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
         options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
         options.CustomRoomProperties.Add("gamemode", "multiplayer");
 
-        if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
-        {
-            return; // Do nothing
-        }
 
-        if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer)
+        if (PhotonNetwork.NetworkClientState != ClientState.Disconnected)
         {
-            //PhotonNetwork.JoinRandomRoom();
 
-            // Can Join Room
+
+            if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
+            {
+                return; // Do nothing
+            }
+
+            if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer)
+            {
+                //PhotonNetwork.JoinRandomRoom();
+
+                // Can Join Room
+            }
+            else
+            {
+                //Debug.LogError("Can't join random room now, client is not ready");
+            }
+
+            // else
+            //PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
+            CreateRoom(roomNameInputField.text, options);
+            MenuManager.Instance.OpenLoadingMenu("Creating Multiplayer Room..."); // Show the loading menu/message
+
+            // When creating a room is done, OnJoinedRoom() will automatically trigger
+            OnCreateMultiplayerRoomButton?.Invoke(this);
         }
         else
         {
-            //Debug.LogError("Can't join random room now, client is not ready");
+            PhotonNetwork.OfflineMode = true; PhotonNetwork.NickName = "0";
+            CreateRoom(roomNameInputField.text, options);
+
+            return;
+            MenuManager.Instance.OpenMenu("multiplayer_room");
+            commonRoomTexts.SetActive(true);
+
+            //if (PhotonNetwork.CurrentRoom.Name != quickMatchRoomName)
+            {
+                roomNameText.text = "LOCAL"; // Change the name of the room to the one given 
+                _vetoBtn.SetActive(false); _matchStartCountdownText.gameObject.SetActive(false);
+            }
+
+            CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
+            _startGameButton.SetActive(true);
+
+            {
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+
+                //if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(PhotonNetwork.NickName))
+                //    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[PhotonNetwork.NickName] = GameManager.instance.nbLocalPlayersPreset;
+                //else
+                //    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Add(PhotonNetwork.NickName, GameManager.instance.nbLocalPlayersPreset);
+                //CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
+
+                //NetworkGameManager.instance.SendGameParams();
+            }
         }
-
-        // else
-        //PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
-        CreateRoom(roomNameInputField.text, options);
-        MenuManager.Instance.OpenLoadingMenu("Creating Multiplayer Room..."); // Show the loading menu/message
-
-        // When creating a room is done, OnJoinedRoom() will automatically trigger
-        OnCreateMultiplayerRoomButton?.Invoke(this);
     }
 
     void CreateRoom(string roomNam, RoomOptions ro, TypedLobby tl = null)
@@ -343,26 +385,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() // Runs only when THIS player joins room
     {
         Debug.Log("Joined room");
-        foreach (Transform child in _namePlatesParent)
-            Destroy(child.gameObject);
-        //foreach (var kvp in PhotonNetwork.CurrentRoom.Players) { Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}"); }
+        DestroyNameplates();
+        CreateNameplates();
 
-        List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
-
-        foreach (Photon.Realtime.Player player in newListPlayers)
-            Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player);
-
-        var listPlayersDiff = newListPlayers.Except(_previousListOfPlayersInRoom).ToList();
-        Debug.Log($"{listPlayersDiff[0].NickName} Joined room");
-
-
-        //if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
-        //{ // Room is Random
-        //    GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
-        //    GameManager.instance.gameType = GameManager.GameType.Fiesta;
-        //    //PhotonNetwork.LoadLevel(waitingRoomLevelIndex);
-        //}
-        //else
         { // Room is private
 
             commonRoomTexts.SetActive(true);
@@ -738,5 +763,44 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(0.5f);
         PhotonNetwork.LoadLevel(levelToLoadIndex);
+    }
+
+    void DestroyNameplates()
+    {
+        foreach (Transform child in _namePlatesParent)
+            Destroy(child.gameObject);
+    }
+
+    void CreateNameplates()
+    {
+        Debug.Log($"CreateNameplates. Steam State: {SteamAPI.IsSteamRunning()}");
+        if (SteamAPI.IsSteamRunning())
+        {
+            List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
+            foreach (Photon.Realtime.Player player in newListPlayers)
+                Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player);
+
+            var listPlayersDiff = newListPlayers.Except(_previousListOfPlayersInRoom).ToList();
+            Debug.Log($"{listPlayersDiff[0].NickName} Joined room");
+        }
+        else
+        {
+            for (int i = 0; i < int.Parse(_nbLocalPlayersInputed.text.ToString()); i++)
+                Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup($"player{i + 1}", i);
+        }
+    }
+
+    void CreateLocalModePlayerDataCells()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+            CurrentRoomManager.GetLocalPlayerData(i).occupied = true;
+            CurrentRoomManager.GetLocalPlayerData(i).photonRoomIndex = i;
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.username = $"player{i + 1}";
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.player_id = i;
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1";
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "grey";
+        }
     }
 }

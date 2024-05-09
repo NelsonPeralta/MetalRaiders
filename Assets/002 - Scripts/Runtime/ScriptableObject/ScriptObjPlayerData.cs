@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Steamworks;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ScriptObjPlayerData", menuName = "ScriptableObjects/PlayerData", order = 1)]
@@ -17,7 +18,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     bool _achUnl = false;
 
-    public int photonRoomIndex { set {  _photonRoomIndex = value; } get { return _photonRoomIndex; } }
+    public int photonRoomIndex { set { _photonRoomIndex = value; } get { return _photonRoomIndex; } }
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData playerExtendedPublicData
     {
         get { return _playerExtendedPublicData; }
@@ -39,7 +40,8 @@ public class ScriptObjPlayerData : ScriptableObject
                 sb.Replace("--", "-");
                 sb.Replace("--", "-");
 
-                UpdateArmorPiecesPurchasedCount(sb.ToString().Split(char.Parse("-")).Count() - 2);
+                if (SteamAPI.IsSteamRunning())
+                    UpdateArmorPiecesPurchasedCount(sb.ToString().Split(char.Parse("-")).Count() - 2);
             }
         }
     }

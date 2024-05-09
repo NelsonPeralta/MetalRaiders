@@ -120,13 +120,6 @@ public class AchievementManager : MonoBehaviour
     void Start()
     {
         instance = this;
-
-        bool tutorialCompleted;
-        Steamworks.SteamUserStats.GetAchievement("tutorial", out tutorialCompleted);
-        if (tutorialCompleted == false)
-        {
-            Steamworks.SteamUserStats.SetAchievement("tutorial");
-        }
     }
 
     // Update is called once per frame

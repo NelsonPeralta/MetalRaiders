@@ -73,7 +73,7 @@ public partial class WebManager
         }
     }
 
-    IEnumerator GetPlayerExtendedPublicData_Coroutine(int playerid, PlayerNamePlate pli = null)
+    IEnumerator GetPlayerExtendedPublicData_Coroutine(int playerid, PlayerNamePlate playerNamePlateInstance = null)
     {
         Debug.Log("GET PLAYER EXTENDED PUBLIC DATA");
         // DISCLAIMER
@@ -109,11 +109,11 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
+                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
                     if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                     {
-                        pli.playerDataCell.team = GameManager.Team.Red;
-                        pli.UpdateColorPalette();
+                        playerNamePlateInstance.playerDataCell.team = GameManager.Team.Red;
+                        playerNamePlateInstance.UpdateColorPalette();
                     }
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
@@ -123,7 +123,7 @@ public partial class WebManager
                     foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
                     {
                         if (int.Parse(p.NickName) == pepd.player_id)
-                            pli.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
+                            playerNamePlateInstance.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
                     }
                 }
                 catch (Exception e) { Debug.LogWarning(e); }

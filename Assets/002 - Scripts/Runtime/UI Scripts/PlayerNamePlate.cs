@@ -88,6 +88,12 @@ public class PlayerNamePlate : MonoBehaviour
         //text.text = s;
     }
 
+    public void Setup(string name, int playerDataCell)
+    {
+        playerText.text = name;
+        _playerData = CurrentRoomManager.GetLocalPlayerData(playerDataCell);
+    }
+
     public void UpdateColorPalette()
     {
         Debug.Log($"UpdateColorPalette of: {playerText.text}. TeamMode: {GameManager.instance.teamMode}");
