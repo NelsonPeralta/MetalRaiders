@@ -35,8 +35,16 @@ public class GrenadePool : MonoBehaviour
 
     public static int GetAvailableGrenadeIndex(bool isFrag, int photonRoomIndex)
     {
+        print($"GetAvailableGrenadeIndex {photonRoomIndex}");
+
         for (int i = (photonRoomIndex - 1) * 10; i < (photonRoomIndex * 10) - 1; i++)
         {
+            print(i);
+            print(instance.name);
+            print(_instance._fragGrenadePool[i].name);
+            print("stop");
+
+
             if (!_instance._fragGrenadePool[i].activeInHierarchy) _instance._fragGrenadePool[i].transform.SetParent(instance.transform);
             if (!_instance._stickyGrenadePool[i].activeInHierarchy)
             {

@@ -796,7 +796,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
             CurrentRoomManager.GetLocalPlayerData(i).occupied = true;
-            CurrentRoomManager.GetLocalPlayerData(i).photonRoomIndex = i;
+            CurrentRoomManager.GetLocalPlayerData(i).photonRoomIndex = i + 1;
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.username = $"player{i + 1}";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.player_id = i;
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1";
