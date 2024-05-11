@@ -36,6 +36,7 @@ public class Melee : MonoBehaviour
     private void Start()
     {
         _maxDis = GetComponent<BoxCollider>().size.z;
+        _maxDis = 4; // changed through manual testing
 
         player.OnPlayerDeath -= OnPlayerDeath_Delegate;
         player.OnPlayerDeath += OnPlayerDeath_Delegate;
@@ -129,7 +130,7 @@ public class Melee : MonoBehaviour
 
                         Vector3 dir = (hp.transform.position - player.transform.position);
 
-                        print("Melee");
+                        print($"Melee. Max dis: ({_maxDis}), cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
                         print(_maxDis);
 
                         if (hp.meleeMagnetism)
@@ -140,10 +141,9 @@ public class Melee : MonoBehaviour
                                                         hp.transform.position.z);
                             movement.transform.LookAt(targetPostition);
 
-                            if (Vector3.Distance(hp.transform.position, movement.transform.position) > _maxDis) _pushForce = 200;
+                            if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
                             else _pushForce = 100;
 
-                            Debug.Log(Vector3.Distance(hp.transform.position, movement.transform.position));
                             player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * 10, ForceMode.Impulse);
                             player.movement.blockPlayerMoveInput = 0.5f;
                         }

@@ -401,8 +401,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         try { instance.localPlayers.Clear(); } catch { }
         orSpPos_Biped_Dict.Clear();
 
-        try { FindObjectOfType<GameTime>().timeRemaining = 0; }
-        catch (Exception e) { Debug.LogWarning(e.Message); }
+        //try { FindObjectOfType<GameTime>().timeRemaining = 0; }
+        //catch (Exception e) { Debug.LogWarning(e.Message); }
 
 
         instance = this;
@@ -482,7 +482,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             FindObjectOfType<Launcher>().OnCreateSwarmRoomButton += OnCreateSwarmRoomButton_Delegate;
             FindObjectOfType<Launcher>().OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
-            FindObjectOfType<GameTime>().timeRemaining = 0;
+            //FindObjectOfType<GameTime>().timeRemaining = 0;
         }
         OnSceneLoadedEvent?.Invoke();
     }

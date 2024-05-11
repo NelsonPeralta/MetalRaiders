@@ -12,7 +12,7 @@ public class MapCamera : MonoBehaviour
     [SerializeField] GameObject _canvas;
     [SerializeField] AudioClip _slayerClip;
     [SerializeField] AudioClip _KingOfTheHillClip;
-    [SerializeField] AudioClip _FirefightClip;
+    [SerializeField] AudioClip _FirefightClip, _oddballIntro;
     [SerializeField] TMP_Text _text;
 
     public Transform disabledJunk;
@@ -104,7 +104,7 @@ public class MapCamera : MonoBehaviour
                 GetComponent<AudioSource>().clip = _FirefightClip;
 
             if (GameManager.instance.gameType == GameManager.GameType.Oddball)
-                GetComponent<AudioSource>().clip = GameManager.instance.oddballSkull._intro;
+                GetComponent<AudioSource>().clip = _oddballIntro;
 
             GetComponent<AudioSource>().Play();
         }

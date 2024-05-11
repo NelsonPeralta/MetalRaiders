@@ -212,7 +212,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                 if (activeWeapon.ammoProjectileType != WeaponProperties.AmmoProjectileType.Plasma)
                 {
-                    if (!player.isMine)
+                    if (!player.isMine || GameManager.instance.connection == GameManager.Connection.Local)
                     {
                         RaycastHit hit;
                         if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))

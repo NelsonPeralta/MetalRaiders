@@ -322,9 +322,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canvas: {fileID: 6976647239567369628}
-  _slayerClip: {fileID: 8300000, guid: fa3fbd16a79894c49a742f120d2373d1, type: 3}
-  _KingOfTheHillClip: {fileID: 8300000, guid: 6edf9a3c4aebf0842ba92241fb53cf0b, type: 3}
-  _FirefightClip: {fileID: 8300000, guid: 123b8cfeed50fd1489ba7ee9637b1daf, type: 3}
+  _slayerClip: {fileID: 8300000, guid: 5e859f9389c89e540b5f79230efb53f0, type: 3}
+  _KingOfTheHillClip: {fileID: 8300000, guid: 506d86340e9a9634e972093c648bc639, type: 3}
+  _FirefightClip: {fileID: 8300000, guid: b4a16db95f38e0a4d9cc02eeecb99759, type: 3}
+  _oddballIntro: {fileID: 8300000, guid: 96985dd3778c2c34f8c29aabad3fbd9c, type: 3}
   _text: {fileID: 7685466951269865866}
   disabledJunk: {fileID: 0}
 --- !u!82 &1352993268692100055

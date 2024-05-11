@@ -1288,6 +1288,7 @@ public class PlayerController : MonoBehaviourPun
 
     public void TogglePauseGame()
     {
+        print($"TogglePauseGame {pauseMenuOpen} {CurrentRoomManager.instance.gameOver} {GetComponent<PlayerUI>().singlePlayerPauseMenu}");
         if (!pauseMenuOpen)
         {
             if (!CurrentRoomManager.instance.gameOver)

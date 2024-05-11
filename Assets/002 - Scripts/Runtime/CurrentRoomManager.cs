@@ -274,6 +274,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
+                print("Game Over bool");
                 _gameOver = true;
             }
         }
