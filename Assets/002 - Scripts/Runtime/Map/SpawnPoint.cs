@@ -1,10 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Codice.CM.Triggers;
 using UnityEngine;
 
 public class SpawnPoint : MonoBehaviour
 {
+    public enum Layer { Alpha, Beta }
+    public bool occupied { get { return players.Count > 0; } }
+    public bool seen
+    {
+        get { return _seen; }
+        set
+        {
+            if (_seen == false && value == true)
+            {
+                _seen = value;
+                _seenReset = 0.2f;
+            }
+        }
+    }
+
+
+    public Layer layer;
     public List<Player> players = new List<Player>();
     public enum SpawnPointType { Player, Computer }
     public SpawnPointType spawnPointType;
@@ -12,11 +30,14 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField] GameObject _witness;
     [SerializeField] int _radius;
 
+    [SerializeField] bool _seen;
+    [SerializeField] float _seenReset;
+
     private void OnTriggerEnter(Collider other)
     {
+        //Debug.Log($"Spawnpoint OnTriggerEnter: {other.name}");
         if (other.GetComponent<PlayerCapsule>() && other.gameObject.activeInHierarchy)
         {
-            //Debug.Log($"Spawnpoint OnTriggerEnter: {other.name}");
             Player player = other.transform.root.GetComponent<Player>();
 
             if (!players.Contains(player))
@@ -34,9 +55,10 @@ public class SpawnPoint : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        //Debug.Log($"SpawnPoint OnTriggerExit {other.name}");
         if (other.GetComponent<PlayerCapsule>() && other.gameObject.activeInHierarchy && players.Contains(other.transform.root.GetComponent<Player>()))
         {
-            //Debug.Log($"SpawnPoint {other.name}");
+            //Debug.Log($"SpawnPoint OnTriggerExit REMOVING PLAYER");
             other.transform.root.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
             players.Remove(other.transform.root.GetComponent<Player>());
 
@@ -64,6 +86,19 @@ public class SpawnPoint : MonoBehaviour
         }
     }
 
+
+    private void Update()
+    {
+        if (_seenReset > 0)
+        {
+            _seenReset -= Time.deltaTime;
+
+            if (_seenReset <= 0)
+            {
+                _seen = false;
+            }
+        }
+    }
 
 
 
