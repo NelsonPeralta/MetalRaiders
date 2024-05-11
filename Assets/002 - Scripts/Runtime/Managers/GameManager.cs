@@ -6,12 +6,9 @@ using Photon.Pun;
 using System;
 using Photon.Realtime;
 using System.IO;
-using System.Linq;
-using TMPro;
 using UnityEngine.UI;
 using System.Net.Mail;
-using UnityEditor;
-using Steamworks;
+using TMPro;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -121,7 +118,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 //if (SteamAPI.IsSteamRunning())
                 //    Launcher.instance.LoginWithSteamName();
-            }else if(value == Connection.Local)
+            }
+            else if (value == Connection.Local)
             {
                 Launcher.instance.CreateLocalModePlayerDataCells();
                 MenuManager.Instance.OpenMenu("online title");
@@ -277,6 +275,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public OddballSkull oddballSkull;
 
+    public TMP_Text debugText { get { return _deb; } }
+
     // called zero
 
     // private Variables
@@ -300,6 +300,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] AudioSource _clickSound, _cancelSound;
     public List<PreviousScenePayload> previousScenePayloads = new List<PreviousScenePayload>();
 
+    [SerializeField] TMP_Text _deb;
 
     public bool playerDataRetrieved
     {
@@ -501,11 +502,55 @@ public class GameManager : MonoBehaviourPunCallbacks
 #else
                   Debug.unityLogger.logEnabled = false;
 #endif
-
-
         CurrentRoomManager.InitializeAllPlayerDataCells();
-        SteamManager.Instance.Init();
-        Launcher.instance.ConnectToPhotonMasterServer();
+
+        StartCoroutine(PingGoogle("8.8.8.8"));
+
+
+        //SteamManager.Instance.Init();
+
+        //GameManager.instance.debugText.text += "--abc---";
+
+        //if (connection == Connection.Online)
+        //{
+        //    GameManager.instance.debugText.text += " ConnectToPhotonMasterServer";
+
+        //    Launcher.instance.ConnectToPhotonMasterServer();
+        //}
+
+
+        //if (Application.internetReachability == NetworkReachability.NotReachable)
+        //{
+        //    Debug.LogError("YOU DONT HAVE INTERNET");
+        //    GameManager.instance.connection = GameManager.Connection.Local;
+        //    PhotonNetwork.OfflineMode = true;
+        //}
+        //else
+        //{
+        //    Debug.LogError("YOU DONT HAVE INTERNET");
+        //    SteamManager.Instance.Init();
+        //    Launcher.instance.ConnectToPhotonMasterServer();
+        //}
+    }
+
+    IEnumerator PingGoogle(string ip)
+    {
+        Ping ping = new Ping(ip);
+        yield return new WaitForSeconds(1f);
+        if (ping.isDone)
+        {
+            print($"Pinged Google in: {ping.time}");
+
+            SteamManager.Instance.Init();
+            Launcher.instance.ConnectToPhotonMasterServer();
+        }
+        else
+        {
+            Debug.LogError("YOU DONT HAVE INTERNET");
+
+            GameManager.instance.connection = GameManager.Connection.Local;
+            PhotonNetwork.OfflineMode = true;
+        }
     }
 
     // called when the game is terminated
@@ -517,11 +562,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Update()
     {
 
-        if(_checkCooldown > 0)
+        if (_checkCooldown > 0)
         {
             _checkCooldown -= Time.deltaTime;
 
-            if(_checkCooldown <= 0)
+            if (_checkCooldown <= 0)
             {
                 _photonNetworkClientState = PhotonNetwork.NetworkClientState;
                 _inARoom = PhotonNetwork.CurrentRoom != null;

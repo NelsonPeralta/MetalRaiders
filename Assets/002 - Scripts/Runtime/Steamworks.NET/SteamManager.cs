@@ -117,7 +117,8 @@ public class SteamManager : MonoBehaviour
             // See the Valve documentation for more information: https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
             if (SteamAPI.RestartAppIfNecessary((AppId_t)2290530))
             {
-                Debug.Log("[Steamworks.NET] Shutting down because RestartAppIfNecessary returned true. Steam will restart the application.");
+                //GameManager.instance.debugText.text += "Shutting down because RestartAppIfNecessary returned true. Steam will restart the application.";
+                Debug.LogError("[Steamworks.NET] Shutting down because RestartAppIfNecessary returned true. Steam will restart the application.");
 
                 Application.Quit();
                 return;
@@ -125,6 +126,7 @@ public class SteamManager : MonoBehaviour
         }
         catch (System.DllNotFoundException e)
         { // We catch this exception here, as it will be the first occurrence of it.
+
             Debug.LogError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. It's likely not in the correct location. Refer to the README for more details.\n" + e, this);
 
             Application.Quit();
@@ -143,15 +145,17 @@ public class SteamManager : MonoBehaviour
         m_bInitialized = SteamAPI.Init();
         if (!m_bInitialized)
         {
-            Debug.LogError("YOU ARE NOT CONNECTED TO STEAM");
             Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", this);
-            GameManager.instance.connection = GameManager.Connection.Local;
-            PhotonNetwork.OfflineMode = true;
+            //GameManager.instance.debugText.text += " YOU ARE NOT CONNECTED TO STEAM.";
+            //Debug.LogError("YOU ARE NOT CONNECTED TO STEAM");
+            //GameManager.instance.connection = GameManager.Connection.Local;
+            //PhotonNetwork.OfflineMode = true;
 
             return;
         }
         else
         {
+            //GameManager.instance.debugText.text += " You ave internet.";
             GameManager.ROOT_PLAYER_NAME = SteamFriends.GetPersonaName();
             GameManager.instance.connection = GameManager.Connection.Online;
             Launcher.instance.LoginWithSteamName();

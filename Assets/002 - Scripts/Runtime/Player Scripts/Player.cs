@@ -960,7 +960,7 @@ public class Player : Biped
         print("r1");
         ragdoll.GetComponent<PlayerArmorManager>().player = this;
         print("r2");
-        if (SteamAPI.IsSteamRunning())
+        if (GameManager.instance.connection == GameManager.Connection.Online)
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
         else
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(rid);
@@ -1379,7 +1379,7 @@ public class Player : Biped
 
     public void ChangePlayerId(int id) // Only works when no internet connection
     {
-        if (!SteamAPI.IsSteamRunning())
+        if (GameManager.instance.connection == GameManager.Connection.Local)
         {
             _playerId = id;
             OnPlayerIdAssigned.Invoke(this);

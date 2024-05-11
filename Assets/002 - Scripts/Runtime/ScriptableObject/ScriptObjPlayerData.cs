@@ -40,7 +40,7 @@ public class ScriptObjPlayerData : ScriptableObject
                 sb.Replace("--", "-");
                 sb.Replace("--", "-");
 
-                if (SteamAPI.IsSteamRunning())
+                if (GameManager.instance.connection == GameManager.Connection.Online)
                     UpdateArmorPiecesPurchasedCount(sb.ToString().Split(char.Parse("-")).Count() - 2);
             }
         }

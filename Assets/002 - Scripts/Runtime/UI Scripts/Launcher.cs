@@ -793,7 +793,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     void CreateNameplates()
     {
         Debug.Log($"CreateNameplates. Steam State: {SteamAPI.IsSteamRunning()}. Nb local: {_nbLocalPlayersInputed}");
-        if (SteamAPI.IsSteamRunning())
+        if (GameManager.instance.connection == GameManager.Connection.Online)
         {
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
             foreach (Photon.Realtime.Player player in newListPlayers)
