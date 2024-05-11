@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
     public enum Team { None, Red, Blue }
-    public enum Connection { Offline, Online }
+    public enum Connection { Unassigned, Local, Online }
     public enum GameMode { Multiplayer, Swarm, Unassigned }
     public enum GameType
     {
@@ -101,11 +101,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Dictionary<int, Player> localPlayers = new Dictionary<int, Player>();
 
     [SerializeField] Connection _connection;
+    [SerializeField] Photon.Realtime.ClientState _photonNetworkClientState;
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
     [SerializeField] TeamMode _teamMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
+    [SerializeField] bool _inARoom;
     // Public variables
 
     public Connection connection
@@ -117,8 +119,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (value == Connection.Online)
             {
-                if (SteamAPI.IsSteamRunning())
-                    Launcher.instance.LoginWithSteamName();
+                //if (SteamAPI.IsSteamRunning())
+                //    Launcher.instance.LoginWithSteamName();
+            }else if(value == Connection.Local)
+            {
+                Launcher.instance.CreateLocalModePlayerDataCells();
+                MenuManager.Instance.OpenMenu("online title");
+                Launcher.instance.nbLocalPlayersHolder.SetActive(true);
             }
         }
     }
@@ -310,9 +317,22 @@ public class GameManager : MonoBehaviourPunCallbacks
             _playerDataRetrieved = true;
         }
     }
+
+
+
+
+
     bool _playerDataRetrieved;
+    float _checkCooldown;
+
+
+
+
     void Awake()
     {
+        _checkCooldown = 0.05f;
+
+        Debug.Log("GameManager Awake");
         InitialisePlayerPrefs();
         Load();
 
@@ -339,7 +359,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         colorDict.Add("brown", "#964B00");
 
-        connection = Connection.Offline;
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         if (instance)
         {
@@ -355,6 +374,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called first
     void OnEnable()
     {
+        Debug.Log("GameManager OnEnable");
         base.OnEnable(); // need this for OnRoomPropertiesUpdate to work
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -397,6 +417,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
                 previousScenePayloads.Remove(PreviousScenePayload.ResetPlayerDataCells);
+            }
+
+            if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReport))
+            {
+                previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReport);
+                MenuManager.Instance.OpenMenu("carnage report");
             }
 
 
@@ -463,6 +489,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called third
     private void Start()
     {
+        Debug.Log("GameManager Start");
         nbLocalPlayersPreset = 1;
         //Debug.Log(colorPaletteTextures.Count);
 
@@ -476,7 +503,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 #endif
 
 
-        //SceneManager.sceneLoaded += OnSceneLoaded;
+        CurrentRoomManager.InitializeAllPlayerDataCells();
+        SteamManager.Instance.Init();
         Launcher.instance.ConnectToPhotonMasterServer();
     }
 
@@ -488,6 +516,19 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+
+        if(_checkCooldown > 0)
+        {
+            _checkCooldown -= Time.deltaTime;
+
+            if(_checkCooldown <= 0)
+            {
+                _photonNetworkClientState = PhotonNetwork.NetworkClientState;
+                _inARoom = PhotonNetwork.CurrentRoom != null;
+
+                _checkCooldown = 0.05f;
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -575,7 +616,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 player.GetComponent<PlayerController>().rid = i;
                 player.ChangePlayerId(i);
 
-                if(i == 0)instance._rootPlayer = player;
+                if (i == 0) instance._rootPlayer = player;
 
                 //player.originalSpawnPosition = spawnpoint.position;
                 //GameManager.instance.orSpPos_Biped_Dict.Add(spawnpoint.position, player); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
@@ -833,14 +874,16 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     public override void OnDisconnected(DisconnectCause cause)
+
     {
-        GameManager.instance.connection = GameManager.Connection.Offline;
+        print("OnDisconnected");
+        //GameManager.instance.connection = GameManager.Connection.Local;
     }
 
     public override void OnConnectedToMaster()
     {
-        GameManager.instance.connection = GameManager.Connection.Online;
-
+        //print("OnConnectedToMaster");
+        //GameManager.instance.connection = GameManager.Connection.Online;
     }
 
 

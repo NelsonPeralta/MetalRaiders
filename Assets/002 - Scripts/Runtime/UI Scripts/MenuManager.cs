@@ -7,7 +7,6 @@ using System.IO;
 using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
-using static GameManager;
 
 public class MenuManager : MonoBehaviour
 {
@@ -49,7 +48,7 @@ public class MenuManager : MonoBehaviour
 
         Debug.Log($"OPEN MENU: {menuName}");
 
-        if (GameManager.instance.previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReport))
+        if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReport))
         { menuName = "carnage report"; print($"Changed to Carnage Report {menuName}"); }
 
 
@@ -108,11 +107,12 @@ public class MenuManager : MonoBehaviour
     public void OpenMainMenu()
     {
         string menuname = "";
-        if (WebManager.webManagerInstance.pda.PlayerDataIsSet())
-            menuname += "online ";
-        else
-            menuname += "offline ";
-        menuname += "title";
+        //if (WebManager.webManagerInstance.pda.PlayerDataIsSet())
+        //    menuname += "online ";
+        //else
+        //    menuname += "offline ";
+        //menuname += "title";
+        menuname = "online title";
         Debug.Log($"MenuManager menuname: {menuname}");
         for (int i = 0; i < menus.Length; i++)
         {
@@ -172,6 +172,17 @@ public class MenuManager : MonoBehaviour
             catch { }
             Launcher.instance.ConnectToPhotonMasterServer();
             OpenMainMenu();
+        }
+    }
+
+    public void CloseCarnageReportMenu()
+    {
+        OpenMainMenu();
+
+        if (GameManager.instance.connection == GameManager.Connection.Local)
+        {
+            Launcher.instance.nbLocalPlayersHolder.SetActive(true);
+            Launcher.instance.nbLocalPlayersText.text = "1";
         }
     }
 }

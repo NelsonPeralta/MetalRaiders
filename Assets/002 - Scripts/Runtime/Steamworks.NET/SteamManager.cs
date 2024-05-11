@@ -13,6 +13,7 @@ using UnityEngine;
 #if !DISABLESTEAMWORKS
 using System.Collections;
 using Steamworks;
+using Photon.Pun;
 #endif
 
 //
@@ -26,7 +27,7 @@ public class SteamManager : MonoBehaviour
     protected static bool s_EverInitialized = false;
 
     protected static SteamManager s_instance;
-    protected static SteamManager Instance
+    public static SteamManager Instance
     {
         get
         {
@@ -89,8 +90,11 @@ public class SteamManager : MonoBehaviour
 
         // We want our SteamManager Instance to persist across scenes.
         DontDestroyOnLoad(gameObject);
+    }
 
-
+    public void Init()
+    {
+        MenuManager.Instance.OpenLoadingMenu("Connecting to Steam...");
         if (!Packsize.Test())
         {
             Debug.LogError("[Steamworks.NET] Packsize Test returned false, the wrong version of Steamworks.NET is being run in this platform.", this);
@@ -141,12 +145,16 @@ public class SteamManager : MonoBehaviour
         {
             Debug.LogError("YOU ARE NOT CONNECTED TO STEAM");
             Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", this);
+            GameManager.instance.connection = GameManager.Connection.Local;
+            PhotonNetwork.OfflineMode = true;
 
             return;
         }
         else
         {
             GameManager.ROOT_PLAYER_NAME = SteamFriends.GetPersonaName();
+            GameManager.instance.connection = GameManager.Connection.Online;
+            Launcher.instance.LoginWithSteamName();
         }
 
         s_EverInitialized = true;

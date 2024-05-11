@@ -358,7 +358,10 @@ public class CurrentRoomManager : MonoBehaviour
     private void Start()
     {
         vetoCountdown = 9;
+    }
 
+    public static void InitializeAllPlayerDataCells()
+    {
         foreach (ScriptObjPlayerData sod in instance._extendedPlayerData)
             sod.InitialReset();
     }
