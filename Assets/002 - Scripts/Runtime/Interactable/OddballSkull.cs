@@ -7,7 +7,7 @@ public class OddballSkull : MonoBehaviour
     public Transform thisRoot;
     public OddballSpawnPoint spawnPoint;
     public Rigidbody rb;
-    public AudioClip _intro, _taken, _dropped, _ballReset;
+    public AudioClip _taken, _dropped, _ballReset;
 
 
     Player _player;
