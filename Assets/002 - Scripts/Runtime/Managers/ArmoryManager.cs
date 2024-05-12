@@ -9,7 +9,6 @@ public class ArmoryManager : MonoBehaviour
 {
     public static ArmoryManager instance;
 
-    public GameObject playerModel;
     public Transform scrollMenuContainer;
 
     public TMP_Text creditsText;
@@ -34,15 +33,15 @@ public class ArmoryManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         instance = this;
 
-        _defaultPlayerModelRotation = playerModel.transform.localRotation.eulerAngles;
+        _defaultPlayerModelRotation = Launcher.instance.playerModel.transform.localRotation.eulerAngles;
         _rotatePlayerModelScrollbar.value = 180;
     }
     private void OnEnable()
     {
-        Debug.Log("OnEnable ArmoryManager");
-        playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
-        playerModel.SetActive(true);
-        playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
+        Debug.Log($"OnEnable ArmoryManager {Launcher.instance.playerModel.name}");
+        Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
+        Launcher.instance.playerModel.SetActive(true);
+        Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
         creditsText.text = $"{pda.playerBasicOnlineStats.credits}cr";
@@ -51,7 +50,7 @@ public class ArmoryManager : MonoBehaviour
         unlockedArmorDataString.text = $"UADS: {pda.unlockedArmorDataString.ToString()}";
 
         int i = 1;
-        foreach (PlayerArmorPiece playerArmorPiece in playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
+        foreach (PlayerArmorPiece playerArmorPiece in Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
         {
             if (!playerArmorPiece.hideFromArmory)
             {
@@ -75,10 +74,7 @@ public class ArmoryManager : MonoBehaviour
 
     private void OnDisable()
     {
-        playerModel.SetActive(false);
-        playerModel.transform.rotation = Quaternion.Euler(Vector3.zero);
-        if (_defaultPlayerModelRotation.y > 180) playerModel.transform.Rotate(new Vector3(0, 180, 0), relativeTo: Space.Self);
-
+        Launcher.TogglePlayerModel(false);
         foreach (ArmorPieceListing armorPieceListing in armorPieceListingList)
             Destroy(armorPieceListing.gameObject);
         armorPieceListingList.Clear();
@@ -98,9 +94,16 @@ public class ArmoryManager : MonoBehaviour
         // REFERENCE: https://discussions.unity.com/t/rotate-gameobject-with-gui-slider/204758/2
         // How much we've changed
         float delta = (_rotatePlayerModelScrollbar.value - 180) - this.previousValue;
-        this.playerModel.transform.Rotate(Vector3.up * delta);
+        Launcher.instance.playerModel.transform.Rotate(Vector3.up * delta);
 
         // Set our previous value for the next change
         this.previousValue = _rotatePlayerModelScrollbar.value - 180;
+    }
+
+    public void ResetPlayerModelRotation()
+    {
+        //Launcher.instance.playerModel.transform.rotation = Quaternion.Euler(Vector3.zero);
+        //if (_defaultPlayerModelRotation.y > 180) Launcher.instance.playerModel.transform.Rotate(new Vector3(0, 180, 0), relativeTo: Space.Self);
+        _rotatePlayerModelScrollbar.value = 180;
     }
 }

@@ -45,7 +45,7 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
                     AchievementManager.UnlockAchievement("OMA");
 
                 if (!CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("trophy_lsa-trophy_rsa"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-trophy_lsa-trophy_rsa-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-gps-lfa-"));
             }
         }
     }

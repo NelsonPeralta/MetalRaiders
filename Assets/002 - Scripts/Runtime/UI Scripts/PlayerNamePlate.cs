@@ -153,9 +153,8 @@ public class PlayerNamePlate : MonoBehaviour
         ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
 
         s.playerData = _playerData;
-        s.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = playerDataCell;
-        s.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
-
+        Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = playerDataCell;
+        Launcher.TogglePlayerModel(true);
     }
 
     public void OnPointerEnter()

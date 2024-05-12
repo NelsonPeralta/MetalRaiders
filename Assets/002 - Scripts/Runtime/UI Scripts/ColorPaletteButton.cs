@@ -10,7 +10,7 @@ public class ColorPaletteButton : MonoBehaviour
     {
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorName}")).SingleOrDefault();
 
-        foreach (PlayerArmorPiece playerArmorPiece in ArmoryManager.instance.playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
+        foreach (PlayerArmorPiece playerArmorPiece in Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
             if (playerArmorPiece.canChangeColorPalette)
                 try
                 {

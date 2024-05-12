@@ -72,7 +72,7 @@ public class ScriptObjPlayerData : ScriptableObject
                 Steamworks.SteamUserStats.GetAchievement("COLLECTOR", out _achUnl);
                 if (!_achUnl)
                 {
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-cards_lsa-cards_rsa-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-geiger-lfa-"));
                     Debug.Log($"Unlocked Achivement COLLECTOR");
                     AchievementManager.UnlockAchievement("COLLECTOR");
                 }

@@ -16,7 +16,7 @@ public class ServiceRecordMenu : MonoBehaviour
 
 
 
-            playerModel.SetActive(true);
+            Launcher.instance.playerModel.SetActive(true);
 
             float kd = 0;
 
@@ -69,7 +69,6 @@ public class ServiceRecordMenu : MonoBehaviour
 
     [SerializeField] Image _rankImage;
 
-    public GameObject playerModel;
 
 
 
@@ -79,7 +78,9 @@ public class ServiceRecordMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        playerModel.SetActive(true); playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
+        Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
+        Launcher.TogglePlayerModel(true);
+
 
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
@@ -125,6 +126,6 @@ public class ServiceRecordMenu : MonoBehaviour
     private void OnDisable()
     {
         _playerData = null;
-        playerModel.SetActive(false);
+        Launcher.instance.playerModel.SetActive(false);
     }
 }

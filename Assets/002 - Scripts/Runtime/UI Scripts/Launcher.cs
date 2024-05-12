@@ -23,6 +23,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public static Launcher instance; // Singleton of the Photon Launcher
     public PhotonView PV;
     public GameObject loginButton;
+    public GameObject playerModel { get { return _playerModel; } }
 
     #region
     public int levelToLoadIndex
@@ -41,6 +42,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             Debug.Log($"levelToLoadIndex {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().mapName}");
         }
     }
+
+
+    [SerializeField] GameObject _playerModel;
+
+
     [SerializeField] int _levelToLoadIndex;
     [SerializeField] int testingRoomLevelIndex;
     public int waitingRoomLevelIndex;
@@ -822,5 +828,12 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "grey";
         }
+    }
+
+    public static void TogglePlayerModel(bool b)
+    {
+        ArmoryManager.instance.ResetPlayerModelRotation();
+        instance.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
+        instance.playerModel.SetActive(b);
     }
 }
