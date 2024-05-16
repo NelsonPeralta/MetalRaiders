@@ -1129,8 +1129,15 @@ MonoBehaviour:
   _shootProjectileCooldown: 0
   _throwExplosiveCooldown: 0
   _switchPlayerCooldown: 0
+  _isDodgingCooldown: 0
   _isInRange: 0
   _walkingAudioSource: {fileID: 0}
+  _leftDodgePosBot: {fileID: 0}
+  _leftDodgePosMid: {fileID: 0}
+  _leftDodgePosTop: {fileID: 0}
+  _rightDodgePosBot: {fileID: 0}
+  _rightDodgePosMid: {fileID: 0}
+  _rightDodgePosTop: {fileID: 0}
 --- !u!195 &4212620777855583801
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -1149,8 +1149,15 @@ MonoBehaviour:
   _shootProjectileCooldown: 0
   _throwExplosiveCooldown: 0
   _switchPlayerCooldown: 0
+  _isDodgingCooldown: 0
   _isInRange: 0
   _walkingAudioSource: {fileID: 0}
+  _leftDodgePosBot: {fileID: 0}
+  _leftDodgePosMid: {fileID: 0}
+  _leftDodgePosTop: {fileID: 0}
+  _rightDodgePosBot: {fileID: 0}
+  _rightDodgePosMid: {fileID: 0}
+  _rightDodgePosTop: {fileID: 0}
   _fireBallPrefab: {fileID: 3996956188031236213, guid: b8556c475913e5a48a676f6421af774e,
     type: 3}
   _minionSpawnPoints:

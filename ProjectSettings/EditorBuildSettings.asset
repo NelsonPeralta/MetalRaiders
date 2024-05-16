@@ -29,12 +29,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple.unity
     guid: b0cdc5e69480f4a4eb87099f24318b3a
-  - enabled: 1
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Shiver.unity
-    guid: e9b7544daabb65448b78f3baa864018b
   - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Babylon.unity
     guid: ffa1a3962a4fe1c4d96dd6e27b371baf
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Quarantine.unity
+    guid: 5df387ea68435f945b62eb364caf7edf
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Starship.unity
     guid: 887ccbafd09e0cd43ac225973bdb7b20

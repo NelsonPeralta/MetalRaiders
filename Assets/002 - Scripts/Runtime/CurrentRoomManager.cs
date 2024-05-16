@@ -859,12 +859,17 @@ public class CurrentRoomManager : MonoBehaviour
     }
     public void ResetAllPlayerDataExceptMine() // Called when leaving a room, so no need to destroy player
     {
+
         for (int i = 0; i < instance._extendedPlayerData.Count; i++)
             if (i > 0)
             {
-                instance._extendedPlayerData[i].occupied = false;
                 instance._extendedPlayerData[i].team = GameManager.Team.None;
-                instance._extendedPlayerData[i].playerExtendedPublicData = null;
+
+                if (GameManager.instance.connection == GameManager.Connection.Online)
+                {
+                    instance._extendedPlayerData[i].occupied = false;
+                    instance._extendedPlayerData[i].playerExtendedPublicData = null;
+                }
             }
     }
 

@@ -827,6 +827,29 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.player_id = i;
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "grey";
+
+            if (i == 0)
+            {
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1-operator_lsa-operator_rsa-patrol_ca";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "red";
+            }
+            else if (i == 1)
+            {
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "vanguard_hc-commando_rsa-commando_lsa-Overseer_ca";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "blue";
+            }
+            else if (i == 2)
+            {
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "infiltrator_hc-pilot_rsa-pilot_lsa-grenadier_ca";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "yellow";
+
+            }
+            else if (i == 3)
+            {
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "sentry_hc-guerilla_ca-security_lsa-security_rsa";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "green";
+
+            }
         }
     }
 

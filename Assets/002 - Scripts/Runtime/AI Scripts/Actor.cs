@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 [RequireComponent(typeof(FieldOfView))]
 [RequireComponent(typeof(NavMeshAgent))]
@@ -121,6 +122,8 @@ abstract public class Actor : Biped
     public int midRange { get { return _midRange; } }
     public int closeRange { get { return _closeRange; } }
     public bool oneShotHeadshot { get { return _oneShotHeadshot; } }
+    public bool isDodging { get { return _isDodgingCooldown > 0; } }
+
 
     [SerializeField] protected int _hitPoints, _defaultHitpoints;
     [SerializeField] Transform _targetTransform;
@@ -140,9 +143,15 @@ abstract public class Actor : Biped
     [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isShooting, isThrowing, isBoosting;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
-    [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown, _switchPlayerCooldown;
+    [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown, _switchPlayerCooldown, _isDodgingCooldown;
     [SerializeField] protected bool _isInRange;
     [SerializeField] AudioSource _walkingAudioSource;
+
+
+
+    [SerializeField] Transform _leftDodgePosBot, _leftDodgePosMid, _leftDodgePosTop;
+    [SerializeField] Transform _rightDodgePosBot, _rightDodgePosMid, _rightDodgePosTop;
+
 
     protected float _diffHpMult, _diffAttMult, _gruntDelay, _defGruntDelay;
     AudioSource _audioSource;
@@ -237,7 +246,7 @@ abstract public class Actor : Biped
     private void OnEnable()
     {
         // See Prepare() for resetting hitpoints on Spawn
-        _flinchCooldown = _defaultFlinchCooldown;
+        _flinchCooldown = _isDodgingCooldown = _defaultFlinchCooldown;
         _switchPlayerCooldown = 0;
         _isInRange = false;
         ChildOnEnable();
@@ -267,7 +276,7 @@ abstract public class Actor : Biped
 
     protected void Prepare()
     {
-
+        _isDodgingCooldown = 0;
         _switchPlayerCooldown = 0;
         _isInRange = false;
         transform.position = new Vector3(0, -10, 0);
@@ -497,7 +506,8 @@ abstract public class Actor : Biped
         if (_switchPlayerCooldown > 0 && hitPoints < _defaultHitpoints)
             _switchPlayerCooldown -= Time.deltaTime;
 
-
+        if (_isDodgingCooldown > 0 && hitPoints < _defaultHitpoints)
+            _isDodgingCooldown -= Time.deltaTime;
     }
 
 
@@ -510,6 +520,16 @@ abstract public class Actor : Biped
 
         if (targetTransform)
         {
+            if (_isDodgingCooldown <= 0)
+            {
+                int l = UnityEngine.Random.Range(0, 2);
+
+                Dodge(l);
+                return;
+            }
+
+
+
             float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
             if (distanceToTarget <= closeRange)
             {
@@ -731,5 +751,63 @@ abstract public class Actor : Biped
             targetTransform = null;
             targetHitpoints = null;
         }
+    }
+
+    [PunRPC]
+    public void Dodge(int left, bool callRPC = true)
+    {
+        if (callRPC && PhotonNetwork.IsMasterClient)
+        {
+            //if (!isBoosting)
+            {
+                Debug.Log($"ACTORD DODGE CALL");
+                GetComponent<PhotonView>().RPC("Dodge", RpcTarget.All, left, false);
+            }
+        }
+        else if (!callRPC)
+        {
+            //print($"TRYING TO DODGE: {CanAgentReachDestination(_nma, _leftDodgePosBot.position)}. " +
+            //    $"Hits: {Physics.RaycastAll(transform.position, _leftDodgePosBot.position, 4).Length}");
+
+            if (left == 1 && Physics.RaycastAll(transform.position, _leftDodgePosBot.position, 4).Length == 0
+                && Physics.RaycastAll(transform.position, _leftDodgePosMid.position, 4).Length == 0
+                && Physics.RaycastAll(transform.position, _leftDodgePosTop.position, 4).Length == 0)
+            {
+                Debug.Log($"ACTORD DODGE CALL PROCESSING");
+
+
+                //RaycastHit[] hits;
+                ////hits = Physics.RaycastAll(transform.position, _leftDodgePos.position, Vector3.Distance(transform.position, _leftDodgePos.position));
+                //hits = Physics.RaycastAll(transform.position, _leftDodgePos.position, 100f);
+                //foreach (RaycastHit hit in hits) { print($"dodge hit ({hits.Length}): {hit.transform.name}"); }
+
+
+                _isDodgingCooldown = 1;
+                //_audioSource.clip = _hurtClip;
+                //_audioSource.Play();
+
+                //nma.enabled = false;
+                _animator.Play("dodge_l");
+                //_isDodgingCooldown = _defaultFlinchCooldown;
+            }
+            else if ((left == 0 && Physics.RaycastAll(transform.position, _leftDodgePosBot.position, 4).Length == 0
+                && Physics.RaycastAll(transform.position, _leftDodgePosMid.position, 4).Length == 0
+                && Physics.RaycastAll(transform.position, _leftDodgePosTop.position, 4).Length == 0))
+            {
+                _isDodgingCooldown = 1;
+                _animator.Play("dodge_r");
+
+            }
+        }
+    }
+
+
+    public static bool CanAgentReachDestination(NavMeshAgent nma, Vector3 pos)
+    {
+        NavMeshPath navMeshPath = new NavMeshPath();
+        if (nma.CalculatePath(pos, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+            return true;
+
+        return false;
     }
 }

@@ -4078,8 +4078,15 @@ MonoBehaviour:
   _shootProjectileCooldown: 0
   _throwExplosiveCooldown: 0
   _switchPlayerCooldown: 0
+  _isDodgingCooldown: 0
   _isInRange: 0
   _walkingAudioSource: {fileID: 2866229061437481522}
+  _leftDodgePosBot: {fileID: 0}
+  _leftDodgePosMid: {fileID: 0}
+  _leftDodgePosTop: {fileID: 0}
+  _rightDodgePosBot: {fileID: 0}
+  _rightDodgePosMid: {fileID: 0}
+  _rightDodgePosTop: {fileID: 0}
   _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
     type: 3}
 --- !u!82 &7575627652589808186

@@ -495,9 +495,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (editMode)
         {
             zombiesLeft = 0;
-            breathersLeft = 1;
+            breathersLeft = 0;
             hellhoundsLeft = 0;
-            ribbiansLeft = 0;
+            ribbiansLeft = 1;
             tyrantsLeft = 0;
         }
 
