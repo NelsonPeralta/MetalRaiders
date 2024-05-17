@@ -18,11 +18,15 @@ public class SpawnPointDisablerRay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _hits = Physics.RaycastAll(transform.position, transform.forward, 40).Select(obj => obj.transform).ToList();
 
-        for (int i = 0; i < _hits.Count; i++)
+        if (GameManager.instance.connection == GameManager.Connection.Online)
         {
-            try { _hits[i].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.seen = true; } catch { }
+            _hits = Physics.RaycastAll(transform.position, transform.forward, 40).Select(obj => obj.transform).ToList();
+
+            for (int i = 0; i < _hits.Count; i++)
+            {
+                try { _hits[i].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.seen = true; } catch { }
+            }
         }
     }
 }

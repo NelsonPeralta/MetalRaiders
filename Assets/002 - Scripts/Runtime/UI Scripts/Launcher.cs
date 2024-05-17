@@ -823,10 +823,11 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
             CurrentRoomManager.GetLocalPlayerData(i).occupied = true;
             CurrentRoomManager.GetLocalPlayerData(i).photonRoomIndex = i + 1;
-            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.username = $"player{i + 1}";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.player_id = i;
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.username = $"player{i + 1}";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "grey";
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.level = 1;
 
             if (i == 0)
             {
@@ -835,7 +836,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             }
             else if (i == 1)
             {
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "vanguard_hc-commando_rsa-commando_lsa-Overseer_ca";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "vanguard_hc-commando_rsa-commando_lsa-overseer_ca";
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "blue";
             }
             else if (i == 2)

@@ -18,21 +18,49 @@ public class KillFeedItem : MonoBehaviour
     }
 
 
+    float _disableCountdown;
     float _scaleCounter;
     Vector3 _oLocalScale;
     RectTransform _rTrans;
 
     private void Start()
     {
+        _disableCountdown = 4;
         _rTrans = GetComponent<RectTransform>();
         _oLocalScale = _rTrans.localScale;
 
 
         _rTrans.pivot = new Vector2(0, GetComponent<RectTransform>().pivot.y);
         _rTrans.localScale = new Vector3(0, 1, 1);
+
+
+
+        _scaleCounter = -1;
+        gameObject.SetActive(false);
     }
     private void Update()
     {
-        oScaleCounter += Time.deltaTime * 3 * _oLocalScale.x;
+        if (_disableCountdown > 0)
+        {
+            _disableCountdown -= Time.deltaTime;
+
+            if (_disableCountdown <= 0)
+            {
+                _scaleCounter = -1;
+                _disableCountdown = 4;
+                gameObject.SetActive(false);
+            }
+        }
+
+        if (_scaleCounter > -1)
+            oScaleCounter += Time.deltaTime * 3 * _oLocalScale.x;
+    }
+
+    public void TriggerBehaviour()
+    {
+        print("Killfeed TriggerBehaviour");
+        transform.localScale = _oLocalScale;
+        _disableCountdown = 4;
+        _scaleCounter = 0;
     }
 }

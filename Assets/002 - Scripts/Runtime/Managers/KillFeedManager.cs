@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class KillFeedManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class KillFeedManager : MonoBehaviour
     [Header("Prefabs")]
     public GameObject killFeedItemPrefab;
     public GameObject newKillFeedItemPrefab;
+
+    [SerializeField] List<TMP_Text> _killFeedList = new List<TMP_Text>();
 
     private void Start()
     {
@@ -55,13 +58,26 @@ public class KillFeedManager : MonoBehaviour
         while (numChild > 3)
         {
             numChild--;
-            Destroy(gridLayout.transform.GetChild(numChild).gameObject);
-            Debug.Log(numChild);
+            gridLayout.transform.GetChild(numChild).gameObject.SetActive(false);
         }
 
 
 
-        try { StartCoroutine(SpawnNewFeed_Coroutine(feed)); } catch { }
+        var nkf = GetKillFeed();
+
+        if (nkf != null)
+        {
+            nkf.text = $"{feed}";
+            nkf.transform.SetParent(gridLayout.transform, false);
+            nkf.transform.SetAsFirstSibling();
+            nkf.GetComponent<KillFeedItem>().TriggerBehaviour();
+            nkf.gameObject.SetActive(true);
+        }
+
+
+
+
+        //try { StartCoroutine(SpawnNewFeed_Coroutine(feed)); } catch { }
     }
 
     public void EnterNewWeaponFeed(string part1, string part2, string weaponCodeName, bool headShot = false)
@@ -144,19 +160,21 @@ public class KillFeedManager : MonoBehaviour
 
     IEnumerator SpawnNewFeed_Coroutine(string part1, string part2, bool headShot = false, bool melee = false)
     {
-        var nkf = Instantiate(killFeedItemPrefab);
+        var nkf = GetKillFeed();
 
-        TMP_Text t1 = nkf.transform.Find("part 1").GetComponent<TMP_Text>();
-        TMP_Text t2 = nkf.transform.Find("part 2").GetComponent<TMP_Text>();
-        Image im;
-
-        if (!headShot && !melee)
-            im = nkf.transform.Find("weapon").GetComponent<Image>();
+        if (nkf != null)
+        {
 
 
+            TMP_Text t1 = nkf.transform.Find("part 1").GetComponent<TMP_Text>();
+            TMP_Text t2 = nkf.transform.Find("part 2").GetComponent<TMP_Text>();
+            Image im;
 
-        yield return new WaitForSeconds(5);
-        Destroy(nkf);
+            if (!headShot && !melee)
+                im = nkf.transform.Find("weapon").GetComponent<Image>();
+
+            yield return new WaitForSeconds(5);
+        }
     }
 
     //void OnTestButton_Delegate(PlayerController playerController)
@@ -164,4 +182,16 @@ public class KillFeedManager : MonoBehaviour
     //    //EnterNewFeed($"Player 123 Killed Player 123 <sprite=0 color=#FF00B0>");
     //    EnterNewWeaponFeed("player 1", "player 2", "m16");
     //}
+
+    TMP_Text GetKillFeed()
+    {
+        foreach (TMP_Text obj in _killFeedList)
+            if (!obj.gameObject.activeInHierarchy)
+            {
+                print("Found available killfeed");
+                return obj;
+            }
+
+        return null;
+    }
 }

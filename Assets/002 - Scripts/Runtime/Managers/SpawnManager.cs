@@ -98,18 +98,7 @@ public class SpawnManager : MonoBehaviour
         if (availableSpawnPoints.Count > 0)
         {
             int ran = Random.Range(0, availableSpawnPoints.Count);
-
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            {
-                if (!availableSpawnPoints[ran].occupied)
-                {
-                    //try { GameManager.GetMyPlayer(controllerId).GetComponent<KillFeedManager>().EnterNewFeed($"Spawn point: {availableSpawnPoints[ran].name}({availableSpawnPoints[ran].transform.position})"); } catch { }
-                    return availableSpawnPoints[ran].transform;
-                }
-            }
-            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                return availableSpawnPoints[ran].transform;
-
+            return availableSpawnPoints[ran].transform;
         }
 
         return GetRandomSpawnpoint(controllerId);

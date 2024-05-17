@@ -199,6 +199,8 @@ public class PlayerController : MonoBehaviourPun
 
         if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !pauseMenuOpen)
         {
+            _disableSprintRPCCooldown -= Time.deltaTime;
+
             if (GameManager.instance.gameStarted)
             {
                 Shooting();
@@ -378,9 +380,17 @@ public class PlayerController : MonoBehaviourPun
         //GetComponent<Player>().PlaySprintingSound();
     }
 
+    float _disableSprintRPCCooldown;
+
     void DisableSprint()
     {
-        PV.RPC("DisableSprint_RPC", RpcTarget.All);
+        if (_disableSprintRPCCooldown < 0)
+        {
+            _disableSprintRPCCooldown = 0.1f;
+
+            if(GameManager.instance.connection == GameManager.Connection.Online) PV.RPC("DisableSprint_RPC", RpcTarget.All);
+            else DisableSprint_RPC();
+        }
     }
 
     [PunRPC]

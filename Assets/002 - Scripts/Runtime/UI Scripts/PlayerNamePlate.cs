@@ -92,6 +92,7 @@ public class PlayerNamePlate : MonoBehaviour
     {
         playerText.text = name;
         _playerData = CurrentRoomManager.GetLocalPlayerData(playerDataCell);
+        UpdateColorPalette();
     }
 
     public void UpdateColorPalette()
