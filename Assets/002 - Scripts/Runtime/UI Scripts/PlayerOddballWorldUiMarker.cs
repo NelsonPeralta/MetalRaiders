@@ -9,7 +9,6 @@ public class PlayerOddballWorldUiMarker : MonoBehaviour
     [SerializeField] GameObject _skullTag, _shieldTag;
 
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -19,10 +18,6 @@ public class PlayerOddballWorldUiMarker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        try
-        {
-            _skullTag.SetActive(player.playerInventory.activeWeapon.codeName == "oddball");
-        }
-        catch { }
+        _skullTag.SetActive(player.playerInventory.playerOddballActive);
     }
 }

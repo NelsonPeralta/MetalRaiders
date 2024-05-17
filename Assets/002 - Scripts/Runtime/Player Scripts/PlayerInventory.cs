@@ -224,6 +224,8 @@ public class PlayerInventory : MonoBehaviourPun
         }
     }
 
+    public bool playerOddballActive { get { return _oddball.gameObject.activeInHierarchy; } }
+
     [SerializeField] Transform _fakeBulletTrailHolder;
     [SerializeField] Transform _fakeBulleTrailPrefab;
     [SerializeField] List<Transform> _fakeBulletTrailPool = new List<Transform>();
@@ -486,6 +488,11 @@ public class PlayerInventory : MonoBehaviourPun
     public IEnumerator EquipStartingWeapon()
     {
         Debug.Log("EquipStartingWeapon");
+
+        _oddball.gameObject.SetActive(false);
+
+
+
         StartingWeapon = "smg";
         StartingWeapon2 = "pistol";
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty

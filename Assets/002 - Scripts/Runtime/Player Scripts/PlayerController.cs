@@ -302,6 +302,8 @@ public class PlayerController : MonoBehaviourPun
 
     void LongInteract()
     {
+        if (GameManager.instance.gameType == GameManager.GameType.Oddball && player.playerInventory.playerOddballActive) return;
+
         if (rewiredPlayer.GetButtonShortPressDown("Interact"))
         {
             OnPlayerLongInteract?.Invoke(this);
@@ -388,7 +390,7 @@ public class PlayerController : MonoBehaviourPun
         {
             _disableSprintRPCCooldown = 0.1f;
 
-            if(GameManager.instance.connection == GameManager.Connection.Online) PV.RPC("DisableSprint_RPC", RpcTarget.All);
+            if (GameManager.instance.connection == GameManager.Connection.Online) PV.RPC("DisableSprint_RPC", RpcTarget.All);
             else DisableSprint_RPC();
         }
     }

@@ -4517,6 +4517,79 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1978039329}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &144600541
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 33
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -30.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 19.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169397, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_Name
+      value: Oddball Spawn Point (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ba5c5775a43d2fe41b97b40331cc8184, type: 3}
 --- !u!4 &146335612 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4151857057655756, guid: c9fe2f5580d589c48aa41beb0b82eb5c,

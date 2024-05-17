@@ -54,6 +54,9 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         set
         {
             _closestLootableWeapon = value;
+
+            if (GameManager.instance.gameType == GameManager.GameType.Oddball && player.playerInventory.playerOddballActive) return;
+
             if (value)
             {
                 WeaponProperties wp = player.playerInventory.GetWeaponProperties(closestLootableWeapon.codeName);

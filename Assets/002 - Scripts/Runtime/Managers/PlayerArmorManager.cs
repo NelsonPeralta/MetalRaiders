@@ -141,14 +141,14 @@ public class PlayerArmorManager : MonoBehaviour
                     }
                     catch
                     {
-                        Debug.LogWarning("Armor piece may not have a renderer");
+                        //Debug.LogWarning("Armor piece may not have a renderer");
 
                         foreach (Renderer r in playerArmorPiece.GetComponentsInChildren<Renderer>())
                             try
                             {
                                 r.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
                             }
-                            catch { Debug.LogWarning("DID NOT FIND ANY RENDERER"); }
+                            catch { /*Debug.LogWarning("DID NOT FIND ANY RENDERER");*/ }
                     }
                 }
             }

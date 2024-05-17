@@ -52,9 +52,7 @@ public class KillFeedManager : MonoBehaviour
 
     public void EnterNewFeed(string feed)
     {
-        Debug.Log("EnterNewFeed");
         int numChild = gridLayout.transform.childCount;
-        Debug.Log(numChild);
         while (numChild > 3)
         {
             numChild--;
@@ -142,10 +140,6 @@ public class KillFeedManager : MonoBehaviour
         t1.ForceMeshUpdate();
         t2.ForceMeshUpdate();
 
-        Debug.Log($"t1 bound size x: {t1.textBounds.size.x}");
-        Debug.Log($"t2 bound size x: {t2.textBounds.size.x}");
-        Debug.Log($"im bound size x: {im.rectTransform.rect.width}");
-
         var temp = im.rectTransform.anchoredPosition;
         temp.x = t1.textBounds.size.x;
         im.rectTransform.anchoredPosition = temp;
@@ -188,7 +182,6 @@ public class KillFeedManager : MonoBehaviour
         foreach (TMP_Text obj in _killFeedList)
             if (!obj.gameObject.activeInHierarchy)
             {
-                print("Found available killfeed");
                 return obj;
             }
 

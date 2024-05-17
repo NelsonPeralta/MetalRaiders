@@ -26855,12 +26855,12 @@ PrefabInstance:
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.913
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.66
+      value: 0.202
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -43380,6 +43380,79 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e97ecf9969a852e46975530b7ee6de9c, type: 3}
+--- !u!1001 &1104257492
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 38
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.872
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.168
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169395, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432627128833169397, guid: ba5c5775a43d2fe41b97b40331cc8184,
+        type: 3}
+      propertyPath: m_Name
+      value: Oddball Spawn Point (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ba5c5775a43d2fe41b97b40331cc8184, type: 3}
 --- !u!1001 &1108724292
 PrefabInstance:
   m_ObjectHideFlags: 0

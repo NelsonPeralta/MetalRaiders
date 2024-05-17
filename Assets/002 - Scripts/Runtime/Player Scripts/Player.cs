@@ -328,7 +328,8 @@ public class Player : Biped
 
             if (value && !previousValue)
             {
-
+                if (playerInventory.playerOddballActive)
+                    NetworkGameManager.instance.DropOddball(weaponDropPoint.position, weaponDropPoint.forward);
 
                 _rb.isKinematic = true;
                 GetComponent<HitPoints>().OnDeath?.Invoke(GetComponent<HitPoints>()); // Needed for melee script
@@ -1491,7 +1492,7 @@ public class Player : Biped
 
         try
         {
-            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
+            foreach (KillFeedManager kfm in GameManager.instance.pid_player_Dict.Values.Select(obj => obj.killFeedManager))
             {
                 string f = $"<color=#31cff9>{playerThatKilledMe.username} killed {username}";
 
