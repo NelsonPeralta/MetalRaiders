@@ -32,11 +32,11 @@ public class ReticuleMagnetism : MonoBehaviour
     [SerializeField] List<Vector3> _hitScreenPosList;
     [SerializeField] Vector3 _previousHitScreenPos;
     [SerializeField] Vector3 _newHitScreenPos;
-    [SerializeField] float xDiff;
-    [SerializeField] float yDiff;
 
-    [SerializeField] int xFact;
-    [SerializeField] int yFact;
+
+    [SerializeField] float xDiff, yDiff;
+    [SerializeField] int xFact, yFact;
+    [SerializeField] float xMag, yMag;
 
     [SerializeField] LayerMask obstructionMask;
     [SerializeField] bool _obstruction;
@@ -175,14 +175,14 @@ public class ReticuleMagnetism : MonoBehaviour
         //if (Mathf.Abs(yDiff) > 1f) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
         if (Mathf.Abs(yDiff) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
         {
-            float yMag = (Mathf.Abs(yDiff) / yFact) * -Mathf.Sign(yDiff);
+            yMag = Mathf.Clamp((Mathf.Abs(yDiff) / yFact) * -Mathf.Sign(yDiff), -1, 1);
             player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * yMag);
         }
 
         //if (Mathf.Abs(xDiff) > 0.5f)
         if (Mathf.Abs(xDiff) > 0)
         {
-            float xMag = (Mathf.Abs(xDiff) / xFact) * Mathf.Sign(xDiff);
+            xMag = Mathf.Clamp((Mathf.Abs(xDiff) / xFact) * Mathf.Sign(xDiff), -1, 1);
             player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * xMag);
         }
     }
