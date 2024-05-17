@@ -344,8 +344,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     public void ReplaceWeapon(Vector3 collidingWeaponPosition, int weaponCollidingWithInInventoryIndex)
     {
         LootableWeapon weaponToLoot = null;
-        LootableWeapon[] allLootableWeapons = FindObjectsOfType<LootableWeapon>();
-        foreach (LootableWeapon _allLootableWeapons in allLootableWeapons)
+        foreach (LootableWeapon _allLootableWeapons in WeaponPool.instance.weaponPool)
             if (_allLootableWeapons.spawnPointPosition == collidingWeaponPosition)
                 weaponToLoot = _allLootableWeapons;
 
@@ -412,8 +411,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         Debug.Log($"RPC: Disabling lootable weapon: {collidingWeaponPosition}");
         //weaponPool.DisablePooledWeapon(collidingWeaponPosition);
 
-        LootableWeapon[] weapons = FindObjectsOfType<LootableWeapon>();
-        foreach (LootableWeapon lw in weapons)
+        foreach (LootableWeapon lw in WeaponPool.instance.weaponPool)
             if (lw.spawnPointPosition == collidingWeaponPosition)
             {
                 lw.HideWeapon();

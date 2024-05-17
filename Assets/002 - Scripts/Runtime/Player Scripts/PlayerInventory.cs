@@ -770,6 +770,17 @@ public class PlayerInventory : MonoBehaviourPun
                 fbt.transform.localPosition = Vector3.zero;
                 fbt.transform.localScale = Vector3.one;
 
+
+                if (GameManager.instance.connection == GameManager.Connection.Local)
+                {
+                    if (player.rid == 0) fbt.GetChild(0).gameObject.layer = 25;
+                    else if (player.rid == 1) fbt.GetChild(0).gameObject.layer = 27;
+                    else if (player.rid == 2) fbt.GetChild(0).gameObject.layer = 29;
+                    else if (player.rid == 3) fbt.GetChild(0).gameObject.layer = 31;
+                }
+
+
+
                 fbt.gameObject.SetActive(false);
                 break;
             }

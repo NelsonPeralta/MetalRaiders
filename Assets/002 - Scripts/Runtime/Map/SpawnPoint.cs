@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SpawnPoint : MonoBehaviour
 {
+    public static int SeenResetTime = 1;
+
     public enum Layer { Alpha, Beta }
     public bool occupied { get { return players.Count > 0; } }
     public bool seen
@@ -12,10 +14,10 @@ public class SpawnPoint : MonoBehaviour
         get { return _seen; }
         set
         {
-            if (_seen == false && value == true)
+            if (value == true)
             {
                 _seen = value;
-                _seenReset = 0.2f;
+                _seenReset = SeenResetTime;
             }
         }
     }

@@ -60,38 +60,28 @@ public class SpawnManager : MonoBehaviour
     {
         List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
 
-        foreach (SpawnPoint sp in genericSpawnPointsAlpha)
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-            {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        {
+            foreach (SpawnPoint sp in genericSpawnPointsAlpha)
                 if (!sp.occupied)
                     availableSpawnPoints.Add(sp);
 
 
-                if (availableSpawnPoints.Count == 0)
-                {
-                    foreach (SpawnPoint spb in genericSpawnPointsBeta)
-                    {
-                        if (!spb.occupied)
-                            availableSpawnPoints.Add(sp);
-                    }
-                }
+            if (availableSpawnPoints.Count == 0)
+                foreach (SpawnPoint sp in genericSpawnPointsBeta)
+                    if (!sp.occupied)
+                        availableSpawnPoints.Add(sp);
+
+            if (availableSpawnPoints.Count == 0)
+                foreach (SpawnPoint spb in genericSpawnPointsAlpha)
+                    if (!spb.seen)
+                        availableSpawnPoints.Add(spb);
+        }
 
 
-                if (availableSpawnPoints.Count == 0)
-                {
-                    foreach (SpawnPoint spb in genericSpawnPointsAlpha)
-                    {
-                        if (!spb.seen)
-                            availableSpawnPoints.Add(sp);
-                    }
-                }
 
-            }
-            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-                if (sp.spawnPointType == SpawnPoint.SpawnPointType.Player)
-                    availableSpawnPoints.Add(sp);
-
-
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            availableSpawnPoints.AddRange(genericSpawnPointsAlpha);
 
 
 
