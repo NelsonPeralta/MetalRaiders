@@ -133,6 +133,7 @@ public class AlienShooter : Actor
         else
         {
             //Debug.Log("Punch Player RPC");
+            _isCurrentlyShootingCooldown = 1;
 
             _animator.SetBool("Run", false);
             nma.enabled = false;
@@ -153,7 +154,7 @@ public class AlienShooter : Actor
 
 
             proj.GetComponent<Fireball>().sourceBiped = gameObject;
-            _shootProjectileCooldown = 1.2f;
+            _shootProjectileCooldown = 0.4f;
         }
     }
 
@@ -171,6 +172,7 @@ public class AlienShooter : Actor
         {
             //Debug.Log("Punch Player RPC");
 
+            _isCurrentlyThrowingGrenadeCooldown = 1;
             _animator.SetBool("Run", false);
             nma.enabled = false;
             _animator.Play("Throw");

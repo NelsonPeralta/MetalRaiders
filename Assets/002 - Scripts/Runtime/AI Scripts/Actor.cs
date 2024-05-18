@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(FieldOfView))]
 [RequireComponent(typeof(NavMeshAgent))]
@@ -123,6 +123,8 @@ abstract public class Actor : Biped
     public int closeRange { get { return _closeRange; } }
     public bool oneShotHeadshot { get { return _oneShotHeadshot; } }
     public bool isDodging { get { return _isDodgingCooldown > 0; } }
+    public bool isShooting { get { return _isCurrentlyShootingCooldown > 0; } }
+    public bool isThrowingGrenade { get { return _isCurrentlyThrowingGrenadeCooldown > 0; } }
 
 
     [SerializeField] protected int _hitPoints, _defaultHitpoints;
@@ -140,18 +142,19 @@ abstract public class Actor : Biped
     protected NavMeshAgent _nma;
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
-    [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, isShooting, isThrowing, isBoosting;
+    [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, _isShooting, _isThrowingGrenade, isBoosting;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
-    [SerializeField] protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown, _switchPlayerCooldown, _isDodgingCooldown;
+    [SerializeField]
+    protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown,
+        _switchPlayerCooldown, _isDodgingCooldown, _isCurrentlyShootingCooldown, _isCurrentlyThrowingGrenadeCooldown;
     [SerializeField] protected bool _isInRange;
     [SerializeField] AudioSource _walkingAudioSource;
 
 
-
-    [SerializeField] Transform _leftDodgePosBot, _leftDodgePosMid, _leftDodgePosTop;
-    [SerializeField] Transform _rightDodgePosBot, _rightDodgePosMid, _rightDodgePosTop;
-
+    [SerializeField] LayerMask _overlapSphereMask;
+    [SerializeField] List<Transform> _leftChecks = new List<Transform>();
+    [SerializeField] List<Transform> _rightChecks = new List<Transform>();
 
     protected float _diffHpMult, _diffAttMult, _gruntDelay, _defGruntDelay;
     AudioSource _audioSource;
@@ -246,7 +249,8 @@ abstract public class Actor : Biped
     private void OnEnable()
     {
         // See Prepare() for resetting hitpoints on Spawn
-        _flinchCooldown = _isDodgingCooldown = _defaultFlinchCooldown;
+        _flinchCooldown = _defaultFlinchCooldown;
+        _isDodgingCooldown = 0;
         _switchPlayerCooldown = 0;
         _isInRange = false;
         ChildOnEnable();
@@ -338,8 +342,8 @@ abstract public class Actor : Biped
         isRunning = _animator.GetCurrentAnimatorStateInfo(0).IsName("Run");
         isTaunting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Taunt");
         isFlinching = _animator.GetCurrentAnimatorStateInfo(0).IsName("Flinch");
-        isShooting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot");
-        isThrowing = _animator.GetCurrentAnimatorStateInfo(0).IsName("Throw");
+        //isShooting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot");
+        //isThrowing = _animator.GetCurrentAnimatorStateInfo(0).IsName("Throw");
         isBoosting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Boost");
     }
 
@@ -450,7 +454,7 @@ abstract public class Actor : Biped
                     {
                         int pid = NetworkSwarmManager.instance.GetRandomAlivePlayerPhotonId();
                         if (pid > 0)
-                            SetNewTargetPlayerWithPid(pid);
+                            SetNewTargetPlayerWithPhotonId(pid);
                     }
                 }
 
@@ -491,6 +495,14 @@ abstract public class Actor : Biped
     {
         // Not networked
 
+        _isShooting = isShooting; _isThrowingGrenade = isThrowingGrenade;
+
+        if (_isCurrentlyShootingCooldown > 0 && hitPoints < _defaultHitpoints)
+            _isCurrentlyShootingCooldown -= Time.deltaTime;
+
+        if (_isCurrentlyThrowingGrenadeCooldown > 0 && hitPoints < _defaultHitpoints)
+            _isCurrentlyThrowingGrenadeCooldown -= Time.deltaTime;
+
         if (_meleeCooldown > 0)
             _meleeCooldown -= Time.deltaTime;
 
@@ -506,7 +518,7 @@ abstract public class Actor : Biped
         if (_switchPlayerCooldown > 0 && hitPoints < _defaultHitpoints)
             _switchPlayerCooldown -= Time.deltaTime;
 
-        if (_isDodgingCooldown > 0 && hitPoints < _defaultHitpoints)
+        if (_isDodgingCooldown > -3 && hitPoints < _defaultHitpoints)
             _isDodgingCooldown -= Time.deltaTime;
     }
 
@@ -520,22 +532,12 @@ abstract public class Actor : Biped
 
         if (targetTransform)
         {
-            if (_isDodgingCooldown <= 0)
-            {
-                int l = UnityEngine.Random.Range(0, 2);
-
-                Dodge(l);
-                return;
-            }
-
-
-
             float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
             if (distanceToTarget <= closeRange)
             {
                 nma.enabled = false;
 
-                if (_meleeCooldown <= 0 && !isFlinching && !isBoosting)
+                if (_meleeCooldown <= 0 && !isFlinching && !isBoosting && !isDodging)
                 {
                     Melee();
                 }
@@ -555,26 +557,48 @@ abstract public class Actor : Biped
 
                 if (_isInRange)
                 {
+                    if (_isDodgingCooldown <= -2 && targetTransform.GetComponent<HitPoints>())
+                    {
+                        int l = UnityEngine.Random.Range(0, 2);
+
+
+                        if (l == 1 && CheckIfSideIsClear())
+                        {
+                            Dodge(l);
+                            return;
+                        }
+                        else if (l == 0 && CheckIfSideIsClear(true))
+                        {
+                            Dodge(l);
+                            return;
+                        }
+                    }
+
+
+
                     int ran = UnityEngine.Random.Range(0, 6);
+                    //print($"{_shootProjectileCooldown} {isTaunting} {isFlinching} {isBoosting} {isDodging} {ran}");
 
                     if (ran != 0)
                     {
-                        if (_shootProjectileCooldown <= 0 && !isTaunting && !isFlinching && !isBoosting)
+                        if (_shootProjectileCooldown <= 0 && !isTaunting && !isFlinching && !isBoosting && !isDodging)
                         {
-                            Debug.Log("Throw Fireball to Player");
 
                             if (!targetTransform.GetComponent<HitPoints>())
                                 targetTransform = null;
                             else
+                            {
+                                //print("Throw Fireball to Player");
                                 ShootProjectile(PhotonNetwork.InRoom);
+                            }
 
                         }
                     }
                     else
                     {
-                        if (_throwExplosiveCooldown <= 0 && !isTaunting && !isFlinching && !isBoosting)
+                        if (_throwExplosiveCooldown <= 0 && !isTaunting && !isFlinching && !isBoosting && !isDodging)
                         {
-                            Debug.Log("Throw Fireball to Player");
+                            //print("Throw Fireball to Player");
 
                             if (!targetTransform.GetComponent<HitPoints>())
                                 targetTransform = null;
@@ -585,20 +609,24 @@ abstract public class Actor : Biped
                 }
                 else
                 {
-                    if (!isRunning && !isFlinching && !isTaunting && !isBoosting)
+                    if (!isRunning && !isFlinching && !isTaunting && !isBoosting && !isDodging)
                     {
-                        Debug.Log("Chase Player");
+                        //Debug.Log("Chase Player");
 
                         Run(PhotonNetwork.InRoom);
                     }
 
-                    if (isRunning && !isFlinching && !isTaunting && !isBoosting)
+                    if (isRunning && !isFlinching && !isTaunting && !isBoosting && !isDodging)
                     {
+                        //Debug.Log("Chase Player");
                         nma.enabled = true;
                         nma.SetDestination(targetTransform.position);
                     }
-                    else if (isFlinching || isTaunting || isBoosting)
+                    else if (isFlinching || isTaunting || isBoosting || isDodging)
+                    {
+                        //print("disabling NavMeshAgent");
                         nma.enabled = false;
+                    }
                 }
             }
             else if (distanceToTarget > longRange)
@@ -606,19 +634,26 @@ abstract public class Actor : Biped
                 if (_isInRange)
                     _isInRange = false;
 
+                //Debug.Log($"Out of range {isFlinching} {isTaunting} {isBoosting} {isDodging} {_isDodgingCooldown}");
+
+
                 if (!isRunning)
                 {
                     //Debug.Log("Chase Player");
                     Run(PhotonNetwork.InRoom);
                 }
 
-                if (isRunning && !isFlinching && !isTaunting && !isBoosting)
+                if (isRunning && !isFlinching && !isTaunting && !isBoosting && !isDodging)
                 {
+                    //print($"Going to waypoint {targetTransform.name}");
                     nma.enabled = true;
                     nma.SetDestination(targetTransform.position);
                 }
-                else if (isFlinching || isTaunting || isBoosting)
+                else if (isFlinching || isTaunting || isBoosting || isDodging)
+                {
+                    //print("disabling NavMeshAgent");
                     nma.enabled = false;
+                }
             }
 
 
@@ -692,9 +727,10 @@ abstract public class Actor : Biped
     [PunRPC]
     public void Flinch(bool callRPC = true)
     {
+        Debug.Log($"Flinch");
         if (callRPC && PhotonNetwork.IsMasterClient)
         {
-            if (!isBoosting)
+            if (!isBoosting && !isDodging)
             {
                 Debug.Log($"ACTORD FLINCH CALL");
                 GetComponent<PhotonView>().RPC("Flinch", RpcTarget.All, false);
@@ -713,15 +749,15 @@ abstract public class Actor : Biped
     }
 
     [PunRPC]
-    public void SetNewTargetPlayerWithPid(int pid, bool caller = true)
+    public void SetNewTargetPlayerWithPhotonId(int pid, bool caller = true)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("SetNewTargetPlayerWithPid", RpcTarget.AllViaServer, pid, false);
+            GetComponent<PhotonView>().RPC("SetNewTargetPlayerWithPhotonId", RpcTarget.AllViaServer, pid, false);
         }
         else
         {
-
+            print($"SetNewTargetPlayerWithPid {pid}");
             targetHitpoints = PhotonView.Find(pid).GetComponent<Player>().GetComponent<HitPoints>();
         }
     }
@@ -730,6 +766,7 @@ abstract public class Actor : Biped
     [PunRPC]
     public void ActorDie(bool caller = true)
     {
+        Debug.Log($"ActorDie");
         if (caller && PhotonNetwork.IsMasterClient)
         {
             Debug.Log($"ACTORD DIE CALL");
@@ -756,33 +793,19 @@ abstract public class Actor : Biped
     [PunRPC]
     public void Dodge(int left, bool callRPC = true)
     {
+        //print("Dodge RPC");
+
         if (callRPC && PhotonNetwork.IsMasterClient)
         {
-            //if (!isBoosting)
-            {
-                Debug.Log($"ACTORD DODGE CALL");
-                GetComponent<PhotonView>().RPC("Dodge", RpcTarget.All, left, false);
-            }
+            //print("Dodge RPC call");
+            GetComponent<PhotonView>().RPC("Dodge", RpcTarget.All, left, false);
         }
         else if (!callRPC)
         {
-            //print($"TRYING TO DODGE: {CanAgentReachDestination(_nma, _leftDodgePosBot.position)}. " +
-            //    $"Hits: {Physics.RaycastAll(transform.position, _leftDodgePosBot.position, 4).Length}");
-
-            if (left == 1 && Physics.RaycastAll(transform.position, _leftDodgePosBot.position, 4).Length == 0
-                && Physics.RaycastAll(transform.position, _leftDodgePosMid.position, 4).Length == 0
-                && Physics.RaycastAll(transform.position, _leftDodgePosTop.position, 4).Length == 0)
+            //print("Dodge RPC processing");
+            _isDodgingCooldown = 1;
+            if (left == 1)
             {
-                Debug.Log($"ACTORD DODGE CALL PROCESSING");
-
-
-                //RaycastHit[] hits;
-                ////hits = Physics.RaycastAll(transform.position, _leftDodgePos.position, Vector3.Distance(transform.position, _leftDodgePos.position));
-                //hits = Physics.RaycastAll(transform.position, _leftDodgePos.position, 100f);
-                //foreach (RaycastHit hit in hits) { print($"dodge hit ({hits.Length}): {hit.transform.name}"); }
-
-
-                _isDodgingCooldown = 1;
                 //_audioSource.clip = _hurtClip;
                 //_audioSource.Play();
 
@@ -790,13 +813,9 @@ abstract public class Actor : Biped
                 _animator.Play("dodge_l");
                 //_isDodgingCooldown = _defaultFlinchCooldown;
             }
-            else if ((left == 0 && Physics.RaycastAll(transform.position, _leftDodgePosBot.position, 4).Length == 0
-                && Physics.RaycastAll(transform.position, _leftDodgePosMid.position, 4).Length == 0
-                && Physics.RaycastAll(transform.position, _leftDodgePosTop.position, 4).Length == 0))
+            else if (left == 0)
             {
-                _isDodgingCooldown = 1;
                 _animator.Play("dodge_r");
-
             }
         }
     }
@@ -809,5 +828,48 @@ abstract public class Actor : Biped
             return true;
 
         return false;
+    }
+
+    bool CheckIfSideIsClear(bool right = false)
+    {
+        //print("CheckIfSideIsClear");
+        if (!right)
+        {
+            //foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
+            //    print(c.name);
+
+            if (Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask).Length > 0) return false;
+        }
+        else
+        {
+            //foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
+            //    print(c.name);
+
+            if (Physics.OverlapSphere(_rightChecks[2].position, 1, _overlapSphereMask).Length > 0) return false;
+        }
+
+
+        return true;
+    }
+
+
+    [PunRPC]
+    public void AssignPlayerOnBulletNearby(int playerId, bool callRPC = true)
+    {
+        //print("AssignPlayerOnBulletNearby");
+        if (callRPC && PhotonNetwork.IsMasterClient)
+        {
+            if (_switchPlayerCooldown <= 0)
+                GetComponent<PhotonView>().RPC("AssignPlayerOnBulletNearby", RpcTarget.AllViaServer, playerId, false);
+        }
+        else if (!callRPC)
+        {
+            print("AssignPlayerOnBulletNearby Processing");
+
+            targetTransform = PhotonView.Find(playerId).GetComponent<Player>().transform;
+            targetHitpoints = PhotonView.Find(playerId).GetComponent<Player>().GetComponent<HitPoints>();
+
+            _switchPlayerCooldown = 5;
+        }
     }
 }

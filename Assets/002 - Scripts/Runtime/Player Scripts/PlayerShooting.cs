@@ -185,6 +185,8 @@ public class PlayerShooting : MonoBehaviourPun
         if (playerController.GetComponent<Player>().isDead || playerController.GetComponent<Player>().isRespawning)
             return;
 
+        playerController.player.assignActorPlayerTargetOnShootingSphere.TriggerBehaviour();
+
         Debug.Log("shoooo 1");
 
         int counter = 1;
@@ -233,7 +235,7 @@ public class PlayerShooting : MonoBehaviourPun
                 if (player.isMine || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
                     Debug.Log("shoooo 2");
-                    if(!_gameObjectPool) _gameObjectPool = FindObjectOfType<GameObjectPool>();
+                    if (!_gameObjectPool) _gameObjectPool = FindObjectOfType<GameObjectPool>();
                     var bullet = _gameObjectPool.SpawnPooledBullet();
 
                     if (activeWeapon.targetTracking) bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;

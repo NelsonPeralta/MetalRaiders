@@ -83,7 +83,7 @@ public class PlayerArmorManager : MonoBehaviour
         foreach (PlayerArmorPiece map in playerArmorPieces)
             map.gameObject.SetActive(false);
 
-        if(SceneManager.GetActiveScene().buildIndex ==0) // If you disable the go in editor, Awake will trigger AFTER setting Data Cell
+        if (SceneManager.GetActiveScene().buildIndex == 0) // If you disable the go in editor, Awake will trigger AFTER setting Data Cell
             gameObject.SetActive(false);
     }
 

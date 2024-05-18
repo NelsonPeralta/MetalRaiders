@@ -15,7 +15,7 @@ public class SpawnManager : MonoBehaviour
         int c = 0;
         if (genericSpawnPointsAlpha.Count == 0)
         {
-            foreach (SpawnPoint sp in FindObjectsOfType<SpawnPoint>())
+            foreach (SpawnPoint sp in GetComponentsInChildren<SpawnPoint>())
             {
                 sp.name = $"Spawn point {c}";
                 c++;
@@ -88,6 +88,7 @@ public class SpawnManager : MonoBehaviour
         if (availableSpawnPoints.Count > 0)
         {
             int ran = Random.Range(0, availableSpawnPoints.Count);
+            print($"Returning {availableSpawnPoints[ran].name} spawn");
             return availableSpawnPoints[ran].transform;
         }
 

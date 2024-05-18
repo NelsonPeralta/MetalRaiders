@@ -565,7 +565,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         int pdelay = -1;
 
         int aiPhotonId = -1;
-        Transform spawnPoint = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
+        Transform spawnPoint = AISpawnManager.aISpawnManagerInstance.GetGenericSpawnpoint();
         if (transform)
         {
             spawnPoint = transform;

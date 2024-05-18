@@ -73,8 +73,8 @@ public class GameTime : MonoBehaviourPunCallbacks
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         OnGameTimeRemainingChanged = null;
-        timeRemaining = 300;
-        _masterTimeRemaining = 300;
+        timeRemaining = 600;
+        _masterTimeRemaining = 600;
 
         //timeRemaining = 10; _masterTimeRemaining = 10;
 

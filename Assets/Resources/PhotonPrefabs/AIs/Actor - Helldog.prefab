@@ -1121,8 +1121,8 @@ MonoBehaviour:
   isMeleeing: 0
   isTaunting: 0
   isFlinching: 0
-  isShooting: 0
-  isThrowing: 0
+  _isShooting: 0
+  _isThrowingGrenade: 0
   isBoosting: 0
   _flinchCooldown: 0
   _meleeCooldown: 0
@@ -1130,14 +1130,15 @@ MonoBehaviour:
   _throwExplosiveCooldown: 0
   _switchPlayerCooldown: 0
   _isDodgingCooldown: 0
+  _isCurrentlyShootingCooldown: 0
+  _isCurrentlyThrowingGrenadeCooldown: 0
   _isInRange: 0
   _walkingAudioSource: {fileID: 0}
-  _leftDodgePosBot: {fileID: 0}
-  _leftDodgePosMid: {fileID: 0}
-  _leftDodgePosTop: {fileID: 0}
-  _rightDodgePosBot: {fileID: 0}
-  _rightDodgePosMid: {fileID: 0}
-  _rightDodgePosTop: {fileID: 0}
+  _overlapSphereMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _leftChecks: []
+  _rightChecks: []
 --- !u!195 &4212620777855583801
 NavMeshAgent:
   m_ObjectHideFlags: 0

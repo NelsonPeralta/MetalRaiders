@@ -191,6 +191,8 @@ MonoBehaviour:
   - ShowOddball
   - DropOddball
   - Dodge
+  - SetNewTargetPlayerWithPhotonId
+  - AssignPlayerOnBulletNearby
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

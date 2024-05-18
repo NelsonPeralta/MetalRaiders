@@ -528,6 +528,7 @@ public class Player : Biped
     public ReticuleFriction reticuleFriction { get { return _reticuleFriction; } }
     public PlayerCapsule playerCapsule { get { return _playerCapsule; } }
     public PlayerShooting playerShooting { get { return _playerShooting; } }
+    public AssignActorPlayerTargetOnShootingSphere assignActorPlayerTargetOnShootingSphere { get { return _assignActorPlayerTargetOnShootingSphere; } }
 
     #endregion
 
@@ -558,6 +559,7 @@ public class Player : Biped
     [SerializeField] ReticuleFriction _reticuleFriction;
     [SerializeField] PlayerCapsule _playerCapsule;
     [SerializeField] PlayerShooting _playerShooting;
+    [SerializeField] AssignActorPlayerTargetOnShootingSphere _assignActorPlayerTargetOnShootingSphere;
     #endregion
 
 
@@ -1557,8 +1559,8 @@ public class Player : Biped
                         else
                             sourcePlayerMedals.kills++;
 
-                        if (_playerMedals.spree >= 5)
-                            sourcePlayerMedals.SpawnKilljoySpreeMedal();
+                        //if (_playerMedals.spree >= 5)
+                        //    sourcePlayerMedals.SpawnKilljoySpreeMedal();
                     }
                 }
                 catch (System.Exception e) { Debug.LogException(e); }

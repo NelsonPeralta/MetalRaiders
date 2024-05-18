@@ -95,6 +95,8 @@ public class Breather : Actor
         {
             //Debug.Log("Punch Player RPC");
 
+            _isCurrentlyShootingCooldown = 1;
+
             _animator.SetBool("Run", false);
             nma.enabled = false;
             _animator.Play("Throw Fireball");
