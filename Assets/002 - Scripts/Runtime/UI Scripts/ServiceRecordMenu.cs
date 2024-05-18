@@ -28,7 +28,7 @@ public class ServiceRecordMenu : MonoBehaviour
 
             levelText.text = $"Level: {_playerData.playerExtendedPublicData.level}";
             xpText.text = $"Xp: {_playerData.playerExtendedPublicData.xp}";
-            creditsText.text = $"Credits: {_playerData.playerExtendedPublicData.credits}";
+            creditsText.text = $"Cuckbucks: {_playerData.playerExtendedPublicData.credits}";
 
             int xpNeeded = 0;
             if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(_playerData.playerExtendedPublicData.level + 1)) xpNeeded = PlayerProgressionManager.playerLevelToXpDic[_playerData.playerExtendedPublicData.level + 1];
@@ -96,7 +96,7 @@ public class ServiceRecordMenu : MonoBehaviour
 
         levelText.text = $"Level: {pda.level.ToString()}";
         xpText.text = $"Xp: {pda.xp.ToString()}";
-        creditsText.text = $"Credits: {pda.credits.ToString()}";
+        creditsText.text = $"Cuckbucks: {pda.credits.ToString()}";
 
         int xpNeeded = 0;
         if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.level + 1)) xpNeeded = PlayerProgressionManager.playerLevelToXpDic[pda.level + 1];

@@ -44,7 +44,7 @@ public class ArmoryManager : MonoBehaviour
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
-        creditsText.text = $"{pda.playerBasicOnlineStats.credits}cr";
+        creditsText.text = $"{pda.playerBasicOnlineStats.credits}cb";
         armorDataString.text = $"ADS: {pda.armorDataString.ToString()}";
         newArmorDataString.text = $"NADS: {pda.armorDataString.ToString()}";
         unlockedArmorDataString.text = $"UADS: {pda.unlockedArmorDataString.ToString()}";

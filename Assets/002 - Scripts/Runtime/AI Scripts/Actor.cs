@@ -859,7 +859,7 @@ abstract public class Actor : Biped
         //print("AssignPlayerOnBulletNearby");
         if (callRPC && PhotonNetwork.IsMasterClient)
         {
-            if (_switchPlayerCooldown <= 0)
+            if (_switchPlayerCooldown <= 0 && hitPoints > 0)
                 GetComponent<PhotonView>().RPC("AssignPlayerOnBulletNearby", RpcTarget.AllViaServer, playerId, false);
         }
         else if (!callRPC)

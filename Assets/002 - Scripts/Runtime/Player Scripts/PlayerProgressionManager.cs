@@ -10,7 +10,7 @@ public class PlayerProgressionManager : MonoBehaviour
     {
         get
         {
-            int r = UnityEngine.Random.Range(160, 240); // 500 games
+            int r = UnityEngine.Random.Range(160, 240) * 2; // 250 games
 
             if (CurrentRoomManager.instance.nbPlayersJoined == 1) r = 0;
 
@@ -18,12 +18,12 @@ public class PlayerProgressionManager : MonoBehaviour
         }
     }
 
-    public static int honorGainPerMatch // 500 games
+    public static int honorGainPerMatch // 333 games
     {
         get
         {
             if (CurrentRoomManager.instance.nbPlayersJoined == 1) return 0;
-            return 2;
+            return 3;
         }
     }
     public List<Sprite> rankSprites { get { return _rankImages; } }
