@@ -29,7 +29,7 @@ public class PlayerMedals : MonoBehaviour
                 if (shortKillSpree == 4)
                     SpawnOverKillMedal();
 
-                if (_spree == 3)
+                if (_spree == 5)
                     SpawnKillingSpreeMedal();
             }
         }
@@ -111,6 +111,7 @@ public class PlayerMedals : MonoBehaviour
         Transform h = Instantiate(sniperHeadshotMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
+        announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
     }
 
     public void SpawnNutshotMedal()
@@ -118,6 +119,7 @@ public class PlayerMedals : MonoBehaviour
         Transform h = Instantiate(nutshotMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
+        announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
     }
 
     public void SpawnMeleeMedal()
