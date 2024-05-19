@@ -40,10 +40,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         Shotguns, Swat, Retro, GunGame, Hill, Oddball,
 
         // Swarm Game Types
-        Survival
+        Survival, Endless
     }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
-    public enum CoopGameType { Survival }
     public enum TeamMode { Classic, None }
 
     public enum PreviousScenePayload { None, OpenCarnageReport, ResetPlayerDataCells }

@@ -41,7 +41,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
                     if (_hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>())
                         _hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.seen = true;
 
-            _c = SpawnPoint.SeenResetTime * 0.8f;
+            _c = SpawnPoint.SeenResetTime * 0.7f;
         }
     }
 }

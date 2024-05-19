@@ -70,12 +70,11 @@ public class ScriptObjPlayerData : ScriptableObject
             if ((_cardsFound.ToString().Split(char.Parse("-")).Count() - 1) == 7)
             {
                 Steamworks.SteamUserStats.GetAchievement("COLLECTOR", out _achUnl);
-                if (!_achUnl)
-                {
+                if (!_achUnl && !CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-geiger-lfa-"));
-                    Debug.Log($"Unlocked Achivement COLLECTOR");
+
+                if (!CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
                     AchievementManager.UnlockAchievement("COLLECTOR");
-                }
             }
 
             SavePrefs();

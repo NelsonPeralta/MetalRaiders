@@ -53,7 +53,9 @@ public class PlayerUI : MonoBehaviour
     public GameObject headshotIndicator;
     Coroutine showHeadshotIndicatorCoroutine;
     Coroutine hideHeadshotIndicatorCoroutine;
-    public TMP_Text weaponInformerText;
+    [SerializeField] GameObject _informerHolder;
+    [SerializeField] TMP_Text _informerText;
+    [SerializeField] Image _weaponIconInformer;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft;
@@ -132,6 +134,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        HideInformer();
         plasmaGrenadeImage.gameObject.SetActive(false);
         GameObject thm = null;
         for (int i = 0; i < 32; i++)
@@ -398,5 +401,24 @@ public class PlayerUI : MonoBehaviour
     void OnPlayerScoreChanged_Delegate(PlayerMultiplayerMatchStats playerMultiplayerMatchStats)
     {
         multiplayerPointsGrey.text = playerMultiplayerMatchStats.score.ToString();
+    }
+
+    public void ShowInformer(string mess, Sprite icon = null)
+    {
+        print("ShowInformer");
+        _informerText.text = mess;
+        _weaponIconInformer.sprite = icon;
+
+        _weaponIconInformer.gameObject.SetActive(icon != null);
+
+        _informerHolder.gameObject.SetActive(true);
+    }
+
+    public void HideInformer()
+    {
+        print("HideInformer");
+        _informerHolder.gameObject.SetActive(false);
+        _weaponIconInformer.sprite = null;
+        _informerText.text = "";
     }
 }

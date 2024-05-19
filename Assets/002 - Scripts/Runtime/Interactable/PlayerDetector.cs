@@ -29,7 +29,7 @@ public class PlayerDetector : MonoBehaviour
         try
         {
             _collidingPlayers.Remove(other.GetComponent<Player>());
-            other.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+            other.GetComponent<PlayerUI>().HideInformer();
 
         }
         catch { }
@@ -43,8 +43,8 @@ public class PlayerDetector : MonoBehaviour
                 {
                     try
                     {
+                        _collidingPlayers[i].GetComponent<PlayerUI>().HideInformer();
                         _collidingPlayers.Remove(_collidingPlayers[i]);
-                        _collidingPlayers[i].GetComponent<PlayerUI>().weaponInformerText.text = $"";
                     }
                     catch { }
                 }

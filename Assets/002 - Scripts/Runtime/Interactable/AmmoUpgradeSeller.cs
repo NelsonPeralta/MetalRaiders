@@ -14,19 +14,19 @@ public class AmmoUpgradeSeller : PerkSeller
             {
                 player.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
                 player.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-                player.GetComponent<PlayerUI>().weaponInformerText.text = $"Buy {perkName} for {cost} points";
+                //player.GetComponent<PlayerUI>()._informerText.text = $"Buy {perkName} for {cost} points";
             }
-            else
-                player.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({cost})";
+            //else
+                //player.GetComponent<PlayerUI>()._informerText.text = $"Not enough points ({cost})";
         }
-        else
-            player.GetComponent<PlayerUI>().weaponInformerText.text = $"You already have this perk ({perkName})";
+        //else
+            //player.GetComponent<PlayerUI>()._informerText.text = $"You already have this perk ({perkName})";
     }
     protected override void OnPlayerLongInteract_Abstract(Player player)
     {
         player.playerInventory.hasAmmoUpgrade = true;
 
         playersInRange.Remove(player);
-        player.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+        //player.GetComponent<PlayerUI>()._informerText.text = $"";
     }
 }

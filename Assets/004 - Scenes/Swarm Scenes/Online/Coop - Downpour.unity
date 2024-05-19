@@ -1054,10 +1054,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &53868024
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2209,10 +2212,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &114785267
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7150,10 +7156,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &371911880
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -35190,10 +35199,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &905992118
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -35561,10 +35573,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &941000735
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -43143,10 +43158,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &1277927969
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -45332,10 +45350,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &1370038405
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -52783,7 +52804,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1689458066
 Transform:
   m_ObjectHideFlags: 0
@@ -52833,7 +52854,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1689458065}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2094a2692deec3442b5e13f7104b6e6a, type: 3}
   m_Name: 
@@ -53793,10 +53814,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &1707835648
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60495,10 +60519,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &2009657001
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -61259,10 +61286,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &2032688534
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -62716,10 +62746,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &2097572498
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -65694,10 +65727,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc63180d856da4dacbe6f72861934b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
   players: []
   spawnPointType: 1
   _witness: {fileID: 0}
   _radius: 0
+  _seen: 0
+  _seenReset: 0
 --- !u!23 &3967360721820777400
 MeshRenderer:
   m_ObjectHideFlags: 0

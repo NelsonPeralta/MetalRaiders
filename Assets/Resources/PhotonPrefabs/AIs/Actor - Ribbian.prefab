@@ -2248,6 +2248,73 @@ Transform:
   m_Father: {fileID: 8606627292790721606}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4384852481579639319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4885464791642339718}
+  - component: {fileID: 8198402582278114497}
+  - component: {fileID: 6679241887067181771}
+  m_Layer: 3
+  m_Name: PlayerLookingAtActorRayTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4885464791642339718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4384852481579639319}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 8606627292790721606}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8198402582278114497
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4384852481579639319}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6679241887067181771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4384852481579639319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6db7cb14285059498129731b2c648d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Actor: {fileID: 7215138691679798162}
 --- !u!1 &4577787628520856585
 GameObject:
   m_ObjectHideFlags: 0
@@ -3256,7 +3323,7 @@ GameObject:
   - component: {fileID: 2242250006504259837}
   - component: {fileID: 7375430592626668524}
   - component: {fileID: 2929854997425488296}
-  m_Layer: 21
+  m_Layer: 19
   m_Name: Reticule Friction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3271,7 +3338,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7534062863722482205}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -4531,6 +4598,7 @@ Transform:
   - {fileID: 954893717704339222}
   - {fileID: 5714853009061430314}
   - {fileID: 5888711883421325784}
+  - {fileID: 4885464791642339718}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4597,6 +4665,7 @@ MonoBehaviour:
   _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 3976385901426164958}
+  _friction: {fileID: 2929854997425488296}
   _closeRange: 0
   _midRange: 0
   _longRange: 0
@@ -4617,7 +4686,6 @@ MonoBehaviour:
   isFlinching: 0
   _isShooting: 0
   _isThrowingGrenade: 0
-  isBoosting: 0
   _flinchCooldown: 0
   _meleeCooldown: 0
   _shootProjectileCooldown: 0
@@ -4626,6 +4694,8 @@ MonoBehaviour:
   _isDodgingCooldown: 0
   _isCurrentlyShootingCooldown: 0
   _isCurrentlyThrowingGrenadeCooldown: 0
+  _isSeenByTargetPlayerCooldown: 0
+  _isCurrentlyAlertingCooldown: 0
   _isInRange: 0
   _walkingAudioSource: {fileID: 7569610477383510051}
   _overlapSphereMask:

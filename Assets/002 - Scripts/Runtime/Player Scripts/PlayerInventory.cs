@@ -500,17 +500,17 @@ public class PlayerInventory : MonoBehaviourPun
         StartingWeapon2 = "pistol";
 
 
-        if (GameManager.instance.gameType.ToString().Contains("Slayer") || GameManager.instance.gameType == GameManager.GameType.Survival)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
             StartingWeapon = "smg";
             StartingWeapon2 = "pistol";
         }
-        if (GameManager.instance.gameType.ToString().Contains("Pro"))
+        if (GameManager.instance.gameType == GameManager.GameType.Pro)
         {
             StartingWeapon = "br";
             StartingWeapon2 = "ar";
         }
-        if (GameManager.instance.gameType.ToString().Contains("Snipers"))
+        if (GameManager.instance.gameType == GameManager.GameType.Snipers)
         {
             StartingWeapon = "sniper";
             StartingWeapon2 = "pistol";
@@ -522,7 +522,7 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "pistol";
         }
 
-        if (GameManager.instance.gameType.ToString().Contains("Shotguns"))
+        if (GameManager.instance.gameType == GameManager.GameType.Shotguns)
         {
             StartingWeapon = "shotgun";
             StartingWeapon2 = "pistol";
@@ -530,7 +530,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-        if (GameManager.instance.gameType.ToString().Contains("Swat"))
+        if (GameManager.instance.gameType == GameManager.GameType.Swat)
         {
             StartingWeapon = "br";
             StartingWeapon2 = "ar";

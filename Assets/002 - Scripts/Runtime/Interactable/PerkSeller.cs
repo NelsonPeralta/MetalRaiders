@@ -28,7 +28,7 @@ abstract public class PerkSeller : MonoBehaviour
         if (other.GetComponent<Player>() && playersInRange.Contains(other.GetComponent<Player>()))
         {
             playersInRange.Remove(other.GetComponent<Player>());
-            other.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+            //other.GetComponent<PlayerUI>()._informerText.text = $"";
         }
     }
 
@@ -39,7 +39,7 @@ abstract public class PerkSeller : MonoBehaviour
             OnPlayerLongInteract_Abstract(playerController.GetComponent<Player>());
 
             playersInRange.Remove(playerController.GetComponent<Player>());
-            playerController.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+            //playerController.GetComponent<PlayerUI>()._informerText.text = $"";
         }
     }
 

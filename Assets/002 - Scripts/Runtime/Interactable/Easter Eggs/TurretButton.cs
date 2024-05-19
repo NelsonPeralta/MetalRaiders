@@ -21,14 +21,14 @@ public class TurretButton : InteractableObject
             {
                 player.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
                 player.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-                player.GetComponent<PlayerUI>().weaponInformerText.text = $"Mortar Strike ({_cost})";
+                //player.GetComponent<PlayerUI>()._informerText.text = $"Mortar Strike ({_cost})";
             }
             else
             {
-                if (player.GetComponent<PlayerSwarmMatchStats>().points < _cost)
-                    player.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({_cost})";
-                else if(consumed)
-                    player.GetComponent<PlayerUI>().weaponInformerText.text = $"Recharging...";
+                //if (player.GetComponent<PlayerSwarmMatchStats>().points < _cost)
+                //    player.GetComponent<PlayerUI>()._informerText.text = $"Not enough points ({_cost})";
+                //else if(consumed)
+                //    player.GetComponent<PlayerUI>()._informerText.text = $"Recharging...";
             }
         }
     }

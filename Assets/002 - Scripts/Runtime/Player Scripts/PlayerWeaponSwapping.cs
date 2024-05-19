@@ -25,9 +25,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     public DualWielding dWielding;
     public PlayerController pController;
     public PlayerSFXs sfxManager;
-    public Transform pickupComponents;
-    public TMP_Text pickupText;
-    public Image pickupWeaponImage;
     public AudioSource ammoPickupAudioSource;
     public PhotonView PV;
     //public ControllerScript cScript;
@@ -63,31 +60,39 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
                 if (wp.isDualWieldable && pInventory.activeWeapon.isDualWieldable)
                 {
-                    pickupText.text = "Hold E to DUAL WIELD " + closestLootableWeapon.cleanName;
+                    //pickupText.text = "Hold E to DUAL WIELD " + closestLootableWeapon.cleanName;
                 }
                 else
                 {
                     if (wp.weaponIcon)
                     {
-                        pickupComponents.gameObject.SetActive(true);
-                        pickupText.text = $"Hold E to pick up";
-                        pickupWeaponImage.sprite = wp.weaponIcon;
-                        var tempColor = pickupWeaponImage.color;
-                        tempColor.a = 255;
-                        pickupWeaponImage.color = tempColor;
+                        player.GetComponent<PlayerUI>().ShowInformer($"Hold E to pick up", wp.weaponIcon);
+
+
+                        //player.GetComponent<PlayerUI>()._informerHolder.gameObject.SetActive(true);
+                        //pickupText.text = $"Hold E to pick up";
+
+                        //pickupWeaponImage.sprite = wp.weaponIcon;
+                        //var tempColor = pickupWeaponImage.color;
+                        //tempColor.a = 255;
+                        //pickupWeaponImage.color = tempColor;
                     }
                     else
-                        pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
+                    {
+                        //pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
+                        player.GetComponent<PlayerUI>().ShowInformer("Hold E to pick up " + closestLootableWeapon.cleanName);
+                    }
                 }
             }
             else
             {
-                pickupText.text = "";
-                pickupWeaponImage.sprite = null;
-                var tempColor = pickupWeaponImage.color;
-                tempColor.a = 0;
-                pickupWeaponImage.color = tempColor;
-                pickupComponents.gameObject.SetActive(false);
+                //pickupText.text = "";
+                //pickupWeaponImage.sprite = null;
+                //var tempColor = pickupWeaponImage.color;
+                //tempColor.a = 0;
+                //pickupWeaponImage.color = tempColor;
+                //player.GetComponent<PlayerUI>()._informerHolder.gameObject.SetActive(false);
+                player.GetComponent<PlayerUI>().HideInformer();
             }
         }
     }
@@ -156,7 +161,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     private void Start()
     {
         _originalLayer = gameObject.layer;
-        pickupText.text = "";
+
         player.OnPlayerDeath -= OnPLayerDeath;
         player.OnPlayerDeath += OnPLayerDeath;
 
@@ -166,7 +171,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         weaponPool = FindObjectOfType<WeaponPool>();
 
         pController.OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-        pickupComponents.gameObject.SetActive(false);
     }
 
     private void OnTriggerStay(Collider other)

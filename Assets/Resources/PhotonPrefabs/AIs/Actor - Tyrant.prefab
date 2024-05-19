@@ -1123,6 +1123,7 @@ MonoBehaviour:
   _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
   _losSpawn: {fileID: 6585857433713372890}
+  _friction: {fileID: 0}
   _closeRange: 0
   _midRange: 0
   _longRange: 0
@@ -1143,7 +1144,6 @@ MonoBehaviour:
   isFlinching: 0
   _isShooting: 0
   _isThrowingGrenade: 0
-  isBoosting: 0
   _flinchCooldown: 0
   _meleeCooldown: 0
   _shootProjectileCooldown: 0
@@ -1152,6 +1152,8 @@ MonoBehaviour:
   _isDodgingCooldown: 0
   _isCurrentlyShootingCooldown: 0
   _isCurrentlyThrowingGrenadeCooldown: 0
+  _isSeenByTargetPlayerCooldown: 0
+  _isCurrentlyAlertingCooldown: 0
   _isInRange: 0
   _walkingAudioSource: {fileID: 0}
   _overlapSphereMask:

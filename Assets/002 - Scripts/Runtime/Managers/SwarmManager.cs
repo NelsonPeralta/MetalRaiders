@@ -192,12 +192,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         get { return _livesLeft; }
         set
         {
-            //_livesLeft = value;
-
-            //if (_livesLeft <= 0)
-            //    EndGame();
-
+            _livesLeft = value;
             OnPlayerLivesChanged?.Invoke(this);
+
+            if (_livesLeft <= 0)
+                EndGame();
         }
     }
 
@@ -353,12 +352,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     //a.gameObject.SetActive(false);
 
 
-                    GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -3), Quaternion.identity);
+                    //GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -3), Quaternion.identity);
                     //hellhoundPool.Add(t.GetComponent<Helldog>());
                     //t.transform.parent = transform;
                     //t.gameObject.SetActive(false);
 
-                    GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -4), Quaternion.identity);
+                    //GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -4), Quaternion.identity);
                     //tyrantPool.Add(h.GetComponent<Tyrant>());
                     //h.transform.parent = transform;
                     //h.gameObject.SetActive(false);
@@ -716,6 +715,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (pdelay >= 0)
             delay = pdelay;
 
+        if(currentWave % 10 == 0)
+        {
+            delay = 2;
+        }
+
         yield return new WaitForSeconds(delay);
 
         Debug.Log($"AFTER DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}. {PhotonView.Find(aiPhotonId).name}");
@@ -949,7 +953,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPacksCheck()
     {
-        if ((currentWave % 10 == 0 && !editMode) || (currentWave % 1 == 0 && editMode))
+        if (currentWave % 10 == 0 && GameManager.instance.gameType == GameManager.GameType.Survival)
         {
             bool _achievementUnlocked = false;
             Steamworks.SteamUserStats.GetAchievement("YAWA", out _achievementUnlocked);
@@ -960,8 +964,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 AchievementManager.UnlockAchievement("YAWA");
             }
 
-            if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
-                EndGame();
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && GameManager.instance.gameType == GameManager.GameType.Survival)
+                if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
+                    EndGame();
         }
         else if (currentWave % 5 == 0)
         {
@@ -981,14 +986,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)
                     hp.gameObject.SetActive(true);
-
-
-
-            try
-            {
-                WebManager.webManagerInstance.SaveSwarmStats(GameManager.GetRootPlayer().GetComponent<PlayerSwarmMatchStats>());
-            }
-            catch (System.Exception e) { Debug.LogException(e); }
         }
     }
     int GetRandomPlayerPhotonId()
@@ -1093,7 +1090,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (!pp.PV.IsMine)
                 continue;
 
-            
+
 
             if (saveXp)
             {

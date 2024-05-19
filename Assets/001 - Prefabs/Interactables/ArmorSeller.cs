@@ -61,13 +61,18 @@ public class ArmorSeller : InteractableObject
                 {
                     other.transform.root.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
                     other.transform.root.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-                    other.transform.root.GetComponent<PlayerUI>().weaponInformerText.text = $"Buy armor for {cost} points";
+
+                    other.transform.root.GetComponent<PlayerUI>().ShowInformer($"Buy armor for {cost} points");
                 }
                 else
-                    other.transform.root.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({cost})";
+                {
+                    other.transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points ({cost})");
+                }
             }
             else
-                other.transform.root.GetComponent<PlayerUI>().weaponInformerText.text = $"You already have an armor";
+            {
+                other.transform.root.GetComponent<PlayerUI>().ShowInformer($"You already have an armor");
+            }
         }
     }
 
@@ -75,8 +80,10 @@ public class ArmorSeller : InteractableObject
     {
         try
         {
+            other.transform.root.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
             playersInRange.Remove(other.transform.root.GetComponent<Player>());
-            other.transform.root.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+
+            other.transform.root.GetComponent<PlayerUI>().HideInformer();
         }
         catch { }
     }
@@ -122,7 +129,7 @@ public class ArmorSeller : InteractableObject
 
 
         playersInRange.Remove(p);
-        p.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+        p.transform.GetComponent<PlayerUI>().HideInformer();
         p.GetComponent<PlayerSwarmMatchStats>().RemovePoints(cost);
 
 

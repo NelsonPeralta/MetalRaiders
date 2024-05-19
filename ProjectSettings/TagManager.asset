@@ -22,11 +22,19 @@ TagManager:
   - Scope BG
   - Weapon Sounds
   - ObjectPool
+  - health_pack
+  - player
+  - Components
+  - Raycast Origin
+  - Total Ammo Text
+  - Pickup Collider
+  - SFX
+  - Current Ammo Text
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Hide
+  - Hide-Isolated
   - Water
   - UI
   - Player

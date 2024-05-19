@@ -83,9 +83,13 @@ abstract public class Actor : Biped
                 if (_targetTransform)
                     if (pre != _targetTransform && (_targetTransform.GetComponent<Player>() || _targetTransform.GetComponent<PlayerCapsule>()))
                     {
-                        _animator.Play("Boost");
-                        _audioSource.clip = _tauntClip;
-                        _audioSource.Play();
+                        if (hitPoints > 0)
+                        {
+                            _isCurrentlyAlertingCooldown = 1;
+                            _animator.Play("Boost");
+                            _audioSource.clip = _tauntClip;
+                            _audioSource.Play();
+                        }
                     }
             }
         }
@@ -125,6 +129,8 @@ abstract public class Actor : Biped
     public bool isDodging { get { return _isDodgingCooldown > 0; } }
     public bool isShooting { get { return _isCurrentlyShootingCooldown > 0; } }
     public bool isThrowingGrenade { get { return _isCurrentlyThrowingGrenadeCooldown > 0; } }
+    public bool isSeenByTargetPlayer { get { return _isSeenByTargetPlayerCooldown > 0; } }
+    public bool isBoosting { get { return _isCurrentlyAlertingCooldown > 0; } }
 
 
     [SerializeField] protected int _hitPoints, _defaultHitpoints;
@@ -132,6 +138,7 @@ abstract public class Actor : Biped
     [SerializeField] HitPoints _targetPlayer;
     [SerializeField] Vector3 _destination;
     [SerializeField] Transform _losSpawn;
+    [SerializeField] ReticuleFriction _friction;
 
     [SerializeField] int _closeRange, _midRange, _longRange;
     [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown, _defaultFlinchCooldown, _lostTargetBipedStopwatch;
@@ -142,12 +149,13 @@ abstract public class Actor : Biped
     protected NavMeshAgent _nma;
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
-    [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, _isShooting, _isThrowingGrenade, isBoosting;
+    [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, _isShooting, _isThrowingGrenade;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     [SerializeField]
     protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown,
-        _switchPlayerCooldown, _isDodgingCooldown, _isCurrentlyShootingCooldown, _isCurrentlyThrowingGrenadeCooldown;
+        _switchPlayerCooldown, _isDodgingCooldown, _isCurrentlyShootingCooldown, _isCurrentlyThrowingGrenadeCooldown,
+        _isSeenByTargetPlayerCooldown, _isCurrentlyAlertingCooldown;
     [SerializeField] protected bool _isInRange;
     [SerializeField] AudioSource _walkingAudioSource;
 
@@ -275,12 +283,13 @@ abstract public class Actor : Biped
         //if (targetPhotonId > 0)
         //    targetTransform = PhotonView.Find(targetPhotonId).transform;
 
+        _friction.gameObject.SetActive(true);
         gameObject.SetActive(true);
     }
 
     protected void Prepare()
     {
-        _isDodgingCooldown = 0;
+        _isSeenByTargetPlayerCooldown = _isDodgingCooldown = _isCurrentlyAlertingCooldown = 0;
         _switchPlayerCooldown = 0;
         _isInRange = false;
         transform.position = new Vector3(0, -10, 0);
@@ -344,7 +353,6 @@ abstract public class Actor : Biped
         isFlinching = _animator.GetCurrentAnimatorStateInfo(0).IsName("Flinch");
         //isShooting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot");
         //isThrowing = _animator.GetCurrentAnimatorStateInfo(0).IsName("Throw");
-        isBoosting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Boost");
     }
 
     void TargetStateCheck()
@@ -384,7 +392,7 @@ abstract public class Actor : Biped
         if (PhotonNetwork.InRoom) if (!PhotonNetwork.IsMasterClient) return;
 
         int ChanceToDrop = UnityEngine.Random.Range(0, 10);
-        int cap = 6;
+        int cap = 7;
 
         if (ChanceToDrop <= cap)
         {
@@ -497,6 +505,12 @@ abstract public class Actor : Biped
 
         _isShooting = isShooting; _isThrowingGrenade = isThrowingGrenade;
 
+        if (_isSeenByTargetPlayerCooldown > 0)
+            _isSeenByTargetPlayerCooldown -= Time.deltaTime;
+
+        if (_isCurrentlyAlertingCooldown > 0)
+            _isCurrentlyAlertingCooldown -= Time.deltaTime;
+
         if (_isCurrentlyShootingCooldown > 0 && hitPoints < _defaultHitpoints)
             _isCurrentlyShootingCooldown -= Time.deltaTime;
 
@@ -518,11 +532,14 @@ abstract public class Actor : Biped
         if (_switchPlayerCooldown > 0 && hitPoints < _defaultHitpoints)
             _switchPlayerCooldown -= Time.deltaTime;
 
-        if (_isDodgingCooldown > -3 && hitPoints < _defaultHitpoints)
+        if (_isDodgingCooldown > -5 && hitPoints < _defaultHitpoints)
             _isDodgingCooldown -= Time.deltaTime;
     }
 
 
+    /// <summary>
+    /// ///////////////////////////////////////// CalculateNextAction
+    /// </summary>
     void CalculateNextAction()
     {
         // If we are in a room and we are not the Host, stop
@@ -557,17 +574,19 @@ abstract public class Actor : Biped
 
                 if (_isInRange)
                 {
+                    //print($"{_isDodgingCooldown} {targetTransform.GetComponent<HitPoints>()} {CheckIfSideIsClear()} {isSeenByTargetPlayer}");
+
                     if (_isDodgingCooldown <= -2 && targetTransform.GetComponent<HitPoints>())
                     {
                         int l = UnityEngine.Random.Range(0, 2);
 
 
-                        if (l == 1 && CheckIfSideIsClear())
+                        if (l == 1 && CheckIfSideIsClear() && isSeenByTargetPlayer)
                         {
                             Dodge(l);
                             return;
                         }
-                        else if (l == 0 && CheckIfSideIsClear(true))
+                        else if (l == 0 && CheckIfSideIsClear(true) && isSeenByTargetPlayer)
                         {
                             Dodge(l);
                             return;
@@ -775,6 +794,7 @@ abstract public class Actor : Biped
         else if (!caller)
         {
             Debug.Log($"ACTORD DIE PROCESSING");
+            _friction.gameObject.SetActive(false);
             _audioSource.clip = _deathClip;
             _audioSource.Play();
 
@@ -832,24 +852,30 @@ abstract public class Actor : Biped
 
     bool CheckIfSideIsClear(bool right = false)
     {
-        //print("CheckIfSideIsClear");
+        print("CheckIfSideIsClear");
         if (!right)
         {
-            //foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
-            //    print(c.name);
+            foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
+                print(c.name);
 
             if (Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask).Length > 0) return false;
         }
         else
         {
-            //foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
-            //    print(c.name);
+            foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
+                print(c.name);
 
             if (Physics.OverlapSphere(_rightChecks[2].position, 1, _overlapSphereMask).Length > 0) return false;
         }
 
 
         return true;
+    }
+
+    public void ResetSeenCooldown(Player p)
+    {
+        if (p.GetComponent<HitPoints>() == targetHitpoints)
+            _isSeenByTargetPlayerCooldown = SpawnPoint.SeenResetTime;
     }
 
 

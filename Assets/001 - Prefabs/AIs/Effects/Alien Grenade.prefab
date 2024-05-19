@@ -25142,8 +25142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6251f11862b37d648ad4806e8bfdb5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 5
-  damage: 200
+  radius: 7
+  damage: 250
   power: 100
   grenadeTimer: 1
   throwForce: 625

@@ -98,14 +98,14 @@ public class EasterEggRadio : InteractableObject
             {
                 other.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
                 other.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
-                other.GetComponent<PlayerUI>().weaponInformerText.text = $"Mortar Strike ({cost})";
+                //other.GetComponent<PlayerUI>()._informerText.text = $"Mortar Strike ({cost})";
             }
             else
             {
-                if (other.GetComponent<PlayerSwarmMatchStats>().points < cost)
-                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Not enough points ({cost})";
-                else
-                    other.GetComponent<PlayerUI>().weaponInformerText.text = $"Recharging...";
+                //if (other.GetComponent<PlayerSwarmMatchStats>().points < cost)
+                //    other.GetComponent<PlayerUI>()._informerText.text = $"Not enough points ({cost})";
+                //else
+                //    other.GetComponent<PlayerUI>()._informerText.text = $"Recharging...";
             }
         }
     }
@@ -115,7 +115,7 @@ public class EasterEggRadio : InteractableObject
         if (other.GetComponent<Player>() && playersInRange.Contains(other.GetComponent<Player>()))
         {
             playersInRange.Remove(other.GetComponent<Player>());
-            other.GetComponent<PlayerUI>().weaponInformerText.text = $"";
+            //other.GetComponent<PlayerUI>()._informerText.text = $"";
         }
     }
 

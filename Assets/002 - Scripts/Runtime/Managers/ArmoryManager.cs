@@ -61,6 +61,7 @@ public class ArmoryManager : MonoBehaviour
                 pal.GetComponent<ArmorPieceListing>().playerArmorPiece = playerArmorPiece;
                 pal.name += $" ({i})";
                 i++;
+                print(pal.GetComponent<ArmorPieceListing>().playerArmorPiece.entity);
             }
         }
 
@@ -94,7 +95,7 @@ public class ArmoryManager : MonoBehaviour
         // REFERENCE: https://discussions.unity.com/t/rotate-gameobject-with-gui-slider/204758/2
         // How much we've changed
         float delta = (_rotatePlayerModelScrollbar.value - 180) - this.previousValue;
-        Launcher.instance.playerModel.transform.Rotate(Vector3.up * delta);
+        Launcher.instance.playerModel.transform.Rotate(Vector3.up * -delta);
 
         // Set our previous value for the next change
         this.previousValue = _rotatePlayerModelScrollbar.value - 180;

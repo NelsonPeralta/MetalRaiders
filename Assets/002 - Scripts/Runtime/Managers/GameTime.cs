@@ -24,7 +24,8 @@ public class GameTime : MonoBehaviourPunCallbacks
                 _timeRemaining = value;
                 OnGameTimeRemainingChanged?.Invoke(this);
 
-                if (value == 0 && PhotonNetwork.IsMasterClient) NetworkGameManager.instance.EndGame();
+                if (value == 0 && PhotonNetwork.IsMasterClient && GameManager.instance.gameType != GameManager.GameType.Endless)
+                    NetworkGameManager.instance.EndGame();
             }
         }
     }
@@ -92,7 +93,6 @@ public class GameTime : MonoBehaviourPunCallbacks
     {
         if (GameManager.sceneIndex <= 0 || !CurrentRoomManager.instance.gameStarted) return;
         if (_masterTimeRemaining <= 0) return;
-
         secondCountdown -= Time.deltaTime;
 
         if (secondCountdown < 0)

@@ -25,7 +25,9 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
             int previousValue = _points;
             _points = value;
             if (previousValue != value)
+            {
                 OnPointsChanged?.Invoke(this);
+            }
         }
     }
 
@@ -44,7 +46,7 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
                 if (!_achUn)
                     AchievementManager.UnlockAchievement("OMA");
 
-                if (!CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("trophy_lsa-trophy_rsa"))
+                if (!CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("gps-lfa"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-gps-lfa-"));
             }
         }
@@ -124,7 +126,7 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
     void AddPoints_RPC(int _points)
     {
         points += _points;
-        _totalPoints += _points;
+        totalPoints += _points;
     }
 
     public void RemovePoints(int _points)
