@@ -19,7 +19,7 @@ public class WeaponProperties : MonoBehaviour
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
     public enum ScopeMagnification { None, Close, Medium, Long }
-    public enum PlasmaColor { Red, Green, Blue }
+    public enum PlasmaColor { Red, Green, Blue, Shard }
 
     public Player player { get { return pController.player; } }
 
@@ -109,7 +109,7 @@ public class WeaponProperties : MonoBehaviour
     [Header("Dual Wielding")]
     public GameObject rightHandGO;
     public GameObject leftHandGO;
-    public bool isDualWieldable;
+    public bool isDualWieldable, ultraBind;
     public WeaponProperties leftWeapon;
     public WeaponProperties rightWeapon;
 
@@ -549,6 +549,8 @@ public class WeaponPropertiesEditor : Editor
             wp.leftWeapon = EditorGUILayout.ObjectField("Left Weapon", wp.leftWeapon, typeof(WeaponProperties), true) as WeaponProperties;
             wp.rightWeapon = EditorGUILayout.ObjectField("Right Weapon", wp.rightWeapon, typeof(WeaponProperties), true) as WeaponProperties;
         }
+
+        wp.ultraBind = GUILayout.Toggle(wp.ultraBind, "Ultra Bind");
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Aiming", EditorStyles.boldLabel);

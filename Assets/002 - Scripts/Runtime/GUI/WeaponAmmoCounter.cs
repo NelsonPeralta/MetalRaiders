@@ -33,18 +33,18 @@ public class WeaponAmmoCounter : MonoBehaviour
         if (_c > 0)
             _c -= Time.deltaTime;
 
-        if (_c <= 0)
+        try
         {
-            try
+            if (_c <= 0)
             {
-                _tmp.text = _weaponProperties.loadedAmmo.ToString();
+                if (_weaponProperties)
+                    _tmp.text = _weaponProperties.loadedAmmo.ToString();
+                else if (_lootableWeapon)
+                    _tmp.text = _lootableWeapon.localAmmo.ToString();
             }
-            catch
-            {
-                _tmp.text = _lootableWeapon.localAmmo.ToString();
-            }
+            else
+                _tmp.text = "";
         }
-        else
-            _tmp.text = "";
+        catch { }
     }
 }

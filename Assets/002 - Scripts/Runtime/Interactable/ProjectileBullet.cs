@@ -84,9 +84,9 @@ public class ProjectileBullet : MonoBehaviour
                             if (player.PV.IsMine)
                             {
                                 if (weaponProperties.codeName != null)
-                                    finalHitDamageable.Damage(damage, wasHeadshot, player.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, damageSource: weaponProperties.codeName, isGroin: wasNutshot);
+                                    finalHitDamageable.Damage(damage, wasHeadshot, player.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, damageSource: weaponProperties.codeName, isGroin: wasNutshot, weaponIndx:weaponProperties.index);
                                 else
-                                    finalHitDamageable.Damage(damage, wasHeadshot, player.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                                    finalHitDamageable.Damage(damage, wasHeadshot, player.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot, weaponIndx: weaponProperties.index);
                             }
 
                             damageDealt = true;
@@ -150,9 +150,9 @@ public class ProjectileBullet : MonoBehaviour
                     if (player.PV.IsMine)
                     {
                         if (weaponProperties.codeName != null)
-                            finalHitDamageable.Damage(damage, wasHeadshot, player.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.codeName, isGroin: wasNutshot);
+                            finalHitDamageable.Damage(damage, wasHeadshot, player.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.codeName, isGroin: wasNutshot, weaponIndx: weaponProperties.index);
                         else
-                            finalHitDamageable.Damage(damage, wasHeadshot, player.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                            finalHitDamageable.Damage(damage, wasHeadshot, player.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot, weaponIndx: weaponProperties.index);
                     }
 
                     damageDealt = true;

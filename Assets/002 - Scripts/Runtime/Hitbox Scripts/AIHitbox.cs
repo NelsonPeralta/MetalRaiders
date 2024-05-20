@@ -402,7 +402,10 @@ public class AIHitbox : Hitbox, IDamageable
         aiAbstractClass.Damage((int)healthDamage, playerWhoShotThisPlayerPhotonId, isHeadshot: headshot);
     }
 
-    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
+    public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId,
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null,
+        bool isGroin = false, int weaponIndx = -1,
+        [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
     {
         //Debug.Log("AI HItbox Damage 2");
         aiAbstractClass.Damage((int)healthDamage, playerWhoShotThisPlayerPhotonId, isHeadshot: headshot);

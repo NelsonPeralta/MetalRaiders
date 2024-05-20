@@ -32,7 +32,7 @@ public class PlayerHitbox : Hitbox, IDamageable
     }
 
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false,
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false, int weaponIndx = -1,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
@@ -74,7 +74,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         //catch { }
         Debug.Log(damage);
 
-        player.Damage((int)damage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin); ;
+        player.Damage((int)damage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin, weaponIndx: weaponIndx); ;
         //player.PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);
     }
 }

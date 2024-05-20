@@ -108,6 +108,7 @@ public class PlayerShield : MonoBehaviour
 
     public void PlayShieldStartSound(Player player)
     {
+        player.ultraMergeCount = 0;
         shieldAudioSource.clip = shieldStartClip;
         shieldAudioSource.Play();
 

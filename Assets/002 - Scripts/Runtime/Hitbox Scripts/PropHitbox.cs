@@ -15,7 +15,9 @@ public class PropHitbox : Hitbox, IDamageable
     {
     }
 
-    public void Damage(int d, bool h, int pid, Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
+    public void Damage(int d, bool h, int pid, Vector3? impactPos = null, Vector3? impactDir = null, 
+        string damageSource = null, bool isGroin = false, int weaponIndx = -1, 
+        [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
     {
         //hitPoints.hitPoints -= d;
     }

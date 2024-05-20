@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System;
+using System.Linq;
 
 public class Bullet : MonoBehaviourPunCallbacks
 {
@@ -65,7 +66,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public GameObject organicBlood;
     public GameObject magicBlood;
     public GameObject shieldHit;
-    public GameObject bluePlasma, greenPlasma, redPlasma;
+    public GameObject bluePlasma, greenPlasma, redPlasma, shard;
 
     int frameCounter;
     List<ObjectHit> objectsHit = new List<ObjectHit>();
@@ -205,11 +206,14 @@ public class Bullet : MonoBehaviourPunCallbacks
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
         if (weaponProperties.targetTracking && trackingTarget)
         {
-            Vector3 dir = trackingTarget.transform.position - transform.position;
-            Quaternion rot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rot, weaponProperties.trackingSpeed * Time.deltaTime);
+            if (!trackingTarget.gameObject.activeInHierarchy || trackingTarget.GetComponent<Player>().isDead) trackingTarget = null;
 
-            if (trackingTarget.GetComponent<Player>().isDead) trackingTarget = null;
+            if (trackingTarget)
+            {
+                Vector3 dir = trackingTarget.transform.position - transform.position;
+                Quaternion rot = Quaternion.LookRotation(dir);
+                transform.rotation = Quaternion.Lerp(transform.rotation, rot, weaponProperties.trackingSpeed * Time.deltaTime);
+            }
         }
 
         //prePos = transform.position;
@@ -412,9 +416,9 @@ public class Bullet : MonoBehaviourPunCallbacks
                             Debug.Log("asdf6");
 
                             if (weaponProperties.codeName != null)
-                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.cleanName, isGroin: wasNutshot);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.cleanName, isGroin: wasNutshot, weaponIndx: weaponProperties.index);
                             else
-                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot, weaponIndx: weaponProperties.index);
                         }
 
                         damageDealt = true;

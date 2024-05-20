@@ -247,6 +247,7 @@ public class PlayerShooting : MonoBehaviourPun
                         bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Blue && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                         bullet.GetComponent<Bullet>().redPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Red && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                         bullet.GetComponent<Bullet>().greenPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Green && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().shard.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Shard && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                     }
 
                     try

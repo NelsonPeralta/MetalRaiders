@@ -19,7 +19,7 @@ public class Player : Biped
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
         OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged, OnPlayerIdAssigned;
 
-    public enum DeathNature { None, Barrel, Headshot, Groin, Melee, Grenade, RPG, Stuck, Sniped }
+    public enum DeathNature { None, Barrel, Headshot, Groin, Melee, Grenade, RPG, Stuck, Sniped, UltraBind }
 
     // public variables
     #region
@@ -560,6 +560,8 @@ public class Player : Biped
     [SerializeField] PlayerCapsule _playerCapsule;
     [SerializeField] PlayerShooting _playerShooting;
     [SerializeField] AssignActorPlayerTargetOnShootingSphere _assignActorPlayerTargetOnShootingSphere;
+    [SerializeField] Explosion _ultraMergeExPrefab;
+
     #endregion
 
 
@@ -587,6 +589,26 @@ public class Player : Biped
 
     private bool deathByHeadshot { get { if (deathNature == DeathNature.Headshot || deathNature == DeathNature.Sniped) return true; else return false; } }
     private bool deathByGroin { get { if (deathNature == DeathNature.Groin) return true; else return false; } }
+    public int ultraMergeCount
+    {
+        get { return _ultraMergeCount; }
+        set
+        {
+            _ultraMergeCount = value;
+
+            if (_ultraMergeCount == 12)
+            {
+                print("ULTRA MERGE!");
+                Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
+                e.DisableIn5Seconds();
+                e.player = _lastPlayerSource;
+                e.gameObject.SetActive(true);
+
+
+                _ultraMergeCount = 0;
+            }
+        }
+    }
 
     #endregion
 
@@ -648,6 +670,7 @@ public class Player : Biped
     public Transform weaponDropPoint;
 
     [SerializeField] GameObject headhunterSkullPrefab;
+    [SerializeField] int _ultraMergeCount;
 
     Rigidbody _rb;
 
@@ -859,7 +882,7 @@ public class Player : Biped
 
     public void Damage(int damage, bool headshot, int source_pid,
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSourceCleanName = null,
-        bool isGroin = false,
+        bool isGroin = false, int weaponIndx = -1,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
@@ -916,6 +939,8 @@ public class Player : Biped
                     dsn = DeathNature.Melee;
                 else if (damageSourceCleanName.Contains("arrel"))
                     dsn = DeathNature.Barrel;
+                else if (damageSourceCleanName.Contains("ultrabind"))
+                    dsn = DeathNature.UltraBind;
                 else
                     Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
 
@@ -925,7 +950,7 @@ public class Player : Biped
 
 
             int newHealth = (int)hitPoints - damage;
-            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn, impactDir);
+            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn, impactDir, weaponIndx);
         }
     }
 
@@ -987,8 +1012,10 @@ public class Player : Biped
 
 
         if (deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.Grenade /*|| deathNature == DeathNature.Stuck*/ || deathNature == DeathNature.RPG || deathNature == DeathNature.Barrel) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
+        else if (deathNature == DeathNature.Grenade /*|| deathNature == DeathNature.Stuck*/ || deathNature == DeathNature.RPG
+            || deathNature == DeathNature.Barrel) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
         else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2000); }
+        else if (deathNature == DeathNature.UltraBind) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((transform.position - _lastPlayerSource.transform.position) * 500); }
         else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 
@@ -1032,6 +1059,8 @@ public class Player : Biped
     void Respawn()
     {
         Debug.Log("Respawn");
+        _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
+
         if (!isRespawning)
             return;
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
@@ -1306,7 +1335,7 @@ public class Player : Biped
     }
 
     [PunRPC]
-    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn, Vector3 impDir)
+    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn, Vector3 impDir, int weaponIndx)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
@@ -1346,6 +1375,12 @@ public class Player : Biped
         if (newHealth <= 0 && isInvincible) newHealth = 1;
 
         hitPoints = newHealth;
+
+        if (weaponIndx >= 0)
+        {
+            if (playerInventory.allWeaponsInInventory[weaponIndx].GetComponent<WeaponProperties>().ultraBind)
+                ultraMergeCount++;
+        }
 
 
         if (!isDead && playerThatKilledMe) playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker();
@@ -1520,6 +1555,8 @@ public class Player : Biped
                 if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team == this.team)
                     f = $"<color=#31cff9>{playerThatKilledMe.username} buddyfucked {username}";
 
+                if (deathNature == DeathNature.UltraBind)
+                    f = $"{playerThatKilledMe.username} [ Crystallizer ] {username}";
 
 
                 if (this != playerThatKilledMe)
