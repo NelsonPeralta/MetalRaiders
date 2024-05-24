@@ -589,26 +589,6 @@ public class Player : Biped
 
     private bool deathByHeadshot { get { if (deathNature == DeathNature.Headshot || deathNature == DeathNature.Sniped) return true; else return false; } }
     private bool deathByGroin { get { if (deathNature == DeathNature.Groin) return true; else return false; } }
-    public int ultraMergeCount
-    {
-        get { return _ultraMergeCount; }
-        set
-        {
-            _ultraMergeCount = value;
-
-            if (_ultraMergeCount == 12)
-            {
-                print("ULTRA MERGE!");
-                Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
-                e.DisableIn5Seconds();
-                e.player = _lastPlayerSource;
-                e.gameObject.SetActive(true);
-
-
-                _ultraMergeCount = 0;
-            }
-        }
-    }
 
     #endregion
 
@@ -670,7 +650,6 @@ public class Player : Biped
     public Transform weaponDropPoint;
 
     [SerializeField] GameObject headhunterSkullPrefab;
-    [SerializeField] int _ultraMergeCount;
 
     Rigidbody _rb;
 
@@ -1613,4 +1592,20 @@ public class Player : Biped
     }
 
     #endregion
+
+
+    public override void SpawnUltraBindExplosion()
+    {
+        base.SpawnUltraBindExplosion();
+
+        print("Player SpawnUltraBindExplosion");
+
+        Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
+        e.DisableIn5Seconds();
+        e.player = _lastPlayerSource;
+        e.gameObject.SetActive(true);
+
+
+        _ultraMergeCount = 0;
+    }
 }

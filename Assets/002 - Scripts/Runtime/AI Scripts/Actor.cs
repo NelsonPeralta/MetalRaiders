@@ -289,6 +289,7 @@ abstract public class Actor : Biped
 
     protected void Prepare()
     {
+        _ultraMergeCount = 0;
         _isSeenByTargetPlayerCooldown = _isDodgingCooldown = _isCurrentlyAlertingCooldown = 0;
         _switchPlayerCooldown = 0;
         _isInRange = false;
