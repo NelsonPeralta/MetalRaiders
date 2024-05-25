@@ -894,7 +894,7 @@ abstract public class Actor : Biped
         Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
         e.player = targetHitpoints.GetComponent<Player>();
         e.gameObject.SetActive(true);
-        e.DisableIn5Seconds();
+        e.DisableIn3Seconds();
 
 
         _ultraMergeCount = 0;

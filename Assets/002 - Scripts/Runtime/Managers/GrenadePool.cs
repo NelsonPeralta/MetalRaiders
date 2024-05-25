@@ -8,9 +8,10 @@ public class GrenadePool : MonoBehaviour
 
     public List<GameObject> stickyGrenadePool { get { return _stickyGrenadePool; } }
 
-    [SerializeField] GameObject _fragGrenadePrefab, _stickyGrenadePrefab;
+    [SerializeField] GameObject _fragGrenadePrefab, _stickyGrenadePrefab, _explosionPrefab;
     [SerializeField] List<GameObject> _fragGrenadePool = new List<GameObject>();
     [SerializeField] List<GameObject> _stickyGrenadePool = new List<GameObject>();
+    [SerializeField] List<Explosion> _explosions = new List<Explosion>();
 
 
     static GrenadePool _instance;
@@ -26,9 +27,11 @@ public class GrenadePool : MonoBehaviour
         {
             _fragGrenadePool.Add(Instantiate(_fragGrenadePrefab, transform));
             _stickyGrenadePool.Add(Instantiate(_stickyGrenadePrefab, transform));
+            _explosions.Add(Instantiate(_explosionPrefab, transform).GetComponent<Explosion>()); // Prefab must be inactive
 
             _fragGrenadePool[i].SetActive(false); _stickyGrenadePool[i].SetActive(false);
             _fragGrenadePool[i].transform.SetParent(this.transform); _stickyGrenadePool[i].transform.SetParent(this.transform);
+            _explosions[i].transform.SetParent(this.transform);
         }
     }
 
@@ -69,5 +72,23 @@ public class GrenadePool : MonoBehaviour
     {
         if (isFrag) return _instance._fragGrenadePool[index];
         else return _instance._stickyGrenadePool[index];
+    }
+
+
+    public static void SpawnExplosion(Player source, Vector3 pos, Explosion.Color col, Explosion.Type t, bool stuck = false)
+    {
+        foreach (Explosion obj in instance._explosions)
+            if (!obj.gameObject.activeInHierarchy)
+            {
+                obj.player = source;
+                obj.transform.position = pos;
+                obj.stuck = stuck;
+                obj.color = col;
+                obj.type = t;
+                obj.gameObject.SetActive(true);
+                obj.Explode();
+                obj.DisableIn3Seconds();
+                break;
+            }
     }
 }

@@ -27,6 +27,8 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] GameObject _stuckVfx;
     [SerializeField] GameObject _fakeModel;
     [SerializeField] float _ttl, _defaultTtl;
+    [SerializeField] Explosion.Color _color;
+    [SerializeField] Explosion.Type _type;
 
     bool _collided;
     float _explosionDelayOnImpact;
@@ -176,11 +178,15 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        Explosion e = Instantiate(explosionPrefab, transform.position, transform.rotation).GetComponent<Explosion>();
-        if (_sticky) { transform.parent = GrenadePool.instance.transform; }
-        e.player = player;
-        e.stuck = _stuck;
-        e.DisableIn5Seconds();
+        GrenadePool.SpawnExplosion(player, transform.position, _color, _type, stuck);
+
+
+
+        //Explosion e = Instantiate(explosionPrefab, transform.position, transform.rotation).GetComponent<Explosion>();
+        //if (_sticky) { transform.parent = GrenadePool.instance.transform; }
+        //e.player = player;
+        //e.stuck = _stuck;
+        //e.DisableIn5Seconds();
         gameObject.SetActive(false);
     }
 

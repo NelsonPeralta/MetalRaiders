@@ -918,7 +918,7 @@ public class Player : Biped
                     dsn = DeathNature.Melee;
                 else if (damageSourceCleanName.Contains("arrel"))
                     dsn = DeathNature.Barrel;
-                else if (damageSourceCleanName.Contains("ultrabind"))
+                else if (damageSourceCleanName.Contains("ltra"))
                     dsn = DeathNature.UltraBind;
                 else
                     Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
@@ -1591,10 +1591,12 @@ public class Player : Biped
 
         print("Player SpawnUltraBindExplosion");
 
-        Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
-        e.player = _lastPlayerSource;
-        e.gameObject.SetActive(true);
-        e.DisableIn5Seconds();
+        //Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
+        //e.player = _lastPlayerSource;
+        //e.gameObject.SetActive(true);
+        //e.DisableIn3Seconds();
+
+        GrenadePool.SpawnExplosion(_lastPlayerSource, transform.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
 
 
         _ultraMergeCount = 0;

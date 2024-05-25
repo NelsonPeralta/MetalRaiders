@@ -17,6 +17,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
     public int index { get { return barrel.index; } }
     public float tts { get { return _tts; } private set { _tts = value; } }
 
+
     private void OnDisable()
     {
         GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
@@ -79,21 +80,25 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
     public void TriggerExplosionCoroutine()
     {
+        barrel.gameObject.SetActive(false);
         StartCoroutine(BarrelExplosion_Coroutine());
     }
 
     IEnumerator BarrelExplosion_Coroutine()
     {
-        barrel.gameObject.SetActive(false);
-
-        explosion.transform.position = barrel.transform.position + new Vector3(0, 1, 0);
-        explosion.GetComponent<Explosion>().damageSource = "Barrel";
-        explosion.GetComponent<Explosion>().player = GameManager.GetPlayerWithPhotonViewId(barrel.lastPid);
+        //explosion.transform.position = barrel.transform.position + new Vector3(0, 1, 0);
+        //explosion.GetComponent<Explosion>().damageSource = "Barrel";
+        //explosion.GetComponent<Explosion>().player = GameManager.GetPlayerWithPhotonViewId(barrel.lastPid);
 
 
+        //yield return new WaitForSeconds(0.1f);
+
+
+        //explosion.SetActive(true);
+
+        print("BarrelExplosion_Coroutine");
         yield return new WaitForSeconds(0.1f);
-
-
-        explosion.SetActive(true);
+        GrenadePool.SpawnExplosion(GameManager.GetPlayerWithPhotonViewId(barrel.lastPid),
+            barrel.transform.position + new Vector3(0, 1, 0), Explosion.Color.Yellow, Explosion.Type.Barrel);
     }
 }

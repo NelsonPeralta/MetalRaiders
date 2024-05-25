@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2724425483926940349
 MonoBehaviour:
@@ -48,5 +48,8 @@ MonoBehaviour:
     type: 3}
   _stickyGrenadePrefab: {fileID: 3334927101774382662, guid: d08e9278aa1ef864b8348e5912d9c13c,
     type: 3}
+  _explosionPrefab: {fileID: 4613590237410703111, guid: 5b0e7bc273e49e141818b80896b74d54,
+    type: 3}
   _fragGrenadePool: []
   _stickyGrenadePool: []
+  _explosions: []

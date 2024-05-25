@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using UnityEngine;
+using static Bullet;
 
 public class Explosion : MonoBehaviour
 {
+    public enum Type { Grenade, Barrel, UltraBind }
+    public enum Color { Yellow, Blue, Purple }
+
     public delegate void ExplosionEvent(Explosion explosion);
     public ExplosionEvent OnObjectAdded;
 
@@ -13,6 +17,27 @@ public class Explosion : MonoBehaviour
     public bool stuck { get { return _stuck; } set { _stuck = value; } }
 
     public string damageSource { get { return _damageSource; } set { _damageSource = value; } }
+
+    public Color color
+    {
+        set
+        {
+            _yellowModel.SetActive(value == Color.Yellow); _blueModel.SetActive(value == Color.Blue); _purpleModel.SetActive(value == Color.Purple);
+        }
+    }
+
+    public Type type
+    {
+        get { return _type; }
+        set
+        {
+            _type = value;
+
+            if (value == Type.Grenade) damageSource = "Grenade";
+            else if (value == Type.Barrel) damageSource = "Barrel";
+            else if (value == Type.UltraBind) damageSource = "Ultra Bind";
+        }
+    }
 
     [SerializeField] Player _player;
     [SerializeField] string _damageSource;
@@ -26,14 +51,17 @@ public class Explosion : MonoBehaviour
 
     List<GameObject> objectsHit = new List<GameObject>();
     bool _stuck;
+    [SerializeField] GameObject _yellowModel, _blueModel, _purpleModel;
+    Type _type;
 
     private void Start()
     {
-        Explode();
+        //Explode();
     }
 
-    void Explode()
+    public void Explode()
     {
+        objectsHit.Clear();
         //Use overlapshere to check for nearby colliders
         Collider[] colliders = Physics.OverlapSphere(transform.position, radius).Distinct().ToArray();
 
@@ -142,14 +170,14 @@ public class Explosion : MonoBehaviour
         //Destroy(gameObject, 10);
     }
 
-    public void DisableIn5Seconds()
+    public void DisableIn3Seconds()
     {
-        StartCoroutine(DIsableIn5Seconds_Coroutine());
+        StartCoroutine(DIsableIn3Seconds_Coroutine());
     }
 
-    IEnumerator DIsableIn5Seconds_Coroutine()
+    IEnumerator DIsableIn3Seconds_Coroutine()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
 
         gameObject.SetActive(false);
     }

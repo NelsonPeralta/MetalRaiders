@@ -14791,6 +14791,8 @@ MonoBehaviour:
   _fakeModel: {fileID: 4004369177905539638, guid: 8adb86f207f40c34dbb23c9728e70fdb,
     type: 3}
   _ttl: 0
+  _defaultTtl: 0
+  _color: 1
 --- !u!82 &3248583250224941726
 AudioSource:
   m_ObjectHideFlags: 0
