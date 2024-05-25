@@ -4955,6 +4955,8 @@ MonoBehaviour:
   _fakeModel: {fileID: 0}
   _ttl: 0
   _defaultTtl: 0
+  _color: 0
+  _type: 1
 --- !u!1 &1833708575658552
 GameObject:
   m_ObjectHideFlags: 0

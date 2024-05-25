@@ -7,7 +7,7 @@ using static Bullet;
 
 public class Explosion : MonoBehaviour
 {
-    public enum Type { Grenade, Barrel, UltraBind }
+    public enum Type { Grenade, RPG, Barrel, UltraBind }
     public enum Color { Yellow, Blue, Purple }
 
     public delegate void ExplosionEvent(Explosion explosion);
@@ -36,6 +36,7 @@ public class Explosion : MonoBehaviour
             if (value == Type.Grenade) damageSource = "Grenade";
             else if (value == Type.Barrel) damageSource = "Barrel";
             else if (value == Type.UltraBind) damageSource = "Ultra Bind";
+            else if (value == Type.RPG) damageSource = "RPG";
         }
     }
 

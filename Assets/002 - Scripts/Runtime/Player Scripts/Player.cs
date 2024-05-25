@@ -1526,7 +1526,7 @@ public class Player : Biped
                     f = $"<color=#31cff9>{playerThatKilledMe.username} buddyfucked {username}";
 
                 if (deathNature == DeathNature.UltraBind)
-                    f = $"<color=#31cff9>{playerThatKilledMe.username} [ Crystallizer ] {username}";
+                    f = $"<color=#31cff9>{playerThatKilledMe.username} [ Splinter ] {username}";
 
 
                 if (this != playerThatKilledMe)
