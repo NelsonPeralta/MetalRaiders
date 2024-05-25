@@ -74,36 +74,40 @@ public class CarnageReportMenu : MonoBehaviour
 
         //_hnrText.text = $"0 / {_hnrToLevelUp}";
 
-        Debug.Log($"CarnageReportMenu {GameManager.instance.carnageReport.xpGained}");
-        if (GameManager.instance.carnageReport.xpGained > 0)
+
+        if (GameManager.instance.carnageReport)
         {
-            _thankYouExtraText.text = $"PS: You gained {GameManager.instance.carnageReport.xpGained} Xp and Cuckbucks";
-            if (GameManager.instance.carnageReport.leveledUp)
-                _thankYouExtraText.text += $" AND leveled up ({GameManager.instance.carnageReport.newLevel}).";
-            else
+            Debug.Log($"CarnageReportMenu {GameManager.instance.carnageReport.xpGained}");
+            if (GameManager.instance.carnageReport.xpGained > 0)
             {
-                try
+                _thankYouExtraText.text = $"PS: You gained {GameManager.instance.carnageReport.xpGained} Xp and Cuckbucks";
+                if (GameManager.instance.carnageReport.leveledUp)
+                    _thankYouExtraText.text += $" AND leveled up ({GameManager.instance.carnageReport.newLevel}).";
+                else
                 {
-                    _xpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + _lvlAddCount];
-                    _thankYouExtraText.text += $", only {_xpToLevelUp - (GameManager.instance.carnageReport.currentXp + GameManager.instance.carnageReport.xpGained)} xp to go! :)";
+                    try
+                    {
+                        _xpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[GameManager.instance.carnageReport.playerLevel + _lvlAddCount];
+                        _thankYouExtraText.text += $", only {_xpToLevelUp - (GameManager.instance.carnageReport.currentXp + GameManager.instance.carnageReport.xpGained)} xp to go! :)";
+                    }
+                    catch (System.Exception e) { Debug.LogException(e); }
                 }
-                catch (System.Exception e) { Debug.LogException(e); }
             }
-        }
 
 
-        if (GameManager.instance.carnageReport.honorGained > 0)
-        {
-            _thankYouExtraText.text += $"\n\nAlso, you gained {GameManager.instance.carnageReport.honorGained} Honor";
+            if (GameManager.instance.carnageReport.honorGained > 0)
+            {
+                _thankYouExtraText.text += $"\n\nAlso, you gained {GameManager.instance.carnageReport.honorGained} Honor";
 
-            PlayerProgressionManager.Rank[] rs = PlayerProgressionManager.GetClosestAndNextRank(GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained);
+                PlayerProgressionManager.Rank[] rs = PlayerProgressionManager.GetClosestAndNextRank(GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained);
 
-            if (!GameManager.instance.carnageReport.rankedUp)
-                _thankYouExtraText.text += $". You will be promoted to {rs[1].cleanName} in {rs[1].honorRequired - (GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained)} more points.";
-            else
-                _thankYouExtraText.text += $" and have been PROMOTED to {rs[0].cleanName}!!! Congrats :D";
+                if (!GameManager.instance.carnageReport.rankedUp)
+                    _thankYouExtraText.text += $". You will be promoted to {rs[1].cleanName} in {rs[1].honorRequired - (GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained)} more points.";
+                else
+                    _thankYouExtraText.text += $" and have been PROMOTED to {rs[0].cleanName}!!! Congrats :D";
 
-            _thankYouExtraText.text += $" \n\nPlay more games to earn Honor points, win games to speed up your progress.";
+                _thankYouExtraText.text += $" \n\nPlay more games to earn Honor points, win games to speed up your progress.";
+            }
         }
     }
 

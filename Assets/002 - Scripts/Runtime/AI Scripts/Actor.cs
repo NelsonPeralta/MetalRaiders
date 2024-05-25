@@ -163,6 +163,7 @@ abstract public class Actor : Biped
     [SerializeField] LayerMask _overlapSphereMask;
     [SerializeField] List<Transform> _leftChecks = new List<Transform>();
     [SerializeField] List<Transform> _rightChecks = new List<Transform>();
+    [SerializeField] Explosion _ultraMergeExPrefab;
 
     protected float _diffHpMult, _diffAttMult, _gruntDelay, _defGruntDelay;
     AudioSource _audioSource;
@@ -299,7 +300,7 @@ abstract public class Actor : Biped
             hitbox.gameObject.SetActive(true);
     }
 
-    public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false, int weIndx = -1)
     {
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
@@ -310,7 +311,7 @@ abstract public class Actor : Biped
                 p.GetComponent<PlayerUI>().SpawnHitMarker();
         }
 
-        GetComponent<PhotonView>().RPC("DamageActor", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot);
+        GetComponent<PhotonView>().RPC("DamageActor", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot, weIndx);
     }
 
     void PlayGruntClip()
@@ -710,7 +711,7 @@ abstract public class Actor : Biped
 
 
     [PunRPC]
-    public void DamageActor(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
+    public void DamageActor(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false, int weapIndx = -1)
     {
         if (hitPoints <= 0)
             return;
@@ -730,6 +731,11 @@ abstract public class Actor : Biped
 
         Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage}");
         hitPoints -= damage;
+        if (weapIndx >= 0)
+        {
+            if (GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[weapIndx].GetComponent<WeaponProperties>().ultraBind)
+                ultraMergeCount++;
+        }
         if (hitPoints <= 0)
         {
             try
@@ -877,6 +883,21 @@ abstract public class Actor : Biped
     {
         if (p.GetComponent<HitPoints>() == targetHitpoints)
             _isSeenByTargetPlayerCooldown = SpawnPoint.SeenResetTime;
+    }
+
+    public override void SpawnUltraBindExplosion()
+    {
+        base.SpawnUltraBindExplosion();
+
+        print("Actor SpawnUltraBindExplosion");
+
+        Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
+        e.player = targetHitpoints.GetComponent<Player>();
+        e.gameObject.SetActive(true);
+        e.DisableIn5Seconds();
+
+
+        _ultraMergeCount = 0;
     }
 
 

@@ -154,7 +154,7 @@ public class AlienShooter : Actor
 
 
             proj.GetComponent<Fireball>().sourceBiped = gameObject;
-            _shootProjectileCooldown = 0.4f;
+            _shootProjectileCooldown = 1.2f;
         }
     }
 

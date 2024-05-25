@@ -289,6 +289,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
                 GameManager.instance.LeaveRoom();
             }
+
+            if (GameManager.instance.connection == GameManager.Connection.Local) break;
         }
     }
 

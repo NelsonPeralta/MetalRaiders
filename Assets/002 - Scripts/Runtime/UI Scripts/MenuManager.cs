@@ -139,6 +139,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenLoadingMenu(string message = "Loading...")
     {
+        print("OpenLoadingMenu");
         loadingMenuText.text = message;
 
         OpenMenu("loading");

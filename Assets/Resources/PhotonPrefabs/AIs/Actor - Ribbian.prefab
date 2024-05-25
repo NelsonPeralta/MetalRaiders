@@ -441,7 +441,7 @@ Transform:
   m_GameObject: {fileID: 1602210879542197774}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8606627292790721606}
@@ -4660,8 +4660,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   originalSpawnPosition: {x: 0, y: 0, z: 0}
   _ultraMergeCount: 0
-  _hitPoints: 400
-  _defaultHitpoints: 500
+  _hitPoints: 350
+  _defaultHitpoints: 350
   _targetTransform: {fileID: 0}
   _targetPlayer: {fileID: 0}
   _destination: {x: 0, y: 0, z: 0}
@@ -4714,6 +4714,8 @@ MonoBehaviour:
   - {fileID: 3926252690837863140}
   - {fileID: 7020979739283047180}
   - {fileID: 5597096648755915045}
+  _ultraMergeExPrefab: {fileID: 6500668859487480126, guid: c4d9f2c427f83a94aad0b6ccb2dcb4e3,
+    type: 3}
   _fireBallPrefab: {fileID: 5091089392186072086, guid: b098cbed4f2aee74c81415d00707bc75,
     type: 3}
   _grenadePrefab: {fileID: 6543794610344578356, guid: ace650de0d210f54490f7e347a783c04,

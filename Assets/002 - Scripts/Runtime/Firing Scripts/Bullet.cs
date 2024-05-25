@@ -273,7 +273,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 else
                                     damage = (int)(damage * weaponProperties.headshotMultiplier);
                         }
-                        finalHitDamageable.Damage(damage, ih, sourcePlayer.photonId);
+                        finalHitDamageable.Damage(damage, ih, sourcePlayer.photonId, weaponIndx: weaponProperties.index);
 
                     }
                     catch

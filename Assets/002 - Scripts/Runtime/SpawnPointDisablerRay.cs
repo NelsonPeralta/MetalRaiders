@@ -19,7 +19,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) return;
         _c -= Time.deltaTime;
 
         //if (GameManager.instance.connection == GameManager.Connection.Online)

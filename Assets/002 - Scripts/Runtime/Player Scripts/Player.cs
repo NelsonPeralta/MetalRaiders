@@ -1592,9 +1592,9 @@ public class Player : Biped
         print("Player SpawnUltraBindExplosion");
 
         Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
-        e.DisableIn5Seconds();
         e.player = _lastPlayerSource;
         e.gameObject.SetActive(true);
+        e.DisableIn5Seconds();
 
 
         _ultraMergeCount = 0;

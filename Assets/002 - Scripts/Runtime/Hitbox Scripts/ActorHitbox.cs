@@ -20,6 +20,6 @@ public class ActorHitbox : Hitbox, IDamageable
         string damageSource = null, bool isGroin = false, int weaponIndx = -1,
         [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
     {
-        actor.Damage((int)d, pid, isHeadshot: h);
+        actor.Damage((int)d, pid, isHeadshot: h ,weIndx: weaponIndx);
     }
 }

@@ -2126,7 +2126,7 @@ Transform:
   m_GameObject: {fileID: 5868260087606716905}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7703879056441657010}
@@ -4930,6 +4930,8 @@ MonoBehaviour:
   - {fileID: 7095866229544506378}
   - {fileID: 7571072029182110230}
   - {fileID: 9064441005604525989}
+  _ultraMergeExPrefab: {fileID: 6500668859487480126, guid: c4d9f2c427f83a94aad0b6ccb2dcb4e3,
+    type: 3}
   _fireBallPrefab: {fileID: 5091089392186072086, guid: 45b166e6f51377d4aacfef1fe4670fce,
     type: 3}
 --- !u!82 &7575627652589808186

@@ -20,6 +20,7 @@ public class Menu : MonoBehaviour
 
     public void Open()
     {
+        print($"Opened {menuName} Menu");
         open = true;
         gameObject.SetActive(true);
     }
