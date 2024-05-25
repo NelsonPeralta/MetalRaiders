@@ -85,14 +85,14 @@ MonoBehaviour:
   codeName: pr
   spriteId: 3
   isDw: 0
-  _ammo: 30
+  _ammo: 100
   _spareAmmo: 0
-  _defaultAmmo: 30
+  _defaultAmmo: 100
   _defaultSpareAmmo: 0
   _tts: 120
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _spawnPointPosition: {x: 0, y: 0, z: 0}
+  _spawnPointPositionIdentity: {x: 0, y: 0, z: 0}
   _ttl: 30
   _defaultTtl: 0
 --- !u!65 &3676310777345466918
@@ -423,7 +423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8690854524755291521
 Transform:
   m_ObjectHideFlags: 0
@@ -433,8 +433,8 @@ Transform:
   m_GameObject: {fileID: 8688738924524063105}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8691140487106693867}
   m_Father: {fileID: 799154819802812775}
@@ -4093,7 +4093,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     type: 1
     collisionMode: 0

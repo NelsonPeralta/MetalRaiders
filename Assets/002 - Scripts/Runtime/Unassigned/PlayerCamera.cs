@@ -193,7 +193,7 @@ public class PlayerCamera : MonoBehaviour
 
 
             // PROCESS PLAYER INPUT
-            if (player.isDead || player.isRespawning)
+            if ((player.isDead || player.isRespawning) && player.playerThatKilledMe)
             {
                 _deathCameraLookAtTimer -= Time.deltaTime;
                 //if (_deathCameraLookAtTimer > 0)

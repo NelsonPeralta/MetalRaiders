@@ -548,7 +548,7 @@ MonoBehaviour:
   _tts: 120
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}
-  _spawnPointPosition: {x: 0, y: 0, z: 0}
+  _spawnPointPositionIdentity: {x: 0, y: 0, z: 0}
   _ttl: 30
   _defaultTtl: 0
 --- !u!65 &821786395023773485
@@ -9584,13 +9584,14 @@ GameObject:
   - component: {fileID: 8190626658059079779}
   - component: {fileID: 8315229327587951223}
   - component: {fileID: 8314157164501940481}
+  - component: {fileID: 2066532614295453054}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8190626658059079779
 Transform:
   m_ObjectHideFlags: 0
@@ -9600,8 +9601,8 @@ Transform:
   m_GameObject: {fileID: 8188238653291213923}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8190868572953966345}
   m_Father: {fileID: 7206459119514176669}
@@ -13260,7 +13261,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     type: 1
     collisionMode: 0
@@ -14482,6 +14483,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &2066532614295453054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8188238653291213923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8810593909896766082
 GameObject:
   m_ObjectHideFlags: 0

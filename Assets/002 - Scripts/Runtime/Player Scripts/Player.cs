@@ -1163,11 +1163,8 @@ public class Player : Biped
 
         if (isDead)
         {
-
-            if (isMine)
+            if (isMine && GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
                 PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSourceCleanName);
-
-
 
             {
                 // Spawn Skull
@@ -1175,14 +1172,8 @@ public class Player : Biped
                 //s.GetComponent<Rigidbody>().AddForce(new Vector3(0, 800, 0));
             }
 
-
-
-
-
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
-
-
         }
 
         isRespawning = true;
@@ -1212,7 +1203,7 @@ public class Player : Biped
 
         SpawnRagdoll();
         StartCoroutine(Respawn_Coroutine());
-        try { StartCoroutine(MidRespawnAction()); } catch (System.Exception e) { Debug.LogException(e); }
+        StartCoroutine(MidRespawnAction());
 
     }
     void OnPlayerDeath_DelegateLate(Player playerProperties)

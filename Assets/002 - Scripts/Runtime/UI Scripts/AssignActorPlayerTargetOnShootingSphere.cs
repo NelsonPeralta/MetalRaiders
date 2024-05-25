@@ -26,7 +26,7 @@ public class AssignActorPlayerTargetOnShootingSphere : MonoBehaviour
 
         print("TriggerBehaviour");
 
-        RaycastHit[] _hits_ = Physics.RaycastAll(transform.position, transform.forward, player.playerInventory.activeWeapon.range, layerMask: _layerMask, queryTriggerInteraction: QueryTriggerInteraction.Collide);
+        RaycastHit[] _hits_ = Physics.RaycastAll(transform.position, transform.forward, player.playerInventory.activeWeapon.range * 0.7f, layerMask: _layerMask, queryTriggerInteraction: QueryTriggerInteraction.Collide);
 
         if (_hits_.Length > 0)
             for (int i = 0; i < _hits_.Length; i++)

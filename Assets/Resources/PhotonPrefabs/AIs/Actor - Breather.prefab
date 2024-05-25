@@ -4875,6 +4875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalSpawnPosition: {x: 0, y: 0, z: 0}
+  _ultraMergeCount: 0
   _hitPoints: 150
   _defaultHitpoints: 200
   _targetTransform: {fileID: 0}

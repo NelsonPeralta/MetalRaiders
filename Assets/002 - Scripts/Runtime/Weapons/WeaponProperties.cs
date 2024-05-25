@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -127,6 +128,19 @@ public class WeaponProperties : MonoBehaviour
         get { return _currentAmmo; }
         set
         {
+            if (SceneManager.GetActiveScene().buildIndex > 0)
+            {
+                if (injectLootedAmmo && (GameManager.instance.gameType == GameManager.GameType.Rockets
+                || GameManager.instance.gameType == GameManager.GameType.Shotguns
+                || GameManager.instance.gameType == GameManager.GameType.GunGame))
+                {
+                    _currentAmmo = ammoCapacity;
+                    OnCurrentAmmoChanged?.Invoke(this);
+                    pController.GetComponent<PlayerUI>().activeAmmoText.text = loadedAmmo.ToString();
+                    return;
+                }
+            }
+
             _currentAmmo = Mathf.Clamp(value, 0, ammoCapacity);
 
             if ((!player.playerInventory.leftWeapon) || (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon != this))
@@ -154,6 +168,18 @@ public class WeaponProperties : MonoBehaviour
         get { return _spareAmmo; }
         set
         {
+            if (SceneManager.GetActiveScene().buildIndex > 0)
+            {
+                if (GameManager.instance.gameType == GameManager.GameType.GunGame
+                    || GameManager.instance.gameType == GameManager.GameType.Snipers)
+                {
+                    _spareAmmo = _maxAmmo;
+                    OnSpareAmmoChanged?.Invoke(this);
+                    pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString();
+                    return;
+                }
+            }
+
             int preVal = _spareAmmo; int newVal = value;
 
             try { if (GameManager.instance.gameType == GameManager.GameType.GunGame && newVal < preVal) return; } catch { }
