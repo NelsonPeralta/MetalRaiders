@@ -5,7 +5,7 @@ using UnityEngine;
 public class ExplosiveProjectile : MonoBehaviour
 {
     public Player player { get { return _player; } set { _player = value; } }
-    public int force { get { return _force; } set { _force = value; } }
+    public int throwForce { get { return _throwForce; } set { _throwForce = value; } }
     public bool useConstantForce { get { return _useConstantForce; } set { _useConstantForce = value; } }
     public GameObject model { get { return _model; } }
     public GameObject visualIndicator { get { return _visualIndicator; } }
@@ -13,7 +13,7 @@ public class ExplosiveProjectile : MonoBehaviour
     public bool stuck { get { return _stuck; } set { _stuck = value; } }
 
     [SerializeField] Player _player;
-    [SerializeField] int _force;
+    [SerializeField] int _damage, _radius, _throwForce, _explosionPower;
     [SerializeField] bool _useConstantForce;
     [SerializeField] float _defaultExplosionDelayOnImpact;
     [SerializeField] Transform explosionPrefab;
@@ -71,7 +71,7 @@ public class ExplosiveProjectile : MonoBehaviour
         catch { }
 
         if (!useConstantForce)
-            GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * force);
+            GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * throwForce);
     }
 
     // Update is called once per frame
@@ -91,7 +91,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
         if (useConstantForce)
             GetComponent<Rigidbody>().AddForce
-                (gameObject.transform.forward * force);
+                (gameObject.transform.forward * throwForce);
 
         if (_collided)
         {
@@ -178,7 +178,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        GrenadePool.SpawnExplosion(player, transform.position, _color, _type, stuck);
+        GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, transform.position, _color, _type, stuck);
 
 
 

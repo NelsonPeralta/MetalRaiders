@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // https://stackoverflow.com/questions/150479/order-of-items-in-classes-fields-properties-constructors-methods
 
     public static string ROOT_PLAYER_NAME;
+    public static int DEFAULT_EXPLOSION_POWER = 300;
 
     // Events
     public delegate void GameManagerEvent();

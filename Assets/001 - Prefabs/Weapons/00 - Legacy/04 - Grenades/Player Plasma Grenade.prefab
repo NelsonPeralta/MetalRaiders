@@ -14773,7 +14773,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  _force: 0
+  _damage: 400
+  _radius: 5
+  _throwForce: 300
+  _explosionPower: 300
   _useConstantForce: 0
   _defaultExplosionDelayOnImpact: 1
   explosionPrefab: {fileID: 9198120252748331428, guid: 133e7e85df7e0964ca94128ae8063fb0,
@@ -14793,6 +14796,7 @@ MonoBehaviour:
   _ttl: 0
   _defaultTtl: 0
   _color: 1
+  _type: 0
 --- !u!82 &3248583250224941726
 AudioSource:
   m_ObjectHideFlags: 0

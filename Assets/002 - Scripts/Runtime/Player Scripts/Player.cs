@@ -994,7 +994,7 @@ public class Player : Biped
         else if (deathNature == DeathNature.Grenade /*|| deathNature == DeathNature.Stuck*/ || deathNature == DeathNature.RPG
             || deathNature == DeathNature.Barrel) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
         else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2000); }
-        else if (deathNature == DeathNature.UltraBind) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((transform.position - _lastPlayerSource.transform.position) * 500); }
+        else if (deathNature == DeathNature.UltraBind) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((transform.position - _lastPlayerSource.transform.position) * 1000); }
         else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 
@@ -1596,7 +1596,7 @@ public class Player : Biped
         //e.gameObject.SetActive(true);
         //e.DisableIn3Seconds();
 
-        GrenadePool.SpawnExplosion(_lastPlayerSource, transform.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
+        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 500, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, transform.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
 
 
         _ultraMergeCount = 0;
