@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static string ROOT_PLAYER_NAME;
     public static int DEFAULT_EXPLOSION_POWER = 300;
+    public static int DEFAULT_FRAMERATE = 65;
 
     // Events
     public delegate void GameManagerEvent();
@@ -198,7 +199,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                     _gameType = GameType.Slayer;
 
 
-                foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.extendedPlayerData) s.team = Team.None;
+                foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells) s.team = Team.None;
 
 
                 FindObjectOfType<Launcher>().teamRoomUI.SetActive(false);
@@ -510,7 +511,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         //Debug.Log(colorPaletteTextures.Count);
 
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 100;
+        Application.targetFrameRate = DEFAULT_FRAMERATE;
 
 #if UNITY_EDITOR
         Debug.unityLogger.logEnabled = true;

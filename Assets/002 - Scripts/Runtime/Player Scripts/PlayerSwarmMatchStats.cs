@@ -46,7 +46,7 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
                 if (!_achUn)
                     AchievementManager.UnlockAchievement("OMA");
 
-                if (!CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("gps-lfa"))
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("gps-lfa"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-gps-lfa-"));
             }
         }

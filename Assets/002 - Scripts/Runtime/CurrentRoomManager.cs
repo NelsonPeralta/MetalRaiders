@@ -307,7 +307,7 @@ public class CurrentRoomManager : MonoBehaviour
             _roomGameStartCountdown = value;
         }
     }
-    public List<ScriptObjPlayerData> extendedPlayerData { get { return _extendedPlayerData; } }
+    public List<ScriptObjPlayerData> playerDataCells { get { return _extendedPlayerData; } }
     public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
@@ -918,11 +918,11 @@ public class CurrentRoomManager : MonoBehaviour
     public static ScriptObjPlayerData GetPlayerDataWithId(int playerId)
     {
         Debug.Log($"GetPlayerDataWithId {playerId}");
-        return instance.extendedPlayerData.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId);
+        return instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId);
     }
 
     public static ScriptObjPlayerData GetLocalPlayerData(int _id)
     {
-        return instance.extendedPlayerData[_id];
+        return instance.playerDataCells[_id];
     }
 }

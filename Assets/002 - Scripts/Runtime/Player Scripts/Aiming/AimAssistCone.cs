@@ -22,11 +22,25 @@ public class AimAssistCone : MonoBehaviour
 
     public bool ReticuleFriction;
     bool _reticuleFriction;
+    [SerializeField] int _reticuleFrictionTick;
 
     public bool reticuleFriction
     {
         get { return _reticuleFriction; }
-        set { _reticuleFriction = value; }
+        set
+        {
+            _reticuleFriction = value;
+
+            if (value) { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick + 3, 0, 30); } else { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick - 2, 0, 30); }
+        }
+    }
+
+    public float reticuleFrictionTick
+    {
+        get
+        {
+            return _reticuleFrictionTick;
+        }
     }
 
     public GameObject collidingHitbox

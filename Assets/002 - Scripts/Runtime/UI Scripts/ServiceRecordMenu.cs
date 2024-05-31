@@ -68,7 +68,7 @@ public class ServiceRecordMenu : MonoBehaviour
     public TMP_Text swarmStatsText;
 
     [SerializeField] Image _rankImage;
-
+    [SerializeField] GameObject _redWitness, _blueWitness, _yellowWitness, _greenWitness, _orangeWitness, _whiteWitness, _blackWitness;
 
 
 
@@ -80,6 +80,20 @@ public class ServiceRecordMenu : MonoBehaviour
     {
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
         Launcher.TogglePlayerModel(true);
+
+
+
+
+
+        _redWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("red"));
+        _blueWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("blue"));
+        _yellowWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("yellow"));
+        _greenWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("green"));
+        _orangeWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
+        _whiteWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
+        _blackWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
+
+
 
 
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;

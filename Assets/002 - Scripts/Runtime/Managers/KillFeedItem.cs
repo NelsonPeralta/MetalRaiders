@@ -60,7 +60,7 @@ public class KillFeedItem : MonoBehaviour
     {
         print("Killfeed TriggerBehaviour");
         transform.localScale = _oLocalScale;
-        _disableCountdown = 4;
+        _disableCountdown = PlayerMedals.MEDAL_TTL;
         _scaleCounter = 0;
     }
 }

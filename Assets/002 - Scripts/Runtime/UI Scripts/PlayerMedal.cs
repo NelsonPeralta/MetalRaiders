@@ -29,7 +29,7 @@ public class PlayerMedal : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, 6);
+        Destroy(gameObject, PlayerMedals.MEDAL_TTL);
     }
 
     private void Update()

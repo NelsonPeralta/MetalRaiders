@@ -118,8 +118,8 @@ public class PlayerCamera : MonoBehaviour
 
 
 
-        if (aimAssistCapsule.reticuleFriction)
-            backEndMouseSens *= 0.65f;
+        //if (aimAssistCapsule.reticuleFriction)
+        backEndMouseSens *= (1f - (aimAssistCapsule.reticuleFrictionTick / 100f));
 
         if (pController.isAiming)
         {
@@ -129,8 +129,11 @@ public class PlayerCamera : MonoBehaviour
                 backEndMouseSens *= 0.6f;
         }
 
-        if (player.aimAssist.redReticuleIsOn && (pController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
-            backEndMouseSens *= 0.5f;
+        //if (player.aimAssist.redReticuleIsOn && (pController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
+        {
+            //backEndMouseSens *= 0.5f;
+            backEndMouseSens *= (1f - (player.aimAssist.redReticuleTick / 100f));
+        }
 
         if (!pController.pauseMenuOpen)
         {

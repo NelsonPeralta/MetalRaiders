@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMedals : MonoBehaviour
 {
+    public static int MEDAL_TTL = 4;
     public Player player { get { return transform.root.GetComponent<Player>(); } }
 
     public int spree { get { return _spree; } }
@@ -14,7 +15,7 @@ public class PlayerMedals : MonoBehaviour
         {
             _spree++;
             shortKillSpree = value;
-            _spreeTtl = 4;
+            _spreeTtl = MEDAL_TTL;
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
                 _spreeTtl = 2;

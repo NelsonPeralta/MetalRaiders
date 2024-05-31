@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Rewired;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,9 +20,29 @@ public class AimAssist : MonoBehaviour
         }
     }
 
+    public bool redReticuleIsOn
+    {
+        get { return _redReticuleIsOn; }
+        set
+        {
+            _redReticuleIsOn = value;
+            //if (value) { _redReticuleTick = Mathf.Clamp(_redReticuleTick + 1, 0, 30); } else { _redReticuleTick = Mathf.Clamp(_redReticuleTick - 1, 0, 30); }
+        }
+    }
+
+    public int redReticuleTick
+    {
+        get
+        {
+            if (pController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
+                return _redReticuleTick;
+
+            return 0;
+        }
+    }
+
     public GameObject firstRayHit;
     public Player player;
-    public bool redReticuleIsOn;
 
     public int playerRewiredID;
     public Transform puCollider;
@@ -61,6 +82,8 @@ public class AimAssist : MonoBehaviour
 
 
     GameObject _preTargetHitboxRoot;
+    bool _redReticuleIsOn;
+    [SerializeField] int _redReticuleTick;
 
     private void Start()
     {
@@ -69,6 +92,10 @@ public class AimAssist : MonoBehaviour
 
     private void Update()
     {
+        if (redReticuleIsOn) { _redReticuleTick = Mathf.Clamp(_redReticuleTick + 3, 0, 30); } else { _redReticuleTick = Mathf.Clamp(_redReticuleTick - 2, 0, 30); }
+
+
+
         if (redReticuleIsOn)
         {
             // https://forum.unity.com/threads/find-a-point-on-a-line-between-two-vector3.140700/
@@ -139,8 +166,8 @@ public class AimAssist : MonoBehaviour
                     }
                 }
 
-            if(targetHitbox.GetComponent<PlayerHitbox>() &&
-                (GameManager.instance.teamMode == GameManager.TeamMode.Classic && 
+            if (targetHitbox.GetComponent<PlayerHitbox>() &&
+                (GameManager.instance.teamMode == GameManager.TeamMode.Classic &&
                 targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
             {
                 if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)

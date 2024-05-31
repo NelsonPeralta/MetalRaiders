@@ -679,7 +679,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
-            GameManager.Team nt = CurrentRoomManager.instance.extendedPlayerData[0].team;
+            GameManager.Team nt = CurrentRoomManager.instance.playerDataCells[0].team;
 
             if (nt == GameManager.Team.Blue)
                 nt = GameManager.Team.Red;
@@ -688,7 +688,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             Dictionary<int, int> nd = new Dictionary<int, int>();
 
-            nd[CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.player_id] = (int)nt;
+            nd[CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id] = (int)nt;
 
             NetworkGameManager.instance.ChangePlayerTeam(nd);
         }

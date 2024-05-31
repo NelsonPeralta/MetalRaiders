@@ -47,6 +47,8 @@ public class ScriptObjPlayerData : ScriptableObject
         }
     }
 
+    public string cardsFound { get { return _cardsFound; } }
+
     public bool occupied { get { return _occupied; } set { _occupied = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
     public PlayerCurrentGameScore playerCurrentGameScore { get { return _playerCurrentGameScore; } }
@@ -61,7 +63,7 @@ public class ScriptObjPlayerData : ScriptableObject
         _cardsFound = "";
         _armorPiecesPurchased = 0;
 
-        if (this == CurrentRoomManager.instance.extendedPlayerData[0])
+        if (this == CurrentRoomManager.instance.playerDataCells[0])
             LoadPrefs();
     }
 
@@ -73,10 +75,10 @@ public class ScriptObjPlayerData : ScriptableObject
             if ((_cardsFound.ToString().Split(char.Parse("-")).Count() - 1) == 7)
             {
                 Steamworks.SteamUserStats.GetAchievement("COLLECTOR", out _achUnl);
-                if (!_achUnl && !CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
+                if (!_achUnl && !CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-geiger-lfa-"));
 
-                if (!CurrentRoomManager.instance.extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
                     AchievementManager.UnlockAchievement("COLLECTOR");
             }
 
@@ -105,7 +107,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public void LoadPrefs()
     {
-        if (this != CurrentRoomManager.instance.extendedPlayerData[0]) return;
+        if (this != CurrentRoomManager.instance.playerDataCells[0]) return;
 
         _cardsFound = PlayerPrefs.GetString("cardsUnlocked", "");
     }
