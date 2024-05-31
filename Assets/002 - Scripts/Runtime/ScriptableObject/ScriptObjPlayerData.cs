@@ -55,7 +55,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public void InitialReset()
     {
-        _playerCurrentGameScore = new PlayerCurrentGameScore();   
+        _playerCurrentGameScore = new PlayerCurrentGameScore();
         _photonRoomIndex = -999;
         _occupied = false;
         _team = GameManager.Team.None;
@@ -72,7 +72,13 @@ public class ScriptObjPlayerData : ScriptableObject
         if (!_cardsFound.Contains(_n))
         {
             _cardsFound += $"{_n}-";
-            if ((_cardsFound.ToString().Split(char.Parse("-")).Count() - 1) == 7)
+            if (_cardsFound.Contains("red") &&
+                _cardsFound.Contains("blue") &&
+                _cardsFound.Contains("yellow") &&
+                _cardsFound.Contains("green") &&
+                _cardsFound.Contains("orange") &&
+                _cardsFound.Contains("white") &&
+                _cardsFound.Contains("black"))
             {
                 Steamworks.SteamUserStats.GetAchievement("COLLECTOR", out _achUnl);
                 if (!_achUnl && !CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))

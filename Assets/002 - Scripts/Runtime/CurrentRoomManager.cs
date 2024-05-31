@@ -307,7 +307,7 @@ public class CurrentRoomManager : MonoBehaviour
             _roomGameStartCountdown = value;
         }
     }
-    public List<ScriptObjPlayerData> playerDataCells { get { return _extendedPlayerData; } }
+    public List<ScriptObjPlayerData> playerDataCells { get { return _playerDataCells; } }
     public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
@@ -328,7 +328,7 @@ public class CurrentRoomManager : MonoBehaviour
     [SerializeField] GameManager.GameType _vetoedGameType;
     [SerializeField] int _ran, _vetoedMapIndex;
 
-    [SerializeField] List<ScriptObjPlayerData> _extendedPlayerData = new List<ScriptObjPlayerData>();
+    [SerializeField] List<ScriptObjPlayerData> _playerDataCells = new List<ScriptObjPlayerData>();
     [SerializeField] List<ScriptObjBipedTeam> _bipedTeams;
 
 
@@ -363,7 +363,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public static void InitializeAllPlayerDataCells()
     {
-        foreach (ScriptObjPlayerData sod in instance._extendedPlayerData)
+        foreach (ScriptObjPlayerData sod in instance._playerDataCells)
             sod.InitialReset();
     }
 
@@ -646,7 +646,7 @@ public class CurrentRoomManager : MonoBehaviour
         if (pepd.username.Equals(GameManager.ROOT_PLAYER_NAME))
         {
             Debug.Log($"UPDATING ROOT PLAYER DATA");
-            instance._extendedPlayerData[0].playerExtendedPublicData = pepd;
+            instance._playerDataCells[0].playerExtendedPublicData = pepd;
 
 
 
@@ -656,7 +656,7 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
-            if (instance._extendedPlayerData[0].playerExtendedPublicData.level >= 5)
+            if (instance._playerDataCells[0].playerExtendedPublicData.level >= 5)
             {
                 _achievementUnlocked = false; _tempAchievementName = "BABYSTEPS";
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
@@ -669,7 +669,7 @@ public class CurrentRoomManager : MonoBehaviour
             }
 
 
-            if (instance._extendedPlayerData[0].playerExtendedPublicData.level >= 25)
+            if (instance._playerDataCells[0].playerExtendedPublicData.level >= 25)
             {
                 _achievementUnlocked = false; _tempAchievementName = "WHWT";
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
@@ -679,13 +679,13 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("burning_helmet"))
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("burning_helmet"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-burning_helmet-"));
             }
 
 
 
-            if (instance._extendedPlayerData[0].playerExtendedPublicData.level == 50)
+            if (instance._playerDataCells[0].playerExtendedPublicData.level == 50)
             {
                 _achievementUnlocked = false; _tempAchievementName = "MAXEDOUT";
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
@@ -695,14 +695,14 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("flaming_helmet"))
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("flaming_helmet"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-flaming_helmet-"));
             }
 
 
 
             _minH = PlayerProgressionManager.GetMinHonorForRank("Sergeant");
-            if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
+            if (instance._playerDataCells[0].playerExtendedPublicData.honor >= _minH)
             {
                 _achievementUnlocked = false; _tempAchievementName = "VETERAN";
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
@@ -714,7 +714,7 @@ public class CurrentRoomManager : MonoBehaviour
             }
 
             _minH = PlayerProgressionManager.GetMinHonorForRank("Second Lieutenant");
-            if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
+            if (instance._playerDataCells[0].playerExtendedPublicData.honor >= _minH)
             {
                 _achievementUnlocked = false; _tempAchievementName = "SIR";
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
@@ -724,13 +724,13 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("sword1_ca"))
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("sword1_ca"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-sword1_ca-"));
             }
 
 
             _minH = PlayerProgressionManager.GetMinHonorForRank("General");
-            if (instance._extendedPlayerData[0].playerExtendedPublicData.honor >= _minH)
+            if (instance._playerDataCells[0].playerExtendedPublicData.honor >= _minH)
             {
                 _achievementUnlocked = false; _tempAchievementName = "LAIC";
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
@@ -740,12 +740,12 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("katana_ca"))
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("katana_ca"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-katana_ca-"));
 
 
-                if (instance._extendedPlayerData[0].playerExtendedPublicData.level == 50)
-                    if (!instance._extendedPlayerData[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("haunted_hc"))
+                if (instance._playerDataCells[0].playerExtendedPublicData.level == 50)
+                    if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("haunted_hc"))
                         WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-haunted_hc-"));
             }
 
@@ -755,16 +755,16 @@ public class CurrentRoomManager : MonoBehaviour
 
         }
         else
-            for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+            for (int i = 0; i < instance._playerDataCells.Count; i++)
             {
                 //Debug.Log($"Player Extended Public Data {i}");
                 //Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].occupied}");
                 //if (instance._extendedPlayerData[i].occupied)
                 //    Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
 
-                if (i > 0 && !instance._extendedPlayerData[i].occupied)
+                if (i > 0 && !instance._playerDataCells[i].occupied)
                 {
-                    instance._extendedPlayerData[i].playerExtendedPublicData = pepd;
+                    instance._playerDataCells[i].playerExtendedPublicData = pepd;
                     break;
                 }
             }
@@ -772,26 +772,26 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void RemoveExtendedPlayerData(string n)
     {
-        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
-            if (instance._extendedPlayerData[i].occupied)
-                if (instance._extendedPlayerData[i].playerExtendedPublicData.username.Equals(n))
+            if (instance._playerDataCells[i].occupied)
+                if (instance._playerDataCells[i].playerExtendedPublicData.username.Equals(n))
                 {
-                    instance._extendedPlayerData[i].playerExtendedPublicData = null;
+                    instance._playerDataCells[i].playerExtendedPublicData = null;
                 }
         }
     }
 
     public void RemoveExtendedPlayerData(int id)
     {
-        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
-            if (instance._extendedPlayerData[i].occupied)
-                if (instance._extendedPlayerData[i].playerExtendedPublicData.player_id == id)
+            if (instance._playerDataCells[i].occupied)
+                if (instance._playerDataCells[i].playerExtendedPublicData.player_id == id)
                 {
-                    instance._extendedPlayerData[i].occupied = false;
-                    instance._extendedPlayerData[i].team = GameManager.Team.None;
-                    instance._extendedPlayerData[i].playerExtendedPublicData = null;
+                    instance._playerDataCells[i].occupied = false;
+                    instance._playerDataCells[i].team = GameManager.Team.None;
+                    instance._playerDataCells[i].playerExtendedPublicData = null;
                 }
         }
     }
@@ -803,15 +803,15 @@ public class CurrentRoomManager : MonoBehaviour
         //        return true;
 
 
-        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
             //Debug.Log(n == null);
             //Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i] == null}");
             //Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData == null}");
-            Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData.username == null}");
-            if (instance._extendedPlayerData[i].occupied)
-                if (instance._extendedPlayerData[i].playerExtendedPublicData.username != null)
-                    if (instance._extendedPlayerData[i].playerExtendedPublicData.username.Equals(n))
+            Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._playerDataCells[i].playerExtendedPublicData.username == null}");
+            if (instance._playerDataCells[i].occupied)
+                if (instance._playerDataCells[i].playerExtendedPublicData.username != null)
+                    if (instance._playerDataCells[i].playerExtendedPublicData.username.Equals(n))
                     {
                         return true;
                     }
@@ -825,11 +825,11 @@ public class CurrentRoomManager : MonoBehaviour
 
     public bool PlayerDataContains(int id)
     {
-        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
-            Debug.Log($"PlayerDataContains [{instance._extendedPlayerData[i].playerExtendedPublicData.player_id}:{id}]");
-            if (instance._extendedPlayerData[i].occupied)
-                if (instance._extendedPlayerData[i].playerExtendedPublicData.player_id == id)
+            Debug.Log($"PlayerDataContains [{instance._playerDataCells[i].playerExtendedPublicData.player_id}:{id}]");
+            if (instance._playerDataCells[i].occupied)
+                if (instance._playerDataCells[i].playerExtendedPublicData.player_id == id)
                     return true;
         }
         return false;
@@ -860,15 +860,15 @@ public class CurrentRoomManager : MonoBehaviour
     public void ResetAllPlayerDataExceptMine() // Called when leaving a room, so no need to destroy player
     {
 
-        for (int i = 0; i < instance._extendedPlayerData.Count; i++)
+        for (int i = 0; i < instance._playerDataCells.Count; i++)
             if (i > 0)
             {
-                instance._extendedPlayerData[i].team = GameManager.Team.None;
+                instance._playerDataCells[i].team = GameManager.Team.None;
 
                 if (GameManager.instance.connection == GameManager.Connection.Online)
                 {
-                    instance._extendedPlayerData[i].occupied = false;
-                    instance._extendedPlayerData[i].playerExtendedPublicData = null;
+                    instance._playerDataCells[i].occupied = false;
+                    instance._playerDataCells[i].playerExtendedPublicData = null;
                 }
             }
     }
@@ -908,7 +908,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData GetPLayerExtendedData(string usernam)
     {
-        foreach (ScriptObjPlayerData pepd in instance._extendedPlayerData)
+        foreach (ScriptObjPlayerData pepd in instance._playerDataCells)
             if (pepd.occupied)
                 if (pepd.playerExtendedPublicData.username.Equals(usernam))
                     return pepd.playerExtendedPublicData;
