@@ -529,6 +529,7 @@ public class Player : Biped
     public PlayerCapsule playerCapsule { get { return _playerCapsule; } }
     public PlayerShooting playerShooting { get { return _playerShooting; } }
     public AssignActorPlayerTargetOnShootingSphere assignActorPlayerTargetOnShootingSphere { get { return _assignActorPlayerTargetOnShootingSphere; } }
+    public PlayerUI playerUI { get { return _playerUi; } }
 
     #endregion
 
@@ -559,6 +560,7 @@ public class Player : Biped
     [SerializeField] ReticuleFriction _reticuleFriction;
     [SerializeField] PlayerCapsule _playerCapsule;
     [SerializeField] PlayerShooting _playerShooting;
+    [SerializeField] PlayerUI _playerUi;
     [SerializeField] AssignActorPlayerTargetOnShootingSphere _assignActorPlayerTargetOnShootingSphere;
     [SerializeField] Explosion _ultraMergeExPrefab;
 
@@ -1056,6 +1058,7 @@ public class Player : Biped
         mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
         mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
         gunCamera.enabled = true;
+        GetComponent<PlayerUI>().ToggleUIExtremities(true);
 
         StartCoroutine(MakeThirdPersonModelVisible());
 
@@ -1123,6 +1126,8 @@ public class Player : Biped
         Debug.Log("MidRespawnAction");
         yield return new WaitForSeconds(_defaultRespawnTime * 0.7f);
         GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
+        try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
+
         hitPoints = maxHitPoints;
         Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint(controllerId);
         transform.position = spawnPoint.position + new Vector3(0, 2, 0);
@@ -1186,6 +1191,8 @@ public class Player : Biped
         GetComponent<PlayerController>().DisableCrouch();
         GetComponent<PlayerController>().isHoldingShootBtn = false;
         GetComponent<PlayerUI>().scoreboard.CloseScoreboard();
+        GetComponent<PlayerUI>().ToggleUIExtremities(false);
+
         gameObject.GetComponent<ScreenEffects>().orangeScreen.SetActive(false);
 
         try
@@ -1497,6 +1504,14 @@ public class Player : Biped
 
         playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
 
+
+        if (GameManager.instance.gameType == GameManager.GameType.GunGame
+                    && deathNature == DeathNature.Stuck)
+        {
+            if (isMine)
+                playerInventory.playerGunGameManager.index--;
+        }
+
         try
         {
             foreach (KillFeedManager kfm in GameManager.instance.pid_player_Dict.Values.Select(obj => obj.killFeedManager))
@@ -1512,8 +1527,6 @@ public class Player : Biped
                     && deathNature == DeathNature.Stuck)
                 {
                     f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"red\"> Humiliated </color> <color=#31cff9>{username}";
-                    if (isMine)
-                        playerInventory.playerGunGameManager.index--;
                 }
                 else if (deathNature == DeathNature.Sniped)
                     f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"yellow\">!!! Sniped !!!</color> <color=#31cff9>{username}";

@@ -28,18 +28,18 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     {
         get
         {
-            if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
-                return _score;
+            //if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
+            //    return player.playerDataCell.playerCurrentGameScore.score;
 
-            return kills;
+            return player.playerDataCell.playerCurrentGameScore.score;
         }
         set
         {
-            var previous = _score;
+            var previous = player.playerDataCell.playerCurrentGameScore.score;
 
-            _score = Mathf.Clamp(value, 0, 999);
+            player.playerDataCell.playerCurrentGameScore.score = Mathf.Clamp(value, 0, 999);
 
-            if (_score != previous)
+            if (player.playerDataCell.playerCurrentGameScore.score != previous)
             {
                 OnPlayerScoreChanged?.Invoke(this);
             }
@@ -48,14 +48,14 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     }
     public int kills
     {
-        get { return _kills; }
+        get { return player.playerDataCell.playerCurrentGameScore.kills; }
         set
         {
-            var previous = _kills;
+            var previous = player.playerDataCell.playerCurrentGameScore.kills;
 
-            _kills = Mathf.Clamp(value, 0, 999);
+            player.playerDataCell.playerCurrentGameScore.kills = Mathf.Clamp(value, 0, 999);
 
-            if (_kills != previous)
+            if (player.playerDataCell.playerCurrentGameScore.kills != previous)
             {
                 OnPlayerScoreChanged?.Invoke(this);
             }
@@ -65,19 +65,19 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
     public int damage
     {
-        get { return _damage; }
-        set { _damage = value; }
+        get { return player.playerDataCell.playerCurrentGameScore.damage; }
+        set { player.playerDataCell.playerCurrentGameScore.damage = value; }
     }
     public int deaths
     {
-        get { return _deaths; }
+        get { return player.playerDataCell.playerCurrentGameScore.deaths; }
         set
         {
-            var previous = _deaths;
+            var previous = player.playerDataCell.playerCurrentGameScore.deaths;
 
-            _deaths = Mathf.Clamp(value, 0, 999);
+            player.playerDataCell.playerCurrentGameScore.deaths = Mathf.Clamp(value, 0, 999);
 
-            if (_deaths != previous)
+            if (player.playerDataCell.playerCurrentGameScore.deaths != previous)
             {
                 OnDeathsChanged?.Invoke(this);
             }
@@ -87,14 +87,14 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
     public int headshots
     {
-        get { return _headshots; }
+        get { return player.playerDataCell.playerCurrentGameScore.headshots; }
         set
         {
-            var previous = _headshots;
+            var previous = player.playerDataCell.playerCurrentGameScore.headshots;
 
-            _headshots = Mathf.Clamp(value, 0, 999);
+            player.playerDataCell.playerCurrentGameScore.headshots = Mathf.Clamp(value, 0, 999);
 
-            if (_headshots != previous)
+            if (player.playerDataCell.playerCurrentGameScore.headshots != previous)
             {
                 OnHeadshotsChanged?.Invoke(this);
             }
@@ -104,36 +104,36 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
     public int meleeKills
     {
-        get { return _meleeKills; }
+        get { return player.playerDataCell.playerCurrentGameScore.meleeKills; }
         set
         {
-            var previous = _meleeKills;
+            var previous = player.playerDataCell.playerCurrentGameScore.meleeKills;
 
-            _meleeKills = Mathf.Clamp(value, 0, 999);
+            player.playerDataCell.playerCurrentGameScore.meleeKills = Mathf.Clamp(value, 0, 999);
         }
     }
 
     public int grenadeKills
     {
-        get { return _grenadeKills; }
+        get { return player.playerDataCell.playerCurrentGameScore.grenadeKills; }
         set
         {
-            var previous = _grenadeKills;
+            var previous = player.playerDataCell.playerCurrentGameScore.grenadeKills;
 
-            _grenadeKills = Mathf.Clamp(value, 0, 999);
+            player.playerDataCell.playerCurrentGameScore.grenadeKills = Mathf.Clamp(value, 0, 999);
         }
     }
 
     public float kd
     {
-        get { return _kd; }
+        get { return player.playerDataCell.playerCurrentGameScore.kd; }
         set
         {
-            var previous = _kd;
+            var previous = player.playerDataCell.playerCurrentGameScore.kd;
 
-            _kd = Mathf.Clamp(value, 0, 999);
+            player.playerDataCell.playerCurrentGameScore.kd = Mathf.Clamp(value, 0, 999);
 
-            if (_kd != previous)
+            if (player.playerDataCell.playerCurrentGameScore.kd != previous)
             {
                 OnKDRatioChanged?.Invoke(this);
             }
@@ -143,15 +143,6 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
     public Player player { get { return _player; } }
 
-    // private variables
-    [SerializeField] int _score;
-    [SerializeField] int _kills;
-    [SerializeField] int _damage;
-    [SerializeField] int _deaths;
-    [SerializeField] int _headshots;
-    [SerializeField] int _meleeKills;
-    [SerializeField] int _grenadeKills;
-    [SerializeField] float _kd;
 
 
     Player _player;
@@ -171,6 +162,6 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     void OnKillsChange(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
         if (deaths > 0)
-            _kd = (kills / deaths);
+            player.playerDataCell.playerCurrentGameScore.kd = (kills / deaths);
     }
 }

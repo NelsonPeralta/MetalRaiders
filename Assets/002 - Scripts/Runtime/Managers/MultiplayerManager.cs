@@ -52,32 +52,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         {
             int hs = 0;
 
-            if (GameManager.instance.gameType == GameManager.GameType.GunGame)
-            {
-                {
-                    Debug.Log("highestScore");
-                    Debug.Log(GameManager.GetRootPlayer().playerInventory.playerGunGameManager.index);
-                }
-                return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.index;
-            }
-
-            if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
-            {
-
-                foreach (Player p in GameManager.instance.pid_player_Dict.Values)
-                {
-                    if (p && p.GetComponent<PlayerMultiplayerMatchStats>().score > hs)
-                        hs = p.GetComponent<PlayerMultiplayerMatchStats>().score;
-                }
-            }
-
-
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
                 foreach (Player p in GameManager.instance.pid_player_Dict.Values)
                 {
                     if (p && p.GetComponent<PlayerMultiplayerMatchStats>().kills > hs)
-                        hs = p.GetComponent<PlayerMultiplayerMatchStats>().kills;
+                        hs = p.GetComponent<PlayerMultiplayerMatchStats>().score;
                 }
             }
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
@@ -287,10 +267,11 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, 0, pda.honor, 0, false, 0);
                 }
 
-                GameManager.instance.LeaveRoom();
+                if (pp.controllerId == 0)
+                    GameManager.instance.LeaveRoom();
             }
 
-            if (GameManager.instance.connection == GameManager.Connection.Local) break;
+            pp.playerUI.scoreboard.OpenScoreboard();
         }
     }
 

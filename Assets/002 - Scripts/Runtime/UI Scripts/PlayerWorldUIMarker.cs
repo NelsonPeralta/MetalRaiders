@@ -77,10 +77,14 @@ public class PlayerWorldUIMarker : MonoBehaviour
                 if (seen) seen = false;
         }
 
-        _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team == GameManager.GetRootPlayer().team);
 
-        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-            if (_player.team == GameManager.GetRootPlayer().team) _text.gameObject.SetActive(true);
+        if (_targetPlayer)
+        {
+            _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team == _targetPlayer.team);
+
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                if (_player.team == _targetPlayer.team) _text.gameObject.SetActive(true);
+        }
     }
 
     public void OnPlayerTeamDelegate(Player player)

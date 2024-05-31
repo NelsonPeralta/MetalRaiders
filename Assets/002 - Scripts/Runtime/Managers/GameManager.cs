@@ -194,6 +194,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
             {
+                if (_gameType == GameType.GunGame || _gameType == GameType.Hill || _gameType == GameType.Oddball)
+                    _gameType = GameType.Slayer;
+
+
                 foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.extendedPlayerData) s.team = Team.None;
 
 
@@ -202,27 +206,38 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                if (gameMode == GameMode.Multiplayer)
-                    FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
 
-                if (_prev != value)
+                if (GameManager.instance.connection == Connection.Online)
                 {
-                    Dictionary<string, int> _teamDict = new Dictionary<string, int>();
+                    if (gameMode == GameMode.Multiplayer)
+                        FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
 
-                    foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
-                        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-                        {
-                            Team t = Team.Red;
+                    if (_prev != value)
+                    {
+                        Dictionary<string, int> _teamDict = new Dictionary<string, int>();
 
-                            if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
-                                t = Team.Blue;
+                        foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
+                            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                            {
+                                Team t = Team.Red;
 
-                            CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
+                                if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
+                                    t = Team.Blue;
 
-                            _teamDict.Add(kvp.Value.NickName, (int)t);
+                                CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
 
-                            Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
-                        }
+                                _teamDict.Add(kvp.Value.NickName, (int)t);
+
+                                Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
+                            }
+                    }
+                }
+                else
+                {
+                    CurrentRoomManager.GetLocalPlayerData(0).team = Team.Red;
+                    CurrentRoomManager.GetLocalPlayerData(1).team = Team.Red;
+                    CurrentRoomManager.GetLocalPlayerData(2).team = Team.Blue;
+                    CurrentRoomManager.GetLocalPlayerData(3).team = Team.Blue;
                 }
             }
 

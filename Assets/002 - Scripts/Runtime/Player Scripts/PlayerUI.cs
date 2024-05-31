@@ -17,6 +17,7 @@ public class PlayerUI : MonoBehaviour
     [Header("Cameras", order = 0)]
     public Camera mainCamera;
     public Camera gunCamera;
+    public Camera uiCamera;
 
     [Header("Top Left", order = 1)]
     public Transform topLeft;
@@ -48,7 +49,7 @@ public class PlayerUI : MonoBehaviour
     public Image holsteredWeaponIcon;
 
     [Header("Center", order = 4)]
-    public Transform center;
+    public Transform center, _notScoreboard;
     public ScoreboardManager scoreboard;
     public GameObject headshotIndicator;
     Coroutine showHeadshotIndicatorCoroutine;
@@ -420,5 +421,15 @@ public class PlayerUI : MonoBehaviour
         _informerHolder.gameObject.SetActive(false);
         _weaponIconInformer.sprite = null;
         _informerText.text = "";
+    }
+
+    public void ToggleUIExtremities(bool t)
+    {
+        _notScoreboard.gameObject.SetActive(t);
+        topMiddle.gameObject.SetActive(t);
+        topLeft.gameObject.SetActive(t);
+        topRight.gameObject.SetActive(t);
+        bottomLeft.gameObject.SetActive(t);
+        bottomRight.gameObject.SetActive(t);
     }
 }

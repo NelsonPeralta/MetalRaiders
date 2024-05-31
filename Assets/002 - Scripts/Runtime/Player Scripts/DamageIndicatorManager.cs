@@ -53,4 +53,12 @@ public class DamageIndicatorManager : MonoBehaviour
         yield return new WaitForSeconds(damageIndicatorLifeTime);
         Destroy(ndi.gameObject);
     }
+
+    public void HideAllIndicators()
+    {
+        foreach(Transform t in transform)
+        {
+            Destroy(t.gameObject);
+        }
+    }
 }

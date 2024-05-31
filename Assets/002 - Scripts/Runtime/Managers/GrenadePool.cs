@@ -32,6 +32,8 @@ public class GrenadePool : MonoBehaviour
             _fragGrenadePool[i].SetActive(false); _stickyGrenadePool[i].SetActive(false);
             _fragGrenadePool[i].transform.SetParent(this.transform); _stickyGrenadePool[i].transform.SetParent(this.transform);
             _explosions[i].transform.SetParent(this.transform);
+
+            _explosions[i].name += $"{Random.Range(1, 99999)}";
         }
     }
 

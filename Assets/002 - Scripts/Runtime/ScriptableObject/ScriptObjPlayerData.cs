@@ -5,7 +5,7 @@ using System.Text;
 using Steamworks;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ScriptObjPlayerData", menuName = "ScriptableObjects/PlayerData", order = 1)]
+[CreateAssetMenu(fileName = "ScriptObjPlayerData", menuName = "ScriptableObjects/PlayerData", order = 10)]
 public class ScriptObjPlayerData : ScriptableObject
 {
     [SerializeField] bool _occupied;
@@ -14,6 +14,7 @@ public class ScriptObjPlayerData : ScriptableObject
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
     [SerializeField] string _cardsFound;
     [SerializeField] int _armorPiecesPurchased;
+    [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
 
 
     bool _achUnl = false;
@@ -48,9 +49,11 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public bool occupied { get { return _occupied; } set { _occupied = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
+    public PlayerCurrentGameScore playerCurrentGameScore { get { return _playerCurrentGameScore; } }
 
     public void InitialReset()
     {
+        _playerCurrentGameScore = new PlayerCurrentGameScore();   
         _photonRoomIndex = -999;
         _occupied = false;
         _team = GameManager.Team.None;

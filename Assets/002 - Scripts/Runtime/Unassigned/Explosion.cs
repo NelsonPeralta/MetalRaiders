@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using UnityEngine;
-using static Bullet;
 
 public class Explosion : MonoBehaviour
 {
@@ -128,7 +127,7 @@ public class Explosion : MonoBehaviour
 
                     try
                     {
-                        Debug.Log("EXPLOSION DAMAGING PLAYER");
+                        Debug.Log($"EXPLOSION {name} DAMAGING PLAYER at {transform.position}");
                         if (stuck)
                             _damageSource = "Stuck";
                         if (player.isMine)

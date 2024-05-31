@@ -15,12 +15,15 @@ public class PlayerGunGameManager : MonoBehaviour
             }
 
             _index = value;
+            print($"index: {value} {playerInventory.player.name}");
 
             WeaponProperties _preActiveWeapon = playerInventory.activeWeapon;
 
             playerInventory.activeWeapon = _gunIndex[_index];
             playerInventory.activeWeapon.loadedAmmo = playerInventory.activeWeapon.ammoCapacity;
             playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxSpareAmmo;
+
+            playerInventory.player.playerDataCell.playerCurrentGameScore.score = index;
 
 
 
