@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class KillFeedManager : MonoBehaviour
 {
+    public Player player;
     public static Dictionary<string, int> killFeedWeaponCodeDict = new Dictionary<string, int>();
     public static Dictionary<string, int> killFeedSpecialCodeDict = new Dictionary<string, int>();
 

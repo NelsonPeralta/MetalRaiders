@@ -173,14 +173,6 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 if (codeName == "pb")
                     codeName = "pr";
             }
-            else if (GameManager.instance.gameType == GameManager.GameType.Pro)
-            {
-                //if (codeName == "cl")
-                //    codeName = "ar";
-
-                //if (codeName == "rpg")
-                //    codeName = "ar";
-            }
             else if (GameManager.instance.gameType == GameManager.GameType.Swat)
             {
                 codeName = "br";

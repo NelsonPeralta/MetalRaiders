@@ -1288,14 +1288,15 @@ public class PlayerController : MonoBehaviourPun
 
     void BackButton()
     {
-        if (rewiredPlayer.GetButtonDown("Back"))
-        {
-            allPlayerScripts.scoreboardManager.OpenScoreboard();
-        }
-        else if (rewiredPlayer.GetButtonUp("Back"))
-        {
-            allPlayerScripts.scoreboardManager.CloseScoreboard();
-        }
+        if (!player.isDead)
+            if (rewiredPlayer.GetButtonDown("Back"))
+            {
+                allPlayerScripts.scoreboardManager.OpenScoreboard();
+            }
+            else if (rewiredPlayer.GetButtonUp("Back"))
+            {
+                allPlayerScripts.scoreboardManager.CloseScoreboard();
+            }
     }
 
     public void TogglePauseGame()

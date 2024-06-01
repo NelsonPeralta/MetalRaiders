@@ -17,13 +17,29 @@ public class PlayerCurrentGameScore
                 || GameManager.instance.gameType == GameManager.GameType.GunGame)
                 return _score;
             else
-                return kills;
+                return _kills;
+        }
+    }
+
+    public int kills
+    {
+        get { return _kills; }
+        set
+        {
+            _kills = value;
+
+            if (GameManager.instance.gameType != GameManager.GameType.Hill
+                && GameManager.instance.gameType != GameManager.GameType.Oddball
+                && GameManager.instance.gameType != GameManager.GameType.GunGame)
+            {
+                score++;
+            }
         }
     }
 
 
-    public int kills, deaths, damage, headshots, nutshots, meleeKills, grenadeKills, stickyKills;
+    public int deaths, damage, headshots, nutshots, meleeKills, grenadeKills, stickyKills;
     public float kd;
 
-    [SerializeField] int _score;
+    [SerializeField] int _score, _kills;
 }

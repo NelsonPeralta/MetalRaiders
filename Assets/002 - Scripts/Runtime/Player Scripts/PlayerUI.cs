@@ -59,7 +59,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] Image _weaponIconInformer;
 
     [Header("Bottom Left", order = 5)]
-    public Transform bottomLeft;
+    public Transform bottomLeft, notKillFeed;
     public GameObject motionTracker;
     public Text isMineText;
     public Text camSensWitnessText;
@@ -429,7 +429,8 @@ public class PlayerUI : MonoBehaviour
         topMiddle.gameObject.SetActive(t);
         topLeft.gameObject.SetActive(t);
         topRight.gameObject.SetActive(t);
-        bottomLeft.gameObject.SetActive(t);
+        //bottomLeft.gameObject.SetActive(t);
+        notKillFeed.gameObject.SetActive(t);
         bottomRight.gameObject.SetActive(t);
     }
 }
