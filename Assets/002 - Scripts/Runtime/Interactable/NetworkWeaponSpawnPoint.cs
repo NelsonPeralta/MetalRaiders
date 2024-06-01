@@ -31,7 +31,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     private void Awake()
     {
-        if (GameManager.instance.gameType == GameManager.GameType.Fiesta || GameManager.instance.gameType == GameManager.GameType.GunGame)
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta ||
+            GameManager.instance.gameType == GameManager.GameType.GunGame
+            || GameManager.instance.gameType == GameManager.GameType.Rockets
+            || GameManager.instance.gameType == GameManager.GameType.Snipers
+            || GameManager.instance.gameType == GameManager.GameType.Shotguns)
         {
             gameObject.SetActive(false);
         }

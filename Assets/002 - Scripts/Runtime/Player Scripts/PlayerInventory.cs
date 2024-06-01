@@ -519,7 +519,7 @@ public class PlayerInventory : MonoBehaviourPun
         if (GameManager.instance.gameType == GameManager.GameType.Rockets)
         {
             StartingWeapon = "rpg";
-            StartingWeapon2 = "pistol";
+            StartingWeapon2 = "gl";
         }
 
         if (GameManager.instance.gameType == GameManager.GameType.Shotguns)
