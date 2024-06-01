@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerMedals : MonoBehaviour
 {
@@ -32,6 +33,14 @@ public class PlayerMedals : MonoBehaviour
 
                 if (_spree == 5)
                     SpawnKillingSpreeMedal();
+
+
+                if (GameManager.instance.gameType != GameManager.GameType.Hill
+                && GameManager.instance.gameType != GameManager.GameType.Oddball
+                && GameManager.instance.gameType != GameManager.GameType.GunGame)
+                {
+                    player.playerUI.ShowPointWitness(1);
+                }
             }
         }
     }

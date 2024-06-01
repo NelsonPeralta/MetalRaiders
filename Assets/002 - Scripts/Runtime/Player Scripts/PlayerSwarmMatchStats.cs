@@ -5,25 +5,23 @@ using Photon.Pun;
 
 public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
 {
-    [SerializeField] int _points;
-    [SerializeField] int _totalPoints;
-
     public delegate void PlayerSwarmEvent(PlayerSwarmMatchStats onlinePlayerSwarmScript);
     public PlayerSwarmEvent OnPointsChanged, OnKillsChanged, OnDeathsChanged, OnHeadshotsChanged;
-    [SerializeField] int _kills;
-    [SerializeField] int _deaths;
-    [SerializeField] int _headshots;
 
     [SerializeField] Player _player;
 
 
     public int points
     {
-        get { return _points; }
+        get { return _player.playerDataCell.playerCurrentGameScore.points; }
         private set
         {
-            int previousValue = _points;
-            _points = value;
+            int previousValue = _player.playerDataCell.playerCurrentGameScore.points;
+
+            _player.playerDataCell.playerCurrentGameScore.points = value;
+            _player.playerDataCell.playerCurrentGameScore.score = value;
+
+
             if (previousValue != value)
             {
                 OnPointsChanged?.Invoke(this);
@@ -33,12 +31,12 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
 
     public int totalPoints
     {
-        get { return _totalPoints; }
+        get { return _player.playerDataCell.playerCurrentGameScore.totalPoints; }
         private set
         {
-            _totalPoints = value;
+            _player.playerDataCell.playerCurrentGameScore.totalPoints = value;
 
-            if (_totalPoints >= 1000000 && !player.hasArmor)
+            if (_player.playerDataCell.playerCurrentGameScore.totalPoints >= 1000000 && !player.hasArmor)
             {
                 bool _achUn = false;
 
@@ -55,14 +53,14 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
 
     public int kills
     {
-        get { return _kills; }
+        get { return _player.playerDataCell.playerCurrentGameScore.kills; }
         set
         {
-            var previous = _kills;
+            var previous = _player.playerDataCell.playerCurrentGameScore.kills;
 
-            _kills = Mathf.Clamp(value, 0, 999);
+            _player.playerDataCell.playerCurrentGameScore.kills = Mathf.Clamp(value, 0, 999);
 
-            if (_kills != previous)
+            if (_player.playerDataCell.playerCurrentGameScore.kills != previous)
             {
                 OnKillsChanged?.Invoke(this);
             }
@@ -71,14 +69,14 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
 
     public int deaths
     {
-        get { return _deaths; }
+        get { return _player.playerDataCell.playerCurrentGameScore.deaths; }
         set
         {
-            var previous = _deaths;
+            var previous = _player.playerDataCell.playerCurrentGameScore.deaths;
 
-            _deaths = Mathf.Clamp(value, 0, 999);
+            _player.playerDataCell.playerCurrentGameScore.deaths = Mathf.Clamp(value, 0, 999);
 
-            if (_deaths != previous)
+            if (_player.playerDataCell.playerCurrentGameScore.deaths != previous)
             {
                 OnDeathsChanged?.Invoke(this);
             }
@@ -87,14 +85,14 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
 
     public int headshots
     {
-        get { return _headshots; }
+        get { return _player.playerDataCell.playerCurrentGameScore.headshots; }
         set
         {
-            var previous = _headshots;
+            var previous = _player.playerDataCell.playerCurrentGameScore.headshots;
 
-            _headshots = Mathf.Clamp(value, 0, 999);
+            _player.playerDataCell.playerCurrentGameScore.headshots = Mathf.Clamp(value, 0, 999);
 
-            if (_headshots != previous)
+            if (_player.playerDataCell.playerCurrentGameScore.headshots != previous)
             {
                 OnHeadshotsChanged?.Invoke(this);
             }
@@ -147,13 +145,13 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
 
     public int GetTotalPoints()
     {
-        return _totalPoints;
+        return _player.playerDataCell.playerCurrentGameScore.totalPoints;
     }
 
     void OnPointsChanged_Delegate(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
-
         GetComponent<PlayerUI>().swarmPointsText.text = points.ToString();
+        //GetComponent<PlayerUI>().UpdateBottomRighScore();
     }
 
     public void ResetPoints()
@@ -166,6 +164,6 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
     void ResetPoints_RPC()
     {
         points = 0;
-        _totalPoints = 0;
+        totalPoints = 0;
     }
 }

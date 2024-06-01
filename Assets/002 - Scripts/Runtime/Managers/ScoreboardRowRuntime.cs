@@ -28,6 +28,13 @@ public class ScoreboardRowRuntime : MonoBehaviour
             _playerNameText.text = pss.playerExtendedPublicData.username;
             _playerTagText.text = pss.playerCurrentGameScore.damage.ToString();
             _playerScoreText.text = pss.playerCurrentGameScore.score.ToString();
+
+
+            if(GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            {
+                _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
+                _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
+            }
         }
     }
 

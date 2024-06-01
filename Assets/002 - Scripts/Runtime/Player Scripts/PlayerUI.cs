@@ -57,6 +57,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] GameObject _informerHolder;
     [SerializeField] TMP_Text _informerText;
     [SerializeField] Image _weaponIconInformer;
+    [SerializeField] PlayerPointWitness _pointWitness;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft, notKillFeed;
@@ -432,5 +433,18 @@ public class PlayerUI : MonoBehaviour
         //bottomLeft.gameObject.SetActive(t);
         notKillFeed.gameObject.SetActive(t);
         bottomRight.gameObject.SetActive(t);
+    }
+
+
+    public void UpdateBottomRighScore()
+    {
+
+    }
+
+
+
+    public void ShowPointWitness(int p)
+    {
+        _pointWitness.Add(p);
     }
 }

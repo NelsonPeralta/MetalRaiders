@@ -38,8 +38,26 @@ public class PlayerCurrentGameScore
     }
 
 
+    public int points
+    {
+        get { return _points; }
+        set
+        {
+            _points = value;
+        }
+    }
+    public int totalPoints
+    {
+        get { return _totalPoints; }
+        set
+        {
+            _totalPoints = value;
+        }
+    }
+
+
     public int deaths, damage, headshots, nutshots, meleeKills, grenadeKills, stickyKills;
     public float kd;
 
-    [SerializeField] int _score, _kills;
+    [SerializeField] int _score, _kills, _points, _totalPoints;
 }

@@ -743,6 +743,7 @@ abstract public class Actor : Biped
                 pp.GetComponent<PlayerSwarmMatchStats>().kills++;
                 pp.playerMedals.kills++;
                 pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
+                pp.playerUI.ShowPointWitness(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
 
                 //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
             }

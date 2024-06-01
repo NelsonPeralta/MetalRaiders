@@ -1344,7 +1344,7 @@ public class Player : Biped
         try
         {
             if ((GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team != this.team) || GameManager.instance.teamMode == GameManager.TeamMode.None)
-                if (playerThatKilledMe != this) playerThatKilledMe.GetComponent<PlayerMultiplayerMatchStats>().damage += damage;
+                if (playerThatKilledMe != this) playerThatKilledMe.GetComponent<PlayerMultiplayerMatchStats>().damage += Mathf.Clamp(damage, 0, (int)hitPoints);
         }
         catch { }
         try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
