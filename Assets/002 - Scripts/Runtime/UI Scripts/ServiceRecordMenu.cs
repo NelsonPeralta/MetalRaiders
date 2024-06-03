@@ -78,13 +78,17 @@ public class ServiceRecordMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        _redWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("red"));
-        _blueWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("blue"));
-        _yellowWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("yellow"));
-        _greenWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("green"));
-        _orangeWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
-        _whiteWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
-        _blackWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
+
+        if (playerData == CurrentRoomManager.instance.playerDataCells[0])
+        {
+            _redWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("red"));
+            _blueWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("blue"));
+            _yellowWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("yellow"));
+            _greenWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("green"));
+            _orangeWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
+            _whiteWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
+            _blackWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
+        }
 
 
 

@@ -176,9 +176,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _gameType; }
         set
         {
+            print($"Gameype: {value}");
             _gameType = value;
-            if (_gameType == GameType.GunGame || _gameType == GameType.Hill || _gameType == GameType.Oddball)
-                teamMode = TeamMode.None;
+
+            //if (value == GameType.GunGame || value == GameType.Hill || value == GameType.Oddball)
+            //    if (teamMode != TeamMode.None)
+            //        teamMode = TeamMode.None;
+
+
 
             Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
         }
@@ -192,13 +197,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             TeamMode _prev = _teamMode;
 
             _teamMode = value;
+            print($"teamMode: {value}");
+
             Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
             {
-                if (_gameType == GameType.GunGame || _gameType == GameType.Hill || _gameType == GameType.Oddball)
-                    _gameType = GameType.Slayer;
-
-
                 foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells) s.team = Team.None;
 
 
@@ -207,7 +210,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-
                 if (GameManager.instance.connection == Connection.Online)
                 {
                     if (gameMode == GameMode.Multiplayer)

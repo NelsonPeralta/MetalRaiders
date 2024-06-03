@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using System.IO;
 using Steamworks;
 using Rewired;
+using static GameManager;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -669,6 +670,14 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void ChangeTeamMode(string tm)
     {
         Debug.Log("ChangeTeamMode Btn");
+
+
+        if ((GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm) == TeamMode.Classic)
+            if (GameManager.instance.gameType == GameType.GunGame || GameManager.instance.gameType == GameType.Hill || GameManager.instance.gameType == GameType.Oddball)
+                GameManager.instance.gameType = GameType.Slayer;
+
+
+
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
 
         if (PhotonNetwork.IsMasterClient)
@@ -696,6 +705,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeGameType(string gt)
     {
+        if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.GunGame
+            || (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.Hill
+            || (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.Oddball)
+            if (GameManager.instance.teamMode != TeamMode.None)
+                GameManager.instance.teamMode = TeamMode.None;
+
+
         GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
         FindObjectOfType<NetworkGameManager>().SendGameParams();
     }
@@ -856,7 +872,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public static void TogglePlayerModel(bool b)
     {
-        ArmoryManager.instance.ResetPlayerModelRotation();
+        FindObjectOfType<ArmoryManager>(true).ResetPlayerModelRotation();
         instance.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
         instance.playerModel.SetActive(b);
     }
