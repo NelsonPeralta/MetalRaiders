@@ -151,7 +151,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                losingPlayerMS.kills--;
+                losingPlayerMS.score--;
 
                 if (winningPlayerMS.team == GameManager.Team.Red)
                     redTeamScore--;

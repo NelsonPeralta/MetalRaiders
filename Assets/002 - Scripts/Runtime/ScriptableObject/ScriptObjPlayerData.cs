@@ -51,7 +51,11 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public bool occupied { get { return _occupied; } set { _occupied = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
-    public PlayerCurrentGameScore playerCurrentGameScore { get { return _playerCurrentGameScore; } }
+    public PlayerCurrentGameScore playerCurrentGameScore
+    {
+        get { return _playerCurrentGameScore; }
+        set { _playerCurrentGameScore = value; }
+    }
 
     public void InitialReset()
     {
@@ -117,4 +121,5 @@ public class ScriptObjPlayerData : ScriptableObject
 
         _cardsFound = PlayerPrefs.GetString("cardsUnlocked", "");
     }
+
 }

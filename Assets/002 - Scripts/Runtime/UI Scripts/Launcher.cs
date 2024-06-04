@@ -831,10 +831,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    public void CreateLocalModePlayerDataCells()
+    public static void CreateLocalModePlayerDataCells()
     {
-        print("CreateLocalModePlayerDataCells");
-        for (int i = 0; i < 5; i++)
+        print($"CreateLocalModePlayerDataCells {GameManager.instance.nbLocalPlayersPreset}");
+
+        for (int i = 0; i < GameManager.instance.nbLocalPlayersPreset; i++)
         {
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
             CurrentRoomManager.GetLocalPlayerData(i).occupied = true;
@@ -845,12 +846,8 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "grey";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.level = 1;
 
-            if (i == 0)
-            {
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1-operator_lsa-operator_rsa-patrol_ca";
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "red";
-            }
-            else if (i == 1)
+
+            if (i == 1)
             {
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "vanguard_hc-commando_rsa-commando_lsa-overseer_ca";
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "blue";
@@ -859,15 +856,18 @@ public class Launcher : MonoBehaviourPunCallbacks
             {
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "infiltrator_hc-pilot_rsa-pilot_lsa-grenadier_ca";
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "yellow";
-
             }
             else if (i == 3)
             {
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "sentry_hc-guerilla_ca-security_lsa-security_rsa";
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "green";
-
             }
         }
+
+
+
+        CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armor_data_string = "helmet1-operator_lsa-operator_rsa-patrol_ca";
+        CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armor_color_palette = "red";
     }
 
     public static void TogglePlayerModel(bool b)

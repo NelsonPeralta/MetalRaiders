@@ -1324,7 +1324,9 @@ public class PlayerController : MonoBehaviourPun
     {
         Debug.Log("Returning to Main Menu");
 
-        GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReport);
+        CurrentRoomManager.instance.leftRoomManually = true;
+
+        GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
         GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
 
 

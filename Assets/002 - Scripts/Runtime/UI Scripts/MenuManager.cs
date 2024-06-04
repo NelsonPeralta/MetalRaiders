@@ -7,6 +7,7 @@ using System.IO;
 using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
+using Steamworks;
 
 public class MenuManager : MonoBehaviour
 {
@@ -48,7 +49,7 @@ public class MenuManager : MonoBehaviour
 
         Debug.Log($"OPEN MENU: {menuName}");
 
-        if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReport))
+        if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits))
         { menuName = "carnage report"; print($"Changed to Carnage Report {menuName}"); }
 
 
@@ -90,6 +91,18 @@ public class MenuManager : MonoBehaviour
         {
             if (menus[i] == menu)
                 menus[i].Open();
+        }
+    }
+
+    public void OpenPopUpMenu(string menuName) // Open a menu GO using the Menu script itself, used for connecting with buttons
+    {
+        for (int i = 0; i < menus.Length; i++)
+        {
+            if (menus[i].menuName == menuName)
+            {
+                Debug.Log($"Open {menus[i].menuName}");
+                menus[i].Open();
+            }
         }
     }
 
@@ -185,5 +198,23 @@ public class MenuManager : MonoBehaviour
             Launcher.instance.nbLocalPlayersHolder.SetActive(true);
             Launcher.instance.nbLocalPlayersText.text = "1";
         }
+    }
+
+    public void OpenCarnageReportMenu()
+    {
+        OpenMenu("carnage report");
+    }
+
+    public void OpenRoomBrowserMenu()
+    {
+        if(GameManager.instance.connection == GameManager.Connection.Local)
+        {
+            CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
+            Launcher.CreateLocalModePlayerDataCells();
+        }
+
+
+
+        OpenMenu("room browser");
     }
 }

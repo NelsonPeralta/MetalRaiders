@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum TeamMode { Classic, None }
 
-    public enum PreviousScenePayload { None, OpenCarnageReport, ResetPlayerDataCells }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else if (value == Connection.Local)
             {
-                Launcher.instance.CreateLocalModePlayerDataCells();
+                Launcher.CreateLocalModePlayerDataCells();
                 MenuManager.Instance.OpenMenu("online title");
                 Launcher.instance.nbLocalPlayersHolder.SetActive(true);
             }
@@ -429,19 +429,22 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().ClearCarnageReportData();
 
             print("GAME MANAGER ONSCENELOADED 0");
 
             if (previousScenePayloads.Contains(PreviousScenePayload.ResetPlayerDataCells))
             {
+                CurrentRoomManager.instance.CreateCarnageReportData();
                 CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
                 previousScenePayloads.Remove(PreviousScenePayload.ResetPlayerDataCells);
             }
 
-            if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReport))
+            if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReportAndCredits))
             {
-                previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReport);
-                MenuManager.Instance.OpenMenu("carnage report");
+                previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReportAndCredits);
+                //MenuManager.Instance.OpenMenu("carnage report");
+                MenuManager.Instance.OpenPopUpMenu("credits");
             }
 
 

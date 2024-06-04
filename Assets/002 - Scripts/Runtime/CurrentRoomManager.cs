@@ -307,6 +307,15 @@ public class CurrentRoomManager : MonoBehaviour
             _roomGameStartCountdown = value;
         }
     }
+
+    public bool leftRoomManually { get { return _leftRoomManually; } set { _leftRoomManually = value; } }
+
+
+
+
+
+
+
     public List<ScriptObjPlayerData> playerDataCells { get { return _playerDataCells; } }
     public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
 
@@ -336,7 +345,7 @@ public class CurrentRoomManager : MonoBehaviour
     bool _achievementUnlocked = false;
     string _tempAchievementName = "";
 
-
+    bool _leftRoomManually;
 
 
 
@@ -460,7 +469,7 @@ public class CurrentRoomManager : MonoBehaviour
     {
 
         gameStarted = false;
-        _reachedHalwayGameStartCountdown = false;
+        _reachedHalwayGameStartCountdown = _leftRoomManually = false;
 
         _expectedMapAddOns = _vetos = 0;
 
@@ -857,20 +866,39 @@ public class CurrentRoomManager : MonoBehaviour
             bt.playerName = pn; bt.team = t;
         }
     }
+
+
+
+
+    public void CreateCarnageReportData()
+    {
+        for (int i = 0; i < instance._playerDataCells.Count; i++)
+        {
+            if (instance._playerDataCells[i].occupied)
+                MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().AddStruct(
+                    new CarnageReportStruc(instance._playerDataCells[i].playerCurrentGameScore,
+                    instance._playerDataCells[i].playerExtendedPublicData.username,
+                    instance._playerDataCells[i].playerExtendedPublicData.armor_color_palette));
+        }
+    }
+
     public void ResetAllPlayerDataExceptMine() // Called when leaving a room, so no need to destroy player
     {
 
         for (int i = 0; i < instance._playerDataCells.Count; i++)
+        {
             if (i > 0)
             {
                 instance._playerDataCells[i].team = GameManager.Team.None;
 
-                if (GameManager.instance.connection == GameManager.Connection.Online)
                 {
                     instance._playerDataCells[i].occupied = false;
-                    instance._playerDataCells[i].playerExtendedPublicData = null;
+                    instance._playerDataCells[i].photonRoomIndex = -999;
+                    instance._playerDataCells[i].playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+                    instance._playerDataCells[i].playerCurrentGameScore = new PlayerCurrentGameScore();
                 }
             }
+        }
     }
 
 
