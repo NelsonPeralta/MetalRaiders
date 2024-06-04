@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System;
 using System.Linq;
 using System.Net.Mail;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class MultiplayerManager : MonoBehaviourPunCallbacks
 {
@@ -56,7 +57,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
                 foreach (Player p in GameManager.instance.pid_player_Dict.Values)
                 {
-                    if (p && p.GetComponent<PlayerMultiplayerMatchStats>().kills > hs)
+                    if (p && p.GetComponent<PlayerMultiplayerMatchStats>().score > hs)
                         hs = p.GetComponent<PlayerMultiplayerMatchStats>().score;
                 }
             }
@@ -121,8 +122,39 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 return;
 
 
-            if (winningPlayerMS != losingPlayerMS)
+            if (winningPlayerMS != losingPlayerMS) // NOT Suicide
             {
+
+
+                winningPlayerMS.kills++;
+
+                if (struc.headshot)
+                    winningPlayerMS.headshots++;
+                if (struc.melee)
+                    winningPlayerMS.meleeKills++;
+                if (struc.grenade)
+                    winningPlayerMS.grenadeKills++;
+                if (struc.stuck) winningPlayerMS.player.playerDataCell.playerCurrentGameScore.stickyKills++;
+                if (struc.nuthshot) winningPlayerMS.player.playerDataCell.playerCurrentGameScore.nutshots++;
+
+
+
+
+                if (GameManager.instance.gameType != GameManager.GameType.Hill
+                && GameManager.instance.gameType != GameManager.GameType.Oddball
+                && GameManager.instance.gameType != GameManager.GameType.GunGame)
+                {
+                    winningPlayerMS.score++;
+
+                    if (winningPlayerMS.team == GameManager.Team.Red)
+                        redTeamScore++;
+                    else if (winningPlayerMS.team == GameManager.Team.Blue)
+                        blueTeamScore++;
+                }
+
+
+
+
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame)
                     if (winningPlayerMS.player == GameManager.GetLocalPlayer(winningPlayerMS.player.rid))
                     {
@@ -134,29 +166,20 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         if (struc.cleanDamageSource.Contains("istol"))
                             NetworkGameManager.instance.EndGame();
                     }
-
-                winningPlayerMS.kills++;
-
-                if (struc.headshot)
-                    winningPlayerMS.headshots++;
-                if (struc.melee)
-                    winningPlayerMS.meleeKills++;
-                if (struc.grenade)
-                    winningPlayerMS.grenadeKills++;
-
-                if (winningPlayerMS.team == GameManager.Team.Red)
-                    redTeamScore++;
-                else if (winningPlayerMS.team == GameManager.Team.Blue)
-                    blueTeamScore++;
             }
-            else
+            else // Suicide
             {
-                losingPlayerMS.score--;
+                if (GameManager.instance.gameType != GameManager.GameType.Hill
+               && GameManager.instance.gameType != GameManager.GameType.Oddball
+               && GameManager.instance.gameType != GameManager.GameType.GunGame)
+                {
+                    losingPlayerMS.score--;
 
-                if (winningPlayerMS.team == GameManager.Team.Red)
-                    redTeamScore--;
-                else if (winningPlayerMS.team == GameManager.Team.Blue)
-                    blueTeamScore--;
+                    if (winningPlayerMS.team == GameManager.Team.Red)
+                        redTeamScore--;
+                    else if (winningPlayerMS.team == GameManager.Team.Blue)
+                        blueTeamScore--;
+                }
             }
 
             losingPlayerMS.deaths++;
@@ -281,28 +304,23 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
         public readonly int winningPlayerPhotonId;
         public readonly int losingPlayerPhotonId;
-        public readonly bool headshot;
-        public readonly bool melee;
-        public readonly bool grenade;
+        public readonly bool headshot, melee, grenade, nuthshot, stuck;
         public readonly string cleanDamageSource;
 
         public AddPlayerKillStruct(int winningPlayerPhotonId, int losingPlayerPhotonId, Player.DeathNature kn, string damageSource)
         {
-            this.headshot = false;
-            this.melee = false;
-            this.grenade = false;
+            this.headshot = this.melee = this.grenade = this.nuthshot = this.stuck = false;
 
             this.winningPlayerPhotonId = winningPlayerPhotonId;
             this.losingPlayerPhotonId = losingPlayerPhotonId;
 
             this.cleanDamageSource = damageSource;
 
-            if (kn == Player.DeathNature.Headshot || kn == Player.DeathNature.Sniped)
-                this.headshot = true;
-            if (kn == Player.DeathNature.Melee)
-                this.melee = true;
-            if (kn == Player.DeathNature.Grenade)
-                this.grenade = true;
+            if (kn == Player.DeathNature.Groin) this.nuthshot = true;
+            else if (kn == Player.DeathNature.Headshot || kn == Player.DeathNature.Sniped) this.headshot = true;
+            else if (kn == Player.DeathNature.Melee) this.melee = true;
+            else if (kn == Player.DeathNature.Stuck) this.stuck = true;
+            else if (kn == Player.DeathNature.Grenade) this.grenade = true;
         }
     }
 

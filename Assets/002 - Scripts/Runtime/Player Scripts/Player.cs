@@ -1565,7 +1565,10 @@ public class Player : Biped
                     if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
                     {
                         if (deathByGroin)
+                        {
+                            deathNature = DeathNature.Groin;
                             sourcePlayerMedals.SpawnNutshotMedal();
+                        }
                         else if (deathNature == DeathNature.Sniped)
                             sourcePlayerMedals.SpawnSniperHeadshotMedal();
                         else if (deathNature == DeathNature.Headshot)

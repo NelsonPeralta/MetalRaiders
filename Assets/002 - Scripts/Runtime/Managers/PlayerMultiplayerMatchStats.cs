@@ -37,7 +37,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
         {
             var previous = player.playerDataCell.playerCurrentGameScore.score;
 
-            player.playerDataCell.playerCurrentGameScore.score = Mathf.Clamp(value, 0, 999);
+            player.playerDataCell.playerCurrentGameScore.ChangeScore(Mathf.Clamp(value, 0, 999));
 
             if (player.playerDataCell.playerCurrentGameScore.score != previous)
             {

@@ -23,7 +23,8 @@ public class PlayerGunGameManager : MonoBehaviour
             playerInventory.activeWeapon.loadedAmmo = playerInventory.activeWeapon.ammoCapacity;
             playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxSpareAmmo;
 
-            playerInventory.player.playerDataCell.playerCurrentGameScore.score = index;
+            playerInventory.player.GetComponent<PlayerMultiplayerMatchStats>().score = index;
+            //playerInventory.player.playerDataCell.playerCurrentGameScore.score = index;
 
 
 

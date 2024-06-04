@@ -19,7 +19,7 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
             int previousValue = _player.playerDataCell.playerCurrentGameScore.points;
 
             _player.playerDataCell.playerCurrentGameScore.points = value;
-            _player.playerDataCell.playerCurrentGameScore.score = value;
+            _player.playerDataCell.playerCurrentGameScore.ChangeScore(value);
 
 
             if (previousValue != value)

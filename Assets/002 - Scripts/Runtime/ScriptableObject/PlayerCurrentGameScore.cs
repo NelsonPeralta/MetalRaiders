@@ -8,10 +8,13 @@ public class PlayerCurrentGameScore
 {
     public int score
     {
-        set { _score = value; }
+        //set { _score = value; }
 
         get
         {
+            return _score;
+
+
             if (GameManager.instance.gameType == GameManager.GameType.Hill
                 || GameManager.instance.gameType == GameManager.GameType.Oddball
                 || GameManager.instance.gameType == GameManager.GameType.GunGame)
@@ -27,13 +30,6 @@ public class PlayerCurrentGameScore
         set
         {
             _kills = value;
-
-            if (GameManager.instance.gameType != GameManager.GameType.Hill
-                && GameManager.instance.gameType != GameManager.GameType.Oddball
-                && GameManager.instance.gameType != GameManager.GameType.GunGame)
-            {
-                score++;
-            }
         }
     }
 
@@ -60,4 +56,12 @@ public class PlayerCurrentGameScore
     public float kd;
 
     [SerializeField] int _score, _kills, _points, _totalPoints;
+
+
+
+
+    public void ChangeScore(int s)
+    {
+        _score = s;
+    }
 }
