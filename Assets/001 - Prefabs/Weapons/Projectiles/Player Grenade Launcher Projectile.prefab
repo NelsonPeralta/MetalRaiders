@@ -149,10 +149,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  _damage: 300
-  _radius: 5
+  _damage: 245
+  _radius: 6
   _throwForce: 1000
   _explosionPower: 300
+  _sourceCleanName: Grenade Launcher
   _useConstantForce: 0
   _defaultExplosionDelayOnImpact: 0
   explosionPrefab: {fileID: 9198120252748331428, guid: b95a9831442803e4797c5cec5bd0aee2,

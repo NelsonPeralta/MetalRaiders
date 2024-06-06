@@ -77,7 +77,7 @@ public class GrenadePool : MonoBehaviour
     }
 
 
-    public static void SpawnExplosion(Player source, int damage, int radius, int expPower,
+    public static void SpawnExplosion(Player source, int damage, int radius, int expPower, string damageCleanNameSource,
         Vector3 pos, Explosion.Color col, Explosion.Type t, bool stuck = false)
     {
         foreach (Explosion obj in instance._explosions)
@@ -90,6 +90,7 @@ public class GrenadePool : MonoBehaviour
                 obj.transform.position = pos;
                 obj.stuck = stuck;
                 obj.color = col;
+                obj.damageSource = damageCleanNameSource;
                 obj.type = t;
                 obj.gameObject.SetActive(true);
                 obj.Explode();

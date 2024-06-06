@@ -9841,13 +9841,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  damageSource: M32
+  _damageSource: 
   damage: 140
-  radius: 4.5
+  radius: 5
   explosionPower: 500
   _obsLayerMask:
     serializedVersion: 2
     m_Bits: 1
+  _yellowModel: {fileID: 0}
+  _blueModel: {fileID: 0}
+  _purpleModel: {fileID: 0}
 --- !u!82 &7241414760208152368
 AudioSource:
   m_ObjectHideFlags: 0

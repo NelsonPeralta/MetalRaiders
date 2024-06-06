@@ -12,9 +12,9 @@ public class ScriptObjPlayerData : ScriptableObject
     [SerializeField] int _photonRoomIndex;
     [SerializeField] GameManager.Team _team;
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
+    [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
     [SerializeField] string _cardsFound;
     [SerializeField] int _armorPiecesPurchased;
-    [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
 
 
     bool _achUnl = false;
@@ -26,12 +26,10 @@ public class ScriptObjPlayerData : ScriptableObject
         set
         {
             _playerExtendedPublicData = value;
-            _occupied = (value != null);
-            if (value == null)
-            {
-                _playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
-            }
-            else
+            occupied = (value.username != null && value.username.Length > 0);
+
+
+            if (occupied)
             {
                 StringBuilder sb = new StringBuilder($"-{value.unlocked_armor_data_string}-");
 
@@ -121,5 +119,4 @@ public class ScriptObjPlayerData : ScriptableObject
 
         _cardsFound = PlayerPrefs.GetString("cardsUnlocked", "");
     }
-
 }

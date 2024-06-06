@@ -779,17 +779,6 @@ public class CurrentRoomManager : MonoBehaviour
             }
     }
 
-    public void RemoveExtendedPlayerData(string n)
-    {
-        for (int i = 0; i < instance._playerDataCells.Count; i++)
-        {
-            if (instance._playerDataCells[i].occupied)
-                if (instance._playerDataCells[i].playerExtendedPublicData.username.Equals(n))
-                {
-                    instance._playerDataCells[i].playerExtendedPublicData = null;
-                }
-        }
-    }
 
     public void RemoveExtendedPlayerData(int id)
     {
@@ -800,7 +789,7 @@ public class CurrentRoomManager : MonoBehaviour
                 {
                     instance._playerDataCells[i].occupied = false;
                     instance._playerDataCells[i].team = GameManager.Team.None;
-                    instance._playerDataCells[i].playerExtendedPublicData = null;
+                    instance._playerDataCells[i].playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
                 }
         }
     }

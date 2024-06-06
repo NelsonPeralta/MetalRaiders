@@ -158,13 +158,17 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame)
                     if (winningPlayerMS.player == GameManager.GetLocalPlayer(winningPlayerMS.player.rid))
                     {
-                        if (!struc.cleanDamageSource.Contains("elee") && !struc.cleanDamageSource.Contains("renade")
+                        if (!struc.cleanDamageSource.Contains("elee") && !struc.cleanDamageSource.Contains("Frag Grenade")
+                            && !struc.cleanDamageSource.Contains("Plasma Grenade")
                             && !struc.cleanDamageSource.Contains("tuck"))
                             winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
 
                         Debug.Log(struc.cleanDamageSource);
                         if (struc.cleanDamageSource.Contains("istol"))
+                        {
+                            winningPlayerMS.score++;
                             NetworkGameManager.instance.EndGame();
+                        }
                     }
             }
             else // Suicide

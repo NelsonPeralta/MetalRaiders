@@ -14,6 +14,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     [SerializeField] Player _player;
     [SerializeField] int _damage, _radius, _throwForce, _explosionPower;
+    [SerializeField] string _sourceCleanName;
     [SerializeField] bool _useConstantForce;
     [SerializeField] float _defaultExplosionDelayOnImpact;
     [SerializeField] Transform explosionPrefab;
@@ -178,7 +179,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, transform.position, _color, _type, stuck);
+        GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, stuck);
 
 
 

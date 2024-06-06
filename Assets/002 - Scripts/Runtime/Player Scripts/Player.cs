@@ -1575,7 +1575,7 @@ public class Player : Biped
                             sourcePlayerMedals.SpawnHeadshotMedal();
                         else if (deathNature == DeathNature.Melee)
                             sourcePlayerMedals.SpawnMeleeMedal();
-                        else if (deathNature == DeathNature.Grenade)
+                        else if (deathNature == DeathNature.Grenade && !_damageSourceCleanName.Contains("Grenade Launcher"))
                             sourcePlayerMedals.SpawnGrenadeMedal();
                         else if (deathNature == DeathNature.Stuck)
                             sourcePlayerMedals.SpawnStuckKillMedal();
@@ -1612,7 +1612,7 @@ public class Player : Biped
         //e.gameObject.SetActive(true);
         //e.DisableIn3Seconds();
 
-        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 500, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, transform.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
+        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 500, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", transform.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
 
 
         _ultraMergeCount = 0;

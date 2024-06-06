@@ -32,10 +32,10 @@ public class Explosion : MonoBehaviour
         {
             _type = value;
 
-            if (value == Type.Grenade) damageSource = "Grenade";
-            else if (value == Type.Barrel) damageSource = "Barrel";
-            else if (value == Type.UltraBind) damageSource = "Ultra Bind";
-            else if (value == Type.RPG) damageSource = "RPG";
+            //if (value == Type.Grenade) damageSource = "Grenade";
+            //else if (value == Type.Barrel) damageSource = "Barrel";
+            //else if (value == Type.UltraBind) damageSource = "Ultra Bind";
+            //else if (value == Type.RPG) damageSource = "RPG";
         }
     }
 

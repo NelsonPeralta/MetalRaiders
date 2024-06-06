@@ -14777,6 +14777,7 @@ MonoBehaviour:
   _radius: 5
   _throwForce: 300
   _explosionPower: 300
+  _sourceCleanName: Plasma Grenade
   _useConstantForce: 0
   _defaultExplosionDelayOnImpact: 1
   explosionPrefab: {fileID: 9198120252748331428, guid: 133e7e85df7e0964ca94128ae8063fb0,
