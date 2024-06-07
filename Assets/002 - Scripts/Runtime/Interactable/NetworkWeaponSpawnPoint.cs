@@ -192,6 +192,9 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             else if (GameManager.instance.gameType == GameManager.GameType.Shotguns)
             {
                 codeName = "shotgun";
+            }else if (GameManager.instance.gameType == GameManager.GameType.PurpleRain)
+            {
+                codeName = "cl";
             }
 
         if ((GameManager.instance.gameType.ToString().Contains("Fiesta")) || GameManager.instance.gameType == GameManager.GameType.GunGame)

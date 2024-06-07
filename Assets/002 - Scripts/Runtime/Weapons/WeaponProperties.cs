@@ -132,7 +132,8 @@ public class WeaponProperties : MonoBehaviour
             {
                 if (injectLootedAmmo && (GameManager.instance.gameType == GameManager.GameType.Rockets
                 || GameManager.instance.gameType == GameManager.GameType.Shotguns
-                || GameManager.instance.gameType == GameManager.GameType.GunGame))
+                || GameManager.instance.gameType == GameManager.GameType.GunGame
+                || GameManager.instance.gameType == GameManager.GameType.PurpleRain))
                 {
                     _currentAmmo = ammoCapacity;
                     OnCurrentAmmoChanged?.Invoke(this);

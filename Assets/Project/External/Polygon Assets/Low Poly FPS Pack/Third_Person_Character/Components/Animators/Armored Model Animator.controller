@@ -1018,7 +1018,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Rifle Sprint 2 0
-  m_Speed: 1
+  m_Speed: 0.8
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -1772,7 +1772,7 @@ AnimatorStateMachine:
     m_Position: {x: -310, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1862352522762659879}
-    m_Position: {x: -60, y: 0, z: 0}
+    m_Position: {x: -140, y: 80, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5014838295248482206}
     m_Position: {x: 1120, y: 0, z: 0}
@@ -1796,7 +1796,7 @@ AnimatorStateMachine:
     m_Position: {x: 180, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2735729088540874816}
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: -210, y: -180, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 288149095629836050}
     m_Position: {x: 0, y: 0, z: 0}
@@ -1808,7 +1808,7 @@ AnimatorStateMachine:
     m_Position: {x: 0, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1982937176613386668}
-    m_Position: {x: 40, y: 40, z: 0}
+    m_Position: {x: 0, y: -220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6454130863569320463}
     m_Position: {x: 750, y: 260, z: 0}
@@ -2535,7 +2535,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Rifle Sprint
-  m_Speed: 1
+  m_Speed: 0.8
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1993649763596286391}

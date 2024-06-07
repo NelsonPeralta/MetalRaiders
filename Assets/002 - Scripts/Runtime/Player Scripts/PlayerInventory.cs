@@ -527,6 +527,11 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon = "shotgun";
             StartingWeapon2 = "pistol";
         }
+        if(GameManager.instance.gameType == GameManager.GameType.PurpleRain)
+        {
+            StartingWeapon = "cl";
+            StartingWeapon2 = "pistol";
+        }
 
 
 

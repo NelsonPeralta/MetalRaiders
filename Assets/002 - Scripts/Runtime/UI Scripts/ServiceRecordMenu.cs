@@ -13,7 +13,7 @@ public class ServiceRecordMenu : MonoBehaviour
         set
         {
             _playerData = value;
-
+            print($"ServiceRecordMenu setting player data: {_playerData}");
 
 
             Launcher.instance.playerModel.SetActive(true);
@@ -52,6 +52,8 @@ public class ServiceRecordMenu : MonoBehaviour
                 ColorUtility.TryParseHtmlString(GameManager.colorDict[rank[0].color], out _tCol);
                 _rankImage.color = _tCol;
             }
+
+
         }
     }
 
@@ -78,19 +80,7 @@ public class ServiceRecordMenu : MonoBehaviour
 
     private void OnEnable()
     {
-
-        if (playerData == CurrentRoomManager.instance.playerDataCells[0])
-        {
-            _redWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("red"));
-            _blueWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("blue"));
-            _yellowWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("yellow"));
-            _greenWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("green"));
-            _orangeWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
-            _whiteWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
-            _blackWitness.SetActive(CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
-        }
-
-
+        print($"ServiceRecordMenu OnEnable {playerData}");
 
 
 
@@ -143,6 +133,18 @@ public class ServiceRecordMenu : MonoBehaviour
 
             ColorUtility.TryParseHtmlString(GameManager.colorDict[rank[0].color], out _tCol);
             _rankImage.color = _tCol;
+        }
+
+
+        // In Service Record, not nameplate
+        {
+            _redWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("red"));
+            _blueWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("blue"));
+            _yellowWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("yellow"));
+            _greenWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("green"));
+            _orangeWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
+            _whiteWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
+            _blackWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
         }
     }
 
