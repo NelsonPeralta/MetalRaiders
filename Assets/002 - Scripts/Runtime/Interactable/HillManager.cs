@@ -10,7 +10,7 @@ public class HillManager : MonoBehaviour
     [SerializeField] Hill _hill;
     [SerializeField] List<GameObject> _locations;
 
-    float _moveTimer;
+    [SerializeField] float _moveTimer;
     bool _allPlayersJoined;
     int c;
     int _hillTtl = 45;
