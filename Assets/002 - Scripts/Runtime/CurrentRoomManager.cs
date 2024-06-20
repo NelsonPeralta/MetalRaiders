@@ -876,15 +876,16 @@ public class CurrentRoomManager : MonoBehaviour
 
         for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
+            instance._playerDataCells[i].team = GameManager.Team.None;
+            instance._playerDataCells[i].playerCurrentGameScore = new PlayerCurrentGameScore();
+
             if (i > 0)
             {
-                instance._playerDataCells[i].team = GameManager.Team.None;
 
                 {
                     instance._playerDataCells[i].occupied = false;
                     instance._playerDataCells[i].photonRoomIndex = -999;
                     instance._playerDataCells[i].playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
-                    instance._playerDataCells[i].playerCurrentGameScore = new PlayerCurrentGameScore();
                 }
             }
         }
