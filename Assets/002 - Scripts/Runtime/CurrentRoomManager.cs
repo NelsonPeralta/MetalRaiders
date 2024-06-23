@@ -199,7 +199,7 @@ public class CurrentRoomManager : MonoBehaviour
                     if (p.isMine) p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
 
                 StartCoroutine(GameStartDelayMapCamera_Coroutine());
-                StartCoroutine(GameStartDelay_Coroutine());
+                TriggerGameStartCountdown();
             }
         }
     }
@@ -351,6 +351,10 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
+
+
+
+
     void Awake()
     {
         _rpcCooldown = 0.3f;
@@ -381,17 +385,33 @@ public class CurrentRoomManager : MonoBehaviour
     private void Update()
     {
 
+        if(SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            if (gameIsReady && _gameStartCountdown > 0)
+            {
+                _gameStartCountdown -= Time.deltaTime;
 
-        //if (gameStart && !gameStarted)
-        //{
-        //    _gameStartCountdown -= Time.deltaTime;
+                if (_gameStartCountdown <= 3)
+                {
+                    MapCamera.PlayerBeeps();
+                }
 
-        //    if (!reachedHalwayGameStartCountdown && _gameStartCountdown <= GameManager.GameStartDelay)
-        //        reachedHalwayGameStartCountdown = true;
+                if (_gameStartCountdown <= 0)
+                {
+                    MapCamera.instance.gameObject.SetActive(false);
+                    foreach (Player p in GameManager.instance.localPlayers.Values)
+                        p.TriggerGameStartBehaviour();
 
-        //    if (_gameStartCountdown <= 0)
-        //        gameStarted = true;
-        //}
+                    if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                        SwarmManager.instance.Begin();
+
+                    foreach (Player p in GameManager.instance.localPlayers.Values) p.playerInventory.TriggerStartGameBehaviour();
+
+                    gameStarted = true;
+                }
+            }
+        }
+
 
         if (SceneManager.GetActiveScene().buildIndex > 0) return;
         if (roomType == RoomType.Private) return;
@@ -460,6 +480,11 @@ public class CurrentRoomManager : MonoBehaviour
         }
 
         if (_rpcCooldown <= 0) _rpcCooldown = 0.3f;
+
+
+
+
+        
     }
 
     private void OnEnable()
@@ -507,10 +532,6 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
-    void OnAllPlayersJoinedGame(CurrentRoomManager gme)
-    {
-        _gameStartCountdown = GameManager.GameStartDelay;
-    }
 
 
 
@@ -866,10 +887,12 @@ public class CurrentRoomManager : MonoBehaviour
         for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
             if (instance._playerDataCells[i].occupied)
+            {
                 MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().AddStruct(
                     new CarnageReportStruc(instance._playerDataCells[i].playerCurrentGameScore,
                     instance._playerDataCells[i].playerExtendedPublicData.username,
-                    instance._playerDataCells[i].playerExtendedPublicData.armor_color_palette));
+                    instance._playerDataCells[i].playerExtendedPublicData.armor_color_palette, instance._playerDataCells[i].team));
+            }
         }
     }
 
@@ -909,20 +932,9 @@ public class CurrentRoomManager : MonoBehaviour
     }
 
 
-    IEnumerator GameStartDelay_Coroutine()
+    void TriggerGameStartCountdown()
     {
-        yield return new WaitForSeconds(8);
-
-        MapCamera.instance.gameObject.SetActive(false);
-        foreach (Player p in GameManager.instance.localPlayers.Values)
-            p.TriggerGameStartBehaviour();
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-            SwarmManager.instance.Begin();
-
-        foreach (Player p in GameManager.instance.localPlayers.Values) p.playerInventory.TriggerStartGameBehaviour();
-
-        gameStarted = true;
+        _gameStartCountdown = 8;
     }
 
 

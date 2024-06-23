@@ -11,13 +11,15 @@ public struct CarnageReportStruc
     public int damage { get { return _damage; } }
     public int score { get { return _score; } }
     public int headshots { get { return _headshots; } }
+    public GameManager.Team team { get { return _team; } }
 
 
     [SerializeField] string _playerName, _colorPalet;
     [SerializeField] int _kills, _deaths, _damage, _score, _headshots, _nutshots, _meleeKills, _grenadeKills, _stickyKills, _points, _totalPoints;
+    [SerializeField] GameManager.Team _team;
 
 
-    public CarnageReportStruc(PlayerCurrentGameScore score, string _n, string colorPal)
+    public CarnageReportStruc(PlayerCurrentGameScore score, string _n, string colorPal, GameManager.Team t)
     {
         _playerName = _n;
         _colorPalet = colorPal;
@@ -32,5 +34,6 @@ public struct CarnageReportStruc
         _stickyKills = score.stickyKills;
         _points = score.points;
         _totalPoints = score.totalPoints;
+        _team = t;
     }
 }

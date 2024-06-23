@@ -14,6 +14,7 @@ public class MapCamera : MonoBehaviour
     [SerializeField] AudioClip _KingOfTheHillClip;
     [SerializeField] AudioClip _FirefightClip, _oddballIntro;
     [SerializeField] TMP_Text _text;
+    [SerializeField] AudioSource _beepConsecutiveAudioSource;
 
     public Transform disabledJunk;
 
@@ -88,7 +89,7 @@ public class MapCamera : MonoBehaviour
         _canvas.gameObject.SetActive(false);
         _announcementPLayed = true;
         GameManager.UpdateVolume();
-        _announcerDelay = 2;
+        _announcerDelay = 0.5f;
 
         try { if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) SwarmManager.instance.PlayOpeningMusic(); } catch { }
     }
@@ -109,5 +110,11 @@ public class MapCamera : MonoBehaviour
             GetComponent<AudioSource>().Play();
         }
         catch { }
+    }
+
+    public static void PlayerBeeps()
+    {
+        if (!_instance._beepConsecutiveAudioSource.isPlaying)
+            _instance._beepConsecutiveAudioSource.Play();
     }
 }

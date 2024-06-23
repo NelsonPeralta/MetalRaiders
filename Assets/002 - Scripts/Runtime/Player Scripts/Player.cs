@@ -14,6 +14,18 @@ using Steamworks;
 
 public class Player : Biped
 {
+    public static int RESPAWN_TIME
+    {
+        get
+        {
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) return 7;
+            return 5;
+        }
+    }
+
+
+
+
     public delegate void PlayerEvent(Player playerProperties);
     public PlayerEvent OnPlayerDeath, OnPlayerDeathLate, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage,
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
@@ -555,7 +567,6 @@ public class Player : Biped
     [SerializeField] bool _isRespawning, _isDead, _isInvincible;
     [SerializeField] GameObject _overshieldFx;
     [SerializeField] Camera _uiCamera;
-    [SerializeField] int _defaultRespawnTime = 4;
     [SerializeField] int _pushForce = 7;
     [SerializeField] Announcer _announcer;
     [SerializeField] PlayerArmorManager _playerArmorManager;
@@ -637,6 +648,7 @@ public class Player : Biped
     [Header("Player Voice")]
     public AudioListener audioListener;
     public AudioSource playerVoice;
+    public AudioSource respawnBeepAudioSource;
     public AudioClip sprintingClip;
     public AudioClip[] meleeClips;
     public AudioClip[] hurtClips;
@@ -665,6 +677,9 @@ public class Player : Biped
     [SerializeField] GameObject headhunterSkullPrefab;
 
     Rigidbody _rb;
+
+    float _respawnCountdown;
+    int _respawnBeepCount;
 
     private void Awake()
     {
@@ -697,7 +712,6 @@ public class Player : Biped
         }
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
         {
-            _defaultRespawnTime = 7;
             _overshieldPoints = 0;
             _maxShieldPoints = 0;
             _maxHitPoints = _maxHealthPoints = 250;
@@ -793,10 +807,12 @@ public class Player : Biped
 
 
         playerArmorManager.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
+
     }
     private void Update()
     {
         if (_hurtCooldown > 0) _hurtCooldown -= Time.deltaTime;
+
 
         if (!PV.IsMine) _rb.isKinematic = true;
         HitPointsRecharge();
@@ -1240,6 +1256,9 @@ public class Player : Biped
         _rb.isKinematic = false;
         _rb.velocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
+
+        _respawnBeepCount = 0;
+        respawnBeepAudioSource.Play();
     }
 
     public void PlaySprintingSound()
@@ -1287,7 +1306,7 @@ public class Player : Biped
     IEnumerator MidRespawnAction()
     {
         Debug.Log("MidRespawnAction");
-        yield return new WaitForSeconds(_defaultRespawnTime * 0.7f);
+        yield return new WaitForSeconds(RESPAWN_TIME * 0.7f);
         GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
@@ -1303,7 +1322,8 @@ public class Player : Biped
     IEnumerator Respawn_Coroutine()
     {
         Debug.Log("Respawn_Coroutine");
-        yield return new WaitForSeconds(_defaultRespawnTime);
+        yield return new WaitForSeconds(RESPAWN_TIME);
+
         Respawn();
     }
 

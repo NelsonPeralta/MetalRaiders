@@ -214,6 +214,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     redTeamScore++;
                 else
                     blueTeamScore++;
+
+
+                foreach (Player p in GameManager.instance.localPlayers.Values)
+                {
+                    p.allPlayerScripts.scoreboardManager.UpdateTeamScores();
+                }
             }
         }
 
@@ -238,6 +244,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (!pp.PV.IsMine)
                 continue;
 
+            CarnageReportMenu.winningTeam = GameManager.Team.None;
+
+
             if (highestScore >= scoreToWin)
             {
                 print($"EndGame {highestScore} / {scoreToWin}");
@@ -258,6 +267,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 {
                     if (redTeamScore >= scoreToWin)
                     {
+                        CarnageReportMenu.winningTeam = GameManager.Team.Red;
 
                         pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Red Team wins!");
 
@@ -265,17 +275,20 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
                             if (pms.GetComponent<Player>().team == GameManager.Team.Red)
                             {
+                                this.winningPlayers.Add(pms.GetComponent<Player>());
                                 this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
                             }
                     }
                     else if (blueTeamScore >= scoreToWin)
                     {
+                        CarnageReportMenu.winningTeam = GameManager.Team.Blue;
 
                         pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Blue Team wins!");
 
                         foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
                             if (pms.GetComponent<Player>().team == GameManager.Team.Blue)
                             {
+                                this.winningPlayers.Add(pms.GetComponent<Player>());
                                 this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
                             }
                     }
@@ -284,6 +297,17 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             else
             {
                 pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER!");
+
+
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                    if (redTeamScore >= blueTeamScore)
+                    {
+                        CarnageReportMenu.winningTeam = GameManager.Team.Red;
+                    }
+                    else
+                    {
+                        CarnageReportMenu.winningTeam = GameManager.Team.Blue;
+                    }
             }
 
             if (saveXp)

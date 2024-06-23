@@ -16,17 +16,17 @@ public class OddballPointGiver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(_del > 0)
+        if (_del > 0)
         {
             _del -= Time.deltaTime;
 
-            if(_del <= 0)
+            if (_del <= 0 && (!player.isDead && !player.isRespawning))
             {
                 NetworkGameManager.instance.AddPlayerPoint(player.photonId);
 

@@ -96,4 +96,14 @@ public class ScoreboardManager : MonoBehaviour
             scoreboardRows[i].gameObject.SetActive(true);
         }
     }
+
+    public void UpdateTeamScores()
+    {
+        try
+        {
+            redTeamText.text = $"Red: {MultiplayerManager.instance.redTeamScore}";
+            blueTeamText.text = $"Blue: {MultiplayerManager.instance.blueTeamScore}";
+        }
+        catch { }
+    }
 }
