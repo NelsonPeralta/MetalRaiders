@@ -206,6 +206,17 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(pid).GetComponent<PlayerMultiplayerMatchStats>();
         winningPlayerMS.score++;
 
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        {
+            if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
+            {
+                if (winningPlayerMS.player.team == GameManager.Team.Red)
+                    redTeamScore++;
+                else
+                    blueTeamScore++;
+            }
+        }
+
         CheckForEndGame();
     }
     public void CheckForEndGame()

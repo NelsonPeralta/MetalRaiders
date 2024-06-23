@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerOddballWorldUiMarker : MonoBehaviour
 {
+    [SerializeField] PlayerWorldUIMarker _playerWorldUIMarker;
     [SerializeField] Player player;
     [SerializeField] GameObject _skullTag, _shieldTag;
 
@@ -18,6 +19,15 @@ public class PlayerOddballWorldUiMarker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _skullTag.SetActive(player.playerInventory.playerOddballActive);
+        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+            _skullTag.SetActive(player.playerInventory.playerOddballActive);
+        else
+        {
+            if (_playerWorldUIMarker)
+            {
+                _skullTag.SetActive(player.playerInventory.playerOddballActive && player.team != _playerWorldUIMarker.targetPlayer.team);
+                _shieldTag.SetActive(player.playerInventory.playerOddballActive && player.team == _playerWorldUIMarker.targetPlayer.team);
+            }
+        }
     }
 }

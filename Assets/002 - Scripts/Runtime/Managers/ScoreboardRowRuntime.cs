@@ -17,7 +17,7 @@ public class ScoreboardRowRuntime : MonoBehaviour
             ColorUtility.TryParseHtmlString(GameManager.colorDict[playerScoreStruct.playerExtendedPublicData.armor_color_palette.ToString().ToLower()], out _tCol);
             _dynamicBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
 
-            if(GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
                 ColorUtility.TryParseHtmlString(GameManager.colorDict[playerScoreStruct.team.ToString().ToLower()], out _tCol);
                 _dynamicBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
@@ -30,7 +30,7 @@ public class ScoreboardRowRuntime : MonoBehaviour
             _playerScoreText.text = pss.playerCurrentGameScore.score.ToString();
 
 
-            if(GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             {
                 _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
                 _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
@@ -46,10 +46,22 @@ public class ScoreboardRowRuntime : MonoBehaviour
 
     [SerializeField] Image _dynamicBg;
     [SerializeField] TextMeshProUGUI _playerNameText, _playerTagText, _playerScoreText;
-
-
-
-
-    ScriptObjPlayerData pss;
+    [SerializeField] ScriptObjPlayerData pss;
     Color _tCol;
+
+    private void Update()
+    {
+        if (pss != null)
+        {
+            _playerTagText.text = pss.playerCurrentGameScore.damage.ToString();
+            _playerScoreText.text = pss.playerCurrentGameScore.score.ToString();
+
+
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            {
+                _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
+                _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
+            }
+        }
+    }
 }

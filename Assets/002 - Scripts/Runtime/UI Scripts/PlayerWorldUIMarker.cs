@@ -20,6 +20,8 @@ public class PlayerWorldUIMarker : MonoBehaviour
         }
     }
 
+    public Player targetPlayer { get { return _targetPlayer; } }
+
     public TMP_Text text { get { return _text; } }
     public GameObject holder { get { return _holder; } }
 

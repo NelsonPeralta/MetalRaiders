@@ -92,9 +92,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1724393147573164324}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2102750334683497532
@@ -189,9 +197,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102750334683497532}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7594931590187533981
@@ -242,12 +258,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04792a0b07b79ad4fa502cd7efe3c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hillMoved: {fileID: 8300000, guid: ccf50edaa681e0d4893dcb01e82e1498, type: 3}
+  _hillMoved: {fileID: 8300000, guid: f1ff5c924d87f2f47ad9c2bfbffe45ad, type: 3}
   _hill: {fileID: 0}
   _locations:
   - {fileID: 2102750334683497532}
   - {fileID: 1724393147573164324}
   - {fileID: 8649178253725216457}
+  _moveTimer: 0
 --- !u!82 &-1770279711291217196
 AudioSource:
   m_ObjectHideFlags: 0
@@ -436,8 +453,16 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8649178253725216457}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}

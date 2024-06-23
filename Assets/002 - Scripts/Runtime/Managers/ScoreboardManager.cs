@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Linq;
 
 public class ScoreboardManager : MonoBehaviour
 {
@@ -23,6 +24,9 @@ public class ScoreboardManager : MonoBehaviour
 
     private void Start()
     {
+        DisableAllRows();
+
+
 
         _scoreboardHolder.SetActive(false);
     }
@@ -30,7 +34,10 @@ public class ScoreboardManager : MonoBehaviour
     public void OpenScoreboard()
     {
         _player.playerUI.ToggleUIExtremities(false);
-        UpdateScoreboard();
+
+        foreach (var row in scoreboardRows) { row.gameObject.SetActive(row.playerScoreStruct); }
+
+
         ToggleTeamScoreboard(GameManager.instance.teamMode == GameManager.TeamMode.Classic);
         if (!scoreboardOpen)
         {
@@ -57,69 +64,6 @@ public class ScoreboardManager : MonoBehaviour
         }
     }
 
-    public void UpdateScoreboard()
-    {
-        DisableAllRows();
-        MultiplayerManager multiplayerManager = MultiplayerManager.instance;
-        //onlineSwarmManager = OnlineSwarmManager.onlineSwarmManagerInstance;
-
-        if (!multiplayerManager)
-            multiplayerManager = FindObjectOfType<MultiplayerManager>();
-
-        //if (!onlineSwarmManager)
-        //    onlineSwarmManager = FindObjectOfType<OnlineSwarmManager>();
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
-        {
-            List<PlayerMultiplayerMatchStats> allPlayersMS = new List<PlayerMultiplayerMatchStats>();
-
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
-                allPlayersMS.Add(go.GetComponent<PlayerMultiplayerMatchStats>());
-
-            for (int i = 0; i < allPlayersMS.Count; i++)
-            {
-                scoreboardRows[i].playerScoreStruct = allPlayersMS[i].player.playerDataCell;
-                //scoreboardRows[i].playerNameText.text = allPlayersMS[i].GetComponent<Player>().username;
-                //scoreboardRows[i].playerKillsText.text = allPlayersMS[i].score.ToString();
-                //scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
-                //scoreboardRows[i].playerHeadshotsText.text = $"{allPlayersMS[i].headshots.ToString()}/{allPlayersMS[i].meleeKills}/{allPlayersMS[i].grenadeKills}";
-                //scoreboardRows[i].playerHeadshotsText.text = $"{allPlayersMS[i].headshots}";
-                //scoreboardRows[i].playerTotalDamageText.text = allPlayersMS[i].damage.ToString();
-                //scoreboardRows[i].team = allPlayersMS[i].team;
-                //if (allPlayersMS[i].deaths > 0)
-                //    scoreboardRows[i].playerCurrentPointsText.text = (allPlayersMS[i].kills / (float)allPlayersMS[i].deaths).ToString();
-                //else
-                //    scoreboardRows[i].playerCurrentPointsText.text = "0";
-
-
-                scoreboardRows[i].gameObject.SetActive(true);
-            }
-        }
-        else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
-        {
-            List<PlayerSwarmMatchStats> allPlayersMS = new List<PlayerSwarmMatchStats>();
-
-            try
-            {
-                foreach (GameObject go in GameObject.FindGameObjectsWithTag("player"))
-                    allPlayersMS.Add(go.GetComponent<PlayerSwarmMatchStats>());
-            }
-            catch { }
-
-            for (int i = 0; i < allPlayersMS.Count; i++)
-            {
-                scoreboardRows[i].playerScoreStruct = allPlayersMS[i].player.playerDataCell;
-                //scoreboardRows[i].playerNameText.text = allPlayersMS[i].GetComponent<Player>().username;
-                //scoreboardRows[i].playerKillsText.text = allPlayersMS[i].kills.ToString();
-                //scoreboardRows[i].playerDeathsText.text = allPlayersMS[i].deaths.ToString();
-                //scoreboardRows[i].playerHeadshotsText.text = allPlayersMS[i].headshots.ToString();
-                //scoreboardRows[i].playerCurrentPointsText.text = allPlayersMS[i].points.ToString();
-
-                scoreboardRows[i].gameObject.SetActive(true);
-            }
-        }
-    }
-
     void DisableAllRows()
     {
         foreach (ScoreboardRowRuntime sr in scoreboardRows)
@@ -141,5 +85,15 @@ public class ScoreboardManager : MonoBehaviour
     void CloseTeamScoreboard()
     {
         try { _teamScoreboard.SetActive(false); } catch { }
+    }
+
+    public void SetScoreboardRows()
+    {
+        print($"SetScoreboardRows {GameManager.instance.pid_player_Dict.Values.Count}");
+        for (int i = 0; i < GameManager.instance.pid_player_Dict.Values.Count; i++)
+        {
+            scoreboardRows[i].playerScoreStruct = GameManager.instance.pid_player_Dict.ElementAt(i).Value.playerDataCell;
+            scoreboardRows[i].gameObject.SetActive(true);
+        }
     }
 }

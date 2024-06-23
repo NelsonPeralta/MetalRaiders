@@ -195,6 +195,8 @@ public class CurrentRoomManager : MonoBehaviour
 
                 OnGameIsReady?.Invoke(this);
 
+                foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+                    if (p.isMine) p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
 
                 StartCoroutine(GameStartDelayMapCamera_Coroutine());
                 StartCoroutine(GameStartDelay_Coroutine());

@@ -673,7 +673,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
         if ((GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm) == TeamMode.Classic)
-            if (GameManager.instance.gameType == GameType.GunGame || GameManager.instance.gameType == GameType.Hill || GameManager.instance.gameType == GameType.Oddball)
+            if (GameManager.instance.gameType == GameType.GunGame)
                 GameManager.instance.gameType = GameType.Slayer;
 
 
@@ -705,9 +705,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeGameType(string gt)
     {
-        if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.GunGame
-            || (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.Hill
-            || (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.Oddball)
+        if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.GunGame)
             if (GameManager.instance.teamMode != TeamMode.None)
                 GameManager.instance.teamMode = TeamMode.None;
 
