@@ -228,6 +228,11 @@ public class Player : Biped
 
                 if (_hitPoints <= 0)
                     PV.RPC("SetIsDead_RPC", RpcTarget.AllViaServer);
+                else if (newHitPoints < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newHitPoints)
+                    PlayHurtSound();
+
+
+
                 //isDead = true;
 
                 impactPos = null;
@@ -635,7 +640,13 @@ public class Player : Biped
     public AudioClip sprintingClip;
     public AudioClip[] meleeClips;
     public AudioClip[] hurtClips;
-    public AudioClip[] deathClips;
+    public AudioClip[] shootingEnemy;
+    public AudioClip[] reloadingClips;
+    public AudioClip[] allyDownClips;
+    public AudioClip[] throwGrenadeClips;
+    public AudioClip[] enemyDownClips;
+    public AudioClip[] outOfAmmoClips;
+
 
     public PhotonView PV;
 
@@ -785,6 +796,8 @@ public class Player : Biped
     }
     private void Update()
     {
+        if (_hurtCooldown > 0) _hurtCooldown -= Time.deltaTime;
+
         if (!PV.IsMine) _rb.isKinematic = true;
         HitPointsRecharge();
         OvershieldPointsRecharge();
@@ -948,12 +961,162 @@ public class Player : Biped
     }
 
 
+
+    int randomSound, ranClipChance;
+    int _playerVoiceCooldownTime { get { return 12 + (GameManager.instance.pid_player_Dict.Count * 3); } }
+    int _ranClipChanceOdds { get { return UnityEngine.Random.Range(0, 90 + (GameManager.instance.pid_player_Dict.Count * 12)); } }
+    int _maxRanClipChance = 30;
+
     public void PlayMeleeSound()
     {
-        int randomSound = UnityEngine.Random.Range(0, meleeClips.Length);
+        randomSound = UnityEngine.Random.Range(0, meleeClips.Length);
         playerVoice.clip = meleeClips[randomSound];
         playerVoice.Play();
     }
+
+    float _hurtCooldown;
+
+    public void PlayHurtSound()
+    {
+        if (hitPoints > 15)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            {
+                if (_hurtCooldown <= 0)
+                {
+                    _hurtCooldown = 2;
+
+
+                    randomSound = UnityEngine.Random.Range(0, hurtClips.Length);
+                    playerVoice.clip = hurtClips[randomSound];
+
+                    if (!playerVoice.isPlaying)
+                        playerVoice.Play();
+                }
+            }
+    }
+
+    public void PlayShootingEnemyClip()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            ranClipChance = _ranClipChanceOdds;
+
+            if (ranClipChance < _maxRanClipChance && GameManager.instance.commonPlayerVoiceCooldown <= 0 && SwarmManager.instance.TimeSinceEnemiesDropped <= 10)
+            {
+                GameManager.instance.commonPlayerVoiceCooldown = _playerVoiceCooldownTime;
+
+
+                randomSound = UnityEngine.Random.Range(0, shootingEnemy.Length);
+                playerVoice.clip = shootingEnemy[randomSound];
+
+                if (!playerVoice.isPlaying)
+                    playerVoice.Play();
+            }
+        }
+    }
+
+    public void PlayReloadingClip()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            ranClipChance = _ranClipChanceOdds;
+
+            if (ranClipChance < _maxRanClipChance && GameManager.instance.commonPlayerVoiceCooldown <= 0)
+            {
+                GameManager.instance.commonPlayerVoiceCooldown = _playerVoiceCooldownTime;
+
+
+                randomSound = UnityEngine.Random.Range(0, reloadingClips.Length);
+                playerVoice.clip = reloadingClips[randomSound];
+
+                if (!playerVoice.isPlaying)
+                    playerVoice.Play();
+            }
+        }
+    }
+
+    void PlayAllyDownClip(Player p)
+    {
+        if (p != this)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            {
+                ranClipChance = _ranClipChanceOdds;
+
+                if (ranClipChance < _maxRanClipChance)
+                {
+                    GameManager.instance.commonPlayerVoiceCooldown = _playerVoiceCooldownTime;
+
+
+                    randomSound = UnityEngine.Random.Range(0, allyDownClips.Length);
+                    playerVoice.clip = allyDownClips[randomSound];
+
+                    if (!playerVoice.isPlaying)
+                        playerVoice.Play();
+                }
+            }
+    }
+
+    public void PlayThrowingGrenadeClip()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            ranClipChance = _ranClipChanceOdds;
+
+            if (ranClipChance < _maxRanClipChance && GameManager.instance.commonPlayerVoiceCooldown <= 0)
+            {
+                GameManager.instance.commonPlayerVoiceCooldown = _playerVoiceCooldownTime;
+
+
+                randomSound = UnityEngine.Random.Range(0, throwGrenadeClips.Length);
+                playerVoice.clip = throwGrenadeClips[randomSound];
+
+                if (!playerVoice.isPlaying)
+                    playerVoice.Play();
+            }
+        }
+    }
+
+    public void PlayEnemyDownClip()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            ranClipChance = _ranClipChanceOdds;
+
+            if (ranClipChance < _maxRanClipChance && GameManager.instance.commonPlayerVoiceCooldown <= 0)
+            {
+                GameManager.instance.commonPlayerVoiceCooldown = _playerVoiceCooldownTime;
+
+
+                randomSound = UnityEngine.Random.Range(0, enemyDownClips.Length);
+                playerVoice.clip = enemyDownClips[randomSound];
+
+                if (!playerVoice.isPlaying)
+                    playerVoice.Play();
+            }
+        }
+    }
+
+    public void PlayOutOfAmmoClip()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            ranClipChance = _ranClipChanceOdds;
+
+            if (ranClipChance < _maxRanClipChance && GameManager.instance.commonPlayerVoiceCooldown <= 0)
+            {
+                GameManager.instance.commonPlayerVoiceCooldown = _playerVoiceCooldownTime;
+
+
+                randomSound = UnityEngine.Random.Range(0, outOfAmmoClips.Length);
+                playerVoice.clip = outOfAmmoClips[randomSound];
+
+                if (!playerVoice.isPlaying)
+                    playerVoice.Play();
+            }
+        }
+    }
+
+
     public void LeaveRoomWithDelay()
     {
         if (controllerId == 0)
@@ -1158,6 +1321,10 @@ public class Player : Biped
 
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
+        GameManager.GetRootPlayer().PlayAllyDownClip(this);
+
+
+
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
@@ -1237,8 +1404,7 @@ public class Player : Biped
 
     void OnPlayerHealthDamaged_Delegate(Player player)
     {
-        var a = Instantiate(bloodImpact, _impactPos, Quaternion.identity);
-        Destroy(a, 1);
+        //PlayHurtSound();
     }
 
     #endregion

@@ -837,6 +837,10 @@ public class PlayerController : MonoBehaviourPun
                 rScript.CheckAmmoTypeType(true, pInventory.leftWeapon);
             }
         }
+
+
+        if (pInventory.activeWeapon.loadedAmmo <= 0 && pInventory.holsteredWeapon.loadedAmmo <= 0)
+            player.PlayOutOfAmmoClip();
     }
 
     void CheckDrawingWeapon()
@@ -1434,6 +1438,8 @@ public class PlayerController : MonoBehaviourPun
     void SpawnGrenade_RPC(bool fga, int ind, Vector3 sp, Quaternion sr, Vector3 forw)
     {
         Debug.Log($"SpawnGrenade_RPC {ind}");
+
+        player.PlayThrowingGrenadeClip();
 
         GameObject nade = GrenadePool.GetGrenade(fga, ind);
         nade.transform.position = sp; nade.transform.rotation = sr;

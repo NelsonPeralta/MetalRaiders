@@ -193,6 +193,7 @@ public class ReloadScript : MonoBehaviourPun
         if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity && activeWeapon.spareAmmo > 0)
         {
             ReloadAnimation(isOutOfAmmo, activeWeapon);
+            pController.player.PlayReloadingClip();
         }
     }
 

@@ -718,6 +718,7 @@ abstract public class Actor : Biped
 
 
         Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        pp.PlayShootingEnemyClip();
         //pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         //if (!targetPlayer)
@@ -744,6 +745,7 @@ abstract public class Actor : Biped
                 pp.playerMedals.kills++;
                 pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
                 pp.playerUI.ShowPointWitness(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
+                pp.PlayEnemyDownClip();
 
                 //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
             }

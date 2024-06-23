@@ -230,6 +230,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public float TimeSinceEnemiesDropped { get { return _timeSinceEnemiesDroped; } }
+
     List<AudioClip> _clips;
 
     float _clipTimeRemaining;
@@ -238,7 +240,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
 
-
+    float _timeSinceEnemiesDroped;
 
 
 
@@ -271,6 +273,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (!waveEnded)
+        {
+            _timeSinceEnemiesDroped += Time.deltaTime;
+        }
+
+
         if (_clipTimeRemaining > 0)
         {
             _clipTimeRemaining -= Time.deltaTime;
@@ -1184,7 +1192,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             foreach (AlienShooter w in ribbiansPool)
             {
-                //print($"{w.GetComponent<PhotonView>().ViewID} is active: {w.gameObject.activeInHierarchy} and is reserved: {_reservedActorPhotonIdsForWave.Contains(w.GetComponent<PhotonView>().ViewID)}");
                 if (!w.gameObject.activeInHierarchy && !_reservedActorPhotonIdsForWave.Contains(w.GetComponent<PhotonView>().ViewID))
                 {
                     aiPhotonId = w.GetComponent<PhotonView>().ViewID;
@@ -1196,36 +1203,52 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             networkSwarmManagerPV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId,
                 sp.transform.position, sp.transform.rotation, AiType.AlienShooter.ToString(), 0);
+
             if (editMode) break;
 
-            //SpawnAi(AiType.AlienShooter, sp.transform);
         }
         foreach (SpawnPoint s in ad.breathersSpawnPoints)
         {
-            foreach (Breather w in breathersPool)
+
+            if (currentWave > 1 && currentWave % 5 == 0) // Spawn Ribbians instead
             {
-                //print($"{w.GetComponent<PhotonView>().ViewID} is active: {w.gameObject.activeInHierarchy} and is reserved: {_reservedActorPhotonIdsForWave.Contains(w.GetComponent<PhotonView>().ViewID)}");
-
-                if (!w.gameObject.activeInHierarchy && !_reservedActorPhotonIdsForWave.Contains(w.GetComponent<PhotonView>().ViewID))
+                foreach (AlienShooter w in ribbiansPool)
                 {
-                    aiPhotonId = w.GetComponent<PhotonView>().ViewID;
-                    _reservedActorPhotonIdsForWave.Add(aiPhotonId);
-                    break;
+                    if (!w.gameObject.activeInHierarchy && !_reservedActorPhotonIdsForWave.Contains(w.GetComponent<PhotonView>().ViewID))
+                    {
+                        aiPhotonId = w.GetComponent<PhotonView>().ViewID;
+                        _reservedActorPhotonIdsForWave.Add(aiPhotonId);
+                        break;
+                    }
                 }
+
+                networkSwarmManagerPV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId,
+                    s.transform.position, s.transform.rotation, AiType.AlienShooter.ToString(), 0);
+
+                if (editMode) break;
             }
+            else // Spawn breathers normally
+            {
+                foreach (Breather w in breathersPool)
+                {
+                    if (!w.gameObject.activeInHierarchy && !_reservedActorPhotonIdsForWave.Contains(w.GetComponent<PhotonView>().ViewID))
+                    {
+                        aiPhotonId = w.GetComponent<PhotonView>().ViewID;
+                        _reservedActorPhotonIdsForWave.Add(aiPhotonId);
+                        break;
+                    }
+                }
 
-            networkSwarmManagerPV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId,
-                s.transform.position, s.transform.rotation, AiType.Breather.ToString(), 0);
+                networkSwarmManagerPV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId,
+                    s.transform.position, s.transform.rotation, AiType.Breather.ToString(), 0);
 
-            if (editMode) break;
-
-            //SpawnAi(AiType.Breather, s.transform);
+                if (editMode) break;
+            }
         }
 
 
 
 
-
-
+        _timeSinceEnemiesDroped = 0;
     }
 }

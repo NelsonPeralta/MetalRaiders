@@ -338,6 +338,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
+    public float commonPlayerVoiceCooldown;
+
 
 
 
@@ -582,6 +584,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (commonPlayerVoiceCooldown > 0) commonPlayerVoiceCooldown -= Time.deltaTime;
+
+
 
         if (_checkCooldown > 0)
         {
