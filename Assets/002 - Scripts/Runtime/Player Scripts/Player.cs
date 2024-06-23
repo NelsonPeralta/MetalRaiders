@@ -1402,9 +1402,15 @@ public class Player : Biped
         }
     }
 
+
+    GameObject _bloodHit;
+
     void OnPlayerHealthDamaged_Delegate(Player player)
     {
         //PlayHurtSound();
+        _bloodHit = gameObjectPool.SpawnPooledBloodHit();
+        _bloodHit.transform.position = _impactPos;
+        _bloodHit.SetActive(true);
     }
 
     #endregion

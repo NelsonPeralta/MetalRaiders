@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerRagdoll : Ragdoll
 {
-    
+
     [SerializeField] Transform _cameraHolder;
     [SerializeField] Transform _cameraAnchor;
     [SerializeField] Transform _cameraHorAxis;
@@ -28,5 +28,15 @@ public class PlayerRagdoll : Ragdoll
         playerCameraScript.transform.parent = _cameraAnchor.transform;
         playerCameraScript.horizontalAxisTarget = _cameraHorAxis.transform;
         playerCameraScript.verticalAxisTarget = _cameraVerAxis.transform;
+    }
+
+
+    public override void PlayerRagdollOnEnable()
+    {
+        if (GameManager.instance.connection == GameManager.Connection.Local)
+        {
+            _deathClipAudioSource.spatialBlend = .1f;
+            _collisionAudioSource.spatialBlend = .1f;
+        }
     }
 }

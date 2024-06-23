@@ -34,6 +34,9 @@ public class PlayerShooting : MonoBehaviourPun
 
     private void Awake()
     {
+        if (GameManager.instance.connection == GameManager.Connection.Local)
+            GetComponent<AudioSource>().spatialBlend = 0;
+
         _gameObjectPool = FindObjectOfType<GameObjectPool>();
     }
     private void Start()

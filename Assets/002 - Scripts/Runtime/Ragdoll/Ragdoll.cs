@@ -10,7 +10,7 @@ abstract public class Ragdoll : MonoBehaviour
 
     [SerializeField] protected List<AudioClip> _deathClips = new List<AudioClip>();
     [SerializeField] protected List<AudioClip> _collisionClips = new List<AudioClip>();
-    [SerializeField] AudioSource _deathClipAudioSource, _collisionAudioSource;
+    [SerializeField] protected AudioSource _deathClipAudioSource, _collisionAudioSource;
 
     [SerializeField] protected List<RagdollLimbCollisionDetection> _limbCollisionDetection = new List<RagdollLimbCollisionDetection>();
     [SerializeField] float _timeSinceLastThud;
@@ -18,6 +18,8 @@ abstract public class Ragdoll : MonoBehaviour
 
     private void OnEnable()
     {
+        PlayerRagdollOnEnable();
+
         _ran = Random.Range(0, _deathClips.Count);
 
         _deathClipAudioSource.clip = _deathClips[_ran];
@@ -62,4 +64,5 @@ abstract public class Ragdoll : MonoBehaviour
 
 
     public virtual void ChildUpdate() { }
+    public virtual void PlayerRagdollOnEnable() { }
 }
