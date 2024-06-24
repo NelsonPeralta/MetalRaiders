@@ -658,6 +658,7 @@ public class Player : Biped
     public AudioClip[] throwGrenadeClips;
     public AudioClip[] enemyDownClips;
     public AudioClip[] outOfAmmoClips;
+    public AudioClip[] stuckClips;
 
 
     public PhotonView PV;
@@ -1129,6 +1130,24 @@ public class Player : Biped
                 if (!playerVoice.isPlaying)
                     playerVoice.Play();
             }
+        }
+    }
+
+
+    public void PlayStuckClip()
+    {
+        ranClipChance = _ranClipChanceOdds;
+
+        if (ranClipChance < 19 && GameManager.instance.commonPlayerVoiceCooldown <= 0)
+        {
+            GameManager.instance.commonPlayerVoiceCooldown = _playerVoiceCooldownTime;
+
+
+            randomSound = UnityEngine.Random.Range(0, stuckClips.Length);
+            playerVoice.clip = stuckClips[randomSound];
+
+            if (!playerVoice.isPlaying)
+                playerVoice.Play();
         }
     }
 

@@ -30,6 +30,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] float _ttl, _defaultTtl;
     [SerializeField] Explosion.Color _color;
     [SerializeField] Explosion.Type _type;
+    [SerializeField] AudioSource _stuckSfxAudioSource;
 
     bool _collided;
     float _explosionDelayOnImpact;
@@ -208,5 +209,12 @@ public class ExplosiveProjectile : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
 
         stuck = true;
+
+
+        if (GameManager.instance.connection == GameManager.Connection.Local) _stuckSfxAudioSource.spatialBlend = 0; else _stuckSfxAudioSource.spatialBlend = 1;
+        _stuckSfxAudioSource.Play();
+
+
+        GameManager.GetPlayerWithId(playerId).PlayStuckClip();
     }
 }

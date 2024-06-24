@@ -89,7 +89,7 @@ public class MapCamera : MonoBehaviour
         _canvas.gameObject.SetActive(false);
         _announcementPLayed = true;
         GameManager.UpdateVolume();
-        _announcerDelay = 0.5f;
+        _announcerDelay = 1;
 
         try { if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) SwarmManager.instance.PlayOpeningMusic(); } catch { }
     }
