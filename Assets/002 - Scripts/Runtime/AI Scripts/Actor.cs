@@ -558,7 +558,9 @@ abstract public class Actor : Biped
 
                 if (_meleeCooldown <= 0 && !isFlinching && !isBoosting && !isDodging)
                 {
-                    Melee();
+                    print($"trying to melee {targetTransform.name}");
+                    if (targetTransform.GetComponent<Player>() || targetTransform.root.GetComponent<Player>())
+                        Melee();
                 }
                 else
                 {
@@ -623,8 +625,10 @@ abstract public class Actor : Biped
 
                             if (!targetTransform.GetComponent<HitPoints>())
                                 targetTransform = null;
-                            else
+                            else if (SwarmManager.instance.globalActorGrenadeCooldown <= 0)
                                 ThrowExplosive(PhotonNetwork.InRoom);
+                            else
+                                ShootProjectile(PhotonNetwork.InRoom);
                         }
                     }
                 }

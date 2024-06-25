@@ -66,7 +66,11 @@ public class Breather : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("BreatherMelee", RpcTarget.All, false);
-            targetTransform.GetComponent<Player>().Damage(22, false, pid);
+
+            if (targetTransform.GetComponent<Player>())
+                targetTransform.GetComponent<Player>().Damage(22, false, pid);
+            else if (targetTransform.root.GetComponent<Player>())
+                targetTransform.GetComponent<Player>().Damage(22, false, pid);
         }
         else
         {

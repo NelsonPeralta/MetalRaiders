@@ -104,7 +104,11 @@ public class AlienShooter : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("RibbianMelee", RpcTarget.All, false);
-            targetTransform.GetComponent<Player>().Damage(33, false, pid);
+            print($"Master client is trying to melee {targetTransform.name}");
+            if (targetTransform.GetComponent<Player>())
+                targetTransform.GetComponent<Player>().Damage(33, false, pid);
+            else if (targetTransform.root.GetComponent<Player>())
+                targetTransform.GetComponent<Player>().Damage(33, false, pid);
         }
         else
         {
@@ -171,7 +175,7 @@ public class AlienShooter : Actor
         else
         {
             //Debug.Log("Punch Player RPC");
-
+            SwarmManager.instance.globalActorGrenadeCooldown = 4;
             _isCurrentlyThrowingGrenadeCooldown = 1;
             _animator.SetBool("Run", false);
             nma.enabled = false;

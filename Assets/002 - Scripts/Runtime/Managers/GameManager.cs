@@ -431,6 +431,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            SwarmManager.instance.StopAllMusic();
             MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().ClearCarnageReportData();
 
             print("GAME MANAGER ONSCENELOADED 0");

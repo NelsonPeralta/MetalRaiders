@@ -240,9 +240,6 @@ public class Player : Biped
 
                 if (_hitPoints <= 0)
                     PV.RPC("SetIsDead_RPC", RpcTarget.AllViaServer);
-                else if (newHitPoints < maxHealthPoints && _previousValue <= maxHealthPoints && _previousValue > newHitPoints)
-                    PlayHurtSound();
-
 
 
                 //isDead = true;
@@ -345,6 +342,8 @@ public class Player : Biped
 
             if (value && !previousValue)
             {
+                playerVoice.Stop(); playerVoice.clip = null;
+
                 if (playerInventory.playerOddballActive)
                     NetworkGameManager.instance.DropOddball(weaponDropPoint.position, weaponDropPoint.forward);
 
@@ -995,21 +994,21 @@ public class Player : Biped
 
     public void PlayHurtSound()
     {
-        if (hitPoints > 15)
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        //if (hitPoints > 15)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            if (_hurtCooldown <= 0)
             {
-                if (_hurtCooldown <= 0)
-                {
-                    _hurtCooldown = 2;
+                _hurtCooldown = 4;
 
 
-                    randomSound = UnityEngine.Random.Range(0, hurtClips.Length);
-                    playerVoice.clip = hurtClips[randomSound];
+                randomSound = UnityEngine.Random.Range(0, hurtClips.Length);
+                playerVoice.clip = hurtClips[randomSound];
 
-                    if (!playerVoice.isPlaying)
-                        playerVoice.Play();
-                }
+                if (!playerVoice.isPlaying)
+                    playerVoice.Play();
             }
+        }
     }
 
     public void PlayShootingEnemyClip()
@@ -1196,6 +1195,7 @@ public class Player : Biped
         else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2000); }
         else if (deathNature == DeathNature.UltraBind) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((transform.position - _lastPlayerSource.transform.position) * 1000); }
         else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+        else if (deathNature == DeathNature.None) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
     }
 
 
@@ -1446,7 +1446,7 @@ public class Player : Biped
 
     void OnPlayerHealthDamaged_Delegate(Player player)
     {
-        //PlayHurtSound();
+        PlayHurtSound();
         _bloodHit = gameObjectPool.SpawnPooledBloodHit();
         _bloodHit.transform.position = _impactPos;
         _bloodHit.SetActive(true);

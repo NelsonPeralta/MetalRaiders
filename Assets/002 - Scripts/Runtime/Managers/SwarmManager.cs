@@ -38,6 +38,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
     }
     public int nextWaveDelay;
+    public int ranClipInt { get { return _ranClipInt; } set { _ranClipInt = value; print($"ranclip set to {value}"); } }
 
 
     [SerializeField] GameObject zombiePrefab;
@@ -77,7 +78,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public List<HealthPack> healthPacks = new List<HealthPack>();
 
-    public List<ScriptObjSwarmBossMusic> bossMusics = new List<ScriptObjSwarmBossMusic>();
+    public AudioClip[] bossMusicsIntros, bossMusicLoops, bossMusicOutros;
 
     [SerializeField] AudioSource _musicAudioSource;
     [SerializeField] List<AudioClip> _openingClips;
@@ -87,6 +88,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     [SerializeField] AudioClip _livesAddedClip;
     [SerializeField] AudioClip _waveSuccessClip;
     [SerializeField] List<ActorDropship> _actorDropships = new List<ActorDropship>();
+
+
+    public float globalActorGrenadeCooldown;
 
     // constants
     const int ZOMBIE_SPAWN_DELAY = 4;
@@ -221,8 +225,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 try
                 {
                     StartCoroutine(PlayClip_Coroutine(_clipTimeRemaining, _clips.Last()));
-                    _clipTimeRemaining += _clips.Last().length + 0.1f;
-                    StartCoroutine(RemoveClip_Coroutine(_clipTimeRemaining * 0.95f, _clips.Last()));
+                    _clipTimeRemaining += _clips.Last().length + 0;
+                    StartCoroutine(RemoveClip_Coroutine(_clipTimeRemaining * 1, _clips.Last()));
                 }
                 catch { }
 
@@ -232,7 +236,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public float TimeSinceEnemiesDropped { get { return _timeSinceEnemiesDroped; } }
 
-    List<AudioClip> _clips;
+    List<AudioClip> _clips = new List<AudioClip>();
 
     float _clipTimeRemaining;
 
@@ -273,6 +277,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (globalActorGrenadeCooldown > 0) globalActorGrenadeCooldown -= Time.deltaTime;
+
         if (!waveEnded)
         {
             _timeSinceEnemiesDroped += Time.deltaTime;
@@ -412,8 +418,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void PlayOpeningMusic()
     {
-        _ranClipInt = Random.Range(0, _openingClips.Count);
-        _musicAudioSource.clip = _openingClips[_ranClipInt];
+        ranClipInt = Random.Range(0, _openingClips.Count);
+        _musicAudioSource.clip = _openingClips[ranClipInt];
         _musicAudioSource.Play();
     }
 
@@ -523,21 +529,35 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     IEnumerator StartNewWave_Coroutine()
     {
         yield return new WaitForSeconds(0);
+
+        //print($"StartNewWave_Coroutine {currentWave}");
+        if (currentWave == 2)
+        {
+            ranClipInt = Random.Range(0, bossMusicsIntros.Length); if (bossMusicsIntros.Length == 1) ranClipInt = 0;
+            print($"StartNewWave_Coroutine {currentWave} {ranClipInt} {bossMusicsIntros.Length}");
+            AddClip(bossMusicsIntros[ranClipInt]);
+            AddClip(bossMusicLoops[ranClipInt]);
+        }
         try
         {
-            if (currentWave % 5 == 3)
-            {
-                _ranClipInt = Random.Range(0, _ambiantClips.Count);
-                _musicAudioSource.clip = _ambiantClips[_ranClipInt];
-                _musicAudioSource.Play();
-            }
-            else if (currentWave % 5 == 0)
-            {
-                int ran = Random.Range(0, bossMusics.Count);
 
-                AddClip(bossMusics[_ranClipInt].intro);
-                AddClip(bossMusics[_ranClipInt].loop);
-            }
+
+
+
+
+            //if (currentWave % 5 == 3)
+            //{
+            //    _ranClipInt = Random.Range(0, _ambiantClips.Count);
+            //    _musicAudioSource.clip = _ambiantClips[_ranClipInt];
+            //    _musicAudioSource.Play();
+            //}
+            //else if (currentWave % 5 == 0 && currentWave > 1)
+            //{
+            //    int ran = Random.Range(0, bossMusics.Count);
+
+            //    AddClip(bossMusics[_ranClipInt].intro);
+            //    AddClip(bossMusics[_ranClipInt].loop);
+            //}
         }
         catch (System.Exception ex)
         {
@@ -944,12 +964,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void EndWave()
     {
         Debug.Log("EndWave_RPC");
-        try
-        {
-            if (currentWave % 5 == 0)
-                AddClip(bossMusics[_ranClipInt].intro);
-        }
-        catch (System.Exception e) { Debug.LogWarning(e); }
+        print($"EndWave_RPC {currentWave} {ranClipInt}");
+        if (currentWave == 2 && currentWave > 1) AddClip(bossMusicOutros[ranClipInt]);
 
         OnWaveEnd?.Invoke(this);
         _newWaveCountdown = nextWaveDelay;
@@ -1112,6 +1128,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void EndGame(bool saveXp = true)
     {
+        SwarmManager.instance.StopAllMusic();
+
+
         CurrentRoomManager.instance.gameOver = true;
         StopAllCoroutines();
         foreach (Player pp in GameManager.instance.pid_player_Dict.Values)
@@ -1155,6 +1174,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             _musicAudioSource.clip = clip;
             _musicAudioSource.Play();
+            _musicAudioSource.loop = bossMusicLoops.Contains(clip);
         }
         catch (System.Exception ex) { Debug.Log(ex); }
 
@@ -1250,5 +1270,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
         _timeSinceEnemiesDroped = 0;
+    }
+
+
+
+
+
+    public void StopAllMusic()
+    {
+        _musicAudioSource.Stop();
+        _musicAudioSource.clip = null;
     }
 }
