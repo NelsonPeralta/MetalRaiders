@@ -84,6 +84,8 @@ public class PlayerShooting : MonoBehaviourPun
         if (wp)
             sw = wp;
 
+        print($"{playerController.player.name} Shoot {sw.name} {sw.loadedAmmo}");
+
         if ((fireInterval > 0 && !wp))
             return;
         if ((leftFireInterval > 0 && wp))
@@ -156,14 +158,17 @@ public class PlayerShooting : MonoBehaviourPun
     void Shoot_Caller(bool isLeftWeapon = false)
     {
 
-        Debug.Log("Shoot_Caller");
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        Debug.Log($"{playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo}");
 
         if (isLeftWeapon)
             activeWeapon = pInventory.activeWeapon.leftWeapon;
 
         if (activeWeapon.loadedAmmo <= 0 || playerController.isReloading)
+        {
+            Debug.Log($"{playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} isReloading: {playerController.isReloading}");
             return;
+        }
 
         shoooo(isLeftWeapon);
         //Shoot_RPC();
