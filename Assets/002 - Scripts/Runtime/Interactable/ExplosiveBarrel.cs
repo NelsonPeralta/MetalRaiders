@@ -12,7 +12,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
 
     public int index { get { return _index; } }
     public int _networkHitPoints { get { return _hitPoints; } set { _hitPoints = value; if (_hitPoints <= 0) OnExploded?.Invoke(this); } }
-    public int hitPoints { get { return _networkHitPoints; } set { NetworkGameManager.instance.DamageExplosiveBarrel(spawnPointPosition, value); } }
+    public int hitPoints { get { return _networkHitPoints; } set { NetworkGameManager.instance.DamageExplosiveBarrel(spawnPointPosition, value, _lastPID); } }
     public Vector3 spawnPointPosition { get { return _spawnPointPosition; } }
     public Quaternion spawnPointRotation { get { return _spawnPointRotation; } }
     public int lastPid { get { return _lastPID; } }
@@ -74,8 +74,8 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
         print($"ExplosiveBarrel Damage {playerWhoShotThisPlayerPhotonId}");
-        hitPoints -= damage;
         _lastPID = playerWhoShotThisPlayerPhotonId;
+        hitPoints -= damage;
     }
 
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId,
