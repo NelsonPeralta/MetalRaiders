@@ -269,21 +269,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
 
-    public void UpdateAmmo(int playerPid, int wIndex, int ammo, bool isSpare = false, bool sender = false)
-    {
-        print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonViewId(playerPid)} {ammo}. Sender: {sender}");
-        if (GameManager.GetPlayerWithPhotonViewId(playerPid).isMine)
-        {
-            if (sender)
-            {
-                instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, sender);
-            }
-        }
-        else
-        {
-            StartCoroutine(UpdateAmmo_Coroutine(playerPid, wIndex, isSpare, ammo));
-        }
-    }
+  
 
     IEnumerator UpdateAmmo_Coroutine(int playerPid, int wIndex, bool isSpare, int ammo)
     {
@@ -934,6 +920,23 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             GameManager.instance.oddballSkull.rb.AddForce(dir * 300);
 
             GameManager.instance.oddballSkull.PlayBallDroppedClip();
+        }
+    }
+
+    [PunRPC]
+    public void UpdateAmmo(int playerPid, int wIndex, int ammo, bool isSpare = false, bool sender = false)
+    {
+        print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonViewId(playerPid)} {ammo}. Sender: {sender}");
+        if (GameManager.GetPlayerWithPhotonViewId(playerPid).isMine)
+        {
+            if (sender)
+            {
+                instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, sender);
+            }
+        }
+        else
+        {
+            StartCoroutine(UpdateAmmo_Coroutine(playerPid, wIndex, isSpare, ammo));
         }
     }
 
