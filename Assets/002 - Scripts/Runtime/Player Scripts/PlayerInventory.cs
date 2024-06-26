@@ -83,7 +83,7 @@ public class PlayerInventory : MonoBehaviourPun
                 try { OnActiveWeaponChanged?.Invoke(this); } catch { }
                 try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
-
+            PlayDrawSound();
 
         }
     }
@@ -746,7 +746,6 @@ public class PlayerInventory : MonoBehaviourPun
     {
         try
         {
-            PlayDrawSound();
             CheckLowAmmoIndicator();
             UpdateAllExtraAmmoHuds();
             UpdateThirdPersonGunModelsOnCharacter();

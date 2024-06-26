@@ -288,8 +288,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     pInventory.hasSecWeap = true;
                     pInventory.activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = closestLootableWeapon.networkAmmo;
                     pInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestLootableWeapon.spareAmmo;
-
-                    pInventory.PlayDrawSound();
                 }
                 else if (pInventory.holsteredWeapon)
                 {
@@ -302,8 +300,6 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     }
                     PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
                     OnWeaponPickup?.Invoke(this);
-
-                    pInventory.PlayDrawSound();
                 }
             }
 

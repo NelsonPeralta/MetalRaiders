@@ -12,13 +12,13 @@ public class PlayerAudioSourceNetworkBehaviour : MonoBehaviour
     {
         _player = transform.root.GetComponent<Player>();
 
-        if (_player.PV.IsMine)
+        if (GameManager.instance.connection == GameManager.Connection.Local)
+        {
             GetComponent<AudioSource>().spatialBlend = 0;
+        }
         else
         {
-            GetComponent<AudioSource>().spatialBlend = 0.95f;
-            GetComponent<AudioSource>().volume = 1;
+            GetComponent<AudioSource>().spatialBlend = 0.98f;
         }
-
     }
 }

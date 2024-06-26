@@ -571,24 +571,23 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if (currentWave > 1)
             GameManager.GetRootPlayer().announcer.AddClip(_waveStartClip);
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-        Debug.Log("Spawning Ais");
 
 
-        _reservedActorPhotonIdsForWave.Clear();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("Spawning Ais");
+            _reservedActorPhotonIdsForWave.Clear();
+
+            for (int i = 0; i < _actorDropships.Count; i++)
+            {
+                StartCoroutine(EnableDropship_Coroutine(_actorDropships[i].gameObject, i + 1));
+            }
+        }
 
         for (int i = 0; i < _actorDropships.Count; i++)
         {
             StartCoroutine(EnableDropship_Coroutine(_actorDropships[i].gameObject, i + 1));
         }
-
-
-        //SpawnAi(AiType.Undead);
-        //SpawnAi(AiType.AlienShooter);
-        //SpawnAi(AiType.Breather);
-        //SpawnAi(AiType.Helldog);
-        //SpawnAi(AiType.FlameTyrant);
     }
     public void SpawnAi(AiType aiType, Transform transform = null)
     {
