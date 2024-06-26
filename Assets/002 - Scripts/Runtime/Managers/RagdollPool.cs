@@ -56,7 +56,7 @@ public class RagdollPool : MonoBehaviour
 
 
 
-    public GameObject SpawnPooledPlayerRagdoll()
+    public GameObject SpawnPooledPlayerRagdoll(bool isMine)
     {
         foreach (GameObject obj in ragdolls)
             if (!obj.activeInHierarchy)
@@ -66,6 +66,7 @@ public class RagdollPool : MonoBehaviour
                     SceneManager.MoveGameObjectToScene(obj, SceneManager.GetActiveScene()); // Undos DontDestroyOnLoad
                     ragdolls.Remove(obj);
                     StartCoroutine(DisableObjectAfterTime(obj, 20));
+                    obj.GetComponent<PlayerRagdoll>().isMine = isMine;
                     return obj;
                 }
         return null;

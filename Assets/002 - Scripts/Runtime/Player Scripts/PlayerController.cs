@@ -113,7 +113,8 @@ public class PlayerController : MonoBehaviourPun
     public Animator animDWLeft;
     public WeaponProperties dwRightWP;
     public WeaponProperties dwLeftWP;
-    public bool isHoldingShootBtn, isHoldingScopeBtn;
+    public bool isHoldingShootBtn { get { return _isHoldingShootBtn; } set { _isHoldingShootBtn = value; print($"isHoldingShootBtn {value}"); } }
+    public bool isHoldingScopeBtn;
     public bool isShootingRight;
     public bool isShootingLeft;
     public bool isReloadingRight;
@@ -163,6 +164,9 @@ public class PlayerController : MonoBehaviourPun
     Vector3 _lastMainCamLocalPos;
     Quaternion _lasMainCamLocalQuat;
     LayerMask _lastMainCamLayerMask;
+
+
+    bool _isHoldingShootBtn;
 
     void Awake()
     {
@@ -447,6 +451,7 @@ public class PlayerController : MonoBehaviourPun
     void _StartShoot_RPC(Vector3 bipedOrSpp)
     {
 
+        isHoldingShootBtn = true;
         if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading &&
             !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
         {
@@ -457,7 +462,6 @@ public class PlayerController : MonoBehaviourPun
             }
             catch { }
             player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.orSpPos_Biped_Dict[bipedOrSpp];
-            isHoldingShootBtn = true;
             holstered = false;
             weaponAnimator.SetBool("Holster", false);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
@@ -489,9 +493,9 @@ public class PlayerController : MonoBehaviourPun
         {
             DisableSprint();
 
+            isHoldingShootBtn = true;
             if (pInventory.activeWeapon.codeName.Equals("oddball"))
             {
-                isHoldingShootBtn = true;
 
                 if (player.isMine) Melee(true);
 

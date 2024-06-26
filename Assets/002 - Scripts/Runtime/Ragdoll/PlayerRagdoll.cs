@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerRagdoll : Ragdoll
 {
+    public bool isMine;
     public AudioSource respawnBeepAudioSource;
 
 
@@ -29,21 +30,22 @@ public class PlayerRagdoll : Ragdoll
         {
             _respawnCountdown -= Time.deltaTime;
 
-            if (_respawnCountdown <= 3 && _respawnBeepCount == 0)
-            {
-                _respawnBeepCount++;
-                respawnBeepAudioSource.Play();
-            }
-            else if (_respawnCountdown <= 2 && _respawnBeepCount == 1)
-            {
-                _respawnBeepCount++;
-                respawnBeepAudioSource.Play();
-            }
-            else if (_respawnCountdown <= 1 && _respawnBeepCount == 2)
-            {
-                _respawnBeepCount++;
-                respawnBeepAudioSource.Play();
-            }
+            if (isMine)
+                if (_respawnCountdown <= 3 && _respawnBeepCount == 0)
+                {
+                    _respawnBeepCount++;
+                    respawnBeepAudioSource.Play();
+                }
+                else if (_respawnCountdown <= 2 && _respawnBeepCount == 1)
+                {
+                    _respawnBeepCount++;
+                    respawnBeepAudioSource.Play();
+                }
+                else if (_respawnCountdown <= 1 && _respawnBeepCount == 2)
+                {
+                    _respawnBeepCount++;
+                    respawnBeepAudioSource.Play();
+                }
         }
     }
 

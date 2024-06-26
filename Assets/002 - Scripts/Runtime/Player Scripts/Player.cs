@@ -1160,7 +1160,7 @@ public class Player : Biped
     void SpawnRagdoll()
     {
         Debug.Log($"SPAWNING PLAYER RAGDOLL {deathNature}");
-        var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll();
+        var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll(this.isMine);
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
         print("r1");
@@ -1277,7 +1277,7 @@ public class Player : Biped
         _rb.angularVelocity = Vector3.zero;
 
         _respawnBeepCount = 0;
-        respawnBeepAudioSource.Play();
+        if (this.isMine) respawnBeepAudioSource.Play();
     }
 
     public void PlaySprintingSound()
