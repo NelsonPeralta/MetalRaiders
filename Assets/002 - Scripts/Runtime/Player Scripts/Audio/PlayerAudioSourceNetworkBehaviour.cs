@@ -16,7 +16,7 @@ public class PlayerAudioSourceNetworkBehaviour : MonoBehaviour
             GetComponent<AudioSource>().spatialBlend = 0;
         else
         {
-            GetComponent<AudioSource>().spatialBlend = 1;
+            GetComponent<AudioSource>().spatialBlend = 0.95f;
             GetComponent<AudioSource>().volume = 1;
         }
 

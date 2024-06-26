@@ -489,7 +489,9 @@ public class PlayerController : MonoBehaviourPun
             if (pInventory.activeWeapon.codeName.Equals("oddball"))
             {
                 isHoldingShootBtn = true;
-                Melee(true);
+
+                if (player.isMine) Melee(true);
+
                 return;
             }
             else _StartShoot();
@@ -656,8 +658,7 @@ public class PlayerController : MonoBehaviourPun
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
         gunCam.enabled = true;
-        PV.RPC("ToggleGlint_RPC", RpcTarget.AllViaServer, isAiming);
-
+        //PV.RPC("ToggleGlint_RPC", RpcTarget.AllViaServer, isAiming);
     }
 
     int _meleeCount = 0;
@@ -713,7 +714,10 @@ public class PlayerController : MonoBehaviourPun
     {
         print("Melee_RPC");
         if (PV.IsMine)
+        {
+            ScopeOut();
             melee.Knife();
+        }
         weaponAnimator.Play("Knife Attack 2", 0, 0f);
         StartCoroutine(Melee3PS());
     }

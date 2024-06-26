@@ -22,17 +22,18 @@ public class OddballPointGiver : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_del > 0)
-        {
-            _del -= Time.deltaTime;
-
-            if (_del <= 0 && (!player.isDead && !player.isRespawning))
+        if (player.isMine)
+            if (_del > 0)
             {
-                NetworkGameManager.instance.AddPlayerPoint(player.photonId);
+                _del -= Time.deltaTime;
 
-                _del = 1;
+                if (_del <= 0 && (!player.isDead && !player.isRespawning))
+                {
+                    NetworkGameManager.instance.AddPlayerPoint(player.photonId);
+
+                    _del = 1;
+                }
             }
-        }
 
     }
 }

@@ -77,6 +77,12 @@ public class GameTime : MonoBehaviourPunCallbacks
         timeRemaining = 600;
         _masterTimeRemaining = 600;
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        {
+            timeRemaining = 1800;
+            _masterTimeRemaining = 1800;
+        }
+
         //timeRemaining = 10; _masterTimeRemaining = 10;
 
         _timeElapsed = 0;

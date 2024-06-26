@@ -531,7 +531,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(0);
 
         //print($"StartNewWave_Coroutine {currentWave}");
-        if (currentWave == 2)
+        if (currentWave % 5 == 0)
         {
             ranClipInt = Random.Range(0, bossMusicsIntros.Length); if (bossMusicsIntros.Length == 1) ranClipInt = 0;
             print($"StartNewWave_Coroutine {currentWave} {ranClipInt} {bossMusicsIntros.Length}");
@@ -965,7 +965,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("EndWave_RPC");
         print($"EndWave_RPC {currentWave} {ranClipInt}");
-        if (currentWave == 2 && currentWave > 1) AddClip(bossMusicOutros[ranClipInt]);
+        if (currentWave % 5 == 0 && currentWave > 1) AddClip(bossMusicOutros[ranClipInt]);
 
         OnWaveEnd?.Invoke(this);
         _newWaveCountdown = nextWaveDelay;
