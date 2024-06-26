@@ -444,7 +444,7 @@ public class WeaponProperties : MonoBehaviour
 
     public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = false)
     {
-        print($"UpdateAmmo for {player.name} {ammo}");
+        print($"UpdateAmmo for {player.name} {ammo}. Sender: {sender}");
         if (player.isMine)
         {
             if (sender)
@@ -454,12 +454,19 @@ public class WeaponProperties : MonoBehaviour
         }
         else
         {
-            Debug.Log($"UpdateAmmo Is Not Mine");
-            if (!isSpare)
-                _currentAmmo = ammo;
-            else
-                _spareAmmo = ammo;
+            StartCoroutine(UpdateAmmo_Coroutine(isSpare, ammo));
         }
+    }
+
+    IEnumerator UpdateAmmo_Coroutine(bool isSpare, int ammo)
+    {
+        yield return new WaitForEndOfFrame();
+
+        Debug.Log($"UpdateAmmo Is Not Mine");
+        if (!isSpare)
+            _currentAmmo = ammo;
+        else
+            _spareAmmo = ammo;
     }
 
 

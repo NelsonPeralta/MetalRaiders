@@ -465,7 +465,7 @@ public class PlayerController : MonoBehaviourPun
         }
         else
         {
-            isHoldingShootBtn = false;
+            //isHoldingShootBtn = false;
         }
         Debug.Log($"{GetComponent<Player>().username}: _StartShoot_RPC {isHoldingShootBtn}");
     }
