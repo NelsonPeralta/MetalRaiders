@@ -269,7 +269,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
 
-  
+
 
     IEnumerator UpdateAmmo_Coroutine(int playerPid, int wIndex, bool isSpare, int ammo)
     {
@@ -926,17 +926,18 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateAmmo(int playerPid, int wIndex, int ammo, bool isSpare = false, bool sender = false)
     {
-        print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonViewId(playerPid)} {ammo}. Sender: {sender}");
-        if (GameManager.GetPlayerWithPhotonViewId(playerPid).isMine)
+        if (GameTime.instance.timeElapsed > 5)
         {
-            if (sender)
+
+            print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonViewId(playerPid)} {ammo}. Sender: {sender}");
+            if (GameManager.GetPlayerWithPhotonViewId(playerPid).isMine && sender)
             {
-                instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, sender);
+                instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, false);
             }
-        }
-        else
-        {
-            StartCoroutine(UpdateAmmo_Coroutine(playerPid, wIndex, isSpare, ammo));
+            else if (!sender && !GameManager.GetPlayerWithPhotonViewId(playerPid).isMine)
+            {
+                StartCoroutine(UpdateAmmo_Coroutine(playerPid, wIndex, isSpare, ammo));
+            }
         }
     }
 
