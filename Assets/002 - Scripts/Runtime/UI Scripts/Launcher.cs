@@ -93,6 +93,21 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject _nbLocalPlayersHolder;
     [SerializeField] TMP_InputField _nbLocalPlayersInputed;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public TMP_InputField loginUsernameText
     {
         get { return _loginUsernameText; }
@@ -409,7 +424,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             {
                 roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
                 _vetoBtn.SetActive(false);
-                _matchStartCountdownText.gameObject.SetActive(false);
+                _matchStartCountdownText.text = "";
             }
             else
             {
@@ -800,6 +815,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     IEnumerator LoadLevel_Coroutine()
     {
+        CurrentRoomManager.instance.roomGameStartCountdown = 5; // TODO
+
+
         yield return new WaitForSeconds(0.5f);
         PhotonNetwork.LoadLevel(levelToLoadIndex);
     }

@@ -328,9 +328,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     // Explosive Barrel
     #region
-    public void DamageExplosiveBarrel(Vector3 position, int val)
+    public void DamageExplosiveBarrel(Vector3 position, int val, int playerPid = -999)
     {
-        _pv.RPC("DamageExplosiveBarrel_RPC", RpcTarget.All, position, val);
+        _pv.RPC("DamageExplosiveBarrel_RPC", RpcTarget.All, position, val, playerPid);
     }
 
     public void ResetAllExplosiveBarrels()
@@ -597,12 +597,13 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     // Explosive Barrel
     #region
     [PunRPC]
-    void DamageExplosiveBarrel_RPC(Vector3 sp, int val)
+    void DamageExplosiveBarrel_RPC(Vector3 sp, int val, int playerPid)
     {
         foreach (ExplosiveBarrel eb in FindObjectsOfType<ExplosiveBarrel>(false).ToList())
         {
             if (eb.spawnPointPosition == sp)
             {
+                eb.UpdateLastPlayerWhoDamaged(playerPid);
                 eb._networkHitPoints = val;
             }
         }

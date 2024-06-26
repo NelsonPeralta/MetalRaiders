@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.Runtime.CompilerServices;
+using Steamworks;
 
 public class ExplosiveBarrel : MonoBehaviour, IDamageable
 {
@@ -66,11 +67,13 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     #region
     public void Damage(int damage)
     {
+        print("ExplosiveBarrel Damage");
         hitPoints -= damage;
     }
 
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
+        print($"ExplosiveBarrel Damage {playerWhoShotThisPlayerPhotonId}");
         hitPoints -= damage;
         _lastPID = playerWhoShotThisPlayerPhotonId;
     }
@@ -81,6 +84,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
+        print($"ExplosiveBarrel Damage {playerWhoShotThisPlayerPhotonId}");
         hitPoints -= damage;
     }
     #endregion
@@ -110,4 +114,9 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
         _networkHitPoints = h;
     }
     #endregion
+
+    public void UpdateLastPlayerWhoDamaged(int playerPid)
+    {
+        _lastPID = playerPid;
+    }
 }
