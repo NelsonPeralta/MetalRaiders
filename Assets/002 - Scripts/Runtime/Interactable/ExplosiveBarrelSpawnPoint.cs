@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
+using System.Threading;
 
 public class ExplosiveBarrelSpawnPoint : Hazard
 {
@@ -40,6 +41,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
         //    b.transform.parent = transform;
         //}
 
+        barrel.UpdateLastPlayerWhoDamaged(-999);
         placeHolder.SetActive(false);
     }
 
@@ -70,6 +72,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
             Debug.Log("ExplosiveBarrelSpawnPoint OnGameTimeChanged");
             explosion.gameObject.SetActive(false);
 
+            barrel.UpdateLastPlayerWhoDamaged(-999);
             barrel.transform.position = barrel.spawnPointPosition;
             barrel.transform.rotation = barrel.spawnPointRotation;
             barrel.GetComponent<Rigidbody>().velocity = Vector3.zero; barrel.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
@@ -96,7 +99,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
         //explosion.SetActive(true);
 
-        print("BarrelExplosion_Coroutine");
+        print($"BarrelExplosion_Coroutine {barrel.lastPid}");
         yield return new WaitForSeconds(0.05f);
         GrenadePool.SpawnExplosion(GameManager.GetPlayerWithPhotonViewId(barrel.lastPid), damage: 500, radius: 6, expPower: GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Barrel",
             barrel.transform.position + new Vector3(0, 1, 0), Explosion.Color.Yellow, Explosion.Type.Barrel);
