@@ -1654,6 +1654,7 @@ public class Player : Biped
     [PunRPC]
     public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = true)
     {
+        print("UpdateAmmo RPC received");
         try
         {
             playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateAmmo(wIndex, ammo, isSpare, false);

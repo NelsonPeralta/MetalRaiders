@@ -157,10 +157,11 @@ public class WeaponProperties : MonoBehaviour
                 player.GetComponent<PlayerUI>().leftSpareAmmoText.text = spareAmmo.ToString();
             }
 
-            if (player.isMine && ((_currentAmmo == 0 || _currentAmmo == ammoCapacity)
+            if (((_currentAmmo == 0 || _currentAmmo == ammoCapacity)
                 || ammoReloadType == AmmoReloadType.Shell))
             {
-                UpdateAmmo(index, _currentAmmo, sender: true);
+                print($"player {player.name} {player.isMine} about to send UPDATEAMMO RPC");
+                if (player.isMine) UpdateAmmo(index, _currentAmmo, sender: true);
             }
         }
     }
