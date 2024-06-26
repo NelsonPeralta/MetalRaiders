@@ -142,6 +142,7 @@ public class WeaponProperties : MonoBehaviour
                 }
             }
 
+            print($"{name} loaded ammo {_currentAmmo} -> {value}");
             _currentAmmo = Mathf.Clamp(value, 0, ammoCapacity);
 
             if ((!player.playerInventory.leftWeapon) || (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon != this))
@@ -442,6 +443,7 @@ public class WeaponProperties : MonoBehaviour
 
     public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = false)
     {
+        print($"UpdateAmmo for {player.name} {ammo}");
         if (player.isMine)
         {
             if (sender)
