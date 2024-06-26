@@ -477,6 +477,21 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void _StopShoot_RPC()
     {
+        if (player.isMine)
+        {
+            isHoldingShootBtn = false;
+            OnPlayerFireButtonUp?.Invoke(this);
+            Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
+        }
+        else
+        {
+            StartCoroutine(StopShoot_Coroutine());
+        }
+    }
+
+    IEnumerator StopShoot_Coroutine()
+    {
+        yield return new WaitForEndOfFrame();
         isHoldingShootBtn = false;
         OnPlayerFireButtonUp?.Invoke(this);
         Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
