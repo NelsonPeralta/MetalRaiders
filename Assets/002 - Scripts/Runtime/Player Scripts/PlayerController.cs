@@ -422,6 +422,7 @@ public class PlayerController : MonoBehaviourPun
 
     void _StartShoot()
     {
+        print($"Player {player.name} is about to call _StartShoot_RPC");
         if (PV.IsMine)
         {
             try { Debug.Log("_StartShoot"); } catch (System.Exception e) { Debug.LogWarning(e); }
@@ -429,6 +430,8 @@ public class PlayerController : MonoBehaviourPun
             try { Debug.Log(player.aimAssist.targetHitbox); } catch (System.Exception e) { Debug.LogWarning(e); }
             try { Debug.Log(player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped); } catch (System.Exception e) { Debug.LogWarning(e); }
             try { Debug.Log(player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition); } catch (System.Exception e) { Debug.LogWarning(e); }
+
+
 
             if (player.aimAssist.targetHitbox) PV.RPC("_StartShoot_RPC", RpcTarget.All, player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition);
             else PV.RPC("_StartShoot_RPC", RpcTarget.All, Vector3.zero);
@@ -494,11 +497,18 @@ public class PlayerController : MonoBehaviourPun
 
                 return;
             }
-            else _StartShoot();
+            else
+            {
+                print($"{player.name} _StartShoot");
+                _StartShoot();
+            }
         }
 
         if (isHoldingShootBtn && !pInventory.activeWeapon.codeName.Equals("oddball"))
+        {
+            print($"{player.name} OnPlayerFire");
             OnPlayerFire?.Invoke(this);
+        }
 
         if (rewiredPlayer.GetButtonUp("Shoot"))
         {
