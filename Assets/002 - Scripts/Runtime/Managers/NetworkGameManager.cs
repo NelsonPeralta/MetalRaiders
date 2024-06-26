@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using Newtonsoft.Json;
 using Photon.Realtime;
+using Rewired;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -265,6 +266,40 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. of player {playerId}");
         instance._pv.RPC("StickGrenadeOnPlayer_RPC", RpcTarget.All, nadeIndex, playerId, gPos);
     }
+
+
+
+    public void UpdateAmmo(int playerPid, int wIndex, int ammo, bool isSpare = false, bool sender = false)
+    {
+        print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonViewId(playerPid)} {ammo}. Sender: {sender}");
+        if (GameManager.GetPlayerWithPhotonViewId(playerPid).isMine)
+        {
+            if (sender)
+            {
+                instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, sender);
+            }
+        }
+        else
+        {
+            StartCoroutine(UpdateAmmo_Coroutine(playerPid, wIndex, isSpare, ammo));
+        }
+    }
+
+    IEnumerator UpdateAmmo_Coroutine(int playerPid, int wIndex, bool isSpare, int ammo)
+    {
+        yield return new WaitForEndOfFrame();
+
+        Debug.Log($"UpdateAmmo Is Not Mine");
+        if (!isSpare)
+        {
+            GameManager.GetPlayerWithPhotonViewId(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateLoadedAmmo(ammo);
+        }
+        else
+        {
+            GameManager.GetPlayerWithPhotonViewId(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateSpareAmmo(ammo);
+        }
+    }
+
 
     // Lootable Weapons
     #region

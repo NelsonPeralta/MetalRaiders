@@ -402,7 +402,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (!isDualWielding)
             {
-                Debug.Log("SwitchWeapons");
+                Debug.Log($"SwitchWeapons {player.name}");
                 WeaponProperties previousActiveWeapon = activeWeapon;
                 WeaponProperties newActiveWeapon = holsteredWeapon;
 
@@ -483,6 +483,8 @@ public class PlayerInventory : MonoBehaviourPun
                     catch { }
                 }
             }
+
+            PlayDrawSound();
         }
     }
     public IEnumerator EquipStartingWeapon()
@@ -709,7 +711,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (MapCamera.instance.gameObject.activeSelf)
             return;
-        Debug.Log("Play Draw Sound");
+        Debug.Log($"{player.name} Play Draw Sound");
         weaponDrawAudioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
         weaponDrawAudioSource.Play();
     }

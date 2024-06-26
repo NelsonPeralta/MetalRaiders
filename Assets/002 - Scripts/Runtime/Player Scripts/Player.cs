@@ -1651,16 +1651,6 @@ public class Player : Biped
         playerVoice.Stop();
     }
 
-    [PunRPC]
-    public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = true) // Is called from WeaponProperties script
-    {
-        print($"UpdateAmmo RPC received {playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().name} {ammo}");
-        try
-        {
-            playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateAmmo(wIndex, ammo, isSpare, false);
-        }
-        catch { }
-    }
 
     [PunRPC]
     void Teleport_RPC(Vector3 t, Vector3 r)

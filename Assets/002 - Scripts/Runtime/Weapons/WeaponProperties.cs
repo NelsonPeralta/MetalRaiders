@@ -161,7 +161,7 @@ public class WeaponProperties : MonoBehaviour
                 || ammoReloadType == AmmoReloadType.Shell))
             {
                 print($"player {player.name} {player.isMine} about to send UPDATEAMMO RPC");
-                if (player.isMine) UpdateAmmo(index, _currentAmmo, sender: true);
+                if (player.isMine) NetworkGameManager.instance.UpdateAmmo(player.photonId, index, _currentAmmo, sender: true);
             }
         }
     }
@@ -374,6 +374,18 @@ public class WeaponProperties : MonoBehaviour
             GameManager.SetLayerRecursively(gameObject, 3);
     }
 
+
+    public void UpdateLoadedAmmo(int a)
+    {
+        _currentAmmo = a;
+    }
+    public void UpdateSpareAmmo(int a)
+    {
+        _spareAmmo = a;
+    }
+
+
+
     public void OnTeamMateHitbox_Delegate(AimAssistCone aimAssistCone)
     {
         try
@@ -442,32 +454,9 @@ public class WeaponProperties : MonoBehaviour
         {"patriot", 19 }, {"colt", 20 }, {"m16", 21 }
     };
 
-    public void UpdateAmmo(int wIndex, int ammo, bool isSpare = false, bool sender = false)
-    {
-        print($"UpdateAmmo for {player.name} {ammo}. Sender: {sender}");
-        if (player.isMine)
-        {
-            if (sender)
-            {
-                player.PV.RPC("UpdateAmmo", Photon.Pun.RpcTarget.All, wIndex, ammo, isSpare, sender);
-            }
-        }
-        else
-        {
-            StartCoroutine(UpdateAmmo_Coroutine(isSpare, ammo));
-        }
-    }
+    
 
-    IEnumerator UpdateAmmo_Coroutine(bool isSpare, int ammo)
-    {
-        yield return new WaitForEndOfFrame();
-
-        Debug.Log($"UpdateAmmo Is Not Mine");
-        if (!isSpare)
-            _currentAmmo = ammo;
-        else
-            _spareAmmo = ammo;
-    }
+   
 
 
 
