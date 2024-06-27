@@ -625,7 +625,7 @@ public class PlayerController : MonoBehaviourPun
     public void UpdateTrackingTargetForOtherPlayers(bool isCaller, Vector3 trackingTargetInstantiationPosition)
     {
         if (isCaller)
-            PV.RPC("UpdateTrackingTarget", RpcTarget.All, false, trackingTargetInstantiationPosition);
+            PV.RPC("UpdateTrackingTargetForOtherPlayers", RpcTarget.All, false, trackingTargetInstantiationPosition);
         else
         {
             if (!player.isMine)
