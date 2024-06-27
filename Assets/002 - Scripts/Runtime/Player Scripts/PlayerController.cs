@@ -535,8 +535,6 @@ public class PlayerController : MonoBehaviourPun
 
         if (player.isMine)
         {
-
-
             if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
             {
                 SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
@@ -544,13 +542,29 @@ public class PlayerController : MonoBehaviourPun
 
 
 
+            //Update Tracking Target
+            if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
+                player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+        }
 
 
+
+
+        //Process Firing
+        //if (player.playerShooting.fireRecovery <= 0 && PlayerInventory)
+        //    player.playerShooting.Shoot();
+
+
+
+
+        if (player.isMine)
+        {
             if (rewiredPlayer.GetButtonUp("Shoot"))
             {
                 SendIsNotHoldingFireWeaponBtn();
             }
         }
+
         return;
 
 
@@ -604,6 +618,20 @@ public class PlayerController : MonoBehaviourPun
 
 
             isHoldingShootBtn = true;
+        }
+    }
+
+    [PunRPC]
+    public void UpdateTrackingTargetForOtherPlayers(bool isCaller, Vector3 trackingTargetInstantiationPosition)
+    {
+        if (isCaller)
+            PV.RPC("UpdateTrackingTarget", RpcTarget.All, false, trackingTargetInstantiationPosition);
+        else
+        {
+            if (!player.isMine)
+            {
+                player.playerShooting.trackingTarget = (trackingTargetInstantiationPosition != Vector3.zero) ? GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition] : null;
+            }
         }
     }
 

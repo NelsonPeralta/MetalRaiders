@@ -8,7 +8,23 @@ public class PlayerShooting : MonoBehaviourPun
     public delegate void PlayerShootingEvent(PlayerShooting playerShooting);
     public PlayerShootingEvent OnBulletSpawned;
 
-    public Biped trackingTarget;
+    public Biped trackingTarget
+    {
+        get { return _preTrackingTarget; }
+
+        set
+        {
+            _preTrackingTarget = _trackingTarget;
+            _trackingTarget = value;
+
+            if (playerController.player.isMine && _preTrackingTarget != _trackingTarget)
+            {
+                playerController.UpdateTrackingTargetForOtherPlayers(true, (_trackingTarget != null) ? _trackingTarget.originalSpawnPosition : Vector3.zero);
+            }
+        }
+    }
+
+    public float fireRecovery { get { return _fireRecovery; } }
 
     [Header("Other Scripts")]
     public PhotonView PV;
@@ -18,11 +34,13 @@ public class PlayerShooting : MonoBehaviourPun
 
     // Private variables
     int playerRewiredID;
-    [SerializeField] float fireInterval = 0, leftFireInterval = 0;
+    [SerializeField] float _fireRecovery = 0, leftFireInterval = 0;
     [SerializeField] bool fireButtonDown = false, scopeBtnDown = false;
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
 
-    GameObjectPool _gameObjectPool;
+
+    Biped _trackingTarget, _preTrackingTarget;
+
 
     public float defaultBurstInterval
     {
@@ -37,7 +55,6 @@ public class PlayerShooting : MonoBehaviourPun
         if (GameManager.instance.connection == GameManager.Connection.Local)
             GetComponent<AudioSource>().spatialBlend = 0;
 
-        _gameObjectPool = FindObjectOfType<GameObjectPool>();
     }
     private void Start()
     {
@@ -56,7 +73,6 @@ public class PlayerShooting : MonoBehaviourPun
 
     void OnPlayerControllerFire_Delegate(PlayerController playerController)
     {
-        if (!_gameObjectPool) _gameObjectPool = FindObjectOfType<GameObjectPool>();
 
         if (playerController.isDrawingWeapon)
             return;
@@ -80,13 +96,16 @@ public class PlayerShooting : MonoBehaviourPun
 
     public void Shoot(WeaponProperties wp = null)
     {
+        if (playerController.isDrawingWeapon) return;
+
+
         WeaponProperties sw = pInventory.activeWeapon.GetComponent<WeaponProperties>();
         if (wp)
             sw = wp;
 
         print($"{playerController.player.name} Shoot {sw.name} {sw.loadedAmmo}");
 
-        if ((fireInterval > 0 && !wp))
+        if ((_fireRecovery > 0 && !wp))
             return;
         if ((leftFireInterval > 0 && wp))
             return;
@@ -103,9 +122,9 @@ public class PlayerShooting : MonoBehaviourPun
         {
 
             if (sw.firingMode == WeaponProperties.FiringMode.Burst)
-                fireInterval = defaultBurstInterval * 5.5f;
+                _fireRecovery = defaultBurstInterval * 5.5f;
             else
-                fireInterval = 1 / (sw.fireRate / 60f);
+                _fireRecovery = 1 / (sw.fireRate / 60f);
         }
         else
         {
@@ -244,13 +263,11 @@ public class PlayerShooting : MonoBehaviourPun
                 if (player.isMine || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
                     Debug.Log("shoooo 2");
-                    if (!_gameObjectPool) _gameObjectPool = FindObjectOfType<GameObjectPool>();
-                    var bullet = _gameObjectPool.SpawnPooledBullet();
+                    var bullet = GameObjectPool.instance.SpawnPooledBullet();
 
                     if (activeWeapon.targetTracking) bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
 
                     {
-                        Debug.Log(_gameObjectPool);
                         Debug.Log(bullet);
                         Debug.Log(activeWeapon);
                         bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Blue && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
@@ -412,8 +429,8 @@ public class PlayerShooting : MonoBehaviourPun
     }
     void FireCooldown()
     {
-        if (fireInterval > 0)
-            fireInterval -= Time.deltaTime;
+        if (_fireRecovery > 0)
+            _fireRecovery -= Time.deltaTime;
 
         if (leftFireInterval > 0)
             leftFireInterval -= Time.deltaTime;
