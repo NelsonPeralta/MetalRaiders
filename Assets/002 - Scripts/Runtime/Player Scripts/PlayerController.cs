@@ -626,7 +626,7 @@ public class PlayerController : MonoBehaviourPun
         else
         {
             try { Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]); } catch { }
-            player.playerShooting.trackingTarget = null; if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
+            //player.playerShooting.trackingTarget = null; if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
 
 
             //if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
