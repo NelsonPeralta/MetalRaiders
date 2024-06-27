@@ -44,7 +44,7 @@ public class PlayerShooting : MonoBehaviourPun
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
 
 
-    Biped _trackingTarget, _preTrackingTarget;
+    [SerializeField] Biped _trackingTarget, _preTrackingTarget;
 
 
     public float defaultBurstInterval
@@ -79,10 +79,10 @@ public class PlayerShooting : MonoBehaviourPun
     void OnPlayerControllerFire_Delegate(PlayerController playerController)
     {
 
-        if (playerController.isDrawingWeapon)
-            return;
+        //if (playerController.isDrawingWeapon)
+        //    return;
 
-        Shoot();
+        //Shoot();
     }
 
 
@@ -108,7 +108,6 @@ public class PlayerShooting : MonoBehaviourPun
         if (wp)
             sw = wp;
 
-        print($"{playerController.player.name} Shoot {sw.name} {sw.loadedAmmo}");
 
         if ((_fireRecovery > 0 && !wp))
             return;
