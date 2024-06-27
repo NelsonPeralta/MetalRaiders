@@ -113,7 +113,44 @@ public class PlayerController : MonoBehaviourPun
     public Animator animDWLeft;
     public WeaponProperties dwRightWP;
     public WeaponProperties dwLeftWP;
-    public bool isHoldingShootBtn { get { return _isHoldingShootBtn; } set { _isHoldingShootBtn = value; print($"{player.name} isHoldingShootBtn {value}"); } }
+    public bool isHoldingShootBtn
+    {
+        get { return _isHoldingShootBtn; }
+        set
+        {
+            _preIsHoldingFireWeaponBtn = _isHoldingShootBtn;
+            _isHoldingShootBtn = value; print($"{player.name} isHoldingShootBtn {value}");
+
+            if (value && !_preIsHoldingFireWeaponBtn)
+            {
+                {
+                    DisableSprint_RPC();
+
+                    if (pInventory.activeWeapon.codeName.Equals("oddball"))
+                    {
+
+                        if (player.isMine) Melee(true);
+                        print("Do an Odball Melee and STOP");
+                        return;
+                    }
+                    else
+                    {
+                        //print($"{player.name} _StartShoot");
+                        //_StartShoot();
+                    }
+                }
+
+                //if (isHoldingShootBtn && !pInventory.activeWeapon.codeName.Equals("oddball"))
+                //{
+                //    print($"{player.name} OnPlayerFire");
+                //    OnPlayerFire?.Invoke(this);
+                //}
+            }
+        }
+    }
+
+
+
     public bool isHoldingScopeBtn;
     public bool isShootingRight;
     public bool isShootingLeft;
@@ -166,7 +203,7 @@ public class PlayerController : MonoBehaviourPun
     LayerMask _lastMainCamLayerMask;
 
 
-    bool _isHoldingShootBtn;
+    bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
 
     void Awake()
     {
@@ -510,7 +547,6 @@ public class PlayerController : MonoBehaviourPun
             {
                 SendIsHoldingFireWeaponBtn(true);
             }
-
 
 
 
