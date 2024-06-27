@@ -126,6 +126,10 @@ public class PlayerController : MonoBehaviourPun
                 {
                     DisableSprint_RPC();
 
+
+
+
+
                     if (pInventory.activeWeapon.codeName.Equals("oddball"))
                     {
 
@@ -133,18 +137,7 @@ public class PlayerController : MonoBehaviourPun
                         print("Do an Odball Melee and STOP");
                         return;
                     }
-                    else
-                    {
-                        //print($"{player.name} _StartShoot");
-                        //_StartShoot();
-                    }
                 }
-
-                //if (isHoldingShootBtn && !pInventory.activeWeapon.codeName.Equals("oddball"))
-                //{
-                //    print($"{player.name} OnPlayerFire");
-                //    OnPlayerFire?.Invoke(this);
-                //}
             }
         }
     }
@@ -496,10 +489,10 @@ public class PlayerController : MonoBehaviourPun
             Debug.Log("_StartShoot_RPC");
             try
             {
-                Debug.Log(GameManager.instance.orSpPos_Biped_Dict[bipedOrSpp]);
+                Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp]);
             }
             catch { }
-            player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.orSpPos_Biped_Dict[bipedOrSpp];
+            player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp];
             holstered = false;
             weaponAnimator.SetBool("Holster", false);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
@@ -546,7 +539,7 @@ public class PlayerController : MonoBehaviourPun
 
             if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
             {
-                SendIsHoldingFireWeaponBtn(true);
+                SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
             }
 
 
@@ -592,12 +585,26 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    void SendIsHoldingFireWeaponBtn(bool isCaller)
+    void SendIsHoldingFireWeaponBtn(bool isCaller, Vector3 trackingTargetInstantiationPosition)
     {
         if (isCaller)
-            PV.RPC("SendIsHoldingFireWeaponBtn", RpcTarget.All, false);
+            PV.RPC("SendIsHoldingFireWeaponBtn", RpcTarget.All, false, trackingTargetInstantiationPosition);
         else
+        {
+            try { Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]); } catch { }
+            player.playerShooting.trackingTarget = null; if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
+
+
+            //if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            {
+                holstered = false;
+                weaponAnimator.SetBool("Holster", false);
+                GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
+            }
+
+
             isHoldingShootBtn = true;
+        }
     }
 
 

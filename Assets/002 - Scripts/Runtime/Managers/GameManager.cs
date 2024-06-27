@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    public Dictionary<Vector3, Biped> orSpPos_Biped_Dict
+    public Dictionary<Vector3, Biped> instantiation_position_Biped_Dict
     {
         get { return _orSpPos_Biped_Dict; }
         set
@@ -419,7 +419,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         try { instance.pid_player_Dict.Clear(); } catch { }
         try { instance.localPlayers.Clear(); } catch { }
-        orSpPos_Biped_Dict.Clear();
+        instantiation_position_Biped_Dict.Clear();
 
         //try { FindObjectOfType<GameTime>().timeRemaining = 0; }
         //catch (Exception e) { Debug.LogWarning(e.Message); }

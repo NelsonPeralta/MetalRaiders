@@ -779,7 +779,7 @@ public class Player : Biped
         }
 
         originalSpawnPosition = transform.position;
-        GameManager.instance.orSpPos_Biped_Dict.Add(transform.position, this); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
+        GameManager.instance.instantiation_position_Biped_Dict.Add(transform.position, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
 
 
         defaultVerticalFov = 0; GetComponent<PlayerController>().ScopeOut();

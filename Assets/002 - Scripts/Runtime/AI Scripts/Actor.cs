@@ -217,7 +217,7 @@ abstract public class Actor : Biped
         transform.parent = SwarmManager.instance.transform;
         gameObject.SetActive(false);
 
-        GameManager.instance.orSpPos_Biped_Dict.Add(transform.position, this); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
+        GameManager.instance.instantiation_position_Biped_Dict.Add(transform.position, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
     }
 
 
