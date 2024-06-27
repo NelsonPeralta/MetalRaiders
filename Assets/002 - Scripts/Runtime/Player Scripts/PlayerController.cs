@@ -497,7 +497,7 @@ public class PlayerController : MonoBehaviourPun
         Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
     }
 
-    void Shooting()
+    void Shooting() //  ***************
     {
         if (GetComponent<Player>().isDead || player.isRespawning)
             return;
@@ -508,7 +508,6 @@ public class PlayerController : MonoBehaviourPun
         {
             DisableSprint();
 
-            isHoldingShootBtn = true;
             if (pInventory.activeWeapon.codeName.Equals("oddball"))
             {
 
