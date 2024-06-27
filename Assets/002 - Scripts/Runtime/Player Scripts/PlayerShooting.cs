@@ -17,9 +17,12 @@ public class PlayerShooting : MonoBehaviourPun
             _preTrackingTarget = _trackingTarget;
             _trackingTarget = value;
 
-            if (playerController.player.isMine && _preTrackingTarget != _trackingTarget)
+
+            if (_preTrackingTarget != _trackingTarget)
             {
-                playerController.UpdateTrackingTargetForOtherPlayers(true, (_trackingTarget != null) ? _trackingTarget.originalSpawnPosition : Vector3.zero);
+                print($"{playerController.player.name} updated tracking target to {_trackingTarget.name}");
+                if (playerController.player.isMine)
+                    playerController.UpdateTrackingTargetForOtherPlayers(true, (_trackingTarget != null) ? _trackingTarget.originalSpawnPosition : Vector3.zero);
             }
         }
     }
