@@ -10,7 +10,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     public Biped trackingTarget
     {
-        get { return _preTrackingTarget; }
+        get { return _trackingTarget; }
 
         set
         {

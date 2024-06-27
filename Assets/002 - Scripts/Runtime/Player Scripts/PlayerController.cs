@@ -478,11 +478,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
             }
-
-
-
-            //Update Tracking Target
-            if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
+            else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
                 player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
         }
 
@@ -580,7 +576,7 @@ public class PlayerController : MonoBehaviourPun
                 Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp]);
             }
             catch { }
-            player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp];
+            //player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp];
             holstered = false;
             weaponAnimator.SetBool("Holster", false);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
@@ -626,7 +622,7 @@ public class PlayerController : MonoBehaviourPun
         else
         {
             try { Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]); } catch { }
-            //player.playerShooting.trackingTarget = null; if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
+            player.playerShooting.trackingTarget = null; if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
 
 
             //if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
