@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviourPun
     public Animator animDWLeft;
     public WeaponProperties dwRightWP;
     public WeaponProperties dwLeftWP;
-    public bool isHoldingShootBtn { get { return _isHoldingShootBtn; } set { _isHoldingShootBtn = value; print($"isHoldingShootBtn {value}"); } }
+    public bool isHoldingShootBtn { get { return _isHoldingShootBtn; } set { _isHoldingShootBtn = value; print($"{player.name} isHoldingShootBtn {value}"); } }
     public bool isHoldingScopeBtn;
     public bool isShootingRight;
     public bool isShootingLeft;
@@ -441,7 +441,7 @@ public class PlayerController : MonoBehaviourPun
             else PV.RPC("_StartShoot_RPC", RpcTarget.All, Vector3.zero);
         }
     }
-    void _StopShoot()
+    void SendIsNotHoldingFireWeaponBtn()
     {
         if (PV.IsMine)
             PV.RPC("_StopShoot_RPC", RpcTarget.All);
@@ -502,6 +502,26 @@ public class PlayerController : MonoBehaviourPun
         if (GetComponent<Player>().isDead || player.isRespawning)
             return;
 
+        if (player.isMine)
+        {
+
+
+            if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
+            {
+                SendIsHoldingFireWeaponBtn(true);
+            }
+
+
+
+
+
+
+            if (rewiredPlayer.GetButtonUp("Shoot"))
+            {
+                SendIsNotHoldingFireWeaponBtn();
+            }
+        }
+        return;
 
 
         if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
@@ -530,45 +550,17 @@ public class PlayerController : MonoBehaviourPun
 
         if (rewiredPlayer.GetButtonUp("Shoot"))
         {
-            _StopShoot();
+            SendIsNotHoldingFireWeaponBtn();
         }
-        return;
+    }
 
-        if (rewiredPlayer.GetButtonUp("Shoot"))
-        {
-            OnPlayerFireButtonUp?.Invoke(this);
-        }
-        if (!isDualWielding)
-        {
-            if (rewiredPlayer.GetButton("Shoot") && !pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
-            {
-                isHoldingShootBtn = true;
-                OnPlayerFire?.Invoke(this);
-
-            }
-            else
-            {
-                isHoldingShootBtn = false;
-            }
-
-        }
-
-        if (isDualWielding)
-        {
-            if (rewiredPlayer.GetButton("Shoot") && !dwRightWP.isOutOfAmmo && !isReloadingRight && !isShootingRight && !isMeleeing && !isThrowingGrenade && !isSprinting)
-            {
-                isShootingRight = true;
-            }
-            else
-            {
-                isShootingRight = false;
-            }
-        }
-
-        /*
-        if (wProperties)
-            if (wProperties.projectileToHide != null && wProperties.outOfAmmo)
-                wProperties.projectileToHide.SetActive(false);*/
+    [PunRPC]
+    void SendIsHoldingFireWeaponBtn(bool isCaller)
+    {
+        if (isCaller)
+            PV.RPC("SendIsHoldingFireWeaponBtn", RpcTarget.All, false);
+        else
+            isHoldingShootBtn = true;
     }
 
 
