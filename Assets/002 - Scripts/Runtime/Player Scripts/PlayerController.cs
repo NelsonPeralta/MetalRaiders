@@ -441,6 +441,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!isSprinting)
             return;
+        print("DisableSprint_RPC");
         isSprinting = false;
         weaponAnimator.SetBool("Run", false);
 
