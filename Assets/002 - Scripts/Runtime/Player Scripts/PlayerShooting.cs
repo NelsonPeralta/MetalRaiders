@@ -265,69 +265,73 @@ public class PlayerShooting : MonoBehaviourPun
                 }
 
 
-                if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
+
+                if (player.isMine || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
                     Debug.Log("shoooo 2");
                     var bullet = GameObjectPool.instance.SpawnPooledBullet();
+                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
 
-                    if (activeWeapon.targetTracking) bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
 
-                    if (player.isMine)
+                    print($"Active weapon has target tracking: {activeWeapon.targetTracking}. PlayerShooting script has tracking target {trackingTarget}");
+                    if (activeWeapon.targetTracking)
                     {
-                        {
-                            Debug.Log(bullet);
-                            Debug.Log(activeWeapon);
-                            bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Blue && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                            bullet.GetComponent<Bullet>().redPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Red && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                            bullet.GetComponent<Bullet>().greenPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Green && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                            bullet.GetComponent<Bullet>().shard.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Shard && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                        }
-
-                        try
-                        {
-                            if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
-                                playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
-
-
-                            if (activeWeapon.isShotgun)
-                            {
-                                quats[i] = Random.rotation;
-                                playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation, quats[i], activeWeapon.bulletSpray);
-                            }
-                            else
-                                playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= ranSprayQuat;
-                        }
-                        catch { }
-
-                        //if (PV.IsMine)
-                        //    bullet.layer = 8;
-                        //else
-                        //    bullet.layer = 0;
-                        try
-                        {
-                            bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-                            bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-                        }
-                        catch
-                        {
-                            bullet.transform.position = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-                            bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-                        }
-
-
-
-                        try { bullet.gameObject.GetComponent<Bullet>().sourcePlayer = playerController.GetComponent<Player>(); } catch { }
-                        try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
-                        try { bullet.gameObject.GetComponent<Bullet>().damage = playerController.GetComponent<Player>().playerInventory.activeWeapon.damage; } catch { }
-                        //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
-                        bullet.gameObject.GetComponent<Bullet>().range = (int)activeWeapon.range;
-                        bullet.gameObject.GetComponent<Bullet>().speed = (int)activeWeapon.bulletSpeed;
-                        //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
-                        //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
-                        //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
-                        //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
-                        bullet.SetActive(true);
+                        bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
                     }
+
+                    {
+                        Debug.Log(bullet);
+                        Debug.Log(activeWeapon);
+                        bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Blue && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().redPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Red && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().greenPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Green && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().shard.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Shard && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                    }
+
+                    try
+                    {
+                        if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
+                            playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
+
+
+                        if (activeWeapon.isShotgun)
+                        {
+                            quats[i] = Random.rotation;
+                            playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation, quats[i], activeWeapon.bulletSpray);
+                        }
+                        else
+                            playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= ranSprayQuat;
+                    }
+                    catch { }
+
+                    //if (PV.IsMine)
+                    //    bullet.layer = 8;
+                    //else
+                    //    bullet.layer = 0;
+                    try
+                    {
+                        bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                        bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+                    }
+                    catch
+                    {
+                        bullet.transform.position = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                        bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+                    }
+
+
+
+                    try { bullet.gameObject.GetComponent<Bullet>().sourcePlayer = playerController.GetComponent<Player>(); } catch { }
+                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
+                    try { bullet.gameObject.GetComponent<Bullet>().damage = playerController.GetComponent<Player>().playerInventory.activeWeapon.damage; } catch { }
+                    //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
+                    bullet.gameObject.GetComponent<Bullet>().range = (int)activeWeapon.range;
+                    bullet.gameObject.GetComponent<Bullet>().speed = (int)activeWeapon.bulletSpeed;
+                    //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
+                    //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
+                    //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
+                    //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
+                    bullet.SetActive(true);
                 }
                 GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }

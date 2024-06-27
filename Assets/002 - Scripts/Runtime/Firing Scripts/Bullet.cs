@@ -160,48 +160,11 @@ public class Bullet : MonoBehaviourPunCallbacks
             gameObject.SetActive(false);
 
         }
-        return;
-        for (int i = 0; i < hits.Length; i++) // wWith a normal for loop, if the player is too close to a wall, it checks what object it collided with from farthest to closest. (int i = 0; i < hits.Length; i++)
-        {
-            //hitMessage += $"\nHIT INDEX: {i}. Hit NAME: {hits[i].collider.name} HIT DISTANCE FROM PLAYER: {Vector3.Distance(playerWhoShot.transform.position, hits[i].point)}";
-            if (!damageDealt)
-            {
-                GameObject hit = hits[i].collider.gameObject;
-
-                if (hits[i].collider.GetComponent<IDamageable>() != null || hits[i].collider)
-                {
-                    ObjectHit newHit = new ObjectHit(hit, fhit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
-                    objectsHit.Add(newHit);
-                }
-
-                // Old
-                #region
-                //if (hit.GetComponent<AIHitbox>() && !hit.GetComponent<AIHitbox>().aiAbstractClass.isDead)
-                //{
-                //    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
-                //    objectsHit.Add(newHit);
-
-                //}
-                //else if (hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<PlayerHitbox>().player.isDead && !hit.GetComponent<PlayerHitbox>().player.isRespawning)
-                //{
-                //    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
-                //    objectsHit.Add(newHit);
-                //}
-                //else if (!hit.GetComponent<PlayerHitbox>() && !hit.GetComponent<CapsuleCollider>() && !hit.GetComponent<AIHitbox>() && !hit.GetComponent<CharacterController>())
-                //{
-                //    ObjectHit newHit = new ObjectHit(hit, hits[i].point, Vector3.Distance(playerPosWhenBulletShot, hits[i].point));
-                //    objectsHit.Add(newHit);
-                //}
-                #endregion
-            }
-
-        }
-        CheckForFinalHit();
     }
 
     void Travel()
     {
-
+        print($"Bullet has tracking target {weaponProperties.targetTracking} {trackingTarget}");
 
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
         if (weaponProperties.targetTracking && trackingTarget)
