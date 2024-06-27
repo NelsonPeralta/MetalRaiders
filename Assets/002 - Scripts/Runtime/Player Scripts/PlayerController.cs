@@ -455,6 +455,94 @@ public class PlayerController : MonoBehaviourPun
         GetComponent<Player>().StopPlayingPlayerVoice();
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+    void Shooting() //  ***************
+    {
+        if (GetComponent<Player>().isDead || player.isRespawning)
+            return;
+
+        if (player.isMine)
+        {
+            if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
+            {
+                SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
+            }
+
+
+
+            //Update Tracking Target
+            if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
+                player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+        }
+
+
+
+
+        //Process Firing
+        if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
+            player.playerShooting.Shoot();
+
+
+
+
+        if (player.isMine)
+        {
+            if (rewiredPlayer.GetButtonUp("Shoot"))
+            {
+                SendIsNotHoldingFireWeaponBtn();
+            }
+        }
+
+        return;
+
+
+        if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
+        {
+            DisableSprint();
+
+            if (pInventory.activeWeapon.codeName.Equals("oddball"))
+            {
+
+                if (player.isMine) Melee(true);
+
+                return;
+            }
+            else
+            {
+                print($"{player.name} _StartShoot");
+                _StartShoot();
+            }
+        }
+
+        if (isHoldingShootBtn && !pInventory.activeWeapon.codeName.Equals("oddball"))
+        {
+            print($"{player.name} OnPlayerFire");
+            OnPlayerFire?.Invoke(this);
+        }
+
+        if (rewiredPlayer.GetButtonUp("Shoot"))
+        {
+            SendIsNotHoldingFireWeaponBtn();
+        }
+    }
+
+
+
+
+
+
+
     void _StartShoot()
     {
         print($"Player {player.name} is about to call _StartShoot_RPC");
@@ -528,75 +616,7 @@ public class PlayerController : MonoBehaviourPun
         Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
     }
 
-    void Shooting() //  ***************
-    {
-        if (GetComponent<Player>().isDead || player.isRespawning)
-            return;
 
-        if (player.isMine)
-        {
-            if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
-            {
-                SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
-            }
-
-
-
-            //Update Tracking Target
-            if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
-                player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
-        }
-
-
-
-
-        //Process Firing
-        //if (player.playerShooting.fireRecovery <= 0 && PlayerInventory)
-        //    player.playerShooting.Shoot();
-
-
-
-
-        if (player.isMine)
-        {
-            if (rewiredPlayer.GetButtonUp("Shoot"))
-            {
-                SendIsNotHoldingFireWeaponBtn();
-            }
-        }
-
-        return;
-
-
-        if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
-        {
-            DisableSprint();
-
-            if (pInventory.activeWeapon.codeName.Equals("oddball"))
-            {
-
-                if (player.isMine) Melee(true);
-
-                return;
-            }
-            else
-            {
-                print($"{player.name} _StartShoot");
-                _StartShoot();
-            }
-        }
-
-        if (isHoldingShootBtn && !pInventory.activeWeapon.codeName.Equals("oddball"))
-        {
-            print($"{player.name} OnPlayerFire");
-            OnPlayerFire?.Invoke(this);
-        }
-
-        if (rewiredPlayer.GetButtonUp("Shoot"))
-        {
-            SendIsNotHoldingFireWeaponBtn();
-        }
-    }
 
     [PunRPC]
     void SendIsHoldingFireWeaponBtn(bool isCaller, Vector3 trackingTargetInstantiationPosition)
