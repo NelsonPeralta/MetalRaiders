@@ -10,7 +10,6 @@ public class PlayerShield : MonoBehaviour
     [Header("Models")]
     public GameObject shieldModel;
     public GameObject shieldThirdPersonModel;
-    public GameObject shieldImpactPrefab;
     public GameObject shieldElectricityThirdPersonModel;
     public GameObject shieldRechargeThirdPersonModel;
 
@@ -28,6 +27,14 @@ public class PlayerShield : MonoBehaviour
     float _shield;
 
     Player _player;
+
+
+
+    List<GameObject> _shieldHits = new List<GameObject>();
+
+
+
+
     public float shield
     {
         get { return _shield; }
@@ -51,6 +58,15 @@ public class PlayerShield : MonoBehaviour
             _shieldIsRecharging = value;
         }
     }
+
+
+
+
+
+
+
+
+
     private void Awake()
     {
         //shield = (float)_player.maxShield;
@@ -67,16 +83,27 @@ public class PlayerShield : MonoBehaviour
 
         _player.OnPlayerDeath += OnPlayerDeath_Delegate;
         _player.OnPlayerRespawned += OnPlayerRespawned_Delegate;
+
     }
+
+
+
+
+    public void SpawnShieldHit()
+    {
+        if (_player.impactPos != null)
+        {
+            GameObject genericHit = GameObjectPool.instance.SpawnPooledShieldHit();
+            genericHit.transform.position = (Vector3)_player.impactPos;
+            genericHit.SetActive(true);
+        }
+    }
+
+
 
     void OnPlayerShieldDamaged_Delegate(Player player)
     {
-        try
-        {
-            var a = Instantiate(shieldImpactPrefab, (Vector3)player.impactPos, Quaternion.identity);
-            Destroy(a, 0.5f);
-        }
-        catch { }
+
     }
 
 

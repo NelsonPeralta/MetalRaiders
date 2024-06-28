@@ -16,7 +16,7 @@ public class DamageIndicator : MonoBehaviour
 
     Vector3 _targetPosition;
 
-    [SerializeField] float ttl = 2;
+    public float ttl = 2;
 
     private void Update()
     {
@@ -25,7 +25,7 @@ public class DamageIndicator : MonoBehaviour
 
         ttl -= Time.deltaTime;
         if (ttl <= 0)
-            Destroy(gameObject);
+            gameObject.SetActive(false);
 
         Vector3 direction = player.transform.position - _targetPosition;
 

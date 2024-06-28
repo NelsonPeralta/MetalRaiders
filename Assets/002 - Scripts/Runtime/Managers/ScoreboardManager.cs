@@ -90,10 +90,13 @@ public class ScoreboardManager : MonoBehaviour
     public void SetScoreboardRows()
     {
         print($"SetScoreboardRows {GameManager.instance.pid_player_Dict.Values.Count}");
-        for (int i = 0; i < CurrentRoomManager.instance.playerDataCells.Count; i++)
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers; i++)
         {
-            scoreboardRows[i].playerScoreStruct = CurrentRoomManager.instance.playerDataCells[i];
-            scoreboardRows[i].gameObject.SetActive(true);
+            if (CurrentRoomManager.instance.playerDataCells[i].occupied)
+            {
+                scoreboardRows[i].playerScoreStruct = CurrentRoomManager.instance.playerDataCells[i];
+                scoreboardRows[i].gameObject.SetActive(true);
+            }
         }
     }
 

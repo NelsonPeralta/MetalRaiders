@@ -14,6 +14,8 @@ public class GameObjectPool : MonoBehaviour
     [Header("Base Objects")]
     public List<GameObject> bullets = new List<GameObject>();
     public GameObject bulletPrefab;
+    public List<GameObject> shieldHits = new List<GameObject>();
+    public GameObject shieldHitPrefab;
     public List<GameObject> bloodHits = new List<GameObject>();
     public GameObject bloodHitPrefab;
     public List<GameObject> genericHits = new List<GameObject>();
@@ -68,6 +70,11 @@ public class GameObjectPool : MonoBehaviour
             obj = Instantiate(genericHitPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             genericHits.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+            obj = Instantiate(shieldHitPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            shieldHits.Add(obj);
             obj.transform.parent = gameObject.transform;
 
 
@@ -131,6 +138,17 @@ public class GameObjectPool : MonoBehaviour
         return null;
     }
 
+    public GameObject SpawnPooledShieldHit()
+    {
+        foreach (GameObject obj in shieldHits)
+            if (!obj.activeSelf)
+            {
+                StartCoroutine(DisableObjectAfterTime(obj, 0.4f));
+                return obj;
+            }
+        return null;
+    }
+
 
     public GameObject SpawnPooledTestingObject()
     {
@@ -182,7 +200,7 @@ public class GameObjectPool : MonoBehaviour
             Destroy(go);
     }
 
-    IEnumerator DisableObjectAfterTime(GameObject obj, int time = 1)
+    public IEnumerator DisableObjectAfterTime(GameObject obj, float time = 1)
     {
         yield return new WaitForSeconds(time);
         obj.SetActive(false);

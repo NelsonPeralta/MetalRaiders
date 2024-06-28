@@ -529,6 +529,11 @@ public class Player : Biped
             Debug.Log($"localPlayers.Keys.Count: {GameManager.instance.localPlayers.Keys.Count}");
             if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _defaultVerticalFov = 31.42f;
             else if (GameManager.instance.nbLocalPlayersPreset == 1) _defaultVerticalFov = 58.72f;
+            else if (GameManager.instance.nbLocalPlayersPreset == 3)
+            {
+                if (rid == 2) _defaultVerticalFov = 31.42f;
+                else _defaultVerticalFov = 58.72f;
+            }
 
 
             GetComponent<PlayerController>().mainCam.fieldOfView = defaultVerticalFov;
@@ -1530,6 +1535,7 @@ public class Player : Biped
 
 
         try { this.impactDir = impDir; } catch { }
+        playerShield.SpawnShieldHit();
         try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}"); }
         try
