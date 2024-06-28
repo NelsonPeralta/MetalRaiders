@@ -90,9 +90,9 @@ public class ScoreboardManager : MonoBehaviour
     public void SetScoreboardRows()
     {
         print($"SetScoreboardRows {GameManager.instance.pid_player_Dict.Values.Count}");
-        for (int i = 0; i < GameManager.instance.pid_player_Dict.Values.Count; i++)
+        for (int i = 0; i < CurrentRoomManager.instance.playerDataCells.Count; i++)
         {
-            scoreboardRows[i].playerScoreStruct = GameManager.instance.pid_player_Dict.ElementAt(i).Value.playerDataCell;
+            scoreboardRows[i].playerScoreStruct = CurrentRoomManager.instance.playerDataCells[i];
             scoreboardRows[i].gameObject.SetActive(true);
         }
     }
@@ -105,5 +105,75 @@ public class ScoreboardManager : MonoBehaviour
             blueTeamText.text = $"Blue: {MultiplayerManager.instance.blueTeamScore}";
         }
         catch { }
+    }
+
+    void SortScoreBoardByScore()
+    {
+        //if(GameManager.instance.teamMode == GameManager.TeamMode.None)
+        //{
+
+        //}
+
+
+
+
+
+
+
+        //int c = 0;
+
+        //for (int i = 0; i < scoreboardRows.Count; i++)
+        //{
+        //    if (scoreboardRows[i].playerScoreStruct.team == GameManager.instance.)
+        //    {
+        //        print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
+        //        ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].team.ToString().ToLower(), out _tCol);
+        //        carnageReportRowArray[c].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
+
+
+        //        carnageReportRowArray[c].playerName.text = _carnageReportStrucs[i].playerName.ToString();
+        //        carnageReportRowArray[c].kills.text = _carnageReportStrucs[i].kills.ToString();
+        //        carnageReportRowArray[c].deaths.text = _carnageReportStrucs[i].deaths.ToString();
+        //        carnageReportRowArray[c].damage.text = _carnageReportStrucs[i].damage.ToString();
+        //        carnageReportRowArray[c].score.text = _carnageReportStrucs[i].score.ToString();
+        //        carnageReportRowArray[c].headshots.text = _carnageReportStrucs[i].headshots.ToString();
+
+
+        //        if (_carnageReportStrucs[i].deaths > 0)
+        //            carnageReportRowArray[c].kdr.text = $"{_carnageReportStrucs[i].kills / (float)_carnageReportStrucs[i].deaths}";
+        //        else
+        //            carnageReportRowArray[c].kdr.text = "0";
+
+
+        //        carnageReportRowArray[c].gameObject.SetActive(true); c++;
+        //    }
+        //}
+
+        //for (int i = 0; i < _carnageReportStrucs.Count; i++)
+        //{
+        //    if (_carnageReportStrucs[i].team != winningTeam)
+        //    {
+        //        print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
+        //        ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].team.ToString().ToLower(), out _tCol);
+        //        carnageReportRowArray[c].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
+
+
+        //        carnageReportRowArray[c].playerName.text = _carnageReportStrucs[i].playerName.ToString();
+        //        carnageReportRowArray[c].kills.text = _carnageReportStrucs[i].kills.ToString();
+        //        carnageReportRowArray[c].deaths.text = _carnageReportStrucs[i].deaths.ToString();
+        //        carnageReportRowArray[c].damage.text = _carnageReportStrucs[i].damage.ToString();
+        //        carnageReportRowArray[c].score.text = _carnageReportStrucs[i].score.ToString();
+        //        carnageReportRowArray[c].headshots.text = _carnageReportStrucs[i].headshots.ToString();
+
+
+        //        if (_carnageReportStrucs[i].deaths > 0)
+        //            carnageReportRowArray[c].kdr.text = $"{_carnageReportStrucs[i].kills / (float)_carnageReportStrucs[i].deaths}";
+        //        else
+        //            carnageReportRowArray[c].kdr.text = "0";
+
+
+        //        carnageReportRowArray[c].gameObject.SetActive(true); c++;
+        //    }
+        //}
     }
 }

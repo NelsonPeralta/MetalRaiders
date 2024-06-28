@@ -164,7 +164,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void Travel()
     {
-        print($"Bullet has tracking target {weaponProperties.targetTracking} {trackingTarget}");
+        //print($"Bullet has tracking target {weaponProperties.targetTracking} {trackingTarget}");
 
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
         if (weaponProperties.targetTracking && trackingTarget)
