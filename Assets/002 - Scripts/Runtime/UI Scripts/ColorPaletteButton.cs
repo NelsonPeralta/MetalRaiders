@@ -10,13 +10,24 @@ public class ColorPaletteButton : MonoBehaviour
     {
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorName}")).SingleOrDefault();
 
+        print($"ColorPaletteButton {Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces.Count}");
         foreach (PlayerArmorPiece playerArmorPiece in Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
             if (playerArmorPiece.canChangeColorPalette)
+            {
                 try
                 {
                     playerArmorPiece.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
                 }
-                catch { }
+                catch
+                {
+                    foreach (Renderer r in playerArmorPiece.GetComponentsInChildren<Renderer>())
+                        try
+                        {
+                            r.GetComponent<Renderer>().material.SetTexture("_MainTex", _tex);
+                        }
+                        catch { /*Debug.LogWarning("DID NOT FIND ANY RENDERER");*/ }
+                }
+            }
 
         SaveColorPalette(colorName);
     }
