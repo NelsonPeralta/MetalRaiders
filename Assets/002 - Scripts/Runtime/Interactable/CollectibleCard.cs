@@ -30,7 +30,7 @@ public class CollectibleCard : MonoBehaviour
         {
             Player p = other.gameObject.GetComponent<Player>(); if (p == null) p = other.gameObject.transform.root.GetComponent<Player>();
 
-            if (p == GameManager.GetRootPlayer())
+            if (p == GameManager.GetRootPlayer() && p.isMine)
             {
                 //if (Vector3.Distance(p.transform.position, gameObject.transform.position) > 0.25f) return;
 

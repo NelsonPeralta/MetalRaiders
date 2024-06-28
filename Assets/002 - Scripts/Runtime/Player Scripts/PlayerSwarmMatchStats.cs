@@ -41,7 +41,7 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
                 bool _achUn = false;
 
                 Steamworks.SteamUserStats.GetAchievement("OMA", out _achUn);
-                if (!_achUn)
+                if (!_achUn && _player.isMine)
                     AchievementManager.UnlockAchievement("OMA");
 
                 if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("gps-lfa"))

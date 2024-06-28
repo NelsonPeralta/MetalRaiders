@@ -25,7 +25,7 @@ public class HealthPack : MonoBehaviour
             bool _achievementUnlocked = false;
             Steamworks.SteamUserStats.GetAchievement("MEDIC", out _achievementUnlocked);
 
-            if (!_achievementUnlocked)
+            if (!_achievementUnlocked && p.isMine)
             {
                 Debug.Log($"Unlocked Achivement MEDIC");
                 AchievementManager.UnlockAchievement("MEDIC");

@@ -100,7 +100,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
         _achUnl = false;
         Steamworks.SteamUserStats.GetAchievement("WAYT", out _achUnl);
-        if (_armorPiecesPurchased > 0 && !_achUnl)
+        if (_armorPiecesPurchased > 0 && !_achUnl && this == CurrentRoomManager.instance.playerDataCells[0])
         {
             Debug.Log($"Unlocked Achivement WAYT");
             AchievementManager.UnlockAchievement("WAYT");

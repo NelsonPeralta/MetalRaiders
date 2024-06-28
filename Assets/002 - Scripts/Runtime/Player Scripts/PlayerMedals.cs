@@ -151,7 +151,9 @@ public class PlayerMedals : MonoBehaviour
         Transform h = Instantiate(stuckMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
-        AchievementManager.instance.stickiesThisGame++;
+
+        if (player.isMine)
+            AchievementManager.instance.stickiesThisGame++;
     }
 
 
