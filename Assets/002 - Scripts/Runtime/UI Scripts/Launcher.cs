@@ -97,6 +97,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
 
+    public MenuGamePadCursor menuGamePadCursor;
+
+
+
+
 
 
 
@@ -147,6 +152,16 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
     bool _tryingToLeaveRoomFromMenu;
+
+    List<RoomInfo> _roomsCached = new List<RoomInfo>();
+
+
+
+
+
+
+
+
 
     void Awake()
     {
@@ -305,77 +320,142 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void CreatePrivateRoom()
     {
-        Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
-
-        CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
-        GameManager.instance.teamMode = GameManager.TeamMode.None;
-        GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
-
-        RoomOptions options = new RoomOptions();
-        options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
-        options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
-        options.CustomRoomProperties.Add("gamemode", "multiplayer");
-
-
-        if (GameManager.instance.connection == GameManager.Connection.Online && PhotonNetwork.NetworkClientState != ClientState.Disconnected)
+        if (!RoomBrowserMenu.GAMEPAD_ROOM_NAMES.Contains(roomNameInputField.text) && !RoomBrowserMenu.FORBIDDEN_ROOM_NAMES.Contains(roomNameInputField.text))
         {
+            Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
+
+            CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
+            GameManager.instance.teamMode = GameManager.TeamMode.None;
+            GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+
+            RoomOptions options = new RoomOptions();
+            options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
+            options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+            options.CustomRoomProperties.Add("gamemode", "multiplayer");
 
 
-            if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
+            if (GameManager.instance.connection == GameManager.Connection.Online && PhotonNetwork.NetworkClientState != ClientState.Disconnected)
             {
-                return; // Do nothing
-            }
 
-            if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer)
+
+                if (string.IsNullOrEmpty(roomNameInputField.text)) // If there is no text in the input field of the room name we want to create
+                {
+                    return; // Do nothing
+                }
+
+                if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer)
+                {
+                    //PhotonNetwork.JoinRandomRoom();
+
+                    // Can Join Room
+                }
+                else
+                {
+                    //Debug.LogError("Can't join random room now, client is not ready");
+                }
+
+                // else
+                //PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
+                CreateRoom(roomNameInputField.text, options);
+                MenuManager.Instance.OpenLoadingMenu("Creating Multiplayer Room..."); // Show the loading menu/message
+
+                // When creating a room is done, OnJoinedRoom() will automatically trigger
+                OnCreateMultiplayerRoomButton?.Invoke(this);
+            }
+            else if (GameManager.instance.connection == GameManager.Connection.Local)
             {
-                //PhotonNetwork.JoinRandomRoom();
+                PhotonNetwork.OfflineMode = true; PhotonNetwork.NickName = "0";
+                CreateRoom(roomNameInputField.text, options);
 
-                // Can Join Room
+                //MenuManager.Instance.OpenMenu("multiplayer_room");
+                //commonRoomTexts.SetActive(true);
+
+                ////if (PhotonNetwork.CurrentRoom.Name != quickMatchRoomName)
+                //{
+                //    roomNameText.text = "LOCAL"; // Change the name of the room to the one given 
+                //    _vetoBtn.SetActive(false); _matchStartCountdownText.gameObject.SetActive(false);
+                //}
+
+                //CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
+                //_startGameButton.SetActive(true);
+
+                //{
+                //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+
+                //    //if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(PhotonNetwork.NickName))
+                //    //    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[PhotonNetwork.NickName] = GameManager.instance.nbLocalPlayersPreset;
+                //    //else
+                //    //    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Add(PhotonNetwork.NickName, GameManager.instance.nbLocalPlayersPreset);
+                //    //CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
+
+                //    //NetworkGameManager.instance.SendGameParams();
+                //}
             }
-            else
-            {
-                //Debug.LogError("Can't join random room now, client is not ready");
-            }
-
-            // else
-            //PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
-            CreateRoom(roomNameInputField.text, options);
-            MenuManager.Instance.OpenLoadingMenu("Creating Multiplayer Room..."); // Show the loading menu/message
-
-            // When creating a room is done, OnJoinedRoom() will automatically trigger
-            OnCreateMultiplayerRoomButton?.Invoke(this);
+            Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
         }
-        else if (GameManager.instance.connection == GameManager.Connection.Local)
+        else
         {
-            PhotonNetwork.OfflineMode = true; PhotonNetwork.NickName = "0";
-            CreateRoom(roomNameInputField.text, options);
-
-            //MenuManager.Instance.OpenMenu("multiplayer_room");
-            //commonRoomTexts.SetActive(true);
-
-            ////if (PhotonNetwork.CurrentRoom.Name != quickMatchRoomName)
-            //{
-            //    roomNameText.text = "LOCAL"; // Change the name of the room to the one given 
-            //    _vetoBtn.SetActive(false); _matchStartCountdownText.gameObject.SetActive(false);
-            //}
-
-            //CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
-            //_startGameButton.SetActive(true);
-
-            //{
-            //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
-
-            //    //if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(PhotonNetwork.NickName))
-            //    //    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[PhotonNetwork.NickName] = GameManager.instance.nbLocalPlayersPreset;
-            //    //else
-            //    //    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Add(PhotonNetwork.NickName, GameManager.instance.nbLocalPlayersPreset);
-            //    //CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
-
-            //    //NetworkGameManager.instance.SendGameParams();
-            //}
+            errorText.text = "You cannot use that name";
+            MenuManager.Instance.OpenPopUpMenu("error");
         }
-        Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
     }
+
+
+
+
+    public void CreatePrivateRoomFromGamepad()
+    {
+        string roomNameToUse = RoomBrowserMenu.GAMEPAD_ROOM_NAMES[0];
+
+        for (int i = 0; i < RoomBrowserMenu.GAMEPAD_ROOM_NAMES.Length; i++)
+        {
+            if (_roomsCached.Find(j => j.Name.Equals(roomNameToUse)) != null)
+            {
+                roomNameToUse = "impossible";
+
+                try { roomNameToUse = RoomBrowserMenu.GAMEPAD_ROOM_NAMES[i]; } catch { }
+            }
+        }
+
+        if (!roomNameToUse.Equals("impossible"))
+        {
+            CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
+            GameManager.instance.teamMode = GameManager.TeamMode.None;
+            GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+
+            RoomOptions options = new RoomOptions();
+            options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
+            options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+            options.CustomRoomProperties.Add("gamemode", "multiplayer");
+
+
+            if (GameManager.instance.connection == GameManager.Connection.Online && PhotonNetwork.NetworkClientState != ClientState.Disconnected)
+            {
+                //PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
+                CreateRoom(roomNameToUse, options);
+                MenuManager.Instance.OpenLoadingMenu("Creating Multiplayer Room..."); // Show the loading menu/message
+
+                // When creating a room is done, OnJoinedRoom() will automatically trigger
+                OnCreateMultiplayerRoomButton?.Invoke(this);
+            }
+            else if (GameManager.instance.connection == GameManager.Connection.Local)
+            {
+                PhotonNetwork.OfflineMode = true; PhotonNetwork.NickName = "0";
+                CreateRoom(roomNameToUse, options);
+            }
+            Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
+        }
+        else
+        {
+            errorText.text = "All Gamepad Room Names have been used";
+            MenuManager.Instance.OpenPopUpMenu("error");
+        }
+    }
+
+
+
+
+
 
     void CreateRoom(string roomNam, RoomOptions ro, TypedLobby tl = null)
     {
@@ -546,7 +626,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         errorText.text = "Room Creation Failed: " + message;
         Debug.LogError("Room Creation Failed: " + message);
-        MenuManager.Instance.OpenMenu("error");
+        MenuManager.Instance.OpenPopUpMenu("error");
     }
 
     public void ShowPlayerMessage(string message)
@@ -640,6 +720,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        _roomsCached.Clear();
         UpdateCachedRoomList(roomList);
 
         foreach (Transform trans in roomListContent)
@@ -651,7 +732,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             if (roomList[i].RemovedFromList)
                 continue;
-            //if (roomList[i].Name != quickMatchRoomName)
+
+            _roomsCached.Add(roomList[i]);
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
         }
     }

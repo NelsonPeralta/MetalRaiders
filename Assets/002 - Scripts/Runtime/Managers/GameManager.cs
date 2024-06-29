@@ -320,6 +320,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] TMP_Text _deb;
 
+
+    public Texture2D cursorTexture;
+
     public bool playerDataRetrieved
     {
         get { return _playerDataRetrieved; }
@@ -354,8 +357,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         _checkCooldown = 0.05f;
 
         Debug.Log("GameManager Awake");
-        InitialisePlayerPrefs();
-        Load();
+        
 
         colorDict.Add("white", "#FFFFFF");
         colorDict.Add("grey", "#B3B3B3");
@@ -389,6 +391,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
         instance = this;
     }
+
+
+
+    
 
 
 
@@ -431,6 +437,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+
+
             SwarmManager.instance.StopAllMusic();
             MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().ClearCarnageReportData();
 
@@ -516,6 +525,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("GameManager Start");
         nbLocalPlayersPreset = 1;
+        InitialisePlayerPrefs();
+        LoadPlayerPrefs();
         //Debug.Log(colorPaletteTextures.Count);
 
         QualitySettings.vSyncCount = 0;
@@ -586,6 +597,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Update()
     {
         if (commonPlayerVoiceCooldown > 0) commonPlayerVoiceCooldown -= Time.deltaTime;
+
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+        }
 
 
 
@@ -1064,9 +1079,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         AudioListener.volume = PlayerPrefs.GetFloat("volume") / 100f;
     }
 
-    public static void Load()
+    public static void LoadPlayerPrefs()
     {
         UpdateVolume();
+
+        CurrentRoomManager.instance.playerDataCells[0].sens = PlayerPrefs.GetFloat("sens");
+        //if (GameManager.instance.connection == Connection.Local)
+        {
+            CurrentRoomManager.instance.playerDataCells[1].sens = PlayerPrefs.GetFloat("sens");
+            CurrentRoomManager.instance.playerDataCells[2].sens = PlayerPrefs.GetFloat("sens");
+            CurrentRoomManager.instance.playerDataCells[3].sens = PlayerPrefs.GetFloat("sens");
+        }
     }
 
     public static void SaveOptions(float vol = -1, float sens = -1)

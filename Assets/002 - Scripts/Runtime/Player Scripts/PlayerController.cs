@@ -21,6 +21,17 @@ public class PlayerController : MonoBehaviourPun
         OnPlayerScopeBtnDown, OnPlayerScopeBtnUp;
 
     public Player player { get { return GetComponent<Player>(); } }
+    public int rid
+    {
+        get { return _rid; }
+        set
+        {
+            _rid = value;
+            player.playerUI.gamepadCursor.rewiredPlayer = ReInput.players.GetPlayer(_rid);
+            player.playerUI.gamepadCursor.player = player;
+        }
+    }
+
 
 
     [Header("Other Scripts")]
@@ -34,7 +45,7 @@ public class PlayerController : MonoBehaviourPun
     public Camera uiCam;
     public PlayerCamera camScript;
     public Rewired.Player rewiredPlayer;
-    public int rid;
+    [SerializeField] int _rid;
     public CrosshairManager crosshairScript;
     public ReloadScript rScript;
     public PlayerWeaponSwapping wPickup;
@@ -1425,6 +1436,7 @@ public class PlayerController : MonoBehaviourPun
                 Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
                 Cursor.visible = true;
                 GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(true);
+                player.playerUI.gamepadCursor.gameObject.SetActive(true);
                 pauseMenuOpen = true;
             }
         }
@@ -1433,6 +1445,7 @@ public class PlayerController : MonoBehaviourPun
             Cursor.lockState = CursorLockMode.Locked; // Must Unlock Cursor so it can detect buttons
             Cursor.visible = false;
             GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(false);
+            player.playerUI.gamepadCursor.gameObject.SetActive(false);
             pauseMenuOpen = false;
         }
     }

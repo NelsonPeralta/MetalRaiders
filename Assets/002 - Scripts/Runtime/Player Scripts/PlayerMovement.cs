@@ -198,12 +198,12 @@ public class PlayerMovement : MonoBehaviour
             //if (Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) <= _forwardDeadzone && Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) <= _rightDeadzone)
             //    _rb.drag = groundDrag * 10;
             //else
-                _rb.drag = groundDrag;
+            _rb.drag = groundDrag;
         }
         else
             _rb.drag = 0;
 
-        if (!CurrentRoomManager.instance.gameStarted) return;
+        if (!CurrentRoomManager.instance.gameStarted || player.playerController.pauseMenuOpen) return;
 
         _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", !isGrounded);
         CalculateCurrentSpeed();

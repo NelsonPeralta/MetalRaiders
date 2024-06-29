@@ -1,13 +1,23 @@
+using Rewired;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomBrowserMenu : MonoBehaviour
 {
-    private void OnEnable()
+    public static string[] GAMEPAD_ROOM_NAMES = { "Poutine", "Sushi", "Spaghetti", "Burger" };
+    public static string[] FORBIDDEN_ROOM_NAMES = { "nigger", "fuck", "faggot", "coon" };
+
+
+
+    [SerializeField] GameObject _keyboardCreateRoomHolder, _gamepadCreateRoomHolder;
+
+
+
+
+    private void Update()
     {
-        //CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
-        //GameManager.instance.teamMode = GameManager.TeamMode.None;
-        //GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+        _keyboardCreateRoomHolder.SetActive(ReInput.controllers.GetLastActiveControllerType() != ControllerType.Joystick);
+        _gamepadCreateRoomHolder.SetActive(ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick);
     }
 }

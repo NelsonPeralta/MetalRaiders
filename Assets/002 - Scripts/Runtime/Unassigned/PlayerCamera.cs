@@ -58,11 +58,12 @@ public class PlayerCamera : MonoBehaviour
 
     private void Awake()
     {
-        frontEndMouseSens = PlayerPrefs.GetFloat("sens");
+
     }
 
     void Start()
     {
+        frontEndMouseSens = player.playerDataCell.sens;
         //transform.parent = null;
         player.OnPlayerRespawnEarly -= OnRespawnEarly_Delegate;
         player.OnPlayerRespawnEarly += OnRespawnEarly_Delegate;

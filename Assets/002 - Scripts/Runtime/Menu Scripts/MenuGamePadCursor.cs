@@ -6,11 +6,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class MenuGamePadCursor : MonoBehaviour
 {
     [SerializeField] Camera _camera;
 
+
+    public Player player { get { return _player; } set { _player = value; } }
 
     public ControllerType controllerType
     {
@@ -27,10 +30,23 @@ public class MenuGamePadCursor : MonoBehaviour
             }
             else if (value != ControllerType.Joystick && _preControllerType == ControllerType.Joystick)
             {
-
+                if (_buttonUnderCursor != null)
+                {
+                    _buttonUnderCursor.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
+                    _buttonUnderCursor = null;
+                }
             }
         }
     }
+
+
+
+
+    public GameObject gamepadCursor { get { return _gamePadCursor; } }
+
+
+
+
     public Rewired.Player rewiredPlayer;
     public int rwid;
 
@@ -41,19 +57,32 @@ public class MenuGamePadCursor : MonoBehaviour
     [SerializeField] GameObject _gamePadCursor;
     [SerializeField] ControllerType _controllerType;
 
+
+
+
     ControllerType _preControllerType;
+    Player _player;
+
+
+
+
+    [SerializeField] Vector3 _startPos, _cachedScreenPos;
+
+
+
 
 
     private void Awake()
     {
         rewiredPlayer = ReInput.players.GetPlayer(0);
+
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-
+        _cachedScreenPos = _startPos;
     }
 
 
@@ -69,12 +98,18 @@ public class MenuGamePadCursor : MonoBehaviour
         {
             pointerData.position = _camera.WorldToScreenPoint(_gamePadCursor.transform.position);
             pointerData.position = _gamePadCursor.transform.position;
+
+            if(SceneManager.GetActiveScene().buildIndex > 0)
+            {
+                pointerData.position = _camera.WorldToScreenPoint(_gamePadCursor.transform.position);
+            }
         }
 
         //if (rewiredPlayer.GetButtonDown("Switch Grenades"))
         {
             _eventSystemRaycastResults.Clear();
             EventSystem.current.RaycastAll(pointerData, _eventSystemRaycastResults);
+
 
 
             if (_eventSystemRaycastResults.Count != _preEentSystemRaycastResults.Count)
@@ -166,8 +201,37 @@ public class MenuGamePadCursor : MonoBehaviour
 
         if (controllerType == ControllerType.Joystick)
         {
-            _gamePadCursor.transform.localPosition += new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) > 0.15f) ? rewiredPlayer.GetAxis("Move Horizontal") * 25 : 0),
-                ((Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) > 0.15f) ? rewiredPlayer.GetAxis("Move Vertical") * 25 : 0), 0);
+
+            if (SceneManager.GetActiveScene().buildIndex == 0 || (SceneManager.GetActiveScene().buildIndex > 0) && player)
+            {
+                _cachedScreenPos += new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) > 0.15f) ? rewiredPlayer.GetAxis("Move Horizontal") * 25 : 0),
+                    ((Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) > 0.15f) ? rewiredPlayer.GetAxis("Move Vertical") * 25 : 0), 0);
+
+
+                _cachedScreenPos.x = Mathf.Clamp(_cachedScreenPos.x, -900, 900);
+                _cachedScreenPos.y = Mathf.Clamp(_cachedScreenPos.y, -500, 500);
+
+
+
+                _gamePadCursor.transform.localPosition = _cachedScreenPos;
+            }
+
+
+            //if (_gamePadCursor.transform.position.x < 50)
+            //    _gamePadCursor.transform.position += new Vector3(50, _gamePadCursor.transform.position.y, _gamePadCursor.transform.position.z);
+
+
+
+            //_camera.WorldToViewportPoint
+
+
+
+            //_gamePadCursor.transform.localPosition +=
+            //    new Vector3(_gamePadCursor.transform.localPosition.x, ((Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) > 0.15f) ? rewiredPlayer.GetAxis("Move Vertical") * 25 : 0), 0);
+
+
+            //_gamePadCursor.transform.localPosition +=
+            //    new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) > 0.15f) ? rewiredPlayer.GetAxis("Move Horizontal") * 25 : 0), _gamePadCursor.transform.localPosition.y, 0);
 
             //transform.localPosition += new Vector3(Mathf.Sign(rewiredPlayer.GetAxis("move_x")) * 3, Mathf.Sign(rewiredPlayer.GetAxis("move_y")) * 3, 0);
         }
@@ -179,10 +243,8 @@ public class MenuGamePadCursor : MonoBehaviour
     [SerializeField] PointerEventData pointerData = new PointerEventData(EventSystem.current) { pointerId = -1, };
     [SerializeField] List<RaycastResult> _eventSystemRaycastResults = new List<RaycastResult>();
     [SerializeField] List<RaycastResult> _preEentSystemRaycastResults = new List<RaycastResult>();
-    [SerializeField] List<Button> _buttonsFound = new List<Button>();
     public List<RaycastResult> RaycastMouse()
     {
-        raycastResults.Clear(); _buttonsFound.Clear();
         pointerData = new PointerEventData(EventSystem.current) { pointerId = -1, };
 
         pointerData.position = _camera.WorldToScreenPoint(_gamePadCursor.transform.position);
@@ -201,6 +263,9 @@ public class MenuGamePadCursor : MonoBehaviour
         return _eventSystemRaycastResults;
     }
 
+
+
+    [SerializeField] List<GameObject> _rawHit = new List<GameObject>();
     [SerializeField] Button _buttonUnderCursor;
     Sprite _buttonUnderCursorUnselectedSprite;
 
@@ -209,16 +274,16 @@ public class MenuGamePadCursor : MonoBehaviour
     {
         print($"MenuGamePadCursor {_eventSystemRaycastResults.Count} {_preEentSystemRaycastResults.Count}");
 
-        _preEentSystemRaycastResults.Clear();
+        _preEentSystemRaycastResults.Clear(); _rawHit.Clear();
         _preEentSystemRaycastResults.AddRange(_eventSystemRaycastResults);
-        _buttonsFound.Clear();
 
 
+        _rawHit = _eventSystemRaycastResults.Select(r => r.gameObject).ToList();
 
 
         foreach (var r in _eventSystemRaycastResults)
         {
-            if (r.gameObject.GetComponent<Button>())
+            if (r.gameObject.GetComponent<Button>() && r.gameObject.GetComponent<Button>().transition == Selectable.Transition.SpriteSwap)
             {
                 if (_buttonUnderCursor != null)
                     if (_buttonUnderCursor.transition == Selectable.Transition.SpriteSwap)
@@ -228,20 +293,30 @@ public class MenuGamePadCursor : MonoBehaviour
 
 
                 _buttonUnderCursor = r.gameObject.GetComponent<Button>();
-                if (_buttonUnderCursor.transition == Selectable.Transition.SpriteSwap)
-                {
-                    _buttonUnderCursorUnselectedSprite = _buttonUnderCursor.GetComponent<Image>().sprite;
-                    _buttonUnderCursor.GetComponent<Image>().sprite = _buttonUnderCursor.spriteState.highlightedSprite;
-                }
+                _buttonUnderCursorUnselectedSprite = _buttonUnderCursor.GetComponent<Image>().sprite;
+                _buttonUnderCursor.GetComponent<Image>().sprite = _buttonUnderCursor.spriteState.highlightedSprite;
+
+                if (_buttonUnderCursor.GetComponent<EventTrigger>())
+                    _buttonUnderCursor.GetComponent<EventTrigger>().OnPointerEnter(pointerData);
 
 
                 break;
             }
-
-
-            if (_buttonUnderCursor != null)
-                if (_buttonUnderCursor.transition == Selectable.Transition.SpriteSwap)
+            else
+            {
+                if (_buttonUnderCursor != null)
+                {
                     _buttonUnderCursor.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
+                    if (_buttonUnderCursor.GetComponent<EventTrigger>())
+                        _buttonUnderCursor.GetComponent<EventTrigger>().OnPointerExit(pointerData);
+
+
+
+
+
+                    _buttonUnderCursor = null;
+                }
+            }
         }
     }
 }

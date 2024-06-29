@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using UnityEngine.UI;
+using Rewired;
 
 public class ArmoryManager : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class ArmoryManager : MonoBehaviour
     public ArmorPieceListing armorPieceListingPrefab;
     public List<ArmorPieceListing> armorPieceListingList = new List<ArmorPieceListing>();
 
+
+    [SerializeField] Scrollbar _armorPiecesScrollbar;
     [SerializeField] Slider _rotatePlayerModelScrollbar;
     Vector3 _defaultPlayerModelRotation;
 
@@ -106,5 +109,23 @@ public class ArmoryManager : MonoBehaviour
         //Launcher.instance.playerModel.transform.rotation = Quaternion.Euler(Vector3.zero);
         //if (_defaultPlayerModelRotation.y > 180) Launcher.instance.playerModel.transform.Rotate(new Vector3(0, 180, 0), relativeTo: Space.Self);
         _rotatePlayerModelScrollbar.value = 180;
+    }
+
+
+
+
+
+
+    private void FixedUpdate()
+    {
+        if (Launcher.instance.menuGamePadCursor.controllerType == Rewired.ControllerType.Joystick)
+        {
+            {
+                _armorPiecesScrollbar.value += (Mathf.Abs(Launcher.instance.menuGamePadCursor.rewiredPlayer.GetAxis("Mouse Y")) > 0.2f) ? Launcher.instance.menuGamePadCursor.rewiredPlayer.GetAxis("Mouse Y") * 0.04f : 0;
+                _rotatePlayerModelScrollbar.value += (Mathf.Abs(Launcher.instance.menuGamePadCursor.rewiredPlayer.GetAxis("Mouse X")) > 0.2f) ? Launcher.instance.menuGamePadCursor.rewiredPlayer.GetAxis("Mouse X") * 7 : 0;
+
+                //transform.localPosition += new Vector3(Mathf.Sign(rewiredPlayer.GetAxis("move_x")) * 3, Mathf.Sign(rewiredPlayer.GetAxis("move_y")) * 3, 0);
+            }
+        }
     }
 }

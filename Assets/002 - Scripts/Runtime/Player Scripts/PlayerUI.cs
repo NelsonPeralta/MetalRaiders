@@ -58,6 +58,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] TMP_Text _informerText;
     [SerializeField] Image _weaponIconInformer;
     [SerializeField] PlayerPointWitness _pointWitness;
+    public OptionsMenu optionsMenuScript;
+    public MenuGamePadCursor gamepadCursor;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft, notKillFeed;
@@ -138,6 +140,7 @@ public class PlayerUI : MonoBehaviour
     {
         HideInformer();
         plasmaGrenadeImage.gameObject.SetActive(false);
+        gamepadCursor.gameObject.SetActive(false);
         GameObject thm = null;
         for (int i = 0; i < 32; i++)
         {
