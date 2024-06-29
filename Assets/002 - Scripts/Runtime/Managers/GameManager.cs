@@ -267,7 +267,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform powerAmmoPack;
 
     [SerializeField] int _nbLocalPlayersPreset;
-    public int nbLocalPlayersPreset { get { return _nbLocalPlayersPreset; } set { _nbLocalPlayersPreset = value; } }
+    public int nbLocalPlayersPreset
+    {
+        get { return _nbLocalPlayersPreset; }
+        set
+        {
+            _nbLocalPlayersPreset = Mathf.Clamp(value, 1, 4);
+        }
+    }
 
 
     public bool isDev;
@@ -357,7 +364,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         _checkCooldown = 0.05f;
 
         Debug.Log("GameManager Awake");
-        
+
 
         colorDict.Add("white", "#FFFFFF");
         colorDict.Add("grey", "#B3B3B3");
@@ -394,7 +401,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    
+
 
 
 

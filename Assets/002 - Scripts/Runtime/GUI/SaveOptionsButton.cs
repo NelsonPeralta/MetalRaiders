@@ -23,12 +23,10 @@ public class SaveOptionsButton : MonoBehaviour
         }
         else
         {
+            _player.playerDataCell.sens = _camSensSlider.value;
+
             if (_player == GameManager.GetRootPlayer())
                 GameManager.SaveOptions(vol: _volumeSlider.value, sens: _camSensSlider.value);
-            else
-            {
-                _player.playerDataCell.sens = _camSensSlider.value;
-            }
 
             _player.playerUI.optionsMenuScript.UpdateWitnesses();
         }

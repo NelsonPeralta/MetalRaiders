@@ -207,14 +207,6 @@ public class MenuManager : MonoBehaviour
 
     public void OpenRoomBrowserMenu()
     {
-        if(GameManager.instance.connection == GameManager.Connection.Local)
-        {
-            CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
-            Launcher.CreateLocalModePlayerDataCells();
-        }
-
-
-
         OpenMenu("room browser");
     }
 }

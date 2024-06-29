@@ -84,6 +84,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
+        _lastPID = playerWhoShotThisPlayerPhotonId;
         print($"ExplosiveBarrel Damage {playerWhoShotThisPlayerPhotonId}");
         hitPoints -= damage;
     }

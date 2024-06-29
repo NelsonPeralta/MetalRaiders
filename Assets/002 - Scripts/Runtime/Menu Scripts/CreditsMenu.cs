@@ -25,7 +25,7 @@ public class CreditsMenu : MonoBehaviour
         Launcher.instance.playerModel.SetActive(true);
 
 
-        if (GameManager.instance.carnageReport)
+        if (GameManager.instance.carnageReport != null)
         {
             Debug.Log($"CarnageReportMenu {GameManager.instance.carnageReport.xpGained}");
             if (GameManager.instance.carnageReport.xpGained > 0)

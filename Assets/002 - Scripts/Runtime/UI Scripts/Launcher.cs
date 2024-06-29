@@ -405,6 +405,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void CreatePrivateRoomFromGamepad()
     {
+        if (GameManager.instance.connection == GameManager.Connection.Local)
+        {
+            CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
+            Launcher.CreateLocalModePlayerDataCells();
+        }
+
+
         string roomNameToUse = RoomBrowserMenu.GAMEPAD_ROOM_NAMES[0];
 
         for (int i = 0; i < RoomBrowserMenu.GAMEPAD_ROOM_NAMES.Length; i++)
@@ -973,5 +980,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         FindObjectOfType<ArmoryManager>(true).ResetPlayerModelRotation();
         instance.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
         instance.playerModel.SetActive(b);
+    }
+
+
+    public void ChangeNumberLocalPlayersBtn(int i)
+    {
+        GameManager.instance.nbLocalPlayersPreset += i;
+        _nbLocalPlayersInputed.text = GameManager.instance.nbLocalPlayersPreset.ToString();
     }
 }

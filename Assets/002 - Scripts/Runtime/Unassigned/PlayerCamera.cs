@@ -73,17 +73,11 @@ public class PlayerCamera : MonoBehaviour
 
         try
         {
-            frontEndMouseSens = PlayerPrefs.GetFloat("sens");
             GameManager.instance.OnCameraSensitivityChanged -= OnCameraSensitivityChanged;
             GameManager.instance.OnCameraSensitivityChanged += OnCameraSensitivityChanged;
         }
         catch { }
 
-        try
-        {
-            frontEndMouseSens = PlayerPrefs.GetFloat("sens");
-        }
-        catch { }
 
         defaultLocalRotation = transform.localRotation;
         mainCamDefaultLocalPosition = mainCam.transform.localPosition;
@@ -109,6 +103,7 @@ public class PlayerCamera : MonoBehaviour
         _controllerType = pController.activeControllerType;
 
 
+        frontEndMouseSens = player.playerDataCell.sens;
         backEndMouseSens = frontEndMouseSens * 30;
 
 

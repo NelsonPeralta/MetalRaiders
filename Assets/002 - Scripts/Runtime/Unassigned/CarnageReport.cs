@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarnageReport : MonoBehaviour
+public class CarnageReport 
 {
     public PlayerProgressionManager.Rank rank { get { return _rank; } }
     public int playerLevel { get { return _pLvl; } }

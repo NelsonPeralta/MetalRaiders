@@ -26,7 +26,7 @@ public class MenuGamePadCursor : MonoBehaviour
 
             if (value == ControllerType.Joystick && _preControllerType != ControllerType.Joystick)
             {
-                _gamePadCursor.transform.position = Input.mousePosition;
+                //_gamePadCursor.transform.position = Input.mousePosition;
             }
             else if (value != ControllerType.Joystick && _preControllerType == ControllerType.Joystick)
             {
@@ -99,7 +99,7 @@ public class MenuGamePadCursor : MonoBehaviour
             pointerData.position = _camera.WorldToScreenPoint(_gamePadCursor.transform.position);
             pointerData.position = _gamePadCursor.transform.position;
 
-            if(SceneManager.GetActiveScene().buildIndex > 0)
+            if (SceneManager.GetActiveScene().buildIndex > 0)
             {
                 pointerData.position = _camera.WorldToScreenPoint(_gamePadCursor.transform.position);
             }
@@ -204,8 +204,8 @@ public class MenuGamePadCursor : MonoBehaviour
 
             if (SceneManager.GetActiveScene().buildIndex == 0 || (SceneManager.GetActiveScene().buildIndex > 0) && player)
             {
-                _cachedScreenPos += new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) > 0.15f) ? rewiredPlayer.GetAxis("Move Horizontal") * 25 : 0),
-                    ((Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) > 0.15f) ? rewiredPlayer.GetAxis("Move Vertical") * 25 : 0), 0);
+                _cachedScreenPos += new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) > 0.15f) ? rewiredPlayer.GetAxis("Move Horizontal") * 20 * (rewiredPlayer.GetButton("Shoot") ? 2 : 1) * (rewiredPlayer.GetButton("Throw Grenade") ? 0.5f : 1) : 0),
+                    ((Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) > 0.15f) ? rewiredPlayer.GetAxis("Move Vertical") * 20 * (rewiredPlayer.GetButton("Shoot") ? 2 : 1) * (rewiredPlayer.GetButton("Throw Grenade") ? 0.5f : 1) : 0), 0);
 
 
                 _cachedScreenPos.x = Mathf.Clamp(_cachedScreenPos.x, -900, 900);
