@@ -15,7 +15,7 @@ public class Biped : MonoBehaviour
         {
             _ultraMergeCount = value;
 
-            if (_ultraMergeCount == 12)
+            if (_ultraMergeCount == 10)
             {
                 print("ULTRA MERGE!");
                 SpawnUltraBindExplosion();

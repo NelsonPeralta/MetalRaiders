@@ -43,8 +43,13 @@ abstract public class Actor : Biped
 
             if (nv < pv)
             {
-                if (_flinchCooldown <= 0 && nv > 0)
+                _flinchThresholdCount += Mathf.Abs(pv - nv);
+                //if (_flinchCooldown <= 0 && nv > 0)
+                if (_flinchThresholdCount > _flinchThreshold && nv > 0)
+                {
+
                     Flinch();
+                }
                 //ChildOnActorDamaged();
             }
 
@@ -165,12 +170,18 @@ abstract public class Actor : Biped
     [SerializeField] List<Transform> _rightChecks = new List<Transform>();
     [SerializeField] Explosion _ultraMergeExPrefab;
 
+    [SerializeField] protected int _flinchThreshold;
+
+    [SerializeField] float _flinchThresholdCount;
+
     protected float _diffHpMult, _diffAttMult, _gruntDelay, _defGruntDelay;
     AudioSource _audioSource;
 
 
     private void Awake()
     {
+        if (_flinchThreshold == 0) _flinchThreshold = 100;
+
         _audioSource = GetComponent<AudioSource>();
         _gruntDelay = _defGruntDelay = UnityEngine.Random.Range(4f, 8f);
 
@@ -233,6 +244,9 @@ abstract public class Actor : Biped
     // Update is called once per frame
     void Update()
     {
+        if (_flinchThresholdCount > 0) _flinchThresholdCount -= Time.deltaTime * 3;
+
+
         TargetStateCheck();
         LostTarget();
 
@@ -774,6 +788,7 @@ abstract public class Actor : Biped
         else if (!callRPC)
         {
             Debug.Log($"ACTORD FLINCH CALL PROCESSING");
+            _flinchThresholdCount = 0;
             _audioSource.clip = _hurtClip;
             _audioSource.Play();
 
@@ -810,6 +825,7 @@ abstract public class Actor : Biped
         else if (!caller)
         {
             Debug.Log($"ACTORD DIE PROCESSING");
+            GetComponent<HitPoints>().OnDeath?.Invoke(GetComponent<HitPoints>());
             _friction.gameObject.SetActive(false);
             _audioSource.clip = _deathClip;
             _audioSource.Play();

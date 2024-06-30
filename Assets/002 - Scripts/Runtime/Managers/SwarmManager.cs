@@ -318,7 +318,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (_waveEndCountdown <= 0)
             {
-                _networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
+                if (!CurrentRoomManager.instance.gameOver)
+                    _networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
 
                 //EndWave();
             }
@@ -1000,7 +1001,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPacksCheck()
     {
-        if (currentWave % 3 == 0 && GameManager.instance.gameType == GameManager.GameType.Survival)
+        if (currentWave % 10 == 0 && GameManager.instance.gameType == GameManager.GameType.Survival)
         {
             bool _achievementUnlocked = false;
             Steamworks.SteamUserStats.GetAchievement("YAWA", out _achievementUnlocked);
@@ -1011,12 +1012,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 AchievementManager.UnlockAchievement("YAWA");
             }
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && GameManager.instance.gameType == GameManager.GameType.Survival)
-                if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
-                {
-                    gameWon = true;
-                    EndGame();
-                }
+            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && GameManager.instance.gameType != GameManager.GameType.Endless)
+            {
+                gameWon = true;
+                EndGame();
+            }
         }
         else if (currentWave % 5 == 0)
         {
@@ -1151,6 +1151,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Objective complete! Game Over.");
 
                 if (gameWon) WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>(), gameWon);
+
+
+                GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
+                GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
 
                 pp.LeaveRoomWithDelay();
             }

@@ -90,8 +90,26 @@ public class Melee : MonoBehaviour
         }
     }
 
+
+
+    HitPoints _tempHb;
+
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log($"Melee OnTriggerExit {other.name}");
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (other.GetComponent<ActorHitbox>())
+            {
+                try
+                {
+                    hitPointsInMeleeZone.Remove(other.GetComponent<ActorHitbox>().hitPoints);
+                }
+                catch { }
+            }
+
+
+
         try
         {
             hitPointsInMeleeZone.Remove(other.GetComponent<HitPoints>());

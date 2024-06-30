@@ -309,13 +309,15 @@ public partial class WebManager
 
     IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<int> winPlayers = null, bool swarmGameWon = false)
     {
-        if (CurrentRoomManager.instance.nbPlayersJoined > 1)
         {
             int xpAndCreditGain = PlayerProgressionManager.xpGainPerMatch;
             int honorGained = PlayerProgressionManager.honorGainPerMatch;
 
             if (swarmGameWon)
+            {
                 honorGained = 1;
+
+            }
             else if (winPlayers != null)
             {
                 if (winPlayers.Contains(CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.player_id))

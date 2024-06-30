@@ -31,9 +31,11 @@ public class AssignActorPlayerTargetOnShootingSphere : MonoBehaviour
         if (_hits_.Length > 0)
             for (int i = 0; i < _hits_.Length; i++)
             {
-                print(_hits_[i].transform.name);
+                print($"AssignActorPlayerTargetOnShootingSphere {_hits_[i].transform.name}");
                 if (_hits_[i].transform.GetComponent<AssignActorPlayerTargetOnShootingSphereTarget>())
-                        _hits_[i].transform.GetComponent<AssignActorPlayerTargetOnShootingSphereTarget>().actor.AssignPlayerOnBulletNearby(player.photonId);
+                    _hits_[i].transform.GetComponent<AssignActorPlayerTargetOnShootingSphereTarget>().actor.AssignPlayerOnBulletNearby(player.photonId);
+
+                break;
             }
 
         _cooldown = 0.3f;

@@ -179,7 +179,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             if (trackingTarget)
             {
                 _bulletToTrackingTargetDirection = trackingTarget.targetTrackingCorrectTarget.position - transform.position;
-                if (Vector3.Angle(_bulletToTrackingTargetDirection, transform.forward) > 60) trackingTarget = null;
+                if (Vector3.Angle(_bulletToTrackingTargetDirection, transform.forward) > 70) trackingTarget = null;
 
 
                 if (trackingTarget)

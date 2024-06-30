@@ -318,7 +318,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] List<ScriptObjBipedTeam> _teamsData;
 
     SwarmManager.Difficulty _difficulty;
-    CarnageReport _carnageReport;
+    [SerializeField] CarnageReport _carnageReport;
     List<LootableWeapon> _lootableWeapons = new List<LootableWeapon>();
     List<NetworkGrenadeSpawnPoint> _networkGrenadeSpawnPoints = new List<NetworkGrenadeSpawnPoint>();
 
@@ -443,6 +443,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
+            Cursor.visible = true;
+
             instantiation_position_Biped_Dict.Clear();
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
 

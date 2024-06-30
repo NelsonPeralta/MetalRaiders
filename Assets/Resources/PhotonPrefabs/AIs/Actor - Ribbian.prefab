@@ -441,7 +441,7 @@ Transform:
   m_GameObject: {fileID: 1602210879542197774}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalScale: {x: 4.5, y: 4.5, z: 4.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8606627292790721606}
@@ -2275,7 +2275,7 @@ Transform:
   m_GameObject: {fileID: 4384852481579639319}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8606627292790721606}
@@ -4749,6 +4749,8 @@ MonoBehaviour:
   - {fileID: 5597096648755915045}
   _ultraMergeExPrefab: {fileID: 6500668859487480126, guid: c4d9f2c427f83a94aad0b6ccb2dcb4e3,
     type: 3}
+  _flinchThreshold: 100
+  _flinchThresholdCount: 0
   _fireBallPrefab: {fileID: 5091089392186072086, guid: b098cbed4f2aee74c81415d00707bc75,
     type: 3}
   _grenadePrefab: {fileID: 6543794610344578356, guid: ace650de0d210f54490f7e347a783c04,

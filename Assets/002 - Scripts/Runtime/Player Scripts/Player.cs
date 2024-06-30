@@ -1310,8 +1310,6 @@ public class Player : Biped
 
         int levelToLoad = 0;
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(levelToLoad);
     }

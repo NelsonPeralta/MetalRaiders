@@ -12,8 +12,6 @@ public class PlayerProgressionManager : MonoBehaviour
         {
             int r = UnityEngine.Random.Range(170, 230); // 500 games
 
-            if (CurrentRoomManager.instance.nbPlayersJoined == 1) r = 0;
-
             return r;
         }
     }

@@ -31,7 +31,7 @@ public class GameTime : MonoBehaviourPunCallbacks
                 }
 
                 if (value == 0 && PhotonNetwork.IsMasterClient && GameManager.instance.gameType != GameManager.GameType.Endless)
-                    NetworkGameManager.instance.EndGame();
+                    SwarmManager.instance.EndGame();
             }
         }
     }
