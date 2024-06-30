@@ -23,7 +23,11 @@ public class Biped : MonoBehaviour
         }
     }
 
+    public Transform targetTrackingCorrectTarget { get { return _targetTrackingCorrectTarget; } }
+
+
     [SerializeField] protected int _ultraMergeCount;
+    [SerializeField] Transform _targetTrackingCorrectTarget;
 
 
 

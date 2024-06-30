@@ -245,7 +245,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
     float _timeSinceEnemiesDroped;
-
+    public bool gameWon;
 
 
 
@@ -332,6 +332,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         Scene currentScene = SceneManager.GetActiveScene();
 
         currentWave = 0;
+        gameWon = false;
         nextWaveDelay = 5;
 
         if (currentScene.buildIndex > 0) // We are not in the menu
@@ -999,7 +1000,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPacksCheck()
     {
-        if (currentWave % 10 == 0 && GameManager.instance.gameType == GameManager.GameType.Survival)
+        if (currentWave % 3 == 0 && GameManager.instance.gameType == GameManager.GameType.Survival)
         {
             bool _achievementUnlocked = false;
             Steamworks.SteamUserStats.GetAchievement("YAWA", out _achievementUnlocked);
@@ -1012,7 +1013,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && GameManager.instance.gameType == GameManager.GameType.Survival)
                 if (CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch)
+                {
+                    gameWon = true;
                     EndGame();
+                }
         }
         else if (currentWave % 5 == 0)
         {
@@ -1144,8 +1148,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (saveXp)
             {
                 pp.allPlayerScripts.announcer.PlayGameOverClip();
-                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER!");
-                WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>());
+                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Objective complete! Game Over.");
+
+                if (gameWon) WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>(), gameWon);
+
                 pp.LeaveRoomWithDelay();
             }
             else

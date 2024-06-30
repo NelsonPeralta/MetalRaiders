@@ -432,7 +432,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         try { instance.pid_player_Dict.Clear(); } catch { }
         try { instance.localPlayers.Clear(); } catch { }
-        instantiation_position_Biped_Dict.Clear();
 
         //try { FindObjectOfType<GameTime>().timeRemaining = 0; }
         //catch (Exception e) { Debug.LogWarning(e.Message); }
@@ -444,6 +443,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            instantiation_position_Biped_Dict.Clear();
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
 
 

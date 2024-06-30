@@ -162,6 +162,10 @@ public class Bullet : MonoBehaviourPunCallbacks
         }
     }
 
+
+
+
+    Vector3 _bulletToTrackingTargetDirection = Vector3.zero;
     void Travel()
     {
         //print($"Bullet has tracking target {weaponProperties.targetTracking} {trackingTarget}");
@@ -169,13 +173,21 @@ public class Bullet : MonoBehaviourPunCallbacks
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
         if (weaponProperties.targetTracking && trackingTarget)
         {
-            if (!trackingTarget.gameObject.activeInHierarchy || trackingTarget.GetComponent<Player>().isDead) trackingTarget = null;
+            if (!trackingTarget.gameObject.activeInHierarchy || trackingTarget.GetComponent<HitPoints>().isDead) trackingTarget = null;
+
 
             if (trackingTarget)
             {
-                Vector3 dir = trackingTarget.transform.position - transform.position;
-                Quaternion rot = Quaternion.LookRotation(dir);
-                transform.rotation = Quaternion.Lerp(transform.rotation, rot, weaponProperties.trackingSpeed * Time.deltaTime);
+                _bulletToTrackingTargetDirection = trackingTarget.targetTrackingCorrectTarget.position - transform.position;
+                if (Vector3.Angle(_bulletToTrackingTargetDirection, transform.forward) > 60) trackingTarget = null;
+
+
+                if (trackingTarget)
+                {
+                    Vector3 dir = trackingTarget.targetTrackingCorrectTarget.position - transform.position;
+                    Quaternion rot = Quaternion.LookRotation(dir);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, rot, weaponProperties.trackingSpeed * Time.deltaTime);
+                }
             }
         }
 

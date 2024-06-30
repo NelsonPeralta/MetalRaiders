@@ -24,6 +24,12 @@ public class GameTime : MonoBehaviourPunCallbacks
                 _timeRemaining = value;
                 OnGameTimeRemainingChanged?.Invoke(this);
 
+
+                if(GameManager.instance.gameMode == GameManager.GameMode.Swarm && GameManager.instance.gameType != GameManager.GameType.Endless)
+                {
+                    SwarmManager.instance.gameWon = true;
+                }
+
                 if (value == 0 && PhotonNetwork.IsMasterClient && GameManager.instance.gameType != GameManager.GameType.Endless)
                     NetworkGameManager.instance.EndGame();
             }

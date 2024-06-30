@@ -307,15 +307,16 @@ public partial class WebManager
         StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     }
 
-    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<int> winPlayers = null)
+    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<int> winPlayers = null, bool swarmGameWon = false)
     {
         if (CurrentRoomManager.instance.nbPlayersJoined > 1)
         {
             int xpAndCreditGain = PlayerProgressionManager.xpGainPerMatch;
             int honorGained = PlayerProgressionManager.honorGainPerMatch;
 
-
-            if (winPlayers != null)
+            if (swarmGameWon)
+                honorGained = 1;
+            else if (winPlayers != null)
             {
                 if (winPlayers.Contains(CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.player_id))
                     xpAndCreditGain = (int)(1.15f * xpAndCreditGain);
@@ -327,6 +328,7 @@ public partial class WebManager
 
                 if (honorGained < 0) honorGained = 0;
             }
+
 
             DateTime today = DateTime.Now;
             if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)

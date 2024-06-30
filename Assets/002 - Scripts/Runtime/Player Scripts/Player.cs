@@ -1820,7 +1820,7 @@ public class Player : Biped
         //e.gameObject.SetActive(true);
         //e.DisableIn3Seconds();
 
-        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 500, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", transform.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
+        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 500, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
 
 
         _ultraMergeCount = 0;

@@ -217,6 +217,8 @@ abstract public class Actor : Biped
         transform.parent = SwarmManager.instance.transform;
         gameObject.SetActive(false);
 
+        print($"Adding {name} {transform.position} to instantiation_position_Biped_Dict");
+        originalSpawnPosition = transform.position;
         GameManager.instance.instantiation_position_Biped_Dict.Add(transform.position, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
     }
 
@@ -897,14 +899,17 @@ abstract public class Actor : Biped
         base.SpawnUltraBindExplosion();
 
         print("Actor SpawnUltraBindExplosion");
-
-        Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
-        e.player = targetHitpoints.GetComponent<Player>();
-        e.gameObject.SetActive(true);
-        e.DisableIn3Seconds();
+        GrenadePool.SpawnExplosion(_targetPlayer.GetComponent<Player>(), damage: 999, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
 
 
-        _ultraMergeCount = 0;
+
+        //Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
+        //e.player = targetHitpoints.GetComponent<Player>();
+        //e.gameObject.SetActive(true);
+        //e.DisableIn3Seconds();
+
+
+        //_ultraMergeCount = 0;
     }
 
 

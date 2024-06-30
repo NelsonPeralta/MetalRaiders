@@ -2667,6 +2667,37 @@ MonoBehaviour:
   isHead: 0
   isGroin: 0
   actor: {fileID: 7758678447683965873}
+--- !u!1 &6312013849272655130
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2996074440190653613}
+  m_Layer: 6
+  m_Name: target tracking correct trasnform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2996074440190653613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6312013849272655130}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.256, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7703879056441657010}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7708910824420299270
 GameObject:
   m_ObjectHideFlags: 0
@@ -4793,6 +4824,7 @@ Transform:
   - {fileID: 1654199271323684415}
   - {fileID: 7413632866088661619}
   - {fileID: 2892811048465686545}
+  - {fileID: 2996074440190653613}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4876,6 +4908,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   originalSpawnPosition: {x: 0, y: 0, z: 0}
   _ultraMergeCount: 0
+  _targetTrackingCorrectTarget: {fileID: 2996074440190653613}
   _hitPoints: 150
   _defaultHitpoints: 200
   _targetTransform: {fileID: 0}

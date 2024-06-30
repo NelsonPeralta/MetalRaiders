@@ -67,22 +67,28 @@ public partial class WebManager : MonoBehaviour
 
 
 
-    public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript)
+    public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript, bool sgw)
     {
-        StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
-        StartCoroutine(SaveXp_Coroutine(onlinePlayerSwarmScript));
+        if (GameManager.instance.connection == GameManager.Connection.Online)
+        {
+            StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
+            StartCoroutine(SaveXp_Coroutine(onlinePlayerSwarmScript, swarmGameWon: sgw));
 
-        UpdatePlayerCommonData();
-        UpdatePlayerCommonPVEData();
+            UpdatePlayerCommonData();
+            UpdatePlayerCommonPVEData();
+        }
     }
 
     public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<int> winPlayers)
     {
-        StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
-        StartCoroutine(SaveXp_Coroutine(playerMultiplayerStats: playerMultiplayerStats, winPlayers: winPlayers));
+        if (GameManager.instance.connection == GameManager.Connection.Online)
+        {
+            StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
+            StartCoroutine(SaveXp_Coroutine(playerMultiplayerStats: playerMultiplayerStats, winPlayers: winPlayers));
 
-        UpdatePlayerCommonData();
-        UpdatePlayerCommonPVPData();
+            UpdatePlayerCommonData();
+            UpdatePlayerCommonPVPData();
+        }
     }
 
     public void SaveArmorData(string newDataString)
