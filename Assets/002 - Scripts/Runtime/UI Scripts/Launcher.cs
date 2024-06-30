@@ -97,7 +97,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
 
-    public MenuGamePadCursor menuGamePadCursor;
+    public MenuGamePadCursor menuGamePadCursorScript;
 
 
 
@@ -209,9 +209,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         //GetComponent<MenuManager>().OpenLoadingMenu("Connecting To Server...");
 
         PhotonNetwork.ConnectUsingSettings();
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -987,5 +984,16 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         GameManager.instance.nbLocalPlayersPreset += i;
         _nbLocalPlayersInputed.text = GameManager.instance.nbLocalPlayersPreset.ToString();
+    }
+
+    public void EnableGamePadCursorIn2Seconds()
+    {
+        StartCoroutine(EnableGamePadCursorIn2Seconds_Coroutine());
+    }
+
+    IEnumerator EnableGamePadCursorIn2Seconds_Coroutine()
+    {
+        yield return new WaitForSeconds(1);
+        menuGamePadCursorScript.gameObject.SetActive(true);
     }
 }

@@ -308,6 +308,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] WeaponPool _weaponPoolPrefab;
     [SerializeField] RagdollPool _ragdollPoolPrefab;
     [SerializeField] GrenadePool _grenadePoolPrefab;
+    [SerializeField] ActorAddonsPool _actorAddonsPoolPrefab;
     [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<Vector3, Biped> _orSpPos_Biped_Dict = new Dictionary<Vector3, Biped>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
@@ -443,8 +444,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
-            Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
-            Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
+            //Cursor.visible = true;
+            Launcher.instance.EnableGamePadCursorIn2Seconds();
+            ActorAddonsPool.instance = null;
 
             instantiation_position_Biped_Dict.Clear();
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
@@ -484,6 +487,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else if (scene.buildIndex > 0) // We're in the game scene
         {
+            if (gameMode == GameMode.Swarm) Instantiate(_actorAddonsPoolPrefab);
+
+
             if (PhotonNetwork.InRoom)
                 try
                 {
@@ -806,7 +812,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void ToggleCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask ^= 1 << LayerMask.NameToLayer("SomeLayer"); }
     public void LeaveRoom()
     {
-        Cursor.visible = true;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(0);
     }

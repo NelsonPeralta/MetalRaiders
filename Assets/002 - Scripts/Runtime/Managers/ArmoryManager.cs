@@ -118,11 +118,11 @@ public class ArmoryManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Launcher.instance.menuGamePadCursor.controllerType == Rewired.ControllerType.Joystick)
+        if (Launcher.instance.menuGamePadCursorScript.controllerType == Rewired.ControllerType.Joystick)
         {
             {
-                _armorPiecesScrollbar.value += (Mathf.Abs(Launcher.instance.menuGamePadCursor.rewiredPlayer.GetAxis("Mouse Y")) > 0.2f) ? Launcher.instance.menuGamePadCursor.rewiredPlayer.GetAxis("Mouse Y") * 0.04f : 0;
-                _rotatePlayerModelScrollbar.value += (Mathf.Abs(Launcher.instance.menuGamePadCursor.rewiredPlayer.GetAxis("Mouse X")) > 0.2f) ? Launcher.instance.menuGamePadCursor.rewiredPlayer.GetAxis("Mouse X") * 7 : 0;
+                _armorPiecesScrollbar.value += (Mathf.Abs(Launcher.instance.menuGamePadCursorScript.rewiredPlayer.GetAxis("Mouse Y")) > 0.2f) ? Launcher.instance.menuGamePadCursorScript.rewiredPlayer.GetAxis("Mouse Y") * 0.04f : 0;
+                _rotatePlayerModelScrollbar.value += (Mathf.Abs(Launcher.instance.menuGamePadCursorScript.rewiredPlayer.GetAxis("Mouse X")) > 0.2f) ? Launcher.instance.menuGamePadCursorScript.rewiredPlayer.GetAxis("Mouse X") * 7 : 0;
 
                 //transform.localPosition += new Vector3(Mathf.Sign(rewiredPlayer.GetAxis("move_x")) * 3, Mathf.Sign(rewiredPlayer.GetAxis("move_y")) * 3, 0);
             }

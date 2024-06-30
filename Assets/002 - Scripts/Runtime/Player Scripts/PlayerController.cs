@@ -1433,8 +1433,6 @@ public class PlayerController : MonoBehaviourPun
         {
             if (!CurrentRoomManager.instance.gameOver)
             {
-                Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
-                Cursor.visible = true;
                 GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(true);
                 player.playerUI.gamepadCursor.gameObject.SetActive(true);
                 pauseMenuOpen = true;
@@ -1442,8 +1440,6 @@ public class PlayerController : MonoBehaviourPun
         }
         else
         {
-            Cursor.lockState = CursorLockMode.Locked; // Must Unlock Cursor so it can detect buttons
-            Cursor.visible = false;
             GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(false);
             player.playerUI.gamepadCursor.gameObject.SetActive(false);
             pauseMenuOpen = false;

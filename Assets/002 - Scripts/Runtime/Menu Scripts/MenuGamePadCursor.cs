@@ -10,6 +10,9 @@ using UnityEngine.SceneManagement;
 
 public class MenuGamePadCursor : MonoBehaviour
 {
+    static Vector3 START_POS = new Vector3(-500, -300);
+
+
     [SerializeField] Camera _camera;
 
 
@@ -26,10 +29,21 @@ public class MenuGamePadCursor : MonoBehaviour
 
             if (value == ControllerType.Joystick && _preControllerType != ControllerType.Joystick)
             {
-                //_gamePadCursor.transform.position = Input.mousePosition;
+                _cachedScreenPos = START_POS;
+                Cursor.lockState = CursorLockMode.Locked; // Must Unlock Cursor so it can detect buttons
+                Cursor.visible = false;
+                _gamePadCursor.transform.localPosition = _cachedScreenPos;
+
+                _gamePadCursor.gameObject.SetActive(true);
             }
             else if (value != ControllerType.Joystick && _preControllerType == ControllerType.Joystick)
             {
+                Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
+                Cursor.visible = true;
+                _gamePadCursor.transform.localPosition = START_POS;
+                _gamePadCursor.gameObject.SetActive(false);
+
+
                 if (_buttonUnderCursor != null)
                 {
                     _buttonUnderCursor.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
@@ -79,19 +93,10 @@ public class MenuGamePadCursor : MonoBehaviour
     }
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        _cachedScreenPos = _startPos;
-    }
-
-
     private void Update()
     {
         controllerType = ReInput.controllers.GetLastActiveControllerType();
         _gamePadCursor.SetActive(controllerType == ControllerType.Joystick);
-        Cursor.visible = !(controllerType == ControllerType.Joystick);
-
 
 
         if (_gamePadCursor.activeSelf)
@@ -103,95 +108,45 @@ public class MenuGamePadCursor : MonoBehaviour
             {
                 pointerData.position = _camera.WorldToScreenPoint(_gamePadCursor.transform.position);
             }
-        }
 
-        //if (rewiredPlayer.GetButtonDown("Switch Grenades"))
-        {
-            _eventSystemRaycastResults.Clear();
-            EventSystem.current.RaycastAll(pointerData, _eventSystemRaycastResults);
-
-
-
-            if (_eventSystemRaycastResults.Count != _preEentSystemRaycastResults.Count)
+            //if (rewiredPlayer.GetButtonDown("Switch Grenades"))
             {
-                RepopulateButtons();
+                _eventSystemRaycastResults.Clear();
+                EventSystem.current.RaycastAll(pointerData, _eventSystemRaycastResults);
 
-            }
-            else
-            {
-                for (int i = 0; i < _eventSystemRaycastResults.Count; i++)
+
+
+                if (_eventSystemRaycastResults.Count != _preEentSystemRaycastResults.Count)
                 {
-                    if (_eventSystemRaycastResults[i].gameObject != _preEentSystemRaycastResults[i].gameObject)
+                    RepopulateButtons();
+
+                }
+                else
+                {
+                    for (int i = 0; i < _eventSystemRaycastResults.Count; i++)
                     {
-                        RepopulateButtons();
+                        if (_eventSystemRaycastResults[i].gameObject != _preEentSystemRaycastResults[i].gameObject)
+                        {
+                            RepopulateButtons();
 
 
 
-                        break;
+                            break;
+                        }
                     }
                 }
-            }
 
 
 
 
 
-            if (rewiredPlayer.GetButtonDown("Switch Grenades"))
-            {
-                if (_buttonUnderCursor != null)
-                    _buttonUnderCursor.onClick.Invoke();
-            }
-
-
-
-
-
-            //if (_eventSystemRaycastResults.Count > 0)
-            //{
-            //    if (_eventSystemRaycastResults != _preEentSystemRaycastResults)
-            //    {
-            //        print($"MenuGamePadCursor {_eventSystemRaycastResults.Count} {_preEentSystemRaycastResults.Count}");
-            //        _preEentSystemRaycastResults.AddRange(_eventSystemRaycastResults);
-            //        foreach (var r in _eventSystemRaycastResults)
-            //        {
-            //            if (r.gameObject.GetComponent<Button>())
-            //                _buttonsFound.Add(r.gameObject.GetComponent<Button>());
-            //        }
-            //    }
-            //}
-            //_buttonsFound = (List<Button>)_eventSystemRaycastResults.Select(i => i.gameObject.GetComponent<Button>());
-
-            //RaycastResult rr = raycastResults.Find(ni => ni.gameObject.GetComponent<Button>());
-
-            //try { rr.gameObject.GetComponent<Button>().onClick.Invoke(); } catch { }
-        }
-        return;
-
-
-
-
-        if (rewiredPlayer.GetButtonDown("b_btn"))
-        {
-            Debug.Log("B BTN");
-
-            {
-                //MenuManager.Instance.OpenPreviousMenu();
+                if (rewiredPlayer.GetButtonDown("Switch Grenades"))
+                {
+                    if (_buttonUnderCursor != null)
+                        _buttonUnderCursor.onClick.Invoke();
+                }
             }
         }
-
-        if (rewiredPlayer.GetButtonDown("Switch Grenades"))
-        {
-            Debug.Log("A BTN");
-            raycastResults = RaycastMouse();
-
-            RaycastResult rr = raycastResults.Find(ni => ni.gameObject.GetComponent<Button>());
-
-            try { rr.gameObject.GetComponent<Button>().onClick.Invoke(); } catch { }
-        }
-
-
-
-
 
     }
 
@@ -199,7 +154,7 @@ public class MenuGamePadCursor : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (controllerType == ControllerType.Joystick)
+        if (controllerType == ControllerType.Joystick && _gamePadCursor.activeSelf)
         {
 
             if (SceneManager.GetActiveScene().buildIndex == 0 || (SceneManager.GetActiveScene().buildIndex > 0) && player)
@@ -215,25 +170,6 @@ public class MenuGamePadCursor : MonoBehaviour
 
                 _gamePadCursor.transform.localPosition = _cachedScreenPos;
             }
-
-
-            //if (_gamePadCursor.transform.position.x < 50)
-            //    _gamePadCursor.transform.position += new Vector3(50, _gamePadCursor.transform.position.y, _gamePadCursor.transform.position.z);
-
-
-
-            //_camera.WorldToViewportPoint
-
-
-
-            //_gamePadCursor.transform.localPosition +=
-            //    new Vector3(_gamePadCursor.transform.localPosition.x, ((Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) > 0.15f) ? rewiredPlayer.GetAxis("Move Vertical") * 25 : 0), 0);
-
-
-            //_gamePadCursor.transform.localPosition +=
-            //    new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) > 0.15f) ? rewiredPlayer.GetAxis("Move Horizontal") * 25 : 0), _gamePadCursor.transform.localPosition.y, 0);
-
-            //transform.localPosition += new Vector3(Mathf.Sign(rewiredPlayer.GetAxis("move_x")) * 3, Mathf.Sign(rewiredPlayer.GetAxis("move_y")) * 3, 0);
         }
     }
 

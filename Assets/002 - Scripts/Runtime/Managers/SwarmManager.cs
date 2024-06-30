@@ -1143,6 +1143,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (!pp.PV.IsMine)
                 continue;
 
+            pp.playerUI.gamepadCursor.gameObject.SetActive(false);
 
 
             if (saveXp)

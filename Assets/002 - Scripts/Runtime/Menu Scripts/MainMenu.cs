@@ -12,9 +12,6 @@ public class MainMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
-        Cursor.visible = true;
-
 
         _quickMatchBtn.SetActive(GameManager.instance.connection == GameManager.Connection.Online);
     }

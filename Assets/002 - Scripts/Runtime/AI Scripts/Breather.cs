@@ -106,9 +106,11 @@ public class Breather : Actor
             _animator.Play("Throw Fireball");
 
             //Vector3 dir = (targetTransform.position - new Vector3(0, 1.5f, 0)) - transform.position;
-            var proj = Instantiate(_fireBallPrefab.gameObject, losSpawn.transform.position
-                , Quaternion.LookRotation((Vector3)_dir));
-            proj.GetComponent<Fireball>().sourceBiped = gameObject;
+
+
+
+
+            ActorAddonsPool.instance.SpawnPooledFireball(losSpawn.transform.position, (Vector3)_dir, gameObject, 8, 48, 2, 50);
             _shootProjectileCooldown = 2.4f;
         }
     }

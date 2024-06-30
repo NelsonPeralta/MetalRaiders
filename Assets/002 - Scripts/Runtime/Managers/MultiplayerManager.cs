@@ -244,6 +244,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (!pp.PV.IsMine)
                 continue;
 
+            pp.playerUI.gamepadCursor.gameObject.SetActive(false);
+
+
             CarnageReportMenu.winningTeam = GameManager.Team.None;
 
 

@@ -14,10 +14,10 @@ public class AIGrenade : MonoBehaviour
     public Transform explosionPrefab;
 
     [Header("Background Info")]
-    public GameObject playerWhoThrewGrenade;
+    public GameObject sourceBiped;
     public int playerRewiredID;
     public string team;
-    bool hasHitObject;
+    public bool hasHitObject;
     bool playerStuck;
     bool explosionTimerStarted = false;
     bool hasExploded;
@@ -48,8 +48,9 @@ public class AIGrenade : MonoBehaviour
 
     void Explosion()
     {
-        var explosionGO = Instantiate(explosionPrefab, transform.position, transform.rotation);
-        Destroy(explosionGO.gameObject, 3f);
+        ActorAddonsPool.instance.SpawnGrenadeVfx(transform.position);
+        //var explosionGO = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        //Destroy(explosionGO.gameObject, 3f);
 
         //Explosion force
         Vector3 explosionPos = transform.position;
@@ -75,12 +76,11 @@ public class AIGrenade : MonoBehaviour
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
                     //Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
-                    if (playerWhoThrewGrenade.GetComponent<PhotonView>().IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.GetComponent<PhotonView>().ViewID);
+                    if (sourceBiped.GetComponent<PhotonView>().IsMine && calculatedDamage > 0)
+                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, sourceBiped.GetComponent<PhotonView>().ViewID);
                 }
             }
         }
-
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

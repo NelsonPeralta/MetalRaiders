@@ -289,7 +289,7 @@ public class BlackKnight : MonoBehaviour
                             var potionBomb = Instantiate(potionBombPrefab, potionBombSpawnPoint.transform.position, potionBombSpawnPoint.transform.rotation);
                             potionBomb.GetComponent<Rigidbody>().AddForce(potionBombSpawnPoint.transform.forward * potionBombThrowForce);
 
-                            potionBomb.GetComponent<AIGrenade>().playerWhoThrewGrenade = gameObject;
+                            potionBomb.GetComponent<AIGrenade>().sourceBiped = gameObject;
                             potionBomb.GetComponent<AIGrenade>().playerRewiredID = 99;
                             //potionBomb.GetComponent<AIGrenade>().team = hitboxes.AIHitboxes[0].team;
                         }
