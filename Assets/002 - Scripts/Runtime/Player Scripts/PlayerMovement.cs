@@ -203,6 +203,16 @@ public class PlayerMovement : MonoBehaviour
         else
             _rb.drag = 0;
 
+        if (player.playerController.pauseMenuOpen)
+        {
+            moveDirection = Vector3.zero;
+            desiredMoveSpeed = lastDesiredMoveSpeed = 0;
+            _playerMovementDirection = _previousMovementDirEnum = PlayerMovementDirection.Idle;
+            _rawRightInput = _correctedRightInput = _rawForwardInput = _correctedForwardInput = 0;
+            state = MovementState.idling;
+            WalkAnimation();
+        }
+
         if (!CurrentRoomManager.instance.gameStarted || player.playerController.pauseMenuOpen) return;
 
         _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", !isGrounded);
@@ -239,7 +249,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (!player.playerController.pauseMenuOpen)
+            MovePlayer();
     }
 
     private void MyInput()
@@ -653,8 +664,9 @@ public class PlayerMovement : MonoBehaviour
                 }
                 else if (!grounded && _pController.weaponAnimator.GetBool("Run"))
                 {
-                    _pController.weaponAnimator.speed = 0.1f;
 
+                    //if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+                    //    _pController.weaponAnimator.speed = 0.1f;
                 }
             }
         }

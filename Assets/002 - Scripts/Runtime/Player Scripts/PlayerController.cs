@@ -261,8 +261,11 @@ public class PlayerController : MonoBehaviourPun
 
         if (PV.IsMine)
         {
-            StartButton();
-            BackButton();
+            if (GameManager.instance.gameStarted)
+            {
+                StartButton();
+                BackButton();
+            }
 
             if (isAiming)
                 currentadsCounter += Time.deltaTime * 6;
@@ -1435,12 +1438,14 @@ public class PlayerController : MonoBehaviourPun
             {
                 GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(true);
                 player.playerUI.gamepadCursor.gameObject.SetActive(true);
+                player.playerUI.gamepadCursor.GetReady(ReInput.controllers.GetLastActiveControllerType());
                 pauseMenuOpen = true;
             }
         }
         else
         {
             GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(false);
+            player.playerUI.gamepadCursor.CloseFromPauseMenu();
             player.playerUI.gamepadCursor.gameObject.SetActive(false);
             pauseMenuOpen = false;
         }

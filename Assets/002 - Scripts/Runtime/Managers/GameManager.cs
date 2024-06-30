@@ -9,6 +9,7 @@ using System.IO;
 using UnityEngine.UI;
 using System.Net.Mail;
 using TMPro;
+using Rewired;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -446,7 +447,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             //Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
             //Cursor.visible = true;
-            Launcher.instance.EnableGamePadCursorIn2Seconds();
+            Launcher.instance.menuGamePadCursorScript.GetReady(ReInput.controllers.GetLastActiveControllerType());
             ActorAddonsPool.instance = null;
 
             instantiation_position_Biped_Dict.Clear();
