@@ -1221,8 +1221,14 @@ public class Player : Biped
             _isHealing = true;
             if (hitPoints < maxHealthPoints)
             {
-                if (needsHealthPack) hitPoints += (Time.deltaTime * 0.5f);
-                else hitPoints += (Time.deltaTime * _healthHealingIncrement);
+                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                {
+                    hitPoints = Mathf.Clamp(hitPoints + (Time.deltaTime * 20), 0, maxHealthPoints * 0.45f);
+                }
+                else
+                {
+                    hitPoints += (Time.deltaTime * _healthHealingIncrement);
+                }
             }
             else
             {

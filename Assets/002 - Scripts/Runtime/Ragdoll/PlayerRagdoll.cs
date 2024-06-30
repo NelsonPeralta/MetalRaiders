@@ -53,6 +53,8 @@ public class PlayerRagdoll : Ragdoll
     {
         playerCameraScript.ragdollPrefab = this;
 
+        playerMainCamera.transform.position = _cameraAnchor.transform.position;
+        playerMainCamera.transform.rotation = _cameraAnchor.transform.rotation;
         playerMainCamera.transform.parent = _cameraAnchor.transform;
 
         playerCameraScript.transform.parent = _cameraAnchor.transform;

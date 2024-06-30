@@ -1661,6 +1661,37 @@ MonoBehaviour:
   isHead: 0
   isGroin: 0
   actor: {fileID: 7758678447683965873}
+--- !u!1 &4388464164535787100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2501185387509327711}
+  m_Layer: 6
+  m_Name: feet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2501185387509327711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4388464164535787100}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7703879056441657010}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5313002324760540522
 GameObject:
   m_ObjectHideFlags: 0
@@ -4797,6 +4828,7 @@ GameObject:
   - component: {fileID: 8448585316378270687}
   - component: {fileID: -9038763875858074809}
   - component: {fileID: 6214594568080097122}
+  - component: {fileID: 5862822619966258647}
   m_Layer: 6
   m_Name: Actor - Breather
   m_TagString: Untagged
@@ -4825,6 +4857,7 @@ Transform:
   - {fileID: 7413632866088661619}
   - {fileID: 2892811048465686545}
   - {fileID: 2996074440190653613}
+  - {fileID: 2501185387509327711}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5127,6 +5160,24 @@ MonoBehaviour:
   _hitPoints: 0
   _healingCountdown: 0
   _shieldRechargeCountdown: 0
+--- !u!114 &5862822619966258647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7709664559660033766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b22c4c0e65ad8644846fcf0c085b36d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _feet: {fileID: 2501185387509327711}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  _distanceToGround: 0
+  _raycastHitGo: {fileID: 0}
 --- !u!1 &7709671546980749050
 GameObject:
   m_ObjectHideFlags: 0

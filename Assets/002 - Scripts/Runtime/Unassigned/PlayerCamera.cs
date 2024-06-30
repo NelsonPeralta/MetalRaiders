@@ -197,16 +197,8 @@ public class PlayerCamera : MonoBehaviour
                 _deathCameraLookAtTimer -= Time.deltaTime;
                 //if (_deathCameraLookAtTimer > 0)
                 {
-                    //var lookDir = player.lastPlayerSource.transform.position - transform.position;
-                    //lookDir.y = 0; // keep only the horizontal direction
-                    //verticalAxisTarget.rotation = Quaternion.LookRotation(lookDir);
-                    var p = player.playerThatKilledMe.transform.position + new Vector3(0, 10, 0); /*p.y = 0;*/
-                    //playerCameraScriptParent.LookAt(p);
-                    verticalAxisTarget.LookAt(p);
-                    //verticalAxisTarget.rotation = Quaternion.Euler(0, verticalAxisTarget.rotation.y, verticalAxisTarget.rotation.z);
-
-                    //p = player.lastPlayerSource.transform.position; 
-                    //horizontalAxisTarget.LookAt(p);
+                    //var p = player.playerThatKilledMe.transform.position + new Vector3(0, 10, 0); /*p.y = 0;*/
+                    //verticalAxisTarget.LookAt(p);
 
                     return;
                 }
