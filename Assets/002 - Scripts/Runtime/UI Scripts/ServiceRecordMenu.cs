@@ -87,7 +87,8 @@ public class ServiceRecordMenu : MonoBehaviour
 
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
         Launcher.TogglePlayerModel(true);
-
+        Launcher.instance.playerModel.GetComponent<Animator>().SetBool("hold rifle", true);
+        Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().weaponForServiceRecord.SetActive(true);
 
 
 
@@ -153,5 +154,7 @@ public class ServiceRecordMenu : MonoBehaviour
     {
         _playerData = null;
         Launcher.instance.playerModel.SetActive(false);
+        Launcher.instance.playerModel.GetComponent<Animator>().SetBool("hold rifle", false);
+        Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().weaponForServiceRecord.SetActive(false);
     }
 }

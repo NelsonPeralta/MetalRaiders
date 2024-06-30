@@ -12,6 +12,9 @@ public class PlayerArmorManager : MonoBehaviour
     public List<PlayerArmorPiece> playerArmorPieces = new List<PlayerArmorPiece>();
     public List<MarineArmorPiece> marineArmorPieces = new List<MarineArmorPiece>();
 
+
+    public GameObject weaponForServiceRecord;
+
     public ScriptObjPlayerData playerDataCell
     {
         get { return _playerDataCell; }
