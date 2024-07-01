@@ -386,6 +386,9 @@ public class Bullet : MonoBehaviourPunCallbacks
                             wasNutshot = hitbox.isGroin;
                         }
 
+
+                        if (player.playerController.cameraisFloating) damage = 0;
+
                         //if (sourcePlayer.PV.IsMine)
                         {
                             Debug.Log("asdf6");

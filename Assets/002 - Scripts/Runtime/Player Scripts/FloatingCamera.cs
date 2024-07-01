@@ -36,6 +36,18 @@ public class FloatingCamera : MonoBehaviour
     private Vector3 _moveSpeed;
 
 
+    float _changeCameraCd;
+    int _gcrc;
+
+
+
+    private void Awake()
+    {
+        _changeCameraCd = 1;
+    }
+
+
+
     private void Start()
     {
         _moveSpeed = Vector3.zero;
@@ -44,8 +56,48 @@ public class FloatingCamera : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+
+
+
+
+
+
+
         if (!playerController.cameraisFloating)
             return;
+
+
+
+        _changeCameraCd -= Time.deltaTime;
+        if (_changeCameraCd <= 0)
+        {
+            transform.parent = GameManager.instance.gameplayRecorderPoints[_gcrc].transform;
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+
+
+
+
+            _gcrc++;
+
+            if (_gcrc > GameManager.instance.gameplayRecorderPoints.Count - 1) _gcrc = 0;
+
+
+            _changeCameraCd = 7;
+        }
+
+
+
+
+
+
+
+
+
+        return;
+
+
+
         HandleMouseRotation();
 
         var acceleration = HandleKeyInput();

@@ -1008,34 +1008,46 @@ public class PlayerController : MonoBehaviourPun
     {
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            if (GameManager.instance.localPlayers.Count == 1)
-                if (!cameraisFloating)
-                {
-                    _lastMainCamLayerMask = mainCam.cullingMask;
-                    _lastMainCamLocalPos = mainCam.transform.localPosition;
-                    _lasMainCamLocalQuat = mainCam.transform.localRotation;
-
-                    mainCam.transform.parent = null;
-                    mainCam.cullingMask = floatinCameraLayerMask;
-                    _cameraIsFloating = true;
-                    Debug.Log("Alpha0");
-                    uiCam.enabled = false;
-                    gunCam.enabled = false;
-                }
-                else
-                {
-                    mainCam.cullingMask = _lastMainCamLayerMask;
-                    mainCam.transform.parent = _mainCamParent;
-                    mainCam.transform.localPosition = _lastMainCamLocalPos;
-                    mainCam.transform.localRotation = _lasMainCamLocalQuat;
-
-                    _cameraIsFloating = false;
-                    Debug.Log("Alpha0");
-                    uiCam.enabled = true;
-                    gunCam.enabled = true;
-                }
+            if (GameManager.instance.localPlayers.Count == 1 && player.isMine)
+            {
+                PV.RPC("ToggleFloatingCamera_RPC", RpcTarget.All);
+            }
         }
     }
+
+
+    [PunRPC]
+    void ToggleFloatingCamera_RPC()
+    {
+        if (!cameraisFloating)
+        {
+            _lastMainCamLayerMask = mainCam.cullingMask;
+            _lastMainCamLocalPos = mainCam.transform.localPosition;
+            _lasMainCamLocalQuat = mainCam.transform.localRotation;
+
+            mainCam.transform.parent = null;
+            mainCam.cullingMask = floatinCameraLayerMask;
+            _cameraIsFloating = true;
+            Debug.Log("Alpha0");
+            uiCam.enabled = false;
+            gunCam.enabled = false;
+        }
+        else
+        {
+            mainCam.cullingMask = _lastMainCamLayerMask;
+            mainCam.transform.parent = _mainCamParent;
+            mainCam.transform.localPosition = _lastMainCamLocalPos;
+            mainCam.transform.localRotation = _lasMainCamLocalQuat;
+
+            _cameraIsFloating = false;
+            Debug.Log("Alpha0");
+            uiCam.enabled = true;
+            gunCam.enabled = true;
+        }
+    }
+
+
+
 
     [PunRPC]
     void SwitchGrenades_RPC()

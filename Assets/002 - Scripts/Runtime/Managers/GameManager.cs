@@ -358,7 +358,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     bool _playerDataRetrieved;
     float _checkCooldown;
 
-
+    public List<GameplayRecorderPoint> gameplayRecorderPoints = new List<GameplayRecorderPoint>();
 
 
     void Awake()
@@ -451,6 +451,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             ActorAddonsPool.instance = null;
 
             instantiation_position_Biped_Dict.Clear();
+            gameplayRecorderPoints.Clear();
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
 
 

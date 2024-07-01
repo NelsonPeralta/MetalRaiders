@@ -70,6 +70,8 @@ public class Hill : MonoBehaviour
     [SerializeField] List<Player> _playersInRange = new List<Player>();
     [SerializeField] Player _closestPlayer;
 
+    [SerializeField] GameObject _hillVfxHolder;
+
     float _timer;
 
 
@@ -127,6 +129,9 @@ public class Hill : MonoBehaviour
     private void Update()
     {
         if (!CurrentRoomManager.instance.gameStarted) return;
+
+        _hillVfxHolder.SetActive(!GameManager.GetRootPlayer().playerController.cameraisFloating);
+
 
 
         if (playersInRange.Count == 1)

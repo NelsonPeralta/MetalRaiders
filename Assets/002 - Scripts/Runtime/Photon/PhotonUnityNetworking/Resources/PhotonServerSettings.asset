@@ -197,6 +197,7 @@ MonoBehaviour:
   - UpdateTrackingTargetForOtherPlayers
   - EndMultiplayerGame
   - EndSwarmGame
+  - ToggleFloatingCamera_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

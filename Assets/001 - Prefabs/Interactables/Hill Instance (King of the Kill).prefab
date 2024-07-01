@@ -566,10 +566,8 @@ Transform:
   m_LocalScale: {x: 5, y: 3, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7015937462620313125}
-  - {fileID: 5322671164670962692}
-  - {fileID: 4839700624575318432}
   - {fileID: 8634620524125266778}
+  - {fileID: 2152184909064685725}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -595,6 +593,7 @@ MonoBehaviour:
   _blue: {fileID: 5320902265684128282}
   _playersInRange: []
   _closestPlayer: {fileID: 0}
+  _hillVfxHolder: {fileID: 9035287437238492478}
 --- !u!82 &4972173216825724730
 AudioSource:
   m_ObjectHideFlags: 0
@@ -60009,7 +60008,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4845720116830084206}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
@@ -60019,7 +60018,7 @@ Transform:
   - {fileID: 4839777610569652766}
   - {fileID: 4842725065124648634}
   - {fileID: 3708670960867234694}
-  m_Father: {fileID: 4940171197140140794}
+  m_Father: {fileID: 2152184909064685725}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &4845807603600904870
@@ -79808,7 +79807,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5320902265684128282}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
@@ -79818,7 +79817,7 @@ Transform:
   - {fileID: 5322347244443356370}
   - {fileID: 5322665605822201598}
   - {fileID: 3400080714111402505}
-  m_Father: {fileID: 4940171197140140794}
+  m_Father: {fileID: 2152184909064685725}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &5320931748680240538
@@ -99713,7 +99712,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7014052605812978699}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
@@ -99723,7 +99722,7 @@ Transform:
   - {fileID: 7008367806885959519}
   - {fileID: 7008464128404346109}
   - {fileID: 2423748896873510843}
-  m_Father: {fileID: 4940171197140140794}
+  m_Father: {fileID: 2152184909064685725}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &7014207544798561115
@@ -104633,3 +104632,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &9035287437238492478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2152184909064685725}
+  m_Layer: 0
+  m_Name: hill vfx holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2152184909064685725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9035287437238492478}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7015937462620313125}
+  - {fileID: 4839700624575318432}
+  - {fileID: 5322671164670962692}
+  m_Father: {fileID: 4940171197140140794}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
