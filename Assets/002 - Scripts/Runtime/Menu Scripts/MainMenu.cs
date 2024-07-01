@@ -13,6 +13,6 @@ public class MainMenu : MonoBehaviour
     private void OnEnable()
     {
 
-        _quickMatchBtn.SetActive(GameManager.instance.connection == GameManager.Connection.Online);
+        //_quickMatchBtn.SetActive(GameManager.instance.connection == GameManager.Connection.Online);
     }
 }
