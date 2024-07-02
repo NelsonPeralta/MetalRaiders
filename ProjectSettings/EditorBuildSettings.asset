@@ -48,6 +48,9 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Factory.unity
     guid: cea931439210b1c4bbb050121647d39d
   - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - ShamanV2.unity
+    guid: 6bb9278a40fc8bc46a3db70204fdf9fc
+  - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Shaman.unity
     guid: 248a209aa1b529248a00946da3614c61
   - enabled: 1
