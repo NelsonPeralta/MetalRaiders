@@ -657,6 +657,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         try { PhotonNetwork.LeaveRoom(); } catch (System.Exception e) { Debug.LogWarning(e); }
         try { GameManager.instance.gameMode = GameManager.GameMode.Multiplayer; } catch { }
         try { GameManager.instance.teamMode = GameManager.TeamMode.None; } catch { }
+        try { CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.None; } catch { }
 
         CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
 
@@ -804,6 +805,30 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
+
+
+    public void ChangeTeamOfLocalPlayer(int localPlayerInd)
+    {
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        {
+            GameManager.Team nt = CurrentRoomManager.instance.playerDataCells[localPlayerInd].team;
+
+            if (nt == GameManager.Team.Blue)
+                nt = GameManager.Team.Red;
+            else if (nt == GameManager.Team.Red)
+                nt = GameManager.Team.Blue;
+
+            Dictionary<int, int> nd = new Dictionary<int, int>();
+
+            nd[CurrentRoomManager.instance.playerDataCells[localPlayerInd].playerExtendedPublicData.player_id] = (int)nt;
+
+            NetworkGameManager.instance.ChangePlayerTeam(nd);
+        }
+    }
+
+
+
+
     public void ChangeGameType(string gt)
     {
         if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.GunGame)
@@ -928,6 +953,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         else
         {
+            if (_nbLocalPlayersInputed.text.Equals("")) _nbLocalPlayersInputed.text = "1";
             for (int i = 0; i < int.Parse(_nbLocalPlayersInputed.text.ToString()); i++)
                 Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup($"player{i + 1}", i);
         }

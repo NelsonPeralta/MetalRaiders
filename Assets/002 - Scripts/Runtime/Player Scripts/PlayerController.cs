@@ -1594,8 +1594,12 @@ public class PlayerController : MonoBehaviourPun
         nade.SetActive(true);
 
         //int _throwF = (int)grenadeThrowForce; if (!fga) _throwF /= 10;
-        foreach (Player p in GameManager.instance.pid_player_Dict.Values) Physics.IgnoreCollision(nade.GetComponent<Collider>(), p.playerCapsule.GetComponent<Collider>());
+        foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+            if (p != null)
+                Physics.IgnoreCollision(nade.GetComponent<Collider>(), p.playerCapsule.GetComponent<Collider>());
+
         nade.GetComponent<Rigidbody>().AddForce(forw * grenadeThrowForce);
+
     }
 
 

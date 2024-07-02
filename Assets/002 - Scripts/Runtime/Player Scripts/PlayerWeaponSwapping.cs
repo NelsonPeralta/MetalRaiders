@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using System.Collections.ObjectModel;
 using TMPro;
+using Rewired;
 
 public class PlayerWeaponSwapping : MonoBehaviourPun
 {
@@ -81,6 +82,9 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     {
                         //pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
                         player.GetComponent<PlayerUI>().ShowInformer("Hold E to pick up " + closestLootableWeapon.cleanName);
+
+                        if(ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick)
+                        player.GetComponent<PlayerUI>().ShowInformer("Hold RELOAD to pick up " + closestLootableWeapon.cleanName);
                     }
                 }
             }

@@ -43,7 +43,7 @@ public class FloatingCamera : MonoBehaviour
 
     private void Awake()
     {
-        _changeCameraCd = 1;
+        _changeCameraCd = 0.5f;
     }
 
 
@@ -83,7 +83,7 @@ public class FloatingCamera : MonoBehaviour
             if (_gcrc > GameManager.instance.gameplayRecorderPoints.Count - 1) _gcrc = 0;
 
 
-            _changeCameraCd = 7;
+            _changeCameraCd = 4.5f;
         }
 
 

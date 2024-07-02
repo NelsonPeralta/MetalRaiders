@@ -447,6 +447,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             //Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
             //Cursor.visible = true;
+            CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.None;
             Launcher.instance.menuGamePadCursorScript.GetReady(ReInput.controllers.GetLastActiveControllerType());
             ActorAddonsPool.instance = null;
 
@@ -756,7 +757,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetPlayerWithId(int id)
     {
-        foreach (Player player in instance.pid_player_Dict.Values) { if (player.playerId == id) return player; }
+        foreach (Player player in instance.pid_player_Dict.Values) { if (player != null && player.playerId == id) return player; }
         return null;
     }
 

@@ -95,7 +95,7 @@ public class ArmorPieceListing : MonoBehaviour
                     (pda.level >= playerArmorPiece.minLvl && pda.honor >= playerArmorPiece.minHonor))
                 {
                     buyButton.gameObject.SetActive(true);
-                    buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
+                    buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cb";
                     Debug.Log("Her5");
                 }
                 else
@@ -106,7 +106,7 @@ public class ArmorPieceListing : MonoBehaviour
 
 
                     notEnoughCreditsButton.gameObject.SetActive(true);
-                    notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cr";
+                    notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cb";
 
                     if (pda.honor < playerArmorPiece.minLvl)
                         notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"lvl {playerArmorPiece.minLvl}";
@@ -132,7 +132,7 @@ public class ArmorPieceListing : MonoBehaviour
         GameManager.PlayClickSound();
         StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(playerArmorPiece));
 
-        ArmoryManager.instance.creditsText.text = $"{WebManager.webManagerInstance.pda.playerBasicOnlineStats.credits.ToString()}cr";
+        ArmoryManager.instance.creditsText.text = $"{WebManager.webManagerInstance.pda.playerBasicOnlineStats.credits.ToString()}cb";
         ArmoryManager.instance.OnArmorBuy_Delegate();
         buyButton.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);

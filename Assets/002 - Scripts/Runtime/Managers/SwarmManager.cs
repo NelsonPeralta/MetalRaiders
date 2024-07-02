@@ -989,7 +989,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         waveEnded = true;
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
         foreach (Player p in GameManager.instance.pid_player_Dict.Values)
-            p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
+            if (p)
+                p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
         RespawnHealthPacksCheck();
     }
 
@@ -1029,9 +1030,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             GameManager.GetRootPlayer().announcer.AddClip(_weaponDropClip);
             foreach (Player p in GameManager.instance.pid_player_Dict.Values)
             {
-                p.killFeedManager.EnterNewFeed($"<color=#31cff9>Lives added: {livesToAdd}");
-                p.killFeedManager.EnterNewFeed("<color=#31cff9>Health Packs Respawned");
-                p.killFeedManager.EnterNewFeed("<color=#31cff9>Weapons respawned");
+                if (p)
+                {
+                    p.killFeedManager.EnterNewFeed($"<color=#31cff9>Lives added: {livesToAdd}");
+                    p.killFeedManager.EnterNewFeed("<color=#31cff9>Health Packs Respawned");
+                    p.killFeedManager.EnterNewFeed("<color=#31cff9>Weapons respawned");
+                }
             }
             foreach (HealthPack hp in healthPacks)
                 if (!hp.gameObject.activeSelf)
@@ -1138,30 +1142,34 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         StopAllCoroutines();
         foreach (Player pp in GameManager.instance.pid_player_Dict.Values)
         {
-            // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
-            // return will stop this method, break will stop the loop, continue will stop the current iteration
-            if (!pp.PV.IsMine)
-                continue;
-
-            pp.playerUI.gamepadCursor.gameObject.SetActive(false);
-
-
-            if (saveXp)
+            if (pp)
             {
-                pp.allPlayerScripts.announcer.PlayGameOverClip();
-                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Objective complete! Game Over.");
 
-                if (gameWon) WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>(), gameWon);
+                // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
+                // return will stop this method, break will stop the loop, continue will stop the current iteration
+                if (!pp.PV.IsMine)
+                    continue;
+
+                pp.playerUI.gamepadCursor.gameObject.SetActive(false);
 
 
-                GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
-                GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
+                if (saveXp)
+                {
+                    pp.allPlayerScripts.announcer.PlayGameOverClip();
+                    pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Objective complete! Game Over.");
 
-                pp.LeaveRoomWithDelay();
-            }
-            else
-            {
-                GameManager.instance.LeaveRoom();
+                    if (gameWon) WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>(), gameWon);
+
+
+                    GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
+                    GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
+
+                    pp.LeaveRoomWithDelay();
+                }
+                else
+                {
+                    GameManager.instance.LeaveRoom();
+                }
             }
         }
     }

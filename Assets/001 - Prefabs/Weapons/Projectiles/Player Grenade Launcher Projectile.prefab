@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
-  _damage: 245
+  _damage: 220
   _radius: 6
   _throwForce: 1000
   _explosionPower: 300
@@ -173,6 +173,7 @@ MonoBehaviour:
   _defaultTtl: 0
   _color: 0
   _type: 0
+  _stuckSfxAudioSource: {fileID: 0}
 --- !u!1 &1725909248936503840
 GameObject:
   m_ObjectHideFlags: 0

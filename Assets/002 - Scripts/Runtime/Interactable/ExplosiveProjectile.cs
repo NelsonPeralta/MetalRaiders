@@ -51,7 +51,8 @@ public class ExplosiveProjectile : MonoBehaviour
         if (_sticky)
             foreach (Player p in GameManager.instance.pid_player_Dict.Values)
             {
-                Physics.IgnoreCollision(p.playerCapsule.GetComponent<Collider>(), GetComponent<Collider>());
+                if (p)
+                    Physics.IgnoreCollision(p.playerCapsule.GetComponent<Collider>(), GetComponent<Collider>());
             }
 
         _ttl = _defaultTtl;

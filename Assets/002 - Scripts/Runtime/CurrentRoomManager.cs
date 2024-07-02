@@ -18,7 +18,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public enum RoomType
     {
-        QuickMatch, Private
+        QuickMatch, Private, None
     }
 
     public RoomType roomType
@@ -196,7 +196,7 @@ public class CurrentRoomManager : MonoBehaviour
                 OnGameIsReady?.Invoke(this);
 
                 foreach (Player p in GameManager.instance.pid_player_Dict.Values)
-                    if (p.isMine) p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
+                    if (p && p.isMine) p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
 
                 StartCoroutine(GameStartDelayMapCamera_Coroutine());
                 TriggerGameStartCountdown();
@@ -359,6 +359,7 @@ public class CurrentRoomManager : MonoBehaviour
     {
         _rpcCooldown = 0.3f;
         vetoCountdown = roomGameStartCountdown = 9;
+        _roomType = RoomType.None;
 
         if (_instance != null && _instance != this)
         {
@@ -385,7 +386,7 @@ public class CurrentRoomManager : MonoBehaviour
     private void Update()
     {
 
-        if(SceneManager.GetActiveScene().buildIndex > 0)
+        if (SceneManager.GetActiveScene().buildIndex > 0)
         {
             if (gameIsReady && _gameStartCountdown > 0)
             {
@@ -484,7 +485,7 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
-        
+
     }
 
     private void OnEnable()

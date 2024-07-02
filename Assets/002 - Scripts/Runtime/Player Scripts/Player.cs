@@ -1728,39 +1728,42 @@ public class Player : Biped
         {
             foreach (KillFeedManager kfm in GameManager.instance.pid_player_Dict.Values.Select(obj => obj.killFeedManager))
             {
-                string f = $"<color=#31cff9>{playerThatKilledMe.username} killed {username}";
-
-                if (_damageSourceCleanName != null && _damageSourceCleanName != "")
-                    f = $"<color=#31cff9>{playerThatKilledMe.username} [ {_damageSourceCleanName} ] {username}";
-                else
-                    Debug.LogWarning("NULL DAMAGE SOURCE CLEAN NAME");
-
-                if (GameManager.instance.gameType == GameManager.GameType.GunGame
-                    && deathNature == DeathNature.Stuck)
+                if (kfm)
                 {
-                    f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"red\"> Humiliated </color> <color=#31cff9>{username}";
+                    string f = $"<color=#31cff9>{playerThatKilledMe.username} killed {username}";
+
+                    if (_damageSourceCleanName != null && _damageSourceCleanName != "")
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} [ {_damageSourceCleanName} ] {username}";
+                    else
+                        Debug.LogWarning("NULL DAMAGE SOURCE CLEAN NAME");
+
+                    if (GameManager.instance.gameType == GameManager.GameType.GunGame
+                        && deathNature == DeathNature.Stuck)
+                    {
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"red\"> Humiliated </color> <color=#31cff9>{username}";
+                    }
+                    else if (deathNature == DeathNature.Sniped)
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"yellow\">!!! Sniped !!!</color> <color=#31cff9>{username}";
+                    else if (deathByHeadshot)
+                        f += $" with a <color=\"red\">Headshot</color>!";
+                    else if (deathByGroin)
+                        f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
+
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team == this.team)
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} buddyfucked {username}";
+
+                    if (deathNature == DeathNature.UltraBind)
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} [ Splinter ] {username}";
+
+
+                    if (this != playerThatKilledMe)
+                    {
+                        kfm.EnterNewFeed(f);
+                        continue;
+                    }
+                    else
+                        kfm.EnterNewFeed($"<color=#31cff9> {username} committed suicide");
                 }
-                else if (deathNature == DeathNature.Sniped)
-                    f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"yellow\">!!! Sniped !!!</color> <color=#31cff9>{username}";
-                else if (deathByHeadshot)
-                    f += $" with a <color=\"red\">Headshot</color>!";
-                else if (deathByGroin)
-                    f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
-
-                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team == this.team)
-                    f = $"<color=#31cff9>{playerThatKilledMe.username} buddyfucked {username}";
-
-                if (deathNature == DeathNature.UltraBind)
-                    f = $"<color=#31cff9>{playerThatKilledMe.username} [ Splinter ] {username}";
-
-
-                if (this != playerThatKilledMe)
-                {
-                    kfm.EnterNewFeed(f);
-                    continue;
-                }
-                else
-                    kfm.EnterNewFeed($"<color=#31cff9> {username} committed suicide");
             }
         }
         catch (System.Exception e) { Debug.LogException(e); }

@@ -79,6 +79,7 @@ public class MenuGamePadCursor : MonoBehaviour
 
     [SerializeField] Vector3 _startPos, _cachedScreenPos;
 
+    public Rewired.Player rewiredPlayer2, rewiredPlayer3, rewiredPlayer4;
 
 
 
@@ -87,6 +88,9 @@ public class MenuGamePadCursor : MonoBehaviour
     {
         _gamePadCursor.SetActive(false);
         rewiredPlayer = ReInput.players.GetPlayer(0);
+        rewiredPlayer2 = ReInput.players.GetPlayer(1);
+        rewiredPlayer3 = ReInput.players.GetPlayer(2);
+        rewiredPlayer4 = ReInput.players.GetPlayer(3);
     }
 
 
@@ -146,6 +150,32 @@ public class MenuGamePadCursor : MonoBehaviour
                         if (_buttonUnderCursor != null)
                             _buttonUnderCursor.onClick.Invoke();
                     }
+                }
+            }
+
+
+
+
+            if (SceneManager.GetActiveScene().buildIndex == 0 && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private && GameManager.instance.connection == GameManager.Connection.Local)
+            {
+                if (rewiredPlayer2.GetButtonDown("Jump") || rewiredPlayer2.GetButtonDown("Melee"))
+                {
+                    Launcher.instance.ChangeTeamOfLocalPlayer(0);
+                }
+
+                if (rewiredPlayer2.GetButtonDown("Jump") || rewiredPlayer2.GetButtonDown("Melee"))
+                {
+                    Launcher.instance.ChangeTeamOfLocalPlayer(1);
+                }
+
+                if (rewiredPlayer3.GetButtonDown("Jump") || rewiredPlayer3.GetButtonDown("Melee"))
+                {
+                    Launcher.instance.ChangeTeamOfLocalPlayer(2);
+                }
+
+                if (rewiredPlayer4.GetButtonDown("Jump") || rewiredPlayer4.GetButtonDown("Melee"))
+                {
+                    Launcher.instance.ChangeTeamOfLocalPlayer(3);
                 }
             }
         }

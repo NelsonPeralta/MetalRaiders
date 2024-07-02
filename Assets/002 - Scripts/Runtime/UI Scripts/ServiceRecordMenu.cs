@@ -70,7 +70,7 @@ public class ServiceRecordMenu : MonoBehaviour
     public TMP_Text swarmStatsText;
 
     [SerializeField] Image _rankImage;
-    [SerializeField] GameObject _redWitness, _blueWitness, _yellowWitness, _greenWitness, _orangeWitness, _whiteWitness, _blackWitness;
+    [SerializeField] GameObject _allCardsWitness, _redWitness, _blueWitness, _yellowWitness, _greenWitness, _orangeWitness, _whiteWitness, _blackWitness;
 
 
 
@@ -89,7 +89,6 @@ public class ServiceRecordMenu : MonoBehaviour
         Launcher.TogglePlayerModel(true);
         Launcher.instance.playerModel.GetComponent<Animator>().SetBool("hold rifle", true);
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().weaponForServiceRecord.SetActive(true);
-
 
 
 
@@ -146,6 +145,8 @@ public class ServiceRecordMenu : MonoBehaviour
             _orangeWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
             _whiteWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
             _blackWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
+
+            if(GameManager.instance.connection == GameManager.Connection.Online && playerData != CurrentRoomManager.instance.playerDataCells[0])_allCardsWitness.SetActive(false);
         }
     }
 
