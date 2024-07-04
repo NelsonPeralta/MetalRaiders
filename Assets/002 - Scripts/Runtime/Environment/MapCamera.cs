@@ -112,9 +112,5 @@ public class MapCamera : MonoBehaviour
         catch { }
     }
 
-    public static void PlayerBeeps()
-    {
-        if (!_instance._beepConsecutiveAudioSource.isPlaying)
-            _instance._beepConsecutiveAudioSource.Play();
-    }
+    
 }

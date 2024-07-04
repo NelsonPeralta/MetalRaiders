@@ -647,7 +647,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         _startGameButton.SetActive(false);
 
         //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
-        StartCoroutine(LoadLevel_Coroutine());
+
+
+        NetworkGameManager.instance.StartGameButton();
+        //StartCoroutine(LoadLevel_Coroutine());
+
     }
 
     public void LeaveRoomButton()
@@ -671,6 +675,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             MenuManager.Instance.OpenMenu("online title");
         }
+
+        CurrentRoomManager.instance.matchSettingsSet = false;
+        Launcher.instance.gameCountdownText.gameObject.SetActive(false);
+        CurrentRoomManager.instance.roomGameStartCountdown = 7;
+        GameManager.StopBeeps();
     }
 
     public void JoinRoom(RoomInfo info)
@@ -926,8 +935,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     IEnumerator LoadLevel_Coroutine()
     {
-        CurrentRoomManager.instance.roomGameStartCountdown = 5; // TODO
-
 
         yield return new WaitForSeconds(0.5f);
         PhotonNetwork.LoadLevel(levelToLoadIndex);

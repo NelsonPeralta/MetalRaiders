@@ -501,7 +501,14 @@ public class PlayerController : MonoBehaviourPun
 
         //Process Firing
         if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
-            player.playerShooting.Shoot();
+            if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
+                player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+            {
+                if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+                    player.playerShooting.Shoot();
+            }
+            else
+                player.playerShooting.Shoot();
 
 
 

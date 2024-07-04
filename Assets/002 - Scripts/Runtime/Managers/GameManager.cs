@@ -358,6 +358,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     bool _playerDataRetrieved;
     float _checkCooldown;
 
+
+    [SerializeField] AudioSource _beepConsecutiveAudioSource;
+
     public List<GameplayRecorderPoint> gameplayRecorderPoints = new List<GameplayRecorderPoint>();
 
 
@@ -615,10 +618,29 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+
         if (commonPlayerVoiceCooldown > 0) commonPlayerVoiceCooldown -= Time.deltaTime;
 
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().buildIndex == 0 && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private
+            && CurrentRoomManager.instance.matchSettingsSet)
         {
+            if (CurrentRoomManager.instance.roomGameStartCountdown > 0)
+            {
+                CurrentRoomManager.instance.roomGameStartCountdown -= Time.deltaTime;
+
+                Launcher.instance.gameCountdownText.text = ($"GAME STARTS IN: {(int)CurrentRoomManager.instance.roomGameStartCountdown}");
+
+
+                if (CurrentRoomManager.instance.roomGameStartCountdown <= 3)
+                    GameManager.PlayerBeeps();
+
+                if (CurrentRoomManager.instance.roomGameStartCountdown <= 0)
+                {
+                    print("LOADING LEVEL");
+                    if (PhotonNetwork.IsMasterClient)
+                        PhotonNetwork.LoadLevel(Launcher.instance.levelToLoadIndex);
+                }
+            }
         }
 
 
@@ -1128,5 +1150,16 @@ public class GameManager : MonoBehaviourPunCallbacks
                     p.playerCamera.frontEndMouseSens = sens;
                 }
         }
+    }
+
+    public static void PlayerBeeps()
+    {
+        if (!instance._beepConsecutiveAudioSource.isPlaying)
+            instance._beepConsecutiveAudioSource.Play();
+    }
+
+    public static void StopBeeps()
+    {
+        instance._beepConsecutiveAudioSource.Stop();
     }
 }

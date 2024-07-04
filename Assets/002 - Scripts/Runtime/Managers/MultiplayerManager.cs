@@ -32,6 +32,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 return 60;
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
+                if (CurrentRoomManager.instance.expectedNbPlayers == 2) return 10;
+                else return 20;
+
                 //return 10 + (Mathf.Clamp((CurrentRoomManager.instance.nbPlayersJoined - 2) * 5, 0, 15));
                 return CurrentRoomManager.instance.expectedNbPlayers * 5;
             }
@@ -69,8 +72,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             return hs;
         }
     }
-    public int redTeamScore { get { return _redTeamScore; } private set { _redTeamScore = value; } }
-    public int blueTeamScore { get { return _blueTeamScore; } private set { _blueTeamScore = value; } }
+    public int redTeamScore { get { return _redTeamScore; } private set { _redTeamScore = value; foreach (Player p in GameManager.instance.pid_player_Dict.Values) if (p) p.playerUI.UpdateScoreWitnesses(); } }
+    public int blueTeamScore { get { return _blueTeamScore; } private set { _blueTeamScore = value; foreach (Player p in GameManager.instance.pid_player_Dict.Values) if (p) p.playerUI.UpdateScoreWitnesses(); } }
     public List<Player> winningPlayers { get { return _winningPlayers; } }
     public List<int> winningPlayersId { get { return _winninPlayersId; } }
 

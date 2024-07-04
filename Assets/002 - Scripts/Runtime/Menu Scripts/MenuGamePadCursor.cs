@@ -158,7 +158,7 @@ public class MenuGamePadCursor : MonoBehaviour
 
             if (SceneManager.GetActiveScene().buildIndex == 0 && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private && GameManager.instance.connection == GameManager.Connection.Local)
             {
-                if (rewiredPlayer2.GetButtonDown("Jump") || rewiredPlayer2.GetButtonDown("Melee"))
+                if (rewiredPlayer.GetButtonDown("Jump") || rewiredPlayer.GetButtonDown("Melee"))
                 {
                     Launcher.instance.ChangeTeamOfLocalPlayer(0);
                 }

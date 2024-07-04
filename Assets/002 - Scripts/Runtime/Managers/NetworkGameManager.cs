@@ -942,5 +942,31 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
 
+    [PunRPC]
+    public void StartGameButton(bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+            instance._pv.RPC("StartGameButton", RpcTarget.AllViaServer, false);
+        else if (!caller)
+        {
+            Launcher.instance.gameCountdownText.gameObject.SetActive(true);
+            CurrentRoomManager.instance.roomGameStartCountdown = 7;
+            CurrentRoomManager.instance.matchSettingsSet = true;
+        }
+    }
+
+    [PunRPC]
+
+    public void TriggerPlayerOverheatWeapon(int playerPhotonId, int weaponInd, bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+            instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.AllViaServer, playerPhotonId , weaponInd, false);
+        else if (!caller)
+        {
+            GameManager.instance.pid_player_Dict[playerPhotonId].playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
+        }
+    }
+
+
     //public void AskHostToStickGrenade
 }

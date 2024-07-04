@@ -1629,6 +1629,8 @@ public class Player : Biped
         playerDataCell = CurrentRoomManager.GetPlayerDataWithId(_playerId);
         username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
         foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.text.text = _username;
+
+        playerUI.SetScoreWitnesses();
     }
 
     [PunRPC]

@@ -11,6 +11,7 @@ public class Crosshair : MonoBehaviour
     [SerializeField] GameObject redReticuleVersion;
     [SerializeField] GameObject greenReticuleVersion;
 
+
     public Color color
     {
         get { return _color; }

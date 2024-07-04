@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Linq;
+using System;
 
 public class PlayerShooting : MonoBehaviourPun
 {
@@ -296,7 +298,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                         if (activeWeapon.isShotgun)
                         {
-                            quats[i] = Random.rotation;
+                            quats[i] = UnityEngine.Random.rotation;
                             playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation, quats[i], activeWeapon.bulletSpray);
                         }
                         else
@@ -332,6 +334,15 @@ public class PlayerShooting : MonoBehaviourPun
                     //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
                     //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
                     bullet.SetActive(true);
+
+                    if (activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                    {
+                        activeWeapon.currentOverheat = Mathf.Clamp(activeWeapon.currentOverheat + activeWeapon.overheatPerShot, 0, 100);
+
+                        if (activeWeapon.currentOverheat >= 100 && activeWeapon.overheatCooldown <= 0 && player.isMine) 
+                            NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId, 
+                                Array.IndexOf(player.playerInventory.allWeaponsInInventory, activeWeapon.gameObject));
+                    }
                 }
                 GetComponent<CommonFiringActions>().SpawnMuzzleflash();
             }

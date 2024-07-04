@@ -9,6 +9,7 @@ public class PlayerUI : MonoBehaviour
 {
     public Canvas canvas;
     [Header("Scripts")]
+    public PlayerMultiplayerMatchStats playerMultiplayerMatchStats;
     public PlayerSwarmMatchStats onlinePlayerSwarmScript;
     [Header("Singletons")]
     public GameTime onlineGameTimeInstance;
@@ -72,6 +73,7 @@ public class PlayerUI : MonoBehaviour
     public Text gameType;
     public Transform bottomRight;
     public GameObject multiplayerPointsHolder;
+    public GameObject neutralPointsHolder, redPointsHolder, bluePointsHolder;
     public Text multiplayerPointsGrey;
     public Text multiplayerPointsRed;
     public Text multiplayerPointsBlue;
@@ -138,6 +140,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        playerMultiplayerMatchStats = GetComponent<PlayerMultiplayerMatchStats>();
         HideInformer();
         plasmaGrenadeImage.gameObject.SetActive(false);
         gamepadCursor.gameObject.SetActive(false);
@@ -405,7 +408,7 @@ public class PlayerUI : MonoBehaviour
 
     void OnPlayerScoreChanged_Delegate(PlayerMultiplayerMatchStats playerMultiplayerMatchStats)
     {
-        multiplayerPointsGrey.text = playerMultiplayerMatchStats.score.ToString();
+        UpdateScoreWitnesses();
     }
 
     public void ShowInformer(string mess, Sprite icon = null)
@@ -449,5 +452,29 @@ public class PlayerUI : MonoBehaviour
     public void ShowPointWitness(int p)
     {
         _pointWitness.Add(p);
+    }
+
+    public void SetScoreWitnesses()
+    {
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        {
+            print($"SetScoreWitnesses {GetComponent<Player>().team}");
+            neutralPointsHolder.gameObject.SetActive(false);
+            redPointsHolder.gameObject.SetActive(GetComponent<Player>().team == GameManager.Team.Red);
+            bluePointsHolder.gameObject.SetActive(GetComponent<Player>().team == GameManager.Team.Blue);
+        }
+    }
+
+    public void UpdateScoreWitnesses()
+    {
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        {
+            if (GetComponent<Player>().team == GameManager.Team.Red)
+                multiplayerPointsRed.text = MultiplayerManager.instance.redTeamScore.ToString();
+            else
+                multiplayerPointsBlue.text = MultiplayerManager.instance.blueTeamScore.ToString();
+        }
+        else
+            multiplayerPointsGrey.text = playerMultiplayerMatchStats.score.ToString();
     }
 }

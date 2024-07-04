@@ -9,12 +9,7 @@ public class WeaponAmmoCounter : MonoBehaviour
     [SerializeField] LootableWeapon _lootableWeapon;
     [SerializeField] TMP_Text _tmp;
 
-    float _c = 0;
 
-    private void OnEnable()
-    {
-        _c = 0.2f;
-    }
     private void Start()
     {
         try
@@ -30,21 +25,14 @@ public class WeaponAmmoCounter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_c > 0)
-            _c -= Time.deltaTime;
-
-        try
+        if (_tmp != null)
         {
-            if (_c <= 0)
-            {
-                if (_weaponProperties)
-                    _tmp.text = _weaponProperties.loadedAmmo.ToString();
-                else if (_lootableWeapon)
-                    _tmp.text = _lootableWeapon.localAmmo.ToString();
-            }
-            else
-                _tmp.text = "";
+            _tmp.text = "";
+
+            if (_weaponProperties)
+                _tmp.text = _weaponProperties.loadedAmmo.ToString();
+            else if (_lootableWeapon)
+                _tmp.text = _lootableWeapon.localAmmo.ToString();
         }
-        catch { }
     }
 }

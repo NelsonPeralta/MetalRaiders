@@ -58,6 +58,9 @@ public class WeaponProperties : MonoBehaviour
     public int ammoCapacity;
     public float bulletSpray;
     public bool injectLootedAmmo;
+    public int overheatPerShot, currentOverheat;
+    public GameObject overheatSteamHolder, tpsEquippedOverheatSteamHolder, tpsHolsteredOverheatSteamHolder;
+    public float overheatCooldown;
 
     [Header("Range")]
     public bool fakeRRR;
@@ -260,6 +263,22 @@ public class WeaponProperties : MonoBehaviour
 
     private void Update()
     {
+        if (currentOverheat > 0)
+            currentOverheat -= (int)(Time.deltaTime * 100);
+
+        if (overheatCooldown > 0)
+        {
+            overheatCooldown -= Time.deltaTime;
+            if (overheatCooldown <= 0)
+            {
+                overheatSteamHolder.SetActive(false);
+                tpsHolsteredOverheatSteamHolder.SetActive(false);
+                tpsEquippedOverheatSteamHolder.SetActive(false);
+            }
+        }
+
+
+
         BloomIncrease();
         BloomDecrease();
     }
@@ -384,6 +403,17 @@ public class WeaponProperties : MonoBehaviour
         _spareAmmo = a;
     }
 
+    public void TriggerOverheat()
+    {
+        if (!player.isDead && !player.isRespawning && overheatCooldown <= 0)
+        {
+            overheatCooldown = 1.7f;
+            overheatSteamHolder.SetActive(true);
+            tpsEquippedOverheatSteamHolder.SetActive(true);
+            tpsHolsteredOverheatSteamHolder.SetActive(true);
+        }
+    }
+
 
 
     public void OnTeamMateHitbox_Delegate(AimAssistCone aimAssistCone)
@@ -454,9 +484,9 @@ public class WeaponProperties : MonoBehaviour
         {"patriot", 19 }, {"colt", 20 }, {"m16", 21 }
     };
 
-    
 
-   
+
+
 
 
 
@@ -517,6 +547,22 @@ public class WeaponPropertiesEditor : Editor
 
             wp.plasmaColor = (WeaponProperties.PlasmaColor)EditorGUILayout.EnumPopup("Plasma Color", wp.plasmaColor);
             wp.shieldDamageMultiplier = EditorGUILayout.FloatField("Shield Damage Mult:", wp.shieldDamageMultiplier);
+
+            if (wp.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+            {
+                wp.overheatPerShot = EditorGUILayout.IntField("Overheat Per Shot", wp.overheatPerShot);
+                wp.currentOverheat = EditorGUILayout.IntField("Overheat", wp.currentOverheat);
+                wp.overheatCooldown = EditorGUILayout.FloatField("Overheat Cooldown", wp.overheatCooldown);
+
+                EditorGUILayout.LabelField("FPS Overheat Steam", EditorStyles.boldLabel);
+                wp.overheatSteamHolder = EditorGUILayout.ObjectField(wp.overheatSteamHolder, typeof(GameObject), true) as GameObject;
+
+                EditorGUILayout.LabelField("TPS Equipped Overheat Steam", EditorStyles.boldLabel);
+                wp.tpsEquippedOverheatSteamHolder = EditorGUILayout.ObjectField(wp.tpsEquippedOverheatSteamHolder, typeof(GameObject), true) as GameObject;
+
+                EditorGUILayout.LabelField("TPS Holstered Overheat Steam", EditorStyles.boldLabel);
+                wp.tpsHolsteredOverheatSteamHolder = EditorGUILayout.ObjectField(wp.tpsHolsteredOverheatSteamHolder, typeof(GameObject), true) as GameObject;
+            }
         }
 
         wp.loadedAmmo = EditorGUILayout.IntField("Loaded Ammo:", wp.loadedAmmo);
