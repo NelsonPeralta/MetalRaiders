@@ -59,7 +59,7 @@ public class WeaponProperties : MonoBehaviour
     public float bulletSpray;
     public bool injectLootedAmmo;
     public int overheatPerShot, currentOverheat;
-    public GameObject overheatSteamHolder, tpsEquippedOverheatSteamHolder, tpsHolsteredOverheatSteamHolder;
+    public GameObject overheatSteamHolder, tpsEquippedOverheatSteamHolder;
     public float overheatCooldown;
 
     [Header("Range")]
@@ -272,7 +272,6 @@ public class WeaponProperties : MonoBehaviour
             if (overheatCooldown <= 0)
             {
                 overheatSteamHolder.SetActive(false);
-                tpsHolsteredOverheatSteamHolder.SetActive(false);
                 tpsEquippedOverheatSteamHolder.SetActive(false);
             }
         }
@@ -408,9 +407,12 @@ public class WeaponProperties : MonoBehaviour
         if (!player.isDead && !player.isRespawning && overheatCooldown <= 0)
         {
             overheatCooldown = 1.7f;
+
+            try { if (player.isMine) overheatSteamHolder.GetComponent<AudioSource>().volume = 0.5f; else overheatSteamHolder.GetComponent<AudioSource>().volume = 1; } catch { }
+            try { if (player.isMine) tpsEquippedOverheatSteamHolder.GetComponent<AudioSource>().volume = 0.5f; else tpsEquippedOverheatSteamHolder.GetComponent<AudioSource>().volume = 1; } catch { }
+
             overheatSteamHolder.SetActive(true);
             tpsEquippedOverheatSteamHolder.SetActive(true);
-            tpsHolsteredOverheatSteamHolder.SetActive(true);
         }
     }
 
@@ -559,9 +561,6 @@ public class WeaponPropertiesEditor : Editor
 
                 EditorGUILayout.LabelField("TPS Equipped Overheat Steam", EditorStyles.boldLabel);
                 wp.tpsEquippedOverheatSteamHolder = EditorGUILayout.ObjectField(wp.tpsEquippedOverheatSteamHolder, typeof(GameObject), true) as GameObject;
-
-                EditorGUILayout.LabelField("TPS Holstered Overheat Steam", EditorStyles.boldLabel);
-                wp.tpsHolsteredOverheatSteamHolder = EditorGUILayout.ObjectField(wp.tpsHolsteredOverheatSteamHolder, typeof(GameObject), true) as GameObject;
             }
         }
 
