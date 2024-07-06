@@ -817,10 +817,6 @@ public class PlayerController : MonoBehaviourPun
     {
         if (overwrite)
         {
-            isMeleeing = true;
-            //_meleeCount = melee.playersInMeleeZone.Count;
-            //meleeMovementFactor = 1;
-
             rScript.reloadIsCanceled = true;
 
             PV.RPC("Melee_RPC", RpcTarget.All);
@@ -829,10 +825,6 @@ public class PlayerController : MonoBehaviourPun
         {
             if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
-                isMeleeing = true;
-                //_meleeCount = melee.playersInMeleeZone.Count;
-                //meleeMovementFactor = 1;
-
                 rScript.reloadIsCanceled = true;
 
                 PV.RPC("Melee_RPC", RpcTarget.All);
@@ -861,6 +853,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee_RPC()
     {
+        isMeleeing = true;
         print("Melee_RPC");
         if (PV.IsMine)
         {
@@ -936,9 +929,8 @@ public class PlayerController : MonoBehaviourPun
                 rScript.reloadIsCanceled = true;
                 ScopeOut();
                 pInventory.fragGrenades = pInventory.fragGrenades - 1;
-                weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
-                StartCoroutine(GrenadeSpawnDelay());
                 PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
+                StartCoroutine(GrenadeSpawnDelay());
                 OnPLayerThrewGrenade?.Invoke(this);
                 //StartCoroutine(GrenadeSpawnDelay());
                 //StartCoroutine(ThrowGrenade3PS());
@@ -1362,6 +1354,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void ThrowGrenade3PS_RPC()
     {
+        weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
         StartCoroutine(ThrowGrenade3PS());
     }
 
