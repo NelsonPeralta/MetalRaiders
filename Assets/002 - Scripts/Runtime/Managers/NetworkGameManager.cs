@@ -959,8 +959,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void TriggerPlayerOverheatWeapon(int playerPhotonId, int weaponInd, bool caller = true)
     {
-        if (caller && PhotonNetwork.IsMasterClient)
-            instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.AllViaServer, playerPhotonId , weaponInd, false);
+        if (caller && GameManager.instance.pid_player_Dict[playerPhotonId].isMine)
+            instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.All, playerPhotonId, weaponInd, false);
         else if (!caller)
         {
             GameManager.instance.pid_player_Dict[playerPhotonId].playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
