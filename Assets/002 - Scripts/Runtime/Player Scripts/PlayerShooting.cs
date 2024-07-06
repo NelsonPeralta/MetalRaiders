@@ -71,8 +71,6 @@ public class PlayerShooting : MonoBehaviourPun
 
         playerController.OnPlayerScopeBtnDown += OnPlayerControllerScope_Delegate;
         playerController.OnPlayerScopeBtnUp += OnPlayerControllerScopeUp_Delegate;
-
-        if (!playerController.player.isMine) GetComponent<AudioSource>().volume = 1;
     }
 
     void OnPlayerControllerFireUp_Delegate(PlayerController playerController)

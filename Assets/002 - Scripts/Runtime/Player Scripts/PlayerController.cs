@@ -243,7 +243,7 @@ public class PlayerController : MonoBehaviourPun
             _meleeCooldown -= Time.deltaTime;
 
         if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime;
-        if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
+        if(_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
 
         if (_meleeCooldown <= 0)
         {
@@ -1584,7 +1584,7 @@ public class PlayerController : MonoBehaviourPun
 
     private void Reload()
     {
-        if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing && !isReloading)
+        if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing)
             if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
                 PV.RPC("Reload_RPC", RpcTarget.All);
     }
