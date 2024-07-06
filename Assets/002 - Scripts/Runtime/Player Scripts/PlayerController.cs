@@ -212,7 +212,7 @@ public class PlayerController : MonoBehaviourPun
     LayerMask _lastMainCamLayerMask;
 
 
-    bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
+    [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
     [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer;
 
     void Awake()

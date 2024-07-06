@@ -254,11 +254,10 @@ public class PlayerShooting : MonoBehaviourPun
                         if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
                         {
                             int d = (int)Vector3.Distance(player.mainCamera.transform.position, hit.point);
-                            StartCoroutine(pInventory.SpawnFakeBulletTrail(d, ranSprayQuat));
+                            pInventory.SpawnFakeBulletTrail(d, ranSprayQuat);
                         }
                         else
-
-                            StartCoroutine(pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat));
+                            pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat);
                     }
                 }
                 else
@@ -339,8 +338,8 @@ public class PlayerShooting : MonoBehaviourPun
                     {
                         activeWeapon.currentOverheat = Mathf.Clamp(activeWeapon.currentOverheat + activeWeapon.overheatPerShot, 0, 100);
 
-                        if (activeWeapon.currentOverheat >= 100 && activeWeapon.overheatCooldown <= 0 && player.isMine) 
-                            NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId, 
+                        if (activeWeapon.currentOverheat >= 100 && activeWeapon.overheatCooldown <= 0 && player.isMine)
+                            NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId,
                                 Array.IndexOf(player.playerInventory.allWeaponsInInventory, activeWeapon.gameObject));
                     }
                 }

@@ -56,7 +56,7 @@ public class PlayerInventory : MonoBehaviourPun
                 WeaponProperties preVal = _activeWeapon;
                 WeaponProperties preHol = _holsteredWeapon;
 
-                if(preVal != value)
+                if (preVal != value)
                 {
                     pController.CancelReloadCoroutine();
                 }
@@ -230,6 +230,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     public bool playerOddballActive { get { return _oddball.gameObject.activeInHierarchy; } }
+    public Transform bulletTrailPool { get { return _fakeBulletTrailHolder; } }
 
     [SerializeField] Transform _fakeBulletTrailHolder;
     [SerializeField] Transform _fakeBulleTrailPrefab;
@@ -268,10 +269,11 @@ public class PlayerInventory : MonoBehaviourPun
             catch (System.Exception e) { Debug.LogWarning(e); }
         }
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 50; i++)
         {
             Transform fbtt = Instantiate(_fakeBulleTrailPrefab, _fakeBulletTrailHolder);
             _fakeBulletTrailPool.Add(fbtt);
+            _fakeBulletTrailPool[i].GetComponent<FakeBulletTrailDisable>().player = player;
             fbtt.gameObject.SetActive(false);
         }
     }
@@ -534,7 +536,7 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon = "shotgun";
             StartingWeapon2 = "pistol";
         }
-        if(GameManager.instance.gameType == GameManager.GameType.PurpleRain)
+        if (GameManager.instance.gameType == GameManager.GameType.PurpleRain)
         {
             StartingWeapon = "cl";
             StartingWeapon2 = "pistol";
@@ -768,7 +770,7 @@ public class PlayerInventory : MonoBehaviourPun
         return null;
     }
 
-    public IEnumerator SpawnFakeBulletTrail(int l, Quaternion spray)
+    public void SpawnFakeBulletTrail(int l, Quaternion spray)
     {
         foreach (Transform fbt in _fakeBulletTrailPool)
         {
@@ -779,27 +781,6 @@ public class PlayerInventory : MonoBehaviourPun
                 fbt.transform.localRotation *= spray;
                 fbt.gameObject.SetActive(true);
                 fbt.transform.parent = null;
-
-                yield return new WaitForSeconds(0.1f);
-
-                fbt.transform.parent = _fakeBulletTrailHolder;
-
-                fbt.transform.localRotation = Quaternion.identity;
-                fbt.transform.localPosition = Vector3.zero;
-                fbt.transform.localScale = Vector3.one;
-
-
-                if (GameManager.instance.connection == GameManager.Connection.Local)
-                {
-                    if (player.rid == 0) fbt.GetChild(0).gameObject.layer = 25;
-                    else if (player.rid == 1) fbt.GetChild(0).gameObject.layer = 27;
-                    else if (player.rid == 2) fbt.GetChild(0).gameObject.layer = 29;
-                    else if (player.rid == 3) fbt.GetChild(0).gameObject.layer = 31;
-                }
-
-
-
-                fbt.gameObject.SetActive(false);
                 break;
             }
         }
