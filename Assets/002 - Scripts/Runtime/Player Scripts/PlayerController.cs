@@ -96,7 +96,9 @@ public class PlayerController : MonoBehaviourPun
     public bool isReloading { get { return _currentlyReloadingTimer > 0; } }
 
     public bool reloadAnimationStarted, reloadWasCanceled, isFiring,
-        isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isSprinting;
+        isAiming, isCrouching, isDrawingWeapon, isSprinting;
+
+    public bool isThrowingGrenade { get { return _currentlyThrowingGrenadeTimer > 0; } }
 
     //Used for fire rate
     private float lastFired;
@@ -213,7 +215,7 @@ public class PlayerController : MonoBehaviourPun
 
 
     [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
-    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer;
+    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer;
 
     void Awake()
     {
@@ -241,6 +243,7 @@ public class PlayerController : MonoBehaviourPun
             _meleeCooldown -= Time.deltaTime;
 
         if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime;
+        if(_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
 
         if (_meleeCooldown <= 0)
         {
@@ -854,6 +857,8 @@ public class PlayerController : MonoBehaviourPun
     void Melee_RPC()
     {
         isMeleeing = true;
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
+
         print("Melee_RPC");
         if (PV.IsMine)
         {
@@ -1259,11 +1264,11 @@ public class PlayerController : MonoBehaviourPun
             {
                 if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("GrenadeThrow"))
                 {
-                    isThrowingGrenade = true;
+                    //isThrowingGrenade = true;
                 }
                 else
                 {
-                    isThrowingGrenade = false;
+                    //isThrowingGrenade = false;
                 }
             }
 
@@ -1284,6 +1289,7 @@ public class PlayerController : MonoBehaviourPun
 
     IEnumerator ThrowGrenade3PS()
     {
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("Throw Grenade");
         yield return new WaitForEndOfFrame();
     }
@@ -1354,6 +1360,8 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void ThrowGrenade3PS_RPC()
     {
+        _currentlyThrowingGrenadeTimer = 1f;
+        print("ThrowGrenade3PS_RPC");
         weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
         StartCoroutine(ThrowGrenade3PS());
     }
@@ -1559,6 +1567,7 @@ public class PlayerController : MonoBehaviourPun
     public void OnDeath_Delegate(Player player)
     {
         Debug.Log("OnDeath_Delegate");
+        _currentlyThrowingGrenadeTimer = 0;
         _currentlyReloadingTimer = 0; CancelReloadCoroutine();
         isSprinting = false;
         isHoldingShootBtn = false;
@@ -1566,6 +1575,7 @@ public class PlayerController : MonoBehaviourPun
 
     void OnRespawn_Delegate(Player player)
     {
+        _currentlyThrowingGrenadeTimer = 0;
         _currentlyReloadingTimer = 0; CancelReloadCoroutine();
         isSprinting = false;
         isHoldingShootBtn = false;
@@ -1623,6 +1633,7 @@ public class PlayerController : MonoBehaviourPun
 
     public void CancelReloadCoroutine()
     {
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
         _completeReloadTimer = -9;
     }
 
