@@ -266,6 +266,9 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+
+        isMoving = false;
+
         if (grounded)
         {
 
@@ -275,6 +278,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (_correctedRightInput != 0 || _correctedForwardInput != 0)
             {
+                isMoving = true;
                 _footstepClipDelay -= Time.deltaTime;
 
 
