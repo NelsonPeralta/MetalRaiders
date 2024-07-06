@@ -267,8 +267,6 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        isMoving = false;
-
         if (grounded)
         {
 
