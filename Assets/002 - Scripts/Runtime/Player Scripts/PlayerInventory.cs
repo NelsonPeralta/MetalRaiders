@@ -337,6 +337,8 @@ public class PlayerInventory : MonoBehaviourPun
         {
             fragGrenades = 2;
         }
+
+        if (!player.isMine) weaponDrawAudioSource.volume = 1;
     }
 
     void OnActiveWeaponAmmoChanged(WeaponProperties weaponProperties)

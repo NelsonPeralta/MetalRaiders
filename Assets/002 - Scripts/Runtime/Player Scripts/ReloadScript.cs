@@ -45,6 +45,13 @@ public class ReloadScript : MonoBehaviourPun
     [Header("Audio Source")]
     public AudioSource reloadAudioSource;
 
+
+    private void Start()
+    {
+        if (!pController.player.isMine) reloadAudioSource.volume = 1;
+
+    }
+
     private void Update()
     {
         if (pController.pInventory.activeWeapon != null)
