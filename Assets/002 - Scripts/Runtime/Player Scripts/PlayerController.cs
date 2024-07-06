@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using Photon.Realtime;
 using Newtonsoft.Json.Bson;
 using System;
+using static PlasticPipe.PlasticProtocol.Messages.Serialization.ItemHandlerMessagesSerialization;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -243,7 +244,7 @@ public class PlayerController : MonoBehaviourPun
             _meleeCooldown -= Time.deltaTime;
 
         if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime;
-        if(_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
+        if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
 
         if (_meleeCooldown <= 0)
         {
@@ -816,23 +817,36 @@ public class PlayerController : MonoBehaviourPun
 
     int _meleeCount = 0;
     float meleeMovementFactor = 0;
+    bool _meleeSucc;
     void Melee(bool overwrite = false)
     {
+        if (!PV.IsMine) return;
+
+
+
+        _meleeSucc = false;
         if (overwrite)
         {
             rScript.reloadIsCanceled = true;
 
-            PV.RPC("Melee_RPC", RpcTarget.All);
+            ScopeOut();
+            _meleeSucc = melee.MeleeDamage();
+            PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
         }
         else if (!GetComponent<Player>().isDead)
         {
             if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
+                ScopeOut();
+                _meleeSucc = melee.MeleeDamage();
+
                 rScript.reloadIsCanceled = true;
 
-                PV.RPC("Melee_RPC", RpcTarget.All);
+                PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
             }
         }
+
+        _meleeSucc = false;
 
         //if (meleeMovementFactor > 0)
         //{
@@ -854,17 +868,15 @@ public class PlayerController : MonoBehaviourPun
 
 
     [PunRPC]
-    void Melee_RPC()
+    void Melee_RPC(bool succ)
     {
+        if (succ) melee.PlaySuccClip(); else melee.PlayMissClip();
+
+
         isMeleeing = true;
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
 
         print("Melee_RPC");
-        if (PV.IsMine)
-        {
-            ScopeOut();
-            melee.Knife();
-        }
         weaponAnimator.Play("Knife Attack 2", 0, 0f);
         StartCoroutine(Melee3PS());
     }
