@@ -9,7 +9,7 @@ public class RagdollPool : MonoBehaviour
 
 
     public GameObject ragdollPrefab;
-    public List<GameObject> ragdolls = new List<GameObject>();
+    public List<GameObject> ragdollPoolList = new List<GameObject>();
 
 
     private void Awake()
@@ -23,7 +23,7 @@ public class RagdollPool : MonoBehaviour
         {
             GameObject obj = Instantiate(ragdollPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
-            ragdolls.Add(obj);
+            ragdollPoolList.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
 
@@ -58,13 +58,13 @@ public class RagdollPool : MonoBehaviour
 
     public GameObject SpawnPooledPlayerRagdoll(bool isMine)
     {
-        foreach (GameObject obj in ragdolls)
+        foreach (GameObject obj in ragdollPoolList)
             if (!obj.activeInHierarchy)
                 if (!obj.activeInHierarchy)
                 {
                     obj.transform.parent = null;
                     SceneManager.MoveGameObjectToScene(obj, SceneManager.GetActiveScene()); // Undos DontDestroyOnLoad
-                    ragdolls.Remove(obj);
+                    ragdollPoolList.Remove(obj);
                     StartCoroutine(DisableObjectAfterTime(obj, 20));
                     obj.GetComponent<PlayerRagdoll>().isMine = isMine;
                     return obj;

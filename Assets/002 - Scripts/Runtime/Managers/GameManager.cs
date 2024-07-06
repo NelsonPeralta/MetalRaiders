@@ -462,6 +462,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             SwarmManager.instance.StopAllMusic();
             MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().ClearCarnageReportData();
 
+
+            if (RagdollPool.instance) { RagdollPool.instance.ragdollPoolList.Clear(); RagdollPool.instance = null; }
+
+
             print("GAME MANAGER ONSCENELOADED 0");
 
             if (previousScenePayloads.Contains(PreviousScenePayload.ResetPlayerDataCells))

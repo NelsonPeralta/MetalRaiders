@@ -182,18 +182,21 @@ public class ReloadScript : MonoBehaviourPun
 
     public void CheckAmmoTypeType(bool isOutOfAmmo, WeaponProperties wp = null)
     {
-        if (pController.isReloading)
-            return;
-
-        WeaponProperties activeWeapon = pController.pInventory.activeWeapon.GetComponent<WeaponProperties>();
-
-        if (wp)
-            activeWeapon = wp;
-
-        if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity && activeWeapon.spareAmmo > 0)
+        if (!pController.isReloading)
         {
-            ReloadAnimation(isOutOfAmmo, activeWeapon);
-            pController.player.PlayReloadingClip();
+            pController.currentlyReloadingTimer = 1.4f;
+            pController.player.playerShooting.StopBurstFiring();
+
+            WeaponProperties activeWeapon = pController.pInventory.activeWeapon.GetComponent<WeaponProperties>();
+
+            if (wp)
+                activeWeapon = wp;
+
+            if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity && activeWeapon.spareAmmo > 0)
+            {
+                ReloadAnimation(isOutOfAmmo, activeWeapon);
+                pController.player.PlayReloadingClip();
+            }
         }
     }
 
@@ -320,5 +323,11 @@ public class ReloadScript : MonoBehaviourPun
     {
         if (!pController.player.isMine)
             try { pController.weaponAnimator.Play(reloadString, 0, 0f); } catch { }
+    }
+
+
+    public void PlayReloadSound(int activeWeaponIndex)
+    {
+        PV.RPC("PlayReloadSound_RPC", RpcTarget.All, activeWeaponIndex);
     }
 }

@@ -56,6 +56,11 @@ public class PlayerInventory : MonoBehaviourPun
                 WeaponProperties preVal = _activeWeapon;
                 WeaponProperties preHol = _holsteredWeapon;
 
+                if(preVal != value)
+                {
+                    pController.CancelReloadCoroutine();
+                }
+
                 try
                 {
                     preVal.equippedModelB.SetActive(false);

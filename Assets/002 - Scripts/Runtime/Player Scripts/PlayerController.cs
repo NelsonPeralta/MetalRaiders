@@ -9,6 +9,7 @@ using ExitGames.Client.Photon.StructWrapping;
 using System.Security.Cryptography;
 using Photon.Realtime;
 using Newtonsoft.Json.Bson;
+using System;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -92,7 +93,9 @@ public class PlayerController : MonoBehaviourPun
     [HideInInspector]
     public bool isInspecting, aimSoundHasPlayed = false;
 
-    public bool isReloading, reloadAnimationStarted, reloadWasCanceled, isFiring,
+    public bool isReloading { get { return _currentlyReloadingTimer > 0; } }
+
+    public bool reloadAnimationStarted, reloadWasCanceled, isFiring,
         isAiming, isThrowingGrenade, isCrouching, isDrawingWeapon, isSprinting;
 
     //Used for fire rate
@@ -198,6 +201,8 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    public float currentlyReloadingTimer { set { _currentlyReloadingTimer = value; } }
+
 
     bool _isMeleeing, _cameraIsFloating;
     float _meleeCooldown, _adsCounter;
@@ -208,6 +213,7 @@ public class PlayerController : MonoBehaviourPun
 
 
     bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
+    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer;
 
     void Awake()
     {
@@ -234,10 +240,23 @@ public class PlayerController : MonoBehaviourPun
         if (_meleeCooldown > 0)
             _meleeCooldown -= Time.deltaTime;
 
+        if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime;
+
         if (_meleeCooldown <= 0)
         {
             _meleeCooldown = 0;
             _isMeleeing = false;
+        }
+
+        if (_completeReloadTimer > 0)
+        {
+            _completeReloadTimer -= Time.deltaTime;
+
+            if (_completeReloadTimer <= 0)
+            {
+                TransferAmmo();
+                player.playerInventory.UpdateAllExtraAmmoHuds();
+            }
         }
 
         try { weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>(); } catch { }
@@ -364,6 +383,7 @@ public class PlayerController : MonoBehaviourPun
         if (isHoldingShootBtn) return;
         if (isSprinting)
         {
+            currentlyReloadingTimer = 0;
             weaponAnimator.SetBool("Run", true);
 
             _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
@@ -500,15 +520,16 @@ public class PlayerController : MonoBehaviourPun
 
 
         //Process Firing
-        if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
-            if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
-                player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
-            {
-                if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+        if (!isReloading && !isThrowingGrenade && !isMeleeing)
+            if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
+                if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
+                    player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                {
+                    if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+                        player.playerShooting.Shoot();
+                }
+                else
                     player.playerShooting.Shoot();
-            }
-            else
-                player.playerShooting.Shoot();
 
 
 
@@ -806,8 +827,7 @@ public class PlayerController : MonoBehaviourPun
         }
         else if (!GetComponent<Player>().isDead)
         {
-            if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing &&
-                !isHoldingShootBtn && /*!isFiring &&*/ !isThrowingGrenade && !isSprinting)
+            if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
                 isMeleeing = true;
                 //_meleeCount = melee.playersInMeleeZone.Count;
@@ -906,11 +926,13 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
-        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding &&
-            !isHoldingShootBtn && /*!isFiring &&*/ !isMeleeing && !isSprinting /* && !isInspecting */)
+        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding /*&& !isMeleeing*/ && !isSprinting)
         {
             if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
             {
+                CancelReloadCoroutine();
+                currentlyReloadingTimer = 0;
+                player.playerShooting.StopBurstFiring();
                 rScript.reloadIsCanceled = true;
                 ScopeOut();
                 pInventory.fragGrenades = pInventory.fragGrenades - 1;
@@ -928,47 +950,45 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead)
         {
-            if (PV.IsMine && rewiredPlayer.GetButtonDown("Reload") && !isReloading && !isDualWielding)
+            if (PV.IsMine && rewiredPlayer.GetButtonDown("Reload"))
             {
-                PV.RPC("CheckRealodButton_RPC", RpcTarget.All);
+                Reload();
             }
         }
     }
 
     [PunRPC]
-    void CheckRealodButton_RPC()
+    void Reload_RPC()
     {
-        rScript.CheckAmmoTypeType(false);
+        _completeReloadTimer = 1;
+        currentlyReloadingTimer = 1.4f;
+        player.playerShooting.StopAllCoroutines();
+        ScopeOut();
+        rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
+
+
+        if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+        {
+            try
+            {
+                weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                //pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
+                //PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Out Of Ammo");
+
+            }
+            catch { }
+            StartCoroutine(Reload3PS());
+
+        }
     }
 
     void CheckAmmoForAutoReload()
     {
-        if (!isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing)
-        {
-            if (pInventory.activeWeapon)
-            {
-                if (pInventory.activeWeapon.loadedAmmo <= 0)
-                {
-                    rScript.CheckAmmoTypeType(true);
-                }
-                else
-                {
-                }
-            }
-        }
-
-        if (isDualWielding)
+        if (pInventory.activeWeapon)
+        //if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing)
         {
             if (pInventory.activeWeapon.loadedAmmo <= 0)
-            {
-                rScript.CheckAmmoTypeType(true);
-
-            }
-
-            if (pInventory.leftWeaponCurrentAmmo <= 0)
-            {
-                rScript.CheckAmmoTypeType(true, pInventory.leftWeapon);
-            }
+                Reload();
         }
 
 
@@ -996,7 +1016,9 @@ public class PlayerController : MonoBehaviourPun
                 try
                 {
                     Debug.Log("SwitchWeapons");
+                    CancelReloadCoroutine();
                     weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
+                    currentlyReloadingTimer = 0;
                     OnPlayerSwitchWeapons?.Invoke(this);
                 }
                 catch { }
@@ -1151,11 +1173,11 @@ public class PlayerController : MonoBehaviourPun
                         if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Out Of Ammo") ||
                             weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Ammo Left"))
                         {
-                            isReloading = true;
+                            //_reloadingRecovery = 1;
                         }
                         else
                         {
-                            isReloading = false;
+                            //isReloading = false;
                         }
                     }
 
@@ -1167,11 +1189,11 @@ public class PlayerController : MonoBehaviourPun
                             weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Insert Shell") ||
                             weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload Close"))
                         {
-                            isReloading = true;
+                            //isReloading = true;
                         }
                         else
                         {
-                            isReloading = false;
+                            //isReloading = false;
                         }
 
                         //Check if inspecting weapon
@@ -1189,7 +1211,7 @@ public class PlayerController : MonoBehaviourPun
                     {
                         if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
                         {
-                            isReloading = true;
+                            //isReloading = true;
 
                             /*
                             if (wProperties.projectileToHide != null)
@@ -1200,7 +1222,7 @@ public class PlayerController : MonoBehaviourPun
 
                         else
                         {
-                            isReloading = false;
+                            //isReloading = false;
                         }
                     }
                 }
@@ -1351,8 +1373,9 @@ public class PlayerController : MonoBehaviourPun
         yield return new WaitForSeconds(0.2f);
         //Spawn grenade prefab at spawnpoint
 
-        PV.RPC("SpawnGrenade_RPC", RpcTarget.All, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
-            gwProperties.grenadeSpawnPoint.rotation, gwProperties.grenadeSpawnPoint.forward);
+        if (PV.IsMine && !player.isDead)
+            PV.RPC("SpawnGrenade_RPC", RpcTarget.All, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
+                gwProperties.grenadeSpawnPoint.rotation, gwProperties.grenadeSpawnPoint.forward);
 
         //var grenade = Instantiate(pInventory.grenadePrefab);
         //Destroy(grenade.gameObject);
@@ -1400,22 +1423,6 @@ public class PlayerController : MonoBehaviourPun
             {
                 pInventory.activeWeapon.loadedAmmo += pInventory.activeWeapon.spareAmmo;
                 pInventory.activeWeapon.spareAmmo = 0;
-            }
-
-            if (pInventory.leftWeapon)
-            {
-                ammoWeaponIsMissing = pInventory.leftWeapon.ammoCapacity - pInventory.leftWeapon.loadedAmmo;
-
-                if (pInventory.leftWeapon.spareAmmo >= ammoWeaponIsMissing)
-                {
-                    pInventory.leftWeapon.loadedAmmo = pInventory.leftWeapon.ammoCapacity;
-                    pInventory.leftWeapon.spareAmmo -= ammoWeaponIsMissing;
-                }
-                else if (pInventory.leftWeapon.spareAmmo < ammoWeaponIsMissing)
-                {
-                    pInventory.leftWeapon.loadedAmmo += pInventory.leftWeapon.spareAmmo;
-                    pInventory.leftWeapon.spareAmmo = 0;
-                }
             }
         }
     }
@@ -1559,16 +1566,72 @@ public class PlayerController : MonoBehaviourPun
     public void OnDeath_Delegate(Player player)
     {
         Debug.Log("OnDeath_Delegate");
+        _currentlyReloadingTimer = 0; CancelReloadCoroutine();
         isSprinting = false;
         isHoldingShootBtn = false;
     }
 
     void OnRespawn_Delegate(Player player)
     {
+        _currentlyReloadingTimer = 0; CancelReloadCoroutine();
         isSprinting = false;
         isHoldingShootBtn = false;
     }
 
+
+    private void Reload()
+    {
+        if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing)
+            if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
+                PV.RPC("Reload_RPC", RpcTarget.All);
+    }
+
+    public IEnumerator Reload_Coroutine()
+    {
+        currentlyReloadingTimer = 1.4f;
+        player.playerShooting.StopAllCoroutines();
+        ScopeOut();
+        rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
+
+
+        if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+        {
+            try
+            {
+                weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                //pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
+                //PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Out Of Ammo");
+
+            }
+            catch { }
+            StartCoroutine(Reload3PS());
+
+        }
+
+
+
+
+
+
+
+
+
+        player.PlayReloadingClip();
+
+
+
+        yield return new WaitForSeconds(1);
+
+
+
+        TransferAmmo();
+        player.playerInventory.UpdateAllExtraAmmoHuds();
+    }
+
+    public void CancelReloadCoroutine()
+    {
+        _completeReloadTimer = -9;
+    }
 
 
 

@@ -24,11 +24,11 @@ public class PlayerHealthBar : PlayerBar
     void Update()
     {
         if (GetComponent<Slider>().value >= (GetComponent<Slider>().maxValue * 0.6f))
-            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(0, 255, 0, 255); // Green
+            healthSliderGO.gameObject.GetComponent<Image>().color = Color.green; // Green
         else if (GetComponent<Slider>().value <= (GetComponent<Slider>().maxValue * 0.25f))
-            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 0, 0, 255); // Red
+            healthSliderGO.gameObject.GetComponent<Image>().color = Color.red; // Red
         else
-            healthSliderGO.gameObject.GetComponent<Image>().color = new Color32(255, 255, 0, 255); // Yellow
+            healthSliderGO.gameObject.GetComponent<Image>().color = Color.yellow; // Yellow
     }
 
     public override void OnPlayerOvershieldPointsChanged_Delegate(Player player)

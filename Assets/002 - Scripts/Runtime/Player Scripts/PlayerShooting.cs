@@ -458,4 +458,10 @@ public class PlayerShooting : MonoBehaviourPun
         if (leftFireInterval > 0)
             leftFireInterval -= Time.deltaTime;
     }
+
+
+    public void StopBurstFiring()
+    {
+        StopAllCoroutines();
+    }
 }

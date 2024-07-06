@@ -129,6 +129,8 @@ public class Melee : MonoBehaviour
     int _pushForce;
     public void Knife()
     {
+        pController.currentlyReloadingTimer = 0;
+        pController.CancelReloadCoroutine();
 
         if (hitPointsInMeleeZone.Count > 0)
         {

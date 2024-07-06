@@ -200,6 +200,8 @@ MonoBehaviour:
   - ToggleFloatingCamera_RPC
   - StartGameButton
   - TriggerPlayerOverheatWeapon
+  - CheckReloadButton_RPC
+  - Reload_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
