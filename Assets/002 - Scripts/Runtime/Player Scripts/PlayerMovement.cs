@@ -267,43 +267,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        if (grounded)
-        {
-
-            if (_correctedRightInput == 0 && _correctedForwardInput == 0)
-            {
-                _footstepClipDelay = 0.35f;
-            }
-            else if (_correctedRightInput != 0 || _correctedForwardInput != 0)
-            {
-                isMoving = true;
-                _footstepClipDelay -= Time.deltaTime;
-
-
-                if (_footstepClipDelay <= 0)
-                {
-                    if (_player.isMine)
-                        _footstepAudioSource.volume = 0.5f;
-                    else
-                        _footstepAudioSource.volume = 1;
-
-
-
-
-                    _footstepAudioSource.Play();
-                    _footstepClipDelay = 0.35f;
-
-                    if (player.playerController.isSprinting)
-                        _footstepClipDelay = 0.25f;
-
-                    if (player.playerController.isCrouching)
-                    {
-                        _footstepAudioSource.volume = 0.25f;
-                        _footstepClipDelay = 0.45f;
-                    }
-                }
-            }
-        }
+        CheckIsMovingAndPlayFootStepSound();
 
 
 
@@ -810,6 +774,57 @@ public class PlayerMovement : MonoBehaviour
             _lastCalulatedGroundedSpeed = currentWorldSpeed;
         _lastPos = transform.position;
         //CalculateSpeedRatio();
+    }
+
+
+    void CheckIsMovingAndPlayFootStepSound()
+    {
+        if (grounded)
+        {
+
+            if (_correctedRightInput == 0 && _correctedForwardInput == 0)
+                isMoving = false;
+            else if (_correctedRightInput != 0 || _correctedForwardInput != 0)
+                isMoving = true;
+
+
+
+            if (!isMoving)
+            {
+                _footstepClipDelay = 0.35f;
+            }
+            else
+            {
+                _footstepClipDelay -= Time.deltaTime;
+
+
+                if (_footstepClipDelay <= 0)
+                {
+                    if (_player.isMine)
+                        _footstepAudioSource.volume = 0.5f;
+                    else
+                        _footstepAudioSource.volume = 1;
+
+
+
+
+                    _footstepAudioSource.Play();
+                    _footstepClipDelay = 0.35f;
+
+                    if (player.playerController.isSprinting)
+                        _footstepClipDelay = 0.25f;
+
+                    if (player.playerController.isCrouching)
+                    {
+                        _footstepAudioSource.volume = 0.25f;
+                        _footstepClipDelay = 0.45f;
+                    }
+                }
+            }
+        }
+        else
+            isMoving = false;
+
     }
 
 
