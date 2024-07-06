@@ -781,11 +781,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (grounded)
         {
-
-            if (_correctedRightInput == 0 && _correctedForwardInput == 0)
-                isMoving = false;
-            else if (_correctedRightInput != 0 || _correctedForwardInput != 0)
-                isMoving = true;
+            if (player.isMine)
+            {
+                if (_correctedRightInput == 0 && _correctedForwardInput == 0)
+                    isMoving = false;
+                else if (_correctedRightInput != 0 || _correctedForwardInput != 0)
+                    isMoving = true;
+            }
 
 
 
@@ -823,7 +825,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         else
-            isMoving = false;
+            if (player.isMine) isMoving = false;
 
     }
 
