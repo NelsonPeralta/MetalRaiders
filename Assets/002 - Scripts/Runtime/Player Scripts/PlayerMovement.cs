@@ -165,6 +165,37 @@ public class PlayerMovement : MonoBehaviour
         air
     }
 
+
+
+
+
+
+
+
+    [SerializeField] AudioSource _footstepAudioSource;
+    float _footstepClipDelay;
+
+
+    public bool isMoving
+    {
+        get { return _isMoving; }
+        private set
+        {
+            if (_isMoving != value)
+            {
+                player.playerController.UpdateIsMoving(value);
+            }
+
+            _isMoving = value;
+        }
+    }
+
+
+    [SerializeField] bool _isMoving;
+
+
+
+
     private void Awake()
     {
 
@@ -184,6 +215,8 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
 
         startYScale = transform.localScale.y;
+
+        if (!player.isMine) _footstepAudioSource.volume = 1;
     }
 
     private void Update()
@@ -230,6 +263,49 @@ public class PlayerMovement : MonoBehaviour
 
 
         CheckDirection(_rawRightInput, _rawForwardInput);
+
+
+
+        if (grounded)
+        {
+
+            if (_correctedRightInput == 0 && _correctedForwardInput == 0)
+            {
+                _footstepClipDelay = 0.35f;
+            }
+            else if (_correctedRightInput != 0 || _correctedForwardInput != 0)
+            {
+                _footstepClipDelay -= Time.deltaTime;
+
+
+                if (_footstepClipDelay <= 0)
+                {
+                    if (_player.isMine)
+                        _footstepAudioSource.volume = 0.5f;
+                    else
+                        _footstepAudioSource.volume = 1;
+
+
+
+
+                    _footstepAudioSource.Play();
+                    _footstepClipDelay = 0.35f;
+
+                    if (player.playerController.isSprinting)
+                        _footstepClipDelay = 0.25f;
+
+                    if (player.playerController.isCrouching)
+                    {
+                        _footstepAudioSource.volume = 0.25f;
+                        _footstepClipDelay = 0.45f;
+                    }
+                }
+            }
+        }
+
+
+
+
         WalkAnimation();
         ControlAnimationSpeed();
 
@@ -734,4 +810,9 @@ public class PlayerMovement : MonoBehaviour
         //CalculateSpeedRatio();
     }
 
+
+    public void UpdateIsMoving(bool u)
+    {
+        _isMoving = u;
+    }
 }

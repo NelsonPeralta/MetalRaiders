@@ -11,6 +11,7 @@ using Photon.Realtime;
 using Newtonsoft.Json.Bson;
 using System;
 using static PlasticPipe.PlasticProtocol.Messages.Serialization.ItemHandlerMessagesSerialization;
+using static UnityEditor.PlayerSettings;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -1596,7 +1597,7 @@ public class PlayerController : MonoBehaviourPun
 
     private void Reload()
     {
-        if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing)
+        if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing && !isReloading)
             if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
                 PV.RPC("Reload_RPC", RpcTarget.All);
     }
@@ -1695,6 +1696,19 @@ public class PlayerController : MonoBehaviourPun
         try { pInventory.activeWeapon.glint.SetActive(fga); } catch { }
     }
 
+
+    [PunRPC]
+    public void UpdateIsMoving(bool nv, bool isCaller = true)
+    {
+        if (player.isMine && isCaller)
+        {
+            PV.RPC("UpdateIsMoving", RpcTarget.All, nv, false);
+        }
+        else
+        {
+            movement.UpdateIsMoving(nv);
+        }
+    }
 }
 
 
