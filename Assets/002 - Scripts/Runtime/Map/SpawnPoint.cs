@@ -22,6 +22,8 @@ public class SpawnPoint : MonoBehaviour
         }
     }
 
+    public bool reserved { get { return _reserved; } set { _reserved = value; } }
+
 
     public Layer layer;
     public List<Player> players = new List<Player>();
@@ -31,7 +33,7 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField] GameObject _witness;
     [SerializeField] int _radius;
 
-    [SerializeField] bool _seen;
+    [SerializeField] bool _seen, _reserved;
     [SerializeField] float _seenReset;
 
     private void OnTriggerEnter(Collider other)

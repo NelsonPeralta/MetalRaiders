@@ -7,6 +7,8 @@ using System;
 using Newtonsoft.Json;
 using Photon.Realtime;
 using Rewired;
+using static Rewired.Platforms.Custom.CustomInputSource;
+using static UnityEditor.PlayerSettings;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -969,5 +971,31 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
 
-    //public void AskHostToStickGrenade
+
+
+
+    (Transform, bool) _reservedSpawnPoint;
+
+
+    [PunRPC]
+    public void AskMasterToReserveSpawnPoint(int playerPhotonId, bool caller = true)
+    {
+        if (caller)
+        {
+            instance._pv.RPC("AskMasterToReserveSpawnPoint", RpcTarget.MasterClient, playerPhotonId, false);
+        }
+        else if (!caller && PhotonNetwork.IsMasterClient)
+        {
+            _reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+            instance._pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.All, playerPhotonId, _reservedSpawnPoint.Item1, _reservedSpawnPoint.Item2);
+        }
+    }
+
+
+    [PunRPC]
+    public void ReserveSpawnPoint_RPC(int playerPhotonId, Vector3 pos, bool isRandom)
+    {
+        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(_reservedSpawnPoint.Item1.position, true);
+        GameManager.instance.pid_player_Dict[playerPhotonId].UpdateReservedSpawnPoint(pos, isRandom);
+    }
 }

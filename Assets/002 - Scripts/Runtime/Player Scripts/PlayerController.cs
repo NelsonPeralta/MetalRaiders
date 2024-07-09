@@ -10,8 +10,6 @@ using System.Security.Cryptography;
 using Photon.Realtime;
 using Newtonsoft.Json.Bson;
 using System;
-using static PlasticPipe.PlasticProtocol.Messages.Serialization.ItemHandlerMessagesSerialization;
-using static UnityEditor.PlayerSettings;
 
 public class PlayerController : MonoBehaviourPun
 {

@@ -1289,6 +1289,9 @@ public class Player : Biped
 
         _respawnBeepCount = 0;
         if (this.isMine) respawnBeepAudioSource.Play();
+        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(_reservedSpawnPointPosition.Item1, false);
+
+        if (_reservedSpawnPointPosition.Item2) killFeedManager.EnterNewFeed("Spawning Randomly"); _reservedSpawnPointPosition = (Vector3.zero, false);
     }
 
     public void PlaySprintingSound()
@@ -1331,17 +1334,19 @@ public class Player : Biped
     #region
 
 
+
+    (Vector3, bool) _reservedSpawnPointPosition;
     IEnumerator MidRespawnAction()
     {
         Debug.Log("MidRespawnAction");
+        NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId);
         yield return new WaitForSeconds(RESPAWN_TIME * 0.7f);
         GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
         hitPoints = maxHitPoints;
-        Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint(controllerId);
-        transform.position = spawnPoint.position + new Vector3(0, 2, 0);
-        transform.rotation = spawnPoint.rotation;
+        transform.position = _reservedSpawnPointPosition.Item1 + new Vector3(0, 2, 0);
+        transform.rotation = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(_reservedSpawnPointPosition.Item1).rotation;
         isDead = false;
     }
 
@@ -1833,5 +1838,11 @@ public class Player : Biped
 
 
         _ultraMergeCount = 0;
+    }
+
+
+    public void UpdateReservedSpawnPoint(Vector3 t, bool isRandom)
+    {
+        _reservedSpawnPointPosition = (t, isRandom);
     }
 }
