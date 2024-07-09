@@ -995,7 +995,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void ReserveSpawnPoint_RPC(int playerPhotonId, Vector3 pos, bool isRandom)
     {
-        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(_reservedSpawnPoint.Item1.position, true);
+        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(pos, true);
         GameManager.instance.pid_player_Dict[playerPhotonId].UpdateReservedSpawnPoint(pos, isRandom);
     }
 }
