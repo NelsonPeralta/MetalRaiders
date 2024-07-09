@@ -203,6 +203,8 @@ MonoBehaviour:
   - CheckReloadButton_RPC
   - Reload_RPC
   - UpdateIsMoving
+  - AskMasterToReserveSpawnPoint
+  - ReserveSpawnPoint_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -987,7 +987,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         else if (!caller && PhotonNetwork.IsMasterClient)
         {
             _reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-            instance._pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.All, playerPhotonId, _reservedSpawnPoint.Item1, _reservedSpawnPoint.Item2);
+            instance._pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.All, playerPhotonId, _reservedSpawnPoint.Item1.position, _reservedSpawnPoint.Item2);
         }
     }
 

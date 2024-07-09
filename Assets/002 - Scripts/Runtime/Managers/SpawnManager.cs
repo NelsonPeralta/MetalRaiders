@@ -54,7 +54,7 @@ public class SpawnManager : MonoBehaviour
         return genericSpawnPointsAlpha[Random.Range(0, genericSpawnPointsAlpha.Count)].transform;
     }
 
-    public (Transform,bool) GetRandomSafeSpawnPoint() // return a position and if the spawn is random or not
+    public (Transform, bool) GetRandomSafeSpawnPoint() // return a position and if the spawn is random or not
     {
         List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
 
@@ -96,8 +96,11 @@ public class SpawnManager : MonoBehaviour
     public Transform GetSpawnPointAtPos(Vector3 p)
     {
         foreach (SpawnPoint sp in genericSpawnPointsAlpha)
+        {
+            print($"GetSpawnPointAtPos {p}    {sp.transform.position}");
             if (sp.transform.position == p)
                 return sp.transform;
+        }
 
         return null;
     }
