@@ -737,14 +737,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             for (int i = 0; i < nbLocalPlayersPreset; i++)
             {
-                Transform spawnpoint = null;
+                (Transform, bool) spawnpoint;
                 do
                 {
                     spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-                } while (_orSpPts.Contains(spawnpoint.position));
+                } while (_orSpPts.Contains(spawnpoint.Item1.position));
 
 
-                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.rotation).GetComponent<Player>();
+                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.Item1.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.Item1.rotation).GetComponent<Player>();
                 player.GetComponent<PlayerController>().rid = i;
                 player.ChangePlayerId(i);
 
