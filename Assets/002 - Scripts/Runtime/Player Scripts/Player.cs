@@ -926,8 +926,8 @@ public class Player : Biped
         //    isGroin);
 
 
-        try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
-        this.impactPos = impactPos; this.impactDir = impactDir;
+        //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
+        //this.impactPos = impactPos; this.impactDir = impactDir;
 
         if ((GameManager.instance.pid_player_Dict.ContainsKey(source_pid) && GameManager.GetPlayerWithPhotonViewId(source_pid).isMine) ||
             PhotonView.Find(source_pid).GetComponent<Actor>())
@@ -966,7 +966,7 @@ public class Player : Biped
 
 
             int newHealth = (int)hitPoints - damage;
-            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn, impactDir, weaponIndx);
+            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn, impactPos, impactDir, weaponIndx);
         }
     }
 
@@ -1538,13 +1538,17 @@ public class Player : Biped
     }
 
     [PunRPC]
-    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn, Vector3 impDir, int weaponIndx)
+    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn, Vector3 impPos, Vector3 impDir, int weaponIndx)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
 
+        this.impactPos = transform.position; this.impactDir = Vector3.zero;
+
         try { this.impactDir = impDir; } catch { }
+        try { this.impactPos = impPos; } catch { }
+
         playerShield.SpawnShieldHit();
         try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}"); }
