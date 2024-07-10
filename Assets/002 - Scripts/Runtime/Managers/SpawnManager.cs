@@ -16,7 +16,7 @@ public class SpawnManager : MonoBehaviour
         int c = 0;
         if (genericSpawnPointsAlpha.Count == 0)
         {
-            foreach (SpawnPoint sp in GetComponentsInChildren<SpawnPoint>())
+            foreach (SpawnPoint sp in GetComponentsInChildren<SpawnPoint>(false))
             {
                 sp.name = $"Spawn point {c}";
                 c++;

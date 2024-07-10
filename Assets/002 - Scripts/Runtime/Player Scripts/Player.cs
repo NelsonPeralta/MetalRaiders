@@ -927,6 +927,7 @@ public class Player : Biped
 
 
         try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
+        this.impactPos = impactPos; this.impactDir = impactDir;
 
         if ((GameManager.instance.pid_player_Dict.ContainsKey(source_pid) && GameManager.GetPlayerWithPhotonViewId(source_pid).isMine) ||
             PhotonView.Find(source_pid).GetComponent<Actor>())
