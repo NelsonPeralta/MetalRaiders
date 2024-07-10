@@ -9,6 +9,7 @@ public class SpawnManager : MonoBehaviour
     public List<SpawnPoint> genericSpawnPointsAlpha = new List<SpawnPoint>();
     public List<SpawnPoint> genericSpawnPointsBeta = new List<SpawnPoint>();
 
+
     public OddballSpawnPoint oddballSpawnPoint;
     void Awake()
     {
@@ -34,6 +35,11 @@ public class SpawnManager : MonoBehaviour
     private void Start()
     {
         oddballSpawnPoint = FindObjectOfType<OddballSpawnPoint>();
+    }
+
+    public Transform GetSpawnPointAtIndex(int i)
+    {
+        return genericSpawnPointsAlpha[i].transform;
     }
 
     public Transform GetRandomComputerSpawnPoint()

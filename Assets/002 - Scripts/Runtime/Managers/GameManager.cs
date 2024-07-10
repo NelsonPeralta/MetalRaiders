@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using System.Net.Mail;
 using TMPro;
 using Rewired;
+using System.Linq;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -727,6 +728,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     List<Vector3> _orSpPts = new List<Vector3>();
+    public Transform reservedSpawnPoint;
     public IEnumerator SpawnPlayers_Coroutine()
     {
         float o = 2; if (PhotonNetwork.IsMasterClient) o = 0.5f;
@@ -737,13 +739,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             for (int i = 0; i < nbLocalPlayersPreset; i++)
             {
-                (Transform, bool) spawnpoint;
-                do
-                {
-                    spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-                } while (_orSpPts.Contains(spawnpoint.Item1.position));
+                (Transform, bool) spawnpoint = (null, false);
 
+                if (GameManager.instance.connection == Connection.Local)
+                    do { spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint(); } while (_orSpPts.Contains(spawnpoint.Item1.position));
+                else
+                    spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex), false);
 
+                _orSpPts.Add(spawnpoint.Item1.position);
                 Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.Item1.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.Item1.rotation).GetComponent<Player>();
                 player.GetComponent<PlayerController>().rid = i;
                 player.ChangePlayerId(i);

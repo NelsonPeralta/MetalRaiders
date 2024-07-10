@@ -784,7 +784,7 @@ public class Player : Biped
         }
 
         originalSpawnPosition = transform.position;
-        GameManager.instance.instantiation_position_Biped_Dict.Add(transform.position, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
+        GameManager.instance.instantiation_position_Biped_Dict.Add(originalSpawnPosition, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
 
 
         defaultVerticalFov = 0; GetComponent<PlayerController>().ScopeOut();
@@ -1289,9 +1289,9 @@ public class Player : Biped
 
         _respawnBeepCount = 0;
         if (this.isMine) respawnBeepAudioSource.Play();
-        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(_reservedSpawnPointPosition.Item1, false);
+        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(GameManager.instance.reservedSpawnPoint.position, false);
 
-        if (_reservedSpawnPointPosition.Item2) killFeedManager.EnterNewFeed("Spawning Randomly"); _reservedSpawnPointPosition = (Vector3.zero, false);
+        if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("Spawning Randomly"); _lastSpawnPointIsRandom = false;
     }
 
     public void PlaySprintingSound()
@@ -1335,7 +1335,7 @@ public class Player : Biped
 
 
 
-    (Vector3, bool) _reservedSpawnPointPosition;
+    bool _lastSpawnPointIsRandom;
     IEnumerator MidRespawnAction()
     {
         Debug.Log("MidRespawnAction");
@@ -1345,8 +1345,8 @@ public class Player : Biped
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
         hitPoints = maxHitPoints;
-        transform.position = _reservedSpawnPointPosition.Item1 + new Vector3(0, 2, 0);
-        transform.rotation = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(_reservedSpawnPointPosition.Item1).rotation;
+        transform.position = GameManager.instance.reservedSpawnPoint.position + new Vector3(0, 2, 0);
+        transform.rotation = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(GameManager.instance.reservedSpawnPoint.position).rotation;
         isDead = false;
     }
 
@@ -1843,6 +1843,7 @@ public class Player : Biped
 
     public void UpdateReservedSpawnPoint(Vector3 t, bool isRandom)
     {
-        _reservedSpawnPointPosition = (t, isRandom);
+        GameManager.instance.reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
+        _lastSpawnPointIsRandom = isRandom;
     }
 }
