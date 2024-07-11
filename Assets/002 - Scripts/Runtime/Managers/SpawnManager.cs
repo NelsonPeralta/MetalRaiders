@@ -103,9 +103,11 @@ public class SpawnManager : MonoBehaviour
     {
         foreach (SpawnPoint sp in genericSpawnPointsAlpha)
         {
-            print($"GetSpawnPointAtPos {p}    {sp.transform.position}");
             if (sp.transform.position == p)
+            {
+                print($"Returning spawn point {sp.name}");
                 return sp.transform;
+            }
         }
 
         return null;

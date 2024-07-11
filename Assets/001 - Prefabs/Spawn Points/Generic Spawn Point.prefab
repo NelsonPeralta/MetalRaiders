@@ -201,7 +201,7 @@ Transform:
   - {fileID: 6361277449371155347}
   - {fileID: 568859185447141987}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &926446499709091165
 MonoBehaviour:
@@ -221,6 +221,7 @@ MonoBehaviour:
   _witness: {fileID: 5559020412961890716}
   _radius: 0
   _seen: 0
+  _reserved: 0
   _seenReset: 0
 --- !u!135 &16571891261673449
 SphereCollider:
@@ -241,7 +242,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 24
+  m_Radius: 26
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &3719724891058014279
 GameObject:
@@ -761,6 +762,7 @@ MonoBehaviour:
   _witness: {fileID: 8017181940849650497}
   _radius: 0
   _seen: 0
+  _reserved: 0
   _seenReset: 0
 --- !u!135 &6676823114773470170
 SphereCollider:
@@ -781,5 +783,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 12
+  m_Radius: 14
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}

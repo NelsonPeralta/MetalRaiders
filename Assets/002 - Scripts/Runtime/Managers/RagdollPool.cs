@@ -22,6 +22,7 @@ public class RagdollPool : MonoBehaviour
         for (int j = 0; j < amountOfWeaponsToPool; j++)
         {
             GameObject obj = Instantiate(ragdollPrefab, transform.position, transform.rotation);
+            obj.name += $" {Random.Range(0, 99999)}";
             obj.SetActive(false);
             ragdollPoolList.Add(obj);
             obj.transform.parent = gameObject.transform;

@@ -118,8 +118,8 @@ public class Explosion : MonoBehaviour
             {
                 if (!rb.GetComponent<Player>())
                     rb.AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
-                //else
-                //    rb.AddExplosionForce(calculatedPower, transform.position, radius, 1.0F);
+                else
+                    rb.AddExplosionForce(calculatedPower, transform.position, radius, 0.1F);
             }
 
 
@@ -137,7 +137,7 @@ public class Explosion : MonoBehaviour
                         if (stuck)
                             _damageSource = "Stuck";
                         if (player.isMine)
-                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.photonId, damageSource: this._damageSource, impactDir: (col.transform.position - transform.position));
+                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.photonId, damageSource: this._damageSource, impactPos: transform.position, impactDir: (col.transform.position - transform.position));
                     }
                     catch { if (col.GetComponent<PlayerHitbox>().player.isMine) col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }
@@ -165,7 +165,7 @@ public class Explosion : MonoBehaviour
                         Debug.Log(calculatedDamage);
                         Debug.Log(player.photonId);
                         Debug.Log(col.transform.position - transform.position);
-                        hitObject.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.photonId, impactDir: (col.transform.position - transform.position));
+                        hitObject.GetComponent<IDamageable>().Damage(calculatedDamage, false, player.photonId, impactPos: transform.position, impactDir: (col.transform.position - transform.position));
                     }
                     catch (System.Exception e) { Debug.LogWarning(e + " " + hitObject.name); }
                 }

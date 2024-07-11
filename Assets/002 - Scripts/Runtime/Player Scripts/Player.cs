@@ -1183,14 +1183,31 @@ public class Player : Biped
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
         ragdoll.SetActive(true);
 
+        impactDir = Vector3.Normalize((Vector3)impactDir);
+        Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
 
-        if (deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+
+        if (deathByHeadshot)
+        {
+            print("Ragdoll 1");
+            ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 6000);
+        }
         else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.Stuck || deathNature == DeathNature.RPG
-            || deathNature == DeathNature.Barrel) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
-        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2000); }
-        else if (deathNature == DeathNature.UltraBind) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((transform.position - _lastPlayerSource.transform.position) * 1000); }
-        else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.None) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+            || deathNature == DeathNature.Barrel || deathNature == DeathNature.UltraBind)
+        {
+            print("Ragdoll 2");
+            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 9000);
+        }
+        else if (deathNature == DeathNature.Melee)
+        {
+            print("Ragdoll 3");
+            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 8000);
+        }
+        else/* if (!deathByHeadshot || deathNature == DeathNature.None)*/
+        {
+            print("Ragdoll 5");
+            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 5000);
+        }
     }
 
 
@@ -1532,11 +1549,14 @@ public class Player : Biped
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
-
+        print($"Damage_RPC {impPos} {impDir}");
         this.impactPos = transform.position; this.impactDir = Vector3.zero;
-
         try { this.impactDir = impDir; } catch { }
         try { this.impactPos = impPos; } catch { }
+        if (impactPos == Vector3.zero) impactPos = transform.position;
+        print($"Damage_RPC {impPos} {impDir}");
+
+
 
         playerShield.SpawnShieldHit();
         try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }

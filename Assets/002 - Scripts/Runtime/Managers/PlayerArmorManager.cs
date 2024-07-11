@@ -71,7 +71,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("PlayerArmorManager Awake");
+        //Debug.Log("PlayerArmorManager Awake");
         marineArmorPieces.Clear();
         marineArmorPieces.AddRange(GetComponentsInChildren<MarineArmorPiece>(true));
 
