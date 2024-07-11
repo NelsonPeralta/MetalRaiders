@@ -96,7 +96,7 @@ public class Melee : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log($"Melee OnTriggerExit {other.name}");
+        //Debug.Log($"Melee OnTriggerExit {other.name}");
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
             if (other.GetComponent<ActorHitbox>())
