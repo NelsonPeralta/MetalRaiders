@@ -5,10 +5,6 @@ using Photon.Pun;
 using System.Linq;
 using System;
 using Newtonsoft.Json;
-using Photon.Realtime;
-using Rewired;
-using static Rewired.Platforms.Custom.CustomInputSource;
-using static UnityEditor.PlayerSettings;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {

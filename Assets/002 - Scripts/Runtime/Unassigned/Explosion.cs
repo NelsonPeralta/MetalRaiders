@@ -106,6 +106,7 @@ public class Explosion : MonoBehaviour
 
 
             Rigidbody rb = col.GetComponent<Rigidbody>();
+            if (rb == null) rb = col.transform.root.GetComponent<Rigidbody>();
 
 
 
@@ -113,8 +114,13 @@ public class Explosion : MonoBehaviour
             int characterControllerDivider = 3;
 
             //Add force to nearby rigidbodies
-            if (rb != null)
-                rb.AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
+            if (rb)
+            {
+                if (!rb.GetComponent<Player>())
+                    rb.AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
+                //else
+                //    rb.AddExplosionForce(calculatedPower, transform.position, radius, 1.0F);
+            }
 
 
             if (col.GetComponent<PlayerHitbox>() && !col.GetComponent<PlayerHitbox>().player.isDead && !col.GetComponent<PlayerHitbox>().player.isRespawning)

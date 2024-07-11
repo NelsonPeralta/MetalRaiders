@@ -1165,33 +1165,22 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
-        Debug.Log($"SPAWNING PLAYER RAGDOLL {deathNature}");
         var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll(this.isMine);
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
-        print("r1");
         ragdoll.GetComponent<PlayerArmorManager>().player = this;
-        print("r2");
+
+
+        Debug.Log($"SPAWNING PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
+
+
         if (GameManager.instance.connection == GameManager.Connection.Online)
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
         else
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(rid);
-        print("r3");
+
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
-        print("r4");
-        print(ragdoll.name);
-        //if (!hasArmor)
-        //{
-        //    ragdoll.GetComponent<PlayerArmorManager>().armorDataString = "";
-
-        //}
-        //else
-        //{
-        //    Debug.Log($"Player {name} has color palette: {playerArmorManager.colorPalette} and armor: {playerArmorManager.armorDataString}");
-        //    ragdoll.GetComponent<PlayerArmorManager>().armorDataString = playerArmorManager.armorDataString;
-        //    ragdoll.GetComponent<PlayerArmorManager>().colorPalette = playerArmorManager.colorPalette;
-        //}
         ragdoll.SetActive(true);
 
 

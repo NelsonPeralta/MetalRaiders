@@ -14,7 +14,7 @@ abstract public class Ragdoll : MonoBehaviour
 
     [SerializeField] protected List<RagdollLimbCollisionDetection> _limbCollisionDetection = new List<RagdollLimbCollisionDetection>();
     [SerializeField] float _timeSinceLastThud;
-    int _ran;
+    int _ran, _tooManyCollisionsCheck;
 
     private void OnEnable()
     {
@@ -42,12 +42,17 @@ abstract public class Ragdoll : MonoBehaviour
 
     public void HandleCollision(Collision collision)
     {
+        if (collision.gameObject.transform.root != transform.root)
+            _tooManyCollisionsCheck++;
+
+        if (_tooManyCollisionsCheck == 10) gameObject.SetActive(false);
+
         if (_timeSinceLastThud > 0.3f
             && collision.gameObject.transform.root != transform.root)
         {
             GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hips.transform.position);
 
-            _timeSinceLastThud = 0;
+            _timeSinceLastThud = 0; _tooManyCollisionsCheck = 0;
 
             if (!collision.gameObject.GetComponent<PlayerCapsule>() && !collision.gameObject.GetComponent<Player>())
                 if (!_deathClipAudioSource.isPlaying)
