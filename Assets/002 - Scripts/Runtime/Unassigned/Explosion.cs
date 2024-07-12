@@ -118,8 +118,8 @@ public class Explosion : MonoBehaviour
             {
                 if (!rb.GetComponent<Player>())
                     rb.AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
-                else
-                    rb.AddExplosionForce(calculatedPower, transform.position, radius, 0.1F);
+                //else
+                    //rb.AddExplosionForce(calculatedPower, transform.position, radius, 0.1F);
             }
 
 

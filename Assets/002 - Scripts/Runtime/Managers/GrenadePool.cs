@@ -16,6 +16,8 @@ public class GrenadePool : MonoBehaviour
 
     static GrenadePool _instance;
 
+    public AudioClip fragClip, barrelClip, plasmaClip, ultraBindClip;
+
     private void Awake()
     {
         _instance = this;
@@ -78,11 +80,12 @@ public class GrenadePool : MonoBehaviour
 
 
     public static void SpawnExplosion(Player source, int damage, int radius, int expPower, string damageCleanNameSource,
-        Vector3 pos, Explosion.Color col, Explosion.Type t, bool stuck = false)
+        Vector3 pos, Explosion.Color col, Explosion.Type t,AudioClip clip, bool stuck = false)
     {
         foreach (Explosion obj in instance._explosions)
             if (!obj.gameObject.activeInHierarchy)
             {
+                obj.GetComponent<AudioSource>().clip = clip;
                 obj.player = source;
                 obj.damage = damage;
                 obj.radius = radius;

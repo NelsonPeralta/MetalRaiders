@@ -53,3 +53,7 @@ MonoBehaviour:
   _fragGrenadePool: []
   _stickyGrenadePool: []
   _explosions: []
+  fragClip: {fileID: 8300000, guid: 63780ae19a5ae5b4f856d64e3bea8b71, type: 3}
+  barrelClip: {fileID: 8300000, guid: 7c41bd44f5c8e02428fc5d7430a2fcca, type: 3}
+  plasmaClip: {fileID: 8300000, guid: cb18e9c43f1eb164e85bbdca6e03e22b, type: 3}
+  ultraBindClip: {fileID: 8300000, guid: 41c2f41ac43344444955a66b0f24ec2b, type: 3}

@@ -102,6 +102,6 @@ public class ExplosiveBarrelSpawnPoint : Hazard
         print($"BarrelExplosion_Coroutine {barrel.lastPid}");
         yield return new WaitForSeconds(0.05f);
         GrenadePool.SpawnExplosion(GameManager.GetPlayerWithPhotonViewId(barrel.lastPid), damage: 500, radius: 6, expPower: GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Barrel",
-            barrel.transform.position + new Vector3(0, 1, 0), Explosion.Color.Yellow, Explosion.Type.Barrel);
+            barrel.transform.position + new Vector3(0, 1, 0), Explosion.Color.Yellow, Explosion.Type.Barrel, GrenadePool.instance.barrelClip);
     }
 }

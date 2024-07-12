@@ -44207,6 +44207,9 @@ MonoBehaviour:
   _obsLayerMask:
     serializedVersion: 2
     m_Bits: 1
+  _yellowModel: {fileID: 0}
+  _blueModel: {fileID: 0}
+  _purpleModel: {fileID: 0}
 --- !u!82 &7241414760208152368
 AudioSource:
   m_ObjectHideFlags: 0
@@ -44217,7 +44220,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 2c33deb30a5db964da56af1418e17133, type: 3}
+  m_audioClip: {fileID: 8300000, guid: cb18e9c43f1eb164e85bbdca6e03e22b, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
