@@ -83,19 +83,9 @@ public class PlayerUI : MonoBehaviour
 
     [Header("General", order = 7)]
     public GameObject singlePlayerPauseMenu;
-    public GameObject splitScreenPauseMenu;
-    public PlayerDebuggerOnUI PlayerDebuggerOnUI;
-    public GameObject worldKillOnSightMark;
 
-    [Header("Hit Markers", order = 8)]
-    public Transform hitMarkerSpawnPoint;
-    public Transform hitMarker;
-    public Transform headshotMarker;
-    public Transform killMarker;
-    public Transform headshotKill;
 
     [SerializeField] List<GameObject> _hitMarkers = new List<GameObject>(); [SerializeField] List<GameObject> _killMarkers = new List<GameObject>();
-    [SerializeField] GameObject _hitMarkerPrefab, _killMarkerPrefab;
     private void OnEnable()
     {
         try
@@ -145,11 +135,6 @@ public class PlayerUI : MonoBehaviour
         plasmaGrenadeImage.gameObject.SetActive(false);
         gamepadCursor.gameObject.SetActive(false);
         GameObject thm = null;
-        for (int i = 0; i < 32; i++)
-        {
-            thm = Instantiate(_hitMarkerPrefab, hitMarkerSpawnPoint.transform); _hitMarkers.Add(thm); thm.SetActive(false);
-            thm = Instantiate(_killMarkerPrefab, hitMarkerSpawnPoint.transform); _killMarkers.Add(thm); thm.SetActive(false);
-        }
 
         try { gameType.text = GameManager.instance.gameType.ToString(); }
         catch (System.Exception e) { Debug.LogWarning($"{e}"); }

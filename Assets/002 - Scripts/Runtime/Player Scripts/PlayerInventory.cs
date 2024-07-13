@@ -770,8 +770,11 @@ public class PlayerInventory : MonoBehaviourPun
         return null;
     }
 
+
+    bool outOfFakeBullets;
     public void SpawnFakeBulletTrail(int l, Quaternion spray)
     {
+        outOfFakeBullets = true;
         foreach (Transform fbt in _fakeBulletTrailPool)
         {
             if (!fbt.gameObject.activeInHierarchy)
@@ -781,8 +784,14 @@ public class PlayerInventory : MonoBehaviourPun
                 fbt.transform.localRotation *= spray;
                 fbt.gameObject.SetActive(true);
                 fbt.transform.parent = null;
+                outOfFakeBullets = false;
                 break;
             }
+        }
+
+        if (outOfFakeBullets)
+        {
+            GameManager.GetRootPlayer().killFeedManager.EnterNewFeed("Out of trails");
         }
     }
 

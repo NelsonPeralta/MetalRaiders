@@ -26,7 +26,6 @@ public class Bullet : MonoBehaviourPunCallbacks
     public WeaponProperties weaponProperties;
     public Zombie zScript;
     public CrosshairManager crosshairScript;
-    public GameObjectPool gameObjectPool;
 
     public GameObject collision;
     public GameObject bulletTarget;
@@ -73,7 +72,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        gameObjectPool = FindObjectOfType<GameObjectPool>();
     }
 
     override public void OnEnable()
@@ -255,7 +253,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     {
                         finalHitDamageable.Damage(damage);
                     }
-                    genericHit = gameObjectPool.SpawnPooledBloodHit();
+                    genericHit = GameObjectPool.instance.SpawnPooledBloodHit();
                     genericHit.transform.position = finalHitPoint;
                     genericHit.SetActive(true);
 
@@ -427,11 +425,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                             }
                         }
                         catch { }
-                        GameObject genericHit = gameObjectPool.SpawnPooledGenericHit();
+                        GameObject genericHit = GameObjectPool.instance.SpawnPooledGenericHit();
                         genericHit.transform.position = finalHitPoint;
                         genericHit.SetActive(true);
 
-                        GameObject imp = gameObjectPool.SpawnBulletMetalImpactObject();
+                        GameObject imp = GameObjectPool.instance.SpawnBulletMetalImpactObject();
                         imp.transform.position = finalHitPoint;
                         imp.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
                         imp.SetActive(true);

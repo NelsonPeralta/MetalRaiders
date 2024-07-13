@@ -165,7 +165,7 @@ public class AimAssistCone : MonoBehaviour
             var hb = collidingHitboxes[0];
 
             foreach (var item in collidingHitboxes)
-                if (item.GetComponent<Hitbox>().isHead || item.GetComponent<Hitbox>().isGroin)
+                if ((item.GetComponent<Hitbox>().isHead || item.GetComponent<Hitbox>().isGroin) && playerInventory.activeWeapon.isHeadshotCapable)
                 {
                     hb = item;
                     break;

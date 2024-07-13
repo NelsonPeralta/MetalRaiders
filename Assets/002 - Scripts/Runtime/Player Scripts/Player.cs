@@ -11,6 +11,7 @@ using System.Text;
 using System.Net.Mail;
 using TMPro;
 using Steamworks;
+using static Player;
 
 public class Player : Biped
 {
@@ -1163,7 +1164,8 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
-        var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll(this.isMine);
+        var ragdoll = RagdollPool.instance.GetPooledPlayerRagdoll(Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), playerDataCell), isMine);
+        //var ragdoll = RagdollPool.instance.GetRa
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.GetComponent<PlayerArmorManager>().player = this;
@@ -1180,32 +1182,41 @@ public class Player : Biped
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
         ragdoll.SetActive(true);
+        //ragdoll.GetComponent<Animator>().enabled = false;
 
         impactDir = Vector3.Normalize((Vector3)impactDir);
         Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
 
+        StartCoroutine(GiveRagdollPush_Coroutine((Vector3)impactDir, deathByHeadshot, deathNature, ragdoll.GetComponent<PlayerRagdoll>()));
 
-        if (deathByHeadshot)
-        {
-            print("Ragdoll 1");
-            ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 6000);
-        }
-        else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.Stuck || deathNature == DeathNature.RPG
-            || deathNature == DeathNature.Barrel || deathNature == DeathNature.UltraBind)
-        {
-            print("Ragdoll 2");
-            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 9000);
-        }
-        else if (deathNature == DeathNature.Melee)
-        {
-            print("Ragdoll 3");
-            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 8000);
-        }
+        //if (deathByHeadshot)
+        //    ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 6000);
+        //else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.Stuck || deathNature == DeathNature.RPG
+        //    || deathNature == DeathNature.Barrel || deathNature == DeathNature.UltraBind)
+        //    ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 9000);
+        //else if (deathNature == DeathNature.Melee)
+        //    ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 8000);
+        //else/* if (!deathByHeadshot || deathNature == DeathNature.None)*/
+        //    ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 5000);
+    }
+
+
+    IEnumerator GiveRagdollPush_Coroutine(Vector3 imdir, bool dbh, DeathNature dn, PlayerRagdoll playerRagdoll)
+    {
+        yield return new WaitForEndOfFrame();
+
+        playerRagdoll.GetComponent<Animator>().enabled = false;
+
+        if (dbh)
+            playerRagdoll.head.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 6000);
+        else if (dn == DeathNature.Grenade || dn == DeathNature.Stuck || dn == DeathNature.RPG
+            || dn == DeathNature.Barrel || dn == DeathNature.UltraBind)
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 9000);
+        else if (dn == DeathNature.Melee)
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 8000);
         else/* if (!deathByHeadshot || deathNature == DeathNature.None)*/
-        {
-            print("Ragdoll 5");
-            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 5000);
-        }
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 5000);
+
     }
 
 

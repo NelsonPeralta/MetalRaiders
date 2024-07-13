@@ -66,10 +66,17 @@ public class PlayerRagdoll : Ragdoll
     public override void PlayerRagdollOnEnable()
     {
         _respawnCountdown = Player.RESPAWN_TIME;
+        _respawnBeepCount = 0;
         if (GameManager.instance.connection == GameManager.Connection.Local)
         {
             _deathClipAudioSource.spatialBlend = .1f;
             _collisionAudioSource.spatialBlend = .1f;
         }
+    }
+
+
+    private void OnDisable()
+    {
+        GetComponent<Animator>().enabled = true;
     }
 }

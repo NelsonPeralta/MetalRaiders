@@ -20,7 +20,7 @@ public class WeaponPool : MonoBehaviourPun
 
     private void Awake()
     {
-        amountOfWeaponsToPool = 100;
+        amountOfWeaponsToPool = 50;
         instance = this;
     }
 

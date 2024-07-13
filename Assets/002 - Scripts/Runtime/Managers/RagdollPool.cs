@@ -14,7 +14,7 @@ public class RagdollPool : MonoBehaviour
 
     private void Awake()
     {
-        int amountOfWeaponsToPool = 100;
+        int amountOfWeaponsToPool = 8;
         instance = this;
 
 
@@ -54,6 +54,31 @@ public class RagdollPool : MonoBehaviour
     }
 
 
+    public GameObject GetPooledPlayerRagdoll(int pDataCellInd, bool isMine)
+    {
+        GameObject obj = ragdollPoolList[pDataCellInd];
+
+        obj.transform.parent = null;
+        SceneManager.MoveGameObjectToScene(obj, SceneManager.GetActiveScene()); // Undos DontDestroyOnLoad
+        StartCoroutine(DisableObjectAfterTime(obj, Player.RESPAWN_TIME));
+        obj.GetComponent<PlayerRagdoll>().isMine = isMine;
+        return obj;
+
+
+
+        //foreach (GameObject obj in ragdollPoolList)
+        //    if (!obj.activeInHierarchy)
+        //        if (!obj.activeInHierarchy)
+        //        {
+        //            obj.transform.parent = null;
+        //            SceneManager.MoveGameObjectToScene(obj, SceneManager.GetActiveScene()); // Undos DontDestroyOnLoad
+        //            ragdollPoolList.Remove(obj);
+        //            StartCoroutine(DisableObjectAfterTime(obj, 20));
+        //            obj.GetComponent<PlayerRagdoll>().isMine = isMine;
+        //            return obj;
+        //        }
+        //return null;
+    }
 
 
     public GameObject SpawnPooledPlayerRagdoll(bool isMine)
