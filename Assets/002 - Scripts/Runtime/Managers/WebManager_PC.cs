@@ -110,7 +110,7 @@ public partial class WebManager
                 try
                 {
                     playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
-                    if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                     {
                         playerNamePlateInstance.playerDataCell.team = GameManager.Team.Red;
                         playerNamePlateInstance.UpdateColorPalette();
@@ -325,7 +325,7 @@ public partial class WebManager
                 else
                     honorGained--;
 
-                if (GameManager.instance.gameMode != GameManager.GameMode.Multiplayer)
+                if (GameManager.instance.gameMode != GameManager.GameMode.Versus)
                     honorGained = 0;
 
                 if (honorGained < 0) honorGained = 0;

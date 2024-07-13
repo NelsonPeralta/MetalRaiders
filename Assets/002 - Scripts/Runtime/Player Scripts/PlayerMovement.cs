@@ -165,6 +165,37 @@ public class PlayerMovement : MonoBehaviour
         air
     }
 
+
+
+
+
+
+
+
+    [SerializeField] AudioSource _footstepAudioSource;
+    float _footstepClipDelay;
+
+
+    public bool isMoving
+    {
+        get { return _isMoving; }
+        private set
+        {
+            if (_isMoving != value)
+            {
+                player.playerController.UpdateIsMoving(value);
+            }
+
+            _isMoving = value;
+        }
+    }
+
+
+    [SerializeField] bool _isMoving;
+
+
+
+
     private void Awake()
     {
 
@@ -184,6 +215,8 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
 
         startYScale = transform.localScale.y;
+
+        if (!player.isMine) _footstepAudioSource.volume = 1;
     }
 
     private void Update()
@@ -230,6 +263,15 @@ public class PlayerMovement : MonoBehaviour
 
 
         CheckDirection(_rawRightInput, _rawForwardInput);
+
+
+
+
+        CheckIsMovingAndPlayFootStepSound();
+
+
+
+
         WalkAnimation();
         ControlAnimationSpeed();
 
@@ -339,7 +381,7 @@ public class PlayerMovement : MonoBehaviour
             desiredMoveSpeed = walkSpeed;
         }
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !player.hasArmor) desiredMoveSpeed *= 0.7f;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop && !player.hasArmor) desiredMoveSpeed *= 0.7f;
 
 
         // check if desiredMoveSpeed has changed drastically
@@ -465,7 +507,7 @@ public class PlayerMovement : MonoBehaviour
         // reset y velocity
         _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
 
-        _tempSpeedVal = jumpForce; if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !player.hasArmor) _tempSpeedVal = jumpForce * 0.7f;
+        _tempSpeedVal = jumpForce; if (GameManager.instance.gameMode == GameManager.GameMode.Coop && !player.hasArmor) _tempSpeedVal = jumpForce * 0.7f;
         _rb.AddForce(transform.up * _tempSpeedVal, ForceMode.Impulse);
     }
     private void ResetJump()
@@ -734,4 +776,62 @@ public class PlayerMovement : MonoBehaviour
         //CalculateSpeedRatio();
     }
 
+
+    void CheckIsMovingAndPlayFootStepSound()
+    {
+        if (grounded)
+        {
+            if (player.isMine)
+            {
+                if (_correctedRightInput == 0 && _correctedForwardInput == 0)
+                    isMoving = false;
+                else if (_correctedRightInput != 0 || _correctedForwardInput != 0)
+                    isMoving = true;
+            }
+
+
+
+            if (!isMoving)
+            {
+                _footstepClipDelay = 0.35f;
+            }
+            else
+            {
+                _footstepClipDelay -= Time.deltaTime;
+
+
+                if (_footstepClipDelay <= 0)
+                {
+                    if (_player.isMine)
+                        _footstepAudioSource.volume = 0.5f;
+                    else
+                        _footstepAudioSource.volume = 1;
+
+
+
+
+                    _footstepAudioSource.Play();
+                    _footstepClipDelay = 0.35f;
+
+                    if (player.playerController.isSprinting)
+                        _footstepClipDelay = 0.25f;
+
+                    if (player.playerController.isCrouching)
+                    {
+                        _footstepAudioSource.volume = 0.25f;
+                        _footstepClipDelay = 0.45f;
+                    }
+                }
+            }
+        }
+        else
+            if (player.isMine) isMoving = false;
+
+    }
+
+
+    public void UpdateIsMoving(bool u)
+    {
+        _isMoving = u;
+    }
 }

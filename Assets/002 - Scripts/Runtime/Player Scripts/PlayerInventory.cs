@@ -325,7 +325,7 @@ public class PlayerInventory : MonoBehaviourPun
         }
         catch { }
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             fragGrenades = maxGrenades;
         }
@@ -333,7 +333,7 @@ public class PlayerInventory : MonoBehaviourPun
                 || GameManager.instance.gameType == GameManager.GameType.Retro
                 /*|| GameManager.instance.gameType == GameManager.GameType.GunGame*/)
             fragGrenades = 1;
-        else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
             fragGrenades = 2;
         }
@@ -509,7 +509,7 @@ public class PlayerInventory : MonoBehaviourPun
         StartingWeapon2 = "pistol";
 
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             StartingWeapon = "smg";
             StartingWeapon2 = "pistol";
@@ -550,7 +550,7 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "ar";
         }
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop
              || GameManager.instance.gameType == GameManager.GameType.Retro)
         {
             StartingWeapon = "smg";

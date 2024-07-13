@@ -12,7 +12,7 @@ public class PlayerHealthBar : PlayerBar
         GetComponent<Slider>().maxValue = player.maxHitPoints;
         GetComponent<Slider>().value = player.maxHitPoints;
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm || GameManager.instance.gameType == GameManager.GameType.Swat || GameManager.instance.gameType == GameManager.GameType.Retro)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop || GameManager.instance.gameType == GameManager.GameType.Swat || GameManager.instance.gameType == GameManager.GameType.Retro)
             holder.SetActive(true);
         else
             holder.SetActive(false);

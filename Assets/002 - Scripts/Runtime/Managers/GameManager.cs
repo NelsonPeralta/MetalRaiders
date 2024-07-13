@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using System.Net.Mail;
 using TMPro;
 using Rewired;
+using System.Linq;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -34,9 +35,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     public delegate void GameManagerEvent();
     public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
     // Enums
-    public enum Team { None, Red, Blue }
+    public enum Team { None, Red, Blue, Alien }
     public enum Connection { Unassigned, Local, Online }
-    public enum GameMode { Multiplayer, Swarm, Unassigned }
+    public enum GameMode { Versus, Coop, Unassigned }
     public enum GameType
     {
         Fiesta, Rockets, Slayer, Pro, Snipers, Unassgined,
@@ -136,7 +137,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             _gameMode = value;
 
-            if (_gameMode == GameMode.Swarm)
+            if (_gameMode == GameMode.Coop)
             {
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
@@ -145,7 +146,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 gameType = GameType.Survival;
                 difficulty = SwarmManager.Difficulty.Normal;
             }
-            else if (_gameMode == GameMode.Multiplayer)
+            else if (_gameMode == GameMode.Versus)
             {
                 if (CurrentRoomManager.instance.roomType != CurrentRoomManager.RoomType.QuickMatch)
                     FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
@@ -213,7 +214,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 if (GameManager.instance.connection == Connection.Online)
                 {
-                    if (gameMode == GameMode.Multiplayer)
+                    if (gameMode == GameMode.Versus)
                         FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
 
                     if (_prev != value)
@@ -225,7 +226,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                             {
                                 Team t = Team.Red;
 
-                                if ((kvp.Key % 2 == 0) && gameMode != GameMode.Swarm)
+                                if ((kvp.Key % 2 == 0) && gameMode != GameMode.Coop)
                                     t = Team.Blue;
 
                                 CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
@@ -362,6 +363,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] AudioSource _beepConsecutiveAudioSource;
 
     public List<GameplayRecorderPoint> gameplayRecorderPoints = new List<GameplayRecorderPoint>();
+    public RenderTexture[] minimapRenderTextures;
 
 
     void Awake()
@@ -484,7 +486,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-            try { gameMode = GameMode.Multiplayer; } catch { }
+            try { gameMode = GameMode.Versus; } catch { }
             try { gameType = GameType.Fiesta; } catch { }
             try { teamMode = TeamMode.None; } catch { }
             _lootableWeapons.Clear();
@@ -497,7 +499,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else if (scene.buildIndex > 0) // We're in the game scene
         {
-            if (gameMode == GameMode.Swarm) Instantiate(_actorAddonsPoolPrefab);
+            if (gameMode == GameMode.Coop) Instantiate(_actorAddonsPoolPrefab);
 
 
             if (PhotonNetwork.InRoom)
@@ -685,13 +687,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnCreateSwarmRoomButton_Delegate(Launcher launcher)
     {
-        gameMode = GameMode.Swarm;
+        gameMode = GameMode.Coop;
         gameType = GameType.Survival;
     }
 
     void OnCreateMultiplayerRoomButton_Delegate(Launcher launcher)
     {
-        gameMode = GameMode.Multiplayer;
+        gameMode = GameMode.Versus;
         gameType = GameType.Slayer;
     }
 
@@ -727,34 +729,44 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     List<Vector3> _orSpPts = new List<Vector3>();
+    public Transform reservedSpawnPoint;
     public IEnumerator SpawnPlayers_Coroutine()
     {
         float o = 2; if (PhotonNetwork.IsMasterClient) o = 0.5f;
         Debug.Log("SpawnPlayers_Coroutine");
         yield return new WaitForSeconds(o);
 
-        try
+        for (int i = 0; i < nbLocalPlayersPreset; i++)
         {
-            for (int i = 0; i < nbLocalPlayersPreset; i++)
+            Debug.Log($"SpawnPlayers_Coroutine {i}");
+
+            (Transform, bool) spawnpoint = (null, false);
+
+            if (GameManager.instance.connection == Connection.Local)
+                do { spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint(); } while (_orSpPts.Contains(spawnpoint.Item1.position));
+            else
+                spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex), false);
+
+            _orSpPts.Add(spawnpoint.Item1.position);
+            Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.Item1.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.Item1.rotation).GetComponent<Player>();
+            print("SpawnPlayers_Coroutine test 1");
+
+            player.GetComponent<PlayerController>().rid = i;
+            print("SpawnPlayers_Coroutine test 2");
+
+            player.ChangePlayerIdLocalMode(i);
+
+            print("SpawnPlayers_Coroutine test 3");
+
+            Debug.Log($"SpawnPlayers_Coroutine {i} {player}");
+            if (i == 0)
             {
-                Transform spawnpoint = null;
-                do
-                {
-                    spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-                } while (_orSpPts.Contains(spawnpoint.position));
-
-
-                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.rotation).GetComponent<Player>();
-                player.GetComponent<PlayerController>().rid = i;
-                player.ChangePlayerId(i);
-
-                if (i == 0) instance._rootPlayer = player;
-
-                //player.originalSpawnPosition = spawnpoint.position;
-                //GameManager.instance.orSpPos_Biped_Dict.Add(spawnpoint.position, player); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
+                instance._rootPlayer = player;
+                _rootPlayer = player;
             }
+            //player.originalSpawnPosition = spawnpoint.position;
+            //GameManager.instance.orSpPos_Biped_Dict.Add(spawnpoint.position, player); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
         }
-        catch (Exception e) { Debug.LogWarning(e.Message); }
     }
 
 

@@ -86,7 +86,7 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
         if (index != 0)
             return;
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             return;
 
         _tts -= Time.deltaTime;

@@ -5,8 +5,6 @@ using Photon.Pun;
 using System.Linq;
 using System;
 using Newtonsoft.Json;
-using Photon.Realtime;
-using Rewired;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -207,9 +205,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
             GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
                 MultiplayerManager.instance.EndGame();
-            else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            else if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                 SwarmManager.instance.EndGame();
         }
 
@@ -514,7 +512,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void SpawnNetworkWeapon_RPC(int firstWeapIndex, Vector3 spp, Vector3 fDir, int firstWeapCurrAmmo, int firstWeapSpareAmmo)
     {
-        GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
+        //GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
         //LootableWeapon firstWeapon = Instantiate(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
         // spp, Quaternion.identity).GetComponent<LootableWeapon>();
 
@@ -525,9 +523,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         //try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
         //try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
 
-
+        print(GameManager.instance);
+        print(GameManager.GetRootPlayer());
+        print(GameManager.GetRootPlayer().playerInventory);
+        print(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory);
         {
-            LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().codeName);
+            LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[firstWeapIndex].GetComponent<WeaponProperties>().codeName);
             try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.transform.position = spp; } catch (System.Exception e) { Debug.Log(e); }
             //try { _firstWeapon.spawnPointPosition = spp; } catch (System.Exception e) { Debug.Log(e); }
@@ -959,14 +960,41 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void TriggerPlayerOverheatWeapon(int playerPhotonId, int weaponInd, bool caller = true)
     {
-        if (caller && PhotonNetwork.IsMasterClient)
-            instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.AllViaServer, playerPhotonId , weaponInd, false);
+        if (caller && GameManager.instance.pid_player_Dict[playerPhotonId].isMine)
+            instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.All, playerPhotonId, weaponInd, false);
         else if (!caller)
         {
+            GameManager.instance.pid_player_Dict[playerPhotonId].playerController.ScopeOut();
             GameManager.instance.pid_player_Dict[playerPhotonId].playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
         }
     }
 
 
-    //public void AskHostToStickGrenade
+
+
+
+    (Transform, bool) _reservedSpawnPoint;
+
+
+    [PunRPC]
+    public void AskMasterToReserveSpawnPoint(int playerPhotonId, bool caller = true)
+    {
+        if (caller)
+        {
+            instance._pv.RPC("AskMasterToReserveSpawnPoint", RpcTarget.MasterClient, playerPhotonId, false);
+        }
+        else if (!caller && PhotonNetwork.IsMasterClient)
+        {
+            _reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+            instance._pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.All, playerPhotonId, _reservedSpawnPoint.Item1.position, _reservedSpawnPoint.Item2);
+        }
+    }
+
+
+    [PunRPC]
+    public void ReserveSpawnPoint_RPC(int playerPhotonId, Vector3 pos, bool isRandom)
+    {
+        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(pos, true);
+        GameManager.instance.pid_player_Dict[playerPhotonId].UpdateReservedSpawnPoint(pos, isRandom);
+    }
 }

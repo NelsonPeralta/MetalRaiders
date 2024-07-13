@@ -25,7 +25,7 @@ public class GameTime : MonoBehaviourPunCallbacks
                 OnGameTimeRemainingChanged?.Invoke(this);
 
 
-                if(GameManager.instance.gameMode == GameManager.GameMode.Swarm && GameManager.instance.gameType != GameManager.GameType.Endless)
+                if(GameManager.instance.gameMode == GameManager.GameMode.Coop && GameManager.instance.gameType != GameManager.GameType.Endless)
                 {
                     SwarmManager.instance.gameWon = true;
                 }
@@ -83,7 +83,7 @@ public class GameTime : MonoBehaviourPunCallbacks
         timeRemaining = 600;
         _masterTimeRemaining = 600;
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             timeRemaining = 1800;
             _masterTimeRemaining = 1800;

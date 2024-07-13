@@ -96,9 +96,9 @@ public class Melee : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log($"Melee OnTriggerExit {other.name}");
+        //Debug.Log($"Melee OnTriggerExit {other.name}");
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             if (other.GetComponent<ActorHitbox>())
             {
                 try
@@ -127,7 +127,7 @@ public class Melee : MonoBehaviour
 
 
     int _pushForce;
-    public void Knife()
+    public bool MeleeDamage()
     {
         pController.currentlyReloadingTimer = 0;
         pController.CancelReloadCoroutine();
@@ -145,8 +145,7 @@ public class Melee : MonoBehaviour
                 {
                     if (player.isMine)
                     {
-                        audioSource.clip = knifeSuccessSound;
-                        audioSource.Play();
+
 
                         Vector3 dir = (hp.transform.position - player.transform.position);
 
@@ -170,28 +169,24 @@ public class Melee : MonoBehaviour
 
                         try
                         {
-                            hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
+                            hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir);
                         }
                         catch { }
 
                         try
                         {
-                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
+                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir);
                         }
                         catch { }
                         //playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
+                        return true;
                     }
                 }
             }
         }
-        else
-        {
-            audioSource.clip = knifeFailSound;
-            audioSource.volume = 0.5f;
-            audioSource.spatialBlend = 1;
 
-            audioSource.Play();
-        }
+
+        return false;
     }
 
 
@@ -223,5 +218,21 @@ public class Melee : MonoBehaviour
         meleeReady = false;
         yield return new WaitForSeconds(0.5f);
         meleeReady = true;
+    }
+
+
+
+
+
+    public void PlaySuccClip()
+    {
+        audioSource.clip = knifeSuccessSound;
+        audioSource.Play();
+    }
+
+    public void PlayMissClip()
+    {
+        audioSource.clip = knifeFailSound;
+        audioSource.Play();
     }
 }

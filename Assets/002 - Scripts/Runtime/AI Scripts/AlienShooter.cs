@@ -120,6 +120,9 @@ public class AlienShooter : Actor
             _animator.SetBool("Run", false);
             _animator.Play("Melee");
             _meleeCooldown = 1;
+
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _meleeCooldown = 0.9f;
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _meleeCooldown = 0.8f;
         }
     }
 
@@ -147,6 +150,9 @@ public class AlienShooter : Actor
 
             ActorAddonsPool.instance.SpawnPooledFireball(losSpawn.transform.position, (Vector3)_dir, gameObject, 12, 42, 2, 50);
             _shootProjectileCooldown = 1.2f;
+
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _shootProjectileCooldown = 1f;
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _shootProjectileCooldown = 0.8f;
         }
     }
 
@@ -172,6 +178,9 @@ public class AlienShooter : Actor
 
             ActorAddonsPool.instance.SpawnPooledGrenade(losSpawn.transform.position, (Vector3)_dir, gameObject, actorHitboxes, 100, 7, 700);
             _throwExplosiveCooldown = 3.1f;
+
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _throwExplosiveCooldown = 2.9f;
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _throwExplosiveCooldown = 2.7f;
         }
     }
 

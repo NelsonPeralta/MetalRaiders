@@ -44,8 +44,8 @@ public class ScoreboardManager : MonoBehaviour
             _scoreboardHolder.SetActive(true);
             scoreboardOpen = true;
 
-            _multiplayerHeaders.SetActive(GameManager.instance.gameMode == GameManager.GameMode.Multiplayer);
-            _swarmHeaders.SetActive(GameManager.instance.gameMode == GameManager.GameMode.Swarm);
+            _multiplayerHeaders.SetActive(GameManager.instance.gameMode == GameManager.GameMode.Versus);
+            _swarmHeaders.SetActive(GameManager.instance.gameMode == GameManager.GameMode.Coop);
         }
 
         _winnerWitness.SetActive(CurrentRoomManager.instance.gameOver && MultiplayerManager.instance.winningPlayers.Contains(_player) && !CurrentRoomManager.instance.leftRoomManually);

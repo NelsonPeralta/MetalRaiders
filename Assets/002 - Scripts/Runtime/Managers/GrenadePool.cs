@@ -13,6 +13,8 @@ public class GrenadePool : MonoBehaviour
     [SerializeField] List<GameObject> _stickyGrenadePool = new List<GameObject>();
     [SerializeField] List<Explosion> _explosions = new List<Explosion>();
 
+    public AudioClip fragClip, plasmaClip, barrelClip, ultraBindClip;
+
 
     static GrenadePool _instance;
 
@@ -78,11 +80,12 @@ public class GrenadePool : MonoBehaviour
 
 
     public static void SpawnExplosion(Player source, int damage, int radius, int expPower, string damageCleanNameSource,
-        Vector3 pos, Explosion.Color col, Explosion.Type t, bool stuck = false)
+        Vector3 pos, Explosion.Color col, Explosion.Type t, AudioClip ac, bool stuck = false)
     {
         foreach (Explosion obj in instance._explosions)
             if (!obj.gameObject.activeInHierarchy)
             {
+                obj.GetComponent<AudioSource>().clip = ac;
                 obj.player = source;
                 obj.damage = damage;
                 obj.radius = radius;

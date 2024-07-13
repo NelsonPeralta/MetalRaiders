@@ -185,23 +185,12 @@ abstract public class Actor : Biped
         _audioSource = GetComponent<AudioSource>();
         _gruntDelay = _defGruntDelay = UnityEngine.Random.Range(4f, 8f);
 
-        _diffHpMult = _diffAttMult = 1;
-
-        try
-        {
-
-            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic)
-            {
-                _diffHpMult = _diffAttMult = 1.5f;
-            }
-            else if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary)
-            {
-                _diffHpMult = _diffAttMult = 2f;
-            }
-        }
-        catch (Exception e) { Debug.LogWarning(e); }
 
         _defaultHitpoints = _hitPoints;
+        if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _defaultHitpoints = (int)(_defaultHitpoints * 1.4f);
+        if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _defaultHitpoints = (int)(_defaultHitpoints * 1.8f);
+
+
         _analyzeNextActionCooldown = _findNewTargetCooldown = 0.5f;
 
         _animator = GetComponent<Animator>();
@@ -238,7 +227,8 @@ abstract public class Actor : Biped
     // Start is called before the first frame update
     void Start()
     {
-
+        if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _flinchThreshold = (int)(_flinchThreshold * 1.5f);
+        if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _flinchThreshold = (int)(_flinchThreshold * 2);
     }
 
     // Update is called once per frame
@@ -302,6 +292,11 @@ abstract public class Actor : Biped
 
         _friction.gameObject.SetActive(true);
         gameObject.SetActive(true);
+        SwarmManager.instance.actorsAliveList.Add(this.GetComponent<Biped>());
+
+        foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+            if (p && p.isMine)
+                p.SetupMotionTracker();
     }
 
     protected void Prepare()
@@ -311,7 +306,7 @@ abstract public class Actor : Biped
         _switchPlayerCooldown = 0;
         _isInRange = false;
         transform.position = new Vector3(0, -10, 0);
-        _hitPoints = (int)(_defaultHitpoints * _diffHpMult);
+        _hitPoints = (int)(_defaultHitpoints);
         foreach (ActorHitbox hitbox in GetComponentsInChildren<ActorHitbox>(true))
             hitbox.gameObject.SetActive(true);
     }
@@ -856,6 +851,12 @@ abstract public class Actor : Biped
         {
             //print("Dodge RPC processing");
             _isDodgingCooldown = 1;
+
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _isDodgingCooldown = 0.9f;
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _isDodgingCooldown = 0.8f;
+
+
+
             if (left == 1)
             {
                 //_audioSource.clip = _hurtClip;
@@ -915,7 +916,7 @@ abstract public class Actor : Biped
         base.SpawnUltraBindExplosion();
 
         print("Actor SpawnUltraBindExplosion");
-        GrenadePool.SpawnExplosion(_targetPlayer.GetComponent<Player>(), damage: 999, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
+        GrenadePool.SpawnExplosion(_targetPlayer.GetComponent<Player>(), damage: 999, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip);
 
 
 

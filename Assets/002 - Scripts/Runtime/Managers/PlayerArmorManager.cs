@@ -30,9 +30,9 @@ public class PlayerArmorManager : MonoBehaviour
             }
             else
             {
-                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
                     EnableAllArmorsInDataString();
-                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                else if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                     ToggleMarinePieces(true);
 
 

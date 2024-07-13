@@ -74,7 +74,7 @@ public class MapCamera : MonoBehaviour
                 {
                     Debug.Log("MapCamera TimeOut");
 
-                    GameManager.SendErrorEmailReport(_text.text);
+                    //GameManager.SendErrorEmailReport(_text.text);
 
 
                     PhotonNetwork.LeaveRoom();
@@ -91,7 +91,7 @@ public class MapCamera : MonoBehaviour
         GameManager.UpdateVolume();
         _announcerDelay = 1;
 
-        try { if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) SwarmManager.instance.PlayOpeningMusic(); } catch { }
+        try { if (GameManager.instance.gameMode == GameManager.GameMode.Coop) SwarmManager.instance.PlayOpeningMusic(); } catch { }
     }
 
     void PlayAnnouncer()
@@ -101,7 +101,7 @@ public class MapCamera : MonoBehaviour
             GetComponent<AudioSource>().clip = _slayerClip;
             if (GameManager.instance.gameType == GameManager.GameType.Hill)
                 GetComponent<AudioSource>().clip = _KingOfTheHillClip;
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                 GetComponent<AudioSource>().clip = _FirefightClip;
 
             if (GameManager.instance.gameType == GameManager.GameType.Oddball)

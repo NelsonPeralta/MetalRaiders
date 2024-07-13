@@ -202,6 +202,9 @@ MonoBehaviour:
   - TriggerPlayerOverheatWeapon
   - CheckReloadButton_RPC
   - Reload_RPC
+  - AskMasterToReserveSpawnPoint
+  - ReserveSpawnPoint_RPC
+  - UpdateIsMoving
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -22,7 +22,7 @@ public class AssignActorPlayerTargetOnShootingSphere : MonoBehaviour
     {
         print("TriggerBehaviour");
 
-        if (_cooldown > 0 || !PhotonNetwork.IsMasterClient || GameManager.instance.gameMode == GameManager.GameMode.Multiplayer) return;
+        if (_cooldown > 0 || !PhotonNetwork.IsMasterClient || GameManager.instance.gameMode == GameManager.GameMode.Versus) return;
 
         print("TriggerBehaviour");
 

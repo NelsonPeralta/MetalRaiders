@@ -18,10 +18,10 @@ public class PlayerMedals : MonoBehaviour
             shortKillSpree = value;
             _spreeTtl = MEDAL_TTL;
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                 _spreeTtl = 2;
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
             {
 
                 if (shortKillSpree == 2)
@@ -53,7 +53,7 @@ public class PlayerMedals : MonoBehaviour
             int _preVal = _shortKillSpree;
             _shortKillSpree = value;
 
-            if (value == 0 && GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (value == 0 && GameManager.instance.gameMode == GameManager.GameMode.Coop)
             {
                 if (_preVal == 2)
                     SpawnDoubleKillMedal();

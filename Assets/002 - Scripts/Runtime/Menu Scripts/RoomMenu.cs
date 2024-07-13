@@ -10,13 +10,13 @@ public class RoomMenu : MonoBehaviour
     private void OnEnable()
     {
         Debug.Log("ONENABLE RoomMenu SCRIPT");
-        if (GameManager.instance.gameMode == GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameMode.Coop)
         {
             FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
             FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
             FindObjectOfType<Launcher>().levelToLoadIndex = 11;
         }
-        else if (GameManager.instance.gameMode == GameMode.Multiplayer)
+        else if (GameManager.instance.gameMode == GameMode.Versus)
         {
             if (CurrentRoomManager.instance.roomType != CurrentRoomManager.RoomType.QuickMatch)
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);

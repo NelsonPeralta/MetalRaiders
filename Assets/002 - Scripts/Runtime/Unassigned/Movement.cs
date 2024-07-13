@@ -110,9 +110,9 @@ public class Movement : MonoBehaviour, IMoveable
 
             if (_pController.isSprinting)
             {
-                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
                     _currentMaxSpeed = defaultMaxSpeed * 1.33f;
-                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                else if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                     _currentMaxSpeed = defaultMaxSpeed * 1.8f;
             }
         }
@@ -240,7 +240,7 @@ public class Movement : MonoBehaviour, IMoveable
     }
     void Start()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             _defaultMaxSpeed *= 0.7f;
 
         _cController = gameObject.GetComponent<CharacterController>();
@@ -570,7 +570,7 @@ public class Movement : MonoBehaviour, IMoveable
             Debug.Log("Jump");
             Debug.Log(_groundCheckScript.touch);
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) { _jumpForce = jumpForce * 0.7f; }
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop) { _jumpForce = jumpForce * 0.7f; }
 
 
             Vector3 v = verticalVector;

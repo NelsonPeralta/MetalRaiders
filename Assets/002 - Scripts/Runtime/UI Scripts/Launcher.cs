@@ -323,7 +323,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
             GameManager.instance.teamMode = GameManager.TeamMode.None;
-            GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+            GameManager.instance.gameMode = GameManager.GameMode.Versus;
 
             RoomOptions options = new RoomOptions();
             options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
@@ -425,7 +425,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
             GameManager.instance.teamMode = GameManager.TeamMode.None;
-            GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+            GameManager.instance.gameMode = GameManager.GameMode.Versus;
 
             RoomOptions options = new RoomOptions();
             options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
@@ -659,7 +659,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("LeaveRoomButton");
         try { commonRoomTexts.SetActive(false); } catch { }
         try { PhotonNetwork.LeaveRoom(); } catch (System.Exception e) { Debug.LogWarning(e); }
-        try { GameManager.instance.gameMode = GameManager.GameMode.Multiplayer; } catch { }
+        try { GameManager.instance.gameMode = GameManager.GameMode.Versus; } catch { }
         try { GameManager.instance.teamMode = GameManager.TeamMode.None; } catch { }
         try { CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.None; } catch { }
 
@@ -852,8 +852,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void ChangeGameMode(string gt)
     {
         GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gt);
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer) GameManager.instance.teamMode = GameManager.TeamMode.None;
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) GameManager.instance.teamMode = GameManager.TeamMode.Classic;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus) GameManager.instance.teamMode = GameManager.TeamMode.None;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) GameManager.instance.teamMode = GameManager.TeamMode.Classic;
 
         FindObjectOfType<NetworkGameManager>().SendGameParams();
     }

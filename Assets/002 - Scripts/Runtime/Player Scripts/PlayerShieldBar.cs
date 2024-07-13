@@ -18,7 +18,7 @@ public class PlayerShieldBar : PlayerBar
     }
     private void Start()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop
             || GameManager.instance.gameType == GameManager.GameType.Swat
             || GameManager.instance.gameType ==  GameManager.GameType.Retro)
             healingSlider.gameObject.SetActive(false);

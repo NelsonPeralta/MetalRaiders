@@ -181,7 +181,10 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, stuck);
+        if (_color == global::Explosion.Color.Yellow)
+            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.fragClip, stuck);
+        else if (_color == global::Explosion.Color.Blue)
+            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.plasmaClip, stuck);
 
 
 

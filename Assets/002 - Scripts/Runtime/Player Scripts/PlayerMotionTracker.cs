@@ -2,96 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Linq;
 
 public class PlayerMotionTracker : MonoBehaviourPun
 {
-
     public Player player;
     public Camera minimapCamera;
-    public GameObject friendlyDot;
-    public GameObject ennemyDot;
+    [SerializeField] MotionTrackerDot[] _motionTrackerDotsList;
+
+
+
+
     private void Awake()
     {
-        if (player.PV.IsMine)
+        _motionTrackerDotsList = GetComponentsInChildren<MotionTrackerDot>();
+    }
+
+    public void Setup()
+    {
+        for (int i = 0; i < _motionTrackerDotsList.Length; i++)
         {
-            friendlyDot.SetActive(true);
-            ennemyDot.SetActive(false);
-        }
-        else
-        {
-            minimapCamera.gameObject.SetActive(false);
-            friendlyDot.SetActive(false);
-            ennemyDot.SetActive(true);
-        }
-    }
-
-    private void Start()
-    {
-        friendlyDot.SetActive(false);
-
-        player.GetComponent<PlayerMovement>().OnPlayerStartedMoving -= OnPlayerStartedMoving_Delegate;
-        player.GetComponent<PlayerMovement>().OnPlayerStartedMoving += OnPlayerStartedMoving_Delegate;
-        player.GetComponent<PlayerMovement>().OnPlayerStoppedMoving -= OnPlayerStoppedMoving_Delegate;
-        player.GetComponent<PlayerMovement>().OnPlayerStoppedMoving += OnPlayerStoppedMoving_Delegate;
-
-        player.GetComponent<PlayerController>().OnCrouchDown -= OnCrouchDown_Delegate;
-        player.GetComponent<PlayerController>().OnCrouchDown += OnCrouchDown_Delegate;
-
-        player.GetComponent<PlayerController>().OnCrouchUp -= OnCrouchUp_Delegate;
-        player.GetComponent<PlayerController>().OnCrouchUp += OnCrouchUp_Delegate;
-    }
-
-    void OnPlayerStartedMoving_Delegate(PlayerMovement movement)
-    {
-        Debug.Log("OnPlayerStartedMoving_Delegate");
-        if (!movement.GetComponent<PlayerController>().isCrouching)
-            if (GetComponent<PhotonView>().IsMine)
-                GetComponent<PhotonView>().RPC("ShowDot_RPC", RpcTarget.All);
-        //friendlyDot.SetActive(true);
-    }
-
-    void OnPlayerStoppedMoving_Delegate(PlayerMovement movement)
-    {
-        if (GetComponent<PhotonView>().IsMine)
-            GetComponent<PhotonView>().RPC("HideDot_RPC", RpcTarget.All);
-    }
-
-    void OnCrouchUp_Delegate(PlayerController playerController)
-    {
-        if (player.GetComponent<PlayerMovement>().moveSpeed > 0.5f)
-            if (GetComponent<PhotonView>().IsMine)
-                GetComponent<PhotonView>().RPC("ShowDot_RPC", RpcTarget.All);
-    }
-
-    void OnCrouchDown_Delegate(PlayerController playerController)
-    {
-        if (GetComponent<PhotonView>().IsMine)
-            GetComponent<PhotonView>().RPC("HideDot_RPC", RpcTarget.All);
-    }
-
-    [PunRPC]
-    void ShowDot_RPC()
-    {
-        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-        {
-            ennemyDot.SetActive(true);
-        }
-        else
-        {
-            if (player.GetComponent<PhotonView>().IsMine)
-                friendlyDot.SetActive(true);
+            if (i < 8)
+            {
+                if (!_motionTrackerDotsList[i].targetPlayerController)
+                {
+                    if (i < GameManager.instance.pid_player_Dict.Count)
+                    {
+                        print($"PlayerMotionTracker Setup {GameManager.instance.pid_player_Dict.ElementAt(i).Value.name}");
+                        _motionTrackerDotsList[i].biped = GameManager.instance.pid_player_Dict.ElementAt(i).Value.GetComponent<Biped>();
+                    }
+                }
+            }
             else
             {
-                if (player.team != GameManager.GetRootPlayer().team)
-                    ennemyDot.SetActive(true);
+                if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+                {
+                    if (SwarmManager.instance.actorsAliveList.Count > 0 && (i - 8 < SwarmManager.instance.actorsAliveList.Count))
+                    {
+                        print($"PlayerMotionTracker assigning actor {i - 8} {i}. {SwarmManager.instance.actorsAliveList.Count}");
+                        _motionTrackerDotsList[i].biped = SwarmManager.instance.actorsAliveList[i - 8];
+                    }
+                }
             }
         }
-    }
-
-    [PunRPC]
-    void HideDot_RPC()
-    {
-        friendlyDot.SetActive(false);
-        ennemyDot.SetActive(false);
     }
 }

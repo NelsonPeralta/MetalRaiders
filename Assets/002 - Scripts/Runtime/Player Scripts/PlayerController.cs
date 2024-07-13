@@ -27,9 +27,14 @@ public class PlayerController : MonoBehaviourPun
         get { return _rid; }
         set
         {
+            print("rid");
             _rid = value;
             player.playerUI.gamepadCursor.rewiredPlayer = ReInput.players.GetPlayer(_rid);
             player.playerUI.gamepadCursor.player = player;
+
+            player.movement.playerMotionTracker.minimapCamera.GetComponent<MotionTrackerCamera>().ChooseRenderTexture(value);
+            print("rid 2");
+
         }
     }
 
@@ -158,6 +163,8 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    public bool isCurrentlyShootingForMotionTracker { get { return _isCurrentlyShootingReset > 0; } }
+
 
 
     public bool isHoldingScopeBtn;
@@ -215,7 +222,7 @@ public class PlayerController : MonoBehaviourPun
 
 
     [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
-    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer;
+    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset;
 
     void Awake()
     {
@@ -239,11 +246,12 @@ public class PlayerController : MonoBehaviourPun
 
     private void Update()
     {
+        if (_isCurrentlyShootingReset > 0) _isCurrentlyShootingReset -= Time.deltaTime;
         if (_meleeCooldown > 0)
             _meleeCooldown -= Time.deltaTime;
 
         if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime;
-        if(_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
+        if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
 
         if (_meleeCooldown <= 0)
         {
@@ -327,7 +335,7 @@ public class PlayerController : MonoBehaviourPun
 
     void ToggleInvincible()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             player.isInvincible = !player.isInvincible;
             GetComponent<PlayerUI>().invincibleIcon.SetActive(player.isInvincible);
@@ -521,18 +529,32 @@ public class PlayerController : MonoBehaviourPun
 
 
 
+        if (!isHoldingShootBtn)
+            _isCurrentlyShootingReset = 0;
+
 
         //Process Firing
         if (!isReloading && !isThrowingGrenade && !isMeleeing)
+        {
             if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
+            {
+
                 if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
                     player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
                 {
                     if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+                    {
                         player.playerShooting.Shoot();
+                        _isCurrentlyShootingReset = 0.3f;
+                    }
                 }
                 else
+                {
+                    _isCurrentlyShootingReset = 0.3f;
                     player.playerShooting.Shoot();
+                }
+            }
+        }
 
 
 
@@ -816,23 +838,36 @@ public class PlayerController : MonoBehaviourPun
 
     int _meleeCount = 0;
     float meleeMovementFactor = 0;
+    bool _meleeSucc;
     void Melee(bool overwrite = false)
     {
+        if (!PV.IsMine) return;
+
+
+
+        _meleeSucc = false;
         if (overwrite)
         {
             rScript.reloadIsCanceled = true;
 
-            PV.RPC("Melee_RPC", RpcTarget.All);
+            ScopeOut();
+            _meleeSucc = melee.MeleeDamage();
+            PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
         }
         else if (!GetComponent<Player>().isDead)
         {
             if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
+                ScopeOut();
+                _meleeSucc = melee.MeleeDamage();
+
                 rScript.reloadIsCanceled = true;
 
-                PV.RPC("Melee_RPC", RpcTarget.All);
+                PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
             }
         }
+
+        _meleeSucc = false;
 
         //if (meleeMovementFactor > 0)
         //{
@@ -854,17 +889,15 @@ public class PlayerController : MonoBehaviourPun
 
 
     [PunRPC]
-    void Melee_RPC()
+    void Melee_RPC(bool succ)
     {
+        if (succ) melee.PlaySuccClip(); else melee.PlayMissClip();
+
+
         isMeleeing = true;
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
 
         print("Melee_RPC");
-        if (PV.IsMine)
-        {
-            ScopeOut();
-            melee.Knife();
-        }
         weaponAnimator.Play("Knife Attack 2", 0, 0f);
         StartCoroutine(Melee3PS());
     }
@@ -1488,9 +1521,9 @@ public class PlayerController : MonoBehaviourPun
         GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
 
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
             FindObjectOfType<MultiplayerManager>().EndGame(false);
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             FindObjectOfType<SwarmManager>().EndGame(false);
     }
 
@@ -1584,7 +1617,7 @@ public class PlayerController : MonoBehaviourPun
 
     private void Reload()
     {
-        if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing)
+        if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing && !isReloading)
             if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
                 PV.RPC("Reload_RPC", RpcTarget.All);
     }
@@ -1683,6 +1716,19 @@ public class PlayerController : MonoBehaviourPun
         try { pInventory.activeWeapon.glint.SetActive(fga); } catch { }
     }
 
+
+    [PunRPC]
+    public void UpdateIsMoving(bool nv, bool isCaller = true)
+    {
+        if (player.isMine && isCaller)
+        {
+            PV.RPC("UpdateIsMoving", RpcTarget.All, nv, false);
+        }
+        else
+        {
+            movement.UpdateIsMoving(nv);
+        }
+    }
 }
 
 

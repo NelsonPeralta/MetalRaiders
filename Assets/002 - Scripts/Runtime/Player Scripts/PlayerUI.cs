@@ -108,7 +108,7 @@ public class PlayerUI : MonoBehaviour
         GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
         GetComponent<Player>().playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
         GetComponent<Player>().playerInventory.OnHolsteredWeaponChanged += OnHolsteredWeaponChanged_Delegate;
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             //SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
             //SwarmManager.instance.OnAiSpawn -= OnSwarmAiDeathOrSpawn;
@@ -128,7 +128,7 @@ public class PlayerUI : MonoBehaviour
     {
 
         GetComponent<Player>().playerInventory.OnGrenadeChanged -= OnGrenadeChanged_Delegate;
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
             SwarmManager.instance.OnAiSpawn -= OnSwarmAiDeathOrSpawn;
@@ -185,7 +185,7 @@ public class PlayerUI : MonoBehaviour
         }
 
         //GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             EnableSwarmUIComponents();
             swarmAisLeftText.text = "";
@@ -196,7 +196,7 @@ public class PlayerUI : MonoBehaviour
             //SwarmManager.instance.OnAIsCalculated += OnSwarmAiDeathOrSpawn;
             //SwarmManager.instance.OnWaveIncrease += OnNewWave_Delegate;
         }
-        else if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        else if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
             EnableMultiplayerUIComponents();
             GetComponent<PlayerMultiplayerMatchStats>().OnPlayerScoreChanged += OnPlayerScoreChanged_Delegate;
@@ -287,12 +287,18 @@ public class PlayerUI : MonoBehaviour
 
     public void EnableArmorUI()
     {
-        shieldBar.SetActive(true);
-        healthBar.SetActive(false);
-        if ((GameManager.instance.gameType == GameManager.GameType.Slayer) || GameManager.instance.gameType == GameManager.GameType.Fiesta)
+        if (GameManager.instance.gameType != GameManager.GameType.Pro &&
+                GameManager.instance.gameType != GameManager.GameType.Swat &&
+                GameManager.instance.gameType != GameManager.GameType.Snipers &&
+                 GameManager.instance.gameType != GameManager.GameType.Retro)
             motionTracker.SetActive(true);
         else
             motionTracker.SetActive(false);
+
+
+
+        shieldBar.SetActive(true);
+        healthBar.SetActive(false);
 
         shieldBar.GetComponent<Slider>().maxValue = GetComponent<Player>().maxShieldPoints;
         shieldBar.GetComponent<Slider>().value = GetComponent<Player>().shieldPoints;
@@ -365,7 +371,7 @@ public class PlayerUI : MonoBehaviour
             }
             catch
             {
-                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                 {
                     SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
                     SwarmManager.instance.OnAiSpawn -= OnSwarmAiDeathOrSpawn;

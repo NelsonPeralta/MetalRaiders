@@ -196,7 +196,11 @@ public class CurrentRoomManager : MonoBehaviour
                 OnGameIsReady?.Invoke(this);
 
                 foreach (Player p in GameManager.instance.pid_player_Dict.Values)
-                    if (p && p.isMine) p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
+                    if (p && p.isMine)
+                    {
+                        p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
+                        p.SetupMotionTracker();
+                    }
 
                 StartCoroutine(GameStartDelayMapCamera_Coroutine());
                 TriggerGameStartCountdown();
@@ -405,7 +409,7 @@ public class CurrentRoomManager : MonoBehaviour
                     foreach (Player p in GameManager.instance.localPlayers.Values)
                         p.TriggerGameStartBehaviour();
 
-                    if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                    if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                         SwarmManager.instance.Begin();
 
                     foreach (Player p in GameManager.instance.localPlayers.Values) p.playerInventory.TriggerStartGameBehaviour();
@@ -550,7 +554,7 @@ public class CurrentRoomManager : MonoBehaviour
 
         if (expectedNbPlayers == 1)
         {
-            GameManager.instance.gameMode = GameManager.GameMode.Swarm;
+            GameManager.instance.gameMode = GameManager.GameMode.Coop;
             GameManager.instance.difficulty = SwarmManager.Difficulty.Heroic;
             GameManager.instance.teamMode = GameManager.TeamMode.Classic;
 
@@ -563,7 +567,7 @@ public class CurrentRoomManager : MonoBehaviour
         }
         else // PvP
         {
-            GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
+            GameManager.instance.gameMode = GameManager.GameMode.Versus;
             GameManager.instance.teamMode = GameManager.TeamMode.None;
 
 

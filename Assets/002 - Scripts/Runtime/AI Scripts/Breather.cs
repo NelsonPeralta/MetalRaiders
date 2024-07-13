@@ -82,6 +82,9 @@ public class Breather : Actor
             _animator.SetBool("Run", false);
             _animator.Play("Melee");
             _meleeCooldown = 1.5f;
+
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _meleeCooldown = 1.4f;
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _meleeCooldown = 1.3f;
         }
     }
 
@@ -112,6 +115,9 @@ public class Breather : Actor
 
             ActorAddonsPool.instance.SpawnPooledFireball(losSpawn.transform.position, (Vector3)_dir, gameObject, 8, 48, 2, 50);
             _shootProjectileCooldown = 2.4f;
+
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _shootProjectileCooldown = 2.2f;
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _shootProjectileCooldown = 2f;
         }
     }
 

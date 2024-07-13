@@ -18,7 +18,7 @@ public class Player : Biped
     {
         get
         {
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) return 7;
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop) return 7;
             return 5;
         }
     }
@@ -698,7 +698,7 @@ public class Player : Biped
 
         _rb = GetComponent<Rigidbody>(); if (!PV.IsMine) _rb.isKinematic = true;
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
             hasArmor = true;
 
@@ -715,7 +715,7 @@ public class Player : Biped
                 _hitPoints = maxHitPoints;
             }
         }
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             _overshieldPoints = 0;
             _maxShieldPoints = 0;
@@ -784,7 +784,7 @@ public class Player : Biped
         }
 
         originalSpawnPosition = transform.position;
-        GameManager.instance.instantiation_position_Biped_Dict.Add(transform.position, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
+        GameManager.instance.instantiation_position_Biped_Dict.Add(originalSpawnPosition, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
 
 
         defaultVerticalFov = 0; GetComponent<PlayerController>().ScopeOut();
@@ -870,8 +870,6 @@ public class Player : Biped
         uiCamera.enabled = false;
         uiCamera.enabled = true;
 
-        movement.playerMotionTracker.minimapCamera.enabled = false;
-        movement.playerMotionTracker.minimapCamera.enabled = true;
     }
     public bool CanBeDamaged()
     {
@@ -926,7 +924,8 @@ public class Player : Biped
         //    isGroin);
 
 
-        try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
+        //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
+        //this.impactPos = impactPos; this.impactDir = impactDir;
 
         if ((GameManager.instance.pid_player_Dict.ContainsKey(source_pid) && GameManager.GetPlayerWithPhotonViewId(source_pid).isMine) ||
             PhotonView.Find(source_pid).GetComponent<Actor>())
@@ -957,15 +956,15 @@ public class Player : Biped
                 else if (damageSourceCleanName.Contains("ltra"))
                     dsn = DeathNature.UltraBind;
                 else
-                    Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
+                    //Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
 
-                bytes = Encoding.UTF8.GetBytes(damageSourceCleanName);
+                    bytes = Encoding.UTF8.GetBytes(damageSourceCleanName);
             }
-            Debug.LogError($"EMPTY DEATH NATURE");
+            //Debug.LogError($"EMPTY DEATH NATURE");
 
 
             int newHealth = (int)hitPoints - damage;
-            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn, impactDir, weaponIndx);
+            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn, impactPos, impactDir, weaponIndx);
         }
     }
 
@@ -1000,7 +999,7 @@ public class Player : Biped
     public void PlayHurtSound()
     {
         //if (hitPoints > 15)
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             if (_hurtCooldown <= 0)
             {
@@ -1018,7 +1017,7 @@ public class Player : Biped
 
     public void PlayShootingEnemyClip()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
 
@@ -1038,7 +1037,7 @@ public class Player : Biped
 
     public void PlayReloadingClip()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
 
@@ -1059,7 +1058,7 @@ public class Player : Biped
     void PlayAllyDownClip(Player p)
     {
         if (p != this)
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             {
                 ranClipChance = _ranClipChanceOdds;
 
@@ -1079,7 +1078,7 @@ public class Player : Biped
 
     public void PlayThrowingGrenadeClip()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
 
@@ -1099,7 +1098,7 @@ public class Player : Biped
 
     public void PlayEnemyDownClip()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
 
@@ -1119,7 +1118,7 @@ public class Player : Biped
 
     public void PlayOutOfAmmoClip()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
 
@@ -1164,43 +1163,49 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
-        Debug.Log($"SPAWNING PLAYER RAGDOLL {deathNature}");
         var ragdoll = RagdollPool.instance.SpawnPooledPlayerRagdoll(this.isMine);
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;
-        print("r1");
         ragdoll.GetComponent<PlayerArmorManager>().player = this;
-        print("r2");
+
+
+        Debug.Log($"SPAWNING PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
+
+
         if (GameManager.instance.connection == GameManager.Connection.Online)
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
         else
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(rid);
-        print("r3");
+
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
-        print("r4");
-        print(ragdoll.name);
-        //if (!hasArmor)
-        //{
-        //    ragdoll.GetComponent<PlayerArmorManager>().armorDataString = "";
-
-        //}
-        //else
-        //{
-        //    Debug.Log($"Player {name} has color palette: {playerArmorManager.colorPalette} and armor: {playerArmorManager.armorDataString}");
-        //    ragdoll.GetComponent<PlayerArmorManager>().armorDataString = playerArmorManager.armorDataString;
-        //    ragdoll.GetComponent<PlayerArmorManager>().colorPalette = playerArmorManager.colorPalette;
-        //}
         ragdoll.SetActive(true);
 
+        impactDir = Vector3.Normalize((Vector3)impactDir);
+        Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
 
-        if (deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.Grenade /*|| deathNature == DeathNature.Stuck*/ || deathNature == DeathNature.RPG
-            || deathNature == DeathNature.Barrel) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 4000); }
-        else if (deathNature == DeathNature.Melee) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 2000); }
-        else if (deathNature == DeathNature.UltraBind) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((transform.position - _lastPlayerSource.transform.position) * 1000); }
-        else if (!deathByHeadshot) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
-        else if (deathNature == DeathNature.None) { ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 350); }
+
+        if (deathByHeadshot)
+        {
+            print("Ragdoll 1");
+            ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 6000);
+        }
+        else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.Stuck || deathNature == DeathNature.RPG
+            || deathNature == DeathNature.Barrel || deathNature == DeathNature.UltraBind)
+        {
+            print("Ragdoll 2");
+            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 9000);
+        }
+        else if (deathNature == DeathNature.Melee)
+        {
+            print("Ragdoll 3");
+            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 8000);
+        }
+        else/* if (!deathByHeadshot || deathNature == DeathNature.None)*/
+        {
+            print("Ragdoll 5");
+            ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 5000);
+        }
     }
 
 
@@ -1221,9 +1226,12 @@ public class Player : Biped
             _isHealing = true;
             if (hitPoints < maxHealthPoints)
             {
-                if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                 {
-                    hitPoints = Mathf.Clamp(hitPoints + (Time.deltaTime * 20), 0, maxHealthPoints * 0.45f);
+                    if (hasArmor)
+                        hitPoints += (Time.deltaTime * _shieldHealingIncrement);
+                    else
+                        hitPoints = Mathf.Clamp(hitPoints + (Time.deltaTime * 20), 0, maxHealthPoints * 0.45f);
                 }
                 else
                 {
@@ -1289,6 +1297,9 @@ public class Player : Biped
 
         _respawnBeepCount = 0;
         if (this.isMine) respawnBeepAudioSource.Play();
+        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(GameManager.instance.reservedSpawnPoint.position, false);
+
+        if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("Spawning Randomly"); _lastSpawnPointIsRandom = false;
     }
 
     public void PlaySprintingSound()
@@ -1331,17 +1342,19 @@ public class Player : Biped
     #region
 
 
+
+    bool _lastSpawnPointIsRandom;
     IEnumerator MidRespawnAction()
     {
         Debug.Log("MidRespawnAction");
+        NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId);
         yield return new WaitForSeconds(RESPAWN_TIME * 0.7f);
         GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
         hitPoints = maxHitPoints;
-        Transform spawnPoint = spawnManager.GetRandomSafeSpawnPoint(controllerId);
-        transform.position = spawnPoint.position + new Vector3(0, 2, 0);
-        transform.rotation = spawnPoint.rotation;
+        transform.position = GameManager.instance.reservedSpawnPoint.position + new Vector3(0, 2, 0);
+        transform.rotation = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(GameManager.instance.reservedSpawnPoint.position).rotation;
         isDead = false;
     }
 
@@ -1378,12 +1391,12 @@ public class Player : Biped
 
 
         playerInventory.transform.localRotation = Quaternion.Euler(0, 0, 0f);
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm) hasArmor = false;
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) hasArmor = false;
 
 
         if (isDead)
         {
-            if (isMine && GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+            if (isMine && GameManager.instance.gameMode == GameManager.GameMode.Versus)
                 PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSourceCleanName);
 
             {
@@ -1392,7 +1405,7 @@ public class Player : Biped
                 //s.GetComponent<Rigidbody>().AddForce(new Vector3(0, 800, 0));
             }
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                 GetComponent<PlayerSwarmMatchStats>().deaths++;
         }
 
@@ -1400,7 +1413,7 @@ public class Player : Biped
         hitboxesEnabled = false;
         thirdPersonModels.SetActive(false);
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             SwarmManager.instance.livesLeft--;
 
         GetComponent<PlayerController>().DisableCrouch();
@@ -1532,14 +1545,20 @@ public class Player : Biped
     }
 
     [PunRPC]
-    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn, Vector3 impDir, int weaponIndx)
+    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn, Vector3 impPos, Vector3 impDir, int weaponIndx)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
-
+        print($"Damage_RPC {impPos} {impDir}");
+        this.impactPos = transform.position; this.impactDir = Vector3.zero;
         try { this.impactDir = impDir; } catch { }
-        playerShield.SpawnShieldHit();
+        try { this.impactPos = impPos; } catch { }
+        if (impactPos == Vector3.zero) impactPos = transform.position;
+        print($"Damage_RPC {impPos} {impDir}");
+
+
+
         try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}"); }
         try
@@ -1613,12 +1632,14 @@ public class Player : Biped
     }
 
 
-    public void ChangePlayerId(int id) // Only works when no internet connection
+    public void ChangePlayerIdLocalMode(int id) // Only works when no internet connection
     {
         if (GameManager.instance.connection == GameManager.Connection.Local)
         {
+            print("ChangePlayerIdLocalMode 1");
             _playerId = id;
-            OnPlayerIdAssigned.Invoke(this);
+            OnPlayerIdAssigned?.Invoke(this);
+            print("ChangePlayerIdLocalMode 2");
         }
     }
 
@@ -1771,7 +1792,7 @@ public class Player : Biped
         catch (System.Exception e) { Debug.LogException(e); }
 
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
             if (GameManager.instance.teamMode == GameManager.TeamMode.None ||
                                 (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team != this.team))
             {
@@ -1829,9 +1850,30 @@ public class Player : Biped
         //e.gameObject.SetActive(true);
         //e.DisableIn3Seconds();
 
-        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 500, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind);
+        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 700, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip);
 
 
         _ultraMergeCount = 0;
+    }
+
+
+    public void UpdateReservedSpawnPoint(Vector3 t, bool isRandom)
+    {
+        GameManager.instance.reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
+        _lastSpawnPointIsRandom = isRandom;
+    }
+
+
+    public void SetupMotionTracker()
+    {
+        print("SetupMotionTracker");
+        movement.playerMotionTracker.Setup();
+        //List<MotionTrackerDot> l = GetComponentsInChildren<MotionTrackerDot>().ToList();
+
+        //if (l.Count > 0)
+        //    for (int i = 0; i < l.Count; i++)
+        //    {
+        //        l[i].targetPlayerController = GameManager.instance.pid_player_Dict.ElementAt(i).Value.playerController;
+        //    }
     }
 }

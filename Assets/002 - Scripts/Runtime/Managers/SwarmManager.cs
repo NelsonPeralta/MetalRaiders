@@ -248,6 +248,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public bool gameWon;
 
 
+    public List<Biped> actorsAliveList = new List<Biped>();
+
 
     private void OnEnable()
     {
@@ -302,7 +304,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     void NewWaveCountdown()
     {
-        if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode != GameManager.GameMode.Coop)
             return;
         if (_newWaveCountdown > 0)
         {
@@ -339,7 +341,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
             Debug.Log("SWARM MANAGER: OnSceneLoaded");
-            if (GameManager.instance.gameMode != GameManager.GameMode.Swarm)
+            if (GameManager.instance.gameMode != GameManager.GameMode.Coop)
                 return;
 
             _instance = this;
@@ -574,7 +576,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (currentWave > 1)
             GameManager.GetRootPlayer().announcer.AddClip(_waveStartClip);
 
-
+        actorsAliveList.Clear();
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("Spawning Ais");
@@ -1013,7 +1015,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 AchievementManager.UnlockAchievement("YAWA");
             }
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && GameManager.instance.gameType != GameManager.GameType.Endless)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop && GameManager.instance.gameType != GameManager.GameType.Endless)
             {
                 gameWon = true;
                 EndGame();
@@ -1217,7 +1219,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void SpawnActorsFromDropship(ActorDropship ad)
     {
-        print("SpawnActorsFromDropship");
+        
         if (!PhotonNetwork.IsMasterClient)
             return;
 
@@ -1288,6 +1290,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
         _timeSinceEnemiesDroped = 0;
+
+        //foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+        //    if (p && p.isMine)
+        //        p.SetupMotionTracker();
     }
 
 

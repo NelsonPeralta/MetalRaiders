@@ -93,7 +93,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void OnGameTimeChanged(GameTime gameTime)
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             //EnableWeapon();
             return;
@@ -168,7 +168,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         string[] heavyWeaponCodeNames = { "ar", "br", "m16", "c7", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
         string[] lightWeaponCodeNames = { "pistol", "smg", "m1911", "colt", "mp5", "p90", "deagle" };
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
             if (GameManager.instance.gameType == GameManager.GameType.Slayer)
             {
                 if (codeName == "br")

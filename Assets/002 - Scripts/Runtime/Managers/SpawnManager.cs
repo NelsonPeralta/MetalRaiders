@@ -9,13 +9,14 @@ public class SpawnManager : MonoBehaviour
     public List<SpawnPoint> genericSpawnPointsAlpha = new List<SpawnPoint>();
     public List<SpawnPoint> genericSpawnPointsBeta = new List<SpawnPoint>();
 
+
     public OddballSpawnPoint oddballSpawnPoint;
     void Awake()
     {
         int c = 0;
         if (genericSpawnPointsAlpha.Count == 0)
         {
-            foreach (SpawnPoint sp in GetComponentsInChildren<SpawnPoint>())
+            foreach (SpawnPoint sp in GetComponentsInChildren<SpawnPoint>(false))
             {
                 sp.name = $"Spawn point {c}";
                 c++;
@@ -36,6 +37,11 @@ public class SpawnManager : MonoBehaviour
         oddballSpawnPoint = FindObjectOfType<OddballSpawnPoint>();
     }
 
+    public Transform GetSpawnPointAtIndex(int i)
+    {
+        return genericSpawnPointsAlpha[i].transform;
+    }
+
     public Transform GetRandomComputerSpawnPoint()
     {
         List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
@@ -49,38 +55,36 @@ public class SpawnManager : MonoBehaviour
         return availableSpawnPoints[ran].transform;
     }
 
-    Transform GetRandomSpawnpoint(int controllerId)
+    Transform GetRandomSpawnpoint()
     {
-        if (CurrentRoomManager.instance.gameStarted)
-            try { GameManager.GetLocalPlayer(controllerId).GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Spawning randomly"); } catch { }
         return genericSpawnPointsAlpha[Random.Range(0, genericSpawnPointsAlpha.Count)].transform;
     }
 
-    public Transform GetRandomSafeSpawnPoint(int controllerId = 0)
+    public (Transform, bool) GetRandomSafeSpawnPoint() // return a position and if the spawn is random or not
     {
         List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
             foreach (SpawnPoint sp in genericSpawnPointsAlpha)
-                if (!sp.occupied)
+                if (!sp.occupied && !sp.reserved)
                     availableSpawnPoints.Add(sp);
 
 
             if (availableSpawnPoints.Count == 0)
                 foreach (SpawnPoint sp in genericSpawnPointsBeta)
-                    if (!sp.occupied)
+                    if (!sp.occupied && !sp.reserved)
                         availableSpawnPoints.Add(sp);
 
             if (availableSpawnPoints.Count == 0)
                 foreach (SpawnPoint spb in genericSpawnPointsAlpha)
-                    if (!spb.seen)
+                    if (!spb.seen && !spb.reserved)
                         availableSpawnPoints.Add(spb);
         }
 
 
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             availableSpawnPoints.AddRange(genericSpawnPointsAlpha);
 
 
@@ -89,9 +93,34 @@ public class SpawnManager : MonoBehaviour
         {
             int ran = Random.Range(0, availableSpawnPoints.Count);
             print($"Returning {availableSpawnPoints[ran].name} spawn");
-            return availableSpawnPoints[ran].transform;
+            return (availableSpawnPoints[ran].transform, false);
         }
 
-        return GetRandomSpawnpoint(controllerId);
+        return (GetRandomSpawnpoint(), true);
+    }
+
+    public Transform GetSpawnPointAtPos(Vector3 p)
+    {
+        foreach (SpawnPoint sp in genericSpawnPointsAlpha)
+        {
+            if (sp.transform.position == p)
+            {
+                print($"Returning spawn point {sp.name}");
+                return sp.transform;
+            }
+        }
+
+        return null;
+    }
+
+    public void ToggleReserveSpawnPoint(Vector3 p, bool r)
+    {
+        foreach (SpawnPoint sp in genericSpawnPointsAlpha)
+            if (sp.transform.position == p)
+                sp.reserved = r;
+
+        foreach (SpawnPoint sp in genericSpawnPointsBeta)
+            if (sp.transform.position == p)
+                sp.reserved = r;
     }
 }

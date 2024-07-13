@@ -54,10 +54,10 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
             try
             {
 
-                if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
+                if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
                 {
                 }
-                else if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+                else if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                 {
                     //skinnedMeshRenderer.sharedMesh = soldierMeshObj.GetComponent<SkinnedMeshRenderer>().sharedMesh;
                     //skinnedMeshRenderer.material = soldierMeshObj.GetComponent<SkinnedMeshRenderer>().material;

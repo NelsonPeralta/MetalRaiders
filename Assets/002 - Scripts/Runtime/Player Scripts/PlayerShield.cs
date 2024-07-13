@@ -103,7 +103,7 @@ public class PlayerShield : MonoBehaviour
 
     void OnPlayerShieldDamaged_Delegate(Player player)
     {
-
+        SpawnShieldHit();
     }
 
 

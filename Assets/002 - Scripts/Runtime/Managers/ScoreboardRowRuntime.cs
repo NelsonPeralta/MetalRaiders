@@ -30,7 +30,7 @@ public class ScoreboardRowRuntime : MonoBehaviour
             _playerScoreText.text = pss.playerCurrentGameScore.score.ToString();
 
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             {
                 _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
                 _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
@@ -57,7 +57,7 @@ public class ScoreboardRowRuntime : MonoBehaviour
             _playerScoreText.text = pss.playerCurrentGameScore.score.ToString();
 
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             {
                 _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
                 _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
