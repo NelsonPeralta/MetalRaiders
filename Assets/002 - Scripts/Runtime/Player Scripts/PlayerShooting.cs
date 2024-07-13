@@ -213,10 +213,14 @@ public class PlayerShooting : MonoBehaviourPun
     }
 
     int _ignoreShootCounter;
+    List<RaycastHit> fakeBulletTrailRaycasthits = new List<RaycastHit>();
+
     void shoooo(bool isLeftWeapon = false)
     {
         if (playerController.GetComponent<Player>().isDead || playerController.GetComponent<Player>().isRespawning)
             return;
+
+        playerController.SetCurrentlyShootingReset();
 
         playerController.player.assignActorPlayerTargetOnShootingSphere.TriggerBehaviour();
 
@@ -250,14 +254,54 @@ public class PlayerShooting : MonoBehaviourPun
                     if (!player.isMine || GameManager.instance.connection == GameManager.Connection.Local)
                     {
                         print("spawning FAKE bullet");
-                        RaycastHit hit;
-                        if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
+
+
+
+
+                        fakeBulletTrailRaycasthits = Physics.RaycastAll(player.mainCamera.transform.position, player.mainCamera.transform.forward, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask).ToList();
+
+                        if (fakeBulletTrailRaycasthits.Count <= 0)
                         {
-                            int d = (int)Vector3.Distance(player.mainCamera.transform.position, hit.point);
-                            pInventory.SpawnFakeBulletTrail(d, ranSprayQuat);
+                            //print("spawning FAKE bullet easy");
+
+                            pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat);
                         }
                         else
-                            pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat);
+                        {
+                            //print("spawning FAKE bullet comp");
+                            for (int j = fakeBulletTrailRaycasthits.Count; j-- > 0;)
+                            {
+                                //do something
+                                if (fakeBulletTrailRaycasthits[j].collider.transform.root == player.transform)
+                                    fakeBulletTrailRaycasthits.Remove(fakeBulletTrailRaycasthits[j]);
+                            }
+
+                            fakeBulletTrailRaycasthits = fakeBulletTrailRaycasthits.OrderBy((d) => (d.collider.transform.position - transform.position).sqrMagnitude).ToList();
+
+
+                            print($"spawning FAKE bullet {fakeBulletTrailRaycasthits[0].collider.name}");
+
+                            int d = (int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point);
+                            pInventory.SpawnFakeBulletTrail(d, ranSprayQuat);
+                        }
+
+
+
+
+                        //print("spawning FAKE bullet");
+                        //RaycastHit hit;
+                        //if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
+                        //{
+                        //    print($"spawning FAKE bullet {hit.collider.name}");
+
+                        //    int d = (int)Vector3.Distance(player.mainCamera.transform.position, hit.point);
+                        //    pInventory.SpawnFakeBulletTrail(d, ranSprayQuat);
+                        //}
+                        //else
+                        //{
+                        //    print($"spawning FAKE bullet {hit.collider.name}");
+                        //    pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat);
+                        //}
                     }
                 }
                 else

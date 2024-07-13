@@ -83,7 +83,9 @@ public class FloatingCamera : MonoBehaviour
             if (_gcrc > GameManager.instance.gameplayRecorderPoints.Count - 1) _gcrc = 0;
 
 
-            _changeCameraCd = 4.5f;
+            _changeCameraCd = 3.5f;
+            if (GameManager.instance.gameplayRecorderPoints[_gcrc].transform.root.GetComponent<Player>())
+                _changeCameraCd = 2f;
         }
 
 

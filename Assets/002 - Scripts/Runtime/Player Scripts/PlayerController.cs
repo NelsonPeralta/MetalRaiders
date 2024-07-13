@@ -510,7 +510,10 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-
+    public void SetCurrentlyShootingReset()
+    {
+        _isCurrentlyShootingReset = 0.6f;
+    }
 
     void Shooting() //  ***************
     {
@@ -529,9 +532,6 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-        if (!isHoldingShootBtn)
-            _isCurrentlyShootingReset = 0;
-
 
         //Process Firing
         if (!isReloading && !isThrowingGrenade && !isMeleeing)
@@ -545,12 +545,10 @@ public class PlayerController : MonoBehaviourPun
                     if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
                     {
                         player.playerShooting.Shoot();
-                        _isCurrentlyShootingReset = 0.3f;
                     }
                 }
                 else
                 {
-                    _isCurrentlyShootingReset = 0.3f;
                     player.playerShooting.Shoot();
                 }
             }

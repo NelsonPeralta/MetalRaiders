@@ -28,7 +28,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
                 {
                     if (i < GameManager.instance.pid_player_Dict.Count)
                     {
-                        print($"PlayerMotionTracker Setup {GameManager.instance.pid_player_Dict.ElementAt(i).Value.name}");
+                        print($"PlayerMotionTracker Setup {i} : {GameManager.instance.pid_player_Dict.ElementAt(i).Value.name}");
                         _motionTrackerDotsList[i].biped = GameManager.instance.pid_player_Dict.ElementAt(i).Value.GetComponent<Biped>();
                     }
                 }

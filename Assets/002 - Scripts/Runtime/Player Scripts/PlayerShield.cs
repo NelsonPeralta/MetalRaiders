@@ -14,7 +14,7 @@ public class PlayerShield : MonoBehaviour
     public GameObject shieldRechargeThirdPersonModel;
 
     [Header("Shield Sounds")]
-    public AudioSource shieldAudioSource;
+    public AudioSource shieldAudioSource, shieldBorkenAudioSource;
     public AudioSource shieldAlarmAudioSource;
     public AudioClip shieldStartClip;
     public AudioClip shieldDownClip;
@@ -145,8 +145,9 @@ public class PlayerShield : MonoBehaviour
 
     public void PlayShieldDownSound(Player player)
     {
-        shieldAudioSource.clip = shieldDownClip;
-        shieldAudioSource.Play();
+        shieldBorkenAudioSource.Play();
+        //shieldAudioSource.clip = shieldDownClip;
+        //shieldAudioSource.Play();
 
         PlayShieldAlarmSound();
         ShowThirdPersionShieldElectricityModel();

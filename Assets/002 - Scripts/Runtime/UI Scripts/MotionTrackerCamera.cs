@@ -4,8 +4,19 @@ using UnityEngine;
 
 public class MotionTrackerCamera : MonoBehaviour
 {
+    private void Awake()
+    {
+        gameObject.SetActive(false);
+    }
+
+
     public void ChooseRenderTexture(int rewiredId)
     {
-        GetComponent<Camera>().targetTexture = GameManager.instance.minimapRenderTextures[rewiredId];
+        if (transform.root.GetComponent<Player>().isMine)
+        {
+            gameObject.SetActive(true);
+            GetComponent<Camera>().targetTexture = GameManager.instance.minimapRenderTextures[rewiredId];
+        }
+
     }
 }
