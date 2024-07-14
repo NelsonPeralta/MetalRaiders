@@ -228,7 +228,7 @@ public class ReloadScript : MonoBehaviourPun
                     pController.pInventory.activeWeapon.rightWeapon.GetComponent<Animator>().Play("Reload Ammo Left", 0, 0f);
                     pController.pInventory.leftWeapon.GetComponent<Animator>().Play("Reload Ammo Left", 0, 0f);
                 }
-                pController.ScopeOut();
+                pController.UnScope();
             }
             catch { }
 
@@ -260,7 +260,7 @@ public class ReloadScript : MonoBehaviourPun
                 DEFAULT_RELOAD_TIME / (3 / 2f), 0);
             pController.weaponAnimator.Play("Reload Open", 0, 0f);
             PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Open");
-            pController.ScopeOut();
+            pController.UnScope();
 
 
         }
@@ -274,7 +274,7 @@ public class ReloadScript : MonoBehaviourPun
             //reloadAudioSource.Play();
             try { pController.weaponAnimator.Play("Reload", 0, 0f); } catch { }
             PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload");
-            pController.ScopeOut();
+            pController.UnScope();
 
             Reload(0, 0, 0, singleReloadTime);
         }

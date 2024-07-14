@@ -773,19 +773,29 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             GameManager.instance.pid_player_Dict[pid].maxOvershieldPoints = 150;
 
 
-            int t = overshield.tts;
-            int _time = FindObjectOfType<GameTime>().timeRemaining;
 
-            int timeLeft = 0;
-
-            if (_time < t)
-                timeLeft = t - _time;
-            else
-                timeLeft = t - (_time % t);
-            Debug.Log(timeLeft);
-
-            StartCoroutine(StartOverShieldRespawn_Coroutine(timeLeft));
             overshield.gameObject.SetActive(false);
+            if (GameTime.instance.timeRemaining > overshield.tts)
+            {
+                int timeToNextSpawn = overshield.tts - (GameTime.instance.timeElapsed % overshield.tts);
+                print($"LootOvershield {overshield.tts} {GameTime.instance.timeElapsed} {GameTime.instance.timeElapsed % overshield.tts} {timeToNextSpawn}");
+                StartCoroutine(StartOverShieldRespawn_Coroutine(timeToNextSpawn));
+            }
+
+
+            //int t = overshield.tts;
+            //int _time = FindObjectOfType<GameTime>().timeRemaining;
+
+            //int timeLeft = 0;
+
+            //if (_time < t)
+            //    timeLeft = t - _time;
+            //else
+            //    timeLeft = t - (_time % t);
+            //Debug.Log(timeLeft);
+
+            //StartCoroutine(StartOverShieldRespawn_Coroutine(timeLeft));
+            //overshield.gameObject.SetActive(false);
         }
     }
 
@@ -964,7 +974,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.All, playerPhotonId, weaponInd, false);
         else if (!caller)
         {
-            GameManager.instance.pid_player_Dict[playerPhotonId].playerController.ScopeOut();
+            GameManager.instance.pid_player_Dict[playerPhotonId].playerController.UnScope();
             GameManager.instance.pid_player_Dict[playerPhotonId].playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
         }
     }
@@ -994,7 +1004,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void ReserveSpawnPoint_RPC(int playerPhotonId, Vector3 pos, bool isRandom)
     {
-        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(pos, true);
+        SpawnManager.spawnManagerInstance.ReserveSpawnPoint(pos);
         GameManager.instance.pid_player_Dict[playerPhotonId].UpdateReservedSpawnPoint(pos, isRandom);
     }
 }

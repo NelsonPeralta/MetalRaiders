@@ -9,6 +9,14 @@ public class Overshield : MonoBehaviour
     public int tts { get { return _tts; } }
 
     [SerializeField] int _tts;
+
+
+
+
+
+
+
+
     private void Start()
     {
         try { NetworkGameManager.instance.overshield = this; } catch { }
@@ -18,22 +26,20 @@ public class Overshield : MonoBehaviour
                 gameObject.SetActive(false);
         }
         catch { }
+
+        if (GameManager.instance.gameType != GameManager.GameType.Retro && GameManager.instance.gameType != GameManager.GameType.Swat)
+        {
+
+            //GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
+            //GameTime.instance.OnGameTimeElapsedChanged += OnGameTimeChanged;
+        }
     }
+
+
+
+
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.GetComponent<Player>() && !other.GetComponent<Player>().isDead && !other.GetComponent<Player>().isRespawning)
-        //{
-        //    if (other.GetComponent<Player>().isMine)
-        //    {
-        //        NetworkGameManager.instance.LootOvershield(other.GetComponent<Player>().pid);
-        //    }
-        //}
-
-
-
-
-
-
         Debug.Log($"ManCannon {other}");
         if (other.gameObject.activeInHierarchy)
         {

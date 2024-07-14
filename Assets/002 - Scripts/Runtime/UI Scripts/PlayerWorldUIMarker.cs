@@ -29,7 +29,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
     [SerializeField] int _controllerTarget;
     [SerializeField] Player _targetPlayer;
 
-    [SerializeField] GameObject _holder;
+    [SerializeField] GameObject _holder, _deadTag;
     [SerializeField] PlayerWorldUIMarkerHolder _holderScript;
     [SerializeField] TMP_Text _text;
     [SerializeField] GameObject _redMarker;
@@ -85,7 +85,20 @@ public class PlayerWorldUIMarker : MonoBehaviour
             _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team == _targetPlayer.team);
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            {
                 if (_player.team == _targetPlayer.team) _text.gameObject.SetActive(true);
+
+                if (_player.isDead || _player.isRespawning) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
+            }
+        }
+
+        if (_targetPlayer)
+        {
+            //print($"PlayerWorldUIMarker {name} {_targetPlayer.isDead} {_targetPlayer.isRespawning} {_player.isDead} {_player.isRespawning}");
+            if (_targetPlayer.isDead || _targetPlayer.isRespawning || _player.isDead || _player.isRespawning)
+                holder.SetActive(false);
+            else
+                holder.SetActive(true);
         }
     }
 

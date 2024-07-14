@@ -149,7 +149,7 @@ public class MotionTrackerDot : MonoBehaviour
             }
 
 
-            if (targetPlayerController.player.isDead) _dotHolder.SetActive(false);
+            if (targetPlayerController.player.isDead || targetPlayerController.player.isRespawning) _dotHolder.SetActive(false);
         }
         else
         {

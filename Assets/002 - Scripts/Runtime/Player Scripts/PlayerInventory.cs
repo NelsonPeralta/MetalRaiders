@@ -73,7 +73,7 @@ public class PlayerInventory : MonoBehaviourPun
                 //if (GameManager.instance.gameType == GameManager.GameType.Fiesta && _activeWeapon.codeName.Equals("rpg")) { _activeWeapon.loadedAmmo = 1; _activeWeapon.spareAmmo = 0; }
                 //if (GameManager.instance.gameType == GameManager.GameType.Fiesta && _activeWeapon.codeName.Equals("sniper")) { _activeWeapon.loadedAmmo = 4; _activeWeapon.spareAmmo = 0; }
 
-                pController.ScopeOut();
+                pController.UnScope();
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 if (!player.isDead && !player.isRespawning)
@@ -375,7 +375,7 @@ public class PlayerInventory : MonoBehaviourPun
         Debug.Log("SwitchWeapons");
 
 
-        pController.ScopeOut();
+        pController.UnScope();
         allPlayerScripts.aimAssist.ResetRedReticule();
 
         if (pController.isReloading && pController.pInventory.weaponsEquiped[1] != null)
@@ -823,6 +823,7 @@ public class PlayerInventory : MonoBehaviourPun
                             weaponsEquiped[0] = activeWeapon.gameObject;
                             activeWeapIs = 0;
                             activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = activeWeapon.GetComponent<WeaponProperties>().ammoCapacity;
+                            activeWeapon.spareAmmo = Mathf.Clamp(activeWeapon.ammoCapacity * 2, 0, activeWeapon.maxSpareAmmo);
                             allWeaponsInInventory[i].gameObject.SetActive(true);
                             StartCoroutine(ToggleTPPistolIdle(1));
                         }
@@ -834,6 +835,7 @@ public class PlayerInventory : MonoBehaviourPun
                         weaponsEquiped[1] = allWeaponsInInventory[i].gameObject;
                         weaponsEquiped[1].GetComponent<WeaponProperties>().loadedAmmo = weaponsEquiped[1].GetComponent<WeaponProperties>().ammoCapacity;
                         holsteredWeapon = weaponsEquiped[1].GetComponent<WeaponProperties>();
+                        holsteredWeapon.spareAmmo = Mathf.Clamp(holsteredWeapon.ammoCapacity * 2, 0, holsteredWeapon.maxSpareAmmo);
                         hasSecWeap = true;
                     }
                     else if (allWeaponsInInventory[i].name != StartingWeapon)

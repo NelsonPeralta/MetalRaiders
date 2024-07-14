@@ -17,6 +17,8 @@ public class HillManager : MonoBehaviour
 
     private void Awake()
     {
+        _hill = FindObjectOfType<Hill>();
+
         foreach (Transform child in transform)
         {
             _locations.Add(child.gameObject);

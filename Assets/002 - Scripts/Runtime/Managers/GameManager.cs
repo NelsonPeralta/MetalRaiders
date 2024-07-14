@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum TeamMode { Classic, None }
 
-    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -484,6 +484,13 @@ public class GameManager : MonoBehaviourPunCallbacks
                 MenuManager.Instance.OpenPopUpMenu("credits");
             }
 
+            if (previousScenePayloads.Contains(PreviousScenePayload.LoadTimeOutOpenErrorMenu))
+            {
+                previousScenePayloads.Remove(PreviousScenePayload.LoadTimeOutOpenErrorMenu);
+                MenuManager.Instance.OpenMainMenu();
+                MenuManager.Instance.OpenErrorMenu("A player could not load level");
+            }
+
 
 
             try { gameMode = GameMode.Versus; } catch { }
@@ -732,9 +739,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform reservedSpawnPoint;
     public IEnumerator SpawnPlayers_Coroutine()
     {
+
         float o = 2; if (PhotonNetwork.IsMasterClient) o = 0.5f;
         Debug.Log("SpawnPlayers_Coroutine");
         yield return new WaitForSeconds(o);
+
 
         for (int i = 0; i < nbLocalPlayersPreset; i++)
         {
@@ -745,18 +754,15 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (GameManager.instance.connection == Connection.Local)
                 do { spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint(); } while (_orSpPts.Contains(spawnpoint.Item1.position));
             else
-                spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex), false);
+                spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex - 1), false);
 
             _orSpPts.Add(spawnpoint.Item1.position);
             Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.Item1.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.Item1.rotation).GetComponent<Player>();
-            print("SpawnPlayers_Coroutine test 1");
 
             player.GetComponent<PlayerController>().rid = i;
-            print("SpawnPlayers_Coroutine test 2");
 
             player.ChangePlayerIdLocalMode(i);
 
-            print("SpawnPlayers_Coroutine test 3");
 
             Debug.Log($"SpawnPlayers_Coroutine {i} {player}");
             if (i == 0)
@@ -851,11 +857,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void EnableCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask |= 1 << LayerMask.NameToLayer($"{layerName}"); }
     public void DisableCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask &= ~(1 << LayerMask.NameToLayer($"{layerName}")); }
     public void ToggleCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask ^= 1 << LayerMask.NameToLayer("SomeLayer"); }
-    public void LeaveRoom()
+    public void LeaveCurrentRoomAndLoadLevelZero()
     {
-        PhotonNetwork.LeaveRoom();
-        PhotonNetwork.LoadLevel(0);
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+            PhotonNetwork.LeaveRoom(); // Will trigger OnLeftRoom
     }
+
+
+    public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
+    {
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+            PhotonNetwork.LoadLevel(0);
+        }
+    }
+
 
     //https://answers.unity.com/questions/1262342/how-to-get-scene-name-at-certain-buildindex.html
     public static string SceneNameFromIndex(int BuildIndex)

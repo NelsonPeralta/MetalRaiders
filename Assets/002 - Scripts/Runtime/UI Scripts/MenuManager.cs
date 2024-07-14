@@ -106,10 +106,33 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    public void OpenErrorMenu(string mess)
+    {
+        for (int i = 0; i < menus.Length; i++)
+        {
+            if (menus[i].menuName.Equals("error"))
+            {
+                Launcher.instance.errorMenuText.text = mess;
+                Debug.Log($"OpenErrorMenu {menus[i].menuName}");
+                menus[i].Open();
+            }
+        }
+    }
+
     public void CloseMenu(Menu menu)
     {
         Debug.Log($"Closing {menu.menuName}");
         menu.Close();
+    }
+    public void CloseMenu(string m)
+    {
+        for (int i = 0; i < menus.Length; i++)
+        {
+            if (menus[i].menuName.Equals(m))
+            {
+                menus[i].Close();
+            }
+        }
     }
 
     public void CloseGame()
@@ -126,7 +149,7 @@ public class MenuManager : MonoBehaviour
         //    menuname += "offline ";
         //menuname += "title";
         menuname = "online title";
-        Debug.Log($"MenuManager menuname: {menuname}");
+        Debug.Log($"MenuManager OpenMainMenu");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName == menuname)
@@ -178,12 +201,8 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Heressssssssssrsrsr");
-            try
-            {
-                gameObject.SetActive(true);
-            }
-            catch { }
+            Debug.Log("MenuManager");
+            try { gameObject.SetActive(true); } catch { }
             Launcher.instance.ConnectToPhotonMasterServer();
             OpenMainMenu();
         }

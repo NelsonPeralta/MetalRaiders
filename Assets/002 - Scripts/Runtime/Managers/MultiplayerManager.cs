@@ -29,7 +29,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count;
             }
             if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
+            {
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic) return 120;
                 return 60;
+            }
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
                 if (CurrentRoomManager.instance.expectedNbPlayers == 2) return 10;
@@ -336,7 +339,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 }
 
                 if (pp.controllerId == 0)
-                    GameManager.instance.LeaveRoom();
+                    GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
             }
 
             pp.playerUI.scoreboard.OpenScoreboard();

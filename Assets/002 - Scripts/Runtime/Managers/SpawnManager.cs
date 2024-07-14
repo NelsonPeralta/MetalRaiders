@@ -67,19 +67,31 @@ public class SpawnManager : MonoBehaviour
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
             foreach (SpawnPoint sp in genericSpawnPointsAlpha)
-                if (!sp.occupied && !sp.reserved)
+                if (!sp.constested && !sp.reserved)
                     availableSpawnPoints.Add(sp);
 
-
-            if (availableSpawnPoints.Count == 0)
-                foreach (SpawnPoint sp in genericSpawnPointsBeta)
-                    if (!sp.occupied && !sp.reserved)
-                        availableSpawnPoints.Add(sp);
 
             if (availableSpawnPoints.Count == 0)
                 foreach (SpawnPoint spb in genericSpawnPointsAlpha)
                     if (!spb.seen && !spb.reserved)
                         availableSpawnPoints.Add(spb);
+
+
+            if (availableSpawnPoints.Count == 0)
+                foreach (SpawnPoint spb in genericSpawnPointsAlpha)
+                    if (!spb.reserved)
+                        availableSpawnPoints.Add(spb);
+
+            if (availableSpawnPoints.Count == 0)
+                foreach (SpawnPoint spb in genericSpawnPointsAlpha)
+                    if (!spb.seen)
+                        availableSpawnPoints.Add(spb);
+
+
+            if (availableSpawnPoints.Count == 0)
+                foreach (SpawnPoint sp in genericSpawnPointsBeta)
+                    if (!sp.constested && !sp.reserved)
+                        availableSpawnPoints.Add(sp);
         }
 
 
@@ -113,14 +125,14 @@ public class SpawnManager : MonoBehaviour
         return null;
     }
 
-    public void ToggleReserveSpawnPoint(Vector3 p, bool r)
+    public void ReserveSpawnPoint(Vector3 p)
     {
         foreach (SpawnPoint sp in genericSpawnPointsAlpha)
             if (sp.transform.position == p)
-                sp.reserved = r;
+                sp.reserved = true;
 
         foreach (SpawnPoint sp in genericSpawnPointsBeta)
             if (sp.transform.position == p)
-                sp.reserved = r;
+                sp.reserved = true;
     }
 }

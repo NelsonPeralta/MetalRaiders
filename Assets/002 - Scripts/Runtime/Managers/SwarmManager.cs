@@ -1170,7 +1170,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    GameManager.instance.LeaveRoom();
+                    GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
                 }
             }
         }

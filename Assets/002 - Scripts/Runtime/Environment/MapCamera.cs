@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
-public class MapCamera : MonoBehaviour
+public class MapCamera : MonoBehaviourPunCallbacks
 {
     public static MapCamera instance { get { return _instance; } private set { _instance = value; } }
     static MapCamera _instance;
@@ -75,10 +75,10 @@ public class MapCamera : MonoBehaviour
                     Debug.Log("MapCamera TimeOut");
 
                     //GameManager.SendErrorEmailReport(_text.text);
+                    GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.LoadTimeOutOpenErrorMenu);
 
-
-                    PhotonNetwork.LeaveRoom();
-                    PhotonNetwork.LoadLevel(0);
+                    PhotonNetwork.LeaveRoom(); // Will trigger on OnLeftRoom
+                    //PhotonNetwork.LoadLevel(0);
                 }
                 catch { }
             }
@@ -112,5 +112,14 @@ public class MapCamera : MonoBehaviour
         catch { }
     }
 
-    
+
+
+
+
+
+    public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
+    {
+        Debug.Log("MAP CAMERA: OnLeftRoom");
+        PhotonNetwork.LoadLevel(0);
+    }
 }

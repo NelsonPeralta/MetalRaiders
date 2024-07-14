@@ -8,7 +8,7 @@ public class SpawnPoint : MonoBehaviour
     public static int SeenResetTime = 1;
 
     public enum Layer { Alpha, Beta }
-    public bool occupied { get { return players.Count > 0; } }
+    public bool constested { get { return players.Count > 0; } }
     public bool seen
     {
         get { return _seen; }
@@ -22,7 +22,16 @@ public class SpawnPoint : MonoBehaviour
         }
     }
 
-    public bool reserved { get { return _reserved; } set { _reserved = value; } }
+    public bool reserved
+    {
+        get { return _reservedReset > 0; }
+        set
+        {
+            _reserved = value;
+            if (value) _reservedReset = 3;
+
+        }
+    }
 
 
     public Layer layer;
@@ -35,6 +44,8 @@ public class SpawnPoint : MonoBehaviour
 
     [SerializeField] bool _seen, _reserved;
     [SerializeField] float _seenReset;
+
+    float _reservedReset;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -92,6 +103,10 @@ public class SpawnPoint : MonoBehaviour
 
     private void Update()
     {
+        if (_reservedReset > 0)
+            _reservedReset -= Time.deltaTime;
+
+
         if (_seenReset > 0)
         {
             _seenReset -= Time.deltaTime;

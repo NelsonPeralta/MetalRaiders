@@ -788,7 +788,7 @@ public class Player : Biped
         GameManager.instance.instantiation_position_Biped_Dict.Add(originalSpawnPosition, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
 
 
-        defaultVerticalFov = 0; GetComponent<PlayerController>().ScopeOut();
+        defaultVerticalFov = 0; GetComponent<PlayerController>().UnScope();
 
         {
             Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.pid_player_Dict);
@@ -1279,7 +1279,7 @@ public class Player : Biped
         OnPlayerRespawnEarly?.Invoke(this);
 
         isRespawning = false;
-        GetComponent<PlayerController>().ScopeOut();
+        GetComponent<PlayerController>().UnScope();
 
         hitPoints = maxHitPoints;
 
@@ -1308,9 +1308,8 @@ public class Player : Biped
 
         _respawnBeepCount = 0;
         if (this.isMine) respawnBeepAudioSource.Play();
-        SpawnManager.spawnManagerInstance.ToggleReserveSpawnPoint(GameManager.instance.reservedSpawnPoint.position, false);
 
-        if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("Spawning Randomly"); _lastSpawnPointIsRandom = false;
+        if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("<color=\"red\">Spawned Randomly"); _lastSpawnPointIsRandom = false;
     }
 
     public void PlaySprintingSound()
@@ -1338,8 +1337,7 @@ public class Player : Biped
 
         int levelToLoad = 0;
 
-        PhotonNetwork.LeaveRoom();
-        PhotonNetwork.LoadLevel(levelToLoad);
+        GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
     }
 
     #endregion
@@ -1355,11 +1353,17 @@ public class Player : Biped
 
 
     bool _lastSpawnPointIsRandom;
-    IEnumerator MidRespawnAction()
+
+    IEnumerator MidRespawn_Coroutine()
     {
         Debug.Log("MidRespawnAction");
+        yield return new WaitForSeconds(RESPAWN_TIME * 0.8f);
         NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId);
-        yield return new WaitForSeconds(RESPAWN_TIME * 0.7f);
+    }
+    IEnumerator LateRespawnAction()
+    {
+        Debug.Log("LateRespawnAction");
+        yield return new WaitForSeconds(RESPAWN_TIME * 0.99f);
         GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
@@ -1449,7 +1453,8 @@ public class Player : Biped
 
         SpawnRagdoll();
         StartCoroutine(Respawn_Coroutine());
-        StartCoroutine(MidRespawnAction());
+        StartCoroutine(MidRespawn_Coroutine());
+        StartCoroutine(LateRespawnAction());
 
     }
     void OnPlayerDeath_DelegateLate(Player playerProperties)
@@ -1461,7 +1466,7 @@ public class Player : Biped
     void OnPlayerDamaged_Delegate(Player player)
     {
         Debug.Log($"OnPlayerDamaged_Delegate {needsHealthPack}");
-        try { GetComponent<PlayerController>().ScopeOut(); } catch { }
+        try { GetComponent<PlayerController>().UnScope(); } catch { }
 
         _isHealing = false;
         healingCountdown = _defaultHealingCountdown;
@@ -1569,7 +1574,7 @@ public class Player : Biped
         print($"Damage_RPC {impPos} {impDir}");
 
 
-
+        playerController.UnScope();
         try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
         try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}"); }
         try
@@ -1782,6 +1787,8 @@ public class Player : Biped
                         f += $" with a <color=\"red\">Headshot</color>!";
                     else if (deathByGroin)
                         f += $" with a <color=\"yellow\">!!! Nutshot !!!</color>!";
+                    else if (deathNature == DeathNature.Stuck)
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} [ Stuck ] {username}";
 
                     if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team == this.team)
                         f = $"<color=#31cff9>{playerThatKilledMe.username} buddyfucked {username}";

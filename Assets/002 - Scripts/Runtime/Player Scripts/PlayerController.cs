@@ -442,7 +442,7 @@ public class PlayerController : MonoBehaviourPun
             return;
         isSprinting = true;
         OnSprintStart?.Invoke(this);
-        ScopeOut();
+        UnScope();
         weaponAnimator.SetBool("Run", true);
 
 
@@ -817,7 +817,7 @@ public class PlayerController : MonoBehaviourPun
         float plusZoom = 0;
     }
 
-    public void ScopeOut()
+    public void UnScope()
     {
         if (!isAiming && !GetComponent<Player>().isDead)
             return;
@@ -848,7 +848,7 @@ public class PlayerController : MonoBehaviourPun
         {
             rScript.reloadIsCanceled = true;
 
-            ScopeOut();
+            UnScope();
             _meleeSucc = melee.MeleeDamage();
             PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
         }
@@ -856,7 +856,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade && !isSprinting)
             {
-                ScopeOut();
+                UnScope();
                 _meleeSucc = melee.MeleeDamage();
 
                 rScript.reloadIsCanceled = true;
@@ -963,7 +963,7 @@ public class PlayerController : MonoBehaviourPun
                 currentlyReloadingTimer = 0;
                 player.playerShooting.StopBurstFiring();
                 rScript.reloadIsCanceled = true;
-                ScopeOut();
+                UnScope();
                 pInventory.fragGrenades = pInventory.fragGrenades - 1;
                 PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
                 StartCoroutine(GrenadeSpawnDelay());
@@ -991,7 +991,7 @@ public class PlayerController : MonoBehaviourPun
         _completeReloadTimer = 1;
         currentlyReloadingTimer = 1.4f;
         player.playerShooting.StopAllCoroutines();
-        ScopeOut();
+        UnScope();
         rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
 
 
@@ -1624,7 +1624,7 @@ public class PlayerController : MonoBehaviourPun
     {
         currentlyReloadingTimer = 1.4f;
         player.playerShooting.StopAllCoroutines();
-        ScopeOut();
+        UnScope();
         rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
 
 

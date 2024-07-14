@@ -98,7 +98,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
     public MenuGamePadCursor menuGamePadCursorScript;
-
+    public TMP_Text errorMenuText { get { return errorText; } }
 
 
 

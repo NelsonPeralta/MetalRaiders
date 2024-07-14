@@ -1,3 +1,4 @@
+using Rewired;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public float correctedXInput { get { return _correctedRightInput; } set { _correctedRightInput = value; } }
     public float correctedZInput { get { return _correctedForwardInput; } set { _correctedForwardInput = value; } }
-    public bool isGrounded { get { return grounded; } }
+    public bool isGrounded { get { return _grounded; } private set { _grounded = value; if (value && readyToJump) _clickedJumpButtonFromLastGrounded = false; } }
     public Rigidbody rb { get { return _rb; } }
     public float animationSpeed
     {
@@ -128,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight, slopeRayLenght;
     public LayerMask whatIsGround;
-    [SerializeField] bool grounded;
+    [SerializeField] bool _grounded;
 
     [Header("Slope Handling")]
     public float maxSlopeAngle, currentSlope;
@@ -143,6 +144,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float _animationSpeed, _currentWorldSpeed;
     [SerializeField] float _rawRightInput, _rawForwardInput, _correctedRightInput, _correctedForwardInput;
     [SerializeField] PlayerMotionTracker _playerMotionTracker;
+    [SerializeField] bool _clickedJumpButtonFromLastGrounded;
+    [SerializeField] PlayerMovementDirection _lastDirectionWhenJumped;
 
 
     float _rightDeadzone = 0.2f, _forwardDeadzone = 0.2f, _lastCalulatedGroundedSpeed;
@@ -222,11 +225,11 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
-        grounded = _groundCheckScript.isGrounded;
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        isGrounded = _groundCheckScript.isGrounded;
 
         // handle drag
-        if (grounded)
+        if (_grounded)
         {
             //if (Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) <= _forwardDeadzone && Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) <= _rightDeadzone)
             //    _rb.drag = groundDrag * 10;
@@ -292,21 +295,31 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (!player.playerController.pauseMenuOpen)
-            MovePlayer();
+        {
+            MovePlayerUsingInput();
+            MovePlayerUsingInputWhileJumping();
+        }
     }
+
 
     private void MyInput()
     {
         _rawRightInput = _correctedRightInput = rewiredPlayer.GetAxis("Move Horizontal");
         _rawForwardInput = _correctedForwardInput = rewiredPlayer.GetAxis("Move Vertical");
 
+        if (ReInput.controllers.GetLastActiveControllerType() != ControllerType.Joystick)
+        {
+            _rawRightInput = _correctedRightInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Horizontal") * 3, -1, 1);
+            _rawForwardInput = _correctedForwardInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Vertical") * 3, -1, 1);
+        }
+
         if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
         if (Mathf.Abs(_correctedForwardInput) <= _forwardDeadzone) _correctedForwardInput = 0;
 
         // when to jump
-        if (rewiredPlayer.GetButtonDown("Jump") && readyToJump && grounded)
+        if (rewiredPlayer.GetButtonDown("Jump") && readyToJump && _grounded)
         {
-            readyToJump = false;
+            readyToJump = false; _clickedJumpButtonFromLastGrounded = true; _lastDirectionWhenJumped = movementDirection;
 
             Jump();
 
@@ -363,7 +376,7 @@ public class PlayerMovement : MonoBehaviour
         //}
 
         // Mode - Walking
-        else if (grounded)
+        else if (_grounded)
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
@@ -435,7 +448,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     public float blockPlayerMoveInput;
-    private void MovePlayer()
+    private void MovePlayerUsingInput()
     {
         if (blockPlayerMoveInput > 0) return;
         // calculate movement direction
@@ -460,11 +473,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // on ground
-        else if (grounded)
+        else if (_grounded)
             _rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
         // in air
-        else if (!grounded)
+        else if (!_grounded)
             _rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
         if (!isGrounded)
@@ -475,6 +488,29 @@ public class PlayerMovement : MonoBehaviour
         if (!player.isDead && !player.isRespawning)
             _rb.useGravity = !OnSlope();
     }
+
+
+
+    [SerializeField] Vector3 _jumpCorrectionDirection;
+    void MovePlayerUsingInputWhileJumping()
+    {
+        if (isGrounded) _jumpCorrectionDirection = Vector3.zero;
+        if (blockPlayerMoveInput > 0) return;
+
+
+        if (_clickedJumpButtonFromLastGrounded)
+        {
+            _jumpCorrectionDirection = orientation.forward * _correctedForwardInput + orientation.right * _correctedRightInput;
+
+            if (_lastDirectionWhenJumped != PlayerMovementDirection.Idle)
+                _rb.AddForce(_jumpCorrectionDirection.normalized * walkSpeed * 2, ForceMode.Force);
+            else
+                _rb.AddForce(_jumpCorrectionDirection.normalized * walkSpeed * 7, ForceMode.Force);
+        }
+    }
+
+
+
 
     private void SpeedControl()
     {
@@ -674,7 +710,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (_pController.weaponAnimator != null)
             {
-                if (grounded)
+                if (_grounded)
                 {
 
                     if (_pController.weaponAnimator.GetBool("Walk"))
@@ -704,7 +740,7 @@ public class PlayerMovement : MonoBehaviour
                             _tpLookAt.anim.speed = 1;
                     }
                 }
-                else if (!grounded && _pController.weaponAnimator.GetBool("Run"))
+                else if (!_grounded && _pController.weaponAnimator.GetBool("Run"))
                 {
 
                     //if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
@@ -725,7 +761,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_rawRightInput != 0 || _rawForwardInput != 0)
         {
-            if (grounded)
+            if (_grounded)
             {
                 if (_pController.weaponAnimator)
                     _pController.weaponAnimator.SetBool("Walk", true);
@@ -779,7 +815,7 @@ public class PlayerMovement : MonoBehaviour
 
     void CheckIsMovingAndPlayFootStepSound()
     {
-        if (grounded)
+        if (_grounded)
         {
             if (player.isMine)
             {
