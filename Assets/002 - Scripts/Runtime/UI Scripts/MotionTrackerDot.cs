@@ -72,9 +72,9 @@ public class MotionTrackerDot : MonoBehaviour
     [SerializeField] float _tarDistance, _tarAngle, _divider;
 
     [SerializeField] SpriteRenderer _spriteRenderer;
+    [SerializeField] Vector3 _dirToTar;
 
-
-    Vector3 _tp, _tpc, _tarpc, _dirToTar, _tarRot, _tarDisV;
+    Vector3 _tp, _tpc, _tarpc, _tarRot, _tarDisV;
 
     GameManager.Team _rootPlayerTeam;
     Actor _actor;
@@ -108,7 +108,7 @@ public class MotionTrackerDot : MonoBehaviour
 
             _tarDistance = Vector3.Distance(_tpc, _tarpc);
 
-            if (_tarDistance <= 15)
+            if (_tarDistance <= 20)
             {
                 _dirToTar = _tarpc - _tpc;
 
@@ -150,6 +150,9 @@ public class MotionTrackerDot : MonoBehaviour
 
 
             if (targetPlayerController.player.isDead || targetPlayerController.player.isRespawning) _dotHolder.SetActive(false);
+
+            //_dotHolder.SetActive(true);
+
         }
         else
         {
