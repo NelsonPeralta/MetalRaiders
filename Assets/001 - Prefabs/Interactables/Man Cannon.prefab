@@ -15193,8 +15193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0612692e81e87214bb86ca6bec992494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 800
-  _blockMovement: 1
+  power: 17
+  _blockMovementTime: 0
   onTriggerAudioClip: {fileID: 8300000, guid: 095150f52d1956f428382890bf6c46fa, type: 3}
 --- !u!136 &7209461666461803122
 CapsuleCollider:

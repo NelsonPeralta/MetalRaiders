@@ -90,6 +90,10 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
                 if (_player.isDead || _player.isRespawning) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
             }
+            else
+            {
+                _deadTag.gameObject.SetActive(false);
+            }
         }
 
         if (_targetPlayer)
