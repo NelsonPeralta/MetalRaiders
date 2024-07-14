@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
+using static UnityEditor.PlayerSettings;
 
 public class ExplosiveProjectile : MonoBehaviour
 {
@@ -36,6 +38,9 @@ public class ExplosiveProjectile : MonoBehaviour
     float _explosionDelayOnImpact;
 
 
+
+
+
     private void Awake()
     {
         if (_defaultTtl <= 0) { _defaultTtl = 10; }
@@ -49,11 +54,20 @@ public class ExplosiveProjectile : MonoBehaviour
         _visualIndicator.SetActive(true);
         try { _stuckVfx.SetActive(false); } catch { }
         if (_sticky)
+        {
             foreach (Player p in GameManager.instance.pid_player_Dict.Values)
             {
                 if (p)
                     Physics.IgnoreCollision(p.playerCapsule.GetComponent<Collider>(), GetComponent<Collider>());
             }
+
+
+            GetComponent<ParentConstraint>().constraintActive = false;
+            GetComponent<ParentConstraint>().locked = false;
+
+            for (int j = GetComponent<ParentConstraint>().sourceCount; j-- > 0;)
+                GetComponent<ParentConstraint>().RemoveSource(j);
+        }
 
         _ttl = _defaultTtl;
 
@@ -102,6 +116,8 @@ public class ExplosiveProjectile : MonoBehaviour
             if (_explosionDelayOnImpact < 0)
                 Explosion();
         }
+
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -115,25 +131,79 @@ public class ExplosiveProjectile : MonoBehaviour
             try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
 
             if (_sticky && !_collided)
+            {
+                Debug.Log($"STUCK: {collision.gameObject.name} {collision.gameObject.GetComponent<PlayerHitbox>()} {collision.gameObject.GetComponent<ActorHitbox>()}");
+
+
                 if (collision.gameObject.transform.root.GetComponent<Player>())
                 {
+                    GetComponent<ParentConstraint>().locked = true;
+                    GetComponent<ParentConstraint>().constraintActive = false;
+
+
                     GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
                         NetworkGameManager.StickGrenadeOnPlayer(GrenadePool.instance.stickyGrenadePool.IndexOf(gameObject), collision.gameObject.transform.root.GetComponent<Player>().playerId, collision.contacts[0].point);
                     _stuckVfx.SetActive(true);
 
                 }
-                else
+                else if (collision.gameObject.GetComponent<Rigidbody>())
                 {
-                    gameObject.transform.parent = collision.gameObject.transform;
+                    transform.parent = collision.transform;
+
+
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
                     try { _stuckVfx.SetActive(true); } catch { }
                 }
+                else
+                {
+                    //print($"STICK TO WALL {collision.gameObject.name} " +
+                    //    $"{transform.position - collision.transform.position}   {collision.transform.InverseTransformDirection(transform.position - collision.transform.position)}");
+
+                    //Vector3 vg = transform.position - collision.transform.position;
+                    //Vector3 v = collision.transform.InverseTransformDirection(transform.position - collision.transform.position);
+                    //print(v);
+
+                    //if (Mathf.Sign(v.x) != Mathf.Sign(vg.x) && Mathf.Abs(v.x) == Mathf.Abs(vg.x))
+                    //    v.x *= -1;
+
+                    //if (Mathf.Sign(v.y) != Mathf.Sign(vg.y) && Mathf.Abs(v.y) == Mathf.Abs(vg.y))
+                    //    v.y *= -1;
+
+                    //if (Mathf.Sign(v.z) != Mathf.Sign(vg.z) && Mathf.Abs(v.z) == Mathf.Abs(vg.z))
+                    //    v.z *= -1;
+
+                    ////v.y *= Mathf.Sign(vg.y);
+                    ////v.z *= Mathf.Sign(vg.z);
+                    //print(v);
+
+                    //ConstraintSource cs = new ConstraintSource(); cs.sourceTransform = collision.transform; cs.weight = 1;
+                    //GetComponent<ParentConstraint>().AddSource(cs);
+                    //GetComponent<ParentConstraint>().SetTranslationOffset(0, v);
+                    //GetComponent<ParentConstraint>().SetRotationOffset(0, transform.rotation.eulerAngles);
+                    //GetComponent<ParentConstraint>().locked = true;
+                    //GetComponent<ParentConstraint>().constraintActive = true;
+
+
+                    //_localDirToFakeParentOnColl = collision.transform.InverseTransformDirection(transform.position - collision.transform.position).normalized;
+                    //_distOnColl = Vector3.Distance(transform.position, collision.transform.position);
+                    //_fakeParent = collision.transform;
+
+
+                    GetComponent<Rigidbody>().useGravity = false;
+                    GetComponent<Rigidbody>().isKinematic = true;
+                    try { _stuckVfx.SetActive(true); } catch { }
+                }
+            }
+
+
 
             _collided = true;
         }
     }
+
+
 
 
 
