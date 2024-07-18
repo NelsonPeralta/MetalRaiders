@@ -45,7 +45,7 @@ abstract public class Ragdoll : MonoBehaviour
         if (_timeSinceLastThud > 0.3f
             && collision.gameObject.transform.root != transform.root)
         {
-            GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hips.transform.position);
+            GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hips.transform.position, SoundManager.instance.ragdollCollision);
 
             _timeSinceLastThud = 0;
 

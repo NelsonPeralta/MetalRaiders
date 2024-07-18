@@ -901,6 +901,9 @@ public class Player : Biped
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
+        print($"Damage: {damageSourceCleanName}");
+
+
         {
             //try
             //{ // Hit Marker Handling
@@ -1574,9 +1577,16 @@ public class Player : Biped
         print($"Damage_RPC {impPos} {impDir}");
 
 
+
         playerController.UnScope();
         try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
-        try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}"); }
+        try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
+
+        print($"COULD NOT ASSIGN DEATH NATURE {dn} {deathNature = (DeathNature)dn}");
+        if (deathNature == DeathNature.Melee)
+            SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulPunch);
+
+
         try
         {
             if (GameManager.instance.pid_player_Dict.ContainsKey(sourcePid))

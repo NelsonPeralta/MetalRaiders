@@ -1015,6 +1015,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeNumberLocalPlayersBtn(int i)
     {
+        PlayClickSound();
         GameManager.instance.nbLocalPlayersPreset += i;
         _nbLocalPlayersInputed.text = GameManager.instance.nbLocalPlayersPreset.ToString();
     }

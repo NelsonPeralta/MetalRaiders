@@ -262,7 +262,7 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         {
             GetComponent<AudioSource>().clip = _collisionAudioClip;
             GetComponent<AudioSource>().Play();
-            GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(transform.position);
+            GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(transform.position, SoundManager.instance.weaponCollision);
         }
         catch (System.Exception e) { Debug.LogError(e); }
     }

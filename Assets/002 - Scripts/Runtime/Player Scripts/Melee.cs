@@ -29,6 +29,7 @@ public class Melee : MonoBehaviour
 
 
     [SerializeField] PlayerMovement _movement;
+    [SerializeField] LayerMask _meleeMask;
 
     float _maxDis; // Does NOT take into account the radius of player character controller
 
@@ -127,6 +128,40 @@ public class Melee : MonoBehaviour
 
 
     int _pushForce;
+
+
+    public void PushIfAble()
+    {
+        if (hitPointsInMeleeZone.Count > 0)
+        {
+            for (int i = 0; i < hitPointsInMeleeZone.Count; i++)
+            {
+                HitPoints hp = hitPointsInMeleeZone[i];
+                if (player.isMine)
+                {
+                    print($"Melee. Max dis: ({_maxDis}), cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
+                    print(_maxDis);
+
+                    if (hp.meleeMagnetism)
+                    {
+                        Vector3 targetPostition = new Vector3(hp.transform.position.x,
+                                                    movement.transform.position.y,
+                                                    hp.transform.position.z);
+                        movement.transform.LookAt(targetPostition);
+
+                        if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
+                        else _pushForce = 100;
+
+                        player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * 10, ForceMode.Impulse);
+                        player.movement.blockPlayerMoveInput = 0.5f;
+                    }
+                }
+            }
+        }
+    }
+
+
+
     public bool MeleeDamage()
     {
         pController.currentlyReloadingTimer = 0;
@@ -149,23 +184,23 @@ public class Melee : MonoBehaviour
 
                         Vector3 dir = (hp.transform.position - player.transform.position);
 
-                        print($"Melee. Max dis: ({_maxDis}), cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
-                        print(_maxDis);
+                        //print($"Melee. Max dis: ({_maxDis}), cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
+                        //print(_maxDis);
 
-                        if (hp.meleeMagnetism)
-                        {
+                        //if (hp.meleeMagnetism)
+                        //{
 
-                            Vector3 targetPostition = new Vector3(hp.transform.position.x,
-                                                        movement.transform.position.y,
-                                                        hp.transform.position.z);
-                            movement.transform.LookAt(targetPostition);
+                        //    Vector3 targetPostition = new Vector3(hp.transform.position.x,
+                        //                                movement.transform.position.y,
+                        //                                hp.transform.position.z);
+                        //    movement.transform.LookAt(targetPostition);
 
-                            if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
-                            else _pushForce = 100;
+                        //    if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
+                        //    else _pushForce = 100;
 
-                            player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * 10, ForceMode.Impulse);
-                            player.movement.blockPlayerMoveInput = 0.5f;
-                        }
+                        //    player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * 10, ForceMode.Impulse);
+                        //    player.movement.blockPlayerMoveInput = 0.5f;
+                        //}
 
                         try
                         {
@@ -183,6 +218,38 @@ public class Melee : MonoBehaviour
                     }
                 }
             }
+        }
+        else
+        {
+            RaycastHit hit;
+            // Does the ray intersect any objects excluding the player layer
+            if (Physics.Raycast(player.mainCamera.transform.position,
+                player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, _maxDis / 2, _meleeMask))
+            {
+                print($"Melee raycast hit: {hit.transform.name}");
+
+                if (hit.transform.gameObject.GetComponent<Rigidbody>())
+                {
+                    print($"Melee pushing: {hit.transform.name}");
+                    hit.transform.gameObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.TransformDirection(Vector3.forward).normalized * 300);
+
+                    GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hit.point, SoundManager.instance.concretePunchHit);
+                    return true;
+                }
+                else
+                    GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hit.point, SoundManager.instance.concretePunchHit);
+
+
+                if (hit.transform.gameObject.GetComponent<ExplosiveBarrel>())
+                {
+                    hit.transform.gameObject.GetComponent<ExplosiveBarrel>().Damage((int)player.meleeDamage, false, player.photonId);
+                }
+
+
+                return true;
+            }
+
+
         }
 
 

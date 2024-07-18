@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviourPun
     PlayerThirdPersonModelManager _playerThirdPersonModelManager;
 
 
-    public bool isMeleeing { get { return _isMeleeing; } set { _isMeleeing = value; if (value) _meleeCooldown = 0.9f; } }
+    public bool isMeleeing { get { return _isMeleeing; } set { _isMeleeing = value; if (value) _meleeCooldown = 0.8f; } }
     public bool cameraisFloating { get { return _cameraIsFloating; } }
     float currentadsCounter
     {
@@ -564,38 +564,6 @@ public class PlayerController : MonoBehaviourPun
                 SendIsNotHoldingFireWeaponBtn();
             }
         }
-
-        return;
-
-
-        if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
-        {
-            DisableSprint();
-
-            if (pInventory.activeWeapon.codeName.Equals("oddball"))
-            {
-
-                if (player.isMine) Melee(true);
-
-                return;
-            }
-            else
-            {
-                print($"{player.name} _StartShoot");
-                _StartShoot();
-            }
-        }
-
-        if (isHoldingShootBtn && !pInventory.activeWeapon.codeName.Equals("oddball"))
-        {
-            print($"{player.name} OnPlayerFire");
-            OnPlayerFire?.Invoke(this);
-        }
-
-        if (rewiredPlayer.GetButtonUp("Shoot"))
-        {
-            SendIsNotHoldingFireWeaponBtn();
-        }
     }
 
 
@@ -835,7 +803,7 @@ public class PlayerController : MonoBehaviourPun
     }
 
     int _meleeCount = 0;
-    float meleeMovementFactor = 0;
+    float _meleeMovementFactor;
     bool _meleeSucc;
     void Melee(bool overwrite = false)
     {
@@ -843,62 +811,72 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-        _meleeSucc = false;
-        if (overwrite)
-        {
-            rScript.reloadIsCanceled = true;
 
-            UnScope();
-            _meleeSucc = melee.MeleeDamage();
-            PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
-        }
-        else if (!GetComponent<Player>().isDead)
+        if (!player.isDead && !player.isRespawning)
         {
-            if ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade && !isSprinting)
+            if ((overwrite) || ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade && !isSprinting))
             {
-                UnScope();
-                _meleeSucc = melee.MeleeDamage();
+                _meleeSucc = false;
 
+
+                UnScope();
                 rScript.reloadIsCanceled = true;
 
-                PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
+                melee.PushIfAble();
+
+
+                StartCoroutine(Melee_Coroutine());
             }
         }
 
-        _meleeSucc = false;
-
-        //if (meleeMovementFactor > 0)
-        //{
-        //    if (_meleeCount > 0)
-        //    {
-        //        Vector3 move = transform.forward * meleeMovementFactor;
-        //        GetComponent<CharacterController>().Move(move * movement.defaultMaxSpeed * 6 * Time.deltaTime);
-        //    }
-
-        //    meleeMovementFactor -= Time.deltaTime * 5f;
-
-        //    if (meleeMovementFactor <= 0)
-        //    {
-        //        _meleeCount = 0;
-        //        meleeMovementFactor = 0;
-        //    }
-        //}
     }
+
+
+
+    IEnumerator Melee_Coroutine()
+    {
+        weaponAnimator.Play("Knife Attack 2", 0, 0f);
+        PV.RPC("MeleeAnimations_RPC", RpcTarget.All);
+
+        yield return new WaitForSeconds(0.1f);
+
+        _meleeSucc = melee.MeleeDamage();
+        PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
+    }
+
+
+
+
+
+    [PunRPC]
+    void MeleeAnimations_RPC()
+    {
+        print("MeleeAnimations_RPC");
+        isMeleeing = true;
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
+
+        weaponAnimator.Play("Knife Attack 2", 0, 0f);
+        StartCoroutine(Melee3PS());
+    }
+
 
 
     [PunRPC]
     void Melee_RPC(bool succ)
     {
-        if (succ) melee.PlaySuccClip(); else melee.PlayMissClip();
-
-
-        isMeleeing = true;
-        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
-
-        print("Melee_RPC");
-        weaponAnimator.Play("Knife Attack 2", 0, 0f);
-        StartCoroutine(Melee3PS());
+        if (player.isMine && (!player.isDead && !player.isRespawning))
+        {
+            print("Melee_RPC");
+            if(!succ)melee.PlayMissClip();
+            //if (succ) melee.PlaySuccClip(); else melee.PlayMissClip();
+        }
+        _meleeSucc = false;
     }
+
+
+
+
+
 
     void Crouch()
     {
@@ -1600,7 +1578,7 @@ public class PlayerController : MonoBehaviourPun
         Debug.Log("OnDeath_Delegate");
         _currentlyThrowingGrenadeTimer = 0;
         _currentlyReloadingTimer = 0; CancelReloadCoroutine();
-        isSprinting = false;
+        isSprinting = false; _meleeSucc = false;
         isHoldingShootBtn = false;
     }
 
@@ -1608,7 +1586,7 @@ public class PlayerController : MonoBehaviourPun
     {
         _currentlyThrowingGrenadeTimer = 0;
         _currentlyReloadingTimer = 0; CancelReloadCoroutine();
-        isSprinting = false;
+        isSprinting = false; _meleeSucc = false;
         isHoldingShootBtn = false;
     }
 

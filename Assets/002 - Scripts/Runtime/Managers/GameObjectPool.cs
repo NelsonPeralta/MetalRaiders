@@ -138,6 +138,8 @@ public class GameObjectPool : MonoBehaviour
         return null;
     }
 
+
+
     public GameObject SpawnPooledShieldHit()
     {
         foreach (GameObject obj in shieldHits)
@@ -173,14 +175,16 @@ public class GameObjectPool : MonoBehaviour
                 }
         return null;
     }
-    public GameObject SpawnWeaponSmokeCollisionObject(Vector3 pos)
+    public GameObject SpawnWeaponSmokeCollisionObject(Vector3 pos, AudioClip ac)
     {
         foreach (GameObject obj in weaponSmokeCollisions)
             if (!obj.activeInHierarchy)
             {
+                obj.GetComponent<AudioSource>().clip = ac;
+
                 obj.transform.position = pos;
                 obj.SetActive(true);
-                StartCoroutine(DisableObjectAfterTime(obj, 10));
+                StartCoroutine(DisableObjectAfterTime(obj, 2));
                 return obj;
             }
         return null;
