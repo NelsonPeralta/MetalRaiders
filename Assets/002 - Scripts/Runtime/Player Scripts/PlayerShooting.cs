@@ -387,13 +387,15 @@ public class PlayerShooting : MonoBehaviourPun
                                 Array.IndexOf(player.playerInventory.allWeaponsInInventory, activeWeapon.gameObject));
                     }
                 }
-                GetComponent<CommonFiringActions>().SpawnMuzzleflash();
+                activeWeapon.SpawnMuzzleflash();
             }
             else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
             {
                 // Projectile does not spawn if ammo left is 0, lag
                 if (playerController.player.isMine)
                     PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.All);
+                activeWeapon.SpawnMuzzleflash();
+
 
                 //Debug.Log($"{playerController.name} PlayerShooting: AmmoProjectileType.Rocket");
                 //ExplosiveProjectile rocket = null;
@@ -480,7 +482,6 @@ public class PlayerShooting : MonoBehaviourPun
         rocket.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
 
         rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
-        GetComponent<CommonFiringActions>().SpawnMuzzleflash();
     }
 
     public void Update()

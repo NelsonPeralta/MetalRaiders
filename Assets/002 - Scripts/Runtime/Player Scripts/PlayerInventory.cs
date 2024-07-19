@@ -63,12 +63,13 @@ public class PlayerInventory : MonoBehaviourPun
 
                 try
                 {
-                    preVal.equippedModelB.SetActive(false);
+                    preVal.equippedModel.SetActive(false);
                     preVal.holsteredModel.SetActive(false);
                 }
                 catch { }
 
                 _activeWeapon = value;
+                _activeWeapon.DisableMuzzleFlash();
 
                 //if (GameManager.instance.gameType == GameManager.GameType.Fiesta && _activeWeapon.codeName.Equals("rpg")) { _activeWeapon.loadedAmmo = 1; _activeWeapon.spareAmmo = 0; }
                 //if (GameManager.instance.gameType == GameManager.GameType.Fiesta && _activeWeapon.codeName.Equals("sniper")) { _activeWeapon.loadedAmmo = 4; _activeWeapon.spareAmmo = 0; }
@@ -346,18 +347,21 @@ public class PlayerInventory : MonoBehaviourPun
 
     void CheckLowAmmoIndicator()
     {
-        lowAmmoIndicator.SetActive(false);
-        noAmmoIndicator.SetActive(false);
 
-        if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
-        {
-            lowAmmoIndicator.SetActive(true);
-            noAmmoIndicator.SetActive(false);
-        }
         if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
         {
             lowAmmoIndicator.SetActive(false);
             noAmmoIndicator.SetActive(true);
+        }
+        else if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
+        {
+            lowAmmoIndicator.SetActive(true);
+            noAmmoIndicator.SetActive(false);
+        }
+        else
+        {
+            lowAmmoIndicator.SetActive(false);
+            noAmmoIndicator.SetActive(false);
         }
     }
 
@@ -446,13 +450,13 @@ public class PlayerInventory : MonoBehaviourPun
 
                     try
                     {
-                        _previousActiveWeapon.equippedModelB.SetActive(false);
+                        _previousActiveWeapon.equippedModel.SetActive(false);
                         _previousActiveWeapon.holsteredModel.SetActive(false);
                     }
                     catch { }
                     try
                     {
-                        _holsteredWeapon.equippedModelB.SetActive(false);
+                        _holsteredWeapon.equippedModel.SetActive(false);
                         _holsteredWeapon.holsteredModel.SetActive(false);
                     }
                     catch { }
@@ -481,10 +485,10 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-
+                    _activeWeapon.DisableMuzzleFlash();
                     try
                     {
-                        _activeWeapon.equippedModelB.SetActive(true);
+                        _activeWeapon.equippedModel.SetActive(true);
                         _holsteredWeapon.holsteredModel.SetActive(true);
                     }
                     catch { }
@@ -639,51 +643,21 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 if (wp != activeWeapon)
                 {
-                    wp.equippedModelB.SetActive(false);
+                    wp.equippedModel.SetActive(false);
                 }
 
                 if (wp == activeWeapon)
                 {
-                    try { wp.equippedModelB.SetActive(true); } catch (Exception e) { Debug.LogWarning($"{e}"); }
+                    try { wp.equippedModel.SetActive(true); } catch (Exception e) { Debug.LogWarning($"{e}"); }
                 }
             }
             catch (Exception e) { Debug.LogWarning($"{e}"); }
         }
     }
 
-    public void SwapGunsOnCharacter(int secondaryWeapon)
-    {
-        //Debug.Log("Active weapon:" + activeWeapon.name);
-
-        foreach (GameObject weap in allWeaponsInInventory)
-        {
-            if (weap.GetComponent<WeaponProperties>().equippedModelA)
-                weap.GetComponent<WeaponProperties>().equippedModelA.SetActive(false);
-            if (weap.GetComponent<WeaponProperties>().unequippedModelA)
-                weap.GetComponent<WeaponProperties>().unequippedModelA.SetActive(false);
-        }
-
-        if (activeWeapon.GetComponent<WeaponProperties>().equippedModelA &&
-            activeWeapon.GetComponent<WeaponProperties>().unequippedModelA)
-        {
-            activeWeapon.GetComponent<WeaponProperties>().equippedModelA.SetActive(true);
-            activeWeapon.GetComponent<WeaponProperties>().unequippedModelA.SetActive(false);
-        }
-
-        if (weaponsEquiped[1])
-        {
-            if (weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().equippedModelA &&
-                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().unequippedModelA)
-            {
-                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().equippedModelA.SetActive(false);
-                weaponsEquiped[secondaryWeapon].GetComponent<WeaponProperties>().unequippedModelA.SetActive(true);
-            }
-        }
-    }
 
     public IEnumerator ToggleTPPistolIdle(int secondaryWeapon)
     {
-        SwapGunsOnCharacter(secondaryWeapon);
         yield return new WaitForEndOfFrame();
 
         if (activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)

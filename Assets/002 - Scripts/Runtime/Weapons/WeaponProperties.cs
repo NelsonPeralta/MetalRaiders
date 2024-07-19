@@ -107,8 +107,6 @@ public class WeaponProperties : MonoBehaviour
 
     [Header("Animation")]
     public IdleHandlingAnimationType idleHandlingAnimationType;
-    public GameObject equippedModelA;
-    public GameObject unequippedModelA;
 
     [Header("Dual Wielding")]
     public GameObject rightHandGO;
@@ -117,11 +115,11 @@ public class WeaponProperties : MonoBehaviour
     public WeaponProperties leftWeapon;
     public WeaponProperties rightWeapon;
 
-    public GameObject equippedModelB;
+    public GameObject equippedModel;
     public GameObject holsteredModel;
 
     public GameObject weaponRessource;
-    public GameObject muzzleFlash, glint;
+    public GameObject fpsMuzzleFlash, tpsMuzzleFlash;
 
     public int degradingDamageStart, degradedDamage;
 
@@ -338,14 +336,27 @@ public class WeaponProperties : MonoBehaviour
     }
     public void SpawnMuzzleflash()
     {
-        StartCoroutine(SpawnMuzzleflash_Coroutine());
+        if (fpsMuzzleFlash)
+            StartCoroutine(SpawnMuzzleflash_Coroutine());
+    }
+
+    public void DisableMuzzleFlash()
+    {
+        if (fpsMuzzleFlash)
+        {
+            fpsMuzzleFlash.SetActive(false);
+            tpsMuzzleFlash.SetActive(false);
+        }
     }
 
     IEnumerator SpawnMuzzleflash_Coroutine()
     {
-        muzzleFlash.SetActive(false);
+        DisableMuzzleFlash();
+
         yield return new WaitForEndOfFrame();
-        muzzleFlash.SetActive(true);
+
+        fpsMuzzleFlash.SetActive(true);
+        tpsMuzzleFlash.SetActive(true);
     }
 
     public Quaternion GetRandomSprayRotation()
@@ -431,7 +442,7 @@ public class WeaponProperties : MonoBehaviour
             previousLayer = gameObject.layer;
             crosshair.gameObject.SetActive(true);
             crosshair.color = Crosshair.Color.Blue;
-            equippedModelB.SetActive(true);
+            equippedModel.SetActive(true);
         }
         catch
         {
@@ -455,7 +466,7 @@ public class WeaponProperties : MonoBehaviour
         try
         {
             crosshair.gameObject.SetActive(false);
-            equippedModelB.SetActive(false);
+            equippedModel.SetActive(false);
         }
         catch
         {
@@ -648,17 +659,21 @@ public class WeaponPropertiesEditor : Editor
         EditorGUILayout.LabelField("Model", EditorStyles.boldLabel);
         wp.weaponRessource = EditorGUILayout.ObjectField("Ressource", wp.weaponRessource, typeof(GameObject), true) as GameObject;
         wp.idleHandlingAnimationType = (WeaponProperties.IdleHandlingAnimationType)EditorGUILayout.EnumPopup("Idle Handling Type", wp.idleHandlingAnimationType);
-        wp.equippedModelA = EditorGUILayout.ObjectField("Equipped model A", wp.equippedModelA, typeof(GameObject), true) as GameObject;
-        wp.unequippedModelA = EditorGUILayout.ObjectField("Unequipped model A", wp.unequippedModelA, typeof(GameObject), true) as GameObject;
-        wp.equippedModelB = EditorGUILayout.ObjectField("Equipped model B", wp.equippedModelB, typeof(GameObject), true) as GameObject;
+        wp.equippedModel = EditorGUILayout.ObjectField("Equipped model", wp.equippedModel, typeof(GameObject), true) as GameObject;
         wp.holsteredModel = EditorGUILayout.ObjectField("Holstered model", wp.holsteredModel, typeof(GameObject), true) as GameObject;
+
+
+
+        wp.fpsMuzzleFlash = EditorGUILayout.ObjectField("Fps Muzzleflash", wp.fpsMuzzleFlash, typeof(GameObject), true) as GameObject;
+        wp.tpsMuzzleFlash = EditorGUILayout.ObjectField("Tps Muzzleflash", wp.tpsMuzzleFlash, typeof(GameObject), true) as GameObject;
+
+
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
         wp.Fire = EditorGUILayout.ObjectField("Fire", wp.Fire, typeof(AudioClip), true) as AudioClip;
         wp.ReloadShort = EditorGUILayout.ObjectField("Reload short", wp.ReloadShort, typeof(AudioClip), true) as AudioClip;
         wp.draw = EditorGUILayout.ObjectField("Draw", wp.draw, typeof(AudioClip), true) as AudioClip;
-        wp.glint = EditorGUILayout.ObjectField("Glint", wp.glint, typeof(GameObject), true) as GameObject;
 
 
         EditorUtility.SetDirty(wp);

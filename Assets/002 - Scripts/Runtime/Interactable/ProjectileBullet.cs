@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class ProjectileBullet : MonoBehaviour
@@ -94,9 +95,7 @@ public class ProjectileBullet : MonoBehaviour
                     }
                     else
                     {
-                        GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
-                        genericHit.transform.position = finalHitPoint;
-                        genericHit.SetActive(true);
+                        //GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit(finalHitPoint, hitInfo.normal);
 
                         damageDealt = true;
                     }
@@ -117,9 +116,7 @@ public class ProjectileBullet : MonoBehaviour
                             }
                     }
                     catch { }
-                    GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
-                    genericHit.transform.position = finalHitPoint;
-                    genericHit.SetActive(true);
+                    //GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit(finalHitPoint);
 
                     damageDealt = true;
                 }
@@ -173,9 +170,7 @@ public class ProjectileBullet : MonoBehaviour
                             }
                     }
                     catch { }
-                    GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
-                    genericHit.transform.position = finalHitPoint;
-                    genericHit.SetActive(true);
+                    //GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit(finalHitPoint);
 
                     damageDealt = true;
                 }

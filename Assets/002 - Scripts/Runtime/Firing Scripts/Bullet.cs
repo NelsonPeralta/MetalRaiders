@@ -401,7 +401,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     }
                     else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<ActorHitbox>() && !finalHitObject.GetComponent<CharacterController>())
                     {
-                        Debug.Log("asdf10");
+                        Debug.Log($"Bullet ELSEIF {finalHitObject.name}");
 
                         try
                         {
@@ -425,14 +425,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                             }
                         }
                         catch { }
-                        GameObject genericHit = GameObjectPool.instance.SpawnPooledGenericHit();
-                        genericHit.transform.position = finalHitPoint;
-                        genericHit.SetActive(true);
+                        GameObjectPool.instance.SpawnPooledGenericHit(finalHitPoint, hitInfo.normal);
 
-                        GameObject imp = GameObjectPool.instance.SpawnBulletMetalImpactObject();
-                        imp.transform.position = finalHitPoint;
-                        imp.transform.rotation = Quaternion.LookRotation(hitInfo.normal);
-                        imp.SetActive(true);
+                        if (finalHitObject.GetComponent<IDamageable>() == null) // avoids staying in empty space after glass is destroyed
+                            GameObjectPool.instance.SpawnBulletMetalImpactObject(finalHitPoint, hitInfo.normal);
 
                         damageDealt = true;
                     }

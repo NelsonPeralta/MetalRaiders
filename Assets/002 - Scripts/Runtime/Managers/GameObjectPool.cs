@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.IO;
 using UnityEngine.SceneManagement;
+using UnityEditor.PackageManager;
 
 public class GameObjectPool : MonoBehaviour
 {
@@ -97,7 +98,7 @@ public class GameObjectPool : MonoBehaviour
 
 
 
-        for (int i = 0; i < amountToPool * 5; i++)
+        for (int i = 0; i < 100; i++)
         {
             GameObject obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
@@ -126,12 +127,21 @@ public class GameObjectPool : MonoBehaviour
         return null;
     }
 
-    public GameObject SpawnPooledGenericHit()
+    public GameObject SpawnPooledGenericHit(Vector3 pos, Vector3 norm)
     {
         foreach (GameObject obj in genericHits)
             if (!obj.activeSelf)
                 if (!obj.activeSelf)
                 {
+                    obj.transform.position = pos;
+
+
+                    obj.transform.rotation = Quaternion.LookRotation(norm);
+                    obj.transform.position += obj.transform.forward / 10;
+
+
+                    obj.SetActive(true);
+
                     StartCoroutine(DisableObjectAfterTime(obj));
                     return obj;
                 }
@@ -164,15 +174,20 @@ public class GameObjectPool : MonoBehaviour
         return null;
     }
 
-    public GameObject SpawnBulletMetalImpactObject()
+    public GameObject SpawnBulletMetalImpactObject(Vector3 pos, Vector3 norm)
     {
         foreach (GameObject obj in bulletMetalImpactList)
             if (!obj.activeSelf)
-                if (!obj.activeSelf)
-                {
-                    StartCoroutine(DisableObjectAfterTime(obj, 10));
-                    return obj;
-                }
+            {
+                obj.transform.position = pos;
+                obj.transform.rotation = Quaternion.LookRotation(norm);
+                obj.transform.position += obj.transform.forward / 1000;
+                obj.SetActive(true);
+
+
+                StartCoroutine(DisableObjectAfterTime(obj, 10));
+                return obj;
+            }
         return null;
     }
     public GameObject SpawnWeaponSmokeCollisionObject(Vector3 pos, AudioClip ac)

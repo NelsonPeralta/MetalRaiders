@@ -749,7 +749,6 @@ public class PlayerController : MonoBehaviourPun
                     isAiming = true;
 
 
-                    PV.RPC("ToggleGlint_RPC", RpcTarget.AllViaServer, isAiming);
 
 
 
@@ -772,7 +771,6 @@ public class PlayerController : MonoBehaviourPun
                     //gunCam.fieldOfView = 60;
 
                     allPlayerScripts.aimingScript.playAimSound();
-                    PV.RPC("ToggleGlint_RPC", RpcTarget.AllViaServer, isAiming);
                 }
             }
         }
@@ -799,7 +797,6 @@ public class PlayerController : MonoBehaviourPun
 
         mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
         gunCam.enabled = true;
-        //PV.RPC("ToggleGlint_RPC", RpcTarget.AllViaServer, isAiming);
     }
 
     int _meleeCount = 0;
@@ -1686,11 +1683,6 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
-    [PunRPC]
-    void ToggleGlint_RPC(bool fga)
-    {
-        try { pInventory.activeWeapon.glint.SetActive(fga); } catch { }
-    }
 
 
     [PunRPC]
