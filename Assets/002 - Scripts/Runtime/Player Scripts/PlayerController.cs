@@ -432,7 +432,8 @@ public class PlayerController : MonoBehaviourPun
 
     public void EnableSprint()
     {
-        PV.RPC("EnableSprint_RPC", RpcTarget.All);
+        if (player.movement.blockPlayerMoveInput <= 0)
+            PV.RPC("EnableSprint_RPC", RpcTarget.All);
     }
 
     [PunRPC]
@@ -864,7 +865,7 @@ public class PlayerController : MonoBehaviourPun
         if (player.isMine && (!player.isDead && !player.isRespawning))
         {
             print("Melee_RPC");
-            if(!succ)melee.PlayMissClip();
+            if (!succ) melee.PlayMissClip();
             //if (succ) melee.PlaySuccClip(); else melee.PlayMissClip();
         }
         _meleeSucc = false;
