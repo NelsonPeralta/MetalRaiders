@@ -127,7 +127,6 @@ public class Melee : MonoBehaviour
 
 
 
-    int _pushForce;
 
 
     public void PushIfAble()
@@ -149,11 +148,11 @@ public class Melee : MonoBehaviour
                                                     hp.transform.position.z);
                         movement.transform.LookAt(targetPostition);
 
-                        if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
-                        else _pushForce = 100;
+                        //if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
+                        //else _pushForce = 100;
 
-                        player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * 10, ForceMode.Impulse);
                         player.movement.blockPlayerMoveInput = 0.5f;
+                        player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * GameManager.instance.playerMeleePushForce, ForceMode.Impulse);
                     }
                 }
             }

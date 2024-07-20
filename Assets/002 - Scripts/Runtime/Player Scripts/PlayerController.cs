@@ -463,7 +463,7 @@ public class PlayerController : MonoBehaviourPun
 
     float _disableSprintRPCCooldown;
 
-    void DisableSprint()
+    public void DisableSprint()
     {
         if (_disableSprintRPCCooldown < 0)
         {

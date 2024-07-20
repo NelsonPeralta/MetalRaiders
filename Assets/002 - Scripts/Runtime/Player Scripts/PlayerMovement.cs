@@ -280,6 +280,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (blockPlayerMoveInput > 0)
         {
+            _rb.useGravity = true;
+            _rb.drag = 0;
             moveSpeed = 1;
             blockPlayerMoveInput -= Time.deltaTime;
 
