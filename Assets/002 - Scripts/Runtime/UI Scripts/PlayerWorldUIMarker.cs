@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
 public class PlayerWorldUIMarker : MonoBehaviour
@@ -34,10 +35,12 @@ public class PlayerWorldUIMarker : MonoBehaviour
     [SerializeField] TMP_Text _text;
     [SerializeField] GameObject _redMarker;
     [SerializeField] GameObject _greenMarker;
+    [SerializeField] Image _greenMarkerImage;
     [SerializeField] bool _seen;
     [SerializeField] float _seenCd;
 
     int damping = 1, tries = 0;
+    Color _tCol;
 
     private void Awake()
     {
@@ -51,6 +54,8 @@ public class PlayerWorldUIMarker : MonoBehaviour
     private void Start()
     {
         _holderScript.OnEnabledThis += OnHolderEnabled;
+
+        _greenMarkerImage = _greenMarker.GetComponent<Image>();
     }
 
     private void Update()
@@ -84,6 +89,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         {
             _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team == _targetPlayer.team);
 
+
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
                 if (_player.team == _targetPlayer.team) _text.gameObject.SetActive(true);
@@ -103,6 +109,28 @@ public class PlayerWorldUIMarker : MonoBehaviour
                 holder.SetActive(false);
             else
                 holder.SetActive(true);
+        }
+
+
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team == _targetPlayer.team)
+        {
+            if (!_player.isDead && !_player.isRespawning)
+            {
+                if (_player.isTakingDamage)
+                {
+                    //_greenMarkerImage.color = new Color(255, 110, 0, 255);
+                    ColorUtility.TryParseHtmlString(GameManager.colorDict["orange"], out _tCol);
+                    _greenMarkerImage.color = _tCol;
+                }
+                else if (_player.playerController.isCurrentlyShootingForMotionTracker)
+                {
+                    _greenMarkerImage.color = Color.yellow;
+                }
+                else
+                {
+                    _greenMarkerImage.color = Color.green;
+                }
+            }
         }
     }
 

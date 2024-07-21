@@ -136,6 +136,9 @@ public class ExplosiveProjectile : MonoBehaviour
 
                 if (collision.gameObject.transform.root.GetComponent<Player>())
                 {
+
+                    print("Stuck 1");
+
                     GetComponent<ParentConstraint>().locked = true;
                     GetComponent<ParentConstraint>().constraintActive = false;
 
@@ -148,9 +151,11 @@ public class ExplosiveProjectile : MonoBehaviour
                 }
                 else if (collision.gameObject.GetComponent<Rigidbody>())
                 {
+                    print("Stuck 2");
                     transform.parent = collision.transform;
 
 
+                    GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
                     try { _stuckVfx.SetActive(true); } catch { }
@@ -190,6 +195,11 @@ public class ExplosiveProjectile : MonoBehaviour
                     //_fakeParent = collision.transform;
 
 
+                    print("Stuck 3");
+
+
+                    transform.parent = collision.transform;
+                    GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
                     try { _stuckVfx.SetActive(true); } catch { }

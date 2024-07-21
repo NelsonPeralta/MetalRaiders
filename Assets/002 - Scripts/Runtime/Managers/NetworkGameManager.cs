@@ -987,24 +987,28 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    public void AskMasterToReserveSpawnPoint(int playerPhotonId, bool caller = true)
+    public void AskMasterToReserveSpawnPoint(int playerPhotonId, int controllerID, bool caller = true)
     {
         if (caller)
         {
-            instance._pv.RPC("AskMasterToReserveSpawnPoint", RpcTarget.MasterClient, playerPhotonId, false);
+            instance._pv.RPC("AskMasterToReserveSpawnPoint", RpcTarget.MasterClient, playerPhotonId, controllerID, false);
         }
         else if (!caller && PhotonNetwork.IsMasterClient)
         {
             _reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
-            instance._pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.All, playerPhotonId, _reservedSpawnPoint.Item1.position, _reservedSpawnPoint.Item2);
+            instance._pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.All, playerPhotonId, controllerID, _reservedSpawnPoint.Item1.position, _reservedSpawnPoint.Item2);
         }
     }
 
 
     [PunRPC]
-    public void ReserveSpawnPoint_RPC(int playerPhotonId, Vector3 pos, bool isRandom)
+    public void ReserveSpawnPoint_RPC(int playerPhotonId, int controllerID, Vector3 pos, bool isRandom)
     {
         SpawnManager.spawnManagerInstance.ReserveSpawnPoint(pos);
-        GameManager.instance.pid_player_Dict[playerPhotonId].UpdateReservedSpawnPoint(pos, isRandom);
+
+        foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+        {
+            if (p.photonId == playerPhotonId && p.rid == controllerID) p.UpdateReservedSpawnPoint(pos, isRandom);
+        }
     }
 }

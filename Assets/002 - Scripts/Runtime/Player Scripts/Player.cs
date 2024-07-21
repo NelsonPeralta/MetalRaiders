@@ -122,6 +122,7 @@ public class Player : Biped
             if (_previousValue > newValue)
             {
                 Debug.Log($"Player Damaged");
+                _isTakingDamageForIndicator = 0.3f;
                 OnPlayerDamaged?.Invoke(this);
             }
 
@@ -684,7 +685,9 @@ public class Player : Biped
 
     Rigidbody _rb;
 
-    float _respawnCountdown;
+    public bool isTakingDamage { get { return _isTakingDamageForIndicator > 0; } }
+
+    float _respawnCountdown, _isTakingDamageForIndicator;
     int _respawnBeepCount;
 
     private void Awake()
@@ -818,6 +821,7 @@ public class Player : Biped
     private void Update()
     {
         if (_hurtCooldown > 0) _hurtCooldown -= Time.deltaTime;
+        if (_isTakingDamageForIndicator > 0) _isTakingDamageForIndicator -= Time.deltaTime;
 
 
         if (!PV.IsMine) _rb.isKinematic = true;
@@ -1361,7 +1365,7 @@ public class Player : Biped
     {
         Debug.Log("MidRespawnAction");
         yield return new WaitForSeconds(RESPAWN_TIME * 0.8f);
-        NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId);
+        NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId, rid);
     }
     IEnumerator LateRespawnAction()
     {
@@ -1371,8 +1375,8 @@ public class Player : Biped
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
         hitPoints = maxHitPoints;
-        transform.position = GameManager.instance.reservedSpawnPoint.position + new Vector3(0, 2, 0);
-        transform.rotation = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(GameManager.instance.reservedSpawnPoint.position).rotation;
+        transform.position = _reservedSpawnPointTrans.position + new Vector3(0, 2, 0);
+        transform.rotation = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(_reservedSpawnPointTrans.position).rotation;
         isDead = false;
     }
 
@@ -1885,9 +1889,11 @@ public class Player : Biped
     }
 
 
+
+    Transform _reservedSpawnPointTrans;
     public void UpdateReservedSpawnPoint(Vector3 t, bool isRandom)
     {
-        GameManager.instance.reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
+        _reservedSpawnPointTrans = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
         _lastSpawnPointIsRandom = isRandom;
     }
 

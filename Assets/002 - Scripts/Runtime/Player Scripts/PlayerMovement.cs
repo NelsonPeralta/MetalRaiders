@@ -841,7 +841,7 @@ public class PlayerMovement : MonoBehaviour
                 if (_footstepClipDelay <= 0)
                 {
                     if (_player.isMine)
-                        _footstepAudioSource.volume = 0.5f;
+                        _footstepAudioSource.volume = 0.2f;
                     else
                         _footstepAudioSource.volume = 1;
 

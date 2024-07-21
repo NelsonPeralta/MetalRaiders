@@ -737,7 +737,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     List<Vector3> _orSpPts = new List<Vector3>();
-    public Transform reservedSpawnPoint;
     public IEnumerator SpawnPlayers_Coroutine()
     {
 
@@ -752,12 +751,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             (Transform, bool) spawnpoint = (null, false);
 
+            //if (GameManager.instance.connection == Connection.Local)
+            //    do { spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint(); } while (_orSpPts.Contains(spawnpoint.Item1.position));
+            //else
+            //    spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex - 1), false);
+            //_orSpPts.Add(spawnpoint.Item1.position);
+
+
+
             if (GameManager.instance.connection == Connection.Local)
-                do { spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint(); } while (_orSpPts.Contains(spawnpoint.Item1.position));
+                spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(i), false);
             else
                 spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex - 1), false);
 
-            _orSpPts.Add(spawnpoint.Item1.position);
+
+
             Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.Item1.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.Item1.rotation).GetComponent<Player>();
 
             player.GetComponent<PlayerController>().rid = i;
