@@ -28,7 +28,7 @@ public class SpawnPoint : MonoBehaviour
         set
         {
             _reserved = value;
-            if (value) _reservedReset = 3;
+            if (value) _reservedReset = 4;
 
         }
     }
@@ -104,7 +104,14 @@ public class SpawnPoint : MonoBehaviour
     private void Update()
     {
         if (_reservedReset > 0)
+        {
             _reservedReset -= Time.deltaTime;
+
+            if (_reservedReset <= 0)
+            {
+                _reserved = false;
+            }
+        }
 
 
         if (_seenReset > 0)

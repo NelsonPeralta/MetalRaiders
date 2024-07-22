@@ -198,7 +198,7 @@ public class ExplosiveProjectile : MonoBehaviour
                     print("Stuck 3");
 
 
-                    transform.parent = collision.transform;
+                    //transform.parent = collision.transform;
                     GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;

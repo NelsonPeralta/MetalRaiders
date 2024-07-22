@@ -8,6 +8,7 @@ public class ManCannon : MonoBehaviour
     [SerializeField] int power;
     [SerializeField] float _blockMovementTime;
     [SerializeField] AudioClip onTriggerAudioClip;
+    [SerializeField] bool _invisible;
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log($"ManCannon {other}");
@@ -34,7 +35,7 @@ public class ManCannon : MonoBehaviour
             {
 
                 if (other.GetComponent<PlayerCapsule>())
-                    if (other.transform.root.GetComponent<PhotonView>().IsMine && other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput <= 0)
+                    if (other.transform.root.GetComponent<PhotonView>().IsMine && (other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput <= 0 || _invisible))
                     {
                         other.transform.root.GetComponent<PlayerController>().DisableSprint();
 

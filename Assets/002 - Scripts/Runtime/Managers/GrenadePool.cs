@@ -59,6 +59,9 @@ public class GrenadePool : MonoBehaviour
                 _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().useGravity = true;
                 _instance._stickyGrenadePool[i].GetComponent<ExplosiveProjectile>().stuck = false;
                 _instance._stickyGrenadePool[i].transform.SetParent(instance.transform);
+
+                _instance._stickyGrenadePool[i].transform.localScale = Vector3.one;
+
             }
 
             if (isFrag)

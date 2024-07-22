@@ -50,6 +50,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         _redMarker.gameObject.SetActive(false);
         _greenMarker.gameObject.SetActive(false);
         _text.gameObject.SetActive(false);
+        _deadTag.gameObject.SetActive(false);
     }
     private void Start()
     {
@@ -94,7 +95,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
             {
                 if (_player.team == _targetPlayer.team) _text.gameObject.SetActive(true);
 
-                if (_player.isDead || _player.isRespawning) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
+                if ((_player.isDead || _player.isRespawning) && _player.team == _targetPlayer.team) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
             }
             else
             {

@@ -1361,17 +1361,26 @@ public class Player : Biped
 
     bool _lastSpawnPointIsRandom;
 
+
+
+    IEnumerator ShowScoreboardOnDeath_Coroutine()
+    {
+        yield return new WaitForSeconds(RESPAWN_TIME - 2);
+
+        GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
+
+    }
+
     IEnumerator MidRespawn_Coroutine()
     {
         Debug.Log("MidRespawnAction");
-        yield return new WaitForSeconds(RESPAWN_TIME * 0.8f);
+        yield return new WaitForSeconds(RESPAWN_TIME - 1);
         NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId, rid);
     }
     IEnumerator LateRespawnAction()
     {
         Debug.Log("LateRespawnAction");
         yield return new WaitForSeconds(RESPAWN_TIME * 0.99f);
-        GetComponent<AllPlayerScripts>().scoreboardManager.OpenScoreboard();
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
         hitPoints = maxHitPoints;
@@ -1459,6 +1468,7 @@ public class Player : Biped
         hitboxesEnabled = false;
 
         SpawnRagdoll();
+        StartCoroutine(ShowScoreboardOnDeath_Coroutine());
         StartCoroutine(Respawn_Coroutine());
         StartCoroutine(MidRespawn_Coroutine());
         StartCoroutine(LateRespawnAction());
@@ -1895,6 +1905,9 @@ public class Player : Biped
     {
         _reservedSpawnPointTrans = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
         _lastSpawnPointIsRandom = isRandom;
+
+
+        transform.position = _reservedSpawnPointTrans.position + new Vector3(0, 2, 0);
     }
 
 
