@@ -35,8 +35,11 @@ public class ManCannon : MonoBehaviour
             {
 
                 if (other.GetComponent<PlayerCapsule>())
-                    if (other.transform.root.GetComponent<PhotonView>().IsMine && (other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput <= 0 || _invisible))
+                    if (other.transform.root.GetComponent<PhotonView>().IsMine && ((!_invisible && other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput <= 0) || (_invisible && other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput > 0)))
                     {
+                        if (_invisible) print(other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput);
+
+
                         other.transform.root.GetComponent<PlayerController>().DisableSprint();
 
 
