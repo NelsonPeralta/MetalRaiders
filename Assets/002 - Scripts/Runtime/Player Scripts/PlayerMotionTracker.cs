@@ -20,16 +20,20 @@ public class PlayerMotionTracker : MonoBehaviourPun
 
     public void Setup()
     {
+        print($"PlayerMotionTracker for {player.name}: Setup {_motionTrackerDotsList.Length} {GameManager.instance.GetAllPhotonPlayers().Count}");
+
         for (int i = 0; i < _motionTrackerDotsList.Length; i++)
         {
             if (i < 8)
             {
+                print($"PlayerMotionTracker for {player.name}: Setup {_motionTrackerDotsList[i].targetPlayerController}");
+
                 if (!_motionTrackerDotsList[i].targetPlayerController)
                 {
-                    if (i < GameManager.instance.pid_player_Dict.Count)
+                    if (i < GameManager.instance.GetAllPhotonPlayers().Count)
                     {
-                        print($"PlayerMotionTracker Setup {i} : {GameManager.instance.pid_player_Dict.ElementAt(i).Value.name}");
-                        _motionTrackerDotsList[i].biped = GameManager.instance.pid_player_Dict.ElementAt(i).Value.GetComponent<Biped>();
+                        print($"PlayerMotionTracker Setup {i} : {GameManager.instance.GetAllPhotonPlayers().ElementAt(i).name}");
+                        _motionTrackerDotsList[i].biped = GameManager.instance.GetAllPhotonPlayers().ElementAt(i).GetComponent<Biped>();
                     }
                 }
             }

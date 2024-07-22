@@ -89,7 +89,7 @@ public class ScoreboardManager : MonoBehaviour
 
     public void SetScoreboardRows()
     {
-        print($"SetScoreboardRows {GameManager.instance.pid_player_Dict.Values.Count}");
+        print($"SetScoreboardRows {GameManager.instance.GetAllPhotonPlayers().Count}");
         for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers; i++)
         {
             if (CurrentRoomManager.instance.playerDataCells[i].occupied)

@@ -294,7 +294,7 @@ abstract public class Actor : Biped
         gameObject.SetActive(true);
         SwarmManager.instance.actorsAliveList.Add(this.GetComponent<Biped>());
 
-        foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+        foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
             if (p && p.isMine)
                 p.SetupMotionTracker();
     }

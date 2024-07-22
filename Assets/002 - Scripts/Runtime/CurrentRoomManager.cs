@@ -171,7 +171,7 @@ public class CurrentRoomManager : MonoBehaviour
             _allPlayersJoined = value;
             if (value && _preVal != value)
             {
-                Debug.Log("OnAllPlayersJoinedRoom");
+                Debug.Log("CurrentRoomManager: OnAllPlayersJoinedRoom");
                 gameIsReady = true;
                 //StartCoroutine(GameIsReadyDelay_Coroutine());
 
@@ -190,12 +190,20 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
-                Debug.Log("gameIsReady");
+                print($"CURRENT ROOM MANAGER: GAME IS READY {GameManager.instance.GetAllPhotonPlayers().Count}");
                 _gameIsReady = true;
 
                 OnGameIsReady?.Invoke(this);
 
-                foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+
+                if (GameManager.instance.GetAllPhotonPlayers().Count != PhotonNetwork.CurrentRoom.PlayerCount)
+                {
+                    GameManager.instance.ReEvaluatePhotonToPlayerDict();
+                    
+                }
+
+
+                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                     if (p && p.isMine)
                     {
                         p.allPlayerScripts.scoreboardManager.SetScoreboardRows();

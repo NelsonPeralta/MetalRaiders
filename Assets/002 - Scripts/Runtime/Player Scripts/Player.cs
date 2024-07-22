@@ -794,10 +794,14 @@ public class Player : Biped
         defaultVerticalFov = 0; GetComponent<PlayerController>().UnScope();
 
         {
-            Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.pid_player_Dict);
-            if (!t.ContainsKey(photonId))
-                t.Add(photonId, this);
-            GameManager.instance.pid_player_Dict = t;
+            if (!GameManager.PlayerDictContainsPhotonId(photonId))
+            {
+                GameManager.instance.AddToPhotonToPlayerDict(photonId, this);
+            }
+            else
+            {
+                Debug.LogError($"pid_player_Dict ALREADY CONTAINS PHOTON ID {photonId}");
+            }
             //CurrentRoomManager.instance.nbPlayersJoined++;
         }
 
@@ -935,7 +939,7 @@ public class Player : Biped
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         //this.impactPos = impactPos; this.impactDir = impactDir;
 
-        if ((GameManager.instance.pid_player_Dict.ContainsKey(source_pid) && GameManager.GetPlayerWithPhotonViewId(source_pid).isMine) ||
+        if ((GameManager.PlayerDictContainsPhotonId(source_pid) && GameManager.GetPlayerWithPhotonViewId(source_pid).isMine) ||
             PhotonView.Find(source_pid).GetComponent<Actor>())
         {
             DeathNature dsn = DeathNature.None;
@@ -991,8 +995,8 @@ public class Player : Biped
 
 
     int randomSound, ranClipChance;
-    int _playerVoiceCooldownTime { get { return 12 + (GameManager.instance.pid_player_Dict.Count * 3); } }
-    int _ranClipChanceOdds { get { return UnityEngine.Random.Range(0, 90 + (GameManager.instance.pid_player_Dict.Count * 12)); } }
+    int _playerVoiceCooldownTime { get { return 12 + (GameManager.instance.GetAllPhotonPlayers().Count * 3); } }
+    int _ranClipChanceOdds { get { return UnityEngine.Random.Range(0, 90 + (GameManager.instance.GetAllPhotonPlayers().Count * 12)); } }
     int _maxRanClipChance = 30;
 
     public void PlayMeleeSound()
@@ -1603,7 +1607,7 @@ public class Player : Biped
 
         try
         {
-            if (GameManager.instance.pid_player_Dict.ContainsKey(sourcePid))
+            if (GameManager.PlayerDictContainsPhotonId(sourcePid))
             {
 
                 if (lastPID > 0)// If a source already damaged this player
@@ -1789,7 +1793,7 @@ public class Player : Biped
 
         try
         {
-            foreach (KillFeedManager kfm in GameManager.instance.pid_player_Dict.Values.Select(obj => obj.killFeedManager))
+            foreach (KillFeedManager kfm in GameManager.instance.GetAllPhotonPlayers().Select(obj => obj.killFeedManager))
             {
                 if (kfm)
                 {

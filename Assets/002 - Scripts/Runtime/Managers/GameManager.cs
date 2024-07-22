@@ -11,6 +11,7 @@ using System.Net.Mail;
 using TMPro;
 using Rewired;
 using System.Linq;
+using Steamworks;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -60,25 +61,26 @@ public class GameManager : MonoBehaviourPunCallbacks
     public CarnageReport carnageReport { get { return _carnageReport; } set { _carnageReport = value; } }
 
     public Dictionary<int, GameManager.Team> controllerId_TeamDict;
-    public Dictionary<int, Player> pid_player_Dict
-    {
-        get { return _pid_player_Dict; }
-        set
-        {
-            int previousCount = _pid_player_Dict.Count;
-            _pid_player_Dict = value;
+    //public Dictionary<int, Player> pid_player_Dict
+    //{
+    //    private get { return _pid_player_Dict; }
 
-            if (pid_player_Dict.Count != previousCount)
-            {
-                Debug.Log(pid_player_Dict.Count);
-                Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
-                Debug.Log(instance.localPlayers.Count);
+    //    //set
+    //    //{
+    //    //    int previousCount = _pid_player_Dict.Count;
+    //    //    _pid_player_Dict = value;
 
-                //if (pid_player_Dict.Count == (PhotonNetwork.CurrentRoom.PlayerCount + GameManager.instance.localPlayers.Count - 1))
-                //    GetComponent<CurrentRoomManager>().allPlayersJoined = true;
-            }
-        }
-    }
+    //    //    if (pid_player_Dict.Count != previousCount)
+    //    //    {
+    //    //        Debug.Log(pid_player_Dict.Count);
+    //    //        Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+    //    //        Debug.Log(instance.localPlayers.Count);
+
+    //    //        //if (pid_player_Dict.Count == (PhotonNetwork.CurrentRoom.PlayerCount + GameManager.instance.localPlayers.Count - 1))
+    //    //        //    GetComponent<CurrentRoomManager>().allPlayersJoined = true;
+    //    //    }
+    //    //}
+    //}
 
 
     public Dictionary<Vector3, Biped> instantiation_position_Biped_Dict
@@ -279,7 +281,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    public bool isDev;
+    public bool devMode;
     [SerializeField] int _sceneIndex = 0;
     public static int sceneIndex
     {
@@ -438,7 +440,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        try { instance.pid_player_Dict.Clear(); } catch { }
         try { instance.localPlayers.Clear(); } catch { }
 
         //try { FindObjectOfType<GameTime>().timeRemaining = 0; }
@@ -453,6 +454,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             //Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
             //Cursor.visible = true;
+            ClearPhotonIdToPlayerDict();
+
+
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.None;
             Launcher.instance.menuGamePadCursorScript.GetReady(ReInput.controllers.GetLastActiveControllerType());
             ActorAddonsPool.instance = null;
@@ -575,7 +579,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 #endif
         CurrentRoomManager.InitializeAllPlayerDataCells();
 
-        StartCoroutine(PingGoogle("8.8.8.8"));
+
+        if (!GameManager.instance.devMode)
+            StartCoroutine(PingGoogle("8.8.8.8"));
+        else
+        {
+            Screen.fullScreenMode = FullScreenMode.Windowed;
+            GameManager.ROOT_PLAYER_NAME = $"{UnityEngine.Random.Range(1, 100)}";
+            PhotonNetwork.NickName = ROOT_PLAYER_NAME;
+            GameManager.instance.connection = GameManager.Connection.Online;
+            Launcher.instance.ConnectToPhotonMasterServer();
+            MenuManager.Instance.OpenMainMenu();
+        }
 
 
         //SteamManager.Instance.Init();
@@ -674,7 +689,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            if (instance.localPlayers.Count == 1 && instance.pid_player_Dict.Count == 1)
+            if (instance.localPlayers.Count == 1 && instance._pid_player_Dict.Count == 1)
                 Debug.Log("Alpha0");
         }
 
@@ -805,13 +820,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetPlayerWithPhotonViewId(int pid)
     {
-        return instance.pid_player_Dict[pid];
+        return instance._pid_player_Dict[pid];
     }
 
     public static Player GetPlayerWithId(int id)
     {
-        foreach (Player player in instance.pid_player_Dict.Values) { if (player != null && player.playerId == id) return player; }
+        foreach (Player player in instance._pid_player_Dict.Values) { if (player != null && player.playerId == id) return player; }
         return null;
+    }
+
+    public static bool PlayerDictContainsPhotonId(int k)
+    {
+        return instance._pid_player_Dict.ContainsKey(k);
     }
 
     public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null)
@@ -1203,5 +1223,34 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static void StopBeeps()
     {
         instance._beepConsecutiveAudioSource.Stop();
+    }
+
+
+    public void ReEvaluatePhotonToPlayerDict()
+    {
+        print("ReEvaluatePhotonToPlayerDict");
+
+        GameManager.instance.ClearPhotonIdToPlayerDict();
+        foreach (Player p in FindObjectsOfType<Player>())
+            GameManager.instance.AddToPhotonToPlayerDict(p.photonId, p);
+        print($"AddToPhotonToPlayerDict {_pid_player_Dict.Count}");
+
+    }
+
+
+    public void AddToPhotonToPlayerDict(int photonId, Player p)
+    {
+        _pid_player_Dict.Add(photonId, p);
+        print($"AddToPhotonToPlayerDict {_pid_player_Dict.Count}");
+    }
+
+    public List<Player> GetAllPhotonPlayers()
+    {
+        return _pid_player_Dict.Values.ToList();
+    }
+
+    public void ClearPhotonIdToPlayerDict()
+    {
+        _pid_player_Dict.Clear();
     }
 }

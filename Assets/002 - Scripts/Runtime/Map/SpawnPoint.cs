@@ -39,7 +39,6 @@ public class SpawnPoint : MonoBehaviour
     public enum SpawnPointType { Player, Computer }
     public SpawnPointType spawnPointType;
 
-    [SerializeField] GameObject _witness;
     [SerializeField] int _radius;
 
     [SerializeField] bool _seen, _reserved;
@@ -56,8 +55,6 @@ public class SpawnPoint : MonoBehaviour
 
             if (!players.Contains(player))
             {
-                if (GameManager.instance.isDev)
-                    _witness.SetActive(true);
 
                 player.OnPlayerDeath -= OnPLayerDeath;
                 player.OnPlayerDeath += OnPLayerDeath;
@@ -75,12 +72,6 @@ public class SpawnPoint : MonoBehaviour
             //Debug.Log($"SpawnPoint OnTriggerExit REMOVING PLAYER");
             other.transform.root.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
             players.Remove(other.transform.root.GetComponent<Player>());
-
-            if (players.Count == 0 && GameManager.instance.isDev)
-            {
-                GameObject wit = gameObject.transform.Find("Witness").gameObject;
-                wit.SetActive(false);
-            }
         }
     }
 

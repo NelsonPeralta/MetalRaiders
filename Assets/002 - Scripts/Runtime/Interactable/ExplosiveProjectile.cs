@@ -54,7 +54,7 @@ public class ExplosiveProjectile : MonoBehaviour
         try { _stuckVfx.SetActive(false); } catch { }
         if (_sticky)
         {
-            foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+            foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
             {
                 if (p)
                     Physics.IgnoreCollision(p.playerCapsule.GetComponent<Collider>(), GetComponent<Collider>());

@@ -11,7 +11,7 @@ public class EasterEggRadio : InteractableObject
 
     public override void Trigger(int? pid)
     {
-        Player mp = GameManager.instance.pid_player_Dict[(int)pid];
+        Player mp = GameManager.GetPlayerWithPhotonViewId((int)pid);
         _radioLight.SetActive(false);
         consumed = true;
         GetComponent<AudioSource>().Play();
@@ -19,7 +19,7 @@ public class EasterEggRadio : InteractableObject
         foreach (Transform t in _artillerySpawnPoint)
         {
             GameObject a = Instantiate(_artilleryPrefab, t.position, t.rotation);
-            a.GetComponent<ExplosiveProjectile>().player = GameManager.instance.pid_player_Dict[(int)pid];
+            a.GetComponent<ExplosiveProjectile>().player = GameManager.GetPlayerWithPhotonViewId((int)pid);
         }
 
         mp.GetComponent<PlayerSwarmMatchStats>().RemovePoints(cost);

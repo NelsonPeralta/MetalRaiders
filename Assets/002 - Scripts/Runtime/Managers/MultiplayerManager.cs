@@ -61,7 +61,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
-                foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                 {
                     if (p && p.GetComponent<PlayerMultiplayerMatchStats>().score > hs)
                         hs = p.GetComponent<PlayerMultiplayerMatchStats>().score;
@@ -75,8 +75,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             return hs;
         }
     }
-    public int redTeamScore { get { return _redTeamScore; } private set { _redTeamScore = value; foreach (Player p in GameManager.instance.pid_player_Dict.Values) if (p) p.playerUI.UpdateScoreWitnesses(); } }
-    public int blueTeamScore { get { return _blueTeamScore; } private set { _blueTeamScore = value; foreach (Player p in GameManager.instance.pid_player_Dict.Values) if (p) p.playerUI.UpdateScoreWitnesses(); } }
+    public int redTeamScore { get { return _redTeamScore; } private set { _redTeamScore = value; foreach (Player p in GameManager.instance.GetAllPhotonPlayers()) if (p) p.playerUI.UpdateScoreWitnesses(); } }
+    public int blueTeamScore { get { return _blueTeamScore; } private set { _blueTeamScore = value; foreach (Player p in GameManager.instance.GetAllPhotonPlayers()) if (p) p.playerUI.UpdateScoreWitnesses(); } }
     public List<Player> winningPlayers { get { return _winningPlayers; } }
     public List<int> winningPlayersId { get { return _winninPlayersId; } }
 
@@ -324,7 +324,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 if (pp.controllerId == 0)
                 {
                     pp.allPlayerScripts.announcer.PlayGameOverClip();
-                    WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
+                    if (!GameManager.instance.devMode) WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
 
                     pp.LeaveRoomWithDelay();
                 }
@@ -333,9 +333,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
                 if (GameManager.instance.connection == GameManager.Connection.Online)
                 {
-                    PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
-                    PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(pda.playerBasicOnlineStats.honor)[0];
-                    GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, 0, pda.honor, 0, false, 0);
+                    if (!GameManager.instance.devMode)
+                    {
+                        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
+                        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(pda.playerBasicOnlineStats.honor)[0];
+                        GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, 0, pda.honor, 0, false, 0);
+                    }
                 }
 
                 if (pp.controllerId == 0)

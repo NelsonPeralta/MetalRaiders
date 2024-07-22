@@ -770,7 +770,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            GameManager.instance.pid_player_Dict[pid].maxOvershieldPoints = 150;
+            GameManager.GetPlayerWithPhotonViewId(pid).maxOvershieldPoints = 150;
 
 
 
@@ -970,12 +970,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void TriggerPlayerOverheatWeapon(int playerPhotonId, int weaponInd, bool caller = true)
     {
-        if (caller && GameManager.instance.pid_player_Dict[playerPhotonId].isMine)
+        if (caller && GameManager.GetPlayerWithPhotonViewId(playerPhotonId).isMine)
             instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.All, playerPhotonId, weaponInd, false);
         else if (!caller)
         {
-            GameManager.instance.pid_player_Dict[playerPhotonId].playerController.UnScope();
-            GameManager.instance.pid_player_Dict[playerPhotonId].playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
+            GameManager.GetPlayerWithPhotonViewId(playerPhotonId).playerController.UnScope();
+            GameManager.GetPlayerWithPhotonViewId(playerPhotonId).playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
         }
     }
 
@@ -1006,7 +1006,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         SpawnManager.spawnManagerInstance.ReserveSpawnPoint(pos);
 
-        foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+        foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
         {
             if (p.photonId == playerPhotonId && p.rid == controllerID) p.UpdateReservedSpawnPoint(pos, isRandom);
         }

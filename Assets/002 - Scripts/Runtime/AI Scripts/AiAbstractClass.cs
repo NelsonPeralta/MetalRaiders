@@ -578,7 +578,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         Debug.Log("GetRandomPlayerTransformSlow_Coroutine");
         try
         {
-            targetPlayer = GameManager.instance.pid_player_Dict[FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId()].transform;
+            targetPlayer = GameManager.GetPlayerWithPhotonViewId(FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId()).transform;
         }
         catch { targetPlayer = null; }
         //int pid = SwarmManager.instance.GetRandomPlayerTransform().GetComponent<PhotonView>().ViewID;

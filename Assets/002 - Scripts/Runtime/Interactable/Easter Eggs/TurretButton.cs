@@ -37,7 +37,7 @@ public class TurretButton : InteractableObject
     {
         _greenBtn.SetActive(false);
         _redBtn.SetActive(true);
-        _turret.GetComponent<TurretHead>().player = GameManager.instance.pid_player_Dict[(int)pid];
+        _turret.GetComponent<TurretHead>().player = GameManager.GetPlayerWithPhotonViewId((int)pid);
         _turret.SetActive(true);
     }
 

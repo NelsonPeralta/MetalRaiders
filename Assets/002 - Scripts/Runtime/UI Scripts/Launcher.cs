@@ -889,10 +889,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         WebManager.webManagerInstance.Register(registerUsernameText.text, registerPasswordText.text);
     }
 
-    public void Login()
+    public void Login(string u = "")
     {
-        GameManager.ROOT_PLAYER_NAME = loginUsernameText.text;
-        WebManager.webManagerInstance.Login("0", loginUsernameText.text, _loginPasswordText.text);
+        if (u.Equals(""))
+            GameManager.ROOT_PLAYER_NAME = loginUsernameText.text;
+        else
+            GameManager.ROOT_PLAYER_NAME = u;
+
+        //WebManager.webManagerInstance.Login("0", loginUsernameText.text, _loginPasswordText.text);
 
         Debug.Log(PhotonNetwork.NetworkClientState);
         Debug.Log(PhotonNetwork.OfflineMode);

@@ -15,7 +15,7 @@ public class ScriptObjPlayerData : ScriptableObject
     [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
     [SerializeField] string _cardsFound;
     [SerializeField] int _armorPiecesPurchased;
-    public float sens; 
+    public float sens;
 
 
     bool _achUnl = false;
@@ -30,7 +30,7 @@ public class ScriptObjPlayerData : ScriptableObject
             occupied = (value.username != null && value.username.Length > 0);
 
 
-            if (occupied)
+            if (occupied && !GameManager.instance.devMode)
             {
                 StringBuilder sb = new StringBuilder($"-{value.unlocked_armor_data_string}-");
 

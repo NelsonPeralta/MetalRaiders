@@ -990,7 +990,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         waveEnded = true;
         int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
-        foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+        foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
             if (p)
                 p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
         RespawnHealthPacksCheck();
@@ -1026,11 +1026,11 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             NetworkSwarmManager.instance.EnableStartingNetworkWeapons();
             NetworkGameManager.instance.EnableGrenadePacks();
 
-            int livesToAdd = GameManager.instance.pid_player_Dict.Count;
+            int livesToAdd = GameManager.instance.GetAllPhotonPlayers().Count;
             livesLeft += livesToAdd;
             GameManager.GetRootPlayer().announcer.AddClip(_livesAddedClip);
             GameManager.GetRootPlayer().announcer.AddClip(_weaponDropClip);
-            foreach (Player p in GameManager.instance.pid_player_Dict.Values)
+            foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
             {
                 if (p)
                 {
@@ -1046,7 +1046,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     int GetRandomPlayerPhotonId()
     {
-        List<Player> allPlayers = GameManager.instance.pid_player_Dict.Values.ToList();
+        List<Player> allPlayers = GameManager.instance.GetAllPhotonPlayers();
         List<Player> allAlivePlayers = new List<Player>();
         foreach (Player p in allPlayers)
             if (!p.isDead && !p.isRespawning)
@@ -1142,7 +1142,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         CurrentRoomManager.instance.gameOver = true;
         StopAllCoroutines();
-        foreach (Player pp in GameManager.instance.pid_player_Dict.Values)
+        foreach (Player pp in GameManager.instance.GetAllPhotonPlayers())
         {
             if (pp)
             {
