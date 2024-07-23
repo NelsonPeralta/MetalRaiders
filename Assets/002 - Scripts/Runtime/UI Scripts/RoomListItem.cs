@@ -6,21 +6,22 @@ using UnityEngine;
 
 public class RoomListItem : MonoBehaviour
 {
-	public TMP_Text text;
+    public TMP_Text text;
 
-	public RoomInfo info;
+    public RoomInfo info;
 
-	public void SetUp(RoomInfo _info)
-	{
-		info = _info;
-		text.text = _info.Name;
+    public void SetUp(RoomInfo _info)
+    {
+        info = _info;
+        text.text = _info.Name;
 
-		//Debug.Log(info.CustomProperties["gamemode"]);
-		//try { text.text += $" {info.CustomProperties["gamemode"]}"; } catch { }
-	}
+        //Debug.Log(info.CustomProperties["gamemode"]);
+        //try { text.text += $" {info.CustomProperties["gamemode"]}"; } catch { }
+    }
 
-	public void OnClick()
-	{
-		Launcher.instance.JoinRoom(info);
-	}
+    public void OnClick()
+    {
+        GameManager.PlayClickSound();
+        Launcher.instance.JoinRoom(info);
+    }
 }

@@ -249,7 +249,15 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
 
             foreach (Transform child in Launcher.instance.namePlatesParent)
+            {
                 child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
+            }
+
+            foreach (Transform child in Launcher.instance.namePlatesParent)
+            {
+                if (child.GetComponent<PlayerNamePlate>().playerDataCell.team == Team.Blue)
+                    child.SetAsLastSibling();
+            }
         }
     }
 

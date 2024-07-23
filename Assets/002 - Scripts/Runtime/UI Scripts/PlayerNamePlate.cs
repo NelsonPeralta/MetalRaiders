@@ -122,40 +122,18 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void UpdateColorPalette()
     {
-        Debug.Log($"UpdateColorPalette of: {playerText.text}. TeamMode: {GameManager.instance.teamMode}");
+        Debug.Log($"UpdateColorPalette of: {_playerData.playerExtendedPublicData.username}. TeamMode: {GameManager.instance.teamMode}");
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
-            //Debug.Log($"SetupWithTeam: {playerText.text}");
 
-            //foreach (KeyValuePair<string, int> items in GameManager.instance.teamDict)
-            //{
-            //    print("You have " + items.Value + " " + items.Key);
-            //}
+            ScriptObjPlayerData spd = CurrentRoomManager.GetPlayerDataWithId(_playerData.playerExtendedPublicData.player_id);
+            ColorUtility.TryParseHtmlString(GameManager.colorDict[spd.team.ToString().ToLower()], out _tCol);
 
-            //try
-            //{
-            //    Debug.Log(((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower());
-            //    Debug.Log(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()]);
-            //}
-            //catch { }
-
-            //Debug.Log((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]);
-
-            try
-            {
-                ScriptObjPlayerData spd = CurrentRoomManager.GetPlayerDataWithId(_playerData.playerExtendedPublicData.player_id);
-                Debug.Log(spd);
-                //ColorUtility.TryParseHtmlString(GameManager.colorDict[((PlayerMultiplayerMatchStats.Team)GameManager.instance.teamDict[playerText.text]).ToString().ToLower()], out _tCol);
-                ColorUtility.TryParseHtmlString(GameManager.colorDict[spd.team.ToString().ToLower()], out _tCol);
-
-                Debug.Log(_tCol);
-                //mainBg.color = _tCol;
-                mainBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
-                secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
-            }
-            catch (System.Exception e) { Debug.LogWarning(e); }
-            //WebManager.webManagerInstance.SetPlayerListItemInRoom(, this);
+            Debug.Log(_tCol);
+            mainBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
+            secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
+            Debug.Log($"Setup TEAM Color: {playerDataCell.team} {_tCol} {_playerData.playerExtendedPublicData.player_id}");
         }
         else
         {

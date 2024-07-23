@@ -131,7 +131,16 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 Debug.Log($"Player {kvp.Key} wants to change team: {(GameManager.Team)kvp.Value}");
                 CurrentRoomManager.GetPlayerDataWithId(kvp.Key).team = (GameManager.Team)kvp.Value;
             }
-            foreach (Transform child in Launcher.instance.namePlatesParent) child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
+            foreach (Transform child in Launcher.instance.namePlatesParent)
+            {
+                child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
+            }
+
+            foreach (Transform child in Launcher.instance.namePlatesParent)
+            {
+                if (child.GetComponent<PlayerNamePlate>().playerDataCell.team == GameManager.Team.Blue)
+                    child.SetAsLastSibling();
+            }
         }
     }
 
