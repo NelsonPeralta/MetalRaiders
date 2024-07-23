@@ -72,7 +72,15 @@ public class SpawnPoint : MonoBehaviour
             //Debug.Log($"SpawnPoint OnTriggerExit REMOVING PLAYER");
             other.transform.root.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
             players.Remove(other.transform.root.GetComponent<Player>());
+
+
+            if (players.Count == 0)
+            {
+                print("Unreserve spawn point");
+                _reserved = false;
+            }
         }
+
     }
 
     void OnPLayerDeath(Player p)
@@ -94,16 +102,6 @@ public class SpawnPoint : MonoBehaviour
 
     private void Update()
     {
-        if (_reservedReset > 0)
-        {
-            _reservedReset -= Time.deltaTime;
-
-            if (_reservedReset <= 0)
-            {
-                _reserved = false;
-            }
-        }
-
 
         if (_seenReset > 0)
         {
