@@ -404,7 +404,7 @@ public class AIHitbox : Hitbox, IDamageable
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId,
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null,
-        bool isGroin = false, int weaponIndx = -1,
+        bool isGroin = false, int weaponIndx = -1, WeaponProperties.KillFeedOutput kfo = WeaponProperties.KillFeedOutput.Unassigned,
         [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
     {
         //Debug.Log("AI HItbox Damage 2");

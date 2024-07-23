@@ -4942,6 +4942,7 @@ MonoBehaviour:
   _throwForce: 1500
   _explosionPower: 300
   _sourceCleanName: RPG
+  _killFeedOutput: 6
   _useConstantForce: 0
   _defaultExplosionDelayOnImpact: 0
   explosionPrefab: {fileID: 9198120252748331428, guid: a6f30146430f6de4f8e53963998c35f2,
@@ -4961,6 +4962,7 @@ MonoBehaviour:
   _defaultTtl: 0
   _color: 0
   _type: 1
+  _stuckSfxAudioSource: {fileID: 0}
 --- !u!1 &1833708575658552
 GameObject:
   m_ObjectHideFlags: 0

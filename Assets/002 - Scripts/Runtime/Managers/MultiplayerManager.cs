@@ -164,13 +164,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame)
                     if (winningPlayerMS.player == GameManager.GetLocalPlayer(winningPlayerMS.player.rid))
                     {
-                        if (!struc.cleanDamageSource.Contains("elee") && !struc.cleanDamageSource.Contains("Frag Grenade")
-                            && !struc.cleanDamageSource.Contains("Plasma Grenade")
-                            && !struc.cleanDamageSource.Contains("tuck"))
+                        if (struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Melee && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Frag_Grenade
+                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Plasma_Grenade
+                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Stuck)
                             winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
 
                         Debug.Log(struc.cleanDamageSource);
-                        if (struc.cleanDamageSource.Contains("istol"))
+                        if (struc.cleanDamageSource == WeaponProperties.KillFeedOutput.Pistol)
                         {
                             winningPlayerMS.score++;
                             NetworkGameManager.instance.EndGame();
@@ -356,9 +356,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         public readonly int winningPlayerPhotonId;
         public readonly int losingPlayerPhotonId;
         public readonly bool headshot, melee, grenade, nuthshot, stuck;
-        public readonly string cleanDamageSource;
+        public readonly WeaponProperties.KillFeedOutput cleanDamageSource;
 
-        public AddPlayerKillStruct(int winningPlayerPhotonId, int losingPlayerPhotonId, Player.DeathNature kn, string damageSource)
+        public AddPlayerKillStruct(int winningPlayerPhotonId, int losingPlayerPhotonId, Player.DeathNature kn, WeaponProperties.KillFeedOutput damageSource)
         {
             this.headshot = this.melee = this.grenade = this.nuthshot = this.stuck = false;
 
@@ -371,7 +371,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             else if (kn == Player.DeathNature.Headshot || kn == Player.DeathNature.Sniped) this.headshot = true;
             else if (kn == Player.DeathNature.Melee) this.melee = true;
             else if (kn == Player.DeathNature.Stuck) this.stuck = true;
-            else if (kn == Player.DeathNature.Grenade) this.grenade = true;
+            else if (kn.ToString().Contains("renade")) this.grenade = true;
         }
     }
 

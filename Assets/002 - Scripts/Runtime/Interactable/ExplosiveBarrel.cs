@@ -22,6 +22,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     [SerializeField] GameObject explosionPrefab;
     [SerializeField] int _defaultHitPoints;
     [SerializeField] int _hitPoints;
+    [SerializeField] WeaponProperties.KillFeedOutput _killFeedOutput;
     [SerializeField] AudioClip _collisionAudioClip;
     [SerializeField] Vector3 _spawnPointPosition;
     [SerializeField] Quaternion _spawnPointRotation;
@@ -79,7 +80,8 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     }
 
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false, int weaponIndx = -1,
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, 
+        bool isGroin = false, int weaponIndx = -1, WeaponProperties.KillFeedOutput kfo = WeaponProperties.KillFeedOutput.Unassigned,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)

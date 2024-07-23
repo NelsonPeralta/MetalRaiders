@@ -16,6 +16,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] Player _player;
     [SerializeField] int _damage, _radius, _throwForce, _explosionPower;
     [SerializeField] string _sourceCleanName;
+    [SerializeField] WeaponProperties.KillFeedOutput _killFeedOutput;
     [SerializeField] bool _useConstantForce;
     [SerializeField] float _defaultExplosionDelayOnImpact;
     [SerializeField] Transform explosionPrefab;
@@ -261,9 +262,9 @@ public class ExplosiveProjectile : MonoBehaviour
     void Explosion()
     {
         if (_color == global::Explosion.Color.Yellow)
-            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.fragClip, stuck);
+            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.fragClip, _killFeedOutput, stuck);
         else if (_color == global::Explosion.Color.Blue)
-            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.plasmaClip, stuck);
+            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.plasmaClip, _killFeedOutput, stuck);
 
 
 

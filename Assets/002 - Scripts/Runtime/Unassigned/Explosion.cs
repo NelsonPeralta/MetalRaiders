@@ -41,6 +41,7 @@ public class Explosion : MonoBehaviour
 
     [SerializeField] Player _player;
     [SerializeField] string _damageSource;
+    public WeaponProperties.KillFeedOutput killFeedOutput;
 
     [Header("Settings")]
     public float damage; // Determined in Weapon Properties Script
@@ -131,7 +132,7 @@ public class Explosion : MonoBehaviour
                         if (stuck)
                             _damageSource = "Stuck";
                         if (player.isMine)
-                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.photonId, damageSource: this._damageSource, impactDir: (col.transform.position - transform.position));
+                            col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.photonId, damageSource: this._damageSource, impactDir: (col.transform.position - transform.position), kfo: killFeedOutput);
                     }
                     catch { if (col.GetComponent<PlayerHitbox>().player.isMine) col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage); }
                 }

@@ -392,9 +392,9 @@ public class Bullet : MonoBehaviourPunCallbacks
                             Debug.Log("asdf6");
 
                             if (weaponProperties.codeName != null)
-                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.cleanName, isGroin: wasNutshot, weaponIndx: weaponProperties.index);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.cleanName, isGroin: wasNutshot, weaponIndx: weaponProperties.index, kfo: weaponProperties.killFeedOutput);
                             else
-                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot, weaponIndx: weaponProperties.index);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot, weaponIndx: weaponProperties.index, kfo: weaponProperties.killFeedOutput);
                         }
 
                         damageDealt = true;

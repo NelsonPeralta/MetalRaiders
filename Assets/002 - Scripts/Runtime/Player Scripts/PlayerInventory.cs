@@ -505,6 +505,7 @@ public class PlayerInventory : MonoBehaviourPun
         Debug.Log("EquipStartingWeapon");
 
         _oddball.gameObject.SetActive(false);
+        GetWeaponProperties("pr").currentOverheat = 0;
 
 
 

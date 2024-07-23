@@ -40077,6 +40077,7 @@ MonoBehaviour:
   _throwForce: 300
   _explosionPower: 300
   _sourceCleanName: Frag Grenade
+  _killFeedOutput: 15
   _useConstantForce: 0
   _defaultExplosionDelayOnImpact: 0.8
   explosionPrefab: {fileID: 9198120252748331428, guid: a0031679046e9984387a3d6b9094f878,
@@ -40096,6 +40097,7 @@ MonoBehaviour:
   _defaultTtl: 0
   _color: 0
   _type: 0
+  _stuckSfxAudioSource: {fileID: 0}
 --- !u!135 &3494870229107894156
 SphereCollider:
   m_ObjectHideFlags: 0

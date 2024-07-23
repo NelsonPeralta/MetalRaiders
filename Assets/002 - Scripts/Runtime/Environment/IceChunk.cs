@@ -57,7 +57,8 @@ public class IceChunk : Hazard, IDamageable
     }
 
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId,
-        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, bool isGroin = false, int weaponIndx = -1,
+        Vector3? impactPos = null, Vector3? impactDir = null, string damageSource = null, 
+        bool isGroin = false, int weaponIndx = -1, WeaponProperties.KillFeedOutput kfo = WeaponProperties.KillFeedOutput.Unassigned,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)

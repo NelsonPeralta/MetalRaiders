@@ -17,7 +17,7 @@ public class ActorHitbox : Hitbox, IDamageable
     }
 
     public void Damage(int d, bool h, int pid, Vector3? impactPos = null, Vector3? impactDir = null,
-        string damageSource = null, bool isGroin = false, int weaponIndx = -1,
+        string damageSource = null, bool isGroin = false, int weaponIndx = -1, WeaponProperties.KillFeedOutput kfo = WeaponProperties.KillFeedOutput.Unassigned,
         [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
     {
         actor.Damage((int)d, pid, isHeadshot: h ,weIndx: weaponIndx);

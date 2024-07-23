@@ -83,13 +83,14 @@ public class GrenadePool : MonoBehaviour
 
 
     public static void SpawnExplosion(Player source, int damage, int radius, int expPower, string damageCleanNameSource,
-        Vector3 pos, Explosion.Color col, Explosion.Type t, AudioClip ac, bool stuck = false)
+        Vector3 pos, Explosion.Color col, Explosion.Type t, AudioClip ac, WeaponProperties.KillFeedOutput kfo, bool stuck = false)
     {
         foreach (Explosion obj in instance._explosions)
             if (!obj.gameObject.activeInHierarchy)
             {
                 obj.GetComponent<AudioSource>().clip = ac;
                 obj.player = source;
+                obj.killFeedOutput = kfo;
                 obj.damage = damage;
                 obj.radius = radius;
                 obj.explosionPower = expPower;

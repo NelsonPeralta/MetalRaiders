@@ -21,6 +21,13 @@ public class WeaponProperties : MonoBehaviour
     public enum IdleHandlingAnimationType { Rifle, Pistol }
     public enum ScopeMagnification { None, Close, Medium, Long }
     public enum PlasmaColor { Red, Green, Blue, Shard }
+    public enum KillFeedOutput
+    {
+        Unassigned,
+        Pistol, SMG, Assault_Rifle, Battle_Rifle, Sniper, RPG, Shotgun, Grenade_Launcher,
+        Oddball, Splinter, Plasma_Rifle, _Plasma_Bolter, Barrel, Ultra_Bind, Frag_Grenade, 
+        Plasma_Grenade, Melee, Stuck
+    }
 
     public Player player { get { return pController.player; } }
 
@@ -34,6 +41,7 @@ public class WeaponProperties : MonoBehaviour
     public string cleanName; // Used for UI purposes
     public WeaponType weaponType;
     public FiringMode firingMode;
+    public KillFeedOutput killFeedOutput;
     public int damage = 50;
     public float shieldDamageMultiplier;
     public int bulletSize;
@@ -529,6 +537,7 @@ public class WeaponPropertiesEditor : Editor
         wp.cleanName = EditorGUILayout.TextField("Clean Name:", wp.cleanName);
         wp.codeName = EditorGUILayout.TextField("Code Name:", wp.codeName);
         wp.fireRate = EditorGUILayout.IntField("Fire Rate:", wp.fireRate);
+        wp.killFeedOutput = (WeaponProperties.KillFeedOutput)EditorGUILayout.EnumPopup("Kill Feed Output", wp.killFeedOutput);
         wp.weaponType = (WeaponProperties.WeaponType)EditorGUILayout.EnumPopup("Weapon Type", wp.weaponType);
         wp.firingMode = (WeaponProperties.FiringMode)EditorGUILayout.EnumPopup("Firing mode", wp.firingMode);
         wp.isShotgun = GUILayout.Toggle(wp.isShotgun, "Is shotgun");

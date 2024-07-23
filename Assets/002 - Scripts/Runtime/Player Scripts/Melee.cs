@@ -151,7 +151,7 @@ public class Melee : MonoBehaviour
                         //if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
                         //else _pushForce = 100;
 
-                        player.movement.blockPlayerMoveInput = 0.5f;
+                        player.movement.blockPlayerMoveInput = 0.3f;
                         player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * GameManager.instance.playerMeleePushForce, ForceMode.Impulse);
                     }
                 }
@@ -203,13 +203,13 @@ public class Melee : MonoBehaviour
 
                         try
                         {
-                            hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir);
+                            hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
                         }
                         catch { }
 
                         try
                         {
-                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir);
+                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
                         }
                         catch { }
                         //playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);

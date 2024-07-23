@@ -606,7 +606,6 @@ public class Player : Biped
     bool _hasArmor;
     bool _hasMeleeUpgrade;
 
-    string _damageSourceCleanName;
     Vector3 _impactPos;
     Vector3 _impactDir;
     float _gameStartDelay;
@@ -904,7 +903,7 @@ public class Player : Biped
 
     public void Damage(int damage, bool headshot, int source_pid,
         Vector3? impactPos = null, Vector3? impactDir = null, string damageSourceCleanName = null,
-        bool isGroin = false, int weaponIndx = -1,
+        bool isGroin = false, int weaponIndx = -1, WeaponProperties.KillFeedOutput kfo = WeaponProperties.KillFeedOutput.Unassigned,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
@@ -967,16 +966,16 @@ public class Player : Biped
                     dsn = DeathNature.Barrel;
                 else if (damageSourceCleanName.Contains("ltra"))
                     dsn = DeathNature.UltraBind;
-                else
-                    //Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
+                //else
+                //    //Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
 
-                    bytes = Encoding.UTF8.GetBytes(damageSourceCleanName);
+                //    bytes = Encoding.UTF8.GetBytes(damageSourceCleanName);
             }
             //Debug.LogError($"EMPTY DEATH NATURE");
 
 
             int newHealth = (int)hitPoints - damage;
-            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, bytes, (int)dsn, impactPos, impactDir, weaponIndx);
+            PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, (int)dsn, impactPos, impactDir, weaponIndx, (int)kfo);
         }
     }
 
@@ -1220,7 +1219,7 @@ public class Player : Biped
 
         if (dbh)
             playerRagdoll.head.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 6000);
-        else if (dn == DeathNature.Grenade || dn == DeathNature.Stuck || dn == DeathNature.RPG
+        else if (dn.ToString().Contains("renade") || dn == DeathNature.Stuck || dn == DeathNature.RPG
             || dn == DeathNature.Barrel || dn == DeathNature.UltraBind)
             playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 9000);
         else if (dn == DeathNature.Melee)
@@ -1286,7 +1285,7 @@ public class Player : Biped
         try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
         _lastPID = -1;
         deathNature = DeathNature.None;
-        _damageSourceCleanName = null;
+        _killFeedOutput = WeaponProperties.KillFeedOutput.Unassigned;
         OnPlayerRespawnEarly?.Invoke(this);
 
         isRespawning = false;
@@ -1432,7 +1431,7 @@ public class Player : Biped
         if (isDead)
         {
             if (isMine && GameManager.instance.gameMode == GameManager.GameMode.Versus)
-                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _damageSourceCleanName);
+                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _killFeedOutput);
 
             {
                 // Spawn Skull
@@ -1581,8 +1580,15 @@ public class Player : Biped
         //    }
     }
 
+
+
+
+    WeaponProperties.KillFeedOutput _killFeedOutput;
+
+
+
     [PunRPC]
-    void Damage_RPC(int newHealth, int damage, int sourcePid, byte[] bytes, int dn, Vector3 impPos, Vector3 impDir, int weaponIndx)
+    void Damage_RPC(int newHealth, int damage, int sourcePid, int dn, Vector3 impPos, Vector3 impDir, int weaponIndx, int kfo)
     {
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
@@ -1597,7 +1603,8 @@ public class Player : Biped
 
 
         playerController.UnScope();
-        try { _damageSourceCleanName = System.Text.Encoding.UTF8.GetString(bytes); } catch { }
+        _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
+        print($"Damage_RPC {_killFeedOutput}");
         try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
 
         print($"COULD NOT ASSIGN DEATH NATURE {dn} {deathNature = (DeathNature)dn}");
@@ -1651,7 +1658,7 @@ public class Player : Biped
     void AchievementCheck(int sourcePid)
     {
         if (!PV.IsMine && sourcePid == GameManager.GetRootPlayer().photonId)
-            if (_damageSourceCleanName.Contains("Plasma"))
+            if (_killFeedOutput.ToString().ToLower().Contains("plasma"))
             {
                 AchievementManager.instance.plasmaKillsInThisGame++;
             }
@@ -1774,12 +1781,11 @@ public class Player : Biped
 
 
     [PunRPC]
-    void AddPlayerKill_RPC(int wpid, int lpid, int dni, string dSource)
+    void AddPlayerKill_RPC(int wpid, int lpid, int dni, int kfo)
     {
         Debug.Log("AddPlayerKill_RPC");
-        Debug.Log($"PLAYER {username} DIED against {GameManager.GetPlayerWithPhotonViewId(wpid).playerDataCell.playerExtendedPublicData.username}. DN: {(DeathNature)dni}. Source: {dSource}");
 
-        playerThatKilledMe = GameManager.GetPlayerWithPhotonViewId(wpid); _damageSourceCleanName = dSource; deathNature = (DeathNature)dni; _lastPID = wpid;
+        playerThatKilledMe = GameManager.GetPlayerWithPhotonViewId(wpid); _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo; deathNature = (DeathNature)dni; _lastPID = wpid;
 
         playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
 
@@ -1799,10 +1805,8 @@ public class Player : Biped
                 {
                     string f = $"<color=#31cff9>{playerThatKilledMe.username} killed {username}";
 
-                    if (_damageSourceCleanName != null && _damageSourceCleanName != "")
-                        f = $"<color=#31cff9>{playerThatKilledMe.username} [ {_damageSourceCleanName} ] {username}";
-                    else
-                        Debug.LogWarning("NULL DAMAGE SOURCE CLEAN NAME");
+                    if (_killFeedOutput != WeaponProperties.KillFeedOutput.Unassigned)
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} [ {_killFeedOutput.ToString().Replace("_", " ")} ] {username}";
 
                     if (GameManager.instance.gameType == GameManager.GameType.GunGame
                         && deathNature == DeathNature.Stuck)
@@ -1859,7 +1863,7 @@ public class Player : Biped
                             sourcePlayerMedals.SpawnHeadshotMedal();
                         else if (deathNature == DeathNature.Melee)
                             sourcePlayerMedals.SpawnMeleeMedal();
-                        else if (deathNature == DeathNature.Grenade && !_damageSourceCleanName.Contains("Grenade Launcher"))
+                        else if (deathNature.ToString().Contains("renade") && _killFeedOutput != WeaponProperties.KillFeedOutput.Grenade_Launcher)
                             sourcePlayerMedals.SpawnGrenadeMedal();
                         else if (deathNature == DeathNature.Stuck)
                             sourcePlayerMedals.SpawnStuckKillMedal();
@@ -1876,7 +1880,7 @@ public class Player : Biped
 
 
 
-                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, dSource));
+                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, (WeaponProperties.KillFeedOutput)kfo));
                 AchievementCheck(lastPID);
             }
 
@@ -1896,7 +1900,7 @@ public class Player : Biped
         //e.gameObject.SetActive(true);
         //e.DisableIn3Seconds();
 
-        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 700, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip);
+        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 700, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip, WeaponProperties.KillFeedOutput.Ultra_Bind);
 
 
         _ultraMergeCount = 0;
