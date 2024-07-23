@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System.Linq;
+using System;
 
 public class ScoreboardManager : MonoBehaviour
 {
@@ -15,8 +16,17 @@ public class ScoreboardManager : MonoBehaviour
     public List<ScoreboardRowRuntime> scoreboardRows = new List<ScoreboardRowRuntime>();
 
 
+    Dictionary<int, int> _sorted = new Dictionary<int, int>();
+
+
+
     // Private Variables
     bool scoreboardOpen;
+
+
+    int _bc, _c;
+
+
 
     private void Awake()
     {
@@ -41,6 +51,12 @@ public class ScoreboardManager : MonoBehaviour
         ToggleTeamScoreboard(GameManager.instance.teamMode == GameManager.TeamMode.Classic);
         if (!scoreboardOpen)
         {
+            SortScoreBoardByScore();
+
+
+
+
+
             _scoreboardHolder.SetActive(true);
             scoreboardOpen = true;
 
@@ -110,73 +126,63 @@ public class ScoreboardManager : MonoBehaviour
         catch { }
     }
 
-    void SortScoreBoardByScore()
+    public void SortScoreBoardByScore()
     {
-        //if(GameManager.instance.teamMode == GameManager.TeamMode.None)
-        //{
+        _sorted.Clear();
 
-        //}
+        foreach (var row in scoreboardRows)
+        {
+            if (row && row.playerScoreStruct)
+            {
+                print($"ScoreboardManager adding {Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct)}  {row.playerScoreStruct.playerCurrentGameScore.score}");
+                _sorted.Add(Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct), row.playerScoreStruct.playerCurrentGameScore.score);
+            }
+        }
 
+        _sorted = _sorted.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
+        {
+            for (int i = 0; i < _sorted.Count; i++)
+            {
+                foreach (var row in scoreboardRows)
+                {
+                    if (row && row.playerScoreStruct)
+                    {
+                        if (Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct) == _sorted.ElementAt(i).Key)
+                        {
+                            print($"{row.playerScoreStruct.playerExtendedPublicData.username} is equal to key: {_sorted.ElementAt(i).Key}");
 
-
-
-
-
-        //int c = 0;
-
-        //for (int i = 0; i < scoreboardRows.Count; i++)
-        //{
-        //    if (scoreboardRows[i].playerScoreStruct.team == GameManager.instance.)
-        //    {
-        //        print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
-        //        ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].team.ToString().ToLower(), out _tCol);
-        //        carnageReportRowArray[c].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
-
-
-        //        carnageReportRowArray[c].playerName.text = _carnageReportStrucs[i].playerName.ToString();
-        //        carnageReportRowArray[c].kills.text = _carnageReportStrucs[i].kills.ToString();
-        //        carnageReportRowArray[c].deaths.text = _carnageReportStrucs[i].deaths.ToString();
-        //        carnageReportRowArray[c].damage.text = _carnageReportStrucs[i].damage.ToString();
-        //        carnageReportRowArray[c].score.text = _carnageReportStrucs[i].score.ToString();
-        //        carnageReportRowArray[c].headshots.text = _carnageReportStrucs[i].headshots.ToString();
-
-
-        //        if (_carnageReportStrucs[i].deaths > 0)
-        //            carnageReportRowArray[c].kdr.text = $"{_carnageReportStrucs[i].kills / (float)_carnageReportStrucs[i].deaths}";
-        //        else
-        //            carnageReportRowArray[c].kdr.text = "0";
-
-
-        //        carnageReportRowArray[c].gameObject.SetActive(true); c++;
-        //    }
-        //}
-
-        //for (int i = 0; i < _carnageReportStrucs.Count; i++)
-        //{
-        //    if (_carnageReportStrucs[i].team != winningTeam)
-        //    {
-        //        print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
-        //        ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].team.ToString().ToLower(), out _tCol);
-        //        carnageReportRowArray[c].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
+                            if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                                row.transform.SetAsLastSibling();
+                            else
+                            {
+                                if (row.playerScoreStruct.team == MultiplayerManager.instance.winningTeam)
+                                    row.transform.SetAsLastSibling();
+                            }
+                        }
+                    }
+                }
+            }
 
 
-        //        carnageReportRowArray[c].playerName.text = _carnageReportStrucs[i].playerName.ToString();
-        //        carnageReportRowArray[c].kills.text = _carnageReportStrucs[i].kills.ToString();
-        //        carnageReportRowArray[c].deaths.text = _carnageReportStrucs[i].deaths.ToString();
-        //        carnageReportRowArray[c].damage.text = _carnageReportStrucs[i].damage.ToString();
-        //        carnageReportRowArray[c].score.text = _carnageReportStrucs[i].score.ToString();
-        //        carnageReportRowArray[c].headshots.text = _carnageReportStrucs[i].headshots.ToString();
-
-
-        //        if (_carnageReportStrucs[i].deaths > 0)
-        //            carnageReportRowArray[c].kdr.text = $"{_carnageReportStrucs[i].kills / (float)_carnageReportStrucs[i].deaths}";
-        //        else
-        //            carnageReportRowArray[c].kdr.text = "0";
-
-
-        //        carnageReportRowArray[c].gameObject.SetActive(true); c++;
-        //    }
-        //}
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            {
+                for (int i = 0; i < _sorted.Count; i++)
+                {
+                    foreach (var row in scoreboardRows)
+                    {
+                        if (row && row.playerScoreStruct)
+                        {
+                            if (Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct) == _sorted.ElementAt(i).Key)
+                            {
+                                if (row.playerScoreStruct.team != MultiplayerManager.instance.winningTeam)
+                                    row.transform.SetAsLastSibling();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

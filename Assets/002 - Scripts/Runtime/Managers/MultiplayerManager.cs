@@ -80,6 +80,23 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public List<Player> winningPlayers { get { return _winningPlayers; } }
     public List<int> winningPlayersId { get { return _winninPlayersId; } }
 
+
+    public GameManager.Team winningTeam
+    {
+        get
+        {
+            GameManager.Team wt = GameManager.Team.Red;
+
+            if (blueTeamScore > redTeamScore)
+            {
+                wt = GameManager.Team.Blue;
+            }
+
+            return wt;
+        }
+    }
+
+
     [SerializeField] int _redTeamScore;
     [SerializeField] int _blueTeamScore;
 

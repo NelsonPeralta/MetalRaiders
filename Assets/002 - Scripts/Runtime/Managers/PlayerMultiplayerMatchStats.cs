@@ -163,5 +163,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     {
         if (deaths > 0)
             player.playerDataCell.playerCurrentGameScore.kd = (kills / deaths);
+
+        player.allPlayerScripts.scoreboardManager.SortScoreBoardByScore();
     }
 }
