@@ -95,7 +95,6 @@ public class CurrentRoomManager : MonoBehaviour
         private set
         {
             _expectedMapAddOns = value;
-            Debug.Log(expectedMapAddOns);
         }
     }
 
@@ -534,14 +533,12 @@ public class CurrentRoomManager : MonoBehaviour
             if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
                 expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length
                 + FindObjectsOfType<Hazard>().Length;
-            Debug.Log(expectedMapAddOns);
 
 
             if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
                 foreach (NetworkWeaponSpawnPoint nwsp in FindObjectsOfType<NetworkWeaponSpawnPoint>())
                     if (nwsp.transform.root.GetComponent<Player>() == null)
                     {
-                        Debug.Log(nwsp.name);
                         expectedMapAddOns += 1;
                     }
         }

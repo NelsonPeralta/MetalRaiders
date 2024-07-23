@@ -28,7 +28,6 @@ public class WeaponPool : MonoBehaviourPun
     {
         foreach (var weapon in _weaponPrefabs)
         {
-            Debug.Log($"WeaponPool {weapon.name}");
 
             for (int j = 0; j < amountOfWeaponsToPool; j++)
             {
@@ -67,7 +66,6 @@ public class WeaponPool : MonoBehaviourPun
             if (_spawnedWeapons[i].codeName.Equals(weaponCodeName) && !_spawnedWeapons[i].gameObject.activeInHierarchy
                 && _spawnedWeapons[i].transform.parent == transform)
             {
-                Debug.Log($"GetLootableWeapon FOUND!");
                 //_spawnedWeapons.Remove(weapon);
                 return _spawnedWeapons[i];
             }

@@ -442,6 +442,8 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!PV.IsMine)
         {
+            print($"AssignWeapon {codeName}");
+
             foreach (GameObject weap in allWeaponsInInventory)
             {
                 if (weap.GetComponent<WeaponProperties>().codeName == codeName)
@@ -485,7 +487,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-                    _activeWeapon.DisableMuzzleFlash();
+                    if (_activeWeapon) _activeWeapon.DisableMuzzleFlash();
                     try
                     {
                         _activeWeapon.equippedModel.SetActive(true);

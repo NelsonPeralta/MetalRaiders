@@ -131,8 +131,6 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             //LootableWeapon lw = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Weapons", weapon.name), transform.position, transform.rotation).GetComponent<LootableWeapon>();
             //LootableWeapon lw = Instantiate(networkLootableWeaponPrefabs.Where(x => x.name == weapon.name).SingleOrDefault(), transform.position, transform.rotation);
 
-            print($"SpawnWeapon {codeName} {WeaponPool.instance.weaponPool.Count}");
-
             LootableWeapon lw = WeaponPool.instance.GetLootableWeapon(codeName);
 
             if (_inGunRack)

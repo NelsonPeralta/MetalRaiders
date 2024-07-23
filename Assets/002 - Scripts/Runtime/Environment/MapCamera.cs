@@ -40,9 +40,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
     private void Start()
     {
         Debug.Log("MapCamera");
-        Debug.Log(AudioListener.volume);
         AudioListener.volume = 0f;
-        Debug.Log(AudioListener.volume);
     }
 
     private void Update()
