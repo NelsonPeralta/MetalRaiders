@@ -1193,8 +1193,6 @@ public class Player : Biped
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
         ragdoll.SetActive(true);
 
-        if (deathNature == DeathNature.Melee)
-            SoundManager.instance.PlayAudioClip(playerCamera.transform.position, SoundManager.instance.successfulPunch);
 
 
         //ragdoll.GetComponent<Animator>().enabled = false;
@@ -1614,6 +1612,8 @@ public class Player : Biped
 
         print($"COULD NOT ASSIGN DEATH NATURE {dn} {deathNature = (DeathNature)dn}");
 
+        if (deathNature == DeathNature.Melee)
+            SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulPunch);
 
 
         try
