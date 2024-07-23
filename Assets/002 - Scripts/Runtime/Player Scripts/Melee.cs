@@ -29,7 +29,7 @@ public class Melee : MonoBehaviour
 
 
     [SerializeField] PlayerMovement _movement;
-    [SerializeField] LayerMask _meleeMask;
+    [SerializeField] LayerMask _meleeMask, _obstructionMask;
 
     float _maxDis; // Does NOT take into account the radius of player character controller
 
@@ -129,10 +129,12 @@ public class Melee : MonoBehaviour
 
 
 
+    Vector3 _lookAtPosition;
     public void PushIfAble()
     {
         if (hitPointsInMeleeZone.Count > 0)
         {
+
             for (int i = 0; i < hitPointsInMeleeZone.Count; i++)
             {
                 HitPoints hp = hitPointsInMeleeZone[i];
@@ -143,14 +145,12 @@ public class Melee : MonoBehaviour
 
                     if (hp.meleeMagnetism)
                     {
-                        Vector3 targetPostition = new Vector3(hp.transform.position.x,
+                        _lookAtPosition = new Vector3(hp.transform.position.x,
                                                     movement.transform.position.y,
                                                     hp.transform.position.z);
-                        movement.transform.LookAt(targetPostition);
+                        movement.transform.LookAt(_lookAtPosition);
 
-                        //if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
-                        //else _pushForce = 100;
-
+                        player.playerCamera.BlockPlayerCamera(0.3f);
                         player.movement.blockPlayerMoveInput = 0.3f;
                         player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * GameManager.instance.playerMeleePushForce, ForceMode.Impulse);
                     }
@@ -168,8 +168,6 @@ public class Melee : MonoBehaviour
 
         if (hitPointsInMeleeZone.Count > 0)
         {
-            StartCoroutine(EnableMeleeIndicator());
-
             for (int i = 0; i < hitPointsInMeleeZone.Count; i++)
             {
                 HitPoints hp = hitPointsInMeleeZone[i];
@@ -183,37 +181,37 @@ public class Melee : MonoBehaviour
 
                         Vector3 dir = (hp.transform.position - player.transform.position);
 
-                        //print($"Melee. Max dis: ({_maxDis}), cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
-                        //print(_maxDis);
+                        print($"Melee. Max dis: ({_maxDis}), cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
 
-                        //if (hp.meleeMagnetism)
-                        //{
 
-                        //    Vector3 targetPostition = new Vector3(hp.transform.position.x,
-                        //                                movement.transform.position.y,
-                        //                                hp.transform.position.z);
-                        //    movement.transform.LookAt(targetPostition);
 
-                        //    if (Vector3.Distance(hp.transform.position, movement.transform.position) > (_maxDis / 2f)) _pushForce = 200;
-                        //    else _pushForce = 100;
+                        RaycastHit hit;
 
-                        //    player.GetComponent<Rigidbody>().AddForce((hp.transform.position - movement.transform.position).normalized * 10, ForceMode.Impulse);
-                        //    player.movement.blockPlayerMoveInput = 0.5f;
-                        //}
-
-                        try
+                        if (!Physics.Raycast(player.mainCamera.transform.position,
+                player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, _maxDis, _obstructionMask))
                         {
-                            hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
-                        }
-                        catch { }
+                            print("Melee found no obstruction");
 
-                        try
-                        {
-                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
+                            try
+                            {
+                                hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
+                            }
+                            catch { }
+
+                            try
+                            {
+                                hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
+                            }
+                            catch { }
+
+                            return true;
                         }
-                        catch { }
-                        //playerToDamage.Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactDir: dir);
-                        return true;
+                        else
+                        {
+                            print($"Melee obstruction {hit.transform.name}");
+                        }
+
+                        return false;
                     }
                 }
             }
@@ -272,20 +270,6 @@ public class Melee : MonoBehaviour
         Debug.Log($"OnPlayerDeadth_Delegate {player.name}");
         hitPointsInMeleeZone.Clear();
     }
-
-    IEnumerator EnableMeleeIndicator()
-    {
-        meleeIndicator.SetActive(true);
-        yield return new WaitForSeconds(0.25f);
-        meleeIndicator.SetActive(false);
-    }
-    IEnumerator DisableMelee()
-    {
-        meleeReady = false;
-        yield return new WaitForSeconds(0.5f);
-        meleeReady = true;
-    }
-
 
 
 

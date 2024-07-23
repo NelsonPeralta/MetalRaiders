@@ -862,7 +862,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee_RPC(bool succ)
     {
-        if (player.isMine && (!player.isDead && !player.isRespawning))
+        if ((!player.isDead && !player.isRespawning))
         {
             print("Melee_RPC");
             if (!succ) melee.PlayMissClip();

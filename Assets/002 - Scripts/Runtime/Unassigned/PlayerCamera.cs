@@ -56,6 +56,16 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] ControllerType _controllerType;
 
 
+
+
+
+    float _blockTime;
+
+
+
+
+
+
     private void Awake()
     {
 
@@ -88,6 +98,12 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_blockTime > 0)
+        {
+            _blockTime -= Time.deltaTime;
+        }
+
+
         if (!GameManager.instance.gameStarted) return;
         if (!pController.PV.IsMine) return;
         if (pController.cameraisFloating) return;
@@ -131,7 +147,7 @@ public class PlayerCamera : MonoBehaviour
             backEndMouseSens *= (1f - (player.aimAssist.redReticuleTick / 100f));
         }
 
-        if (!pController.pauseMenuOpen)
+        if (!pController.pauseMenuOpen && _blockTime <= 0)
         {
             xAxisInput = rewiredPlayer.GetAxis("Mouse X");
             yAxisInput = rewiredPlayer.GetAxis("Mouse Y");
@@ -355,5 +371,11 @@ public class PlayerCamera : MonoBehaviour
         verticalAxisTarget = player.playerInventory.transform;
 
         verticalAxisTarget.localRotation = Quaternion.Euler(0, 0, 0f);
+    }
+
+
+    public void BlockPlayerCamera(float t)
+    {
+        _blockTime = t;
     }
 }
