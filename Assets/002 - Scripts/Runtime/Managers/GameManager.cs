@@ -592,7 +592,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             StartCoroutine(PingGoogle("8.8.8.8"));
         else
         {
-            Screen.fullScreenMode = FullScreenMode.Windowed;
             GameManager.ROOT_PLAYER_NAME = $"{UnityEngine.Random.Range(1, 100)}";
             PhotonNetwork.NickName = ROOT_PLAYER_NAME;
             GameManager.instance.connection = GameManager.Connection.Online;

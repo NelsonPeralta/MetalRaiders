@@ -74,11 +74,11 @@ public class SpawnPoint : MonoBehaviour
             players.Remove(other.transform.root.GetComponent<Player>());
 
 
-            if (players.Count == 0)
-            {
-                print("Unreserve spawn point");
-                _reserved = false;
-            }
+            //if (players.Count == 0)
+            //{
+            //    print("Unreserve spawn point");
+            //    _reserved = false;
+            //}
         }
 
     }
@@ -102,6 +102,18 @@ public class SpawnPoint : MonoBehaviour
 
     private void Update()
     {
+        if (_reservedReset > 0)
+        {
+            _reservedReset -= Time.deltaTime;
+
+            if (_reservedReset < 0)
+            {
+                reserved = false;
+            }
+        }
+
+
+
 
         if (_seenReset > 0)
         {
