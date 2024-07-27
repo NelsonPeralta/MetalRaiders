@@ -171,7 +171,7 @@ public class GameObjectPool : MonoBehaviour
         return null;
     }
 
-    public GameObject SpawnBulletMetalImpactObject(Vector3 pos, Vector3 norm)
+    public GameObject SpawnBulletHole(Vector3 pos, Vector3 norm)
     {
         foreach (GameObject obj in bulletMetalImpactList)
             if (!obj.activeSelf)

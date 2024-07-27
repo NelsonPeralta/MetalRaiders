@@ -1827,7 +1827,7 @@ public class Player : Biped
                         f = $"<color=#31cff9>{playerThatKilledMe.username} [ Stuck ] {username}";
 
                     if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team == this.team)
-                        f = $"<color=#31cff9>{playerThatKilledMe.username} buddyfucked {username}";
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"red\"> Buddyfucked </color> {username}";
 
                     if (deathNature == DeathNature.UltraBind)
                         f = $"<color=#31cff9>{playerThatKilledMe.username} [ Splinter ] {username}";

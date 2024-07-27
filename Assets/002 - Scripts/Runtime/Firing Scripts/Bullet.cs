@@ -427,8 +427,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                         catch { }
                         GameObjectPool.instance.SpawnPooledGenericHit(finalHitPoint, hitInfo.normal);
 
-                        if (finalHitObject.GetComponent<IDamageable>() == null) // avoids staying in empty space after glass is destroyed
-                            GameObjectPool.instance.SpawnBulletMetalImpactObject(finalHitPoint, hitInfo.normal);
+                        if (finalHitObject.GetComponent<IDamageable>() == null && !finalHitObject.GetComponent<DontSpawnBulletHoleDecalHere>()) // avoids staying in empty space after glass is destroyed
+                        {
+                            print($"SpawnBulletHole {hitInfo.transform.name}");
+                            GameObjectPool.instance.SpawnBulletHole(finalHitPoint, hitInfo.normal);
+                        }
 
                         damageDealt = true;
                     }
