@@ -22,7 +22,6 @@ public class Bullet : MonoBehaviourPunCallbacks
     [Header("Other Scripts")]
     // BulletProperties bProperties;
     public AllPlayerScripts allPlayerScripts;
-    public PlayerInventory pInventory;
     public WeaponProperties weaponProperties;
     public Zombie zScript;
     public CrosshairManager crosshairScript;
@@ -155,7 +154,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             if (fhit.collider.GetComponent<IDamageable>() != null || fhit.collider)
             {
                 if (fhit.transform.root.GetComponent<Player>())
-                    if (fhit.transform.root.GetComponent<Player>() == pInventory.player && _ignoreOriginPlayerTime > 0)
+                    if (fhit.transform.root.GetComponent<Player>() == weaponProperties.transform.root.GetComponent<Player>() && _ignoreOriginPlayerTime > 0)
                         _addToHits = false;
 
 
