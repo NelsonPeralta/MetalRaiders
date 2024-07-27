@@ -70,12 +70,18 @@ public class Bullet : MonoBehaviourPunCallbacks
     int frameCounter;
     List<ObjectHit> objectsHit = new List<ObjectHit>();
 
+
+    float _ignoreOriginPlayerTime;
+    bool _addToHits;
+
     void Awake()
     {
     }
 
     override public void OnEnable()
     {
+        _ignoreOriginPlayerTime = 0.2f;
+
         prePos = transform.position;
         _nextPos = Vector3.zero;
 
@@ -105,6 +111,10 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (_ignoreOriginPlayerTime > 0) _ignoreOriginPlayerTime -= Time.deltaTime;
+
+
+
         Despawn();
         ShootRay();
         Travel();
@@ -137,16 +147,23 @@ public class Bullet : MonoBehaviourPunCallbacks
         RaycastHit fhit;
         if (Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, finalmask))
         {
-            Debug.Log($"HIT: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}");
+            _addToHits = true;
+            Debug.Log($"Bullet hit: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}. Root: {fhit.transform.root.name}");
 
 
-            GameObject hit = fhit.collider.gameObject;
 
             if (fhit.collider.GetComponent<IDamageable>() != null || fhit.collider)
             {
+                if (fhit.transform.root.GetComponent<Player>())
+                    if (fhit.transform.root.GetComponent<Player>() == pInventory.player && _ignoreOriginPlayerTime > 0)
+                        _addToHits = false;
+
+
+
+                GameObject hit = fhit.collider.gameObject;
                 float _distanceFromSpawnToHit = Vector3.Distance(originalPos, fhit.point);
 
-                if (_distanceFromSpawnToHit <= weaponProperties.range)
+                if (_distanceFromSpawnToHit <= weaponProperties.range && _addToHits)
                 {
                     ObjectHit newHit = new ObjectHit(hit, fhit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
                     objectsHit.Add(newHit);
