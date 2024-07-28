@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     public enum PlayerMovementDirection { Idle, Left, Right, Forward, Backwards, ForwardLeft, ForwardRight, BackwardsLeft, BackwardsRight }
+    public enum BlockedMovementType { None, ManCannon, Other }
 
     public Player player { get { return _player; } }
     public Rewired.Player rewiredPlayer { get { return _pController.rewiredPlayer; } }
@@ -38,7 +39,21 @@ public class PlayerMovement : MonoBehaviour
     }
     public float correctedXInput { get { return _correctedRightInput; } set { _correctedRightInput = value; } }
     public float correctedZInput { get { return _correctedForwardInput; } set { _correctedForwardInput = value; } }
-    public bool isGrounded { get { return _grounded; } private set { _grounded = value; if (value && readyToJump) _clickedJumpButtonFromLastGrounded = false; } }
+    public bool isGrounded
+    {
+        get { return _grounded; }
+        private set
+        {
+            _grounded = value;
+            if (value && readyToJump) _clickedJumpButtonFromLastGrounded = false;
+
+            if (value && _pushedByBlockMovement && blockPlayerMoveInput <= 0)
+            {
+                blockedMovementType = BlockedMovementType.None;
+                _pushedByBlockMovement = false;
+            }
+        }
+    }
     public Rigidbody rb { get { return _rb; } }
     public float animationSpeed
     {
@@ -220,6 +235,8 @@ public class PlayerMovement : MonoBehaviour
         startYScale = transform.localScale.y;
 
         if (!player.isMine) _footstepAudioSource.volume = 1;
+
+        player.OnPlayerRespawnEarly += OnPlayerRespawnEarly;
     }
 
     private void Update()
@@ -311,8 +328,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (ReInput.controllers.GetLastActiveControllerType() != ControllerType.Joystick)
         {
-            _rawRightInput = _correctedRightInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Horizontal") * 3, -1, 1);
-            _rawForwardInput = _correctedForwardInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Vertical") * 3, -1, 1);
+            _rawRightInput = _correctedRightInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Horizontal") * 2, -1, 1);
+            _rawForwardInput = _correctedForwardInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Vertical") * 2, -1, 1);
         }
 
         if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
@@ -449,7 +466,26 @@ public class PlayerMovement : MonoBehaviour
             moveSpeed = desiredMoveSpeed;
         }
     }
-    public float blockPlayerMoveInput;
+    public float blockPlayerMoveInput
+    {
+        get
+        {
+            return _blockPlayerMoveInput;
+        }
+
+        set
+        {
+            _blockPlayerMoveInput = value;
+
+            if (value > 0) _pushedByBlockMovement = true;
+        }
+    }
+
+
+    float _blockPlayerMoveInput;
+    bool _pushedByBlockMovement;
+    public BlockedMovementType blockedMovementType;
+
     private void MovePlayerUsingInput()
     {
         if (blockPlayerMoveInput > 0) return;
@@ -500,7 +536,7 @@ public class PlayerMovement : MonoBehaviour
         if (blockPlayerMoveInput > 0) return;
 
 
-        if (_clickedJumpButtonFromLastGrounded)
+        if (_clickedJumpButtonFromLastGrounded && !_pushedByBlockMovement)
         {
             _jumpCorrectionDirection = orientation.forward * _correctedForwardInput + orientation.right * _correctedRightInput;
 
@@ -529,11 +565,22 @@ public class PlayerMovement : MonoBehaviour
             Vector3 flatVel = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
 
             // limit velocity if needed
-            if (flatVel.magnitude > moveSpeed)
-            {
-                Vector3 limitedVel = flatVel.normalized * moveSpeed;
-                _rb.velocity = new Vector3(limitedVel.x, _rb.velocity.y, limitedVel.z);
-            }
+            if (!_pushedByBlockMovement)
+                if (flatVel.magnitude > moveSpeed)
+                {
+                    Vector3 limitedVel = flatVel.normalized * moveSpeed;
+                    _rb.velocity = new Vector3(limitedVel.x, _rb.velocity.y, limitedVel.z);
+
+
+                    //float speed = Vector3.Magnitude(_rb.velocity);  // test current object speed   
+                    //if (speed > maximumSpeed)
+                    //{
+                    //    float brakeSpeed = speed - maximumSpeed;  // calculate the speed decrease
+                    //    Vector3 normalisedVelocity = rigidbody.velocity.normalized;
+                    //    Vector3 brakeVelocity = normalisedVelocity * brakeSpeed;  // make the brake Vector3 value  
+                    //    rigidbody.AddForce(-brakeVelocity);  // apply opposing brake force
+                    //}
+                }
         }
     }
     float _tempSpeedVal;
@@ -871,5 +918,12 @@ public class PlayerMovement : MonoBehaviour
     public void UpdateIsMoving(bool u)
     {
         _isMoving = u;
+    }
+
+    void OnPlayerRespawnEarly(Player p)
+    {
+        _rb.velocity = Vector3.zero; _rb.angularVelocity = Vector3.zero;
+        blockedMovementType = BlockedMovementType.None;
+        blockPlayerMoveInput = 0;
     }
 }

@@ -6,12 +6,7 @@ using UnityEngine;
 using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
-using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using System.Text;
-using System.Net.Mail;
-using TMPro;
-using Steamworks;
-using static Player;
 
 public class Player : Biped
 {
@@ -1655,7 +1650,26 @@ public class Player : Biped
         }
 
 
-        if (!isDead && playerThatKilledMe) playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker();
+        if (!isDead && playerThatKilledMe)
+        {
+            playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker();
+
+
+            // grenade jumping
+            if (_deathNature == DeathNature.RPG || _deathNature == DeathNature.Grenade ||
+                _deathNature == DeathNature.Barrel || _deathNature == DeathNature.UltraBind)
+                if (movement.blockedMovementType != PlayerMovement.BlockedMovementType.ManCannon)
+                {
+                    movement.blockPlayerMoveInput = 0.2f;
+                    movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
+                    _rb.velocity = Vector3.zero;
+                    _rb.angularVelocity = Vector3.zero;
+                    _rb.useGravity = true;
+                    _rb.drag = 0;
+                    _rb.AddForce(_impactDir.normalized * 7, ForceMode.Impulse);
+
+                }
+        }
     }
 
 
@@ -1832,6 +1846,8 @@ public class Player : Biped
                     if (deathNature == DeathNature.UltraBind)
                         f = $"<color=#31cff9>{playerThatKilledMe.username} [ Splinter ] {username}";
 
+                    if (_killFeedOutput == WeaponProperties.KillFeedOutput.Assasination)
+                        f = $"<color=#31cff9>{playerThatKilledMe.username} [ <color=\"yellow\"> Assasination! </color> ] {username}";
 
                     if (this != playerThatKilledMe)
                     {
@@ -1865,6 +1881,8 @@ public class Player : Biped
                             sourcePlayerMedals.SpawnSniperHeadshotMedal();
                         else if (deathNature == DeathNature.Headshot)
                             sourcePlayerMedals.SpawnHeadshotMedal();
+                        else if (_killFeedOutput == WeaponProperties.KillFeedOutput.Assasination)
+                            sourcePlayerMedals.SpawnAssasinationMedal();
                         else if (deathNature == DeathNature.Melee)
                             sourcePlayerMedals.SpawnMeleeMedal();
                         else if (deathNature.ToString().Contains("renade") && _killFeedOutput != WeaponProperties.KillFeedOutput.Grenade_Launcher)

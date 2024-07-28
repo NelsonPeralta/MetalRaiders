@@ -45,6 +45,7 @@ public class ManCannon : MonoBehaviour
 
                         rb = other.transform.root.GetComponent<Rigidbody>();
                         rb.GetComponent<PlayerMovement>().blockPlayerMoveInput = _blockMovementTime;
+                        rb.GetComponent<PlayerMovement>().blockedMovementType = PlayerMovement.BlockedMovementType.ManCannon;
 
                         print($"ManCannon dir {transform.up * power}");
                         Debug.Log($"ManCannon BEFORE! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");

@@ -918,7 +918,7 @@ public class PlayerController : MonoBehaviourPun
         movement.playerCapsule.localScale = new Vector3(transform.localScale.x, movement.crouchYScale, transform.localScale.z);
 
         if (movement.isGrounded)
-            movement.rb.AddForce(Vector3.down * 2f, ForceMode.Impulse);
+            movement.rb.AddForce(Vector3.down * 0.7f, ForceMode.Impulse);
     }
 
     [PunRPC]
