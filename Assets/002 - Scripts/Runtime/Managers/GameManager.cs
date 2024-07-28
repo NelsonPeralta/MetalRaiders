@@ -416,7 +416,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
         instance = this;
 
-        PhotonNetwork.GameVersion = "169";
+        PhotonNetwork.GameVersion = "171";
     }
 
 
