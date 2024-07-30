@@ -62,15 +62,19 @@ public class ManCannon : MonoBehaviour
             }
             else
             {
-                print($"ManCannon dir {transform.up * power}");
-                //Debug.Log($"ManCannon LAUNCH! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                //Debug.Log($"ManCannon LAUNCH! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
-                rb.AddForce(transform.up * power, ForceMode.Impulse);
 
-                GetComponent<AudioSource>().clip = onTriggerAudioClip;
-                GetComponent<AudioSource>().Play();
+                if (!_invisible)
+                {
+                    print($"ManCannon dir {transform.up * power}");
+                    //Debug.Log($"ManCannon LAUNCH! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    //Debug.Log($"ManCannon LAUNCH! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
+                    rb.AddForce(transform.up * power, ForceMode.Impulse);
+
+                    GetComponent<AudioSource>().clip = onTriggerAudioClip;
+                    GetComponent<AudioSource>().Play();
+                }
             }
         }
     }

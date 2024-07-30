@@ -785,7 +785,7 @@ public class Player : Biped
         GameManager.instance.instantiation_position_Biped_Dict.Add(originalSpawnPosition, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
 
 
-        defaultVerticalFov = 0; GetComponent<PlayerController>().UnScope();
+        defaultVerticalFov = 0; GetComponent<PlayerController>().Descope();
 
         {
             if (!GameManager.PlayerDictContainsPhotonId(photonId))
@@ -1287,7 +1287,7 @@ public class Player : Biped
         OnPlayerRespawnEarly?.Invoke(this);
 
         isRespawning = false;
-        GetComponent<PlayerController>().UnScope();
+        GetComponent<PlayerController>().Descope();
 
         hitPoints = maxHitPoints;
 
@@ -1484,7 +1484,7 @@ public class Player : Biped
     void OnPlayerDamaged_Delegate(Player player)
     {
         Debug.Log($"OnPlayerDamaged_Delegate {needsHealthPack}");
-        try { GetComponent<PlayerController>().UnScope(); } catch { }
+        try { GetComponent<PlayerController>().Descope(); } catch { }
 
         _isHealing = false;
         healingCountdown = _defaultHealingCountdown;
@@ -1600,7 +1600,7 @@ public class Player : Biped
 
 
 
-        playerController.UnScope();
+        playerController.Descope();
         _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
         print($"Damage_RPC {_killFeedOutput}");
         try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }

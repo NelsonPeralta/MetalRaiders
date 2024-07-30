@@ -74,7 +74,7 @@ public class PlayerInventory : MonoBehaviourPun
                 //if (GameManager.instance.gameType == GameManager.GameType.Fiesta && _activeWeapon.codeName.Equals("rpg")) { _activeWeapon.loadedAmmo = 1; _activeWeapon.spareAmmo = 0; }
                 //if (GameManager.instance.gameType == GameManager.GameType.Fiesta && _activeWeapon.codeName.Equals("sniper")) { _activeWeapon.loadedAmmo = 4; _activeWeapon.spareAmmo = 0; }
 
-                pController.UnScope();
+                pController.Descope();
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 if (!player.isDead && !player.isRespawning)
@@ -379,7 +379,7 @@ public class PlayerInventory : MonoBehaviourPun
         Debug.Log("SwitchWeapons");
 
 
-        pController.UnScope();
+        pController.Descope();
         allPlayerScripts.aimAssist.ResetRedReticule();
 
         if (pController.isReloading && pController.pInventory.weaponsEquiped[1] != null)

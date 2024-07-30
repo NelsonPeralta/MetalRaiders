@@ -316,7 +316,7 @@ public class PlayerController : MonoBehaviourPun
                     LongInteract();
                     if (isSprinting)
                         return;
-                    ScopeIn();
+                    ScopeCheck();
                     Melee();
                     Crouch();
                     Grenade(); //TO DO: Spawn Grenades the same way as bullets
@@ -443,7 +443,7 @@ public class PlayerController : MonoBehaviourPun
             return;
         isSprinting = true;
         OnSprintStart?.Invoke(this);
-        UnScope();
+        Descope();
         weaponAnimator.SetBool("Run", true);
 
 
@@ -710,7 +710,7 @@ public class PlayerController : MonoBehaviourPun
     }
 
     float _tempFov;
-    void ScopeIn()
+    void ScopeCheck()
     {
         if (isDualWielding || pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.None)
             return;
@@ -725,6 +725,9 @@ public class PlayerController : MonoBehaviourPun
         {
             _tempFov = 17.14f;
             if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 8.62f;
+
+
+
         }
 
         if (isAiming)
@@ -774,6 +777,33 @@ public class PlayerController : MonoBehaviourPun
                     allPlayerScripts.aimingScript.playAimSound();
                 }
             }
+
+
+        }
+
+
+        if (isAiming && pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
+        {
+            player.playerUI.motionTracker.SetActive(false);
+            player.playerUI.bottomRight.gameObject.SetActive(false);
+            player.playerUI.topLeft.gameObject.SetActive(false);
+            player.playerUI.topMiddle.gameObject.SetActive(false);
+        }
+        else if (!isAiming)
+        {
+            player.playerUI.bottomRight.gameObject.SetActive(true);
+            player.playerUI.topLeft.gameObject.SetActive(true);
+            player.playerUI.topMiddle.gameObject.SetActive(true);
+
+
+
+            if (GameManager.instance.gameType != GameManager.GameType.Pro &&
+            GameManager.instance.gameType != GameManager.GameType.Swat &&
+            GameManager.instance.gameType != GameManager.GameType.Snipers &&
+             GameManager.instance.gameType != GameManager.GameType.Retro)
+                player.playerUI.motionTracker.SetActive(true);
+            else
+                player.playerUI.motionTracker.SetActive(false);
         }
     }
 
@@ -784,7 +814,7 @@ public class PlayerController : MonoBehaviourPun
         float plusZoom = 0;
     }
 
-    public void UnScope()
+    public void Descope()
     {
         if (!isAiming && !GetComponent<Player>().isDead)
             return;
@@ -817,7 +847,7 @@ public class PlayerController : MonoBehaviourPun
                 _meleeSucc = false;
 
 
-                UnScope();
+                Descope();
                 rScript.reloadIsCanceled = true;
 
                 melee.PushIfAble();
@@ -939,7 +969,7 @@ public class PlayerController : MonoBehaviourPun
                 currentlyReloadingTimer = 0;
                 player.playerShooting.StopBurstFiring();
                 rScript.reloadIsCanceled = true;
-                UnScope();
+                Descope();
                 pInventory.fragGrenades = pInventory.fragGrenades - 1;
                 PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
                 StartCoroutine(GrenadeSpawnDelay());
@@ -967,7 +997,7 @@ public class PlayerController : MonoBehaviourPun
         _completeReloadTimer = 1;
         currentlyReloadingTimer = 1.4f;
         player.playerShooting.StopAllCoroutines();
-        UnScope();
+        Descope();
         rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
 
 
@@ -1600,7 +1630,7 @@ public class PlayerController : MonoBehaviourPun
     {
         currentlyReloadingTimer = 1.4f;
         player.playerShooting.StopAllCoroutines();
-        UnScope();
+        Descope();
         rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
 
 

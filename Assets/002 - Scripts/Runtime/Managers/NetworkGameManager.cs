@@ -983,7 +983,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.All, playerPhotonId, weaponInd, false);
         else if (!caller)
         {
-            GameManager.GetPlayerWithPhotonViewId(playerPhotonId).playerController.UnScope();
+            GameManager.GetPlayerWithPhotonViewId(playerPhotonId).playerController.Descope();
             GameManager.GetPlayerWithPhotonViewId(playerPhotonId).playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
         }
     }
