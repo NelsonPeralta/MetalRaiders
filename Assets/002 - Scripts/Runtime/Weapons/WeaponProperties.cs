@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class WeaponProperties : MonoBehaviour
 {
+    public static int RECOIL_FRAMES = 6;
+
     public delegate void WeaponPropertiesEvent(WeaponProperties weaponProperties);
     public WeaponPropertiesEvent OnCurrentAmmoChanged, OnSpareAmmoChanged;
 
@@ -25,7 +27,7 @@ public class WeaponProperties : MonoBehaviour
     {
         Unassigned,
         Pistol, SMG, Assault_Rifle, Battle_Rifle, Sniper, RPG, Shotgun, Grenade_Launcher,
-        Oddball, Splinter, Plasma_Rifle, _Plasma_Bolter, Barrel, Ultra_Bind, Frag_Grenade, 
+        Oddball, Splinter, Plasma_Rifle, _Plasma_Bolter, Barrel, Ultra_Bind, Frag_Grenade,
         Plasma_Grenade, Melee, Stuck, Assasination
     }
 
@@ -235,7 +237,7 @@ public class WeaponProperties : MonoBehaviour
     public bool hipSprayOnly;
     public bool degradingDamage;
 
-    int _index, _preLayer;
+    int _index, _preLayer, _recoilCount;
     Animator _animator;
 
     private void Start()
@@ -269,6 +271,59 @@ public class WeaponProperties : MonoBehaviour
 
     private void Update()
     {
+        if (_recoilCount > 0)
+        {
+            print($"{_recoilCount} {RECOIL_FRAMES / 2}");
+            if (_recoilCount > RECOIL_FRAMES)
+            {
+                if (camScript)
+                    if (xRecoil > 0 || yRecoil > 0)
+                    {
+                        float horRecoil = Random.Range(-xRecoil, xRecoil);
+                        float verRecoil = -yRecoil;
+
+                        if (pController.isCrouching)
+                        {
+                            verRecoil *= 0.8f;
+                            horRecoil *= 0.8f;
+                        }
+
+                        print($"plus");
+                        player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * verRecoil);
+                        player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
+                    }
+            }
+            else
+            {
+                if (camScript && yRecoil > 0)
+                {
+                    //float horRecoil = Random.Range(-xRecoil, xRecoil);
+                    float verRecoil = -yRecoil;
+
+                    if (pController.isCrouching)
+                    {
+                        verRecoil *= 0.8f;
+                        //horRecoil *= 0.8f;
+                    }
+
+
+
+
+                    //verRecoil *= -1;
+                    //horRecoil *= -0.5f;
+                    print($"minus");
+
+                    player.playerCamera.verticalAxisTarget.Rotate(-Vector3.right * 0.7f * verRecoil);
+                    //player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
+                }
+            }
+
+            _recoilCount--;
+        }
+
+
+
+
         if (currentOverheat > 0)
             currentOverheat -= (int)(Time.deltaTime * 100);
 
@@ -290,21 +345,27 @@ public class WeaponProperties : MonoBehaviour
     }
     public void Recoil()
     {
-        if (camScript)
-            if (xRecoil > 0 || yRecoil > 0)
-            {
-                float horRecoil = Random.Range(-xRecoil, xRecoil);
-                float verRecoil = -yRecoil;
 
-                if (pController.isCrouching)
-                {
-                    verRecoil *= 0.8f;
-                    horRecoil *= 0.8f;
-                }
+        if (_recoilCount == 0)
+        {
+            print("Recoil");
+            _recoilCount = RECOIL_FRAMES * 2;
+        }
+        //if (camScript)
+        //    if (xRecoil > 0 || yRecoil > 0)
+        //    {
+        //        float horRecoil = Random.Range(-xRecoil, xRecoil);
+        //        float verRecoil = -yRecoil;
 
-                player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * verRecoil);
-                player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
-            }
+        //        if (pController.isCrouching)
+        //        {
+        //            verRecoil *= 0.8f;
+        //            horRecoil *= 0.8f;
+        //        }
+
+        //        player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * verRecoil);
+        //        player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
+        //    }
     }
 
     void BloomIncrease()
@@ -471,6 +532,8 @@ public class WeaponProperties : MonoBehaviour
 
     private void OnDisable()
     {
+        _recoilCount = 0;
+
         try
         {
             crosshair.gameObject.SetActive(false);

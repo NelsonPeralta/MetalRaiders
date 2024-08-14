@@ -469,6 +469,14 @@ public class PlayerShooting : MonoBehaviourPun
         else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
             rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
 
+
+
+
+        foreach (PlayerHitbox hb in playerController.player.hitboxes)
+            Physics.IgnoreCollision(rocket.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+
+
+
         Debug.Log($"{playerController.name} PlayerShooting: {rocket.name}");
         rocket.player = playerController.player;
 

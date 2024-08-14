@@ -55,13 +55,23 @@ public class Announcer : MonoBehaviour
     public void PlayGameOverClip()
     {
         CurrentRoomManager.instance.gameOver = true;
-        AddClip(gameOverClip);
+
+
+        if (clips.Count > 0)
+        {
+            List<AudioClip> c = new List<AudioClip>();
+            c.Add(clips[0]);
+            c.Add(gameOverClip);
+            clips = c;
+        }
+        else
+        {
+            AddClip(gameOverClip);
+        }
     }
 
     public void AddClip(AudioClip ac)
     {
-        print($"AddClip {ac.name}");
-
         List<AudioClip> c = clips;
         c.Add(ac);
         clips = c;

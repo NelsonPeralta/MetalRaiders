@@ -151,7 +151,7 @@ MonoBehaviour:
   _player: {fileID: 0}
   _damage: 220
   _radius: 6
-  _throwForce: 1000
+  _throwForce: 1500
   _explosionPower: 300
   _sourceCleanName: Grenade Launcher
   _killFeedOutput: 8
