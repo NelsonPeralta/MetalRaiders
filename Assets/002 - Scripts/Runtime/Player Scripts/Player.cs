@@ -19,6 +19,9 @@ public class Player : Biped
         }
     }
 
+    public static int MELEE_PUSH = 8;
+    public static float MELEE_DISTANCE = 3;
+
 
 
 
