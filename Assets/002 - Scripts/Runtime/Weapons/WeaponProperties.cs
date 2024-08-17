@@ -313,7 +313,7 @@ public class WeaponProperties : MonoBehaviour
                     //horRecoil *= -0.5f;
                     print($"minus");
 
-                    player.playerCamera.verticalAxisTarget.Rotate(-Vector3.right * 0.7f * verRecoil);
+                    player.playerCamera.verticalAxisTarget.Rotate(-Vector3.right * 0.5f * verRecoil);
                     //player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
                 }
             }
@@ -346,9 +346,12 @@ public class WeaponProperties : MonoBehaviour
     public void Recoil()
     {
 
-        if (_recoilCount == 0)
+        if (firingMode == FiringMode.Burst && _recoilCount > 0)
         {
             print("Recoil");
+        }
+        else
+        {
             _recoilCount = RECOIL_FRAMES * 2;
         }
         //if (camScript)

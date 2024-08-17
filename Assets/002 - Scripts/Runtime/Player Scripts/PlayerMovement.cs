@@ -47,9 +47,13 @@ public class PlayerMovement : MonoBehaviour
             _grounded = value;
             if (value && readyToJump) _clickedJumpButtonFromLastGrounded = false;
 
-            if (value && _pushedByBlockMovement && blockPlayerMoveInput <= 0)
+            if (value && blockPlayerMoveInput <= 0)
             {
                 blockedMovementType = BlockedMovementType.None;
+            }
+
+            if (value && _pushedByBlockMovement)
+            {
                 _pushedByBlockMovement = false;
             }
         }
@@ -482,8 +486,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    float _blockPlayerMoveInput;
-    bool _pushedByBlockMovement;
+    public float _blockPlayerMoveInput;
+    public bool _pushedByBlockMovement;
     public BlockedMovementType blockedMovementType;
 
     private void MovePlayerUsingInput()

@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 7025801602816862126}
   - component: {fileID: 1079418026511544142}
   m_Layer: 10
-  m_Name: Plasma Bolter
+  m_Name: Plasma Blaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab26f0c822434c4ea74a1d7a59889c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cleanName: Plasma Bolter
+  cleanName: Plasma Blaster
   codeName: pb
   spriteId: 3
   isDw: 0
