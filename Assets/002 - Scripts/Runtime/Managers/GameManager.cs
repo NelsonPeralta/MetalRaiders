@@ -374,8 +374,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public List<GameplayRecorderPoint> gameplayRecorderPoints = new List<GameplayRecorderPoint>();
     public RenderTexture[] minimapRenderTextures;
-    
-    
+
+
+
+
+
+
+
+    public LayerMask bulletLayerMask;
+
+
+
+
 
 
 

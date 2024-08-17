@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     Player _sourcePlayer;
     Vector3 _spawnDir;
-    Vector3 _nextPos;
+
 
     public PhotonView PV;
     public Biped trackingTarget;
@@ -56,8 +56,9 @@ public class Bullet : MonoBehaviourPunCallbacks
     public bool damageDealt;
 
     Vector3 playerPosWhenBulletShot;
-    Vector3 prePos;
+    Vector3 _prePos, _nextPos;
     Vector3 originalPos;
+    float _dTravalled;
 
     [Header("Impact Effects")]
     public GameObject genericHit;
@@ -79,9 +80,10 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     override public void OnEnable()
     {
+        print("Bullet OnEnable");
         _ignoreOriginPlayerTime = 0.2f;
 
-        prePos = transform.position;
+        _prePos = transform.position;
         _nextPos = Vector3.zero;
 
         objectsHit.Clear();
@@ -113,7 +115,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         if (_ignoreOriginPlayerTime > 0) _ignoreOriginPlayerTime -= Time.deltaTime;
 
 
-
+        print("Bullet Update");
         Despawn();
         ShootRay();
         Travel();
@@ -126,28 +128,75 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     float _distanceTravalled;
     //List<int> bulletLayers = new List<int> { 0, 7, 12, 14 };
+
+
+
+    List<RaycastHit> _hitList = new List<RaycastHit>();
+    RaycastHit _tempRh;
     void ShootRay()
     {
-        prePos = transform.position;
+        _prePos = transform.position;
         _nextPos = transform.position + transform.TransformDirection(Vector3.forward) * speed * Time.deltaTime;
         //transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
 
-        float _dTravalled = Vector3.Distance(prePos, _nextPos);
-        //if (_dTravalled > weaponProperties.range)
-        //    gameObject.SetActive(false);
+        _dTravalled = Vector3.Distance(_prePos, _nextPos);
 
+
+
+
+
+
+        RaycastHit[] hits;
+        _hitList = Physics.RaycastAll(_prePos, (_nextPos - _prePos).normalized, maxDistance: _dTravalled, layerMask: GameManager.instance.bulletLayerMask).ToList();
+
+        if (_hitList.Count > 0)
+        {
+            if (_ignoreOriginPlayerTime > 0)
+                for (int i = _hitList.Count; i-- > 0;)
+                {
+                    _tempRh = _hitList[i];
+                    if (_tempRh.collider.transform.root == weaponProperties.player.transform) _hitList.RemoveAt(i);
+                }
+
+
+
+
+            if (_hitList.Count > 0)
+            {
+                _hitList = _hitList.OrderBy(x => Vector2.Distance(_prePos, x.point)).ToList();
+
+
+
+
+                _tempRh = _hitList[0];
+                float _distanceFromSpawnToHit = Vector3.Distance(originalPos, _tempRh.point);
+
+                if (_distanceFromSpawnToHit <= weaponProperties.range)
+                {
+                    ObjectHit newHit = new ObjectHit(_tempRh.collider.gameObject, _tempRh, _tempRh.point, Vector3.Distance(playerPosWhenBulletShot, _tempRh.point));
+                    objectsHit.Add(newHit);
+                }
+
+                if (objectsHit.Count > 0)
+                {
+                    CheckForFinalHit();
+                    gameObject.SetActive(false);
+                }
+            }
+        }
+
+
+
+        return;
         RaycastHit[] m_Results = new RaycastHit[5];
-        Ray r = new Ray(prePos, (_nextPos - prePos).normalized);
-        int dLayer = 0;
-        int hLayer = 7;
+        Ray r = new Ray(_prePos, (_nextPos - _prePos).normalized);
 
-        int finalmask = (1 << dLayer) | (1 << hLayer);
 
         RaycastHit fhit;
-        if (Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, finalmask))
+        if (Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, layerMask: GameManager.instance.bulletLayerMask))
         {
             _addToHits = true;
-            Debug.Log($"Bullet hit: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}. Root: {fhit.transform.root.name}");
+            Debug.Log($"Bullet hit: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}. Root: {fhit.transform.root.name}. Check :{_ignoreOriginPlayerTime}");
 
 
 
@@ -169,10 +218,11 @@ public class Bullet : MonoBehaviourPunCallbacks
                 }
             }
 
-            CheckForFinalHit();
-
-            gameObject.SetActive(false);
-
+            if (objectsHit.Count > 0)
+            {
+                CheckForFinalHit();
+                gameObject.SetActive(false);
+            }
         }
     }
 
