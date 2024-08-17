@@ -41,11 +41,6 @@ public class ExplosiveProjectile : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        if (_defaultTtl <= 0) { _defaultTtl = 10; }
-    }
-
     private void OnEnable()
     {
         if (_defaultTtl <= 0) { _defaultTtl = 10; }
@@ -76,20 +71,9 @@ public class ExplosiveProjectile : MonoBehaviour
         gameObject.layer = 8;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (!player.PV.IsMine) _explosionDelayOnImpact *= 0.9f;
-        try
-        {
-            foreach (PlayerHitbox ph in player.GetComponent<PlayerHitboxes>().hitboxes)
-                Physics.IgnoreCollision(GetComponent<Collider>(), ph.GetComponent<Collider>());
-        }
-        catch { }
 
-        if (!useConstantForce)
-            GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * throwForce);
-    }
+
+
 
     // Update is called once per frame
     void Update()

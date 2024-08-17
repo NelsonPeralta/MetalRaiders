@@ -1412,7 +1412,7 @@ public class PlayerController : MonoBehaviourPun
         //Spawn grenade prefab at spawnpoint
 
         if (PV.IsMine && !player.isDead)
-            PV.RPC("SpawnGrenade_RPC", RpcTarget.All, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
+            PV.RPC("SpawnGrenade_RPC", RpcTarget.AllViaServer, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
                 gwProperties.grenadeSpawnPoint.rotation, gwProperties.grenadeSpawnPoint.forward);
 
         //var grenade = Instantiate(pInventory.grenadePrefab);
