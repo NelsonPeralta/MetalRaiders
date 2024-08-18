@@ -1020,4 +1020,17 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             if (p.photonId == playerPhotonId && p.rid == controllerID) p.UpdateReservedSpawnPoint(pos, isRandom);
         }
     }
+
+    [PunRPC]
+    public void DisableAndExplodeProjectile(int output, int ind, Vector3 pos, bool caller = true)
+    {
+        if (caller)
+        {
+            instance._pv.RPC("DisableAndExplodeProjectile", RpcTarget.AllViaServer, output, ind, pos, false);
+        }
+        else if (!caller)
+        {
+            GrenadePool.instance.DisableExplosive((WeaponProperties.KillFeedOutput)output, ind, pos);
+        }
+    }
 }

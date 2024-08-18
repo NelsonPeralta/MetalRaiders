@@ -34,7 +34,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] Explosion.Type _type;
     [SerializeField] AudioSource _stuckSfxAudioSource;
 
-    bool _collided;
+    bool _collided, _exploded;
     float _explosionDelayOnImpact;
 
 
@@ -66,6 +66,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
         _ttl = _defaultTtl;
 
+        _exploded = false;
         _collided = false; _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.layer = 8;
@@ -245,20 +246,46 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
+        if (player.isMine && !_exploded)
+        {
+            _exploded = true;
+            NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
+        }
+
+
+
+
+
+
+
+
+
+
+        //if (_color == global::Explosion.Color.Yellow)
+        //    GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.fragClip, _killFeedOutput, stuck);
+        //else if (_color == global::Explosion.Color.Blue)
+        //    GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.plasmaClip, _killFeedOutput, stuck);
+
+
+
+        //gameObject.SetActive(false);
+    }
+
+    public void TriggerExplosion(Vector3 pos)
+    {
         if (_color == global::Explosion.Color.Yellow)
-            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.fragClip, _killFeedOutput, stuck);
+            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, pos, _color, _type, GrenadePool.instance.fragClip, _killFeedOutput, stuck);
         else if (_color == global::Explosion.Color.Blue)
-            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.plasmaClip, _killFeedOutput, stuck);
+            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, pos, _color, _type, GrenadePool.instance.plasmaClip, _killFeedOutput, stuck);
 
 
 
-        //Explosion e = Instantiate(explosionPrefab, transform.position, transform.rotation).GetComponent<Explosion>();
-        //if (_sticky) { transform.parent = GrenadePool.instance.transform; }
-        //e.player = player;
-        //e.stuck = _stuck;
-        //e.DisableIn5Seconds();
         gameObject.SetActive(false);
     }
+
+
+
+
 
     public void TriggerStuckBehaviour(int playerId, Vector3 gPos)
     {

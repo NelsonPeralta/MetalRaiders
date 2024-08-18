@@ -206,6 +206,7 @@ MonoBehaviour:
   - ReserveSpawnPoint_RPC
   - UpdateIsMoving
   - MeleeAnimations_RPC
+  - DisableAndExplodeProjectile
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

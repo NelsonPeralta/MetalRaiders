@@ -197,6 +197,55 @@ public class GrenadePool : MonoBehaviour
 
 
 
+    public int GetIndexOfExplosive(WeaponProperties.KillFeedOutput kfo, GameObject go)
+    {
+        if (kfo == WeaponProperties.KillFeedOutput.Frag_Grenade)
+        {
+            return _fragGrenadePool.IndexOf(go);
+        }
+        else if (kfo == WeaponProperties.KillFeedOutput.Plasma_Grenade)
+        {
+            return _stickyGrenadePool.IndexOf(go);
+        }
+        else if (kfo == WeaponProperties.KillFeedOutput.RPG)
+        {
+            return _rocketPool.IndexOf(go.GetComponent<ExplosiveProjectile>());
+        }
+        else if (kfo == WeaponProperties.KillFeedOutput.Grenade_Launcher)
+        {
+            return _glProjectilePool.IndexOf(go.GetComponent<ExplosiveProjectile>());
+        }
+
+
+
+        return -1;
+    }
+
+
+
+    public void DisableExplosive(WeaponProperties.KillFeedOutput kfo, int ind, Vector3 pos)
+    {
+        if (kfo == WeaponProperties.KillFeedOutput.Frag_Grenade)
+        {
+            _fragGrenadePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
+        }
+        else if (kfo == WeaponProperties.KillFeedOutput.Plasma_Grenade)
+        {
+            _stickyGrenadePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
+        }
+        else if (kfo == WeaponProperties.KillFeedOutput.RPG)
+        {
+            _rocketPool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
+        }
+        else if (kfo == WeaponProperties.KillFeedOutput.Grenade_Launcher)
+        {
+            _glProjectilePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
+        }
+    }
+
+
+
+
 
 
 
