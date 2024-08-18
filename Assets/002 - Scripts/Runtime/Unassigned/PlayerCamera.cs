@@ -59,7 +59,7 @@ public class PlayerCamera : MonoBehaviour
 
 
 
-    float _blockTime;
+    public float _blockTime, _trueLocalX;
 
 
 
@@ -223,7 +223,26 @@ public class PlayerCamera : MonoBehaviour
 
 
 
-            verticalAxisTarget.Rotate(Vector3.left * _clampedMouseY); // NEW, multiple scripts can now interact with local rotation
+            verticalAxisTarget.Rotate(Vector3.left * mouseY); // NEW, multiple scripts can now interact with local rotation
+            //localeulerangles return over 300 when looking up and returns below 90 when looking down
+            _trueLocalX = 0;
+
+
+            if (verticalAxisTarget.localEulerAngles.x > 0 && verticalAxisTarget.localEulerAngles.x < 180) _trueLocalX -= verticalAxisTarget.localEulerAngles.x;
+            if (verticalAxisTarget.localEulerAngles.x > 180 && verticalAxisTarget.localEulerAngles.x <= 360) _trueLocalX = 360 - verticalAxisTarget.localEulerAngles.x;
+
+
+
+
+
+            if (_trueLocalX > maxXClamp) verticalAxisTarget.localRotation = Quaternion.Euler(new Vector3(minXClamp, verticalAxisTarget.localRotation.y, verticalAxisTarget.localRotation.z));
+            else if (_trueLocalX < minXClamp) verticalAxisTarget.localRotation = Quaternion.Euler(new Vector3(maxXClamp, verticalAxisTarget.localRotation.y, verticalAxisTarget.localRotation.z));
+            else
+            {
+                //print($"{verticalAxisTarget.localEulerAngles.x} {verticalAxisTarget.eulerAngles.x} {maxXClamp} {minXClamp}");
+            }
+
+
 
             if (horizontalAxisTarget.transform.root == horizontalAxisTarget)
                 horizontalAxisTarget.Rotate(Vector3.up * mouseX);

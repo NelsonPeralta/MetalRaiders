@@ -393,8 +393,18 @@ public class PlayerShooting : MonoBehaviourPun
             {
                 // Projectile does not spawn if ammo left is 0, lag
                 if (playerController.player.isMine)
-                    PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.AllViaServer, GrenadePool.GetAvailableGrenadeLauncherProjectileAtIndex(playerController.player.playerDataCell.photonRoomIndex), 
+                    if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+                    {
+
+                        PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.AllViaServer, GrenadePool.GetAvailableRocketAtIndex(playerController.player.playerDataCell.photonRoomIndex),
                         playerController.player.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position, playerController.player.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation.eulerAngles);
+                    }
+                    else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+                    {
+                        PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.AllViaServer, GrenadePool.GetAvailableGrenadeLauncherProjectileAtIndex(playerController.player.playerDataCell.photonRoomIndex),
+                        playerController.player.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position, playerController.player.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation.eulerAngles);
+                    }
+
                 activeWeapon.SpawnMuzzleflash();
 
 
@@ -459,12 +469,15 @@ public class PlayerShooting : MonoBehaviourPun
     [PunRPC]
     void SpawnFakeExplosiveProjectile_RPC(int projectileIndex, Vector3 pos, Vector3 rot)
     {
+        print($"SpawnFakeExplosiveProjectile_RPC {projectileIndex}");
+
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
         if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
         {
             GrenadePool.SpawnRocket(playerController.player, projectileIndex, pos, rot);
-        }else if(activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+        }
+        else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
         {
             GrenadePool.SpawnGrenadeLauncherProjectile(playerController.player, projectileIndex, pos, rot);
         }

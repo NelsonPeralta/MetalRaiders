@@ -185,7 +185,7 @@ public class GrenadePool : MonoBehaviour
 
         _instance._glProjectilePool[index].transform.position = pos;
         _instance._glProjectilePool[index].transform.rotation = Quaternion.Euler(rot);
-        _instance._rocketPool[index].GetComponent<Rigidbody>().velocity = Vector3.zero; _instance._glProjectilePool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        _instance._glProjectilePool[index].GetComponent<Rigidbody>().velocity = Vector3.zero; _instance._glProjectilePool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         _instance._glProjectilePool[index].gameObject.SetActive(true);
         if (!_instance._glProjectilePool[index].useConstantForce)
             _instance._glProjectilePool[index].GetComponent<Rigidbody>().AddForce(_instance._glProjectilePool[index].gameObject.transform.forward * _instance._glProjectilePool[index].throwForce);
