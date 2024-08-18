@@ -231,16 +231,10 @@ public class PlayerCamera : MonoBehaviour
             if (verticalAxisTarget.localEulerAngles.x > 0 && verticalAxisTarget.localEulerAngles.x < 180) _trueLocalX -= verticalAxisTarget.localEulerAngles.x;
             if (verticalAxisTarget.localEulerAngles.x > 180 && verticalAxisTarget.localEulerAngles.x <= 360) _trueLocalX = 360 - verticalAxisTarget.localEulerAngles.x;
 
+            _trueLocalX *= -1;
 
-
-
-
-            if (_trueLocalX > maxXClamp) verticalAxisTarget.localRotation = Quaternion.Euler(new Vector3(minXClamp, verticalAxisTarget.localRotation.y, verticalAxisTarget.localRotation.z));
-            else if (_trueLocalX < minXClamp) verticalAxisTarget.localRotation = Quaternion.Euler(new Vector3(maxXClamp, verticalAxisTarget.localRotation.y, verticalAxisTarget.localRotation.z));
-            else
-            {
-                //print($"{verticalAxisTarget.localEulerAngles.x} {verticalAxisTarget.eulerAngles.x} {maxXClamp} {minXClamp}");
-            }
+            if (_trueLocalX > maxXClamp) verticalAxisTarget.localRotation = Quaternion.Euler(new Vector3(maxXClamp, verticalAxisTarget.localRotation.y, verticalAxisTarget.localRotation.z));
+            else if (_trueLocalX < minXClamp) verticalAxisTarget.localRotation = Quaternion.Euler(new Vector3(minXClamp, verticalAxisTarget.localRotation.y, verticalAxisTarget.localRotation.z));
 
 
 

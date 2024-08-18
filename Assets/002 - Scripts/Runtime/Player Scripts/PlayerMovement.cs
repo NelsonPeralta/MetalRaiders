@@ -796,8 +796,8 @@ public class PlayerMovement : MonoBehaviour
                 else if (!_grounded && _pController.weaponAnimator.GetBool("Run"))
                 {
 
-                    //if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
-                    //    _pController.weaponAnimator.speed = 0.1f;
+                    if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+                        _pController.weaponAnimator.speed = 0.1f;
                 }
             }
         }
