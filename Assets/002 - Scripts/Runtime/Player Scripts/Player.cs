@@ -1870,40 +1870,33 @@ public class Player : Biped
                                 (GameManager.instance.teamMode == GameManager.TeamMode.Classic && playerThatKilledMe.team != this.team))
             {
 
-                try
+                PlayerMedals sourcePlayerMedals = playerThatKilledMe._playerMedals;
+                if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
                 {
-                    PlayerMedals sourcePlayerMedals = playerThatKilledMe._playerMedals;
-                    if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
+                    print($"Spawning medal: {deathByGroin} {deathNature}");
+                    if (deathByGroin)
                     {
-                        if (deathByGroin)
-                        {
-                            deathNature = DeathNature.Groin;
-                            sourcePlayerMedals.SpawnNutshotMedal();
-                        }
-                        else if (deathNature == DeathNature.Sniped)
-                            sourcePlayerMedals.SpawnSniperHeadshotMedal();
-                        else if (deathNature == DeathNature.Headshot)
-                            sourcePlayerMedals.SpawnHeadshotMedal();
-                        else if (_killFeedOutput == WeaponProperties.KillFeedOutput.Assasination)
-                            sourcePlayerMedals.SpawnAssasinationMedal();
-                        else if (deathNature == DeathNature.Melee)
-                            sourcePlayerMedals.SpawnMeleeMedal();
-                        else if (deathNature.ToString().Contains("renade") && _killFeedOutput != WeaponProperties.KillFeedOutput.Grenade_Launcher)
-                            sourcePlayerMedals.SpawnGrenadeMedal();
-                        else if (deathNature == DeathNature.Stuck)
-                            sourcePlayerMedals.SpawnStuckKillMedal();
-                        else
-                            sourcePlayerMedals.kills++;
-
-                        //if (_playerMedals.spree >= 5)
-                        //    sourcePlayerMedals.SpawnKilljoySpreeMedal();
+                        deathNature = DeathNature.Groin;
+                        sourcePlayerMedals.SpawnNutshotMedal();
                     }
+                    else if (deathNature == DeathNature.Sniped)
+                        sourcePlayerMedals.SpawnSniperHeadshotMedal();
+                    else if (deathNature == DeathNature.Headshot)
+                        sourcePlayerMedals.SpawnHeadshotMedal();
+                    else if (_killFeedOutput == WeaponProperties.KillFeedOutput.Assasination)
+                        sourcePlayerMedals.SpawnAssasinationMedal();
+                    else if (deathNature == DeathNature.Melee)
+                        sourcePlayerMedals.SpawnMeleeMedal();
+                    else if (deathNature.ToString().Contains("renade") && _killFeedOutput != WeaponProperties.KillFeedOutput.Grenade_Launcher)
+                        sourcePlayerMedals.SpawnGrenadeMedal();
+                    else if (deathNature == DeathNature.Stuck)
+                        sourcePlayerMedals.SpawnStuckKillMedal();
+                    else
+                        sourcePlayerMedals.kills++;
+
+                    //if (_playerMedals.spree >= 5)
+                    //    sourcePlayerMedals.SpawnKilljoySpreeMedal();
                 }
-                catch (System.Exception e) { Debug.LogException(e); }
-
-
-
-
 
                 MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, (WeaponProperties.KillFeedOutput)kfo));
                 AchievementCheck(lastPID);
