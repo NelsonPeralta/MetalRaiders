@@ -362,13 +362,12 @@ public class PlayerShooting : MonoBehaviourPun
 
                 if (player.isMine || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
-                    Debug.Log("shoooo 2");
+                    Debug.Log("Shooting Plasma bullet");
                     var bullet = GameObjectPool.instance.SpawnPooledBullet();
                     bullet.GetComponent<Bullet>().overcharged = false;
                     try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
 
 
-                    print($"Active weapon has target tracking: {activeWeapon.targetTracking}. PlayerShooting script has tracking target {trackingTarget}");
                     if (activeWeapon.targetTracking)
                     {
                         if (!activeWeapon.overcharge)
@@ -379,10 +378,14 @@ public class PlayerShooting : MonoBehaviourPun
                             {
                                 bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
                                 bullet.GetComponent<Bullet>().overcharged = overcharge;
-                                bullet.GetComponent<Bullet>().damage *= 5;
+                                bullet.GetComponent<Bullet>().damage = 25;
                             }
                         }
                     }
+                    print($"Active weapon has target tracking: {activeWeapon.targetTracking}. PlayerShooting script has tracking target {trackingTarget}. {overcharge}");
+
+
+
 
                     {
                         Debug.Log(bullet);
