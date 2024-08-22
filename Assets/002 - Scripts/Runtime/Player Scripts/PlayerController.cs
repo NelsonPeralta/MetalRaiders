@@ -563,7 +563,6 @@ public class PlayerController : MonoBehaviourPun
             if (rewiredPlayer.GetButtonUp("Shoot"))
             {
                 SendIsNotHoldingFireWeaponBtn();
-                player.playerShooting.PlayerReleasedFireBtn();
             }
         }
     }
@@ -632,6 +631,7 @@ public class PlayerController : MonoBehaviourPun
             isHoldingShootBtn = false;
             OnPlayerFireButtonUp?.Invoke(this);
             Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
+            
         }
         else
         {

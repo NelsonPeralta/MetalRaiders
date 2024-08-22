@@ -77,6 +77,18 @@ public class PlayerShooting : MonoBehaviourPun
     void OnPlayerControllerFireUp_Delegate(PlayerController playerController)
     {
         fireButtonDown = false;
+
+        if (playerController.player.playerInventory.activeWeapon && playerController.player.playerInventory.activeWeapon.overcharge)
+            if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
+            {
+                print("SHOOT OVERCHARGED SHOT");
+                ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
+            }
+            else
+            {
+                print("Shoot normal shot");
+                ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
+            }
     }
 
     void OnPlayerControllerFire_Delegate(PlayerController playerController)
@@ -619,20 +631,5 @@ public class PlayerShooting : MonoBehaviourPun
     public void StopBurstFiring()
     {
         StopAllCoroutines();
-    }
-
-    public void PlayerReleasedFireBtn()
-    {
-        if (playerController.player.playerInventory.activeWeapon && playerController.player.playerInventory.activeWeapon.overcharge)
-            if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
-            {
-                print("SHOOT OVERCHARGED SHOT");
-                ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
-            }
-            else
-            {
-                print("Shoot normal shot");
-                ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
-            }
     }
 }
