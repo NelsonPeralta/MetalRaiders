@@ -79,16 +79,17 @@ public class PlayerShooting : MonoBehaviourPun
         fireButtonDown = false;
 
         if (playerController.player.playerInventory.activeWeapon && playerController.player.playerInventory.activeWeapon.overcharge)
-            if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
-            {
-                print("SHOOT OVERCHARGED SHOT");
-                ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
-            }
-            else
-            {
-                print("Shoot normal shot");
-                ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
-            }
+            if (pInventory.activeWeapon.overheatCooldown <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
+                if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
+                {
+                    print("SHOOT OVERCHARGED SHOT");
+                    ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
+                }
+                else
+                {
+                    print("Shoot normal shot");
+                    ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
+                }
     }
 
     void OnPlayerControllerFire_Delegate(PlayerController playerController)
@@ -512,7 +513,10 @@ public class PlayerShooting : MonoBehaviourPun
         if (PV.IsMine)
         {
             if (!overcharge)
+            {
+                print("removing 1 loaded ammo");
                 activeWeapon.loadedAmmo -= 1;
+            }
             else
                 activeWeapon.loadedAmmo -= 10;
         }

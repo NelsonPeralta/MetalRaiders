@@ -15,7 +15,7 @@ public class PlayerAudioSourceNetworkBehaviour : MonoBehaviour
             GetComponent<AudioSource>().spatialBlend = 0.98f;
 
             if (transform.root.GetComponent<Player>() && !transform.root.GetComponent<Player>().isMine)
-                GetComponent<AudioSource>().volume = 1.0f;
+                GetComponent<AudioSource>().volume = 0.5f;
         }
     }
 }

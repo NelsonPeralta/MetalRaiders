@@ -109,10 +109,10 @@ public class AimAssistCone : MonoBehaviour
 
         ReticuleFriction = reticuleFriction;
 
-        if (player.GetComponent<PlayerController>().rewiredPlayer.GetButtonUp("Shoot"))
-        {
-            player.GetComponent<PlayerController>().OnPlayerFireButtonUp?.Invoke(player.GetComponent<PlayerController>());
-        }
+        //if (player.GetComponent<PlayerController>().rewiredPlayer.GetButtonUp("Shoot"))
+        //{
+        //    player.GetComponent<PlayerController>().OnPlayerFireButtonUp?.Invoke(player.GetComponent<PlayerController>());
+        //}
 
         Ray();
 
