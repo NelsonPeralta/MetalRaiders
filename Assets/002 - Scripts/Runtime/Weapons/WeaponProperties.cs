@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class WeaponProperties : MonoBehaviour
 {
     public static int RECOIL_FRAMES = 6;
+    public static float OVERCHARGE_TIME_LOW = 0.3f;
+    public static float OVERCHARGE_TIME_FULL = 0.9f;
 
     public delegate void WeaponPropertiesEvent(WeaponProperties weaponProperties);
     public WeaponPropertiesEvent OnCurrentAmmoChanged, OnSpareAmmoChanged;
@@ -28,7 +30,7 @@ public class WeaponProperties : MonoBehaviour
         Unassigned,
         Pistol, SMG, Assault_Rifle, Battle_Rifle, Sniper, RPG, Shotgun, Grenade_Launcher,
         Oddball, Splinter, Plasma_Rifle, _Plasma_Bolter, Barrel, Ultra_Bind, Frag_Grenade,
-        Plasma_Grenade, Melee, Stuck, Assasination
+        Plasma_Grenade, Melee, Stuck, Assasination, Plasma_Pistol
     }
 
     public Player player { get { return pController.player; } }
@@ -50,7 +52,7 @@ public class WeaponProperties : MonoBehaviour
     public int numberOfPellets = 1;
     public int bulletSpeed = 250;
     public float range;
-    public bool isShotgun;
+    public bool isShotgun, overcharge;
     public float redReticuleHint;
     float _previousRedReticuleHint;
     public bool targetTracking;
@@ -611,6 +613,11 @@ public class WeaponPropertiesEditor : Editor
         {
             wp.numberOfPellets = EditorGUILayout.IntField("Pellets:", wp.numberOfPellets);
         }
+
+
+        wp.overcharge = GUILayout.Toggle(wp.overcharge, "Overcharge");
+
+
         wp.redReticuleHint = EditorGUILayout.FloatField("Red reticule hint:", wp.redReticuleHint);
 
         wp.targetTracking = GUILayout.Toggle(wp.targetTracking, "Target Tracking");

@@ -563,6 +563,7 @@ public class PlayerController : MonoBehaviourPun
             if (rewiredPlayer.GetButtonUp("Shoot"))
             {
                 SendIsNotHoldingFireWeaponBtn();
+                player.playerShooting.PlayerReleasedFireBtn();
             }
         }
     }

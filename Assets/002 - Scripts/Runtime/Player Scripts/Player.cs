@@ -906,7 +906,7 @@ public class Player : Biped
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        print($"Damage: {damageSourceCleanName}");
+        print($"Damage: ({damage}) {damageSourceCleanName}");
 
 
         {
@@ -970,6 +970,7 @@ public class Player : Biped
                 //    bytes = Encoding.UTF8.GetBytes(damageSourceCleanName);
             }
             //Debug.LogError($"EMPTY DEATH NATURE");
+
 
 
             int newHealth = (int)hitPoints - damage;
@@ -1432,7 +1433,7 @@ public class Player : Biped
         if (isDead)
         {
             if (isMine && GameManager.instance.gameMode == GameManager.GameMode.Versus)
-                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, _killFeedOutput);
+                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, (int)_killFeedOutput);
 
             {
                 // Spawn Skull

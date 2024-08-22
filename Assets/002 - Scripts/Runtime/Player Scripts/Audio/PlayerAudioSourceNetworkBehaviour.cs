@@ -13,6 +13,7 @@ public class PlayerAudioSourceNetworkBehaviour : MonoBehaviour
         else
         {
             GetComponent<AudioSource>().spatialBlend = 0.98f;
+            GetComponent<AudioSource>().volume = 1.0f;
         }
     }
 }

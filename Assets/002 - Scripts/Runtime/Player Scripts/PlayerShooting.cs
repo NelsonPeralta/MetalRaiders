@@ -32,6 +32,7 @@ public class PlayerShooting : MonoBehaviourPun
     }
 
     public float fireRecovery { get { return _fireRecovery; } }
+    public bool overchargeReady { get { return _overchargeFloat >= WeaponProperties.OVERCHARGE_TIME_LOW; } }
 
     [Header("Other Scripts")]
     public PhotonView PV;
@@ -41,7 +42,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     // Private variables
     int playerRewiredID;
-    [SerializeField] float _fireRecovery = 0, leftFireInterval = 0;
+    [SerializeField] float _fireRecovery = 0, leftFireInterval = 0, _overchargeFloat;
     [SerializeField] bool fireButtonDown = false, scopeBtnDown = false;
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
 
@@ -147,10 +148,45 @@ public class PlayerShooting : MonoBehaviourPun
 
             if (sw.firingMode == WeaponProperties.FiringMode.Burst)
                 ShootBurst(sw);
-            else
+            else if (!sw.overcharge)
                 Shoot_Caller(isLeftWeapon);
+            else if (sw.overcharge)
+            {
+                //print("shooting overcharg");
+                //Shoot_Caller(isLeftWeapon);
+            }
         }
     }
+
+
+
+
+
+    public void ShootOverchargeWeapon(WeaponProperties wp, bool overcharge = false)
+    {
+        if (playerController.isDrawingWeapon) return;
+
+
+        if ((_fireRecovery > 0 && !wp))
+            return;
+
+
+        _fireRecovery = 1 / (wp.fireRate / 60f);
+
+        if (CanShootAuto(wp) || CanShootSingleOrBurst(wp))
+        {
+            fireButtonDown = true;
+
+            if (wp.overcharge)
+            {
+                print("shooting overcharg");
+                Shoot_Caller(false, overcharge);
+            }
+        }
+    }
+
+
+
 
     bool CanShootAuto(WeaponProperties activeWeapon)
     {
@@ -180,7 +216,7 @@ public class PlayerShooting : MonoBehaviourPun
         //PV.RPC("Shoot_RPC", RpcTarget.All);
     }
 
-    void Shoot_Caller(bool isLeftWeapon = false)
+    void Shoot_Caller(bool isLeftWeapon = false, bool overcharge = false)
     {
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
@@ -195,7 +231,7 @@ public class PlayerShooting : MonoBehaviourPun
             return;
         }
 
-        shoooo(isLeftWeapon);
+        shoooo(isLeftWeapon, overcharge);
         //Shoot_RPC();
         return;
         PV.RPC("Shoot_RPC", RpcTarget.All);
@@ -215,7 +251,7 @@ public class PlayerShooting : MonoBehaviourPun
     int _ignoreShootCounter;
     List<RaycastHit> fakeBulletTrailRaycasthits = new List<RaycastHit>();
 
-    void shoooo(bool isLeftWeapon = false)
+    void shoooo(bool isLeftWeapon = false, bool overcharge = false)
     {
         if (playerController.GetComponent<Player>().isDead || playerController.GetComponent<Player>().isRespawning)
             return;
@@ -315,13 +351,24 @@ public class PlayerShooting : MonoBehaviourPun
                 {
                     Debug.Log("shoooo 2");
                     var bullet = GameObjectPool.instance.SpawnPooledBullet();
+                    bullet.GetComponent<Bullet>().overcharged = false;
                     try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
 
 
                     print($"Active weapon has target tracking: {activeWeapon.targetTracking}. PlayerShooting script has tracking target {trackingTarget}");
                     if (activeWeapon.targetTracking)
                     {
-                        bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
+                        if (!activeWeapon.overcharge)
+                            bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
+                        else
+                        {
+                            if (overcharge)
+                            {
+                                bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
+                                bullet.GetComponent<Bullet>().overcharged = overcharge;
+                                bullet.GetComponent<Bullet>().damage *= 5;
+                            }
+                        }
                     }
 
                     {
@@ -369,6 +416,12 @@ public class PlayerShooting : MonoBehaviourPun
                     try { bullet.gameObject.GetComponent<Bullet>().sourcePlayer = playerController.GetComponent<Player>(); } catch { }
                     try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
                     try { bullet.gameObject.GetComponent<Bullet>().damage = playerController.GetComponent<Player>().playerInventory.activeWeapon.damage; } catch { }
+
+
+                    if (overcharge) bullet.GetComponent<Bullet>().damage *= 5;
+
+
+
                     //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
                     bullet.gameObject.GetComponent<Bullet>().range = (int)activeWeapon.range;
                     bullet.gameObject.GetComponent<Bullet>().speed = (int)activeWeapon.bulletSpeed;
@@ -381,6 +434,8 @@ public class PlayerShooting : MonoBehaviourPun
                     if (activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
                     {
                         activeWeapon.currentOverheat = Mathf.Clamp(activeWeapon.currentOverheat + activeWeapon.overheatPerShot, 0, 100);
+
+                        if (overcharge) activeWeapon.currentOverheat = 100;
 
                         if (activeWeapon.currentOverheat >= 100 && activeWeapon.overheatCooldown <= 0 && player.isMine)
                             NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId,
@@ -443,7 +498,12 @@ public class PlayerShooting : MonoBehaviourPun
             _ignoreShootCounter++;
 
         if (PV.IsMine)
-            activeWeapon.loadedAmmo -= 1;
+        {
+            if (!overcharge)
+                activeWeapon.loadedAmmo -= 1;
+            else
+                activeWeapon.loadedAmmo -= 10;
+        }
 
         try
         {
@@ -524,7 +584,22 @@ public class PlayerShooting : MonoBehaviourPun
     public void Update()
     {
         if (playerController)
+        {
             FireCooldown();
+
+
+
+            if (playerController.isHoldingShootBtn)
+            {
+                if (playerController.pInventory && playerController.pInventory.activeWeapon)
+                    if (pInventory.activeWeapon.currentOverheat <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
+                        _overchargeFloat += Time.deltaTime;
+            }
+            else
+            {
+                _overchargeFloat = 0;
+            }
+        }
     }
     IEnumerator Player3PSFiringAnimation()
     {
@@ -544,5 +619,20 @@ public class PlayerShooting : MonoBehaviourPun
     public void StopBurstFiring()
     {
         StopAllCoroutines();
+    }
+
+    public void PlayerReleasedFireBtn()
+    {
+        if (playerController.player.playerInventory.activeWeapon && playerController.player.playerInventory.activeWeapon.overcharge)
+            if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
+            {
+                print("SHOOT OVERCHARGED SHOT");
+                ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
+            }
+            else
+            {
+                print("Shoot normal shot");
+                ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
+            }
     }
 }

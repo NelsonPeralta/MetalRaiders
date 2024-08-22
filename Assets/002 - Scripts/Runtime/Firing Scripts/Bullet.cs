@@ -43,6 +43,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     public bool blueTeam = false;
     public bool yellowTeam = false;
     public bool greenTeam = false;
+    public bool overcharged;
     float defaultTimeToDespawn = .5f, timeToDespawn;
 
 
@@ -456,6 +457,15 @@ public class Bullet : MonoBehaviourPunCallbacks
                         //if (sourcePlayer.PV.IsMine)
                         {
                             Debug.Log("asdf6");
+
+
+                            if (player.hasArmor)
+                            {
+                                print($"Bullet Overcharged damage : {player.shieldPoints}");
+                                if (player.shieldPoints > 0 && overcharged) damage = (int)player.shieldPoints;
+                            }
+
+
 
                             if (weaponProperties.codeName != null)
                                 finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.cleanName, isGroin: wasNutshot, weaponIndx: weaponProperties.index, kfo: weaponProperties.killFeedOutput);
