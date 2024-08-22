@@ -211,9 +211,10 @@ public class PlayerController : MonoBehaviourPun
     }
 
     public float currentlyReloadingTimer { set { _currentlyReloadingTimer = value; } }
+    public bool triggerOverHeatOnShootingBtnUp { set { _triggerOverHeatOnShootingBtnUp = value; } }
 
 
-    bool _isMeleeing, _cameraIsFloating;
+    bool _isMeleeing, _cameraIsFloating, _triggerOverHeatOnShootingBtnUp;
     float _meleeCooldown, _adsCounter;
     Transform _mainCamParent;
     Vector3 _lastMainCamLocalPos;

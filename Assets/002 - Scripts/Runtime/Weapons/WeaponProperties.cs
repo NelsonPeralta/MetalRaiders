@@ -248,12 +248,9 @@ public class WeaponProperties : MonoBehaviour
             _currentOverheat = value;
 
             if (_currentOverheat >= 100 && overheatCooldown <= 0 && player.isMine)
-                NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId,
-                    System.Array.IndexOf(player.playerInventory.allWeaponsInInventory, gameObject));
+                StartCoroutine(TriggerOverheat_Coroutine());
         }
     }
-
-    public bool allowSinglePlasmaBoltForNetworkedOverheat { get { return _allowSinglePlasmaBoltForNetworkedOverheat; } set { /*_allowSinglePlasmaBoltForNetworkedOverheat = value;*/ } }
 
 
     public int _currentOverheat;
@@ -261,7 +258,6 @@ public class WeaponProperties : MonoBehaviour
     int _index, _preLayer, _recoilCount;
     Animator _animator;
 
-    bool _allowSinglePlasmaBoltForNetworkedOverheat;
 
     private void Start()
     {
@@ -355,7 +351,6 @@ public class WeaponProperties : MonoBehaviour
             overheatCooldown -= Time.deltaTime;
             if (overheatCooldown <= 0)
             {
-                _allowSinglePlasmaBoltForNetworkedOverheat = false;
                 overheatSteamHolder.SetActive(false);
                 tpsHolsteredOverheatSteamHolder.SetActive(false);
                 tpsEquippedOverheatSteamHolder.SetActive(false);
@@ -453,6 +448,15 @@ public class WeaponProperties : MonoBehaviour
 
         fpsMuzzleFlash.SetActive(true);
         tpsMuzzleFlash.SetActive(true);
+    }
+
+    IEnumerator TriggerOverheat_Coroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+
+        NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId,
+                    System.Array.IndexOf(player.playerInventory.allWeaponsInInventory, gameObject));
     }
 
     public Quaternion GetRandomSprayRotation()

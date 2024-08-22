@@ -84,14 +84,13 @@ public class PlayerShooting : MonoBehaviourPun
         {
             print($"OnPlayerControllerFireUp_Delegate 2 {pInventory.activeWeapon.overheatCooldown} {pInventory.activeWeapon.loadedAmmo}");
 
-            if ((pInventory.activeWeapon.overheatCooldown <= 0 || pInventory.activeWeapon.allowSinglePlasmaBoltForNetworkedOverheat) && pInventory.activeWeapon.loadedAmmo > 0)
+            if (pInventory.activeWeapon.overheatCooldown <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
             {
                 print($"OnPlayerControllerFireUp_Delegate 3");
 
                 if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
                 {
                     print("SHOOT OVERCHARGED SHOT");
-                    pInventory.activeWeapon.allowSinglePlasmaBoltForNetworkedOverheat = false;
                     ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
                 }
                 else
