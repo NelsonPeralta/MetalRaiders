@@ -375,6 +375,7 @@ public class PlayerShooting : MonoBehaviourPun
                     Debug.Log("Shooting Plasma bullet");
                     var bullet = GameObjectPool.instance.SpawnPooledBullet();
                     bullet.GetComponent<Bullet>().overcharged = false;
+                    bullet.GetComponent<Bullet>().trackingTarget = null;
                     try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
 
 
