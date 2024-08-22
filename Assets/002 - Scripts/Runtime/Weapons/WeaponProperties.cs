@@ -248,7 +248,7 @@ public class WeaponProperties : MonoBehaviour
             _currentOverheat = value;
 
             if (_currentOverheat >= 100 && overheatCooldown <= 0 && player.isMine)
-                StartCoroutine(TriggerOverheat_Coroutine());
+                StartCoroutine(TriggerOverheat_Coroutine()); // Allow time for networking purposes
         }
     }
 
@@ -292,7 +292,6 @@ public class WeaponProperties : MonoBehaviour
     {
         if (_recoilCount > 0)
         {
-            print($"{_recoilCount} {RECOIL_FRAMES / 2}");
             if (_recoilCount > RECOIL_FRAMES)
             {
                 if (camScript)
@@ -307,7 +306,6 @@ public class WeaponProperties : MonoBehaviour
                             horRecoil *= 0.8f;
                         }
 
-                        print($"plus");
                         player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * verRecoil);
                         player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
                     }
@@ -316,24 +314,17 @@ public class WeaponProperties : MonoBehaviour
             {
                 if (camScript && yRecoil > 0)
                 {
-                    //float horRecoil = Random.Range(-xRecoil, xRecoil);
                     float verRecoil = -yRecoil;
 
                     if (pController.isCrouching)
                     {
                         verRecoil *= 0.8f;
-                        //horRecoil *= 0.8f;
                     }
 
 
 
 
-                    //verRecoil *= -1;
-                    //horRecoil *= -0.5f;
-                    print($"minus");
-
                     player.playerCamera.verticalAxisTarget.Rotate(-Vector3.right * 0.5f * verRecoil);
-                    //player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
                 }
             }
 
