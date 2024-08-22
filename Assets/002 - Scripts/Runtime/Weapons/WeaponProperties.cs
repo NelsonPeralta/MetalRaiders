@@ -253,7 +253,7 @@ public class WeaponProperties : MonoBehaviour
         }
     }
 
-    public bool allowSinglePlasmaBoltForNetworkedOverheat { get { return _allowSinglePlasmaBoltForNetworkedOverheat; } set { _allowSinglePlasmaBoltForNetworkedOverheat = value; } }
+    public bool allowSinglePlasmaBoltForNetworkedOverheat { get { return _allowSinglePlasmaBoltForNetworkedOverheat; } set { /*_allowSinglePlasmaBoltForNetworkedOverheat = value;*/ } }
 
 
     public int _currentOverheat;
