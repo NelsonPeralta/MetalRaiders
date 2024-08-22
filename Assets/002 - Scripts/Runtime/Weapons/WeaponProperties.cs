@@ -70,7 +70,7 @@ public class WeaponProperties : MonoBehaviour
     public int ammoCapacity;
     public float bulletSpray;
     public bool injectLootedAmmo;
-    public int overheatPerShot, currentOverheat;
+    public int overheatPerShot;
     public GameObject overheatSteamHolder, tpsEquippedOverheatSteamHolder, tpsHolsteredOverheatSteamHolder;
     public float overheatCooldown;
 
@@ -239,8 +239,29 @@ public class WeaponProperties : MonoBehaviour
     public bool hipSprayOnly;
     public bool degradingDamage;
 
+
+    public int currentOverheat
+    {
+        get { return _currentOverheat; }
+        set
+        {
+            _currentOverheat = value;
+
+            if (_currentOverheat >= 100 && overheatCooldown <= 0 && player.isMine)
+                NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId,
+                    System.Array.IndexOf(player.playerInventory.allWeaponsInInventory, gameObject));
+        }
+    }
+
+    public bool allowSinglePlasmaBoltForNetworkedOverheat { get { return _allowSinglePlasmaBoltForNetworkedOverheat; } set { _allowSinglePlasmaBoltForNetworkedOverheat = value; } }
+
+
+    public int _currentOverheat;
+
     int _index, _preLayer, _recoilCount;
     Animator _animator;
+
+    bool _allowSinglePlasmaBoltForNetworkedOverheat;
 
     private void Start()
     {
@@ -326,14 +347,15 @@ public class WeaponProperties : MonoBehaviour
 
 
 
-        if (currentOverheat > 0)
-            currentOverheat -= (int)(Time.deltaTime * 100);
+        if (_currentOverheat > 0)
+            _currentOverheat -= (int)(Time.deltaTime * 100);
 
         if (overheatCooldown > 0)
         {
             overheatCooldown -= Time.deltaTime;
             if (overheatCooldown <= 0)
             {
+                _allowSinglePlasmaBoltForNetworkedOverheat = false;
                 overheatSteamHolder.SetActive(false);
                 tpsHolsteredOverheatSteamHolder.SetActive(false);
                 tpsEquippedOverheatSteamHolder.SetActive(false);
@@ -492,12 +514,15 @@ public class WeaponProperties : MonoBehaviour
     {
         if (!player.isDead && !player.isRespawning && overheatCooldown <= 0)
         {
+            print("TriggerOverheat");
             overheatCooldown = 1.7f;
             overheatSteamHolder.SetActive(true);
             tpsEquippedOverheatSteamHolder.SetActive(true);
             tpsHolsteredOverheatSteamHolder.SetActive(true);
         }
     }
+
+
 
 
 
@@ -644,7 +669,7 @@ public class WeaponPropertiesEditor : Editor
             if (wp.plasmaColor != WeaponProperties.PlasmaColor.Shard)
             {
                 wp.overheatPerShot = EditorGUILayout.IntField("Overheat Per Shot", wp.overheatPerShot);
-                wp.currentOverheat = EditorGUILayout.IntField("Overheat", wp.currentOverheat);
+                wp._currentOverheat = EditorGUILayout.IntField("Overheat", wp._currentOverheat);
                 wp.overheatCooldown = EditorGUILayout.FloatField("Overheat Cooldown", wp.overheatCooldown);
 
                 EditorGUILayout.LabelField("FPS Overheat Steam", EditorStyles.boldLabel);

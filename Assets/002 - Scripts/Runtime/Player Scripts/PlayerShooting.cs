@@ -78,11 +78,20 @@ public class PlayerShooting : MonoBehaviourPun
     {
         fireButtonDown = false;
 
+        print($"OnPlayerControllerFireUp_Delegate 1");
+
         if (playerController.player.playerInventory.activeWeapon && playerController.player.playerInventory.activeWeapon.overcharge)
-            if (pInventory.activeWeapon.overheatCooldown <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
+        {
+            print($"OnPlayerControllerFireUp_Delegate 2 {pInventory.activeWeapon.overheatCooldown} {pInventory.activeWeapon.loadedAmmo}");
+
+            if ((pInventory.activeWeapon.overheatCooldown <= 0 || pInventory.activeWeapon.allowSinglePlasmaBoltForNetworkedOverheat) && pInventory.activeWeapon.loadedAmmo > 0)
+            {
+                print($"OnPlayerControllerFireUp_Delegate 3");
+
                 if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
                 {
                     print("SHOOT OVERCHARGED SHOT");
+                    pInventory.activeWeapon.allowSinglePlasmaBoltForNetworkedOverheat = false;
                     ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
                 }
                 else
@@ -90,6 +99,8 @@ public class PlayerShooting : MonoBehaviourPun
                     print("Shoot normal shot");
                     ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
                 }
+            }
+        }
     }
 
     void OnPlayerControllerFire_Delegate(PlayerController playerController)
@@ -452,10 +463,6 @@ public class PlayerShooting : MonoBehaviourPun
                         activeWeapon.currentOverheat = Mathf.Clamp(activeWeapon.currentOverheat + activeWeapon.overheatPerShot, 0, 100);
 
                         if (overcharge) activeWeapon.currentOverheat = 100;
-
-                        if (activeWeapon.currentOverheat >= 100 && activeWeapon.overheatCooldown <= 0 && player.isMine)
-                            NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId,
-                                Array.IndexOf(player.playerInventory.allWeaponsInInventory, activeWeapon.gameObject));
                     }
                 }
                 activeWeapon.SpawnMuzzleflash();
