@@ -452,8 +452,8 @@ public class WeaponProperties : MonoBehaviour
 
     IEnumerator TriggerOverheat_Coroutine()
     {
-        yield return new WaitForEndOfFrame();
-
+        print("TriggerOverheat_Coroutine");
+        yield return new WaitForSeconds(0.2f);
 
         NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId,
                     System.Array.IndexOf(player.playerInventory.allWeaponsInInventory, gameObject));
