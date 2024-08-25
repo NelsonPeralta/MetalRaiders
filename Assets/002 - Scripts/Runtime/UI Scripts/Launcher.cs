@@ -494,7 +494,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         OnCreateSwarmRoomButton?.Invoke(this);
     }
 
-    public override void OnJoinedRoom() // Runs only when THIS player joins room
+    public override void OnJoinedRoom() // Runs only when My player joined the room
     {
         Debug.Log("Joined room");
         DestroyNameplates();
@@ -562,18 +562,21 @@ public class Launcher : MonoBehaviourPunCallbacks
                 NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
             }
         }
+
+        FindMasterClientAndToggleIcon();
     }
 
-    // Runs only when OTHER players join room
+    // Runs only when OTHER player joined room.
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
+        print("Other player joined room");
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
         Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(newPlayer);
 
         if (PhotonNetwork.IsMasterClient)
         {
             StartCoroutine(InstantiateNetworkGameManager_Coroutine());
-            StartCoroutine(SendGameParamsWithDelay());
+            //StartCoroutine(SendGameParamsWithDelay());
         }
     }
 
@@ -615,7 +618,16 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
     {
+        print($"OnMasterClientSwitched {newMasterClient.NickName} {PhotonNetwork.IsMasterClient}");
+
+        GameManager.instance.gameMode = GameMode.Versus;
+        GameManager.instance.teamMode = TeamMode.None;
+
         _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
+        _mapSelectedPreview.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
+
+        FindMasterClientAndToggleIcon();
+        ChangeLevelToLoadWithIndex(1); // Will send params too
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -925,6 +937,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("InstantiateNetworkGameManager_Coroutine");
         yield return new WaitForSeconds(0.1f);
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
+        NetworkGameManager.instance.SendGameParams();
     }
 
     IEnumerator LoadLevel_Coroutine()
@@ -947,7 +960,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
             foreach (Photon.Realtime.Player player in newListPlayers)
-                Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player);
+                Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player, false);
 
             var listPlayersDiff = newListPlayers.Except(_previousListOfPlayersInRoom).ToList();
             Debug.Log($"{listPlayersDiff[0].NickName} Joined room");
@@ -1017,6 +1030,30 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void EnableGamePadCursorIn2Seconds()
     {
         StartCoroutine(EnableGamePadCursorIn2Seconds_Coroutine());
+    }
+
+    void FindMasterClientAndToggleIcon()
+    {
+        print("FindMasterClientAndToggleIcon");
+        namePlatesParent.transform.GetChild(0).GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+
+
+        foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
+        {
+            if (player.IsMasterClient)
+            {
+                foreach (Transform child in namePlatesParent)
+                {
+                    if (child.GetComponent<PlayerNamePlate>())
+                    {
+                        if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName))
+                            child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+                        else
+                            child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                    }
+                }
+            }
+        }
     }
 
     IEnumerator EnableGamePadCursorIn2Seconds_Coroutine()

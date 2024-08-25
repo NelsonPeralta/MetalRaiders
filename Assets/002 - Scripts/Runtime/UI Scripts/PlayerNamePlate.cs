@@ -55,7 +55,7 @@ public class PlayerNamePlate : MonoBehaviour
     [SerializeField] ScriptObjPlayerData _playerData;
     [SerializeField] TMP_Text playerText, levelText;
     [SerializeField] Image _mainBg, _secBg, _rankIm;
-    [SerializeField] GameObject _pointerEnterIndicator;
+    [SerializeField] GameObject _pointerEnterIndicator, _roomLeaderIcon;
 
     Color _tCol;
 
@@ -76,7 +76,7 @@ public class PlayerNamePlate : MonoBehaviour
 
 
 
-    public void SetUp(Photon.Realtime.Player _player) // MAIN
+    public void SetUp(Photon.Realtime.Player _player, bool masterClient = false) // MAIN
     {
         Debug.Log($"SetUp PlayerListItem {_player.NickName}");
         //Debug.Log($"{_player.NickName.Split(char.Parse("-"))[0]}");
@@ -113,7 +113,7 @@ public class PlayerNamePlate : MonoBehaviour
         //text.text = s;
     }
 
-    public void Setup(string name, int playerDataCell)
+    public void Setup(string name, int playerDataCell) // Only used for LOCAL play
     {
         playerText.text = name;
         _playerData = CurrentRoomManager.GetLocalPlayerData(playerDataCell);
@@ -128,12 +128,18 @@ public class PlayerNamePlate : MonoBehaviour
         {
 
             ScriptObjPlayerData spd = CurrentRoomManager.GetPlayerDataWithId(_playerData.playerExtendedPublicData.player_id);
-            ColorUtility.TryParseHtmlString(GameManager.colorDict[spd.team.ToString().ToLower()], out _tCol);
 
-            Debug.Log(_tCol);
-            mainBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
-            secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
-            Debug.Log($"Setup TEAM Color: {playerDataCell.team} {_tCol} {_playerData.playerExtendedPublicData.player_id}");
+            if ((spd.team != GameManager.Team.None))
+            {
+                ColorUtility.TryParseHtmlString(GameManager.colorDict[spd.team.ToString().ToLower()], out _tCol);
+
+                Debug.Log(_tCol);
+                mainBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
+                secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
+                Debug.Log($"Setup TEAM Color: {playerDataCell.team} {_tCol} {_playerData.playerExtendedPublicData.player_id}");
+            }
+            else
+                print("PLAYER TEAM IS NONE");
         }
         else
         {
@@ -169,5 +175,10 @@ public class PlayerNamePlate : MonoBehaviour
     public void OnPointerExit()
     {
         _pointerEnterIndicator.SetActive(false);
+    }
+
+    public void ToggleLeaderIcon(bool t)
+    {
+        _roomLeaderIcon.SetActive(t);
     }
 }

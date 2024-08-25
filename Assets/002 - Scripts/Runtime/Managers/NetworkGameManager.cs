@@ -5,6 +5,7 @@ using Photon.Pun;
 using System.Linq;
 using System;
 using Newtonsoft.Json;
+using UnityEngine.SceneManagement;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -71,6 +72,18 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         if (caller && PhotonNetwork.IsMasterClient)
         {
             Dictionary<string, string> ps = new Dictionary<string, string>();
+            print("SendGameParams MASTER");
+
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && SceneManager.GetActiveScene().buildIndex == 0)
+                for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+                {
+                    if (CurrentRoomManager.GetLocalPlayerData(i).team == GameManager.Team.None)
+                    {
+                        print("Correcting Teams because a player joined");
+                        ps.Add("reevaluateteams", "");
+                    }
+                }
+
 
             ps.Add("roomtype", CurrentRoomManager.instance.roomType.ToString());
 
@@ -88,31 +101,28 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
             _pv.RPC("SendGameParams", RpcTarget.AllViaServer, ps, false);
         }
-        else if (!caller && !PhotonNetwork.IsMasterClient)
+        else if (!caller)
         {
-            try { GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), p["gamemode"]); } catch (System.Exception e) { Debug.Log(e); }
-            try { GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), p["gametype"]); } catch (System.Exception e) { Debug.Log(e); }
-            try { Launcher.instance.levelToLoadIndex = (System.Int16.Parse(p["leveltoloadindex"])); } catch (System.Exception e) { Debug.Log(e); }
-            try { GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), p["teammode"]); } catch (System.Exception e) { Debug.Log(e); }
-            //try
-            //{
-            //    GameManager.instance.teamDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["teamdict"]);
-            //    Debug.Log(GameManager.instance.teamDict);
-            //}
-            //catch { }
-
-            try
+            print("SendGameParams CLIENT");
+            if (!PhotonNetwork.IsMasterClient)
             {
-                CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["nbLocalPlayersDict"]);
-                Debug.Log(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict);
+                try { GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), p["gamemode"]); } catch (System.Exception e) { Debug.Log(e); }
+                try { GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), p["gametype"]); } catch (System.Exception e) { Debug.Log(e); }
+                try { Launcher.instance.levelToLoadIndex = (System.Int16.Parse(p["leveltoloadindex"])); } catch (System.Exception e) { Debug.Log(e); }
+                try { GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), p["teammode"]); } catch (System.Exception e) { Debug.Log(e); }
+
+                try
+                {
+                    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["nbLocalPlayersDict"]);
+                    Debug.Log(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict);
+                }
+                catch { }
             }
-            catch { }
 
-            //CurrentRoomManager.instance.roomType = JsonConvert.DeserializeObject<CurrentRoomManager.RoomType>(p["roomType"]);
-
-
-            //NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
-
+            if (p.ContainsKey("reevaluateteams"))
+            {
+                GameManager.instance.CreateTeamsBecausePlayerJoined();
+            }
         }
     }
 

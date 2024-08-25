@@ -44,6 +44,7 @@ public class ReticuleMagnetism : MonoBehaviour
 
     Vector3 _obsDir;
     float _obsDis;
+    bool _friendly;
 
 
     // Update is called once per frame
@@ -60,12 +61,17 @@ public class ReticuleMagnetism : MonoBehaviour
             return;
 
         Ray();
-        CalculateDirection();
-        Magnetism();
+
+        if (!_friendly)
+        {
+            CalculateDirection();
+            Magnetism();
+        }
     }
 
     void Ray()
     {
+        _friendly = false;
         try
         { raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange; }
         catch (System.Exception) { }
@@ -92,7 +98,10 @@ public class ReticuleMagnetism : MonoBehaviour
 
                         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                             if (rf.player && (rf.player.team == player.team))
+                            {
+                                _friendly = true;
                                 return;
+                            }
 
                         _obstruction = false;
                         _obsDir = (firstRayHit.transform.position - player.mainCamera.transform.position).normalized;

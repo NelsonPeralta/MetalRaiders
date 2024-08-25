@@ -1137,7 +1137,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void EndGame(bool saveXp = true)
     {
-        SwarmManager.instance.StopAllMusic();
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+            SwarmManager.instance.StopAllMusic();
 
 
         CurrentRoomManager.instance.gameOver = true;
@@ -1219,7 +1220,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void SpawnActorsFromDropship(ActorDropship ad)
     {
-        
+
         if (!PhotonNetwork.IsMasterClient)
             return;
 

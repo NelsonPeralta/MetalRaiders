@@ -221,22 +221,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
                     if (_prev != value)
                     {
-                        Dictionary<string, int> _teamDict = new Dictionary<string, int>();
-
-                        foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
-                            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-                            {
-                                Team t = Team.Red;
-
-                                if ((kvp.Key % 2 == 0) && gameMode != GameMode.Coop)
-                                    t = Team.Blue;
-
-                                CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
-
-                                _teamDict.Add(kvp.Value.NickName, (int)t);
-
-                                Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
-                            }
+                        CreateTeamsBecausePlayerJoined();
                     }
                 }
                 else
@@ -248,16 +233,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 }
             }
 
-            foreach (Transform child in Launcher.instance.namePlatesParent)
-            {
-                child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
-            }
-
-            foreach (Transform child in Launcher.instance.namePlatesParent)
-            {
-                if (child.GetComponent<PlayerNamePlate>().playerDataCell.team == Team.Blue)
-                    child.SetAsLastSibling();
-            }
+            UpdateNamePlateColorsAndSort();
         }
     }
 
@@ -1273,5 +1249,42 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void ClearPhotonIdToPlayerDict()
     {
         _pid_player_Dict.Clear();
+    }
+
+    public void CreateTeamsBecausePlayerJoined()
+    {
+        Dictionary<string, int> _teamDict = new Dictionary<string, int>();
+
+        foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            {
+                Team t = Team.Red;
+
+                if ((kvp.Key % 2 == 0) && gameMode != GameMode.Coop)
+                    t = Team.Blue;
+
+                CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
+
+                _teamDict.Add(kvp.Value.NickName, (int)t);
+
+                Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
+            }
+
+        UpdateNamePlateColorsAndSort();
+    }
+
+
+    void UpdateNamePlateColorsAndSort()
+    {
+        foreach (Transform child in Launcher.instance.namePlatesParent)
+        {
+            child.GetComponent<PlayerNamePlate>().UpdateColorPalette();
+        }
+
+        foreach (Transform child in Launcher.instance.namePlatesParent)
+        {
+            if (child.GetComponent<PlayerNamePlate>().playerDataCell.team == Team.Blue)
+                child.SetAsLastSibling();
+        }
     }
 }
