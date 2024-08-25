@@ -64,7 +64,7 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft, notKillFeed;
-    public GameObject motionTracker;
+    [SerializeField] GameObject _motionTracker;
     public Text isMineText;
     public Text camSensWitnessText;
 
@@ -267,7 +267,7 @@ public class PlayerUI : MonoBehaviour
     {
         shieldBar.SetActive(false);
         multiplayerPointsHolder.SetActive(false);
-        motionTracker.SetActive(false);
+        ToggleMotionTracker(false);
     }
 
     public void EnableArmorUI()
@@ -276,9 +276,10 @@ public class PlayerUI : MonoBehaviour
                 GameManager.instance.gameType != GameManager.GameType.Swat &&
                 GameManager.instance.gameType != GameManager.GameType.Snipers &&
                  GameManager.instance.gameType != GameManager.GameType.Retro)
-            motionTracker.SetActive(true);
+            ToggleMotionTracker(true);
         else
-            motionTracker.SetActive(false);
+            ToggleMotionTracker(false);
+
 
 
 
@@ -467,5 +468,15 @@ public class PlayerUI : MonoBehaviour
         }
         else
             multiplayerPointsGrey.text = playerMultiplayerMatchStats.score.ToString();
+    }
+
+
+    public void ToggleMotionTracker(bool b)
+    {
+        if (_motionTracker.gameObject.activeSelf != b)
+        {
+            print($"ToggleMotionTracker {b}");
+            _motionTracker.SetActive(b);
+        }
     }
 }

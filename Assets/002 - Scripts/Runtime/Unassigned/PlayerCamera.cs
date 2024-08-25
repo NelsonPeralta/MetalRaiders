@@ -137,7 +137,7 @@ public class PlayerCamera : MonoBehaviour
         {
             backEndMouseSens *= 0.65f;
 
-            if (_controllerType == ControllerType.Joystick && player.playerInventory.activeWeapon.scopeFov == 20)
+            if(player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
                 backEndMouseSens *= 0.6f;
         }
 

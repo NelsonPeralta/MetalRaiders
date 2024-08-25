@@ -1,18 +1,16 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
-using UnityEngine.SceneManagement;
 using Photon.Pun;
-using UnityEngine.EventSystems;
-using ExitGames.Client.Photon.StructWrapping;
-using System.Security.Cryptography;
-using Photon.Realtime;
-using Newtonsoft.Json.Bson;
 using System;
 
 public class PlayerController : MonoBehaviourPun
 {
+    public static float WEAPON_DRAW_TIME = 0.65f;
+
+
+
+
     // Events
     public delegate void PlayerControllerEvent(PlayerController playerController);
     public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract,
@@ -223,7 +221,7 @@ public class PlayerController : MonoBehaviourPun
 
 
     [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
-    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset;
+    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime;
 
     void Awake()
     {
@@ -247,12 +245,20 @@ public class PlayerController : MonoBehaviourPun
 
     private void Update()
     {
+        if (_drawingWeaponTime > 0) _drawingWeaponTime -= Time.deltaTime;
         if (_isCurrentlyShootingReset > 0) _isCurrentlyShootingReset -= Time.deltaTime;
-        if (_meleeCooldown > 0)
-            _meleeCooldown -= Time.deltaTime;
-
+        if (_meleeCooldown > 0) _meleeCooldown -= Time.deltaTime;
         if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime;
         if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
+
+        if (GameManager.instance.devMode)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameType == GameManager.GameType.GunGame)
+                pInventory.playerGunGameManager.index++;
+        }
+
+
+
 
         if (_meleeCooldown <= 0)
         {
@@ -632,7 +638,7 @@ public class PlayerController : MonoBehaviourPun
             isHoldingShootBtn = false;
             OnPlayerFireButtonUp?.Invoke(this);
             Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
-            
+
         }
         else
         {
@@ -714,79 +720,90 @@ public class PlayerController : MonoBehaviourPun
     float _tempFov;
     void ScopeCheck()
     {
-        if (isDualWielding || pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.None)
-            return;
+        //if (isDualWielding || pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.None)
+        //    return;
 
-        if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Close ||
-            pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Medium)
+
+
+        if (pInventory.activeWeapon.scopeMagnification != WeaponProperties.ScopeMagnification.None)
         {
-            _tempFov = 35.98f;
-            if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 18.45f;
-        }
-        else if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
-        {
-            _tempFov = 17.14f;
-            if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 8.62f;
 
 
-
-        }
-
-        if (isAiming)
-        {
-            pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.scopeRRR;
-        }
-        else
-        {
-            if (pInventory.activeWeapon)
-                if (pInventory.activeWeapon.defaultRedReticuleRange > 0)
-                {
-                    pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.defaultRedReticuleRange;
-                }
-        }
-
-
-        if (rewiredPlayer.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
-        {
-            if (pInventory.activeWeapon.aimingMechanic != WeaponProperties.AimingMechanic.None)
+            if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Close ||
+                pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Medium)
             {
-                if (isAiming == false)
-                {
-                    isAiming = true;
+                _tempFov = 35.98f;
+                if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 18.45f;
+            }
+            else if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
+            {
+                _tempFov = 17.14f;
+                if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 8.62f;
 
 
 
+            }
 
-
-                    //mainCam.fieldOfView = _tempFov;
-                    //uiCam.fieldOfView = _tempFov;
-                    if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
-                        gunCam.enabled = false;
-                    //else
-                    //    gunCam.fieldOfView = 50;
-
-                    allPlayerScripts.aimingScript.playAimSound();
-                }
-                else
-                {
-                    isAiming = false;
-                    //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
-                    //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
-                    camScript.backEndMouseSens = camScript.frontEndMouseSens;
-                    gunCam.enabled = true;
-                    //gunCam.fieldOfView = 60;
-
-                    allPlayerScripts.aimingScript.playAimSound();
-                }
+            if (isAiming)
+            {
+                pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.scopeRRR;
+            }
+            else
+            {
+                if (pInventory.activeWeapon)
+                    if (pInventory.activeWeapon.defaultRedReticuleRange > 0)
+                    {
+                        pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.defaultRedReticuleRange;
+                    }
             }
 
 
+            if (rewiredPlayer.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
+            {
+                if (pInventory.activeWeapon.aimingMechanic != WeaponProperties.AimingMechanic.None)
+                {
+                    if (isAiming == false)
+                    {
+                        isAiming = true;
+
+                        //mainCam.fieldOfView = _tempFov;
+                        //uiCam.fieldOfView = _tempFov;
+                        if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
+                            gunCam.enabled = false;
+                        //else
+                        //    gunCam.fieldOfView = 50;
+
+                        allPlayerScripts.aimingScript.playAimSound();
+                    }
+                    else
+                    {
+                        isAiming = false;
+                        //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+                        //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+                        camScript.backEndMouseSens = camScript.frontEndMouseSens;
+                        gunCam.enabled = true;
+                        //gunCam.fieldOfView = 60;
+
+                        allPlayerScripts.aimingScript.playAimSound();
+                    }
+                }
+            }else if (rewiredPlayer.GetButtonUp("Aim"))
+            {
+                if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
+                {
+                    Descope();
+                }
+            }
         }
+
+
+
+
 
 
         if (isAiming && pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
         {
-            player.playerUI.motionTracker.SetActive(false);
+            player.playerUI.ToggleMotionTracker(false);
             player.playerUI.bottomRight.gameObject.SetActive(false);
             player.playerUI.topLeft.gameObject.SetActive(false);
             player.playerUI.topMiddle.gameObject.SetActive(false);
@@ -803,9 +820,9 @@ public class PlayerController : MonoBehaviourPun
             GameManager.instance.gameType != GameManager.GameType.Swat &&
             GameManager.instance.gameType != GameManager.GameType.Snipers &&
              GameManager.instance.gameType != GameManager.GameType.Retro)
-                player.playerUI.motionTracker.SetActive(true);
+                player.playerUI.ToggleMotionTracker(true);
             else
-                player.playerUI.motionTracker.SetActive(false);
+                player.playerUI.ToggleMotionTracker(false);
         }
     }
 
@@ -1034,11 +1051,14 @@ public class PlayerController : MonoBehaviourPun
 
     void CheckDrawingWeapon()
     {
-        if (weaponAnimator)
-            if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
-                isDrawingWeapon = true;
-            else
-                isDrawingWeapon = false;
+        //if (weaponAnimator)
+        //    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
+        //        isDrawingWeapon = true;
+        //    else
+        //        isDrawingWeapon = false;
+
+
+        isDrawingWeapon = _drawingWeaponTime > 0;
     }
 
     void SwitchWeapons()
@@ -1676,6 +1696,10 @@ public class PlayerController : MonoBehaviourPun
         _completeReloadTimer = -9;
     }
 
+    public void SetDrawingWeaponCooldown()
+    {
+        _drawingWeaponTime = WEAPON_DRAW_TIME;
+    }
 
 
 

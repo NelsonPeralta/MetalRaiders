@@ -116,7 +116,6 @@ public class Bullet : MonoBehaviourPunCallbacks
         if (_ignoreOriginPlayerTime > 0) _ignoreOriginPlayerTime -= Time.deltaTime;
 
 
-        print("Bullet Update");
         Despawn();
         ShootRay();
         Travel();
@@ -477,14 +476,17 @@ public class Bullet : MonoBehaviourPunCallbacks
                     }
                     else if (!finalHitObject.GetComponent<PlayerHitbox>() && !finalHitObject.GetComponent<CapsuleCollider>() && !finalHitObject.GetComponent<ActorHitbox>() && !finalHitObject.GetComponent<CharacterController>())
                     {
-                        Debug.Log($"Bullet ELSEIF {finalHitObject.name}");
+                        //Debug.Log($"Bullet ELSEIF {finalHitObject.name}");
 
                         try
                         {
                             if (!finalHitObject.GetComponent<PlayerHitbox>())
                             {
                                 if (finalHitDamageable == null)
-                                    Debug.Log($"No IDamageeable script on {finalHitObject.name}");
+                                {
+
+                                    //Debug.Log($"No IDamageeable script on {finalHitObject.name}");
+                                }
                                 else
                                 {
                                     try
@@ -505,7 +507,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                         if (finalHitObject.GetComponent<IDamageable>() == null && !finalHitObject.GetComponent<DontSpawnBulletHoleDecalHere>()) // avoids staying in empty space after glass is destroyed
                         {
-                            print($"SpawnBulletHole {hitInfo.transform.name}");
+                            //print($"SpawnBulletHole {hitInfo.transform.name}");
                             GameObjectPool.instance.SpawnBulletHole(finalHitPoint, hitInfo.normal);
                         }
 

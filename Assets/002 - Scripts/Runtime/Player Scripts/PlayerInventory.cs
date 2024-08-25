@@ -78,9 +78,13 @@ public class PlayerInventory : MonoBehaviourPun
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 if (!player.isDead && !player.isRespawning)
+                {
+                    pController.SetDrawingWeaponCooldown();
                     _activeWeapon.gameObject.SetActive(true);
+                }
 
                 pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
+                pController.weaponAnimator.Play("Draw", 0, 0f);
 
                 activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                 activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
@@ -443,6 +447,7 @@ public class PlayerInventory : MonoBehaviourPun
         if (!PV.IsMine)
         {
             print($"AssignWeapon {codeName}");
+            pController.SetDrawingWeaponCooldown();
 
             foreach (GameObject weap in allWeaponsInInventory)
             {
@@ -496,6 +501,10 @@ public class PlayerInventory : MonoBehaviourPun
                     catch { }
                 }
             }
+
+
+            pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
+            pController.weaponAnimator.Play("Draw", 0, 0f);
 
             PlayDrawSound();
         }

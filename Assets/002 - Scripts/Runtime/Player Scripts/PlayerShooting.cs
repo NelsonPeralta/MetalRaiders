@@ -33,6 +33,15 @@ public class PlayerShooting : MonoBehaviourPun
 
     public float fireRecovery { get { return _fireRecovery; } }
     public bool overchargeReady { get { return _overchargeFloat >= WeaponProperties.OVERCHARGE_TIME_LOW; } }
+    public bool fireButtonDown
+    {
+        get { return _fireButtonDown; }
+        set
+        {
+            _fireButtonDown = value;
+            print($"Fire Button Down: {value}");
+        }
+    }
 
     [Header("Other Scripts")]
     public PhotonView PV;
@@ -43,7 +52,7 @@ public class PlayerShooting : MonoBehaviourPun
     // Private variables
     int playerRewiredID;
     [SerializeField] float _fireRecovery = 0, leftFireInterval = 0, _overchargeFloat;
-    [SerializeField] bool fireButtonDown = false, scopeBtnDown = false;
+    [SerializeField] bool _fireButtonDown = false, scopeBtnDown = false;
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
 
 
@@ -127,18 +136,22 @@ public class PlayerShooting : MonoBehaviourPun
 
     public void Shoot(WeaponProperties wp = null)
     {
+        print("Calling Shoot");
         if (playerController.isDrawingWeapon) return;
+        WeaponProperties sw = pInventory.activeWeapon; if (wp) sw = wp;
 
 
-        WeaponProperties sw = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-        if (wp)
-            sw = wp;
+        print($"Shoot start 1 {_fireRecovery} {leftFireInterval} {wp}");
+
+
+
 
 
         if ((_fireRecovery > 0 && !wp))
             return;
         if ((leftFireInterval > 0 && wp))
             return;
+
 
         bool isLeftWeapon = false;
 
@@ -161,12 +174,16 @@ public class PlayerShooting : MonoBehaviourPun
             leftFireInterval = 1 / (sw.fireRate / 60f);
         }
 
+        print($"Shoot start 2 {isLeftWeapon} {_fireRecovery} {leftFireInterval} {sw.overcharge} {sw}");
+
         if (CanShootAuto(sw) || CanShootSingleOrBurst(sw))
         {
             if (!isLeftWeapon)
                 fireButtonDown = true;
             else
                 scopeBtnDown = true;
+
+            print($"Shoot start 2 {isLeftWeapon} {sw.overcharge} {sw}");
 
 
             if (sw.firingMode == WeaponProperties.FiringMode.Burst)
@@ -198,7 +215,7 @@ public class PlayerShooting : MonoBehaviourPun
 
         if (CanShootAuto(wp) || CanShootSingleOrBurst(wp))
         {
-            fireButtonDown = true;
+            //fireButtonDown = true; // NO! Does not reset after bolt is shot. If player switches weapons, causes blank shot
 
             if (wp.overcharge)
             {
@@ -218,11 +235,15 @@ public class PlayerShooting : MonoBehaviourPun
 
     bool CanShootSingleOrBurst(WeaponProperties activeWeapon)
     {
-        return ((activeWeapon.firingMode == WeaponProperties.FiringMode.Single || activeWeapon.firingMode == WeaponProperties.FiringMode.Burst) && ((!fireButtonDown && !pInventory.isDualWielding) || (!scopeBtnDown && pInventory.isDualWielding)));
+        print($"CanShootSingleOrBurst: {activeWeapon.firingMode} {fireButtonDown} {scopeBtnDown} {pInventory.isDualWielding}");
+
+        return ((activeWeapon.firingMode == WeaponProperties.FiringMode.Single || activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
+            && ((!fireButtonDown && !pInventory.isDualWielding) || (!scopeBtnDown && pInventory.isDualWielding)));
     }
 
     void ShootBurst(WeaponProperties activeWeapon)
     {
+        print("Shoot Burst");
         for (int i = 0; i < 3; i++)
         {
             if (activeWeapon.loadedAmmo > 0)
@@ -243,7 +264,7 @@ public class PlayerShooting : MonoBehaviourPun
     {
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-        Debug.Log($"{playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo}");
+        Debug.Log($"Shoot_Caller: {playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo}");
 
         if (isLeftWeapon)
             activeWeapon = pInventory.activeWeapon.leftWeapon;
@@ -374,6 +395,10 @@ public class PlayerShooting : MonoBehaviourPun
                 {
                     Debug.Log("Shooting Plasma bullet");
                     var bullet = GameObjectPool.instance.SpawnPooledBullet();
+                    bullet.transform.localScale = Vector3.one;
+
+                    if (overcharge) bullet.transform.localScale = Vector3.one * 5;
+
                     bullet.GetComponent<Bullet>().overcharged = false;
                     bullet.GetComponent<Bullet>().trackingTarget = null;
                     try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
