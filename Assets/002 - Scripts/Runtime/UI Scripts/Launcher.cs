@@ -572,17 +572,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            //Dictionary<string, string> roomParams = new Dictionary<string, string>();
-            //roomParams["gamemode"] = GameManager.instance.gameMode.ToString();
-            //roomParams["gametype"] = GameManager.instance.gameType.ToString();
-
-            //FindObjectOfType<NetworkMainMenu>().UpdateRoomSettings(roomParams);
-
             StartCoroutine(InstantiateNetworkGameManager_Coroutine());
-        }
-        else
-        {
-
+            StartCoroutine(SendGameParamsWithDelay());
         }
     }
 
@@ -934,8 +925,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("InstantiateNetworkGameManager_Coroutine");
         yield return new WaitForSeconds(0.1f);
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
-        NetworkGameManager.instance.SendGameParams();
-
     }
 
     IEnumerator LoadLevel_Coroutine()
@@ -1034,5 +1023,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(1);
         menuGamePadCursorScript.gameObject.SetActive(true);
+    }
+
+    IEnumerator SendGameParamsWithDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        NetworkGameManager.instance.SendGameParams();
     }
 }

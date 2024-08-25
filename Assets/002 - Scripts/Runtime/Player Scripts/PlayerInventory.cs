@@ -80,6 +80,7 @@ public class PlayerInventory : MonoBehaviourPun
                 if (!player.isDead && !player.isRespawning)
                 {
                     pController.SetDrawingWeaponCooldown();
+                    pController.Descope();
                     _activeWeapon.gameObject.SetActive(true);
                 }
 

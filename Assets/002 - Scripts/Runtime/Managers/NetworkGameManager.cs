@@ -86,7 +86,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
             //Debug.Log($"SendGameParams {GameManager.instance.teamDict}");
 
-            _pv.RPC("SendGameParams", RpcTarget.All, ps, false);
+            _pv.RPC("SendGameParams", RpcTarget.AllViaServer, ps, false);
         }
         else if (!caller && !PhotonNetwork.IsMasterClient)
         {
