@@ -30,7 +30,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             }
             if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
             {
-                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic) return 150;
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic) return 120;
                 return 75;
             }
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)

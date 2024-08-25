@@ -25,13 +25,15 @@ public class GameTime : MonoBehaviourPunCallbacks
                 OnGameTimeRemainingChanged?.Invoke(this);
 
 
-                if(GameManager.instance.gameMode == GameManager.GameMode.Coop && GameManager.instance.gameType != GameManager.GameType.Endless)
+                if (GameManager.instance.gameMode == GameManager.GameMode.Coop && GameManager.instance.gameType != GameManager.GameType.Endless)
                 {
                     SwarmManager.instance.gameWon = true;
                 }
 
                 if (value == 0 && PhotonNetwork.IsMasterClient && GameManager.instance.gameType != GameManager.GameType.Endless)
-                    SwarmManager.instance.EndGame();
+                {
+                    NetworkGameManager.instance.EndGame();
+                }
             }
         }
     }

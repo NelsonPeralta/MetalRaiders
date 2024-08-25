@@ -12,10 +12,13 @@ public class Hill : MonoBehaviour
         get { return _playersInRange; }
         set
         {
-            int p = _playersInRange.Count;
+            int _previousPlayerCount = _playersInRange.Count;
+            bool _previousState = _contested;
+
+            _contested = false;
             _playersInRange = value;
 
-            if (p != _playersInRange.Count)
+            if (_previousPlayerCount != _playersInRange.Count)
             {
                 _grey.SetActive(false);
                 _red.SetActive(false);
@@ -24,35 +27,63 @@ public class Hill : MonoBehaviour
                 if (playersInRange.Count == 0)
                 {
                     _grey.SetActive(true);
-                    //_red.SetActive(false);
-                    //_blue.SetActive(false);
                 }
                 else if (playersInRange.Count == 1)
                 {
                     _timer = 0;
-                    if (playersInRange[0].isMine)
-                    {
-                        //_red.SetActive(false);
-                        _blue.SetActive(true);
 
-                        _audioSource.clip = _hillControlled;
-                        GameManager.GetRootPlayer().announcer.AddClip(_hillControlled);
-                    }
-                    else
+
+
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                     {
-                        _red.SetActive(true);
-                        //_blue.SetActive(false);
+                        _red.SetActive(!playersInRange[0].isMine);
+                        _blue.SetActive(playersInRange[0].isMine);
+                    }
+                    else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                    {
+                        _red.SetActive(playersInRange[0].team == GameManager.Team.Red);
+                        _blue.SetActive(playersInRange[0].team == GameManager.Team.Blue);
                     }
                 }
                 else if (playersInRange.Count > 1)
                 {
-                    _grey.SetActive(true);
-                    //_red.SetActive(false);
-                    //_blue.SetActive(false);
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                    {
+                        _contested = true;
+                        _timer = 0;
 
-                    _audioSource.clip = _hillContested;
-                    GameManager.GetRootPlayer().announcer.AddClip(_hillContested);
+                        _red.SetActive(true);
+
+
+                    }
+                    else
+                    {
+                        for (int i = 0; i < playersInRange.Count; i++)
+                            if (playersInRange[i].team != playersInRange[0].team)
+                            {
+                                _contested = true;
+                                _timer = 0;
+                                _grey.SetActive(true);
+                            }
+                            else
+                            {
+                                _red.SetActive(playersInRange[0].team == GameManager.Team.Red);
+                                _blue.SetActive(playersInRange[0].team == GameManager.Team.Blue);
+                            }
+                    }
                 }
+
+                if (_previousState != _contested || _previousPlayerCount == 0)
+                    if (_contested)
+                    {
+                        _audioSource.clip = _hillContested;
+                        GameManager.GetRootPlayer().announcer.AddClip(_hillContested);
+                    }
+                    else
+                    {
+                        _audioSource.clip = _hillControlled;
+                        GameManager.GetRootPlayer().announcer.AddClip(_hillControlled);
+                    }
             }
         }
     }
@@ -73,6 +104,7 @@ public class Hill : MonoBehaviour
     [SerializeField] GameObject _hillVfxHolder;
 
     float _timer;
+    bool _contested;
 
 
     private void Start()
@@ -134,7 +166,7 @@ public class Hill : MonoBehaviour
 
 
 
-        if (playersInRange.Count == 1)
+        if (!_contested && playersInRange.Count > 0)
         {
             if (_timer < 1)
             {
