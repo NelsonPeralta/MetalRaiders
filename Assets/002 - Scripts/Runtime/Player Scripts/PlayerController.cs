@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviourPun
 
 
     [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
-    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime;
+    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime, _markSpotCooldown;
 
     void Awake()
     {
@@ -250,6 +250,7 @@ public class PlayerController : MonoBehaviourPun
         if (_meleeCooldown > 0) _meleeCooldown -= Time.deltaTime;
         if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime;
         if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
+        if (_markSpotCooldown > 0) _markSpotCooldown -= Time.deltaTime;
 
         if (GameManager.instance.devMode)
         {
@@ -321,6 +322,7 @@ public class PlayerController : MonoBehaviourPun
                     SwitchGrenades();
                     SwitchWeapons();
                     LongInteract();
+                    MarkSpot();
                     if (isSprinting)
                         return;
                     ScopeCheck();
@@ -544,22 +546,23 @@ public class PlayerController : MonoBehaviourPun
         //Process Firing
         if (!isReloading && !isThrowingGrenade && !isMeleeing)
         {
-            if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
-            {
-
-                if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
-                    player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+            if (player.playerShooting && player.playerInventory)
+                if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
                 {
-                    if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+
+                    if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
+                        player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                    {
+                        if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+                        {
+                            player.playerShooting.Shoot();
+                        }
+                    }
+                    else
                     {
                         player.playerShooting.Shoot();
                     }
                 }
-                else
-                {
-                    player.playerShooting.Shoot();
-                }
-            }
         }
 
 
@@ -1027,6 +1030,7 @@ public class PlayerController : MonoBehaviourPun
         }
 
         if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol) currentlyReloadingTimer = 1.2f;
+        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sniper) currentlyReloadingTimer = 2.3f;
 
 
 
@@ -1720,6 +1724,88 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
+    void MarkSpot()
+    {
+        if (rewiredPlayer.GetButtonDown("mark") && _markSpotCooldown <= 0)
+        {
+
+            RaycastHit hit;
+            // Does the ray intersect any objects excluding the player layer
+            if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
+            {
+                Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
+
+                _markSpotCooldown = 0.15f;
+
+
+                if (hit.collider.transform.root.GetComponent<Player>())
+                {
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                        MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
+                    else
+                    {
+                        if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
+                            PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
+                        else
+                            PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                    }
+                }
+                else
+                {
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                        MarkerManager.instance.SpawnNormalMarker(hit.point, player.playerId);
+                    else
+                        PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                }
+            }
+        }
+    }
+
+
+
+    [PunRPC]
+    void MarkSpot_RPC(Vector3 pointt, int teamm, bool enSpot)
+    {
+        print("MarkSpot_RPC");
+
+
+        if (enSpot)
+        {
+
+            if (GameManager.instance.connection == GameManager.Connection.Online)
+            {
+                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+                    if (p.team == (GameManager.Team)teamm && p.isMine)
+                        MarkerManager.instance.SpawnEnnSpotMarker(pointt, p.playerId);
+            }
+            else if (GameManager.instance.connection == GameManager.Connection.Local)
+            {
+                foreach (Player p in GameManager.instance.localPlayers.Values)
+                    if (p.team == (GameManager.Team)teamm && p.isMine)
+                        MarkerManager.instance.SpawnEnnSpotMarker(pointt, p.playerId);
+            }
+        }
+        else
+        {
+            if (GameManager.instance.connection == GameManager.Connection.Online)
+            {
+
+                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+                    if (p.team == (GameManager.Team)teamm && p.isMine)
+                    {
+                        MarkerManager.instance.SpawnNormalMarker(pointt, p.playerId);
+                    }
+            }
+            else if (GameManager.instance.connection == GameManager.Connection.Local)
+            {
+                foreach (Player p in GameManager.instance.localPlayers.Values)
+                    if (p.team == (GameManager.Team)teamm && p.isMine)
+                    {
+                        MarkerManager.instance.SpawnNormalMarker(pointt, p.playerId);
+                    }
+            }
+        }
+    }
 
 
 

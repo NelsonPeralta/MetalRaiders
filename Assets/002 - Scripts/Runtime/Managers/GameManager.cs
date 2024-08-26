@@ -357,7 +357,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public LayerMask bulletLayerMask;
+    public LayerMask bulletLayerMask, markLayerMask;
 
 
 
@@ -820,9 +820,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         return instance._pid_player_Dict[pid];
     }
 
-    public static Player GetPlayerWithId(int id)
+    public static Player GetPlayerWithId(int _player_id)
     {
-        foreach (Player player in instance._pid_player_Dict.Values) { if (player != null && player.playerId == id) return player; }
+        foreach (Player player in instance._pid_player_Dict.Values) { if (player != null && player.playerId == _player_id) return player; }
         return null;
     }
 

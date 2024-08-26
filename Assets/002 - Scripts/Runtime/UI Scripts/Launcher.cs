@@ -559,7 +559,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             }
             //else
             {
-                NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
+                StartCoroutine(SendLocalGameParamsToMasterClient_Coroutine());
             }
         }
 
@@ -583,6 +583,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
 
+    }
+
+    IEnumerator SendLocalGameParamsToMasterClient_Coroutine() // Allow time for the NetworkGameManager instance to fully set
+    {
+        yield return new WaitForEndOfFrame();
+        NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
     }
 
 
@@ -1032,7 +1038,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         StartCoroutine(EnableGamePadCursorIn2Seconds_Coroutine());
     }
 
-    void FindMasterClientAndToggleIcon()
+    public void FindMasterClientAndToggleIcon()
     {
         print("FindMasterClientAndToggleIcon");
         namePlatesParent.transform.GetChild(0).GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
@@ -1040,12 +1046,14 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
         {
+            print($"FindMasterClientAndToggleIcon: {player.NickName} {player.IsMasterClient}");
             if (player.IsMasterClient)
             {
                 foreach (Transform child in namePlatesParent)
                 {
                     if (child.GetComponent<PlayerNamePlate>())
                     {
+                        print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
                         if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName))
                             child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
                         else
