@@ -498,10 +498,10 @@ MonoBehaviour:
   codeName: cl
   spriteId: 3
   isDw: 0
-  _ammo: 40
-  _spareAmmo: 0
-  _defaultAmmo: 40
-  _defaultSpareAmmo: 0
+  _ammo: 24
+  _spareAmmo: 48
+  _defaultAmmo: 24
+  _defaultSpareAmmo: 48
   _tts: 120
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}

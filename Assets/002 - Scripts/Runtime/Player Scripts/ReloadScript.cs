@@ -15,6 +15,7 @@ public class ReloadScript : MonoBehaviourPun
     public PhotonView PV;
 
     const int DEFAULT_RELOAD_TIME = 1;
+    const int DEFAULT_RELOAD_TIME_LONG = 4;
 
     [HideInInspector]
     [Header("Void Enablers")]
@@ -204,6 +205,7 @@ public class ReloadScript : MonoBehaviourPun
     {
         if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
         {
+            print("ReloadAnimation");
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
                     if (pController.pInventory.allWeaponsInInventory[i].GetComponent<WeaponProperties>() == wp)
@@ -238,11 +240,16 @@ public class ReloadScript : MonoBehaviourPun
                 <SkinnedMeshRenderer>().enabled = true;
             }
 
-            Reload(magsAmmoLeft, 0, 0, 0);
+            if (wp.killFeedOutput == WeaponProperties.KillFeedOutput.Grenade_Launcher)
+                Reload(DEFAULT_RELOAD_TIME_LONG, 0, 0, 0);
+            else
+                Reload(magsAmmoLeft, 0, 0, 0);
         }
 
         if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
+            print("ReloadAnimation");
+
             int ammoNeededToReload = pController.pInventory.activeWeapon.ammoCapacity - pController.pInventory.activeWeapon.loadedAmmo;
             int ammoToReload = 0;
 
@@ -266,6 +273,7 @@ public class ReloadScript : MonoBehaviourPun
         }
         if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
         {
+            print("ReloadAnimation");
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
                     if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.pInventory.activeWeapon.gameObject)

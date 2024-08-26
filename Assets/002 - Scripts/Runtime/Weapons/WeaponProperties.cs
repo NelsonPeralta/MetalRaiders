@@ -19,7 +19,7 @@ public class WeaponProperties : MonoBehaviour
     public enum WeaponType { AR, DMR, Pistol, SMG, Shotgun, Sniper, LMG, Launcher, None }
     public enum FiringMode { Auto, Burst, Single }
     public enum AmmoType { Heavy, Light, Power }
-    public enum AmmoReloadType { Magazine, Shell, Single }
+    public enum AmmoReloadType { Magazine, Shell, Single, Generic }
     public enum AmmoProjectileType { Bullet, Grenade, Rocket, Plasma }
     public enum AimingMechanic { None, Zoom, Scope }
     public enum IdleHandlingAnimationType { Rifle, Pistol }
@@ -29,7 +29,7 @@ public class WeaponProperties : MonoBehaviour
     {
         Unassigned,
         Pistol, SMG, Assault_Rifle, Battle_Rifle, Sniper, RPG, Shotgun, Grenade_Launcher,
-        Oddball, Splinter, Plasma_Rifle, _Plasma_Bolter, Barrel, Ultra_Bind, Frag_Grenade,
+        Oddball, Splinter, Plasma_Rifle, Plasma_Blaster, Barrel, Ultra_Bind, Frag_Grenade,
         Plasma_Grenade, Melee, Stuck, Assasination, Plasma_Pistol
     }
 
@@ -187,9 +187,10 @@ public class WeaponProperties : MonoBehaviour
             if (SceneManager.GetActiveScene().buildIndex > 0)
             {
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame
-                    || GameManager.instance.gameType == GameManager.GameType.Snipers)
+                    || GameManager.instance.gameType == GameManager.GameType.Snipers
+                    || GameManager.instance.gameType == GameManager.GameType.Rockets)
                 {
-                    _spareAmmo = _maxAmmo;
+                    _spareAmmo = maxSpareAmmo;
                     OnSpareAmmoChanged?.Invoke(this);
                     pController.GetComponent<PlayerUI>().spareAmmoText.text = spareAmmo.ToString();
                     return;

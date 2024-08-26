@@ -787,7 +787,8 @@ public class PlayerController : MonoBehaviourPun
                         allPlayerScripts.aimingScript.playAimSound();
                     }
                 }
-            }else if (rewiredPlayer.GetButtonUp("Aim"))
+            }
+            else if (rewiredPlayer.GetButtonUp("Aim"))
             {
                 if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
                 {
@@ -1013,14 +1014,28 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Reload_RPC()
     {
-        _completeReloadTimer = 1;
-        currentlyReloadingTimer = 1.4f;
+        _completeReloadTimer = 1; // Used to trasnfer ammo
+        currentlyReloadingTimer = 2f; // Used to lock animation time
+
+
+        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Grenade_Launcher ||
+            pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.RPG ||
+            pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Shotgun ||
+            pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sniper)
+        {
+            currentlyReloadingTimer = 3; // Used to lock animation time
+        }
+
+        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol) currentlyReloadingTimer = 1.2f;
+
+
+
         player.playerShooting.StopAllCoroutines();
         Descope();
         rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
 
 
-        if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+        if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
         {
             try
             {

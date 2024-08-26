@@ -1670,7 +1670,7 @@ public class Player : Biped
                     _rb.angularVelocity = Vector3.zero;
                     _rb.useGravity = true;
                     _rb.drag = 0;
-                    _rb.AddForce(_impactDir.normalized * 4, ForceMode.Impulse);
+                    _rb.AddForce(_impactDir.normalized * 2.5f, ForceMode.Impulse);
 
                 }
         }
@@ -1834,6 +1834,7 @@ public class Player : Biped
                         && deathNature == DeathNature.Stuck)
                     {
                         f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"red\"> Humiliated </color> <color=#31cff9>{username}";
+                        GetComponent<PlayerMultiplayerMatchStats>().score--;
                     }
                     else if (deathNature == DeathNature.Sniped)
                         f = $"<color=#31cff9>{playerThatKilledMe.username} <color=\"yellow\">!!! Sniped !!!</color> <color=#31cff9>{username}";
@@ -1859,7 +1860,7 @@ public class Player : Biped
                         continue;
                     }
                     else
-                        kfm.EnterNewFeed($"<color=#31cff9> {username} committed suicide");
+                        kfm.EnterNewFeed($"<color=#31cff9>{username} committed suicide");
                 }
             }
         }

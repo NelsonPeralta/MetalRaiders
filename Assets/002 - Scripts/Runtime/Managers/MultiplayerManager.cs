@@ -167,12 +167,16 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 && GameManager.instance.gameType != GameManager.GameType.Oddball
                 && GameManager.instance.gameType != GameManager.GameType.GunGame)
                 {
-                    winningPlayerMS.score++;
-
                     if (winningPlayerMS.team == GameManager.Team.Red)
                         redTeamScore++;
                     else if (winningPlayerMS.team == GameManager.Team.Blue)
                         blueTeamScore++;
+                }
+
+                if (GameManager.instance.gameType != GameManager.GameType.Hill
+                && GameManager.instance.gameType != GameManager.GameType.Oddball)
+                {
+                    winningPlayerMS.score++;
                 }
 
 
@@ -187,7 +191,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                             winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
 
                         Debug.Log(struc.cleanDamageSource);
-                        if (struc.cleanDamageSource == WeaponProperties.KillFeedOutput.Pistol)
+                        if (struc.cleanDamageSource == WeaponProperties.KillFeedOutput.Plasma_Pistol)
                         {
                             winningPlayerMS.score++;
                             NetworkGameManager.instance.EndGame();
