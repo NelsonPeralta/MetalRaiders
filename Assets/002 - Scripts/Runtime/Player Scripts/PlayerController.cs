@@ -1714,6 +1714,9 @@ public class PlayerController : MonoBehaviourPun
     public void SetDrawingWeaponCooldown()
     {
         _drawingWeaponTime = WEAPON_DRAW_TIME;
+
+        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
+            _drawingWeaponTime = 0.45f;
     }
 
 
