@@ -1015,7 +1015,7 @@ public class PlayerController : MonoBehaviourPun
     void Reload_RPC()
     {
         _completeReloadTimer = 1; // Used to trasnfer ammo
-        currentlyReloadingTimer = 2f; // Used to lock animation time
+        currentlyReloadingTimer = 1.7f; // Used to lock animation time
 
 
         if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Grenade_Launcher ||
@@ -1023,7 +1023,7 @@ public class PlayerController : MonoBehaviourPun
             pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Shotgun ||
             pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sniper)
         {
-            currentlyReloadingTimer = 3; // Used to lock animation time
+            currentlyReloadingTimer = 2.8f; // Used to lock animation time
         }
 
         if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol) currentlyReloadingTimer = 1.2f;
