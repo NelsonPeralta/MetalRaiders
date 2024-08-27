@@ -3,6 +3,7 @@ using UnityEngine;
 using Rewired;
 using Photon.Pun;
 using System;
+using Photon.Realtime;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -56,6 +57,7 @@ public class PlayerController : MonoBehaviourPun
     public DualWieldingReload dwReload;
     public PlayerMovement movement;
     public Melee melee;
+    public FloatingCamera floatingCamera;
     public ControllerType activeControllerType
     {
         get { return _activeControllerType; }
@@ -190,7 +192,7 @@ public class PlayerController : MonoBehaviourPun
 
 
     public bool isMeleeing { get { return _isMeleeing; } set { _isMeleeing = value; if (value) _meleeCooldown = 0.8f; } }
-    public bool cameraisFloating { get { return _cameraIsFloating; } }
+    public bool cameraIsFloating { get { return _cameraIsFloating; } }
     float currentadsCounter
     {
         get { return _adsCounter; }
@@ -1108,22 +1110,34 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+
+
     void FloatingCamera()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0))
+        if (rewiredPlayer.GetButtonLongPressDown("floatingcamera") && PV.IsMine)
         {
-            if (GameManager.instance.localPlayers.Count == 1 && player.isMine)
-            {
-                PV.RPC("ToggleFloatingCamera_RPC", RpcTarget.All);
-            }
+            ToggleFloatingCamera();
+        }
+        else if (rewiredPlayer.GetButtonDown("floatingcamera") && PV.IsMine && cameraIsFloating)
+        {
+            PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All);
+        }
+    }
+
+    public void ToggleFloatingCamera()
+    {
+        if (PV.IsMine)
+        {
+            PV.RPC("ToggleFloatingCamera_RPC", RpcTarget.All);
         }
     }
 
 
+    Vector3 _posBeforeTogglingFloatingCamera;
     [PunRPC]
     void ToggleFloatingCamera_RPC()
     {
-        if (!cameraisFloating)
+        if (!cameraIsFloating)
         {
             _lastMainCamLayerMask = mainCam.cullingMask;
             _lastMainCamLocalPos = mainCam.transform.localPosition;
@@ -1135,6 +1149,13 @@ public class PlayerController : MonoBehaviourPun
             Debug.Log("Alpha0");
             uiCam.enabled = false;
             gunCam.enabled = false;
+
+
+            floatingCamera.counter = 0;
+            _posBeforeTogglingFloatingCamera = transform.position;
+            player.transform.position = Vector3.up * -100;
+            player.GetComponent<Rigidbody>().useGravity = false;
+            player.GetComponent<Rigidbody>().isKinematic = true;
         }
         else
         {
@@ -1147,7 +1168,18 @@ public class PlayerController : MonoBehaviourPun
             Debug.Log("Alpha0");
             uiCam.enabled = true;
             gunCam.enabled = true;
+
+
+            player.transform.position = _posBeforeTogglingFloatingCamera;
+            player.GetComponent<Rigidbody>().useGravity = true;
+            player.GetComponent<Rigidbody>().isKinematic = false;
         }
+    }
+
+    [PunRPC]
+    void IncreaseFloatinCameraCounter_RPC()
+    {
+        floatingCamera.counter++;
     }
 
 

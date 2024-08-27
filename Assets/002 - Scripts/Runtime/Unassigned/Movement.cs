@@ -290,7 +290,7 @@ public class Movement : MonoBehaviour, IMoveable
         ApplyResidualMovementWhileNotGrounded();
         ApplyInAirMovement();
 
-        if (!_pController.cameraisFloating)
+        if (!_pController.cameraIsFloating)
             ApplyMovement();
     }
 

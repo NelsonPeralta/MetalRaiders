@@ -106,7 +106,7 @@ public class PlayerCamera : MonoBehaviour
 
         if (!GameManager.instance.gameStarted) return;
         if (!pController.PV.IsMine) return;
-        if (pController.cameraisFloating) return;
+        if (pController.cameraIsFloating) return;
 
         try
         {

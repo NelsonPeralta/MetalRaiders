@@ -7,6 +7,27 @@ using UnityEngine;
 public class FloatingCamera : MonoBehaviour
 {
     public PlayerController playerController;
+    public int counter
+    {
+        get { return _counter; }
+        set
+        {
+            _counter = value;
+
+
+            if (_counter > GameManager.instance.gameplayRecorderPoints.Count - 1)
+            {
+                // disable floating camera
+                playerController.ToggleFloatingCamera();
+            }
+            else
+            {
+                transform.parent = GameManager.instance.gameplayRecorderPoints[_counter].transform;
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
+            }
+        }
+    }
 
     [Header("Constants")]
 
@@ -37,7 +58,7 @@ public class FloatingCamera : MonoBehaviour
 
 
     float _changeCameraCd;
-    int _gcrc;
+    int _counter;
 
 
 
@@ -57,64 +78,6 @@ public class FloatingCamera : MonoBehaviour
     private void Update()
     {
 
-
-
-
-
-
-
-        if (!playerController.cameraisFloating)
-            return;
-
-
-
-        _changeCameraCd -= Time.deltaTime;
-        if (_changeCameraCd <= 0)
-        {
-            transform.parent = GameManager.instance.gameplayRecorderPoints[_gcrc].transform;
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-
-
-
-
-            _gcrc++;
-
-            if (_gcrc > GameManager.instance.gameplayRecorderPoints.Count - 1) _gcrc = 0;
-
-
-            _changeCameraCd = 3.5f;
-            if (GameManager.instance.gameplayRecorderPoints[_gcrc].transform.root.GetComponent<Player>())
-                _changeCameraCd = 2f;
-        }
-
-
-
-
-
-
-
-
-
-        return;
-
-
-
-        HandleMouseRotation();
-
-        var acceleration = HandleKeyInput();
-
-        _moveSpeed += acceleration;
-
-        HandleDeceleration(acceleration);
-
-        // clamp the move speed
-        if (_moveSpeed.magnitude > MaximumMovementSpeed)
-        {
-            _moveSpeed = _moveSpeed.normalized * MaximumMovementSpeed;
-        }
-
-        transform.Translate(_moveSpeed);
     }
 
     private Vector3 HandleKeyInput()

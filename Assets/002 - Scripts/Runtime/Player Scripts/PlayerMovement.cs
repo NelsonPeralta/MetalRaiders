@@ -270,7 +270,7 @@ public class PlayerMovement : MonoBehaviour
             WalkAnimation();
         }
 
-        if (!CurrentRoomManager.instance.gameStarted || player.playerController.pauseMenuOpen) return;
+        if (!CurrentRoomManager.instance.gameStarted || player.playerController.pauseMenuOpen || player.playerController.cameraIsFloating) return;
 
         _thirdPersonScript.GetComponent<Animator>().SetBool("Jump", !isGrounded);
         CalculateCurrentSpeed();

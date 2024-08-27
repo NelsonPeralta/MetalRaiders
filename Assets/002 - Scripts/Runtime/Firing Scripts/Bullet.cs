@@ -451,7 +451,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         }
 
 
-                        if (player.playerController.cameraisFloating) damage = 0;
+                        if (player.playerController.cameraIsFloating) damage = 0;
 
                         //if (sourcePlayer.PV.IsMine)
                         {

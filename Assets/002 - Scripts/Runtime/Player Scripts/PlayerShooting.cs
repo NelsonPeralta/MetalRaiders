@@ -477,6 +477,7 @@ public class PlayerShooting : MonoBehaviourPun
                     //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
                     bullet.gameObject.GetComponent<Bullet>().range = (int)activeWeapon.range;
                     bullet.gameObject.GetComponent<Bullet>().speed = (int)activeWeapon.bulletSpeed;
+                    if (overcharge) bullet.gameObject.GetComponent<Bullet>().speed = (int)(activeWeapon.bulletSpeed * 0.65f);
                     //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
                     //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
                     //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;

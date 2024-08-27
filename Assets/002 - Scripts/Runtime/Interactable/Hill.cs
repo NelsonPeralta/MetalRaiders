@@ -162,7 +162,7 @@ public class Hill : MonoBehaviour
     {
         if (!CurrentRoomManager.instance.gameStarted) return;
 
-        _hillVfxHolder.SetActive(!GameManager.GetRootPlayer().playerController.cameraisFloating);
+        _hillVfxHolder.SetActive(!GameManager.GetRootPlayer().playerController.cameraIsFloating);
 
 
 
