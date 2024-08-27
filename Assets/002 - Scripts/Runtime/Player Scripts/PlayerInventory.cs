@@ -445,6 +445,7 @@ public class PlayerInventory : MonoBehaviourPun
     [PunRPC]
     void AssignWeapon(string codeName, bool actWeap = true)
     {
+        print($"{player.name} AssignWeapon");
         if (!PV.IsMine)
         {
             print($"AssignWeapon {codeName}");
@@ -503,9 +504,11 @@ public class PlayerInventory : MonoBehaviourPun
                 }
             }
 
-
-            pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
-            pController.weaponAnimator.Play("Draw", 0, 0f);
+            if (player.isMine)
+            {
+                pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
+                pController.weaponAnimator.Play("Draw", 0, 0f);
+            }
 
             PlayDrawSound();
         }

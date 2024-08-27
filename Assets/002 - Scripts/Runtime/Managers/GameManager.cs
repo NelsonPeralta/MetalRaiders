@@ -438,6 +438,33 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        string[] names = QualitySettings.names;
+        for (int i = 0; i < names.Length; i++)
+        {
+            print($"Quality: {names[i]}");
+            //QualitySettings.SetQualityLevel(i, true);
+
+            if (instance.connection == Connection.Online)
+            {
+                if (names[i].Equals("High"))
+                    QualitySettings.SetQualityLevel(i, true);
+            }
+            else
+            {
+                if (instance.nbLocalPlayersPreset == 1)
+                {
+                    if (names[i].Equals("High"))
+                        QualitySettings.SetQualityLevel(i, true);
+                }
+                else if (instance.nbLocalPlayersPreset >= 2)
+                {
+                    if (names[i].Equals("Medium"))
+                        QualitySettings.SetQualityLevel(i, true);
+                }
+            }
+        }
+
+
         try { instance.localPlayers.Clear(); } catch { }
 
         //try { FindObjectOfType<GameTime>().timeRemaining = 0; }

@@ -1911,19 +1911,10 @@ public class Player : Biped
 
     public override void SpawnUltraBindExplosion()
     {
-        base.SpawnUltraBindExplosion();
-
-        print("Player SpawnUltraBindExplosion");
-
-        //Explosion e = Instantiate(_ultraMergeExPrefab, transform.position, Quaternion.identity).GetComponent<Explosion>();
-        //e.player = _lastPlayerSource;
-        //e.gameObject.SetActive(true);
-        //e.DisableIn3Seconds();
-
-        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 700, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip, WeaponProperties.KillFeedOutput.Ultra_Bind);
-
-
-        _ultraMergeCount = 0;
+        if (PV.IsMine)
+        {
+            PV.RPC("SpawnUltraBindExplosion_RPC", RpcTarget.AllViaServer);
+        }
     }
 
 
@@ -1950,5 +1941,19 @@ public class Player : Biped
         //    {
         //        l[i].targetPlayerController = GameManager.instance.pid_player_Dict.ElementAt(i).Value.playerController;
         //    }
+    }
+
+
+    [PunRPC]
+    void SpawnUltraBindExplosion_RPC()
+    {
+        base.SpawnUltraBindExplosion();
+
+        print("Player SpawnUltraBindExplosion");
+
+        GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 700, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip, WeaponProperties.KillFeedOutput.Ultra_Bind);
+
+
+        ultraMergeCount = 0;
     }
 }

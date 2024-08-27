@@ -1046,14 +1046,14 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
         {
-            print($"FindMasterClientAndToggleIcon: {player.NickName} {player.IsMasterClient}");
+            //print($"FindMasterClientAndToggleIcon: {player.NickName} {player.IsMasterClient}");
             if (player.IsMasterClient)
             {
                 foreach (Transform child in namePlatesParent)
                 {
                     if (child.GetComponent<PlayerNamePlate>())
                     {
-                        print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
+                        //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
                         if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName))
                             child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
                         else

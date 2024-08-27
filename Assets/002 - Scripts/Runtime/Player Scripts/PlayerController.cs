@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviourPun
     LayerMask _lastMainCamLayerMask;
 
 
-    [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn;
+    [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn, _isHoldingSprintBtn;
     [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime, _markSpotCooldown;
 
     void Awake()
@@ -307,10 +307,13 @@ public class PlayerController : MonoBehaviourPun
                 BackButton();
             }
 
-            if (isAiming)
-                currentadsCounter += Time.deltaTime * 6;
-            else
-                currentadsCounter -= Time.deltaTime * 6;
+            if (!cameraIsFloating)
+            {
+                if (isAiming)
+                    currentadsCounter += Time.deltaTime * 6;
+                else
+                    currentadsCounter -= Time.deltaTime * 6;
+            }
 
             if (!GameManager.instance.gameStarted)
                 return;
@@ -428,10 +431,16 @@ public class PlayerController : MonoBehaviourPun
                 return;
             if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
             {
-                if (rewiredPlayer.GetButton("Sprint"))
+                if (rewiredPlayer.GetButton("Sprint") && !_isHoldingSprintBtn)
+                {
+                    _isHoldingSprintBtn = true;
                     EnableSprint();
+                }
                 else if (rewiredPlayer.GetButtonUp("Sprint"))
+                {
+                    _isHoldingSprintBtn = false;
                     DisableSprint();
+                }
             }
             else if (activeControllerType == ControllerType.Joystick)
                 if (rewiredPlayer.GetButtonDown("Sprint"))
@@ -444,7 +453,9 @@ public class PlayerController : MonoBehaviourPun
     public void EnableSprint()
     {
         if (player.movement.blockPlayerMoveInput <= 0)
+        {
             PV.RPC("EnableSprint_RPC", RpcTarget.All);
+        }
     }
 
     [PunRPC]
@@ -728,6 +739,7 @@ public class PlayerController : MonoBehaviourPun
         //if (isDualWielding || pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.None)
         //    return;
 
+        if (cameraIsFloating) return;
 
 
         if (pInventory.activeWeapon.scopeMagnification != WeaponProperties.ScopeMagnification.None)
@@ -1751,8 +1763,9 @@ public class PlayerController : MonoBehaviourPun
     {
         _drawingWeaponTime = WEAPON_DRAW_TIME;
 
-        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
-            _drawingWeaponTime = 0.45f;
+        if (pInventory.activeWeapon)
+            if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
+                _drawingWeaponTime = 0.45f;
     }
 
 

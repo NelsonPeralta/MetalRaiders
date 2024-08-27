@@ -12,22 +12,43 @@ public class FloatingCamera : MonoBehaviour
         get { return _counter; }
         set
         {
-            _counter = value;
-
-
-            if (_counter > GameManager.instance.gameplayRecorderPoints.Count - 1)
+            if (_counter == 99)
             {
-                // disable floating camera
-                playerController.ToggleFloatingCamera();
-            }
-            else
-            {
+                _counter = 0;
+
                 transform.parent = GameManager.instance.gameplayRecorderPoints[_counter].transform;
                 transform.localPosition = Vector3.zero;
                 transform.localRotation = Quaternion.identity;
             }
+            else
+            {
+                _counter = value;
+
+                if (_counter > GameManager.instance.gameplayRecorderPoints.Count - 1)
+                {
+                    _counter = 99;
+                }
+                else
+                {
+                    transform.parent = GameManager.instance.gameplayRecorderPoints[_counter].transform;
+                    transform.localPosition = Vector3.zero;
+                    transform.localRotation = Quaternion.identity;
+                }
+            }
         }
     }
+
+
+    private int zoomCounter
+    {
+        get { return _zoomCounter; }
+        set
+        {
+            _zoomCounter = Mathf.Clamp(value, 0, GameManager.DEFAULT_FRAMERATE / 2);
+        }
+    }
+
+
 
     [Header("Constants")]
 
@@ -58,13 +79,16 @@ public class FloatingCamera : MonoBehaviour
 
 
     float _changeCameraCd;
-    int _counter;
+    [SerializeField] int _counter, _zoomCounter;
+
+    Camera _cam;
 
 
 
     private void Awake()
     {
         _changeCameraCd = 0.5f;
+        _cam = GetComponent<Camera>();
     }
 
 
@@ -77,7 +101,29 @@ public class FloatingCamera : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!playerController.cameraIsFloating) return;
 
+        if (playerController.rewiredPlayer.GetButton("Aim")) { zoomCounter += 2; } else zoomCounter -= 2;
+
+        _cam.fieldOfView = 60 - zoomCounter;
+        var acceleration = HandleKeyInput();
+        if (playerController.rewiredPlayer.GetButton("Sprint")) acceleration *= 3;
+
+        if (!playerController.cameraIsFloating || counter != 99) return;
+
+        HandleMouseRotation();
+
+        _moveSpeed += acceleration;
+
+        HandleDeceleration(acceleration);
+
+        // clamp the move speed
+        if (_moveSpeed.magnitude > MaximumMovementSpeed)
+        {
+            _moveSpeed = _moveSpeed.normalized * MaximumMovementSpeed;
+        }
+
+        transform.Translate(_moveSpeed);
     }
 
     private Vector3 HandleKeyInput()
@@ -87,32 +133,32 @@ public class FloatingCamera : MonoBehaviour
         //key input detection
         if (Input.GetKey(Forwards))
         {
-            acceleration.z += 1;
+            acceleration.z += 0.3f;
         }
 
         if (Input.GetKey(Backwards))
         {
-            acceleration.z -= 1;
+            acceleration.z -= 0.3f;
         }
 
         if (Input.GetKey(Left))
         {
-            acceleration.x -= 1;
+            acceleration.x -= 0.3f;
         }
 
         if (Input.GetKey(Right))
         {
-            acceleration.x += 1;
+            acceleration.x += 0.3f;
         }
 
         if (Input.GetKey(Up))
         {
-            acceleration.y += 1;
+            acceleration.y += 0.3f;
         }
 
         if (Input.GetKey(Down))
         {
-            acceleration.y -= 1;
+            acceleration.y -= 0.3f;
         }
 
         return acceleration.normalized * AccelerationMod;
