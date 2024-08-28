@@ -179,6 +179,7 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void ToggleLeaderIcon(bool t)
     {
+        print($"ToggleLeaderIcon {t}");
         _roomLeaderIcon.SetActive(t);
     }
 }

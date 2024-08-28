@@ -19,8 +19,8 @@ public class Marker : MonoBehaviour
             this.transform.LookAt(targetPostition);
 
 
-            print(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100);
-            print(Mathf.Clamp(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100, .01f, 1));
+            //print(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100);
+            //print(Mathf.Clamp(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100, .01f, 1));
             localScale.localScale = Vector3.one * (Mathf.Clamp(Vector3.Distance(transform.position, lookAtThisTrans.position) / 30, .03f, 1));
         }
     }

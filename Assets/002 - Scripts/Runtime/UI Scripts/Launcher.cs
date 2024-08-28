@@ -1051,14 +1051,18 @@ public class Launcher : MonoBehaviourPunCallbacks
             {
                 foreach (Transform child in namePlatesParent)
                 {
-                    if (child.GetComponent<PlayerNamePlate>())
+                    try
                     {
-                        //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
-                        if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName))
-                            child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
-                        else
-                            child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                        if (child.GetComponent<PlayerNamePlate>())
+                        {
+                            //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
+                            if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName))
+                                child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+                            else
+                                child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                        }
                     }
+                    catch { }
                 }
             }
         }

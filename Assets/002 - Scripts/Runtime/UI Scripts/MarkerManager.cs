@@ -9,7 +9,7 @@ public class MarkerManager : MonoBehaviour
 
 
     [SerializeField] Marker _marker, _markerEnSpot;
-    [SerializeField] List<Marker> _markers, _markersEnSpot;
+    [SerializeField] List<Marker> _markers = new List<Marker>(), _markersEnSpot = new List<Marker>();
 
 
 
@@ -37,35 +37,38 @@ public class MarkerManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         print("MarkerManager OnSceneLoaded");
-        if (instance)
+        if (instance == this)
         {
             print("MarkerManager OnSceneLoaded");
             if (scene.buildIndex > 0)
             {
+                instance._markers = new List<Marker>();
+                instance._markersEnSpot = new List<Marker>();
+
                 for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 10; i++)
                 {
                     GameObject obj = Instantiate(_marker.gameObject, transform.position, transform.rotation);
                     obj.SetActive(false);
-                    _markers.Add(obj.GetComponent<Marker>());
+                    instance._markers.Add(obj.GetComponent<Marker>());
                     obj.transform.parent = gameObject.transform;
 
 
                     obj = Instantiate(_markerEnSpot.gameObject, transform.position, transform.rotation);
                     obj.SetActive(false);
-                    _markersEnSpot.Add(obj.GetComponent<Marker>());
+                    instance._markersEnSpot.Add(obj.GetComponent<Marker>());
                     obj.transform.parent = gameObject.transform;
                 }
             }
             else
             {
-                for (int i = _markers.Count; i-- > 0;)
+                for (int i = instance._markers.Count; i-- > 0;)
                 {
-                    Destroy(_markers[i].gameObject);
+                    Destroy(instance._markers[i].gameObject);
                 }
 
-                for (int i = _markersEnSpot.Count; i-- > 0;)
+                for (int i = instance._markersEnSpot.Count; i-- > 0;)
                 {
-                    Destroy(_markersEnSpot[i].gameObject);
+                    Destroy(instance._markersEnSpot[i].gameObject);
                 }
             }
         }
@@ -80,7 +83,7 @@ public class MarkerManager : MonoBehaviour
 
     public void SpawnNormalMarker(Vector3 pos, int player_id)
     {
-        foreach (Marker obj in _markers)
+        foreach (Marker obj in instance._markers)
             if (!obj.gameObject.activeSelf)
             {
                 obj.transform.position = pos;
@@ -95,7 +98,7 @@ public class MarkerManager : MonoBehaviour
 
     public void SpawnEnnSpotMarker(Vector3 pos, int player_id)
     {
-        foreach (Marker obj in _markersEnSpot)
+        foreach (Marker obj in instance._markersEnSpot)
             if (!obj.gameObject.activeSelf)
             {
                 obj.transform.position = pos;
@@ -127,6 +130,7 @@ public class MarkerManager : MonoBehaviour
     public IEnumerator DisableObjectAfterTime(GameObject obj, float time = 1)
     {
         yield return new WaitForSeconds(time);
-        obj.SetActive(false);
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+            obj.SetActive(false);
     }
 }

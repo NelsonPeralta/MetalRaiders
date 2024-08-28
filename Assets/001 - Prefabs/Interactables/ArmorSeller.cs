@@ -62,16 +62,16 @@ public class ArmorSeller : InteractableObject
                     other.transform.root.GetComponent<PlayerController>().OnPlayerLongInteract -= OnPlayerLongInteract_Delegate;
                     other.transform.root.GetComponent<PlayerController>().OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
 
-                    other.transform.root.GetComponent<PlayerUI>().ShowInformer($"Buy armor for {cost} points");
+                    other.transform.root.GetComponent<PlayerUI>().ShowInformer($"Buy Power Armor [Cost: {cost}]");
                 }
                 else
                 {
-                    other.transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points ({cost})");
+                    other.transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points [Cost: {cost}]");
                 }
             }
             else
             {
-                other.transform.root.GetComponent<PlayerUI>().ShowInformer($"You already have an armor");
+                other.transform.root.GetComponent<PlayerUI>().ShowInformer($"You already have a Power Armor");
             }
         }
     }
