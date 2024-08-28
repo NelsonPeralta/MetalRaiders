@@ -325,7 +325,7 @@ public class WeaponProperties : MonoBehaviour
 
 
 
-                    player.playerCamera.verticalAxisTarget.Rotate(-Vector3.right * 0.5f * verRecoil);
+                    player.playerCamera.verticalAxisTarget.Rotate(-Vector3.right * 0.65f * verRecoil);
                 }
             }
 

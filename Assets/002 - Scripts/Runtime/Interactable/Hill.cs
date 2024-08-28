@@ -121,15 +121,18 @@ public class Hill : MonoBehaviour
     {
         if (other.GetComponent<PlayerCapsule>())
         {
-            Player p = other.transform.root.GetComponent<Player>();
-
-            if (!p.isDead && !p.isRespawning && !playersInRange.Contains(p))
+            if (Mathf.Abs(transform.position.y - other.transform.position.y) < 2)
             {
-                p.OnPlayerDeath += OnPlayerDeath;
-                List<Player> list = new List<Player>(playersInRange);
-                list.Add(p);
+                Player p = other.transform.root.GetComponent<Player>();
 
-                playersInRange = list;
+                if (!p.isDead && !p.isRespawning && !playersInRange.Contains(p))
+                {
+                    p.OnPlayerDeath += OnPlayerDeath;
+                    List<Player> list = new List<Player>(playersInRange);
+                    list.Add(p);
+
+                    playersInRange = list;
+                }
             }
         }
     }
