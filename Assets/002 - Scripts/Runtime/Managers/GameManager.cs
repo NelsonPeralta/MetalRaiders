@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     // Events
     public delegate void GameManagerEvent();
-    public GameManagerEvent OnSceneLoadedEvent, OnCameraSensitivityChanged;
+    public GameManagerEvent OnGameManagerFinishedLoadingScene_Late, OnCameraSensitivityChanged;
     // Enums
     public enum Team { None, Red, Blue, Alien }
     public enum Connection { Unassigned, Local, Online }
@@ -582,7 +582,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             FindObjectOfType<Launcher>().OnCreateMultiplayerRoomButton += OnCreateMultiplayerRoomButton_Delegate;
             //FindObjectOfType<GameTime>().timeRemaining = 0;
         }
-        OnSceneLoadedEvent?.Invoke();
+        OnGameManagerFinishedLoadingScene_Late?.Invoke();
     }
 
     // called third

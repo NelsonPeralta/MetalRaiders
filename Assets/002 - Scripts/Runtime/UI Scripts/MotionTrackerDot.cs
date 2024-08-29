@@ -103,56 +103,62 @@ public class MotionTrackerDot : MonoBehaviour
     {
         if (targetPlayerController != null)
         {
-            _tpc = transform.position; _tpc.y = 0;
-            _tarpc = targetPlayerController.transform.position; _tarpc.y = 0;
+            _tpc = transform.position; _tpc.x = 0; _tpc.z = 0;
+            _tarpc = targetPlayerController.transform.position; _tarpc.x = 0; _tarpc.z = 0;
 
-            _tarDistance = Vector3.Distance(_tpc, _tarpc);
-
-            if (_tarDistance <= 20)
+            if (Vector3.Distance(_tpc, _tarpc) <= 10)
             {
-                _dirToTar = _tarpc - _tpc;
+                _tpc = transform.position; _tpc.y = 0;
+                _tarpc = targetPlayerController.transform.position; _tarpc.y = 0;
+                _tarDistance = Vector3.Distance(_tpc, _tarpc);
 
-                _dotHolder.SetActive(true);
-                _tarAngle = Vector3.SignedAngle(transform.forward, _dirToTar, Vector3.up);
-                _tarRot = new Vector3(0, _tarAngle, 0);
-                _tarDisV = new Vector3(0, 0, _tarDistance);
-
-
-                _dotRotation.localRotation = Quaternion.Euler(0, _tarAngle, 0);
-                _dotDistance.localPosition = _tarDisV / _divider;
-
-
-                _tp = targetPlayerController.transform.position / _divider; _tp.y = 0;
-
-                //_dotHolder.transform.localPosition = _tp;
-
-                if (targetPlayerController.player.movement.isMoving)
+                if (_tarDistance <= 20)
                 {
-                    _dotHolder.SetActive(targetPlayerController.player.movement.isMoving);
-                    _dotHolder.SetActive(!targetPlayerController.isCrouching);
+                    _dirToTar = _tarpc - _tpc;
 
+                    _dotHolder.SetActive(true);
+                    _tarAngle = Vector3.SignedAngle(transform.forward, _dirToTar, Vector3.up);
+                    _tarRot = new Vector3(0, _tarAngle, 0);
+                    _tarDisV = new Vector3(0, 0, _tarDistance);
+
+
+                    _dotRotation.localRotation = Quaternion.Euler(0, _tarAngle, 0);
+                    _dotDistance.localPosition = _tarDisV / _divider;
+
+
+                    _tp = targetPlayerController.transform.position / _divider; _tp.y = 0;
+
+                    //_dotHolder.transform.localPosition = _tp;
+
+                    if (targetPlayerController.player.movement.isMoving)
+                    {
+                        _dotHolder.SetActive(targetPlayerController.player.movement.isMoving);
+                        _dotHolder.SetActive(!targetPlayerController.isCrouching);
+
+                    }
+                    else
+                    {
+                        _dotHolder.SetActive(false);
+                    }
+
+                    if (!targetPlayerController.player.movement.isGrounded) _dotHolder.SetActive(true);
+                    if (targetPlayerController.isCurrentlyShootingForMotionTracker) _dotHolder.SetActive(true);
+
+                    //if (targetPlayerController.player.team == _rootPlayerTeam) _dotHolder.SetActive(true);
                 }
                 else
                 {
                     _dotHolder.SetActive(false);
+
                 }
 
-                if (!targetPlayerController.player.movement.isGrounded) _dotHolder.SetActive(true);
-                if (targetPlayerController.isCurrentlyShootingForMotionTracker) _dotHolder.SetActive(true);
 
-                //if (targetPlayerController.player.team == _rootPlayerTeam) _dotHolder.SetActive(true);
+                if (targetPlayerController.player.isDead || targetPlayerController.player.isRespawning) _dotHolder.SetActive(false);
+
+                //_dotHolder.SetActive(true);
             }
             else
-            {
                 _dotHolder.SetActive(false);
-
-            }
-
-
-            if (targetPlayerController.player.isDead || targetPlayerController.player.isRespawning) _dotHolder.SetActive(false);
-
-            //_dotHolder.SetActive(true);
-
         }
         else
         {

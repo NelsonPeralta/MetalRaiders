@@ -122,7 +122,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             if (p.ContainsKey("reevaluateteams"))
             {
                 GameManager.instance.CreateTeamsBecausePlayerJoined();
-                Launcher.instance.FindMasterClientAndToggleIcon();
+                //Launcher.instance.FindMasterClientAndToggleIcon();
             }
         }
     }

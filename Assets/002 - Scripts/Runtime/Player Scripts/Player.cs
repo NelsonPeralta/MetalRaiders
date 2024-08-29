@@ -349,6 +349,7 @@ public class Player : Biped
 
                 _rb.isKinematic = true;
                 GetComponent<HitPoints>().OnDeath?.Invoke(GetComponent<HitPoints>()); // Needed for melee script
+                _gameplayerRecordingPointsHolder.transform.parent = null;
                 OnPlayerDeath?.Invoke(this);
                 OnPlayerDeathLate?.Invoke(this);
             }
@@ -583,6 +584,7 @@ public class Player : Biped
     [SerializeField] PlayerUI _playerUi;
     [SerializeField] AssignActorPlayerTargetOnShootingSphere _assignActorPlayerTargetOnShootingSphere;
     [SerializeField] Explosion _ultraMergeExPrefab;
+    [SerializeField] Transform _gameplayerRecordingPointsHolder;
 
     #endregion
 
@@ -1280,6 +1282,7 @@ public class Player : Biped
     void Respawn()
     {
         Debug.Log("Respawn");
+        _gameplayerRecordingPointsHolder.parent = transform;
         _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
 
         if (!isRespawning)

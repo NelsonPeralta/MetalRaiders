@@ -271,8 +271,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
-        GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
+        GameManager.instance.OnGameManagerFinishedLoadingScene_Late -= OnSceneLoaded;
+        GameManager.instance.OnGameManagerFinishedLoadingScene_Late += OnSceneLoaded;
     }
 
     NetworkSwarmManager _networkSwarmManager;

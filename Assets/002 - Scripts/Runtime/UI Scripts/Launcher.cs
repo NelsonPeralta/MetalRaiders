@@ -164,20 +164,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
 
-    void Awake()
-    {
-        if (instance)
-        {
-            Debug.Log("There is a MenuManager Instance");
-            Destroy(gameObject);
-            return;
-        }
-        //DontDestroyOnLoad(gameObject);
-        instance = this;
 
-        FindObjectOfType<GameManager>().OnSceneLoadedEvent -= OnSceneLoaded;
-        FindObjectOfType<GameManager>().OnSceneLoadedEvent += OnSceneLoaded;
-    }
 
     public TMP_Text mapSelectedText
     {
@@ -191,6 +178,22 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public TMP_InputField nbLocalPlayersText { get { return _nbLocalPlayersInputed; } }
 
+
+    void Awake()
+    {
+        if (instance)
+        {
+            Debug.Log("There is a MenuManager Instance");
+            Destroy(gameObject);
+            return;
+        }
+        //DontDestroyOnLoad(gameObject);
+        instance = this;
+
+        FindObjectOfType<GameManager>().OnGameManagerFinishedLoadingScene_Late -= OnSceneLoaded;
+        FindObjectOfType<GameManager>().OnGameManagerFinishedLoadingScene_Late += OnSceneLoaded;
+    }
+
     void Start()
     {
         //if (Application.platform == RuntimePlatform.WindowsPlayer)
@@ -202,6 +205,27 @@ public class Launcher : MonoBehaviourPunCallbacks
         //TODO: PhotonNetwork.OfflineMode = true;
         //ConnectToPhotonMasterServer();
         //GetComponent<MenuManager>().OpenMainMenu();
+    }
+
+
+
+    [SerializeField] float _masterClientIconCheck;
+    private void Update()
+    {
+        if (_masterClientIconCheck > 0)
+        {
+            _masterClientIconCheck -= Time.deltaTime;
+
+            if (_masterClientIconCheck < 0)
+            {
+
+                if (SceneManager.GetActiveScene().buildIndex == 0 && PhotonNetwork.InRoom)
+                {
+                    FindMasterClientAndToggleIcon();
+                }
+                _masterClientIconCheck = 1;
+            }
+        }
     }
 
     public void ConnectToPhotonMasterServer(bool showMessage = true)
@@ -563,7 +587,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             }
         }
 
-        FindMasterClientAndToggleIcon();
+        //FindMasterClientAndToggleIcon();
     }
 
     // Runs only when OTHER player joined room.
@@ -632,7 +656,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
         _mapSelectedPreview.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
 
-        FindMasterClientAndToggleIcon();
+        //FindMasterClientAndToggleIcon();
         ChangeLevelToLoadWithIndex(1); // Will send params too
     }
 
@@ -932,6 +956,15 @@ public class Launcher : MonoBehaviourPunCallbacks
     void OnSceneLoaded()
     {
         Debug.Log($"PhotonNetwork.NetworkClientState: {PhotonNetwork.NetworkClientState}");
+
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            _masterClientIconCheck = 1;
+        }
+        else
+        {
+            _masterClientIconCheck = -1;
+        }
     }
 
 
@@ -1056,10 +1089,17 @@ public class Launcher : MonoBehaviourPunCallbacks
                         if (child.GetComponent<PlayerNamePlate>())
                         {
                             //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
-                            if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName))
-                                child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+                            if (child.GetComponent<PlayerNamePlate>().playerDataCell)
+                            {
+                                if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName))
+                                    child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+                                else
+                                    child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                            }
                             else
+                            {
                                 child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                            }
                         }
                     }
                     catch { }

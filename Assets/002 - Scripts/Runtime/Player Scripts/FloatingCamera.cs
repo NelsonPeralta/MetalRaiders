@@ -106,7 +106,13 @@ public class FloatingCamera : MonoBehaviour
         if (playerController.rewiredPlayer.GetButton("Aim")) { zoomCounter += 2; } else zoomCounter -= 2;
 
         _cam.fieldOfView = 60 - zoomCounter;
-        var acceleration = HandleKeyInput();
+        //var acceleration = HandleKeyInput();
+        var acceleration = Vector3.zero;
+
+        acceleration.z = playerController.rewiredPlayer.GetAxis("Move Vertical");
+        acceleration.x = playerController.rewiredPlayer.GetAxis("Move Horizontal");
+
+
         if (playerController.rewiredPlayer.GetButton("Sprint")) acceleration *= 3;
 
         if (!playerController.cameraIsFloating || counter != 99) return;
@@ -169,8 +175,8 @@ public class FloatingCamera : MonoBehaviour
     private void HandleMouseRotation()
     {
         //mouse input
-        var rotationHorizontal = XAxisSensitivity * Input.GetAxis("Mouse X");
-        var rotationVertical = YAxisSensitivity * Input.GetAxis("Mouse Y");
+        var rotationHorizontal = playerController.rewiredPlayer.GetAxis("Mouse X") / 2;
+        var rotationVertical = playerController.rewiredPlayer.GetAxis("Mouse Y") / 2;
 
         //applying mouse rotation
         // always rotate Y in global world space to avoid gimbal lock
