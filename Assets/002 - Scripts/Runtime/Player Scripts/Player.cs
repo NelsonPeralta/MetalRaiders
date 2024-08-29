@@ -1310,6 +1310,8 @@ public class Player : Biped
                 || GameManager.instance.gameType == GameManager.GameType.Retro)
             playerInventory.fragGrenades = 1;
 
+        if (GameManager.instance.gameType == GameManager.GameType.Hill) playerInventory.fragGrenades = 1;
+
         //StartCoroutine(playerInventory.EquipStartingWeapon());
         playerInventory.weaponsEquiped[1] = null;
 

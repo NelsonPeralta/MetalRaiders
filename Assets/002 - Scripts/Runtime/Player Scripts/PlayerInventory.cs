@@ -343,6 +343,10 @@ public class PlayerInventory : MonoBehaviourPun
         {
             fragGrenades = 2;
         }
+        if (GameManager.instance.gameType == GameManager.GameType.Hill)
+        {
+            fragGrenades = 1;
+        }
     }
 
     void OnActiveWeaponAmmoChanged(WeaponProperties weaponProperties)

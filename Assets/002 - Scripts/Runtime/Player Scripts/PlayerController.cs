@@ -1132,7 +1132,11 @@ public class PlayerController : MonoBehaviourPun
         }
         else if (rewiredPlayer.GetButtonDown("floatingcamera") && PV.IsMine && cameraIsFloating)
         {
-            PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All);
+            PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, false);
+        }
+        else if (rewiredPlayer.GetButtonDown("floatingcameraminus") && PV.IsMine && cameraIsFloating)
+        {
+            PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, true);
         }
     }
 
@@ -1189,9 +1193,12 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    void IncreaseFloatinCameraCounter_RPC()
+    void IncreaseFloatinCameraCounter_RPC(bool actuallyMinus)
     {
-        floatingCamera.counter++;
+        if (!actuallyMinus)
+            floatingCamera.counter++;
+        else
+            floatingCamera.counter--;
     }
 
 

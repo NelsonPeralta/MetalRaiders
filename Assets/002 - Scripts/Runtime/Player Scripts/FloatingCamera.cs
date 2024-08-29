@@ -28,6 +28,14 @@ public class FloatingCamera : MonoBehaviour
                 {
                     _counter = 99;
                 }
+                else if (_counter == -1)
+                {
+                    _counter = GameManager.instance.gameplayRecorderPoints.Count - 1;
+
+                    transform.parent = GameManager.instance.gameplayRecorderPoints[_counter].transform;
+                    transform.localPosition = Vector3.zero;
+                    transform.localRotation = Quaternion.identity;
+                }
                 else
                 {
                     transform.parent = GameManager.instance.gameplayRecorderPoints[_counter].transform;
