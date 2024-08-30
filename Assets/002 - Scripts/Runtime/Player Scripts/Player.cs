@@ -1675,7 +1675,8 @@ public class Player : Biped
                     _rb.angularVelocity = Vector3.zero;
                     _rb.useGravity = true;
                     _rb.drag = 0;
-                    _rb.AddForce(_impactDir.normalized * 2.5f, ForceMode.Impulse);
+                    _impactDir.y *= 3;
+                    _rb.AddForce(_impactDir.normalized * 4f, ForceMode.Impulse);
 
                 }
         }

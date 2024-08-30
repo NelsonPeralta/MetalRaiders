@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using TMPro;
+using UnityEngine.UI;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class MapCamera : MonoBehaviourPunCallbacks
 {
@@ -10,10 +13,11 @@ public class MapCamera : MonoBehaviourPunCallbacks
     static MapCamera _instance;
 
     [SerializeField] GameObject _canvas;
+    [SerializeField] Image _mapPreview;
     [SerializeField] AudioClip _slayerClip;
     [SerializeField] AudioClip _KingOfTheHillClip;
     [SerializeField] AudioClip _FirefightClip, _oddballIntro;
-    [SerializeField] TMP_Text _text;
+    [SerializeField] TMP_Text _loadingText, _gametypePreviewInfo, _mapNameInfo;
     [SerializeField] AudioSource _beepConsecutiveAudioSource;
 
     public Transform disabledJunk;
@@ -41,15 +45,48 @@ public class MapCamera : MonoBehaviourPunCallbacks
     {
         Debug.Log("MapCamera");
         AudioListener.volume = 0f;
+
+
+        try
+        {
+            _mapPreview.sprite = GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex == SceneManager.GetActiveScene().buildIndex).SingleOrDefault().image;
+            _mapPreview.color = Color.white;
+        }
+        catch { }
+
+
+        _gametypePreviewInfo.text = GameManager.instance.gameType.ToString();
+
+        if(GameManager.instance.teamMode == GameManager.TeamMode.Classic && GameManager.instance.gameMode == GameManager.GameMode.Versus)
+        {
+            _gametypePreviewInfo.text = $"Team {_gametypePreviewInfo.text}";
+        }
+        _gametypePreviewInfo.text += " on";
+
+
+        _mapNameInfo.text = GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex == SceneManager.GetActiveScene().buildIndex).SingleOrDefault().name;
+
     }
 
     private void Update()
     {
-        _text.text = $"expectedMapAddOns {CurrentRoomManager.instance.expectedMapAddOns} - spawnedMapAddOns {CurrentRoomManager.instance.spawnedMapAddOns}";
-        _text.text += $"\nmapIsReady {CurrentRoomManager.instance.mapIsReady} - playersLoadedScene {CurrentRoomManager.instance.playersLoadedScene}";
-        _text.text += $"\nnbPlayersJoined {CurrentRoomManager.instance.nbPlayersJoined} - expectedNbPlayers {CurrentRoomManager.instance.expectedNbPlayers}";
-        _text.text += $"\nallPlayersJoined {CurrentRoomManager.instance.allPlayersJoined}";
-        _text.text += $"\ngameIsReady {CurrentRoomManager.instance.gameIsReady}";
+        //_text.text = $"expectedMapAddOns {CurrentRoomManager.instance.expectedMapAddOns} - spawnedMapAddOns {CurrentRoomManager.instance.spawnedMapAddOns}";
+        //_text.text += $"\nmapIsReady {CurrentRoomManager.instance.mapIsReady} - playersLoadedScene {CurrentRoomManager.instance.playersLoadedScene}";
+        //_text.text += $"\nnbPlayersJoined {CurrentRoomManager.instance.nbPlayersJoined} - expectedNbPlayers {CurrentRoomManager.instance.expectedNbPlayers}";
+        //_text.text += $"\nallPlayersJoined {CurrentRoomManager.instance.allPlayersJoined}";
+        //_text.text += $"\ngameIsReady {CurrentRoomManager.instance.gameIsReady}";
+
+
+
+
+        _loadingText.text = $"Mapp Add0Ons: {CurrentRoomManager.instance.spawnedMapAddOns}/{CurrentRoomManager.instance.expectedMapAddOns}";
+        _loadingText.text += $"\nMap Loaded: {CurrentRoomManager.instance.mapIsReady}";
+        _loadingText.text += $"\nPlayers Loaded Map: {CurrentRoomManager.instance.playersLoadedScene}/{CurrentRoomManager.instance.expectedNbPlayers}";
+        _loadingText.text += $"\nPlayers Spawned: {CurrentRoomManager.instance.nbPlayersJoined}/{CurrentRoomManager.instance.expectedNbPlayers}";
+        _loadingText.text += $"\nAll Players Joined: {CurrentRoomManager.instance.allPlayersJoined}";
+        _loadingText.text += $"\nReady: {CurrentRoomManager.instance.gameIsReady}";
+
+
 
 
         if (_announcerDelay > 0)

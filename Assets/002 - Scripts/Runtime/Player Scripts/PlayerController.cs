@@ -986,12 +986,38 @@ public class PlayerController : MonoBehaviourPun
 
         if (movement.isGrounded)
             movement.rb.AddForce(Vector3.down * 0.7f, ForceMode.Impulse);
+
+
+
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast((player.mainCamera.transform.position + player.playerCapsule.transform.position) / 2, Vector3.down, out hit, (player.playerCapsule.GetComponent<CapsuleCollider>().height / 2) + 0.5f, GameManager.instance.ragdollHumpLayerMask))
+        {
+            //Debug.Log($"EnableCrouch_RPC Did Hit: {hit.collider.name}");
+            if (hit.collider.GetComponent<RagdollLimbCollisionDetection>() && hit.collider.GetComponent<Rigidbody>() && hit.collider.GetComponent<Rigidbody>().velocity.magnitude < 20)
+            {
+                Debug.Log($"EnableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().velocity.magnitude}");
+                hit.collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 250 * hit.collider.GetComponent<Rigidbody>().mass);
+            }
+        }
     }
 
     [PunRPC]
     void DisableCrouch_RPC()
     {
         movement.playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
+
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast((player.mainCamera.transform.position + player.playerCapsule.transform.position) / 2, Vector3.down, out hit, (player.playerCapsule.GetComponent<CapsuleCollider>().height / 2) + 0.5f, GameManager.instance.ragdollHumpLayerMask))
+        {
+            //Debug.Log($"DisableCrouch_RPC Did Hit: {hit.collider.name}");
+            if (hit.collider.GetComponent<RagdollLimbCollisionDetection>() && hit.collider.GetComponent<Rigidbody>())
+            {
+                Debug.Log($"DisableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().velocity.magnitude}");
+                hit.collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 150 * hit.collider.GetComponent<Rigidbody>().mass);
+            }
+        }
     }
 
 

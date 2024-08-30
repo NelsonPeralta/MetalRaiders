@@ -223,7 +223,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                 {
                     FindMasterClientAndToggleIcon();
                 }
-                _masterClientIconCheck = 1;
+                _masterClientIconCheck = 0.6f;
             }
         }
     }
@@ -959,7 +959,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
-            _masterClientIconCheck = 1;
+            _masterClientIconCheck = 0.6f;
         }
         else
         {

@@ -357,7 +357,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public LayerMask bulletLayerMask, markLayerMask;
+    public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask;
 
 
 
