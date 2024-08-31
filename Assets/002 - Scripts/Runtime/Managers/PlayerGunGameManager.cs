@@ -9,31 +9,34 @@ public class PlayerGunGameManager : MonoBehaviour
         get { return _index; }
         set
         {
-            if (value < 0 || value >= gunIndex.Count)
+            if (!CurrentRoomManager.instance.gameOver)
             {
-                return;
+                if (value < 0 || value >= gunIndex.Count)
+                {
+                    return;
+                }
+
+                _index = value;
+                print($"index: {value} {playerInventory.player.name}");
+
+                WeaponProperties _preActiveWeapon = playerInventory.activeWeapon;
+
+                playerInventory.activeWeapon = _gunIndex[_index];
+                playerInventory.activeWeapon.loadedAmmo = playerInventory.activeWeapon.ammoCapacity;
+                playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxSpareAmmo;
+
+                playerInventory.player.GetComponent<PlayerMultiplayerMatchStats>().score = index;
+                //playerInventory.player.playerDataCell.playerCurrentGameScore.score = index;
+
+
+
+                //playerInventory.holsteredWeapon = playerInventory.weaponCodeNameDict["nailgun"];
+                //playerInventory.holsteredWeapon.currentAmmo = playerInventory.activeWeapon.ammoCapacity;
+                //playerInventory.holsteredWeapon.spareAmmo = playerInventory.activeWeapon.maxAmmo;
+
+                _preActiveWeapon.gameObject.SetActive(false);
+                //playerInventory.holsteredWeapon = 
             }
-
-            _index = value;
-            print($"index: {value} {playerInventory.player.name}");
-
-            WeaponProperties _preActiveWeapon = playerInventory.activeWeapon;
-
-            playerInventory.activeWeapon = _gunIndex[_index];
-            playerInventory.activeWeapon.loadedAmmo = playerInventory.activeWeapon.ammoCapacity;
-            playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxSpareAmmo;
-
-            playerInventory.player.GetComponent<PlayerMultiplayerMatchStats>().score = index;
-            //playerInventory.player.playerDataCell.playerCurrentGameScore.score = index;
-
-
-
-            //playerInventory.holsteredWeapon = playerInventory.weaponCodeNameDict["nailgun"];
-            //playerInventory.holsteredWeapon.currentAmmo = playerInventory.activeWeapon.ammoCapacity;
-            //playerInventory.holsteredWeapon.spareAmmo = playerInventory.activeWeapon.maxAmmo;
-
-            _preActiveWeapon.gameObject.SetActive(false);
-            //playerInventory.holsteredWeapon = 
         }
     }
 

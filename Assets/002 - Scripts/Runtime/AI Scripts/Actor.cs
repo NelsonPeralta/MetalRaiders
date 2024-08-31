@@ -313,6 +313,7 @@ abstract public class Actor : Biped
 
     public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false, int weIndx = -1)
     {
+        print($"Actor Damage: {damageSource}");
         { // Hit Marker Handling
             Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
 
@@ -416,6 +417,21 @@ abstract public class Actor : Biped
             try
             {
                 WeaponProperties wp = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
+
+                {// Splinter is too strong. Check 2x before truly spawning one
+                    if (wp.killFeedOutput == WeaponProperties.KillFeedOutput.Splinter)
+                    {
+                        randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory.Length);
+                        wp = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
+                    }
+                    if (wp.killFeedOutput == WeaponProperties.KillFeedOutput.Splinter)
+                    {
+                        randomWeaponInd = UnityEngine.Random.Range(0, GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory.Length);
+                        wp = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[randomWeaponInd].GetComponent<WeaponProperties>();
+                    }
+                }
+
+
 
                 if (/*wp.weaponType == WeaponProperties.WeaponType.LMG ||*/
                     wp.weaponType == WeaponProperties.WeaponType.Launcher ||
@@ -731,6 +747,8 @@ abstract public class Actor : Biped
         if (hitPoints <= 0)
             return;
 
+        SoundManager.instance.PlayAudioClip(transform.position, SoundManager.instance.successfulPunch);
+
 
         Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
         pp.PlayShootingEnemyClip();
@@ -745,7 +763,7 @@ abstract public class Actor : Biped
             _switchPlayerCooldown = 5;
         }
 
-        Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage}");
+        Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage} {damageSource}");
         hitPoints -= damage;
         if (weapIndx >= 0)
         {

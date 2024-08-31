@@ -255,7 +255,8 @@ public class PlayerShooting : MonoBehaviourPun
     {
         yield return new WaitForSeconds(delay);
 
-        Shoot_RPC();
+        if (pInventory.activeWeapon.firingMode == WeaponProperties.FiringMode.Burst && !playerController.isDrawingWeapon)
+            Shoot_RPC();
         //return;
         //PV.RPC("Shoot_RPC", RpcTarget.All);
     }

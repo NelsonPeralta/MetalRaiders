@@ -282,14 +282,35 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 print($"EndGame {highestScore} / {scoreToWin}");
                 if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                 {
-                    foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-                    {
-                        print($"EndGame {pms.score} / {scoreToWin}");
-                        if (pms.score >= scoreToWin)
+                    if (GameManager.instance.gameType != GameManager.GameType.GunGame)
+                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
                         {
-                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
-                            this.winningPlayers.Add(pms.GetComponent<Player>());
-                            this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+                            print($"EndGame {pms.score} / {scoreToWin}");
+                            if (pms.score >= scoreToWin)
+                            {
+                                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
+                                this.winningPlayers.Add(pms.GetComponent<Player>());
+                                this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+                            }
+                        }
+                    else if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+                    {
+                        this.winningPlayers.Clear();
+                        this.winningPlayersId.Clear();
+
+                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                        {
+                            if (pms.player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
+                            {
+                                this.winningPlayers.Add(pms.GetComponent<Player>());
+                                this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+                                break;
+                            }
+                        }
+
+                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                        {
+                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {winningPlayers[0].username} wins!");
                         }
                     }
                 }
