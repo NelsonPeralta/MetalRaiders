@@ -140,7 +140,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             foreach (KeyValuePair<int, int> kvp in d)
             {
                 Debug.Log($"Player {kvp.Key} wants to change team: {(GameManager.Team)kvp.Value}");
-                CurrentRoomManager.GetPlayerDataWithId(kvp.Key).team = (GameManager.Team)kvp.Value;
+                CurrentRoomManager.GetPlayerDataWithId(kvp.Key, 0).team = (GameManager.Team)kvp.Value;
             }
             foreach (Transform child in Launcher.instance.namePlatesParent)
             {
@@ -292,11 +292,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         Debug.Log($"UpdateAmmo Is Not Mine");
         if (!isSpare)
         {
-            GameManager.GetPlayerWithPhotonViewId(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateLoadedAmmo(ammo);
+            GameManager.GetPlayerWithPhotonView(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateLoadedAmmo(ammo);
         }
         else
         {
-            GameManager.GetPlayerWithPhotonViewId(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateSpareAmmo(ammo);
+            GameManager.GetPlayerWithPhotonView(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateSpareAmmo(ammo);
         }
     }
 
@@ -786,7 +786,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            GameManager.GetPlayerWithPhotonViewId(pid).maxOvershieldPoints = 150;
+            GameManager.GetPlayerWithPhotonView(pid).maxOvershieldPoints = 150;
 
 
 
@@ -907,7 +907,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             GameManager.instance.oddballSkull.DisableOddball();
             GameManager.instance.oddballSkull.PlayBallTakenClip();
-            GameManager.GetPlayerWithId(playerId).playerInventory.EquipOddball();
+            GameManager.GetPlayerWithIdAndRewId(playerId).playerInventory.EquipOddball();
         }
     }
 
@@ -956,12 +956,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         if (GameTime.instance.timeElapsed > 5)
         {
 
-            print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonViewId(playerPid)} {ammo}. Sender: {sender}");
-            if (GameManager.GetPlayerWithPhotonViewId(playerPid).isMine && sender)
+            print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonView(playerPid)} {ammo}. Sender: {sender}");
+            if (GameManager.GetPlayerWithPhotonView(playerPid).isMine && sender)
             {
                 instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, false);
             }
-            else if (!sender && !GameManager.GetPlayerWithPhotonViewId(playerPid).isMine)
+            else if (!sender && !GameManager.GetPlayerWithPhotonView(playerPid).isMine)
             {
                 StartCoroutine(UpdateAmmo_Coroutine(playerPid, wIndex, isSpare, ammo));
             }
@@ -986,12 +986,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void TriggerPlayerOverheatWeapon(int playerPhotonId, int weaponInd, bool caller = true)
     {
-        if (caller && GameManager.GetPlayerWithPhotonViewId(playerPhotonId).isMine)
+        if (caller && GameManager.GetPlayerWithPhotonView(playerPhotonId).isMine)
             instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.AllViaServer, playerPhotonId, weaponInd, false);
         else if (!caller)
         {
-            GameManager.GetPlayerWithPhotonViewId(playerPhotonId).playerController.Descope();
-            GameManager.GetPlayerWithPhotonViewId(playerPhotonId).playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
+            GameManager.GetPlayerWithPhotonView(playerPhotonId).playerController.Descope();
+            GameManager.GetPlayerWithPhotonView(playerPhotonId).playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
         }
     }
 

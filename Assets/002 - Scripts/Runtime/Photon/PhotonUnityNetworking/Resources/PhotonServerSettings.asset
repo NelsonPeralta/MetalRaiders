@@ -210,6 +210,7 @@ MonoBehaviour:
   - MarkSpot_RPC
   - IncreaseFloatinCameraCounter_RPC
   - SpawnUltraBindExplosion_RPC
+  - UpdateRewiredId
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

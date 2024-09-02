@@ -198,7 +198,7 @@ public class CurrentRoomManager : MonoBehaviour
                 if (GameManager.instance.GetAllPhotonPlayers().Count != PhotonNetwork.CurrentRoom.PlayerCount)
                 {
                     GameManager.instance.ReEvaluatePhotonToPlayerDict();
-                    
+
                 }
 
 
@@ -413,13 +413,14 @@ public class CurrentRoomManager : MonoBehaviour
                 if (_gameStartCountdown <= 0)
                 {
                     MapCamera.instance.gameObject.SetActive(false);
-                    foreach (Player p in GameManager.instance.localPlayers.Values)
-                        p.TriggerGameStartBehaviour();
+                    foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+                        if (p.isMine)
+                            p.TriggerGameStartBehaviour();
 
                     if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                         SwarmManager.instance.Begin();
 
-                    foreach (Player p in GameManager.instance.localPlayers.Values) p.playerInventory.TriggerStartGameBehaviour();
+                    foreach (Player p in GameManager.GetLocalPlayers()) p.playerInventory.TriggerStartGameBehaviour();
 
                     gameStarted = true;
                 }
@@ -823,6 +824,7 @@ public class CurrentRoomManager : MonoBehaviour
                 if (instance._playerDataCells[i].playerExtendedPublicData.player_id == id)
                 {
                     instance._playerDataCells[i].occupied = false;
+                    instance._playerDataCells[i].local = false;
                     instance._playerDataCells[i].team = GameManager.Team.None;
                     instance._playerDataCells[i].playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
                 }
@@ -921,6 +923,8 @@ public class CurrentRoomManager : MonoBehaviour
 
                 {
                     instance._playerDataCells[i].occupied = false;
+                    instance._playerDataCells[i].local = false;
+                    instance._playerDataCells[i].rewiredId = 0;
                     instance._playerDataCells[i].photonRoomIndex = -999;
                     instance._playerDataCells[i].playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
                 }
@@ -959,14 +963,24 @@ public class CurrentRoomManager : MonoBehaviour
 
         return null;
     }
-    public static ScriptObjPlayerData GetPlayerDataWithId(int playerId)
+    public static ScriptObjPlayerData GetPlayerDataWithId(int playerId, int rewiredId)
     {
-        Debug.Log($"GetPlayerDataWithId {playerId}");
-        return instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId);
+        Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
+        return instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId && item.rewiredId == rewiredId);
     }
 
     public static ScriptObjPlayerData GetLocalPlayerData(int _id)
     {
         return instance.playerDataCells[_id];
+    }
+
+    public static int GetUnoccupiedDataCell()
+    {
+        foreach (ScriptObjPlayerData s in instance._playerDataCells)
+        {
+            if (!s.occupied) return instance._playerDataCells.IndexOf(s);
+        }
+
+        return -1;
     }
 }

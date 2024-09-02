@@ -76,7 +76,7 @@ public class MotionTrackerDot : MonoBehaviour
 
     Vector3 _tp, _tpc, _tarpc, _tarRot, _tarDisV;
 
-    GameManager.Team _rootPlayerTeam;
+    GameManager.Team _rootPlayerTeam = GameManager.Team.None;
     Actor _actor;
 
 
@@ -87,7 +87,11 @@ public class MotionTrackerDot : MonoBehaviour
     {
         if (_divider == 0) _divider = 1;
         _dotHolder.SetActive(false);
-        _rootPlayerTeam = transform.root.GetComponent<Player>().team;
+
+
+
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
     }
 
 
@@ -192,5 +196,11 @@ public class MotionTrackerDot : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
+    {
+        _rootPlayerTeam = transform.root.GetComponent<Player>().team;
     }
 }

@@ -298,7 +298,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
 
         gameObject.transform.position = gPos;
-        gameObject.transform.SetParent(GameManager.GetPlayerWithId(playerId).transform, true);
+        gameObject.transform.SetParent(GameManager.GetPlayerWithIdAndRewId(playerId).transform, true);
 
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().isKinematic = true;
@@ -310,6 +310,6 @@ public class ExplosiveProjectile : MonoBehaviour
         _stuckSfxAudioSource.Play();
 
 
-        GameManager.GetPlayerWithId(playerId).PlayStuckClip();
+        GameManager.GetPlayerWithIdAndRewId(playerId).PlayStuckClip();
     }
 }

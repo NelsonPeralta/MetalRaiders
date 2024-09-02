@@ -65,7 +65,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         {
             try
             {
-                _targetPlayer = GameManager.instance.localPlayers[_controllerTarget];
+                _targetPlayer = GameManager.GetLocalPlayer(_controllerTarget);
             }
             catch { }
             return;

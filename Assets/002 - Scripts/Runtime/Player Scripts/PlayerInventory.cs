@@ -269,8 +269,7 @@ public class PlayerInventory : MonoBehaviourPun
                 //}
 
                 allThirdPersonEquippedWeaponsHolder.SetActive(true);
-                foreach (GameObject w in allWeaponsInInventory)
-                    GameManager.SetLayerRecursively(w, 31);
+
             }
             catch (System.Exception e) { Debug.LogWarning(e); }
         }
@@ -286,6 +285,9 @@ public class PlayerInventory : MonoBehaviourPun
     public void Start()
     {
         Debug.Log("PlayerInventory Start");
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
+
         foreach (GameObject wp in allWeaponsInInventory)
         {
             try
@@ -851,5 +853,21 @@ public class PlayerInventory : MonoBehaviourPun
         _activeWeapon.gameObject.SetActive(false);
         UpdateThirdPersonGunModelsOnCharacter();
         pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
+    }
+
+
+    void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
+    {
+        foreach (GameObject w in allWeaponsInInventory)
+        {
+            if (pController.rid == 0)
+                GameManager.SetLayerRecursively(w, 24);
+            else if (pController.rid == 1)
+                GameManager.SetLayerRecursively(w, 26);
+            else if (pController.rid == 2)
+                GameManager.SetLayerRecursively(w, 28);
+            else if (pController.rid == 3)
+                GameManager.SetLayerRecursively(w, 30);
+        }
     }
 }

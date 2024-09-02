@@ -20,6 +20,6 @@ public class RoomBrowserMenu : MonoBehaviour
         _keyboardCreateRoomHolder.SetActive(ReInput.controllers.GetLastActiveControllerType() != ControllerType.Joystick);
         _gamepadCreateRoomHolder.SetActive(ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick);
 
-        _nbPlayersHolder.SetActive(ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick && GameManager.instance.connection == GameManager.Connection.Local);
+        //_nbPlayersHolder.SetActive(ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick && GameManager.instance.connection == GameManager.Connection.Local);
     }
 }

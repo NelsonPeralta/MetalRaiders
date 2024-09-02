@@ -491,7 +491,7 @@ public class Player : Biped
             //if(GameManager.instance.pid_player_Dict.ContainsKey(value)) _lastPID = value;else _lastPID = 0;
             _lastPID = value;
 
-            try { playerThatKilledMe = GameManager.GetPlayerWithPhotonViewId(_lastPID); } catch { _lastPID = 0; }
+            try { playerThatKilledMe = GameManager.GetPlayerWithPhotonView(_lastPID); } catch { _lastPID = 0; }
         }
     }
 
@@ -527,7 +527,6 @@ public class Player : Biped
             //60  18.45
             //30  8.62
 
-            Debug.Log($"localPlayers.Keys.Count: {GameManager.instance.localPlayers.Keys.Count}");
             if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _defaultVerticalFov = 31.42f;
             else if (GameManager.instance.nbLocalPlayersPreset == 1) _defaultVerticalFov = 58.72f;
             else if (GameManager.instance.nbLocalPlayersPreset == 3)
@@ -694,10 +693,10 @@ public class Player : Biped
         OnPlayerIdAssigned -= OnPlayerIdAssigned_Delegate;
         OnPlayerIdAssigned += OnPlayerIdAssigned_Delegate;
 
-
-        Debug.Log($"Player Owner: {PV.Owner.NickName}");
+        print("Player Awake");
+        Debug.Log($"Spawning player at: {transform.position}");
         _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
-        if (_playerId >= 0) OnPlayerIdAssigned?.Invoke(this);
+        //if (_playerId >= 0) OnPlayerIdAssigned?.Invoke(this);
 
         _rb = GetComponent<Rigidbody>(); if (!PV.IsMine) _rb.isKinematic = true;
 
@@ -776,15 +775,6 @@ public class Player : Biped
 
 
 
-        {
-            if (isMine)
-            {
-                Dictionary<int, Player> t = new Dictionary<int, Player>(GameManager.instance.localPlayers);
-                if (!t.ContainsKey(controllerId))
-                    t.Add(controllerId, this);
-                GameManager.instance.localPlayers = t;
-            }
-        }
 
         originalSpawnPosition = transform.position;
         GameManager.instance.instantiation_position_Biped_Dict.Add(originalSpawnPosition, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
@@ -793,15 +783,7 @@ public class Player : Biped
         defaultVerticalFov = 0; GetComponent<PlayerController>().Descope();
 
         {
-            if (!GameManager.PlayerDictContainsPhotonId(photonId))
-            {
-                GameManager.instance.AddToPhotonToPlayerDict(photonId, this);
-            }
-            else
-            {
-                Debug.LogError($"pid_player_Dict ALREADY CONTAINS PHOTON ID {photonId}");
-            }
-            //CurrentRoomManager.instance.nbPlayersJoined++;
+            GameManager.instance.AddToPhotonToPlayerDict(photonId, this);
         }
 
         {
@@ -818,7 +800,7 @@ public class Player : Biped
 
 
 
-        playerArmorManager.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
+        //playerArmorManager.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId, rid);
 
     }
     private void Update()
@@ -938,13 +920,15 @@ public class Player : Biped
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         //this.impactPos = impactPos; this.impactDir = impactDir;
 
-        if ((GameManager.PlayerDictContainsPhotonId(source_pid) && GameManager.GetPlayerWithPhotonViewId(source_pid).isMine) ||
-            PhotonView.Find(source_pid).GetComponent<Actor>())
+        //if ((GameManager.PlayerDictContainsPhotonId(source_pid) && GameManager.GetPlayerWithPhotonView(source_pid).isMine) ||
+        //    PhotonView.Find(source_pid).GetComponent<Actor>())
+        if ((GameManager.GetPlayerWithPhotonView(source_pid).isMine) ||
+        PhotonView.Find(source_pid).GetComponent<Actor>())
         {
             DeathNature dsn = DeathNature.None;
             if (headshot)
                 dsn = DeathNature.Headshot;
-            if (headshot && GameManager.GetPlayerWithPhotonViewId(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
+            if (headshot && GameManager.GetPlayerWithPhotonView(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
                 dsn = DeathNature.Sniped;
             if (isGroin)
                 dsn = DeathNature.Groin;
@@ -1186,7 +1170,7 @@ public class Player : Biped
 
 
         if (GameManager.instance.connection == GameManager.Connection.Online)
-            ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId);
+            ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId, rid);
         else
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(rid);
 
@@ -1525,7 +1509,7 @@ public class Player : Biped
     void UpdatePlayerId_RPC(int nn)
     {
         _playerId = nn;
-        username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
+        username = CurrentRoomManager.GetPlayerDataWithId(_playerId, rid).playerExtendedPublicData.username;
     }
 
     [PunRPC]
@@ -1622,7 +1606,7 @@ public class Player : Biped
 
         try
         {
-            if (GameManager.PlayerDictContainsPhotonId(sourcePid))
+            //if (GameManager.PlayerDictContainsPhotonId(sourcePid))
             {
 
                 if (lastPID > 0)// If a source already damaged this player
@@ -1726,11 +1710,12 @@ public class Player : Biped
     void OnPlayerIdAssigned_Delegate(Player p)
     {
         print("OnPlayerIdAssigned_Delegate");
-        playerDataCell = CurrentRoomManager.GetPlayerDataWithId(_playerId);
-        username = CurrentRoomManager.GetPlayerDataWithId(_playerId).playerExtendedPublicData.username;
+        playerDataCell = CurrentRoomManager.GetPlayerDataWithId(_playerId, rid);
+        username = CurrentRoomManager.GetPlayerDataWithId(_playerId, rid).playerExtendedPublicData.username;
         foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.text.text = _username;
 
         playerUI.SetScoreWitnesses();
+        playerArmorManager.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId, rid);
     }
 
     [PunRPC]
@@ -1813,7 +1798,7 @@ public class Player : Biped
     {
         Debug.Log("AddPlayerKill_RPC");
 
-        playerThatKilledMe = GameManager.GetPlayerWithPhotonViewId(wpid); _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo; deathNature = (DeathNature)dni; _lastPID = wpid;
+        playerThatKilledMe = GameManager.GetPlayerWithPhotonView(wpid); _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo; deathNature = (DeathNature)dni; _lastPID = wpid;
 
         playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
 
@@ -1961,5 +1946,23 @@ public class Player : Biped
 
 
         ultraMergeCount = 0;
+    }
+
+
+    [PunRPC]
+    public void UpdateRewiredId(int i, bool send = true)
+    {
+        if (send && PV.IsMine)
+        {
+            PV.RPC("UpdateRewiredId", RpcTarget.AllViaServer, i, false);
+        }
+        else
+        {
+            playerController.rid = i;
+
+            if (playerId != -99999 && playerId != -99999)
+                OnPlayerIdAssigned?.Invoke(this);
+        }
+
     }
 }

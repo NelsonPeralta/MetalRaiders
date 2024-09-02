@@ -16,7 +16,7 @@ public class OddballWorldUiFollowPlayerCamera : MonoBehaviour
         {
             try
             {
-                _targetPlayer = GameManager.instance.localPlayers[ridTarget];
+                _targetPlayer = GameManager.GetLocalPlayer(ridTarget);
             }
             catch { }
         }

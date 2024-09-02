@@ -315,7 +315,7 @@ abstract public class Actor : Biped
     {
         print($"Actor Damage: {damageSource}");
         { // Hit Marker Handling
-            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+            Player p = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
 
             if (hitPoints <= damage)
                 p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
@@ -750,7 +750,7 @@ abstract public class Actor : Biped
         SoundManager.instance.PlayAudioClip(transform.position, SoundManager.instance.successfulPunch);
 
 
-        Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
         pp.PlayShootingEnemyClip();
         //pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 

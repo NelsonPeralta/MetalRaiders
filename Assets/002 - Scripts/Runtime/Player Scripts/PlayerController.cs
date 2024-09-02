@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviourPun
 
             player.movement.playerMotionTracker.minimapCamera.GetComponent<MotionTrackerCamera>().ChooseRenderTexture(value);
             print("rid 2");
-
+            rewiredPlayer = ReInput.players.GetPlayer(rid);
         }
     }
 
@@ -227,6 +227,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Awake()
     {
+        _rid = -99999;
         PV = GetComponent<PhotonView>();
         _mainCamParent = mainCam.transform.parent;
         _playerThirdPersonModelManager = GetComponent<PlayerThirdPersonModelManager>();
@@ -234,7 +235,6 @@ public class PlayerController : MonoBehaviourPun
     }
     public void Start()
     {
-        rewiredPlayer = ReInput.players.GetPlayer(rid);
 
         if (!PV.IsMine)
         {
@@ -1854,13 +1854,13 @@ public class PlayerController : MonoBehaviourPun
             {
                 foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                     if (p.team == (GameManager.Team)teamm && p.isMine)
-                        MarkerManager.instance.SpawnEnnSpotMarker(pointt, p.playerId);
+                        MarkerManager.instance.SpawnEnnSpotMarker(pointt, p.PV.ViewID);
             }
             else if (GameManager.instance.connection == GameManager.Connection.Local)
             {
-                foreach (Player p in GameManager.instance.localPlayers.Values)
+                foreach (Player p in GameManager.GetLocalPlayers())
                     if (p.team == (GameManager.Team)teamm && p.isMine)
-                        MarkerManager.instance.SpawnEnnSpotMarker(pointt, p.playerId);
+                        MarkerManager.instance.SpawnEnnSpotMarker(pointt, p.PV.ViewID);
             }
         }
         else
@@ -1871,15 +1871,15 @@ public class PlayerController : MonoBehaviourPun
                 foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                     if (p.team == (GameManager.Team)teamm && p.isMine)
                     {
-                        MarkerManager.instance.SpawnNormalMarker(pointt, p.playerId);
+                        MarkerManager.instance.SpawnNormalMarker(pointt, p.PV.ViewID);
                     }
             }
             else if (GameManager.instance.connection == GameManager.Connection.Local)
             {
-                foreach (Player p in GameManager.instance.localPlayers.Values)
+                foreach (Player p in GameManager.GetLocalPlayers())
                     if (p.team == (GameManager.Team)teamm && p.isMine)
                     {
-                        MarkerManager.instance.SpawnNormalMarker(pointt, p.playerId);
+                        MarkerManager.instance.SpawnNormalMarker(pointt, p.PV.ViewID);
                     }
             }
         }

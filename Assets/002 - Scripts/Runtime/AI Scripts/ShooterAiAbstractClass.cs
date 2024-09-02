@@ -567,7 +567,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
     public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
         { // Hit Marker Handling
-            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+            Player p = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
 
             if (isHeadshot)
             {

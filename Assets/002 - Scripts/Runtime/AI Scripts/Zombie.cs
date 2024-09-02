@@ -135,7 +135,7 @@ public class Zombie : AiAbstractClass
 
         int _damage = health - nh;
 
-        Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
         try
         {
             pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(_damage);

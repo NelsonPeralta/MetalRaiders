@@ -151,9 +151,6 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
     {
         _player = GetComponent<Player>();
         this.OnPlayerScoreChanged += this.OnKillsChange;
-        kills = 0;
-        deaths = 0;
-        headshots = 0;
 
         //if (GetComponent<Player>().isMine)
         //    team = GameManager.instance.onlineTeam;

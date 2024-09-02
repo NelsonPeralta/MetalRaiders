@@ -138,8 +138,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         try
         {
-            PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
-            PlayerMultiplayerMatchStats losingPlayerMS = GameManager.GetPlayerWithPhotonViewId(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
+            PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonView(struc.winningPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
+            PlayerMultiplayerMatchStats losingPlayerMS = GameManager.GetPlayerWithPhotonView(struc.losingPlayerPhotonId).GetComponent<PlayerMultiplayerMatchStats>();
 
             if (highestScore >= scoreToWin)
                 return;
@@ -230,7 +230,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         if (highestScore >= scoreToWin)
             return;
-        PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonViewId(pid).GetComponent<PlayerMultiplayerMatchStats>();
+        PlayerMultiplayerMatchStats winningPlayerMS = GameManager.GetPlayerWithPhotonView(pid).GetComponent<PlayerMultiplayerMatchStats>();
         winningPlayerMS.score++;
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
@@ -243,9 +243,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     blueTeamScore++;
 
 
-                foreach (Player p in GameManager.instance.localPlayers.Values)
+                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                 {
-                    p.allPlayerScripts.scoreboardManager.UpdateTeamScores();
+                    if (p.isMine)
+                        p.allPlayerScripts.scoreboardManager.UpdateTeamScores();
                 }
             }
         }

@@ -73,7 +73,8 @@ public class PlayerCamera : MonoBehaviour
 
     void Start()
     {
-        frontEndMouseSens = player.playerDataCell.sens;
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
         //transform.parent = null;
         player.OnPlayerRespawnEarly -= OnRespawnEarly_Delegate;
         player.OnPlayerRespawnEarly += OnRespawnEarly_Delegate;
@@ -137,7 +138,7 @@ public class PlayerCamera : MonoBehaviour
         {
             backEndMouseSens *= 0.65f;
 
-            if(player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
+            if (player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
                 backEndMouseSens *= 0.4f;
         }
 
@@ -246,6 +247,12 @@ public class PlayerCamera : MonoBehaviour
         }
 
         //WeaponSway();
+    }
+
+
+    void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
+    {
+        frontEndMouseSens = player.playerDataCell.sens;
     }
 
     float HorizontalSway()

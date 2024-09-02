@@ -8,8 +8,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ScriptObjPlayerData", menuName = "ScriptableObjects/PlayerData", order = 10)]
 public class ScriptObjPlayerData : ScriptableObject
 {
-    [SerializeField] bool _occupied;
-    [SerializeField] int _photonRoomIndex;
+    [SerializeField] bool _occupied, _local;
+    [SerializeField] int _photonRoomIndex, _rewiredIndex;
     [SerializeField] GameManager.Team _team;
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
     [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
@@ -48,7 +48,9 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public string cardsFound { get { return _cardsFound; } }
 
-    public bool occupied { get { return _occupied; } set { _occupied = value; } }
+    public bool occupied { get { return _occupied; } set { _occupied = value; Debug.Log($"Occupied: {occupied}"); } }
+    public bool local { get { return _local; } set { _local = value; } }
+    public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
     public PlayerCurrentGameScore playerCurrentGameScore
     {

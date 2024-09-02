@@ -488,6 +488,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void CreateRoom(string roomNam, RoomOptions ro, TypedLobby tl = null)
     {
+
+        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", int.Parse(nbLocalPlayersText.text) } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(h);
+
+
         CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Clear();
         CurrentRoomManager.instance.expectedNbPlayers = 0;
         CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = 9;
@@ -716,8 +721,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         GameManager.StopBeeps();
     }
 
-    public void JoinRoom(RoomInfo info)
+    public void JoinRoomPlateBtn(RoomInfo info)
     {
+        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "localPlayerCount", int.Parse(nbLocalPlayersText.text) } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(h);
+
+
         PhotonNetwork.JoinRoom(info.Name);
         MenuManager.Instance.OpenLoadingMenu("Joining Room...");
     }
@@ -999,10 +1008,35 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
             foreach (Photon.Realtime.Player player in newListPlayers)
+            {
+                print($"Player {player.NickName} has {(int)player.CustomProperties["localPlayerCount"] - 1} invites");
                 Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player, false);
 
-            var listPlayersDiff = newListPlayers.Except(_previousListOfPlayersInRoom).ToList();
-            Debug.Log($"{listPlayersDiff[0].NickName} Joined room");
+
+
+                // Online Splitscreen
+                if ((int)player.CustomProperties["localPlayerCount"] > 1)
+                {
+                    for (int i = 1; i < (int)player.CustomProperties["localPlayerCount"]; i++)
+                    {
+                        int ii = CurrentRoomManager.GetUnoccupiedDataCell();
+                        ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
+                        s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+                        s.occupied = true;
+                        s.rewiredId = i;
+                        s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
+                        s.playerExtendedPublicData.player_id = int.Parse(player.NickName);
+                        s.playerExtendedPublicData.username = $"{(string)player.CustomProperties["username"]} - {i}";
+                        s.playerExtendedPublicData.armor_data_string = "helmet1";
+                        s.playerExtendedPublicData.armor_color_palette = "grey";
+                        s.playerExtendedPublicData.level = 1;
+
+                        s.local = (PhotonNetwork.NickName == player.NickName);
+
+                        Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(s.playerExtendedPublicData.username, ii);
+                    }
+                }
+            }
         }
         else
         {
@@ -1010,6 +1044,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             for (int i = 0; i < int.Parse(_nbLocalPlayersInputed.text.ToString()); i++)
                 Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup($"player{i + 1}", i);
         }
+
     }
 
     public static void CreateLocalModePlayerDataCells()
@@ -1020,7 +1055,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
             CurrentRoomManager.GetLocalPlayerData(i).occupied = true;
+            CurrentRoomManager.GetLocalPlayerData(i).local = true;
             CurrentRoomManager.GetLocalPlayerData(i).photonRoomIndex = i + 1;
+            CurrentRoomManager.GetLocalPlayerData(i).rewiredId = i;
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.player_id = i;
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.username = $"player{i + 1}";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1";
@@ -1073,7 +1110,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void FindMasterClientAndToggleIcon()
     {
-        print("FindMasterClientAndToggleIcon");
         namePlatesParent.transform.GetChild(0).GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
 
 
@@ -1091,7 +1127,8 @@ public class Launcher : MonoBehaviourPunCallbacks
                             //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
                             if (child.GetComponent<PlayerNamePlate>().playerDataCell)
                             {
-                                if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName))
+                                if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName)
+                                    && child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0)
                                     child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
                                 else
                                     child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);

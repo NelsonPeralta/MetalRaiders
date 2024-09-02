@@ -116,7 +116,7 @@ public class ArmorSeller : InteractableObject
     public override void Trigger(int? pid)
     {
         Debug.Log($"Player {pid} bought armor");
-        Player p = GameManager.GetPlayerWithPhotonViewId((int)pid);
+        Player p = GameManager.GetPlayerWithPhotonView((int)pid);
         Debug.Log($"Player {p.playerId} bought armor");
 
         p.hasArmor = true;

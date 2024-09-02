@@ -59,6 +59,8 @@ public partial class WebManager
 
 
                     GameManager.instance.playerDataRetrieved = true;
+                    CurrentRoomManager.instance.playerDataCells[0].occupied = true;
+                    CurrentRoomManager.instance.playerDataCells[0].local = true;
                 }
                 catch (Exception e)
                 {
@@ -109,7 +111,7 @@ public partial class WebManager
 
                 try
                 {
-                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
+                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id, 0);
                     if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                     {
                         playerNamePlateInstance.playerDataCell.team = GameManager.Team.Red;
@@ -207,7 +209,7 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id);
+                    pli.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id, 0);
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 

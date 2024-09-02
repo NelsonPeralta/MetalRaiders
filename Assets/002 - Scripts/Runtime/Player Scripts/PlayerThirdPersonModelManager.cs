@@ -48,6 +48,20 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     }
     private void Start()
     {
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
+    }
+
+    void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
+    {
+        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Rifle", false);
+        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
+
+        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
+    }
+
+    void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
+    {
         Scene currentScene = SceneManager.GetActiveScene();
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
@@ -117,13 +131,5 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                 lw.ttl = 99999;
             }
         }
-    }
-
-    void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
-    {
-        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Rifle", false);
-        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
-
-        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
     }
 }

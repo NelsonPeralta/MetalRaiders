@@ -81,14 +81,14 @@ public class MarkerManager : MonoBehaviour
     }
 
 
-    public void SpawnNormalMarker(Vector3 pos, int player_id)
+    public void SpawnNormalMarker(Vector3 pos, int playerPhotonView)
     {
         foreach (Marker obj in instance._markers)
             if (!obj.gameObject.activeSelf)
             {
                 obj.transform.position = pos;
-                obj.lookAtThisTrans = GameManager.GetPlayerWithId(player_id).transform;
-                ChangeLayer(obj.gameObject, GameManager.GetPlayerWithId(player_id).rid);
+                obj.lookAtThisTrans = GameManager.GetPlayerWithIdAndRewId(playerPhotonView).transform;
+                ChangeLayer(obj.gameObject, GameManager.GetPlayerWithIdAndRewId(playerPhotonView).rid);
                 obj.gameObject.SetActive(true);
                 StartCoroutine(DisableObjectAfterTime(obj.gameObject, 4));
                 break;
@@ -102,8 +102,8 @@ public class MarkerManager : MonoBehaviour
             if (!obj.gameObject.activeSelf)
             {
                 obj.transform.position = pos;
-                obj.lookAtThisTrans = GameManager.GetPlayerWithId(player_id).transform;
-                ChangeLayer(obj.gameObject, GameManager.GetPlayerWithId(player_id).rid);
+                obj.lookAtThisTrans = GameManager.GetPlayerWithIdAndRewId(player_id).transform;
+                ChangeLayer(obj.gameObject, GameManager.GetPlayerWithIdAndRewId(player_id).rid);
                 obj.gameObject.SetActive(true);
                 StartCoroutine(DisableObjectAfterTime(obj.gameObject, 4));
                 break;

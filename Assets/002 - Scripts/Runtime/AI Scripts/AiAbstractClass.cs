@@ -578,7 +578,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         Debug.Log("GetRandomPlayerTransformSlow_Coroutine");
         try
         {
-            targetPlayer = GameManager.GetPlayerWithPhotonViewId(FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId()).transform;
+            targetPlayer = GameManager.GetPlayerWithPhotonView(FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId()).transform;
         }
         catch { targetPlayer = null; }
         //int pid = SwarmManager.instance.GetRandomPlayerTransform().GetComponent<PhotonView>().ViewID;
@@ -658,7 +658,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false)
     {
         { // Hit Marker Handling
-            Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+            Player p = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
 
             if (isHeadshot)
             {

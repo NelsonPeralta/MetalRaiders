@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return GetComponent<CurrentRoomManager>().gameStarted; }
     }
 
-    public Dictionary<int, Player> localPlayers = new Dictionary<int, Player>();
+    List<Player> _allPlayers = new List<Player>();
 
     [SerializeField] Connection _connection;
     [SerializeField] Photon.Realtime.ClientState _photonNetworkClientState;
@@ -297,7 +297,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] RagdollPool _ragdollPoolPrefab;
     [SerializeField] GrenadePool _grenadePoolPrefab;
     [SerializeField] ActorAddonsPool _actorAddonsPoolPrefab;
-    [SerializeField] Dictionary<int, Player> _pid_player_Dict = new Dictionary<int, Player>();
     [SerializeField] Dictionary<Vector3, Biped> _orSpPos_Biped_Dict = new Dictionary<Vector3, Biped>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
     [SerializeField] Dictionary<string, PlayerDatabaseAdaptor> _roomPlayerData = new Dictionary<string, PlayerDatabaseAdaptor>();
@@ -438,6 +437,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        _allPlayers = new List<Player>();
+
         string[] names = QualitySettings.names;
         for (int i = 0; i < names.Length; i++)
         {
@@ -465,7 +466,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
 
-        try { instance.localPlayers.Clear(); } catch { }
 
         //try { FindObjectOfType<GameTime>().timeRemaining = 0; }
         //catch (Exception e) { Debug.LogWarning(e.Message); }
@@ -711,12 +711,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            if (instance.localPlayers.Count == 1 && instance._pid_player_Dict.Count == 1)
-                Debug.Log("Alpha0");
-        }
-
         //if (Input.GetKeyDown(KeyCode.Alpha6))
         //    SendReport();
 
@@ -784,42 +778,43 @@ public class GameManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(o);
 
 
-        for (int i = 0; i < nbLocalPlayersPreset; i++)
+        for (int i = 0; i < CurrentRoomManager.instance.playerDataCells.Count; i++)
         {
-            Debug.Log($"SpawnPlayers_Coroutine {i}");
-
-            (Transform, bool) spawnpoint = (null, false);
-
-            //if (GameManager.instance.connection == Connection.Local)
-            //    do { spawnpoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint(); } while (_orSpPts.Contains(spawnpoint.Item1.position));
-            //else
-            //    spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex - 1), false);
-            //_orSpPts.Add(spawnpoint.Item1.position);
-
-
-
-            if (GameManager.instance.connection == Connection.Local)
-                spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(i), false);
-            else
-                spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex - 1), false);
-
-
-
-            Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spawnpoint.Item1.position + new Vector3(0, 2 + ((WebManager.webManagerInstance.pda.id) * 0.0001f), 0 + (i * 0.0001f)), spawnpoint.Item1.rotation).GetComponent<Player>();
-
-            player.GetComponent<PlayerController>().rid = i;
-
-            player.ChangePlayerIdLocalMode(i);
-
-
-            Debug.Log($"SpawnPlayers_Coroutine {i} {player}");
-            if (i == 0)
+            if (CurrentRoomManager.instance.playerDataCells[i].local)
             {
-                instance._rootPlayer = player;
-                _rootPlayer = player;
+                Debug.Log($"SpawnPlayers_Coroutine {i} {CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex} {CurrentRoomManager.instance.playerDataCells[i].rewiredId}");
+
+                (Transform, bool) spawnpoint = (null, false);
+
+                if (GameManager.instance.connection == Connection.Local)
+                    spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(i), false);
+                else
+                {
+                    spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex - 1), false);
+
+                }
+
+                // Do not use spawn position for authority. It is not accurate due to it being a float type
+                Vector3 sp = spawnpoint.Item1.position;
+                //print($"Spawning player at: {sp} + {new Vector3((float)CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex / 10, 2, (float)CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex / 10)}");
+                sp = sp + new Vector3((float)CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex / 10, 2, (float)CurrentRoomManager.instance.playerDataCells[i].rewiredId / 10);
+                //print($"Spawning player at: {sp}");
+                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), sp, spawnpoint.Item1.rotation).GetComponent<Player>();
+
+                player.UpdateRewiredId(CurrentRoomManager.instance.playerDataCells[i].rewiredId);
+
+                player.ChangePlayerIdLocalMode(i);
+
+
+                Debug.Log($"SpawnPlayers_Coroutine {i} {player}");
+                if (i == 0)
+                {
+                    instance._rootPlayer = player;
+                    _rootPlayer = player;
+                }
+                //player.originalSpawnPosition = spawnpoint.position;
+                //GameManager.instance.orSpPos_Biped_Dict.Add(spawnpoint.position, player); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
             }
-            //player.originalSpawnPosition = spawnpoint.position;
-            //GameManager.instance.orSpPos_Biped_Dict.Add(spawnpoint.position, player); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
         }
     }
 
@@ -834,29 +829,45 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetLocalPlayer(int controllerId)
     {
-        return instance.localPlayers[controllerId];
+        foreach (Player p in instance._allPlayers)
+            if (p.controllerId == controllerId)
+                return p;
+        return null;
+    }
+
+    public static List<Player> GetLocalPlayers()
+    {
+        return instance._allPlayers.Where(item => item.isMine).ToList();
     }
 
     public static Player GetRootPlayer()
     {
-        return instance._rootPlayer;
+        return instance._allPlayers.Where(item => item.rid == 0 && item.isMine).FirstOrDefault();
     }
 
-    public static Player GetPlayerWithPhotonViewId(int pid)
+    public static Player GetPlayerWithPhotonView(int pid)
     {
-        return instance._pid_player_Dict[pid];
+        return instance._allPlayers.Where(item => item.photonId == pid).FirstOrDefault();
     }
 
-    public static Player GetPlayerWithId(int _player_id)
+
+
+    public static Player GetPlayerWithIdAndRewId(int playerPhotonView)
     {
-        foreach (Player player in instance._pid_player_Dict.Values) { if (player != null && player.playerId == _player_id) return player; }
-        return null;
+        return instance._allPlayers.Where(item => item.photonId == playerPhotonView).FirstOrDefault();
     }
 
-    public static bool PlayerDictContainsPhotonId(int k)
-    {
-        return instance._pid_player_Dict.ContainsKey(k);
-    }
+
+
+
+    //public static bool PlayerDictContainsPhotonId(int k)
+    //{
+    //    foreach (Player p in instance._allPlayers)
+    //        if (p.controllerId == k) return true;
+
+    //    return false;
+    //    //return instance._pid_player_Dict.ContainsKey(k);
+    //}
 
     public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null)
     {
@@ -1231,10 +1242,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
             if (SceneManager.GetActiveScene().buildIndex > 0)
-                foreach (Player p in instance.localPlayers.Values)
-                {
-                    p.playerCamera.frontEndMouseSens = sens;
-                }
+            {
+                print("FIX THIS");
+                //foreach (Player p in instance.localPlayers.Values)
+                //{
+                //    p.playerCamera.frontEndMouseSens = sens;
+                //}
+            }
         }
     }
 
@@ -1257,25 +1271,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         GameManager.instance.ClearPhotonIdToPlayerDict();
         foreach (Player p in FindObjectsOfType<Player>())
             GameManager.instance.AddToPhotonToPlayerDict(p.photonId, p);
-        print($"AddToPhotonToPlayerDict {_pid_player_Dict.Count}");
 
     }
 
 
     public void AddToPhotonToPlayerDict(int photonId, Player p)
     {
-        _pid_player_Dict.Add(photonId, p);
-        print($"AddToPhotonToPlayerDict {_pid_player_Dict.Count}");
+        _allPlayers.Add(p);
+        //_pid_player_Dict.Add(photonId, p);
     }
 
     public List<Player> GetAllPhotonPlayers()
     {
-        return _pid_player_Dict.Values.ToList();
+        return _allPlayers;
     }
 
     public void ClearPhotonIdToPlayerDict()
     {
-        _pid_player_Dict.Clear();
+        _allPlayers.Clear();
+        //_pid_player_Dict.Clear();
     }
 
     public void CreateTeamsBecausePlayerJoined()
@@ -1290,7 +1304,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 if ((kvp.Key % 2 == 0) && gameMode != GameMode.Coop)
                     t = Team.Blue;
 
-                CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName)).team = t;
+                CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName), 0).team = t;
 
                 _teamDict.Add(kvp.Value.NickName, (int)t);
 

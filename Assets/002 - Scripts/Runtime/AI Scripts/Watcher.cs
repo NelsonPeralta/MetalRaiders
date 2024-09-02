@@ -198,7 +198,7 @@ public class Watcher : AiAbstractClass
         if (isDead)
             return;
 
-        Player pp = GameManager.GetPlayerWithPhotonViewId(playerWhoShotPDI);
+        Player pp = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
         pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(damage);
 
         health -= damage;

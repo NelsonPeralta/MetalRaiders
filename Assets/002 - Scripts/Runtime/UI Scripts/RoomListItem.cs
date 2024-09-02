@@ -22,6 +22,6 @@ public class RoomListItem : MonoBehaviour
     public void OnClick()
     {
         GameManager.PlayClickSound();
-        Launcher.instance.JoinRoom(info);
+        Launcher.instance.JoinRoomPlateBtn(info);
     }
 }
