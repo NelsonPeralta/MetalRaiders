@@ -845,11 +845,15 @@ public class Player : Biped
     // public functions
     #region
 
+    public void TriggerAllPlayersJoinedBehaviour()
+    {
+        UpdateRewiredId(rid);
+    }
+
+
     public void TriggerGameStartBehaviour()
     {
         Debug.Log("TriggerGameStartBehaviour");
-
-        UpdateRewiredId(rid);
 
 
         if (rid == 0)
@@ -1701,13 +1705,13 @@ public class Player : Biped
 
     public void ChangePlayerIdLocalMode(int id) // Only works when no internet connection
     {
-        if (GameManager.instance.connection == GameManager.Connection.Local)
-        {
-            print("ChangePlayerIdLocalMode 1");
-            _playerId = id;
-            OnPlayerIdAssigned?.Invoke(this);
-            print("ChangePlayerIdLocalMode 2");
-        }
+        //if (GameManager.instance.connection == GameManager.Connection.Local)
+        //{
+        //    print("ChangePlayerIdLocalMode 1");
+        //    _playerId = id;
+        //    //OnPlayerIdAssigned?.Invoke(this);
+        //    print("ChangePlayerIdLocalMode 2");
+        //}
     }
 
 
@@ -1964,9 +1968,12 @@ public class Player : Biped
         {
             print($"UpdateRewiredId: {playerId} {i} {name}"); ;
             playerController.rid = i;
+            NetworkGameManager.instance.AddPlayerSetCount();
 
             if (playerId != -99999 && playerController.rid != -99999)
+            {
                 OnPlayerIdAssigned?.Invoke(this);
+            }
         }
 
     }

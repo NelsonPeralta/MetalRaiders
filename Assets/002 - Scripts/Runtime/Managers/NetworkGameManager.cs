@@ -256,6 +256,25 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     }
 
+
+
+    [PunRPC]
+    public void AddPlayerSetCount(bool caller = true)
+    {
+        if (caller)
+        {
+            _pv.RPC("AddPlayerSetCount", RpcTarget.AllViaServer, false);
+        }
+        else if (!caller)
+        {
+            CurrentRoomManager.instance.nbPlayersSet++;
+        }
+
+    }
+
+
+
+
     [PunRPC]
     public void AddPlayerLoadedScene(bool caller = true)
     {

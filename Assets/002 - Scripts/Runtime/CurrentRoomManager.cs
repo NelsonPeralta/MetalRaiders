@@ -158,9 +158,27 @@ public class CurrentRoomManager : MonoBehaviour
             _nbPlayersJoined = value;
 
             if (nbPlayersJoined == expectedNbPlayers)
+                foreach(Player p in GameManager.instance.GetAllPhotonPlayers())
+                    if(p.isMine)p.TriggerAllPlayersJoinedBehaviour();
+        }
+    }
+
+    public int nbPlayersSet
+    {
+        get { return _nbPlayersSet; }
+        set
+        {
+            _nbPlayersSet = value;
+
+            if (_nbPlayersSet == expectedNbPlayers && nbPlayersJoined == expectedNbPlayers)
                 allPlayersJoined = true;
         }
     }
+
+
+
+
+
 
     public bool allPlayersJoined
     {
@@ -338,7 +356,7 @@ public class CurrentRoomManager : MonoBehaviour
     [SerializeField] bool _matchSettingsSet, _gameStarted, _gameOver;
     [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9, _rpcCooldown;
 
-    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersJoined, _vetos;
+    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersJoined, _nbPlayersSet, _vetos;
 
     [SerializeField] RoomType _roomType;
 
@@ -966,7 +984,7 @@ public class CurrentRoomManager : MonoBehaviour
     }
     public static ScriptObjPlayerData GetDataCellWithDatabaseId(int playerId, int rewiredId)
     {
-        //Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
+        Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
         //foreach (ScriptObjPlayerData s in instance.playerDataCells)
         //    if (s.occupied)
         //        print($"{s.playerExtendedPublicData.player_id} {s.rewiredId}");

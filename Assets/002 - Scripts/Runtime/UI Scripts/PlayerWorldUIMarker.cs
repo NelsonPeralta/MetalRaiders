@@ -61,6 +61,8 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
     private void Update()
     {
+        if (!CurrentRoomManager.instance.gameStarted) return;
+
         if (!_targetPlayer)
         {
             try

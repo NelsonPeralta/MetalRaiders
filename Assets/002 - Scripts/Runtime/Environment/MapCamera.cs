@@ -83,6 +83,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
         _loadingText.text += $"\nMap Loaded: {CurrentRoomManager.instance.mapIsReady}";
         _loadingText.text += $"\nPlayers Loaded Map: {CurrentRoomManager.instance.playersLoadedScene}/{CurrentRoomManager.instance.expectedNbPlayers}";
         _loadingText.text += $"\nPlayers Spawned: {CurrentRoomManager.instance.nbPlayersJoined}/{CurrentRoomManager.instance.expectedNbPlayers}";
+        _loadingText.text += $"\nPlayers Set: {CurrentRoomManager.instance.nbPlayersSet}/{CurrentRoomManager.instance.nbPlayersSet}";
         _loadingText.text += $"\nAll Players Joined: {CurrentRoomManager.instance.allPlayersJoined}";
         _loadingText.text += $"\nReady: {CurrentRoomManager.instance.gameIsReady}";
 
