@@ -158,8 +158,12 @@ public class CurrentRoomManager : MonoBehaviour
             _nbPlayersJoined = value;
 
             if (nbPlayersJoined == expectedNbPlayers)
-                foreach(Player p in GameManager.instance.GetAllPhotonPlayers())
-                    if(p.isMine)p.TriggerAllPlayersJoinedBehaviour();
+                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+                    if (p.isMine)
+                    {
+                        print($"nbPlayersJoined {p.name}");
+                        p.TriggerAllPlayersJoinedBehaviour();
+                    }
         }
     }
 
