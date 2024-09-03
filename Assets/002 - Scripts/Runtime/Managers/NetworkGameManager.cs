@@ -907,7 +907,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             GameManager.instance.oddballSkull.DisableOddball();
             GameManager.instance.oddballSkull.PlayBallTakenClip();
-            GameManager.GetPlayerWithIdAndRewId(playerId).playerInventory.EquipOddball();
+            GameManager.GetPlayerWithPhotonView(playerId).playerInventory.EquipOddball();
         }
     }
 

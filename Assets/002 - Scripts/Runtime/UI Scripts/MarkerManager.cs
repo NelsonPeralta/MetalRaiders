@@ -87,8 +87,8 @@ public class MarkerManager : MonoBehaviour
             if (!obj.gameObject.activeSelf)
             {
                 obj.transform.position = pos;
-                obj.lookAtThisTrans = GameManager.GetPlayerWithIdAndRewId(playerPhotonView).transform;
-                ChangeLayer(obj.gameObject, GameManager.GetPlayerWithIdAndRewId(playerPhotonView).rid);
+                obj.lookAtThisTrans = GameManager.GetPlayerWithPhotonView(playerPhotonView).transform;
+                ChangeLayer(obj.gameObject, GameManager.GetPlayerWithPhotonView(playerPhotonView).rid);
                 obj.gameObject.SetActive(true);
                 StartCoroutine(DisableObjectAfterTime(obj.gameObject, 4));
                 break;
@@ -102,8 +102,8 @@ public class MarkerManager : MonoBehaviour
             if (!obj.gameObject.activeSelf)
             {
                 obj.transform.position = pos;
-                obj.lookAtThisTrans = GameManager.GetPlayerWithIdAndRewId(player_id).transform;
-                ChangeLayer(obj.gameObject, GameManager.GetPlayerWithIdAndRewId(player_id).rid);
+                obj.lookAtThisTrans = GameManager.GetPlayerWithPhotonView(player_id).transform;
+                ChangeLayer(obj.gameObject, GameManager.GetPlayerWithPhotonView(player_id).rid);
                 obj.gameObject.SetActive(true);
                 StartCoroutine(DisableObjectAfterTime(obj.gameObject, 4));
                 break;
