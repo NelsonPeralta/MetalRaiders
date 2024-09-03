@@ -1304,7 +1304,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 if ((kvp.Key % 2 == 0) && gameMode != GameMode.Coop)
                     t = Team.Blue;
 
-                CurrentRoomManager.GetPlayerDataWithId(int.Parse(kvp.Value.NickName), 0).team = t;
+                CurrentRoomManager.GetDataCellWithDatabaseId(int.Parse(kvp.Value.NickName), 0).team = t;
 
                 _teamDict.Add(kvp.Value.NickName, (int)t);
 

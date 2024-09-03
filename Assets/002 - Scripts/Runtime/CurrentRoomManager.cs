@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Progress;
 
 public class CurrentRoomManager : MonoBehaviour
 {
@@ -963,10 +964,15 @@ public class CurrentRoomManager : MonoBehaviour
 
         return null;
     }
-    public static ScriptObjPlayerData GetPlayerDataWithId(int playerId, int rewiredId)
+    public static ScriptObjPlayerData GetDataCellWithDatabaseId(int playerId, int rewiredId)
     {
         Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
-        return instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId && item.rewiredId == rewiredId);
+        foreach (ScriptObjPlayerData s in instance.playerDataCells)
+            if (s.occupied)
+                print($"{s.playerExtendedPublicData.player_id} {s.rewiredId}");
+
+        return CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId && item.rewiredId == rewiredId);
+        //return instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId && item.rewiredId == rewiredId);
     }
 
     public static ScriptObjPlayerData GetLocalPlayerData(int _id)

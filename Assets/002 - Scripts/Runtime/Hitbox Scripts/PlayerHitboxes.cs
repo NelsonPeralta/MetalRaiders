@@ -7,6 +7,8 @@ public class PlayerHitboxes : Hitboxes
 {
     public void OnModelAssigned(PlayerThirdPersonModelManager playerThirdPersonModelManager)
     {
+        print("PlayerHitboxes OnModelAssigned");
+
         _hitboxes = GetComponentsInChildren<Hitbox>().ToList();
 
         foreach (PlayerHitbox playerHitbox in _hitboxes)

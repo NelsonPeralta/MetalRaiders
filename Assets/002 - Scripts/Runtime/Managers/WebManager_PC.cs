@@ -77,7 +77,7 @@ public partial class WebManager
 
     IEnumerator GetPlayerExtendedPublicData_Coroutine(int playerid, PlayerNamePlate playerNamePlateInstance = null)
     {
-        Debug.Log("GET PLAYER EXTENDED PUBLIC DATA");
+        Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA {playerNamePlateInstance}");
         // DISCLAIMER
         // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
 
@@ -111,7 +111,8 @@ public partial class WebManager
 
                 try
                 {
-                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id, 0);
+                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(pepd.player_id, 0);
+
                     if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                     {
                         playerNamePlateInstance.playerDataCell.team = GameManager.Team.Red;
@@ -209,7 +210,7 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(pepd.player_id, 0);
+                    pli.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(pepd.player_id, 0);
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 

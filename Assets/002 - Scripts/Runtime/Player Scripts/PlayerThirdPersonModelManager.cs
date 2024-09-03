@@ -93,7 +93,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                 //    humanModel.EnableSkinnedMeshes();
                 //}
 
-                OnModelAssigned?.Invoke(this);
+                //OnModelAssigned?.Invoke(this);
 
                 List<int> ignoreList = new List<int>();
                 ignoreList.Add(7); // 7 = Player Hitbox
@@ -121,6 +121,8 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                         }
                     }
 
+             
+                OnModelAssigned?.Invoke(this);
             }
             catch (System.Exception e) { Debug.LogException(e); }
 

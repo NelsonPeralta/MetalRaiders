@@ -140,7 +140,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             foreach (KeyValuePair<int, int> kvp in d)
             {
                 Debug.Log($"Player {kvp.Key} wants to change team: {(GameManager.Team)kvp.Value}");
-                CurrentRoomManager.GetPlayerDataWithId(kvp.Key, 0).team = (GameManager.Team)kvp.Value;
+                CurrentRoomManager.GetDataCellWithDatabaseId(kvp.Key, 0).team = (GameManager.Team)kvp.Value;
             }
             foreach (Transform child in Launcher.instance.namePlatesParent)
             {

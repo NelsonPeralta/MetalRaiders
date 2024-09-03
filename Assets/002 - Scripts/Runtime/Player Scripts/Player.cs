@@ -1170,7 +1170,7 @@ public class Player : Biped
 
 
         if (GameManager.instance.connection == GameManager.Connection.Online)
-            ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId, rid);
+            ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(playerId, rid);
         else
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(rid);
 
@@ -1509,7 +1509,7 @@ public class Player : Biped
     void UpdatePlayerId_RPC(int nn)
     {
         _playerId = nn;
-        username = CurrentRoomManager.GetPlayerDataWithId(_playerId, rid).playerExtendedPublicData.username;
+        username = CurrentRoomManager.GetDataCellWithDatabaseId(_playerId, rid).playerExtendedPublicData.username;
     }
 
     [PunRPC]
@@ -1710,12 +1710,12 @@ public class Player : Biped
     void OnPlayerIdAssigned_Delegate(Player p)
     {
         print("OnPlayerIdAssigned_Delegate");
-        playerDataCell = CurrentRoomManager.GetPlayerDataWithId(_playerId, rid);
-        username = CurrentRoomManager.GetPlayerDataWithId(_playerId, rid).playerExtendedPublicData.username;
+        playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(_playerId, rid);
+        username = CurrentRoomManager.GetDataCellWithDatabaseId(_playerId, rid).playerExtendedPublicData.username;
         foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.text.text = _username;
 
         playerUI.SetScoreWitnesses();
-        playerArmorManager.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId, rid);
+        playerArmorManager.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(playerId, rid);
     }
 
     [PunRPC]
@@ -1958,6 +1958,7 @@ public class Player : Biped
         }
         else
         {
+            print($"UpdateRewiredId: {playerId} {i} {name}"); ;
             playerController.rid = i;
 
             if (playerId != -99999 && playerId != -99999)

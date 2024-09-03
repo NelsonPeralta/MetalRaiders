@@ -50,7 +50,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public bool occupied { get { return _occupied; } set { _occupied = value; Debug.Log($"Occupied: {occupied}"); } }
     public bool local { get { return _local; } set { _local = value; } }
-    public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value; } }
+    public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value; Debug.Log($"Occupied: {rewiredId}"); } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
     public PlayerCurrentGameScore playerCurrentGameScore
     {
@@ -62,7 +62,8 @@ public class ScriptObjPlayerData : ScriptableObject
     {
         _playerCurrentGameScore = new PlayerCurrentGameScore();
         _photonRoomIndex = -999;
-        _occupied = false;
+        _occupied = _local = false;
+        _rewiredIndex = 0;
         _team = GameManager.Team.None;
         _playerExtendedPublicData = null;
         _cardsFound = "";
