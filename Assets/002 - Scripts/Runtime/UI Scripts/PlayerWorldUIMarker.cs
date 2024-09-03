@@ -16,8 +16,8 @@ public class PlayerWorldUIMarker : MonoBehaviour
             _seen = value;
             if (value) _seenCd = 0.2f;
 
-            _redMarker.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team != GameManager.GetRootPlayer().team)));
-            _text.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team != GameManager.GetRootPlayer().team)));
+            _redMarker.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team != GameManager.GetRootPlayer().team)));
+            _text.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team != GameManager.GetRootPlayer().team)));
         }
     }
 
@@ -26,7 +26,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
     public TMP_Text text { get { return _text; } }
     public GameObject holder { get { return _holder; } }
 
-    [SerializeField] Player _player;
+    [SerializeField] Player _rootPlayer;
     [SerializeField] int _controllerTarget;
     [SerializeField] Player _targetPlayer;
 
@@ -44,8 +44,10 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
     private void Awake()
     {
-        _player.OnPlayerTeamChanged += OnPlayerTeamDelegate;
-        _player.OnPlayerHitPointsChanged += OnPlayerHitPointsChanged;
+        _rootPlayer = transform.root.GetComponent<Player>();
+
+        _rootPlayer.OnPlayerTeamChanged += OnPlayerTeamDelegate;
+        _rootPlayer.OnPlayerHitPointsChanged += OnPlayerHitPointsChanged;
 
         _redMarker.gameObject.SetActive(false);
         _greenMarker.gameObject.SetActive(false);
@@ -90,14 +92,14 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
         if (_targetPlayer)
         {
-            _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team == _targetPlayer.team);
+            _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _targetPlayer.team);
 
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
-                if (_player.team == _targetPlayer.team) _text.gameObject.SetActive(true);
+                if (_rootPlayer.team == _targetPlayer.team) _text.gameObject.SetActive(true);
 
-                if ((_player.isDead || _player.isRespawning) && _player.team == _targetPlayer.team) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
+                if ((_rootPlayer.isDead || _rootPlayer.isRespawning) && _rootPlayer.team == _targetPlayer.team) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
             }
             else
             {
@@ -108,24 +110,24 @@ public class PlayerWorldUIMarker : MonoBehaviour
         if (_targetPlayer)
         {
             //print($"PlayerWorldUIMarker {name} {_targetPlayer.isDead} {_targetPlayer.isRespawning} {_player.isDead} {_player.isRespawning}");
-            if (_targetPlayer.isDead || _targetPlayer.isRespawning || _player.isDead || _player.isRespawning)
+            if (_targetPlayer.isDead || _targetPlayer.isRespawning || _rootPlayer.isDead || _rootPlayer.isRespawning)
                 holder.SetActive(false);
             else
                 holder.SetActive(true);
         }
 
 
-        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _player.team == _targetPlayer.team)
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _targetPlayer.team)
         {
-            if (!_player.isDead && !_player.isRespawning)
+            if (!_rootPlayer.isDead && !_rootPlayer.isRespawning)
             {
-                if (_player.isTakingDamage)
+                if (_rootPlayer.isTakingDamage)
                 {
                     //_greenMarkerImage.color = new Color(255, 110, 0, 255);
                     ColorUtility.TryParseHtmlString(GameManager.colorDict["orange"], out _tCol);
                     _greenMarkerImage.color = _tCol;
                 }
-                else if (_player.playerController.isCurrentlyShootingForMotionTracker)
+                else if (_rootPlayer.playerController.isCurrentlyShootingForMotionTracker)
                 {
                     _greenMarkerImage.color = Color.yellow;
                 }
