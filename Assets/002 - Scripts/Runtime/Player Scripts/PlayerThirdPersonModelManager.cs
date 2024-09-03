@@ -26,7 +26,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     public List<GameObject> feet = new List<GameObject>();
 
     [SerializeField] SkinnedMeshRenderer skinnedMeshRenderer;
-    [SerializeField] Mesh undersuitMesh;
+    [SerializeField] GameObject undersuitMesh;
     [SerializeField] GameObject soldierMeshObj;
 
     private void OnEnable()
@@ -36,6 +36,10 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     private void Awake()
     {
+        undersuitMesh.layer = 5;
+
+
+
         OnModelAssigned -= GetComponent<PlayerHitboxes>().OnModelAssigned;
         OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
         playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_Delegate;
@@ -121,7 +125,25 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
                         }
                     }
 
-             
+
+                undersuitMesh.layer = 0;
+
+                if (player.PV.IsMine)
+                {
+                    int l = 0;
+
+                    if (player.rid == 0)
+                        l = 25;
+                    else if (player.rid == 1)
+                        l = 27;
+                    else if (player.rid == 2)
+                        l = 29;
+                    else if (player.rid == 3)
+                        l = 31;
+                    undersuitMesh.layer = l;
+                }
+
+
                 OnModelAssigned?.Invoke(this);
             }
             catch (System.Exception e) { Debug.LogException(e); }

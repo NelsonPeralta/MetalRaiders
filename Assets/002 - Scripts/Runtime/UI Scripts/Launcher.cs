@@ -689,6 +689,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
         NetworkGameManager.instance.StartGameButton();
+
         //StartCoroutine(LoadLevel_Coroutine());
 
     }

@@ -966,10 +966,10 @@ public class CurrentRoomManager : MonoBehaviour
     }
     public static ScriptObjPlayerData GetDataCellWithDatabaseId(int playerId, int rewiredId)
     {
-        Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
-        foreach (ScriptObjPlayerData s in instance.playerDataCells)
-            if (s.occupied)
-                print($"{s.playerExtendedPublicData.player_id} {s.rewiredId}");
+        //Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
+        //foreach (ScriptObjPlayerData s in instance.playerDataCells)
+        //    if (s.occupied)
+        //        print($"{s.playerExtendedPublicData.player_id} {s.rewiredId}");
 
         return CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId && item.rewiredId == rewiredId);
         //return instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId && item.rewiredId == rewiredId);

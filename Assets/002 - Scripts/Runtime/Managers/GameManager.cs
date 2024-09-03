@@ -1295,6 +1295,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void CreateTeamsBecausePlayerJoined()
     {
+        print("CreateTeamsBecausePlayerJoined");
+
         Dictionary<string, int> _teamDict = new Dictionary<string, int>();
 
         foreach (KeyValuePair<int, Photon.Realtime.Player> kvp in PhotonNetwork.CurrentRoom.Players)
@@ -1305,11 +1307,19 @@ public class GameManager : MonoBehaviourPunCallbacks
                 if ((kvp.Key % 2 == 0) && gameMode != GameMode.Coop)
                     t = Team.Blue;
 
-                CurrentRoomManager.GetDataCellWithDatabaseId(int.Parse(kvp.Value.NickName), 0).team = t;
+                foreach (ScriptObjPlayerData pdc in CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied))
+                {
+                    if (pdc.playerExtendedPublicData.player_id.Equals(int.Parse(kvp.Value.NickName)))
+                    {
+                        pdc.team = t;
+                        //CurrentRoomManager.GetDataCellWithDatabaseId(int.Parse(kvp.Value.NickName), 0).team = t;
+                    }
+                }
 
-                _teamDict.Add(kvp.Value.NickName, (int)t);
 
-                Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
+                //_teamDict.Add(kvp.Value.NickName, (int)t);
+
+                //Debug.Log($"Player {kvp.Value.NickName} is part of {t} team");
             }
 
         UpdateNamePlateColorsAndSort();

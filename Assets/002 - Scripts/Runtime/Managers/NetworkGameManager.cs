@@ -140,7 +140,20 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             foreach (KeyValuePair<int, int> kvp in d)
             {
                 Debug.Log($"Player {kvp.Key} wants to change team: {(GameManager.Team)kvp.Value}");
-                CurrentRoomManager.GetDataCellWithDatabaseId(kvp.Key, 0).team = (GameManager.Team)kvp.Value;
+
+
+
+                foreach (ScriptObjPlayerData pdc in CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied))
+                {
+                    if (pdc.playerExtendedPublicData.player_id.Equals(kvp.Key))
+                    {
+                        pdc.team = (GameManager.Team)kvp.Value;
+                        //CurrentRoomManager.GetDataCellWithDatabaseId(int.Parse(kvp.Value.NickName), 0).team = t;
+                    }
+                }
+
+
+                //CurrentRoomManager.GetDataCellWithDatabaseId(kvp.Key, 0).team = (GameManager.Team)kvp.Value;
             }
             foreach (Transform child in Launcher.instance.namePlatesParent)
             {
@@ -973,7 +986,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     public void StartGameButton(bool caller = true)
     {
         if (caller && PhotonNetwork.IsMasterClient)
+        {
             instance._pv.RPC("StartGameButton", RpcTarget.AllViaServer, false);
+        }
         else if (!caller)
         {
             Launcher.instance.gameCountdownText.gameObject.SetActive(true);
