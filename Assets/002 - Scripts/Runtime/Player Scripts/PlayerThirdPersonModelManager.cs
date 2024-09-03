@@ -36,7 +36,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     private void Awake()
     {
-        undersuitMesh.layer = 5;
+        undersuitMesh.layer = 0;
 
 
 
