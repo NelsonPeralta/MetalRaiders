@@ -1968,13 +1968,13 @@ public class Player : Biped
         {
             print($"UpdateRewiredId: {playerId} {i} {name}"); ;
             playerController.rid = i;
-            NetworkGameManager.instance.AddPlayerSetCount();
 
             if (playerId != -99999 && playerController.rid != -99999)
             {
+                if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
+
                 OnPlayerIdAssigned?.Invoke(this);
             }
         }
-
     }
 }

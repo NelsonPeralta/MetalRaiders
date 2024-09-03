@@ -173,6 +173,7 @@ public class CurrentRoomManager : MonoBehaviour
         set
         {
             _nbPlayersSet = value;
+            print($"_nbPlayersSet {_nbPlayersSet}");
 
             if (_nbPlayersSet == expectedNbPlayers && nbPlayersJoined == expectedNbPlayers)
                 allPlayersJoined = true;
