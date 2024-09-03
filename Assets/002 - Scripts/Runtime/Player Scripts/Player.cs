@@ -848,6 +848,10 @@ public class Player : Biped
     public void TriggerGameStartBehaviour()
     {
         Debug.Log("TriggerGameStartBehaviour");
+
+        UpdateRewiredId(rid);
+
+
         if (rid == 0)
             audioListener.enabled = true;
 
@@ -1950,7 +1954,7 @@ public class Player : Biped
 
 
     [PunRPC]
-    public void UpdateRewiredId(int i, bool send = true)
+    void UpdateRewiredId(int i, bool send = true)
     {
         if (send && PV.IsMine)
         {
@@ -1961,7 +1965,7 @@ public class Player : Biped
             print($"UpdateRewiredId: {playerId} {i} {name}"); ;
             playerController.rid = i;
 
-            if (playerId != -99999 && playerId != -99999)
+            if (playerId != -99999 && playerController.rid != -99999)
                 OnPlayerIdAssigned?.Invoke(this);
         }
 

@@ -801,7 +801,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 //print($"Spawning player at: {sp}");
                 Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), sp, spawnpoint.Item1.rotation).GetComponent<Player>();
 
-                player.UpdateRewiredId(CurrentRoomManager.instance.playerDataCells[i].rewiredId);
+                player.playerController.rid = i;
+                //player.UpdateRewiredId(CurrentRoomManager.instance.playerDataCells[i].rewiredId);
 
                 player.ChangePlayerIdLocalMode(i);
 
