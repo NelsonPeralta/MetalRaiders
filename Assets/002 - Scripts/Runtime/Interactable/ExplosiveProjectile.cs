@@ -131,7 +131,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
                     GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
-                        NetworkGameManager.StickGrenadeOnPlayer(GrenadePool.instance.stickyGrenadePool.IndexOf(gameObject), collision.gameObject.transform.root.GetComponent<Player>().playerId, collision.contacts[0].point);
+                        NetworkGameManager.StickGrenadeOnPlayer(GrenadePool.instance.stickyGrenadePool.IndexOf(gameObject), collision.gameObject.transform.root.GetComponent<Player>().PV.ViewID, collision.contacts[0].point);
                     _stuckVfx.SetActive(true);
 
                 }
@@ -287,9 +287,9 @@ public class ExplosiveProjectile : MonoBehaviour
 
 
 
-    public void TriggerStuckBehaviour(int playerId, Vector3 gPos)
+    public void TriggerStuckBehaviour(int playerPhotonId, Vector3 gPos)
     {
-        Debug.Log($"TriggerStuckBehaviour. of player {playerId}. gPos {gPos}");
+        Debug.Log($"TriggerStuckBehaviour. of photon id {playerPhotonId}. gPos {gPos}");
         GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
@@ -298,7 +298,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
 
         gameObject.transform.position = gPos;
-        gameObject.transform.SetParent(GameManager.GetPlayerWithPhotonView(playerId).transform, true);
+        gameObject.transform.SetParent(GameManager.GetPlayerWithPhotonView(playerPhotonId).transform, true);
 
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().isKinematic = true;
@@ -310,6 +310,6 @@ public class ExplosiveProjectile : MonoBehaviour
         _stuckSfxAudioSource.Play();
 
 
-        GameManager.GetPlayerWithPhotonView(playerId).PlayStuckClip();
+        GameManager.GetPlayerWithPhotonView(playerPhotonId).PlayStuckClip();
     }
 }
