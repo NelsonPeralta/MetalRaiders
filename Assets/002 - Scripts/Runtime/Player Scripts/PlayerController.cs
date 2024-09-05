@@ -26,14 +26,13 @@ public class PlayerController : MonoBehaviourPun
         get { return _rid; }
         set
         {
-            print("rid");
             _rid = value;
             player.playerUI.gamepadCursor.rewiredPlayer = ReInput.players.GetPlayer(_rid);
             player.playerUI.gamepadCursor.player = player;
 
             player.movement.playerMotionTracker.minimapCamera.GetComponent<MotionTrackerCamera>().ChooseRenderTexture(value);
-            print("rid 2");
             rewiredPlayer = ReInput.players.GetPlayer(rid);
+            print($"PlayerController rid: {_rid}");
         }
     }
 

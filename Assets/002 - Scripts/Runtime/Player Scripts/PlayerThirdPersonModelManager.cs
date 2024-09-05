@@ -39,7 +39,6 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         undersuitMesh.layer = 0;
 
 
-
         OnModelAssigned -= GetComponent<PlayerHitboxes>().OnModelAssigned;
         OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
         playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_Delegate;
@@ -52,6 +51,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     }
     private void Start()
     {
+        print($"PlayerThirdPersonModelManager Start OnPlayerIdAssigned");
         transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
         transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
     }
@@ -66,7 +66,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
-        print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name}");
+        print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned");
 
         Scene currentScene = SceneManager.GetActiveScene();
         if (currentScene.buildIndex > 0) // We are not in the menu
