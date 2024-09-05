@@ -347,6 +347,16 @@ public class CurrentRoomManager : MonoBehaviour
 
     public bool leftRoomManually { get { return _leftRoomManually; } set { _leftRoomManually = value; } }
 
+    public bool halfOfPlayersAreRandos
+    {
+        get
+        {
+            if (GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2))
+                return true;
+            else
+                return false;
+        }
+    }
 
 
 

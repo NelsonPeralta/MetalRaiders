@@ -364,7 +364,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             if (saveXp)
             {
-                if (pp.controllerId == 0)
+                if (pp.controllerId == 0 && CurrentRoomManager.instance.halfOfPlayersAreRandos)
                 {
                     pp.allPlayerScripts.announcer.PlayGameOverClip();
                     if (!GameManager.instance.devMode) WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
