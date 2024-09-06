@@ -346,7 +346,9 @@ public class CurrentRoomManager : MonoBehaviour
     {
         get
         {
-            if (GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2))
+            print($"halfOfPlayersAreRandos : {GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count()} / {instance.expectedNbPlayers / 2f} " +
+                $"{GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2f)}");
+            if (GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2f))
                 return true;
             else
                 return false;

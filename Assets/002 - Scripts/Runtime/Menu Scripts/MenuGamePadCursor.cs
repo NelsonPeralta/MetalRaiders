@@ -248,6 +248,24 @@ public class MenuGamePadCursor : MonoBehaviour
 
             print($"MenuGamePadCursor {_eventSystemRaycastResults.Count} {_preEentSystemRaycastResults.Count}");
 
+
+
+            foreach (var r in _preEentSystemRaycastResults)
+            {
+                if (r.gameObject.GetComponent<Button>() && r.gameObject.GetComponent<Button>().transition == Selectable.Transition.SpriteSwap)
+                {
+                    r.gameObject.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
+                    if (r.gameObject.GetComponent<EventTrigger>())
+                        r.gameObject.GetComponent<EventTrigger>().OnPointerExit(pointerData);
+                }
+                else
+                {
+
+                }
+            }
+
+
+
             _preEentSystemRaycastResults.Clear(); _rawHit.Clear();
             _preEentSystemRaycastResults.AddRange(_eventSystemRaycastResults);
 
