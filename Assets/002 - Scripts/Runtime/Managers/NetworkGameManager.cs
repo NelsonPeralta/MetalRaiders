@@ -928,19 +928,19 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    public void EquipOddballToPlayer_RPC(int playerId, bool caller = true)
+    public void EquipOddballToPlayer_RPC(int playerPhotonView, bool caller = true)
     {
 
 
         if (caller && PhotonNetwork.IsMasterClient)
         {
-            _pv.RPC("EquipOddballToPlayer_RPC", RpcTarget.All, playerId, false);
+            _pv.RPC("EquipOddballToPlayer_RPC", RpcTarget.All, playerPhotonView, false);
         }
         else if (!caller)
         {
             GameManager.instance.oddballSkull.DisableOddball();
             GameManager.instance.oddballSkull.PlayBallTakenClip();
-            GameManager.GetPlayerWithPhotonView(playerId).playerInventory.EquipOddball();
+            GameManager.GetPlayerWithPhotonView(playerPhotonView).playerInventory.EquipOddball();
         }
     }
 

@@ -34,7 +34,7 @@ public class OddballSkull : MonoBehaviour
             if (!_player.isDead && !_player.isRespawning)
             {
                 print("OODBALL Player");
-                NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.playerId);
+                NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.photonId);
             }
         }
     }
