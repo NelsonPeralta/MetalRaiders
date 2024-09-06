@@ -1,12 +1,9 @@
-using ExitGames.Client.Photon.Encryption;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Progress;
 
 public class CurrentRoomManager : MonoBehaviour
 {
