@@ -369,7 +369,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     pp.allPlayerScripts.announcer.PlayGameOverClip();
 
                     if (!GameManager.instance.devMode)
-                        if (CurrentRoomManager.instance.halfOfPlayersAreRandos)
+                        if (CurrentRoomManager.instance.youHaveInvites)
+                        {
+                            if (CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos)
+                                WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
+                        }
+                        else
                             WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
 
                     pp.LeaveRoomWithDelay();

@@ -1586,7 +1586,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            print(CurrentRoomManager.instance.halfOfPlayersAreRandos);
+            print(CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos);
 
             //OnPlayerTestButton?.Invoke(this);
         }

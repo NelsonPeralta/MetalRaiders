@@ -339,13 +339,24 @@ public class CurrentRoomManager : MonoBehaviour
 
     public bool leftRoomManually { get { return _leftRoomManually; } set { _leftRoomManually = value; } }
 
-    public bool halfOfPlayersAreRandos
+    public bool halfOfPlayersInRoomAreRandos
     {
         get
         {
             print($"halfOfPlayersAreRandos : {GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count()} / {instance.expectedNbPlayers / 2f} " +
                 $"{GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2f)}");
             if (GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2f))
+                return true;
+            else
+                return false;
+        }
+    }
+
+    public bool youHaveInvites
+    {
+        get
+        {
+            if (GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() > 1)
                 return true;
             else
                 return false;
