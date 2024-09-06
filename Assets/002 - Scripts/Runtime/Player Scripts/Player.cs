@@ -1725,6 +1725,8 @@ public class Player : Biped
 
         playerUI.SetScoreWitnesses();
         playerArmorManager.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(playerId, rid);
+
+        gameObject.name = $"Player {playerDataCell.playerExtendedPublicData.username}"; if (PV.IsMine) gameObject.name += " - IM";
     }
 
     [PunRPC]
@@ -1974,10 +1976,8 @@ public class Player : Biped
             {
                 if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
 
-                gameObject.name = $"Player {playerDataCell.playerExtendedPublicData.username}"; if (PV.IsMine) gameObject.name += " - IM";
 
-
-                print($"UpdateRewiredId - OnPlayerIdAssigned: {name} {playerDataCell.playerExtendedPublicData.username} {playerController.rid}");
+                print($"UpdateRewiredId - OnPlayerIdAssigned: {name} {playerId} {playerController.rid}");
                 OnPlayerIdAssigned?.Invoke(this);
             }
         }
