@@ -356,7 +356,7 @@ public class CurrentRoomManager : MonoBehaviour
     {
         get
         {
-            if (GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() > 1)
+            if (GameManager.instance.GetAllPhotonPlayers().Where(item => item.isMine).Count() > 1)
                 return true;
             else
                 return false;
