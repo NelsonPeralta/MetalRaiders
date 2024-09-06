@@ -437,8 +437,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        _allPlayers = new List<Player>();
-
         string[] names = QualitySettings.names;
         for (int i = 0; i < names.Length; i++)
         {
@@ -830,10 +828,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetLocalPlayer(int controllerId)
     {
-        foreach (Player p in instance._allPlayers)
-            if (p.controllerId == controllerId)
-                return p;
-        return null;
+        return instance._allPlayers.Where(item => item.controllerId == controllerId && item.isMine).FirstOrDefault();
     }
 
     public static List<Player> GetLocalPlayers()
@@ -1278,7 +1273,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void AddToPhotonToPlayerDict(int photonId, Player p)
     {
-        _allPlayers.Add(p);
+        if (!_allPlayers.Contains(p))
+            _allPlayers.Add(p);
+        else Debug.LogError($"PLAYER {p.name} IS ALREADY IN LIST OF ALL PLAYERS");
+
         //_pid_player_Dict.Add(photonId, p);
     }
 

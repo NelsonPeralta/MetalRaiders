@@ -782,15 +782,8 @@ public class Player : Biped
 
         defaultVerticalFov = 0; GetComponent<PlayerController>().Descope();
 
-        {
-            GameManager.instance.AddToPhotonToPlayerDict(photonId, this);
-        }
-
-        {
-            if (isMine)
-                NetworkGameManager.instance.AddPlayerJoinedCount();
-        }
-        //try { team = GameManager.instance.onlineTeam; } catch { }
+        GameManager.instance.AddToPhotonToPlayerDict(photonId, this);
+        if (isMine) StartCoroutine(AddPlayerJoinedCount_Coroutine());
 
 
         // Bug
@@ -813,6 +806,14 @@ public class Player : Biped
         HitPointsRecharge();
         OvershieldPointsRecharge();
     }
+
+
+    IEnumerator AddPlayerJoinedCount_Coroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        if (isMine) NetworkGameManager.instance.AddPlayerJoinedCount();
+    }
+
 
     //private void OnControllerColliderHit(ControllerColliderHit hit)
     //{
@@ -1973,10 +1974,10 @@ public class Player : Biped
             {
                 if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
 
-                gameObject.name = $"Player {username}"; if (PV.IsMine) gameObject.name += " - IM";
+                gameObject.name = $"Player {playerDataCell.playerExtendedPublicData.username}"; if (PV.IsMine) gameObject.name += " - IM";
 
 
-                print($"UpdateRewiredId - OnPlayerIdAssigned: {name} {playerId} {playerController.rid}");
+                print($"UpdateRewiredId - OnPlayerIdAssigned: {name} {playerDataCell.playerExtendedPublicData.username} {playerController.rid}");
                 OnPlayerIdAssigned?.Invoke(this);
             }
         }

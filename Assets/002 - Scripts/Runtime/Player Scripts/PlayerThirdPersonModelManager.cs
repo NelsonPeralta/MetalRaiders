@@ -36,6 +36,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     private void Awake()
     {
+        print($"PlayerThirdPersonModelManager Awake {transform.root.name}");
         undersuitMesh.layer = 0;
 
 
@@ -44,6 +45,9 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_Delegate;
         playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
 
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
+        transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
+
         //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
         thirdPersonScript = spartanModel;
         //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm)
@@ -51,9 +55,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     }
     private void Start()
     {
-        print($"PlayerThirdPersonModelManager Start OnPlayerIdAssigned");
-        transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
-        transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
+        print($"PlayerThirdPersonModelManager Start {transform.root.name}");
     }
 
     void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)

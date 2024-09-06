@@ -332,7 +332,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                 if (activeWeapon.ammoProjectileType != WeaponProperties.AmmoProjectileType.Plasma)
                 {
-                    if (!player.isMine || GameManager.instance.connection == GameManager.Connection.Local)
+                    //if (!player.isMine/* || GameManager.instance.connection == GameManager.Connection.Local*/)
                     {
                         print("spawning FAKE bullet");
 
@@ -351,19 +351,12 @@ public class PlayerShooting : MonoBehaviourPun
                         {
                             //print("spawning FAKE bullet comp");
                             for (int j = fakeBulletTrailRaycasthits.Count; j-- > 0;)
-                            {
-                                //do something
                                 if (fakeBulletTrailRaycasthits[j].collider.transform.root == player.transform)
                                     fakeBulletTrailRaycasthits.Remove(fakeBulletTrailRaycasthits[j]);
-                            }
 
-                            fakeBulletTrailRaycasthits = fakeBulletTrailRaycasthits.OrderBy((d) => (d.collider.transform.position - transform.position).sqrMagnitude).ToList();
+                            fakeBulletTrailRaycasthits = fakeBulletTrailRaycasthits.OrderBy(item => Vector3.Distance(player.mainCamera.transform.position, item.point)).ToList();
 
-
-                            print($"spawning FAKE bullet {fakeBulletTrailRaycasthits[0].collider.name}");
-
-                            int d = (int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point);
-                            pInventory.SpawnFakeBulletTrail(d, ranSprayQuat);
+                            pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point), ranSprayQuat);
                         }
 
 

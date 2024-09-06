@@ -158,12 +158,7 @@ public class CurrentRoomManager : MonoBehaviour
             _nbPlayersJoined = value;
 
             if (nbPlayersJoined == expectedNbPlayers)
-                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
-                    if (p.isMine)
-                    {
-                        print($"nbPlayersJoined {p.name}");
-                        p.TriggerAllPlayersJoinedBehaviour();
-                    }
+                StartCoroutine(TriggerAllPlayersJoined_Coroutine());
         }
     }
 
@@ -580,6 +575,18 @@ public class CurrentRoomManager : MonoBehaviour
     }
 
 
+
+    IEnumerator TriggerAllPlayersJoined_Coroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+            if (p.isMine)
+            {
+                print($"nbPlayersJoined {p.name}");
+                p.TriggerAllPlayersJoinedBehaviour();
+
+            }
+    }
 
 
 

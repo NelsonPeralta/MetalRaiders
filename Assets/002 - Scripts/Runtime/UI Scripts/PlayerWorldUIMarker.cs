@@ -21,14 +21,14 @@ public class PlayerWorldUIMarker : MonoBehaviour
         }
     }
 
-    public Player targetPlayer { get { return _targetPlayer; } }
+    public Player lookAtThisPlayer { get { return _lookAtThisPlayer; } }
 
     public TMP_Text text { get { return _text; } }
     public GameObject holder { get { return _holder; } }
 
     [SerializeField] Player _rootPlayer;
     [SerializeField] int _controllerTarget;
-    [SerializeField] Player _targetPlayer;
+    [SerializeField] Player _lookAtThisPlayer;
 
     [SerializeField] GameObject _holder, _deadTag;
     [SerializeField] PlayerWorldUIMarkerHolder _holderScript;
@@ -65,19 +65,19 @@ public class PlayerWorldUIMarker : MonoBehaviour
     {
         if (!CurrentRoomManager.instance.gameStarted) return;
 
-        if (!_targetPlayer)
+        if (!_lookAtThisPlayer)
         {
             try
             {
-                _targetPlayer = GameManager.GetLocalPlayer(_controllerTarget);
+                _lookAtThisPlayer = GameManager.GetLocalPlayer(_controllerTarget);
             }
             catch { }
             return;
         }
 
-        Vector3 targetPostition = new Vector3(_targetPlayer.transform.position.x,
+        Vector3 targetPostition = new Vector3(_lookAtThisPlayer.transform.position.x,
                                         this.transform.position.y,
-                                        _targetPlayer.transform.position.z);
+                                        _lookAtThisPlayer.transform.position.z);
         this.transform.LookAt(targetPostition);
 
 
@@ -90,16 +90,16 @@ public class PlayerWorldUIMarker : MonoBehaviour
         }
 
 
-        if (_targetPlayer)
+        if (_lookAtThisPlayer)
         {
-            _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _targetPlayer.team);
+            _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _lookAtThisPlayer.team);
 
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
-                if (_rootPlayer.team == _targetPlayer.team) _text.gameObject.SetActive(true);
+                if (_rootPlayer.team == _lookAtThisPlayer.team) _text.gameObject.SetActive(true);
 
-                if ((_rootPlayer.isDead || _rootPlayer.isRespawning) && _rootPlayer.team == _targetPlayer.team) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
+                if ((_rootPlayer.isDead || _rootPlayer.isRespawning) && _rootPlayer.team == _lookAtThisPlayer.team) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
             }
             else
             {
@@ -107,17 +107,17 @@ public class PlayerWorldUIMarker : MonoBehaviour
             }
         }
 
-        if (_targetPlayer)
+        if (_lookAtThisPlayer)
         {
             //print($"PlayerWorldUIMarker {name} {_targetPlayer.isDead} {_targetPlayer.isRespawning} {_player.isDead} {_player.isRespawning}");
-            if (_targetPlayer.isDead || _targetPlayer.isRespawning || _rootPlayer.isDead || _rootPlayer.isRespawning)
+            if (_lookAtThisPlayer.isDead || _lookAtThisPlayer.isRespawning || _rootPlayer.isDead || _rootPlayer.isRespawning)
                 holder.SetActive(false);
             else
                 holder.SetActive(true);
         }
 
 
-        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _targetPlayer.team)
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _lookAtThisPlayer.team)
         {
             if (!_rootPlayer.isDead && !_rootPlayer.isRespawning)
             {
