@@ -549,7 +549,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             _matchSettingsSet = _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
                   _reachedHalwayGameStartCountdown = _randomInitiQuickMatchSettingsChosen = false;
-            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _playersLoadedScene = 0;
+            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _nbPlayersSet = _playersLoadedScene = 0;
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
             _vetoedGameType = GameManager.GameType.Unassgined; _vetoedMapIndex = 0;

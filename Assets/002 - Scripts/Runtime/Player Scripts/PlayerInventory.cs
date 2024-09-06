@@ -768,13 +768,31 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     bool outOfFakeBullets;
-    public void SpawnFakeBulletTrail(int l, Quaternion spray)
+    public void SpawnFakeBulletTrail(int l, Quaternion spray, bool bipedIsMine)
     {
         outOfFakeBullets = true;
         foreach (Transform fbt in _fakeBulletTrailPool)
         {
             if (!fbt.gameObject.activeInHierarchy)
             {
+                GameManager.SetLayerRecursively(fbt.gameObject, 0);
+
+                if (bipedIsMine)
+                {
+                    int ll = 0;
+
+                    if (player.rid == 0)
+                        ll = 25;
+                    else if (player.rid == 1)
+                        ll = 27;
+                    else if (player.rid == 2)
+                        ll = 29;
+                    else if (player.rid == 3)
+                        ll = 31;
+
+                    GameManager.SetLayerRecursively(fbt.gameObject, ll);
+                }
+
                 Debug.Log("SpawnFakeBulletTrail");
                 fbt.transform.localScale = new Vector3(l * 0.5f, l * 0.5f, Mathf.Clamp(l, 0, 999));
                 fbt.transform.localRotation *= spray;

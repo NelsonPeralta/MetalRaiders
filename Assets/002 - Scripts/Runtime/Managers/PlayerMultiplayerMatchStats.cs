@@ -39,6 +39,11 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
 
             player.playerDataCell.playerCurrentGameScore.ChangeScore(Mathf.Clamp(value, 0, 999));
 
+
+            if(player.playerDataCell.playerCurrentGameScore.score > previous)
+                player.playerUI.ShowPointWitness(player.playerDataCell.playerCurrentGameScore.score - previous);
+
+
             if (player.playerDataCell.playerCurrentGameScore.score != previous)
             {
                 OnPlayerScoreChanged?.Invoke(this);

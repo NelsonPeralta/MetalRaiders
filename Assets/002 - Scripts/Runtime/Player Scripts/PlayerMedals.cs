@@ -35,12 +35,12 @@ public class PlayerMedals : MonoBehaviour
                     SpawnKillingSpreeMedal();
 
 
-                if (GameManager.instance.gameType != GameManager.GameType.Hill
-                && GameManager.instance.gameType != GameManager.GameType.Oddball
-                && GameManager.instance.gameType != GameManager.GameType.GunGame)
-                {
-                    player.playerUI.ShowPointWitness(1);
-                }
+                //if (GameManager.instance.gameType != GameManager.GameType.Hill
+                //&& GameManager.instance.gameType != GameManager.GameType.Oddball
+                //&& GameManager.instance.gameType != GameManager.GameType.GunGame)
+                //{
+                //    player.playerUI.ShowPointWitness(1);
+                //}
             }
         }
     }

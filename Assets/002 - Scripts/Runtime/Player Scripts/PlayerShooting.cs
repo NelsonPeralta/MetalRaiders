@@ -345,7 +345,7 @@ public class PlayerShooting : MonoBehaviourPun
                         {
                             //print("spawning FAKE bullet easy");
 
-                            pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat);
+                            pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat, player.isMine);
                         }
                         else
                         {
@@ -356,7 +356,13 @@ public class PlayerShooting : MonoBehaviourPun
 
                             fakeBulletTrailRaycasthits = fakeBulletTrailRaycasthits.OrderBy(item => Vector3.Distance(player.mainCamera.transform.position, item.point)).ToList();
 
-                            pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point), ranSprayQuat);
+                            if (fakeBulletTrailRaycasthits.Count > 0)
+                            {
+                                print($"Fake trail of lenght {Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point)}. Ends at point {fakeBulletTrailRaycasthits[0].point}");
+                                pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point), ranSprayQuat, player.isMine);
+                            }
+                            else
+                                pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat, player.isMine);
                         }
 
 

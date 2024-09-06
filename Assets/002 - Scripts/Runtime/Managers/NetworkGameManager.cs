@@ -263,6 +263,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller)
         {
+            print("_nbPlayersSet");
             _pv.RPC("AddPlayerSetCount", RpcTarget.AllViaServer, false);
         }
         else if (!caller)
