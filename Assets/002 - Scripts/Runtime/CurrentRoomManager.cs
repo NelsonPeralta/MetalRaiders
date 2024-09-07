@@ -107,9 +107,18 @@ public class CurrentRoomManager : MonoBehaviour
             int _preVal = _spawnedMapAddOns;
             _spawnedMapAddOns = value;
 
+            if (_preVal < _spawnedMapAddOns)
+            {
+                print($"_spawnedMapAddOns increase to {_spawnedMapAddOns}");
+                print($"IceChunk: {FindObjectsOfType<IceChunk>().Length}");
+                print($"ExplosiveBarrelSpawnPoint: {FindObjectsOfType<ExplosiveBarrelSpawnPoint>().Length}");
+                print($"NetworkWeaponSpawnPoint: {FindObjectsOfType<NetworkWeaponSpawnPoint>().Length}");
+                print($"NetworkGrenadeSpawnPoint: {FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length}");
+            }
+
             if (_spawnedMapAddOns == expectedMapAddOns)
             {
-                Debug.Log($"Spawn Map Add-Ons: {value} ({expectedMapAddOns} needed)");
+                Debug.Log($"spawnedMapAddOns: {value} ({expectedMapAddOns} needed)");
                 mapIsReady = true;
             }
         }
@@ -140,7 +149,7 @@ public class CurrentRoomManager : MonoBehaviour
             _playersLoadedScene = value;
 
             if (_playersLoadedScene == expectedNbPlayers)
-                StartCoroutine(GameManager.instance.SpawnPlayers_Coroutine());
+                StartCoroutine(GameManager.instance.SpawnPlayersCheck_Coroutine());
         }
     }
 
@@ -571,16 +580,13 @@ public class CurrentRoomManager : MonoBehaviour
 
 
             if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
-                expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length
-                + FindObjectsOfType<Hazard>().Length;
+                expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length + FindObjectsOfType<Hazard>().Length;
 
 
             if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
                 foreach (NetworkWeaponSpawnPoint nwsp in FindObjectsOfType<NetworkWeaponSpawnPoint>())
                     if (nwsp.transform.root.GetComponent<Player>() == null)
-                    {
                         expectedMapAddOns += 1;
-                    }
         }
     }
 

@@ -149,6 +149,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             lw.networkWeaponSpawnPoint = this;
             weaponSpawned = lw;
             _tts = lw.tts;
+
+            CurrentRoomManager.instance.spawnedMapAddOns++;
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
     }

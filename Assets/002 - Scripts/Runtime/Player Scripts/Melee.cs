@@ -135,7 +135,8 @@ public class Melee : MonoBehaviour
                 if (player.isMine)
                 {
 
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= (Player.MELEE_DISTANCE + 1) && hp.meleeMagnetism)
+                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= (Player.MELEE_DISTANCE + 1)
+                         && hp.meleeMagnetism)
                     {
                         print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
 
@@ -147,7 +148,11 @@ public class Melee : MonoBehaviour
                         player.playerCamera.BlockPlayerCamera(0.3f);
                         player.movement.blockPlayerMoveInput = 0.3f;
                         player.movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
-                        player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);
+
+                        if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) > 1.5f)
+                            player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);
+                        else
+                            player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * (Player.MELEE_PUSH / 2), ForceMode.Impulse);
                     }
                 }
             }

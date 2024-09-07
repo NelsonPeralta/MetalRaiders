@@ -693,10 +693,10 @@ public class Player : Biped
         OnPlayerIdAssigned -= OnPlayerIdAssigned_Delegate;
         OnPlayerIdAssigned += OnPlayerIdAssigned_Delegate;
 
-        print("Player Awake");
-        Debug.Log($"Spawning player at: {transform.position}");
+        Debug.Log($"Player Awake {GameManager.instance.GetAllPhotonPlayers().Count()}");
         _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
-        //if (_playerId >= 0) OnPlayerIdAssigned?.Invoke(this);
+        if(GameManager.instance.connection == GameManager.Connection.Local)
+            _playerId = GameManager.instance.GetAllPhotonPlayers().Count();
 
         _rb = GetComponent<Rigidbody>(); if (!PV.IsMine) _rb.isKinematic = true;
 
@@ -731,6 +731,7 @@ public class Player : Biped
 
         hitboxes = GetComponentsInChildren<PlayerHitbox>().ToList();
         _networkPlayer = GetComponent<NetworkPlayer>();
+        GameManager.instance.AddToPhotonToPlayerDict(photonId, this);
     }
     private void Start()
     {
@@ -782,7 +783,7 @@ public class Player : Biped
 
         defaultVerticalFov = 0; GetComponent<PlayerController>().Descope();
 
-        GameManager.instance.AddToPhotonToPlayerDict(photonId, this);
+        //GameManager.instance.AddToPhotonToPlayerDict(photonId, this);
         if (isMine) StartCoroutine(AddPlayerJoinedCount_Coroutine());
 
 
@@ -1514,12 +1515,6 @@ public class Player : Biped
 
     // rpc functions
     #region
-    [PunRPC]
-    void UpdatePlayerId_RPC(int nn)
-    {
-        _playerId = nn;
-        username = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(_playerId, rid).playerExtendedPublicData.username;
-    }
 
     [PunRPC]
     void UpdateTeam_RPC(string nn)

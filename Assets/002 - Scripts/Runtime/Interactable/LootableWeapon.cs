@@ -112,11 +112,6 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         }
         catch { }
     }
-    private void Start()
-    {
-        if (parent != WeaponPool.instance.transform)
-            CurrentRoomManager.instance.spawnedMapAddOns++;
-    }
 
     private void Update()
     {

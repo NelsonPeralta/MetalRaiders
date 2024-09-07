@@ -768,41 +768,62 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     List<Vector3> _orSpPts = new List<Vector3>();
-    public IEnumerator SpawnPlayers_Coroutine()
+    public IEnumerator SpawnPlayersCheck_Coroutine()
     {
 
-        float o = 2; if (PhotonNetwork.IsMasterClient) o = 0.5f;
-        Debug.Log("SpawnPlayers_Coroutine");
+        Debug.Log("SpawnPlayersCheck_Coroutine");
+        float o = 1; if (PhotonNetwork.IsMasterClient) o = 0.25f;
         yield return new WaitForSeconds(o);
 
 
         for (int i = 0; i < CurrentRoomManager.instance.playerDataCells.Count; i++)
         {
             if (CurrentRoomManager.instance.playerDataCells[i].local)
-            {
-                Debug.Log($"SpawnPlayers_Coroutine {i} {CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex} {CurrentRoomManager.instance.playerDataCells[i].rewiredId}");
-
-                Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[i].startingSpawnPosInd);
-
-                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spt.position + (2 * Vector3.up), spt.rotation).GetComponent<Player>();
-
-                player.playerController.rid = i;
-
-                player.ChangePlayerIdLocalMode(i);
+                StartCoroutine(SpawnPlayers_Coroutine(i));
 
 
-                Debug.Log($"SpawnPlayers_Coroutine {i} {player}");
-                if (i == 0)
-                {
-                    instance._rootPlayer = player;
-                    _rootPlayer = player;
-                }
-                //player.originalSpawnPosition = spawnpoint.position;
-                //GameManager.instance.orSpPos_Biped_Dict.Add(spawnpoint.position, player); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
-            }
+
+            //if (CurrentRoomManager.instance.playerDataCells[i].local)
+            //{
+            //    Debug.Log($"SpawnPlayers_Coroutine {i} {CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex} {CurrentRoomManager.instance.playerDataCells[i].rewiredId}");
+
+            //    Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[i].startingSpawnPosInd);
+
+            //    Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spt.position + (2 * Vector3.up), spt.rotation).GetComponent<Player>();
+            //    player.playerController.rid = i;
+
+
+            //    Debug.Log($"SpawnPlayers_Coroutine {i} {player}");
+            //    if (i == 0)
+            //    {
+            //        instance._rootPlayer = player;
+            //        _rootPlayer = player;
+            //    }
+            //    //player.originalSpawnPosition = spawnpoint.position;
+            //    //GameManager.instance.orSpPos_Biped_Dict.Add(spawnpoint.position, player); GameManager.instance.orSpPos_Biped_Dict = GameManager.instance.orSpPos_Biped_Dict;
+            //}
         }
     }
 
+
+    public IEnumerator SpawnPlayers_Coroutine(int indd)
+    {
+        //Debug.Log($"SpawnPlayers_Coroutine {i} {CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex} {CurrentRoomManager.instance.playerDataCells[i].rewiredId}");
+        Debug.Log($"SpawnPlayers_Coroutine {GameManager.instance.GetAllPhotonPlayers().Count}");
+
+        Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[indd].startingSpawnPosInd);
+
+        Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spt.position + (2 * Vector3.up), spt.rotation).GetComponent<Player>();
+        player.playerController.rid = indd;
+
+
+        if (indd == 0)
+        {
+            instance._rootPlayer = player;
+            _rootPlayer = player;
+        }
+        yield return new WaitForEndOfFrame(); // Give time for local stuff
+    }
 
 
 
@@ -1225,11 +1246,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (SceneManager.GetActiveScene().buildIndex > 0)
             {
-                print("FIX THIS");
-                //foreach (Player p in instance.localPlayers.Values)
-                //{
-                //    p.playerCamera.frontEndMouseSens = sens;
-                //}
+                foreach (Player p in GetLocalPlayers())
+                {
+                    p.playerCamera.frontEndMouseSens = sens;
+                }
             }
         }
     }
