@@ -59,8 +59,10 @@ public class PlayerMedals : MonoBehaviour
                     SpawnDoubleKillMedal();
                 else if (_preVal == 3)
                     SpawnTripleKillMedal();
-                else if (_preVal >= 4)
+                else if (_preVal == 4)
                     SpawnOverKillMedal();
+                else if (_preVal > 4)
+                    SpawnMultiKillMedal();
             }
         }
     }
@@ -76,9 +78,7 @@ public class PlayerMedals : MonoBehaviour
     [SerializeField] Transform grenadeMedalPrefab;
     [SerializeField] Transform stuckMedalPrefab;
 
-    [SerializeField] Transform doubleKillMedalPrefab;
-    [SerializeField] Transform tripleKillMedalPrefab;
-    [SerializeField] Transform overKillMedalPrefab;
+    [SerializeField] Transform doubleKillMedalPrefab, tripleKillMedalPrefab, overKillMedalPrefab, _multiKillMedalPrefab;
 
     [SerializeField] Transform killingSpreeMedalPrefab;
 
@@ -191,7 +191,13 @@ public class PlayerMedals : MonoBehaviour
 
         announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
     }
+    void SpawnMultiKillMedal()
+    {
+        Transform h = Instantiate(_multiKillMedalPrefab, grid);
+        h.SetAsFirstSibling();
 
+        announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
+    }
 
 
 
