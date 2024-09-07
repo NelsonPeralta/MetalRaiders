@@ -43,7 +43,7 @@ public class PlayerArmorManager : MonoBehaviour
                         ToggleMarinePieces(false);
                         EnableAllArmorsInDataString();
                     }
-                    UpdateColorPalette(CurrentRoomManager.GetDataCellWithDatabaseId(player.playerId, playerDataCell.rewiredId).team.ToString().ToLower());
+                    UpdateColorPalette(CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(player.playerId, playerDataCell.rewiredId).team.ToString().ToLower());
                 }
                 else
                     UpdateColorPalette();

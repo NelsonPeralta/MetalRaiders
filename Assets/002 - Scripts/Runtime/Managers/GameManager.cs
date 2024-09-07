@@ -782,25 +782,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 Debug.Log($"SpawnPlayers_Coroutine {i} {CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex} {CurrentRoomManager.instance.playerDataCells[i].rewiredId}");
 
-                (Transform, bool) spawnpoint = (null, false);
+                Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[i].startingSpawnPosInd);
 
-                if (GameManager.instance.connection == Connection.Local)
-                    spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(i), false);
-                else
-                {
-                    spawnpoint = (SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex - 1), false);
-
-                }
-
-                // Do not use spawn position for authority. It is not accurate due to it being a float type
-                Vector3 sp = spawnpoint.Item1.position;
-                //print($"Spawning player at: {sp} + {new Vector3((float)CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex / 10, 2, (float)CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex / 10)}");
-                sp = sp + new Vector3((float)CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex / 10, 2, (float)CurrentRoomManager.instance.playerDataCells[i].rewiredId / 10);
-                //print($"Spawning player at: {sp}");
-                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), sp, spawnpoint.Item1.rotation).GetComponent<Player>();
+                Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spt.position + (2 * Vector3.up), spt.rotation).GetComponent<Player>();
 
                 player.playerController.rid = i;
-                //player.UpdateRewiredId(CurrentRoomManager.instance.playerDataCells[i].rewiredId);
 
                 player.ChangePlayerIdLocalMode(i);
 

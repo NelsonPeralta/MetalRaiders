@@ -685,13 +685,19 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         _startGameButton.SetActive(false);
 
-        //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
 
 
+        int c = 0;
+        foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied))
+        {
+            print($"{s.playerExtendedPublicData.player_id} {s.rewiredId} will get spawn {c}");
+            NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, c);
+            c++;
+        }
+        
+        
+        
         NetworkGameManager.instance.StartGameButton();
-
-        //StartCoroutine(LoadLevel_Coroutine());
-
     }
 
     public void LeaveRoomButton()

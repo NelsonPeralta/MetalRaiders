@@ -95,7 +95,7 @@ public class PlayerNamePlate : MonoBehaviour
 
 
             CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
-            this.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(pepd.player_id, 0);
+            this.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
 
 
 
@@ -127,7 +127,7 @@ public class PlayerNamePlate : MonoBehaviour
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
 
-            ScriptObjPlayerData spd = CurrentRoomManager.GetDataCellWithDatabaseId(_playerData.playerExtendedPublicData.player_id, _playerData.rewiredId);
+            ScriptObjPlayerData spd = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(_playerData.playerExtendedPublicData.player_id, _playerData.rewiredId);
 
             if ((spd.team != GameManager.Team.None))
             {

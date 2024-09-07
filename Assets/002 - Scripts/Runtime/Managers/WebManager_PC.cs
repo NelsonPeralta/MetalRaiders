@@ -111,7 +111,7 @@ public partial class WebManager
 
                 try
                 {
-                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(pepd.player_id, 0);
+                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
 
                     if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                     {
@@ -210,7 +210,7 @@ public partial class WebManager
 
                 try
                 {
-                    pli.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseId(pepd.player_id, 0);
+                    pli.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 

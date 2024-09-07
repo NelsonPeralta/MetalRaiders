@@ -1002,6 +1002,29 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
 
+
+    [PunRPC]
+    public void SetPlayerDataCellStartingSpawnPositionIndex(int playerDbId, int rewiredId, int indd, bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            instance._pv.RPC("SetPlayerDataCellStartingSpawnPositionIndex", RpcTarget.AllViaServer, playerDbId, rewiredId, indd, false);
+        }
+        else if (!caller)
+        {
+            //print($"{playerDbId} {rewiredId} will get spawn {indd}");
+
+            try
+            {
+                CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(playerDbId, rewiredId).startingSpawnPosInd = indd;
+            }
+            catch { Debug.LogError("Could not find data cell and assign starting pos"); }
+        }
+    }
+
+
+
+
     [PunRPC]
     public void StartGameButton(bool caller = true)
     {

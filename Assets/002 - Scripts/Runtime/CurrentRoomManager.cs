@@ -1014,7 +1014,7 @@ public class CurrentRoomManager : MonoBehaviour
 
         return null;
     }
-    public static ScriptObjPlayerData GetDataCellWithDatabaseId(int playerId, int rewiredId)
+    public static ScriptObjPlayerData GetDataCellWithDatabaseIdAndRewiredId(int playerId, int rewiredId)
     {
         Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
         //foreach (ScriptObjPlayerData s in instance.playerDataCells)

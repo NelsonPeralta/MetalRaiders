@@ -9,7 +9,7 @@ using UnityEngine;
 public class ScriptObjPlayerData : ScriptableObject
 {
     [SerializeField] bool _occupied, _local;
-    [SerializeField] int _photonRoomIndex, _rewiredIndex;
+    [SerializeField] int _photonRoomIndex, _rewiredIndex, _startingSpawnPosInd;
     [SerializeField] GameManager.Team _team;
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
     [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
@@ -51,6 +51,7 @@ public class ScriptObjPlayerData : ScriptableObject
     public bool occupied { get { return _occupied; } set { _occupied = value; Debug.Log($"Occupied: {occupied}"); } }
     public bool local { get { return _local; } set { _local = value; } }
     public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value; Debug.Log($"Occupied: {rewiredId}"); } }
+    public int startingSpawnPosInd { get { return _startingSpawnPosInd; } set { _startingSpawnPosInd = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
     public PlayerCurrentGameScore playerCurrentGameScore
     {
@@ -63,7 +64,7 @@ public class ScriptObjPlayerData : ScriptableObject
         _playerCurrentGameScore = new PlayerCurrentGameScore();
         _photonRoomIndex = -999;
         _occupied = _local = false;
-        _rewiredIndex = 0;
+        _rewiredIndex = _startingSpawnPosInd = 0;
         _team = GameManager.Team.None;
         _playerExtendedPublicData = null;
         _cardsFound = "";

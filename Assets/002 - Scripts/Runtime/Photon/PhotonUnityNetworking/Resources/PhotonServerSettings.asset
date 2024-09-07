@@ -212,6 +212,7 @@ MonoBehaviour:
   - SpawnUltraBindExplosion_RPC
   - UpdateRewiredId
   - AddPlayerSetCount
+  - SetPlayerDataCellStartingSpawnPositionIndex
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
