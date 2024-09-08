@@ -232,14 +232,14 @@ public class AimAssistCone : MonoBehaviour
 
 
             _obstructed = false;
-            if(_obstructionHitGo && distanceToObstruction < distanceToHitbox) _obstructed = true;
+            if (_obstructionHitGo && hitboxRayHitGo && distanceToObstruction < distanceToHitbox) _obstructed = true;
 
 
 
 
 
 
-            if (!_obstructed && targetCollisionHitbox)
+            if (hitboxRayHitGo && !_obstructed && targetCollisionHitbox)
             {
                 if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 {
