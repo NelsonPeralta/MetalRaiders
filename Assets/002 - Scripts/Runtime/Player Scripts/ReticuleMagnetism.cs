@@ -4,30 +4,35 @@ using UnityEngine;
 
 public class ReticuleMagnetism : MonoBehaviour
 {
-    public Player player;
-    public PlayerMovement movement;
-
-    RaycastHit hit;
-    public LayerMask layerMask;
-    public float raycastRange = 1000;
-
-
-    [SerializeField] GameObject _firstRayHit;
-    public GameObject firstRayHit
+    public GameObject magnetismHit
     {
-        get { return _firstRayHit; }
+        get { return _magnetismHit; }
         set
         {
-            var previousValue = firstRayHit;
+            var previousValue = magnetismHit;
 
             if (value == null)
             {
                 //aimAssist.ResetRedReticule();
             }
 
-            _firstRayHit = value;
+            _magnetismHit = value;
         }
     }
+
+
+
+
+    public Player player;
+    public PlayerMovement movement;
+
+    RaycastHit hit, _obsHit;
+    public LayerMask magnetismMask, obstructionMask;
+    public float raycastRange = 50;
+
+
+    [SerializeField] GameObject _magnetismHit, _obstructionHit;
+    [SerializeField] float _distFromMagTrans;
 
     [SerializeField] List<Vector3> _hitScreenPosList;
     [SerializeField] Vector3 _previousHitScreenPos;
@@ -38,8 +43,9 @@ public class ReticuleMagnetism : MonoBehaviour
     [SerializeField] int xFact, yFact;
     [SerializeField] float xMag, yMag;
 
-    [SerializeField] LayerMask obstructionMask;
     [SerializeField] bool _obstruction;
+
+    [SerializeField] GameManager.Team _playerTeam, _hitTeam;
 
 
     Vector3 _obsDir;
@@ -71,75 +77,69 @@ public class ReticuleMagnetism : MonoBehaviour
 
     void Ray()
     {
-        _friendly = false;
-        try
-        { raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange; }
-        catch (System.Exception) { }
+        _friendly = _obstruction = false;
 
-        if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, raycastRange, layerMask))
+
+        if (player && player.playerInventory && player.playerInventory.activeWeapon)
         {
-            if (hit.transform.root.gameObject != player.gameObject)
+            raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange;
+
+            if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, raycastRange * 1.5f, magnetismMask))
             {
+                if (hit.transform.root.gameObject != player.gameObject)
                 {
-                    if (hit.transform.gameObject.layer == 0)
-                        firstRayHit = null;
+                    magnetismHit = hit.transform.gameObject;
+
+                    _obsDir = (hit.point - player.mainCamera.transform.position).normalized;
+                    _obsDis = Vector3.Distance(hit.point, player.mainCamera.transform.position);
+
+                    if (!Physics.Raycast(player.mainCamera.transform.position, _obsDir, out _obsHit, _obsDis, obstructionMask))
+                    {
+                        ReticuleFriction rf = magnetismHit.GetComponent<ReticuleFriction>(); if (rf == null) try { rf = hit.transform.GetComponent<Player>().reticuleFriction; } catch { }
+
+                        if (rf)
+                        {
+                            _distFromMagTrans = Vector3.Distance(rf.transform.position, transform.position);
+
+                            _playerTeam = player.team;
+                            if (rf.player) _hitTeam = rf.player.team;
+
+
+                            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                                if (rf.player && (rf.player.team == player.team))
+                                {
+                                    _friendly = true;
+                                    return;
+                                }
+
+
+
+                            //if(movement.speed == 0)
+                            _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
+                                                                           //_hitScreenPosList.Add(hit.point); // When player moves and target does not
+                            if (_hitScreenPosList.Count > 4)
+                                _hitScreenPosList.RemoveAt(0);
+                        }
+                    }
                     else
                     {
-                        firstRayHit = hit.transform.gameObject;
+                        _obstructionHit = _obsHit.transform.gameObject;
+                        _obstruction = true;
+
+                        magnetismHit = null;
+                        _hitScreenPosList.Clear();
                     }
-
-
-
-                    try
-                    {
-
-                        ReticuleFriction rf = firstRayHit.GetComponent<ReticuleFriction>();
-
-
-                        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-                            if (rf.player && (rf.player.team == player.team))
-                            {
-                                _friendly = true;
-                                return;
-                            }
-
-                        _obstruction = false;
-                        _obsDir = (firstRayHit.transform.position - player.mainCamera.transform.position).normalized;
-                        _obsDis = Vector3.Distance(player.mainCamera.transform.position, firstRayHit.transform.position);
-
-                        if (Physics.Raycast(player.mainCamera.transform.position, _obsDir, _obsDis, obstructionMask))
-                            _obstruction = true;
-
-                        if (_obstruction)
-                        {
-                            rf = null;
-                            _hitScreenPosList.Clear();
-                            return;
-                        }
-
-                    }
-                    catch { }
-
-
-
-
-
-
-
-
-
-                    //if(movement.speed == 0)
-                    _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
-                                                                   //_hitScreenPosList.Add(hit.point); // When player moves and target does not
-                    if (_hitScreenPosList.Count > 4)
-                        _hitScreenPosList.RemoveAt(0);
+                }
+                else
+                {
+                    magnetismHit = null;
                 }
             }
-        }
-        else
-        {
-            firstRayHit = null;
-            _hitScreenPosList.Clear();
+            else
+            {
+                magnetismHit = null;
+                _hitScreenPosList.Clear();
+            }
         }
     }
 
