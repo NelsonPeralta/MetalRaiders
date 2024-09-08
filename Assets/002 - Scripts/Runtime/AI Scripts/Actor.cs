@@ -116,7 +116,7 @@ abstract public class Actor : Biped
 
                 _targetPlayer = value;
 
-
+                if (_targetPlayer) print($"targetplayer changed: {value.name}");
             }
         }
     }
@@ -490,8 +490,7 @@ abstract public class Actor : Biped
                     if (NetworkSwarmManager.instance)
                     {
                         int pid = NetworkSwarmManager.instance.GetRandomAlivePlayerPhotonId();
-                        if (pid > 0)
-                            SetNewTargetPlayerWithPhotonId(pid);
+                        if (pid > 0) SetNewTargetPlayerWithPhotonId(pid);
                     }
                 }
 
@@ -949,20 +948,20 @@ abstract public class Actor : Biped
 
 
     [PunRPC]
-    public void AssignPlayerOnBulletNearby(int playerId, bool callRPC = true)
+    public void AssignPlayerOnBulletNearby(int playerPhotonId, bool callRPC = true)
     {
         //print("AssignPlayerOnBulletNearby");
         if (callRPC && PhotonNetwork.IsMasterClient)
         {
             if (_switchPlayerCooldown <= 0 && hitPoints > 0)
-                GetComponent<PhotonView>().RPC("AssignPlayerOnBulletNearby", RpcTarget.AllViaServer, playerId, false);
+                GetComponent<PhotonView>().RPC("AssignPlayerOnBulletNearby", RpcTarget.AllViaServer, playerPhotonId, false);
         }
         else if (!callRPC)
         {
             print("AssignPlayerOnBulletNearby Processing");
 
-            targetTransform = PhotonView.Find(playerId).GetComponent<Player>().transform;
-            targetHitpoints = PhotonView.Find(playerId).GetComponent<Player>().GetComponent<HitPoints>();
+            targetTransform = PhotonView.Find(playerPhotonId).GetComponent<Player>().transform;
+            targetHitpoints = PhotonView.Find(playerPhotonId).GetComponent<Player>().GetComponent<HitPoints>();
 
             _switchPlayerCooldown = 5;
         }

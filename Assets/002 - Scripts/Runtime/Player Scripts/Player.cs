@@ -932,7 +932,7 @@ public class Player : Biped
 
         //if ((GameManager.PlayerDictContainsPhotonId(source_pid) && GameManager.GetPlayerWithPhotonView(source_pid).isMine) ||
         //    PhotonView.Find(source_pid).GetComponent<Actor>())
-        if ((GameManager.GetPlayerWithPhotonView(source_pid).isMine) ||
+        if ((GameManager.GetPlayerWithPhotonView(source_pid) && GameManager.GetPlayerWithPhotonView(source_pid).isMine) ||
         PhotonView.Find(source_pid).GetComponent<Actor>())
         {
             DeathNature dsn = DeathNature.None;

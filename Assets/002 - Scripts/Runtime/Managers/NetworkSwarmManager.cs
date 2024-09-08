@@ -95,6 +95,9 @@ public class NetworkSwarmManager : MonoBehaviourPun
     {
         FindObjectOfType<SwarmManager>().CreateAIPool(false);
     }
+
+
+    int _lastRandomPlayerPhotonId;
     public int GetRandomAlivePlayerPhotonId()
     {
         //if (punCall)
@@ -103,15 +106,19 @@ public class NetworkSwarmManager : MonoBehaviourPun
         //}
         //else
         {
-            foreach (Player nsp in FindObjectsOfType<Player>().ToList())
+            foreach (Player nsp in GameManager.instance.GetAllPhotonPlayers())
             {
-                if (!nsp.isDead && !nsp.isRespawning)
+                if (!nsp.isDead && !nsp.isRespawning && _lastRandomPlayerPhotonId != nsp.GetComponent<PhotonView>().ViewID)
+                {
+                    _lastRandomPlayerPhotonId = nsp.GetComponent<PhotonView>().ViewID;
                     return nsp.GetComponent<PhotonView>().ViewID;
+                }
 
             }
         }
 
-        return -1;
+        _lastRandomPlayerPhotonId = -1;
+        return _lastRandomPlayerPhotonId;
     }
 
 

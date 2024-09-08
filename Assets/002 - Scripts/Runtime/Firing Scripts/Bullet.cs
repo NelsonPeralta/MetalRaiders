@@ -81,7 +81,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     override public void OnEnable()
     {
-        print("Bullet OnEnable");
         _ignoreOriginPlayerTime = 0.2f;
 
         _prePos = transform.position;

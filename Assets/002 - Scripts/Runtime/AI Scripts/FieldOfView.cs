@@ -115,7 +115,7 @@ public class FieldOfView : MonoBehaviour
                 }
                 else
                 {
-                    _state = "4";
+                    _state = "Actor can see a player, but it is not his main target";
                     canSeePlayer = false;
                 }
 

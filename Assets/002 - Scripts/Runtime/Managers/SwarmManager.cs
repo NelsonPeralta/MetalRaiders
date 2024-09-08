@@ -1226,7 +1226,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         int targetPhotonId, aiPhotonId = -1;
         try { targetPhotonId = GetRandomPlayerPhotonId(); } catch { targetPhotonId = 0; }
-
+        print($"SpawnActorsFromDropship: targetPhotonId {targetPhotonId}");
 
 
         foreach (SpawnPoint sp in ad.ribbianSpawnPoints)
