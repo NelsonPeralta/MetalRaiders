@@ -4955,6 +4955,7 @@ MonoBehaviour:
   originalSpawnPosition: {x: 0, y: 0, z: 0}
   _ultraMergeCount: 0
   _targetTrackingCorrectTarget: {fileID: 2996074440190653613}
+  _aiType: 2
   _hitPoints: 150
   _defaultHitpoints: 200
   _targetTransform: {fileID: 0}
@@ -4992,6 +4993,7 @@ MonoBehaviour:
   _isCurrentlyThrowingGrenadeCooldown: 0
   _isSeenByTargetPlayerCooldown: 0
   _isCurrentlyAlertingCooldown: 0
+  _hardIdleTime: 0
   _isInRange: 0
   _walkingAudioSource: {fileID: 2866229061437481522}
   _overlapSphereMask:

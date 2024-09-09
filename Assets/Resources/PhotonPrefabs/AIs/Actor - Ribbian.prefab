@@ -4621,12 +4621,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8606627292790721606}
-  - component: {fileID: 7901069246398537680}
   - component: {fileID: 8516912798924777548}
-  - component: {fileID: 7215138691679798162}
   - component: {fileID: 8516912798924777545}
   - component: {fileID: 8516912798924777551}
   - component: {fileID: 8352243239658617212}
+  - component: {fileID: 7215138691679798162}
+  - component: {fileID: 7901069246398537680}
   - component: {fileID: 4183603536328548558}
   - component: {fileID: 8240525704724878406}
   - component: {fileID: 5094079241440170308}
@@ -4667,30 +4667,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7901069246398537680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8603248463023796302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cb4d220f4364f844a3471dfba69fab2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 10
-  angle: 120
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 64
-  obstructionMask:
-    serializedVersion: 2
-    m_Bits: 1
-  canSeePlayer: 0
-  _obstruction: {fileID: 0}
-  _state: 
-  rangeChecks: []
 --- !u!95 &8516912798924777548
 Animator:
   serializedVersion: 5
@@ -4711,83 +4687,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &7215138691679798162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8603248463023796302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea11089b7903c0845b654cb9d4186576, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  originalSpawnPosition: {x: 0, y: 0, z: 0}
-  _ultraMergeCount: 0
-  _targetTrackingCorrectTarget: {fileID: 3020682479340124237}
-  _hitPoints: 350
-  _defaultHitpoints: 350
-  _targetTransform: {fileID: 0}
-  _targetPlayer: {fileID: 0}
-  _destination: {x: 0, y: 0, z: 0}
-  _losSpawn: {fileID: 3976385901426164958}
-  _friction: {fileID: 2929854997425488296}
-  _closeRange: 0
-  _midRange: 0
-  _longRange: 0
-  _analyzeNextActionCooldown: 0
-  _findNewTargetCooldown: 0
-  _defaultFlinchCooldown: 2.2
-  _lostTargetBipedStopwatch: 0
-  _attackClip: {fileID: 8300000, guid: fdc8080df366feb43805c05300069c0e, type: 3}
-  _deathClip: {fileID: 8300000, guid: 94f300b380dc25f44b40e75fb5931bf8, type: 3}
-  _tauntClip: {fileID: 8300000, guid: 98e43a47e797e4941a04a53e0c6f192e, type: 3}
-  _hurtClip: {fileID: 8300000, guid: a5cf47b8c1aa8c14bb232e34edbda1b9, type: 3}
-  _gruntClip: {fileID: 8300000, guid: 0d2e4e34094f2584dbd954967af10431, type: 3}
-  _oneShotHeadshot: 0
-  isIdling: 0
-  isRunning: 0
-  isMeleeing: 0
-  isTaunting: 0
-  isFlinching: 0
-  _isShooting: 0
-  _isThrowingGrenade: 0
-  _flinchCooldown: 0
-  _meleeCooldown: 0
-  _shootProjectileCooldown: 0
-  _throwExplosiveCooldown: 0
-  _switchPlayerCooldown: 0
-  _isDodgingCooldown: 0
-  _isCurrentlyShootingCooldown: 0
-  _isCurrentlyThrowingGrenadeCooldown: 0
-  _isSeenByTargetPlayerCooldown: 0
-  _isCurrentlyAlertingCooldown: 0
-  _isInRange: 0
-  _walkingAudioSource: {fileID: 7569610477383510051}
-  _overlapSphereMask:
-    serializedVersion: 2
-    m_Bits: 1
-  _leftChecks:
-  - {fileID: 7215148497402074464}
-  - {fileID: 1165082539732729484}
-  - {fileID: 1039900603458708019}
-  - {fileID: 1592043827978086722}
-  - {fileID: 6856440140681853433}
-  _rightChecks:
-  - {fileID: 5428035272035552164}
-  - {fileID: 2213733084605151001}
-  - {fileID: 3926252690837863140}
-  - {fileID: 7020979739283047180}
-  - {fileID: 5597096648755915045}
-  _ultraMergeExPrefab: {fileID: 6500668859487480126, guid: c4d9f2c427f83a94aad0b6ccb2dcb4e3,
-    type: 3}
-  _flinchThreshold: 100
-  _flinchThresholdCount: 0
-  _fireBallPrefab: {fileID: 5091089392186072086, guid: b098cbed4f2aee74c81415d00707bc75,
-    type: 3}
-  _grenadePrefab: {fileID: 6543794610344578356, guid: ace650de0d210f54490f7e347a783c04,
-    type: 3}
 --- !u!195 &8516912798924777545
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4929,6 +4828,109 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &7215138691679798162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8603248463023796302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea11089b7903c0845b654cb9d4186576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSpawnPosition: {x: 0, y: 0, z: 0}
+  _ultraMergeCount: 0
+  _targetTrackingCorrectTarget: {fileID: 3020682479340124237}
+  _aiType: 1
+  _hitPoints: 350
+  _defaultHitpoints: 350
+  _targetTransform: {fileID: 0}
+  _targetPlayer: {fileID: 0}
+  _destination: {x: 0, y: 0, z: 0}
+  _losSpawn: {fileID: 3976385901426164958}
+  _friction: {fileID: 2929854997425488296}
+  _closeRange: 0
+  _midRange: 0
+  _longRange: 0
+  _analyzeNextActionCooldown: 0
+  _findNewTargetCooldown: 0
+  _defaultFlinchCooldown: 2.2
+  _lostTargetBipedStopwatch: 0
+  _attackClip: {fileID: 8300000, guid: fdc8080df366feb43805c05300069c0e, type: 3}
+  _deathClip: {fileID: 8300000, guid: 94f300b380dc25f44b40e75fb5931bf8, type: 3}
+  _tauntClip: {fileID: 8300000, guid: 98e43a47e797e4941a04a53e0c6f192e, type: 3}
+  _hurtClip: {fileID: 8300000, guid: a5cf47b8c1aa8c14bb232e34edbda1b9, type: 3}
+  _gruntClip: {fileID: 8300000, guid: 0d2e4e34094f2584dbd954967af10431, type: 3}
+  _oneShotHeadshot: 0
+  isIdling: 0
+  isRunning: 0
+  isMeleeing: 0
+  isTaunting: 0
+  isFlinching: 0
+  _isShooting: 0
+  _isThrowingGrenade: 0
+  _flinchCooldown: 0
+  _meleeCooldown: 0
+  _shootProjectileCooldown: 0
+  _throwExplosiveCooldown: 0
+  _switchPlayerCooldown: 0
+  _isDodgingCooldown: 0
+  _isCurrentlyShootingCooldown: 0
+  _isCurrentlyThrowingGrenadeCooldown: 0
+  _isSeenByTargetPlayerCooldown: 0
+  _isCurrentlyAlertingCooldown: 0
+  _hardIdleTime: 0
+  _isInRange: 0
+  _walkingAudioSource: {fileID: 7569610477383510051}
+  _overlapSphereMask:
+    serializedVersion: 2
+    m_Bits: 1
+  _leftChecks:
+  - {fileID: 7215148497402074464}
+  - {fileID: 1165082539732729484}
+  - {fileID: 1039900603458708019}
+  - {fileID: 1592043827978086722}
+  - {fileID: 6856440140681853433}
+  _rightChecks:
+  - {fileID: 5428035272035552164}
+  - {fileID: 2213733084605151001}
+  - {fileID: 3926252690837863140}
+  - {fileID: 7020979739283047180}
+  - {fileID: 5597096648755915045}
+  _ultraMergeExPrefab: {fileID: 6500668859487480126, guid: c4d9f2c427f83a94aad0b6ccb2dcb4e3,
+    type: 3}
+  _flinchThreshold: 100
+  _flinchThresholdCount: 0
+  _fireBallPrefab: {fileID: 5091089392186072086, guid: b098cbed4f2aee74c81415d00707bc75,
+    type: 3}
+  _grenadePrefab: {fileID: 6543794610344578356, guid: ace650de0d210f54490f7e347a783c04,
+    type: 3}
+--- !u!114 &7901069246398537680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8603248463023796302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cb4d220f4364f844a3471dfba69fab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 10
+  angle: 120
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 64
+  obstructionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  canSeePlayer: 0
+  _obstruction: {fileID: 0}
+  _state: 
+  rangeChecks: []
 --- !u!114 &4183603536328548558
 MonoBehaviour:
   m_ObjectHideFlags: 0

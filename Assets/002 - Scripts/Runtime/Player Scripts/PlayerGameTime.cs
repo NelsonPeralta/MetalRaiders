@@ -29,7 +29,7 @@ public class PlayerGameTime : MonoBehaviour
         //_timer.text = TimeSpan.FromSeconds(GameTime.instance.totalTime).ToString("mm:ss");
         _timer.text = $"{(GameTime.instance.timeRemaining / 60).ToString("00")}:{(GameTime.instance.timeRemaining % 60).ToString("00")}";
 
-        if (GameManager.instance.gameType == GameManager.GameType.Endless)
+        if (GameManager.instance.gameType == GameManager.GameType.Survival)
             _timer.text = $"{(GameTime.instance.timeElapsed / 60).ToString("00")}:{(GameTime.instance.timeElapsed % 60).ToString("00")}";
     }
 }

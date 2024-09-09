@@ -138,6 +138,11 @@ abstract public class Actor : Biped
     public bool isBoosting { get { return _isCurrentlyAlertingCooldown > 0; } }
 
 
+
+
+
+    [SerializeField] SwarmManager.AiType _aiType;
+
     [SerializeField] protected int _hitPoints, _defaultHitpoints;
     [SerializeField] Transform _targetTransform;
     [SerializeField] HitPoints _targetPlayer;
@@ -146,7 +151,7 @@ abstract public class Actor : Biped
     [SerializeField] ReticuleFriction _friction;
 
     [SerializeField] int _closeRange, _midRange, _longRange;
-    [SerializeField] float _analyzeNextActionCooldown, _findNewTargetCooldown, _defaultFlinchCooldown, _lostTargetBipedStopwatch;
+    [SerializeField] float _distanceToTarget, _analyzeNextActionCooldown, _findNewTargetCooldown, _defaultFlinchCooldown, _lostTargetBipedStopwatch;
     [SerializeField] protected AudioClip _attackClip, _deathClip, _tauntClip, _hurtClip, _gruntClip;
     [SerializeField] bool _oneShotHeadshot;
 
@@ -160,7 +165,7 @@ abstract public class Actor : Biped
     [SerializeField]
     protected float _flinchCooldown, _meleeCooldown, _shootProjectileCooldown, _throwExplosiveCooldown,
         _switchPlayerCooldown, _isDodgingCooldown, _isCurrentlyShootingCooldown, _isCurrentlyThrowingGrenadeCooldown,
-        _isSeenByTargetPlayerCooldown, _isCurrentlyAlertingCooldown;
+        _isSeenByTargetPlayerCooldown, _isCurrentlyAlertingCooldown, _hardIdleTime;
     [SerializeField] protected bool _isInRange;
     [SerializeField] AudioSource _walkingAudioSource;
 
@@ -259,6 +264,9 @@ abstract public class Actor : Biped
         FindNewTarget();
         PlayGruntClip();
         PlayWalkingSound();
+
+
+        ChildUpdate();
     }
 
     private void OnEnable()
@@ -367,6 +375,7 @@ abstract public class Actor : Biped
         isFlinching = _animator.GetCurrentAnimatorStateInfo(0).IsName("Flinch");
         //isShooting = _animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot");
         //isThrowing = _animator.GetCurrentAnimatorStateInfo(0).IsName("Throw");
+
     }
 
     void TargetStateCheck()
@@ -562,6 +571,8 @@ abstract public class Actor : Biped
 
         if (_isDodgingCooldown > -5 && hitPoints < _defaultHitpoints)
             _isDodgingCooldown -= Time.deltaTime;
+
+        if (_hardIdleTime > 0) _hardIdleTime -= Time.deltaTime;
     }
 
 
@@ -577,10 +588,18 @@ abstract public class Actor : Biped
 
         if (targetTransform)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
-            if (distanceToTarget <= closeRange)
+            _distanceToTarget = Vector3.Distance(transform.position, targetTransform.position);
+
+            if (_aiType == SwarmManager.AiType.Undead && _hardIdleTime > 0)
             {
                 nma.enabled = false;
+                _animator.SetBool("Run", false);
+            }
+
+            if (_distanceToTarget <= closeRange)
+            {
+                nma.enabled = false;
+                print($"trying to melee {_meleeCooldown} {isFlinching} {isBoosting} {isDodging}");
 
                 if (_meleeCooldown <= 0 && !isFlinching && !isBoosting && !isDodging)
                 {
@@ -593,9 +612,24 @@ abstract public class Actor : Biped
 
                 }
             }
-            else if (distanceToTarget > closeRange && distanceToTarget <= longRange)
+            else if (_aiType == SwarmManager.AiType.Undead)
             {
-                if (distanceToTarget > closeRange && distanceToTarget <= midRange)
+                if (_distanceToTarget > closeRange && _hardIdleTime <= 0)
+                {
+                    if (!isMeleeing)
+                    {
+                        Debug.Log("Chase Player");
+                        if (!isRunning)
+                            Run(PhotonNetwork.InRoom);
+
+                        nma.enabled = true;
+                        nma.SetDestination(targetTransform.position);
+                    }
+                }
+            }
+            else if (_distanceToTarget > closeRange && _distanceToTarget <= longRange)
+            {
+                if (_distanceToTarget > closeRange && _distanceToTarget <= midRange)
                 {
                     if (!_isInRange)
                         _isInRange = true;
@@ -680,7 +714,7 @@ abstract public class Actor : Biped
                     }
                 }
             }
-            else if (distanceToTarget > longRange)
+            else if (_distanceToTarget > longRange)
             {
                 if (_isInRange)
                     _isInRange = false;
@@ -733,6 +767,7 @@ abstract public class Actor : Biped
 
     protected virtual void ChildOnActorDamaged() { }
     protected virtual void ChildOnEnable() { }
+    protected virtual void ChildUpdate() { }
 
 
 
@@ -789,7 +824,7 @@ abstract public class Actor : Biped
     public void Flinch(bool callRPC = true)
     {
         Debug.Log($"Flinch");
-        if (callRPC && PhotonNetwork.IsMasterClient)
+        if (callRPC && PhotonNetwork.IsMasterClient && _defaultFlinchCooldown > 0)
         {
             if (!isBoosting && !isDodging)
             {

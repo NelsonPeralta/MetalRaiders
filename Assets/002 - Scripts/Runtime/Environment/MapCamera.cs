@@ -57,7 +57,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
 
         _gametypePreviewInfo.text = GameManager.instance.gameType.ToString();
 
-        if(GameManager.instance.teamMode == GameManager.TeamMode.Classic && GameManager.instance.gameMode == GameManager.GameMode.Versus)
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
             _gametypePreviewInfo.text = $"Team {_gametypePreviewInfo.text}";
         }

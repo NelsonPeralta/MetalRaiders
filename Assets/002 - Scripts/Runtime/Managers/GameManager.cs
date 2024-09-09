@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Shotguns, Swat, Retro, GunGame, Hill, Oddball, PurpleRain,
 
         // Swarm Game Types
-        Survival, Endless
+        Skirmish, Survival, Zombies
     }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum TeamMode { Classic, None }
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(PhotonNetwork.IsMasterClient);
                 FindObjectOfType<Launcher>().levelToLoadIndex = 11;
 
-                gameType = GameType.Survival;
+                gameType = GameType.Skirmish;
                 difficulty = SwarmManager.Difficulty.Normal;
             }
             else if (_gameMode == GameMode.Versus)
@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 Launcher.instance.multiplayerMcComponentsHolder.SetActive(false);
                 FindObjectOfType<Launcher>().gameModeBtns.SetActive(false);
-                FindObjectOfType<Launcher>().swarmModeBtns.SetActive(false);
+                FindObjectOfType<Launcher>().swarmDifficultyBtnsHolder.SetActive(false);
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
             }
         }
@@ -190,6 +190,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
             Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
+
+            if (gameMode == GameMode.Coop)
+                if (value == GameType.Zombies)
+                {
+                    FindObjectOfType<Launcher>().levelToLoadIndex = 18;
+                    Launcher.instance.swarmDifficultyBtnsHolder.SetActive(false);
+                    Launcher.instance.zombieMapBtnsHolder.SetActive(true);
+                    Launcher.instance.swarmMapBtnsHolder.SetActive(false);
+                }
+                else
+                {
+                    Launcher.instance.swarmDifficultyBtnsHolder.SetActive(true);
+                    Launcher.instance.zombieMapBtnsHolder.SetActive(false);
+                    Launcher.instance.swarmMapBtnsHolder.SetActive(true);
+                }
         }
     }
 
@@ -356,7 +371,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask, obstructionMask, reticuleFrictionMask, hitboxlayerMask;
+    public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask, obstructionMask, reticuleFrictionMask, hitboxlayerMask, hideLayerMask;
 
 
 
@@ -727,7 +742,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnCreateSwarmRoomButton_Delegate(Launcher launcher)
     {
         gameMode = GameMode.Coop;
-        gameType = GameType.Survival;
+        gameType = GameType.Skirmish;
     }
 
     void OnCreateMultiplayerRoomButton_Delegate(Launcher launcher)
@@ -811,7 +826,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         //Debug.Log($"SpawnPlayers_Coroutine {i} {CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex} {CurrentRoomManager.instance.playerDataCells[i].rewiredId}");
         Debug.Log($"SpawnPlayers_Coroutine {GameManager.instance.GetAllPhotonPlayers().Count}");
 
-        Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[indd].startingSpawnPosInd);
+        Transform spt = SpawnManager.spawnManagerInstance.GetPlayerSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[indd].startingSpawnPosInd);
 
         Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spt.position + (2 * Vector3.up), spt.rotation).GetComponent<Player>();
         player.playerController.rid = indd;

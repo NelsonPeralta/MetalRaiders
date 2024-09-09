@@ -5,13 +5,52 @@ using UnityEngine;
 
 public class Undead : Actor
 {
-    float _targetLostCooldown;
+    float _targetLostCooldown, _checkForBarricadeCooldown;
 
-    
+    RaycastHit _hit;
+
+
     protected override void ChildOnEnable()
     {
-        _hitPoints += FindObjectOfType<SwarmManager>().currentWave * 8;
+        _hitPoints = _defaultHitpoints + FindObjectOfType<SwarmManager>().currentWave * 8;
+        _checkForBarricadeCooldown = 0.25f;
     }
+
+
+
+    protected override void ChildUpdate()
+    {
+        if (_checkForBarricadeCooldown > 0)
+        {
+            _checkForBarricadeCooldown -= Time.deltaTime;
+
+            if (_checkForBarricadeCooldown < 0)
+            {
+                if (Physics.Raycast(losSpawn.transform.position, losSpawn.transform.forward, out _hit, 1, GameManager.instance.hideLayerMask))
+                {
+                    if (_hit.transform.GetComponent<ZombieBarricade>() && _hit.transform.GetComponent<ZombieBarricade>().hitpoints > 0)
+                    {
+                        print($"undead sees barricade {_meleeCooldown} {_hardIdleTime} {isMeleeing}");
+                        UndeadIdle(hardIdle: true);
+                        if (_meleeCooldown <= 0)
+                        {
+                            if (PhotonNetwork.IsMasterClient)
+                                UndeadDamageBarricade(GameManager.instance.hazards.IndexOf(_hit.transform.GetComponent<Hazard>()));
+                        }
+                    }
+                }
+
+                _checkForBarricadeCooldown = 0.1f;
+            }
+        }
+    }
+
+
+
+
+
+
+
 
 
     [PunRPC]
@@ -36,6 +75,25 @@ public class Undead : Actor
     }
 
 
+    [PunRPC]
+    void UndeadDamageBarricade(int hazardInd, bool caller = true)
+    {
+        if (caller)
+        {
+            GetComponent<PhotonView>().RPC("UndeadDamageBarricade", RpcTarget.All, hazardInd, false);
+            GameManager.instance.hazards[hazardInd].GetComponent<ZombieBarricade>().Damage();
+        }
+        else
+        {
+            GetComponent<AudioSource>().clip = _attackClip;
+            GetComponent<AudioSource>().Play();
+
+            _animator.Play("Melee");
+            _meleeCooldown = 2;
+        }
+    }
+
+
 
 
 
@@ -43,15 +101,19 @@ public class Undead : Actor
 
 
     [PunRPC]
-    void UndeadIdle(bool caller = true)
+    void UndeadIdle(bool caller = true, bool hardIdle = false)
     {
         if (caller)
         {
-            GetComponent<PhotonView>().RPC("UndeadIdle", RpcTarget.All, false);
+            print("calling undeadidle");
+            GetComponent<PhotonView>().RPC("UndeadIdle", RpcTarget.All, false, hardIdle);
         }
         else
         {
             //Debug.Log("UndeadIdle RPC");
+            print("undeadidle");
+
+            if(hardIdle)_hardIdleTime = 3;
 
             nma.enabled = false;
             _animator.SetBool("Run", false);
@@ -67,7 +129,7 @@ public class Undead : Actor
         }
         else
         {
-            //Debug.Log("UndeadRun RPC");
+            Debug.Log("UndeadRun RPC");
 
             //_animator.Play("Run");
             _animator.SetBool("Run", true);
@@ -76,31 +138,32 @@ public class Undead : Actor
 
     public override void Idle(bool callRPC = true)
     {
-        throw new System.NotImplementedException();
+        if (!isMeleeing)
+            UndeadIdle(callRPC);
     }
 
     public override void Run(bool callRPC = true)
     {
-        throw new System.NotImplementedException();
+        UndeadRun(callRPC);
     }
 
     public override void Melee(bool callRPC = true)
     {
-        throw new System.NotImplementedException();
+        UndeadAttack(callRPC);
     }
 
     public override void ShootProjectile(bool callRPC = true)
     {
-        throw new System.NotImplementedException();
+        UndeadRun(callRPC);
     }
 
     public override void ThrowExplosive(bool callRPC = true)
     {
-        throw new System.NotImplementedException();
+        UndeadRun(callRPC);
     }
 
     protected override void ChildAwake()
     {
-        throw new System.NotImplementedException();
+        SwarmManager.instance.zombieList.Add(this);
     }
 }

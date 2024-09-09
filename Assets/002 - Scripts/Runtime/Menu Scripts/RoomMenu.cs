@@ -34,7 +34,7 @@ public class RoomMenu : MonoBehaviour
         {
             Launcher.instance.multiplayerMcComponentsHolder.SetActive(false);
             FindObjectOfType<Launcher>().gameModeBtns.SetActive(false);
-            FindObjectOfType<Launcher>().swarmModeBtns.SetActive(false);
+            FindObjectOfType<Launcher>().swarmDifficultyBtnsHolder.SetActive(false);
             FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
         }
     }

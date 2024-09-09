@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -37,9 +38,9 @@ public class SpawnManager : MonoBehaviour
         oddballSpawnPoint = FindObjectOfType<OddballSpawnPoint>();
     }
 
-    public Transform GetSpawnPointAtIndex(int i)
+    public Transform GetPlayerSpawnPointAtIndex(int i)
     {
-        return genericSpawnPointsAlpha[i].transform;
+        return genericSpawnPointsAlpha.Where(item => item.spawnPointType == SpawnPoint.SpawnPointType.Player).ElementAt(i).transform;
     }
 
     public Transform GetRandomComputerSpawnPoint()
@@ -53,6 +54,11 @@ public class SpawnManager : MonoBehaviour
         int ran = Random.Range(0, availableSpawnPoints.Count);
 
         return availableSpawnPoints[ran].transform;
+    }
+
+    public List<SpawnPoint> GetComputerSpawnPoints()
+    {
+        return genericSpawnPointsAlpha.Where(item => item.spawnPointType == SpawnPoint.SpawnPointType.Computer).ToList();
     }
 
     Transform GetRandomSpawnpoint()

@@ -80,4 +80,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Opus.unity
     guid: 9bb0c8ccf6bbbd24cb47ff136672b917
+  - enabled: 0
+    path: Assets/004 - Scenes/Sprite Creating.unity
+    guid: adf279c12aee74947809feb699d8df79
+  - enabled: 1
+    path: Assets/004 - Scenes/Swarm Scenes/Online/Coop - Terror.unity
+    guid: b834aa7fc5f00cd498879a0243322fbf
   m_configObjects: {}

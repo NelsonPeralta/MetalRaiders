@@ -73,7 +73,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text _teamModeText;
     [SerializeField] TMP_Text _teamText;
     [SerializeField] GameObject _teamModeBtns;
-    [SerializeField] GameObject _swarmDifficultyBtns;
+    [SerializeField] GameObject _swarmMapBtnsHolder, _zombiesMapBtnsHolder, _swarmDifficultyBtns;
     [SerializeField] GameObject _vetoBtn;
     [SerializeField] TMP_Text _matchStartCountdownText;
 
@@ -141,9 +141,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public GameObject gameModeBtns { get { return _gameModeBtns; } }
     public GameObject teamModeBtns { get { return _teamModeBtns; } }
-    public GameObject swarmModeBtns { get { return _swarmDifficultyBtns; } }
+    public GameObject swarmDifficultyBtnsHolder { get { return _swarmDifficultyBtns; } }
     public GameObject multiplayerMcComponentsHolder { get { return _multiplayerMcComponentsHolder; } }
     public GameObject swarmMcComponentsHolder { get { return _swarmMcComponentsHolder; } }
+    public GameObject swarmMapBtnsHolder { get { return _swarmMapBtnsHolder; } }
+    public GameObject zombieMapBtnsHolder { get { return _zombiesMapBtnsHolder; } }
     public TMP_Text gameCountdownText { get { return _matchStartCountdownText; } }
     public GameObject vetoBtn { get { return _vetoBtn; } }
     public GameObject nbLocalPlayersHolder { get { return _nbLocalPlayersHolder; } }

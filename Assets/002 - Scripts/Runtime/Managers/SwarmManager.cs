@@ -352,38 +352,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
                 for (int i = 0; i < 32; i++)
                 {
-                    //Transform sp = SpawnManager.spawnManagerInstance.GetRandomComputerSpawnPoint();
-                    //GameObject z = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero, Quaternion.identity);
-                    //_zombiesPool.Add(z.GetComponent<Undead>());
-                    //z.transform.parent = transform;
-                    //z.gameObject.SetActive(false);
-
-                    GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -1), Quaternion.identity);
-                    //_breathersPool.Add(w.GetComponent<Breather>());
-                    //w.transform.parent = transform;
-                    //w.gameObject.SetActive(false);
-
-                    GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -2), Quaternion.identity);
-                    //_ribbianPool.Add(a.GetComponent<AlienShooter>());
-                    //a.transform.parent = transform;
-                    //a.gameObject.SetActive(false);
-
-
-                    //GameObject t = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", helldogPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -3), Quaternion.identity);
-                    //hellhoundPool.Add(t.GetComponent<Helldog>());
-                    //t.transform.parent = transform;
-                    //t.gameObject.SetActive(false);
-
-                    //GameObject h = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", tyrantPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -4), Quaternion.identity);
-                    //tyrantPool.Add(h.GetComponent<Tyrant>());
-                    //h.transform.parent = transform;
-                    //h.gameObject.SetActive(false);
-                    //GameObject z = Instantiate(zombiePrefab, Vector3.zero, Quaternion.identity);
-                    //_zombieList.Add(z.GetComponent<Undead>());
-                    //z.transform.parent = transform;
-                    //z.SetActive(false);
+                    if (GameManager.instance.gameType == GameManager.GameType.Zombies)
+                    {
+                        GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", zombiePrefab.name), Vector3.zero + new Vector3(0, -i * 10, -1), Quaternion.identity);
+                    }
+                    else
+                    {
+                        GameObject w = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", knightPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -1), Quaternion.identity);
+                        GameObject a = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/AIs", alienShooterPrefab.name), Vector3.zero + new Vector3(0, -i * 10, -2), Quaternion.identity);
+                    }
                 }
-
             }
 
             _actorDropships = FindObjectsOfType<ActorDropship>().ToList();
@@ -427,6 +405,14 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         _musicAudioSource.Play();
     }
 
+    public void TriggerZombieBehaviour()
+    {
+        if (GameManager.instance.gameType == GameManager.GameType.Zombies)
+        {
+            SpawnZombieSubWave();
+        }
+    }
+
     public void CreateAIPool(bool caller = true)
     {
         if (!caller)
@@ -439,7 +425,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void Begin()
     {
-
         _maxBreathersEnabled = 6;
         _maxAliensEnabled = 6;
         _maxZombieEnabled = 3;
@@ -458,6 +443,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         currentWave++;
         CalculateNumberOfAIsForNextWave();
+        TriggerZombieBehaviour();
+
         Debug.Log("Wave Increased");
 
 
@@ -1004,7 +991,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPacksCheck()
     {
-        if (currentWave % 10 == 0 && GameManager.instance.gameType == GameManager.GameType.Survival)
+        if (currentWave % 10 == 0 && GameManager.instance.gameType == GameManager.GameType.Skirmish)
         {
             bool _achievementUnlocked = false;
             Steamworks.SteamUserStats.GetAchievement("YAWA", out _achievementUnlocked);
@@ -1015,7 +1002,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 AchievementManager.UnlockAchievement("YAWA");
             }
 
-            if (GameManager.instance.gameMode == GameManager.GameMode.Coop && GameManager.instance.gameType != GameManager.GameType.Endless)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop && GameManager.instance.gameType != GameManager.GameType.Survival)
             {
                 gameWon = true;
                 EndGame();
@@ -1218,6 +1205,15 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         go.SetActive(true);
     }
 
+
+
+
+
+
+
+    
+
+
     public void SpawnActorsFromDropship(ActorDropship ad)
     {
 
@@ -1296,6 +1292,39 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         //    if (p && p.isMine)
         //        p.SetupMotionTracker();
     }
+
+
+
+    void SpawnZombieSubWave()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        int targetPhotonId, aiPhotonId = -1;
+        try { targetPhotonId = GetRandomPlayerPhotonId(); } catch { targetPhotonId = 0; }
+        print($"SpawnZombieSubWave");
+
+
+        foreach (SpawnPoint sp in SpawnManager.spawnManagerInstance.GetComputerSpawnPoints())
+        {
+            foreach (Undead w in zombieList)
+            {
+                if (!w.gameObject.activeInHierarchy && !_reservedActorPhotonIdsForWave.Contains(w.GetComponent<PhotonView>().ViewID))
+                {
+                    aiPhotonId = w.GetComponent<PhotonView>().ViewID;
+                    _reservedActorPhotonIdsForWave.Add(aiPhotonId);
+                    break;
+                }
+
+            }
+
+            networkSwarmManagerPV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId,
+                sp.transform.position, sp.transform.rotation, AiType.Undead.ToString(), 0);
+
+            if (editMode) break;
+        }
+    }
+
 
 
 

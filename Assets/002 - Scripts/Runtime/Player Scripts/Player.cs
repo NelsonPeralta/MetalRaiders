@@ -695,7 +695,7 @@ public class Player : Biped
 
         Debug.Log($"Player Awake {GameManager.instance.GetAllPhotonPlayers().Count()}");
         _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
-        if(GameManager.instance.connection == GameManager.Connection.Local)
+        if (GameManager.instance.connection == GameManager.Connection.Local)
             _playerId = GameManager.instance.GetAllPhotonPlayers().Count();
 
         _rb = GetComponent<Rigidbody>(); if (!PV.IsMine) _rb.isKinematic = true;
@@ -1250,7 +1250,15 @@ public class Player : Biped
                     if (hasArmor)
                         hitPoints += (Time.deltaTime * _shieldHealingIncrement);
                     else
-                        hitPoints = Mathf.Clamp(hitPoints + (Time.deltaTime * 20), 0, maxHealthPoints * 0.45f);
+                    {
+                        if (GameManager.instance.gameType != GameManager.GameType.Zombies)
+                        {
+                            if (hitPoints < maxHealthPoints * 0.45f)
+                                hitPoints = Mathf.Clamp(hitPoints + (Time.deltaTime * 20), 0, maxHealthPoints * 0.45f);
+                        }
+                        else
+                            hitPoints += (Time.deltaTime * 20);
+                    }
                 }
                 else
                 {
