@@ -39,7 +39,7 @@ public class WallWeapon : InteractableObject
             }
             else
             {
-                other.transform.root.GetComponent<PlayerUI>().ShowInformer($"You ammo for [Cost: {_ammoCost}]");
+                other.transform.root.GetComponent<PlayerUI>().ShowInformer($"Buy ammo for [Cost: {_ammoCost}]");
             }
         }
     }

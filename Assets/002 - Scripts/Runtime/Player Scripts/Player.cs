@@ -1256,8 +1256,8 @@ public class Player : Biped
                             if (hitPoints < maxHealthPoints * 0.45f)
                                 hitPoints = Mathf.Clamp(hitPoints + (Time.deltaTime * 20), 0, maxHealthPoints * 0.45f);
                         }
-                        else
-                            hitPoints += (Time.deltaTime * 20);
+                        //else
+                        //    hitPoints += (Time.deltaTime * 20);
                     }
                 }
                 else

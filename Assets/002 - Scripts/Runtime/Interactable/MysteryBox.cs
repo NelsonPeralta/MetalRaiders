@@ -6,7 +6,7 @@ using UnityEngine;
 public class MysteryBox : InteractableObject
 {
     [SerializeField] int _cost;
-    [SerializeField] Transform _spawnFor;
+    [SerializeField] Transform _spawnPos, _spawnFor;
     [SerializeField] Animator _animator;
 
 
@@ -111,8 +111,8 @@ public class MysteryBox : InteractableObject
             LootableWeapon weapon = WeaponPool.instance.GetWeaponAtInd(_weapIndd);
             print($"SpitWeapon: {weapon.name}");
 
-            weapon.transform.position = _spawnFor.position;
-            weapon.transform.rotation = _spawnFor.rotation;
+            weapon.transform.position = _spawnPos.position;
+            weapon.transform.rotation = _spawnPos.rotation;
             weapon.gameObject.SetActive(true);
             weapon.GetComponent<Rigidbody>().velocity = Vector3.zero;
             weapon.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;

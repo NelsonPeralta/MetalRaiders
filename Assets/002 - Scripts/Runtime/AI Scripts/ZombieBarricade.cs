@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ZombieBarricade : Hazard
 {
-    [SerializeField] GameObject _model;
+    [SerializeField] GameObject _model, _repairHolder;
     [SerializeField] int _hitpoints;
 
     [SerializeField] List<GameObject> _planks = new List<GameObject>();
@@ -15,7 +15,7 @@ public class ZombieBarricade : Hazard
 
 
 
-    public int hitpoints { get { return _hitpoints; }  }
+    public int hitpoints { get { return _hitpoints; } }
 
 
 
@@ -42,6 +42,26 @@ public class ZombieBarricade : Hazard
             _planks[2].SetActive(_hitpoints > 2);
             _planks[3].SetActive(_hitpoints > 3);
             _planks[4].SetActive(_hitpoints > 4);
+
+            _repairHolder.SetActive(_hitpoints < 5);
+        }
+    }
+
+    public void Repair()
+    {
+        if (_hitpoints < 5)
+        {
+            _hitpoints += 1;
+
+            _model.SetActive(_hitpoints > 0);
+
+            _planks[0].SetActive(_hitpoints > 0);
+            _planks[1].SetActive(_hitpoints > 1);
+            _planks[2].SetActive(_hitpoints > 2);
+            _planks[3].SetActive(_hitpoints > 3);
+            _planks[4].SetActive(_hitpoints > 4);
+
+            _repairHolder.SetActive(_hitpoints < 5);
         }
     }
 
@@ -50,6 +70,7 @@ public class ZombieBarricade : Hazard
     private void Awake()
     {
         _hitpoints = 5;
+        _repairHolder.SetActive(false);
     }
 
     // Start is called before the first frame update

@@ -938,10 +938,20 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 //_networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
             }
 
-        if (ribbiansAlive <= 0 && breathersAlive <= 0)
+        if (GameManager.instance.gameType != GameManager.GameType.Zombies)
         {
-            Debug.Log("Swarm Manager EndWave");
-            _waveEndCountdown = nextWaveDelay;
+            if (ribbiansAlive <= 0 && breathersAlive <= 0)
+            {
+                Debug.Log("Swarm Manager EndWave");
+                _waveEndCountdown = nextWaveDelay;
+            }
+        }
+        else
+        {
+            if (zombiesAlive <= (CurrentRoomManager.instance.expectedNbPlayers / 2))
+            {
+                _waveEndCountdown = nextWaveDelay;
+            }
         }
     }
 
@@ -955,7 +965,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("EndWave_RPC");
         print($"EndWave_RPC {currentWave} {ranClipInt}");
-        if (currentWave % 5 == 0 && currentWave > 1) AddClip(bossMusicOutros[ranClipInt]);
+
+        if (GameManager.instance.gameType != GameManager.GameType.Zombies)
+            if (currentWave % 5 == 0 && currentWave > 1) AddClip(bossMusicOutros[ranClipInt]);
 
         OnWaveEnd?.Invoke(this);
         _newWaveCountdown = nextWaveDelay;
@@ -1016,27 +1028,37 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
         else if (currentWave % 5 == 0)
         {
-            NetworkSwarmManager.instance.EnableStartingNetworkWeapons();
-            NetworkGameManager.instance.EnableGrenadePacks();
-
-            int livesToAdd = GameManager.instance.GetAllPhotonPlayers().Count;
-            livesLeft += livesToAdd;
-            GameManager.GetRootPlayer().announcer.AddClip(_livesAddedClip);
-            GameManager.GetRootPlayer().announcer.AddClip(_weaponDropClip);
-            foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+            if (GameManager.instance.gameType != GameManager.GameType.Zombies)
             {
-                if (p)
+
+                NetworkSwarmManager.instance.EnableStartingNetworkWeapons();
+                NetworkGameManager.instance.EnableGrenadePacks();
+
+                int livesToAdd = GameManager.instance.GetAllPhotonPlayers().Count;
+                livesLeft += livesToAdd;
+                GameManager.GetRootPlayer().announcer.AddClip(_livesAddedClip);
+                GameManager.GetRootPlayer().announcer.AddClip(_weaponDropClip);
+                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                 {
-                    p.killFeedManager.EnterNewFeed($"<color=#31cff9>Lives added: {livesToAdd}");
-                    p.killFeedManager.EnterNewFeed("<color=#31cff9>Health Packs Respawned");
-                    p.killFeedManager.EnterNewFeed("<color=#31cff9>Weapons respawned");
+                    if (p)
+                    {
+                        p.killFeedManager.EnterNewFeed($"<color=#31cff9>Lives added: {livesToAdd}");
+                        p.killFeedManager.EnterNewFeed("<color=#31cff9>Health Packs Respawned");
+                        p.killFeedManager.EnterNewFeed("<color=#31cff9>Weapons respawned");
+                    }
                 }
             }
+
             foreach (HealthPack hp in healthPacks)
-                if (!hp.gameObject.activeSelf)
-                    hp.gameObject.SetActive(true);
+                hp.gameObject.SetActive(true);
+
+            foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+                p.killFeedManager.EnterNewFeed("<color=#31cff9>Health Packs Respawned");
         }
     }
+
+
+
     int GetRandomPlayerPhotonId()
     {
         List<Player> allPlayers = GameManager.instance.GetAllPhotonPlayers();
