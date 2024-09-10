@@ -13,7 +13,7 @@ public class Undead : Actor
     protected override void ChildOnEnable()
     {
         _hitPoints = _defaultHitpoints + FindObjectOfType<SwarmManager>().currentWave * 8;
-        _checkForBarricadeCooldown = 0.25f;
+        _checkForBarricadeCooldown = 0.3f;
     }
 
 
@@ -26,21 +26,22 @@ public class Undead : Actor
 
             if (_checkForBarricadeCooldown < 0)
             {
-                if (Physics.Raycast(losSpawn.transform.position, losSpawn.transform.forward, out _hit, 1, GameManager.instance.hideLayerMask))
-                {
-                    if (_hit.transform.GetComponent<ZombieBarricade>() && _hit.transform.GetComponent<ZombieBarricade>().hitpoints > 0)
+                if (_hitPoints > 0)
+                    if (Physics.Raycast(losSpawn.transform.position, losSpawn.transform.forward, out _hit, 1, GameManager.instance.hideLayerMask))
                     {
-                        print($"undead sees barricade {_meleeCooldown} {_hardIdleTime} {isMeleeing}");
-                        UndeadIdle(hardIdle: true);
-                        if (_meleeCooldown <= 0)
+                        if (_hit.transform.GetComponent<ZombieBarricade>() && _hit.transform.GetComponent<ZombieBarricade>().hitpoints > 0)
                         {
-                            if (PhotonNetwork.IsMasterClient)
-                                UndeadDamageBarricade(GameManager.instance.hazards.IndexOf(_hit.transform.GetComponent<Hazard>()));
+                            print($"undead sees barricade {_meleeCooldown} {_hardIdleTime} {isMeleeing}");
+                            UndeadIdle(hardIdle: true);
+                            if (_meleeCooldown <= 0)
+                            {
+                                if (PhotonNetwork.IsMasterClient)
+                                    UndeadDamageBarricade(GameManager.instance.hazards.IndexOf(_hit.transform.GetComponent<Hazard>()));
+                            }
                         }
                     }
-                }
 
-                _checkForBarricadeCooldown = 0.1f;
+                _checkForBarricadeCooldown = 0.3f;
             }
         }
     }
@@ -113,7 +114,7 @@ public class Undead : Actor
             //Debug.Log("UndeadIdle RPC");
             print("undeadidle");
 
-            if(hardIdle)_hardIdleTime = 3;
+            if (hardIdle) _hardIdleTime = 2.5f;
 
             nma.enabled = false;
             _animator.SetBool("Run", false);

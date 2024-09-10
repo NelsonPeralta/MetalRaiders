@@ -479,6 +479,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
 
+
     // RPCs
     #region
 
@@ -587,7 +588,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
             try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.GetComponent<Rigidbody>().AddForce(fDir * 200); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { _firstWeapon.GetComponent<Rigidbody>().AddForce(fDir * GameManager.WEAPON_DROP_FORCE); } catch (System.Exception e) { Debug.LogWarning(e); }
         }
     }
 

@@ -410,6 +410,10 @@ abstract public class Actor : Biped
 
     void DropRandomWeapon()
     {
+        if (_aiType == SwarmManager.AiType.Undead) return;
+
+
+
 
         // If we are in a room and we are not the Host, stop
         if (PhotonNetwork.InRoom) if (!PhotonNetwork.IsMasterClient) return;
@@ -498,8 +502,13 @@ abstract public class Actor : Biped
 
                     if (NetworkSwarmManager.instance)
                     {
-                        int pid = NetworkSwarmManager.instance.GetRandomAlivePlayerPhotonId();
+                        int pid = NetworkSwarmManager.instance.GetRandomAlivePlayerPhotonId(); // Returns -1 if the last player photonid returned was the same
                         if (pid > 0) SetNewTargetPlayerWithPhotonId(pid);
+                        else // Try again. If only 1 player in room
+                        {
+                            pid = NetworkSwarmManager.instance.GetRandomAlivePlayerPhotonId();
+                            SetNewTargetPlayerWithPhotonId(pid);
+                        }
                     }
                 }
 
@@ -618,7 +627,6 @@ abstract public class Actor : Biped
                 {
                     if (!isMeleeing)
                     {
-                        Debug.Log("Chase Player");
                         if (!isRunning)
                             Run(PhotonNetwork.InRoom);
 
@@ -809,14 +817,36 @@ abstract public class Actor : Biped
             try
             {
                 pp.GetComponent<PlayerSwarmMatchStats>().kills++;
-                pp.playerMedals.kills++;
-                pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
-                pp.playerUI.ShowPointWitness(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
-                pp.PlayEnemyDownClip();
+                if (isHeadshot)
+                    pp.GetComponent<PlayerSwarmMatchStats>().headshots++;
 
-                //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
+                if (_aiType != SwarmManager.AiType.Undead)
+                {
+                    pp.playerMedals.kills++;
+                    pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
+                    pp.playerUI.ShowPointWitness(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
+                    pp.PlayEnemyDownClip();
+                }
+                else
+                {
+                    if (!isHeadshot)
+                    {
+                        pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(100);
+                        pp.playerUI.ShowPointWitness(100);
+                    }
+                    else
+                    {
+                        pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(150);
+                        pp.playerUI.ShowPointWitness(150);
+                    }
+                }
             }
             catch { }
+        }
+        else
+        {
+            pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(10);
+            pp.playerUI.ShowPointWitness(10);
         }
     }
 
@@ -850,6 +880,7 @@ abstract public class Actor : Biped
     {
         if (caller)
         {
+            print("SetNewTargetPlayerWithPhotonId call");
             GetComponent<PhotonView>().RPC("SetNewTargetPlayerWithPhotonId", RpcTarget.AllViaServer, pid, false);
         }
         else

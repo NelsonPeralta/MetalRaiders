@@ -976,10 +976,16 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
 
         waveEnded = true;
-        int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
-        foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
-            if (p)
-                p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
+
+        if (GameManager.instance.gameType != GameManager.GameType.Zombies)
+        {
+            int ranBonusPoints = Random.Range(currentWave * 500, currentWave * 1000 + 1);
+            foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+                if (p)
+                    p.GetComponent<PlayerSwarmMatchStats>().AddPoints(ranBonusPoints, true);
+        }
+
+
         RespawnHealthPacksCheck();
     }
 
@@ -1211,7 +1217,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
 
-    
+
 
 
     public void SpawnActorsFromDropship(ActorDropship ad)

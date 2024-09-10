@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static string ROOT_PLAYER_NAME;
     public static int DEFAULT_EXPLOSION_POWER = 300;
     public static int DEFAULT_FRAMERATE = 65;
+    public static int WEAPON_DROP_FORCE = 200;
 
     // Events
     public delegate void GameManagerEvent();

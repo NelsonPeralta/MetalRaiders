@@ -7,6 +7,8 @@ public class ZombieBarricade : Hazard
     [SerializeField] GameObject _model;
     [SerializeField] int _hitpoints;
 
+    [SerializeField] List<GameObject> _planks = new List<GameObject>();
+
 
 
 
@@ -34,6 +36,12 @@ public class ZombieBarricade : Hazard
             {
                 _model.SetActive(false);
             }
+
+            _planks[0].SetActive(_hitpoints > 0);
+            _planks[1].SetActive(_hitpoints > 1);
+            _planks[2].SetActive(_hitpoints > 2);
+            _planks[3].SetActive(_hitpoints > 3);
+            _planks[4].SetActive(_hitpoints > 4);
         }
     }
 
@@ -41,7 +49,7 @@ public class ZombieBarricade : Hazard
 
     private void Awake()
     {
-        _hitpoints = 4;
+        _hitpoints = 5;
     }
 
     // Start is called before the first frame update

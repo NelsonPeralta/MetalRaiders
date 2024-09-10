@@ -4,6 +4,7 @@ using Photon.Pun;
 using System.IO;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 
 // Used to spawn weapons at runtime
@@ -81,5 +82,20 @@ public class WeaponPool : MonoBehaviourPun
         //}
 
         return null;
+    }
+
+
+
+
+
+
+    public int GetMysteryBoxWeaponInd()
+    {
+        return Random.Range(0, _spawnedWeapons.Where(item => !item.gameObject.activeInHierarchy).Count() - 1);
+    }
+
+    public LootableWeapon GetWeaponAtInd(int indd)
+    {
+        return _spawnedWeapons[indd];
     }
 }
