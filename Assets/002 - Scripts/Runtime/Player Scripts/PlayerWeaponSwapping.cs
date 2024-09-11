@@ -83,8 +83,8 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                         //pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
                         player.GetComponent<PlayerUI>().ShowInformer("Hold E to pick up " + closestLootableWeapon.cleanName);
 
-                        if(ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick)
-                        player.GetComponent<PlayerUI>().ShowInformer("Hold RELOAD to pick up " + closestLootableWeapon.cleanName);
+                        if (ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick)
+                            player.GetComponent<PlayerUI>().ShowInformer("Hold RELOAD to pick up " + closestLootableWeapon.cleanName);
                     }
                 }
             }
@@ -179,6 +179,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
 
     private void OnTriggerStay(Collider other)
     {
+        return;
         if (other.GetComponent<LootableWeapon>() && other.gameObject.activeSelf)
         {
             //if (player.isDead ||

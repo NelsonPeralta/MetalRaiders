@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
-public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
+public class LootableWeapon : InteractableObject //IPunObservable*/
 {
     public delegate void LootableWeaponEvent(LootableWeapon lootableWeapon);
     public LootableWeaponEvent OnLooted;
@@ -276,5 +276,10 @@ public class LootableWeapon : MonoBehaviourPun //IPunObservable*/
         MultiplayerManager.instance.lootableWeaponsDict.Add(_spawnPointPositionIdentity, this);
         gameObject.SetActive(false);
         transform.position = pos;
+    }
+
+    public override void Trigger(int? pid)
+    {
+
     }
 }
