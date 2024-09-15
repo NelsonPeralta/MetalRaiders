@@ -632,6 +632,7 @@ public class Player : Biped
     public AimAssist aimAssist;
     public PlayerSurroundings playerSurroundings;
     public PlayerMovement movement;
+    public PlayerInteractableObjectHandler playerInteractableObjectHandler;
 
     [Header("Camera Options")]
     [Tooltip("Default value for camera field of view (40 is recommended).")]

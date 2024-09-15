@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviourPun
 
     // Events
     public delegate void PlayerControllerEvent(PlayerController playerController);
-    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract,
+    public PlayerControllerEvent OnPlayerSwitchWeapons, OnPlayerLongInteract, OnPlayerShortPressInteract,
         OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade,
         OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop, OnPlayerDeath,
         OnControllerTypeChangedToController, OnControllerTypeChangedToMouseAndKeyboard,
@@ -397,7 +397,8 @@ public class PlayerController : MonoBehaviourPun
 
         if (rewiredPlayer.GetButtonShortPressDown("Interact"))
         {
-            OnPlayerLongInteract?.Invoke(this);
+            //OnPlayerLongInteract?.Invoke(this);
+            OnPlayerShortPressInteract?.Invoke(this);
         }
     }
 

@@ -130,6 +130,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        transform.GetComponent<Player>().playerInteractableObjectHandler.ClosestInteractableObjectAssigned += OnClosestInteractableObjectAssigned;
         playerMultiplayerMatchStats = GetComponent<PlayerMultiplayerMatchStats>();
         HideInformer();
         plasmaGrenadeImage.gameObject.SetActive(false);
@@ -477,6 +478,23 @@ public class PlayerUI : MonoBehaviour
         {
             print($"ToggleMotionTracker {b}");
             _motionTracker.SetActive(b);
+        }
+    }
+
+    void OnClosestInteractableObjectAssigned(PlayerInteractableObjectHandler pioh)
+    {
+        if (pioh.closestInteractableObject == null)
+        {
+            HideInformer();
+
+        }
+        else
+        {
+            print($"OnClosestInteractableObjectAssigned {pioh.closestInteractableObject.name}");
+
+            if (pioh.closestInteractableObject.GetComponent<LootableWeapon>())
+                ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(pioh.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+            //else if(pioh.closestInteractableObject.GetComponent<ArmorSeller>())
         }
     }
 }

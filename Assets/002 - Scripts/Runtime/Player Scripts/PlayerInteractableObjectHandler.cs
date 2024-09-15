@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class PlayerInteractableObjectHandler : MonoBehaviour
 {
+    public delegate void PlayerInteractableObjectHandlerEvent(PlayerInteractableObjectHandler pioh);
+
+    public PlayerInteractableObjectHandlerEvent ClosestInteractableObjectAssigned;
+
+
+
     [SerializeField] InteractableObject _closestInteractableObject;
 
     [SerializeField] List<InteractableObject> _rawInteractableObjects = new List<InteractableObject>();
@@ -32,7 +38,16 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
     public Player player { get { return _player; } }
     PhotonView PV { get { return GetComponent<PhotonView>(); } }
-    public InteractableObject closestInteractableObject { get { return _closestInteractableObject; } set { _closestInteractableObject = value; } }
+    public InteractableObject closestInteractableObject
+    {
+        get { return _closestInteractableObject; }
+        set
+        {
+            _closestInteractableObject = value;
+
+            //ClosestInteractableObjectAssigned?.Invoke(this);
+        }
+    }
 
     List<InteractableObject> rawInteractableObjects
     {
@@ -80,6 +95,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                 if (_preClosestInteractableObject != _closestInteractableObject)
                 {
                     //if(_preClosestInteractableObject.GetComponent<LootableWeapon>()) _preClosestInteractableObject.GetComponent<LootableWeapon>()
+                    ClosestInteractableObjectAssigned?.Invoke(this);
                 }
             }
         }
@@ -106,7 +122,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
     {
         _player = transform.root.GetComponent<Player>();
 
-        player.playerController.OnPlayerLongInteract += OnPlayerLongInteract_Delegate;
+        player.playerController.OnPlayerShortPressInteract += OnPlayerLongInteract_Delegate;
     }
 
     private void Update()
@@ -168,7 +184,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                 }
 
 
-                _closestInteractableObject = _filteredInteractableObjects[0];
+                closestInteractableObject = _filteredInteractableObjects[0];
             }
         }
     }
@@ -247,14 +263,14 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                     //OnWeaponPickup?.Invoke(this);
                 }
 
-                PV.RPC("RPC_DisableCollidingWeapon", RpcTarget.All, lwPosition);
+                PV.RPC("DisableCollidingWeapon_RPC", RpcTarget.All, lwPosition);
             }
         }
     }
 
 
     [PunRPC]
-    public void RPC_DisableCollidingWeapon(Vector3 collidingWeaponPosition)
+    public void DisableCollidingWeapon_RPC(Vector3 collidingWeaponPosition)
     {
         Debug.Log($"RPC: Disabling lootable weapon: {collidingWeaponPosition}");
         //weaponPool.DisablePooledWeapon(collidingWeaponPosition);
