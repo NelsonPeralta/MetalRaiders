@@ -64,7 +64,7 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft, notKillFeed;
-    [SerializeField] GameObject _motionTracker;
+    [SerializeField] GameObject _motionTracker, _motionTrackerSwarmHolder;
     public Text isMineText;
     public Text camSensWitnessText;
 
@@ -268,18 +268,22 @@ public class PlayerUI : MonoBehaviour
     {
         shieldBar.SetActive(false);
         multiplayerPointsHolder.SetActive(false);
-        ToggleMotionTracker(false);
+        ToggleMotionTracker_ForAiming(false);
     }
 
     public void EnableArmorUI()
     {
+        ToggleMotionTrackerHolder(true);
+
+
+
         if (GameManager.instance.gameType != GameManager.GameType.Pro &&
                 GameManager.instance.gameType != GameManager.GameType.Swat &&
                 GameManager.instance.gameType != GameManager.GameType.Snipers &&
                  GameManager.instance.gameType != GameManager.GameType.Retro)
-            ToggleMotionTracker(true);
+            ToggleMotionTracker_ForAiming(true);
         else
-            ToggleMotionTracker(false);
+            ToggleMotionTracker_ForAiming(false);
 
 
 
@@ -290,6 +294,18 @@ public class PlayerUI : MonoBehaviour
         shieldBar.GetComponent<Slider>().maxValue = GetComponent<Player>().maxShieldPoints;
         shieldBar.GetComponent<Slider>().value = GetComponent<Player>().shieldPoints;
     }
+
+
+    public void DisableArmorUI()
+    {
+        ToggleMotionTrackerHolder(false);
+        ToggleMotionTracker_ForAiming(false);
+        shieldBar.SetActive(false);
+        healthBar.SetActive(true);
+    }
+
+
+
     public void AddInformerText(string message)
     {
         StartCoroutine(AddInformerText_Coroutine(message));
@@ -472,13 +488,18 @@ public class PlayerUI : MonoBehaviour
     }
 
 
-    public void ToggleMotionTracker(bool b)
+    public void ToggleMotionTracker_ForAiming(bool b)
     {
         if (_motionTracker.gameObject.activeSelf != b)
         {
             print($"ToggleMotionTracker {b}");
             _motionTracker.SetActive(b);
         }
+    }
+
+    public void ToggleMotionTrackerHolder(bool b)// used more for Swarm
+    {
+        _motionTrackerSwarmHolder.gameObject.SetActive(b);
     }
 
     void OnClosestInteractableObjectAssigned(PlayerInteractableObjectHandler pioh)
@@ -494,7 +515,24 @@ public class PlayerUI : MonoBehaviour
 
             if (pioh.closestInteractableObject.GetComponent<LootableWeapon>())
                 ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(pioh.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
-            //else if(pioh.closestInteractableObject.GetComponent<ArmorSeller>())
+            else if (pioh.closestInteractableObject.GetComponent<ArmorSeller>())
+            {
+
+                ShowInformer($"Hold [Interact] to buy Power Armor");
+
+
+                if (!transform.root.GetComponent<Player>().hasArmor)
+                {
+                    if (transform.root.GetComponent<PlayerSwarmMatchStats>().points >= pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost)
+                        ShowInformer($"Buy Power Armor [Cost: {pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
+                    else
+                        transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points [Cost: {pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
+                }
+                else
+                {
+                    transform.root.GetComponent<PlayerUI>().ShowInformer($"You already have a Power Armor");
+                }
+            }
         }
     }
 }

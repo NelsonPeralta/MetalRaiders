@@ -821,7 +821,7 @@ public class PlayerController : MonoBehaviourPun
 
         if (isAiming && pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
         {
-            player.playerUI.ToggleMotionTracker(false);
+            player.playerUI.ToggleMotionTracker_ForAiming(false);
             player.playerUI.bottomRight.gameObject.SetActive(false);
             player.playerUI.topLeft.gameObject.SetActive(false);
             player.playerUI.topMiddle.gameObject.SetActive(false);
@@ -838,9 +838,9 @@ public class PlayerController : MonoBehaviourPun
             GameManager.instance.gameType != GameManager.GameType.Swat &&
             GameManager.instance.gameType != GameManager.GameType.Snipers &&
              GameManager.instance.gameType != GameManager.GameType.Retro)
-                player.playerUI.ToggleMotionTracker(true);
+                player.playerUI.ToggleMotionTracker_ForAiming(true);
             else
-                player.playerUI.ToggleMotionTracker(false);
+                player.playerUI.ToggleMotionTracker_ForAiming(false);
         }
     }
 

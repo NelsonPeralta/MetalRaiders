@@ -3340,10 +3340,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 258785369160381947}
-  - component: {fileID: 258785369160381946}
+  - component: {fileID: 5330303900050677934}
   - component: {fileID: 3037963482385236054}
   - component: {fileID: 4027902820036829864}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Armor Seller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3369,7 +3369,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &258785369160381946
+--- !u!114 &5330303900050677934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3378,21 +3378,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 258785369160381945}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e5c64d4548f7494884f7f566301cab7, type: 3}
+  m_Script: {fileID: 11500000, guid: af37dd6dfdd561847a311e8d1d811539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   armorModel: {fileID: 257102834313342281}
   cost: 100000
   playersInRange: []
-  _findableObjects:
-  - {fileID: 1010026336777627977}
-  - {fileID: 2802277490621872700}
-  - {fileID: 3877520467660529322}
+  _findableObjects: []
   _allFindableObjectsFound: 0
-  _findableObjectsFoundClip: {fileID: 8300000, guid: 1f4428701d5fd3544b68cb539a562bcf,
-    type: 3}
-  _allFindableObjectsFoundClip: {fileID: 8300000, guid: d17966a38132e474ab571a084af55c8f,
-    type: 3}
+  _findableObjectsFoundClip: {fileID: 0}
+  _allFindableObjectsFoundClip: {fileID: 0}
 --- !u!136 &3037963482385236054
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3595,18 +3590,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf0bc5941286a73459c7cc1cdce0f738, type: 3}
---- !u!114 &3877520467660529322 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3537244724539711200, guid: cf0bc5941286a73459c7cc1cdce0f738,
-    type: 3}
-  m_PrefabInstance: {fileID: 349425928069578826}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fafa010bbb76d4f4b94e4d4c3ece1c57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6731030255344970995 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6462671364210322617, guid: cf0bc5941286a73459c7cc1cdce0f738,
@@ -3696,18 +3679,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf0bc5941286a73459c7cc1cdce0f738, type: 3}
---- !u!114 &2802277490621872700 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3537244724539711200, guid: cf0bc5941286a73459c7cc1cdce0f738,
-    type: 3}
-  m_PrefabInstance: {fileID: 1726393587530638556}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fafa010bbb76d4f4b94e4d4c3ece1c57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &5640024675248425061 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6462671364210322617, guid: cf0bc5941286a73459c7cc1cdce0f738,
@@ -3797,18 +3768,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf0bc5941286a73459c7cc1cdce0f738, type: 3}
---- !u!114 &1010026336777627977 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3537244724539711200, guid: cf0bc5941286a73459c7cc1cdce0f738,
-    type: 3}
-  m_PrefabInstance: {fileID: 4544841002333714345}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fafa010bbb76d4f4b94e4d4c3ece1c57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &7395616004633746192 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6462671364210322617, guid: cf0bc5941286a73459c7cc1cdce0f738,

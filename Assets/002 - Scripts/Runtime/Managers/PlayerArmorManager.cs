@@ -33,7 +33,12 @@ public class PlayerArmorManager : MonoBehaviour
                 if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
                     EnableAllArmorsInDataString();
                 else if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
-                    ToggleMarinePieces(true);
+                {
+                    if (!player.hasArmor)
+                        ToggleMarinePieces(true);
+                    else
+                        EnableAllArmorsInDataString();
+                }
 
 
                 if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
@@ -90,7 +95,11 @@ public class PlayerArmorManager : MonoBehaviour
             gameObject.SetActive(false);
     }
 
-
+    private void Start()
+    {
+        player.OnPlayerRespawnEarly -= OnPlayerRespawn;
+        player.OnPlayerRespawnEarly += OnPlayerRespawn;
+    }
 
 
 
@@ -101,6 +110,9 @@ public class PlayerArmorManager : MonoBehaviour
     {
         foreach (MarineArmorPiece map in marineArmorPieces)
             map.gameObject.SetActive(t);
+
+        foreach (PlayerArmorPiece map in playerArmorPieces)
+            map.gameObject.SetActive(false);
     }
 
     void EnableAllArmorsInDataString()
@@ -160,6 +172,8 @@ public class PlayerArmorManager : MonoBehaviour
 
     public void ReloadFpsArmor()
     {
+        // Only for active weapon. All disabled weapon will handle themselves
+
         Debug.Log("ReloadFpsArmor");
         foreach (PlayerArmorPiece pap in player.playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
             pap.gameObject.SetActive(player.playerArmorManager.playerDataCell.playerExtendedPublicData.armor_data_string.Contains(pap.entity));
@@ -170,5 +184,10 @@ public class PlayerArmorManager : MonoBehaviour
     public void ReloadArmorData()
     {
         playerDataCell = _playerDataCell;
+    }
+
+    void OnPlayerRespawn(Player p)
+    {
+        ToggleMarinePieces(p);
     }
 }

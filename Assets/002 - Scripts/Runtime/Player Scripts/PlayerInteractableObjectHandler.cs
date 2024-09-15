@@ -67,7 +67,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                 _filteredInteractableObjects = new List<InteractableObject>(rawInteractableObjects);
 
                 _filteredInteractableObjects = _filteredInteractableObjects.Where(item => item.gameObject.activeSelf).ToList();
-                _filteredInteractableObjects.OrderBy(x => Vector3.Distance(this.transform.position, new Vector3(x.transform.position.x, transform.position.y, x.transform.position.z))).ToList();
+                _filteredInteractableObjects = _filteredInteractableObjects.OrderBy(x => Vector3.Distance(this.transform.position, new Vector3(x.transform.position.x, transform.position.y, x.transform.position.z))).ToList();
 
 
                 for (int i = _filteredInteractableObjects.Count - 1; i >= 0; i--)
@@ -177,14 +177,19 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
             if (_filteredInteractableObjects.Count > 0)
             {
-                if (_filteredInteractableObjects[0].GetComponent<LootableWeapon>())
-                {
-                    //_filteredInteractableObjects[0].GetComponent<LootableWeapon>().OnLooted -= OnWeaponLooted;
-                    //_filteredInteractableObjects[0].GetComponent<LootableWeapon>().OnLooted += OnWeaponLooted;
-                }
+                // order by closest closest
+                if (_filteredInteractableObjects.Count > 1)
+                    _filteredInteractableObjects = _filteredInteractableObjects.OrderBy(x => Vector3.Distance(this.transform.position, new Vector3(x.transform.position.x, transform.position.y, x.transform.position.z))).ToList();
 
 
+
+
+
+                _preClosestInteractableObject = _closestInteractableObject;
                 closestInteractableObject = _filteredInteractableObjects[0];
+
+                if (_preClosestInteractableObject != _closestInteractableObject)
+                    ClosestInteractableObjectAssigned?.Invoke(this);
             }
         }
     }
@@ -264,6 +269,14 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                 }
 
                 PV.RPC("DisableCollidingWeapon_RPC", RpcTarget.All, lwPosition);
+            }
+            else if (closestInteractableObject.GetComponent<ArmorSeller>())
+            {
+                if (!transform.root.GetComponent<Player>().hasArmor)
+                {
+                    if (transform.root.GetComponent<PlayerSwarmMatchStats>().points >= closestInteractableObject.GetComponent<ArmorSeller>().cost)
+                        NetworkGameManager.instance.AskHostToTriggerInteractableObject(closestInteractableObject.transform.position, playerController.player.photonId);
+                }
             }
         }
     }

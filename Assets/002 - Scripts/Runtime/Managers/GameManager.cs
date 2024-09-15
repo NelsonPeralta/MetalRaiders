@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                     FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
 
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
-                FindObjectOfType<Launcher>().levelToLoadIndex = 5;
+                FindObjectOfType<Launcher>().levelToLoadIndex = 1;
 
 
                 //teamDict = new Dictionary<string, int>();

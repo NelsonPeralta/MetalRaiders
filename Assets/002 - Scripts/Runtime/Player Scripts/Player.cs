@@ -49,9 +49,9 @@ public class Player : Biped
         get { return _hasArmor; }
         set
         {
+            _hasArmor = value;
             if (value)
             {
-                _hasArmor = true;
                 maxHitPoints = 250;
                 maxShieldPoints = 150;
                 maxHealthPoints = 100;
@@ -60,6 +60,10 @@ public class Player : Biped
                 needsHealthPack = false;
 
                 GetComponent<PlayerUI>().EnableArmorUI();
+            }
+            else
+            {
+                GetComponent<PlayerUI>().DisableArmorUI();
             }
         }
     }
@@ -696,7 +700,7 @@ public class Player : Biped
 
         Debug.Log($"Player Awake {GameManager.instance.GetAllPhotonPlayers().Count()}");
         _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
-        if(GameManager.instance.connection == GameManager.Connection.Local)
+        if (GameManager.instance.connection == GameManager.Connection.Local)
             _playerId = GameManager.instance.GetAllPhotonPlayers().Count();
 
         _rb = GetComponent<Rigidbody>(); if (!PV.IsMine) _rb.isKinematic = true;
@@ -720,12 +724,7 @@ public class Player : Biped
         }
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
-            _overshieldPoints = 0;
-            _maxShieldPoints = 0;
-            _maxHitPoints = _maxHealthPoints = 250;
-            _networkHitPoints = maxHitPoints;
-            _hitPoints = maxHitPoints;
-            needsHealthPack = true;
+            DisableArmorComponentsOnRespawn();
         }
 
 
@@ -1287,6 +1286,7 @@ public class Player : Biped
         deathNature = DeathNature.None;
         _killFeedOutput = WeaponProperties.KillFeedOutput.Unassigned;
         OnPlayerRespawnEarly?.Invoke(this);
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) DisableArmorComponentsOnRespawn();
 
         isRespawning = false;
         GetComponent<PlayerController>().Descope();
@@ -1322,6 +1322,21 @@ public class Player : Biped
         if (this.isMine) respawnBeepAudioSource.Play();
 
         if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("<color=\"red\">Spawned Randomly"); _lastSpawnPointIsRandom = false;
+    }
+
+    void DisableArmorComponentsOnRespawn()
+    {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+        {
+            hasArmor = false;
+
+            _overshieldPoints = 0;
+            _maxShieldPoints = 0;
+            _maxHitPoints = _maxHealthPoints = 250;
+            _networkHitPoints = maxHitPoints;
+            _hitPoints = maxHitPoints;
+            needsHealthPack = true;
+        }
     }
 
     public void PlaySprintingSound()
@@ -1427,7 +1442,6 @@ public class Player : Biped
 
 
         playerInventory.transform.localRotation = Quaternion.Euler(0, 0, 0f);
-        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) hasArmor = false;
 
 
         if (isDead)
@@ -1471,6 +1485,17 @@ public class Player : Biped
         finally { gunCamera.enabled = false; }
 
         hitboxesEnabled = false;
+
+
+
+
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+            foreach (PlayerArmorPiece pap in playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
+                pap.gameObject.SetActive(false);
+
+
+
 
         SpawnRagdoll();
         StartCoroutine(ShowScoreboardOnDeath_Coroutine());
