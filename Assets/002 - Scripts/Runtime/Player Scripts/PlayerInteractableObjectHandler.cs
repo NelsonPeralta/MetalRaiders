@@ -132,7 +132,8 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
         {
             // check for disabled
 
-            if (!_rawInteractableObjects[i].gameObject.activeSelf || !_rawInteractableObjects[i].gameObject.activeInHierarchy)
+            if (!_rawInteractableObjects[i].gameObject.activeSelf || !_rawInteractableObjects[i].gameObject.activeInHierarchy ||
+                (_rawInteractableObjects[i].GetComponent<Collider>() && _rawInteractableObjects[i].GetComponent<Collider>().isTrigger && !_rawInteractableObjects[i].GetComponent<Collider>().enabled))
             {
                 _preRawInteractableObjects = new List<InteractableObject>(_rawInteractableObjects);
                 _rawInteractableObjects.RemoveAt(i);
