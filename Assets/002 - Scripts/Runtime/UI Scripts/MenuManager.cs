@@ -11,43 +11,33 @@ using Steamworks;
 
 public class MenuManager : MonoBehaviour
 {
-    public static MenuManager Instance;
+    public static MenuManager Instance { get {  return FindObjectOfType<MenuManager>(); } }
 
     public TMP_Text loadingMenuText;
 
     [SerializeField] Menu[] menus;
 
+
     void Awake()
     {
-        if (Instance)
-        {
-            Debug.Log("There is a MenuManager Instance");
-            Destroy(gameObject);
-            return;
-        }
-        //DontDestroyOnLoad(gameObject);
-        Instance = this;
+        name += $" {Random.Range(100, 999)}";
+        print($"MenuManager Awake {name}");
     }
 
     private void OnEnable()
     {
-        //this.menus = GetComponentsInChildren<Menu>(true);
-
-        //GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
-        //GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
+        print("MenuManager OnEnable");
     }
 
     private void Start()
     {
-        //GameManager.instance.OnSceneLoadedEvent -= OnSceneLoaded;
-        //GameManager.instance.OnSceneLoadedEvent += OnSceneLoaded;
-        //OnSceneLoaded();
+        print("MenuManager Start");
     }
 
     public void OpenMenu(string menuName, bool closeOthers = true) // Open a menu GO using the name from its Menu script
     {
 
-        Debug.Log($"OPEN MENU: {menuName}");
+        Debug.Log($"OPEN MENU: {menuName} {closeOthers}");
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits))
         { menuName = "carnage report"; print($"Changed to Carnage Report {menuName}"); }
@@ -87,6 +77,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenPopUpMenu(Menu menu) // Open a menu GO using the Menu script itself, used for connecting with buttons
     {
+        print($"OpenPopUpMenu {menu.menuName}");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i] == menu)
@@ -96,6 +87,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenPopUpMenu(string menuName) // Open a menu GO using the Menu script itself, used for connecting with buttons
     {
+        print($"OpenPopUpMenu {menuName}");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName == menuName)
@@ -108,6 +100,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenErrorMenu(string mess)
     {
+        print($"OpenErrorMenu");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName.Equals("error"))
@@ -165,6 +158,7 @@ public class MenuManager : MonoBehaviour
 
     public Menu GetMenu(string n)
     {
+        print($"GetMenu {n}");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName.Equals(n))
@@ -183,33 +177,14 @@ public class MenuManager : MonoBehaviour
 
     void ResetLoadingMenu()
     {
+        print("ResetLoadingMenu");
         loadingMenuText.text = "Loading...";
     }
 
-    public void OnSceneLoaded()
-    {
-        Scene currentScene = SceneManager.GetActiveScene();
-
-        if (currentScene.buildIndex > 0) // We are not in the menu
-        {
-            try
-            {
-                foreach (Menu menu in menus)
-                    menu.gameObject.SetActive(false); // Error here when changing scenes
-            }
-            catch { }
-        }
-        else
-        {
-            Debug.Log("MenuManager");
-            try { gameObject.SetActive(true); } catch { }
-            Launcher.instance.ConnectToPhotonMasterServer();
-            OpenMainMenu();
-        }
-    }
 
     public void CloseCarnageReportMenu()
     {
+        print("CloseCarnageReportMenu");
         OpenMainMenu();
 
         if (GameManager.instance.connection == GameManager.Connection.Local)
@@ -221,11 +196,13 @@ public class MenuManager : MonoBehaviour
 
     public void OpenCarnageReportMenu()
     {
+        print("OpenCarnageReportMenu");
         OpenMenu("carnage report");
     }
 
     public void OpenRoomBrowserMenu()
     {
+        print("OpenRoomBrowserMenu");
         OpenMenu("room browser");
     }
 }

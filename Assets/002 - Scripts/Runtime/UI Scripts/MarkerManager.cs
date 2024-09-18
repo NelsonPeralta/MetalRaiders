@@ -61,15 +61,17 @@ public class MarkerManager : MonoBehaviour
             }
             else
             {
-                for (int i = instance._markers.Count; i-- > 0;)
-                {
-                    Destroy(instance._markers[i].gameObject);
-                }
+                if (instance._markers.Count > 0)
+                    for (int i = instance._markers.Count; i-- > 0;)
+                        if (instance._markers[i] != null)
+                            Destroy(instance._markers[i].gameObject);
 
-                for (int i = instance._markersEnSpot.Count; i-- > 0;)
-                {
-                    Destroy(instance._markersEnSpot[i].gameObject);
-                }
+                if (instance._markersEnSpot.Count > 0)
+                    for (int i = instance._markersEnSpot.Count; i-- > 0;)
+                        if (instance._markersEnSpot[i] != null)
+                            Destroy(instance._markersEnSpot[i].gameObject);
+
+                instance._markers.Clear(); instance._markersEnSpot.Clear();
             }
         }
     }

@@ -734,7 +734,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 18
+        _actionId: 25
         _elementType: 1
         _elementIdentifierId: 4
         _axisRange: 0
@@ -844,7 +844,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 25
+        _actionId: 18
         _elementType: 1
         _elementIdentifierId: 19
         _axisRange: 0

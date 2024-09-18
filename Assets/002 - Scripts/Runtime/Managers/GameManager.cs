@@ -437,6 +437,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+
         string[] names = QualitySettings.names;
         for (int i = 0; i < names.Length; i++)
         {
@@ -475,10 +476,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            //Debug.Break();
             //Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
             //Cursor.visible = true;
             ClearPhotonIdToPlayerDict();
-
 
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.None;
             Launcher.instance.menuGamePadCursorScript.GetReady(ReInput.controllers.GetLastActiveControllerType());
@@ -497,6 +498,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
             print("GAME MANAGER ONSCENELOADED 0");
+            print($"GameManager MenuManager {MenuManager.Instance.name}");
 
             if (previousScenePayloads.Contains(PreviousScenePayload.ResetPlayerDataCells))
             {
@@ -515,8 +517,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (previousScenePayloads.Contains(PreviousScenePayload.LoadTimeOutOpenErrorMenu))
             {
                 previousScenePayloads.Remove(PreviousScenePayload.LoadTimeOutOpenErrorMenu);
-                MenuManager.Instance.OpenMainMenu();
-                MenuManager.Instance.OpenErrorMenu("A player could not load level");
+                StartCoroutine(LoadTimeOutOpenErrorMenu_Coroutine());
+
             }
 
 
@@ -534,6 +536,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else if (scene.buildIndex > 0) // We're in the game scene
         {
+            print("GAME MANAGER ONSCENELOADED Over 0");
+            print($"GameManager MenuManager {MenuManager.Instance}");
             if (gameMode == GameMode.Coop) Instantiate(_actorAddonsPoolPrefab);
 
 
@@ -1342,5 +1346,16 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (child.GetComponent<PlayerNamePlate>().playerDataCell.team == Team.Blue)
                 child.SetAsLastSibling();
         }
+    }
+
+
+    IEnumerator LoadTimeOutOpenErrorMenu_Coroutine()
+    {
+        // When the MapCamera script run PhotonNetwork.LoadLevel(), it is ASYNCHRONUS. This causes instances bugs. In this case, the game thinks there is 2 MapManager Instances.
+        // Waiting 0.1 seconds is a ghetto solution, but works
+        yield return new WaitForSeconds(0.1f);
+
+        MenuManager.Instance.OpenMainMenu();
+        MenuManager.Instance.OpenErrorMenu("A player could not load level");
     }
 }

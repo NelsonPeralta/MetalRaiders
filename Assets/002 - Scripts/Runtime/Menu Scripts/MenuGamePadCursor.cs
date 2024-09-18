@@ -145,7 +145,7 @@ public class MenuGamePadCursor : MonoBehaviour
 
 
 
-                    if (rewiredPlayer.GetButtonDown("Switch Grenades"))
+                    if (rewiredPlayer.GetButtonDown("mark"))
                     {
                         if (_buttonUnderCursor != null)
                             _buttonUnderCursor.onClick.Invoke();
