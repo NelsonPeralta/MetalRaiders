@@ -1249,7 +1249,7 @@ public class Player : Biped
                 {
                     if (hasArmor)
                         hitPoints += (Time.deltaTime * _shieldHealingIncrement);
-                    else
+                    else if(hitPoints < (maxHealthPoints * 0.45f))
                         hitPoints = Mathf.Clamp(hitPoints + (Time.deltaTime * 20), 0, maxHealthPoints * 0.45f);
                 }
                 else
