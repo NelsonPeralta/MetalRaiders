@@ -403,12 +403,12 @@ public partial class WebManager
 
                     if (www.result.ToString().Contains("uccess"))
                         if (xpAndCreditGain > 0)
-                            GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Cuckbucks");
+                            //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Cuckbucks");
                     //else
                     //    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
                     if (newXp >= minXpToLevelUp)
                     {
-                        GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
+                        //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
                     }
 
 

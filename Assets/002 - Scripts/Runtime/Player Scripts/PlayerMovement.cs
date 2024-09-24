@@ -495,7 +495,7 @@ public class PlayerMovement : MonoBehaviour
         if (blockPlayerMoveInput > 0) return;
         // calculate movement direction
         if (isGrounded)
-            moveDirection = orientation.forward * _rawForwardInput + orientation.right * _rawRightInput;
+            moveDirection = orientation.forward * _correctedForwardInput + orientation.right * _correctedRightInput;
 
         // on slope
         if (OnSlope() && !exitingSlope)
@@ -523,7 +523,7 @@ public class PlayerMovement : MonoBehaviour
             _rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
         if (!isGrounded)
-            _rb.AddForce((orientation.forward * _rawForwardInput + orientation.right * _rawRightInput).normalized * moveSpeed * 1f, ForceMode.Force);
+            _rb.AddForce((orientation.forward * _correctedForwardInput + orientation.right * _correctedRightInput).normalized * moveSpeed * 1f, ForceMode.Force);
 
 
         // turn gravity off while on slope
