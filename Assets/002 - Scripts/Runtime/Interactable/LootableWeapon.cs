@@ -176,7 +176,8 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
         {
             w.spareAmmo += ammoToLoot;
         }
-        //playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up {cleanName} ammo ({ammoToLoot})");
+
+        if (w == playerInventory.activeWeapon) playerInventory.player.playerUI.ShowPickedUpAmmoWitness(ammoToLoot);
 
         if (ammoNeeded >= ammoAvailable)
             HideWeapon();

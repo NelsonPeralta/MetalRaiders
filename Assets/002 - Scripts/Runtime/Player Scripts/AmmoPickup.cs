@@ -48,6 +48,7 @@ public class AmmoPickup : MonoBehaviour
         if (ammoPackScript.ammoType == "grenade")
         {
             pInventory.fragGrenades += ammoToRemoveFromThisPack;
+            playerProperties.playerUI.ShowPickedUpGrenadeWitness(ammoToRemoveFromThisPack);
             //playerProperties.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up {ammoToRemoveFromThisPack} Grenades");
         }
 

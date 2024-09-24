@@ -48,6 +48,8 @@ public class PlayerUI : MonoBehaviour
     public TMP_Text spareAmmoText;
     public Image activeWeaponIcon;
     public Image holsteredWeaponIcon;
+    public TMP_Text pickedUpAmmoWitnessText;
+    public TMP_Text pickedUpGrenadeWitnessText;
 
     [Header("Center", order = 4)]
     public Transform center, _notScoreboard;
@@ -534,5 +536,17 @@ public class PlayerUI : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ShowPickedUpAmmoWitness(int amm)
+    {
+        pickedUpAmmoWitnessText.text = $"+{amm}";
+        pickedUpAmmoWitnessText.GetComponent<Animator>().Play("show");
+    }
+
+    public void ShowPickedUpGrenadeWitness(int amm)
+    {
+        pickedUpGrenadeWitnessText.text = $"+{amm}";
+        pickedUpGrenadeWitnessText.GetComponent<Animator>().Play("show");
     }
 }
