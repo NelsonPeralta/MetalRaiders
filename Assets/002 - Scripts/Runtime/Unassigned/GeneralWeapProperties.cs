@@ -44,6 +44,7 @@ public class GeneralWeapProperties : MonoBehaviour
     public Transform casingSpawnPoint;
     public Vector3 defaultBulletSpawnPoint;
     public Transform bulletSpawnPoint;
+    public List<Transform> pelletSpawnPoints = new List<Transform>();
     public Transform grenadeSpawnPoint;
 
     [Header("UI Components")]

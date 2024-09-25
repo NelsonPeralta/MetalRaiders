@@ -316,6 +316,7 @@ public class PlayerShooting : MonoBehaviourPun
         if (activeWeapon.isShotgun)
         {
             counter = activeWeapon.numberOfPellets;
+            counter = playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints.Count;
             if (activeWeapon.isShotgun)
                 for (int j = 0; j < activeWeapon.numberOfPellets; j++)
                     quats.Add(Quaternion.Euler(Vector3.zero));
@@ -441,7 +442,7 @@ public class PlayerShooting : MonoBehaviourPun
                         if (activeWeapon.isShotgun)
                         {
                             quats[i] = UnityEngine.Random.rotation;
-                            playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation, quats[i], activeWeapon.bulletSpray);
+                            //playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation, quats[i], activeWeapon.bulletSpray);
                         }
                         else
                             playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation *= ranSprayQuat;
@@ -452,15 +453,20 @@ public class PlayerShooting : MonoBehaviourPun
                     //    bullet.layer = 8;
                     //else
                     //    bullet.layer = 0;
-                    try
+
+                    if (activeWeapon.isShotgun)
+                    {
+                        quats[i] = UnityEngine.Random.rotation;
+
+                        bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints[i].position;
+                        bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints[i].rotation;
+
+                        bullet.transform.rotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints[i].rotation, quats[i], activeWeapon.bulletSpray);
+                    }
+                    else
                     {
                         bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
                         bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-                    }
-                    catch
-                    {
-                        bullet.transform.position = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-                        bullet.transform.rotation = GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
                     }
 
 
