@@ -41,7 +41,7 @@ public class AimAssistCone : MonoBehaviour
     RaycastHit hit, _obsHit;
 
 
-
+    ReticuleMagnetism _reticuleMagnetism;
 
 
 
@@ -108,7 +108,10 @@ public class AimAssistCone : MonoBehaviour
 
 
 
-
+    private void Awake()
+    {
+        _reticuleMagnetism = GetComponent<ReticuleMagnetism>();
+    }
 
 
 
@@ -122,12 +125,9 @@ public class AimAssistCone : MonoBehaviour
                     frictionColliders.Remove(frictionColliders[i]);
 
         if (player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
-        {
-            if (frictionColliders.Count == 0)
-                reticuleFriction = false;
-            else
-                reticuleFriction = true;
-        }
+            reticuleFriction = _reticuleMagnetism.trueHit;
+        else
+            reticuleFriction = false;
 
         //HitboxRay();
 

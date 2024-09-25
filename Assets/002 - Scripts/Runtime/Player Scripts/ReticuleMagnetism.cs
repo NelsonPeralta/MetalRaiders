@@ -20,6 +20,8 @@ public class ReticuleMagnetism : MonoBehaviour
         }
     }
 
+    public bool trueHit { get { return _hitScreenPosList.Count > 0; } }
+
 
 
 
@@ -181,17 +183,21 @@ public class ReticuleMagnetism : MonoBehaviour
 
     void Magnetism()
     {
+        // Increase yFact and xFact in Inspector to weaken magnetism
+
+
+
         //if (Mathf.Abs(yDiff) > 1f) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
         if (Mathf.Abs(yDiff) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
         {
-            yMag = Mathf.Clamp((Mathf.Abs(yDiff) / yFact) * -Mathf.Sign(yDiff), -1, 1);
+            yMag = Mathf.Clamp((Mathf.Abs(yDiff) / yFact) * -Mathf.Sign(yDiff), -0.9f, 0.9f);
             player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * yMag);
         }
 
         //if (Mathf.Abs(xDiff) > 0.5f)
         if (Mathf.Abs(xDiff) > 0)
         {
-            xMag = Mathf.Clamp((Mathf.Abs(xDiff) / xFact) * Mathf.Sign(xDiff), -1, 1);
+            xMag = Mathf.Clamp((Mathf.Abs(xDiff) / xFact) * Mathf.Sign(xDiff), -0.9f, 0.9f);
             player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * xMag);
         }
     }
