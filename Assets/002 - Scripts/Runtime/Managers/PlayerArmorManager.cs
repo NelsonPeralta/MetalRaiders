@@ -188,6 +188,6 @@ public class PlayerArmorManager : MonoBehaviour
 
     void OnPlayerRespawn(Player p)
     {
-        ToggleMarinePieces(p);
+        //ToggleMarinePieces(p);
     }
 }

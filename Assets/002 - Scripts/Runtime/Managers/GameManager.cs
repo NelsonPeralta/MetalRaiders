@@ -100,7 +100,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return GetComponent<CurrentRoomManager>().gameStarted; }
     }
 
-    List<Player> _allPlayers = new List<Player>();
 
     [SerializeField] Connection _connection;
     [SerializeField] Photon.Realtime.ClientState _photonNetworkClientState;
@@ -110,6 +109,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
     [SerializeField] bool _inARoom;
+    [SerializeField] List<Player> _allPlayers = new List<Player>();
     // Public variables
 
     public Connection connection

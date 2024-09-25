@@ -1835,7 +1835,7 @@ public class PlayerController : MonoBehaviourPun
                 else
                 {
                     if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                        MarkerManager.instance.SpawnNormalMarker(hit.point, player.playerId);
+                        MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
                     else
                         PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
                 }

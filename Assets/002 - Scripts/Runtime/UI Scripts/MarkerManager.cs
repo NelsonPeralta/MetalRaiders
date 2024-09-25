@@ -18,13 +18,17 @@ public class MarkerManager : MonoBehaviour
     {
         if (instance)
         {
+            print("MarkerManager Awake 1");
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
-        instance = this;
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        else
+        {
+            print("MarkerManager Awake 2");
+            instance = this;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     // called first
@@ -36,12 +40,12 @@ public class MarkerManager : MonoBehaviour
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        print("MarkerManager OnSceneLoaded");
         if (instance == this)
         {
-            print("MarkerManager OnSceneLoaded");
+            print("MarkerManager OnSceneLoaded instance");
             if (scene.buildIndex > 0)
             {
+                print("MarkerManager OnSceneLoaded > 0");
                 instance._markers = new List<Marker>();
                 instance._markersEnSpot = new List<Marker>();
 
@@ -61,6 +65,7 @@ public class MarkerManager : MonoBehaviour
             }
             else
             {
+                print("MarkerManager OnSceneLoaded 0");
                 if (instance._markers.Count > 0)
                     for (int i = instance._markers.Count; i-- > 0;)
                         if (instance._markers[i] != null)
@@ -85,6 +90,7 @@ public class MarkerManager : MonoBehaviour
 
     public void SpawnNormalMarker(Vector3 pos, int playerPhotonView)
     {
+        print($"SpawnNormalMarker {playerPhotonView}");
         foreach (Marker obj in instance._markers)
             if (!obj.gameObject.activeSelf)
             {
