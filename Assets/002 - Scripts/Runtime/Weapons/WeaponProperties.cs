@@ -188,7 +188,8 @@ public class WeaponProperties : MonoBehaviour
             {
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame
                     || GameManager.instance.gameType == GameManager.GameType.Snipers
-                    || GameManager.instance.gameType == GameManager.GameType.Rockets)
+                    || GameManager.instance.gameType == GameManager.GameType.Rockets
+                    || GameManager.instance.gameType == GameManager.GameType.Shotguns)
                 {
                     _spareAmmo = maxSpareAmmo;
                     OnSpareAmmoChanged?.Invoke(this);

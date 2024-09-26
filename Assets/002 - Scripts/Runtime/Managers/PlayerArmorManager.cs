@@ -188,6 +188,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     void OnPlayerRespawn(Player p)
     {
-        //ToggleMarinePieces(p);
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+            ToggleMarinePieces(true);
     }
 }
