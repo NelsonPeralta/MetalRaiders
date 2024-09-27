@@ -125,7 +125,6 @@ public class PlayerController : MonoBehaviourPun
     public bool stickyGrenadesActive;
 
     [Header("Aiming Script Components")]
-    public Aiming aimingScript;
     public GameObject aimingComponentsPivot;
 
     [Header("Dual Wielding")]
@@ -329,7 +328,7 @@ public class PlayerController : MonoBehaviourPun
                     MarkSpot();
                     if (isSprinting)
                         return;
-                    ScopeCheck();
+                    Scope();
                     Melee();
                     Crouch();
                     Grenade(); //TO DO: Spawn Grenades the same way as bullets
@@ -734,7 +733,7 @@ public class PlayerController : MonoBehaviourPun
     }
 
     float _tempFov;
-    void ScopeCheck()
+    void Scope()
     {
         //if (isDualWielding || pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.None)
         //    return;

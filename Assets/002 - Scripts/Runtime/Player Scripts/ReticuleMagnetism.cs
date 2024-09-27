@@ -20,7 +20,7 @@ public class ReticuleMagnetism : MonoBehaviour
         }
     }
 
-    public bool trueHit { get { return _hitScreenPosList.Count > 0; } }
+    public bool trueHit { get { return _trueHit; } }
 
 
 
@@ -41,9 +41,10 @@ public class ReticuleMagnetism : MonoBehaviour
     [SerializeField] Vector3 _newHitScreenPos;
 
 
-    [SerializeField] float xDiff, yDiff;
+    [SerializeField] float xMagDir, yMagDir;
     [SerializeField] int xFact, yFact;
     [SerializeField] float xMag, yMag;
+    [SerializeField] float _distanceFact;
 
     [SerializeField] bool _obstruction;
 
@@ -52,7 +53,7 @@ public class ReticuleMagnetism : MonoBehaviour
 
     Vector3 _obsDir;
     float _obsDis;
-    bool _friendly;
+    bool _friendly, _trueHit;
 
 
     // Update is called once per frame
@@ -65,28 +66,37 @@ public class ReticuleMagnetism : MonoBehaviour
             player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Mouse)
             return;
 
-        if (player.GetComponent<PlayerController>().isAiming)
-            return;
+        //if (player.GetComponent<PlayerController>().isAiming)
+        //    return;
 
         Ray();
 
-        if (!_friendly)
+        if (!_friendly && _distFromMagTrans > 0)
         {
             CalculateDirection();
             Magnetism();
         }
+        else
+        {
+            yMagDir = 0;
+            xMagDir = 0;
+        }
     }
+
+
+
 
     void Ray()
     {
-        _friendly = _obstruction = false;
+        _distFromMagTrans = 0;
+        _friendly = _obstruction = _trueHit = false;
 
 
         if (player && player.playerInventory && player.playerInventory.activeWeapon)
         {
-            raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange;
+            raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange * 2;
 
-            if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, raycastRange * 1.5f, magnetismMask))
+            if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, raycastRange, magnetismMask))
             {
                 if (hit.transform.root.gameObject != player.gameObject)
                 {
@@ -115,12 +125,14 @@ public class ReticuleMagnetism : MonoBehaviour
                                 }
 
 
-
-                            //if(movement.speed == 0)
-                            _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
-                                                                           //_hitScreenPosList.Add(hit.point); // When player moves and target does not
-                            if (_hitScreenPosList.Count > 4)
-                                _hitScreenPosList.RemoveAt(0);
+                            _trueHit = true;
+                            if (!player.playerController.isAiming)
+                            {
+                                _hitScreenPosList.Add(hit.transform.position); // When player does not move and target moves
+                                                                               //_hitScreenPosList.Add(hit.point); // When player moves and target does not
+                                if (_hitScreenPosList.Count > 4)
+                                    _hitScreenPosList.RemoveAt(0);
+                            }
                         }
                     }
                     else
@@ -149,55 +161,50 @@ public class ReticuleMagnetism : MonoBehaviour
     {
         if (_hitScreenPosList.Count == 0)
         {
-            yDiff = 0;
-            xDiff = 0;
+            yMagDir = 0;
+            xMagDir = 0;
         }
         else if (_hitScreenPosList.Count == 4)
         {
-            yDiff = 0;
-            xDiff = 0;
+            yMagDir = 0;
+            xMagDir = 0;
 
             for (int i = 0; i < _hitScreenPosList.Count; i++)
             {
                 if (i > 0)
                 {
-                    xDiff += (player.mainCamera.WorldToScreenPoint(_hitScreenPosList[i]).x) -
+                    xMagDir += (player.mainCamera.WorldToScreenPoint(_hitScreenPosList[i]).x) -
                          (player.mainCamera.WorldToScreenPoint(_hitScreenPosList[i - 1]).x);
 
-                    yDiff += (player.mainCamera.WorldToScreenPoint(_hitScreenPosList[i]).y) -
+                    yMagDir += (player.mainCamera.WorldToScreenPoint(_hitScreenPosList[i]).y) -
                          (player.mainCamera.WorldToScreenPoint(_hitScreenPosList[i - 1]).y);
                 }
             }
-
-            try
-            {
-                //if (firstRayHit.GetComponent<ReticuleFriction>().player.GetComponent<Movement>().calulatedVelocity.magnitude <= .5)
-                //{
-                //    xDiff = 0;
-                //    yDiff = 0;
-                //}
-            }
-            catch { }
         }
     }
+
+
+
+
+
 
     void Magnetism()
     {
         // Increase yFact and xFact in Inspector to weaken magnetism
-
+        _distanceFact = Mathf.Clamp(_distFromMagTrans / raycastRange, 1, 0);
 
 
         //if (Mathf.Abs(yDiff) > 1f) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
-        if (Mathf.Abs(yDiff) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
+        if (Mathf.Abs(yMagDir) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
         {
-            yMag = Mathf.Clamp((Mathf.Abs(yDiff) / yFact) * -Mathf.Sign(yDiff), -0.9f, 0.9f);
+            yMag = Mathf.Clamp((Mathf.Abs(yMagDir) / (yFact * _distanceFact)) * -Mathf.Sign(yMagDir), -0.9f, 0.9f);
             player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * yMag);
         }
 
         //if (Mathf.Abs(xDiff) > 0.5f)
-        if (Mathf.Abs(xDiff) > 0)
+        if (Mathf.Abs(xMagDir) > 0)
         {
-            xMag = Mathf.Clamp((Mathf.Abs(xDiff) / xFact) * Mathf.Sign(xDiff), -0.9f, 0.9f);
+            xMag = Mathf.Clamp((Mathf.Abs(xMagDir) / (xFact * _distanceFact)) * Mathf.Sign(xMagDir), -0.9f, 0.9f);
             player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * xMag);
         }
     }

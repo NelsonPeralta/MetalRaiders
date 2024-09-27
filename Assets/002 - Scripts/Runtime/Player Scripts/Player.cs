@@ -522,20 +522,25 @@ public class Player : Biped
             //34.81   10.08
 
 
-
+            // 1080p, 1 player
+            //hor to ver
             //90  58.72
             //60  35.98
             //30  17.14
 
+            // 1080p, 2 player
+            //hor to ver
             //90  31.42
             //60  18.45
             //30  8.62
 
-            if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _defaultVerticalFov = 31.42f;
+            //if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _defaultVerticalFov = 31.42f; // too fish eye
+            if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _defaultVerticalFov = 25;
             else if (GameManager.instance.nbLocalPlayersPreset == 1) _defaultVerticalFov = 58.72f;
             else if (GameManager.instance.nbLocalPlayersPreset == 3)
             {
-                if (rid == 2) _defaultVerticalFov = 31.42f;
+                //if (rid == 2) _defaultVerticalFov = 31.42f; // too fish eye
+                if (rid == 2) _defaultVerticalFov = 25;
                 else _defaultVerticalFov = 58.72f;
             }
 
@@ -1249,7 +1254,7 @@ public class Player : Biped
                 {
                     if (hasArmor)
                         hitPoints += (Time.deltaTime * _shieldHealingIncrement);
-                    else if(hitPoints < (maxHealthPoints * 0.45f))
+                    else if (hitPoints < (maxHealthPoints * 0.45f))
                         hitPoints = Mathf.Clamp(hitPoints + (Time.deltaTime * 20), 0, maxHealthPoints * 0.45f);
                 }
                 else

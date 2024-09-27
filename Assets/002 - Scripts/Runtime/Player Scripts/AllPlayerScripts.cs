@@ -14,7 +14,7 @@ public class AllPlayerScripts : MonoBehaviour
     public PlayerCamera cameraScript;
     public CrosshairManager crosshairScript;
     public AimAssist aimAssist;
-    public Aiming aimingScript;
+    public PlayerScope aimingScript;
     public WaveCounter waveCounter;
     public ScoreboardManager scoreboardManager;
     public KillFeedManager killFeedManager;

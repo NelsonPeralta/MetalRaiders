@@ -132,7 +132,7 @@ public class PlayerCamera : MonoBehaviour
 
 
         if (aimAssistCapsule.reticuleFriction)
-            backEndMouseSens *= (1f - (aimAssistCapsule.reticuleFrictionTick / 75f)); // reticuleFrictionTick = 30 max
+            backEndMouseSens *= (1f - (aimAssistCapsule.reticuleFrictionTick / 70f)); // reticuleFrictionTick = 30 max
 
         if (pController.isAiming)
         {

@@ -318,7 +318,7 @@ public class PlayerShooting : MonoBehaviourPun
             counter = activeWeapon.numberOfPellets;
             counter = playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints.Count;
             if (activeWeapon.isShotgun)
-                for (int j = 0; j < activeWeapon.numberOfPellets; j++)
+                for (int j = 0; j < playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints.Count; j++)
                     quats.Add(Quaternion.Euler(Vector3.zero));
         }
 
