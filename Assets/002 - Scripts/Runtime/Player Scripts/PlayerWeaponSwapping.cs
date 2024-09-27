@@ -6,6 +6,7 @@ using Photon.Pun;
 using System.Collections.ObjectModel;
 using TMPro;
 using Rewired;
+using System.Linq;
 
 public class PlayerWeaponSwapping : MonoBehaviourPun
 {
@@ -283,7 +284,17 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
             }
             else
             {
-                if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
+
+
+
+                if (player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
+                {
+                    if (GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable && (player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
+                        PV.RPC("PickupThirdWeapon", RpcTarget.All, lwPosition, true);
+                    else
+                        ;
+                }
+                else if (!pInventory.holsteredWeapon) // Looks for Secondary Weapon
                 {
                     //Debug.Log("RPC: Picking up second weapon");
                     //PickupSecWeap();
@@ -412,6 +423,27 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         StartCoroutine(pInventory.ToggleTPPistolIdle(0));
         pInventory.ChangeActiveAmmoCounter();
     }
+
+
+
+    [PunRPC]
+    void PickupThirdWeapon(Vector3 collidingWeaponPosition, bool dw)
+    {
+        if (dw)
+        {
+            LootableWeapon weaponToLoot = WeaponPool.instance.weaponPool.Where(item => item.spawnPointPosition == collidingWeaponPosition).FirstOrDefault();
+
+            foreach (GameObject w in pInventory.allWeaponsInInventory)
+                if (w.GetComponent<WeaponProperties>().codeName == weaponToLoot.codeName)
+                    player.playerInventory.thirdWeapon = w.GetComponent<WeaponProperties>();
+
+            weaponToLoot.gameObject.SetActive(false);
+        }
+    }
+
+
+
+
 
     [PunRPC]
     public void RPC_DisableCollidingWeapon(Vector3 collidingWeaponPosition)

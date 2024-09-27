@@ -88,6 +88,24 @@ public class PlayerUI : MonoBehaviour
 
 
     [SerializeField] List<GameObject> _hitMarkers = new List<GameObject>(); [SerializeField] List<GameObject> _killMarkers = new List<GameObject>();
+
+
+
+
+
+
+
+
+
+    Player _player;
+
+
+
+    private void Awake()
+    {
+        _player = GetComponent<Player>();
+    }
+
     private void OnEnable()
     {
         try
@@ -504,20 +522,30 @@ public class PlayerUI : MonoBehaviour
         _motionTrackerSwarmHolder.gameObject.SetActive(b);
     }
 
-    void OnClosestInteractableObjectAssigned(PlayerInteractableObjectHandler pioh)
+
+
+
+    private void Update()
     {
-        if (pioh.closestInteractableObject == null)
+        if (_player.playerInteractableObjectHandler.closestInteractableObject == null)
         {
             HideInformer();
-
         }
         else
         {
-            print($"OnClosestInteractableObjectAssigned {pioh.closestInteractableObject.name}");
-
-            if (pioh.closestInteractableObject.GetComponent<LootableWeapon>())
-                ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(pioh.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
-            else if (pioh.closestInteractableObject.GetComponent<ArmorSeller>())
+            if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>())
+            {
+                if (_player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
+                {
+                    if (GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable && (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
+                        ShowInformer($"You are stepping on a DW weapon");
+                    else
+                        HideInformer();
+                }
+                else
+                    ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+            }
+            else if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>())
             {
 
                 ShowInformer($"Hold [Interact] to buy Power Armor");
@@ -525,10 +553,10 @@ public class PlayerUI : MonoBehaviour
 
                 if (!transform.root.GetComponent<Player>().hasArmor)
                 {
-                    if (transform.root.GetComponent<PlayerSwarmMatchStats>().points >= pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost)
-                        ShowInformer($"Buy Power Armor [Cost: {pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
+                    if (transform.root.GetComponent<PlayerSwarmMatchStats>().points >= _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost)
+                        ShowInformer($"Buy Power Armor [Cost: {_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
                     else
-                        transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points [Cost: {pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
+                        transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points [Cost: {_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
                 }
                 else
                 {
@@ -536,6 +564,58 @@ public class PlayerUI : MonoBehaviour
                 }
             }
         }
+    }
+
+
+
+
+    void OnClosestInteractableObjectAssigned(PlayerInteractableObjectHandler pioh)
+    {
+        //if (pioh.closestInteractableObject == null)
+        //{
+        //    HideInformer();
+
+        //}
+        //else
+        //{
+        //    print($"OnClosestInteractableObjectAssigned {pioh.closestInteractableObject.name}");
+
+        //    if (pioh.closestInteractableObject.GetComponent<LootableWeapon>())
+        //    {
+
+
+
+
+        //        if (GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable && (pioh.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
+        //        {
+        //            ShowInformer($"You are stepping on a DW weapon");
+
+        //        }
+        //        else
+        //        {
+
+        //            ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(pioh.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+        //        }
+        //    }
+        //    else if (pioh.closestInteractableObject.GetComponent<ArmorSeller>())
+        //    {
+
+        //        ShowInformer($"Hold [Interact] to buy Power Armor");
+
+
+        //        if (!transform.root.GetComponent<Player>().hasArmor)
+        //        {
+        //            if (transform.root.GetComponent<PlayerSwarmMatchStats>().points >= pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost)
+        //                ShowInformer($"Buy Power Armor [Cost: {pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
+        //            else
+        //                transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points [Cost: {pioh.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
+        //        }
+        //        else
+        //        {
+        //            transform.root.GetComponent<PlayerUI>().ShowInformer($"You already have a Power Armor");
+        //        }
+        //    }
+        //}
     }
 
     public void ShowPickedUpAmmoWitness(int amm)

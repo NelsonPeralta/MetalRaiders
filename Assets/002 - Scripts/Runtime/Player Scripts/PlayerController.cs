@@ -326,6 +326,7 @@ public class PlayerController : MonoBehaviourPun
                     SwitchWeapons();
                     LongInteract();
                     MarkSpot();
+                    //LongMarkSpot();
                     if (isSprinting)
                         return;
                     Scope();
@@ -1805,42 +1806,76 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
+
+    float _timeMarkBtnHeld, _timeHeldForDw;
     void MarkSpot()
     {
-        if (rewiredPlayer.GetButtonDown("mark") && _markSpotCooldown <= 0)
+        if (rewiredPlayer.GetButton("mark"))
         {
+            _timeMarkBtnHeld += Time.deltaTime;
 
-            RaycastHit hit;
-            // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
+            if (player.playerInteractableObjectHandler.closestInteractableObject && player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>())
             {
-                Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
+                _timeHeldForDw += Time.deltaTime;
 
-                _markSpotCooldown = 0.15f;
-
-
-                if (hit.collider.transform.root.GetComponent<Player>())
-                {
-                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                        MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
+                if (_timeHeldForDw > 0.4f)
+                    if (player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
+                    {
+                        if (player.playerInventory.activeWeapon.isDualWieldable && (player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
+                        {
+                            //player.playerInventory.activeWeapon.leftWeapon.gameObject.SetActive(true);
+                            _timeHeldForDw = 0;
+                        }
+                        else
+                            ;
+                    }
                     else
                     {
-                        if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
-                            PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
+
+                    }
+            }
+        }
+        else if (rewiredPlayer.GetButtonUp("mark"))
+        {
+            if (_timeMarkBtnHeld <= 0.4f)
+            {
+                RaycastHit hit;
+                // Does the ray intersect any objects excluding the player layer
+                if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
+                {
+                    Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
+
+                    _markSpotCooldown = 0.15f;
+
+
+                    if (hit.collider.transform.root.GetComponent<Player>())
+                    {
+                        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                            MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
+                        else
+                        {
+                            if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
+                                PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
+                            else
+                                PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                        }
+                    }
+                    else
+                    {
+                        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                            MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
                         else
                             PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
                     }
                 }
-                else
-                {
-                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                        MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
-                    else
-                        PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
-                }
             }
+
+            _timeMarkBtnHeld = 0;
+            _timeHeldForDw = 0;
         }
     }
+
+
 
 
 

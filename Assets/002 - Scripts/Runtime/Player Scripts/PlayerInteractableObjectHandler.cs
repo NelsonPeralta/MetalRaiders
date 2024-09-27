@@ -18,6 +18,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
     [SerializeField] List<InteractableObject> _filteredInteractableObjects = new List<InteractableObject>();
 
     [SerializeField] List<InteractableObject> _weaponsThePlayerHasInInventory = new List<InteractableObject>();
+    [SerializeField] List<InteractableObject> _weaponsThePlayerHasInInventoryAndAreDualWieldable = new List<InteractableObject>();
 
 
 
@@ -49,6 +50,8 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
         }
     }
 
+    public bool closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory { get { return _weaponsThePlayerHasInInventoryAndAreDualWieldable.Count > 0; } }
+
     List<InteractableObject> rawInteractableObjects
     {
         get { return _rawInteractableObjects; }
@@ -79,7 +82,14 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                             _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName)
                         {
                             _weaponsThePlayerHasInInventory.Add(_filteredInteractableObjects[i]);
-                            _filteredInteractableObjects.RemoveAt(i);
+
+
+                            if ((_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.activeWeapon.isDualWieldable)
+                                _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
+                            else if ((_player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.holsteredWeapon.isDualWieldable)
+                                _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
+                            else
+                                _filteredInteractableObjects.RemoveAt(i);
                         }
                     }
                 }

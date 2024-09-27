@@ -37,8 +37,7 @@ public class PlayerInventory : MonoBehaviourPun
     public string StartingWeapon;
     public string StartingWeapon2;
     public int activeWeapIs = 0;
-    [SerializeField] WeaponProperties _activeWeapon;
-    [SerializeField] WeaponProperties _holsteredWeapon;
+    [SerializeField] WeaponProperties _activeWeapon, _holsteredWeapon, _thirdWeapon;
     [SerializeField] WeaponProperties _leftWeapon;
 
     public WeaponProperties activeWeapon
@@ -120,6 +119,21 @@ public class PlayerInventory : MonoBehaviourPun
                 try { _holsteredWeapon.holsteredModel.SetActive(true); } catch (System.Exception e) { Debug.LogWarning(e); }
                 _holsteredWeapon.gameObject.SetActive(false);
             }
+        }
+    }
+
+
+    public WeaponProperties thirdWeapon
+    {
+        get
+        {
+            return _thirdWeapon;
+        }
+
+        set
+        {
+            _thirdWeapon = value;
+            _thirdWeapon.gameObject.SetActive(true);
         }
     }
 
