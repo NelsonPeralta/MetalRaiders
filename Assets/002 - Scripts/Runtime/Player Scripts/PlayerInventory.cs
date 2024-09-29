@@ -13,8 +13,6 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     public PlayerGunGameManager playerGunGameManager { get { return _playerGunGameManager; } }
-    public Dictionary<string, WeaponProperties> weaponCodeNameDict { get { return _weaponCodeNameDict; } }
-    public Dictionary<string, WeaponProperties> weaponCleanNameDict { get { return _weaponCleanNameDict; } }
 
 
 
@@ -249,8 +247,6 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     List<WeaponProperties> _allWeapons = new List<WeaponProperties>(); // To replace allWeaponsInInventory variable
-    Dictionary<string, WeaponProperties> _weaponCodeNameDict = new Dictionary<string, WeaponProperties>();
-    Dictionary<string, WeaponProperties> _weaponCleanNameDict = new Dictionary<string, WeaponProperties>();
 
 
 
@@ -288,21 +284,6 @@ public class PlayerInventory : MonoBehaviourPun
         transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
         transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
 
-        foreach (GameObject wp in allWeaponsInInventory)
-        {
-            try
-            {
-                _weaponCodeNameDict.Add(wp.GetComponent<WeaponProperties>().codeName, wp.GetComponent<WeaponProperties>());
-                _weaponCleanNameDict.Add(wp.GetComponent<WeaponProperties>().cleanName, wp.GetComponent<WeaponProperties>());
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"{e}");
-                Debug.LogError($"YOU MAY HAVE 2 GUNS WITH THE SAME CODENAME {wp.name} {wp.GetComponent<WeaponProperties>().codeName}. THIS MAY STOP THE FOLLOWING CODE");
-            }
-        }
-
-        Debug.Log("PlayerInventory Start 2");
 
         //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
         OnActiveWeaponChanged += aimAssistCone.OnActiveWeaponChanged;

@@ -1281,7 +1281,7 @@ public class Player : Biped
     void Respawn()
     {
         Debug.Log("Respawn");
-        _gameplayerRecordingPointsHolder.parent = transform;
+        _gameplayerRecordingPointsHolder.parent = transform; _gameplayerRecordingPointsHolder.transform.localPosition = Vector3.zero; _gameplayerRecordingPointsHolder.transform.localRotation = Quaternion.identity;
         _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
 
         if (!isRespawning)

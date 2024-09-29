@@ -114,14 +114,16 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void EnableWeapon()
     {
-        print("EnableWeapon");
+        if (!CurrentRoomManager.instance.gameOver)
+        {
+            print("EnableWeapon");
 
-
-        weaponSpawned.transform.localPosition = Vector3.zero;
-        weaponSpawned.transform.localRotation = Quaternion.identity;
-        weaponSpawned.localAmmo = weaponSpawned.defaultAmmo;
-        weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
-        weaponSpawned.gameObject.SetActive(true);
+            weaponSpawned.transform.localPosition = Vector3.zero;
+            weaponSpawned.transform.localRotation = Quaternion.identity;
+            weaponSpawned.localAmmo = weaponSpawned.defaultAmmo;
+            weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+            weaponSpawned.gameObject.SetActive(true);
+        }
     }
 
     void SpawnWeapon()
@@ -192,7 +194,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             else if (GameManager.instance.gameType == GameManager.GameType.Shotguns)
             {
                 codeName = "shotgun";
-            }else if (GameManager.instance.gameType == GameManager.GameType.PurpleRain)
+            }
+            else if (GameManager.instance.gameType == GameManager.GameType.PurpleRain)
             {
                 codeName = "cl";
             }
