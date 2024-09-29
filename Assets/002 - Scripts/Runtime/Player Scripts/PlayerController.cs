@@ -335,12 +335,12 @@ public class PlayerController : MonoBehaviourPun
                     SwitchWeapons();
                     LongInteract();
                     MarkSpot();
+                    Grenade();
                     if (isSprinting)
                         return;
                     Scope();
                     Melee();
                     Crouch();
-                    Grenade(); //TO DO: Spawn Grenades the same way as bullets
                     HolsterAndInspect();
                     CheckDrawingWeapon();
                     FloatingCamera();
@@ -1023,10 +1023,11 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
-        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding /*&& !isMeleeing*/ && !isSprinting)
+        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding /*&& !isMeleeing*/ /*&& !isSprinting*/)
         {
             if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
             {
+                print($"Grenade 1");
                 CancelReloadCoroutine();
                 currentlyReloadingTimer = 0;
                 player.playerShooting.StopBurstFiring();
@@ -1527,6 +1528,7 @@ public class PlayerController : MonoBehaviourPun
         //Wait for set amount of time before spawning grenade
         yield return new WaitForSeconds(0.2f);
         //Spawn grenade prefab at spawnpoint
+        print($"Grenade 2");
 
         if (PV.IsMine && !player.isDead)
             PV.RPC("SpawnGrenade_RPC", RpcTarget.AllViaServer, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
@@ -1899,7 +1901,7 @@ public class PlayerController : MonoBehaviourPun
     void SpawnGrenade_RPC(bool fga, int ind, Vector3 sp, Quaternion sr, Vector3 forw)
     {
         Debug.Log($"SpawnGrenade_RPC {ind}");
-
+        DisableSprint_RPC();
         player.PlayThrowingGrenadeClip();
 
         GameObject nade = GrenadePool.GetGrenade(fga, ind);
