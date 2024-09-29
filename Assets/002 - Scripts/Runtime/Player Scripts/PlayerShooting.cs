@@ -89,26 +89,28 @@ public class PlayerShooting : MonoBehaviourPun
 
         print($"OnPlayerControllerFireUp_Delegate 1");
 
-        if (playerController.player.playerInventory.activeWeapon && playerController.player.playerInventory.activeWeapon.overcharge)
-        {
-            print($"OnPlayerControllerFireUp_Delegate 2 {pInventory.activeWeapon.overheatCooldown} {pInventory.activeWeapon.loadedAmmo}");
 
-            if (pInventory.activeWeapon.overheatCooldown <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
+        if (!playerController.player.isRespawning && !playerController.player.isDead)
+            if (playerController.player.playerInventory.activeWeapon && playerController.player.playerInventory.activeWeapon.overcharge)
             {
-                print($"OnPlayerControllerFireUp_Delegate 3");
+                print($"OnPlayerControllerFireUp_Delegate 2 {pInventory.activeWeapon.overheatCooldown} {pInventory.activeWeapon.loadedAmmo}");
 
-                if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
+                if (pInventory.activeWeapon.overheatCooldown <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
                 {
-                    print("SHOOT OVERCHARGED SHOT");
-                    ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
-                }
-                else
-                {
-                    print("Shoot normal shot");
-                    ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
+                    print($"OnPlayerControllerFireUp_Delegate 3");
+
+                    if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
+                    {
+                        print("SHOOT OVERCHARGED SHOT");
+                        ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
+                    }
+                    else
+                    {
+                        print("Shoot normal shot");
+                        ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
+                    }
                 }
             }
-        }
     }
 
     void OnPlayerControllerFire_Delegate(PlayerController playerController)

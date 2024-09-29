@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
 using System.Text;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class Player : Biped
 {
@@ -44,6 +45,10 @@ public class Player : Biped
     {
         get { return GetComponent<PlayerController>().rid; }
     }
+
+    public bool isAlive { get { return (!isDead && !isRespawning); } }
+
+
     public bool hasArmor // Used to handle armor seller for Swarm Mode
     {
         get { return _hasArmor; }

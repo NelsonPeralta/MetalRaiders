@@ -56,30 +56,42 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
         {
             _rawInteractableObjects = value;
 
-            //print($"_preRawInteractableObjects {_preRawInteractableObjects.Count}    rawInteractableObjects {_rawInteractableObjects.Count}");
-            if (_preRawInteractableObjects.Count != _rawInteractableObjects.Count)
+
+
+            if (!player.isDead && !player.isRespawning)
+                print($"_preRawInteractableObjects {_preRawInteractableObjects.Count}    rawInteractableObjects {_rawInteractableObjects.Count}");
+
+
+
+            if (_preRawInteractableObjects != _rawInteractableObjects)
             {
-                print("rawInteractableObjects CHANGE");
+                if (!player.isDead && !player.isRespawning)
+                    print("rawInteractableObjects CHANGE");
 
 
 
                 _weaponsThePlayerHasInInventory.Clear();
-                _filteredInteractableObjects = new List<InteractableObject>(rawInteractableObjects);
-
-                _filteredInteractableObjects = _filteredInteractableObjects.Where(item => item.gameObject.activeSelf).ToList();
-                _filteredInteractableObjects = _filteredInteractableObjects.OrderBy(x => Vector3.Distance(this.transform.position, new Vector3(x.transform.position.x, transform.position.y, x.transform.position.z))).ToList();
+                if (rawInteractableObjects.Count > 0) _filteredInteractableObjects = new List<InteractableObject>(rawInteractableObjects);
+                else _filteredInteractableObjects.Clear();
 
 
-                for (int i = _filteredInteractableObjects.Count - 1; i >= 0; i--)
+                if (_filteredInteractableObjects.Count > 0)
                 {
-                    // Do something
-                    if (_filteredInteractableObjects[i].GetComponent<LootableWeapon>())
+                    _filteredInteractableObjects = _filteredInteractableObjects.Where(item => item.gameObject.activeSelf).ToList();
+                    _filteredInteractableObjects = _filteredInteractableObjects.OrderBy(x => Vector3.Distance(this.transform.position, new Vector3(x.transform.position.x, transform.position.y, x.transform.position.z))).ToList();
+
+
+                    for (int i = _filteredInteractableObjects.Count - 1; i >= 0; i--)
                     {
-                        if (_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
-                            _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName)
+                        // Do something
+                        if (_filteredInteractableObjects[i].GetComponent<LootableWeapon>())
                         {
-                            _weaponsThePlayerHasInInventory.Add(_filteredInteractableObjects[i]);
-                            _filteredInteractableObjects.RemoveAt(i);
+                            if (_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
+                                _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName)
+                            {
+                                _weaponsThePlayerHasInInventory.Add(_filteredInteractableObjects[i]);
+                                _filteredInteractableObjects.RemoveAt(i);
+                            }
                         }
                     }
                 }
@@ -127,24 +139,6 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
     private void Update()
     {
-
-        for (int i = _rawInteractableObjects.Count - 1; i >= 0; i--)
-        {
-            // check for disabled
-
-            if (!_rawInteractableObjects[i].gameObject.activeSelf || !_rawInteractableObjects[i].gameObject.activeInHierarchy ||
-                (_rawInteractableObjects[i].GetComponent<Collider>() && _rawInteractableObjects[i].GetComponent<Collider>().isTrigger && !_rawInteractableObjects[i].GetComponent<Collider>().enabled))
-            {
-                _preRawInteractableObjects = new List<InteractableObject>(_rawInteractableObjects);
-                _rawInteractableObjects.RemoveAt(i);
-                rawInteractableObjects = _rawInteractableObjects;
-            }
-        }
-
-
-
-
-
         if (player.isDead || player.isRespawning)
         {
             _rawInteractableObjects.Clear();
@@ -152,6 +146,21 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
         }
         else
         {
+            if (_rawInteractableObjects.Count > 0)
+                for (int i = _rawInteractableObjects.Count - 1; i >= 0; i--)
+                {
+                    // check for disabled
+
+                    if (!_rawInteractableObjects[i].gameObject.activeSelf || !_rawInteractableObjects[i].gameObject.activeInHierarchy ||
+                        (_rawInteractableObjects[i].GetComponent<Collider>() && _rawInteractableObjects[i].GetComponent<Collider>().isTrigger && !_rawInteractableObjects[i].GetComponent<Collider>().enabled))
+                    {
+                        _preRawInteractableObjects = new List<InteractableObject>(_rawInteractableObjects);
+                        _rawInteractableObjects.RemoveAt(i);
+                        rawInteractableObjects = _rawInteractableObjects;
+                    }
+                }
+
+
             if (_check > 0)
             {
 

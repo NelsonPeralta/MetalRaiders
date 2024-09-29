@@ -140,24 +140,26 @@ public class PlayerController : MonoBehaviourPun
             _preIsHoldingFireWeaponBtn = _isHoldingShootBtn;
             _isHoldingShootBtn = value; print($"{player.name} isHoldingShootBtn {value}");
 
-            if (value && !_preIsHoldingFireWeaponBtn)
-            {
+
+            if (player.isAlive)
+                if (value && !_preIsHoldingFireWeaponBtn)
                 {
-                    DisableSprint_RPC();
-
-
-
-
-
-                    if (pInventory.activeWeapon.codeName.Equals("oddball"))
                     {
+                        DisableSprint_RPC();
 
-                        if (player.isMine) Melee(true);
-                        print("Do an Odball Melee and STOP");
-                        return;
+
+
+
+
+                        if (pInventory.activeWeapon.codeName.Equals("oddball"))
+                        {
+
+                            if (player.isMine) Melee(true);
+                            print("Do an Odball Melee and STOP");
+                            return;
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -296,6 +298,13 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
         }
+        if (player.isMine)
+            if (rewiredPlayer.GetButtonUp("Shoot"))
+                SendIsNotHoldingFireWeaponBtn();
+
+
+
+
 
         if (PV.IsMine)
         {
@@ -539,52 +548,43 @@ public class PlayerController : MonoBehaviourPun
 
     void Shooting() //  ***************
     {
-        if (GetComponent<Player>().isDead || player.isRespawning)
-            return;
-
-        if (player.isMine)
+        if (!GetComponent<Player>().isDead && !player.isRespawning)
         {
-            if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
+
+
+            if (player.isMine)
             {
-                SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
-            }
-            else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
-                player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
-        }
-
-
-
-
-        //Process Firing
-        if (!isReloading && !isThrowingGrenade && !isMeleeing)
-        {
-            if (player.playerShooting && player.playerInventory)
-                if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
+                if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
                 {
+                    SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
+                }
+                else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
+                    player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+            }
 
-                    if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
-                        player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+
+
+
+            //Process Firing
+            if (!isReloading && !isThrowingGrenade && !isMeleeing)
+            {
+                if (player.playerShooting && player.playerInventory)
+                    if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
                     {
-                        if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+
+                        if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
+                            player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                        {
+                            if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+                            {
+                                player.playerShooting.Shoot();
+                            }
+                        }
+                        else
                         {
                             player.playerShooting.Shoot();
                         }
                     }
-                    else
-                    {
-                        player.playerShooting.Shoot();
-                    }
-                }
-        }
-
-
-
-
-        if (player.isMine)
-        {
-            if (rewiredPlayer.GetButtonUp("Shoot"))
-            {
-                SendIsNotHoldingFireWeaponBtn();
             }
         }
     }
