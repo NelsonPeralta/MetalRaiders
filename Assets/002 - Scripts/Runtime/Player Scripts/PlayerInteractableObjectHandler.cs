@@ -56,7 +56,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
         {
             _rawInteractableObjects = value;
 
-            print($"_preRawInteractableObjects {_preRawInteractableObjects.Count}    rawInteractableObjects {_rawInteractableObjects.Count}");
+            //print($"_preRawInteractableObjects {_preRawInteractableObjects.Count}    rawInteractableObjects {_rawInteractableObjects.Count}");
             if (_preRawInteractableObjects.Count != _rawInteractableObjects.Count)
             {
                 print("rawInteractableObjects CHANGE");
