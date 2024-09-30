@@ -270,6 +270,7 @@ public class AimAssist : MonoBehaviour
     }
     public void ResetRedReticule()
     {
+        print("ResetRedReticule");
         redReticuleIsOn = false;
         targetHitbox = null;
     }

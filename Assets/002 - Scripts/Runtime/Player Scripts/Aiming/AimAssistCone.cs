@@ -38,8 +38,8 @@ public class AimAssistCone : MonoBehaviour
     int _reticuleFrictionLayer = 19;
     float _raycastRange;
     bool _obstructed;
-    RaycastHit hit, _obsHit;
-
+    RaycastHit _obsHit;
+    List<RaycastHit> _aimAssistRaycastHitsList = new List<RaycastHit>();
 
     ReticuleMagnetism _reticuleMagnetism;
 
@@ -83,6 +83,8 @@ public class AimAssistCone : MonoBehaviour
                 //Debug.Log($"AimAssistCone {_preCollidingHitbox} {_collidingHitbox}");
 
             }
+
+            //if (value == null && player.playerController.rid == 0) print("Nulling targetCollisionHitbox");
         }
     }
 
@@ -99,6 +101,7 @@ public class AimAssistCone : MonoBehaviour
             }
 
             _hitboxRayHitGo = value;
+            //if (value == null && player.playerController.rid == 0) print("Nulling hitboxRayHitGo");
         }
     }
 
@@ -192,15 +195,23 @@ public class AimAssistCone : MonoBehaviour
 
 
 
-                if (Physics.Raycast(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position),
-                    out hit, _raycastRange, GameManager.instance.hitboxlayerMask))
+
+
+                _aimAssistRaycastHitsList = Physics.RaycastAll(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position),
+                     _raycastRange, GameManager.instance.hitboxlayerMask).ToList();
+
+                if (_aimAssistRaycastHitsList.Count > 0)
                 {
-                    if (hit.transform.root.gameObject != player.gameObject)
+                    for (int i = _aimAssistRaycastHitsList.Count; i-- > 0;)
+                        if (_aimAssistRaycastHitsList[i].collider.transform.root == transform.root) _aimAssistRaycastHitsList.RemoveAt(i);
+
+                    if (_aimAssistRaycastHitsList.Count > 0)
                     {
-                        hitboxRayHitGo = hit.transform.gameObject;
-                        distanceToHitbox = Vector3.Distance(hit.point, player.mainCamera.transform.position);
+                        _aimAssistRaycastHitsList = _aimAssistRaycastHitsList.OrderBy(x => Vector3.Distance(player.mainCamera.transform.position, x.point)).ToList();
+                        //print($"_aimAssistRaycastHitsList hit: {_aimAssistRaycastHitsList[0].collider.name}");
+                        hitboxRayHitGo = _aimAssistRaycastHitsList[0].collider.gameObject;
 
-
+                        distanceToHitbox = Vector3.Distance(_aimAssistRaycastHitsList[0].point, player.mainCamera.transform.position);
 
                         if (Physics.Raycast(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position)
                             , out _obsHit, _raycastRange, GameManager.instance.obstructionMask))
@@ -213,14 +224,65 @@ public class AimAssistCone : MonoBehaviour
                             _obstructionHitGo = null;
                         }
                     }
+                    else
+                    {
+                        hitboxRayHitGo = null;
+                        _obstructionHitGo = null;
+                    }
                 }
                 else
                 {
-                    distanceToHitbox = distanceToObstruction = 0;
-
                     hitboxRayHitGo = null;
                     _obstructionHitGo = null;
                 }
+
+
+
+
+
+
+
+
+
+
+                //if (Physics.Raycast(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position),
+                //    out hit, _raycastRange, GameManager.instance.hitboxlayerMask))
+                //{
+                //    print($"AimAssistCone Raycast {hit.collider.name}");
+                //    if (hit.transform.root.gameObject != player.gameObject)
+                //    {
+                //        hitboxRayHitGo = hit.transform.gameObject;
+                //        distanceToHitbox = Vector3.Distance(hit.point, player.mainCamera.transform.position);
+
+
+
+                //        if (Physics.Raycast(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position)
+                //            , out _obsHit, _raycastRange, GameManager.instance.obstructionMask))
+                //        {
+                //            print($"AimAssistCone Raycast 1");
+                //            _obstructionHitGo = _obsHit.transform.gameObject;
+                //            distanceToObstruction = Vector3.Distance(_obsHit.point, player.mainCamera.transform.position);
+                //        }
+                //        else
+                //        {
+                //            print($"AimAssistCone Raycast 2");
+                //            _obstructionHitGo = null;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        print($"AimAssistCone Raycast 3");
+
+                //    }
+                //}
+                //else
+                //{
+                //    distanceToHitbox = distanceToObstruction = 0;
+                //    print($"AimAssistCone Raycast 4");
+
+                //    hitboxRayHitGo = null;
+                //    _obstructionHitGo = null;
+                //}
             }
             else
             {
@@ -288,15 +350,21 @@ public class AimAssistCone : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
-            return;
+        {
+            //print($"{other.name} is inactive");
+        }
+        else
+        {
 
-        if (other.gameObject.layer != _reticuleFrictionLayer)
-            if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
-                collidingHitboxes.Add(other.gameObject);
 
-        if (other.gameObject.layer == _reticuleFrictionLayer)
-            if (!frictionColliders.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
-                frictionColliders.Add(other.gameObject);
+            if (other.gameObject.layer != _reticuleFrictionLayer)
+                if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+                    collidingHitboxes.Add(other.gameObject);
+
+            if (other.gameObject.layer == _reticuleFrictionLayer)
+                if (!frictionColliders.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+                    frictionColliders.Add(other.gameObject);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -315,43 +383,6 @@ public class AimAssistCone : MonoBehaviour
         if (collidingHitboxes.Count == 0)
             aimAssist.ResetRedReticule();
     }
-
-    void HitboxRay()
-    {
-        try
-        { _raycastRange = playerInventory.activeWeapon.currentRedReticuleRange; }
-        catch (System.Exception) { }
-
-        if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, _raycastRange, GameManager.instance.hitboxlayerMask))
-        {
-            if (hit.transform.root.gameObject != player.gameObject)
-            {
-                hitboxRayHitGo = hit.transform.gameObject;
-                distanceToHitbox = Vector3.Distance(hit.point, player.mainCamera.transform.position);
-
-
-
-                if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out _obsHit, _raycastRange, GameManager.instance.hitboxlayerMask))
-                {
-                    _obstructionHitGo = _obsHit.transform.gameObject;
-                    distanceToObstruction = Vector3.Distance(_obsHit.point, player.mainCamera.transform.position);
-                }
-                else
-                {
-                    _obstructionHitGo = null;
-                }
-            }
-        }
-        else
-        {
-            hitboxRayHitGo = null;
-            _obstructionHitGo = null;
-        }
-    }
-
-
-
-
 
 
     public void OnActiveWeaponChanged(PlayerInventory playerInventory)
