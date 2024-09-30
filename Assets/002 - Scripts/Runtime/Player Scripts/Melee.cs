@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Linq;
 
 public class Melee : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class Melee : MonoBehaviour
     public Player player;
 
     [Header("Players in Melee Zone")]
-    public List<HitPoints> hitPointsInMeleeZone;
+    public List<HitPoints> hitPointsInMeleeZone = new List<HitPoints>();
 
     [Header("Components")]
     bool meleeReady = true;
@@ -30,6 +31,11 @@ public class Melee : MonoBehaviour
 
     [SerializeField] PlayerMovement _movement;
     [SerializeField] LayerMask _meleeMask, _obstructionMask;
+
+
+    List<HitPoints> _pushIfAbleList = new List<HitPoints>();
+    List<HitPoints> _damageList = new List<HitPoints>();
+
 
 
 
@@ -128,10 +134,19 @@ public class Melee : MonoBehaviour
     {
         if (hitPointsInMeleeZone.Count > 0)
         {
+            _pushIfAbleList = new List<HitPoints>(hitPointsInMeleeZone);
+            _pushIfAbleList = _pushIfAbleList.OrderBy(x => Vector3.Distance(player.mainCamera.transform.position, x.transform.position)).ToList();
 
-            for (int i = 0; i < hitPointsInMeleeZone.Count; i++)
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                for (int i = _pushIfAbleList.Count; i-- > 0;)
+                    if (_pushIfAbleList[i].transform.root.GetComponent<Player>() && _pushIfAbleList[i].transform.root.GetComponent<Player>().team == player.team)
+                        _pushIfAbleList.RemoveAt(i);
+
+
+            //for (int i = 0; i < _pushIfAbleList.Count; i++)
+            if (_pushIfAbleList.Count > 0)
             {
-                HitPoints hp = hitPointsInMeleeZone[i];
+                HitPoints hp = _pushIfAbleList[0];
                 if (player.isMine)
                 {
 
@@ -171,11 +186,21 @@ public class Melee : MonoBehaviour
         pController.currentlyReloadingTimer = 0;
         pController.CancelReloadCoroutine();
 
-        if (hitPointsInMeleeZone.Count > 0)
+
+
+        _damageList = new List<HitPoints>(hitPointsInMeleeZone);
+        _damageList = _damageList.OrderBy(x => Vector3.Distance(player.mainCamera.transform.position, x.transform.position)).ToList();
+
+        //if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        //    for (int i = _damageList.Count; i-- > 0;)
+        //        if (_damageList[i].transform.root.GetComponent<Player>() && _damageList[i].transform.root.GetComponent<Player>().team == player.team)
+        //            _damageList.RemoveAt(i);
+
+        if (_damageList.Count > 0)
         {
-            for (int i = 0; i < hitPointsInMeleeZone.Count; i++)
+            //for (int i = 0; i < _damageList.Count; i++)
             {
-                HitPoints hp = hitPointsInMeleeZone[i];
+                HitPoints hp = _damageList[0];
                 //if (hp.hitPoints <= 0 || hp.isDead || !hp.gameObject.activeInHierarchy)
                 //    hitPointsInMeleeZone.Remove(hp);
                 //else

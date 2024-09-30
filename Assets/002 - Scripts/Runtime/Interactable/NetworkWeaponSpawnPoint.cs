@@ -105,8 +105,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             {
                 //EnableWeapon();
 
-                ResetWeaponPositionIfTooFar();
-                StartCoroutine(EnableWeapon_Coroutine());
+                if (!CurrentRoomManager.instance.gameOver)
+                {
+                    ResetWeaponPositionIfTooFar();
+                    StartCoroutine(EnableWeapon_Coroutine());
+                }
             }
         }
         catch (System.Exception e) { Debug.LogWarning(e); }

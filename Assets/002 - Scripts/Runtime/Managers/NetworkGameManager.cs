@@ -398,7 +398,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     #region
     public void DamageExplosiveBarrel(Vector3 position, int val, int playerPid = -999)
     {
-        _pv.RPC("DamageExplosiveBarrel_RPC", RpcTarget.All, position, val, playerPid);
+        if (!CurrentRoomManager.instance.gameOver)
+            _pv.RPC("DamageExplosiveBarrel_RPC", RpcTarget.All, position, val, playerPid);
     }
 
     public void ResetAllExplosiveBarrels()
@@ -439,12 +440,14 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void DisableAmmoPack(Vector3 sp)
     {
-        _pv.RPC("DisableAmmoPack_RPC", RpcTarget.All, sp);
+        if (!CurrentRoomManager.instance.gameOver)
+            _pv.RPC("DisableAmmoPack_RPC", RpcTarget.All, sp);
     }
 
     public void EnableGrenadePacks()
     {
-        _pv.RPC("EnableGrenadePacks_RPC", RpcTarget.All);
+        if (!CurrentRoomManager.instance.gameOver)
+            _pv.RPC("EnableGrenadePacks_RPC", RpcTarget.All);
     }
 
     #endregion

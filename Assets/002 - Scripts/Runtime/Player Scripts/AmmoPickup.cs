@@ -24,7 +24,9 @@ public class AmmoPickup : MonoBehaviour
     {
         if (!playerProperties.PV.IsMine || !other.GetComponent<NetworkGrenadeSpawnPoint>())
             return;
-        LootAmmo(other.transform.position, other.GetComponent<NetworkGrenadeSpawnPoint>());
+
+        if (!CurrentRoomManager.instance.gameOver)
+            LootAmmo(other.transform.position, other.GetComponent<NetworkGrenadeSpawnPoint>());
     }
 
     void LootAmmo(Vector3 ammoPackPosition, NetworkGrenadeSpawnPoint ammoPackScript)

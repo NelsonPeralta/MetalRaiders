@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.ProBuilder.Shapes;
 using Rewired;
 using System.Linq;
+using static UnityEditor.Progress;
 
 public class AimAssistCone : MonoBehaviour
 {
@@ -19,17 +20,19 @@ public class AimAssistCone : MonoBehaviour
     [SerializeField] bool _reticuleFriction;
 
 
-    public List<GameObject> collidingHitboxes;
+    public List<GameObject> collidingHitboxes = new List<GameObject>();
     [SerializeField] GameObject _targetCollisionHitbox, _hitboxRayHitGo, _obstructionHitGo;
     [SerializeField] float distanceToHitbox, distanceToObstruction;
 
     [SerializeField] int _reticuleFrictionTick;
 
 
-
+    [SerializeField] Transform _targetHitboxWitness;
     [SerializeField] PlayerHitboxDetector _invisibleHitboxDetector;
 
+
     GameObject _preCollidingHitbox, _tempHbGo;
+    //List<GameObject> _collidingHitboxesTemp = new List<GameObject>();
 
 
 
@@ -135,9 +138,25 @@ public class AimAssistCone : MonoBehaviour
         //HitboxRay();
 
         if (collidingHitboxes.Count > 0)
-            for (int i = 0; i < collidingHitboxes.Count; i++)
-                if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy)
+        {
+            collidingHitboxes = collidingHitboxes.OrderBy(item => Vector3.Angle(player.mainCamera.transform.forward, (item.transform.position - player.mainCamera.transform.position))).ToList();
+
+
+
+            for (int i = collidingHitboxes.Count; i-- > 0;)
+            {
+
+                if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy /*|| collidingHitboxes[i].GetComponent<Hitbox>().ignoreForAimAssistList*/)
                     collidingHitboxes.Remove(collidingHitboxes[i]);
+                //else
+                //{
+                //    if (player.playerController.rid == 0)
+                //        print($"{collidingHitboxes[i].transform.name} has an angle of : {Vector3.Angle(player.mainCamera.transform.forward, (collidingHitboxes[i].transform.position - player.mainCamera.transform.position))}");
+                //    _anglesOfCollision.Add(Vector3.Angle(player.mainCamera.transform.forward, (collidingHitboxes[i].transform.position - player.mainCamera.transform.position)));
+                //}
+            }
+        }
+
 
         if (targetCollisionHitbox && (!targetCollisionHitbox.activeSelf || !targetCollisionHitbox.activeInHierarchy))
         {
@@ -180,16 +199,24 @@ public class AimAssistCone : MonoBehaviour
                 targetCollisionHitbox = collidingHitboxes[0];
 
                 foreach (var item in collidingHitboxes)
-                    if ((item.GetComponent<Hitbox>().isHead || item.GetComponent<Hitbox>().isGroin) && playerInventory.activeWeapon.isHeadshotCapable)
+                    if ((item.GetComponent<Hitbox>().isHead) && playerInventory.activeWeapon.isHeadshotCapable)
                     {
                         targetCollisionHitbox = item;
                         break;
                     }
-                    else
+
+                foreach (var item in collidingHitboxes)
+                    if ((item.GetComponent<Hitbox>().isGroin) && playerInventory.activeWeapon.isHeadshotCapable)
                     {
-                        if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetCollisionHitbox.transform.position, player.mainCamera.transform.position))
-                            targetCollisionHitbox = item;
+                        targetCollisionHitbox = item;
+                        break;
                     }
+
+                //else
+                //{
+                //    if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetCollisionHitbox.transform.position, player.mainCamera.transform.position))
+                //        targetCollisionHitbox = item;
+                //}
 
 
 
@@ -208,6 +235,8 @@ public class AimAssistCone : MonoBehaviour
                     if (_aimAssistRaycastHitsList.Count > 0)
                     {
                         _aimAssistRaycastHitsList = _aimAssistRaycastHitsList.OrderBy(x => Vector3.Distance(player.mainCamera.transform.position, x.point)).ToList();
+                        //_aimAssistRaycastHitsList = _aimAssistRaycastHitsList.OrderBy(x => Vector3.Angle(player.mainCamera.transform.forward, x.point)).ToList();
+                        _targetHitboxWitness.forward = targetCollisionHitbox.transform.position - player.mainCamera.transform.position;
                         //print($"_aimAssistRaycastHitsList hit: {_aimAssistRaycastHitsList[0].collider.name}");
                         hitboxRayHitGo = _aimAssistRaycastHitsList[0].collider.gameObject;
 

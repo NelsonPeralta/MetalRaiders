@@ -749,7 +749,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     bool outOfFakeBullets;
-    public void SpawnFakeBulletTrail(int l, Quaternion spray, bool bipedIsMine)
+    public void SpawnFakeBulletTrail(int distanceToTravel, Quaternion spray, bool bipedIsMine)
     {
         outOfFakeBullets = true;
         foreach (Transform fbt in _fakeBulletTrailPool)
@@ -775,8 +775,13 @@ public class PlayerInventory : MonoBehaviourPun
                 }
 
                 Debug.Log("SpawnFakeBulletTrail");
-                fbt.transform.localScale = new Vector3(l * 0.5f, l * 0.5f, Mathf.Clamp(l, 0, 999));
+                fbt.transform.localScale = new Vector3(distanceToTravel * 0.5f, distanceToTravel * 0.5f, Mathf.Clamp(distanceToTravel, 0, 999));
                 fbt.transform.localRotation *= spray;
+                //fbt.GetComponent<FakeBulletTrailDisable>().timeBeforeDisabling = ((float)distanceToTravel / FakeBulletTrailDisable.Speed);
+                fbt.GetComponent<FakeBulletTrailDisable>().timeBeforeDisabling = 0.1f;
+
+
+
                 fbt.gameObject.SetActive(true);
                 fbt.transform.parent = null;
                 outOfFakeBullets = false;
