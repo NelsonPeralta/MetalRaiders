@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ProBuilder.Shapes;
 using Rewired;
 using System.Linq;
-using static UnityEditor.Progress;
 
 public class AimAssistCone : MonoBehaviour
 {
