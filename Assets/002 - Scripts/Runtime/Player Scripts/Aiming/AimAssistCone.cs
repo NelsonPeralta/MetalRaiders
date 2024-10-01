@@ -32,7 +32,7 @@ public class AimAssistCone : MonoBehaviour
 
 
     GameObject _preCollidingHitbox, _tempHbGo;
-    //List<GameObject> _collidingHitboxesTemp = new List<GameObject>();
+    List<GameObject> _collidingHitboxesTemp = new List<GameObject>();
 
 
 
@@ -137,18 +137,21 @@ public class AimAssistCone : MonoBehaviour
 
         //HitboxRay();
 
-        if (collidingHitboxes.Count > 0)
+
+        _collidingHitboxesTemp = new List<GameObject>(collidingHitboxes);
+
+        if (_collidingHitboxesTemp.Count > 0)
         {
-            collidingHitboxes = collidingHitboxes.OrderBy(item => Vector3.Angle(player.mainCamera.transform.forward, (item.transform.position - player.mainCamera.transform.position))).ToList();
+            _collidingHitboxesTemp = _collidingHitboxesTemp.OrderBy(item => Vector3.Angle(player.mainCamera.transform.forward, (item.transform.position - player.mainCamera.transform.position))).ToList();
             //hitboxRayHitGo = _aimAssistRaycastHitsList[0].collider.gameObject;
 
 
 
-            for (int i = collidingHitboxes.Count; i-- > 0;)
+            for (int i = _collidingHitboxesTemp.Count; i-- > 0;)
             {
 
-                if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy /*|| collidingHitboxes[i].GetComponent<Hitbox>().ignoreForAimAssistList*/)
-                    collidingHitboxes.Remove(collidingHitboxes[i]);
+                if (!_collidingHitboxesTemp[i].gameObject.activeSelf || !_collidingHitboxesTemp[i].gameObject.activeInHierarchy /*|| collidingHitboxes[i].GetComponent<Hitbox>().ignoreForAimAssistList*/)
+                    _collidingHitboxesTemp.Remove(_collidingHitboxesTemp[i]);
                 //else
                 //{
                 //    if (player.playerController.rid == 0)
@@ -161,7 +164,7 @@ public class AimAssistCone : MonoBehaviour
 
         if (closestHbToCorsshairCenter && (!closestHbToCorsshairCenter.activeSelf || !closestHbToCorsshairCenter.activeInHierarchy))
         {
-            collidingHitboxes.Remove(closestHbToCorsshairCenter);
+            _collidingHitboxesTemp.Remove(closestHbToCorsshairCenter);
             closestHbToCorsshairCenter = null;
         }
 
@@ -195,18 +198,18 @@ public class AimAssistCone : MonoBehaviour
 
 
 
-            if (collidingHitboxes.Count > 0)
+            if (_collidingHitboxesTemp.Count > 0)
             {
-                closestHbToCorsshairCenter = collidingHitboxes[0];
+                closestHbToCorsshairCenter = _collidingHitboxesTemp[0];
 
-                foreach (var item in collidingHitboxes)
+                foreach (var item in _collidingHitboxesTemp)
                     if ((item.GetComponent<Hitbox>().isHead) && playerInventory.activeWeapon.isHeadshotCapable)
                     {
                         closestHbToCorsshairCenter = item;
                         break;
                     }
 
-                foreach (var item in collidingHitboxes)
+                foreach (var item in _collidingHitboxesTemp)
                     if ((item.GetComponent<Hitbox>().isGroin) && playerInventory.activeWeapon.isHeadshotCapable)
                     {
                         closestHbToCorsshairCenter = item;
