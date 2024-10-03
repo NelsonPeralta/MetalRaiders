@@ -70,14 +70,13 @@ public class PlayerWorldUIMarker : MonoBehaviour
             try
             {
                 _lookAtThisPlayer = GameManager.GetLocalPlayer(_controllerTarget);
-                _lookAtThisPlayer.OnPlayerDeath -= OnTargetPlayerDeath;
-                _lookAtThisPlayer.OnPlayerDeath += OnTargetPlayerDeath;
-
-                _lookAtThisPlayer.OnPlayerRespawned -= OnTargetPlayerRespawn;
-                _lookAtThisPlayer.OnPlayerRespawned += OnTargetPlayerRespawn;
             }
             catch { }
             return;
+        }
+        else
+        {
+            transform.GetChild(0).gameObject.SetActive(_lookAtThisPlayer.isAlive);
         }
 
         Vector3 targetPostition = new Vector3(_lookAtThisPlayer.transform.position.x,
@@ -210,15 +209,5 @@ public class PlayerWorldUIMarker : MonoBehaviour
     void OnPlayerDeath(Player player)
     {
         //_holder.SetActive(false);
-    }
-
-    private void OnTargetPlayerDeath(Player p)
-    {
-        transform.GetChild(0).gameObject.SetActive(false);
-    }
-
-    void OnTargetPlayerRespawn(Player p)
-    {
-        transform.GetChild(0).gameObject.SetActive(true);
     }
 }
