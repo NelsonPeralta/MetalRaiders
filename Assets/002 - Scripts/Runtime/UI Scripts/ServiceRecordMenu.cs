@@ -7,7 +7,7 @@ using System.Linq;
 
 public class ServiceRecordMenu : MonoBehaviour
 {
-    public ScriptObjPlayerData playerData
+    public ScriptObjPlayerData playerData // Used for nameplate
     {
         get { return _playerData; }
         set
@@ -39,15 +39,18 @@ public class ServiceRecordMenu : MonoBehaviour
 
             PlayerProgressionManager.Rank[] rank = PlayerProgressionManager.GetClosestAndNextRank(_playerData.playerExtendedPublicData.honor);
             _rankCleanNameText.text = $"Rank: {rank[0].cleanName}";
-            _honorText.text = $"Honor: {_playerData.playerExtendedPublicData.honor.ToString()}\n\nNext rank: {rank[1].cleanName} at {rank[1].honorRequired} honor";
+            _honorText.text = $"Honor: {_playerData.playerExtendedPublicData.honor.ToString()}";
+            if(rank[1].honorRequired > 0)
+                _honorText.text += $"\n\nNext rank: {rank[1].cleanName} at {rank[1].honorRequired} honor";
+
 
             if (GameManager.colorDict.ContainsKey(rank[0].color))
             {
                 _rankImage.enabled = true;
 
-                Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].spriteName).SingleOrDefault().name);
+                Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault().name);
 
-                _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].spriteName).SingleOrDefault();
+                _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault();
 
                 ColorUtility.TryParseHtmlString(GameManager.colorDict[rank[0].color], out _tCol);
                 _rankImage.color = _tCol;
@@ -121,15 +124,17 @@ public class ServiceRecordMenu : MonoBehaviour
 
         PlayerProgressionManager.Rank[] rank = PlayerProgressionManager.GetClosestAndNextRank(pda.honor);
         _rankCleanNameText.text = $"Rank: {rank[0].cleanName}";
-        _honorText.text = $"Honor: {pda.honor.ToString()}\n\nNext rank: {rank[1].cleanName} at {rank[1].honorRequired} honor";
+        _honorText.text = $"Honor: {pda.honor}";
+        if (rank[1].honorRequired > 0)
+            _honorText.text += $"\n\nNext rank: {rank[1].cleanName} at {rank[1].honorRequired} honor";
 
         if (GameManager.colorDict.ContainsKey(rank[0].color))
         {
             _rankImage.enabled = true;
 
-            Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].spriteName).SingleOrDefault().name);
+            Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault().name);
 
-            _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].spriteName).SingleOrDefault();
+            _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault();
 
             ColorUtility.TryParseHtmlString(GameManager.colorDict[rank[0].color], out _tCol);
             _rankImage.color = _tCol;

@@ -92,7 +92,7 @@ public class PlayerDatabaseAdaptor
         get
         {
             PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(playerBasicOnlineStats.honor)[0];
-            return rank.spriteName;
+            return rank.codename;
         }
     }
 

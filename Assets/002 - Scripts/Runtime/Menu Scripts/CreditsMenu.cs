@@ -51,10 +51,24 @@ public class CreditsMenu : MonoBehaviour
 
                 PlayerProgressionManager.Rank[] rs = PlayerProgressionManager.GetClosestAndNextRank(GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained);
 
-                if (!GameManager.instance.carnageReport.rankedUp)
-                    _thankYouExtraText.text += $". You will be promoted to {rs[1].cleanName} in {rs[1].honorRequired - (GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained)} more points.";
-                else
+
+                if (GameManager.instance.carnageReport.rankedUp)
+                {
                     _thankYouExtraText.text += $" and have been PROMOTED to {rs[0].cleanName}!!! Congrats :D";
+                }
+                else
+                {
+                    if (rs[1].honorRequired > 0)// Must be -1 or lesser to be ignored. Used for max rank
+                    {
+                        _thankYouExtraText.text += $". You will be promoted to {rs[1].cleanName} in {rs[1].honorRequired - (GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained)} more points.";
+                    }
+                }
+
+
+                //if (!GameManager.instance.carnageReport.rankedUp)
+                //    _thankYouExtraText.text += $". You will be promoted to {rs[1].cleanName} in {rs[1].honorRequired - (GameManager.instance.carnageReport.currentHonor + GameManager.instance.carnageReport.honorGained)} more points.";
+                //else
+                //    _thankYouExtraText.text += $" and have been PROMOTED to {rs[0].cleanName}!!! Congrats :D";
 
                 _thankYouExtraText.text += $" \n\nPlay more games to earn Honor points, win games to speed up your progress.";
             }

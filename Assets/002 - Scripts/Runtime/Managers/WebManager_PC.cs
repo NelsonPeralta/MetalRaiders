@@ -375,7 +375,7 @@ public partial class WebManager
                 Debug.Log("LEVEL UP");
                 newLevel = pda.playerBasicOnlineStats.level + 1;
             }
-            GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, xpAndCreditGain, pda.honor, honorGained, newXp >= minXpToLevelUp, newLevel);
+            GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, xpAndCreditGain, pda.honor, honorGained, newXp >= minXpToLevelUp && pda.level < 50, newLevel);
 
             WWWForm form = new WWWForm();
             form.AddField("service", "SaveBasicOnlineStats");

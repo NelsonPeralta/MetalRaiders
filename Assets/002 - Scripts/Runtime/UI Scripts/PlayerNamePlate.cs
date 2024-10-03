@@ -27,9 +27,9 @@ public class PlayerNamePlate : MonoBehaviour
                 Debug.Log(_playerData.playerExtendedPublicData.honor);
                 rankIm.enabled = true;
 
-                Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
+                Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.codename).SingleOrDefault().name);
 
-                rankIm.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
+                rankIm.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.codename).SingleOrDefault();
 
                 ColorUtility.TryParseHtmlString(GameManager.colorDict[rank.color], out _tCol);
                 rankIm.color = _tCol;

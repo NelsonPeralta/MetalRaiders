@@ -1143,7 +1143,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButtonDown("Switch Grenades") && PV.IsMine)
         {
-            grenadeSwitchAudioSource.Play();
+            //grenadeSwitchAudioSource.Play();
             PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
         }
     }

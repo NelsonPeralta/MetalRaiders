@@ -70,6 +70,11 @@ public class PlayerWorldUIMarker : MonoBehaviour
             try
             {
                 _lookAtThisPlayer = GameManager.GetLocalPlayer(_controllerTarget);
+                _lookAtThisPlayer.OnPlayerDeath -= OnTargetPlayerDeath;
+                _lookAtThisPlayer.OnPlayerDeath += OnTargetPlayerDeath;
+
+                _lookAtThisPlayer.OnPlayerRespawned -= OnTargetPlayerRespawn;
+                _lookAtThisPlayer.OnPlayerRespawned += OnTargetPlayerRespawn;
             }
             catch { }
             return;
@@ -205,5 +210,15 @@ public class PlayerWorldUIMarker : MonoBehaviour
     void OnPlayerDeath(Player player)
     {
         //_holder.SetActive(false);
+    }
+
+    private void OnTargetPlayerDeath(Player p)
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+    void OnTargetPlayerRespawn(Player p)
+    {
+        transform.GetChild(0).gameObject.SetActive(true);
     }
 }
