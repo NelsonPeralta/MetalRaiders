@@ -1545,17 +1545,19 @@ public class Player : Biped
 
 
 
-
         _bloodHit = gameObjectPool.SpawnPooledBloodHit();
 
-        if (playerController.rid == 0)
-            GameManager.SetLayerRecursively(_bloodHit, 24);
-        else if (playerController.rid == 1)
-            GameManager.SetLayerRecursively(_bloodHit, 26);
-        else if (playerController.rid == 2)
-            GameManager.SetLayerRecursively(_bloodHit, 28);
-        else if (playerController.rid == 3)
-            GameManager.SetLayerRecursively(_bloodHit, 30);
+        if (PV.IsMine)
+        {
+            if (playerController.rid == 0)
+                GameManager.SetLayerRecursively(_bloodHit, 24);
+            else if (playerController.rid == 1)
+                GameManager.SetLayerRecursively(_bloodHit, 26);
+            else if (playerController.rid == 2)
+                GameManager.SetLayerRecursively(_bloodHit, 28);
+            else if (playerController.rid == 3)
+                GameManager.SetLayerRecursively(_bloodHit, 30);
+        }
 
         _bloodHit.transform.position = _impactPos;
         _bloodHit.SetActive(true);

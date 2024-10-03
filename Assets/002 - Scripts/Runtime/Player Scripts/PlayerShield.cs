@@ -170,14 +170,17 @@ public class PlayerShield : MonoBehaviour
     {
         if (!shieldElectricityThirdPersonModel.activeSelf)
         {
-            if (_player.playerController.rid == 0)
-                GameManager.SetLayerRecursively(shieldElectricityThirdPersonModel, 24);
-            else if (_player.playerController.rid == 1)
-                GameManager.SetLayerRecursively(shieldElectricityThirdPersonModel, 26);
-            else if (_player.playerController.rid == 2)
-                GameManager.SetLayerRecursively(shieldElectricityThirdPersonModel, 28);
-            else if (_player.playerController.rid == 3)
-                GameManager.SetLayerRecursively(shieldElectricityThirdPersonModel, 30);
+            if (_player.PV.IsMine)
+            {
+                if (_player.playerController.rid == 0)
+                    GameManager.SetLayerRecursively(shieldElectricityThirdPersonModel, 24);
+                else if (_player.playerController.rid == 1)
+                    GameManager.SetLayerRecursively(shieldElectricityThirdPersonModel, 26);
+                else if (_player.playerController.rid == 2)
+                    GameManager.SetLayerRecursively(shieldElectricityThirdPersonModel, 28);
+                else if (_player.playerController.rid == 3)
+                    GameManager.SetLayerRecursively(shieldElectricityThirdPersonModel, 30);
+            }
 
 
 
