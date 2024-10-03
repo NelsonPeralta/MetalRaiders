@@ -254,11 +254,11 @@ public class PlayerController : MonoBehaviourPun
         if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
         if (_markSpotCooldown > 0) _markSpotCooldown -= Time.deltaTime;
 
-        if (GameManager.instance.devMode)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameType == GameManager.GameType.GunGame)
-                pInventory.playerGunGameManager.index++;
-        }
+        //if (GameManager.instance.devMode)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameType == GameManager.GameType.GunGame)
+        //        pInventory.playerGunGameManager.index++;
+        //}
 
 
 
@@ -356,11 +356,11 @@ public class PlayerController : MonoBehaviourPun
 
     void ToggleInvincible()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Coop)
-        {
-            player.isInvincible = !player.isInvincible;
-            GetComponent<PlayerUI>().invincibleIcon.SetActive(player.isInvincible);
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Coop)
+        //{
+        //    player.isInvincible = !player.isInvincible;
+        //    GetComponent<PlayerUI>().invincibleIcon.SetActive(player.isInvincible);
+        //}
     }
 
     void UpdateWeaponPropertiesAndAnimator()
@@ -1260,44 +1260,24 @@ public class PlayerController : MonoBehaviourPun
 
     void HolsterAndInspect()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-            holstered = !holstered;
+        if (rewiredPlayer.GetButtonLongPressDown("holster") && PV.IsMine)
+        {
+            PV.RPC("ToggleHolsterWeaponAnimation_RPC", RpcTarget.All, !holstered);
+        }
+    }
 
-        //Holster anim toggle
+
+    [PunRPC]
+    void ToggleHolsterWeaponAnimation_RPC(bool newVal)
+    {
+        holstered = newVal;
         if (weaponAnimator)
         {
             weaponAnimator.SetBool("Holster", holstered);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", holstered);
         }
-
-        //if (holstered == true)
-        //{
-        //    if (weaponAnimator)
-        //    {
-        //        weaponAnimator.SetBool("Holster", true);
-        //        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", true);
-
-        //    }
-        //}
-        //else
-        //{
-        //    if (weaponAnimator)
-        //    {
-        //        weaponAnimator.SetBool("Holster", false);
-        //        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
-
-        //    }
-        //}
-
-
-        //Inspect weapon when T key is pressed
-        ///////////////////////////////////////
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    weaponAnimator.Play("Reload Open", 0, 0f);
-        //    //anim.SetTrigger("Inspect");
-        //}
     }
+
 
     private void AnimationCheck()
     {
@@ -1586,14 +1566,14 @@ public class PlayerController : MonoBehaviourPun
 
     void TestButton()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
 
-            print(CurrentRoomManager.instance.youHaveInvites);
-            print(CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos);
+        //    print(CurrentRoomManager.instance.youHaveInvites);
+        //    print(CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos);
 
-            //OnPlayerTestButton?.Invoke(this);
-        }
+        //    //OnPlayerTestButton?.Invoke(this);
+        //}
     }
     void StartButton()
     {
