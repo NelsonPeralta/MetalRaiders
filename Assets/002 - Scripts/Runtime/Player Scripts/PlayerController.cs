@@ -623,6 +623,16 @@ public class PlayerController : MonoBehaviourPun
     {
 
         isHoldingShootBtn = true;
+
+        try
+        {
+            holstered = false;
+            weaponAnimator.SetBool("Holster", false);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
+        }
+        catch { }
+
+
         if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading &&
             !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
         {
@@ -633,10 +643,6 @@ public class PlayerController : MonoBehaviourPun
             }
             catch { }
             //player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp];
-            holstered = false;
-            weaponAnimator.SetBool("Holster", false);
-            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
-
         }
         else
         {
