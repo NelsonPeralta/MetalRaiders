@@ -864,14 +864,21 @@ public class PlayerInventory : MonoBehaviourPun
     {
         foreach (GameObject w in allWeaponsInInventory)
         {
-            if (pController.rid == 0)
-                GameManager.SetLayerRecursively(w, 24);
-            else if (pController.rid == 1)
-                GameManager.SetLayerRecursively(w, 26);
-            else if (pController.rid == 2)
-                GameManager.SetLayerRecursively(w, 28);
-            else if (pController.rid == 3)
-                GameManager.SetLayerRecursively(w, 30);
+            if (player.isMine)
+            {
+                if (pController.rid == 0)
+                    GameManager.SetLayerRecursively(w, 24);
+                else if (pController.rid == 1)
+                    GameManager.SetLayerRecursively(w, 26);
+                else if (pController.rid == 2)
+                    GameManager.SetLayerRecursively(w, 28);
+                else if (pController.rid == 3)
+                    GameManager.SetLayerRecursively(w, 30);
+            }
+            else
+            {
+                GameManager.SetLayerRecursively(w, 3);
+            }
         }
     }
 }
