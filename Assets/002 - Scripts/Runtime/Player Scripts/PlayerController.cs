@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviourPun
 
     public bool reloadAnimationStarted, reloadWasCanceled, isFiring,
         isAiming, isCrouching, isDrawingWeapon, isSprinting;
-
+    bool isDrawingThirdWeapon { get { return _drawingWeaponTime_thirdWeapon > 0; } }
     public bool isThrowingGrenade { get { return _currentlyThrowingGrenadeTimer > 0; } }
 
     //Used for fire rate
@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviourPun
 
 
     [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn, _isHoldingSprintBtn;
-    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime;
+    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime, _isCurrentlyShootingReset_thirdWeapon, _drawingWeaponTime_thirdWeapon;
 
     void Awake()
     {
@@ -247,8 +247,8 @@ public class PlayerController : MonoBehaviourPun
 
     private void Update()
     {
-        if (_drawingWeaponTime > 0) _drawingWeaponTime -= Time.deltaTime;
-        if (_isCurrentlyShootingReset > 0) _isCurrentlyShootingReset -= Time.deltaTime;
+        if (_drawingWeaponTime > 0) _drawingWeaponTime -= Time.deltaTime; if (_drawingWeaponTime_thirdWeapon > 0) _drawingWeaponTime_thirdWeapon -= Time.deltaTime;
+        if (_isCurrentlyShootingReset > 0) _isCurrentlyShootingReset -= Time.deltaTime; if (_isCurrentlyShootingReset_thirdWeapon > 0) _isCurrentlyShootingReset_thirdWeapon -= Time.deltaTime;
         if (_meleeCooldown > 0) _meleeCooldown -= Time.deltaTime;
         if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime; if (_currentlyReloadingTimer_thirdWeapon > 0) _currentlyReloadingTimer_thirdWeapon -= Time.deltaTime;
         if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
@@ -303,6 +303,8 @@ public class PlayerController : MonoBehaviourPun
             {
                 Shooting();
                 LeftShooting();
+                AutoReloadThirdWeapon();
+
                 if (!isSprinting)
                 {
                     CheckReloadButton();
@@ -427,6 +429,8 @@ public class PlayerController : MonoBehaviourPun
     void Sprint()
     {
         if (isHoldingShootBtn) return;
+
+
         if (isSprinting)
         {
             currentlyReloadingTimer = 0;
@@ -473,6 +477,8 @@ public class PlayerController : MonoBehaviourPun
 
     public void EnableSprint()
     {
+        if (player.playerInventory.isDualWielding) player.playerInventory.DropThirdWeapon();
+
         if (player.movement.blockPlayerMoveInput <= 0)
         {
             PV.RPC("EnableSprint_RPC", RpcTarget.All);
@@ -604,15 +610,29 @@ public class PlayerController : MonoBehaviourPun
 
     void LeftShooting()
     {
-        if (pInventory.thirdWeapon && PV.IsMine && player.isAlive)
+        if (pInventory.thirdWeapon && PV.IsMine && player.isAlive && _isCurrentlyShootingReset_thirdWeapon <= 0 && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon)
         {
-            if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
+            if (activeControllerType == ControllerType.Joystick)
             {
+                if (rewiredPlayer.GetButton("Throw Grenade"))
+                {
+                    //player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
 
+                    _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+
+                    player.playerShooting.Shoot(pInventory.thirdWeapon);
+                }
             }
-            else if (activeControllerType == ControllerType.Joystick)
+            else
             {
+                if (rewiredPlayer.GetButton("Aim"))
+                {
+                    //player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
 
+                    _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+
+                    player.playerShooting.Shoot(pInventory.thirdWeapon);
+                }
             }
         }
     }
@@ -1070,7 +1090,7 @@ public class PlayerController : MonoBehaviourPun
 
     void CheckReloadButton()
     {
-        if (!GetComponent<Player>().isDead)
+        if (!player.isDead)
         {
             if (PV.IsMine && rewiredPlayer.GetButtonDown("Reload"))
             {
@@ -1132,6 +1152,19 @@ public class PlayerController : MonoBehaviourPun
         if (pInventory.activeWeapon.loadedAmmo <= 0 && pInventory.holsteredWeapon.loadedAmmo <= 0)
             player.PlayOutOfAmmoClip();
     }
+
+
+    void AutoReloadThirdWeapon()
+    {
+        if (player.playerInventory.thirdWeapon)
+        {
+            if (player.playerInventory.thirdWeapon.loadedAmmo == 0 && player.playerInventory.thirdWeapon.spareAmmo > 0)
+            {
+                ReloadThirdWeapon();
+            }
+        }
+    }
+
 
     void CheckDrawingWeapon()
     {
@@ -1287,6 +1320,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButtonLongPressDown("holster") && PV.IsMine)
         {
+            if (player.playerInventory.isDualWielding) player.playerInventory.DropThirdWeapon();
             PV.RPC("ToggleHolsterWeaponAnimation_RPC", RpcTarget.All, !holstered);
         }
     }
@@ -1847,21 +1881,39 @@ public class PlayerController : MonoBehaviourPun
 
     void ReloadThirdWeapon()
     {
-        player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("Reload Ammo Left", 0, 0f);
+        if (player.playerInventory.thirdWeapon && player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity && _currentlyReloadingTimer_thirdWeapon <= 0)
+        {
+            player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("Reload Ammo Left", 0, 0f);
 
 
 
-        _completeReloadTimer_thirdWeapon = 2f; // Used to trasnfer ammo
-        _currentlyReloadingTimer_thirdWeapon = 3f; // Used to lock animation time
+            _completeReloadTimer_thirdWeapon = 2f; // Used to trasnfer ammo
+            _currentlyReloadingTimer_thirdWeapon = 4f; // Used to lock animation time
+
+            if (pInventory.thirdWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol)
+            {
+                _completeReloadTimer_thirdWeapon = 1.5f; // Used to trasnfer ammo
+                _currentlyReloadingTimer_thirdWeapon = 3; // Used to lock animation time
+            }
 
 
-        SoundManager.instance.PlayAudioClip(transform.position, player.playerInventory.thirdWeapon.ReloadShort);
 
 
-        //if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
-        //{
-        //    StartCoroutine(Reload3PS());
-        //}
+
+            SoundManager.instance.PlayAudioClip(transform.position, player.playerInventory.thirdWeapon.ReloadShort);
+
+
+            //if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
+            //{
+            //    StartCoroutine(Reload3PS());
+            //}
+        }
+    }
+
+
+    public void SetDrawingThirdWeapon()
+    {
+        _drawingWeaponTime_thirdWeapon = 1.5f;
     }
 
 

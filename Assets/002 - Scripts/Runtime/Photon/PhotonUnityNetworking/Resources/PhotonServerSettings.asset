@@ -215,6 +215,7 @@ MonoBehaviour:
   - SetPlayerDataCellStartingSpawnPositionIndex
   - DisableCollidingWeapon_RPC
   - ToggleHolsterWeaponAnimation_RPC
+  - PickupThirdWeapon
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

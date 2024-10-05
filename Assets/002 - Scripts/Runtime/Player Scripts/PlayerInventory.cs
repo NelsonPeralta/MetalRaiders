@@ -133,7 +133,19 @@ public class PlayerInventory : MonoBehaviourPun
             if (value)
             {
                 print($"showing third weapon");
+                pController.SetDrawingThirdWeapon();
+                pController.Descope();
                 value.gameObject.SetActive(true);
+                value.equippedModel.SetActive(true);
+
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", true);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
+
+                value.GetComponent<Animator>().SetBool("dw", true);
+                value.GetComponent<Animator>().Play("dw draw");
+
+                activeWeapon.GetComponent<Animator>().SetBool("dw", true);
             }
             else
             {
@@ -142,6 +154,10 @@ public class PlayerInventory : MonoBehaviourPun
                 {
                     print($"hiding third weapon");
                     _thirdWeapon.gameObject.SetActive(false);
+                    activeWeapon.GetComponent<Animator>().SetBool("dw", false);
+
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", false);
+                    StartCoroutine(ToggleTPPistolIdle(1));
                 }
             }
 
@@ -692,6 +708,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             {
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", false);
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", true);
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
             }
@@ -705,6 +722,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             //if (GameManager.instance.gameMode == GameManager.GameMode.Multiplayer)
             {
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", false);
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", true);
             }

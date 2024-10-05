@@ -133,7 +133,7 @@ public class PlayerShooting : MonoBehaviourPun
         if (playerController.isDrawingWeapon)
             return;
 
-        Shoot(pInventory.activeWeapon.leftWeapon);
+        //Shoot(pInventory.activeWeapon.leftWeapon);
     }
 
     public void Shoot(WeaponProperties wp = null)
@@ -269,8 +269,7 @@ public class PlayerShooting : MonoBehaviourPun
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
         Debug.Log($"Shoot_Caller: {playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo}");
 
-        if (isLeftWeapon)
-            activeWeapon = pInventory.activeWeapon.leftWeapon;
+        if (isLeftWeapon) activeWeapon = pInventory.thirdWeapon;
 
         if (activeWeapon.loadedAmmo <= 0 || playerController.isReloading)
         {
@@ -307,33 +306,32 @@ public class PlayerShooting : MonoBehaviourPun
 
         playerController.player.assignActorPlayerTargetOnShootingSphere.TriggerBehaviour();
 
-        Debug.Log("shoooo 1");
+        Debug.Log($"shoooo 1 {isLeftWeapon}");
 
         int counter = 1;
-        WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        WeaponProperties weaponToShoot = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 
-        if (isLeftWeapon)
-            activeWeapon = pInventory.activeWeapon.leftWeapon;
+        if (isLeftWeapon) weaponToShoot = pInventory.thirdWeapon;
 
-        if (activeWeapon.isShotgun)
+        if (weaponToShoot.isShotgun)
         {
-            counter = activeWeapon.numberOfPellets;
+            counter = weaponToShoot.numberOfPellets;
             counter = playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints.Count;
-            if (activeWeapon.isShotgun)
+            if (weaponToShoot.isShotgun)
                 for (int j = 0; j < playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints.Count; j++)
                     quats.Add(Quaternion.Euler(Vector3.zero));
         }
 
         for (int i = 0; i < counter; i++)
-            if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
+            if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet || weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
             {
                 Player player = playerController.GetComponent<Player>();
-                Quaternion ranSprayQuat = activeWeapon.GetRandomSprayRotation();
+                Quaternion ranSprayQuat = weaponToShoot.GetRandomSprayRotation();
 
-                if (playerController.isAiming && activeWeapon.hipSprayOnly)
+                if (playerController.isAiming && weaponToShoot.hipSprayOnly)
                     ranSprayQuat = Quaternion.identity;
 
-                if (activeWeapon.ammoProjectileType != WeaponProperties.AmmoProjectileType.Plasma)
+                if (weaponToShoot.ammoProjectileType != WeaponProperties.AmmoProjectileType.Plasma)
                 {
                     //if (!player.isMine/* || GameManager.instance.connection == GameManager.Connection.Local*/)
                     {
@@ -394,7 +392,7 @@ public class PlayerShooting : MonoBehaviourPun
 
 
 
-                if (player.isMine || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
+                if (player.isMine || weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
                     Debug.Log("Shooting Plasma bullet");
                     var bullet = GameObjectPool.instance.SpawnPooledBullet();
@@ -404,12 +402,12 @@ public class PlayerShooting : MonoBehaviourPun
 
                     bullet.GetComponent<Bullet>().overcharged = false;
                     bullet.GetComponent<Bullet>().trackingTarget = null;
-                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
+                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = weaponToShoot; } catch { }
 
 
-                    if (activeWeapon.targetTracking)
+                    if (weaponToShoot.targetTracking)
                     {
-                        if (!activeWeapon.overcharge)
+                        if (!weaponToShoot.overcharge)
                             bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
                         else
                         {
@@ -421,18 +419,18 @@ public class PlayerShooting : MonoBehaviourPun
                             }
                         }
                     }
-                    print($"Active weapon has target tracking: {activeWeapon.targetTracking}. PlayerShooting script has tracking target {trackingTarget}. {overcharge}");
+                    print($"Active weapon has target tracking: {weaponToShoot.targetTracking}. PlayerShooting script has tracking target {trackingTarget}. {overcharge}");
 
 
 
 
                     {
                         Debug.Log(bullet);
-                        Debug.Log(activeWeapon);
-                        bullet.GetComponent<Bullet>().bluePlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Blue && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                        bullet.GetComponent<Bullet>().redPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Red && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                        bullet.GetComponent<Bullet>().greenPlasma.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Green && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                        bullet.GetComponent<Bullet>().shard.SetActive(activeWeapon.plasmaColor == WeaponProperties.PlasmaColor.Shard && activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        Debug.Log(weaponToShoot);
+                        bullet.GetComponent<Bullet>().bluePlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Blue && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().redPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Red && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().greenPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Green && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().shard.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Shard && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                     }
 
                     try
@@ -441,7 +439,7 @@ public class PlayerShooting : MonoBehaviourPun
                             playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
 
 
-                        if (activeWeapon.isShotgun)
+                        if (weaponToShoot.isShotgun)
                         {
                             quats[i] = UnityEngine.Random.rotation;
                             //playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.localRotation, quats[i], activeWeapon.bulletSpray);
@@ -456,14 +454,14 @@ public class PlayerShooting : MonoBehaviourPun
                     //else
                     //    bullet.layer = 0;
 
-                    if (activeWeapon.isShotgun)
+                    if (weaponToShoot.isShotgun)
                     {
                         quats[i] = UnityEngine.Random.rotation;
 
                         bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints[i].position;
                         bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints[i].rotation;
 
-                        bullet.transform.rotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints[i].rotation, quats[i], activeWeapon.bulletSpray);
+                        bullet.transform.rotation = Quaternion.RotateTowards(playerController.GetComponent<GeneralWeapProperties>().pelletSpawnPoints[i].rotation, quats[i], weaponToShoot.bulletSpray);
                     }
                     else
                     {
@@ -474,7 +472,7 @@ public class PlayerShooting : MonoBehaviourPun
 
 
                     try { bullet.gameObject.GetComponent<Bullet>().sourcePlayer = playerController.GetComponent<Player>(); } catch { }
-                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = activeWeapon; } catch { }
+                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = weaponToShoot; } catch { }
                     try { bullet.gameObject.GetComponent<Bullet>().damage = playerController.GetComponent<Player>().playerInventory.activeWeapon.damage; } catch { }
 
 
@@ -483,41 +481,41 @@ public class PlayerShooting : MonoBehaviourPun
 
 
                     //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
-                    bullet.gameObject.GetComponent<Bullet>().range = (int)activeWeapon.range;
-                    bullet.gameObject.GetComponent<Bullet>().speed = (int)activeWeapon.bulletSpeed;
-                    if (overcharge) bullet.gameObject.GetComponent<Bullet>().speed = (int)(activeWeapon.bulletSpeed * 0.65f);
+                    bullet.gameObject.GetComponent<Bullet>().range = (int)weaponToShoot.range;
+                    bullet.gameObject.GetComponent<Bullet>().speed = (int)weaponToShoot.bulletSpeed;
+                    if (overcharge) bullet.gameObject.GetComponent<Bullet>().speed = (int)(weaponToShoot.bulletSpeed * 0.65f);
                     //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
                     //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
                     //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
                     //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
                     bullet.SetActive(true);
 
-                    if (activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                    if (weaponToShoot.plasmaColor != WeaponProperties.PlasmaColor.Shard)
                     {
-                        activeWeapon.currentOverheat = Mathf.Clamp(activeWeapon.currentOverheat + activeWeapon.overheatPerShot, 0, 100);
+                        weaponToShoot.currentOverheat = Mathf.Clamp(weaponToShoot.currentOverheat + weaponToShoot.overheatPerShot, 0, 100);
 
-                        if (overcharge) activeWeapon.currentOverheat = 100;
+                        if (overcharge) weaponToShoot.currentOverheat = 100;
                     }
                 }
-                activeWeapon.SpawnMuzzleflash();
+                weaponToShoot.SpawnMuzzleflash();
             }
-            else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+            else if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket || weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
             {
                 // Projectile does not spawn if ammo left is 0, lag
                 if (playerController.player.isMine)
-                    if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+                    if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
                     {
 
                         PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.AllViaServer, GrenadePool.GetAvailableRocketAtIndex(playerController.player.playerDataCell.photonRoomIndex),
                         playerController.player.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position, playerController.player.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation.eulerAngles);
                     }
-                    else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+                    else if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
                     {
                         PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.AllViaServer, GrenadePool.GetAvailableGrenadeLauncherProjectileAtIndex(playerController.player.playerDataCell.photonRoomIndex),
                         playerController.player.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position, playerController.player.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation.eulerAngles);
                     }
 
-                activeWeapon.SpawnMuzzleflash();
+                weaponToShoot.SpawnMuzzleflash();
 
 
                 //Debug.Log($"{playerController.name} PlayerShooting: AmmoProjectileType.Rocket");
@@ -559,29 +557,36 @@ public class PlayerShooting : MonoBehaviourPun
             if (!overcharge)
             {
                 print("removing 1 loaded ammo");
-                activeWeapon.loadedAmmo -= 1;
+                weaponToShoot.loadedAmmo -= 1;
             }
             else
-                activeWeapon.loadedAmmo -= 10;
+                weaponToShoot.loadedAmmo -= 10;
         }
 
         try
         {
-            activeWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
-            tPersonController.GetComponent<Animator>().SetTrigger("Fire");
+            if (!playerController.player.playerInventory.isDualWielding)
+            {
+                tPersonController.GetComponent<Animator>().SetTrigger("Fire");
+                weaponToShoot.GetComponent<Animator>().Play("Fire", 0, 0f);
+            }
+            else
+            {
+                weaponToShoot.GetComponent<Animator>().Play("dw fire", 0, 0f);
+            }
             //if (pInventory.isDualWielding)
             //    activeWeapon.leftWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
             //StartCoroutine(Player3PSFiringAnimation());
         }
         catch (System.Exception e) { Debug.LogError(e); }
         Debug.Log("Calling Recoil()");
-        activeWeapon.Recoil();
+        weaponToShoot.Recoil();
         //if (pInventory.isDualWielding)
         //    activeWeapon.rightWeapon.Recoil();
 
 
 
-        GetComponent<AudioSource>().clip = activeWeapon.Fire;
+        GetComponent<AudioSource>().clip = weaponToShoot.Fire;
         GetComponent<AudioSource>().Play();
         OnBulletSpawned?.Invoke(this);
     }
