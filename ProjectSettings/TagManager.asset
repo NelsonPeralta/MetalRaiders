@@ -30,6 +30,9 @@ TagManager:
   - Pickup Collider
   - SFX
   - Current Ammo Text
+  - Spawn Point
+  - Spawn Manager
+  - oddball
   layers:
   - Default
   - TransparentFX

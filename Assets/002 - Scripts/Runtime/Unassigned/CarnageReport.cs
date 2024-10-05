@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarnageReport 
+public class CarnageReport
 {
     public PlayerProgressionManager.Rank rank { get { return _rank; } }
     public int playerLevel { get { return _pLvl; } }
@@ -37,6 +37,6 @@ public class CarnageReport
 
         _honorGained = gh; _currentHonor = curH;
 
-        _rankedUp = (_honorGained + _currentHonor) >= PlayerProgressionManager.GetClosestAndNextRank(currentHonor)[1].honorRequired;
+        _rankedUp = (_honorGained + _currentHonor) >= PlayerProgressionManager.GetClosestAndNextRank(currentHonor)[1].honorRequired && PlayerProgressionManager.GetClosestAndNextRank(currentHonor)[1].honorRequired > 0;
     }
 }

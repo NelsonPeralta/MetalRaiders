@@ -7,6 +7,9 @@ public class GrenadePool : MonoBehaviour
 {
     public static GrenadePool instance { get { return _instance; } }
 
+    static int ROCKET_INC = 10;
+    static int GL_INC = 24;
+
     public List<GameObject> stickyGrenadePool { get { return _stickyGrenadePool; } }
 
     [SerializeField] GameObject _fragGrenadePrefab, _stickyGrenadePrefab, _rocketPrefab, _glProjectilePrefab, _explosionPrefab;
@@ -42,7 +45,7 @@ public class GrenadePool : MonoBehaviour
         }
 
 
-        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 5; i++)
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * ROCKET_INC; i++)
         {
             _rocketPool.Add(Instantiate(_rocketPrefab, transform).GetComponent<ExplosiveProjectile>());
 
@@ -50,7 +53,7 @@ public class GrenadePool : MonoBehaviour
             _rocketPool[i].transform.SetParent(this.transform);
         }
 
-        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 12; i++)
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * GL_INC; i++)
         {
             _glProjectilePool.Add(Instantiate(_glProjectilePrefab, transform).GetComponent<ExplosiveProjectile>());
 
@@ -109,7 +112,7 @@ public class GrenadePool : MonoBehaviour
 
     public static int GetAvailableRocketAtIndex(int photonRoomIndex)
     {
-        for (int i = (photonRoomIndex - 1) * 5; i < (photonRoomIndex * 5) - 1; i++)
+        for (int i = (photonRoomIndex - 1) * ROCKET_INC; i < (photonRoomIndex * ROCKET_INC) - 1; i++)
         {
 
             if (!_instance._rocketPool[i].gameObject.activeInHierarchy) _instance._rocketPool[i].transform.SetParent(instance.transform);
@@ -121,7 +124,7 @@ public class GrenadePool : MonoBehaviour
 
     public static int GetAvailableGrenadeLauncherProjectileAtIndex(int photonRoomIndex)
     {
-        for (int i = (photonRoomIndex - 1) * 12; i < (photonRoomIndex * 12) - 1; i++)
+        for (int i = (photonRoomIndex - 1) * GL_INC; i < (photonRoomIndex * GL_INC) - 1; i++)
         {
 
             if (!_instance._glProjectilePool[i].gameObject.activeInHierarchy) _instance._glProjectilePool[i].transform.SetParent(instance.transform);

@@ -140,24 +140,26 @@ public class PlayerController : MonoBehaviourPun
             _preIsHoldingFireWeaponBtn = _isHoldingShootBtn;
             _isHoldingShootBtn = value; print($"{player.name} isHoldingShootBtn {value}");
 
-            if (value && !_preIsHoldingFireWeaponBtn)
-            {
+
+            if (player.isAlive)
+                if (value && !_preIsHoldingFireWeaponBtn)
                 {
-                    DisableSprint_RPC();
-
-
-
-
-
-                    if (pInventory.activeWeapon.codeName.Equals("oddball"))
                     {
+                        DisableSprint_RPC();
 
-                        if (player.isMine) Melee(true);
-                        print("Do an Odball Melee and STOP");
-                        return;
+
+
+
+
+                        if (pInventory.activeWeapon.codeName.Equals("oddball"))
+                        {
+
+                            if (player.isMine) Melee(true);
+                            print("Do an Odball Melee and STOP");
+                            return;
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -252,11 +254,11 @@ public class PlayerController : MonoBehaviourPun
         if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
         if (_markSpotCooldown > 0) _markSpotCooldown -= Time.deltaTime;
 
-        if (GameManager.instance.devMode)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameType == GameManager.GameType.GunGame)
-                pInventory.playerGunGameManager.index++;
-        }
+        //if (GameManager.instance.devMode)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameType == GameManager.GameType.GunGame)
+        //        pInventory.playerGunGameManager.index++;
+        //}
 
 
 
@@ -296,6 +298,13 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
         }
+        if (player.isMine)
+            if (rewiredPlayer.GetButtonUp("Shoot"))
+                SendIsNotHoldingFireWeaponBtn();
+
+
+
+
 
         if (PV.IsMine)
         {
@@ -326,13 +335,12 @@ public class PlayerController : MonoBehaviourPun
                     SwitchWeapons();
                     LongInteract();
                     MarkSpot();
-                    //LongMarkSpot();
+                    Grenade();
                     if (isSprinting)
                         return;
                     Scope();
                     Melee();
                     Crouch();
-                    Grenade(); //TO DO: Spawn Grenades the same way as bullets
                     HolsterAndInspect();
                     CheckDrawingWeapon();
                     FloatingCamera();
@@ -348,11 +356,11 @@ public class PlayerController : MonoBehaviourPun
 
     void ToggleInvincible()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Coop)
-        {
-            player.isInvincible = !player.isInvincible;
-            GetComponent<PlayerUI>().invincibleIcon.SetActive(player.isInvincible);
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Coop)
+        //{
+        //    player.isInvincible = !player.isInvincible;
+        //    GetComponent<PlayerUI>().invincibleIcon.SetActive(player.isInvincible);
+        //}
     }
 
     void UpdateWeaponPropertiesAndAnimator()
@@ -540,52 +548,43 @@ public class PlayerController : MonoBehaviourPun
 
     void Shooting() //  ***************
     {
-        if (GetComponent<Player>().isDead || player.isRespawning)
-            return;
-
-        if (player.isMine)
+        if (!GetComponent<Player>().isDead && !player.isRespawning)
         {
-            if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
+
+
+            if (player.isMine)
             {
-                SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
-            }
-            else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
-                player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
-        }
-
-
-
-
-        //Process Firing
-        if (!isReloading && !isThrowingGrenade && !isMeleeing)
-        {
-            if (player.playerShooting && player.playerInventory)
-                if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
+                if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
                 {
+                    SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
+                }
+                else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
+                    player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+            }
 
-                    if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
-                        player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+
+
+
+            //Process Firing
+            if (!isReloading && !isThrowingGrenade && !isMeleeing)
+            {
+                if (player.playerShooting && player.playerInventory)
+                    if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
                     {
-                        if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+
+                        if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
+                            player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                        {
+                            if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+                            {
+                                player.playerShooting.Shoot();
+                            }
+                        }
+                        else
                         {
                             player.playerShooting.Shoot();
                         }
                     }
-                    else
-                    {
-                        player.playerShooting.Shoot();
-                    }
-                }
-        }
-
-
-
-
-        if (player.isMine)
-        {
-            if (rewiredPlayer.GetButtonUp("Shoot"))
-            {
-                SendIsNotHoldingFireWeaponBtn();
             }
         }
     }
@@ -624,6 +623,16 @@ public class PlayerController : MonoBehaviourPun
     {
 
         isHoldingShootBtn = true;
+
+        try
+        {
+            holstered = false;
+            weaponAnimator.SetBool("Holster", false);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
+        }
+        catch { }
+
+
         if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading &&
             !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
         {
@@ -634,10 +643,6 @@ public class PlayerController : MonoBehaviourPun
             }
             catch { }
             //player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp];
-            holstered = false;
-            weaponAnimator.SetBool("Holster", false);
-            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
-
         }
         else
         {
@@ -1024,10 +1029,11 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
-        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding /*&& !isMeleeing*/ && !isSprinting)
+        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding /*&& !isMeleeing*/ /*&& !isSprinting*/)
         {
             if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
             {
+                print($"Grenade 1");
                 CancelReloadCoroutine();
                 currentlyReloadingTimer = 0;
                 player.playerShooting.StopBurstFiring();
@@ -1143,7 +1149,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButtonDown("Switch Grenades") && PV.IsMine)
         {
-            grenadeSwitchAudioSource.Play();
+            //grenadeSwitchAudioSource.Play();
             PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
         }
     }
@@ -1260,44 +1266,24 @@ public class PlayerController : MonoBehaviourPun
 
     void HolsterAndInspect()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-            holstered = !holstered;
+        if (rewiredPlayer.GetButtonLongPressDown("holster") && PV.IsMine)
+        {
+            PV.RPC("ToggleHolsterWeaponAnimation_RPC", RpcTarget.All, !holstered);
+        }
+    }
 
-        //Holster anim toggle
+
+    [PunRPC]
+    void ToggleHolsterWeaponAnimation_RPC(bool newVal)
+    {
+        holstered = newVal;
         if (weaponAnimator)
         {
             weaponAnimator.SetBool("Holster", holstered);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", holstered);
         }
-
-        //if (holstered == true)
-        //{
-        //    if (weaponAnimator)
-        //    {
-        //        weaponAnimator.SetBool("Holster", true);
-        //        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", true);
-
-        //    }
-        //}
-        //else
-        //{
-        //    if (weaponAnimator)
-        //    {
-        //        weaponAnimator.SetBool("Holster", false);
-        //        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
-
-        //    }
-        //}
-
-
-        //Inspect weapon when T key is pressed
-        ///////////////////////////////////////
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    weaponAnimator.Play("Reload Open", 0, 0f);
-        //    //anim.SetTrigger("Inspect");
-        //}
     }
+
 
     private void AnimationCheck()
     {
@@ -1528,6 +1514,7 @@ public class PlayerController : MonoBehaviourPun
         //Wait for set amount of time before spawning grenade
         yield return new WaitForSeconds(0.2f);
         //Spawn grenade prefab at spawnpoint
+        print($"Grenade 2");
 
         if (PV.IsMine && !player.isDead)
             PV.RPC("SpawnGrenade_RPC", RpcTarget.AllViaServer, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
@@ -1585,14 +1572,14 @@ public class PlayerController : MonoBehaviourPun
 
     void TestButton()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
 
-            print(CurrentRoomManager.instance.youHaveInvites);
-            print(CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos);
+        //    print(CurrentRoomManager.instance.youHaveInvites);
+        //    print(CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos);
 
-            //OnPlayerTestButton?.Invoke(this);
-        }
+        //    //OnPlayerTestButton?.Invoke(this);
+        //}
     }
     void StartButton()
     {
@@ -1734,8 +1721,9 @@ public class PlayerController : MonoBehaviourPun
 
     void OnRespawn_Delegate(Player player)
     {
-        _currentlyThrowingGrenadeTimer = 0;
-        _currentlyReloadingTimer = 0; CancelReloadCoroutine();
+        _currentlyReloadingTimer = _completeReloadTimer = _currentlyThrowingGrenadeTimer = _isCurrentlyShootingReset = _drawingWeaponTime = 0;
+
+        CancelReloadCoroutine();
         isSprinting = false; _meleeSucc = false;
         isHoldingShootBtn = false;
     }
@@ -1806,76 +1794,42 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
-
-    float _timeMarkBtnHeld, _timeHeldForDw;
     void MarkSpot()
     {
-        if (rewiredPlayer.GetButton("mark"))
+        if (rewiredPlayer.GetButtonDown("mark") && _markSpotCooldown <= 0)
         {
-            _timeMarkBtnHeld += Time.deltaTime;
 
-            if (player.playerInteractableObjectHandler.closestInteractableObject && player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>())
+            RaycastHit hit;
+            // Does the ray intersect any objects excluding the player layer
+            if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
             {
-                _timeHeldForDw += Time.deltaTime;
+                Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
 
-                if (_timeHeldForDw > 0.4f)
-                    if (player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
-                    {
-                        if (player.playerInventory.activeWeapon.isDualWieldable && (player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
-                        {
-                            //player.playerInventory.activeWeapon.leftWeapon.gameObject.SetActive(true);
-                            _timeHeldForDw = 0;
-                        }
-                        else
-                            ;
-                    }
-                    else
-                    {
+                _markSpotCooldown = 0.15f;
 
-                    }
-            }
-        }
-        else if (rewiredPlayer.GetButtonUp("mark"))
-        {
-            if (_timeMarkBtnHeld <= 0.4f)
-            {
-                RaycastHit hit;
-                // Does the ray intersect any objects excluding the player layer
-                if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
+
+                if (hit.collider.transform.root.GetComponent<Player>())
                 {
-                    Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
-
-                    _markSpotCooldown = 0.15f;
-
-
-                    if (hit.collider.transform.root.GetComponent<Player>())
-                    {
-                        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                            MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
-                        else
-                        {
-                            if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
-                                PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
-                            else
-                                PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
-                        }
-                    }
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                        MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
                     else
                     {
-                        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                            MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
+                        if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
+                            PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
                         else
                             PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
                     }
                 }
+                else
+                {
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                        MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
+                    else
+                        PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                }
             }
-
-            _timeMarkBtnHeld = 0;
-            _timeHeldForDw = 0;
         }
     }
-
-
 
 
 
@@ -1933,7 +1887,7 @@ public class PlayerController : MonoBehaviourPun
     void SpawnGrenade_RPC(bool fga, int ind, Vector3 sp, Quaternion sr, Vector3 forw)
     {
         Debug.Log($"SpawnGrenade_RPC {ind}");
-
+        DisableSprint_RPC();
         player.PlayThrowingGrenadeClip();
 
         GameObject nade = GrenadePool.GetGrenade(fga, ind);

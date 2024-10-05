@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 979001302690551041}
   - component: {fileID: 2147815408547441912}
   - component: {fileID: 4061188935447534598}
+  - component: {fileID: 6724729410660088789}
   m_Layer: 10
   m_Name: collider
   m_TagString: Untagged
@@ -195,6 +196,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6724729410660088789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4164686963869403501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10ebf597b23c31240823408e47b83e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 3517156382934049492}
 --- !u!1 &4169268434635430984
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,7 +257,6 @@ MonoBehaviour:
   thisRoot: {fileID: 8576106208979078454}
   spawnPoint: {fileID: 0}
   rb: {fileID: 3517156382934049492}
-  _intro: {fileID: 8300000, guid: 76bcf90f4cee9ac43858b91926afc1aa, type: 3}
   _taken: {fileID: 8300000, guid: 0e1a03c0dca32df46977dda1d801b740, type: 3}
   _dropped: {fileID: 8300000, guid: 45bbbdf578f6e2b4da637eeb83295566, type: 3}
   _ballReset: {fileID: 8300000, guid: 2dd272b5b363f9a45a73350e8ae391ca, type: 3}
@@ -5555,7 +5568,7 @@ GameObject:
   - component: {fileID: 3517156382934049492}
   m_Layer: 10
   m_Name: Oddball Skull
-  m_TagString: Untagged
+  m_TagString: oddball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

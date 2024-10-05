@@ -274,8 +274,6 @@ public class WeaponProperties : MonoBehaviour
 
         currentRedReticuleRange = defaultRedReticuleRange;
 
-        SetCorrectLayer();
-
         _previousRedReticuleHint = redReticuleHint;
 
         pController.OnControllerTypeChangedToController += OnControllerTypeChanged;

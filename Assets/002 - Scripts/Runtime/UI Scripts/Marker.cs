@@ -4,29 +4,36 @@ using UnityEngine;
 
 public class Marker : MonoBehaviour
 {
-    public Transform lookAtThisTrans, localScale;
+    public Player targetPlayer;
+    public Transform localScale;
 
 
 
     // Update is called once per frame
     void Update()
     {
-        if (lookAtThisTrans)
+        if (targetPlayer)
         {
-            Vector3 targetPostition = new Vector3(lookAtThisTrans.transform.position.x,
+            Vector3 targetPostition = new Vector3(targetPlayer.transform.position.x,
                                         this.transform.position.y,
-                                        lookAtThisTrans.transform.position.z);
+                                        targetPlayer.transform.position.z);
             this.transform.LookAt(targetPostition);
 
 
             //print(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100);
             //print(Mathf.Clamp(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100, .01f, 1));
-            localScale.localScale = Vector3.one * (Mathf.Clamp(Vector3.Distance(transform.position, lookAtThisTrans.position) / 30, .03f, 1));
+            localScale.localScale = Vector3.one * (Mathf.Clamp(Vector3.Distance(transform.position, targetPlayer.transform.position) / 30, .03f, 1));
+
+            if (!targetPlayer.isAlive)
+            {
+                targetPlayer = null;
+                gameObject.SetActive(false);
+            }
         }
     }
 
     private void OnDisable()
     {
-        lookAtThisTrans = null;
+        targetPlayer = null;
     }
 }

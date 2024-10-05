@@ -1,24 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Rewired.ComponentControls.Effects.RotateAroundAxis;
 
 public class FakeBulletTrailDisable : MonoBehaviour
 {
+    public static int Speed = 300;
+
+
     public Player player;
-    float _c;
+    public float timeBeforeDisabling;
 
     private void OnEnable()
     {
-        _c = 0.1f;
+        timeBeforeDisabling = 0.1f;
     }
 
     private void Update()
     {
-        if(_c > 0)
+        if(timeBeforeDisabling > 0)
         {
-            _c -= Time.deltaTime;
+            timeBeforeDisabling -= Time.deltaTime;
 
-            if(_c <= 0)
+            if(timeBeforeDisabling <= 0)
             {
                 transform.parent = player.playerInventory.bulletTrailPool;
 
@@ -38,6 +42,11 @@ public class FakeBulletTrailDisable : MonoBehaviour
 
                 gameObject.SetActive(false);
             }
+            //else
+            //{
+            //    transform.localScale = Vector3.one;
+            //    transform.Translate(Vector3.forward * Time.deltaTime * Speed);
+            //}
         }
     }
 }

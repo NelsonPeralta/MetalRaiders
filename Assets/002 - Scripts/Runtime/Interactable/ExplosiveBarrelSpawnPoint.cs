@@ -67,24 +67,28 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
     void OnGameTimeChanged(GameTime gameTime)
     {
-        if (gameTime.timeRemaining % tts == 0 && gameTime.timeRemaining > 0)
-        {
-            Debug.Log("ExplosiveBarrelSpawnPoint OnGameTimeChanged");
-            explosion.gameObject.SetActive(false);
+        if (!CurrentRoomManager.instance.gameOver)
+            if (gameTime.timeRemaining % tts == 0 && gameTime.timeRemaining > 0)
+            {
+                Debug.Log("ExplosiveBarrelSpawnPoint OnGameTimeChanged");
+                explosion.gameObject.SetActive(false);
 
-            barrel.UpdateLastPlayerWhoDamaged(-999);
-            barrel.transform.position = barrel.spawnPointPosition;
-            barrel.transform.rotation = barrel.spawnPointRotation;
-            barrel.GetComponent<Rigidbody>().velocity = Vector3.zero; barrel.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                barrel.UpdateLastPlayerWhoDamaged(-999);
+                barrel.transform.position = barrel.spawnPointPosition;
+                barrel.transform.rotation = barrel.spawnPointRotation;
+                barrel.GetComponent<Rigidbody>().velocity = Vector3.zero; barrel.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
-            barrel.gameObject.SetActive(true);
-        }
+                barrel.gameObject.SetActive(true);
+            }
     }
 
     public void TriggerExplosionCoroutine()
     {
-        barrel.gameObject.SetActive(false);
-        StartCoroutine(BarrelExplosion_Coroutine());
+        if (!CurrentRoomManager.instance.gameOver)
+        {
+            barrel.gameObject.SetActive(false);
+            StartCoroutine(BarrelExplosion_Coroutine());
+        }
     }
 
     IEnumerator BarrelExplosion_Coroutine()

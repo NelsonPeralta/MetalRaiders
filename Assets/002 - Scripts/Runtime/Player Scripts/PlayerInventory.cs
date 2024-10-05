@@ -13,8 +13,6 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     public PlayerGunGameManager playerGunGameManager { get { return _playerGunGameManager; } }
-    public Dictionary<string, WeaponProperties> weaponCodeNameDict { get { return _weaponCodeNameDict; } }
-    public Dictionary<string, WeaponProperties> weaponCleanNameDict { get { return _weaponCleanNameDict; } }
 
 
 
@@ -263,8 +261,6 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     List<WeaponProperties> _allWeapons = new List<WeaponProperties>(); // To replace allWeaponsInInventory variable
-    Dictionary<string, WeaponProperties> _weaponCodeNameDict = new Dictionary<string, WeaponProperties>();
-    Dictionary<string, WeaponProperties> _weaponCleanNameDict = new Dictionary<string, WeaponProperties>();
 
 
 
@@ -302,21 +298,6 @@ public class PlayerInventory : MonoBehaviourPun
         transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
         transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
 
-        foreach (GameObject wp in allWeaponsInInventory)
-        {
-            try
-            {
-                _weaponCodeNameDict.Add(wp.GetComponent<WeaponProperties>().codeName, wp.GetComponent<WeaponProperties>());
-                _weaponCleanNameDict.Add(wp.GetComponent<WeaponProperties>().cleanName, wp.GetComponent<WeaponProperties>());
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"{e}");
-                Debug.LogError($"YOU MAY HAVE 2 GUNS WITH THE SAME CODENAME {wp.name} {wp.GetComponent<WeaponProperties>().codeName}. THIS MAY STOP THE FOLLOWING CODE");
-            }
-        }
-
-        Debug.Log("PlayerInventory Start 2");
 
         //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
         OnActiveWeaponChanged += aimAssistCone.OnActiveWeaponChanged;
@@ -782,7 +763,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     bool outOfFakeBullets;
-    public void SpawnFakeBulletTrail(int l, Quaternion spray, bool bipedIsMine)
+    public void SpawnFakeBulletTrail(int distanceToTravel, Quaternion spray, bool bipedIsMine)
     {
         outOfFakeBullets = true;
         foreach (Transform fbt in _fakeBulletTrailPool)
@@ -808,8 +789,13 @@ public class PlayerInventory : MonoBehaviourPun
                 }
 
                 Debug.Log("SpawnFakeBulletTrail");
-                fbt.transform.localScale = new Vector3(l * 0.5f, l * 0.5f, Mathf.Clamp(l, 0, 999));
+                fbt.transform.localScale = new Vector3(distanceToTravel * 0.5f, distanceToTravel * 0.5f, Mathf.Clamp(distanceToTravel, 0, 999));
                 fbt.transform.localRotation *= spray;
+                //fbt.GetComponent<FakeBulletTrailDisable>().timeBeforeDisabling = ((float)distanceToTravel / FakeBulletTrailDisable.Speed);
+                fbt.GetComponent<FakeBulletTrailDisable>().timeBeforeDisabling = 0.1f;
+
+
+
                 fbt.gameObject.SetActive(true);
                 fbt.transform.parent = null;
                 outOfFakeBullets = false;
@@ -892,14 +878,21 @@ public class PlayerInventory : MonoBehaviourPun
     {
         foreach (GameObject w in allWeaponsInInventory)
         {
-            if (pController.rid == 0)
-                GameManager.SetLayerRecursively(w, 24);
-            else if (pController.rid == 1)
-                GameManager.SetLayerRecursively(w, 26);
-            else if (pController.rid == 2)
-                GameManager.SetLayerRecursively(w, 28);
-            else if (pController.rid == 3)
-                GameManager.SetLayerRecursively(w, 30);
+            if (player.isMine)
+            {
+                if (pController.rid == 0)
+                    GameManager.SetLayerRecursively(w, 24);
+                else if (pController.rid == 1)
+                    GameManager.SetLayerRecursively(w, 26);
+                else if (pController.rid == 2)
+                    GameManager.SetLayerRecursively(w, 28);
+                else if (pController.rid == 3)
+                    GameManager.SetLayerRecursively(w, 30);
+            }
+            else
+            {
+                GameManager.SetLayerRecursively(w, 3);
+            }
         }
     }
 }

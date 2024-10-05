@@ -105,8 +105,11 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             {
                 //EnableWeapon();
 
-                ResetWeaponPositionIfTooFar();
-                StartCoroutine(EnableWeapon_Coroutine());
+                if (!CurrentRoomManager.instance.gameOver)
+                {
+                    ResetWeaponPositionIfTooFar();
+                    StartCoroutine(EnableWeapon_Coroutine());
+                }
             }
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
@@ -114,14 +117,16 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void EnableWeapon()
     {
-        print("EnableWeapon");
+        if (!CurrentRoomManager.instance.gameOver)
+        {
+            print("EnableWeapon");
 
-
-        weaponSpawned.transform.localPosition = Vector3.zero;
-        weaponSpawned.transform.localRotation = Quaternion.identity;
-        weaponSpawned.localAmmo = weaponSpawned.defaultAmmo;
-        weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
-        weaponSpawned.gameObject.SetActive(true);
+            weaponSpawned.transform.localPosition = Vector3.zero;
+            weaponSpawned.transform.localRotation = Quaternion.identity;
+            weaponSpawned.localAmmo = weaponSpawned.defaultAmmo;
+            weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
+            weaponSpawned.gameObject.SetActive(true);
+        }
     }
 
     void SpawnWeapon()
@@ -192,7 +197,8 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             else if (GameManager.instance.gameType == GameManager.GameType.Shotguns)
             {
                 codeName = "shotgun";
-            }else if (GameManager.instance.gameType == GameManager.GameType.PurpleRain)
+            }
+            else if (GameManager.instance.gameType == GameManager.GameType.PurpleRain)
             {
                 codeName = "cl";
             }

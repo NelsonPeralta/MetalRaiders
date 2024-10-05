@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
 using System.Text;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class Player : Biped
 {
@@ -44,6 +45,10 @@ public class Player : Biped
     {
         get { return GetComponent<PlayerController>().rid; }
     }
+
+    public bool isAlive { get { return (!isDead && !isRespawning); } }
+
+
     public bool hasArmor // Used to handle armor seller for Swarm Mode
     {
         get { return _hasArmor; }
@@ -1281,7 +1286,7 @@ public class Player : Biped
     void Respawn()
     {
         Debug.Log("Respawn");
-        _gameplayerRecordingPointsHolder.parent = transform;
+        _gameplayerRecordingPointsHolder.parent = transform; _gameplayerRecordingPointsHolder.transform.localPosition = Vector3.zero; _gameplayerRecordingPointsHolder.transform.localRotation = Quaternion.identity;
         _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
 
         if (!isRespawning)
@@ -1537,7 +1542,23 @@ public class Player : Biped
     void OnPlayerHealthDamaged_Delegate(Player player)
     {
         PlayHurtSound();
+
+
+
         _bloodHit = gameObjectPool.SpawnPooledBloodHit();
+
+        if (PV.IsMine)
+        {
+            if (playerController.rid == 0)
+                GameManager.SetLayerRecursively(_bloodHit, 24);
+            else if (playerController.rid == 1)
+                GameManager.SetLayerRecursively(_bloodHit, 26);
+            else if (playerController.rid == 2)
+                GameManager.SetLayerRecursively(_bloodHit, 28);
+            else if (playerController.rid == 3)
+                GameManager.SetLayerRecursively(_bloodHit, 30);
+        }
+
         _bloodHit.transform.position = _impactPos;
         _bloodHit.SetActive(true);
     }

@@ -74,6 +74,10 @@ public class PlayerWorldUIMarker : MonoBehaviour
             catch { }
             return;
         }
+        else
+        {
+            transform.GetChild(0).gameObject.SetActive(_lookAtThisPlayer.isAlive);
+        }
 
         Vector3 targetPostition = new Vector3(_lookAtThisPlayer.transform.position.x,
                                         this.transform.position.y,

@@ -97,8 +97,11 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void Start()
     {
-        player.OnPlayerRespawnEarly -= OnPlayerRespawn;
-        player.OnPlayerRespawnEarly += OnPlayerRespawn;
+        if (player)
+        {
+            player.OnPlayerRespawnEarly -= OnPlayerRespawn;
+            player.OnPlayerRespawnEarly += OnPlayerRespawn;
+        }
     }
 
 

@@ -8,36 +8,27 @@ public class ManCannon : MonoBehaviour
     [SerializeField] int power;
     [SerializeField] float _blockMovementTime;
     [SerializeField] AudioClip onTriggerAudioClip;
-    [SerializeField] bool _invisible;
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"ManCannon {other}");
+        Debug.Log($"ManCannon {other.name} {other.transform.root.name}");
         if (other.gameObject.activeInHierarchy)
         {
-            //try
-            //{
-            //    if (other.GetComponent<IMoveable>() != null)
-            //    {
-            //        Debug.Log("Found IMoveable");
-            //        other.GetComponent<IMoveable>().Push(transform.up, power, PushSource.ManCannon, _blockMovement);
-
-            //        GetComponent<AudioSource>().clip = onTriggerAudioClip;
-            //        GetComponent<AudioSource>().Play();
-            //        return;
-            //    }
-            //}
-            //catch { }
-
+            Debug.Log($"ManCannon {other.name} active");
 
             Rigidbody rb = other.GetComponent<Rigidbody>();
 
+            if (!rb && other.GetComponent<OddballCollider>() != null) rb = other.GetComponent<OddballCollider>().rb;
+
+
+
             if (rb == null)
             {
+                Debug.Log($"ManCannon null");
 
-                if (other.GetComponent<PlayerCapsule>())
-                    if (other.transform.root.GetComponent<PhotonView>().IsMine && ((!_invisible && other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput <= 0) || (_invisible && other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput > 0)))
+                if (other.GetComponent<PlayerCapsule>() || other.GetComponent<Player>())
+                    if (other.transform.root.GetComponent<PhotonView>().IsMine && ((/*!_invisible &&*/ other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput <= 0) || (/*_invisible &&*/ other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput > 0)))
                     {
-                        if (_invisible) print(other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput);
+                        //if (_invisible) print(other.transform.root.GetComponent<PlayerMovement>().blockPlayerMoveInput);
 
 
                         other.transform.root.GetComponent<PlayerController>().DisableSprint();
@@ -63,7 +54,7 @@ public class ManCannon : MonoBehaviour
             else
             {
 
-                if (!_invisible)
+                //if (!_invisible)
                 {
                     print($"ManCannon dir {transform.up * power}");
                     //Debug.Log($"ManCannon LAUNCH! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
@@ -76,6 +67,10 @@ public class ManCannon : MonoBehaviour
                     GetComponent<AudioSource>().Play();
                 }
             }
+        }
+        else
+        {
+            Debug.Log($"ManCannon {other.name} inactive");
         }
     }
 }

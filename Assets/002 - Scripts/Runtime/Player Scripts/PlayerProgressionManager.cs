@@ -87,7 +87,21 @@ public class PlayerProgressionManager : MonoBehaviour
             if (h >= instance._ranks[i].honorRequired)
             {
                 r[0] = instance._ranks[i];
-                try { r[1] = instance._ranks[i + 1]; } catch { }
+
+
+
+                print($"GetClosestAndNextRank {h} >= {instance._ranks[i].honorRequired}");
+
+                if (i < instance._ranks.Count - 1)
+                {
+                    print($"GetClosestAndNextRank NEXT -> {instance._ranks[i + 1].cleanName} {instance._ranks[i].honorRequired}");
+                    r[1] = instance._ranks[i + 1];
+                }
+                else
+                {
+                    print("GetClosestAndNextRank You are max rank");
+                    r[1] = new Rank(-1, "r", "Recruit", "invisible");
+                }
             }
             else
                 break;
@@ -179,20 +193,20 @@ public class PlayerProgressionManager : MonoBehaviour
     {
 
         public int honorRequired { get { return _honorRequired; } }
-        public string spriteName { get { return _spriteName; } }
+        public string codename { get { return _codename; } }
         public string cleanName { get { return _cleanName; } }
         public string color { get { return _color; } }
 
 
 
         int _honorRequired;
-        string _spriteName, _cleanName, _color;
+        string _codename, _cleanName, _color;
 
 
         public Rank(int hReq, string n, string cn, string color)
         {
             _honorRequired = hReq;
-            _spriteName = n;
+            _codename = n;
             _cleanName = cn;
             _color = color;
         }
