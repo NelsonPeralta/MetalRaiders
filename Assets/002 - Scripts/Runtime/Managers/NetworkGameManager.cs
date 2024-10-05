@@ -362,8 +362,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public static void SpawnNetworkWeapon(WeaponProperties weap, Vector3 spp, Vector3 fDir, int? currAmmo = null, int? spareAmmo = null)
     {
-        GameObject[] allWeap = weap.player.playerInventory.allWeaponsInInventory;
-        int firstWeapIndex = Array.IndexOf(allWeap, weap.gameObject);
+        int firstWeapIndex = Array.IndexOf(weap.player.playerInventory.allWeaponsInInventory, weap.player.playerInventory.GetWeaponProperties(weap.codeName).gameObject);
         int firstWeapCurrAmmo = weap.loadedAmmo; int firstWeapSpareAmmo = weap.spareAmmo;
 
         if (currAmmo != null) firstWeapCurrAmmo = (int)currAmmo;
@@ -564,34 +563,27 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void SpawnNetworkWeapon_RPC(int firstWeapIndex, Vector3 spp, Vector3 fDir, int firstWeapCurrAmmo, int firstWeapSpareAmmo)
     {
-        //GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
-        //LootableWeapon firstWeapon = Instantiate(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
-        // spp, Quaternion.identity).GetComponent<LootableWeapon>();
+        print("SpawnNetworkWeapon_RPC");
+        LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[firstWeapIndex].GetComponent<WeaponProperties>().codeName);
+        print("SpawnNetworkWeapon_RPC 1");
 
-        //try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-        //try { firstWeapon.transform.position = spp; } catch (System.Exception e) { Debug.Log(e); }
-        //try { firstWeapon.spawnPointPosition = spp; } catch (System.Exception e) { Debug.Log(e); }
-        //try { firstWeapon.GetComponent<Rigidbody>().AddForce(fDir * 200); } catch (System.Exception e) { Debug.Log(e); }
-        //try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
-        //try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
-
-        print(GameManager.instance);
-        print(GameManager.GetRootPlayer());
-        print(GameManager.GetRootPlayer().playerInventory);
-        print(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory);
+        if (_firstWeapon != null)
         {
-            LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[firstWeapIndex].GetComponent<WeaponProperties>().codeName);
-            try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.transform.position = spp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.spawnPointPosition = spp; } catch (System.Exception e) { Debug.Log(e); }
+            print($"SPAWING WEAPON");
+
+            _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", "");
+            _firstWeapon.transform.position = spp;
+
             try { _firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
             try { _firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
 
 
-            try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.GetComponent<Rigidbody>().AddForce(fDir * 200); } catch (System.Exception e) { Debug.LogWarning(e); }
+            _firstWeapon.ttl = _firstWeapon.defaultTtl;
+            _firstWeapon.gameObject.SetActive(true);
+            _firstWeapon.GetComponent<Rigidbody>().AddForce(fDir * 200);
         }
+        else print($"COULD NOT SPAWN WEAPON CORRECTLY");
+        print("SpawnNetworkWeapon_RPC 2");
     }
 
     [PunRPC]

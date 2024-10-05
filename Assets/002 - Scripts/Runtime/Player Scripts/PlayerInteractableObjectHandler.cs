@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerInteractableObjectHandler : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
     [SerializeField] List<InteractableObject> _filteredInteractableObjects = new List<InteractableObject>();
 
     [SerializeField] List<InteractableObject> _weaponsThePlayerHasInInventory = new List<InteractableObject>();
-
+    [SerializeField] List<InteractableObject> _weaponsThePlayerHasInInventoryAndAreDualWieldable = new List<InteractableObject>();
 
 
 
@@ -48,6 +49,8 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
             //ClosestInteractableObjectAssigned?.Invoke(this);
         }
     }
+
+    public bool closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory { get { return _weaponsThePlayerHasInInventoryAndAreDualWieldable.Count > 0; } }
 
     List<InteractableObject> rawInteractableObjects
     {
@@ -90,7 +93,14 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                                 _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName)
                             {
                                 _weaponsThePlayerHasInInventory.Add(_filteredInteractableObjects[i]);
-                                _filteredInteractableObjects.RemoveAt(i);
+
+
+                                if ((_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.activeWeapon.isDualWieldable)
+                                    _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
+                                else if ((_player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.holsteredWeapon.isDualWieldable)
+                                    _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
+                                else
+                                    _filteredInteractableObjects.RemoveAt(i);
                             }
                         }
                     }
@@ -242,7 +252,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
         print($"PlayerInteractableObjectHandler OnPlayerLongInteract_Delegate");
 
-        if (closestInteractableObject)
+        if (closestInteractableObject && !closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
         {
             if (closestInteractableObject.GetComponent<LootableWeapon>())
             {
@@ -290,6 +300,18 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
             }
         }
     }
+
+
+    public void TriggerLongInteract()
+    {
+        if (closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
+        {
+            if (player.playerInventory.activeWeapon.isDualWieldable && (closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(player.playerInventory.activeWeapon.codeName)))
+                player.playerInventory.PV.RPC("PickupThirdWeapon", RpcTarget.All, closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition, true);
+        }
+    }
+
+
 
 
     [PunRPC]

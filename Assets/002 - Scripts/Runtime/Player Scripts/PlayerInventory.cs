@@ -130,8 +130,22 @@ public class PlayerInventory : MonoBehaviourPun
 
         set
         {
+            if (value)
+            {
+                print($"showing third weapon");
+                value.gameObject.SetActive(true);
+            }
+            else
+            {
+                print($"third weapon becomes null");
+                if (_thirdWeapon != null)
+                {
+                    print($"hiding third weapon");
+                    _thirdWeapon.gameObject.SetActive(false);
+                }
+            }
+
             _thirdWeapon = value;
-            _thirdWeapon.gameObject.SetActive(true);
         }
     }
 
@@ -167,7 +181,7 @@ public class PlayerInventory : MonoBehaviourPun
         }
     }
 
-    public bool isDualWielding { get { return leftWeapon; } }
+    public bool isDualWielding { get { return thirdWeapon && thirdWeapon.isDualWieldable; } }
 
     public bool hasSecWeap = false;
 
@@ -382,7 +396,6 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!PV.IsMine)
             return;
-        Debug.Log("SwitchWeapons");
 
 
         pController.Descope();
@@ -392,7 +405,6 @@ public class PlayerInventory : MonoBehaviourPun
         {
             rScript.reloadIsCanceled = true;
         }
-        Debug.Log("SwitchWeapons");
 
         if (pController.pInventory.holsteredWeapon != null && !player.isDead && !player.isRespawning)
         {
@@ -417,9 +429,10 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (player.isMine)
         {
+            print($"SwitchWeapons_RPC {isDualWielding}");
+
             if (!isDualWielding)
             {
-                Debug.Log($"SwitchWeapons {player.name}");
                 WeaponProperties previousActiveWeapon = activeWeapon;
                 WeaponProperties newActiveWeapon = holsteredWeapon;
 
@@ -436,9 +449,7 @@ public class PlayerInventory : MonoBehaviourPun
             }
             else
             {
-                NetworkGameManager.SpawnNetworkWeapon(leftWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
-                //player.DropWeaponOnDeath(leftWeapon);
-                leftWeapon = null;
+                DropThirdWeapon();
             }
         }
     }
@@ -893,6 +904,37 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 GameManager.SetLayerRecursively(w, 3);
             }
+        }
+    }
+
+    public void DropThirdWeapon()
+    {
+        print("DropThirdWeapon");
+        NetworkGameManager.SpawnNetworkWeapon(thirdWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward, currAmmo: thirdWeapon.loadedAmmo, spareAmmo: thirdWeapon.spareAmmo);
+        thirdWeapon = null;
+    }
+
+
+
+
+
+    [PunRPC]
+    void PickupThirdWeapon(Vector3 collidingWeaponPosition, bool dw)// Called from PlayerInteractableObjectHandler
+    {
+        if (dw)
+        {
+            print("PickupThirdWeapon RPC");
+            LootableWeapon weaponToLoot = WeaponPool.instance.weaponPool.Where(item => item.spawnPointPosition == collidingWeaponPosition).FirstOrDefault();
+
+            foreach (GameObject w in allWeaponsInInventory)
+                if (w.GetComponent<WeaponProperties>().codeName == weaponToLoot.codeName)
+                {
+                    thirdWeapon = w.GetComponent<WeaponProperties>().leftWeapon;
+                    thirdWeapon.loadedAmmo = weaponToLoot.networkAmmo;
+                    thirdWeapon.spareAmmo = weaponToLoot.spareAmmo;
+                }
+
+            weaponToLoot.gameObject.SetActive(false);
         }
     }
 }

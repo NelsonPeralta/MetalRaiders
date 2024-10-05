@@ -10195,7 +10195,7 @@ MonoBehaviour:
   cleanName: SMG
   codeName: smg
   spriteId: 0
-  isDw: 0
+  isDw: 1
   _ammo: 50
   _spareAmmo: 100
   _defaultAmmo: 50

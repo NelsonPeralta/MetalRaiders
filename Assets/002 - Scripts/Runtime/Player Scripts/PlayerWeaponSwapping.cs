@@ -259,7 +259,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
     //TODO: Optimize this
     void OnPlayerLongInteract_Delegate(PlayerController playerController)
     {
-        if (!PV.IsMine)
+        //if (!PV.IsMine)
             return;
 
         //Debug.Log("Om Player Long Interact Delegate");

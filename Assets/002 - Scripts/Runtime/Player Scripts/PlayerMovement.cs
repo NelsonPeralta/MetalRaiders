@@ -822,7 +822,7 @@ public class PlayerMovement : MonoBehaviour
                 if (_pController.pInventory.isDualWielding)
                 {
                     _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", true);
-                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", true);
+                    //_pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", true);
                 }
             }
             else
@@ -832,7 +832,7 @@ public class PlayerMovement : MonoBehaviour
                 if (_pController.pInventory.isDualWielding)
                 {
                     _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", false);
-                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
+                    //_pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
                 }
             }
         }
@@ -844,7 +844,7 @@ public class PlayerMovement : MonoBehaviour
                 if (_pController.pInventory.isDualWielding)
                 {
                     _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", false);
-                    _pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
+                    //_pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
                 }
             }
             catch { }

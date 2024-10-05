@@ -442,7 +442,6 @@ public class PlayerUI : MonoBehaviour
 
     public void ShowInformer(string mess, Sprite icon = null)
     {
-        print("ShowInformer");
         _informerText.text = mess;
         _weaponIconInformer.sprite = icon;
 
@@ -453,7 +452,6 @@ public class PlayerUI : MonoBehaviour
 
     public void HideInformer()
     {
-        print("HideInformer");
         _informerHolder.gameObject.SetActive(false);
         _weaponIconInformer.sprite = null;
         _informerText.text = "";
@@ -538,7 +536,7 @@ public class PlayerUI : MonoBehaviour
                 if (_player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
                 {
                     if (GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable && (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
-                        ShowInformer($"You are stepping on a DW weapon");
+                        ShowInformer($"Hold [Mark] to Dual Wield", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
                     else
                         HideInformer();
                 }

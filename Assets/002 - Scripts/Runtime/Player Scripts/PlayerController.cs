@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviourPun
 
 
     [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn, _isHoldingSprintBtn;
-    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime, _markSpotCooldown;
+    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime;
 
     void Awake()
     {
@@ -250,9 +250,8 @@ public class PlayerController : MonoBehaviourPun
         if (_drawingWeaponTime > 0) _drawingWeaponTime -= Time.deltaTime;
         if (_isCurrentlyShootingReset > 0) _isCurrentlyShootingReset -= Time.deltaTime;
         if (_meleeCooldown > 0) _meleeCooldown -= Time.deltaTime;
-        if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime;
+        if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime; if (_currentlyReloadingTimer_thirdWeapon > 0) _currentlyReloadingTimer_thirdWeapon -= Time.deltaTime;
         if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
-        if (_markSpotCooldown > 0) _markSpotCooldown -= Time.deltaTime;
 
         //if (GameManager.instance.devMode)
         //{
@@ -275,10 +274,24 @@ public class PlayerController : MonoBehaviourPun
 
             if (_completeReloadTimer <= 0)
             {
-                TransferAmmo();
+                TransferAmmo(player.playerInventory.activeWeapon);
                 player.playerInventory.UpdateAllExtraAmmoHuds();
             }
         }
+
+        if (_completeReloadTimer_thirdWeapon > 0)
+        {
+            _completeReloadTimer_thirdWeapon -= Time.deltaTime;
+
+            if (_completeReloadTimer_thirdWeapon <= 0)
+            {
+                // transfer third weapon ammo
+                TransferAmmo(player.playerInventory.thirdWeapon);
+            }
+        }
+
+
+
 
         try { weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>(); } catch { }
 
@@ -289,9 +302,9 @@ public class PlayerController : MonoBehaviourPun
             if (GameManager.instance.gameStarted)
             {
                 Shooting();
+                LeftShooting();
                 if (!isSprinting)
                 {
-                    LeftShooting();
                     CheckReloadButton();
                     CheckAmmoForAutoReload();
                     AnimationCheck();
@@ -589,7 +602,20 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    void LeftShooting()
+    {
+        if (pInventory.thirdWeapon && PV.IsMine && player.isAlive)
+        {
+            if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
+            {
 
+            }
+            else if (activeControllerType == ControllerType.Joystick)
+            {
+
+            }
+        }
+    }
 
 
 
@@ -717,27 +743,6 @@ public class PlayerController : MonoBehaviourPun
 
 
     float _leftShootCooldown;
-    void LeftShooting()
-    {
-        if (!isDualWielding)
-            return;
-        if (GetComponent<Player>().isDead || isSprinting || player.isRespawning)
-            return;
-
-        if (_leftShootCooldown > 0)
-        {
-            _leftShootCooldown -= Time.deltaTime;
-        }
-        else
-        {
-            if (rewiredPlayer.GetButton("Aim"))
-            {
-                pInventory.activeWeapon.leftWeapon.animator.Play("Fire", 0, 0f);
-                _leftShootCooldown = 0.1f;
-            }
-        }
-    }
-
     float _tempFov;
     void Scope()
     {
@@ -747,77 +752,78 @@ public class PlayerController : MonoBehaviourPun
         if (cameraIsFloating) return;
 
 
-        if (pInventory.activeWeapon.scopeMagnification != WeaponProperties.ScopeMagnification.None)
-        {
-
-
-            if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Close ||
-                pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Medium)
+        if (!pInventory.isDualWielding)
+            if (pInventory.activeWeapon.scopeMagnification != WeaponProperties.ScopeMagnification.None)
             {
-                _tempFov = 35.98f;
-                if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 18.45f;
-            }
-            else if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
-            {
-                _tempFov = 17.14f;
-                if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 8.62f;
 
 
-
-            }
-
-            if (isAiming)
-            {
-                pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.scopeRRR;
-            }
-            else
-            {
-                if (pInventory.activeWeapon)
-                    if (pInventory.activeWeapon.defaultRedReticuleRange > 0)
-                    {
-                        pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.defaultRedReticuleRange;
-                    }
-            }
-
-
-            if (rewiredPlayer.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
-            {
-                if (pInventory.activeWeapon.aimingMechanic != WeaponProperties.AimingMechanic.None)
+                if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Close ||
+                    pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Medium)
                 {
-                    if (isAiming == false)
+                    _tempFov = 35.98f;
+                    if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 18.45f;
+                }
+                else if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
+                {
+                    _tempFov = 17.14f;
+                    if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 8.62f;
+
+
+
+                }
+
+                if (isAiming)
+                {
+                    pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.scopeRRR;
+                }
+                else
+                {
+                    if (pInventory.activeWeapon)
+                        if (pInventory.activeWeapon.defaultRedReticuleRange > 0)
+                        {
+                            pInventory.activeWeapon.currentRedReticuleRange = pInventory.activeWeapon.defaultRedReticuleRange;
+                        }
+                }
+
+
+                if (rewiredPlayer.GetButtonDown("Aim") && !isReloading && !isRunning && !isInspecting)
+                {
+                    if (pInventory.activeWeapon.aimingMechanic != WeaponProperties.AimingMechanic.None)
                     {
-                        isAiming = true;
+                        if (isAiming == false)
+                        {
+                            isAiming = true;
 
-                        //mainCam.fieldOfView = _tempFov;
-                        //uiCam.fieldOfView = _tempFov;
-                        if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
-                            gunCam.enabled = false;
-                        //else
-                        //    gunCam.fieldOfView = 50;
+                            //mainCam.fieldOfView = _tempFov;
+                            //uiCam.fieldOfView = _tempFov;
+                            if (pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
+                                gunCam.enabled = false;
+                            //else
+                            //    gunCam.fieldOfView = 50;
 
-                        allPlayerScripts.aimingScript.playAimSound();
+                            allPlayerScripts.aimingScript.playAimSound();
+                        }
+                        else
+                        {
+                            isAiming = false;
+                            //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+                            //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
+                            camScript.backEndMouseSens = camScript.frontEndMouseSens;
+                            gunCam.enabled = true;
+                            //gunCam.fieldOfView = 60;
+
+                            allPlayerScripts.aimingScript.playAimSound();
+                        }
                     }
-                    else
+                }
+                else if (rewiredPlayer.GetButtonUp("Aim"))
+                {
+                    if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
                     {
-                        isAiming = false;
-                        //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
-                        //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
-                        camScript.backEndMouseSens = camScript.frontEndMouseSens;
-                        gunCam.enabled = true;
-                        //gunCam.fieldOfView = 60;
-
-                        allPlayerScripts.aimingScript.playAimSound();
+                        Descope();
                     }
                 }
             }
-            else if (rewiredPlayer.GetButtonUp("Aim"))
-            {
-                if (activeControllerType == ControllerType.Keyboard || activeControllerType == ControllerType.Mouse)
-                {
-                    Descope();
-                }
-            }
-        }
 
 
 
@@ -934,6 +940,13 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Melee_RPC(bool succ)
     {
+        if (PV.IsMine && pInventory.isDualWielding)
+        {
+            pInventory.DropThirdWeapon();
+        }
+
+
+
         if ((!player.isDead && !player.isRespawning))
         {
             print("Melee_RPC");
@@ -1031,6 +1044,12 @@ public class PlayerController : MonoBehaviourPun
     {
         if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding /*&& !isMeleeing*/ /*&& !isSprinting*/)
         {
+            if (pInventory.isDualWielding)
+            {
+                pInventory.DropThirdWeapon();
+            }
+
+
             if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
             {
                 print($"Grenade 1");
@@ -1546,26 +1565,26 @@ public class PlayerController : MonoBehaviourPun
         //grenade.GetComponent<Rigidbody>().AddForce(gwProperties.grenadeSpawnPoint.transform.forward * grenadeThrowForce);
         //Destroy(grenade.gameObject, 10);
     }
-    public void TransferAmmo()
+    public void TransferAmmo(WeaponProperties weap)
     {
-        if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
+        if (weap.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
-            pInventory.activeWeapon.spareAmmo -= 1;
-            pInventory.activeWeapon.loadedAmmo += 1;
+            weap.spareAmmo -= 1;
+            weap.loadedAmmo += 1;
         }
         else
         {
-            ammoWeaponIsMissing = pInventory.activeWeapon.ammoCapacity - pInventory.activeWeapon.loadedAmmo;
+            ammoWeaponIsMissing = weap.ammoCapacity - weap.loadedAmmo;
 
-            if (pInventory.activeWeapon.spareAmmo >= ammoWeaponIsMissing)
+            if (weap.spareAmmo >= ammoWeaponIsMissing)
             {
-                pInventory.activeWeapon.loadedAmmo = pInventory.activeWeapon.ammoCapacity;
-                pInventory.activeWeapon.spareAmmo -= ammoWeaponIsMissing;
+                weap.loadedAmmo = weap.ammoCapacity;
+                weap.spareAmmo -= ammoWeaponIsMissing;
             }
-            else if (pInventory.activeWeapon.spareAmmo < ammoWeaponIsMissing)
+            else if (weap.spareAmmo < ammoWeaponIsMissing)
             {
-                pInventory.activeWeapon.loadedAmmo += pInventory.activeWeapon.spareAmmo;
-                pInventory.activeWeapon.spareAmmo = 0;
+                weap.loadedAmmo += weap.spareAmmo;
+                weap.spareAmmo = 0;
             }
         }
     }
@@ -1736,47 +1755,6 @@ public class PlayerController : MonoBehaviourPun
                 PV.RPC("Reload_RPC", RpcTarget.All);
     }
 
-    public IEnumerator Reload_Coroutine()
-    {
-        currentlyReloadingTimer = 1.4f;
-        player.playerShooting.StopAllCoroutines();
-        Descope();
-        rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
-
-
-        if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
-        {
-            try
-            {
-                weaponAnimator.Play("Reload Ammo Left", 0, 0f);
-                //pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
-                //PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Out Of Ammo");
-
-            }
-            catch { }
-            StartCoroutine(Reload3PS());
-
-        }
-
-
-
-
-
-
-
-
-
-        player.PlayReloadingClip();
-
-
-
-        yield return new WaitForSeconds(1);
-
-
-
-        TransferAmmo();
-        player.playerInventory.UpdateAllExtraAmmoHuds();
-    }
 
     public void CancelReloadCoroutine()
     {
@@ -1794,41 +1772,96 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
+
+
+    int _framesMarkSpotHasBeenHeld;
     void MarkSpot()
     {
-        if (rewiredPlayer.GetButtonDown("mark") && _markSpotCooldown <= 0)
+        if (rewiredPlayer.GetButton("mark"))
         {
-
-            RaycastHit hit;
-            // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
+            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2)
             {
-                Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
+                _framesMarkSpotHasBeenHeld++;
 
-                _markSpotCooldown = 0.15f;
-
-
-                if (hit.collider.transform.root.GetComponent<Player>())
+                if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 2)
                 {
-                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                        MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
-                    else
+                    print($"MARK SPOT HELD LONG {_framesMarkSpotHasBeenHeld}");
+
+                    player.playerInteractableObjectHandler.TriggerLongInteract();
+                }
+            }
+        }
+        else if (rewiredPlayer.GetButtonUp("mark"))
+        {
+            print($"MarkSport {_framesMarkSpotHasBeenHeld}");
+
+
+            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 5)
+            {
+                if (!player.playerInventory.isDualWielding)
+                {
+                    RaycastHit hit;
+
+
+                    if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
                     {
-                        if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
-                            PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
+                        Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
+
+                        if (hit.collider.transform.root.GetComponent<Player>())
+                        {
+                            if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                                MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
+                            else
+                            {
+                                if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
+                                    PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
+                                else
+                                    PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                            }
+                        }
                         else
-                            PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                        {
+                            if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                                MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
+                            else
+                                PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                        }
                     }
                 }
                 else
                 {
-                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                        MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
-                    else
-                        PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                    if (player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity)
+                        ReloadThirdWeapon();
                 }
             }
+
+
+            _framesMarkSpotHasBeenHeld = 0;
         }
+    }
+
+
+
+
+    float _completeReloadTimer_thirdWeapon, _currentlyReloadingTimer_thirdWeapon;
+
+    void ReloadThirdWeapon()
+    {
+        player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("Reload Ammo Left", 0, 0f);
+
+
+
+        _completeReloadTimer_thirdWeapon = 2f; // Used to trasnfer ammo
+        _currentlyReloadingTimer_thirdWeapon = 3f; // Used to lock animation time
+
+
+        SoundManager.instance.PlayAudioClip(transform.position, player.playerInventory.thirdWeapon.ReloadShort);
+
+
+        //if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
+        //{
+        //    StartCoroutine(Reload3PS());
+        //}
     }
 
 

@@ -58,7 +58,7 @@ public class ReloadScript : MonoBehaviourPun
 
                     if (reloadCountdownMags <= 0)
                     {
-                        pController.TransferAmmo();
+                        //pController.TransferAmmo();
                         reloadingMagInProgress = false;
                         reloadCountdownMags = 0;
                         OnReloadEnd?.Invoke(this);
@@ -83,7 +83,7 @@ public class ReloadScript : MonoBehaviourPun
                         Debug.Log("Inserting Shell");
                         pController.weaponAnimator.Play("Insert Shell", 0, 0f);
                         shellsToInsert = shellsToInsert - 1;
-                        pController.TransferAmmo();
+                        //pController.TransferAmmo();
 
                         openingWeaponForShells = false;
                         insertingShellInProgress = true;
@@ -121,7 +121,7 @@ public class ReloadScript : MonoBehaviourPun
                         {
                             pController.weaponAnimator.Play("Insert Shell", 0, 0f);
                             shellsToInsert = shellsToInsert - 1;
-                            pController.TransferAmmo();
+                            //pController.TransferAmmo();
 
                             reloadInsertCountdown = shellsInsertTime;
 
@@ -163,7 +163,7 @@ public class ReloadScript : MonoBehaviourPun
 
                     if (reloadSingleCountdown <= 0)
                     {
-                        pController.TransferAmmo();
+                        //pController.TransferAmmo();
                         reloadingSingleInProgress = false;
                         reloadSingleCountdown = 0;
 
