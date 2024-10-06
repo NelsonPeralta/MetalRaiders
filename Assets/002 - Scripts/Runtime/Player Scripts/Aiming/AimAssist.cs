@@ -274,7 +274,7 @@ public class AimAssist : MonoBehaviour
         redReticuleIsOn = false;
         targetHitbox = null;
 
-        //Debug.Break();
+        Debug.Break();
     }
 
     void ShootInspectorRay()
