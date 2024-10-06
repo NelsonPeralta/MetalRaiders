@@ -270,8 +270,11 @@ public class AimAssist : MonoBehaviour
     }
     public void ResetRedReticule()
     {
+        print("RESETREDRETICULE");
         redReticuleIsOn = false;
         targetHitbox = null;
+
+        Debug.Break();
     }
 
     void ShootInspectorRay()

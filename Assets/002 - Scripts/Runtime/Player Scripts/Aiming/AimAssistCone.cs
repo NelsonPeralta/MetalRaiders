@@ -125,7 +125,7 @@ public class AimAssistCone : MonoBehaviour
     private void Update()
     {
         _frame++;
-        if (player.playerController.rid == 0 && player.isMine) print($"Update {_frame} {doNotClearListThisFrame}");
+        if (player.playerController.rid == 0 && player.isMine) print($"Update {_frame} {doNotClearListThisFrame} {collidingHitboxes.Count}");
         _rb.AddForce(Vector3.zero);
         if (!doNotClearListThisFrame) collidingHitboxes.Clear(); // since ontrigger stay is only called when detecting something, we need to manually clear it
 
@@ -417,7 +417,7 @@ public class AimAssistCone : MonoBehaviour
     bool doNotClearListThisFrame;
     private void OnTriggerStay(Collider other) // is called after update
     {
-        if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay {other.name}");
+        //if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay {other.name}");
         //if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
         if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
         {
