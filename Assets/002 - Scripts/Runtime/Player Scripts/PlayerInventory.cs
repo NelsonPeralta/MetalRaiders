@@ -971,10 +971,15 @@ public class PlayerInventory : MonoBehaviourPun
     {
         print("DropThirdWeapon");
         NetworkGameManager.SpawnNetworkWeapon(thirdWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward, currAmmo: thirdWeapon.loadedAmmo, spareAmmo: thirdWeapon.spareAmmo);
-        thirdWeapon = null;
+        PV.RPC("RemoveThirdWeapon_RPC", RpcTarget.All);
     }
 
 
+    [PunRPC]
+    void RemoveThirdWeapon_RPC()
+    {
+        thirdWeapon = null;
+    }
 
 
 
