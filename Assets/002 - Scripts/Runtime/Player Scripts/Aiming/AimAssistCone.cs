@@ -446,6 +446,7 @@ public class AimAssistCone : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        print($"OnTriggerExit {other.name}");
         if (other.gameObject == closestHbToCorsshairCenter)
         {
             //Debug.Log($"OnTriggerExit from AimAssistCapsule: {other.name}");
@@ -457,8 +458,8 @@ public class AimAssistCone : MonoBehaviour
         if (frictionColliders.Contains(other.gameObject))
             frictionColliders.Remove(other.gameObject);
 
-        if (collidingHitboxes.Count == 0)
-            aimAssist.ResetRedReticule();
+        //if (collidingHitboxes.Count == 0)
+        //    aimAssist.ResetRedReticule();
     }
 
 

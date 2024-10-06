@@ -270,11 +270,11 @@ public class AimAssist : MonoBehaviour
     }
     public void ResetRedReticule()
     {
-        print("RESETREDRETICULE");
+        if (player.playerController.rid == 0 && player.isMine) print("RESETREDRETICULE");
         redReticuleIsOn = false;
         targetHitbox = null;
 
-        Debug.Break();
+        //Debug.Break();
     }
 
     void ShootInspectorRay()
