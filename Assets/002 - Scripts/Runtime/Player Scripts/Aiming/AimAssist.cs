@@ -273,8 +273,6 @@ public class AimAssist : MonoBehaviour
         if (player.playerController.rid == 0 && player.isMine) print("RESETREDRETICULE");
         redReticuleIsOn = false;
         targetHitbox = null;
-
-        Debug.Break();
     }
 
     void ShootInspectorRay()
