@@ -124,10 +124,14 @@ public class AimAssistCone : MonoBehaviour
 
     private void Update()
     {
-        _frame++;
-        if (player.playerController.rid == 0 && player.isMine) print($"Update {_frame} {doNotClearListThisFrame} {collidingHitboxes.Count}");
-        _rb.AddForce(Vector3.zero);
-        if (!doNotClearListThisFrame) collidingHitboxes.Clear(); // since ontrigger stay is only called when detecting something, we need to manually clear it
+
+        {// DO NOT REMOVE THIS. This is needed because there is no native way to remove disabled objs without using listeners. Removing this will break aiming
+
+            if (collidingHitboxes.Count > 0)
+                for (int i = 0; i < collidingHitboxes.Count; i++)
+                    if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy)
+                        collidingHitboxes.Remove(collidingHitboxes[i]);
+        }
 
 
 
@@ -407,14 +411,11 @@ public class AimAssistCone : MonoBehaviour
             }
         }
 
-        doNotClearListThisFrame = false;
-        if (player.playerController.rid == 0 && player.isMine) print($"Update {_frame} {doNotClearListThisFrame}");
+        //if (player.playerController.rid == 0 && player.isMine) print($"Update {_frame} {doNotClearListThisFrame}");
     }
 
 
 
-    int _frame;
-    bool doNotClearListThisFrame;
     private void OnTriggerStay(Collider other) // is called after update
     {
         //if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay {other.name}");
@@ -425,16 +426,10 @@ public class AimAssistCone : MonoBehaviour
         }
         else
         {
-            if (other.gameObject.transform.root != player.transform && other.GetComponent<Hitbox>() && !doNotClearListThisFrame)
-            {
-                if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name} doNotClearListThisFrame");
-                doNotClearListThisFrame = true;
-            }
-
             if (other.gameObject.layer != _reticuleFrictionLayer)
                 if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
                 {
-                    //if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
+                    //if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay addind {other.name}");
                     collidingHitboxes.Add(other.gameObject);
                 }
 
