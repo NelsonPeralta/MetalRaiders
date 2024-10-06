@@ -15,7 +15,7 @@ public class AimAssist : MonoBehaviour
             {
                 _preTargetHitboxRoot = _targetHitboxRoot;
                 _targetHitboxRoot = value;
-                Debug.Log($"targetHitboxRoot {_preTargetHitboxRoot} {_targetHitboxRoot}");
+                //Debug.Log($"targetHitboxRoot {_preTargetHitboxRoot} {_targetHitboxRoot}");
             }
         }
     }

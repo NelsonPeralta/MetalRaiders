@@ -43,7 +43,7 @@ public class AimAssistCone : MonoBehaviour
     List<RaycastHit> _aimAssistRaycastHitsList = new List<RaycastHit>();
 
     ReticuleMagnetism _reticuleMagnetism;
-
+    Rigidbody _rb;
 
 
 
@@ -115,6 +115,7 @@ public class AimAssistCone : MonoBehaviour
     private void Awake()
     {
         _reticuleMagnetism = GetComponent<ReticuleMagnetism>();
+        _rb = GetComponent<Rigidbody>();
     }
 
 
@@ -124,9 +125,11 @@ public class AimAssistCone : MonoBehaviour
     private void Update()
     {
         _frame++;
-        //if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
-
+        if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
+        _rb.AddForce(Vector3.zero);
         if (!doNotClearListThisFrame) collidingHitboxes.Clear(); // since ontrigger stay is only called when detecting something, we need to manually clear it
+
+
 
 
         if (frictionColliders.Count > 0)
@@ -363,18 +366,23 @@ public class AimAssistCone : MonoBehaviour
                             aimAssist.targetHitbox = closestHbToCorsshairCenter;
                             aimAssist.redReticuleIsOn = true;
                             playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
+
+                            if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
                         }
                         else if (closestHbToCorsshairCenter.GetComponent<PlayerHitbox>().player.team == player.team)
                         {
                             aimAssist.targetHitbox = null;
                             aimAssist.redReticuleIsOn = false;
                             playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Green;
+
+                            if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Green;
                         }
                         else
                         {
                             aimAssist.targetHitbox = closestHbToCorsshairCenter;
                             aimAssist.redReticuleIsOn = true;
                             playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
+                            if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
                         }
                     }
                     catch { }
@@ -384,6 +392,7 @@ public class AimAssistCone : MonoBehaviour
                     aimAssist.targetHitbox = closestHbToCorsshairCenter;
                     aimAssist.redReticuleIsOn = true;
                     playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
+                    if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
                 }
 
                 //aimAssist.crosshairScript.ActivateRedCrosshair();
@@ -393,12 +402,13 @@ public class AimAssistCone : MonoBehaviour
                 aimAssist.targetHitbox = null;
                 closestHbToCorsshairCenter = null;
                 try { playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Blue; } catch { }
+                if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Blue;
                 //aimAssist.ResetRedReticule();
             }
         }
 
         doNotClearListThisFrame = false;
-        //if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
+        if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
     }
 
 
@@ -407,6 +417,7 @@ public class AimAssistCone : MonoBehaviour
     bool doNotClearListThisFrame;
     private void OnTriggerStay(Collider other) // is called after update
     {
+        print($"OnTriggerStay");
         //if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
         if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
         {
@@ -414,8 +425,11 @@ public class AimAssistCone : MonoBehaviour
         }
         else
         {
-            if(other.gameObject.transform.root != player.transform && other.GetComponent<Hitbox>() && !doNotClearListThisFrame)
+            if (other.gameObject.transform.root != player.transform && other.GetComponent<Hitbox>() && !doNotClearListThisFrame)
+            {
+                if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
                 doNotClearListThisFrame = true;
+            }
 
             if (other.gameObject.layer != _reticuleFrictionLayer)
                 if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
