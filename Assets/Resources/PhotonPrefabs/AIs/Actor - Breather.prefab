@@ -125,6 +125,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 1
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &188047900166868130
 GameObject:
@@ -318,6 +319,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &1682980692499644888
 GameObject:
@@ -550,6 +552,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &2761527059285005743
 GameObject:
@@ -676,6 +679,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &3015794419834766593
 GameObject:
@@ -802,6 +806,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &3163822667820013951
 GameObject:
@@ -1011,6 +1016,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &3441404852652105210
 GameObject:
@@ -1258,6 +1264,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &3512012615773341270
 GameObject:
@@ -1415,6 +1422,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &4002664484523596434
 GameObject:
@@ -1660,6 +1668,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &4388464164535787100
 GameObject:
@@ -2584,6 +2593,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &6230396879781840136
 GameObject:
@@ -2710,6 +2720,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &6312013849272655130
 GameObject:
@@ -6421,6 +6432,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &8231772921329174800
 GameObject:
@@ -6630,6 +6642,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &8309157059218366251
 GameObject:
@@ -6756,6 +6769,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7758678447683965873}
 --- !u!1 &8358430297333799238
 GameObject:

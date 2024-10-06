@@ -637,11 +637,11 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-        if (pInventory.thirdWeapon && player.isAlive && _isCurrentlyShootingReset_thirdWeapon <= 0 && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon && _currentlyReloadingTimer_thirdWeapon <= 0)
+        if (pInventory.thirdWeapon && player.isAlive /*&& _isCurrentlyShootingReset_thirdWeapon <= 0*/ && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon && _currentlyReloadingTimer_thirdWeapon <= 0)
         {
             if (isHoldingShootDualWieldedWeapon)
             {
-                _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+                //_isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
 
                 player.playerShooting.Shoot(pInventory.thirdWeapon);
             }

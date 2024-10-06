@@ -20799,7 +20799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7361587406c90a14c8e8d0a70d5f379d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  codeName: smg
+  codeName: ar
   placeHolder: {fileID: 204412400104030200}
   networkLootableWeaponPrefabs:
   - {fileID: 4872683641760828623, guid: 06c33ff6616c7c34691663fec2c5d32e, type: 3}

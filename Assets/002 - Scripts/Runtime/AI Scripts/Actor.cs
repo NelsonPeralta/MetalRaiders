@@ -250,7 +250,7 @@ abstract public class Actor : Biped
 
                 if (_analyzeNextActionCooldown <= 0)
                 {
-                    CalculateNextAction();
+                    if (!SwarmManager.instance.editMode) CalculateNextAction();
                     _analyzeNextActionCooldown = 0.3f;
                 }
             }
@@ -613,12 +613,12 @@ abstract public class Actor : Biped
 
                         if (l == 1 && CheckIfSideIsClear() && isSeenByTargetPlayer)
                         {
-                            Dodge(l);
+                            if (!SwarmManager.instance.editMode) Dodge(l);
                             return;
                         }
                         else if (l == 0 && CheckIfSideIsClear(true) && isSeenByTargetPlayer)
                         {
-                            Dodge(l);
+                            if (!SwarmManager.instance.editMode) Dodge(l);
                             return;
                         }
                     }
@@ -638,7 +638,7 @@ abstract public class Actor : Biped
                             else
                             {
                                 //print("Throw Fireball to Player");
-                                ShootProjectile(PhotonNetwork.InRoom);
+                                if (!SwarmManager.instance.editMode) ShootProjectile(PhotonNetwork.InRoom);
                             }
 
                         }
@@ -652,9 +652,13 @@ abstract public class Actor : Biped
                             if (!targetTransform.GetComponent<HitPoints>())
                                 targetTransform = null;
                             else if (SwarmManager.instance.globalActorGrenadeCooldown <= 0)
-                                ThrowExplosive(PhotonNetwork.InRoom);
+                            {
+                                if (!SwarmManager.instance.editMode) ThrowExplosive(PhotonNetwork.InRoom);
+                            }
                             else
-                                ShootProjectile(PhotonNetwork.InRoom);
+                            {
+                                if (!SwarmManager.instance.editMode) ShootProjectile(PhotonNetwork.InRoom);
+                            }
                         }
                     }
                 }

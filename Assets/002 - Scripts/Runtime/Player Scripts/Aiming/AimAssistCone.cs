@@ -18,7 +18,9 @@ public class AimAssistCone : MonoBehaviour
 
 
     public List<GameObject> collidingHitboxes = new List<GameObject>();
-    [SerializeField] GameObject _targetCollisionHitbox, _hitboxRayHitGo, _obstructionHitGo;
+    public List<GameObject> _collidingHitboxesTemp = new List<GameObject>();
+
+    [SerializeField] GameObject _closestHbToCorsshairCenter, _hitboxRayHitGo, _obstructionHitGo;
     [SerializeField] float distanceToHitbox, distanceToObstruction;
 
     [SerializeField] int _reticuleFrictionTick;
@@ -29,7 +31,6 @@ public class AimAssistCone : MonoBehaviour
 
 
     GameObject _preCollidingHitbox, _tempHbGo;
-    List<GameObject> _collidingHitboxesTemp = new List<GameObject>();
 
 
 
@@ -71,15 +72,15 @@ public class AimAssistCone : MonoBehaviour
 
     public GameObject closestHbToCorsshairCenter
     {
-        get { return _targetCollisionHitbox; }
+        get { return _closestHbToCorsshairCenter; }
         set
         {
-            if (value != _targetCollisionHitbox)
+            if (value != _closestHbToCorsshairCenter)
             {
-                _preCollidingHitbox = _targetCollisionHitbox;
+                _preCollidingHitbox = _closestHbToCorsshairCenter;
                 if (closestHbToCorsshairCenter && !value)
                     aimAssist.ResetRedReticule();
-                _targetCollisionHitbox = value;
+                _closestHbToCorsshairCenter = value;
                 //Debug.Log($"AimAssistCone {_preCollidingHitbox} {_collidingHitbox}");
 
             }
@@ -122,6 +123,12 @@ public class AimAssistCone : MonoBehaviour
 
     private void Update()
     {
+        _frame++;
+        if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
+
+        if (!doNotClearListThisFrame) collidingHitboxes.Clear();
+
+
         if (frictionColliders.Count > 0)
             for (int i = 0; i < frictionColliders.Count; i++)
                 if (!frictionColliders[i].gameObject.activeSelf || !frictionColliders[i].gameObject.activeInHierarchy)
@@ -389,21 +396,33 @@ public class AimAssistCone : MonoBehaviour
                 //aimAssist.ResetRedReticule();
             }
         }
+
+        doNotClearListThisFrame = false;
+        if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
     }
 
-    private void OnTriggerStay(Collider other)
+
+
+    int _frame;
+    bool doNotClearListThisFrame;
+    private void OnTriggerStay(Collider other) // is called after update
     {
+        if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
         if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
         {
             //print($"{other.name} is inactive");
         }
         else
         {
-
+            if(other.gameObject.transform.root != player.transform && other.GetComponent<Hitbox>() && !doNotClearListThisFrame)
+                doNotClearListThisFrame = true;
 
             if (other.gameObject.layer != _reticuleFrictionLayer)
                 if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+                {
+                    if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
                     collidingHitboxes.Add(other.gameObject);
+                }
 
             if (other.gameObject.layer == _reticuleFrictionLayer)
                 if (!frictionColliders.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)

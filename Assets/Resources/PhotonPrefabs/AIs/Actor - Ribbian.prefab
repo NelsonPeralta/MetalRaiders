@@ -138,6 +138,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &5604566087043634979
 CapsuleCollider:
@@ -264,6 +265,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &4363479198765174235
 CapsuleCollider:
@@ -390,6 +392,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &975205894146559295
 CapsuleCollider:
@@ -583,6 +586,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &3233377440403640273
 CapsuleCollider:
@@ -709,6 +713,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &2803191624416841372
 CapsuleCollider:
@@ -835,6 +840,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 1
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &8500896809394472960
 CapsuleCollider:
@@ -961,6 +967,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &5376829885828539024
 CapsuleCollider:
@@ -1170,6 +1177,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &5124091385959645406
 CapsuleCollider:
@@ -2193,6 +2201,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &5978113023542645519
 CapsuleCollider:
@@ -2545,6 +2554,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &4481840513000574782
 CapsuleCollider:
@@ -2671,6 +2681,7 @@ MonoBehaviour:
   hitPoints: {fileID: 0}
   isHead: 0
   isGroin: 0
+  ignoreForAimAssistList: 0
   actor: {fileID: 7215138691679798162}
 --- !u!136 &3479202933920941802
 CapsuleCollider:

@@ -514,11 +514,12 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (editMode)
         {
-            zombiesLeft = 0;
-            breathersLeft = 0;
-            hellhoundsLeft = 0;
-            ribbiansLeft = 1;
-            tyrantsLeft = 0;
+            //zombiesLeft = 0;
+            //hellhoundsLeft = 0;
+            //tyrantsLeft = 0;
+
+            breathersLeft = 1;
+            ribbiansLeft = 2;
         }
 
         OnAIsCalculated?.Invoke(this);
@@ -1245,8 +1246,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             networkSwarmManagerPV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId,
                 sp.transform.position, sp.transform.rotation, AiType.AlienShooter.ToString(), 0);
 
-            if (editMode) break;
-
+            //if (editMode) break;
         }
         foreach (SpawnPoint s in ad.breathersSpawnPoints)
         {
@@ -1266,7 +1266,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 networkSwarmManagerPV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId,
                     s.transform.position, s.transform.rotation, AiType.AlienShooter.ToString(), 0);
 
-                if (editMode) break;
+                //if (editMode) break;
             }
             else // Spawn breathers normally
             {
@@ -1283,7 +1283,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 networkSwarmManagerPV.RPC("SpawnAi_RPC", RpcTarget.All, aiPhotonId, targetPhotonId,
                     s.transform.position, s.transform.rotation, AiType.Breather.ToString(), 0);
 
-                if (editMode) break;
+                //if (editMode) break;
             }
         }
 

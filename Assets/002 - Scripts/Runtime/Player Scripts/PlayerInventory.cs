@@ -386,26 +386,46 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnActiveWeaponAmmoChanged(WeaponProperties weaponProperties)
     {
-        CheckLowAmmoIndicator();
+        LowAmmoIndicatorControl();
     }
 
-    void CheckLowAmmoIndicator()
+    void LowAmmoIndicatorControl()
     {
-
-        if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
+        if (!player.isDualWielding)
         {
-            lowAmmoIndicator.SetActive(false);
-            noAmmoIndicator.SetActive(true);
-        }
-        else if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
-        {
-            lowAmmoIndicator.SetActive(true);
-            noAmmoIndicator.SetActive(false);
+            if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
+            {
+                lowAmmoIndicator.SetActive(false);
+                noAmmoIndicator.SetActive(true);
+            }
+            else if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
+            {
+                lowAmmoIndicator.SetActive(true);
+                noAmmoIndicator.SetActive(false);
+            }
+            else
+            {
+                lowAmmoIndicator.SetActive(false);
+                noAmmoIndicator.SetActive(false);
+            }
         }
         else
         {
-            lowAmmoIndicator.SetActive(false);
-            noAmmoIndicator.SetActive(false);
+            if ((activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0) && (thirdWeapon.loadedAmmo == 0 && thirdWeapon.spareAmmo == 0))
+            {
+                lowAmmoIndicator.SetActive(false);
+                noAmmoIndicator.SetActive(true);
+            }
+            else if ((activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f) || thirdWeapon.loadedAmmo < thirdWeapon.ammoCapacity * 0.4f)
+            {
+                lowAmmoIndicator.SetActive(true);
+                noAmmoIndicator.SetActive(false);
+            }
+            else
+            {
+                lowAmmoIndicator.SetActive(false);
+                noAmmoIndicator.SetActive(false);
+            }
         }
     }
 
@@ -440,7 +460,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
     void OnBulletSpawned_Delegate(PlayerShooting playerShooting)
     {
-        CheckLowAmmoIndicator();
+        LowAmmoIndicatorControl();
     }
 
     void OnReloadEnd_Delegate(ReloadScript reloadScript)
@@ -558,16 +578,16 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-        StartingWeapon = "smg";
+        StartingWeapon = "ar";
         StartingWeapon2 = "pistol";
         yield return new WaitForEndOfFrame(); // Withou this it will think the Array is Empty
-        StartingWeapon = "smg";
+        StartingWeapon = "ar";
         StartingWeapon2 = "pistol";
 
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
-            StartingWeapon = "smg";
+            StartingWeapon = "ar";
             StartingWeapon2 = "pistol";
         }
         if (GameManager.instance.gameType == GameManager.GameType.Pro)
@@ -609,7 +629,7 @@ public class PlayerInventory : MonoBehaviourPun
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop
              || GameManager.instance.gameType == GameManager.GameType.Retro)
         {
-            StartingWeapon = "smg";
+            StartingWeapon = "ar";
             StartingWeapon2 = "pistol";
         }
 
@@ -617,7 +637,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType == GameManager.GameType.Hill)
         {
-            StartingWeapon = "smg";
+            StartingWeapon = "ar";
             StartingWeapon2 = "pistol";
         }
 
@@ -783,7 +803,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         try
         {
-            CheckLowAmmoIndicator();
+            LowAmmoIndicatorControl();
             UpdateAllExtraAmmoHuds();
             UpdateThirdPersonGunModelsOnCharacter();
         }
