@@ -417,7 +417,7 @@ public class AimAssistCone : MonoBehaviour
     bool doNotClearListThisFrame;
     private void OnTriggerStay(Collider other) // is called after update
     {
-        if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay");
+        if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay {other.name}");
         //if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
         if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
         {
