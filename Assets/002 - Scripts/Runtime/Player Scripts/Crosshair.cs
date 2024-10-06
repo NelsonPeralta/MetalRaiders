@@ -19,8 +19,6 @@ public class Crosshair : MonoBehaviour
         {
             _color = value;
 
-            if (transform.root.GetComponent<Player>() == GameManager.GetRootPlayer() && value == Color.Blue) print($"CROSSHAIR BLUE");
-
             if (value == Color.Blue)
             {
                 try

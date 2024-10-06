@@ -787,6 +787,9 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPlayerRespawnEarly_Delegate(Player player)
     {
+        thirdWeapon = null; // do it mine or not
+
+
         if (GameManager.instance.gameType != GameManager.GameType.Fiesta && GameManager.instance.gameType != GameManager.GameType.GunGame)
             StartCoroutine(EquipStartingWeapon());
         else
@@ -969,9 +972,12 @@ public class PlayerInventory : MonoBehaviourPun
 
     public void DropThirdWeapon()
     {
-        print("DropThirdWeapon");
-        NetworkGameManager.SpawnNetworkWeapon(thirdWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward, currAmmo: thirdWeapon.loadedAmmo, spareAmmo: thirdWeapon.spareAmmo);
-        PV.RPC("RemoveThirdWeapon_RPC", RpcTarget.All);
+        if (PV.IsMine)
+        {
+            print("DropThirdWeapon");
+            NetworkGameManager.SpawnNetworkWeapon(thirdWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward, currAmmo: thirdWeapon.loadedAmmo, spareAmmo: thirdWeapon.spareAmmo);
+            PV.RPC("RemoveThirdWeapon_RPC", RpcTarget.All);
+        }
     }
 
 

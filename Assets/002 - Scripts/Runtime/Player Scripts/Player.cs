@@ -1447,6 +1447,7 @@ public class Player : Biped
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
         GameManager.GetRootPlayer().PlayAllyDownClip(this);
+        if (isDualWielding) playerInventory.DropThirdWeapon();
 
 
 
