@@ -212,6 +212,7 @@ public class PlayerController : MonoBehaviourPun
 
     public float currentlyReloadingTimer { set { _currentlyReloadingTimer = value; } }
     public bool triggerOverHeatOnShootingBtnUp { set { _triggerOverHeatOnShootingBtnUp = value; } }
+    public bool isReloadingThirWeaponAnimation { get { return _currentlyReloadingTimer_thirdWeapon > 0; } }
 
 
     bool _isMeleeing, _cameraIsFloating, _triggerOverHeatOnShootingBtnUp;
@@ -1116,8 +1117,9 @@ public class PlayerController : MonoBehaviourPun
             }
             else
             {
-                if (player.playerInventory.activeWeapon.spareAmmo > 0 || player.playerInventory.thirdWeapon.spareAmmo > 0)
-                    PV.RPC("Reload_RPC", RpcTarget.All);
+                if (!isReloading)
+                    if (player.playerInventory.activeWeapon.spareAmmo > 0 || player.playerInventory.thirdWeapon.spareAmmo > 0)
+                        PV.RPC("Reload_RPC", RpcTarget.All);
             }
         }
     }
@@ -1149,7 +1151,7 @@ public class PlayerController : MonoBehaviourPun
             _completeReloadTimer = 2; // Used to trasnfer ammo
             currentlyReloadingTimer = 4f; // Used to lock animation time
 
-            if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol)
+            if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Revolver)
             {
                 _completeReloadTimer = 1.5f; // Used to trasnfer ammo
                 currentlyReloadingTimer = 3f; // Used to lock animation time
@@ -1168,7 +1170,13 @@ public class PlayerController : MonoBehaviourPun
         {
             if (!player.playerInventory.isDualWielding)
             {
-                weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+                    weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                else if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
+                    weaponAnimator.Play("reload generic", 0, 0f);
+
+
+
                 StartCoroutine(Reload3PS());
             }
             else

@@ -556,6 +556,9 @@ public class Player : Biped
         }
     }
 
+
+    public bool isDualWielding { get { return playerInventory.isDualWielding; } }
+
     public PlayerArmorManager playerArmorManager { get { return _playerArmorManager; } }
     public PlayerThirdPersonModel playerThirdPersonModel { get { return _playerThirdPersonModel; } }
     public PlayerShield playerShield { get { return _playerShield; } }

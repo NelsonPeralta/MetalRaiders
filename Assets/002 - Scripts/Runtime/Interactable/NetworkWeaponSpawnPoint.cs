@@ -119,8 +119,6 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     {
         if (!CurrentRoomManager.instance.gameOver)
         {
-            print("EnableWeapon");
-
             weaponSpawned.transform.localPosition = Vector3.zero;
             weaponSpawned.transform.localRotation = Quaternion.identity;
             weaponSpawned.localAmmo = weaponSpawned.defaultAmmo;

@@ -237,7 +237,7 @@ public class WeaponProperties : MonoBehaviour
     public int previousLayer { get { return _preLayer; } set { _preLayer = value; } }
     public bool isActiveWeapon { get { return this == player.playerInventory.activeWeapon; } }
     public bool isLeftWeapon { get { return this == player.playerInventory.leftWeapon; } }
-    public Animator animator { get { return _animator; } }
+    public Animator animator { get { if (!_animator) _animator = GetComponent<Animator>(); return _animator; } }
     public bool hipSprayOnly;
     public bool degradingDamage;
 

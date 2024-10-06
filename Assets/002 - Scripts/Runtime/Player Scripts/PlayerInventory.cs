@@ -141,11 +141,15 @@ public class PlayerInventory : MonoBehaviourPun
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", true);
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
                 pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
+                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("dw draw");
 
-                value.GetComponent<Animator>().SetBool("dw", true);
+                value.GetComponent<Animator>().SetBool("idle", false);
+                value.GetComponent<Animator>().SetBool("dw idle", true);
                 value.GetComponent<Animator>().Play("dw draw");
 
-                activeWeapon.GetComponent<Animator>().SetBool("dw", true);
+                activeWeapon.GetComponent<Animator>().SetBool("idle", false);
+                activeWeapon.GetComponent<Animator>().SetBool("dw idle", true);
+                activeWeapon.GetComponent<Animator>().Play("dw idle force");
             }
             else
             {
@@ -154,7 +158,9 @@ public class PlayerInventory : MonoBehaviourPun
                 {
                     print($"hiding third weapon");
                     _thirdWeapon.gameObject.SetActive(false);
-                    activeWeapon.GetComponent<Animator>().SetBool("dw", false);
+                    activeWeapon.GetComponent<Animator>().SetBool("idle", true);
+                    activeWeapon.GetComponent<Animator>().SetBool("dw idle", false);
+                    activeWeapon.GetComponent<Animator>().SetBool("dw walk", false);
 
                     pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", false);
                     StartCoroutine(ToggleTPPistolIdle(1));

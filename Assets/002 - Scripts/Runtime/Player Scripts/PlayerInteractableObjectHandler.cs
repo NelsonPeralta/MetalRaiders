@@ -309,7 +309,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
     public void TriggerLongInteract()
     {
-        if (closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
+        if (PV.IsMine && closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
         {
             if (player.playerInventory.activeWeapon.isDualWieldable && (closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(player.playerInventory.activeWeapon.codeName)))
                 player.playerInventory.PV.RPC("PickupThirdWeapon", RpcTarget.All, closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition, true);

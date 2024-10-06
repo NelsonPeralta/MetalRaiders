@@ -267,7 +267,7 @@ public class PlayerMovement : MonoBehaviour
             _playerMovementDirection = _previousMovementDirEnum = PlayerMovementDirection.Idle;
             _rawRightInput = _correctedRightInput = _rawForwardInput = _correctedForwardInput = 0;
             state = MovementState.idling;
-            WalkAnimation();
+            WalkAnimationControl();
         }
 
         if (!CurrentRoomManager.instance.gameStarted || player.playerController.pauseMenuOpen || player.playerController.cameraIsFloating) return;
@@ -296,7 +296,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        WalkAnimation();
+        WalkAnimationControl();
         ControlAnimationSpeed();
 
         if (blockPlayerMoveInput > 0)
@@ -765,39 +765,77 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (_grounded)
                 {
-
-                    if (_pController.weaponAnimator.GetBool("Walk"))
+                    if (!player.isDualWielding)
                     {
-                        if (!_pController.isReloading && !_pController.isDrawingWeapon && !_pController.isThrowingGrenade &&
-                            !_pController.isMeleeing && !_pController.isFiring)
+                        if (_pController.weaponAnimator.GetBool("Walk"))
                         {
+                            if (!_pController.isReloading && !_pController.isDrawingWeapon && !_pController.isThrowingGrenade &&
+                                !_pController.isMeleeing && !_pController.isFiring)
+                            {
 
-                            _pController.weaponAnimator.speed = animationSpeed;
-                            if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
+                                _pController.weaponAnimator.speed = animationSpeed;
+                                if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Draw"))
+                                    _pController.weaponAnimator.speed = 1;
+                                _tpLookAt.anim.speed = animationSpeed;
+                            }
+                            else if (_pController.isReloading || _pController.isDrawingWeapon || _pController.isThrowingGrenade ||
+                                _pController.isMeleeing || _pController.isFiring)
+                            {
+                                //_speedRatio = 1;
                                 _pController.weaponAnimator.speed = 1;
-                            _tpLookAt.anim.speed = animationSpeed;
+                                _tpLookAt.anim.speed = 1;
+                            }
                         }
-                        else if (_pController.isReloading || _pController.isDrawingWeapon || _pController.isThrowingGrenade ||
-                            _pController.isMeleeing || _pController.isFiring)
+                        else
                         {
                             //_speedRatio = 1;
                             _pController.weaponAnimator.speed = 1;
-                            _tpLookAt.anim.speed = 1;
+                            if (_tpLookAt.anim)
+                                _tpLookAt.anim.speed = 1;
                         }
                     }
                     else
                     {
-                        //_speedRatio = 1;
-                        _pController.weaponAnimator.speed = 1;
-                        if (_tpLookAt.anim)
-                            _tpLookAt.anim.speed = 1;
+                        if (_pController.isReloading)
+                        {
+                            player.playerInventory.activeWeapon.animator.speed = 1;
+                        }
+                        else if (player.playerInventory.activeWeapon.animator.GetBool("dw idle"))
+                        {
+                            player.playerInventory.activeWeapon.animator.speed = 1;
+                        }
+                        else if (player.playerInventory.activeWeapon.animator.GetBool("dw walk"))
+                        {
+                            player.playerInventory.activeWeapon.animator.speed = animationSpeed;
+                        }
+
+
+
+
+                        if (_pController.isReloadingThirWeaponAnimation)
+                        {
+                            player.playerInventory.thirdWeapon.animator.speed = 1;
+                        }
+                        else if (player.playerInventory.thirdWeapon.animator.GetBool("dw idle"))
+                        {
+                            player.playerInventory.thirdWeapon.animator.speed = 1;
+                        }
+                        else if (player.playerInventory.thirdWeapon.animator.GetBool("dw walk"))
+                        {
+                            player.playerInventory.thirdWeapon.animator.speed = animationSpeed;
+                        }
                     }
                 }
-                else if (!_grounded && _pController.weaponAnimator.GetBool("Run"))
+                else if (!_grounded && !player.isDualWielding && _pController.weaponAnimator.GetBool("Run"))
                 {
 
                     if (_pController.weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
                         _pController.weaponAnimator.speed = 0.1f;
+                }
+                else if (player.isDualWielding)
+                {
+                    player.playerInventory.activeWeapon.animator.speed = 1;
+                    player.playerInventory.thirdWeapon.animator.speed = 1;
                 }
             }
         }
@@ -810,44 +848,57 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-    void WalkAnimation()
+    void WalkAnimationControl()
     {
         if (_rawRightInput != 0 || _rawForwardInput != 0)
         {
-            if (_grounded)
+            if (_grounded) // grounded and moving
             {
-                if (_pController.weaponAnimator)
-                    _pController.weaponAnimator.SetBool("Walk", true);
-
-                if (_pController.pInventory.isDualWielding)
+                if (player.isDualWielding)
                 {
-                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", true);
-                    //_pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", true);
+                    _pController.pInventory.activeWeapon.animator.SetBool("dw idle", false);
+                    _pController.pInventory.thirdWeapon.animator.SetBool("dw idle", false);
+
+                    _pController.pInventory.activeWeapon.animator.SetBool("dw walk", true);
+                    _pController.pInventory.thirdWeapon.animator.SetBool("dw walk", true);
+                }
+                else
+                {
+                    if (_pController.weaponAnimator)
+                        _pController.weaponAnimator.SetBool("Walk", true);
                 }
             }
             else
             {
-                try { _pController.weaponAnimator.SetBool("Walk", false); } catch { }
-
-                if (_pController.pInventory.isDualWielding)
+                if (player.isDualWielding)
                 {
-                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", false);
-                    //_pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
+                    _pController.pInventory.activeWeapon.animator.SetBool("dw walk", false);
+                    _pController.pInventory.thirdWeapon.animator.SetBool("dw walk", false);
+
+                    _pController.pInventory.activeWeapon.animator.SetBool("dw idle", true);
+                    _pController.pInventory.thirdWeapon.animator.SetBool("dw idle", true);
+                }
+                else
+                {
+                    _pController.weaponAnimator.SetBool("Walk", false);
                 }
             }
         }
         else
-            try
+        {
+            if (!player.isDualWielding)
             {
                 _pController.weaponAnimator.SetBool("Walk", false);
-
-                if (_pController.pInventory.isDualWielding)
-                {
-                    _pController.pInventory.activeWeapon.leftWeapon.animator.SetBool("Walk", false);
-                    //_pController.pInventory.activeWeapon.rightWeapon.animator.SetBool("Walk", false);
-                }
             }
-            catch { }
+            else
+            {
+                _pController.pInventory.activeWeapon.animator.SetBool("dw idle", true);
+                if (_pController.pInventory.thirdWeapon) _pController.pInventory.thirdWeapon.animator.SetBool("dw idle", true); // lag can cause error
+
+                _pController.pInventory.activeWeapon.animator.SetBool("dw walk", false);
+                if (_pController.pInventory.thirdWeapon) _pController.pInventory.thirdWeapon.animator.SetBool("dw walk", false);
+            }
+        }
     }
 
 
