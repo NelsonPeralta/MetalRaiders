@@ -1971,6 +1971,7 @@ public class PlayerController : MonoBehaviourPun
     void OnRespawn_Delegate(Player player)
     {
         _currentlyReloadingTimer = _completeReloadTimer = _currentlyThrowingGrenadeTimer = _isCurrentlyShootingReset = _drawingWeaponTime = 0;
+        _completeReloadTimer_thirdWeapon = _currentlyReloadingTimer_thirdWeapon = _drawingWeaponTime_thirdWeapon = _isCurrentlyShootingReset_thirdWeapon = 0;
 
         CancelReloadCoroutine();
         isSprinting = false; _meleeSucc = false;
