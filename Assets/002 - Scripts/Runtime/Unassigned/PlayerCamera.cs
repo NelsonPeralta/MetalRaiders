@@ -139,7 +139,12 @@ public class PlayerCamera : MonoBehaviour
             backEndMouseSens *= 0.65f;
 
             if (player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
+            {
                 backEndMouseSens *= 0.4f;
+
+
+                if (_controllerType == ControllerType.Joystick) backEndMouseSens *= 1.2f;
+            }
         }
 
         //if (player.aimAssist.redReticuleIsOn && (pController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick))
