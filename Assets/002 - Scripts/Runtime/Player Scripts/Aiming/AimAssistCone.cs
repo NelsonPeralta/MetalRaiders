@@ -124,9 +124,9 @@ public class AimAssistCone : MonoBehaviour
     private void Update()
     {
         _frame++;
-        if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
+        //if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
 
-        if (!doNotClearListThisFrame) collidingHitboxes.Clear();
+        if (!doNotClearListThisFrame) collidingHitboxes.Clear(); // since ontrigger stay is only called when detecting something, we need to manually clear it
 
 
         if (frictionColliders.Count > 0)
@@ -398,7 +398,7 @@ public class AimAssistCone : MonoBehaviour
         }
 
         doNotClearListThisFrame = false;
-        if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
+        //if (player.playerController.rid == 0) print($"Update {_frame} {doNotClearListThisFrame}");
     }
 
 
@@ -407,7 +407,7 @@ public class AimAssistCone : MonoBehaviour
     bool doNotClearListThisFrame;
     private void OnTriggerStay(Collider other) // is called after update
     {
-        if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
+        //if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
         if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
         {
             //print($"{other.name} is inactive");
@@ -420,7 +420,7 @@ public class AimAssistCone : MonoBehaviour
             if (other.gameObject.layer != _reticuleFrictionLayer)
                 if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
                 {
-                    if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
+                    //if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
                     collidingHitboxes.Add(other.gameObject);
                 }
 

@@ -10197,9 +10197,9 @@ MonoBehaviour:
   spriteId: 0
   isDw: 1
   _ammo: 50
-  _spareAmmo: 100
+  _spareAmmo: 150
   _defaultAmmo: 50
-  _defaultSpareAmmo: 100
+  _defaultSpareAmmo: 150
   _tts: 60
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}
