@@ -141,66 +141,71 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
         spareAmmo = (int)Mathf.Ceil(Random.Range(0, spareAmmo));
     }
 
-    public void LootWeapon(Player player)
+    public void LootWeapon(Player player, bool thirdWeapon = false)
     {
         PlayerInventory playerInventory = player.playerInventory;
         WeaponProperties w = playerInventory.activeWeapon;
         if (playerInventory.holsteredWeapon.codeName == codeName)
             w = playerInventory.holsteredWeapon;
 
-        int ammoNeeded = w.maxSpareAmmo - w.spareAmmo;
-        int ammoAvailable = (localAmmo + spareAmmo);
-        int totalAmmoAvailable = _ammo + _spareAmmo;
+        if (thirdWeapon) w = playerInventory.thirdWeapon;
 
-        if (w.injectLootedAmmo)
-            ammoNeeded = w.ammoCapacity - w.loadedAmmo;
-
-        if (ammoNeeded <= 0)
-            return;
-
-
-        int ammoToLoot = ammoNeeded;
-        if (ammoNeeded >= ammoAvailable)
-            ammoToLoot = ammoAvailable;
-
-        if (w.injectLootedAmmo)
+        if (w.codeName.Equals(codeName) && gameObject.activeInHierarchy && gameObject.activeSelf)
         {
-            w.loadedAmmo += ammoAvailable;
-            HideWeapon();
-            NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
-            playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();
-            //playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up {cleanName} ammo ({ammoNeeded})</color>");
-            return;
-        }
-        else
-        {
-            w.spareAmmo += ammoToLoot;
-        }
+            int ammoNeeded = w.maxSpareAmmo - w.spareAmmo;
+            int ammoAvailable = (localAmmo + spareAmmo);
+            int totalAmmoAvailable = _ammo + _spareAmmo;
 
-        if (w == playerInventory.activeWeapon) playerInventory.player.playerUI.ShowPickedUpAmmoWitness(ammoToLoot);
+            if (w.injectLootedAmmo)
+                ammoNeeded = w.ammoCapacity - w.loadedAmmo;
 
-        if (ammoNeeded >= ammoAvailable)
-            HideWeapon();
-        else
-        {
-            Dictionary<string, string> param = new Dictionary<string, string>();
+            if (ammoNeeded <= 0)
+                return;
 
-            int newAmmo = localAmmo;
-            int newSpareAmmo = spareAmmo;
 
-            newSpareAmmo -= ammoNeeded;
-            if (newSpareAmmo < 0)
+            int ammoToLoot = ammoNeeded;
+            if (ammoNeeded >= ammoAvailable)
+                ammoToLoot = ammoAvailable;
+
+            if (w.injectLootedAmmo)
             {
-                newAmmo -= Mathf.Abs(newSpareAmmo);
-                newSpareAmmo = 0;
+                w.loadedAmmo += ammoAvailable;
+                HideWeapon();
+                NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
+                playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();
+                //playerInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up {cleanName} ammo ({ammoNeeded})</color>");
+                return;
+            }
+            else
+            {
+                w.spareAmmo += ammoToLoot;
             }
 
-            param["ammo"] = newAmmo.ToString();
-            param["spareAmmo"] = newSpareAmmo.ToString();
+            if (w == playerInventory.activeWeapon) playerInventory.player.playerUI.ShowPickedUpAmmoWitness(ammoToLoot);
 
-            NetworkGameManager.instance.UpdateLootableWeaponData(spawnPointPosition, param);
+            if (ammoNeeded >= ammoAvailable)
+                HideWeapon();
+            else
+            {
+                Dictionary<string, string> param = new Dictionary<string, string>();
+
+                int newAmmo = localAmmo;
+                int newSpareAmmo = spareAmmo;
+
+                newSpareAmmo -= ammoNeeded;
+                if (newSpareAmmo < 0)
+                {
+                    newAmmo -= Mathf.Abs(newSpareAmmo);
+                    newSpareAmmo = 0;
+                }
+
+                param["ammo"] = newAmmo.ToString();
+                param["spareAmmo"] = newSpareAmmo.ToString();
+
+                NetworkGameManager.instance.UpdateLootableWeaponData(spawnPointPosition, param);
+            }
+            playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();
         }
-        playerInventory.player.allPlayerScripts.weaponPickUp.ammoPickupAudioSource.Play();
     }
 
     public void HideWeapon()

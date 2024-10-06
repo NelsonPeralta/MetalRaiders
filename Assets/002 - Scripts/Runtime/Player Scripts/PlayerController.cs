@@ -610,7 +610,7 @@ public class PlayerController : MonoBehaviourPun
 
     void LeftShooting()
     {
-        if (pInventory.thirdWeapon && PV.IsMine && player.isAlive && _isCurrentlyShootingReset_thirdWeapon <= 0 && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon)
+        if (pInventory.thirdWeapon && PV.IsMine && player.isAlive && _isCurrentlyShootingReset_thirdWeapon <= 0 && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon && _currentlyReloadingTimer_thirdWeapon <= 0)
         {
             if (activeControllerType == ControllerType.Joystick)
             {
@@ -845,6 +845,9 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
 
+
+        if (rewiredPlayer.GetButtonUp("Aim"))
+            OnPlayerScopeBtnUp?.Invoke(this);
 
 
 
@@ -1099,6 +1102,28 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+
+
+    private void Reload()
+    {
+        if (PV.IsMine)
+        {
+            if (!player.playerInventory.isDualWielding)
+            {
+                if (!isDrawingWeapon && !isThrowingGrenade && !isMeleeing && !isReloading)
+                    if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
+                        PV.RPC("Reload_RPC", RpcTarget.All);
+            }
+            else
+            {
+                if (player.playerInventory.activeWeapon.spareAmmo > 0 || player.playerInventory.thirdWeapon.spareAmmo > 0)
+                    PV.RPC("Reload_RPC", RpcTarget.All);
+            }
+        }
+    }
+
+
+
     [PunRPC]
     void Reload_RPC()
     {
@@ -1119,6 +1144,21 @@ public class PlayerController : MonoBehaviourPun
 
 
 
+        if (player.playerInventory.isDualWielding)
+        {
+            _completeReloadTimer = 2; // Used to trasnfer ammo
+            currentlyReloadingTimer = 4f; // Used to lock animation time
+
+            if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol)
+            {
+                _completeReloadTimer = 1.5f; // Used to trasnfer ammo
+                currentlyReloadingTimer = 3f; // Used to lock animation time
+            }
+        }
+
+
+
+
         player.playerShooting.StopAllCoroutines();
         Descope();
         rScript.PlayReloadSound(Array.IndexOf(player.playerInventory.allWeaponsInInventory, player.playerInventory.activeWeapon.gameObject));
@@ -1126,16 +1166,56 @@ public class PlayerController : MonoBehaviourPun
 
         if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
         {
-            try
+            if (!player.playerInventory.isDualWielding)
             {
                 weaponAnimator.Play("Reload Ammo Left", 0, 0f);
-                //pController.weaponAnimator.Play("Reload Out Of Ammo", 0, 0f);
-                //PV.RPC("PlayFirstPersonReloadAnimation_RPC", RpcTarget.All, "Reload Out Of Ammo");
-
+                StartCoroutine(Reload3PS());
             }
-            catch { }
-            StartCoroutine(Reload3PS());
+            else
+            {
+                player.playerInventory.activeWeapon.GetComponent<Animator>().Play("dw reload", 0, 0f);
+            }
 
+
+
+        }
+
+
+
+
+
+
+
+
+        // third weapon
+        if (player.playerInventory.thirdWeapon /*&& player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity && _currentlyReloadingTimer_thirdWeapon <= 0*/)
+        {
+            player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("dw reload", 0, 0f);
+
+
+
+            _completeReloadTimer_thirdWeapon = 2f; // Used to trasnfer ammo
+            _currentlyReloadingTimer_thirdWeapon = 4f; // Used to lock animation time
+
+            if (pInventory.thirdWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol)
+            {
+                _completeReloadTimer_thirdWeapon = 1.5f; // Used to trasnfer ammo
+                _currentlyReloadingTimer_thirdWeapon = 3; // Used to lock animation time
+            }
+
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("dw reload");
+
+
+
+
+
+            SoundManager.instance.PlayAudioClip(transform.position, player.playerInventory.thirdWeapon.ReloadShort);
+
+
+            //if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
+            //{
+            //    StartCoroutine(Reload3PS());
+            //}
         }
     }
 
@@ -1144,13 +1224,21 @@ public class PlayerController : MonoBehaviourPun
         if (pInventory.activeWeapon)
         //if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing)
         {
-            if (pInventory.activeWeapon.loadedAmmo <= 0)
-                Reload();
+            if (!pInventory.isDualWielding)
+            {
+                if (pInventory.activeWeapon.loadedAmmo <= 0)
+                    Reload();
+            }
+            else
+            {
+                if (pInventory.activeWeapon.loadedAmmo <= 0 && pInventory.thirdWeapon.loadedAmmo <= 0)
+                    Reload();
+            }
         }
 
 
-        if (pInventory.activeWeapon.loadedAmmo <= 0 && pInventory.holsteredWeapon.loadedAmmo <= 0)
-            player.PlayOutOfAmmoClip();
+        //if (pInventory.activeWeapon.loadedAmmo <= 0 && pInventory.holsteredWeapon.loadedAmmo <= 0)
+        //    player.PlayOutOfAmmoClip();
     }
 
 
@@ -1162,6 +1250,41 @@ public class PlayerController : MonoBehaviourPun
             {
                 ReloadThirdWeapon();
             }
+        }
+    }
+
+    void ReloadThirdWeapon()
+    {
+        return;// impossible. Each arm of the third person model needs to be independant to independently reload each guns
+
+
+
+        if (player.playerInventory.thirdWeapon && player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity && _currentlyReloadingTimer_thirdWeapon <= 0)
+        {
+            player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("dw reload", 0, 0f);
+
+
+
+            _completeReloadTimer_thirdWeapon = 2f; // Used to trasnfer ammo
+            _currentlyReloadingTimer_thirdWeapon = 4f; // Used to lock animation time
+
+            if (pInventory.thirdWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol)
+            {
+                _completeReloadTimer_thirdWeapon = 1.5f; // Used to trasnfer ammo
+                _currentlyReloadingTimer_thirdWeapon = 3; // Used to lock animation time
+            }
+
+
+
+
+
+            SoundManager.instance.PlayAudioClip(transform.position, player.playerInventory.thirdWeapon.ReloadShort);
+
+
+            //if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
+            //{
+            //    StartCoroutine(Reload3PS());
+            //}
         }
     }
 
@@ -1782,12 +1905,7 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
-    private void Reload()
-    {
-        if (PV.IsMine && !isDualWielding && !isDrawingWeapon && !isThrowingGrenade && !isMeleeing && !isReloading)
-            if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
-                PV.RPC("Reload_RPC", RpcTarget.All);
-    }
+
 
 
     public void CancelReloadCoroutine()
@@ -1832,7 +1950,7 @@ public class PlayerController : MonoBehaviourPun
 
             if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 5)
             {
-                if (!player.playerInventory.isDualWielding)
+                //if (!player.playerInventory.isDualWielding)
                 {
                     RaycastHit hit;
 
@@ -1862,11 +1980,11 @@ public class PlayerController : MonoBehaviourPun
                         }
                     }
                 }
-                else
-                {
-                    if (player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity)
-                        ReloadThirdWeapon();
-                }
+                //else
+                //{
+                //    if (player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity)
+                //        ReloadThirdWeapon();
+                //}
             }
 
 
@@ -1877,43 +1995,14 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-    float _completeReloadTimer_thirdWeapon, _currentlyReloadingTimer_thirdWeapon;
-
-    void ReloadThirdWeapon()
-    {
-        if (player.playerInventory.thirdWeapon && player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity && _currentlyReloadingTimer_thirdWeapon <= 0)
-        {
-            player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("Reload Ammo Left", 0, 0f);
+    [SerializeField] float _completeReloadTimer_thirdWeapon, _currentlyReloadingTimer_thirdWeapon;
 
 
-
-            _completeReloadTimer_thirdWeapon = 2f; // Used to trasnfer ammo
-            _currentlyReloadingTimer_thirdWeapon = 4f; // Used to lock animation time
-
-            if (pInventory.thirdWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Pistol)
-            {
-                _completeReloadTimer_thirdWeapon = 1.5f; // Used to trasnfer ammo
-                _currentlyReloadingTimer_thirdWeapon = 3; // Used to lock animation time
-            }
-
-
-
-
-
-            SoundManager.instance.PlayAudioClip(transform.position, player.playerInventory.thirdWeapon.ReloadShort);
-
-
-            //if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
-            //{
-            //    StartCoroutine(Reload3PS());
-            //}
-        }
-    }
 
 
     public void SetDrawingThirdWeapon()
     {
-        _drawingWeaponTime_thirdWeapon = 1.5f;
+        _drawingWeaponTime_thirdWeapon = 1.1f;
     }
 
 

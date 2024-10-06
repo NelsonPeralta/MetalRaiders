@@ -917,6 +917,20 @@ public class PlayerInventory : MonoBehaviourPun
                     GameManager.SetLayerRecursively(w, 28);
                 else if (pController.rid == 3)
                     GameManager.SetLayerRecursively(w, 30);
+
+
+
+                if (w.GetComponent<WeaponProperties>().leftWeapon)
+                {
+                    if (pController.rid == 0)
+                        GameManager.SetLayerRecursively(w.GetComponent<WeaponProperties>().leftWeapon.gameObject, 24);
+                    else if (pController.rid == 1)
+                        GameManager.SetLayerRecursively(w.GetComponent<WeaponProperties>().leftWeapon.gameObject, 26);
+                    else if (pController.rid == 2)
+                        GameManager.SetLayerRecursively(w.GetComponent<WeaponProperties>().leftWeapon.gameObject, 28);
+                    else if (pController.rid == 3)
+                        GameManager.SetLayerRecursively(w.GetComponent<WeaponProperties>().leftWeapon.gameObject, 30);
+                }
             }
             else
             {

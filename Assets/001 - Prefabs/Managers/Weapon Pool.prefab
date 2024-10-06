@@ -57,4 +57,5 @@ MonoBehaviour:
   - {fileID: 7327557961540528252, guid: fff6ecf8305f33648a7af55836dd16b7, type: 3}
   - {fileID: 737131878201673498, guid: cb57437ec754b25458f1c49e7287fe9f, type: 3}
   - {fileID: 3727167578903649148, guid: 1e0103e407a765b46ab06cd686a459fd, type: 3}
+  - {fileID: 5678749805716732755, guid: ed45149373e94f34bac872dab2693e6e, type: 3}
   _spawnedWeapons: []

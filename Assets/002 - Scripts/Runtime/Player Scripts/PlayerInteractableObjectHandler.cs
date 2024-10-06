@@ -73,7 +73,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
 
 
-                _weaponsThePlayerHasInInventory.Clear();
+                _weaponsThePlayerHasInInventory.Clear(); _weaponsThePlayerHasInInventoryAndAreDualWieldable.Clear();
                 if (rawInteractableObjects.Count > 0) _filteredInteractableObjects = new List<InteractableObject>(rawInteractableObjects);
                 else _filteredInteractableObjects.Clear();
 
@@ -90,7 +90,8 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                         if (_filteredInteractableObjects[i].GetComponent<LootableWeapon>())
                         {
                             if (_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
-                                _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName)
+                                _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
+                              (_player.playerInventory.thirdWeapon && _player.playerInventory.thirdWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName))
                             {
                                 _weaponsThePlayerHasInInventory.Add(_filteredInteractableObjects[i]);
 
@@ -183,17 +184,21 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
             }
 
 
-            if (_weaponsThePlayerHasInInventory.Count > 0)
-            {
-                for (int i = _weaponsThePlayerHasInInventory.Count - 1; i >= 0; i--)
-                {
-                    // Do something
-                    if (_weaponsThePlayerHasInInventory[i].GetComponent<LootableWeapon>())
-                    {
-                        _weaponsThePlayerHasInInventory[i].GetComponent<LootableWeapon>().LootWeapon(_player);
-                    }
-                }
+            {// TRANSFER AMMO
+                if (_weaponsThePlayerHasInInventory.Count > 0)
+                    for (int i = _weaponsThePlayerHasInInventory.Count - 1; i >= 0; i--)
+                        if (_weaponsThePlayerHasInInventory[i].GetComponent<LootableWeapon>())
+                            _weaponsThePlayerHasInInventory[i].GetComponent<LootableWeapon>().LootWeapon(_player);
+
+                if (player.playerInventory.isDualWielding)
+                    if (_weaponsThePlayerHasInInventory.Count > 0)
+                        for (int i = _weaponsThePlayerHasInInventory.Count - 1; i >= 0; i--)
+                            if (_weaponsThePlayerHasInInventory[i].GetComponent<LootableWeapon>())
+                                _weaponsThePlayerHasInInventory[i].GetComponent<LootableWeapon>().LootWeapon(_player, thirdWeapon: true);
             }
+
+
+
 
             if (_filteredInteractableObjects.Count > 0)
             {
