@@ -174,7 +174,8 @@ public class WeaponProperties : MonoBehaviour
                 || ammoReloadType == AmmoReloadType.Shell))
             {
                 print($"player {player.name} {player.isMine} about to send UPDATEAMMO RPC");
-                if (player.isMine) NetworkGameManager.instance.UpdateAmmo(player.photonId, index, _currentAmmo, sender: true);
+                if (player.isMine) NetworkGameManager.instance.UpdateAmmo(player.photonId, index, _currentAmmo, 
+                    isThirdWeapon: player.playerInventory.thirdWeapon && this == player.playerInventory.thirdWeapon, sender: true);
             }
         }
     }

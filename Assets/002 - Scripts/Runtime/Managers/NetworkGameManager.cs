@@ -318,18 +318,31 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
 
-    IEnumerator UpdateAmmo_Coroutine(int playerPid, int wIndex, bool isSpare, int ammo)
+    IEnumerator UpdateAmmo_Coroutine(int playerPid, int wIndex, bool isSpare, bool isThirdWeapon, int ammo)
     {
         yield return new WaitForEndOfFrame();
 
         Debug.Log($"UpdateAmmo Is Not Mine");
-        if (!isSpare)
+
+
+        if (isThirdWeapon)
         {
-            GameManager.GetPlayerWithPhotonView(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateLoadedAmmo(ammo);
+            if (!isSpare)
+                GameManager.GetPlayerWithPhotonView(playerPid).playerInventory.thirdWeapon.UpdateLoadedAmmo(ammo);
+            else
+                GameManager.GetPlayerWithPhotonView(playerPid).playerInventory.thirdWeapon.UpdateSpareAmmo(ammo);
         }
         else
         {
-            GameManager.GetPlayerWithPhotonView(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateSpareAmmo(ammo);
+
+            if (!isSpare)
+            {
+                GameManager.GetPlayerWithPhotonView(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateLoadedAmmo(ammo);
+            }
+            else
+            {
+                GameManager.GetPlayerWithPhotonView(playerPid).playerInventory.allWeaponsInInventory[wIndex].GetComponent<WeaponProperties>().UpdateSpareAmmo(ammo);
+            }
         }
     }
 
@@ -979,7 +992,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void UpdateAmmo(int playerPid, int wIndex, int ammo, bool isSpare = false, bool sender = false)
+    public void UpdateAmmo(int playerPid, int wIndex, int ammo, bool isSpare = false, bool isThirdWeapon = false, bool sender = false)
     {
         if (GameTime.instance.timeElapsed > 5)
         {
@@ -987,11 +1000,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonView(playerPid)} {ammo}. Sender: {sender}");
             if (GameManager.GetPlayerWithPhotonView(playerPid).isMine && sender)
             {
-                instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, false);
+                instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, isThirdWeapon, false);
             }
             else if (!sender && !GameManager.GetPlayerWithPhotonView(playerPid).isMine)
             {
-                StartCoroutine(UpdateAmmo_Coroutine(playerPid, wIndex, isSpare, ammo));
+                StartCoroutine(UpdateAmmo_Coroutine(playerPid, wIndex, isSpare, isThirdWeapon, ammo));
             }
         }
     }
