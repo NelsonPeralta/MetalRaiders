@@ -468,7 +468,7 @@ public class WeaponProperties : MonoBehaviour
         float ranY = Random.Range(-currentSpray, currentSpray);
 
         Quaternion ranSprayRotation = new Quaternion();
-        ranSprayRotation.eulerAngles = new Vector3(ranX, ranY, 0);
+        ranSprayRotation.eulerAngles = new Vector3(ranX, ranY, 0) * (player.isDualWielding ? 1.8f : 1);
 
         return ranSprayRotation;
     }

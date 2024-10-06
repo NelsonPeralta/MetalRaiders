@@ -204,6 +204,8 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     public bool isDualWielding { get { return thirdWeapon && thirdWeapon.isDualWieldable; } }
+    public bool hasADualWieldableWeapon { get { if (activeWeapon.isDualWieldable || holsteredWeapon.isDualWieldable) return true; return false; } }
+    public bool activeWeaponIsDualWieldable { get { return activeWeapon.isDualWieldable; } }
 
     public bool hasSecWeap = false;
 

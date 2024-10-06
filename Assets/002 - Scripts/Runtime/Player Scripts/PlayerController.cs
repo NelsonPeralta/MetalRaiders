@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviourPun
         OnPlayerFire, OnPlayerFireButtonUp, OnPlayerTestButton, OnPLayerThrewGrenade,
         OnCrouchUp, OnCrouchDown, OnSprintStart, OnSprintStop, OnPlayerDeath,
         OnControllerTypeChangedToController, OnControllerTypeChangedToMouseAndKeyboard,
-        OnPlayerScopeBtnDown, OnPlayerScopeBtnUp;
+        OnPlayerScopeBtnDown, OnDualWieldedWeaponFireBtnUp;
 
     public Player player { get { return GetComponent<Player>(); } }
     public int rid
@@ -163,6 +163,18 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    bool isHoldingShootDualWieldedWeapon
+    {
+        get { return _isHoldingShootDualWieldedWeapon; }
+        set
+        {
+            _isHoldingShootDualWieldedWeapon = value;
+
+            if (value == false)
+                OnDualWieldedWeaponFireBtnUp?.Invoke(this);
+        }
+    }
+
     public bool isCurrentlyShootingForMotionTracker { get { return _isCurrentlyShootingReset > 0; } }
 
 
@@ -223,7 +235,7 @@ public class PlayerController : MonoBehaviourPun
     LayerMask _lastMainCamLayerMask;
 
 
-    [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn, _isHoldingSprintBtn;
+    [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn, _isHoldingSprintBtn, _isHoldingShootDualWieldedWeapon;
     [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime, _isCurrentlyShootingReset_thirdWeapon, _drawingWeaponTime_thirdWeapon;
 
     void Awake()
@@ -576,7 +588,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
                 {
-                    SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero);
+                    SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, false);
                 }
                 else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
                     player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
@@ -611,32 +623,54 @@ public class PlayerController : MonoBehaviourPun
 
     void LeftShooting()
     {
-        if (pInventory.thirdWeapon && PV.IsMine && player.isAlive && _isCurrentlyShootingReset_thirdWeapon <= 0 && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon && _currentlyReloadingTimer_thirdWeapon <= 0)
-        {
+        if (PV.IsMine && player.isDualWielding && !isHoldingShootDualWieldedWeapon)
             if (activeControllerType == ControllerType.Joystick)
             {
-                if (rewiredPlayer.GetButton("Throw Grenade"))
-                {
-                    //player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
-
-                    _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
-
-                    player.playerShooting.Shoot(pInventory.thirdWeapon);
-                }
+                if (rewiredPlayer.GetButton("Throw Grenade")) SendIsHoldingFireWeaponBtn(true, Vector3.zero, true);
             }
             else
             {
-                if (rewiredPlayer.GetButton("Aim"))
-                {
-                    //player.playerInventory.thirdWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
-
-                    _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
-
-                    player.playerShooting.Shoot(pInventory.thirdWeapon);
-                }
+                if (rewiredPlayer.GetButton("Aim")) SendIsHoldingFireWeaponBtn(true, Vector3.zero, true);
             }
+
+
+
+
+
+        if (pInventory.thirdWeapon && player.isAlive && _isCurrentlyShootingReset_thirdWeapon <= 0 && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon && _currentlyReloadingTimer_thirdWeapon <= 0)
+        {
+            if (isHoldingShootDualWieldedWeapon)
+            {
+                _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+
+                player.playerShooting.Shoot(pInventory.thirdWeapon);
+            }
+
+
+
+
+            //if (activeControllerType == ControllerType.Joystick)
+            //{
+            //    if (isHoldingShootDualWieldedWeapon)
+            //    {
+            //        _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+
+            //        player.playerShooting.Shoot(pInventory.thirdWeapon);
+            //    }
+            //}
+            //else
+            //{
+            //    if (isHoldingShootDualWieldedWeapon)
+            //    {
+            //        _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+
+            //        player.playerShooting.Shoot(pInventory.thirdWeapon);
+            //    }
+            //}
         }
     }
+
+
 
 
 
@@ -662,7 +696,7 @@ public class PlayerController : MonoBehaviourPun
     void SendIsNotHoldingFireWeaponBtn()
     {
         if (PV.IsMine)
-            PV.RPC("_StopShoot_RPC", RpcTarget.All);
+            PV.RPC("_StopShoot_RPC", RpcTarget.All, false);
     }
 
     [PunRPC]
@@ -699,51 +733,76 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    void _StopShoot_RPC()
+    void _StopShoot_RPC(bool isDw)
     {
-        if (player.isMine)
+        if (!isDw)
+        {
+            if (player.isMine)
+            {
+                isHoldingShootBtn = false;
+                OnPlayerFireButtonUp?.Invoke(this);
+                Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
+
+            }
+            else
+            {
+                StartCoroutine(StopShoot_Coroutine(false));
+            }
+        }
+        else
+        {
+            StartCoroutine(StopShoot_Coroutine(true));
+        }
+    }
+
+    IEnumerator StopShoot_Coroutine(bool isDw)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (!isDw)
         {
             isHoldingShootBtn = false;
             OnPlayerFireButtonUp?.Invoke(this);
             Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
-
         }
         else
         {
-            StartCoroutine(StopShoot_Coroutine());
+            isHoldingShootDualWieldedWeapon = false;
         }
-    }
-
-    IEnumerator StopShoot_Coroutine()
-    {
-        yield return new WaitForEndOfFrame();
-        isHoldingShootBtn = false;
-        OnPlayerFireButtonUp?.Invoke(this);
-        Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
     }
 
 
 
     [PunRPC]
-    void SendIsHoldingFireWeaponBtn(bool isCaller, Vector3 trackingTargetInstantiationPosition)
+    void SendIsHoldingFireWeaponBtn(bool isCaller, Vector3 trackingTargetInstantiationPosition, bool isDualWieldedWeapon)
     {
+
         if (isCaller)
-            PV.RPC("SendIsHoldingFireWeaponBtn", RpcTarget.All, false, trackingTargetInstantiationPosition);
+            PV.RPC("SendIsHoldingFireWeaponBtn", RpcTarget.All, false, trackingTargetInstantiationPosition, isDualWieldedWeapon);
         else
         {
-            try { Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]); } catch { }
-            player.playerShooting.trackingTarget = null; if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
-
-
-            //if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
+            print($"SendIsHoldingFireWeaponBtn received {isDualWieldedWeapon}");
+            if (!isDualWieldedWeapon)
             {
-                holstered = false;
-                weaponAnimator.SetBool("Holster", false);
-                GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
+
+                try { Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]); } catch { }
+                player.playerShooting.trackingTarget = null; if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
+
+
+                //if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading && !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
+                {
+                    holstered = false;
+                    weaponAnimator.SetBool("Holster", false);
+                    GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Holster Rifle", false);
+                }
+
+
+                isHoldingShootBtn = true;
             }
-
-
-            isHoldingShootBtn = true;
+            else
+            {
+                isHoldingShootDualWieldedWeapon = true;
+            }
         }
     }
 
@@ -847,8 +906,10 @@ public class PlayerController : MonoBehaviourPun
             }
 
 
-        if (rewiredPlayer.GetButtonUp("Aim"))
-            OnPlayerScopeBtnUp?.Invoke(this);
+        if (rewiredPlayer.GetButtonUp("Aim") && activeControllerType != ControllerType.Joystick) //  for dual wielding
+        {
+            PV.RPC("_StopShoot_RPC", RpcTarget.All, true);
+        }
 
 
 
@@ -1066,7 +1127,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Grenade()
     {
-        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !isDualWielding /*&& !isMeleeing*/ /*&& !isSprinting*/)
+        if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) && !player.isDualWielding /*&& !isMeleeing*/ /*&& !isSprinting*/)
         {
             if (pInventory.isDualWielding)
             {
@@ -1089,6 +1150,10 @@ public class PlayerController : MonoBehaviourPun
                 //StartCoroutine(GrenadeSpawnDelay());
                 //StartCoroutine(ThrowGrenade3PS());
             }
+        }
+        else if (rewiredPlayer.GetButtonUp("Throw Grenade") && activeControllerType == ControllerType.Joystick) // for dual wielding
+        {
+            PV.RPC("_StopShoot_RPC", RpcTarget.All, true);
         }
     }
 

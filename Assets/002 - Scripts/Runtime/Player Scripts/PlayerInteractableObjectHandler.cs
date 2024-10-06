@@ -103,6 +103,9 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                                 else
                                     _filteredInteractableObjects.RemoveAt(i);
                             }
+
+
+
                         }
                     }
                 }
@@ -309,7 +312,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
     public void TriggerLongInteract()
     {
-        if (PV.IsMine && closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
+        if (PV.IsMine && closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory && !player.isDualWielding)
         {
             if (player.playerInventory.activeWeapon.isDualWieldable && (closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(player.playerInventory.activeWeapon.codeName)))
                 player.playerInventory.PV.RPC("PickupThirdWeapon", RpcTarget.All, closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition, true);

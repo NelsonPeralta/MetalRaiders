@@ -52,7 +52,7 @@ public class PlayerShooting : MonoBehaviourPun
     // Private variables
     int playerRewiredID;
     [SerializeField] float _fireRecovery = 0, leftFireInterval = 0, _overchargeFloat;
-    [SerializeField] bool _fireButtonDown = false, scopeBtnDown = false;
+    [SerializeField] bool _fireButtonDown = false, dualWieldedWeaponFireButnDown = false;
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
 
 
@@ -80,7 +80,7 @@ public class PlayerShooting : MonoBehaviourPun
         playerController.OnPlayerFireButtonUp += OnPlayerControllerFireUp_Delegate;
 
         playerController.OnPlayerScopeBtnDown += OnPlayerControllerScope_Delegate;
-        playerController.OnPlayerScopeBtnUp += OnPlayerControllerScopeUp_Delegate;
+        playerController.OnDualWieldedWeaponFireBtnUp += OnPlayerControllerScopeUp_Delegate;
     }
 
     void OnPlayerControllerFireUp_Delegate(PlayerController playerController)
@@ -126,7 +126,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     void OnPlayerControllerScopeUp_Delegate(PlayerController playerController)
     {
-        scopeBtnDown = false;
+        dualWieldedWeaponFireButnDown = false;
     }
     void OnPlayerControllerScope_Delegate(PlayerController playerController)
     {
@@ -183,7 +183,7 @@ public class PlayerShooting : MonoBehaviourPun
             if (!isLeftWeapon)
                 fireButtonDown = true;
             else
-                scopeBtnDown = true;
+                dualWieldedWeaponFireButnDown = true;
 
             print($"Shoot start 2 {isLeftWeapon} {sw.overcharge} {sw}");
 
@@ -237,10 +237,10 @@ public class PlayerShooting : MonoBehaviourPun
 
     bool CanShootSingleOrBurst(WeaponProperties activeWeapon)
     {
-        print($"CanShootSingleOrBurst: {activeWeapon.firingMode} {fireButtonDown} {scopeBtnDown} {pInventory.isDualWielding}");
+        print($"CanShootSingleOrBurst: {activeWeapon.firingMode} {fireButtonDown} {dualWieldedWeaponFireButnDown} {pInventory.isDualWielding}");
 
         return ((activeWeapon.firingMode == WeaponProperties.FiringMode.Single || activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
-            && ((!fireButtonDown && !pInventory.isDualWielding) || (!scopeBtnDown && pInventory.isDualWielding)));
+            && ((!fireButtonDown && !pInventory.isDualWielding) || (!dualWieldedWeaponFireButnDown && pInventory.isDualWielding)));
     }
 
     void ShootBurst(WeaponProperties activeWeapon)
@@ -567,7 +567,7 @@ public class PlayerShooting : MonoBehaviourPun
         {
             if (!playerController.player.playerInventory.isDualWielding)
             {
-                tPersonController.GetComponent<Animator>().SetTrigger("Fire");
+                //tPersonController.GetComponent<Animator>().SetTrigger("Fire");
                 weaponToShoot.GetComponent<Animator>().Play("Fire", 0, 0f);
             }
             else

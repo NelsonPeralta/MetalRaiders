@@ -535,7 +535,7 @@ public class PlayerUI : MonoBehaviour
             {
                 if (_player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
                 {
-                    if (GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable && (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
+                    if (!_player.isDualWielding && GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable && (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
                         ShowInformer($"Hold [Mark] to Dual Wield", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
                     else
                         HideInformer();
