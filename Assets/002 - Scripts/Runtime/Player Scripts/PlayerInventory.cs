@@ -954,6 +954,9 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
+        print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine}");
+
+
         foreach (GameObject w in allWeaponsInInventory)
         {
             if (player.isMine)
