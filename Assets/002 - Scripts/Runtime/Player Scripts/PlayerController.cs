@@ -1282,7 +1282,7 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-            SoundManager.instance.PlayAudioClip(transform.position, player.playerInventory.thirdWeapon.ReloadShort);
+            //SoundManager.instance.PlayAudioClip(transform.position, player.playerInventory.thirdWeapon.ReloadShort);
 
 
             //if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)

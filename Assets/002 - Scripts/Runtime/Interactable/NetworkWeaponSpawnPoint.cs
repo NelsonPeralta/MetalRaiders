@@ -208,6 +208,16 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 codeName = "cl";
             }
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Duals)
+        {
+            if (codeName == "sniper" || codeName == "rpg" || codeName == "shotgun" || codeName == "gl" || codeName == "cl" || codeName == "pistol" || codeName == "br" || codeName == "pp")
+                codeName = "rvv";
+            else
+                codeName = "smg";
+        }
+
+
+
         if ((GameManager.instance.gameType.ToString().Contains("Fiesta")) || GameManager.instance.gameType == GameManager.GameType.GunGame)
         {
             gameObject.SetActive(false);

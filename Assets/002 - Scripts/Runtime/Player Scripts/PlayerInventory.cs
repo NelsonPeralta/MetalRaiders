@@ -150,6 +150,10 @@ public class PlayerInventory : MonoBehaviourPun
                 activeWeapon.GetComponent<Animator>().SetBool("idle", false);
                 activeWeapon.GetComponent<Animator>().SetBool("dw idle", true);
                 activeWeapon.GetComponent<Animator>().Play("dw idle force");
+
+
+                value.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
+                value.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
             }
             else
             {
@@ -157,7 +161,9 @@ public class PlayerInventory : MonoBehaviourPun
                 if (_thirdWeapon != null)
                 {
                     print($"hiding third weapon");
+                    _thirdWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                     _thirdWeapon.gameObject.SetActive(false);
+
                     activeWeapon.GetComponent<Animator>().SetBool("idle", true);
                     activeWeapon.GetComponent<Animator>().SetBool("dw idle", false);
                     activeWeapon.GetComponent<Animator>().SetBool("dw walk", false);
@@ -640,6 +646,18 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon = "ar";
             StartingWeapon2 = "pistol";
         }
+
+
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Duals)
+        {
+            StartingWeapon = "smg";
+            StartingWeapon2 = "rvv";
+        }
+
+
+
+
+
 
         Debug.Log(GetWeaponProperties(StartingWeapon));
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
