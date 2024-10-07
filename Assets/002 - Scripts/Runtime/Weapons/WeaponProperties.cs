@@ -479,36 +479,6 @@ public class WeaponProperties : MonoBehaviour
         return numberOfPellets;
     }
 
-    public void SetCorrectLayer()
-    {
-        if (pController.PV.IsMine)
-        {
-            if (pController.rid == 0)
-                GameManager.SetLayerRecursively(gameObject, 24);
-            else if (pController.rid == 1)
-                GameManager.SetLayerRecursively(gameObject, 26);
-            else if (pController.rid == 2)
-                GameManager.SetLayerRecursively(gameObject, 28);
-            else if (pController.rid == 3)
-                GameManager.SetLayerRecursively(gameObject, 30);
-
-
-            if (leftWeapon)
-            {
-                if (pController.rid == 0)
-                    GameManager.SetLayerRecursively(leftWeapon.gameObject, 24);
-                else if (pController.rid == 1)
-                    GameManager.SetLayerRecursively(leftWeapon.gameObject, 26);
-                else if (pController.rid == 2)
-                    GameManager.SetLayerRecursively(leftWeapon.gameObject, 28);
-                else if (pController.rid == 3)
-                    GameManager.SetLayerRecursively(leftWeapon.gameObject, 30);
-            }
-        }
-        else
-            GameManager.SetLayerRecursively(gameObject, 3);
-    }
-
 
     public void UpdateLoadedAmmo(int a)
     {
