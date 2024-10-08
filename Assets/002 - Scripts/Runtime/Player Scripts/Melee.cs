@@ -38,6 +38,11 @@ public class Melee : MonoBehaviour
 
 
 
+    //Vector3 _normalScale = new Vector3(1, 1.5f, 1.5f);
+    //Vector3 _swordScale = new Vector3(1, 1.5f, 2.5f);
+
+
+
 
     private void Start()
     {
@@ -46,6 +51,23 @@ public class Melee : MonoBehaviour
 
         meleeIndicator.SetActive(false);
     }
+
+
+    private void Update()
+    {
+        //if(player && player.playerInventory.activeWeapon)
+        //{
+        //    if(player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+        //    {
+        //        transform.localScale = _swordScale;
+        //    }
+        //    else
+        //    {
+        //        transform.localScale = _normalScale;
+        //    }
+        //}
+    }
+
 
     private void OnTriggerStay(Collider other)
     {
@@ -150,8 +172,8 @@ public class Melee : MonoBehaviour
                 if (player.isMine)
                 {
 
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= 
-                        (Player.MELEE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 10 : 0))
+                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
+                        (Player.MELEE_DAMAGE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 1 : 0))
                          && hp.meleeMagnetism)
                     {
                         print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
@@ -165,8 +187,13 @@ public class Melee : MonoBehaviour
                         player.movement.blockPlayerMoveInput = 0.3f;
                         player.movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
 
-                        if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) > 1.5f)
-                            player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);
+                        if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) > 1.5f) // arbitrary and tested distance as to which the player should be pushed harder to ensure he closes the distance for the damage to register
+                        {
+                            if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+                                player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);
+                            else
+                                player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH * 2, ForceMode.Impulse);
+                        }
                         else
                             player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * (Player.MELEE_PUSH / 2), ForceMode.Impulse);
                     }
@@ -218,8 +245,7 @@ public class Melee : MonoBehaviour
                     RaycastHit hit;
 
                     if (Physics.Raycast(player.mainCamera.transform.position,
-            player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DISTANCE + 
-            (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 10 : 0), _obstructionMask))
+            player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DAMAGE_DISTANCE, _obstructionMask))
                     {
                         //print($"Melee obstruction {hit.transform.name} " +
                         //    $" HB Dis{Vector3.Distance(hp.transform.position, movement.transform.position)}" +
@@ -229,8 +255,7 @@ public class Melee : MonoBehaviour
                             _trulyObstructed = true;
                     }
 
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= 
-                        (Player.MELEE_DISTANCE + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 10 : 0)) && !_trulyObstructed)
+                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= (Player.MELEE_DAMAGE_DISTANCE) && !_trulyObstructed)
                     {
 
                         print($"Melee DAMAGE. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
@@ -271,7 +296,7 @@ public class Melee : MonoBehaviour
             RaycastHit hit;
             // Does the ray intersect any objects excluding the player layer. Ex: weapons, wall, trash cans
             if (Physics.Raycast(player.mainCamera.transform.position,
-                player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DISTANCE / 2, _meleeMask))
+                player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DAMAGE_DISTANCE / 2, _meleeMask))
             {
                 print($"Melee raycast hit: {hit.transform.name}");
 

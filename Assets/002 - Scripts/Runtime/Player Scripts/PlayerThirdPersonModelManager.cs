@@ -73,6 +73,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         else
         {
             thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
+            thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", false);
         }
     }
 
