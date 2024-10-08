@@ -1050,14 +1050,31 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     [PunRPC]
 
-    public void TriggerPlayerOverheatWeapon(int playerPhotonId, int weaponInd, bool caller = true)
+    public void TriggerPlayerOverheatWeapon(int playerPhotonId, int weaponKillFeedOutputInt, bool leftHand, bool caller = true)
     {
         if (caller && GameManager.GetPlayerWithPhotonView(playerPhotonId).isMine)
-            instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.AllViaServer, playerPhotonId, weaponInd, false);
+            instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.AllViaServer, playerPhotonId, weaponKillFeedOutputInt, leftHand, false);
         else if (!caller)
         {
+            print($"TriggerPlayerOverheatWeapon {leftHand}");
             GameManager.GetPlayerWithPhotonView(playerPhotonId).playerController.Descope();
-            GameManager.GetPlayerWithPhotonView(playerPhotonId).playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
+
+            foreach (GameObject weaponGo in GameManager.GetPlayerWithPhotonView(playerPhotonId).playerInventory.allWeaponsInInventory)
+            {
+                if (weaponGo.GetComponent<WeaponProperties>().killFeedOutput == (WeaponProperties.KillFeedOutput)weaponKillFeedOutputInt)
+                {
+                    if (!leftHand)
+                    {
+                        weaponGo.GetComponent<WeaponProperties>().TriggerOverheat();
+
+                    }
+                    else
+                    {
+                        weaponGo.GetComponent<WeaponProperties>().leftWeapon.TriggerOverheat();
+                    }
+                }
+            }
+            //GameManager.GetPlayerWithPhotonView(playerPhotonId).playerInventory.allWeaponsInInventory[weaponInd].GetComponent<WeaponProperties>().TriggerOverheat();
         }
     }
 

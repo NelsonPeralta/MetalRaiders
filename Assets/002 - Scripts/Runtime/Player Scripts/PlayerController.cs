@@ -163,10 +163,10 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
-    bool isHoldingShootDualWieldedWeapon
+    public bool isHoldingShootDualWieldedWeapon
     {
         get { return _isHoldingShootDualWieldedWeapon; }
-        set
+        private set
         {
             _isHoldingShootDualWieldedWeapon = value;
 
@@ -330,8 +330,11 @@ public class PlayerController : MonoBehaviourPun
             }
         }
         if (player.isMine)
+        {
             if (rewiredPlayer.GetButtonUp("Shoot"))
                 SendIsNotHoldingFireWeaponBtn();
+
+        }
 
 
 
@@ -613,12 +616,12 @@ public class PlayerController : MonoBehaviourPun
                             {
                                 if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
                                 {
-                                    player.playerShooting.Shoot();
+                                    player.playerShooting.Shoot(player.playerInventory.activeWeapon);
                                 }
                             }
                             else
                             {
-                                player.playerShooting.Shoot();
+                                player.playerShooting.Shoot(player.playerInventory.activeWeapon);
 
                             }
                         }
@@ -747,6 +750,7 @@ public class PlayerController : MonoBehaviourPun
                 isHoldingShootBtn = false;
                 OnPlayerFireButtonUp?.Invoke(this);
                 Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
+
 
             }
             else

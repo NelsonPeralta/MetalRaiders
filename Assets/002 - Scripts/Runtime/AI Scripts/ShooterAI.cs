@@ -136,7 +136,7 @@ public class ShooterAI : AiAbstractClass
             frames++;
 
             if (frames >= 30 && frames <= 60)
-                GetComponent<PlayerShooting>().Shoot();
+                //GetComponent<PlayerShooting>().Shoot();
             if (frames > 90)
                 frames = 0;
 

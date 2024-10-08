@@ -33,6 +33,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     public float fireRecovery { get { return _fireRecovery; } }
     public bool overchargeReady { get { return _overchargeFloat >= WeaponProperties.OVERCHARGE_TIME_LOW; } }
+    public bool overchargeReadyLeftWeapon { get { return _overchargeFloat_thirdWeapon >= WeaponProperties.OVERCHARGE_TIME_LOW; } }
     public bool fireButtonDown
     {
         get { return _fireButtonDown; }
@@ -51,7 +52,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     // Private variables
     int playerRewiredID;
-    [SerializeField] float _fireRecovery = 0, leftFireInterval = 0, _overchargeFloat;
+    [SerializeField] float _fireRecovery = 0, _leftFireRecovery = 0, _overchargeFloat, _overchargeFloat_thirdWeapon;
     [SerializeField] bool _fireButtonDown = false, dualWieldedWeaponFireButnDown = false;
     [SerializeField] LayerMask _fakeBulletTrailCollisionLayerMask;
 
@@ -80,8 +81,53 @@ public class PlayerShooting : MonoBehaviourPun
         playerController.OnPlayerFireButtonUp += OnPlayerControllerFireUp_Delegate;
 
         playerController.OnPlayerScopeBtnDown += OnPlayerControllerScope_Delegate;
-        playerController.OnDualWieldedWeaponFireBtnUp += OnPlayerControllerScopeUp_Delegate;
+        playerController.OnDualWieldedWeaponFireBtnUp += OnPlayerFireDualWieldedWeaponButtonUp_Delegate;
     }
+
+    public void Update()
+    {
+        if (playerController)
+        {
+            FireCooldown();
+
+
+
+            if (playerController.isHoldingShootBtn)
+            {
+                if (playerController.pInventory && playerController.pInventory.activeWeapon)
+                    if (pInventory.activeWeapon.currentOverheat <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
+                        _overchargeFloat += Time.deltaTime;
+            }
+            else
+            {
+                _overchargeFloat = 0;
+            }
+
+
+            if (playerController.player.isDualWielding)
+            {
+                if (playerController.isHoldingShootDualWieldedWeapon)
+                {
+                    if (pInventory.thirdWeapon.currentOverheat <= 0 && pInventory.thirdWeapon.loadedAmmo > 0)
+                        _overchargeFloat_thirdWeapon += Time.deltaTime;
+                }
+                else
+                {
+                    _overchargeFloat_thirdWeapon = 0;
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
     void OnPlayerControllerFireUp_Delegate(PlayerController playerController)
     {
@@ -124,10 +170,34 @@ public class PlayerShooting : MonoBehaviourPun
 
 
 
-    void OnPlayerControllerScopeUp_Delegate(PlayerController playerController)
+    void OnPlayerFireDualWieldedWeaponButtonUp_Delegate(PlayerController playerController)
     {
         dualWieldedWeaponFireButnDown = false;
+
+
+        if (!playerController.player.isRespawning && !playerController.player.isDead)
+            if (playerController.player.playerInventory.thirdWeapon && playerController.player.playerInventory.thirdWeapon.overcharge)
+            {
+                print($"OnPlayerFireDualWieldedWeaponButtonUp_Delegate 2 {pInventory.thirdWeapon.overheatCooldown} {pInventory.thirdWeapon.loadedAmmo}");
+
+                if (pInventory.thirdWeapon.overheatCooldown <= 0 && pInventory.thirdWeapon.loadedAmmo > 0)
+                {
+                    print($"OnPlayerFireDualWieldedWeaponButtonUp_Delegate 3");
+
+                    if (_overchargeFloat_thirdWeapon > (WeaponProperties.OVERCHARGE_TIME_FULL))
+                    {
+                        print("OnPlayerFireDualWieldedWeaponButtonUp_Delegate SHOOT OVERCHARGED SHOT");
+                        ShootOverchargeWeapon(playerController.player.playerInventory.thirdWeapon, true);
+                    }
+                    else
+                    {
+                        print("OnPlayerFireDualWieldedWeaponButtonUp_Delegate Shoot normal shot");
+                        ShootOverchargeWeapon(playerController.player.playerInventory.thirdWeapon);
+                    }
+                }
+            }
     }
+
     void OnPlayerControllerScope_Delegate(PlayerController playerController)
     {
         if (playerController.isDrawingWeapon)
@@ -136,65 +206,53 @@ public class PlayerShooting : MonoBehaviourPun
         //Shoot(pInventory.activeWeapon.leftWeapon);
     }
 
-    public void Shoot(WeaponProperties wp = null)
+    public void Shoot(WeaponProperties wp)
     {
         print("Calling Shoot");
         if (playerController.isDrawingWeapon) return;
-        WeaponProperties sw = pInventory.activeWeapon; if (wp) sw = wp;
-
-        
-
-
-        print($"Shoot start 1 {_fireRecovery} {leftFireInterval} {wp}");
+        print($"Shoot start 1 {_fireRecovery} {_leftFireRecovery} {wp == playerController.player.playerInventory.activeWeapon}");
 
 
 
 
 
-        if ((_fireRecovery > 0 && !wp))
+        if ((_fireRecovery > 0 && wp == playerController.player.playerInventory.activeWeapon)) // active weapon
             return;
-        if ((leftFireInterval > 0 && wp))
+        if ((_leftFireRecovery > 0 && wp != playerController.player.playerInventory.activeWeapon)) // dual wielded weapon
             return;
 
 
-        bool isLeftWeapon = false;
 
-        if (wp)
-        {
-            sw = wp;
-            isLeftWeapon = true;
-        }
-
-        if (!isLeftWeapon)
+        if (wp == playerController.player.playerInventory.activeWeapon)
         {
 
-            if (sw.firingMode == WeaponProperties.FiringMode.Burst)
+            if (wp.firingMode == WeaponProperties.FiringMode.Burst)
                 _fireRecovery = defaultBurstInterval * 5.5f;
             else
-                _fireRecovery = 1 / (sw.fireRate / 60f);
+                _fireRecovery = 1 / (wp.fireRate / 60f);
         }
         else
         {
-            leftFireInterval = 1 / (sw.fireRate / 60f);
+            _leftFireRecovery = 1 / (wp.fireRate / 60f);
         }
 
-        print($"Shoot start 2 {isLeftWeapon} {_fireRecovery} {leftFireInterval} {sw.overcharge} {sw}");
+        print($"Shoot start 2 {wp == playerController.player.playerInventory.activeWeapon} {_fireRecovery} {_leftFireRecovery} {wp.overcharge} {wp}");
 
-        if (CanShootAuto(sw) || CanShootSingleOrBurst(sw))
+        if (CanShootAuto(wp) || CanShootSingleOrBurst(wp))
         {
-            if (!isLeftWeapon)
+            if (wp == playerController.player.playerInventory.activeWeapon)
                 fireButtonDown = true;
             else
                 dualWieldedWeaponFireButnDown = true;
 
-            print($"Shoot start 2 {isLeftWeapon} {sw.overcharge} {sw}");
+            print($"Shoot start 2 {wp == playerController.player.playerInventory.activeWeapon} {wp.overcharge} {wp}");
 
 
-            if (sw.firingMode == WeaponProperties.FiringMode.Burst)
-                ShootBurst(sw);
-            else if (!sw.overcharge)
-                Shoot_Caller(isLeftWeapon);
-            else if (sw.overcharge)
+            if (wp.firingMode == WeaponProperties.FiringMode.Burst)
+                ShootBurst(wp);
+            else if (!wp.overcharge)
+                Shoot_Caller(wp == playerController.player.playerInventory.thirdWeapon);
+            else if (wp.overcharge)
             {
                 //print("shooting overcharg");
                 //Shoot_Caller(isLeftWeapon);
@@ -210,23 +268,44 @@ public class PlayerShooting : MonoBehaviourPun
     {
         if (playerController.isDrawingWeapon) return;
 
-
-        if ((_fireRecovery > 0 && !wp))
-            return;
-
-
-        _fireRecovery = 1 / (wp.fireRate / 60f);
-
-        if (CanShootAuto(wp) || CanShootSingleOrBurst(wp))
+        if (wp != playerController.player.playerInventory.thirdWeapon) // active weapon
         {
-            //fireButtonDown = true; // NO! Does not reset after bolt is shot. If player switches weapons, causes blank shot
+            if ((_fireRecovery > 0 && !wp)) return;
 
-            if (wp.overcharge)
+
+            _fireRecovery = 1 / (wp.fireRate / 60f);
+
+            if (CanShootAuto(wp) || CanShootSingleOrBurst(wp))
             {
-                print("shooting overcharg");
-                Shoot_Caller(false, overcharge);
+                //fireButtonDown = true; // NO! Does not reset after bolt is shot. If player switches weapons, causes blank shot
+
+                if (wp.overcharge)
+                {
+                    print("shooting overcharg");
+                    Shoot_Caller(false, overcharge);
+                }
             }
         }
+        else // dual wielded weapon
+        {
+            if ((_leftFireRecovery > 0 && !wp)) return;
+
+
+            _leftFireRecovery = 1 / (wp.fireRate / 60f);
+
+            if (CanShootAuto(wp) || CanShootSingleOrBurst(wp))
+            {
+                //fireButtonDown = true; // NO! Does not reset after bolt is shot. If player switches weapons, causes blank shot
+
+                if (wp.overcharge)
+                {
+                    print("shooting overcharg");
+                    Shoot_Caller(true, overcharge);
+                }
+            }
+        }
+
+
     }
 
 
@@ -269,7 +348,7 @@ public class PlayerShooting : MonoBehaviourPun
     {
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
-        Debug.Log($"Shoot_Caller: {playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo}");
+        Debug.Log($"Shoot_Caller: {playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} {isLeftWeapon}");
 
         if (isLeftWeapon) activeWeapon = pInventory.thirdWeapon;
 
@@ -648,26 +727,7 @@ public class PlayerShooting : MonoBehaviourPun
         //rocket.gameObject.GetComponent<ExplosiveProjectile>().player = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>();
     }
 
-    public void Update()
-    {
-        if (playerController)
-        {
-            FireCooldown();
 
-
-
-            if (playerController.isHoldingShootBtn)
-            {
-                if (playerController.pInventory && playerController.pInventory.activeWeapon)
-                    if (pInventory.activeWeapon.currentOverheat <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
-                        _overchargeFloat += Time.deltaTime;
-            }
-            else
-            {
-                _overchargeFloat = 0;
-            }
-        }
-    }
     IEnumerator Player3PSFiringAnimation()
     {
         //tPersonController.GetComponent<Animator>().Play("Fire");
@@ -678,8 +738,8 @@ public class PlayerShooting : MonoBehaviourPun
         if (_fireRecovery > 0)
             _fireRecovery -= Time.deltaTime;
 
-        if (leftFireInterval > 0)
-            leftFireInterval -= Time.deltaTime;
+        if (_leftFireRecovery > 0)
+            _leftFireRecovery -= Time.deltaTime;
     }
 
 

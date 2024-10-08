@@ -174,7 +174,7 @@ public class WeaponProperties : MonoBehaviour
                 || ammoReloadType == AmmoReloadType.Shell))
             {
                 print($"player {player.name} {player.isMine} about to send UPDATEAMMO RPC");
-                if (player.isMine) NetworkGameManager.instance.UpdateAmmo(player.photonId, index, _currentAmmo, 
+                if (player.isMine) NetworkGameManager.instance.UpdateAmmo(player.photonId, index, _currentAmmo,
                     isThirdWeapon: player.playerInventory.thirdWeapon && this == player.playerInventory.thirdWeapon, sender: true);
             }
         }
@@ -251,7 +251,7 @@ public class WeaponProperties : MonoBehaviour
             _currentOverheat = value;
 
             if (_currentOverheat >= 100 && overheatCooldown <= 0 && player.isMine)
-                StartCoroutine(TriggerOverheat_Coroutine()); // Allow time for networking purposes
+                StartCoroutine(TriggerOverheat_Coroutine(this)); // Allow time for networking purposes
         }
     }
 
@@ -442,13 +442,13 @@ public class WeaponProperties : MonoBehaviour
         tpsMuzzleFlash.SetActive(true);
     }
 
-    IEnumerator TriggerOverheat_Coroutine()
+    IEnumerator TriggerOverheat_Coroutine(WeaponProperties wp)
     {
-        print("TriggerOverheat_Coroutine");
+        if (player.playerInventory.thirdWeapon) print($"TriggerOverheat_Coroutine {wp == player.playerInventory.thirdWeapon} {wp.name} VS {player.playerInventory.thirdWeapon.name}");
         yield return new WaitForSeconds(0.2f);
 
-        NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId,
-                    System.Array.IndexOf(player.playerInventory.allWeaponsInInventory, gameObject));
+        NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId, (int)wp.killFeedOutput,
+            leftHand: player.playerInventory.thirdWeapon && wp == player.playerInventory.thirdWeapon);
     }
 
     public Quaternion GetRandomSprayRotation()

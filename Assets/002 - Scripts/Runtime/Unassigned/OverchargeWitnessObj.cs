@@ -6,6 +6,7 @@ public class OverchargeWitnessObj : MonoBehaviour
 {
     public PlayerShooting playerShooting;
     public GameObject witness;
+    public bool leftWeapon;
 
 
     // Start is called before the first frame update
@@ -19,7 +20,8 @@ public class OverchargeWitnessObj : MonoBehaviour
     {
         if (playerShooting && witness)
         {
-            witness.SetActive(playerShooting.overchargeReady);
+            if (!leftWeapon) witness.SetActive(playerShooting.overchargeReady);
+            else if (leftWeapon) witness.SetActive(playerShooting.overchargeReadyLeftWeapon);
         }
     }
 }
