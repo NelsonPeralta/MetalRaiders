@@ -60,10 +60,20 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
     {
+        print($"Chaging TPS model stance");
+
         thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Rifle", false);
         thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
 
-        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
+        if (playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+        {
+            thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", true);
+            thirdPersonScript.GetComponent<Animator>().Play("sword draw");
+        }
+        else
+        {
+            thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
+        }
     }
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)

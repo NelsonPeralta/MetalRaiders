@@ -22,7 +22,7 @@ public class OddballPointGiver : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.isMine)
+        if (player.isMine && GameManager.instance.gameType == GameManager.GameType.Oddball && !CurrentRoomManager.instance.gameOver)
             if (_del > 0)
             {
                 _del -= Time.deltaTime;

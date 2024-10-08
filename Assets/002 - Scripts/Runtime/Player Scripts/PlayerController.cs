@@ -138,26 +138,26 @@ public class PlayerController : MonoBehaviourPun
         set
         {
             _preIsHoldingFireWeaponBtn = _isHoldingShootBtn;
-            _isHoldingShootBtn = value; print($"{player.name} isHoldingShootBtn {value}");
+            _isHoldingShootBtn = value; print($"{player.name} isHoldingShootBtn. {_preIsHoldingFireWeaponBtn} -> {value}");
 
 
             if (player.isAlive)
                 if (value && !_preIsHoldingFireWeaponBtn)
                 {
+
+                    DisableSprint_RPC();
+                    print($"{player.name} isHoldingShootBtn. {pInventory.activeWeapon.killFeedOutput} {_swordRecovery}");
+
+                    if ((pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Oddball || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword) && _swordRecovery <= 0)
                     {
-                        DisableSprint_RPC();
 
-
-
-
-
-                        if (pInventory.activeWeapon.codeName.Equals("oddball"))
+                        if (player.isMine)
                         {
-
-                            if (player.isMine) Melee(true);
-                            print("Do an Odball Melee and STOP");
-                            return;
+                            _swordRecovery = 1f / (pInventory.activeWeapon.fireRate / 60f);
+                            Melee(true);
                         }
+                        print("Do an Odball Melee and STOP");
+                        return;
                     }
                 }
         }
@@ -236,7 +236,9 @@ public class PlayerController : MonoBehaviourPun
 
 
     [SerializeField] bool _isHoldingShootBtn, _preIsHoldingFireWeaponBtn, _isHoldingSprintBtn, _isHoldingShootDualWieldedWeapon;
-    [SerializeField] float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset, _drawingWeaponTime, _isCurrentlyShootingReset_thirdWeapon, _drawingWeaponTime_thirdWeapon;
+    [SerializeField]
+    float _currentlyReloadingTimer, _completeReloadTimer, _currentlyThrowingGrenadeTimer, _isCurrentlyShootingReset,
+        _drawingWeaponTime, _isCurrentlyShootingReset_thirdWeapon, _drawingWeaponTime_thirdWeapon, _swordRecovery;
 
     void Awake()
     {
@@ -265,6 +267,7 @@ public class PlayerController : MonoBehaviourPun
         if (_meleeCooldown > 0) _meleeCooldown -= Time.deltaTime;
         if (_currentlyReloadingTimer > 0) _currentlyReloadingTimer -= Time.deltaTime; if (_currentlyReloadingTimer_thirdWeapon > 0) _currentlyReloadingTimer_thirdWeapon -= Time.deltaTime;
         if (_currentlyThrowingGrenadeTimer > 0) _currentlyThrowingGrenadeTimer -= Time.deltaTime;
+        if (_swordRecovery > 0) _swordRecovery -= Time.deltaTime;
 
         //if (GameManager.instance.devMode)
         //{
@@ -598,26 +601,28 @@ public class PlayerController : MonoBehaviourPun
 
 
             //Process Firing
-            if (!isReloading && !isThrowingGrenade && !isMeleeing)
-            {
-                if (player.playerShooting && player.playerInventory)
-                    if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
-                    {
-
-                        if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
-                            player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+            if (pInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Oddball && pInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+                if (!isReloading && !isThrowingGrenade && !isMeleeing)
+                {
+                    if (player.playerShooting && player.playerInventory)
+                        if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
                         {
-                            if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+
+                            if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
+                                player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                            {
+                                if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+                                {
+                                    player.playerShooting.Shoot();
+                                }
+                            }
+                            else
                             {
                                 player.playerShooting.Shoot();
+
                             }
                         }
-                        else
-                        {
-                            player.playerShooting.Shoot();
-                        }
-                    }
-            }
+                }
         }
     }
 
@@ -1036,6 +1041,11 @@ public class PlayerController : MonoBehaviourPun
         {
             print("Melee_RPC");
             if (!succ) melee.PlayMissClip();
+            else
+            {
+                if (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+                    player.playerInventory.activeWeapon.loadedAmmo--;
+            }
             //if (succ) melee.PlaySuccClip(); else melee.PlayMissClip();
         }
         _meleeSucc = false;
@@ -1705,7 +1715,10 @@ public class PlayerController : MonoBehaviourPun
 
     IEnumerator Melee3PS()
     {
-        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("Melee");
+        if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("Melee");
+        else
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("sword attack");
         //StartCoroutine(ShowMeleeKnife());
         yield return new WaitForEndOfFrame();
     }

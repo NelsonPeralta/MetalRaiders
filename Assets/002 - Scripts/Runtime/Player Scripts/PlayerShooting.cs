@@ -142,6 +142,8 @@ public class PlayerShooting : MonoBehaviourPun
         if (playerController.isDrawingWeapon) return;
         WeaponProperties sw = pInventory.activeWeapon; if (wp) sw = wp;
 
+        
+
 
         print($"Shoot start 1 {_fireRecovery} {leftFireInterval} {wp}");
 

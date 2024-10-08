@@ -150,7 +150,8 @@ public class Melee : MonoBehaviour
                 if (player.isMine)
                 {
 
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= (Player.MELEE_DISTANCE + 1)
+                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= 
+                        (Player.MELEE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 10 : 0))
                          && hp.meleeMagnetism)
                     {
                         print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
@@ -217,7 +218,8 @@ public class Melee : MonoBehaviour
                     RaycastHit hit;
 
                     if (Physics.Raycast(player.mainCamera.transform.position,
-            player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DISTANCE, _obstructionMask))
+            player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DISTANCE + 
+            (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 10 : 0), _obstructionMask))
                     {
                         //print($"Melee obstruction {hit.transform.name} " +
                         //    $" HB Dis{Vector3.Distance(hp.transform.position, movement.transform.position)}" +
@@ -227,7 +229,8 @@ public class Melee : MonoBehaviour
                             _trulyObstructed = true;
                     }
 
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= Player.MELEE_DISTANCE && !_trulyObstructed)
+                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= 
+                        (Player.MELEE_DISTANCE + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 10 : 0)) && !_trulyObstructed)
                     {
 
                         print($"Melee DAMAGE. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
@@ -266,7 +269,7 @@ public class Melee : MonoBehaviour
         else
         {
             RaycastHit hit;
-            // Does the ray intersect any objects excluding the player layer
+            // Does the ray intersect any objects excluding the player layer. Ex: weapons, wall, trash cans
             if (Physics.Raycast(player.mainCamera.transform.position,
                 player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DISTANCE / 2, _meleeMask))
             {

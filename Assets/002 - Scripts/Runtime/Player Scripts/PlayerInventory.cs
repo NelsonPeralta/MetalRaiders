@@ -150,6 +150,8 @@ public class PlayerInventory : MonoBehaviourPun
                 activeWeapon.GetComponent<Animator>().SetBool("idle", false);
                 activeWeapon.GetComponent<Animator>().SetBool("dw idle", true);
                 activeWeapon.GetComponent<Animator>().Play("dw idle force");
+                weaponDrawAudioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
+                weaponDrawAudioSource.Play();
 
 
                 value.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
