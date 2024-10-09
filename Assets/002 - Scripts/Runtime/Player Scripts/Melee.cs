@@ -173,7 +173,7 @@ public class Melee : MonoBehaviour
                 {
 
                     if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
-                        (Player.MELEE_DAMAGE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 4 : 0))
+                        (Player.MELEE_DAMAGE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2.5f : 0))
                          && hp.meleeMagnetism)
                     {
                         print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
@@ -247,15 +247,17 @@ public class Melee : MonoBehaviour
                     if (Physics.Raycast(player.mainCamera.transform.position,
             player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DAMAGE_DISTANCE, _obstructionMask))
                     {
-                        //print($"Melee obstruction {hit.transform.name} " +
-                        //    $" HB Dis{Vector3.Distance(hp.transform.position, movement.transform.position)}" +
-                        //    $" Obs Dis: {hit.distance}");
+                        print($"Melee obstruction {hit.transform.name} " +
+                            $" HB Dis{Vector3.Distance(hp.transform.position, movement.transform.position)}" +
+                            $" Obs Dis: {hit.distance}");
 
                         if (hit.distance < Vector3.Distance(hp.transform.position, movement.transform.position))
                             _trulyObstructed = true;
                     }
 
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <= (Player.MELEE_DAMAGE_DISTANCE) && !_trulyObstructed)
+                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
+                        (Player.MELEE_DAMAGE_DISTANCE + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2 : 0))
+                        && !_trulyObstructed)
                     {
 
                         print($"Melee DAMAGE. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
