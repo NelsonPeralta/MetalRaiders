@@ -173,7 +173,7 @@ public class Melee : MonoBehaviour
                 {
 
                     if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
-                        (Player.MELEE_DAMAGE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2 : 0))
+                        (Player.MELEE_DAMAGE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 4 : 0))
                          && hp.meleeMagnetism)
                     {
                         print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
@@ -192,7 +192,7 @@ public class Melee : MonoBehaviour
                             if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
                                 player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);
                             else
-                                player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH * 3, ForceMode.Impulse);
+                                player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH * 2.2f, ForceMode.Impulse);
                         }
                         else
                             player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * (Player.MELEE_PUSH / 2), ForceMode.Impulse);
@@ -207,7 +207,7 @@ public class Melee : MonoBehaviour
 
 
     bool _trulyObstructed;
-    public bool MeleeDamage()
+    public bool MeleeDamage(WeaponProperties weaponProperties)
     {
         _trulyObstructed = false;
 
@@ -277,11 +277,25 @@ public class Melee : MonoBehaviour
                             }
                             catch { }
 
-                            try
+
+
+                            if (weaponProperties.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
                             {
-                                hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
+
+                                try
+                                {
+                                    hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
+                                }
+                                catch { }
                             }
-                            catch { }
+                            else
+                            {
+                                try
+                                {
+                                    hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Sword);
+                                }
+                                catch { }
+                            }
                         }
 
                         return true;

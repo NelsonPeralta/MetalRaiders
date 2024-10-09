@@ -656,6 +656,12 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "rvv";
         }
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Swords)
+        {
+            StartingWeapon = "sword";
+            StartingWeapon2 = "pistol";
+        }
+
 
 
 

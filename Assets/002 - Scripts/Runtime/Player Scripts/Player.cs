@@ -1661,7 +1661,12 @@ public class Player : Biped
         print($"COULD NOT ASSIGN DEATH NATURE {dn} {deathNature = (DeathNature)dn}");
 
         if (deathNature == DeathNature.Melee)
-            SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulPunch);
+        {
+            if (_killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+                SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulSwordSlash);
+            else
+                SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulPunch);
+        }
 
 
         try

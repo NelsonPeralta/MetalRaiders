@@ -148,7 +148,8 @@ public class PlayerController : MonoBehaviourPun
                     DisableSprint_RPC();
                     print($"{player.name} isHoldingShootBtn. {pInventory.activeWeapon.killFeedOutput} {_swordRecovery}");
 
-                    if ((pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Oddball || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword) && _swordRecovery <= 0)
+                    if ((pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Oddball || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+                        && _swordRecovery <= 0 && _drawingWeaponTime <= 0)
                     {
 
                         if (player.isMine)
@@ -457,9 +458,11 @@ public class PlayerController : MonoBehaviourPun
 
             _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
             _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
+            //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", false);
 
-
-            if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
+            if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+                _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", true);
+            else if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
                 _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
             else
                 _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
@@ -554,6 +557,7 @@ public class PlayerController : MonoBehaviourPun
 
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Rifle Sprint", false);
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Pistol Sprint", false);
+        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("sword sprint", false);
 
         if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
@@ -995,7 +999,7 @@ public class PlayerController : MonoBehaviourPun
                 melee.PushIfAble();
 
 
-                StartCoroutine(Melee_Coroutine());
+                StartCoroutine(Melee_Coroutine(player.playerInventory.activeWeapon));
             }
         }
 
@@ -1003,14 +1007,14 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-    IEnumerator Melee_Coroutine()
+    IEnumerator Melee_Coroutine(WeaponProperties wp)
     {
         weaponAnimator.Play("Knife Attack 2", 0, 0f);
         PV.RPC("MeleeAnimations_RPC", RpcTarget.All);
 
         yield return new WaitForSeconds(0.1f);
 
-        _meleeSucc = melee.MeleeDamage();
+        _meleeSucc = melee.MeleeDamage(wp);
         PV.RPC("Melee_RPC", RpcTarget.All, _meleeSucc);
     }
 
@@ -1393,7 +1397,8 @@ public class PlayerController : MonoBehaviourPun
         if (GameManager.instance.gameType != GameManager.GameType.GunGame &&
             GameManager.instance.gameType != GameManager.GameType.Shotguns &&
             GameManager.instance.gameType != GameManager.GameType.Snipers &&
-            GameManager.instance.gameType != GameManager.GameType.PurpleRain)
+            GameManager.instance.gameType != GameManager.GameType.PurpleRain &&
+            GameManager.instance.gameType != GameManager.GameType.Swords)
             if (rewiredPlayer.GetButtonDown("Switch Weapons"))
             {
                 try

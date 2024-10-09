@@ -207,6 +207,10 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             {
                 codeName = "cl";
             }
+            else if (GameManager.instance.gameType == GameManager.GameType.Swords)
+            {
+                codeName = "swords";
+            }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Duals)
         {

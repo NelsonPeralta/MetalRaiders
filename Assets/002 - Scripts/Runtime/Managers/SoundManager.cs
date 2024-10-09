@@ -9,7 +9,7 @@ public class SoundManager : MonoBehaviour
 
 
 
-    public AudioClip concretePunchHit, successfulPunch, failedPunch;
+    public AudioClip concretePunchHit, successfulPunch, failedPunch, successfulSwordSlash;
     public AudioClip weaponCollision;
     public AudioClip ragdollCollision;
 
