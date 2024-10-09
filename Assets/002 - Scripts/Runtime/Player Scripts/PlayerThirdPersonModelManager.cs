@@ -60,7 +60,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     void OnActiveWeaponChanged_PlayTPSAnimations_Delegate(PlayerInventory playerInventory)
     {
-        print($"Chaging TPS model stance");
+        print($"Chaging TPS model stance {playerInventory.activeWeapon.killFeedOutput} {playerInventory.activeWeapon.idleHandlingAnimationType}");
 
         thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Rifle", false);
         thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
