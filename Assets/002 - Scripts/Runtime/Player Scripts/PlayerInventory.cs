@@ -539,6 +539,8 @@ public class PlayerInventory : MonoBehaviourPun
 
                     if (actWeap) // activeWeapon
                     {
+                        print($"AssignWeapon {codeName} actWeap");
+
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
                         _activeWeapon.loadedAmmo = _activeWeapon.ammoCapacity;
                         pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
