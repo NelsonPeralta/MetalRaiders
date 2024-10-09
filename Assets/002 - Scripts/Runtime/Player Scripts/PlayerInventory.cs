@@ -72,7 +72,7 @@ public class PlayerInventory : MonoBehaviourPun
                 //if (GameManager.instance.gameType == GameManager.GameType.Fiesta && _activeWeapon.codeName.Equals("sniper")) { _activeWeapon.loadedAmmo = 4; _activeWeapon.spareAmmo = 0; }
 
                 pController.Descope();
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
+                //pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("Draw");
                 PV.RPC("AssignWeapon", RpcTarget.Others, activeWeapon.codeName, true);
                 if (!player.isDead && !player.isRespawning)
                 {
@@ -548,6 +548,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
                         pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
+                        OnActiveWeaponChanged?.Invoke(this);
                         //UpdateThirdPersonGunModelsOnCharacter();
                     }
                     else

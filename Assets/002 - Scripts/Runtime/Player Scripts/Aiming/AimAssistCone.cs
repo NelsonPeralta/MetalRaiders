@@ -461,20 +461,23 @@ public class AimAssistCone : MonoBehaviour
 
     public void OnActiveWeaponChanged(PlayerInventory playerInventory)
     {
-        try
+        if (player.PV.IsMine)
         {
-            WeaponProperties activeWeapon = playerInventory.activeWeapon;
-            float h = activeWeapon.redReticuleHint;
+            try
+            {
+                WeaponProperties activeWeapon = playerInventory.activeWeapon;
+                float h = activeWeapon.redReticuleHint;
 
-            //Vector3 v = new Vector3(1, 1, activeWeapon.currentRedReticuleRange / 2);
-            //transform.parent.localScale = v;
+                //Vector3 v = new Vector3(1, 1, activeWeapon.currentRedReticuleRange / 2);
+                //transform.parent.localScale = v;
 
-            Vector3 v = new Vector3(h * 10, transform.localScale.y, h * 10);
-            transform.localScale = v;
+                Vector3 v = new Vector3(h * 10, transform.localScale.y, h * 10);
+                transform.localScale = v;
 
-            v = new Vector3(1, 1, activeWeapon.currentRedReticuleRange / 2);
-            transform.parent.localScale = v;
+                v = new Vector3(1, 1, activeWeapon.currentRedReticuleRange / 2);
+                transform.parent.localScale = v;
+            }
+            catch (System.Exception e) { }
         }
-        catch (System.Exception e) { }
     }
 }

@@ -456,19 +456,19 @@ public class PlayerController : MonoBehaviourPun
             currentlyReloadingTimer = 0;
             weaponAnimator.SetBool("Run", true);
 
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
+            //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
+            //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
             //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", false);
 
-            if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
-                _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", true);
-            else if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
-                _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
-            else
-                _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
+            //if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+            //    _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", true);
+            //else if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
+            //    _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
+            //else
+            //    _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
 
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Rifle", true);
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Pistol", true);
+            //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Rifle", true);
+            //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Pistol", true);
         }
 
 
@@ -518,17 +518,55 @@ public class PlayerController : MonoBehaviourPun
         weaponAnimator.SetBool("Run", true);
 
 
+
+
+
+
+        //new 
+
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
-
-
-        if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
-        else
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", false);
 
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Rifle", false);
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Pistol", false);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword idle", false);
+
+        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+        {
+
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", true);
+        }
+        else if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
+        {
+
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
+        }
+        else
+        {
+
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
+        }
+
+        //
+
+
+
+
+
+
+
+        //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
+        //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
+
+
+        //if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
+        //    _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
+        //else
+        //    _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
+
+        //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Rifle", false);
+        //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Pistol", false);
         //GetComponent<Player>().playerVoice.volume = 0.1f;
         //GetComponent<Player>().PlaySprintingSound();
     }
@@ -559,15 +597,24 @@ public class PlayerController : MonoBehaviourPun
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Pistol Sprint", false);
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("sword sprint", false);
 
-        if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Rifle", false);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Pistol", false);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword idle", false);
+
+
+        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+        {
+            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword idle", true);
+        }
+        else if (pInventory.activeWeapon.GetComponent<WeaponProperties>().idleHandlingAnimationType == WeaponProperties.IdleHandlingAnimationType.Pistol)
         {
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Pistol", true);
-            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Rifle", false);
+            //GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Rifle", false);
         }
         else
         {
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Rifle", true);
-            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Pistol", false);
+            //GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Idle Pistol", false);
         }
 
         GetComponent<Player>().StopPlayingPlayerVoice();

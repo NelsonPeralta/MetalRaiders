@@ -42,8 +42,8 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
         OnModelAssigned -= GetComponent<PlayerHitboxes>().OnModelAssigned;
         OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;
-        playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_Delegate;
-        playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
+        playerInventory.OnActiveWeaponChanged -= OnActiveWeaponChanged_PlayTPSAnimations_Delegate;
+        playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_PlayTPSAnimations_Delegate;
 
         transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
         transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
@@ -58,12 +58,13 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         print($"PlayerThirdPersonModelManager Start {transform.root.name}");
     }
 
-    void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
+    void OnActiveWeaponChanged_PlayTPSAnimations_Delegate(PlayerInventory playerInventory)
     {
         print($"Chaging TPS model stance");
 
         thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Rifle", false);
         thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
+        thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", false);
 
         if (playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
         {
@@ -74,7 +75,9 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         {
             thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
             thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", false);
+            thirdPersonScript.GetComponent<Animator>().Play("Draw");
         }
+
     }
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)

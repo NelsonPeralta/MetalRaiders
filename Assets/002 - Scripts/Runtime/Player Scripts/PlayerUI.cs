@@ -361,10 +361,13 @@ public class PlayerUI : MonoBehaviour
 
     void OnActiveWeaponChanged_Delegate(PlayerInventory playerInventory)
     {
-        activeAmmoText.text = playerInventory.activeWeapon.loadedAmmo.ToString();
-        spareAmmoText.text = playerInventory.activeWeapon.spareAmmo.ToString();
+        if (GetComponent<Player>().PV.IsMine)
+        {
+            activeAmmoText.text = playerInventory.activeWeapon.loadedAmmo.ToString();
+            spareAmmoText.text = playerInventory.activeWeapon.spareAmmo.ToString();
 
-        try { activeWeaponIcon.sprite = playerInventory.activeWeapon.weaponIcon; } catch { activeWeaponIcon.sprite = null; }
+            try { activeWeaponIcon.sprite = playerInventory.activeWeapon.weaponIcon; } catch { activeWeaponIcon.sprite = null; }
+        }
     }
 
     void OnHolsteredWeaponChanged_Delegate(PlayerInventory playerInventory)
