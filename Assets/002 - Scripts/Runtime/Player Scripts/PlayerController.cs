@@ -524,29 +524,22 @@ public class PlayerController : MonoBehaviourPun
 
         //new 
 
-        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
-        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
-        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", false);
+        print($"EnableSprint_RPC {pInventory.activeWeapon.killFeedOutput} {pInventory.activeWeapon.weaponType}");
+
+
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", pInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Pistol && pInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword);
+
+
+
+        //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", false);
+        //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", false);
+        //_playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", false);
 
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Rifle", false);
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Idle Pistol", false);
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword idle", false);
-
-        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
-        {
-
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", true);
-        }
-        else if (pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol)
-        {
-
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", true);
-        }
-        else
-        {
-
-            _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", true);
-        }
 
         //
 
