@@ -1292,7 +1292,7 @@ public class PlayerController : MonoBehaviourPun
 
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().Play("dw reload");
 
-
+            rScript.PlayerLeftWeaponReloadSound();
 
 
 
@@ -2022,11 +2022,11 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButton("mark"))
         {
-            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2)
+            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 3)
             {
                 _framesMarkSpotHasBeenHeld++;
 
-                if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 2)
+                if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 3)
                 {
                     print($"MARK SPOT HELD LONG {_framesMarkSpotHasBeenHeld}");
 

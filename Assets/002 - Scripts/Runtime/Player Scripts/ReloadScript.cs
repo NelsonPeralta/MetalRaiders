@@ -44,7 +44,7 @@ public class ReloadScript : MonoBehaviourPun
     public float singleReloadTime = 1f;
 
     [Header("Audio Source")]
-    public AudioSource reloadAudioSource;
+    public AudioSource reloadAudioSource, leftHandAudioSource;
 
     private void Update()
     {
@@ -337,5 +337,11 @@ public class ReloadScript : MonoBehaviourPun
     public void PlayReloadSound(int activeWeaponIndex)
     {
         PV.RPC("PlayReloadSound_RPC", RpcTarget.All, activeWeaponIndex);
+    }
+
+    public void PlayerLeftWeaponReloadSound()
+    {
+        leftHandAudioSource.clip = pController.player.playerInventory.thirdWeapon.ReloadShort;
+        leftHandAudioSource.Play();
     }
 }

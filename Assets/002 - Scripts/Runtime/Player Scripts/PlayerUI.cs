@@ -533,15 +533,54 @@ public class PlayerUI : MonoBehaviour
         {
             if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>())
             {
-                if (_player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
+                if (_player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso)
                 {
-                    if (!_player.isDualWielding && GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable && (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName)))
-                        ShowInformer($"Hold [Mark] to Dual Wield", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                    if (!_player.isDualWielding)
+                    {
+                        if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
+                        && _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
+                        {
+                            ShowInformer($"Hold [Mark] to Dual Wield or Hold [Interact] to swap for", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                        }
+                        //else if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
+                        //&& _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
+                        //{
+
+                        //}
+                        else
+                        {
+                            ShowInformer($"Hold [Mark] to Dual Wield ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                            //HideInformer();
+                        }
+                    }
                     else
+                    {
                         HideInformer();
+
+                    }
+
+
+
+
+
+
+                    //if (!_player.isDualWielding && GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable /*&& (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName))*/)
+                    //    ShowInformer($"Hold [Mark] to Dual Wield or Hold [Interact] to swap for", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                    //else
+                    //    HideInformer();
                 }
                 else
-                    ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                {
+                    if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
+                        && _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
+                    {
+                        ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                    }
+                    else
+                    {
+                        HideInformer();
+                    }
+                }
             }
             else if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>())
             {

@@ -51,6 +51,13 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
     }
 
     public bool closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory { get { return _weaponsThePlayerHasInInventoryAndAreDualWieldable.Count > 0; } }
+    public bool closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso
+    {
+        get
+        {
+            return (closestInteractableObject.GetComponent<LootableWeapon>() && closestInteractableObject.GetComponent<LootableWeapon>().isDw && player.playerInventory.activeWeapon.isDualWieldable);
+        }
+    }
 
     List<InteractableObject> rawInteractableObjects
     {
@@ -94,15 +101,22 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                               (_player.playerInventory.thirdWeapon && _player.playerInventory.thirdWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName))
                             {
                                 _weaponsThePlayerHasInInventory.Add(_filteredInteractableObjects[i]);
-
-
-                                if ((_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.activeWeapon.isDualWieldable)
-                                    _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
-                                else if ((_player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.holsteredWeapon.isDualWieldable)
-                                    _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
-                                else
-                                    _filteredInteractableObjects.RemoveAt(i);
                             }
+
+
+
+                            //if (_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
+                            //    _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
+                            //  (_player.playerInventory.thirdWeapon && _player.playerInventory.thirdWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName))
+                            //{
+
+                            //    if ((_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.activeWeapon.isDualWieldable)
+                            //        _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
+                            //    else if ((_player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.holsteredWeapon.isDualWieldable)
+                            //        _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
+                            //    else
+                            //        _filteredInteractableObjects.RemoveAt(i);
+                            //}
 
 
 
@@ -260,43 +274,72 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
         print($"PlayerInteractableObjectHandler OnPlayerLongInteract_Delegate");
 
-        if (closestInteractableObject && !closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory)
+        if (closestInteractableObject  /* && !closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory*/ /*&& !closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso*/)
         {
             if (closestInteractableObject.GetComponent<LootableWeapon>())
             {
-                int weaponCollidingWithInInventoryIndex = 0;
-                for (int i = 0; i < player.playerInventory.allWeaponsInInventory.Length; i++)
-                    if (closestInteractableObject.gameObject == player.playerInventory.allWeaponsInInventory[i])
-                        weaponCollidingWithInInventoryIndex = i;
-                Vector3 lwPosition = closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition;
-
-
-
-                if (!player.playerInventory.holsteredWeapon) // Looks for Secondary Weapon
+                if (!closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso)
                 {
-                    //Debug.Log("RPC: Picking up second weapon");
-                    //PickupSecWeap();
-                    PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
-                    //OnWeaponPickup?.Invoke(this);
-
-                    player.playerInventory.hasSecWeap = true;
-                    player.playerInventory.activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = closestInteractableObject.GetComponent<LootableWeapon>().networkAmmo;
-                    player.playerInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestInteractableObject.GetComponent<LootableWeapon>().spareAmmo;
-                }
-                else if (player.playerInventory.holsteredWeapon)
-                {
-                    if (player.GetComponent<PhotonView>().IsMine)
+                    if (closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.activeWeapon.codeName
+                        && closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.holsteredWeapon.codeName)
                     {
-                        //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
-                        //player.DropWeaponOnDeath(pInventory.activeWeapon);
-                        NetworkGameManager.SpawnNetworkWeapon(
-                            player.playerInventory.activeWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
-                    }
-                    PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
-                    //OnWeaponPickup?.Invoke(this);
-                }
+                        int weaponCollidingWithInInventoryIndex = 0;
+                        for (int i = 0; i < player.playerInventory.allWeaponsInInventory.Length; i++)
+                            if (closestInteractableObject.gameObject == player.playerInventory.allWeaponsInInventory[i])
+                                weaponCollidingWithInInventoryIndex = i;
+                        Vector3 lwPosition = closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition;
 
-                PV.RPC("DisableCollidingWeapon_RPC", RpcTarget.All, lwPosition);
+
+
+                        if (!player.playerInventory.holsteredWeapon) // Looks for Secondary Weapon
+                        {
+                            //Debug.Log("RPC: Picking up second weapon");
+                            //PickupSecWeap();
+                            PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                            //OnWeaponPickup?.Invoke(this);
+
+                            player.playerInventory.hasSecWeap = true;
+                            player.playerInventory.activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = closestInteractableObject.GetComponent<LootableWeapon>().networkAmmo;
+                            player.playerInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestInteractableObject.GetComponent<LootableWeapon>().spareAmmo;
+                        }
+                        else if (player.playerInventory.holsteredWeapon)
+                        {
+                            if (player.GetComponent<PhotonView>().IsMine)
+                            {
+                                //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
+                                //player.DropWeaponOnDeath(pInventory.activeWeapon);
+                                NetworkGameManager.SpawnNetworkWeapon(
+                                    player.playerInventory.activeWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
+                            }
+                            PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                            //OnWeaponPickup?.Invoke(this);
+                        }
+
+                        PV.RPC("DisableCollidingWeapon_RPC", RpcTarget.All, lwPosition);
+                    }
+                }
+                else
+                {
+                    if (closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.activeWeapon.codeName
+                        && closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.holsteredWeapon.codeName)
+                    {
+                        int weaponCollidingWithInInventoryIndex = 0;
+                        for (int i = 0; i < player.playerInventory.allWeaponsInInventory.Length; i++)
+                            if (closestInteractableObject.gameObject == player.playerInventory.allWeaponsInInventory[i])
+                                weaponCollidingWithInInventoryIndex = i;
+                        Vector3 lwPosition = closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition;
+
+                        if (player.GetComponent<PhotonView>().IsMine)
+                        {
+                            //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
+                            //player.DropWeaponOnDeath(pInventory.activeWeapon);
+                            NetworkGameManager.SpawnNetworkWeapon(
+                                player.playerInventory.activeWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
+                        }
+                        PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                        PV.RPC("DisableCollidingWeapon_RPC", RpcTarget.All, lwPosition);
+                    }
+                }
             }
             else if (closestInteractableObject.GetComponent<ArmorSeller>())
             {
@@ -312,9 +355,10 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
     public void TriggerLongInteract()
     {
-        if (PV.IsMine && closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory && !player.isDualWielding)
+        if (closestInteractableObject) print($"TriggerLongInteract {closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso}");
+        if (PV.IsMine && closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso && !player.isDualWielding)
         {
-            if (player.playerInventory.activeWeapon.isDualWieldable && (closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(player.playerInventory.activeWeapon.codeName)))
+            if (player.playerInventory.activeWeapon.isDualWieldable /*&& (closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(player.playerInventory.activeWeapon.codeName))*/)
                 player.playerInventory.PV.RPC("PickupThirdWeapon", RpcTarget.All, closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition, true);
         }
     }

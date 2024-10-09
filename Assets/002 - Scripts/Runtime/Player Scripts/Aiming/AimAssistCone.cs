@@ -187,6 +187,7 @@ public class AimAssistCone : MonoBehaviour
         {
 
             Vector3 v = new Vector3(player.playerInventory.activeWeapon.redReticuleHint * 10, transform.localScale.y, player.playerInventory.activeWeapon.redReticuleHint * 10);
+            if (player.isDualWielding) v = new Vector3((player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f, transform.localScale.y, (player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f);
             transform.localScale = v;
 
             v = new Vector3(1, 1, player.playerInventory.activeWeapon.currentRedReticuleRange);

@@ -44,6 +44,9 @@ public class PlayerShooting : MonoBehaviourPun
         }
     }
 
+    public bool isDualWielding { get { return playerController.player.isDualWielding; } }
+
+
     [Header("Other Scripts")]
     public PhotonView PV;
     public PlayerController playerController;
@@ -58,6 +61,7 @@ public class PlayerShooting : MonoBehaviourPun
 
 
     [SerializeField] Biped _trackingTarget, _preTrackingTarget;
+    [SerializeField] AudioSource _leftWeaponAudioSource;
 
 
     public float defaultBurstInterval
@@ -208,17 +212,19 @@ public class PlayerShooting : MonoBehaviourPun
 
     public void Shoot(WeaponProperties wp)
     {
+        /*if (wp == playerController.player.playerInventory.thirdWeapon)*/
         print("Calling Shoot");
         if (playerController.isDrawingWeapon) return;
+        /*if (wp == playerController.player.playerInventory.thirdWeapon)*/
         print($"Shoot start 1 {_fireRecovery} {_leftFireRecovery} {wp == playerController.player.playerInventory.activeWeapon}");
 
 
 
 
 
-        if ((_fireRecovery > 0 && wp == playerController.player.playerInventory.activeWeapon)) // active weapon
+        if ((wp == playerController.player.playerInventory.activeWeapon && _fireRecovery > 0)) // active weapon
             return;
-        if ((_leftFireRecovery > 0 && wp != playerController.player.playerInventory.activeWeapon)) // dual wielded weapon
+        if (isDualWielding && wp == playerController.player.playerInventory.thirdWeapon && _leftFireRecovery > 0) // dual wielded weapon
             return;
 
 
@@ -236,6 +242,7 @@ public class PlayerShooting : MonoBehaviourPun
             _leftFireRecovery = 1 / (wp.fireRate / 60f);
         }
 
+        /* if (wp == playerController.player.playerInventory.thirdWeapon)*/
         print($"Shoot start 2 {wp == playerController.player.playerInventory.activeWeapon} {_fireRecovery} {_leftFireRecovery} {wp.overcharge} {wp}");
 
         if (CanShootAuto(wp) || CanShootSingleOrBurst(wp))
@@ -245,7 +252,8 @@ public class PlayerShooting : MonoBehaviourPun
             else
                 dualWieldedWeaponFireButnDown = true;
 
-            print($"Shoot start 2 {wp == playerController.player.playerInventory.activeWeapon} {wp.overcharge} {wp}");
+            /*if (wp == playerController.player.playerInventory.thirdWeapon)*/
+            print($"Shoot start 3 {wp == playerController.player.playerInventory.activeWeapon} {wp.overcharge} {wp}");
 
 
             if (wp.firingMode == WeaponProperties.FiringMode.Burst)
@@ -316,12 +324,45 @@ public class PlayerShooting : MonoBehaviourPun
         return (activeWeapon.firingMode == WeaponProperties.FiringMode.Auto);
     }
 
-    bool CanShootSingleOrBurst(WeaponProperties activeWeapon)
+    bool CanShootSingleOrBurst(WeaponProperties weaponToShoot)
     {
-        print($"CanShootSingleOrBurst: {activeWeapon.firingMode} {fireButtonDown} {dualWieldedWeaponFireButnDown} {pInventory.isDualWielding}");
+        print($"CanShootSingleOrBurst: {weaponToShoot.firingMode} {fireButtonDown} {dualWieldedWeaponFireButnDown} {pInventory.isDualWielding}");
 
-        return ((activeWeapon.firingMode == WeaponProperties.FiringMode.Single || activeWeapon.firingMode == WeaponProperties.FiringMode.Burst)
-            && ((!fireButtonDown && !pInventory.isDualWielding) || (!dualWieldedWeaponFireButnDown && pInventory.isDualWielding)));
+
+        if (!pInventory.isDualWielding)
+        {
+            if (weaponToShoot.firingMode == WeaponProperties.FiringMode.Single || weaponToShoot.firingMode == WeaponProperties.FiringMode.Burst)
+            {
+                if (!fireButtonDown) return true;
+            }
+            else return false;
+        }
+        else
+        {
+            if (weaponToShoot.firingMode == WeaponProperties.FiringMode.Single || weaponToShoot.firingMode == WeaponProperties.FiringMode.Burst)
+            {
+                if (weaponToShoot == playerController.player.playerInventory.activeWeapon)
+                {
+                    if (!fireButtonDown) return true;
+                    else return false;
+                }
+                else if (weaponToShoot == playerController.player.playerInventory.thirdWeapon)
+                {
+                    if (!dualWieldedWeaponFireButnDown) return true;
+                    else return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            //return ((weaponToShoot.firingMode == WeaponProperties.FiringMode.Single || weaponToShoot.firingMode == WeaponProperties.FiringMode.Burst) && !fireButtonDown);
+        }
+
+
+        return false;
+        //return ((weaponToShoot.firingMode == WeaponProperties.FiringMode.Single || weaponToShoot.firingMode == WeaponProperties.FiringMode.Burst)
+        //    && ((!fireButtonDown && weaponToShoot == playerController.player.playerInventory.activeWeapon) || (pInventory.isDualWielding && !dualWieldedWeaponFireButnDown && weaponToShoot == playerController.player.playerInventory.thirdWeapon)));
     }
 
     void ShootBurst(WeaponProperties activeWeapon)
@@ -348,12 +389,14 @@ public class PlayerShooting : MonoBehaviourPun
     {
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
         Debug.Log($"Shoot_Caller: {playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} {isLeftWeapon}");
 
         if (isLeftWeapon) activeWeapon = pInventory.thirdWeapon;
 
         if (activeWeapon.loadedAmmo <= 0 || playerController.isReloading)
         {
+            /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
             Debug.Log($"{playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} isReloading: {playerController.isReloading}");
             return;
         }
@@ -387,7 +430,7 @@ public class PlayerShooting : MonoBehaviourPun
 
         playerController.player.assignActorPlayerTargetOnShootingSphere.TriggerBehaviour();
 
-        Debug.Log($"shoooo 1 {isLeftWeapon}");
+        //Debug.Log($"shoooo 1 {isLeftWeapon}");
 
         int counter = 1;
         WeaponProperties weaponToShoot = pInventory.activeWeapon.GetComponent<WeaponProperties>();
@@ -416,7 +459,7 @@ public class PlayerShooting : MonoBehaviourPun
                 {
                     //if (!player.isMine/* || GameManager.instance.connection == GameManager.Connection.Local*/)
                     {
-                        print("spawning FAKE bullet");
+                        if (weaponToShoot == playerController.player.playerInventory.thirdWeapon) print("spawning FAKE bullet");
 
 
 
@@ -666,9 +709,20 @@ public class PlayerShooting : MonoBehaviourPun
         //    activeWeapon.rightWeapon.Recoil();
 
 
+        if (!isLeftWeapon)
+        {
+            GetComponent<AudioSource>().clip = weaponToShoot.Fire;
+            GetComponent<AudioSource>().Play();
+        }
+        else
+        {
+            _leftWeaponAudioSource.clip = weaponToShoot.Fire;
+            _leftWeaponAudioSource.Play();
+        }
 
-        GetComponent<AudioSource>().clip = weaponToShoot.Fire;
-        GetComponent<AudioSource>().Play();
+
+
+
         OnBulletSpawned?.Invoke(this);
     }
 
