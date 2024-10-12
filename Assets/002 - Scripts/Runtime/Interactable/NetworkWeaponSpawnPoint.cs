@@ -167,20 +167,13 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     #region
     void ReplaceWeaponsByGametype()
     {
-        string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal", "m32", "sniper", "shotgun" };
-        string[] heavyWeaponCodeNames = { "ar", "br", "m16", "c7", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
-        string[] lightWeaponCodeNames = { "pistol", "smg", "m1911", "colt", "mp5", "p90", "deagle" };
+        //string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal", "m32", "sniper", "shotgun" };
+        //string[] heavyWeaponCodeNames = { "ar", "br", "m16", "c7", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
+        //string[] lightWeaponCodeNames = { "pistol", "smg", "m1911", "colt", "mp5", "p90", "deagle" };
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
             if (GameManager.instance.gameType == GameManager.GameType.Slayer)
             {
-                // quick fix
-                if (codeName == "smg") codeName = "ar";
-                else if (codeName == "ar") codeName = "smg";
-
-
-
-
                 if (codeName == "br")
                     codeName = "smg";
 
@@ -214,7 +207,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Duals)
         {
-            if (!codeName.Equals("pp"))
+            if (!codeName.Equals("pp") && !codeName.Equals("rvv") && !codeName.Equals("smg"))
             {
                 if (codeName == "pistol" || codeName == "br")
                     codeName = "rvv";

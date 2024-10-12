@@ -1668,7 +1668,7 @@ PrefabInstance:
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: sniper
+      value: gl
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
@@ -18624,7 +18624,7 @@ PrefabInstance:
     - target: {fileID: 8628595011434998437, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
       propertyPath: codeName
-      value: br
+      value: ar
       objectReference: {fileID: 0}
     - target: {fileID: 8628595011434998442, guid: ca7cbd80bf478c6498ef0309c99b2da6,
         type: 3}
