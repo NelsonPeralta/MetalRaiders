@@ -22,7 +22,7 @@ public class PlayerShieldBar : PlayerBar
             || GameManager.instance.gameType == GameManager.GameType.Swat
             || GameManager.instance.gameType ==  GameManager.GameType.Retro)
             healingSlider.gameObject.SetActive(false);
-        healingSlider.maxValue = player.defaultHealingCountdown + ((player.maxHealthPoints - player.hitPoints) / player.healthHealingIncrement);
+        try { healingSlider.maxValue = player.defaultHealingCountdown + ((player.maxHealthPoints - player.hitPoints) / player.healthHealingIncrement); } catch { Debug.LogError("Error here"); }
         GetComponent<Slider>().maxValue = player.maxShieldPoints;
 
         player.OnPlayerShieldDamaged += OnShieldDamaged_Delegate;

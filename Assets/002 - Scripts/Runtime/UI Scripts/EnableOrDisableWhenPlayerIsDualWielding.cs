@@ -5,8 +5,9 @@ using UnityEngine;
 public class EnableOrDisableWhenPlayerIsDualWielding : MonoBehaviour
 {
     [SerializeField] PlayerInventory _playerInventory;
-    [SerializeField] bool _show;
+    [SerializeField] bool _showIfDualWielding;
     [SerializeField] GameObject _target;
+
 
 
     // Start is called before the first frame update
@@ -18,6 +19,13 @@ public class EnableOrDisableWhenPlayerIsDualWielding : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _target.SetActive(_playerInventory.isDualWielding && _show);
+        if (!_playerInventory.isDualWielding && !_showIfDualWielding)
+        {
+            _target.SetActive(true);
+        }
+        else
+        {
+            _target.SetActive(_playerInventory.isDualWielding && _showIfDualWielding);
+        }
     }
 }

@@ -33,6 +33,7 @@ public class PlayerUI : MonoBehaviour
     public TMP_Text leftActiveAmmoText;
     public TMP_Text leftSpareAmmoText;
     public Image leftWeaponIcon;
+    [SerializeField] TMP_Text _pickedUpLeftWeaponAmmoWitnessText;
 
     [Header("Top Center", order = 2)]
     public Transform topMiddle;
@@ -658,10 +659,18 @@ public class PlayerUI : MonoBehaviour
         //}
     }
 
-    public void ShowPickedUpAmmoWitness(int amm)
+    public void ShowPickedUpAmmoWitness(int amm, bool leftWeapon)
     {
-        pickedUpAmmoWitnessText.text = $"+{amm}";
-        pickedUpAmmoWitnessText.GetComponent<Animator>().Play("show");
+        if (!leftWeapon)
+        {
+            pickedUpAmmoWitnessText.text = $"+{amm}";
+            pickedUpAmmoWitnessText.GetComponent<Animator>().Play("show");
+        }
+        else
+        {
+            _pickedUpLeftWeaponAmmoWitnessText.text = $"+{amm}";
+            _pickedUpLeftWeaponAmmoWitnessText.GetComponent<Animator>().Play("show");
+        }
     }
 
     public void ShowPickedUpGrenadeWitness(int amm)

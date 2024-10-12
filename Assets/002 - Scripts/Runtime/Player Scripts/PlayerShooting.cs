@@ -388,18 +388,54 @@ public class PlayerShooting : MonoBehaviourPun
     void Shoot_Caller(bool isLeftWeapon = false, bool overcharge = false)
     {
 
-        WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
+        WeaponProperties weap = pInventory.activeWeapon.GetComponent<WeaponProperties>();
         /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
-        Debug.Log($"Shoot_Caller: {playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} {isLeftWeapon}");
+        Debug.Log($"Shoot_Caller: {playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} {isLeftWeapon}");
 
-        if (isLeftWeapon) activeWeapon = pInventory.thirdWeapon;
+        if (isLeftWeapon) weap = pInventory.thirdWeapon;
 
-        if (activeWeapon.loadedAmmo <= 0 || playerController.isReloading)
+        if (!playerController.player.isDualWielding)
         {
-            /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
-            Debug.Log($"{playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} isReloading: {playerController.isReloading}");
-            return;
+            if (weap.loadedAmmo <= 0 || playerController.isReloading)
+            {
+                /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
+                Debug.Log($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
+                return;
+            }
         }
+        else
+        {
+            if (!isLeftWeapon)
+            {
+                if (weap.loadedAmmo <= 0 || playerController.isReloadingRight)
+                {
+                    /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
+                    Debug.Log($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
+                    return;
+                }
+            }
+            else
+            {
+                if (weap.loadedAmmo <= 0 || playerController.isReloadingLeft)
+                {
+                    /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
+                    Debug.Log($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
+                    return;
+                }
+            }
+        }
+
+
+
+
+
+
+        //if (activeWeapon.loadedAmmo <= 0 || playerController.isReloading)
+        //{
+        //    /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
+        //    Debug.Log($"{playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} isReloading: {playerController.isReloading}");
+        //    return;
+        //}
 
         shoooo(isLeftWeapon, overcharge);
         //Shoot_RPC();

@@ -214,12 +214,15 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Duals)
         {
-            if (codeName == "pistol" || codeName == "br" || codeName == "pp")
-                codeName = "rvv";
-            else if (codeName == "sniper" || codeName == "rpg" || codeName == "shotgun" || codeName == "gl" || codeName == "cl")
-                codeName = "pp";
-            else
-                codeName = "smg";
+            if (!codeName.Equals("pp"))
+            {
+                if (codeName == "pistol" || codeName == "br")
+                    codeName = "rvv";
+                else if (codeName == "sniper" || codeName == "rpg" || codeName == "shotgun" || codeName == "gl" || codeName == "cl")
+                    codeName = "pp";
+                else
+                    codeName = "smg";
+            }
         }
 
 

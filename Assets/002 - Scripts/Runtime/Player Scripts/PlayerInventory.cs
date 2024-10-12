@@ -238,8 +238,8 @@ public class PlayerInventory : MonoBehaviourPun
     public GameObject[] allWeaponsInInventory = new GameObject[25];
 
     [Header("HUD Components")]
-    public GameObject lowAmmoIndicator;
-    public GameObject noAmmoIndicator;
+    public GameObject lowAmmoIndicator, lowAmmoIndicatorLeft, lowAmmoIndicatorRight;
+    public GameObject noAmmoIndicator, noAmmoIndicatorLeft, noAmmoIndicatorRight;
 
     [Header("Weapon Meshes On Player")]
     public GameObject weaponMesh1;
@@ -392,6 +392,11 @@ public class PlayerInventory : MonoBehaviourPun
         }
     }
 
+    private void Update()
+    {
+        LowAmmoIndicatorControl();
+    }
+
     void OnActiveWeaponAmmoChanged(WeaponProperties weaponProperties)
     {
         LowAmmoIndicatorControl();
@@ -401,6 +406,12 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (!player.isDualWielding)
         {
+            lowAmmoIndicatorLeft.SetActive(false); noAmmoIndicatorLeft.SetActive(false);
+
+
+
+            //if (!player.playerController.isReloading)
+            //{
             if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
             {
                 lowAmmoIndicator.SetActive(false);
@@ -416,24 +427,67 @@ public class PlayerInventory : MonoBehaviourPun
                 lowAmmoIndicator.SetActive(false);
                 noAmmoIndicator.SetActive(false);
             }
+            //}
+            //else
+            //{
+            //    lowAmmoIndicator.SetActive(false);
+            //    noAmmoIndicator.SetActive(false);
+            //}
         }
         else
         {
-            if ((activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0) && (thirdWeapon.loadedAmmo == 0 && thirdWeapon.spareAmmo == 0))
+            lowAmmoIndicator.SetActive(false); noAmmoIndicator.SetActive(false);
+
+
+            //if (!player.playerController.isReloadingRight)
+            //{
+            if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
             {
-                lowAmmoIndicator.SetActive(false);
-                noAmmoIndicator.SetActive(true);
+                lowAmmoIndicatorRight.SetActive(false);
+                noAmmoIndicatorRight.SetActive(true);
             }
-            else if ((activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f) || thirdWeapon.loadedAmmo < thirdWeapon.ammoCapacity * 0.4f)
+            else if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
             {
-                lowAmmoIndicator.SetActive(true);
-                noAmmoIndicator.SetActive(false);
+                lowAmmoIndicatorRight.SetActive(true);
+                noAmmoIndicatorRight.SetActive(false);
             }
             else
             {
-                lowAmmoIndicator.SetActive(false);
-                noAmmoIndicator.SetActive(false);
+                lowAmmoIndicatorRight.SetActive(false);
+                noAmmoIndicatorRight.SetActive(false);
             }
+            //}
+            //else
+            //{
+            //    lowAmmoIndicator.SetActive(false);
+            //    noAmmoIndicator.SetActive(false);
+            //}
+
+
+
+            //if (!player.playerController.isReloadingLeft)
+            //{
+            if (thirdWeapon.loadedAmmo == 0 && thirdWeapon.spareAmmo == 0)
+            {
+                lowAmmoIndicatorLeft.SetActive(false);
+                noAmmoIndicatorLeft.SetActive(true);
+            }
+            else if (thirdWeapon.loadedAmmo < thirdWeapon.ammoCapacity * 0.4f)
+            {
+                lowAmmoIndicatorLeft.SetActive(true);
+                noAmmoIndicatorLeft.SetActive(false);
+            }
+            else
+            {
+                lowAmmoIndicatorLeft.SetActive(false);
+                noAmmoIndicatorLeft.SetActive(false);
+            }
+            //}
+            //else
+            //{
+            //    lowAmmoIndicatorLeft.SetActive(false);
+            //    noAmmoIndicatorLeft.SetActive(false);
+            //}
         }
     }
 

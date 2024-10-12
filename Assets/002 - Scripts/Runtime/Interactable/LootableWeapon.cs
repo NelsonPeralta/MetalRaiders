@@ -181,7 +181,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
                 w.spareAmmo += ammoToLoot;
             }
 
-            if (w == playerInventory.activeWeapon) playerInventory.player.playerUI.ShowPickedUpAmmoWitness(ammoToLoot);
+            playerInventory.player.playerUI.ShowPickedUpAmmoWitness(ammoToLoot, w != playerInventory.activeWeapon);
 
             if (ammoNeeded >= ammoAvailable)
                 HideWeapon();
