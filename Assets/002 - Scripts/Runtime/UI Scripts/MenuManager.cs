@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
 using Steamworks;
+using static GameManager;
 
 public class MenuManager : MonoBehaviour
 {
@@ -115,6 +116,9 @@ public class MenuManager : MonoBehaviour
     public void CloseMenu(Menu menu)
     {
         Debug.Log($"Closing {menu.menuName}");
+
+
+        if (GameManager.instance.previousScenePayloads.Contains(PreviousScenePayload.LoadTimeOutOpenErrorMenu)) { GameManager.instance.RemoveFromPreviousScenePayload(PreviousScenePayload.LoadTimeOutOpenErrorMenu); }
         menu.Close();
     }
     public void CloseMenu(string m)

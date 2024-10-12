@@ -91,6 +91,15 @@ public class GameTime : MonoBehaviourPunCallbacks
             _masterTimeRemaining = 1800;
         }
 
+
+        //// tests
+        //timeRemaining = 10;
+        //_masterTimeRemaining = 10;
+        //// test
+
+
+
+
         //timeRemaining = 10; _masterTimeRemaining = 10;
 
         _timeElapsed = 0;

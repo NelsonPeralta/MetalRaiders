@@ -85,14 +85,31 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         get
         {
-            GameManager.Team wt = GameManager.Team.Red;
+            return _winningTeam;
+        }
 
-            if (blueTeamScore > redTeamScore)
+        private set
+        {
+            _winningTeam = value;
+        }
+    }
+
+    public bool isADraw
+    {
+        get
+        {
+            return _isADraw;
+        }
+
+        private set
+        {
+            _isADraw = value;
+
+            if (_isADraw)
             {
-                wt = GameManager.Team.Blue;
+                this.winningPlayers.Clear();
+                this.winningPlayersId.Clear();
             }
-
-            return wt;
         }
     }
 
@@ -104,6 +121,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     [SerializeField] List<int> _winninPlayersId = new List<int>();
 
     int _initialRoomPlayercount;
+    bool _isADraw;
+    GameManager.Team _winningTeam;
 
     // private variables
     private void Awake()
@@ -133,6 +152,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         winningPlayers.Clear();
         redTeamScore = 0;
         blueTeamScore = 0;
+        _isADraw = false;
+        _winningTeam = GameManager.Team.None;
     }
     public void AddPlayerKill(AddPlayerKillStruct struc)
     {
@@ -263,104 +284,109 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public void EndGame(bool saveXp = true, bool actuallyQuit = false)
     {
         CurrentRoomManager.instance.gameOver = true;
-        print("EndGame");
+        print($"EndGame {highestScore} / {scoreToWin}");
+
+        CreateWinningPlayersList();
+        SpawnWinnerKillFeeds();
+
+
         foreach (Player pp in FindObjectsOfType<Player>())
         {
 
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
             // return will stop this method, break will stop the loop, continue will stop the current iteration
-            if (!pp.PV.IsMine)
-                continue;
+            if (!pp.PV.IsMine) continue;
 
             pp.playerUI.gamepadCursor.gameObject.SetActive(false);
 
 
-            CarnageReportMenu.winningTeam = GameManager.Team.None;
+
+            //CarnageReportMenu.winningTeam = GameManager.Team.None;
 
 
-            if (highestScore >= scoreToWin)
-            {
-                print($"EndGame {highestScore} / {scoreToWin}");
-                if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                {
-                    if (GameManager.instance.gameType != GameManager.GameType.GunGame)
-                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-                        {
-                            print($"EndGame {pms.score} / {scoreToWin}");
-                            if (pms.score >= scoreToWin)
-                            {
-                                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
-                                this.winningPlayers.Add(pms.GetComponent<Player>());
-                                this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
-                            }
-                        }
-                    else if (GameManager.instance.gameType == GameManager.GameType.GunGame)
-                    {
-                        this.winningPlayers.Clear();
-                        this.winningPlayersId.Clear();
+            //if (highestScore >= scoreToWin)
+            //{
+            //    print($"EndGame {highestScore} / {scoreToWin}");
+            //    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+            //    {
+            //        if (GameManager.instance.gameType != GameManager.GameType.GunGame)
+            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+            //            {
+            //                print($"EndGame {pms.score} / {scoreToWin}");
+            //                if (pms.score >= scoreToWin)
+            //                {
+            //                    pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
+            //                    this.winningPlayers.Add(pms.GetComponent<Player>());
+            //                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+            //                }
+            //            }
+            //        else if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+            //        {
+            //            this.winningPlayers.Clear();
+            //            this.winningPlayersId.Clear();
 
-                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-                        {
-                            if (pms.player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
-                            {
-                                this.winningPlayers.Add(pms.GetComponent<Player>());
-                                this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
-                                break;
-                            }
-                        }
+            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+            //            {
+            //                if (pms.player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
+            //                {
+            //                    this.winningPlayers.Add(pms.GetComponent<Player>());
+            //                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+            //                    break;
+            //                }
+            //            }
 
-                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-                        {
-                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {winningPlayers[0].username} wins!");
-                        }
-                    }
-                }
-                else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-                {
-                    if (redTeamScore >= scoreToWin)
-                    {
-                        CarnageReportMenu.winningTeam = GameManager.Team.Red;
+            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+            //            {
+            //                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {winningPlayers[0].username} wins!");
+            //            }
+            //        }
+            //    }
+            //    else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            //    {
+            //        if (redTeamScore >= scoreToWin)
+            //        {
+            //            CarnageReportMenu.winningTeam = GameManager.Team.Red;
 
-                        pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Red Team wins!");
-
-
-                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-                            if (pms.GetComponent<Player>().team == GameManager.Team.Red)
-                            {
-                                this.winningPlayers.Add(pms.GetComponent<Player>());
-                                this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
-                            }
-                    }
-                    else if (blueTeamScore >= scoreToWin)
-                    {
-                        CarnageReportMenu.winningTeam = GameManager.Team.Blue;
-
-                        pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Blue Team wins!");
-
-                        foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-                            if (pms.GetComponent<Player>().team == GameManager.Team.Blue)
-                            {
-                                this.winningPlayers.Add(pms.GetComponent<Player>());
-                                this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
-                            }
-                    }
-                }
-            }
-            else
-            {
-                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER!");
+            //            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Red Team wins!");
 
 
-                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-                    if (redTeamScore >= blueTeamScore)
-                    {
-                        CarnageReportMenu.winningTeam = GameManager.Team.Red;
-                    }
-                    else
-                    {
-                        CarnageReportMenu.winningTeam = GameManager.Team.Blue;
-                    }
-            }
+            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+            //                if (pms.GetComponent<Player>().team == GameManager.Team.Red)
+            //                {
+            //                    this.winningPlayers.Add(pms.GetComponent<Player>());
+            //                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+            //                }
+            //        }
+            //        else if (blueTeamScore >= scoreToWin)
+            //        {
+            //            CarnageReportMenu.winningTeam = GameManager.Team.Blue;
+
+            //            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Blue Team wins!");
+
+            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+            //                if (pms.GetComponent<Player>().team == GameManager.Team.Blue)
+            //                {
+            //                    this.winningPlayers.Add(pms.GetComponent<Player>());
+            //                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
+            //                }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER!");
+
+
+            //    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            //        if (redTeamScore >= blueTeamScore)
+            //        {
+            //            CarnageReportMenu.winningTeam = GameManager.Team.Red;
+            //        }
+            //        else
+            //        {
+            //            CarnageReportMenu.winningTeam = GameManager.Team.Blue;
+            //        }
+            //}
 
             if (saveXp)
             {
@@ -399,6 +425,109 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             pp.playerUI.scoreboard.OpenScoreboard();
         }
     }
+
+
+
+
+
+    void CreateWinningPlayersList()
+    {
+        this.winningPlayers.Clear();
+        this.winningPlayersId.Clear();
+
+        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+        {
+            if (GameManager.instance.gameType != GameManager.GameType.GunGame)
+                foreach (PlayerMultiplayerMatchStats pms in GameManager.instance.GetAllPhotonPlayers().Select(item => item.GetComponent<PlayerMultiplayerMatchStats>()))
+                {
+                    if (pms.score >= highestScore)
+                    {
+                        this.winningPlayers.Add(pms.player);
+                        this.winningPlayersId.Add(pms.player.playerId);
+                    }
+                }
+            else if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+            {
+                foreach (PlayerMultiplayerMatchStats pms in GameManager.instance.GetAllPhotonPlayers().Select(item => item.GetComponent<PlayerMultiplayerMatchStats>()))
+                {
+                    if (pms.player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
+                    {
+                        this.winningPlayers.Add(pms.player);
+                        this.winningPlayersId.Add(pms.player.playerId);
+                        break;
+                    }
+                }
+            }
+
+            if (winningPlayers.Count > 1)
+            {
+                isADraw = true;
+            }
+        }
+        else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        {
+            if (redTeamScore == blueTeamScore)
+            {
+                isADraw = true;
+            }
+            else
+            {
+                winningTeam = GameManager.Team.Red; if (blueTeamScore > redTeamScore) { winningTeam = GameManager.Team.Blue; }
+
+                if (winningTeam == GameManager.Team.Red)
+                {
+                    CarnageReportMenu.winningTeam = GameManager.Team.Red;
+
+                    foreach (PlayerMultiplayerMatchStats pms in GameManager.instance.GetAllPhotonPlayers().Select(item => item.GetComponent<PlayerMultiplayerMatchStats>()))
+                        if (pms.player.team == GameManager.Team.Red)
+                        {
+                            this.winningPlayers.Add(pms.player);
+                            this.winningPlayersId.Add(pms.player.playerId);
+                        }
+                }
+                else
+                {
+                    CarnageReportMenu.winningTeam = GameManager.Team.Blue;
+
+                    foreach (PlayerMultiplayerMatchStats pms in GameManager.instance.GetAllPhotonPlayers().Select(item => item.GetComponent<PlayerMultiplayerMatchStats>()))
+                        if (pms.player.team == GameManager.Team.Blue)
+                        {
+                            this.winningPlayers.Add(pms.player);
+                            this.winningPlayersId.Add(pms.player.playerId);
+                        }
+                }
+            }
+        }
+    }
+
+    void SpawnWinnerKillFeeds()
+    {
+        foreach (Player p in GameManager.GetLocalPlayers())
+        {
+            if (!isADraw)
+            {
+                if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                {
+                    p.killFeedManager.EnterNewFeed($"<color=#31cff9>GAME OVER! {winningPlayers[0].username} wins!");
+                }
+                else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                {
+                    if (winningTeam == GameManager.Team.Red)
+                        p.killFeedManager.EnterNewFeed($"<color=#31cff9>GAME OVER! Red Team wins!");
+                    else
+                        p.killFeedManager.EnterNewFeed($"<color=#31cff9>GAME OVER! Blue Team wins!");
+                }
+            }
+            else
+            {
+                p.killFeedManager.EnterNewFeed($"<color=#31cff9>DRAW!");
+            }
+        }
+    }
+
+
+
+
 
     public struct AddPlayerKillStruct
     {

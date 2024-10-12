@@ -489,6 +489,9 @@ public class Player : Biped
     {
         get
         {
+            print($"Player has a data cell:");
+            print(playerDataCell);
+            print(playerDataCell.team);
             return playerDataCell.team;
         }
     }
@@ -2030,11 +2033,11 @@ public class Player : Biped
 
             if (playerId != -99999 && playerController.rid != -99999)
             {
-                if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
 
 
                 print($"UpdateRewiredId - OnPlayerIdAssigned: {name} {playerId} {playerController.rid}");
                 OnPlayerIdAssigned?.Invoke(this);
+                if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
             }
         }
     }

@@ -366,33 +366,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void Awake()
     {
+        name += $" {UnityEngine.Random.Range(100, 999)}";
+
+
         _checkCooldown = 0.05f;
 
-        Debug.Log("GameManager Awake");
-
-
-        colorDict.Add("white", "#FFFFFF");
-        colorDict.Add("grey", "#B3B3B3");
-        colorDict.Add("black", "#333333");
-
-        colorDict.Add("red", "#FF3939");
-        colorDict.Add("lightred", "#FF7C7C");
-        colorDict.Add("darkred", "#FF0000");
-
-        colorDict.Add("blue", "#00B0FF");
-        colorDict.Add("lightblue", "#77D5FF");
-        colorDict.Add("darkblue", "#0080ff");
-
-        colorDict.Add("lightyellow", "#FFFF00");
-        colorDict.Add("yellow", "#ABA80E");
-
-        colorDict.Add("green", "#08c50f");
-
-        colorDict.Add("purple", "#A6327E");
-
-        colorDict.Add("orange", "#ff8000");
-
-        colorDict.Add("brown", "#964B00");
+        Debug.Log($"GameManager Awake {name}");
 
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         if (instance)
@@ -400,10 +379,38 @@ public class GameManager : MonoBehaviourPunCallbacks
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
-        instance = this;
+        else
+        {
 
-        PhotonNetwork.GameVersion = "171";
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+
+            PhotonNetwork.GameVersion = "171";
+
+
+            colorDict.Add("white", "#FFFFFF");
+            colorDict.Add("grey", "#B3B3B3");
+            colorDict.Add("black", "#333333");
+
+            colorDict.Add("red", "#FF3939");
+            colorDict.Add("lightred", "#FF7C7C");
+            colorDict.Add("darkred", "#FF0000");
+
+            colorDict.Add("blue", "#00B0FF");
+            colorDict.Add("lightblue", "#77D5FF");
+            colorDict.Add("darkblue", "#0080ff");
+
+            colorDict.Add("lightyellow", "#FFFF00");
+            colorDict.Add("yellow", "#ABA80E");
+
+            colorDict.Add("green", "#08c50f");
+
+            colorDict.Add("purple", "#A6327E");
+
+            colorDict.Add("orange", "#ff8000");
+
+            colorDict.Add("brown", "#964B00");
+        }
     }
 
 
@@ -497,8 +504,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (RagdollPool.instance) { RagdollPool.instance.ragdollPoolList.Clear(); RagdollPool.instance = null; }
 
 
-            print("GAME MANAGER ONSCENELOADED 0");
+            print($"GAMEMANAGER ONSCENELOADED {name}");
             print($"GameManager MenuManager {MenuManager.Instance.name}");
+
+            foreach (PreviousScenePayload psp in previousScenePayloads) { print($"GAMEMANAGER ONSCENELOADED: {psp}"); }
 
             if (previousScenePayloads.Contains(PreviousScenePayload.ResetPlayerDataCells))
             {
@@ -516,9 +525,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (previousScenePayloads.Contains(PreviousScenePayload.LoadTimeOutOpenErrorMenu))
             {
-                previousScenePayloads.Remove(PreviousScenePayload.LoadTimeOutOpenErrorMenu);
                 StartCoroutine(LoadTimeOutOpenErrorMenu_Coroutine());
-
             }
 
 
@@ -1355,7 +1362,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         // Waiting 0.1 seconds is a ghetto solution, but works
         yield return new WaitForSeconds(0.1f);
 
+        print($"LoadTimeOutOpenErrorMenu_Coroutine {name}");
         MenuManager.Instance.OpenMainMenu();
         MenuManager.Instance.OpenErrorMenu("A player could not load level");
+        //Debug.Break();
+    }
+
+
+    public void RemoveFromPreviousScenePayload(PreviousScenePayload psp)
+    {
+        previousScenePayloads.Remove(psp);
     }
 }

@@ -8,7 +8,7 @@ using System;
 public class ScoreboardManager : MonoBehaviour
 {
     [SerializeField] Player _player;
-    [SerializeField] GameObject _scoreboardHolder, _teamScoreboard, _multiplayerHeaders, _swarmHeaders, _winnerWitness, _loserWitness;
+    [SerializeField] GameObject _scoreboardHolder, _teamScoreboard, _multiplayerHeaders, _swarmHeaders, _winnerWitness, _loserWitness, _drawWitness;
     [SerializeField] TMPro.TMP_Text redTeamText;
     [SerializeField] TMPro.TMP_Text blueTeamText;
 
@@ -37,7 +37,9 @@ public class ScoreboardManager : MonoBehaviour
         DisableAllRows();
 
 
-
+        _winnerWitness.SetActive(false);
+        _loserWitness.SetActive(false);
+        _drawWitness.SetActive(false);
         _scoreboardHolder.SetActive(false);
     }
 
@@ -64,8 +66,20 @@ public class ScoreboardManager : MonoBehaviour
             _swarmHeaders.SetActive(GameManager.instance.gameMode == GameManager.GameMode.Coop);
         }
 
-        _winnerWitness.SetActive(CurrentRoomManager.instance.gameOver && MultiplayerManager.instance.winningPlayers.Contains(_player) && !CurrentRoomManager.instance.leftRoomManually);
-        _loserWitness.SetActive(CurrentRoomManager.instance.gameOver && !MultiplayerManager.instance.winningPlayers.Contains(_player) && !CurrentRoomManager.instance.leftRoomManually);
+        if (CurrentRoomManager.instance.gameOver)
+        {
+            if (!MultiplayerManager.instance.isADraw)
+            {
+                _winnerWitness.SetActive(CurrentRoomManager.instance.gameOver && MultiplayerManager.instance.winningPlayers.Contains(_player) && !CurrentRoomManager.instance.leftRoomManually);
+                _loserWitness.SetActive(CurrentRoomManager.instance.gameOver && !MultiplayerManager.instance.winningPlayers.Contains(_player) && !CurrentRoomManager.instance.leftRoomManually);
+            }
+            else
+            {
+                _winnerWitness.SetActive(false);
+                _loserWitness.SetActive(false);
+                _drawWitness.SetActive(true);
+            }
+        }
     }
 
     public void CloseScoreboard()
@@ -141,6 +155,8 @@ public class ScoreboardManager : MonoBehaviour
 
         _sorted = _sorted.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
+        GameManager.Team _winningTeam = GameManager.Team.Red; if (!MultiplayerManager.instance.isADraw) { _winningTeam = MultiplayerManager.instance.winningTeam; }
+
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
             for (int i = 0; i < _sorted.Count; i++)
@@ -157,7 +173,7 @@ public class ScoreboardManager : MonoBehaviour
                                 row.transform.SetAsLastSibling();
                             else
                             {
-                                if (row.playerScoreStruct.team == MultiplayerManager.instance.winningTeam)
+                                if (row.playerScoreStruct.team == _winningTeam)
                                     row.transform.SetAsLastSibling();
                             }
                         }
@@ -176,7 +192,7 @@ public class ScoreboardManager : MonoBehaviour
                         {
                             if (Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct) == _sorted.ElementAt(i).Key)
                             {
-                                if (row.playerScoreStruct.team != MultiplayerManager.instance.winningTeam)
+                                if (row.playerScoreStruct.team != _winningTeam)
                                     row.transform.SetAsLastSibling();
                             }
                         }

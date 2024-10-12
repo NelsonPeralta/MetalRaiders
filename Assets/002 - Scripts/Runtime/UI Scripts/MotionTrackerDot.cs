@@ -39,10 +39,15 @@ public class MotionTrackerDot : MonoBehaviour
                     if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                     {
                         _spriteRenderer.color = Color.red;
-
                     }
                     else
                     {
+                        print($"motiontracker targetPlayerController");
+                        print($"motiontracker targetPlayerController {_targetPlayerController.player}");
+                        print($"motiontracker targetPlayerController {transform.root.GetComponent<Player>()}");
+                        print($"motiontracker targetPlayerController {transform.root.GetComponent<Player>().team}");
+                        print($"motiontracker targetPlayerController {_targetPlayerController.player.team}");
+
                         if (_targetPlayerController.player.team == transform.root.GetComponent<Player>().team)
                         {
                             _spriteRenderer.color = Color.green;

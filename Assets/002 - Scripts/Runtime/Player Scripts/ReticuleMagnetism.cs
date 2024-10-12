@@ -94,7 +94,7 @@ public class ReticuleMagnetism : MonoBehaviour
 
         if (player && player.playerInventory && player.playerInventory.activeWeapon)
         {
-            raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange * 2;
+            raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange * 3;
 
             if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, raycastRange, magnetismMask))
             {

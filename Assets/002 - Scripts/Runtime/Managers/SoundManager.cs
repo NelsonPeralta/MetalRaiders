@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -26,8 +27,17 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
-        DontDestroyOnLoad(gameObject);
+        if (instance)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
     }
 
     private void Start()
