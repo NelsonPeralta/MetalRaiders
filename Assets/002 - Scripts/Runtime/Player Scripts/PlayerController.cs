@@ -373,7 +373,7 @@ public class PlayerController : MonoBehaviourPun
                     SwitchWeapons();
                     LongInteract();
                     MarkSpot();
-                    Grenade();
+                    GrenadeBtn();
                     if (isSprinting)
                         return;
                     Scope();
@@ -1213,28 +1213,24 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-    void Grenade()
+    void GrenadeBtn()
     {
         if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) /*&& !player.isDualWielding*/ /*&& !isMeleeing*/ /*&& !isSprinting*/)
         {
-            if (pInventory.isDualWielding && activeControllerType != ControllerType.Joystick)
+            if (!pInventory.isDualWielding)
             {
-                pInventory.DropThirdWeapon();
-
-                if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
+                ThrowGrenade();
+            }
+            else
+            {
+                if (activeControllerType == ControllerType.Joystick)
                 {
-                    print($"Grenade 1");
-                    CancelReloadCoroutine();
-                    currentlyReloadingTimer = 0;
-                    player.playerShooting.StopBurstFiring();
-                    rScript.reloadIsCanceled = true;
-                    Descope();
-                    pInventory.fragGrenades = pInventory.fragGrenades - 1;
-                    PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
-                    StartCoroutine(GrenadeSpawnDelay());
-                    OnPLayerThrewGrenade?.Invoke(this);
-                    //StartCoroutine(GrenadeSpawnDelay());
-                    //StartCoroutine(ThrowGrenade3PS());
+                    // do nothing
+                }
+                else
+                {
+                    pInventory.DropThirdWeapon();
+                    ThrowGrenade();
                 }
             }
         }
@@ -1243,6 +1239,28 @@ public class PlayerController : MonoBehaviourPun
             PV.RPC("_StopShoot_RPC", RpcTarget.All, true);
         }
     }
+
+
+    void ThrowGrenade()
+    {
+        if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
+        {
+            print($"Grenade 1");
+            CancelReloadCoroutine();
+            currentlyReloadingTimer = 0;
+            player.playerShooting.StopBurstFiring();
+            rScript.reloadIsCanceled = true;
+            Descope();
+            pInventory.fragGrenades = pInventory.fragGrenades - 1;
+            PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
+            StartCoroutine(GrenadeSpawnDelay());
+            OnPLayerThrewGrenade?.Invoke(this);
+            //StartCoroutine(GrenadeSpawnDelay());
+            //StartCoroutine(ThrowGrenade3PS());
+        }
+    }
+
+
 
     void CheckReloadButton()
     {
