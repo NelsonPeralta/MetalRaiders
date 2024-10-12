@@ -89,6 +89,7 @@ public class PlayerUI : MonoBehaviour
 
 
     [SerializeField] List<GameObject> _hitMarkers = new List<GameObject>(); [SerializeField] List<GameObject> _killMarkers = new List<GameObject>();
+    [SerializeField] State _state;
 
 
 
@@ -526,9 +527,13 @@ public class PlayerUI : MonoBehaviour
 
 
 
+    enum State { s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10 }
+
 
     private void Update()
     {
+        _state = State.s0;
+
         if (_player.playerInteractableObjectHandler.closestInteractableObject == null)
         {
             HideInformer();
@@ -539,11 +544,16 @@ public class PlayerUI : MonoBehaviour
             {
                 if (_player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso)
                 {
+                    _state = State.s1;
                     if (!_player.isDualWielding)
                     {
+                        _state = State.s2;
+
                         if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
                         && _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
                         {
+                            _state = State.s3;
+
                             ShowInformer($"Hold [Mark] to Dual Wield or Hold [Interact] to swap for", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
                         }
                         //else if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
@@ -553,12 +563,15 @@ public class PlayerUI : MonoBehaviour
                         //}
                         else
                         {
+                            _state = State.s4;
+
                             ShowInformer($"Hold [Mark] to Dual Wield ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
                             //HideInformer();
                         }
                     }
                     else
                     {
+                        _state = State.s5;
                         HideInformer();
 
                     }
@@ -578,10 +591,20 @@ public class PlayerUI : MonoBehaviour
                     if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
                         && _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
                     {
-                        ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                        if (!_player.isDualWielding)
+                        {
+                            _state = State.s6;
+                            ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                        }
+                        else
+                        {
+                            _state = State.s7;
+                            HideInformer();
+                        }
                     }
                     else
                     {
+                        _state = State.s8;
                         HideInformer();
                     }
                 }

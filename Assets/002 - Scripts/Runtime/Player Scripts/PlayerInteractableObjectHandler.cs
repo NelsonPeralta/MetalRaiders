@@ -280,42 +280,45 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
             {
                 if (!closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso)
                 {
-                    if (closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.activeWeapon.codeName
-                        && closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.holsteredWeapon.codeName)
+                    if (!_player.isDualWielding)
                     {
-                        int weaponCollidingWithInInventoryIndex = 0;
-                        for (int i = 0; i < player.playerInventory.allWeaponsInInventory.Length; i++)
-                            if (closestInteractableObject.gameObject == player.playerInventory.allWeaponsInInventory[i])
-                                weaponCollidingWithInInventoryIndex = i;
-                        Vector3 lwPosition = closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition;
-
-
-
-                        if (!player.playerInventory.holsteredWeapon) // Looks for Secondary Weapon
+                        if (closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.activeWeapon.codeName
+                        && closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.holsteredWeapon.codeName)
                         {
-                            //Debug.Log("RPC: Picking up second weapon");
-                            //PickupSecWeap();
-                            PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
-                            //OnWeaponPickup?.Invoke(this);
+                            int weaponCollidingWithInInventoryIndex = 0;
+                            for (int i = 0; i < player.playerInventory.allWeaponsInInventory.Length; i++)
+                                if (closestInteractableObject.gameObject == player.playerInventory.allWeaponsInInventory[i])
+                                    weaponCollidingWithInInventoryIndex = i;
+                            Vector3 lwPosition = closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition;
 
-                            player.playerInventory.hasSecWeap = true;
-                            player.playerInventory.activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = closestInteractableObject.GetComponent<LootableWeapon>().networkAmmo;
-                            player.playerInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestInteractableObject.GetComponent<LootableWeapon>().spareAmmo;
-                        }
-                        else if (player.playerInventory.holsteredWeapon)
-                        {
-                            if (player.GetComponent<PhotonView>().IsMine)
+
+
+                            if (!player.playerInventory.holsteredWeapon) // Looks for Secondary Weapon
                             {
-                                //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
-                                //player.DropWeaponOnDeath(pInventory.activeWeapon);
-                                NetworkGameManager.SpawnNetworkWeapon(
-                                    player.playerInventory.activeWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
-                            }
-                            PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
-                            //OnWeaponPickup?.Invoke(this);
-                        }
+                                //Debug.Log("RPC: Picking up second weapon");
+                                //PickupSecWeap();
+                                PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                                //OnWeaponPickup?.Invoke(this);
 
-                        PV.RPC("DisableCollidingWeapon_RPC", RpcTarget.All, lwPosition);
+                                player.playerInventory.hasSecWeap = true;
+                                player.playerInventory.activeWeapon.GetComponent<WeaponProperties>().loadedAmmo = closestInteractableObject.GetComponent<LootableWeapon>().networkAmmo;
+                                player.playerInventory.activeWeapon.GetComponent<WeaponProperties>().spareAmmo = closestInteractableObject.GetComponent<LootableWeapon>().spareAmmo;
+                            }
+                            else if (player.playerInventory.holsteredWeapon)
+                            {
+                                if (player.GetComponent<PhotonView>().IsMine)
+                                {
+                                    //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
+                                    //player.DropWeaponOnDeath(pInventory.activeWeapon);
+                                    NetworkGameManager.SpawnNetworkWeapon(
+                                        player.playerInventory.activeWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
+                                }
+                                PV.RPC("ReplaceWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
+                                //OnWeaponPickup?.Invoke(this);
+                            }
+
+                            PV.RPC("DisableCollidingWeapon_RPC", RpcTarget.All, lwPosition);
+                        }
                     }
                 }
                 else

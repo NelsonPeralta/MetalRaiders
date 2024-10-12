@@ -1217,26 +1217,25 @@ public class PlayerController : MonoBehaviourPun
     {
         if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) /*&& !player.isDualWielding*/ /*&& !isMeleeing*/ /*&& !isSprinting*/)
         {
-            if (pInventory.isDualWielding)
+            if (pInventory.isDualWielding && activeControllerType != ControllerType.Joystick)
             {
                 pInventory.DropThirdWeapon();
-            }
 
-
-            if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
-            {
-                print($"Grenade 1");
-                CancelReloadCoroutine();
-                currentlyReloadingTimer = 0;
-                player.playerShooting.StopBurstFiring();
-                rScript.reloadIsCanceled = true;
-                Descope();
-                pInventory.fragGrenades = pInventory.fragGrenades - 1;
-                PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
-                StartCoroutine(GrenadeSpawnDelay());
-                OnPLayerThrewGrenade?.Invoke(this);
-                //StartCoroutine(GrenadeSpawnDelay());
-                //StartCoroutine(ThrowGrenade3PS());
+                if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
+                {
+                    print($"Grenade 1");
+                    CancelReloadCoroutine();
+                    currentlyReloadingTimer = 0;
+                    player.playerShooting.StopBurstFiring();
+                    rScript.reloadIsCanceled = true;
+                    Descope();
+                    pInventory.fragGrenades = pInventory.fragGrenades - 1;
+                    PV.RPC("ThrowGrenade3PS_RPC", RpcTarget.All);
+                    StartCoroutine(GrenadeSpawnDelay());
+                    OnPLayerThrewGrenade?.Invoke(this);
+                    //StartCoroutine(GrenadeSpawnDelay());
+                    //StartCoroutine(ThrowGrenade3PS());
+                }
             }
         }
         else if (rewiredPlayer.GetButtonUp("Throw Grenade") && activeControllerType == ControllerType.Joystick) // for dual wielding
@@ -2233,8 +2232,8 @@ public class PlayerController : MonoBehaviourPun
     {
         Debug.Log("OnDeath_Delegate");
         _currentlyThrowingGrenadeTimer = 0;
-        _currentlyReloadingTimer = _currentlyReloadingTimer_thirdWeapon = 0; 
-        
+        _currentlyReloadingTimer = _currentlyReloadingTimer_thirdWeapon = 0;
+
         CancelReloadCoroutine();
         isSprinting = false; _meleeSucc = false;
         isHoldingShootBtn = false;
