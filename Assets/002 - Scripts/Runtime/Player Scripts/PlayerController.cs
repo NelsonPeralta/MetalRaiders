@@ -2233,7 +2233,9 @@ public class PlayerController : MonoBehaviourPun
     {
         Debug.Log("OnDeath_Delegate");
         _currentlyThrowingGrenadeTimer = 0;
-        _currentlyReloadingTimer = 0; CancelReloadCoroutine();
+        _currentlyReloadingTimer = _currentlyReloadingTimer_thirdWeapon = 0; 
+        
+        CancelReloadCoroutine();
         isSprinting = false; _meleeSucc = false;
         isHoldingShootBtn = false;
     }
