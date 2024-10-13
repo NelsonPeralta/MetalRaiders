@@ -95,37 +95,51 @@ public class AimAssist : MonoBehaviour
         if (redReticuleIsOn) { _redReticuleTick = Mathf.Clamp(_redReticuleTick + 3, 0, 30); } else { _redReticuleTick = Mathf.Clamp(_redReticuleTick - 2, 0, 30); }
 
 
-
-        if (redReticuleIsOn)
+        if (targetHitbox)
         {
-            // https://forum.unity.com/threads/find-a-point-on-a-line-between-two-vector3.140700/
-            // https://www.varsitytutors.com/hotmath/hotmath_help/topics/adding-and-subtracting-vectors#:~:text=To%20add%20or%20subtract%20two,v2%E2%9F%A9%20be%20two%20vectors.&text=The%20sum%20of%20two%20or,method%20or%20the%20triangle%20method%20.
-            // https://answers.unity.com/questions/459532/how-to-get-a-point-on-a-direction.html
+            if (redReticuleIsOn)
+            {
+                // https://forum.unity.com/threads/find-a-point-on-a-line-between-two-vector3.140700/
+                // https://www.varsitytutors.com/hotmath/hotmath_help/topics/adding-and-subtracting-vectors#:~:text=To%20add%20or%20subtract%20two,v2%E2%9F%A9%20be%20two%20vectors.&text=The%20sum%20of%20two%20or,method%20or%20the%20triangle%20method%20.
+                // https://answers.unity.com/questions/459532/how-to-get-a-point-on-a-direction.html
 
-            //Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-            //Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
+                //Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+                //Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
 
-            Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-            Vector3 targetDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
+                Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+                Vector3 targetDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
 
-            Vector3 middleDir = bspDir + targetDir;
+                Vector3 middleDir = bspDir + targetDir;
 
-            bulletSpawnPoint.forward = (middleDir);
+                bulletSpawnPoint.forward = (middleDir);
 
-            //bulletSpawnPoint.LookAt(target.transform);
-        }
-        else if (_invisibleHitboxDetector.collidingHitboxes.Count > 0)
-        {
-            try { if (player.isDead || player.isRespawning) { return; } } catch { }
+                //bulletSpawnPoint.LookAt(target.transform);
+            }
+            else if (_invisibleHitboxDetector.collidingHitboxes.Count > 0)
+            {
+                try { if (player.isDead || player.isRespawning) { return; } } catch { }
 
-            var targetHitbox = _invisibleHitboxDetector.collidingHitboxes[0];
+                var targetHitbox = _invisibleHitboxDetector.collidingHitboxes[0];
 
-            foreach (var item in _invisibleHitboxDetector.collidingHitboxes)
-                if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-                {
-                    try
+                foreach (var item in _invisibleHitboxDetector.collidingHitboxes)
+                    if (GameManager.instance.teamMode.ToString().Contains("Classic"))
                     {
-                        if (targetHitbox.GetComponent<ActorHitbox>() || (targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+                        try
+                        {
+                            if (targetHitbox.GetComponent<ActorHitbox>() || (targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+                                if (item.GetComponent<Hitbox>().isHead)
+                                {
+                                    targetHitbox = item;
+                                    break;
+                                }
+                                else
+                                {
+                                    if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
+                                        targetHitbox = item;
+                                }
+                        }
+                        catch
+                        {
                             if (item.GetComponent<Hitbox>().isHead)
                             {
                                 targetHitbox = item;
@@ -136,9 +150,11 @@ public class AimAssist : MonoBehaviour
                                 if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
                                     targetHitbox = item;
                             }
+                        }
                     }
-                    catch
+                    else
                     {
+
                         if (item.GetComponent<Hitbox>().isHead)
                         {
                             targetHitbox = item;
@@ -150,75 +166,61 @@ public class AimAssist : MonoBehaviour
                                 targetHitbox = item;
                         }
                     }
+
+                if (targetHitbox.GetComponent<PlayerHitbox>() &&
+                    (GameManager.instance.teamMode == GameManager.TeamMode.Classic &&
+                    targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+                {
+                    if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                        bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
+
+                    return;
+                }
+
+                Vector3 targetHitboxDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
+                float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, bulletSpawnPoint.position);
+
+
+
+
+                if (!Physics.Raycast(player.mainCamera.transform.position, targetHitboxDir, targetHitboxDistance, obstructionMask))
+                {
+                    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+                    Vector3 targetDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
+
+                    Vector3 newDir = bspDir + (targetDir * 0.2f);
+
+                    bulletSpawnPoint.forward = newDir;
                 }
                 else
                 {
-
-                    if (item.GetComponent<Hitbox>().isHead)
-                    {
-                        targetHitbox = item;
-                        break;
-                    }
-                    else
-                    {
-                        if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
-                            targetHitbox = item;
-                    }
+                    if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                        bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
                 }
 
-            if (targetHitbox.GetComponent<PlayerHitbox>() &&
-                (GameManager.instance.teamMode == GameManager.TeamMode.Classic &&
-                targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
-            {
-                if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                    bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
-
-                return;
-            }
-
-            Vector3 targetHitboxDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
-            float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, bulletSpawnPoint.position);
 
 
 
+                //if (collidingHitbox && !obstruction)
+                //{
+                //    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
+                //    Vector3 targetDir = (collidingHitbox.transform.position - bulletSpawnPoint.position);
 
-            if (!Physics.Raycast(player.mainCamera.transform.position, targetHitboxDir, targetHitboxDistance, obstructionMask))
-            {
-                Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-                Vector3 targetDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
+                //    Vector3 newDir = bspDir + (targetDir * 0.25f);
 
-                Vector3 newDir = bspDir + (targetDir * 0.2f);
-
-                bulletSpawnPoint.forward = newDir;
+                //    bulletSpawnPoint.forward = newDir;
+                //}
+                //else
+                //{
+                //    if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                //        bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                //}
             }
             else
             {
                 if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
                     bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
             }
-
-
-
-
-            //if (collidingHitbox && !obstruction)
-            //{
-            //    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-            //    Vector3 targetDir = (collidingHitbox.transform.position - bulletSpawnPoint.position);
-
-            //    Vector3 newDir = bspDir + (targetDir * 0.25f);
-
-            //    bulletSpawnPoint.forward = newDir;
-            //}
-            //else
-            //{
-            //    if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
-            //        bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
-            //}
-        }
-        else
-        {
-            if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
         }
     }
 

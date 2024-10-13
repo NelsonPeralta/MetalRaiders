@@ -506,7 +506,11 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         {
             if (!isADraw)
             {
-                if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                if (CurrentRoomManager.instance.leftRoomManually)
+                {
+                    // do nothing
+                }
+                else if (GameManager.instance.teamMode == GameManager.TeamMode.None && winningPlayers.Count > 0)
                 {
                     p.killFeedManager.EnterNewFeed($"<color=#31cff9>GAME OVER! {winningPlayers[0].username} wins!");
                 }
