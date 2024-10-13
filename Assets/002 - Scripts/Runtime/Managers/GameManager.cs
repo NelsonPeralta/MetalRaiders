@@ -871,6 +871,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         return instance._allPlayers.Where(item => item != null && item.photonId == playerPhotonView).FirstOrDefault();
     }
 
+    public static Player GetPlayerWithUsername(string u)
+    {
+        return instance._allPlayers.Where(item => item != null && item.username.Equals(u)).FirstOrDefault();
+    }
+
 
 
 

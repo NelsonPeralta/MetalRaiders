@@ -30,6 +30,9 @@ public class ScoreboardManager : MonoBehaviour
 
     private void Awake()
     {
+        //print($"ScoreboardManager Awake {GetComponentsInChildren<ScoreboardRowRuntime>(includeInactive: true).Length}");
+        //scoreboardRows.Clear();
+        //scoreboardRows = GetComponentsInChildren<ScoreboardRowRuntime>(includeInactive: true).ToList(); // this gets 40 instead of 8
     }
 
     private void Start()

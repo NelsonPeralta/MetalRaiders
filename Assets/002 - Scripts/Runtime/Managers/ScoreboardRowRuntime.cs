@@ -47,6 +47,9 @@ public class ScoreboardRowRuntime : MonoBehaviour
     [SerializeField] Image _dynamicBg;
     [SerializeField] TextMeshProUGUI _playerNameText, _playerTagText, _playerScoreText;
     [SerializeField] ScriptObjPlayerData pss;
+    //[SerializeField] Player _player;
+    [SerializeField] Image _deadWitness;
+
     Color _tCol;
 
     private void Update()
@@ -62,6 +65,8 @@ public class ScoreboardRowRuntime : MonoBehaviour
                 _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
                 _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
             }
+
+            _deadWitness.gameObject.SetActive(!GameManager.GetPlayerWithUsername(pss.playerExtendedPublicData.username).isAlive);
         }
     }
 }

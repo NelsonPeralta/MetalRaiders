@@ -338,6 +338,14 @@ public class PlayerController : MonoBehaviourPun
             if (rewiredPlayer.GetButtonUp("Shoot"))
                 SendIsNotHoldingFireWeaponBtn();
 
+            if (rewiredPlayer.GetButtonUp("Aim") && activeControllerType != ControllerType.Joystick) //  for dual wielding
+            {
+                SendIsNotHoldingDualWieldedFireWeaponBtn();
+            }
+            else if (rewiredPlayer.GetButtonUp("Throw Grenade") && activeControllerType == ControllerType.Joystick) // for dual wielding
+            {
+                SendIsNotHoldingDualWieldedFireWeaponBtn();
+            }
         }
 
 
@@ -788,6 +796,12 @@ public class PlayerController : MonoBehaviourPun
             PV.RPC("_StopShoot_RPC", RpcTarget.All, false);
     }
 
+    void SendIsNotHoldingDualWieldedFireWeaponBtn()
+    {
+        if (PV.IsMine)
+            PV.RPC("_StopShoot_RPC", RpcTarget.All, true);
+    }
+
     [PunRPC]
     void _StartShoot_RPC(Vector3 bipedOrSpp)
     {
@@ -997,10 +1011,7 @@ public class PlayerController : MonoBehaviourPun
             }
 
 
-        if (rewiredPlayer.GetButtonUp("Aim") && activeControllerType != ControllerType.Joystick) //  for dual wielding
-        {
-            PV.RPC("_StopShoot_RPC", RpcTarget.All, true);
-        }
+
 
 
 
@@ -1244,10 +1255,7 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
         }
-        else if (rewiredPlayer.GetButtonUp("Throw Grenade") && activeControllerType == ControllerType.Joystick) // for dual wielding
-        {
-            PV.RPC("_StopShoot_RPC", RpcTarget.All, true);
-        }
+
     }
 
 

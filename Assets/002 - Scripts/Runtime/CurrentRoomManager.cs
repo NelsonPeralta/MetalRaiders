@@ -407,12 +407,7 @@ public class CurrentRoomManager : MonoBehaviour
     bool _achievementUnlocked = false;
     string _tempAchievementName = "";
 
-    bool _leftRoomManually;
-
-
-
-
-
+    bool _leftRoomManually, _playerDataRetrieved;
 
 
     void Awake()
