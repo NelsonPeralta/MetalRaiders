@@ -23,9 +23,14 @@ public class PlayerThirdPersonModelHipRotationFix : MonoBehaviour
     private void Update()
     {
         if (_player.movement.currentWorldSpeed > 0.1f)
-            currentRotationFix -= Time.deltaTime * _rotationTarget * 5;
+        {
+            if (_player.movement.isGrounded && !_player.playerController.isCrouching)
+                currentRotationFix -= Time.deltaTime * _rotationTarget * 7;
+            else
+                currentRotationFix += Time.deltaTime * _rotationTarget * 7;
+        }
         else
-            currentRotationFix += Time.deltaTime * _rotationTarget * 5;
+            currentRotationFix += Time.deltaTime * _rotationTarget * 7;
         transform.localRotation = Quaternion.Euler(0, currentRotationFix, 0);
     }
 }

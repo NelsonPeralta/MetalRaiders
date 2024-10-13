@@ -1335,6 +1335,14 @@ public class Player : Biped
         if (this.isMine) respawnBeepAudioSource.Play();
 
         if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("<color=\"red\">Spawned Randomly"); _lastSpawnPointIsRandom = false;
+        StartCoroutine(DisableAndEnableGunCam());
+    }
+
+    IEnumerator DisableAndEnableGunCam()
+    {
+        gunCamera.enabled = false;
+        yield return new WaitForEndOfFrame();
+        gunCamera.enabled = true;
     }
 
     void DisableArmorComponentsOnRespawn()
