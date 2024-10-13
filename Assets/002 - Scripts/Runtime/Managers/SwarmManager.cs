@@ -321,7 +321,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (_waveEndCountdown <= 0)
             {
                 if (!CurrentRoomManager.instance.gameOver)
-                    _networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
+                    if (PhotonNetwork.IsMasterClient) _networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
 
                 //EndWave();
             }
@@ -451,7 +451,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             return;
         Debug.Log("SWARM MANAGER: Begin");
 
-        _networkSwarmManager.GetComponent<PhotonView>().RPC("IncreaseWave_RPC", RpcTarget.All);
+        if (PhotonNetwork.IsMasterClient) _networkSwarmManager.GetComponent<PhotonView>().RPC("IncreaseWave_RPC", RpcTarget.All);
     }
 
     public void IncreaseWave()
@@ -1065,7 +1065,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void RespawnHealthPack_MasterCall(Vector3 hpPosition, int time)
     {
-        _networkSwarmManager.GetComponent<PhotonView>().RPC("RespawnHealthPack_RPC", RpcTarget.All, hpPosition, time);
+        if (PhotonNetwork.IsMasterClient) _networkSwarmManager.GetComponent<PhotonView>().RPC("RespawnHealthPack_RPC", RpcTarget.All, hpPosition, time);
     }
 
     public void RespawnHealthPack(Vector3 hpPosition, int time)
@@ -1085,7 +1085,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void DisableHealthPack_MasterCall(Vector3 hpPosition)
     {
-        _networkSwarmManager.GetComponent<PhotonView>().RPC("DisableHealthPack_RPC", RpcTarget.All, hpPosition);
+        if (PhotonNetwork.IsMasterClient) _networkSwarmManager.GetComponent<PhotonView>().RPC("DisableHealthPack_RPC", RpcTarget.All, hpPosition);
     }
 
     public void DisableHealthPack(Vector3 hpPosition)
@@ -1112,7 +1112,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.IsMasterClient)
             return;
-        _networkSwarmManager.GetComponent<PhotonView>().RPC("DropRandomLoot_RPC", RpcTarget.All, ammoType, position, rotation);
+        if (PhotonNetwork.IsMasterClient) _networkSwarmManager.GetComponent<PhotonView>().RPC("DropRandomLoot_RPC", RpcTarget.All, ammoType, position, rotation);
     }
 
     public void DropRandomLoot(string ammotype, Vector3 position, Quaternion rotation)

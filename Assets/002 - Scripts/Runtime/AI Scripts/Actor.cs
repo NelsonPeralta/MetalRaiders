@@ -36,7 +36,7 @@ abstract public class Actor : Biped
                 Debug.Log($"ACTORD DIE CALLING");
                 //target = null; \\DO NOT REMOVE TARGET HERE
                 DropRandomWeapon();
-                ActorDie();
+                ActorDie(playerWhoShotPDI: _lastPlayerPhotonIdWhoDamagedThis);
                 return;
             }
 
@@ -170,7 +170,7 @@ abstract public class Actor : Biped
     [SerializeField] List<Transform> _rightChecks = new List<Transform>();
     [SerializeField] Explosion _ultraMergeExPrefab;
 
-    [SerializeField] protected int _flinchThreshold;
+    [SerializeField] protected int _flinchThreshold, _lastPlayerPhotonIdWhoDamagedThis;
 
     [SerializeField] float _flinchThresholdCount;
 
@@ -301,7 +301,7 @@ abstract public class Actor : Biped
 
     protected void Prepare()
     {
-        //_lastPlayerPhotonIdWhoDamagedThis = -1;
+        _lastPlayerPhotonIdWhoDamagedThis = -1;
         _ultraMergeCount = 0;
         _isSeenByTargetPlayerCooldown = _isDodgingCooldown = _isCurrentlyAlertingCooldown = 0;
         _switchPlayerCooldown = 0;

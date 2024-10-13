@@ -66,7 +66,7 @@ public class ScoreboardRowRuntime : MonoBehaviour
                 _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
             }
 
-            _deadWitness.gameObject.SetActive(!GameManager.GetPlayerWithUsername(pss.playerExtendedPublicData.username).isAlive);
+            if (GameManager.GetPlayerWithUsername(pss.playerExtendedPublicData.username)) _deadWitness.gameObject.SetActive(!GameManager.GetPlayerWithUsername(pss.playerExtendedPublicData.username).isAlive);
         }
     }
 }
