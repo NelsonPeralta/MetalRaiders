@@ -134,6 +134,7 @@ public class Fireball : MonoBehaviour
 
     void ShootRay()
     {
+        objectsHit.Clear();
         _prePos = transform.position;
         _nextPos = transform.position + transform.TransformDirection(Vector3.forward) * speed * Time.deltaTime;
 

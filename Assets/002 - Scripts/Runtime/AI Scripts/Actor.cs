@@ -301,6 +301,7 @@ abstract public class Actor : Biped
 
     protected void Prepare()
     {
+        //_lastPlayerPhotonIdWhoDamagedThis = -1;
         _ultraMergeCount = 0;
         _isSeenByTargetPlayerCooldown = _isDodgingCooldown = _isCurrentlyAlertingCooldown = 0;
         _switchPlayerCooldown = 0;
@@ -314,16 +315,16 @@ abstract public class Actor : Biped
     public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false, int weIndx = -1)
     {
         print($"Actor Damage: {damageSource}");
-        { // Hit Marker Handling
-            Player p = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
+        //{ // Hit Marker Handling
+        //    Player p = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
 
-            if (hitPoints <= damage)
-                p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-            else
-                p.GetComponent<PlayerUI>().SpawnHitMarker();
-        }
+        //    if (hitPoints <= damage)
+        //        p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+        //    else
+        //        p.GetComponent<PlayerUI>().SpawnHitMarker();
+        //}
 
-        GetComponent<PhotonView>().RPC("DamageActor", RpcTarget.All, damage, playerWhoShotPDI, damageSource, isHeadshot, weIndx);
+        GetComponent<PhotonView>().RPC("DamageActor", RpcTarget.AllViaServer, damage, playerWhoShotPDI, damageSource, isHeadshot, weIndx);
     }
 
     void PlayGruntClip()
@@ -744,11 +745,15 @@ abstract public class Actor : Biped
 
 
 
+
+
     [PunRPC]
     public void DamageActor(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false, int weapIndx = -1)
     {
         if (hitPoints <= 0)
             return;
+
+        //if (playerWhoShotPDI > 0) _lastPlayerPhotonIdWhoDamagedThis = playerWhoShotPDI;
 
         SoundManager.instance.PlayAudioClip(transform.position, SoundManager.instance.successfulPunch);
 
@@ -768,24 +773,16 @@ abstract public class Actor : Biped
 
         Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage} {damageSource}");
         hitPoints -= damage;
-        if (weapIndx >= 0)
-        {
-            if (GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[weapIndx].GetComponent<WeaponProperties>().ultraBind)
-                ultraMergeCount++;
-        }
-        if (hitPoints <= 0)
-        {
-            try
-            {
-                pp.GetComponent<PlayerSwarmMatchStats>().kills++;
-                pp.playerMedals.kills++;
-                pp.GetComponent<PlayerSwarmMatchStats>().AddPoints(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
-                pp.playerUI.ShowPointWitness(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
-                pp.PlayEnemyDownClip();
 
-                //SpawnKillFeed(this.GetType().ToString(), playerWhoShotPDI, damageSource: damageSource, isHeadshot: isHeadshot);
+        if (hitPoints > 0)
+        {
+            if (weapIndx >= 0)
+            {
+                if (GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[weapIndx].GetComponent<WeaponProperties>().ultraBind)
+                    ultraMergeCount++;
             }
-            catch { }
+
+            pp.GetComponent<PlayerUI>().SpawnHitMarker();
         }
     }
 
@@ -830,17 +827,33 @@ abstract public class Actor : Biped
 
 
     [PunRPC]
-    public void ActorDie(bool caller = true)
+    public void ActorDie(bool caller = true, int playerWhoShotPDI = -1)
     {
         Debug.Log($"ActorDie");
         if (caller && PhotonNetwork.IsMasterClient)
         {
             Debug.Log($"ACTORD DIE CALL");
-            GetComponent<PhotonView>().RPC("ActorDie", RpcTarget.All, false);
+            GetComponent<PhotonView>().RPC("ActorDie", RpcTarget.All, false, playerWhoShotPDI);
         }
         else if (!caller)
         {
+            if (playerWhoShotPDI > 0)
+            {
+                GameManager.GetPlayerWithPhotonView(playerWhoShotPDI).GetComponent<PlayerSwarmMatchStats>().kills++;
+                GameManager.GetPlayerWithPhotonView(playerWhoShotPDI).playerMedals.kills++;
+                GameManager.GetPlayerWithPhotonView(playerWhoShotPDI).GetComponent<PlayerSwarmMatchStats>().AddPoints(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
+                GameManager.GetPlayerWithPhotonView(playerWhoShotPDI).playerUI.ShowPointWitness(_defaultHitpoints * 8 + SwarmManager.instance.currentWave * 33);
+                GameManager.GetPlayerWithPhotonView(playerWhoShotPDI).PlayEnemyDownClip();
+                GameManager.GetPlayerWithPhotonView(playerWhoShotPDI).playerUI.SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
+            }
+
+
+
+
+
             Debug.Log($"ACTORD DIE PROCESSING");
+            _animator.Play("Die");
+
             GetComponent<HitPoints>().OnDeath?.Invoke(GetComponent<HitPoints>());
             _friction.gameObject.SetActive(false);
             _audioSource.clip = _deathClip;
@@ -849,7 +862,6 @@ abstract public class Actor : Biped
             foreach (ActorHitbox ah in GetComponentsInChildren<ActorHitbox>())
                 ah.gameObject.SetActive(false);
 
-            _animator.Play("Die");
             nma.enabled = false;
             SwarmManager.instance.InvokeOnAiDeath();
             StartCoroutine(Hide());
