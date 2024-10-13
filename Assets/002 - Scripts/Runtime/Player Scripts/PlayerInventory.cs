@@ -404,90 +404,94 @@ public class PlayerInventory : MonoBehaviourPun
 
     void LowAmmoIndicatorControl()
     {
-        if (!player.isDualWielding)
+        if (activeWeapon)
         {
-            lowAmmoIndicatorLeft.SetActive(false); noAmmoIndicatorLeft.SetActive(false);
 
-
-
-            //if (!player.playerController.isReloading)
-            //{
-            if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
+            if (!player.isDualWielding)
             {
-                lowAmmoIndicator.SetActive(false);
-                noAmmoIndicator.SetActive(true);
-            }
-            else if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
-            {
-                lowAmmoIndicator.SetActive(true);
-                noAmmoIndicator.SetActive(false);
+                lowAmmoIndicatorLeft.SetActive(false); noAmmoIndicatorLeft.SetActive(false);
+
+
+
+                //if (!player.playerController.isReloading)
+                //{
+                if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
+                {
+                    lowAmmoIndicator.SetActive(false);
+                    noAmmoIndicator.SetActive(true);
+                }
+                else if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
+                {
+                    lowAmmoIndicator.SetActive(true);
+                    noAmmoIndicator.SetActive(false);
+                }
+                else
+                {
+                    lowAmmoIndicator.SetActive(false);
+                    noAmmoIndicator.SetActive(false);
+                }
+                //}
+                //else
+                //{
+                //    lowAmmoIndicator.SetActive(false);
+                //    noAmmoIndicator.SetActive(false);
+                //}
             }
             else
             {
-                lowAmmoIndicator.SetActive(false);
-                noAmmoIndicator.SetActive(false);
-            }
-            //}
-            //else
-            //{
-            //    lowAmmoIndicator.SetActive(false);
-            //    noAmmoIndicator.SetActive(false);
-            //}
-        }
-        else
-        {
-            lowAmmoIndicator.SetActive(false); noAmmoIndicator.SetActive(false);
+                lowAmmoIndicator.SetActive(false); noAmmoIndicator.SetActive(false);
 
 
-            //if (!player.playerController.isReloadingRight)
-            //{
-            if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
-            {
-                lowAmmoIndicatorRight.SetActive(false);
-                noAmmoIndicatorRight.SetActive(true);
-            }
-            else if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
-            {
-                lowAmmoIndicatorRight.SetActive(true);
-                noAmmoIndicatorRight.SetActive(false);
-            }
-            else
-            {
-                lowAmmoIndicatorRight.SetActive(false);
-                noAmmoIndicatorRight.SetActive(false);
-            }
-            //}
-            //else
-            //{
-            //    lowAmmoIndicator.SetActive(false);
-            //    noAmmoIndicator.SetActive(false);
-            //}
+                //if (!player.playerController.isReloadingRight)
+                //{
+                if (activeWeapon.loadedAmmo == 0 && activeWeapon.spareAmmo == 0)
+                {
+                    lowAmmoIndicatorRight.SetActive(false);
+                    noAmmoIndicatorRight.SetActive(true);
+                }
+                else if (activeWeapon.loadedAmmo < activeWeapon.ammoCapacity * 0.4f)
+                {
+                    lowAmmoIndicatorRight.SetActive(true);
+                    noAmmoIndicatorRight.SetActive(false);
+                }
+                else
+                {
+                    lowAmmoIndicatorRight.SetActive(false);
+                    noAmmoIndicatorRight.SetActive(false);
+                }
+                //}
+                //else
+                //{
+                //    lowAmmoIndicator.SetActive(false);
+                //    noAmmoIndicator.SetActive(false);
+                //}
 
 
 
-            //if (!player.playerController.isReloadingLeft)
-            //{
-            if (thirdWeapon.loadedAmmo == 0 && thirdWeapon.spareAmmo == 0)
-            {
-                lowAmmoIndicatorLeft.SetActive(false);
-                noAmmoIndicatorLeft.SetActive(true);
+                //if (!player.playerController.isReloadingLeft)
+                //{
+                if (thirdWeapon.loadedAmmo == 0 && thirdWeapon.spareAmmo == 0)
+                {
+                    lowAmmoIndicatorLeft.SetActive(false);
+                    noAmmoIndicatorLeft.SetActive(true);
+                }
+                else if (thirdWeapon.loadedAmmo < thirdWeapon.ammoCapacity * 0.4f)
+                {
+                    lowAmmoIndicatorLeft.SetActive(true);
+                    noAmmoIndicatorLeft.SetActive(false);
+                }
+                else
+                {
+                    lowAmmoIndicatorLeft.SetActive(false);
+                    noAmmoIndicatorLeft.SetActive(false);
+                }
+                //}
+                //else
+                //{
+                //    lowAmmoIndicatorLeft.SetActive(false);
+                //    noAmmoIndicatorLeft.SetActive(false);
+                //}
             }
-            else if (thirdWeapon.loadedAmmo < thirdWeapon.ammoCapacity * 0.4f)
-            {
-                lowAmmoIndicatorLeft.SetActive(true);
-                noAmmoIndicatorLeft.SetActive(false);
-            }
-            else
-            {
-                lowAmmoIndicatorLeft.SetActive(false);
-                noAmmoIndicatorLeft.SetActive(false);
-            }
-            //}
-            //else
-            //{
-            //    lowAmmoIndicatorLeft.SetActive(false);
-            //    noAmmoIndicatorLeft.SetActive(false);
-            //}
         }
     }
 

@@ -33,8 +33,11 @@ public class IncreaseScaleThenScaleBackInTime : MonoBehaviour
 
     public void Trigger()
     {
-        if (coroutine != null) StopCoroutine(coroutine);
-        coroutine = StartCoroutine(ScaleOverTime(0.25f, 1));
+        if (transform.GetComponent<Player>().isMine)
+        {
+            if (coroutine != null) StopCoroutine(coroutine);
+            if (gameObject.activeSelf) coroutine = StartCoroutine(ScaleOverTime(0.25f, 1));
+        }
     }
 
     IEnumerator ScaleOverTime(float time, float destScale)
