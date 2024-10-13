@@ -77,7 +77,8 @@ public class ScoreboardManager : MonoBehaviour
             {
                 _winnerWitness.SetActive(false);
                 _loserWitness.SetActive(false);
-                _drawWitness.SetActive(true);
+
+                if (!CurrentRoomManager.instance.leftRoomManually) _drawWitness.SetActive(true); else _drawWitness.SetActive(false);
             }
         }
     }

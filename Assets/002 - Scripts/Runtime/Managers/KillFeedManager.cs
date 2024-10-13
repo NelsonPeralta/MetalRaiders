@@ -66,6 +66,8 @@ public class KillFeedManager : MonoBehaviour
 
         if (nkf != null)
         {
+            if (feed.Contains(player.username)) feed.Replace(player.username, "You");
+
             nkf.text = $"{feed}";
             nkf.transform.SetParent(gridLayout.transform, false);
             nkf.transform.SetAsFirstSibling();

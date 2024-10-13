@@ -128,18 +128,38 @@ public class AimAssistCone : MonoBehaviour
         {// DO NOT REMOVE THIS. This is needed because there is no native way to remove disabled objs without using listeners. Removing this will break aiming
 
             if (collidingHitboxes.Count > 0)
-                for (int i = 0; i < collidingHitboxes.Count; i++)
-                    if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy)
+                for (int i = collidingHitboxes.Count; i-- > 0;)
+                {
+                    if (collidingHitboxes[i] == null) // if a player leaves while in the list this WILL cause errors for the code below
+                    {
                         collidingHitboxes.Remove(collidingHitboxes[i]);
+                    }
+                    else
+                    {
+                        if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy)
+                            collidingHitboxes.Remove(collidingHitboxes[i]);
+                    }
+                }
         }
 
 
 
 
         if (frictionColliders.Count > 0)
-            for (int i = 0; i < frictionColliders.Count; i++)
-                if (!frictionColliders[i].gameObject.activeSelf || !frictionColliders[i].gameObject.activeInHierarchy)
+        {
+            for (int i = frictionColliders.Count; i-- > 0;)
+            {
+                if (frictionColliders[i] == null)// if a player leaves while in the list this WILL cause errors for the code below
                     frictionColliders.Remove(frictionColliders[i]);
+                else
+                {
+                    if (!frictionColliders[i].gameObject.activeSelf || !frictionColliders[i].gameObject.activeInHierarchy)
+                        frictionColliders.Remove(frictionColliders[i]);
+                }
+            }
+        }
+
+
 
         if (player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
             reticuleFriction = _reticuleMagnetism.trueHit;

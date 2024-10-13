@@ -846,29 +846,29 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetLocalPlayer(int controllerId)
     {
-        return instance._allPlayers.Where(item => item.controllerId == controllerId && item.isMine).FirstOrDefault();
+        return instance._allPlayers.Where(item => item != null && item.controllerId == controllerId && item.isMine).FirstOrDefault();
     }
 
     public static List<Player> GetLocalPlayers()
     {
-        return instance._allPlayers.Where(item => item.isMine).ToList();
+        return instance._allPlayers.Where(item => item != null && item.isMine).ToList();
     }
 
     public static Player GetRootPlayer()
     {
-        return instance._allPlayers.Where(item => item.rid == 0 && item.isMine).FirstOrDefault();
+        return instance._allPlayers.Where(item => item != null && item.rid == 0 && item.isMine).FirstOrDefault();
     }
 
     public static Player GetPlayerWithPhotonView(int pid)
     {
-        return instance._allPlayers.Where(item => item.photonId == pid).FirstOrDefault();
+        return instance._allPlayers.Where(item => item != null && item.photonId == pid).FirstOrDefault();
     }
 
 
 
     public static Player GetPlayerWithIdAndRewId(int playerPhotonView)
     {
-        return instance._allPlayers.Where(item => item.photonId == playerPhotonView).FirstOrDefault();
+        return instance._allPlayers.Where(item => item != null && item.photonId == playerPhotonView).FirstOrDefault();
     }
 
 
@@ -1299,7 +1299,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public List<Player> GetAllPhotonPlayers()
     {
-        return _allPlayers;
+        return _allPlayers.Where(item => item != null).ToList();
     }
 
     public void ClearPhotonIdToPlayerDict()

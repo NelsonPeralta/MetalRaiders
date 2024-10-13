@@ -849,11 +849,11 @@ public class PlayerController : MonoBehaviourPun
     {
         yield return new WaitForEndOfFrame();
 
+        Debug.Log($"StopShoot_Coroutine {GetComponent<Player>().username}: {isDw}");
         if (!isDw)
         {
             isHoldingShootBtn = false;
             OnPlayerFireButtonUp?.Invoke(this);
-            Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
         }
         else
         {
@@ -1788,6 +1788,7 @@ public class PlayerController : MonoBehaviourPun
 
             //GetComponent<PlayerUI>().plasmaGrenadeBox.SetActive(false);
             GetComponent<PlayerUI>().plasmaGrenadeImage.gameObject.SetActive(true);
+            GetComponent<PlayerUI>().plasmaGrenadeImage.GetComponent<AudioSource>().Play();
             GetComponent<PlayerUI>().plasmaGrenadeImage.GetComponent<IncreaseScaleThenScaleBackInTime>().Trigger();
             GetComponent<PlayerUI>().fragGrenadeImage.gameObject.SetActive(false);
             //GetComponent<PlayerUI>().fragGrenadeBox.SetActive(true);
@@ -1802,6 +1803,7 @@ public class PlayerController : MonoBehaviourPun
 
             GetComponent<PlayerUI>().plasmaGrenadeImage.gameObject.SetActive(false);
             GetComponent<PlayerUI>().fragGrenadeImage.gameObject.SetActive(true);
+            GetComponent<PlayerUI>().fragGrenadeImage.GetComponent<AudioSource>().Play();
             GetComponent<PlayerUI>().fragGrenadeImage.GetComponent<IncreaseScaleThenScaleBackInTime>().Trigger();
         }
     }
@@ -2181,9 +2183,9 @@ public class PlayerController : MonoBehaviourPun
 
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
-            FindObjectOfType<MultiplayerManager>().EndGame(false);
+            FindObjectOfType<MultiplayerManager>().EndGame(false, actuallyQuit: true);
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
-            FindObjectOfType<SwarmManager>().EndGame(false);
+            FindObjectOfType<SwarmManager>().EndGame(false, actuallyQuit: true);
     }
 
     public void SetPlayerIDInInput()

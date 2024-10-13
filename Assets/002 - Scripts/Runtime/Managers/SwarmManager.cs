@@ -1136,7 +1136,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         Destroy(loot, 60);
     }
 
-    public void EndGame(bool saveXp = true)
+    public void EndGame(bool saveXp = true, bool actuallyQuit = false)
     {
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             SwarmManager.instance.StopAllMusic();

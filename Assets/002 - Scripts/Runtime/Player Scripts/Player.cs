@@ -489,9 +489,6 @@ public class Player : Biped
     {
         get
         {
-            print($"Player has a data cell:");
-            print(playerDataCell);
-            print(playerDataCell.team);
             return playerDataCell.team;
         }
     }
