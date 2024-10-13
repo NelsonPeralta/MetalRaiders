@@ -86,6 +86,7 @@ public class PlayerShooting : MonoBehaviourPun
 
         playerController.OnPlayerScopeBtnDown += OnPlayerControllerScope_Delegate;
         playerController.OnDualWieldedWeaponFireBtnUp += OnPlayerFireDualWieldedWeaponButtonUp_Delegate;
+        playerController.player.OnPlayerDeath += OnPlayerDeath_Delegate;
     }
 
     public void Update()
@@ -554,7 +555,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                 if (player.isMine || weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
-                    Debug.Log("Shooting Plasma bullet");
+                    Debug.Log($"Shooting Plasma bullet {overcharge} {weaponToShoot.targetTracking}");
                     var bullet = GameObjectPool.instance.SpawnPooledBullet();
                     bullet.transform.localScale = Vector3.one;
 
@@ -836,5 +837,11 @@ public class PlayerShooting : MonoBehaviourPun
     public void StopBurstFiring()
     {
         StopAllCoroutines();
+    }
+
+
+    void OnPlayerDeath_Delegate(Player p)
+    {
+        _overchargeFloat = _overchargeFloat_thirdWeapon = 0;
     }
 }

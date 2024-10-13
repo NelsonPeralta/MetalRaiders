@@ -86,6 +86,10 @@ public class MotionTrackerDot : MonoBehaviour
 
 
 
+    enum State { s1, s2, s3, s4, s5, s6, s7, s8, s9 }
+    [SerializeField] State _state;
+
+
 
 
     private void Awake()
@@ -110,10 +114,13 @@ public class MotionTrackerDot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _state = 0;
         if (targetPlayerController != null)
         {
             _tpc = transform.position; _tpc.x = 0; _tpc.z = 0;
             _tarpc = targetPlayerController.transform.position; _tarpc.x = 0; _tarpc.z = 0;
+
+            _state = State.s1;
 
             if (Vector3.Distance(_tpc, _tarpc) <= 10)
             {
@@ -121,8 +128,11 @@ public class MotionTrackerDot : MonoBehaviour
                 _tarpc = targetPlayerController.transform.position; _tarpc.y = 0;
                 _tarDistance = Vector3.Distance(_tpc, _tarpc);
 
+                _state = State.s2;
                 if (_tarDistance <= 20)
                 {
+                    _state = State.s3;
+
                     _dirToTar = _tarpc - _tpc;
 
                     _dotHolder.SetActive(true);
@@ -141,24 +151,27 @@ public class MotionTrackerDot : MonoBehaviour
 
                     if (targetPlayerController.player.movement.isMoving)
                     {
+                        _state = State.s4;
+
                         _dotHolder.SetActive(targetPlayerController.player.movement.isMoving);
                         _dotHolder.SetActive(!targetPlayerController.isCrouching);
 
                     }
                     else
                     {
+                        _state = State.s5;
                         _dotHolder.SetActive(false);
                     }
 
-                    if (!targetPlayerController.player.movement.isGrounded) _dotHolder.SetActive(true);
-                    if (targetPlayerController.isCurrentlyShootingForMotionTracker) _dotHolder.SetActive(true);
+                    if (!targetPlayerController.player.movement.isGrounded) { _dotHolder.SetActive(true); _state = State.s6; }
+                    if (targetPlayerController.isCurrentlyShootingForMotionTracker) { _dotHolder.SetActive(true); _state = State.s7; }
 
                     //if (targetPlayerController.player.team == _rootPlayerTeam) _dotHolder.SetActive(true);
                 }
                 else
                 {
                     _dotHolder.SetActive(false);
-
+                    _state = State.s8;
                 }
 
 
@@ -167,7 +180,10 @@ public class MotionTrackerDot : MonoBehaviour
                 //_dotHolder.SetActive(true);
             }
             else
+            {
+                _state = State.s9;
                 _dotHolder.SetActive(false);
+            }
         }
         else
         {

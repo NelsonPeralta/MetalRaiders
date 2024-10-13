@@ -635,8 +635,6 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!GetComponent<Player>().isDead && !player.isRespawning)
         {
-
-
             if (player.isMine)
             {
                 if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
@@ -705,14 +703,23 @@ public class PlayerController : MonoBehaviourPun
 
     void LeftShooting()
     {
+
+        //if (player.isDualWielding)
+        //{
+        //    if (player.playerInventory.thirdWeapon.loadedAmmo > 0 && player.playerInventory.thirdWeapon.targetTracking && player.playerShooting.revo <= 0 && isHoldingShootBtn)
+        //        player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+        //}
+
+
+
         if (PV.IsMine && player.isDualWielding && !isHoldingShootDualWieldedWeapon)
             if (activeControllerType == ControllerType.Joystick)
             {
-                if (rewiredPlayer.GetButton("Throw Grenade")) SendIsHoldingFireWeaponBtn(true, Vector3.zero, true);
+                if (rewiredPlayer.GetButton("Throw Grenade")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
             }
             else
             {
-                if (rewiredPlayer.GetButton("Aim")) SendIsHoldingFireWeaponBtn(true, Vector3.zero, true);
+                if (rewiredPlayer.GetButton("Aim")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
             }
 
 
@@ -864,7 +871,7 @@ public class PlayerController : MonoBehaviourPun
             PV.RPC("SendIsHoldingFireWeaponBtn", RpcTarget.All, false, trackingTargetInstantiationPosition, isDualWieldedWeapon);
         else
         {
-            print($"SendIsHoldingFireWeaponBtn received {isDualWieldedWeapon}");
+            print($"SendIsHoldingFireWeaponBtn received {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
             if (!isDualWieldedWeapon)
             {
 
@@ -884,6 +891,7 @@ public class PlayerController : MonoBehaviourPun
             }
             else
             {
+                if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
                 isHoldingShootDualWieldedWeapon = true;
             }
         }
@@ -1173,6 +1181,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void EnableCrouch_RPC()
     {
+        isCrouching = true; // for motion tracker
         movement.playerCapsule.localScale = new Vector3(transform.localScale.x, movement.crouchYScale, transform.localScale.z);
 
         if (movement.isGrounded)
@@ -1196,6 +1205,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void DisableCrouch_RPC()
     {
+        isCrouching = false;// for motion tracker
         movement.playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
 
         RaycastHit hit;
@@ -1798,7 +1808,7 @@ public class PlayerController : MonoBehaviourPun
 
     void HolsterAndInspect()
     {
-        if (rewiredPlayer.GetButtonLongPressDown("holster") && PV.IsMine)
+        if (rewiredPlayer.GetButtonLongPressDown("holster") && PV.IsMine && !player.isDualWielding)
         {
             if (player.playerInventory.isDualWielding) player.playerInventory.DropThirdWeapon();
             PV.RPC("ToggleHolsterWeaponAnimation_RPC", RpcTarget.All, !holstered);
