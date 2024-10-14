@@ -526,6 +526,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() // Runs only when My player joined the room
     {
         Debug.Log("Joined room");
+        TriggerOnJoinedRoomBehaviour();
+
+        //FindMasterClientAndToggleIcon();
+    }
+
+    public void TriggerOnJoinedRoomBehaviour()
+    {
         DestroyNameplates();
         CreateNameplates();
 
@@ -591,8 +598,6 @@ public class Launcher : MonoBehaviourPunCallbacks
                 StartCoroutine(SendLocalGameParamsToMasterClient_Coroutine());
             }
         }
-
-        //FindMasterClientAndToggleIcon();
     }
 
     // Runs only when OTHER player joined room.
@@ -694,9 +699,9 @@ public class Launcher : MonoBehaviourPunCallbacks
             NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, c);
             c++;
         }
-        
-        
-        
+
+
+
         NetworkGameManager.instance.StartGameButton();
     }
 

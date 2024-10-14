@@ -12,7 +12,7 @@ using static GameManager;
 
 public class MenuManager : MonoBehaviour
 {
-    public static MenuManager Instance { get {  return FindObjectOfType<MenuManager>(); } }
+    public static MenuManager Instance { get { return FindObjectOfType<MenuManager>(); } }
 
     public TMP_Text loadingMenuText;
 
@@ -189,7 +189,19 @@ public class MenuManager : MonoBehaviour
     public void CloseCarnageReportMenu()
     {
         print("CloseCarnageReportMenu");
-        OpenMainMenu();
+
+        if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates))
+        {
+            GameManager.instance.RemoveFromPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
+            Launcher.instance.TriggerOnJoinedRoomBehaviour();
+            //MenuManager.Instance.OpenMenu("multiplayer_room");
+            //Launcher.instance.DestroyNameplates();
+            //Launcher.instance.CreateNameplates();
+        }
+        else
+        {
+            OpenMainMenu();
+        }
 
         if (GameManager.instance.connection == GameManager.Connection.Local)
         {

@@ -403,7 +403,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         else
                             WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
 
-                    pp.LeaveRoomWithDelay();
+                    {
+
+                        pp.LeaveLevelButStayInRoom();
+                    }
                 }
             }
             else
@@ -419,7 +422,11 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 }
 
                 if (pp.controllerId == 0)
+                {
                     GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
+                    //pp.LeaveLevelButStayInRoom();
+
+                }
             }
 
             pp.playerUI.scoreboard.OpenScoreboard();

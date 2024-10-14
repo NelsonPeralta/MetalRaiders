@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Text;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.SceneManagement;
 
 public class Player : Biped
 {
@@ -1174,10 +1175,10 @@ public class Player : Biped
     }
 
 
-    public void LeaveRoomWithDelay()
+    public void LeaveLevelButStayInRoom()
     {
         if (controllerId == 0)
-            StartCoroutine(LeaveRoomWithDelay_Coroutine());
+            StartCoroutine(LeaveLevelButStayInRoom_Coroutine());
     }
 
     void SpawnRagdoll()
@@ -1378,14 +1379,22 @@ public class Player : Biped
 
     // public coroutines
     #region
-    public IEnumerator LeaveRoomWithDelay_Coroutine(int delay = 5)
+    public IEnumerator LeaveLevelButStayInRoom_Coroutine(int delay = 5)
     {
         yield return new WaitForSeconds(delay);
 
 
         int levelToLoad = 0;
 
-        GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
+        //GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
+
+
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            GameManager.instance.AddToPreivousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
+            Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+            PhotonNetwork.LoadLevel(0);
+        }
     }
 
     #endregion

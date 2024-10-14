@@ -9,8 +9,11 @@ public class QuitCurrentGameButton : MonoBehaviour
 
     public void QuitCurrentGame()
     {
-        CurrentRoomManager.instance.leftRoomManually = true;
-        button.SetActive(false);
-        playerController.QuitMatch();
+        if (!CurrentRoomManager.instance.gameOver)
+        {
+            CurrentRoomManager.instance.leftRoomManually = true;
+            button.SetActive(false);
+            playerController.QuitMatch();
+        }
     }
 }
