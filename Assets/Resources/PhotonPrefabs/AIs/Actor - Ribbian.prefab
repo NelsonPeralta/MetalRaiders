@@ -4794,6 +4794,7 @@ MonoBehaviour:
   _ultraMergeExPrefab: {fileID: 6500668859487480126, guid: c4d9f2c427f83a94aad0b6ccb2dcb4e3,
     type: 3}
   _flinchThreshold: 100
+  _lastPlayerPhotonIdWhoDamagedThis: 0
   _flinchThresholdCount: 0
   _fireBallPrefab: {fileID: 5091089392186072086, guid: b098cbed4f2aee74c81415d00707bc75,
     type: 3}
