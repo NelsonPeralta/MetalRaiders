@@ -58,7 +58,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         print($"PlayerThirdPersonModelManager Start {transform.root.name}");
     }
 
-    void OnActiveWeaponChanged_PlayTPSAnimations_Delegate(PlayerInventory playerInventory)
+    public void OnActiveWeaponChanged_PlayTPSAnimations_Delegate(PlayerInventory playerInventory)
     {
         print($"Chaging TPS model stance {playerInventory.activeWeapon.killFeedOutput} {playerInventory.activeWeapon.idleHandlingAnimationType}");
 
@@ -66,7 +66,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
         thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", false);
 
-        if (playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+        if (playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword || playerInventory.hasEnnemyFlag)
         {
             thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", true);
             thirdPersonScript.GetComponent<Animator>().Play("sword draw");

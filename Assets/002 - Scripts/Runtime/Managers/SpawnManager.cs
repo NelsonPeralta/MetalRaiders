@@ -9,6 +9,10 @@ public class SpawnManager : MonoBehaviour
     public List<SpawnPoint> genericSpawnPointsAlpha = new List<SpawnPoint>();
     public List<SpawnPoint> genericSpawnPointsBeta = new List<SpawnPoint>();
 
+    public List<SpawnPoint> redSpawnPoints = new List<SpawnPoint>();
+    public List<SpawnPoint> blueSpawnPoints = new List<SpawnPoint>();
+
+
 
     public OddballSpawnPoint oddballSpawnPoint;
     void Awake()
@@ -21,10 +25,18 @@ public class SpawnManager : MonoBehaviour
                 sp.name = $"Spawn point {c}";
                 c++;
 
-                if (sp.layer == SpawnPoint.Layer.Alpha)
+                if (sp.layer == SpawnPoint.Layer.Alpha && sp.team == GameManager.Team.None)
                     genericSpawnPointsAlpha.Add(sp);
-                else if (sp.layer == SpawnPoint.Layer.Beta)
+                else if (sp.layer == SpawnPoint.Layer.Beta && sp.team == GameManager.Team.None)
                     genericSpawnPointsBeta.Add(sp);
+
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                {
+                    if (sp.layer == SpawnPoint.Layer.Beta && sp.team == GameManager.Team.Red)
+                        redSpawnPoints.Add(sp);
+                    else if (sp.layer == SpawnPoint.Layer.Beta && sp.team == GameManager.Team.Blue)
+                        blueSpawnPoints.Add(sp);
+                }
             }
         }
 
@@ -37,9 +49,23 @@ public class SpawnManager : MonoBehaviour
         oddballSpawnPoint = FindObjectOfType<OddballSpawnPoint>();
     }
 
-    public Transform GetSpawnPointAtIndex(int i)
+    public Transform GetSpawnPointAtIndex(int i, GameManager.Team team)
     {
-        return genericSpawnPointsAlpha[i].transform;
+        if (team == GameManager.Team.None)
+            return genericSpawnPointsAlpha[i].transform;
+        else
+        {
+            if (team == GameManager.Team.Red)
+            {
+                return redSpawnPoints[i].transform;
+            }
+            else
+            {
+                return blueSpawnPoints[i].transform;
+            }
+        }
+
+        return null;
     }
 
     public Transform GetRandomComputerSpawnPoint()
@@ -55,43 +81,90 @@ public class SpawnManager : MonoBehaviour
         return availableSpawnPoints[ran].transform;
     }
 
-    Transform GetRandomSpawnpoint()
+    Transform GetCompletelyRandomSpawnpoint()
     {
+        print($"GetCompletelyRandomSpawnpoint");
         return genericSpawnPointsAlpha[Random.Range(0, genericSpawnPointsAlpha.Count)].transform;
     }
 
-    public (Transform, bool) GetRandomSafeSpawnPoint() // return a position and if the spawn is random or not
+    public (Transform, bool) GetRandomSafeSpawnPoint(GameManager.Team team) // return a position and if the spawn is random or not
     {
+        print($"GetRandomSafeSpawnPoint {team} {blueSpawnPoints.Count}");
+
         List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
-            foreach (SpawnPoint sp in genericSpawnPointsAlpha)
-                if (!sp.constested && !sp.reserved)
-                    availableSpawnPoints.Add(sp);
-
-
-            if (availableSpawnPoints.Count == 0)
-                foreach (SpawnPoint spb in genericSpawnPointsAlpha)
-                    if (!spb.seen && !spb.reserved)
-                        availableSpawnPoints.Add(spb);
-
-
-            if (availableSpawnPoints.Count == 0)
-                foreach (SpawnPoint spb in genericSpawnPointsAlpha)
-                    if (!spb.reserved)
-                        availableSpawnPoints.Add(spb);
-
-            if (availableSpawnPoints.Count == 0)
-                foreach (SpawnPoint spb in genericSpawnPointsAlpha)
-                    if (!spb.seen)
-                        availableSpawnPoints.Add(spb);
-
-
-            if (availableSpawnPoints.Count == 0)
-                foreach (SpawnPoint sp in genericSpawnPointsBeta)
+            if (GameManager.instance.gameType != GameManager.GameType.CTF)
+            {
+                foreach (SpawnPoint sp in genericSpawnPointsAlpha)
                     if (!sp.constested && !sp.reserved)
                         availableSpawnPoints.Add(sp);
+
+
+                if (availableSpawnPoints.Count == 0)
+                    foreach (SpawnPoint spb in genericSpawnPointsAlpha)
+                        if (!spb.seen && !spb.reserved)
+                            availableSpawnPoints.Add(spb);
+
+
+                if (availableSpawnPoints.Count == 0)
+                    foreach (SpawnPoint spb in genericSpawnPointsAlpha)
+                        if (!spb.reserved)
+                            availableSpawnPoints.Add(spb);
+
+                if (availableSpawnPoints.Count == 0)
+                    foreach (SpawnPoint spb in genericSpawnPointsAlpha)
+                        if (!spb.seen)
+                            availableSpawnPoints.Add(spb);
+
+
+                if (availableSpawnPoints.Count == 0)
+                    foreach (SpawnPoint sp in genericSpawnPointsBeta)
+                        if (!sp.constested && !sp.reserved)
+                            availableSpawnPoints.Add(sp);
+            }
+            else
+            {
+                if (team == GameManager.Team.Red)
+                {
+                    foreach (SpawnPoint sp in redSpawnPoints)
+                        if (!sp.constested && !sp.reserved)
+                            availableSpawnPoints.Add(sp);
+
+
+                    if (availableSpawnPoints.Count == 0)
+                        foreach (SpawnPoint spb in redSpawnPoints)
+                            if (!spb.reserved)
+                                availableSpawnPoints.Add(spb);
+
+                    if (availableSpawnPoints.Count == 0)
+                        foreach (SpawnPoint spb in redSpawnPoints)
+                            if (!spb.seen)
+                                availableSpawnPoints.Add(spb);
+                }
+                else
+                {
+                    foreach (SpawnPoint sp in blueSpawnPoints)
+                        if (!sp.constested && !sp.reserved)
+                            availableSpawnPoints.Add(sp);
+
+                    if (availableSpawnPoints.Count == 0)
+                        foreach (SpawnPoint spb in blueSpawnPoints)
+                            if (!spb.reserved)
+                                availableSpawnPoints.Add(spb);
+
+                    if (availableSpawnPoints.Count == 0)
+                        foreach (SpawnPoint spb in blueSpawnPoints)
+                            if (!spb.seen)
+                                availableSpawnPoints.Add(spb);
+                }
+
+
+
+
+
+            }
         }
 
 
@@ -108,12 +181,31 @@ public class SpawnManager : MonoBehaviour
             return (availableSpawnPoints[ran].transform, false);
         }
 
-        return (GetRandomSpawnpoint(), true);
+        return (GetCompletelyRandomSpawnpoint(), true);
     }
 
     public Transform GetSpawnPointAtPos(Vector3 p)
     {
         foreach (SpawnPoint sp in genericSpawnPointsAlpha)
+        {
+            if (sp.transform.position == p)
+            {
+                print($"Returning spawn point {sp.name}");
+                return sp.transform;
+            }
+        }
+
+
+        foreach (SpawnPoint sp in redSpawnPoints)
+        {
+            if (sp.transform.position == p)
+            {
+                print($"Returning spawn point {sp.name}");
+                return sp.transform;
+            }
+        }
+
+        foreach (SpawnPoint sp in blueSpawnPoints)
         {
             if (sp.transform.position == p)
             {
@@ -132,6 +224,14 @@ public class SpawnManager : MonoBehaviour
                 sp.reserved = true;
 
         foreach (SpawnPoint sp in genericSpawnPointsBeta)
+            if (sp.transform.position == p)
+                sp.reserved = true;
+
+        foreach (SpawnPoint sp in redSpawnPoints)
+            if (sp.transform.position == p)
+                sp.reserved = true;
+
+        foreach (SpawnPoint sp in blueSpawnPoints)
             if (sp.transform.position == p)
                 sp.reserved = true;
     }

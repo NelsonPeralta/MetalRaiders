@@ -256,7 +256,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
-            if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
+            if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball
+                || GameManager.instance.gameType == GameManager.GameType.CTF)
             {
                 if (winningPlayerMS.player.team == GameManager.Team.Red)
                     redTeamScore++;

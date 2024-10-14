@@ -12,10 +12,27 @@ public class OddballWorldUiFollowPlayerCamera : MonoBehaviour
     Image _im;
 
 
+    [SerializeField] Flag _flagScript;
+
+
 
     private void Awake()
     {
         try { _im = GetComponent<Image>(); } catch { }
+    }
+
+    private void Start()
+    {
+        if (GameManager.instance.gameType == GameManager.GameType.CTF && _flagScript)
+        {
+            _im.color = Color.white;
+
+            if (_flagScript.spawnPoint.team == GameManager.Team.Red)
+                _im.color = Color.red;
+
+            if (_flagScript.spawnPoint.team == GameManager.Team.Blue)
+                _im.color = Color.blue;
+        }
     }
 
     // Update is called once per frame
@@ -36,6 +53,8 @@ public class OddballWorldUiFollowPlayerCamera : MonoBehaviour
                                             this.transform.position.y,
                                             _targetPlayer.transform.position.z);
             this.transform.LookAt(_targetPostition);
+
+
         }
     }
 }

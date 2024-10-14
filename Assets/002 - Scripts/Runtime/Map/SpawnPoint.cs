@@ -33,11 +33,14 @@ public class SpawnPoint : MonoBehaviour
         }
     }
 
+    public GameManager.Team team { get { return _team; } }
+
 
     public Layer layer;
     public List<Player> players = new List<Player>();
     public enum SpawnPointType { Player, Computer }
     public SpawnPointType spawnPointType;
+    [SerializeField] GameManager.Team _team;
 
     [SerializeField] int _radius;
 

@@ -149,7 +149,9 @@ public class PlayerController : MonoBehaviourPun
                     DisableSprint_RPC();
                     print($"{player.name} isHoldingShootBtn. {pInventory.activeWeapon.killFeedOutput} {_swordRecovery}");
 
-                    if ((pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Oddball || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+                    if ((pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Oddball
+                        || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword
+                        || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Flag)
                         && _swordRecovery <= 0 && _drawingWeaponTime <= 0)
                     {
 
@@ -462,7 +464,7 @@ public class PlayerController : MonoBehaviourPun
     //TODO Make the player controller handle the third person script and models instead of the movement script
     void Sprint()
     {
-        if (isHoldingShootBtn) return;
+        if (isHoldingShootBtn || player.hasEnnemyFlag || player.playerInventory.playerOddballActive) return;
 
 
         if (isSprinting)
@@ -541,7 +543,7 @@ public class PlayerController : MonoBehaviourPun
         print($"EnableSprint_RPC {pInventory.activeWeapon.killFeedOutput} {pInventory.activeWeapon.weaponType}");
 
 
-        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword);
+        _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword || player.hasEnnemyFlag);
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Rifle Sprint", pInventory.activeWeapon.weaponType != WeaponProperties.WeaponType.Pistol);
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("Pistol Sprint", pInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Pistol && pInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword);
 
@@ -609,7 +611,7 @@ public class PlayerController : MonoBehaviourPun
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword idle", false);
 
 
-        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
+        if (pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword || player.hasEnnemyFlag)
         {
             _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword idle", true);
         }

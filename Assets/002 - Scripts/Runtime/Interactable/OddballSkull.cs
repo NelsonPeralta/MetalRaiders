@@ -11,7 +11,7 @@ public class OddballSkull : MonoBehaviour
 
 
     Player _player;
-    float _del, _reset;
+    float _triggerReset, _reset;
 
 
     private void Awake()
@@ -20,29 +20,28 @@ public class OddballSkull : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (_del > 0) return;
-
-
-        print($"OODBALL {other.name}");
-        if (other.transform.root.GetComponent<Player>())
+        if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
         {
-
-
-            _player = other.transform.root.GetComponent<Player>();
-            if (!_player.isDead && !_player.isRespawning)
+            print($"OODBALL {other.name}");
+            if (_triggerReset <= 0 && thisRoot.gameObject.activeSelf &&
+                other.transform.root.GetComponent<Player>())
             {
-                print("OODBALL Player");
-                NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.photonId);
+                _player = other.transform.root.GetComponent<Player>();
+                if (!_player.isDead && !_player.isRespawning)
+                {
+                    print("OODBALL Player");
+                    NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.photonId);
+                }
             }
         }
     }
 
     private void Update()
     {
-        if (_del > 0)
-            _del -= Time.deltaTime;
+        if (_triggerReset > 0)
+            _triggerReset -= Time.deltaTime;
 
 
 
@@ -72,7 +71,7 @@ public class OddballSkull : MonoBehaviour
 
     public void DisableOddball()
     {
-        _del = 0.5f;
+        _triggerReset = 1;
         thisRoot.gameObject.SetActive(false);
     }
 

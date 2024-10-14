@@ -465,9 +465,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     #endregion
 
     // Multiplayer
-    public void AddPlayerPoint(int pid)
+    public void AddPlayerPoint(int pid, int whichFlagNeedsToBeReset = -1)
     {
-        _pv.RPC("AddPlayerPoint_RPC", RpcTarget.All, pid);
+        _pv.RPC("AddPlayerPoint_RPC", RpcTarget.All, pid, whichFlagNeedsToBeReset);
     }
 
     public void NextHillLocation()
@@ -796,9 +796,29 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     // Multiplayer
     [PunRPC]
-    void AddPlayerPoint_RPC(int pid)
+    void AddPlayerPoint_RPC(int pid, int whichFlagNeedsToBeReset)
     {
         Debug.Log("AddPlayerPoint_RPC");
+
+
+        if (whichFlagNeedsToBeReset > -1 && GameManager.instance.gameType == GameManager.GameType.CTF)
+        {
+            GameManager.GetPlayerWithPhotonView(pid).playerInventory.SwitchWeapons_RPC(false);
+
+            if ((GameManager.Team)whichFlagNeedsToBeReset == GameManager.Team.Red)
+            {
+                GameManager.instance.redFlag.spawnPoint.SpawnFlagAtStand();
+
+                foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>Red Flag Captured!");
+            }
+            else
+            {
+                foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>Blue Flag Captured!");
+                GameManager.instance.blueFlag.spawnPoint.SpawnFlagAtStand();
+            }
+        }
+
+
         MultiplayerManager.instance.AddPlayerPoint(pid);
     }
 
@@ -954,6 +974,44 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
+    public void EquipFlagToPlayer_RPC(int playerPhotonView, int whichFlagToDisable, bool caller = true)
+    {
+
+
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            _pv.RPC("EquipFlagToPlayer_RPC", RpcTarget.All, playerPhotonView, whichFlagToDisable, false); // no latency from MC side
+        }
+        else if (!caller)
+        {
+            print("EquipFlagToPlayer_RPC");
+
+            if (GameManager.GetPlayerWithPhotonView(playerPhotonView).team == GameManager.Team.Red)
+            {
+                GameManager.instance.blueFlag.scriptRoot.gameObject.SetActive(false);
+            }
+            else
+            {
+                GameManager.instance.redFlag.scriptRoot.gameObject.SetActive(false);
+            }
+
+
+
+            GameManager.GetPlayerWithPhotonView(playerPhotonView).playerInventory.EquipFlag();
+
+
+
+            foreach (Player p in GameManager.GetLocalPlayers())
+            {
+                p.killFeedManager.EnterNewFeed($"<color=#31cff9>{(GameManager.GetPlayerWithPhotonView(playerPhotonView).team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red)} Flag Taken");
+            }
+        }
+    }
+
+
+
+
+    [PunRPC]
     public void AddForceToOddball(float calculatedPower, Vector3 pos, float rad, float up, bool caller = true)
     {
         if (caller && PhotonNetwork.IsMasterClient)
@@ -990,6 +1048,48 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             GameManager.instance.oddballSkull.PlayBallDroppedClip();
         }
     }
+
+    [PunRPC]
+    public void DropFlag(Vector3 pos, Vector3 dir, GameManager.Team flagTeam, bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            _pv.RPC("DropFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false);
+        }
+        else if (!caller)
+        {
+            if (flagTeam == GameManager.Team.Blue)
+            {
+                GameManager.instance.blueFlag.rb.velocity = Vector3.zero;
+                GameManager.instance.blueFlag.rb.angularVelocity = Vector3.zero;
+
+
+                GameManager.instance.blueFlag.scriptRoot.rotation = Quaternion.identity;
+                GameManager.instance.blueFlag.scriptRoot.position = pos;
+
+                GameManager.instance.blueFlag.scriptRoot.gameObject.SetActive(true);
+                GameManager.instance.blueFlag.rb.mass = 1;
+                GameManager.instance.blueFlag.rb.AddForce(dir * 350);
+
+                //GameManager.instance.oddballSkull.PlayBallDroppedClip();
+            }
+            else
+            {
+                GameManager.instance.redFlag.rb.velocity = Vector3.zero;
+                GameManager.instance.redFlag.rb.angularVelocity = Vector3.zero;
+
+
+                GameManager.instance.redFlag.scriptRoot.rotation = Quaternion.identity;
+                GameManager.instance.redFlag.scriptRoot.position = pos;
+
+                GameManager.instance.redFlag.scriptRoot.gameObject.SetActive(true);
+                GameManager.instance.redFlag.rb.mass = 1;
+                GameManager.instance.redFlag.rb.AddForce(dir * 350);
+            }
+        }
+    }
+
+
 
     [PunRPC]
     public void UpdateAmmo(int playerPid, int wIndex, int ammo, bool isSpare = false, bool isThirdWeapon = false, bool sender = false)
@@ -1094,7 +1194,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (!caller && PhotonNetwork.IsMasterClient)
         {
-            _reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint();
+            _reservedSpawnPoint = SpawnManager.spawnManagerInstance.GetRandomSafeSpawnPoint(GameManager.GetPlayerWithPhotonView(playerPhotonId).team);
             instance._pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.All, playerPhotonId, controllerID, _reservedSpawnPoint.Item1.position, _reservedSpawnPoint.Item2);
         }
     }

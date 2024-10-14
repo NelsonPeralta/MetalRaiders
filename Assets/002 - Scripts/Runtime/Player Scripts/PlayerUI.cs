@@ -73,7 +73,7 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Bottom Right", order = 6)]
     public Text Timer;
-    public Text gameType;
+    public TMP_Text gameType;
     public Transform bottomRight;
     public GameObject multiplayerPointsHolder;
     public GameObject neutralPointsHolder, redPointsHolder, bluePointsHolder;

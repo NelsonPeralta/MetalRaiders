@@ -287,6 +287,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     public OddballSkull oddballSkull;
+    public Flag redFlag, blueFlag;
 
     public TMP_Text debugText { get { return _deb; } }
 
@@ -483,6 +484,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            oddballSkull = null; redFlag = blueFlag = null;
             //Debug.Break();
             //Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
             //Cursor.visible = true;
@@ -528,7 +530,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 StartCoroutine(LoadTimeOutOpenErrorMenu_Coroutine());
             }
 
-            
+
 
 
 
@@ -827,7 +829,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         //Debug.Log($"SpawnPlayers_Coroutine {i} {CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex} {CurrentRoomManager.instance.playerDataCells[i].rewiredId}");
         Debug.Log($"SpawnPlayers_Coroutine {GameManager.instance.GetAllPhotonPlayers().Count}");
 
-        Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[indd].startingSpawnPosInd);
+        Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[indd].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[indd].team);
 
         Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spt.position + (2 * Vector3.up), spt.rotation).GetComponent<Player>();
         player.playerController.rid = indd;
@@ -895,6 +897,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null)
     {
+        print($"SetLayerRecursively {go.name} {layerNumber}");
+
+
         if (ignoreList == null)
             ignoreList = new List<int>();
         // Reference: https://forum.unity.com/threads/change-gameobject-layer-at-run-time-wont-apply-to-child.10091/

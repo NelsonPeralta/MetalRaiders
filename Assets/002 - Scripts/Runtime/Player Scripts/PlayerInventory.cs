@@ -43,6 +43,7 @@ public class PlayerInventory : MonoBehaviourPun
         get
         {
             if (_oddball.gameObject.activeInHierarchy) return _oddball;
+            if (_flag.gameObject.activeInHierarchy) return _flag;
 
             return _activeWeapon;
         }
@@ -294,13 +295,15 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     public bool playerOddballActive { get { return _oddball.gameObject.activeInHierarchy; } }
+    public bool hasEnnemyFlag { get { return _flag.gameObject.activeInHierarchy; } }
+
     public Transform bulletTrailPool { get { return _fakeBulletTrailHolder; } }
 
     [SerializeField] Transform _fakeBulletTrailHolder;
     [SerializeField] Transform _fakeBulleTrailPrefab;
     [SerializeField] List<Transform> _fakeBulletTrailPool = new List<Transform>();
     [SerializeField] PlayerGunGameManager _playerGunGameManager;
-    [SerializeField] WeaponProperties _oddball;
+    [SerializeField] WeaponProperties _oddball, _flag;
 
 
 
@@ -353,6 +356,7 @@ public class PlayerInventory : MonoBehaviourPun
                 GameManager.SetLayerRecursively(w.GetComponent<WeaponProperties>().leftWeapon.gameObject, 3);
         }
         GameManager.SetLayerRecursively(_oddball.gameObject, 3);
+        GameManager.SetLayerRecursively(_flag.gameObject, 3);
     }
 
 
@@ -539,7 +543,7 @@ public class PlayerInventory : MonoBehaviourPun
         if (pController.pInventory.holsteredWeapon != null && !player.isDead && !player.isRespawning)
         {
             Debug.Log("SwitchWeapons");
-            PV.RPC("SwitchWeapons_RPC", RpcTarget.All);
+            PV.RPC("SwitchWeapons_RPC", RpcTarget.All, true);
         }
 
         ChangeActiveAmmoCounter();
@@ -555,7 +559,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void SwitchWeapons_RPC()
+    public void SwitchWeapons_RPC(bool spawnFlagIfYouHaveIt = true)
     {
         if (player.isMine)
         {
@@ -566,16 +570,26 @@ public class PlayerInventory : MonoBehaviourPun
                 WeaponProperties previousActiveWeapon = activeWeapon;
                 WeaponProperties newActiveWeapon = holsteredWeapon;
 
-                if (_oddball.gameObject.activeInHierarchy)
+                if (GameManager.instance.gameType == GameManager.GameType.Oddball && _oddball.gameObject.activeInHierarchy)
                 {
                     previousActiveWeapon = _activeWeapon;
                     NetworkGameManager.instance.DropOddball(player.weaponDropPoint.position, player.weaponDropPoint.forward);
                 }
 
+                if (GameManager.instance.gameType == GameManager.GameType.CTF && _flag.gameObject.activeInHierarchy)
+                {
+                    previousActiveWeapon = _activeWeapon;
+
+                    if (spawnFlagIfYouHaveIt)
+                        NetworkGameManager.instance.DropFlag(player.weaponDropPoint.position, player.weaponDropPoint.forward, (player.team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
+                }
+
+
                 activeWeapon = newActiveWeapon;
                 holsteredWeapon = previousActiveWeapon;
 
                 _oddball.gameObject.SetActive(false);
+                _flag.gameObject.SetActive(false);
             }
             else
             {
@@ -1040,6 +1054,8 @@ public class PlayerInventory : MonoBehaviourPun
 
     public void EquipOddball()
     {
+        DropThirdWeapon();
+        pController.DisableSprint();
         _oddball.gameObject.SetActive(true);
         _activeWeapon.gameObject.SetActive(false);
         UpdateThirdPersonGunModelsOnCharacter();
@@ -1047,9 +1063,20 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
 
+    public void EquipFlag()
+    {
+        DropThirdWeapon();
+        pController.DisableSprint();
+        _flag.gameObject.SetActive(true);
+        _activeWeapon.gameObject.SetActive(false);
+        UpdateThirdPersonGunModelsOnCharacter();
+        pController.GetComponent<PlayerThirdPersonModelManager>().OnActiveWeaponChanged_PlayTPSAnimations_Delegate(this);
+    }
+
+
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
-        print($"PlayerInventory OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine}");
+        print($"PlayerInventory OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine} {GameManager.instance.gameType}");
 
 
         foreach (GameObject w in allWeaponsInInventory)
@@ -1102,15 +1129,35 @@ public class PlayerInventory : MonoBehaviourPun
                 else if (pController.rid == 3)
                     GameManager.SetLayerRecursively(_oddball.gameObject, 30);
             }
+            else
             {
                 GameManager.SetLayerRecursively(_oddball.gameObject, 3);
+            }
+        }
+
+        if (GameManager.instance.gameType == GameManager.GameType.CTF)
+        {
+            if (player.isMine)
+            {
+                if (pController.rid == 0)
+                    GameManager.SetLayerRecursively(_flag.gameObject, 24);
+                else if (pController.rid == 1)
+                    GameManager.SetLayerRecursively(_flag.gameObject, 26);
+                else if (pController.rid == 2)
+                    GameManager.SetLayerRecursively(_flag.gameObject, 28);
+                else if (pController.rid == 3)
+                    GameManager.SetLayerRecursively(_flag.gameObject, 30);
+            }
+            else
+            {
+                GameManager.SetLayerRecursively(_flag.gameObject, 3);
             }
         }
     }
 
     public void DropThirdWeapon()
     {
-        if (PV.IsMine)
+        if (PV.IsMine && thirdWeapon)
         {
             print("DropThirdWeapon");
             NetworkGameManager.SpawnNetworkWeapon(thirdWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward, currAmmo: thirdWeapon.loadedAmmo, spareAmmo: thirdWeapon.spareAmmo);
