@@ -899,6 +899,10 @@ public class Launcher : MonoBehaviourPunCallbacks
             if (GameManager.instance.teamMode != TeamMode.None)
                 GameManager.instance.teamMode = TeamMode.None;
 
+        if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.CTF)
+            if (GameManager.instance.teamMode != TeamMode.Classic)
+                GameManager.instance.teamMode = TeamMode.Classic;
+
 
         GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
         FindObjectOfType<NetworkGameManager>().SendGameParams();

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AchievementManager : MonoBehaviour
 {
@@ -128,6 +129,12 @@ public class AchievementManager : MonoBehaviour
 
     }
 
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        _sticksInCurrentGame = _plamaKillsInCurrentGame = 0;
+        _gotAKillByBlowingUpABarrel = _gotANutshotKill = false;
+    }
 
 
     public static void UnlockAchievement(string an)

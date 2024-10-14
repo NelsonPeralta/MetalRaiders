@@ -1753,7 +1753,7 @@ public class Player : Biped
     void AchievementCheck(int sourcePid)
     {
         if (!PV.IsMine && sourcePid == GameManager.GetRootPlayer().photonId)
-            if (_killFeedOutput.ToString().ToLower().Contains("plasma"))
+            if (_killFeedOutput != WeaponProperties.KillFeedOutput.Plasma_Grenade && _killFeedOutput.ToString().ToLower().Contains("plasma"))
             {
                 AchievementManager.instance.plasmaKillsInThisGame++;
             }

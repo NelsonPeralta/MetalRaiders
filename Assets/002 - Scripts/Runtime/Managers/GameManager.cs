@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum GameType
     {
         Fiesta, Rockets, Slayer, Pro, Snipers, Unassgined,
-        Shotguns, Swat, Retro, GunGame, Hill, Oddball, PurpleRain, Duals, Swords,
+        Shotguns, Swat, Retro, GunGame, Hill, Oddball, PurpleRain, Duals, Swords, CTF, Martian,
 
         // Swarm Game Types
         Survival, Endless

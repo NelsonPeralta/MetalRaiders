@@ -155,7 +155,7 @@ public class PlayerUI : MonoBehaviour
         transform.GetComponent<Player>().playerInteractableObjectHandler.ClosestInteractableObjectAssigned += OnClosestInteractableObjectAssigned;
         playerMultiplayerMatchStats = GetComponent<PlayerMultiplayerMatchStats>();
         HideInformer();
-        plasmaGrenadeImage.gameObject.SetActive(false);
+        if (GameManager.instance.gameType != GameManager.GameType.Martian) plasmaGrenadeImage.gameObject.SetActive(false);
         gamepadCursor.gameObject.SetActive(false);
         GameObject thm = null;
 

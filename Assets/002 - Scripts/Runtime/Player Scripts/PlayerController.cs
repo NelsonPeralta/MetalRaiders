@@ -260,6 +260,9 @@ public class PlayerController : MonoBehaviourPun
         }
         OnPlayerSwitchWeapons?.Invoke(this);
         player.OnPlayerRespawned += OnRespawn_Delegate;
+
+
+        if (GameManager.instance.gameType == GameManager.GameType.Martian) SwitchGrenades_RPC();
     }
 
     private void Update()
@@ -1693,11 +1696,11 @@ public class PlayerController : MonoBehaviourPun
     }
     void SwitchGrenades()
     {
-        if (rewiredPlayer.GetButtonDown("Switch Grenades") && PV.IsMine)
-        {
-            //grenadeSwitchAudioSource.Play();
-            PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
-        }
+        if (GameManager.instance.gameType != GameManager.GameType.Martian)
+            if (rewiredPlayer.GetButtonDown("Switch Grenades") && PV.IsMine)
+            {
+                PV.RPC("SwitchGrenades_RPC", RpcTarget.All);
+            }
     }
 
 
@@ -1790,25 +1793,20 @@ public class PlayerController : MonoBehaviourPun
             fragGrenadesActive = false;
             stickyGrenadesActive = true;
 
-            //GetComponent<PlayerUI>().plasmaGrenadeBox.SetActive(false);
-            GetComponent<PlayerUI>().plasmaGrenadeImage.gameObject.SetActive(true);
-            GetComponent<PlayerUI>().plasmaGrenadeImage.GetComponent<AudioSource>().Play();
-            GetComponent<PlayerUI>().plasmaGrenadeImage.GetComponent<IncreaseScaleThenScaleBackInTime>().Trigger();
-            GetComponent<PlayerUI>().fragGrenadeImage.gameObject.SetActive(false);
-            //GetComponent<PlayerUI>().fragGrenadeBox.SetActive(true);
+            player.playerUI.fragGrenadeImage.gameObject.SetActive(false);
+            player.playerUI.plasmaGrenadeImage.gameObject.SetActive(true);
+            player.playerUI.plasmaGrenadeImage.GetComponent<AudioSource>().Play();
+            player.playerUI.plasmaGrenadeImage.GetComponent<IncreaseScaleThenScaleBackInTime>().Trigger();
         }
         else if (stickyGrenadesActive)
         {
-            fragGrenadesActive = true;
             stickyGrenadesActive = false;
+            fragGrenadesActive = true;
 
-            //GetComponent<PlayerUI>().fragGrenadeBox.SetActive(true);
-            //GetComponent<PlayerUI>().plasmaGrenadeBox.SetActive(false);
-
-            GetComponent<PlayerUI>().plasmaGrenadeImage.gameObject.SetActive(false);
-            GetComponent<PlayerUI>().fragGrenadeImage.gameObject.SetActive(true);
-            GetComponent<PlayerUI>().fragGrenadeImage.GetComponent<AudioSource>().Play();
-            GetComponent<PlayerUI>().fragGrenadeImage.GetComponent<IncreaseScaleThenScaleBackInTime>().Trigger();
+            player.playerUI.plasmaGrenadeImage.gameObject.SetActive(false);
+            player.playerUI.fragGrenadeImage.gameObject.SetActive(true);
+            player.playerUI.fragGrenadeImage.GetComponent<AudioSource>().Play();
+            player.playerUI.fragGrenadeImage.GetComponent<IncreaseScaleThenScaleBackInTime>().Trigger();
         }
     }
 

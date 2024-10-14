@@ -743,6 +743,12 @@ public class PlayerInventory : MonoBehaviourPun
             StartingWeapon2 = "pistol";
         }
 
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Martian)
+        {
+            StartingWeapon = "pr";
+            StartingWeapon2 = "pp";
+        }
+
 
 
 
