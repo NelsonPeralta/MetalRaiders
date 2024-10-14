@@ -569,6 +569,7 @@ public class Player : Biped
     public PlayerShooting playerShooting { get { return _playerShooting; } }
     public AssignActorPlayerTargetOnShootingSphere assignActorPlayerTargetOnShootingSphere { get { return _assignActorPlayerTargetOnShootingSphere; } }
     public PlayerUI playerUI { get { return _playerUi; } }
+    public bool isHealing { get { return _isHealing; } }
 
     #endregion
 

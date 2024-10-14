@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using HarmonyLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -38,7 +39,6 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     {
         print($"PlayerThirdPersonModelManager Awake {transform.root.name}");
         undersuitMesh.layer = 0;
-
 
         OnModelAssigned -= GetComponent<PlayerHitboxes>().OnModelAssigned;
         OnModelAssigned += GetComponent<PlayerHitboxes>().OnModelAssigned;

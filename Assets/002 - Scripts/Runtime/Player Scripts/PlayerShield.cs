@@ -32,6 +32,8 @@ public class PlayerShield : MonoBehaviour
 
     List<GameObject> _shieldHits = new List<GameObject>();
 
+    [SerializeField] List<Renderer> _shieldRenderers = new List<Renderer>();
+
 
 
 
@@ -43,9 +45,12 @@ public class PlayerShield : MonoBehaviour
             if (value < shield)
                 OnPlayerShieldDamaged?.Invoke(this);
             if (value != shield)
+            {
                 OnPlayerShieldChanged?.Invoke(this);
 
-            shield = value;
+            }
+
+            _shield = value;
         }
     }
 
@@ -59,8 +64,16 @@ public class PlayerShield : MonoBehaviour
         }
     }
 
+    float shieldDamagePercentage
+    {
+        get
+        {
+            return 1 - (_player.shieldPoints / _player.maxShieldPoints);
+        }
+    }
 
 
+    float _shieldDamagePercentage;
 
 
 
@@ -84,8 +97,38 @@ public class PlayerShield : MonoBehaviour
         _player.OnPlayerDeath += OnPlayerDeath_Delegate;
         _player.OnPlayerRespawned += OnPlayerRespawned_Delegate;
 
+
+        foreach (Renderer mr in _shieldRenderers)
+        {
+            mr.sharedMaterials[1].SetFloat("_Alpha", 0);
+            //mr.materials[1].SetFloat("_Alpha", 0);
+        }
     }
 
+
+    private void Update()
+    {
+        if (_player)
+        {
+            foreach (Renderer mr in _shieldRenderers)
+            {
+                if (mr.gameObject.activeInHierarchy)
+                {
+                    if (_player.isHealing)
+                    {
+                        if (shieldDamagePercentage > 0.5f)
+                            mr.materials[1].SetFloat("_Alpha", (1 - shieldDamagePercentage) * 2);
+                        else
+                            mr.materials[1].SetFloat("_Alpha", shieldDamagePercentage * 2);
+                    }
+                    else if (shieldDamagePercentage == 1)
+                        mr.materials[1].SetFloat("_Alpha", 0);
+                    else
+                        mr.materials[1].SetFloat("_Alpha", shieldDamagePercentage);
+                }
+            }
+        }
+    }
 
 
 
@@ -104,6 +147,9 @@ public class PlayerShield : MonoBehaviour
     void OnPlayerShieldDamaged_Delegate(Player player)
     {
         SpawnShieldHit();
+
+
+
     }
 
 

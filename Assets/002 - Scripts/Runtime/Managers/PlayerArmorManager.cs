@@ -1,3 +1,4 @@
+using HarmonyLib;
 using Photon.Pun;
 using System;
 using System.Collections;
@@ -62,8 +63,11 @@ public class PlayerArmorManager : MonoBehaviour
 
 
     public bool isRagdoll { get { return GetComponent<PlayerRagdoll>(); } }
+    public Material shieldMaterial { get { return _shieldMaterial; } }
 
     [SerializeField] ScriptObjPlayerData _playerDataCell;
+    [SerializeField] Material _shieldMaterial;
+    [SerializeField] GameObject _santaHat;
 
     public int ReloadArmorTries { get; set; }
     public bool PreventReloadArmor { get; set; }
@@ -96,6 +100,9 @@ public class PlayerArmorManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex == 0) // If you disable the go in editor, Awake will trigger AFTER setting Data Cell
             gameObject.SetActive(false);
+
+
+        if (_santaHat) _santaHat.SetActive(DateTime.Now >= new DateTime(DateTime.Now.Year, 10, 0) && DateTime.Now <= new DateTime(DateTime.Now.Year + 1, 3, 31));
     }
 
     private void Start()
