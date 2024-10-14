@@ -22,33 +22,7 @@ public class KillFeedManager : MonoBehaviour
 
     private void Start()
     {
-        killFeedWeaponCodeDict.Add("m1911", 8);
-        killFeedWeaponCodeDict.Add("colt", 20);
-        killFeedWeaponCodeDict.Add("mp5", 13);
 
-        killFeedWeaponCodeDict.Add("m4", 4);
-        killFeedWeaponCodeDict.Add("ak47", 3);
-        killFeedWeaponCodeDict.Add("m16", 21);
-        killFeedWeaponCodeDict.Add("scar", 0);
-        killFeedWeaponCodeDict.Add("patriot", 19);
-        killFeedWeaponCodeDict.Add("m249", 15);
-
-        killFeedWeaponCodeDict.Add("m1100", 6);
-        killFeedWeaponCodeDict.Add("r700", 17);
-        killFeedWeaponCodeDict.Add("barrett50cal", 18);
-        killFeedWeaponCodeDict.Add("rpg", 5);
-
-        killFeedWeaponCodeDict.Add("fraggrenade", 24);
-        killFeedWeaponCodeDict.Add("stickygrenade", 28);
-        killFeedWeaponCodeDict.Add("melee", 22);
-
-        killFeedSpecialCodeDict.Add("headshot", 23);
-        killFeedSpecialCodeDict.Add("nutshot", 34);
-
-
-
-        //GetComponent<PlayerController>().OnPlayerTestButton -= OnTestButton_Delegate;
-        //GetComponent<PlayerController>().OnPlayerTestButton += OnTestButton_Delegate;
     }
 
     public void EnterNewFeed(string feed)

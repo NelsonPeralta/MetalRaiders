@@ -337,12 +337,32 @@ public class PlayerInventory : MonoBehaviourPun
             _fakeBulletTrailPool[i].GetComponent<FakeBulletTrailDisable>().player = player;
             fbtt.gameObject.SetActive(false);
         }
+
+
+
+
+
+
+
+
+        foreach (GameObject w in allWeaponsInInventory)
+        {
+            GameManager.SetLayerRecursively(w, 3);
+
+            if (w.GetComponent<WeaponProperties>().leftWeapon)
+                GameManager.SetLayerRecursively(w.GetComponent<WeaponProperties>().leftWeapon.gameObject, 3);
+        }
+        GameManager.SetLayerRecursively(_oddball.gameObject, 3);
     }
+
+
+
+
     public void Start()
     {
         Debug.Log("PlayerInventory Start");
-        transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
-        transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
+        player.OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
+        player.OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
 
 
         //OnActiveWeaponChanged += crosshairScript.OnActiveWeaponChanged_Delegate;
@@ -1023,7 +1043,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
-        print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine}");
+        print($"PlayerInventory OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine}");
 
 
         foreach (GameObject w in allWeaponsInInventory)
@@ -1059,6 +1079,25 @@ public class PlayerInventory : MonoBehaviourPun
 
                 if (w.GetComponent<WeaponProperties>().leftWeapon)
                     GameManager.SetLayerRecursively(w.GetComponent<WeaponProperties>().leftWeapon.gameObject, 3);
+            }
+        }
+
+
+        if (GameManager.instance.gameType == GameManager.GameType.Oddball)
+        {
+            if (player.isMine)
+            {
+                if (pController.rid == 0)
+                    GameManager.SetLayerRecursively(_oddball.gameObject, 24);
+                else if (pController.rid == 1)
+                    GameManager.SetLayerRecursively(_oddball.gameObject, 26);
+                else if (pController.rid == 2)
+                    GameManager.SetLayerRecursively(_oddball.gameObject, 28);
+                else if (pController.rid == 3)
+                    GameManager.SetLayerRecursively(_oddball.gameObject, 30);
+            }
+            {
+                GameManager.SetLayerRecursively(_oddball.gameObject, 3);
             }
         }
     }

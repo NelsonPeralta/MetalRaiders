@@ -382,10 +382,10 @@ public class PlayerController : MonoBehaviourPun
                     LongInteract();
                     MarkSpot();
                     GrenadeBtn();
+                    Melee();
                     if (isSprinting)
                         return;
                     Scope();
-                    Melee();
                     Crouch();
                     HolsterAndInspect();
                     CheckDrawingWeapon();
@@ -905,7 +905,7 @@ public class PlayerController : MonoBehaviourPun
             }
             else
             {
-                if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
+                if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]; else player.playerShooting.trackingTarget = null;
                 isHoldingShootDualWieldedWeapon = true;
             }
         }
@@ -1070,14 +1070,9 @@ public class PlayerController : MonoBehaviourPun
     bool _meleeSucc;
     void Melee(bool overwrite = false)
     {
-        if (!PV.IsMine) return;
-
-
-
-
-        if (!player.isDead && !player.isRespawning)
+        if (player.isAlive && player.isMine)
         {
-            if ((overwrite) || ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade && !isSprinting))
+            if ((overwrite) || ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade /*&& !isSprinting*/))
             {
                 _meleeSucc = false;
 
@@ -1115,6 +1110,7 @@ public class PlayerController : MonoBehaviourPun
     void MeleeAnimations_RPC()
     {
         print("MeleeAnimations_RPC");
+        DisableSprint_RPC();
         isMeleeing = true;
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
 

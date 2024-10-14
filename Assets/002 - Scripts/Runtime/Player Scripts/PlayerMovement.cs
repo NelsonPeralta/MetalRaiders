@@ -195,6 +195,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     [SerializeField] AudioSource _footstepAudioSource;
+    [SerializeField] Transform _weaponOffset;
     float _footstepClipDelay;
 
 
@@ -215,6 +216,10 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] bool _isMoving;
 
+
+    [SerializeField] int _offsetTick;
+    [SerializeField] Vector3 _weaponOffsetLocalPosition = new Vector3(0, 0, 0);
+    [SerializeField] Vector3 _weaponOffsetLocalRotation = new Vector3();
 
 
 
@@ -245,6 +250,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        //if (_weaponOffset)
+        //{
+        //    if (isGrounded && (_correctedRightInput != 0 || _correctedForwardInput != 0))
+        //        _offsetTick = Mathf.Clamp(_offsetTick + 1, 0, GameManager.DEFAULT_FRAMERATE / 2);
+        //    else
+        //        _offsetTick = Mathf.Clamp(_offsetTick - 1, 0, GameManager.DEFAULT_FRAMERATE / 2);
+
+
+        //    //_weaponOffsetLocalPosition = _weaponOffset.localPosition + Vector3.back * (_offsetTick * 0.01f) * (_correctedForwardInput != 0 ? Mathf.Sign(_correctedForwardInput) : 0);
+        //    //_weaponOffsetLocalPosition.z = Mathf.Clamp(_weaponOffsetLocalPosition.z, -.02f, 0.2f);
+        //    _weaponOffsetLocalPosition.z = Mathf.Clamp(-_correctedForwardInput * 0.02f, -.01f, 0.1f);
+
+        //    _weaponOffset.localPosition = _weaponOffsetLocalPosition;
+        //    _weaponOffset.localRotation = Quaternion.Euler(0, 0, -_correctedRightInput * 5);
+        //}
+
+
+
+
+
+
+
+
         // ground check
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         isGrounded = _groundCheckScript.isGrounded;
@@ -299,6 +327,12 @@ public class PlayerMovement : MonoBehaviour
         WalkAnimationControl();
         ControlAnimationSpeed();
 
+
+
+
+
+
+
         if (blockPlayerMoveInput > 0)
         {
             _rb.useGravity = true;
@@ -312,7 +346,6 @@ public class PlayerMovement : MonoBehaviour
         {
             SpeedControl();
         }
-
     }
 
     private void FixedUpdate()
