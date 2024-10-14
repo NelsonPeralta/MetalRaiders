@@ -438,7 +438,7 @@ abstract public class Actor : Biped
                     wp.weaponType == WeaponProperties.WeaponType.Launcher ||
                     wp.weaponType == WeaponProperties.WeaponType.Shotgun ||
                     wp.weaponType == WeaponProperties.WeaponType.Sniper ||
-                    wp.weaponType == WeaponProperties.WeaponType.LMG)
+                    wp.weaponType == WeaponProperties.WeaponType.LMG || wp.killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
                     return;
                 Debug.Log($"DropRandomWeapon: {wp.cleanName}");
 

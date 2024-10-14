@@ -112,6 +112,7 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnHeadshotMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(headshotMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
@@ -119,6 +120,7 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnSniperHeadshotMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(sniperHeadshotMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
@@ -127,6 +129,7 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnNutshotMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(nutshotMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
@@ -135,6 +138,7 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnMeleeMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(meleeMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
@@ -142,6 +146,7 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnAssasinationMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(assasinationMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
@@ -149,6 +154,7 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnGrenadeMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(grenadeMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
@@ -156,6 +162,7 @@ public class PlayerMedals : MonoBehaviour
 
     public void SpawnStuckKillMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(stuckMedalPrefab, grid);
         h.SetAsFirstSibling();
         kills++;
@@ -170,6 +177,7 @@ public class PlayerMedals : MonoBehaviour
 
     void SpawnDoubleKillMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(doubleKillMedalPrefab, grid);
         h.SetAsFirstSibling();
 
@@ -178,6 +186,7 @@ public class PlayerMedals : MonoBehaviour
 
     void SpawnTripleKillMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(tripleKillMedalPrefab, grid);
         h.SetAsFirstSibling();
 
@@ -186,6 +195,7 @@ public class PlayerMedals : MonoBehaviour
 
     void SpawnOverKillMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(overKillMedalPrefab, grid);
         h.SetAsFirstSibling();
 
@@ -193,6 +203,7 @@ public class PlayerMedals : MonoBehaviour
     }
     void SpawnMultiKillMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(_multiKillMedalPrefab, grid);
         h.SetAsFirstSibling();
 
@@ -205,6 +216,7 @@ public class PlayerMedals : MonoBehaviour
 
     void SpawnKillingSpreeMedal()
     {
+        if (!player.isMine) return;
         Transform h = Instantiate(killingSpreeMedalPrefab, grid);
         h.SetAsFirstSibling();
 
