@@ -753,7 +753,7 @@ abstract public class Actor : Biped
         if (hitPoints <= 0)
             return;
 
-        //if (playerWhoShotPDI > 0) _lastPlayerPhotonIdWhoDamagedThis = playerWhoShotPDI;
+        if (playerWhoShotPDI > 0) _lastPlayerPhotonIdWhoDamagedThis = playerWhoShotPDI;
 
         SoundManager.instance.PlayAudioClip(transform.position, SoundManager.instance.successfulPunch);
 
