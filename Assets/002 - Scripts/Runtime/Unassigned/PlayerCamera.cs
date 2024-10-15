@@ -53,6 +53,7 @@ public class PlayerCamera : MonoBehaviour
 
     [SerializeField] Transform _weaponOffset;
     [SerializeField] int _offsetTickRightRotation, _offsetTickUpRotation;
+    [SerializeField] float _angleBetweenPlayerForwardAndVertAxis;
     [SerializeField] Vector3 _weaponOffsetLocalPosition = new Vector3(0, 0, 0);
     [SerializeField] Vector3 _weaponOffsetLocalRotation = new Vector3();
 
@@ -94,6 +95,10 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _angleBetweenPlayerForwardAndVertAxis = Vector3.SignedAngle(verticalAxisTarget.forward, transform.root.forward, verticalAxisTarget.right);
+
+
+
         if (_blockTime > 0)
         {
             _blockTime -= Time.deltaTime;
@@ -257,6 +262,11 @@ public class PlayerCamera : MonoBehaviour
 
     void WeaponOffset()
     {
+        //_angleBetweenPlayerForwardAndVertAxis = Vector3.SignedAngle(verticalAxisTarget.forward, transform.root.forward, Vector3.right);
+        //if (Vector3.Cross(verticalAxisTarget.forward, transform.root.forward).y < 0) _angleBetweenPlayerForwardAndVertAxis = -_angleBetweenPlayerForwardAndVertAxis;
+
+
+
         if (!player.isAlive || !player.movement.isGrounded)
         {
 
@@ -318,28 +328,28 @@ public class PlayerCamera : MonoBehaviour
             {
                 if (_offsetTickUpRotation > 0)
                 {
-                    if (_offsetTickUpRotation >= 3)
-                        _offsetTickUpRotation -= 3;
+                    if (_offsetTickUpRotation >= 2)
+                        _offsetTickUpRotation -= 2;
                     else
                         _offsetTickUpRotation -= _offsetTickUpRotation;
                 }
                 else if (_offsetTickUpRotation < 0)
                 {
-                    if (_offsetTickUpRotation <= -3)
-                        _offsetTickUpRotation += 3;
+                    if (_offsetTickUpRotation <= -2)
+                        _offsetTickUpRotation += 2;
                     else
                         _offsetTickUpRotation -= _offsetTickUpRotation;
                 }
             }
-            else if (_correctedXAxisInput > 0) _offsetTickUpRotation = Mathf.Clamp(_offsetTickUpRotation + 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
-            else if (_correctedXAxisInput < 0) _offsetTickUpRotation = Mathf.Clamp(_offsetTickUpRotation - 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+            else if (_correctedXAxisInput > 0) _offsetTickUpRotation = Mathf.Clamp(_offsetTickUpRotation + 2, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+            else if (_correctedXAxisInput < 0) _offsetTickUpRotation = Mathf.Clamp(_offsetTickUpRotation - 2, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
         }
 
 
 
-        //_weaponOffsetLocalPosition.z = Mathf.Clamp(-_offsetTickRightRotation * 0.001f, -1, 1);
-        //_weaponOffset.localPosition = _weaponOffsetLocalPosition;
-        _weaponOffset.localRotation = Quaternion.Euler(_weaponOffset.localRotation.x, _offsetTickUpRotation * 0.1f, _weaponOffset.localRotation.z);
+        _weaponOffsetLocalPosition.z = -_angleBetweenPlayerForwardAndVertAxis * 0.001f;
+        _weaponOffset.localPosition = _weaponOffsetLocalPosition;
+        _weaponOffset.localRotation = Quaternion.Euler(_weaponOffset.localRotation.x, _offsetTickUpRotation * 0.08f, _weaponOffset.localRotation.z);
     }
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
