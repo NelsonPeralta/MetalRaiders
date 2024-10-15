@@ -367,8 +367,35 @@ public class PlayerMovement : MonoBehaviour
         if (!player.isAlive || !isGrounded)
         {
 
-            if (_offsetTickForwardDirection > 0) _offsetTickForwardDirection -= 3; else if (_offsetTickForwardDirection < 0) _offsetTickForwardDirection += 3;
-            if (_offsetTickForwardRotation > 0) _offsetTickForwardRotation -= 3; else if (_offsetTickForwardRotation < 0) _offsetTickForwardRotation += 3;
+            if (_offsetTickForwardDirection > 0)
+            {
+                if (_offsetTickForwardDirection >= 3)
+                    _offsetTickForwardDirection -= 3;
+                else
+                    _offsetTickForwardDirection -= _offsetTickForwardDirection;
+            }
+            else if (_offsetTickForwardDirection < 0)
+            {
+                if (_offsetTickForwardDirection <= -3)
+                    _offsetTickForwardDirection += 3;
+                else
+                    _offsetTickForwardDirection -= _offsetTickForwardDirection;
+            }
+
+            if (_offsetTickForwardRotation > 0)
+            {
+                if (_offsetTickForwardRotation >= 3)
+                    _offsetTickForwardRotation -= 3;
+                else
+                    _offsetTickForwardRotation -= _offsetTickForwardRotation;
+            }
+            else if (_offsetTickForwardRotation < 0)
+            {
+                if (_offsetTickForwardRotation <= -3)
+                    _offsetTickForwardRotation += 3;
+                else
+                    _offsetTickForwardRotation -= _offsetTickForwardRotation;
+            }
 
         }
         else

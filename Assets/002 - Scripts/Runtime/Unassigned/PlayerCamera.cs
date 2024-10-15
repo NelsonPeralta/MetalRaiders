@@ -29,7 +29,7 @@ public class PlayerCamera : MonoBehaviour
     public Vector3 mainCamDefaultLocalPosition;
     public Quaternion mainCamDefaultLocalRotation;
 
-    [SerializeField] float xAxisInput, yAxisInput, mouseX, mouseY, _clampedMouseY;
+    [SerializeField] float xAxisInput, yAxisInput, mouseX, mouseY, _clampedMouseY, _correctedXAxisInput, _correctedYAxisInput;
 
     // Weapon Sway
     Quaternion defaultLocalRotation;
@@ -46,20 +46,15 @@ public class PlayerCamera : MonoBehaviour
 
 
 
-
-
-
-
-
-
-
     [SerializeField] ControllerType _controllerType;
 
-
-
-
-
     public float _blockTime, _trueLocalX;
+
+
+    [SerializeField] Transform _weaponOffset;
+    [SerializeField] int _offsetTickRightRotation, _offsetTickUpRotation;
+    [SerializeField] Vector3 _weaponOffsetLocalPosition = new Vector3(0, 0, 0);
+    [SerializeField] Vector3 _weaponOffsetLocalRotation = new Vector3();
 
 
 
@@ -158,30 +153,30 @@ public class PlayerCamera : MonoBehaviour
             xAxisInput = rewiredPlayer.GetAxis("Mouse X");
             yAxisInput = rewiredPlayer.GetAxis("Mouse Y");
 
-            float _xAxisInput = xAxisInput, _yAxisInput = yAxisInput;
+            _correctedXAxisInput = xAxisInput; _correctedYAxisInput = yAxisInput;
 
             if (_controllerType == ControllerType.Joystick)
             {
                 if (Mathf.Abs(xAxisInput) <= 0.1f)
-                    _xAxisInput = 0;
+                    _correctedXAxisInput = 0;
                 if (Mathf.Abs(yAxisInput) <= 0.1f)
-                    _yAxisInput = 0;
+                    _correctedYAxisInput = 0;
 
-                _yAxisInput *= 0.75f;
+                _correctedYAxisInput *= 0.75f;
             }
             float xExtremeDeadzone = 0.98f;
             float yExtremeDeadzone = 0.98f;
 
             if (Mathf.Abs(xAxisInput) >= xExtremeDeadzone)
                 //if (Mathf.Abs(yAxisInput) <= 0.2f || yAxisInput == 0)
-                _xAxisInput *= 1.6f;
+                _correctedXAxisInput *= 1.6f;
 
             if (Mathf.Abs(yAxisInput) >= yExtremeDeadzone)
                 //if (Mathf.Abs(xAxisInput) <= 0.2f || yAxisInput == 0)
-                _yAxisInput *= 1.6f;
+                _correctedYAxisInput *= 1.6f;
 
-            mouseX = _xAxisInput * backEndMouseSens * Time.deltaTime + HorizontalSway();
-            mouseY = _yAxisInput * backEndMouseSens * 0.75f * Time.deltaTime;
+            mouseX = _correctedXAxisInput * backEndMouseSens * Time.deltaTime + HorizontalSway();
+            mouseY = _correctedYAxisInput * backEndMouseSens * 0.75f * Time.deltaTime;
 
             float xDeadzone = mouseX * 0.1f;
             float yDeadzone = mouseY * 0.1f;
@@ -189,7 +184,7 @@ public class PlayerCamera : MonoBehaviour
 
 
             //if (controllerType == "controller") ;
-            //mouseY = _yAxisInput * mouseSensitivity * 0.5f * Time.deltaTime;
+            //mouseY = _correctedYAxisInput * mouseSensitivity * 0.5f * Time.deltaTime;
 
             yRotation -= mouseX + HorizontalSway();
             xRotation -= mouseY + VerticalSway();
@@ -254,6 +249,98 @@ public class PlayerCamera : MonoBehaviour
         //WeaponSway();
     }
 
+    private void FixedUpdate()
+    {
+        WeaponOffset();
+    }
+
+
+    void WeaponOffset()
+    {
+        if (!player.isAlive || !player.movement.isGrounded)
+        {
+
+            if (_offsetTickRightRotation > 0)
+            {
+                if (_offsetTickRightRotation >= 3)
+                    _offsetTickRightRotation -= 3;
+                else
+                    _offsetTickRightRotation -= _offsetTickRightRotation;
+            }
+            else if (_offsetTickRightRotation < 0)
+            {
+                if (_offsetTickRightRotation <= -3)
+                    _offsetTickRightRotation += 3;
+                else
+                    _offsetTickRightRotation -= _offsetTickRightRotation;
+            }
+
+            if (_offsetTickUpRotation > 0)
+            {
+                if (_offsetTickUpRotation >= 3)
+                    _offsetTickUpRotation -= 3;
+                else
+                    _offsetTickUpRotation -= _offsetTickUpRotation;
+            }
+            else if (_offsetTickUpRotation < 0)
+            {
+                if (_offsetTickUpRotation <= -3)
+                    _offsetTickUpRotation += 3;
+                else
+                    _offsetTickUpRotation -= _offsetTickUpRotation;
+            }
+
+        }
+        else
+        {
+            if (_correctedYAxisInput == 0)
+            {
+                if (_offsetTickRightRotation > 0)
+                {
+                    if (_offsetTickRightRotation >= 3)
+                        _offsetTickRightRotation -= 3;
+                    else
+                        _offsetTickRightRotation -= _offsetTickRightRotation;
+                }
+                else if (_offsetTickRightRotation < 0)
+                {
+                    if (_offsetTickRightRotation <= -3)
+                        _offsetTickRightRotation += 3;
+                    else
+                        _offsetTickRightRotation -= _offsetTickRightRotation;
+                }
+            }
+            else if (_correctedYAxisInput > 0) _offsetTickRightRotation = Mathf.Clamp(_offsetTickRightRotation + 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+            else if (_correctedYAxisInput < 0) _offsetTickRightRotation = Mathf.Clamp(_offsetTickRightRotation - 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+
+
+            if (_correctedXAxisInput == 0)
+            {
+                if (_offsetTickUpRotation > 0)
+                {
+                    if (_offsetTickUpRotation >= 3)
+                        _offsetTickUpRotation -= 3;
+                    else
+                        _offsetTickUpRotation -= _offsetTickUpRotation;
+                }
+                else if (_offsetTickUpRotation < 0)
+                {
+                    if (_offsetTickUpRotation <= -3)
+                        _offsetTickUpRotation += 3;
+                    else
+                        _offsetTickUpRotation -= _offsetTickUpRotation;
+                }
+            }
+            else if (_correctedXAxisInput > 0) _offsetTickUpRotation = Mathf.Clamp(_offsetTickUpRotation + 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+            else if (_correctedXAxisInput < 0) _offsetTickUpRotation = Mathf.Clamp(_offsetTickUpRotation - 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+        }
+
+
+
+        //_weaponOffsetLocalPosition.z = Mathf.Clamp(-_offsetTickRightRotation * 0.001f, -1, 1);
+        //_weaponOffset.localPosition = _weaponOffsetLocalPosition;
+        _weaponOffset.localRotation = Quaternion.Euler(_weaponOffset.localRotation.x, _offsetTickUpRotation * 0.1f, _weaponOffset.localRotation.z);
+    }
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
