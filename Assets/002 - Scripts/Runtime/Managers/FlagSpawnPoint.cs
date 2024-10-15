@@ -16,7 +16,7 @@ public class FlagSpawnPoint : MonoBehaviour
             _flag.spawnPoint = this;
             _flag.scriptRoot.parent = null;
         }
-        else 
+        else
             Destroy(gameObject);
     }
 
@@ -49,7 +49,7 @@ public class FlagSpawnPoint : MonoBehaviour
         _flag.rb.angularVelocity = Vector3.zero;
         _flag.rb.mass = 999;
 
-        _flag.transform.root.rotation = Quaternion.identity;
+        _flag.transform.root.rotation = transform.rotation;
         _flag.transform.root.position = transform.position + (Vector3.up * 1.5f);
 
         yield return new WaitForSeconds(1);

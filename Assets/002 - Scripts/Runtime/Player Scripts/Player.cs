@@ -357,6 +357,9 @@ public class Player : Biped
                 if (playerInventory.playerOddballActive)
                     NetworkGameManager.instance.DropOddball(weaponDropPoint.position, weaponDropPoint.forward);
 
+                if (playerInventory.hasEnnemyFlag)
+                    NetworkGameManager.instance.DropFlag(weaponDropPoint.position, weaponDropPoint.forward, team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red);
+
                 _rb.isKinematic = true;
                 GetComponent<HitPoints>().OnDeath?.Invoke(GetComponent<HitPoints>()); // Needed for melee script
                 _gameplayerRecordingPointsHolder.transform.parent = null;

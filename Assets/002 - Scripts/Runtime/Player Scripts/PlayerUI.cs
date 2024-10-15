@@ -540,91 +540,99 @@ public class PlayerUI : MonoBehaviour
         }
         else
         {
-            if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>())
+            if (_player.hasEnnemyFlag || _player.playerInventory.playerOddballActive)
             {
-                if (_player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso)
+                HideInformer();
+            }
+            else
+            {
+
+                if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>())
                 {
-                    _state = State.s1;
-                    if (!_player.isDualWielding)
+                    if (_player.playerInteractableObjectHandler.closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso)
                     {
-                        _state = State.s2;
-
-                        if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
-                        && _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
+                        _state = State.s1;
+                        if (!_player.isDualWielding)
                         {
-                            _state = State.s3;
+                            _state = State.s2;
 
-                            ShowInformer($"Hold [Mark] to Dual Wield or Hold [Interact] to swap for", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                            if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
+                            && _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
+                            {
+                                _state = State.s3;
+
+                                ShowInformer($"Hold [Mark] to Dual Wield or Hold [Interact] to swap for", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                            }
+                            //else if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
+                            //&& _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
+                            //{
+
+                            //}
+                            else
+                            {
+                                _state = State.s4;
+
+                                ShowInformer($"Hold [Mark] to Dual Wield ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                                //HideInformer();
+                            }
                         }
-                        //else if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
-                        //&& _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
-                        //{
-
-                        //}
                         else
                         {
-                            _state = State.s4;
+                            _state = State.s5;
+                            HideInformer();
 
-                            ShowInformer($"Hold [Mark] to Dual Wield ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
-                            //HideInformer();
                         }
+
+
+
+
+
+
+                        //if (!_player.isDualWielding && GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable /*&& (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName))*/)
+                        //    ShowInformer($"Hold [Mark] to Dual Wield or Hold [Interact] to swap for", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                        //else
+                        //    HideInformer();
                     }
                     else
                     {
-                        _state = State.s5;
-                        HideInformer();
-
-                    }
-
-
-
-
-
-
-                    //if (!_player.isDualWielding && GetComponent<Player>().playerInventory.activeWeapon.isDualWieldable /*&& (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(GetComponent<Player>().playerInventory.activeWeapon.codeName))*/)
-                    //    ShowInformer($"Hold [Mark] to Dual Wield or Hold [Interact] to swap for", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
-                    //else
-                    //    HideInformer();
-                }
-                else
-                {
-                    if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
-                        && _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
-                    {
-                        if (!_player.isDualWielding)
+                        if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.activeWeapon.codeName
+                            && _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName != _player.playerInventory.holsteredWeapon.codeName)
                         {
-                            _state = State.s6;
-                            ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                            if (!_player.isDualWielding)
+                            {
+                                _state = State.s6;
+                                ShowInformer($"Hold [Interact] to swap for ", transform.GetComponent<Player>().playerInventory.GetWeaponProperties(_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<LootableWeapon>().codeName).weaponIcon);
+                            }
+                            else
+                            {
+                                _state = State.s7;
+                                HideInformer();
+                            }
                         }
                         else
                         {
-                            _state = State.s7;
+                            _state = State.s8;
                             HideInformer();
                         }
                     }
+                }
+                else if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>())
+                {
+
+                    ShowInformer($"Hold [Interact] to buy Power Armor");
+
+
+                    if (!transform.root.GetComponent<Player>().hasArmor)
+                    {
+                        if (transform.root.GetComponent<PlayerSwarmMatchStats>().points >= _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost)
+                            ShowInformer($"Buy Power Armor [Cost: {_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
+                        else
+                            transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points [Cost: {_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
+                    }
                     else
                     {
-                        _state = State.s8;
-                        HideInformer();
+                        transform.root.GetComponent<PlayerUI>().ShowInformer($"You already have a Power Armor");
                     }
-                }
-            }
-            else if (_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>())
-            {
-
-                ShowInformer($"Hold [Interact] to buy Power Armor");
-
-
-                if (!transform.root.GetComponent<Player>().hasArmor)
-                {
-                    if (transform.root.GetComponent<PlayerSwarmMatchStats>().points >= _player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost)
-                        ShowInformer($"Buy Power Armor [Cost: {_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
-                    else
-                        transform.root.GetComponent<PlayerUI>().ShowInformer($"Not enough points [Cost: {_player.playerInteractableObjectHandler.closestInteractableObject.GetComponent<ArmorSeller>().cost}]");
-                }
-                else
-                {
-                    transform.root.GetComponent<PlayerUI>().ShowInformer($"You already have a Power Armor");
                 }
             }
         }

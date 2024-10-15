@@ -33,6 +33,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 if (GameManager.instance.teamMode == GameManager.TeamMode.Classic) return 120;
                 return 75;
             }
+            if (GameManager.instance.gameType == GameManager.GameType.CTF)
+            {
+                return 3;
+            }
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
                 if (CurrentRoomManager.instance.expectedNbPlayers == 2) return 10;

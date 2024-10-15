@@ -803,7 +803,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
         if (whichFlagNeedsToBeReset > -1 && GameManager.instance.gameType == GameManager.GameType.CTF)
         {
-            GameManager.GetPlayerWithPhotonView(pid).playerInventory.SwitchWeapons_RPC(false);
+            //GameManager.GetPlayerWithPhotonView(pid).playerInventory.SwitchWeapons_RPC();
+            GameManager.GetPlayerWithPhotonView(pid).playerInventory.HideFlag();
 
             if ((GameManager.Team)whichFlagNeedsToBeReset == GameManager.Team.Red)
             {
@@ -985,6 +986,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         else if (!caller)
         {
             print("EquipFlagToPlayer_RPC");
+
+            //GameManager.GetPlayerWithPhotonView(playerPhotonView).playerInventory.HideFlag();
 
             if (GameManager.GetPlayerWithPhotonView(playerPhotonView).team == GameManager.Team.Red)
             {

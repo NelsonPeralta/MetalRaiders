@@ -101,10 +101,15 @@ public class Hill : MonoBehaviour
     [SerializeField] List<Player> _playersInRange = new List<Player>();
     [SerializeField] Player _closestPlayer;
 
-    [SerializeField] GameObject _hillVfxHolder;
+    [SerializeField] GameObject _hillVfxHolder, _canvases;
 
     float _timer;
     bool _contested;
+
+    private void Awake()
+    {
+        _canvases.SetActive(true);
+    }
 
 
     private void Start()

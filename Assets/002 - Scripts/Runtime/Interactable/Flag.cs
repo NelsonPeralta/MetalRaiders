@@ -33,31 +33,32 @@ public class Flag : MonoBehaviour
         if (_triggerReset > 0) _triggerReset -= Time.deltaTime;
 
 
-
-        if (Vector3.Distance(spawnPoint.transform.position, rb.transform.position) > 3)
-        {
-            _reset -= Time.deltaTime;
-
-            if (_reset <= 0)
-            {
-                foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>{spawnPoint.team} Flag Reset");
-                spawnPoint.SpawnFlagAtStand();
-                //PlayBallResetClip();
-
-                _reset = 15;
-            }
-        }
-        else if (transform.position.y <= -20)
+        if (transform.position.y <= -20)
         {
             foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>{spawnPoint.team} Flag Reset");
             spawnPoint.SpawnFlagAtStand();
-            //PlayBallResetClip();
 
             _reset = 15;
         }
         else
         {
-            _reset = 15;
+            if (Vector3.Distance(spawnPoint.transform.position, rb.transform.position) > 3)
+            {
+                _reset -= Time.deltaTime;
+
+                if (_reset <= 0)
+                {
+                    foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>{spawnPoint.team} Flag Reset");
+                    spawnPoint.SpawnFlagAtStand();
+                    //PlayBallResetClip();
+
+                    _reset = 15;
+                }
+            }
+            else
+            {
+                _reset = 15;
+            }
         }
     }
 

@@ -269,7 +269,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
     void OnPlayerLongInteract_Delegate(PlayerController playerController)
     {
-        if (!player.PV.IsMine)
+        if (!player.PV.IsMine || player.hasEnnemyFlag || player.playerInventory.playerOddballActive)
             return;
 
         print($"PlayerInteractableObjectHandler OnPlayerLongInteract_Delegate");
@@ -359,6 +359,9 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
     public void TriggerLongInteract()
     {
         if (closestInteractableObject) print($"TriggerLongInteract {closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso}");
+
+        if (!player.PV.IsMine || player.hasEnnemyFlag || player.playerInventory.playerOddballActive) return;
+
         if (PV.IsMine && closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso && !player.isDualWielding)
         {
             if (player.playerInventory.activeWeapon.isDualWieldable /*&& (closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(player.playerInventory.activeWeapon.codeName))*/)

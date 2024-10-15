@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static PlayerProgressionManager;
 
 public class OddballWorldUiFollowPlayerCamera : MonoBehaviour
 {
@@ -31,7 +32,11 @@ public class OddballWorldUiFollowPlayerCamera : MonoBehaviour
                 _im.color = Color.red;
 
             if (_flagScript.spawnPoint.team == GameManager.Team.Blue)
-                _im.color = Color.blue;
+            {
+                Color _tCol = new Color();
+                ColorUtility.TryParseHtmlString(GameManager.colorDict["lightblue"], out _tCol);
+                _im.color = _tCol;
+            }
         }
     }
 

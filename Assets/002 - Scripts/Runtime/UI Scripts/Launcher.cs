@@ -842,6 +842,10 @@ public class Launcher : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameType == GameType.GunGame)
                 GameManager.instance.gameType = GameType.Slayer;
 
+        if ((GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm) == TeamMode.None)
+            if (GameManager.instance.gameType == GameType.CTF)
+                GameManager.instance.gameType = GameType.Slayer;
+
 
 
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);

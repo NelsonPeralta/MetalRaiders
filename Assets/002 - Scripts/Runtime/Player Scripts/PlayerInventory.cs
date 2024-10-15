@@ -543,7 +543,7 @@ public class PlayerInventory : MonoBehaviourPun
         if (pController.pInventory.holsteredWeapon != null && !player.isDead && !player.isRespawning)
         {
             Debug.Log("SwitchWeapons");
-            PV.RPC("SwitchWeapons_RPC", RpcTarget.All, true);
+            PV.RPC("SwitchWeapons_RPC", RpcTarget.All);
         }
 
         ChangeActiveAmmoCounter();
@@ -559,7 +559,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void SwitchWeapons_RPC(bool spawnFlagIfYouHaveIt = true)
+    public void SwitchWeapons_RPC()
     {
         if (player.isMine)
         {
@@ -579,9 +579,7 @@ public class PlayerInventory : MonoBehaviourPun
                 if (GameManager.instance.gameType == GameManager.GameType.CTF && _flag.gameObject.activeInHierarchy)
                 {
                     previousActiveWeapon = _activeWeapon;
-
-                    if (spawnFlagIfYouHaveIt)
-                        NetworkGameManager.instance.DropFlag(player.weaponDropPoint.position, player.weaponDropPoint.forward, (player.team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
+                    NetworkGameManager.instance.DropFlag(player.weaponDropPoint.position, player.weaponDropPoint.forward, (player.team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
                 }
 
 
@@ -926,6 +924,7 @@ public class PlayerInventory : MonoBehaviourPun
     void OnPLayerDeath_Delegate(Player player)
     {
         Debug.Log("OnPLayerDeath_Delegate");
+        _oddball.gameObject.SetActive(false); _flag.gameObject.SetActive(false);
         try { activeWeapon.animator.SetBool("Run", false); } catch { }
     }
 
@@ -1070,6 +1069,13 @@ public class PlayerInventory : MonoBehaviourPun
         _flag.gameObject.SetActive(true);
         _activeWeapon.gameObject.SetActive(false);
         UpdateThirdPersonGunModelsOnCharacter();
+        pController.GetComponent<PlayerThirdPersonModelManager>().OnActiveWeaponChanged_PlayTPSAnimations_Delegate(this);
+    }
+
+    public void HideFlag()
+    {
+        _activeWeapon.gameObject.SetActive(true);
+        _flag.gameObject.SetActive(false);
         pController.GetComponent<PlayerThirdPersonModelManager>().OnActiveWeaponChanged_PlayTPSAnimations_Delegate(this);
     }
 

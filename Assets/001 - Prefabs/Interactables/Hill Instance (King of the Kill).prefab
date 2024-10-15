@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0172565170d0e4444ab4326afdfc3f8b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 515e1722bb0b86e4bb28c0aaade52e65, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridTarget: 3
+  _flagScript: {fileID: 0}
 --- !u!1 &866199885087143998
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +388,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0172565170d0e4444ab4326afdfc3f8b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 515e1722bb0b86e4bb28c0aaade52e65, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -410,6 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridTarget: 2
+  _flagScript: {fileID: 0}
 --- !u!1 &1604394232626531504
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,7 +479,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0172565170d0e4444ab4326afdfc3f8b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 515e1722bb0b86e4bb28c0aaade52e65, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -500,6 +502,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridTarget: 1
+  _flagScript: {fileID: 0}
 --- !u!1 &1950753236753459611
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,7 +518,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8634620524125266778
 Transform:
   m_ObjectHideFlags: 0
@@ -594,6 +597,7 @@ MonoBehaviour:
   _playersInRange: []
   _closestPlayer: {fileID: 0}
   _hillVfxHolder: {fileID: 9035287437238492478}
+  _canvases: {fileID: 1950753236753459611}
 --- !u!82 &4972173216825724730
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15539,7 +15543,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0172565170d0e4444ab4326afdfc3f8b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 515e1722bb0b86e4bb28c0aaade52e65, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -15562,6 +15566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridTarget: 0
+  _flagScript: {fileID: 0}
 --- !u!1 &3397139444333691381
 GameObject:
   m_ObjectHideFlags: 0
