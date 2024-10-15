@@ -217,9 +217,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] bool _isMoving;
 
 
-    [SerializeField] int _offsetTick;
+    [SerializeField] int _offsetTickForwardDirection, _offsetTickForwardRotation;
     [SerializeField] Vector3 _weaponOffsetLocalPosition = new Vector3(0, 0, 0);
     [SerializeField] Vector3 _weaponOffsetLocalRotation = new Vector3();
+
+
 
 
 
@@ -350,11 +352,74 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        WeaponOffset();
+
         if (!player.playerController.pauseMenuOpen)
         {
             MovePlayerUsingInput();
             MovePlayerUsingInputWhileJumping();
         }
+    }
+
+
+    void WeaponOffset()
+    {
+        if (!player.isAlive || !isGrounded)
+        {
+
+            if (_offsetTickForwardDirection > 0) _offsetTickForwardDirection -= 3; else if (_offsetTickForwardDirection < 0) _offsetTickForwardDirection += 3;
+            if (_offsetTickForwardRotation > 0) _offsetTickForwardRotation -= 3; else if (_offsetTickForwardRotation < 0) _offsetTickForwardRotation += 3;
+
+        }
+        else
+        {
+            if (_correctedForwardInput == 0)
+            {
+                if (_offsetTickForwardDirection > 0)
+                {
+                    if (_offsetTickForwardDirection >= 3)
+                        _offsetTickForwardDirection -= 3;
+                    else
+                        _offsetTickForwardDirection -= _offsetTickForwardDirection;
+                }
+                else if (_offsetTickForwardDirection < 0)
+                {
+                    if (_offsetTickForwardDirection <= -3)
+                        _offsetTickForwardDirection += 3;
+                    else
+                        _offsetTickForwardDirection -= _offsetTickForwardDirection;
+                }
+            }
+            else if (_correctedForwardInput > 0) _offsetTickForwardDirection = Mathf.Clamp(_offsetTickForwardDirection + 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+            else if (_correctedForwardInput < 0) _offsetTickForwardDirection = Mathf.Clamp(_offsetTickForwardDirection - 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+
+
+            if (_correctedRightInput == 0)
+            {
+                if (_offsetTickForwardRotation > 0)
+                {
+                    if (_offsetTickForwardRotation >= 3)
+                        _offsetTickForwardRotation -= 3;
+                    else
+                        _offsetTickForwardRotation -= _offsetTickForwardRotation;
+                }
+                else if (_offsetTickForwardRotation < 0)
+                {
+                    if (_offsetTickForwardRotation <= -3)
+                        _offsetTickForwardRotation += 3;
+                    else
+                        _offsetTickForwardRotation -= _offsetTickForwardRotation;
+                }
+            }
+            else if (_correctedRightInput > 0) _offsetTickForwardRotation = Mathf.Clamp(_offsetTickForwardRotation + 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+            else if (_correctedRightInput < 0) _offsetTickForwardRotation = Mathf.Clamp(_offsetTickForwardRotation - 3, -GameManager.DEFAULT_FRAMERATE / 2, GameManager.DEFAULT_FRAMERATE / 2);
+        }
+
+
+
+        _weaponOffsetLocalPosition.z = Mathf.Clamp(-_offsetTickForwardDirection * 0.001f, -1, 1);
+        _weaponOffset.localPosition = _weaponOffsetLocalPosition;
+        _weaponOffset.localRotation = Quaternion.Euler(0, 0, -_offsetTickForwardRotation * 0.2f);
     }
 
 
