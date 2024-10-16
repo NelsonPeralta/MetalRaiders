@@ -101,7 +101,7 @@ public class PlayerArmorManager : MonoBehaviour
             gameObject.SetActive(false);
 
 
-        if (_santaHat) _santaHat.SetActive(DateTime.Now >= new DateTime(DateTime.Now.Year, 10, 1) && DateTime.Now <= new DateTime(DateTime.Now.Year + 1, 3, 31));
+        if (_santaHat) _santaHat.SetActive(DateTime.Now >= new DateTime(DateTime.Now.Year, 11, 1) && DateTime.Now <= new DateTime(DateTime.Now.Year + 1, 3, 31));
     }
 
     private void Start()

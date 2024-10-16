@@ -23,7 +23,7 @@ public class PlayerOddballWorldUiMarker : MonoBehaviour
             _skullTag.SetActive(player.playerInventory.playerOddballActive);
         else
         {
-            if (_playerWorldUIMarker)
+            if (_playerWorldUIMarker && _playerWorldUIMarker.lookAtThisPlayer)
             {
                 _skullTag.SetActive(player.playerInventory.playerOddballActive && player.team != _playerWorldUIMarker.lookAtThisPlayer.team);
                 _shieldTag.SetActive(player.playerInventory.playerOddballActive && player.team == _playerWorldUIMarker.lookAtThisPlayer.team);
