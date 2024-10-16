@@ -520,6 +520,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReportAndCredits))
             {
+                CurrentRoomManager.instance.CreateCarnageReportData();
                 previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReportAndCredits);
                 //MenuManager.Instance.OpenMenu("carnage report");
                 MenuManager.Instance.OpenPopUpMenu("credits");

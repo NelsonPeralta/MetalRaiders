@@ -1166,7 +1166,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
                     GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
-                    GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
 
                     pp.LeaveLevelButStayInRoom();
                 }
