@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviourPun
 
     PlayerThirdPersonModelManager _playerThirdPersonModelManager;
 
-
+    public PlayerThirdPersonModelManager playerThirdPersonModelManager { get { return _playerThirdPersonModelManager; } }
     public bool isMeleeing { get { return _isMeleeing; } set { _isMeleeing = value; if (value) _meleeCooldown = 0.8f; } }
     public bool cameraIsFloating { get { return _cameraIsFloating; } }
     float currentadsCounter

@@ -80,7 +80,8 @@ public class Flag : MonoBehaviour
         if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
         {
             print($"FLAG OnTriggerStay {other.transform.root.name}");
-            if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && !other.transform.root.GetComponent<Player>().hasEnnemyFlag &&
+            if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && other.transform.root.GetComponent<Player>() &&
+                !other.transform.root.GetComponent<Player>().hasEnnemyFlag &&
                 other.transform.root.GetComponent<Player>() && other.transform.root.GetComponent<Player>().team != spawnPoint.team)
             {
                 if (other.transform.root.GetComponent<Player>().isAlive)

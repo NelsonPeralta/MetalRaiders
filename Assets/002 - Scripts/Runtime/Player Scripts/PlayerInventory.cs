@@ -568,15 +568,18 @@ public class PlayerInventory : MonoBehaviourPun
     enum SwitchWeapons_Mode { normal, dropThirdWeapon, dropOddball, dropFlag }
 
     [PunRPC]
-    void SwitchWeapons_RPC(int mode)
+    void SwitchWeapons_RPC(int mode) // everyone receives this
     {
         // everyone do this locally
         if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.normal || (SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropThirdWeapon)
         {
-            // do nothing
+            if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropThirdWeapon)
+                thirdWeapon = null;
         }
         else
         {
+            pController.playerThirdPersonModelManager.OnActiveWeaponChanged_PlayTPSAnimations_Delegate(this);
+            pController.SetDrawingWeaponCooldown();
             if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropFlag)
             {
                 _flag.gameObject.SetActive(false); _flag.equippedModel.SetActive(false); _flag.holsteredModel.SetActive(false);
@@ -588,6 +591,8 @@ public class PlayerInventory : MonoBehaviourPun
 
             if (player.isMine) activeWeapon.gameObject.SetActive(true);
             activeWeapon.equippedModel.SetActive(true); activeWeapon.holsteredModel.SetActive(false);
+            PlayDrawSound();
+            pController.playerThirdPersonModelManager.OnActiveWeaponChanged_PlayTPSAnimations_Delegate(this);
         }
 
 
@@ -596,47 +601,42 @@ public class PlayerInventory : MonoBehaviourPun
         if (player.isMine) // Do locally right now if its mine
         {
             print($"SwitchWeapons_RPC {isDualWielding} {(SwitchWeapons_Mode)mode}");
-            if (!isDualWielding)
+            if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropFlag)
             {
-                if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropFlag)
-                {
-                    try { OnActiveWeaponChanged?.Invoke(this); } catch { }
-                    try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
-                }
-                else if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropOddball)
-                {
-                    try { OnActiveWeaponChanged?.Invoke(this); } catch { }
-                    try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
-                }
-                else
-                {
-                    WeaponProperties previousActiveWeapon = activeWeapon;
-                    WeaponProperties newActiveWeapon = holsteredWeapon;
-
-                    activeWeapon = newActiveWeapon;
-                    holsteredWeapon = previousActiveWeapon;
-                }
+                try { OnActiveWeaponChanged?.Invoke(this); } catch { }
+                try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
-            else
+            else if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropOddball)
+            {
+                try { OnActiveWeaponChanged?.Invoke(this); } catch { }
+                try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
+            }
+            else if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropThirdWeapon)
             {
                 DropThirdWeapon();
             }
-        }
+            else
+            {
+                WeaponProperties previousActiveWeapon = activeWeapon;
+                WeaponProperties newActiveWeapon = holsteredWeapon;
+
+                activeWeapon = newActiveWeapon;
+                holsteredWeapon = previousActiveWeapon;
+            }
 
 
-
-        // everyone do this
-        if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.normal || (SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropThirdWeapon)
-        {
-            // do nothing
-        }
-        else if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropFlag)
-        {
-            NetworkGameManager.instance.AskMasterClientToSpawnFlag(player.weaponDropPoint.position, player.weaponDropPoint.forward, (player.team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
-        }
-        else if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropOddball)
-        {
-            NetworkGameManager.instance.AskMasterClientToSpawnOddball(player.weaponDropPoint.position, player.weaponDropPoint.forward);
+            if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.normal || (SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropThirdWeapon)
+            {
+                // do nothing
+            }
+            else if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropFlag)
+            {
+                NetworkGameManager.instance.AskMasterClientToSpawnFlag(player.weaponDropPoint.position, player.weaponDropPoint.forward, (player.team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
+            }
+            else if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropOddball)
+            {
+                NetworkGameManager.instance.AskMasterClientToSpawnOddball(player.weaponDropPoint.position, player.weaponDropPoint.forward);
+            }
         }
     }
 

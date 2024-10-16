@@ -220,6 +220,8 @@ MonoBehaviour:
   - RemoveThirdWeapon_RPC
   - EquipFlagToPlayer_RPC
   - DropFlag
+  - AskMasterClientToSpawnFlag
+  - AskMasterClientToSpawnOddball
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
