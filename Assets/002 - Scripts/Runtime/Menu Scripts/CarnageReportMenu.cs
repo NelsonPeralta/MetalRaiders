@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 
 public class CarnageReportMenu : MonoBehaviour
@@ -143,6 +144,9 @@ public class CarnageReportMenu : MonoBehaviour
     IEnumerator EnableBackBtn_Coroutine()
     {
         yield return new WaitForSeconds(1);
+
+        if (PhotonNetwork.InRoom) Launcher.instance.TriggerOnJoinedRoomBehaviour();
+
         _backBtn.SetActive(true);
     }
 }
