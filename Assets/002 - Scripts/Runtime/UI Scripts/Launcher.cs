@@ -1130,36 +1130,38 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void FindMasterClientAndToggleIcon()
     {
-        namePlatesParent.transform.GetChild(0).GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
-
-
-        foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
+        if (namePlatesParent.childCount > 0)
         {
-            //print($"FindMasterClientAndToggleIcon: {player.NickName} {player.IsMasterClient}");
-            if (player.IsMasterClient)
+            namePlatesParent.transform.GetChild(0).GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+
+            foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
             {
-                foreach (Transform child in namePlatesParent)
+                //print($"FindMasterClientAndToggleIcon: {player.NickName} {player.IsMasterClient}");
+                if (player.IsMasterClient)
                 {
-                    try
+                    foreach (Transform child in namePlatesParent)
                     {
-                        if (child.GetComponent<PlayerNamePlate>())
+                        try
                         {
-                            //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
-                            if (child.GetComponent<PlayerNamePlate>().playerDataCell)
+                            if (child.GetComponent<PlayerNamePlate>())
                             {
-                                if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName)
-                                    && child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0)
-                                    child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+                                //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
+                                if (child.GetComponent<PlayerNamePlate>().playerDataCell)
+                                {
+                                    if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName)
+                                        && child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0)
+                                        child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+                                    else
+                                        child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                                }
                                 else
+                                {
                                     child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
-                            }
-                            else
-                            {
-                                child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                                }
                             }
                         }
+                        catch { }
                     }
-                    catch { }
                 }
             }
         }

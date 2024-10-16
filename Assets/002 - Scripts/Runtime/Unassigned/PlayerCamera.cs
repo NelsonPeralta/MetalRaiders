@@ -349,7 +349,7 @@ public class PlayerCamera : MonoBehaviour
 
         _weaponOffsetLocalPosition.z = -_angleBetweenPlayerForwardAndVertAxis * 0.001f;
         _weaponOffset.localPosition = _weaponOffsetLocalPosition;
-        _weaponOffset.localRotation = Quaternion.Euler(_weaponOffset.localRotation.x, _offsetTickUpRotation * 0.08f, _weaponOffset.localRotation.z);
+        _weaponOffset.localRotation = Quaternion.Euler(_weaponOffset.localRotation.x, _offsetTickUpRotation * 0.1f, _weaponOffset.localRotation.z);
     }
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)

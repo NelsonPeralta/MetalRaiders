@@ -135,13 +135,12 @@ public class SpawnManager : MonoBehaviour
 
                     if (availableSpawnPoints.Count == 0)
                         foreach (SpawnPoint spb in redSpawnPoints)
-                            if (!spb.reserved)
+                            if (!spb.reserved && !spb.seen)
                                 availableSpawnPoints.Add(spb);
 
                     if (availableSpawnPoints.Count == 0)
                         foreach (SpawnPoint spb in redSpawnPoints)
-                            if (!spb.seen)
-                                availableSpawnPoints.Add(spb);
+                            availableSpawnPoints.Add(spb);
                 }
                 else
                 {
@@ -151,13 +150,12 @@ public class SpawnManager : MonoBehaviour
 
                     if (availableSpawnPoints.Count == 0)
                         foreach (SpawnPoint spb in blueSpawnPoints)
-                            if (!spb.reserved)
+                            if (!spb.reserved && !spb.seen)
                                 availableSpawnPoints.Add(spb);
 
                     if (availableSpawnPoints.Count == 0)
                         foreach (SpawnPoint spb in blueSpawnPoints)
-                            if (!spb.seen)
-                                availableSpawnPoints.Add(spb);
+                            availableSpawnPoints.Add(spb);
                 }
 
 
@@ -169,7 +167,7 @@ public class SpawnManager : MonoBehaviour
 
 
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) { }
             availableSpawnPoints.AddRange(genericSpawnPointsAlpha);
 
 

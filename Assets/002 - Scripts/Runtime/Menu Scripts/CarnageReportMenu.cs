@@ -50,6 +50,8 @@ public class CarnageReportMenu : MonoBehaviour
             {
                 print($"{_carnageReportStrucs[i].kills} {_carnageReportStrucs[i].deaths}");
                 ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].colorPalette.ToString().ToLower(), out _tCol);
+
+                print($"Changing carnage report row color to: {_tCol}");
                 carnageReportRowArray[i].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
 
 
@@ -80,6 +82,7 @@ public class CarnageReportMenu : MonoBehaviour
                 {
                     print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
                     ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].team.ToString().ToLower(), out _tCol);
+                    print($"Changing carnage report row color to: {_tCol}");
                     carnageReportRowArray[c].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
 
 
@@ -107,6 +110,7 @@ public class CarnageReportMenu : MonoBehaviour
                 {
                     print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
                     ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].team.ToString().ToLower(), out _tCol);
+                    print($"Changing carnage report row color to: {_tCol}");
                     carnageReportRowArray[c].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
 
 

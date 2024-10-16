@@ -589,7 +589,7 @@ public class PlayerInventory : MonoBehaviourPun
                 _oddball.gameObject.SetActive(false); _oddball.equippedModel.SetActive(false); _oddball.holsteredModel.SetActive(false);
             }
 
-            if (player.isMine) activeWeapon.gameObject.SetActive(true);
+            activeWeapon.gameObject.SetActive(true);
             activeWeapon.equippedModel.SetActive(true); activeWeapon.holsteredModel.SetActive(false);
             PlayDrawSound();
             pController.playerThirdPersonModelManager.OnActiveWeaponChanged_PlayTPSAnimations_Delegate(this);
