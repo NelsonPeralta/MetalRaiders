@@ -1183,7 +1183,10 @@ public class Player : Biped
     public void LeaveLevelButStayInRoom()
     {
         if (controllerId == 0)
+        {
+            GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
             StartCoroutine(LeaveLevelButStayInRoom_Coroutine());
+        }
     }
 
     void SpawnRagdoll()

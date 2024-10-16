@@ -231,8 +231,6 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             if (CurrentRoomManager.instance.gameOver) return;
             print("NetworkGameManager EndGame");
 
-            GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
-
             if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
                 MultiplayerManager.instance.EndGame();
             else if (GameManager.instance.gameMode == GameManager.GameMode.Coop)

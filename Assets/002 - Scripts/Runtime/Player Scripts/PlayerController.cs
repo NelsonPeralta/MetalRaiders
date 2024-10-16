@@ -2182,7 +2182,6 @@ public class PlayerController : MonoBehaviourPun
 
         CurrentRoomManager.instance.leftRoomManually = true;
 
-        GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
         GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ResetPlayerDataCells);
 
 

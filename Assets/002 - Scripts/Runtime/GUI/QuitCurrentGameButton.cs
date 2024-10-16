@@ -11,6 +11,14 @@ public class QuitCurrentGameButton : MonoBehaviour
     {
         if (!CurrentRoomManager.instance.gameOver)
         {
+
+
+#if (UNITY_EDITOR)
+            // your code here
+            GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
+
+#endif
+
             CurrentRoomManager.instance.leftRoomManually = true;
             button.SetActive(false);
             playerController.QuitMatch();

@@ -513,7 +513,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (previousScenePayloads.Contains(PreviousScenePayload.ResetPlayerDataCells))
             {
-                CurrentRoomManager.instance.CreateCarnageReportData();
                 CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
                 previousScenePayloads.Remove(PreviousScenePayload.ResetPlayerDataCells);
             }

@@ -1165,8 +1165,6 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     if (gameWon) WebManager.webManagerInstance.SaveSwarmStats(pp.GetComponent<PlayerSwarmMatchStats>(), gameWon);
 
 
-                    GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
-
                     pp.LeaveLevelButStayInRoom();
                 }
                 else
