@@ -1451,7 +1451,7 @@ public class Player : Biped
         Debug.Log("Respawn_Coroutine");
         yield return new WaitForSeconds(RESPAWN_TIME);
 
-        Respawn();
+        if (!CurrentRoomManager.instance.gameOver) Respawn();
     }
 
     IEnumerator MakeThirdPersonModelVisible()

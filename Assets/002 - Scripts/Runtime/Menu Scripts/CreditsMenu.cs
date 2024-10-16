@@ -78,7 +78,10 @@ public class CreditsMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        if (!GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.ResetPlayerDataCells))
+        {
+            Launcher.instance.TriggerOnJoinedRoomBehaviour();
+        }
     }
 
 

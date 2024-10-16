@@ -95,7 +95,7 @@ public class SpawnManager : MonoBehaviour
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
-            if (GameManager.instance.gameType != GameManager.GameType.CTF)
+            if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
                 foreach (SpawnPoint sp in genericSpawnPointsAlpha)
                     if (!sp.constested && !sp.reserved)
@@ -157,18 +157,16 @@ public class SpawnManager : MonoBehaviour
                         foreach (SpawnPoint spb in blueSpawnPoints)
                             availableSpawnPoints.Add(spb);
                 }
-
-
-
-
-
             }
         }
 
 
 
-        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) { }
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+        {
+            availableSpawnPoints.Clear();
             availableSpawnPoints.AddRange(genericSpawnPointsAlpha);
+        }
 
 
 

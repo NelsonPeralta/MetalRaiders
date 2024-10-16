@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Progress;
 
 public class CurrentRoomManager : MonoBehaviour
 {
@@ -852,19 +853,28 @@ public class CurrentRoomManager : MonoBehaviour
 
         }
         else
-            for (int i = 0; i < instance._playerDataCells.Count; i++)
+        {
+            if (instance._playerDataCells.Where(item => item.occupied && item.playerExtendedPublicData.player_id == pepd.player_id).Count() == 1)
             {
-                //Debug.Log($"Player Extended Public Data {i}");
-                //Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].occupied}");
-                //if (instance._extendedPlayerData[i].occupied)
-                //    Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
-
-                if (i > 0 && !instance._playerDataCells[i].occupied)
+                instance._playerDataCells.Where(item => item.occupied && item.playerExtendedPublicData.player_id == pepd.player_id).FirstOrDefault().playerExtendedPublicData = pepd;
+            }
+            else
+            {
+                for (int i = 0; i < instance._playerDataCells.Count; i++)
                 {
-                    instance._playerDataCells[i].playerExtendedPublicData = pepd;
-                    break;
+                    //Debug.Log($"Player Extended Public Data {i}");
+                    //Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].occupied}");
+                    //if (instance._extendedPlayerData[i].occupied)
+                    //    Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
+
+                    if (i > 0 && !instance._playerDataCells[i].occupied)
+                    {
+                        instance._playerDataCells[i].playerExtendedPublicData = pepd;
+                        break;
+                    }
                 }
             }
+        }
     }
 
 
@@ -950,6 +960,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void CreateCarnageReportData()
     {
+        print($"CreateCarnageReportData {instance._playerDataCells.Where(item => item.occupied).Count()}");
         for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
             if (instance._playerDataCells[i].occupied)
