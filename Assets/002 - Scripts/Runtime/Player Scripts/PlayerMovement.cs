@@ -44,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
         get { return _grounded; }
         private set
         {
+            if (_grounded == false && value == true) _fpsJumpingAnimator.Play("land");
+
             _grounded = value;
             if (value && readyToJump) _clickedJumpButtonFromLastGrounded = false;
 
@@ -196,6 +198,8 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] AudioSource _footstepAudioSource;
     [SerializeField] Transform _weaponOffset;
+    [SerializeField] Animator _fpsJumpingAnimator;
+
     float _footstepClipDelay;
 
 
@@ -364,7 +368,7 @@ public class PlayerMovement : MonoBehaviour
 
     void WeaponOffset()
     {
-        if (!player.isAlive || !isGrounded)
+        if (!player.isAlive /*|| !isGrounded*/)
         {
 
             if (_offsetTickForwardDirection > 0)
@@ -382,19 +386,23 @@ public class PlayerMovement : MonoBehaviour
                     _offsetTickForwardDirection -= _offsetTickForwardDirection;
             }
 
-            if (_offsetTickForwardRotation > 0)
+
+            if (isGrounded)
             {
-                if (_offsetTickForwardRotation >= 3)
-                    _offsetTickForwardRotation -= 3;
-                else
-                    _offsetTickForwardRotation -= _offsetTickForwardRotation;
-            }
-            else if (_offsetTickForwardRotation < 0)
-            {
-                if (_offsetTickForwardRotation <= -3)
-                    _offsetTickForwardRotation += 3;
-                else
-                    _offsetTickForwardRotation -= _offsetTickForwardRotation;
+                if (_offsetTickForwardRotation > 0)
+                {
+                    if (_offsetTickForwardRotation >= 3)
+                        _offsetTickForwardRotation -= 3;
+                    else
+                        _offsetTickForwardRotation -= _offsetTickForwardRotation;
+                }
+                else if (_offsetTickForwardRotation < 0)
+                {
+                    if (_offsetTickForwardRotation <= -3)
+                        _offsetTickForwardRotation += 3;
+                    else
+                        _offsetTickForwardRotation -= _offsetTickForwardRotation;
+                }
             }
 
         }
@@ -467,6 +475,7 @@ public class PlayerMovement : MonoBehaviour
         // when to jump
         if (rewiredPlayer.GetButtonDown("Jump") && readyToJump && _grounded)
         {
+            _fpsJumpingAnimator.Play("jump");
             readyToJump = false; _clickedJumpButtonFromLastGrounded = true; _lastDirectionWhenJumped = movementDirection;
 
             Jump();
