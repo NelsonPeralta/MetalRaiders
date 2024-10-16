@@ -27,6 +27,9 @@ public class PlayerOddballWorldUiMarker : MonoBehaviour
             {
                 _skullTag.SetActive(player.playerInventory.playerOddballActive && player.team != _playerWorldUIMarker.lookAtThisPlayer.team);
                 _shieldTag.SetActive(player.playerInventory.playerOddballActive && player.team == _playerWorldUIMarker.lookAtThisPlayer.team);
+
+
+                _shieldTag.SetActive(player.playerInventory.hasEnnemyFlag && player.team == _playerWorldUIMarker.lookAtThisPlayer.team);
             }
         }
     }

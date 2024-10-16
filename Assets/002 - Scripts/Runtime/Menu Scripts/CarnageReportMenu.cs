@@ -145,7 +145,7 @@ public class CarnageReportMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
 
-        if (PhotonNetwork.InRoom) Launcher.instance.TriggerOnJoinedRoomBehaviour();
+        //if (PhotonNetwork.InRoom) Launcher.instance.TriggerOnJoinedRoomBehaviour();
 
         _backBtn.SetActive(true);
     }
