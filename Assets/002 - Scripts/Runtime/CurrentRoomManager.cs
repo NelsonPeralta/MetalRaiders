@@ -854,12 +854,12 @@ public class CurrentRoomManager : MonoBehaviour
         }
         else
         {
-            //if (instance._playerDataCells.Where(item => item.occupied && item.playerExtendedPublicData.player_id == pepd.player_id).Count() == 1)
-            //{
-            //    instance._playerDataCells.Where(item => item.occupied && item.playerExtendedPublicData.player_id == pepd.player_id).FirstOrDefault().playerExtendedPublicData = pepd;
-            //}
-            //else
-            //{
+            if (instance._playerDataCells.Where(item => item.occupied && item.playerExtendedPublicData.player_id == pepd.player_id && item.rewiredId == 0).Count() == 1)
+            {
+                instance._playerDataCells.Where(item => item.occupied && item.playerExtendedPublicData.player_id == pepd.player_id && item.rewiredId == 0).FirstOrDefault().playerExtendedPublicData = pepd;
+            }
+            else
+            {
                 for (int i = 0; i < instance._playerDataCells.Count; i++)
                 {
                     //Debug.Log($"Player Extended Public Data {i}");
@@ -873,7 +873,7 @@ public class CurrentRoomManager : MonoBehaviour
                         break;
                     }
                 }
-            //}
+            }
         }
     }
 
