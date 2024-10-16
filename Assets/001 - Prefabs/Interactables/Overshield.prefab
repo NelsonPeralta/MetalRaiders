@@ -24721,6 +24721,7 @@ GameObject:
   - component: {fileID: 8556144322490905289}
   - component: {fileID: 2763913393729733362}
   - component: {fileID: 2539104610365015734}
+  - component: {fileID: 2419334231266085665}
   m_Layer: 0
   m_Name: Overshield
   m_TagString: Untagged
@@ -24880,6 +24881,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2419334231266085665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8117220242365851967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c11cab512ad030408b7d5274b9b71f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8117471496456833223
 GameObject:
   m_ObjectHideFlags: 0

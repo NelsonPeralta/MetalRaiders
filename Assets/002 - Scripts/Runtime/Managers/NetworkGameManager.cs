@@ -1030,11 +1030,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void DropOddball(Vector3 pos, Vector3 dir, bool caller = true)
+    public void AskMasterClientToSpawnOddball(Vector3 pos, Vector3 dir, bool caller = true)
     {
         if (caller && PhotonNetwork.IsMasterClient)
         {
-            _pv.RPC("DropOddball", RpcTarget.AllViaServer, pos, dir, false);
+            _pv.RPC("AskMasterClientToSpawnOddball", RpcTarget.AllViaServer, pos, dir, false);
         }
         else if (!caller)
         {
@@ -1053,11 +1053,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void DropFlag(Vector3 pos, Vector3 dir, GameManager.Team flagTeam, bool caller = true)
+    public void AskMasterClientToSpawnFlag(Vector3 pos, Vector3 dir, GameManager.Team flagTeam, bool caller = true)
     {
         if (caller && PhotonNetwork.IsMasterClient)
         {
-            _pv.RPC("DropFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false);
+            _pv.RPC("AskMasterClientToSpawnFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false);
         }
         else if (!caller)
         {
