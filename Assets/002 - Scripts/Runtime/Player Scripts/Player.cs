@@ -709,7 +709,7 @@ public class Player : Biped
 
     public bool isTakingDamage { get { return _isTakingDamageForIndicator > 0; } }
 
-    float _respawnCountdown, _isTakingDamageForIndicator;
+    float _respawnCountdown, _isTakingDamageForIndicator, _spawnProtectionTime;
     int _respawnBeepCount;
 
     private void Awake()
@@ -818,6 +818,7 @@ public class Player : Biped
     }
     private void Update()
     {
+        if (_spawnProtectionTime > 0) _spawnProtectionTime -= Time.deltaTime;
         if (_hurtCooldown > 0) _hurtCooldown -= Time.deltaTime;
         if (_isTakingDamageForIndicator > 0) _isTakingDamageForIndicator -= Time.deltaTime;
 
@@ -921,6 +922,7 @@ public class Player : Biped
     {
         print($"Damage: ({damage}) {damageSourceCleanName}");
 
+        if (_spawnProtectionTime > 0) damage = 0;
 
         {
             //try
@@ -1298,6 +1300,7 @@ public class Player : Biped
     void Respawn()
     {
         Debug.Log("Respawn");
+        if (GameManager.instance.gameType == GameManager.GameType.CTF) _spawnProtectionTime = 3;
         _gameplayerRecordingPointsHolder.parent = transform; _gameplayerRecordingPointsHolder.transform.localPosition = Vector3.zero; _gameplayerRecordingPointsHolder.transform.localRotation = Quaternion.identity;
         _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
 
