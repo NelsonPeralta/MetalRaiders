@@ -486,9 +486,14 @@ public class PlayerController : MonoBehaviourPun
         //}
     }
 
-    public void ResetLongInteractFrameCounter()
+
+    public enum InteractResetMode { activeweapon, thirdweapon }
+    public void ResetLongInteractFrameCounter(InteractResetMode irm)
     {
-        _framesInteractBtnHasBeenHeld = 0;
+        if (irm == InteractResetMode.activeweapon)
+            _framesInteractBtnHasBeenHeld = 0;
+        else if (irm == InteractResetMode.thirdweapon)
+            _framesMarkSpotHasBeenHeld = 0;
     }
 
 
@@ -2344,16 +2349,14 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButton("mark"))
         {
-            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 3)
+            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2)
+                _framesMarkSpotHasBeenHeld = Mathf.Clamp(_framesMarkSpotHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 2);
+
+            if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 2)
             {
-                _framesMarkSpotHasBeenHeld++;
+                print($"MARK SPOT HELD LONG {_framesMarkSpotHasBeenHeld}");
 
-                if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 3)
-                {
-                    print($"MARK SPOT HELD LONG {_framesMarkSpotHasBeenHeld}");
-
-                    player.playerInteractableObjectHandler.TriggerLongInteract();
-                }
+                player.playerInteractableObjectHandler.TriggerLongInteract();
             }
         }
         else if (rewiredPlayer.GetButtonUp("mark"))

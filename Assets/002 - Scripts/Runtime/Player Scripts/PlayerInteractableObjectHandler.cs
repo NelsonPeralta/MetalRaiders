@@ -55,7 +55,10 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
     {
         get
         {
-            return (closestInteractableObject.GetComponent<LootableWeapon>() && closestInteractableObject.GetComponent<LootableWeapon>().isDw && player.playerInventory.activeWeapon.isDualWieldable);
+            if (closestInteractableObject)
+                return (closestInteractableObject.GetComponent<LootableWeapon>() && closestInteractableObject.GetComponent<LootableWeapon>().isDw && player.playerInventory.activeWeapon.isDualWieldable);
+
+            return false;
         }
     }
 
@@ -276,7 +279,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
         if (closestInteractableObject  /* && !closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory*/ /*&& !closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso*/)
         {
-            playerController.ResetLongInteractFrameCounter();
+            playerController.ResetLongInteractFrameCounter(PlayerController.InteractResetMode.activeweapon);
 
             if (closestInteractableObject.GetComponent<LootableWeapon>())
             {
@@ -355,7 +358,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                 }
             }
 
-            playerController.ResetLongInteractFrameCounter();
+            playerController.ResetLongInteractFrameCounter(PlayerController.InteractResetMode.activeweapon);
         }
     }
 
@@ -368,8 +371,12 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
         if (PV.IsMine && closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso && !player.isDualWielding)
         {
+            player.playerController.ResetLongInteractFrameCounter(PlayerController.InteractResetMode.thirdweapon);
+
             if (player.playerInventory.activeWeapon.isDualWieldable /*&& (closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(player.playerInventory.activeWeapon.codeName))*/)
                 player.playerInventory.PV.RPC("PickupThirdWeapon", RpcTarget.All, closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition, true);
+
+            player.playerController.ResetLongInteractFrameCounter(PlayerController.InteractResetMode.thirdweapon);
         }
     }
 
