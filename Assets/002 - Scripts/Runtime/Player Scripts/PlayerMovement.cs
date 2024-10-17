@@ -44,7 +44,14 @@ public class PlayerMovement : MonoBehaviour
         get { return _grounded; }
         private set
         {
-            if (_grounded == false && value == true) _fpsJumpingAnimator.Play("land");
+            if (_grounded == false && value == true /*&& !_fpsJumpingAnimator.GetCurrentAnimatorStateInfo(0).IsName("jump") && _timeFalling > 1*/)
+            {
+                print($"may have landed: {_timeFalling}");
+
+                if (_timeFalling > 0.5f)
+                    _fpsJumpingAnimator.Play("land");
+            }
+
 
             _grounded = value;
             if (value && readyToJump) _clickedJumpButtonFromLastGrounded = false;
@@ -219,11 +226,12 @@ public class PlayerMovement : MonoBehaviour
 
 
     [SerializeField] bool _isMoving;
+    [SerializeField] float _timeFalling;
 
 
-    [SerializeField] int _offsetTickForwardDirection, _offsetTickForwardRotation;
-    [SerializeField] Vector3 _weaponOffsetLocalPosition = new Vector3(0, 0, 0);
-    [SerializeField] Vector3 _weaponOffsetLocalRotation = new Vector3();
+    int _offsetTickForwardDirection, _offsetTickForwardRotation;
+    Vector3 _weaponOffsetLocalPosition = new Vector3(0, 0, 0);
+    Vector3 _weaponOffsetLocalRotation = new Vector3();
 
 
 
@@ -252,6 +260,8 @@ public class PlayerMovement : MonoBehaviour
         if (!player.isMine) _footstepAudioSource.volume = 1;
 
         player.OnPlayerRespawnEarly += OnPlayerRespawnEarly;
+
+        if (GameManager.instance.sprintMode == GameManager.SprintMode.Off) walkSpeed *= 1.15f;
     }
 
     private void Update()
@@ -272,7 +282,19 @@ public class PlayerMovement : MonoBehaviour
         //    _weaponOffset.localRotation = Quaternion.Euler(0, 0, -_correctedRightInput * 5);
         //}
 
+        if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
+        {
+            if (_rb.velocity.y < -1) _timeFalling += Time.deltaTime;
+            else _timeFalling = 0;
 
+            if (_timeFalling > 10)
+            {
+                if (player.lastPID > 0)
+                    player.Damage((int)player.hitPoints, false, player.lastPID);
+                else
+                    player.Damage((int)player.hitPoints, false, player.photonId);
+            }
+        }
 
 
 

@@ -297,6 +297,16 @@ public class PlayerInventory : MonoBehaviourPun
 
     public bool playerOddballActive { get { return _oddball.gameObject.activeInHierarchy; } }
     public bool hasEnnemyFlag { get { return _flag.gameObject.activeInHierarchy; } }
+    public bool holdingObjective
+    {
+        get
+        {
+            if (_oddball.gameObject.activeInHierarchy) return true;
+            if (_flag.gameObject.activeInHierarchy) return true;
+
+            return false;
+        }
+    }
 
     public Transform bulletTrailPool { get { return _fakeBulletTrailHolder; } }
 

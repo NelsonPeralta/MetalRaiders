@@ -139,8 +139,7 @@ public class SpawnManager : MonoBehaviour
                                 availableSpawnPoints.Add(spb);
 
                     if (availableSpawnPoints.Count == 0)
-                        foreach (SpawnPoint spb in redSpawnPoints)
-                            availableSpawnPoints.Add(spb);
+                        availableSpawnPoints = new List<SpawnPoint>(redSpawnPoints);
                 }
                 else
                 {
@@ -154,8 +153,7 @@ public class SpawnManager : MonoBehaviour
                                 availableSpawnPoints.Add(spb);
 
                     if (availableSpawnPoints.Count == 0)
-                        foreach (SpawnPoint spb in blueSpawnPoints)
-                            availableSpawnPoints.Add(spb);
+                        availableSpawnPoints = new List<SpawnPoint>(blueSpawnPoints);
                 }
             }
         }

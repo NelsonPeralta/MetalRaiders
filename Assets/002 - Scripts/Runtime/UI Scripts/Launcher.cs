@@ -61,6 +61,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text messageText;
     [SerializeField] GameObject commonRoomTexts;
     [SerializeField] GameObject _teamRoomUI;
+    [SerializeField] TMP_Text _sprintModeText;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
@@ -138,6 +139,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public TMP_Text teamModeText { get { return _teamModeText; } }
     public TMP_Text teamText { get { return _teamText; } }
     public GameObject teamRoomUI { get { return _teamRoomUI; } }
+    public TMP_Text sprintModeText { get { return _sprintModeText; } }
 
     public GameObject gameModeBtns { get { return _gameModeBtns; } }
     public GameObject teamModeBtns { get { return _teamModeBtns; } }
@@ -349,6 +351,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
             GameManager.instance.teamMode = GameManager.TeamMode.None;
             GameManager.instance.gameMode = GameManager.GameMode.Versus;
+            GameManager.instance.sprintMode = GameManager.SprintMode.On;
 
             RoomOptions options = new RoomOptions();
             options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
@@ -451,6 +454,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
             GameManager.instance.teamMode = GameManager.TeamMode.None;
             GameManager.instance.gameMode = GameManager.GameMode.Versus;
+            GameManager.instance.sprintMode = SprintMode.On;
 
             RoomOptions options = new RoomOptions();
             options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
@@ -665,6 +669,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         GameManager.instance.gameMode = GameMode.Versus;
         GameManager.instance.teamMode = TeamMode.None;
+        GameManager.instance.sprintMode = SprintMode.On;
 
         _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
         _mapSelectedPreview.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
@@ -852,6 +857,21 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
         GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
+
+        if (PhotonNetwork.IsMasterClient)
+            NetworkGameManager.instance.SendGameParams();
+    }
+
+    public void ChangeSprintMode() //  called from a ui button
+    {
+        if (GameManager.instance.sprintMode == SprintMode.On)
+        {
+            GameManager.instance.sprintMode = SprintMode.Off;
+        }
+        else
+        {
+            GameManager.instance.sprintMode = SprintMode.On;
+        }
 
         if (PhotonNetwork.IsMasterClient)
             NetworkGameManager.instance.SendGameParams();

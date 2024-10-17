@@ -276,6 +276,8 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
         if (closestInteractableObject  /* && !closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory*/ /*&& !closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso*/)
         {
+            playerController.ResetLongInteractFrameCounter();
+
             if (closestInteractableObject.GetComponent<LootableWeapon>())
             {
                 if (!closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso)
@@ -352,6 +354,8 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                         NetworkGameManager.instance.AskHostToTriggerInteractableObject(closestInteractableObject.transform.position, playerController.player.photonId);
                 }
             }
+
+            playerController.ResetLongInteractFrameCounter();
         }
     }
 

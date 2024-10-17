@@ -450,20 +450,55 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+
+    int _framesInteractBtnHasBeenHeld;
     void LongInteract()
     {
-        if (GameManager.instance.gameType == GameManager.GameType.Oddball && player.playerInventory.playerOddballActive) return;
-
-        if (rewiredPlayer.GetButtonShortPressDown("Interact"))
+        if (player.playerInventory.holdingObjective) _framesInteractBtnHasBeenHeld = 0;
+        else
         {
-            //OnPlayerLongInteract?.Invoke(this);
-            OnPlayerShortPressInteract?.Invoke(this);
+            if (rewiredPlayer.GetButton("Interact"))
+            {
+                if (_framesInteractBtnHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2)
+                    _framesInteractBtnHasBeenHeld = Mathf.Clamp(_framesInteractBtnHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 2);
+            }
+
+
+            if (_framesInteractBtnHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 2)
+                OnPlayerShortPressInteract?.Invoke(this);
         }
+
+        if (rewiredPlayer.GetButtonUp("Interact"))
+        {
+            _framesInteractBtnHasBeenHeld = 0;
+        }
+
+
+
+
+
+        //if (GameManager.instance.gameType == GameManager.GameType.Oddball && player.playerInventory.playerOddballActive) return;
+
+        //if (rewiredPlayer.GetButtonShortPressDown("Interact"))
+        //{
+        //    //OnPlayerLongInteract?.Invoke(this);
+        //    OnPlayerShortPressInteract?.Invoke(this);
+        //}
     }
+
+    public void ResetLongInteractFrameCounter()
+    {
+        _framesInteractBtnHasBeenHeld = 0;
+    }
+
+
 
     //TODO Make the player controller handle the third person script and models instead of the movement script
     void Sprint()
     {
+        if (GameManager.instance.sprintMode == GameManager.SprintMode.Off) return;
+
+
         if (isHoldingShootBtn || player.hasEnnemyFlag || player.playerInventory.playerOddballActive) return;
 
 

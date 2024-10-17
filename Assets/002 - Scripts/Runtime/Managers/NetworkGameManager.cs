@@ -92,6 +92,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             ps.Add("gametype", GameManager.instance.gameType.ToString());
             ps.Add("leveltoloadindex", Launcher.instance.levelToLoadIndex.ToString());
             ps.Add("teammode", GameManager.instance.teamMode.ToString());
+            ps.Add("sprintmode", GameManager.instance.teamMode.ToString());
             //ps.Add("teamdict", string.Join(Environment.NewLine, GameManager.instance.teamDict));
             //ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));
             ps.Add("nbLocalPlayersDict", JsonConvert.SerializeObject(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict));
@@ -110,6 +111,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 try { GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), p["gametype"]); } catch (System.Exception e) { Debug.Log(e); }
                 try { Launcher.instance.levelToLoadIndex = (System.Int16.Parse(p["leveltoloadindex"])); } catch (System.Exception e) { Debug.Log(e); }
                 try { GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), p["teammode"]); } catch (System.Exception e) { Debug.Log(e); }
+                try { GameManager.instance.sprintMode = (GameManager.SprintMode)System.Enum.Parse(typeof(GameManager.SprintMode), p["sprintmode"]); } catch (System.Exception e) { Debug.Log(e); }
+
 
                 try
                 {

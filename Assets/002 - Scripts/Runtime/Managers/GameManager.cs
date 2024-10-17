@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum TeamMode { Classic, None }
+    public enum SprintMode { On, Off }
 
     public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates }
 
@@ -106,6 +107,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
     [SerializeField] TeamMode _teamMode;
+    [SerializeField] SprintMode _sprintMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
     [SerializeField] bool _inARoom;
@@ -236,6 +238,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             UpdateNamePlateColorsAndSort();
         }
     }
+
+    public SprintMode sprintMode
+    {
+        get { return _sprintMode; }
+        set
+        {
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                _sprintMode = value;
+                Launcher.instance.sprintModeText.text = $"Sprint: {_sprintMode}";
+            }
+        }
+    }
+
+
 
     public SwarmManager.Difficulty difficulty
     {
@@ -537,6 +554,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { gameMode = GameMode.Versus; } catch { }
             try { gameType = GameType.Fiesta; } catch { }
             try { teamMode = TeamMode.None; } catch { }
+            sprintMode = SprintMode.On;
             _lootableWeapons.Clear();
             hazards.Clear();
             _networkGrenadeSpawnPoints.Clear();
