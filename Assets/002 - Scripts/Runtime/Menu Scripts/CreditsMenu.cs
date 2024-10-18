@@ -30,7 +30,7 @@ public class CreditsMenu : MonoBehaviour
             Debug.Log($"CarnageReportMenu {GameManager.instance.carnageReport.xpGained}");
             if (GameManager.instance.carnageReport.xpGained > 0)
             {
-                _thankYouExtraText.text = $"PS: You gained {GameManager.instance.carnageReport.xpGained} Xp and Cuckbucks.";
+                _thankYouExtraText.text = $"You gained {GameManager.instance.carnageReport.xpGained} Xp and Cuckbucks.";
                 if (GameManager.instance.carnageReport.leveledUp)
                     _thankYouExtraText.text += $" LEVEL UP -> {GameManager.instance.carnageReport.newLevel}!";
                 else
