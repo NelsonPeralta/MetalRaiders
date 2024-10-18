@@ -22,6 +22,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public LauncherEvent OnCreateMultiplayerRoomButton;
 
     public static Launcher instance; // Singleton of the Photon Launcher
+    public static int DEFAULT_ROOM_COUNTDOWN = 9;
     public PhotonView PV;
     public GameObject loginButton;
     public GameObject playerModel { get { return _playerModel; } }
@@ -72,7 +73,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text _gametypeSelectedText;
     [SerializeField] TMP_Text _gameModeSelectedText;
     [SerializeField] TMP_Text _teamModeText;
-    [SerializeField] TMP_Text _teamText;
+    [SerializeField] TMP_Text _teamText, _difficultyText;
     [SerializeField] GameObject _teamModeBtns;
     [SerializeField] GameObject _swarmDifficultyBtns;
     [SerializeField] GameObject _vetoBtn;
@@ -138,6 +139,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public TMP_Text gameModeText { get { return _gameModeSelectedText; } }
     public TMP_Text teamModeText { get { return _teamModeText; } }
     public TMP_Text teamText { get { return _teamText; } }
+    public TMP_Text difficultyText { get { return _difficultyText; } }
     public GameObject teamRoomUI { get { return _teamRoomUI; } }
     public TMP_Text sprintModeText { get { return _sprintModeText; } }
 
@@ -352,6 +354,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             GameManager.instance.teamMode = GameManager.TeamMode.None;
             GameManager.instance.gameMode = GameManager.GameMode.Versus;
             GameManager.instance.sprintMode = GameManager.SprintMode.On;
+            GameManager.instance.difficulty = SwarmManager.Difficulty.Normal;
 
             RoomOptions options = new RoomOptions();
             options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
@@ -499,7 +502,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Clear();
         CurrentRoomManager.instance.expectedNbPlayers = 0;
-        CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = 9;
+        CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = DEFAULT_ROOM_COUNTDOWN;
 
         if (tl == null)
             PhotonNetwork.CreateRoom(roomNam, ro);
@@ -670,6 +673,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         GameManager.instance.gameMode = GameMode.Versus;
         GameManager.instance.teamMode = TeamMode.None;
         GameManager.instance.sprintMode = SprintMode.On;
+        GameManager.instance.difficulty = SwarmManager.Difficulty.Normal;
 
         _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
         _mapSelectedPreview.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
@@ -737,7 +741,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         CurrentRoomManager.instance.matchSettingsSet = false;
         Launcher.instance.gameCountdownText.gameObject.SetActive(false);
-        CurrentRoomManager.instance.roomGameStartCountdown = 7;
+        CurrentRoomManager.instance.roomGameStartCountdown = DEFAULT_ROOM_COUNTDOWN;
         GameManager.StopBeeps();
     }
 
@@ -836,113 +840,138 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        {
+            Launcher.instance.levelToLoadIndex = index;
+            NetworkGameManager.instance.SendGameParams();
+        }
+    }
 
-        Launcher.instance.levelToLoadIndex = index;
-        NetworkGameManager.instance.SendGameParams();
+    public void ChangeGameType(string gt)
+    {
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        {
+            if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.GunGame)
+                if (GameManager.instance.teamMode != TeamMode.None)
+                    GameManager.instance.teamMode = TeamMode.None;
+
+            if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.CTF)
+                if (GameManager.instance.teamMode != TeamMode.Classic)
+                    GameManager.instance.teamMode = TeamMode.Classic;
+
+
+            GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
+            FindObjectOfType<NetworkGameManager>().SendGameParams();
+        }
+    }
+
+    public void ChangeGameMode(string gt)
+    {
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        {
+            GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gt);
+            if (GameManager.instance.gameMode == GameManager.GameMode.Versus) GameManager.instance.teamMode = GameManager.TeamMode.None;
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop) GameManager.instance.teamMode = GameManager.TeamMode.Classic;
+
+            FindObjectOfType<NetworkGameManager>().SendGameParams();
+        }
     }
 
     public void ChangeTeamMode(string tm)
     {
         Debug.Log("ChangeTeamMode Btn");
 
-
-        if ((GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm) == TeamMode.Classic)
-            if (GameManager.instance.gameType == GameType.GunGame)
-                GameManager.instance.gameType = GameType.Slayer;
-
-        if ((GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm) == TeamMode.None)
-            if (GameManager.instance.gameType == GameType.CTF)
-                GameManager.instance.gameType = GameType.Slayer;
-
-
-
-        GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
-
-        if (PhotonNetwork.IsMasterClient)
-            NetworkGameManager.instance.SendGameParams();
-    }
-
-    public void ChangeSprintMode() //  called from a ui button
-    {
-        if (GameManager.instance.sprintMode == SprintMode.On)
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
         {
-            GameManager.instance.sprintMode = SprintMode.Off;
-        }
-        else
-        {
-            GameManager.instance.sprintMode = SprintMode.On;
-        }
+            if ((GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm) == TeamMode.Classic)
+                if (GameManager.instance.gameType == GameType.GunGame)
+                    GameManager.instance.gameType = GameType.Slayer;
 
-        if (PhotonNetwork.IsMasterClient)
-            NetworkGameManager.instance.SendGameParams();
+            if ((GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm) == TeamMode.None)
+                if (GameManager.instance.gameType == GameType.CTF)
+                    GameManager.instance.gameType = GameType.Slayer;
+
+
+
+            GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm);
+
+            if (PhotonNetwork.IsMasterClient)
+                NetworkGameManager.instance.SendGameParams();
+        }
     }
 
     public void ChangeTeam()
     {
-        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
         {
-            GameManager.Team nt = CurrentRoomManager.instance.playerDataCells[0].team;
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            {
+                GameManager.Team nt = CurrentRoomManager.instance.playerDataCells[0].team;
 
-            if (nt == GameManager.Team.Blue)
-                nt = GameManager.Team.Red;
-            else if (nt == GameManager.Team.Red)
-                nt = GameManager.Team.Blue;
+                if (nt == GameManager.Team.Blue)
+                    nt = GameManager.Team.Red;
+                else if (nt == GameManager.Team.Red)
+                    nt = GameManager.Team.Blue;
 
-            Dictionary<int, int> nd = new Dictionary<int, int>();
+                Dictionary<int, int> nd = new Dictionary<int, int>();
 
-            nd[CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id] = (int)nt;
+                nd[CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id] = (int)nt;
 
-            NetworkGameManager.instance.ChangePlayerTeam(nd);
+                NetworkGameManager.instance.ChangePlayerTeam(nd);
+            }
         }
     }
+
+    public void ChangeSprintMode() //  called from a ui button
+    {
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        {
+            if (GameManager.instance.sprintMode == SprintMode.On)
+            {
+                GameManager.instance.sprintMode = SprintMode.Off;
+            }
+            else
+            {
+                GameManager.instance.sprintMode = SprintMode.On;
+            }
+
+            if (PhotonNetwork.IsMasterClient)
+                NetworkGameManager.instance.SendGameParams();
+        }
+    }
+
+
 
 
 
     public void ChangeTeamOfLocalPlayer(int localPlayerInd)
     {
-        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
         {
-            GameManager.Team nt = CurrentRoomManager.instance.playerDataCells[localPlayerInd].team;
+            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            {
+                GameManager.Team nt = CurrentRoomManager.instance.playerDataCells[localPlayerInd].team;
 
-            if (nt == GameManager.Team.Blue)
-                nt = GameManager.Team.Red;
-            else if (nt == GameManager.Team.Red)
-                nt = GameManager.Team.Blue;
+                if (nt == GameManager.Team.Blue)
+                    nt = GameManager.Team.Red;
+                else if (nt == GameManager.Team.Red)
+                    nt = GameManager.Team.Blue;
 
-            Dictionary<int, int> nd = new Dictionary<int, int>();
+                Dictionary<int, int> nd = new Dictionary<int, int>();
 
-            nd[CurrentRoomManager.instance.playerDataCells[localPlayerInd].playerExtendedPublicData.player_id] = (int)nt;
+                nd[CurrentRoomManager.instance.playerDataCells[localPlayerInd].playerExtendedPublicData.player_id] = (int)nt;
 
-            NetworkGameManager.instance.ChangePlayerTeam(nd);
+                NetworkGameManager.instance.ChangePlayerTeam(nd);
+            }
         }
     }
 
 
 
 
-    public void ChangeGameType(string gt)
-    {
-        if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.GunGame)
-            if (GameManager.instance.teamMode != TeamMode.None)
-                GameManager.instance.teamMode = TeamMode.None;
-
-        if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.CTF)
-            if (GameManager.instance.teamMode != TeamMode.Classic)
-                GameManager.instance.teamMode = TeamMode.Classic;
 
 
-        GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt);
-        FindObjectOfType<NetworkGameManager>().SendGameParams();
-    }
 
-    public void ChangeGameMode(string gt)
-    {
-        GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gt);
-        if (GameManager.instance.gameMode == GameManager.GameMode.Versus) GameManager.instance.teamMode = GameManager.TeamMode.None;
-        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) GameManager.instance.teamMode = GameManager.TeamMode.Classic;
-
-        FindObjectOfType<NetworkGameManager>().SendGameParams();
-    }
 
 
     public void SendVetoToMaster()
@@ -953,8 +982,10 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeSwarmDifficulty(int enumI)
     {
-        NetworkGameManager.instance.UpdateSwarmDifficulty(enumI);
-
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        {
+            NetworkGameManager.instance.UpdateSwarmDifficulty(enumI);
+        }
     }
 
 

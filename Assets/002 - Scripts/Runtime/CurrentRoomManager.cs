@@ -64,7 +64,7 @@ public class CurrentRoomManager : MonoBehaviour
                 {
                     //if (vetoCountdown > 0) // Make sure this variable if greater than 0 by default
                     vetoCountdown = 10;
-                    roomGameStartCountdown = 10;
+                    roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;
                     ChooseRandomMatchSettingsForQuickMatch();
                 }
                 else if (expectedNbPlayers > 1)
@@ -72,7 +72,7 @@ public class CurrentRoomManager : MonoBehaviour
                     if (_preVal < expectedNbPlayers)
                     {
                         vetoCountdown = 9;
-                        roomGameStartCountdown = 9;
+                        roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;
                     }
 
 
@@ -413,7 +413,7 @@ public class CurrentRoomManager : MonoBehaviour
     void Awake()
     {
         _rpcCooldown = 0.3f;
-        vetoCountdown = roomGameStartCountdown = 9;
+        vetoCountdown = roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;
         _roomType = RoomType.None;
 
         if (_instance != null && _instance != this)

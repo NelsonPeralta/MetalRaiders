@@ -454,12 +454,12 @@ public class PlayerController : MonoBehaviourPun
     int _framesInteractBtnHasBeenHeld;
     void LongInteract()
     {
-        if (player.playerInventory.holdingObjective) _framesInteractBtnHasBeenHeld = 0;
+        if (player.playerInventory.holdingObjective) _framesInteractBtnHasBeenHeld = -1;
         else
         {
             if (rewiredPlayer.GetButton("Interact"))
             {
-                if (_framesInteractBtnHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2)
+                if (_framesInteractBtnHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2 && _framesInteractBtnHasBeenHeld > -1)
                     _framesInteractBtnHasBeenHeld = Mathf.Clamp(_framesInteractBtnHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 2);
             }
 
@@ -491,9 +491,9 @@ public class PlayerController : MonoBehaviourPun
     public void ResetLongInteractFrameCounter(InteractResetMode irm)
     {
         if (irm == InteractResetMode.activeweapon)
-            _framesInteractBtnHasBeenHeld = 0;
+            _framesInteractBtnHasBeenHeld = -999;
         else if (irm == InteractResetMode.thirdweapon)
-            _framesMarkSpotHasBeenHeld = 0;
+            _framesMarkSpotHasBeenHeld = -999;
     }
 
 
@@ -2349,7 +2349,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButton("mark"))
         {
-            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2)
+            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2 && _framesMarkSpotHasBeenHeld > -1)
                 _framesMarkSpotHasBeenHeld = Mathf.Clamp(_framesMarkSpotHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 2);
 
             if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 2)
@@ -2364,7 +2364,7 @@ public class PlayerController : MonoBehaviourPun
             print($"MarkSport {_framesMarkSpotHasBeenHeld}");
 
 
-            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 5)
+            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 5 && _framesMarkSpotHasBeenHeld > -1)
             {
                 //if (!player.playerInventory.isDualWielding)
                 {

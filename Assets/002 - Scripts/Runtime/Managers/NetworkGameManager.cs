@@ -835,6 +835,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     void UpdateSwarmDifficulty_RPC(int ei)
     {
         GameManager.instance.difficulty = (SwarmManager.Difficulty)ei;
+        Launcher.instance.difficultyText.text = $"Difficulty: {GameManager.instance.difficulty}";
     }
 
 
@@ -1146,7 +1147,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         else if (!caller)
         {
             Launcher.instance.gameCountdownText.gameObject.SetActive(true);
-            CurrentRoomManager.instance.roomGameStartCountdown = 7;
+            CurrentRoomManager.instance.roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;
             CurrentRoomManager.instance.matchSettingsSet = true;
         }
     }

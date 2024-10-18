@@ -174,6 +174,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 FindObjectOfType<Launcher>().gameModeBtns.SetActive(false);
                 FindObjectOfType<Launcher>().swarmModeBtns.SetActive(false);
                 FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
+                //Launcher.instance.difficultyText.gameObject.SetActive(false);
             }
         }
     }
@@ -261,7 +262,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             _difficulty = value;
             FindObjectOfType<Launcher>().teamModeText.text = $"Difficulty: {_difficulty.ToString()}";
-            NetworkGameManager.instance.SendGameParams();
+            if (PhotonNetwork.InRoom) NetworkGameManager.instance.SendGameParams();
         }
     }
 
@@ -555,6 +556,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { gameType = GameType.Fiesta; } catch { }
             try { teamMode = TeamMode.None; } catch { }
             sprintMode = SprintMode.On;
+            //difficulty = SwarmManager.Difficulty.Normal;
             _lootableWeapons.Clear();
             hazards.Clear();
             _networkGrenadeSpawnPoints.Clear();

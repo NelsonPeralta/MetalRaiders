@@ -261,7 +261,7 @@ public class PlayerMovement : MonoBehaviour
 
         player.OnPlayerRespawnEarly += OnPlayerRespawnEarly;
 
-        if (GameManager.instance.sprintMode == GameManager.SprintMode.Off) walkSpeed *= 1.15f;
+        if (GameManager.instance.sprintMode == GameManager.SprintMode.Off) walkSpeed *= 1.1f;
     }
 
     private void Update()
@@ -476,7 +476,7 @@ public class PlayerMovement : MonoBehaviour
 
         _weaponOffsetLocalPosition.z = Mathf.Clamp(-_offsetTickForwardDirection * 0.001f, -1, 1);
         _weaponOffset.localPosition = _weaponOffsetLocalPosition;
-        _weaponOffset.localRotation = Quaternion.Euler(0, 0, -_offsetTickForwardRotation * 0.2f);
+        _weaponOffset.localRotation = Quaternion.Euler(0, 0, -_offsetTickForwardRotation * 0.15f);
     }
 
 

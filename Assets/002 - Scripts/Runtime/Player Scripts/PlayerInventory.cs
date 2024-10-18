@@ -584,7 +584,10 @@ public class PlayerInventory : MonoBehaviourPun
         if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.normal || (SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropThirdWeapon)
         {
             if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropThirdWeapon)
+            {
+                if (PV.IsMine) DropThirdWeapon();
                 thirdWeapon = null;
+            }
         }
         else
         {
@@ -623,7 +626,7 @@ public class PlayerInventory : MonoBehaviourPun
             }
             else if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropThirdWeapon)
             {
-                DropThirdWeapon();
+                //DropThirdWeapon();
             }
             else
             {
