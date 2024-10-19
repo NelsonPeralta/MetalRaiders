@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 
 public class LootableWeapon : InteractableObject //IPunObservable*/
 {
@@ -270,7 +271,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
     private void OnDisable()
     {
-        if (networkWeaponSpawnPoint)
+        if (networkWeaponSpawnPoint && PhotonNetwork.InRoom && SceneManager.GetActiveScene().buildIndex > 0)
         {
             NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
         }

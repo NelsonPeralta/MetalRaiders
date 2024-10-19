@@ -12,6 +12,7 @@ using TMPro;
 using Rewired;
 using System.Linq;
 using Steamworks;
+using UnityEngine.EventSystems;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -422,8 +423,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             DontDestroyOnLoad(gameObject);
             instance = this;
-
             PhotonNetwork.GameVersion = "171";
+
+
+
+            gameObject.AddComponent<EventSystem>();
+            gameObject.AddComponent<StandaloneInputModule>();
+
 
 
             colorDict.Add("white", "#FFFFFF");
