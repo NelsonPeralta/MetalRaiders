@@ -922,7 +922,7 @@ public class Player : Biped
     {
         print($"Damage: ({damage}) {damageSourceCleanName}");
 
-        if (_spawnProtectionTime > 0) damage = 0;
+        if (_spawnProtectionTime > 0) damage /= 2;
 
         {
             //try
@@ -1723,7 +1723,14 @@ public class Player : Biped
                 if (playerThatKilledMe != this) playerThatKilledMe.GetComponent<PlayerMultiplayerMatchStats>().damage += Mathf.Clamp(damage, 0, (int)hitPoints);
         }
         catch { }
-        try { allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid); } catch { }
+        try
+        {
+            print($"SpawnNewDamageIndicator {Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z))}");
+
+            if (Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z)) > 45)
+                allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
+        }
+        catch { }
 
         if (newHealth <= 0 && isInvincible) newHealth = 1;
 
@@ -1738,7 +1745,8 @@ public class Player : Biped
 
         if (!isDead && playerThatKilledMe)
         {
-            playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker();
+            if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
+                playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker();
 
 
             // grenade jumping

@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum ArenaGameType { Fiesta, Slayer, Pro, Snipers, Shotguns }
     public enum TeamMode { Classic, None }
     public enum SprintMode { On, Off }
+    public enum HitMarkersMode { On, Off }
 
     public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates }
 
@@ -108,6 +109,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] GameType _gameType;
     [SerializeField] TeamMode _teamMode;
     [SerializeField] SprintMode _sprintMode;
+    [SerializeField] HitMarkersMode _hitMarkersMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
     [SerializeField] bool _inARoom;
@@ -249,6 +251,23 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 _sprintMode = value;
                 Launcher.instance.sprintModeText.text = $"Sprint: {_sprintMode}";
+            }
+        }
+    }
+
+    public HitMarkersMode hitMarkersMode
+    {
+        get
+        {
+            return _hitMarkersMode;
+        }
+
+        set
+        {
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                _hitMarkersMode = value;
+                Launcher.instance.hitMarkersModeText.text = $"Hit Markers: {_hitMarkersMode}";
             }
         }
     }
@@ -553,9 +572,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
             try { gameMode = GameMode.Versus; } catch { }
-            try { gameType = GameType.Fiesta; } catch { }
+            try { gameType = GameType.Slayer; } catch { }
             try { teamMode = TeamMode.None; } catch { }
             sprintMode = SprintMode.On;
+            hitMarkersMode = HitMarkersMode.On;
             //difficulty = SwarmManager.Difficulty.Normal;
             _lootableWeapons.Clear();
             hazards.Clear();

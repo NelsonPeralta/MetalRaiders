@@ -420,7 +420,7 @@ public class PlayerUI : MonoBehaviour
     public enum HitMarkerType { Hit, Headshot, Kill, HeadshotKill };
     public void SpawnHitMarker(HitMarkerType hitMarkerType = HitMarkerType.Hit)
     {
-        if (!GetComponent<PhotonView>().IsMine)
+        if (!GetComponent<PhotonView>().IsMine || GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.Off)
             return;
 
 

@@ -62,7 +62,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text messageText;
     [SerializeField] GameObject commonRoomTexts;
     [SerializeField] GameObject _teamRoomUI;
-    [SerializeField] TMP_Text _sprintModeText;
+    [SerializeField] TMP_Text _sprintModeText, _hitMarkersMode;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
@@ -142,6 +142,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public TMP_Text difficultyText { get { return _difficultyText; } }
     public GameObject teamRoomUI { get { return _teamRoomUI; } }
     public TMP_Text sprintModeText { get { return _sprintModeText; } }
+    public TMP_Text hitMarkersModeText { get { return _hitMarkersMode; } }
 
     public GameObject gameModeBtns { get { return _gameModeBtns; } }
     public GameObject teamModeBtns { get { return _teamModeBtns; } }
@@ -354,6 +355,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             GameManager.instance.teamMode = GameManager.TeamMode.None;
             GameManager.instance.gameMode = GameManager.GameMode.Versus;
             GameManager.instance.sprintMode = GameManager.SprintMode.On;
+            GameManager.instance.hitMarkersMode = HitMarkersMode.On;
             GameManager.instance.difficulty = SwarmManager.Difficulty.Normal;
 
             RoomOptions options = new RoomOptions();
@@ -458,6 +460,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             GameManager.instance.teamMode = GameManager.TeamMode.None;
             GameManager.instance.gameMode = GameManager.GameMode.Versus;
             GameManager.instance.sprintMode = SprintMode.On;
+            GameManager.instance.hitMarkersMode = HitMarkersMode.On;
 
             RoomOptions options = new RoomOptions();
             options.CustomRoomPropertiesForLobby = new string[1] { "gamemode" };
@@ -673,6 +676,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         GameManager.instance.gameMode = GameMode.Versus;
         GameManager.instance.teamMode = TeamMode.None;
         GameManager.instance.sprintMode = SprintMode.On;
+        GameManager.instance.hitMarkersMode = HitMarkersMode.On;
         GameManager.instance.difficulty = SwarmManager.Difficulty.Normal;
 
         _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
@@ -933,6 +937,24 @@ public class Launcher : MonoBehaviourPunCallbacks
             else
             {
                 GameManager.instance.sprintMode = SprintMode.On;
+            }
+
+            if (PhotonNetwork.IsMasterClient)
+                NetworkGameManager.instance.SendGameParams();
+        }
+    }
+
+    public void ChangeHitMarkersMode() //  called from a ui button
+    {
+        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        {
+            if (GameManager.instance.hitMarkersMode == HitMarkersMode.On)
+            {
+                GameManager.instance.hitMarkersMode = HitMarkersMode.Off;
+            }
+            else
+            {
+                GameManager.instance.hitMarkersMode = HitMarkersMode.On;
             }
 
             if (PhotonNetwork.IsMasterClient)
