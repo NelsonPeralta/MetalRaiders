@@ -753,7 +753,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void JoinRoomPlateBtn(RoomInfo info)
     {
-        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "localPlayerCount", int.Parse(nbLocalPlayersText.text) } };
+        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", int.Parse(nbLocalPlayersText.text) } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(h);
 
 
