@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum SprintMode { On, Off }
     public enum HitMarkersMode { On, Off }
 
-    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -303,7 +303,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    public bool devMode;
+    public bool devMode, allowLogsInBuild;
     [SerializeField] int _sceneIndex = 0;
     public static int sceneIndex
     {
@@ -492,7 +492,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         string[] names = QualitySettings.names;
         for (int i = 0; i < names.Length; i++)
         {
-            print($"Quality: {names[i]}");
             //QualitySettings.SetQualityLevel(i, true);
 
             if (instance.connection == Connection.Online)
@@ -566,6 +565,10 @@ public class GameManager : MonoBehaviourPunCallbacks
                 previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReportAndCredits);
                 //MenuManager.Instance.OpenMenu("carnage report");
                 MenuManager.Instance.OpenPopUpMenu("credits");
+            }else if (previousScenePayloads.Contains(PreviousScenePayload.OpenMainMenu))
+            {
+                previousScenePayloads.Remove(PreviousScenePayload.OpenMainMenu);
+                MenuManager.Instance.OpenMainMenu();
             }
 
             if (previousScenePayloads.Contains(PreviousScenePayload.LoadTimeOutOpenErrorMenu))
@@ -650,7 +653,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called third
     private void Start()
     {
-        Debug.Log("GameManager Start");
+        Debug.Log("GameManager Start. WATCHOUT, LOGGER MAY BE DISABLED");
         nbLocalPlayersPreset = 1;
         InitialisePlayerPrefs();
         LoadPlayerPrefs();
@@ -659,11 +662,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = DEFAULT_FRAMERATE;
 
-#if UNITY_EDITOR
-        Debug.unityLogger.logEnabled = true;
-#else
-                  Debug.unityLogger.logEnabled = false;
-#endif
+        Debug.unityLogger.logEnabled = allowLogsInBuild;
         CurrentRoomManager.InitializeAllPlayerDataCells();
 
 

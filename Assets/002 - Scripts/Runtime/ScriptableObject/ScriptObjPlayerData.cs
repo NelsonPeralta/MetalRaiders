@@ -48,9 +48,9 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public string cardsFound { get { return _cardsFound; } }
 
-    public bool occupied { get { return _occupied; } set { _occupied = value; Debug.Log($"Occupied: {occupied}"); } }
+    public bool occupied { get { return _occupied; } set { _occupied = value;  } }
     public bool local { get { return _local; } set { _local = value; } }
-    public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value; Debug.Log($"Occupied: {rewiredId}"); } }
+    public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value;  } }
     public int startingSpawnPosInd { get { return _startingSpawnPosInd; } set { _startingSpawnPosInd = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
     public PlayerCurrentGameScore playerCurrentGameScore

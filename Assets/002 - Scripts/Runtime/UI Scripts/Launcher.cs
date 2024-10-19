@@ -22,7 +22,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public LauncherEvent OnCreateMultiplayerRoomButton;
 
     public static Launcher instance; // Singleton of the Photon Launcher
-    public static int DEFAULT_ROOM_COUNTDOWN = 9;
+    public static int DEFAULT_ROOM_COUNTDOWN = 7;
     public PhotonView PV;
     public GameObject loginButton;
     public GameObject playerModel { get { return _playerModel; } }
