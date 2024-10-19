@@ -17,6 +17,8 @@ public class FlagSpawnPoint : MonoBehaviour
         {
             _flag.spawnPoint = this;
             _flag.scriptRoot.parent = null;
+
+            _canvasHolder.SetActive(true);
         }
         else
             Destroy(gameObject);

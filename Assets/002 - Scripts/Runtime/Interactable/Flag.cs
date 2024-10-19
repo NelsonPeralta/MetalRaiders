@@ -17,7 +17,7 @@ public class Flag : MonoBehaviour
 
 
     [SerializeField] AudioClip _takenClip, _stolenClip, _droppedClip, _resetClip, _capturedClip;
-    [SerializeField] GameObject _redBanner, _blueBanner;
+    [SerializeField] GameObject _redBanner, _blueBanner, _canvases;
     [SerializeField] State _state;
 
 
@@ -30,6 +30,7 @@ public class Flag : MonoBehaviour
 
         _redBanner.SetActive(GameManager.instance.gameType == GameManager.GameType.CTF && spawnPoint.team == GameManager.Team.Red);
         _blueBanner.SetActive(GameManager.instance.gameType == GameManager.GameType.CTF && spawnPoint.team == GameManager.Team.Blue);
+        _canvases.SetActive(true);
 
         if (GameManager.instance.gameType == GameManager.GameType.CTF)
         {

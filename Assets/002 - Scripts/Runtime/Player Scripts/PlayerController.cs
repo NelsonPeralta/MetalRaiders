@@ -459,12 +459,12 @@ public class PlayerController : MonoBehaviourPun
         {
             if (rewiredPlayer.GetButton("Interact"))
             {
-                if (_framesInteractBtnHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2 && _framesInteractBtnHasBeenHeld > -1)
-                    _framesInteractBtnHasBeenHeld = Mathf.Clamp(_framesInteractBtnHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 2);
+                if (_framesInteractBtnHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 3 && _framesInteractBtnHasBeenHeld > -1)
+                    _framesInteractBtnHasBeenHeld = Mathf.Clamp(_framesInteractBtnHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 3);
             }
 
 
-            if (_framesInteractBtnHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 2)
+            if (_framesInteractBtnHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 3)
                 OnPlayerShortPressInteract?.Invoke(this);
         }
 
@@ -2349,10 +2349,10 @@ public class PlayerController : MonoBehaviourPun
     {
         if (rewiredPlayer.GetButton("mark"))
         {
-            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 2 && _framesMarkSpotHasBeenHeld > -1)
-                _framesMarkSpotHasBeenHeld = Mathf.Clamp(_framesMarkSpotHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 2);
+            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 3 && _framesMarkSpotHasBeenHeld > -1)
+                _framesMarkSpotHasBeenHeld = Mathf.Clamp(_framesMarkSpotHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 3);
 
-            if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 2)
+            if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 3)
             {
                 print($"MARK SPOT HELD LONG {_framesMarkSpotHasBeenHeld}");
 
