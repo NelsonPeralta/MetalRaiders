@@ -1113,7 +1113,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
             foreach (Photon.Realtime.Player player in newListPlayers)
             {
-                print($"Player {player.NickName} - {(string)player.CustomProperties["username"]} " +
+                print($"CreateNameplates Player {player.NickName} - {(string)player.CustomProperties["username"]} " +
                     $"has {(int)player.CustomProperties["localPlayerCount"] - 1} invites");
                 Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player, false);
 
@@ -1128,12 +1128,14 @@ public class Launcher : MonoBehaviourPunCallbacks
                         && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).Count() > 0)
                         {
                             // there is already a cell for that invite. Do this
+                            print($"CreateNameplates there is already a cell for that invite {int.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
                             Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
                         && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).FirstOrDefault().playerExtendedPublicData.username
                         , CurrentRoomManager.instance.playerDataCells.IndexOf(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).FirstOrDefault()));
                         }
                         else
                         {
+                            print($"CreateNameplates making for invite {int.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
                             int ii = CurrentRoomManager.GetUnoccupiedDataCell();
                             ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
                             s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
