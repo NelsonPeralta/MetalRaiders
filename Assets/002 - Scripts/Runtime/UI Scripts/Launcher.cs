@@ -620,6 +620,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
         Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(newPlayer);
 
+        DestroyAndCreateNameplates();
+
         if (PhotonNetwork.IsMasterClient)
         {
             StartCoroutine(InstantiateNetworkGameManager_Coroutine());
@@ -1091,6 +1093,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(levelToLoadIndex);
     }
 
+    public void DestroyAndCreateNameplates()
+    {
+        DestroyNameplates();
+        CreateNameplates();
+    }
+
     void DestroyNameplates()
     {
         foreach (Transform child in _namePlatesParent)
@@ -1105,7 +1113,8 @@ public class Launcher : MonoBehaviourPunCallbacks
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
             foreach (Photon.Realtime.Player player in newListPlayers)
             {
-                print($"Player {player.NickName} has {(int)player.CustomProperties["localPlayerCount"] - 1} invites");
+                print($"Player {player.NickName} - {(string)player.CustomProperties["username"]} " +
+                    $"has {(int)player.CustomProperties["localPlayerCount"] - 1} invites");
                 Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player, false);
 
 
@@ -1115,21 +1124,32 @@ public class Launcher : MonoBehaviourPunCallbacks
                 {
                     for (int i = 1; i < (int)player.CustomProperties["localPlayerCount"]; i++)
                     {
-                        int ii = CurrentRoomManager.GetUnoccupiedDataCell();
-                        ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
-                        s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
-                        s.occupied = true;
-                        s.rewiredId = i;
-                        s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
-                        s.playerExtendedPublicData.player_id = int.Parse(player.NickName);
-                        s.playerExtendedPublicData.username = $"{(string)player.CustomProperties["username"]} - {i}";
-                        s.playerExtendedPublicData.armor_data_string = "helmet1";
-                        s.playerExtendedPublicData.armor_color_palette = "grey";
-                        s.playerExtendedPublicData.level = 1;
+                        if (CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
+                        && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).Count() > 0)
+                        {
+                            // there is already a cell for that invite. Do this
+                            Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
+                        && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).FirstOrDefault().playerExtendedPublicData.username
+                        , CurrentRoomManager.instance.playerDataCells.IndexOf(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).FirstOrDefault()));
+                        }
+                        else
+                        {
+                            int ii = CurrentRoomManager.GetUnoccupiedDataCell();
+                            ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
+                            s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+                            s.occupied = true;
+                            s.rewiredId = i;
+                            s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
+                            s.playerExtendedPublicData.player_id = int.Parse(player.NickName);
+                            s.playerExtendedPublicData.username = $"{(string)player.CustomProperties["username"]} - {i}";
+                            s.playerExtendedPublicData.armor_data_string = "helmet1";
+                            s.playerExtendedPublicData.armor_color_palette = "grey";
+                            s.playerExtendedPublicData.level = 1;
 
-                        s.local = (PhotonNetwork.NickName == player.NickName);
+                            s.local = (PhotonNetwork.NickName == player.NickName);
 
-                        Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(s.playerExtendedPublicData.username, ii);
+                            Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(s.playerExtendedPublicData.username, ii);
+                        }
                     }
                 }
             }

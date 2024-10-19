@@ -23,7 +23,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 1
-  controlID: 18038
+  controlID: 103
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -45,7 +45,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 746
+    x: -1174
     y: 332
     width: 974
     height: 667
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 18039
+  controlID: 104
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: SceneHierarchyWindow
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -168,15 +168,15 @@ MonoBehaviour:
     y: 0
     width: 439
     height: 947
-  m_MinSize: {x: 201, y: 221}
+  m_MinSize: {x: 101, y: 121}
   m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 5}
+  m_ActualView: {fileID: 6}
   m_Panes:
   - {fileID: 5}
   - {fileID: 6}
   - {fileID: 7}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -198,7 +198,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 0
+    x: -1920
     y: 73
     width: 438
     height: 926
@@ -216,7 +216,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 1c8cf2ff049af2ff2a9bf2ffcca1f2ff7645f6ffa647f6ffae47f6ffac48f6ffc04df6ff6a58f6ff28e7f6ff10eaf6ff58ecf6ff62f1f6ff3813f7ffec7df7ffb0affafff6b7faff56a4fbffeaa4fbffd68effffdc8effffea8efffff08efffffe8effff048fffff088fffff0c8ffffffefaffff06fbffff0cfbffffcec40200cac5020066890400988c0400
+      m_ExpandedIDs: 0cfbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -261,7 +261,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 0
+    x: -1920
     y: 73
     width: 438
     height: 926
@@ -355,7 +355,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 439
+    x: -1481
     y: 73
     width: 305
     height: 926
@@ -374,7 +374,7 @@ MonoBehaviour:
     m_CachedPref: 185
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
-  m_LastInspectedObjectInstanceID: 131004
+  m_LastInspectedObjectInstanceID: -5388
   m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0
@@ -405,7 +405,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 18016
+  controlID: 81
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1428,7 +1428,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 746
+    x: -1174
     y: 73
     width: 974
     height: 238
@@ -1948,7 +1948,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 239}
     m_SelectedIDs: 32c60200
     m_LastClickedID: 181810
-    m_ExpandedIDs: 0000000096a2010098a201009aa201009ca201009ea20100a0a20100a2a20100a4a20100a6a20100a8a20100aaa20100aca20100aea20100b0a20100b2a20100b4a20100b6a20100b8a2010000ca9a3bffffff7f
+    m_ExpandedIDs: 0000000096a2010098a201009aa201009ca201009ea20100a0a20100a2a20100a4a20100a6a20100a8a20100aaa20100aca20100aea20100b0a20100b2a20100b4a20100b6a20100b8a20100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1976,7 +1976,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000096a2010098a201009aa201009ca201009ea20100a0a20100a2a20100a4a20100a6a20100a8a20100aaa20100aca20100aea20100b0a20100b2a20100b4a20100b6a20100b8a2010000ca9a3bffffff7f
+    m_ExpandedIDs: 0000000096a2010098a201009aa201009ca201009ea20100a0a20100a2a20100a4a20100a6a20100a8a20100aaa20100aca20100aea20100b0a20100b2a20100b4a20100b6a20100b8a20100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -3185,7 +3185,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1722
+    x: -198
     y: 73
     width: 197
     height: 926
