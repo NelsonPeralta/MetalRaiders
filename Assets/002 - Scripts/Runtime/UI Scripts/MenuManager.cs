@@ -188,7 +188,13 @@ public class MenuManager : MonoBehaviour
 
     public void CloseCarnageReportMenu()
     {
-        print("CloseCarnageReportMenu");
+        print($"CloseCarnageReportMenu {GameManager.instance.nbLocalPlayersPreset}");
+
+        if (GameManager.instance.connection == GameManager.Connection.Local)
+        {
+            Launcher.instance.nbLocalPlayersHolder.SetActive(true);
+            Launcher.instance.nbLocalPlayersText.text = GameManager.instance.nbLocalPlayersPreset.ToString();
+        }
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates))
         {
@@ -201,12 +207,6 @@ public class MenuManager : MonoBehaviour
         else
         {
             OpenMainMenu();
-        }
-
-        if (GameManager.instance.connection == GameManager.Connection.Local)
-        {
-            Launcher.instance.nbLocalPlayersHolder.SetActive(true);
-            Launcher.instance.nbLocalPlayersText.text = "1";
         }
     }
 

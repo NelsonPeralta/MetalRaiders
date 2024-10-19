@@ -261,8 +261,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             _difficulty = value;
-            FindObjectOfType<Launcher>().teamModeText.text = $"Difficulty: {_difficulty.ToString()}";
-            if (PhotonNetwork.InRoom) NetworkGameManager.instance.SendGameParams();
+            //FindObjectOfType<Launcher>().teamModeText.text = $"Difficulty: {_difficulty.ToString()}";
+            //if (PhotonNetwork.InRoom) NetworkGameManager.instance.SendGameParams();
         }
     }
 

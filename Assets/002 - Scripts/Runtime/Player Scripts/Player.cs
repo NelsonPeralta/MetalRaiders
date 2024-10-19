@@ -1746,17 +1746,39 @@ public class Player : Biped
                 _deathNature == DeathNature.Barrel || _deathNature == DeathNature.UltraBind)
                 if (movement.blockedMovementType != PlayerMovement.BlockedMovementType.ManCannon)
                 {
-                    movement.blockPlayerMoveInput = 0.2f;
-                    movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
-                    _rb.velocity = Vector3.zero;
-                    _rb.angularVelocity = Vector3.zero;
-                    _rb.useGravity = true;
-                    _rb.drag = 0;
-                    _impactDir.y *= 3;
-                    _rb.AddForce(_impactDir.normalized * 4f, ForceMode.Impulse);
-
+                    GrenadeJumping();
                 }
         }
+    }
+
+    void GrenadeJumping()
+    {
+        print($"Grenade jumping: {_rb.velocity}");
+
+        movement.blockPlayerMoveInput = 0.2f;
+        movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
+
+        if (_rb.velocity.y > 2)
+        {
+            // do nothing yet
+        }
+        else
+        {
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+        }
+
+        _rb.useGravity = true;
+        _rb.drag = 0;
+        _impactDir.y *= 3;
+
+        if (_rb.velocity.y > 2)
+        {
+            //_rb.AddForce(_rb.velocity.normalized * 4, ForceMode.Impulse);
+            _rb.AddForce(new Vector3(0, 4, 0), ForceMode.Impulse);
+        }
+        else
+            _rb.AddForce(_impactDir.normalized * 4f, ForceMode.Impulse);
     }
 
 

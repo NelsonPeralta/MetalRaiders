@@ -806,6 +806,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             //GameManager.GetPlayerWithPhotonView(pid).playerInventory.SwitchWeapons_RPC();
             GameManager.GetPlayerWithPhotonView(pid).playerInventory.HideFlag();
 
+            GameManager.GetRootPlayer().announcer.AddClip(GameManager.instance.redFlag.flagCapturedClip);
+
             if ((GameManager.Team)whichFlagNeedsToBeReset == GameManager.Team.Red)
             {
                 GameManager.instance.redFlag.spawnPoint.SpawnFlagAtStand();
@@ -992,10 +994,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
             if (GameManager.GetPlayerWithPhotonView(playerPhotonView).team == GameManager.Team.Red)
             {
+                GameManager.instance.blueFlag.ChangeState(Flag.State.stolen);
                 GameManager.instance.blueFlag.scriptRoot.gameObject.SetActive(false);
             }
             else
             {
+                GameManager.instance.redFlag.ChangeState(Flag.State.stolen);
                 GameManager.instance.redFlag.scriptRoot.gameObject.SetActive(false);
             }
 
@@ -1062,8 +1066,17 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (!caller)
         {
+            foreach (Player p in GameManager.GetLocalPlayers())
+            {
+                p.killFeedManager.EnterNewFeed($"<color=#31cff9>{flagTeam} Flag dropped");
+            }
+
+
+
             if (flagTeam == GameManager.Team.Blue)
             {
+                GameManager.instance.blueFlag.ChangeState(Flag.State.away);
+
                 GameManager.instance.blueFlag.rb.velocity = Vector3.zero;
                 GameManager.instance.blueFlag.rb.angularVelocity = Vector3.zero;
 
@@ -1079,6 +1092,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             }
             else
             {
+                GameManager.instance.redFlag.ChangeState(Flag.State.away);
+
                 GameManager.instance.redFlag.rb.velocity = Vector3.zero;
                 GameManager.instance.redFlag.rb.angularVelocity = Vector3.zero;
 

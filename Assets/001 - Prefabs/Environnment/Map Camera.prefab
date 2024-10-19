@@ -327,6 +327,7 @@ MonoBehaviour:
   _KingOfTheHillClip: {fileID: 8300000, guid: 506d86340e9a9634e972093c648bc639, type: 3}
   _FirefightClip: {fileID: 8300000, guid: b4a16db95f38e0a4d9cc02eeecb99759, type: 3}
   _oddballIntro: {fileID: 8300000, guid: 96985dd3778c2c34f8c29aabad3fbd9c, type: 3}
+  _ctfIntro: {fileID: 8300000, guid: d9eb78cddfd63fc40935fc574f9081cb, type: 3}
   _loadingText: {fileID: 3313733686658588780}
   _gametypePreviewInfo: {fileID: 2213916113550555195}
   _mapNameInfo: {fileID: 3811960278225462626}

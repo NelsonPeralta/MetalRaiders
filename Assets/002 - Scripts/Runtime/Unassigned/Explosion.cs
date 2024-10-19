@@ -111,11 +111,13 @@ public class Explosion : MonoBehaviour
 
 
 
-            int characterControllerDivider = 3;
 
             //Add force to nearby rigidbodies
-            if (rb != null)
+            if (rb != null && !rb.isKinematic) // does not actually detect rb in player root, grenade jumping is handled in player script
+            {
+                print($"Explosion force added to: {rb.name}");
                 rb.AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
+            }
 
 
             if (col.GetComponent<PlayerHitbox>() && !col.GetComponent<PlayerHitbox>().player.isDead && !col.GetComponent<PlayerHitbox>().player.isRespawning)

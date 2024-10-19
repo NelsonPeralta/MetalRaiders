@@ -64,6 +64,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] PlayerPointWitness _pointWitness;
     public OptionsMenu optionsMenuScript;
     public MenuGamePadCursor gamepadCursor;
+    [SerializeField] GameObject _yourFlagStolenHolder;
+    [SerializeField] TMP_Text _yourFlagStolenText;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft, notKillFeed;
@@ -152,6 +154,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
+        _yourFlagStolenHolder.SetActive(false);
         transform.GetComponent<Player>().playerInteractableObjectHandler.ClosestInteractableObjectAssigned += OnClosestInteractableObjectAssigned;
         playerMultiplayerMatchStats = GetComponent<PlayerMultiplayerMatchStats>();
         HideInformer();
@@ -218,6 +221,9 @@ public class PlayerUI : MonoBehaviour
 
         OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);
     }
+
+
+
 
     void OnSwarmKillsChanged(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
@@ -634,6 +640,18 @@ public class PlayerUI : MonoBehaviour
                         transform.root.GetComponent<PlayerUI>().ShowInformer($"You already have a Power Armor");
                     }
                 }
+            }
+        }
+
+
+        if (GameManager.instance.gameType == GameManager.GameType.CTF && CurrentRoomManager.instance.gameStarted)
+        {
+            if (_player.team == GameManager.Team.Red)
+            {
+                _yourFlagStolenHolder.SetActive(GameManager.instance.redFlag.state != Flag.State.atbase);
+
+                if (GameManager.instance.redFlag.state == Flag.State.away) _yourFlagStolenText.text = "Your flag is away";
+                if (GameManager.instance.redFlag.state == Flag.State.stolen) _yourFlagStolenText.text = "The enemy has your flag!";
             }
         }
     }

@@ -5,6 +5,8 @@ using UnityEngine;
 public class FlagSpawnPoint : MonoBehaviour
 {
     public GameManager.Team team;
+
+
     [SerializeField] Flag _flag;
     [SerializeField] GameObject _canvasHolder;
 
@@ -44,6 +46,7 @@ public class FlagSpawnPoint : MonoBehaviour
 
     IEnumerator SpawnFlagAtStand_Coroutine()
     {
+        _flag.ChangeState(Flag.State.atbase);
         _flag.scriptRoot.gameObject.SetActive(false);
         _flag.rb.velocity = Vector3.zero;
         _flag.rb.angularVelocity = Vector3.zero;

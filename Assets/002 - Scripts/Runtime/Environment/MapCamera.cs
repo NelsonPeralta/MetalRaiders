@@ -16,7 +16,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
     [SerializeField] Image _mapPreview;
     [SerializeField] AudioClip _slayerClip;
     [SerializeField] AudioClip _KingOfTheHillClip;
-    [SerializeField] AudioClip _FirefightClip, _oddballIntro;
+    [SerializeField] AudioClip _FirefightClip, _oddballIntro, _ctfIntro;
     [SerializeField] TMP_Text _loadingText, _gametypePreviewInfo, _mapNameInfo;
     [SerializeField] AudioSource _beepConsecutiveAudioSource;
 
@@ -57,7 +57,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
 
         _gametypePreviewInfo.text = GameManager.instance.gameType.ToString();
 
-        if(GameManager.instance.teamMode == GameManager.TeamMode.Classic && GameManager.instance.gameMode == GameManager.GameMode.Versus)
+        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && GameManager.instance.gameMode == GameManager.GameMode.Versus)
         {
             _gametypePreviewInfo.text = $"Team {_gametypePreviewInfo.text}";
         }
@@ -142,6 +142,9 @@ public class MapCamera : MonoBehaviourPunCallbacks
 
             if (GameManager.instance.gameType == GameManager.GameType.Oddball)
                 GetComponent<AudioSource>().clip = _oddballIntro;
+
+            if (GameManager.instance.gameType == GameManager.GameType.CTF)
+                GetComponent<AudioSource>().clip = _ctfIntro;
 
             GetComponent<AudioSource>().Play();
         }

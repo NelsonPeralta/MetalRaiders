@@ -1077,7 +1077,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void CreateNameplates()
     {
-        Debug.Log($"CreateNameplates. Steam State: {SteamAPI.IsSteamRunning()}. Nb local: {_nbLocalPlayersInputed}");
+        Debug.Log($"CreateNameplates. Steam State: {SteamAPI.IsSteamRunning()}. Nb local: {_nbLocalPlayersInputed.text}");
         if (GameManager.instance.connection == GameManager.Connection.Online)
         {
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
@@ -1114,6 +1114,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         else
         {
+            print($"CreateNameplates local: {_nbLocalPlayersInputed.text} {GameManager.instance.nbLocalPlayersPreset}");
             if (_nbLocalPlayersInputed.text.Equals("")) _nbLocalPlayersInputed.text = "1";
             for (int i = 0; i < int.Parse(_nbLocalPlayersInputed.text.ToString()); i++)
                 Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup($"player{i + 1}", i);
