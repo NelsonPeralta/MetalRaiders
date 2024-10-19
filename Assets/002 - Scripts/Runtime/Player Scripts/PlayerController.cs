@@ -837,13 +837,13 @@ public class PlayerController : MonoBehaviourPun
     }
     void SendIsNotHoldingFireWeaponBtn()
     {
-        if (PV.IsMine)
+        if (PV.IsMine && PhotonNetwork.InRoom)
             PV.RPC("_StopShoot_RPC", RpcTarget.All, false);
     }
 
     void SendIsNotHoldingDualWieldedFireWeaponBtn()
     {
-        if (PV.IsMine)
+        if (PV.IsMine && PhotonNetwork.InRoom)
             PV.RPC("_StopShoot_RPC", RpcTarget.All, true);
     }
 

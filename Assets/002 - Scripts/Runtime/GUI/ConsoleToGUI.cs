@@ -1,5 +1,5 @@
 using UnityEngine;
-// https://answers.unity.com/questions/125049/is-there-any-way-to-view-the-console-in-a-build.html
+
 public class ConsoleToGUI : MonoBehaviour
 {
     string myLog = "*begin log";
@@ -8,30 +8,22 @@ public class ConsoleToGUI : MonoBehaviour
     int kChars = 700;
     void OnEnable() { Application.logMessageReceived += Log; }
     void OnDisable() { Application.logMessageReceived -= Log; }
-
-    private void Start()
-    {
-        doShow = false;
-    }
-    void Update() { if (Input.GetKeyDown(KeyCode.Alpha0)) { doShow = !doShow; } }
+    void Update() { if (Input.GetKeyDown(KeyCode.L)) { doShow = !doShow; } }
     public void Log(string logString, string stackTrace, LogType type)
     {
         // for onscreen...
         myLog = myLog + "\n" + logString;
         if (myLog.Length > kChars) { myLog = myLog.Substring(myLog.Length - kChars); }
-
-
-        return;
         // for the file ...
         if (filename == "")
         {
             string d = System.Environment.GetFolderPath(
-               System.Environment.SpecialFolder.Desktop) + "/YOUR_LOGS";
+               System.Environment.SpecialFolder.ApplicationData) + "/SPACE_WACKOS_LOGS";
             System.IO.Directory.CreateDirectory(d);
             string r = Random.Range(1000, 9999).ToString();
             filename = d + "/log-" + r + ".txt";
         }
-        try { System.IO.File.AppendAllText(filename, logString + "\n"); }
+        try { System.IO.File.AppendAllText(filename, logString + ""); }
         catch { }
     }
 

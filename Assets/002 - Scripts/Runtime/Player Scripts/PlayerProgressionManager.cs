@@ -90,16 +90,16 @@ public class PlayerProgressionManager : MonoBehaviour
 
 
 
-                print($"GetClosestAndNextRank {h} >= {instance._ranks[i].honorRequired}");
+                //print($"GetClosestAndNextRank {h} >= {instance._ranks[i].honorRequired}");
 
                 if (i < instance._ranks.Count - 1)
                 {
-                    print($"GetClosestAndNextRank NEXT -> {instance._ranks[i + 1].cleanName} {instance._ranks[i].honorRequired}");
+                    //print($"GetClosestAndNextRank NEXT -> {instance._ranks[i + 1].cleanName} {instance._ranks[i].honorRequired}");
                     r[1] = instance._ranks[i + 1];
                 }
                 else
                 {
-                    print("GetClosestAndNextRank You are max rank");
+                    //print("GetClosestAndNextRank You are max rank");
                     r[1] = new Rank(-1, "r", "Recruit", "invisible");
                 }
             }
