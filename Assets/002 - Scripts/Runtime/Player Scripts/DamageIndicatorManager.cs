@@ -26,26 +26,29 @@ public class DamageIndicatorManager : MonoBehaviour
 
     public void SpawnNewDamageIndicator(int playerWhoShotPID)
     {
-        if (playerWhoShotPID == 99) // Guardians
-            return;
-
-        if (player.isMine)
+        if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
         {
-            Transform playerWhoDamagedThisPlayer = PhotonView.Find(playerWhoShotPID).transform;
-            if (playerWhoDamagedThisPlayer.GetComponent<Player>() == player)
+            if (playerWhoShotPID == 99) // Guardians
                 return;
 
-            i = 0;
-            for (i = 0; i < _damageIndicatorList.Count; i++)
+            if (player.isMine)
             {
-                if (!_damageIndicatorList[i].gameObject.activeSelf)
-                {
-                    _damageIndicatorList[i].GetComponent<DamageIndicator>().player = player;
-                    _damageIndicatorList[i].GetComponent<DamageIndicator>().targetTransform = playerWhoDamagedThisPlayer;
-                    _damageIndicatorList[i].GetComponent<DamageIndicator>().ttl = 2;
-                    _damageIndicatorList[i].gameObject.SetActive(true);
+                Transform playerWhoDamagedThisPlayer = PhotonView.Find(playerWhoShotPID).transform;
+                if (playerWhoDamagedThisPlayer.GetComponent<Player>() == player)
+                    return;
 
-                    break;
+                i = 0;
+                for (i = 0; i < _damageIndicatorList.Count; i++)
+                {
+                    if (!_damageIndicatorList[i].gameObject.activeSelf)
+                    {
+                        _damageIndicatorList[i].GetComponent<DamageIndicator>().player = player;
+                        _damageIndicatorList[i].GetComponent<DamageIndicator>().targetTransform = playerWhoDamagedThisPlayer;
+                        _damageIndicatorList[i].GetComponent<DamageIndicator>().ttl = 2;
+                        _damageIndicatorList[i].gameObject.SetActive(true);
+
+                        break;
+                    }
                 }
             }
         }

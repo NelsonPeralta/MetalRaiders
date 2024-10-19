@@ -37,9 +37,12 @@ public class PlayerPointWitness : MonoBehaviour
 
     public void Add(int p)
     {
-        countdown = PlayerMedals.MEDAL_TTL;
-        tempPoints += p;
-        _text.text = $"+{tempPoints}";
-        _text.gameObject.SetActive(true);
+        if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
+        {
+            countdown = PlayerMedals.MEDAL_TTL;
+            tempPoints += p;
+            _text.text = $"+{tempPoints}";
+            _text.gameObject.SetActive(true);
+        }
     }
 }

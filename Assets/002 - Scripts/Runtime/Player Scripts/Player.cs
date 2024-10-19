@@ -1727,8 +1727,10 @@ public class Player : Biped
         {
             print($"SpawnNewDamageIndicator {Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z))}");
 
-            if (Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z)) > 45)
-                allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
+
+            if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
+                if (Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z)) > 45)
+                    allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
         }
         catch { }
 
