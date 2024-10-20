@@ -667,6 +667,7 @@ public class Player : Biped
     public Camera gunCamera;
     public Camera deathCamera;
     public PlayerCamera playerCamera;
+    [SerializeField] Transform _thirdPersonCameraPos;
 
     public Vector3 mainOriginalCameraPosition;
 
