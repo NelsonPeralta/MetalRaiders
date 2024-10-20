@@ -663,6 +663,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         Application.targetFrameRate = DEFAULT_FRAMERATE;
 
         Debug.unityLogger.logEnabled = allowLogsInBuild;
+
+#if UNITY_EDITOR
+        Debug.unityLogger.logEnabled = true;
+#endif
+
+
         CurrentRoomManager.InitializeAllPlayerDataCells();
 
 

@@ -92,7 +92,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             ps.Add("gametype", GameManager.instance.gameType.ToString());
             ps.Add("leveltoloadindex", Launcher.instance.levelToLoadIndex.ToString());
             ps.Add("teammode", GameManager.instance.teamMode.ToString());
-            ps.Add("sprintmode", GameManager.instance.teamMode.ToString());
+            ps.Add("sprintmode", GameManager.instance.sprintMode.ToString());
             ps.Add("hmmode", GameManager.instance.hitMarkersMode.ToString());
             //ps.Add("teamdict", string.Join(Environment.NewLine, GameManager.instance.teamDict));
             //ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));

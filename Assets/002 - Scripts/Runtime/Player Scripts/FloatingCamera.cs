@@ -109,7 +109,7 @@ public class FloatingCamera : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (!playerController.cameraIsFloating) return;
+        if (!playerController.cameraIsFloating || !playerController.player.isMine) return;
 
         if (playerController.rewiredPlayer.GetButton("Aim")) { zoomCounter += 2; } else zoomCounter -= 2;
 
