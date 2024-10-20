@@ -26,7 +26,7 @@ public class DamageIndicatorManager : MonoBehaviour
 
     public void SpawnNewDamageIndicator(int playerWhoShotPID)
     {
-        if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
+        //if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
         {
             if (playerWhoShotPID == 99) // Guardians
                 return;
