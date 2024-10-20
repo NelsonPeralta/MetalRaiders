@@ -66,7 +66,6 @@ public class PlayerArmorManager : MonoBehaviour
 
     [SerializeField] ScriptObjPlayerData _playerDataCell;
     [SerializeField] Material _shieldMaterial;
-    [SerializeField] GameObject _santaHat;
 
     public int ReloadArmorTries { get; set; }
     public bool PreventReloadArmor { get; set; }
@@ -99,9 +98,6 @@ public class PlayerArmorManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex == 0) // If you disable the go in editor, Awake will trigger AFTER setting Data Cell
             gameObject.SetActive(false);
-
-
-        if (_santaHat) _santaHat.SetActive(DateTime.Now >= new DateTime(DateTime.Now.Year, 11, 1) && DateTime.Now <= new DateTime(DateTime.Now.Year + 1, 3, 31));
     }
 
     private void Start()
