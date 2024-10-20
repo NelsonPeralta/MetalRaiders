@@ -27,6 +27,7 @@ public class FloatingCamera : MonoBehaviour
                 if (_counter > GameManager.instance.gameplayRecorderPoints.Count - 1)
                 {
                     _counter = 99;
+                    transform.parent = null;
                 }
                 else if (_counter == -1)
                 {
