@@ -777,6 +777,13 @@ public class Player : Biped
         //PhotonNetwork.SerializationRate = 50;
 
         mainOriginalCameraPosition = new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, mainCamera.transform.localPosition.z);
+        if (GameManager.instance.thirPersonMode == GameManager.ThirPersonMode.On)
+        {
+            mainCamera.transform.position = _thirdPersonCameraPos.localPosition;
+            mainOriginalCameraPosition = _thirdPersonCameraPos.localPosition;
+            allPlayerScripts.cameraScript.mainCamDefaultLocalPosition = _thirdPersonCameraPos.localPosition;
+
+        }
 
 
         //if (GetComponent<PlayerController>().PV.IsMine)
@@ -1730,8 +1737,8 @@ public class Player : Biped
 
 
             //if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
-                if (Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z)) > 45)
-                    allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
+            if (Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z)) > 45)
+                allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
         }
         catch { }
 

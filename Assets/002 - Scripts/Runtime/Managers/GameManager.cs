@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum TeamMode { Classic, None }
     public enum SprintMode { On, Off }
     public enum HitMarkersMode { On, Off }
+    public enum ThirPersonMode { Off, On }
 
     public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu }
 
@@ -111,6 +112,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] TeamMode _teamMode;
     [SerializeField] SprintMode _sprintMode;
     [SerializeField] HitMarkersMode _hitMarkersMode;
+    [SerializeField] ThirPersonMode _thirdPersonMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
     [SerializeField] bool _inARoom;
@@ -269,6 +271,23 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 _hitMarkersMode = value;
                 Launcher.instance.hitMarkersModeText.text = $"Hit Markers: {_hitMarkersMode}";
+            }
+        }
+    }
+
+    public ThirPersonMode thirPersonMode
+    {
+        get
+        {
+            return _thirdPersonMode;
+        }
+
+        set
+        {
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                _thirdPersonMode = value;
+                Launcher.instance.thirdPersonModeText.text = $"Hit Markers: {_hitMarkersMode}";
             }
         }
     }
@@ -565,7 +584,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReportAndCredits);
                 //MenuManager.Instance.OpenMenu("carnage report");
                 MenuManager.Instance.OpenPopUpMenu("credits");
-            }else if (previousScenePayloads.Contains(PreviousScenePayload.OpenMainMenu))
+            }
+            else if (previousScenePayloads.Contains(PreviousScenePayload.OpenMainMenu))
             {
                 previousScenePayloads.Remove(PreviousScenePayload.OpenMainMenu);
                 MenuManager.Instance.OpenMainMenu();
@@ -585,6 +605,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { teamMode = TeamMode.None; } catch { }
             sprintMode = SprintMode.On;
             hitMarkersMode = HitMarkersMode.On;
+            thirPersonMode = ThirPersonMode.Off;
             //difficulty = SwarmManager.Difficulty.Normal;
             _lootableWeapons.Clear();
             hazards.Clear();
