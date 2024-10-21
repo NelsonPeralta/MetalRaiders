@@ -961,6 +961,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
 
+
+
     [PunRPC]
     public void EquipOddballToPlayer_RPC(int playerPhotonView, bool caller = true)
     {
@@ -1041,21 +1043,36 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller && PhotonNetwork.IsMasterClient)
         {
+            print("AskMasterClientToSpawnOddball");
             _pv.RPC("AskMasterClientToSpawnOddball", RpcTarget.AllViaServer, pos, dir, false);
         }
         else if (!caller)
         {
-            GameManager.instance.oddballSkull.rb.velocity = Vector3.zero;
-            GameManager.instance.oddballSkull.rb.angularVelocity = Vector3.zero;
+            if (pos != Vector3.up * -999)
+            {
+
+                GameManager.instance.oddballSkull.rb.velocity = Vector3.zero;
+                GameManager.instance.oddballSkull.rb.angularVelocity = Vector3.zero;
 
 
-            GameManager.instance.oddballSkull.thisRoot.rotation = Quaternion.identity;
-            GameManager.instance.oddballSkull.thisRoot.position = pos;
+                GameManager.instance.oddballSkull.thisRoot.rotation = Quaternion.identity;
+                GameManager.instance.oddballSkull.thisRoot.position = pos;
 
-            GameManager.instance.oddballSkull.thisRoot.gameObject.SetActive(true);
-            GameManager.instance.oddballSkull.rb.AddForce(dir * 300);
+                GameManager.instance.oddballSkull.thisRoot.gameObject.SetActive(true);
+                GameManager.instance.oddballSkull.rb.AddForce(dir * 300);
 
-            GameManager.instance.oddballSkull.PlayBallDroppedClip();
+                GameManager.instance.oddballSkull.PlayBallDroppedClip();
+            }
+            else
+            {
+                foreach (Player p in GameManager.GetLocalPlayers())
+                {
+                    p.killFeedManager.EnterNewFeed($"<color=#31cff9>Ball Reset");
+                }
+
+                GameManager.instance.oddballSkull.PlayBallResetClip();
+                GameManager.instance.oddballSkull.spawnPoint.SpawnOddball();
+            }
         }
     }
 
@@ -1064,48 +1081,74 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller && PhotonNetwork.IsMasterClient)
         {
+            print("AskMasterClientToSpawnFlag");
             _pv.RPC("AskMasterClientToSpawnFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false);
         }
         else if (!caller)
         {
-            foreach (Player p in GameManager.GetLocalPlayers())
+
+            if (pos != Vector3.up * -999)
             {
-                p.killFeedManager.EnterNewFeed($"<color=#31cff9>{flagTeam} Flag dropped");
-            }
+
+                foreach (Player p in GameManager.GetLocalPlayers())
+                {
+                    p.killFeedManager.EnterNewFeed($"<color=#31cff9>{flagTeam} Flag dropped");
+                }
 
 
+                if (flagTeam == GameManager.Team.Blue)
+                {
+                    GameManager.instance.blueFlag.ChangeState(Flag.State.away);
 
-            if (flagTeam == GameManager.Team.Blue)
-            {
-                GameManager.instance.blueFlag.ChangeState(Flag.State.away);
-
-                GameManager.instance.blueFlag.rb.velocity = Vector3.zero;
-                GameManager.instance.blueFlag.rb.angularVelocity = Vector3.zero;
+                    GameManager.instance.blueFlag.rb.velocity = Vector3.zero;
+                    GameManager.instance.blueFlag.rb.angularVelocity = Vector3.zero;
 
 
-                GameManager.instance.blueFlag.scriptRoot.rotation = Quaternion.identity;
-                GameManager.instance.blueFlag.scriptRoot.position = pos;
+                    GameManager.instance.blueFlag.scriptRoot.rotation = Quaternion.identity;
+                    GameManager.instance.blueFlag.scriptRoot.position = pos;
 
-                GameManager.instance.blueFlag.scriptRoot.gameObject.SetActive(true);
-                GameManager.instance.blueFlag.rb.mass = 1;
-                GameManager.instance.blueFlag.rb.AddForce(dir * 350);
+                    GameManager.instance.blueFlag.scriptRoot.gameObject.SetActive(true);
+                    GameManager.instance.blueFlag.rb.mass = 1;
+                    GameManager.instance.blueFlag.rb.AddForce(dir * 350);
 
-                //GameManager.instance.oddballSkull.PlayBallDroppedClip();
+                    //GameManager.instance.oddballSkull.PlayBallDroppedClip();
+                }
+                else
+                {
+                    GameManager.instance.redFlag.ChangeState(Flag.State.away);
+
+                    GameManager.instance.redFlag.rb.velocity = Vector3.zero;
+                    GameManager.instance.redFlag.rb.angularVelocity = Vector3.zero;
+
+
+                    GameManager.instance.redFlag.scriptRoot.rotation = Quaternion.identity;
+                    GameManager.instance.redFlag.scriptRoot.position = pos;
+
+                    GameManager.instance.redFlag.scriptRoot.gameObject.SetActive(true);
+                    GameManager.instance.redFlag.rb.mass = 1;
+                    GameManager.instance.redFlag.rb.AddForce(dir * 350);
+                }
             }
             else
             {
-                GameManager.instance.redFlag.ChangeState(Flag.State.away);
+                foreach (Player p in GameManager.GetLocalPlayers())
+                {
+                    p.killFeedManager.EnterNewFeed($"<color=#31cff9>{flagTeam} Flag Reset");
+                }
 
-                GameManager.instance.redFlag.rb.velocity = Vector3.zero;
-                GameManager.instance.redFlag.rb.angularVelocity = Vector3.zero;
+                GameManager.instance.redFlag.PlayerResetClip();
 
 
-                GameManager.instance.redFlag.scriptRoot.rotation = Quaternion.identity;
-                GameManager.instance.redFlag.scriptRoot.position = pos;
 
-                GameManager.instance.redFlag.scriptRoot.gameObject.SetActive(true);
-                GameManager.instance.redFlag.rb.mass = 1;
-                GameManager.instance.redFlag.rb.AddForce(dir * 350);
+
+                if (flagTeam == GameManager.Team.Blue)
+                {
+                    GameManager.instance.blueFlag.spawnPoint.SpawnFlagAtStand();
+                }
+                else
+                {
+                    GameManager.instance.redFlag.spawnPoint.SpawnFlagAtStand();
+                }
             }
         }
     }

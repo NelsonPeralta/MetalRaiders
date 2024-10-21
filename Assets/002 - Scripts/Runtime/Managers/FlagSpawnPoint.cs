@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
+using System.Linq;
 using UnityEngine;
 
 public class FlagSpawnPoint : MonoBehaviour
@@ -9,6 +11,9 @@ public class FlagSpawnPoint : MonoBehaviour
 
     [SerializeField] Flag _flag;
     [SerializeField] GameObject _canvasHolder;
+
+    [SerializeField] int _resetFlag;
+    [SerializeField] float _check;
 
 
     private void Awake()
@@ -29,19 +34,71 @@ public class FlagSpawnPoint : MonoBehaviour
     void Start()
     {
         if (GameManager.instance.gameType == GameManager.GameType.CTF)
+        {
+            _check = 1;
+            _resetFlag = 0;
             SpawnFlagAtStand();
+        }
+
         else _flag.scriptRoot.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.gameType == GameManager.GameType.CTF && PhotonNetwork.IsMasterClient
+            && CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
+        {
+            if (_check > 0)
+            {
+                _check -= Time.deltaTime;
 
+                if (_check < 0)
+                {
+                    print($"OddballSpawnPoint {_flag.scriptRoot.transform.parent == null} {_flag.gameObject.activeInHierarchy} " +
+                        $"{Vector3.Distance(transform.position, _flag.rb.transform.position)} {GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.hasEnnemyFlag).Count()}");
+
+
+                    if (_flag.transform.position.y < -20)
+                    {
+                        NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team);
+
+                    }
+                    else if (_flag.scriptRoot.transform.parent == null && !_flag.gameObject.activeInHierarchy
+                        && GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.playerInventory.hasEnnemyFlag).Count() == 0)
+                    {
+                        _resetFlag++;
+                        print($"flag has disapeared for {_resetFlag} seconds");
+
+                        if (_resetFlag >= 10)
+                        {
+                            NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team);
+                        }
+                    }
+                    else if (_flag.scriptRoot.transform.parent == null && _flag.state != Flag.State.atbase && _flag.gameObject.activeInHierarchy && GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.hasEnnemyFlag).Count() == 0)
+                    {
+                        _resetFlag++;
+                        print($"flag has disapeared for {_resetFlag} seconds");
+
+                        if (_resetFlag >= 30)
+                        {
+                            NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team);
+                        }
+                    }
+                    else
+                    {
+                        _resetFlag = 0;
+                    }
+                    _check = 0.5f;
+                }
+            }
+        }
     }
 
 
     public void SpawnFlagAtStand()
     {
+        _resetFlag = 0;
         print("SpawnFlag");
         StartCoroutine(SpawnFlagAtStand_Coroutine());
     }

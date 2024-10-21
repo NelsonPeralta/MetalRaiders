@@ -21,7 +21,7 @@ public class Flag : MonoBehaviour
     [SerializeField] State _state;
 
 
-    float _reset, _triggerReset;
+    float  _triggerReset;
 
     // Start is called before the first frame update
     void Start()
@@ -45,40 +45,12 @@ public class Flag : MonoBehaviour
         if (_triggerReset > 0) _triggerReset -= Time.deltaTime;
 
 
-        if (transform.position.y <= -20)
-        {
-            foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>{spawnPoint.team} Flag Reset");
-            GameManager.GetRootPlayer().announcer.AddClip(_resetClip);
-            spawnPoint.SpawnFlagAtStand();
-
-            _reset = 15;
-        }
-        else
-        {
-            if (_state != State.atbase)
-            {
-                _reset -= Time.deltaTime;
-
-                if (_reset <= 0)
-                {
-                    foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>{spawnPoint.team} Flag Reset");
-                    GameManager.GetRootPlayer().announcer.AddClip(_resetClip);
-                    spawnPoint.SpawnFlagAtStand();
-                    //PlayBallResetClip();
-
-                    _reset = 15;
-                }
-            }
-            else
-            {
-                _reset = 15;
-            }
-        }
+        
     }
 
     private void OnEnable()
     {
-        _reset = 15;
+
     }
 
     private void OnDisable()
@@ -137,5 +109,10 @@ public class Flag : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void PlayerResetClip()
+    {
+        GameManager.GetRootPlayer().announcer.AddClip(_resetClip);
     }
 }

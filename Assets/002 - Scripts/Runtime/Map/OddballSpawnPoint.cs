@@ -9,8 +9,8 @@ public class OddballSpawnPoint : MonoBehaviour
     [SerializeField] OddballSkull _oddball;
 
 
-    int _secondsTheBallIsInactiveAndNoPlayersAreHoldingIt;
-    float _check;
+    [SerializeField] int _resetBall;
+    [SerializeField] float _check;
 
     private void Awake()
     {
@@ -38,21 +38,40 @@ public class OddballSpawnPoint : MonoBehaviour
 
                 if (_check < 0)
                 {
-                    if (_oddball.transform.root == null && _oddball.gameObject.activeSelf
+                    print($"OddballSpawnPoint {_oddball.thisRoot.transform.parent == null} {_oddball.gameObject.activeInHierarchy} " +
+                        $"{Vector3.Distance(transform.position, _oddball.rb.transform.position)} {GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count()}");
+
+                    if (_oddball.rb.transform.position.y < -20)
+                    {
+                        NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero);
+                    }
+                    if (_oddball.thisRoot.transform.parent == null && !_oddball.gameObject.activeInHierarchy
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
                     {
-                        _secondsTheBallIsInactiveAndNoPlayersAreHoldingIt++;
-                        print($"oddball has disapeared for {_secondsTheBallIsInactiveAndNoPlayersAreHoldingIt} seconds");
+                        _resetBall++;
+                        print($"oddball has disapeared for {_resetBall} seconds");
 
-                        if(_secondsTheBallIsInactiveAndNoPlayersAreHoldingIt == 5)
+                        if (_resetBall >= 10)
                         {
+                            NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero);
+                        }
+                    }
+                    else if (_oddball.thisRoot.transform.parent == null && _oddball.gameObject.activeInHierarchy && Vector3.Distance(transform.position, _oddball.rb.transform.position) > 3
+                        && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
+                    {
+                        _resetBall++;
+                        print($"oddball has disapeared for {_resetBall} seconds");
 
+                        if (_resetBall >= 30)
+                        {
+                            NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero);
                         }
                     }
                     else
                     {
-                        _secondsTheBallIsInactiveAndNoPlayersAreHoldingIt = 0;
+                        _resetBall = 0;
                     }
+                    _check = 0.5f;
                 }
             }
         }
@@ -61,6 +80,7 @@ public class OddballSpawnPoint : MonoBehaviour
     public void SpawnOddball()
     {
         print("SpawnOddball");
+        _resetBall = 0;
         StartCoroutine(SpawnOddball_Coroutine());
     }
 

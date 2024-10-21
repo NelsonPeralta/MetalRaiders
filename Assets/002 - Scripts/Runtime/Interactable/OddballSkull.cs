@@ -11,7 +11,7 @@ public class OddballSkull : MonoBehaviour
 
 
     Player _player;
-    float _triggerReset, _reset;
+    float _triggerReset;
 
 
     private void Awake()
@@ -42,30 +42,11 @@ public class OddballSkull : MonoBehaviour
     {
         if (_triggerReset > 0)
             _triggerReset -= Time.deltaTime;
-
-
-
-        if (Vector3.Distance(spawnPoint.transform.position, rb.transform.position) > 3)
-        {
-            _reset -= Time.deltaTime;
-
-            if (_reset <= 0)
-            {
-                spawnPoint.SpawnOddball();
-                PlayBallResetClip();
-
-                _reset = 10;
-            }
-        }
-        else
-        {
-            _reset = 10;
-        }
     }
 
     private void OnEnable()
     {
-        _reset = 10;
+
     }
 
 

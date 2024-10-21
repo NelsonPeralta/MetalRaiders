@@ -1303,7 +1303,7 @@ public class PlayerController : MonoBehaviourPun
 
     void ThrowGrenade()
     {
-        if (pInventory.fragGrenades > 0 && !isThrowingGrenade)
+        if (pInventory.fragGrenades > 0 && !isThrowingGrenade && !player.playerInventory.holdingObjective)
         {
             print($"Grenade 1");
             CancelReloadCoroutine();
