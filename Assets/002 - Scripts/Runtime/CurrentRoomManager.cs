@@ -567,6 +567,7 @@ public class CurrentRoomManager : MonoBehaviour
             playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
 
             _vetoedGameType = GameManager.GameType.Unassgined; _vetoedMapIndex = 0;
+            _roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;
         }
         else
         {

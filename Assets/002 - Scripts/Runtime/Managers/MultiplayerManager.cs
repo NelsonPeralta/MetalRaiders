@@ -30,6 +30,15 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             }
             if (GameManager.instance.gameType == GameManager.GameType.Hill || GameManager.instance.gameType == GameManager.GameType.Oddball)
             {
+
+#if (UNITY_EDITOR)
+                // your code here
+                if (GameManager.instance.gameType == GameManager.GameType.Hill)
+                    return 5;
+#endif
+
+
+
                 if (GameManager.instance.teamMode == GameManager.TeamMode.Classic) return 120;
                 return 75;
             }
@@ -188,16 +197,16 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
 
 
-#if (UNITY_EDITOR)
-                // your code here
-                if (GameManager.instance.gameType == GameManager.GameType.CTF)
-                {
-                    if (winningPlayerMS.team == GameManager.Team.Red)
-                        redTeamScore++;
-                    else if (winningPlayerMS.team == GameManager.Team.Blue)
-                        blueTeamScore++;
-                }
-#endif
+//#if (UNITY_EDITOR)
+//                // your code here
+//                if (GameManager.instance.gameType == GameManager.GameType.CTF)
+//                {
+//                    if (winningPlayerMS.team == GameManager.Team.Red)
+//                        redTeamScore++;
+//                    else if (winningPlayerMS.team == GameManager.Team.Blue)
+//                        blueTeamScore++;
+//                }
+//#endif
 
 
                 if (GameManager.instance.gameType != GameManager.GameType.Hill

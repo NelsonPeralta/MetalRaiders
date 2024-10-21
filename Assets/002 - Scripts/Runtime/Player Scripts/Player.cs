@@ -548,7 +548,7 @@ public class Player : Biped
             else if (GameManager.instance.nbLocalPlayersPreset == 1) _defaultVerticalFov = 58.72f;
             else if (GameManager.instance.nbLocalPlayersPreset == 3)
             {
-                if (rid == 2) _defaultVerticalFov = 31.42f; // too fish eye
+                if (rid == 0) _defaultVerticalFov = 31.42f; // too fish eye
                 //if (rid == 2) _defaultVerticalFov = 25;
                 else _defaultVerticalFov = 58.72f;
             }

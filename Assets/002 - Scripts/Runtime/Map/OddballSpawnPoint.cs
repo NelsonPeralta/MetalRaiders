@@ -1,10 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 
 public class OddballSpawnPoint : MonoBehaviour
 {
     [SerializeField] OddballSkull _oddball;
+
+
+    int _secondsTheBallIsInactiveAndNoPlayersAreHoldingIt;
+    float _check;
 
     private void Awake()
     {
@@ -14,8 +20,42 @@ public class OddballSpawnPoint : MonoBehaviour
     private void Start()
     {
         if (GameManager.instance.gameType == GameManager.GameType.Oddball)
+        {
             SpawnOddball();
+            _check = 1;
+        }
         else _oddball.DisableOddball();
+    }
+
+    private void Update()
+    {
+        if (GameManager.instance.gameType == GameManager.GameType.Oddball && PhotonNetwork.IsMasterClient
+            && CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
+        {
+            if (_check > 0)
+            {
+                _check -= Time.deltaTime;
+
+                if (_check < 0)
+                {
+                    if (_oddball.transform.root == null && _oddball.gameObject.activeSelf
+                        && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
+                    {
+                        _secondsTheBallIsInactiveAndNoPlayersAreHoldingIt++;
+                        print($"oddball has disapeared for {_secondsTheBallIsInactiveAndNoPlayersAreHoldingIt} seconds");
+
+                        if(_secondsTheBallIsInactiveAndNoPlayersAreHoldingIt == 5)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        _secondsTheBallIsInactiveAndNoPlayersAreHoldingIt = 0;
+                    }
+                }
+            }
+        }
     }
 
     public void SpawnOddball()

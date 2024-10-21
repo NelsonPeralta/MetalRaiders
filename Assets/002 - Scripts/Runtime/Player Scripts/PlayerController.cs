@@ -5,6 +5,7 @@ using Photon.Pun;
 using System;
 using Photon.Realtime;
 using Steamworks;
+using System.Linq;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -2483,9 +2484,10 @@ public class PlayerController : MonoBehaviourPun
         GameObject nade = GrenadePool.GetGrenade(fga, ind);
         nade.transform.position = sp; nade.transform.rotation = sr;
         nade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
+        nade.GetComponent<ExplosiveProjectile>().IgnoreTheseCollidersFor1Second(GetComponent<Player>().hitboxes.Select(x => x.GetComponent<Collider>()).ToList());
 
-        foreach (PlayerHitbox hb in GetComponent<Player>().hitboxes)
-            Physics.IgnoreCollision(nade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
+        //foreach (PlayerHitbox hb in GetComponent<Player>().hitboxes)
+        //    Physics.IgnoreCollision(nade.GetComponent<Collider>(), hb.GetComponent<Collider>()); // Prevents the grenade from colliding with the player who threw it
 
 
         nade.GetComponent<Rigidbody>().useGravity = true;

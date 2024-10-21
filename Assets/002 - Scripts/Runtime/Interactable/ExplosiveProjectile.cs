@@ -35,7 +35,7 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] AudioSource _stuckSfxAudioSource;
 
     bool _collided, _exploded;
-    float _explosionDelayOnImpact;
+    float _explosionDelayOnImpact, _resetIgnoredColliders;
 
 
 
@@ -103,6 +103,17 @@ public class ExplosiveProjectile : MonoBehaviour
         }
 
 
+        if (_resetIgnoredColliders > 0)
+        {
+            _resetIgnoredColliders -= Time.deltaTime;
+
+            if (_resetIgnoredColliders <= 0)
+            {
+                if (_collidersToIgnore.Count > 0)
+                    foreach (Collider collider in _collidersToIgnore)
+                        Physics.IgnoreCollision(GetComponent<Collider>(), collider);
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -280,7 +291,13 @@ public class ExplosiveProjectile : MonoBehaviour
 
 
 
+        _resetIgnoredColliders = -1;
         gameObject.SetActive(false);
+
+
+        if (_collidersToIgnore.Count > 0)
+            foreach (Collider collider in _collidersToIgnore)
+                Physics.IgnoreCollision(GetComponent<Collider>(), collider, false);
     }
 
 
@@ -311,5 +328,20 @@ public class ExplosiveProjectile : MonoBehaviour
 
 
         GameManager.GetPlayerWithPhotonView(playerPhotonId).PlayStuckClip();
+    }
+
+
+
+
+    List<Collider> _collidersToIgnore = new List<Collider>();
+    public void IgnoreTheseCollidersFor1Second(List<Collider> collidersToIgnore)
+    {
+        _collidersToIgnore = collidersToIgnore;
+        foreach (Collider collider in collidersToIgnore)
+        {
+            Physics.IgnoreCollision(GetComponent<Collider>(), collider);
+        }
+
+        _resetIgnoredColliders = 1;
     }
 }
