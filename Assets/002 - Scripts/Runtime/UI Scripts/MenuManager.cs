@@ -35,6 +35,19 @@ public class MenuManager : MonoBehaviour
         print("MenuManager Start");
     }
 
+    public string GetOpenMenu()
+    {
+        for (int i = 0; i < menus.Length; i++)
+        {
+            if (menus[i].open)
+            {
+                return menus[i].menuName;
+            }
+        }
+
+        return "";
+    }
+
     public void OpenMenu(string menuName, bool closeOthers = true) // Open a menu GO using the name from its Menu script
     {
 
