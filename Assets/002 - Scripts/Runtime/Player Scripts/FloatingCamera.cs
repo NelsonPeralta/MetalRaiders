@@ -73,7 +73,7 @@ public class FloatingCamera : MonoBehaviour
 
     [Space]
 
-    public float MaximumMovementSpeed = 0.7f;
+    public float MaximumMovementSpeed = 0.5f;
 
     [Header("Controls")]
 
@@ -98,6 +98,7 @@ public class FloatingCamera : MonoBehaviour
     {
         _changeCameraCd = 0.5f;
         _cam = GetComponent<Camera>();
+        MaximumMovementSpeed = 0.5f;
     }
 
 

@@ -255,7 +255,19 @@ public class MenuGamePadCursor : MonoBehaviour
                 {
                     r.gameObject.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
                     if (r.gameObject.GetComponent<EventTrigger>())
-                        r.gameObject.GetComponent<EventTrigger>().OnPointerExit(pointerData);
+                    {
+                        print($"MenuGamePadCursor OnPointerExit {r.gameObject.name} {r.gameObject.activeSelf}");
+
+                        if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !r.gameObject.activeSelf)
+                        {
+                            // do nothing
+                        }
+                        else
+                        {
+                            r.gameObject.GetComponent<EventTrigger>().OnPointerExit(pointerData);
+                        }
+
+                    }
                 }
 
 
@@ -294,7 +306,18 @@ public class MenuGamePadCursor : MonoBehaviour
                     {
                         _buttonUnderCursor.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
                         if (_buttonUnderCursor.GetComponent<EventTrigger>())
-                            _buttonUnderCursor.GetComponent<EventTrigger>().OnPointerExit(pointerData);
+                        {
+                            print($"MenuGamePadCursor OnPointerExit {_buttonUnderCursor.gameObject.name} {_buttonUnderCursor.gameObject.activeSelf}");
+
+                            if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !_buttonUnderCursor.gameObject.activeSelf)
+                            {
+                                // do nothing
+                            }
+                            else
+                            {
+                                _buttonUnderCursor.gameObject.GetComponent<EventTrigger>().OnPointerExit(pointerData);
+                            }
+                        }
 
 
 

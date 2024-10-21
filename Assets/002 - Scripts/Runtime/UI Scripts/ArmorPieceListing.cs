@@ -129,6 +129,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     void BuyArmorPiece()
     {
+        print("BuyArmorPiece");
         GameManager.PlayClickSound();
         StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(playerArmorPiece));
 
@@ -140,7 +141,8 @@ public class ArmorPieceListing : MonoBehaviour
 
     void EquipArmorPiece()
     {
-        Debug.Log($"Previous: {WebManager.webManagerInstance.pda.armorDataString}");
+        print("EquipArmorPiece");
+        //Debug.Log($"Previous: {WebManager.webManagerInstance.pda.armorDataString}");
         GameManager.PlayClickSound();
         string newData = WebManager.webManagerInstance.pda.armorDataString;
 
@@ -151,8 +153,8 @@ public class ArmorPieceListing : MonoBehaviour
                 {
                     if (WebManager.webManagerInstance.pda.unlockedArmorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
                     {
-                        Debug.Log($"Replacing string");
-                        Debug.Log(armorPieceListing.playerArmorPiece.entity);
+                        //Debug.Log($"Replacing string");
+                        //Debug.Log(armorPieceListing.playerArmorPiece.entity);
 
                         armorPieceListing.model.gameObject.SetActive(false);
                         armorPieceListing.equipButton.gameObject.SetActive(true);
@@ -178,6 +180,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void UnequipArmorPiece()
     {
+        print("UnequipArmorPiece");
         GameManager.PlayCancelSound();
         string newData = WebManager.webManagerInstance.pda.armorDataString.Replace($"{playerArmorPiece.entity}", "");
         newData = newData.Replace($"----", "--");
@@ -193,6 +196,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void OnButtonMouseEnter()
     {
+        print("OnButtonMouseEnter");
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
                 try
@@ -207,6 +211,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void OnButtonMouseExit()
     {
+        print("OnButtonMouseExit");
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
                 if (WebManager.webManagerInstance.pda.armorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
