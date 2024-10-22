@@ -995,6 +995,14 @@ public class CurrentRoomManager : MonoBehaviour
         }
     }
 
+    public void ResetPlayerDataCellsCurrentGameScoreOnly()
+    {
+        for (int i = 0; i < instance._playerDataCells.Count; i++)
+        {
+            instance._playerDataCells[i].playerCurrentGameScore = new PlayerCurrentGameScore();
+        }
+    }
+
 
 
     public void UpdateCountdowns(int vetoC, int roomGameStartC)

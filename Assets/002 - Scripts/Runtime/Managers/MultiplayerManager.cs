@@ -48,6 +48,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             }
             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             {
+#if (UNITY_EDITOR)
+                // your code here
+                return 3;
+#endif
+
+
                 if (CurrentRoomManager.instance.expectedNbPlayers == 2) return 10;
                 else return 20;
 
@@ -163,6 +169,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         Debug.Log("Multiplayer Manager OnSceneLoaded");
 
         winningPlayers.Clear();
+        winningPlayersId.Clear();
         redTeamScore = 0;
         blueTeamScore = 0;
         _isADraw = false;

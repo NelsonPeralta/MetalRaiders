@@ -221,6 +221,8 @@ public class MenuManager : MonoBehaviour
         {
             OpenMainMenu();
         }
+
+        CurrentRoomManager.instance.ResetPlayerDataCellsCurrentGameScoreOnly();
     }
 
     public void OpenCarnageReportMenu()
