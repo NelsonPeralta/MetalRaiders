@@ -81,30 +81,33 @@ public class PlayerNamePlate : MonoBehaviour
         Debug.Log($"SetUp PlayerListItem {_player.NickName}");
         //Debug.Log($"{_player.NickName.Split(char.Parse("-"))[0]}");
 
-        if (!GameManager.instance.devMode)
-            WebManager.webManagerInstance.SetPlayerListItemInRoom(int.Parse(_player.NickName), this);
-        else
-        {
-
-            PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
-            pepd.username = _player.NickName;
-            pepd.player_id = int.Parse(_player.NickName);
-            pepd.armor_color_palette = "grey";
-            pepd.armor_data_string = "helmet1";
+        WebManager.webManagerInstance.SetPlayerListItemInRoom(int.Parse(_player.NickName), this);
 
 
+        //if (!GameManager.instance.devMode)
+        //    WebManager.webManagerInstance.SetPlayerListItemInRoom(int.Parse(_player.NickName), this);
+        //else
+        //{
 
-            CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
-            this.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
+        //    PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+        //    pepd.username = _player.NickName;
+        //    pepd.player_id = int.Parse(_player.NickName);
+        //    pepd.armor_color_palette = "grey";
+        //    pepd.armor_data_string = "helmet1";
 
 
 
-            foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
-            {
-                if (int.Parse(p.NickName) == pepd.player_id)
-                    this.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
-            }
-        }
+        //    CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
+        //    this.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
+
+
+
+        //    foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
+        //    {
+        //        if (int.Parse(p.NickName) == pepd.player_id)
+        //            this.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
+        //    }
+        //}
     }
 
     public void SetUp(string s)

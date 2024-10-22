@@ -671,17 +671,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         CurrentRoomManager.InitializeAllPlayerDataCells();
 
+        StartCoroutine(PingGoogle("8.8.8.8"));
 
-        if (!GameManager.instance.devMode)
-            StartCoroutine(PingGoogle("8.8.8.8"));
-        else
-        {
-            GameManager.ROOT_PLAYER_NAME = $"{UnityEngine.Random.Range(1, 100)}";
-            PhotonNetwork.NickName = ROOT_PLAYER_NAME;
-            GameManager.instance.connection = GameManager.Connection.Online;
-            Launcher.instance.ConnectToPhotonMasterServer();
-            MenuManager.Instance.OpenMainMenu();
-        }
+        //if (!GameManager.instance.devMode)
+        //    StartCoroutine(PingGoogle("8.8.8.8"));
+        //else
+        //{
+        //    GameManager.ROOT_PLAYER_NAME = $"{UnityEngine.Random.Range(1, 100)}";
+        //    PhotonNetwork.NickName = ROOT_PLAYER_NAME;
+        //    GameManager.instance.connection = GameManager.Connection.Online;
+        //    Launcher.instance.ConnectToPhotonMasterServer();
+        //    MenuManager.Instance.OpenMainMenu();
+        //}
 
 
         //SteamManager.Instance.Init();

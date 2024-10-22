@@ -98,7 +98,8 @@ public class FloatingCamera : MonoBehaviour
     {
         _changeCameraCd = 0.5f;
         _cam = GetComponent<Camera>();
-        MaximumMovementSpeed = 0.5f;
+        MaximumMovementSpeed = 0.05f;
+        XAxisSensitivity = YAxisSensitivity = 2;
     }
 
 

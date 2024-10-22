@@ -30,7 +30,7 @@ public class ScriptObjPlayerData : ScriptableObject
             occupied = (value.username != null && value.username.Length > 0);
 
 
-            if (occupied && !GameManager.instance.devMode)
+            if (occupied /*&& !GameManager.instance.devMode*/)
             {
                 StringBuilder sb = new StringBuilder($"-{value.unlocked_armor_data_string}-");
 

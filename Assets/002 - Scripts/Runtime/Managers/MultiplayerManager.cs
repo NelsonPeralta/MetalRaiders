@@ -197,16 +197,16 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
 
 
-//#if (UNITY_EDITOR)
-//                // your code here
-//                if (GameManager.instance.gameType == GameManager.GameType.CTF)
-//                {
-//                    if (winningPlayerMS.team == GameManager.Team.Red)
-//                        redTeamScore++;
-//                    else if (winningPlayerMS.team == GameManager.Team.Blue)
-//                        blueTeamScore++;
-//                }
-//#endif
+                //#if (UNITY_EDITOR)
+                //                // your code here
+                //                if (GameManager.instance.gameType == GameManager.GameType.CTF)
+                //                {
+                //                    if (winningPlayerMS.team == GameManager.Team.Red)
+                //                        redTeamScore++;
+                //                    else if (winningPlayerMS.team == GameManager.Team.Blue)
+                //                        blueTeamScore++;
+                //                }
+                //#endif
 
 
                 if (GameManager.instance.gameType != GameManager.GameType.Hill
@@ -423,14 +423,14 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 {
                     pp.allPlayerScripts.announcer.PlayGameOverClip();
 
-                    if (!GameManager.instance.devMode)
-                        if (CurrentRoomManager.instance.youHaveInvites)
-                        {
-                            if (CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos)
-                                WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
-                        }
-                        else
+                    //if (!GameManager.instance.devMode)
+                    if (CurrentRoomManager.instance.youHaveInvites)
+                    {
+                        if (CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos)
                             WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
+                    }
+                    else
+                        WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
 
                     {
 
@@ -442,7 +442,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
                 if (GameManager.instance.connection == GameManager.Connection.Online)
                 {
-                    if (!GameManager.instance.devMode)
+                    //if (!GameManager.instance.devMode)
                     {
                         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
                         PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(pda.playerBasicOnlineStats.honor)[0];

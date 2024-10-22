@@ -30,6 +30,10 @@ public class HolidayOnlyProp : MonoBehaviour
             else
                 Destroy(gameObject);
         }
+        else
+            transform.GetChild(0).gameObject.SetActive(false);
+
+        transform.GetChild(0).gameObject.SetActive(false);
     }
 
     // Update is called once per frame

@@ -1750,6 +1750,8 @@ public class PlayerController : MonoBehaviourPun
 
     void FloatingCamera()
     {
+        //if (GameManager.instance.devMode)
+
         if (rewiredPlayer.GetButtonLongPressDown("floatingcamera") && PV.IsMine)
         {
             ToggleFloatingCamera();
