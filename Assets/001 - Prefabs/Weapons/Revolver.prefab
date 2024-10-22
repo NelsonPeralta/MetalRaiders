@@ -10315,10 +10315,10 @@ MonoBehaviour:
   codeName: rvv
   spriteId: 0
   isDw: 1
-  _ammo: 6
-  _spareAmmo: 18
-  _defaultAmmo: 6
-  _defaultSpareAmmo: 18
+  _ammo: 8
+  _spareAmmo: 16
+  _defaultAmmo: 8
+  _defaultSpareAmmo: 16
   _tts: 60
   _collisionAudioClip: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}
