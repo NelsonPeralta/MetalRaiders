@@ -307,8 +307,8 @@ public class WeaponProperties : MonoBehaviour
                             horRecoil *= 0.8f;
                         }
 
-                        player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * verRecoil);
-                        player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
+                        player.playerCamera.AddToUpDownRotation(verRecoil);
+                        player.playerCamera.AddToLeftRightRotation(horRecoil);
                     }
             }
             else
@@ -321,11 +321,7 @@ public class WeaponProperties : MonoBehaviour
                     {
                         verRecoil *= 0.8f;
                     }
-
-
-
-
-                    player.playerCamera.verticalAxisTarget.Rotate(-Vector3.right * 0.65f * verRecoil);
+                    player.playerCamera.AddToUpDownRotation(-verRecoil * 0.65f);
                 }
             }
 
@@ -356,7 +352,6 @@ public class WeaponProperties : MonoBehaviour
     }
     public void Recoil()
     {
-
         if (firingMode == FiringMode.Burst && _recoilCount > 0)
         {
             print("Recoil");
@@ -365,21 +360,6 @@ public class WeaponProperties : MonoBehaviour
         {
             _recoilCount = RECOIL_FRAMES * 2;
         }
-        //if (camScript)
-        //    if (xRecoil > 0 || yRecoil > 0)
-        //    {
-        //        float horRecoil = Random.Range(-xRecoil, xRecoil);
-        //        float verRecoil = -yRecoil;
-
-        //        if (pController.isCrouching)
-        //        {
-        //            verRecoil *= 0.8f;
-        //            horRecoil *= 0.8f;
-        //        }
-
-        //        player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * verRecoil);
-        //        player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * horRecoil);
-        //    }
     }
 
     void BloomIncrease()
