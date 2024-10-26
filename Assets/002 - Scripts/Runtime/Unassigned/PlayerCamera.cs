@@ -51,7 +51,7 @@ public class PlayerCamera : MonoBehaviour
     public float _blockTime, _trueLocalX;
 
 
-    [SerializeField] Transform _weaponOffset;
+    [SerializeField] Transform _weaponOffset, _playerCameraHolder;
     [SerializeField] int _offsetTickRightRotation, _offsetTickUpRotation;
     [SerializeField] float _angleBetweenPlayerForwardAndVertAxis;
     [SerializeField] Vector3 _weaponOffsetLocalPosition = new Vector3(0, 0, 0);
@@ -257,6 +257,17 @@ public class PlayerCamera : MonoBehaviour
     private void FixedUpdate()
     {
         WeaponOffset();
+    }
+
+    private void LateUpdate()
+    {
+        //if(horizontalAxisTarget.transform.root.parent.GetComponent<Player>() && verticalAxisTarget.transform.root.parent.GetComponent<Player>())// main cam currently attached to player
+        //{
+        //    mainCam.transform.parent = null;
+
+        //    mainCam.transform.position = _playerCameraHolder.position;
+
+        //}
     }
 
 

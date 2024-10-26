@@ -452,26 +452,26 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
-    int _framesInteractBtnHasBeenHeld;
+    float _timeInteractBtnHasBeenHeld;
     void LongInteract()
     {
-        if (player.playerInventory.holdingObjective) _framesInteractBtnHasBeenHeld = -1;
+        if (player.playerInventory.holdingObjective) _timeInteractBtnHasBeenHeld = -1;
         else
         {
             if (rewiredPlayer.GetButton("Interact"))
             {
-                if (_framesInteractBtnHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 3 && _framesInteractBtnHasBeenHeld > -1)
-                    _framesInteractBtnHasBeenHeld = Mathf.Clamp(_framesInteractBtnHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 3);
+                if (_timeInteractBtnHasBeenHeld < 0.33f && _timeInteractBtnHasBeenHeld > -1)
+                    _timeInteractBtnHasBeenHeld = Mathf.Clamp(_timeInteractBtnHasBeenHeld + Time.deltaTime, 0, 0.33f);
             }
 
 
-            if (_framesInteractBtnHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 3)
+            if (_timeInteractBtnHasBeenHeld == 0.33f)
                 OnPlayerShortPressInteract?.Invoke(this);
         }
 
         if (rewiredPlayer.GetButtonUp("Interact"))
         {
-            _framesInteractBtnHasBeenHeld = 0;
+            _timeInteractBtnHasBeenHeld = 0;
         }
 
 
@@ -492,9 +492,9 @@ public class PlayerController : MonoBehaviourPun
     public void ResetLongInteractFrameCounter(InteractResetMode irm)
     {
         if (irm == InteractResetMode.activeweapon)
-            _framesInteractBtnHasBeenHeld = -999;
+            _timeInteractBtnHasBeenHeld = -999;
         else if (irm == InteractResetMode.thirdweapon)
-            _framesMarkSpotHasBeenHeld = -999;
+            _timeMarkSpotHasBeenHeld = -999;
     }
 
 
@@ -2347,27 +2347,27 @@ public class PlayerController : MonoBehaviourPun
 
 
 
-    int _framesMarkSpotHasBeenHeld;
+    float _timeMarkSpotHasBeenHeld;
     void MarkSpot()
     {
         if (rewiredPlayer.GetButton("mark"))
         {
-            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 3 && _framesMarkSpotHasBeenHeld > -1)
-                _framesMarkSpotHasBeenHeld = Mathf.Clamp(_framesMarkSpotHasBeenHeld + 1, 0, GameManager.DEFAULT_FRAMERATE / 3);
+            if (_timeMarkSpotHasBeenHeld < 0.33f && _timeMarkSpotHasBeenHeld > -1)
+                _timeMarkSpotHasBeenHeld = Mathf.Clamp(_timeMarkSpotHasBeenHeld + Time.deltaTime, 0, 0.33f);
 
-            if (_framesMarkSpotHasBeenHeld == GameManager.DEFAULT_FRAMERATE / 3)
+            if (_timeMarkSpotHasBeenHeld == 0.33f)
             {
-                print($"MARK SPOT HELD LONG {_framesMarkSpotHasBeenHeld}");
+                print($"MARK SPOT HELD LONG {_timeMarkSpotHasBeenHeld}");
 
                 player.playerInteractableObjectHandler.TriggerLongInteract();
             }
         }
         else if (rewiredPlayer.GetButtonUp("mark"))
         {
-            print($"MarkSport {_framesMarkSpotHasBeenHeld}");
+            print($"MarkSpot held: {_timeMarkSpotHasBeenHeld}");
 
 
-            if (_framesMarkSpotHasBeenHeld < GameManager.DEFAULT_FRAMERATE / 5 && _framesMarkSpotHasBeenHeld > -1)
+            if (_timeMarkSpotHasBeenHeld < 0.2f && _timeMarkSpotHasBeenHeld > -1)
             {
                 //if (!player.playerInventory.isDualWielding)
                 {
@@ -2407,7 +2407,7 @@ public class PlayerController : MonoBehaviourPun
             }
 
 
-            _framesMarkSpotHasBeenHeld = 0;
+            _timeMarkSpotHasBeenHeld = 0;
         }
     }
 

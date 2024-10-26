@@ -482,6 +482,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             PlayerPrefs.SetFloat("sens", 3);
         }
+
+        if (!PlayerPrefs.HasKey("vsyncint"))
+        {
+            PlayerPrefs.SetInt("vsyncint", 0);
+        }
     }
 
 
@@ -565,7 +570,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReportAndCredits);
                 //MenuManager.Instance.OpenMenu("carnage report");
                 MenuManager.Instance.OpenPopUpMenu("credits");
-            }else if (previousScenePayloads.Contains(PreviousScenePayload.OpenMainMenu))
+            }
+            else if (previousScenePayloads.Contains(PreviousScenePayload.OpenMainMenu))
             {
                 previousScenePayloads.Remove(PreviousScenePayload.OpenMainMenu);
                 MenuManager.Instance.OpenMainMenu();
@@ -657,10 +663,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         nbLocalPlayersPreset = 1;
         InitialisePlayerPrefs();
         LoadPlayerPrefs();
-        //Debug.Log(colorPaletteTextures.Count);
-
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = DEFAULT_FRAMERATE;
 
         Debug.unityLogger.logEnabled = allowLogsInBuild;
 
@@ -1307,6 +1309,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             CurrentRoomManager.instance.playerDataCells[1].sens = PlayerPrefs.GetFloat("sens");
             CurrentRoomManager.instance.playerDataCells[2].sens = PlayerPrefs.GetFloat("sens");
             CurrentRoomManager.instance.playerDataCells[3].sens = PlayerPrefs.GetFloat("sens");
+        }
+
+        LoadVSyncPrefs();
+    }
+
+    public static void LoadVSyncPrefs()
+    {
+        if (PlayerPrefs.GetInt("vsyncint") == 0)
+        {
+            Application.targetFrameRate = DEFAULT_FRAMERATE;
+            QualitySettings.vSyncCount = 0;
+        }
+        else if (PlayerPrefs.GetInt("vsyncint") == 1)
+        {
+            QualitySettings.vSyncCount = 1;
         }
     }
 
