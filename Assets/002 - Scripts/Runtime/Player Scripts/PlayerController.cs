@@ -1796,27 +1796,43 @@ public class PlayerController : MonoBehaviourPun
             floatingCamera.counter = 0;
             _posBeforeTogglingFloatingCamera = transform.position;
             player.transform.position = Vector3.up * -100;
+            player.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.None;
             player.GetComponent<Rigidbody>().useGravity = false;
             player.GetComponent<Rigidbody>().isKinematic = true;
         }
         else
         {
             mainCam.cullingMask = _lastMainCamLayerMask;
-            mainCam.transform.parent = _mainCamParent;
-            mainCam.transform.localPosition = _lastMainCamLocalPos;
-            mainCam.transform.localRotation = _lasMainCamLocalQuat;
+            //mainCam.transform.parent = _mainCamParent;
+            //mainCam.transform.localPosition = _lastMainCamLocalPos;
+            //mainCam.transform.localRotation = _lasMainCamLocalQuat;
 
             _cameraIsFloating = false;
-            Debug.Log("Alpha0");
+            Debug.Log($"ToggleFloatingCamera_RPC {_posBeforeTogglingFloatingCamera}");
             uiCam.enabled = true;
             gunCam.enabled = true;
 
 
             player.transform.position = _posBeforeTogglingFloatingCamera;
+            //player.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
             player.GetComponent<Rigidbody>().useGravity = true;
             player.GetComponent<Rigidbody>().isKinematic = false;
+
+            StartCoroutine(EnableInterpolationNextFrame());
         }
+        player.playerCamera.followPlayer = !cameraIsFloating;
     }
+
+
+    IEnumerator EnableInterpolationNextFrame()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        player.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+    }
+
+
+
 
     [PunRPC]
     void IncreaseFloatinCameraCounter_RPC(bool actuallyMinus)

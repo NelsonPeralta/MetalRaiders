@@ -1382,9 +1382,9 @@ public class Player : Biped
         PV.RPC("StopPlayingPlayerVoice_RPC", RpcTarget.All);
     }
 
-    public void Teleport(Vector3 v, Vector3 r)
+    public void Teleport(Vector3 v, Vector3 @for)
     {
-        PV.RPC("Teleport_RPC", RpcTarget.All, v, r);
+        PV.RPC("Teleport_RPC", RpcTarget.All, v, @for);
     }
 
     #endregion
@@ -1448,6 +1448,7 @@ public class Player : Biped
         hitPoints = maxHitPoints;
         transform.position = _reservedSpawnPointTrans.position + new Vector3(0, 2, 0);
         transform.rotation = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(_reservedSpawnPointTrans.position).rotation;
+        playerCamera.RotateCameraToRotation(_reservedSpawnPointTrans.forward);
         isDead = false;
     }
 
@@ -1730,8 +1731,8 @@ public class Player : Biped
 
 
             //if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
-                if (Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z)) > 45)
-                    allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
+            if (Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z)) > 45)
+                allPlayerScripts.damageIndicatorManager.SpawnNewDamageIndicator(sourcePid);
         }
         catch { }
 
@@ -1832,6 +1833,11 @@ public class Player : Biped
         //}
     }
 
+    public void RotatePlayerCameraToDirection(Vector3 dirr)
+    {
+        playerCamera.RotateCameraToRotation(dirr);
+    }
+
 
     void OnPlayerIdAssigned_Delegate(Player p)
     {
@@ -1878,11 +1884,15 @@ public class Player : Biped
 
 
     [PunRPC]
-    void Teleport_RPC(Vector3 t, Vector3 r)
+    void Teleport_RPC(Vector3 t, Vector3 forr)
     {
         Debug.Log("Teleport_RPC");
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+        _rb.AddForce(forr.normalized * 100, mode: ForceMode.Impulse);
         transform.position = t;
-        transform.eulerAngles = r;
+        playerCamera.RotateCameraToRotation(forr);
+        //transform.eulerAngles = forr;
     }
 
     [PunRPC]

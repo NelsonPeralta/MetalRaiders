@@ -9,7 +9,7 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
 
     public Transform orignalParent { get { return _originalParent; } }
 
-    Player _player;
+    [SerializeField] Player _player;
     Camera _camera;
 
     [SerializeField] Transform _originalParent;
@@ -23,14 +23,13 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _player = transform.root.GetComponent<Player>();
         _camera = GetComponent<Camera>();
 
         if (!_player.isMine) { gameObject.SetActive(false); return; }
 
 
-        transform.root.GetComponent<Player>().OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
-        transform.root.GetComponent<Player>().OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
+        _player.OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
+        _player.OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
     }
 
 

@@ -887,6 +887,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spt.position + (2 * Vector3.up), spt.rotation).GetComponent<Player>();
         player.playerController.rid = indd;
+        player.RotatePlayerCameraToDirection(spt.forward);
 
 
         if (indd == 0)

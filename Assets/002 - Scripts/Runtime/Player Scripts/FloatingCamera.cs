@@ -84,10 +84,10 @@ public class FloatingCamera : MonoBehaviour
     public KeyCode Up = KeyCode.Q;
     public KeyCode Down = KeyCode.E;
 
-    private Vector3 _moveSpeed;
+    [SerializeField] Vector3 _moveSpeed;
 
 
-    float _changeCameraCd;
+    float _changeCameraCd, _rotationX;
     [SerializeField] int _counter, _zoomCounter;
 
     Camera _cam;
@@ -135,53 +135,19 @@ public class FloatingCamera : MonoBehaviour
         HandleDeceleration(acceleration);
 
         // clamp the move speed
-        if (_moveSpeed.magnitude > MaximumMovementSpeed)
-        {
-            _moveSpeed = _moveSpeed.normalized * MaximumMovementSpeed;
-        }
+        if (_moveSpeed.magnitude > MaximumMovementSpeed) _moveSpeed = _moveSpeed.normalized * MaximumMovementSpeed;
 
         transform.Translate(_moveSpeed);
     }
 
-    private Vector3 HandleKeyInput()
-    {
-        var acceleration = Vector3.zero;
 
-        //key input detection
-        if (Input.GetKey(Forwards))
-        {
-            acceleration.z += 0.3f;
-        }
 
-        if (Input.GetKey(Backwards))
-        {
-            acceleration.z -= 0.3f;
-        }
 
-        if (Input.GetKey(Left))
-        {
-            acceleration.x -= 0.3f;
-        }
 
-        if (Input.GetKey(Right))
-        {
-            acceleration.x += 0.3f;
-        }
 
-        if (Input.GetKey(Up))
-        {
-            acceleration.y += 0.3f;
-        }
 
-        if (Input.GetKey(Down))
-        {
-            acceleration.y -= 0.3f;
-        }
 
-        return acceleration.normalized * AccelerationMod;
-    }
 
-    private float _rotationX;
 
     private void HandleMouseRotation()
     {

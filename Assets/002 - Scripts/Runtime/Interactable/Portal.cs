@@ -15,7 +15,7 @@ public class Portal : MonoBehaviour
             Vector3 t = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);
             Vector3 r = _endpoint.transform.rotation.eulerAngles;
 
-            other.GetComponent<PlayerCapsule>().player.Teleport(t, r);
+            other.GetComponent<PlayerCapsule>().player.Teleport(t, _endpoint.transform.forward);
 
             //GetComponent<AudioSource>().Play();
             _endpoint.GetComponent<AudioSource>().Play();

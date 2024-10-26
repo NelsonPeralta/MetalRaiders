@@ -93,9 +93,11 @@ public class ThirdPersonLookAt : MonoBehaviour
 
     void PlayerChestRotation()
     {
-        //Debug.Log(lookAtGO.position);
-        chest.LookAt(lookAtGO.position);
-        chest.rotation = chest.rotation * Quaternion.Euler(currentOffset);
+        if (_playerController.player.isAlive && !_playerController.cameraIsFloating)
+        {
+            chest.LookAt(lookAtGO.position);
+            chest.rotation = chest.rotation * Quaternion.Euler(currentOffset);
+        }
     }
 
     void UpdateOffset(PlayerMovement.PlayerMovementDirection pmd)
