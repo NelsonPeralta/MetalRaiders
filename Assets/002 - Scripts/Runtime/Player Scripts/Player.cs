@@ -755,6 +755,8 @@ public class Player : Biped
     }
     private void Start()
     {
+        if (!PV.IsMine) _rb.interpolation = RigidbodyInterpolation.None;
+
         OnPlayerDeath += OnPlayerDeath_Delegate;
         OnPlayerDeathLate += OnPlayerDeath_DelegateLate;
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
