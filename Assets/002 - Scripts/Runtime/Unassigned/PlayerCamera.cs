@@ -101,9 +101,11 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.instance.gameStarted || !pController.PV.IsMine || pController.cameraIsFloating) return;
+
+
         _angleBetweenPlayerForwardAndVertAxis = Vector3.SignedAngle(verticalAxisTarget.forward, transform.root.forward, verticalAxisTarget.right);
         if (_blockTime > 0) _blockTime -= Time.deltaTime;
-        if (!GameManager.instance.gameStarted || !pController.PV.IsMine || pController.cameraIsFloating) return;
 
         _controllerType = pController.activeControllerType;
         frontEndMouseSens = player.playerDataCell.sens;
@@ -153,7 +155,7 @@ public class PlayerCamera : MonoBehaviour
 
 
 
-            if (!pController.pauseMenuOpen && _blockTime <= 0)
+            if (player.isMine && !pController.pauseMenuOpen && _blockTime <= 0)
             {
                 xAxisInput = rewiredPlayer.GetAxis("Mouse X");
                 yAxisInput = rewiredPlayer.GetAxis("Mouse Y");
@@ -280,7 +282,7 @@ public class PlayerCamera : MonoBehaviour
 
     void WeaponOffset()
     {
-        if (!player.isAlive || !player.movement.isGrounded)
+        if (player.isMine && !player.isAlive || !player.movement.isGrounded)
         {
 
             if (_offsetTickRightRotation > 0)
