@@ -1117,7 +1117,7 @@ public class PlayerController : MonoBehaviourPun
     bool _meleeSucc;
     void Melee(bool overwrite = false)
     {
-        if (player.isAlive && player.isMine)
+        if (player.isAlive && player.isMine && !cameraIsFloating)
         {
             if ((overwrite) || ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade /*&& !isSprinting*/))
             {
