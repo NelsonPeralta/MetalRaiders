@@ -38,6 +38,10 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    public Camera mainCam { get { return player.mainCamera; } }
+    public Camera gunCam { get { return player.gunCamera; } }
+    public Camera uiCam { get { return player.uiCamera; } }
+
 
 
     [Header("Other Scripts")]
@@ -46,9 +50,7 @@ public class PlayerController : MonoBehaviourPun
     public PlayerInventory pInventory;
     public GeneralWeapProperties gwProperties;
     public Animator weaponAnimator;
-    public Camera mainCam;
-    public Camera gunCam;
-    public Camera uiCam;
+    
     public PlayerCamera camScript;
     public Rewired.Player rewiredPlayer;
     [SerializeField] int _rid;
@@ -259,7 +261,6 @@ public class PlayerController : MonoBehaviourPun
         if (!PV.IsMine)
         {
             gunCam.gameObject.SetActive(false);
-            mainCam.gameObject.SetActive(false);
         }
         OnPlayerSwitchWeapons?.Invoke(this);
         player.OnPlayerRespawned += OnRespawn_Delegate;
