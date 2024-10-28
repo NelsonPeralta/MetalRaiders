@@ -755,7 +755,11 @@ public class Player : Biped
     }
     private void Start()
     {
-        if (!PV.IsMine) _rb.interpolation = RigidbodyInterpolation.None;
+        if (!PV.IsMine)
+        {
+            _rb.interpolation = RigidbodyInterpolation.None;
+            mainCamera.GetComponent<FloatingCamera>().enabled = false;
+        }
 
         OnPlayerDeath += OnPlayerDeath_Delegate;
         OnPlayerDeathLate += OnPlayerDeath_DelegateLate;
@@ -2108,6 +2112,8 @@ public class Player : Biped
                 print($"UpdateRewiredId - OnPlayerIdAssigned: {name} {playerId} {playerController.rid}");
                 OnPlayerIdAssigned?.Invoke(this);
                 if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
+
+                mainCamera.gameObject.name = $"Player {username} MAIN CAMERA";
             }
         }
     }

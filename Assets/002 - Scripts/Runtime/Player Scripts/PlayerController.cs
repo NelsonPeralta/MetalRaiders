@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviourPun
     public PlayerInventory pInventory;
     public GeneralWeapProperties gwProperties;
     public Animator weaponAnimator;
-    
+
     public PlayerCamera camScript;
     public Rewired.Player rewiredPlayer;
     [SerializeField] int _rid;
@@ -1810,8 +1810,12 @@ public class PlayerController : MonoBehaviourPun
 
             _cameraIsFloating = false;
             Debug.Log($"ToggleFloatingCamera_RPC {_posBeforeTogglingFloatingCamera}");
-            uiCam.enabled = true;
-            gunCam.enabled = true;
+
+            if (player.isMine)
+            {
+                uiCam.enabled = true;
+                gunCam.enabled = true;
+            }
 
 
             player.transform.position = _posBeforeTogglingFloatingCamera;
@@ -1819,7 +1823,8 @@ public class PlayerController : MonoBehaviourPun
             player.GetComponent<Rigidbody>().useGravity = true;
             player.GetComponent<Rigidbody>().isKinematic = false;
 
-            StartCoroutine(EnableInterpolationNextFrame());
+            if (player.isMine)
+                StartCoroutine(EnableInterpolationNextFrame());
         }
         player.playerCamera.followPlayer = !cameraIsFloating;
     }
