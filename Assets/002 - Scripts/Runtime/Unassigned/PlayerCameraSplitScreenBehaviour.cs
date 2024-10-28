@@ -25,11 +25,12 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
     {
         _camera = GetComponent<Camera>();
 
-        if (!_player.isMine) { gameObject.SetActive(false); return; }
 
-
-        _player.OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
-        _player.OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
+        if (_player.isMine)
+        {
+            _player.OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
+            _player.OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
+        }
     }
 
 
