@@ -44,7 +44,7 @@ public class OddballSpawnPoint : MonoBehaviour
                     if (_oddball.rb.transform.position.y < -20)
                     {
                         if (PhotonNetwork.IsMasterClient)
-                            NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: true);
+                            NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: false);
                     }
                     if (_oddball.thisRoot.transform.parent == null && !_oddball.gameObject.activeInHierarchy
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
@@ -55,7 +55,7 @@ public class OddballSpawnPoint : MonoBehaviour
                         if (_resetBall >= 10)
                         {
                             if (PhotonNetwork.IsMasterClient)
-                                NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: true);
+                                NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: false);
                         }
                     }
                     else if (_oddball.thisRoot.transform.parent == null && _oddball.gameObject.activeInHierarchy && Vector3.Distance(transform.position, _oddball.rb.transform.position) > 3
@@ -67,7 +67,7 @@ public class OddballSpawnPoint : MonoBehaviour
                         if (_resetBall >= 30)
                         {
                             if (PhotonNetwork.IsMasterClient)
-                                NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: true);
+                                NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: false);
                         }
                     }
                     else
