@@ -7,6 +7,7 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
     public enum CameraType { Main, Gun, UI, World }
     public CameraType cameraType;
 
+    public Player player { get { return _player; } }
     public Transform orignalParent { get { return _originalParent; } }
 
     [SerializeField] Player _player;

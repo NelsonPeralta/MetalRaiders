@@ -61,7 +61,8 @@ public class FlagSpawnPoint : MonoBehaviour
 
                     if (_flag.transform.position.y < -20)
                     {
-                        NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team);
+                        if (PhotonNetwork.IsMasterClient)
+                            NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
 
                     }
                     else if (_flag.scriptRoot.transform.parent == null && !_flag.gameObject.activeInHierarchy
@@ -72,7 +73,8 @@ public class FlagSpawnPoint : MonoBehaviour
 
                         if (_resetFlag >= 10)
                         {
-                            NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team);
+                            if (PhotonNetwork.IsMasterClient)
+                                NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
                         }
                     }
                     else if (_flag.scriptRoot.transform.parent == null && _flag.state != Flag.State.atbase && _flag.gameObject.activeInHierarchy && GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.hasEnnemyFlag).Count() == 0)
@@ -82,7 +84,8 @@ public class FlagSpawnPoint : MonoBehaviour
 
                         if (_resetFlag >= 30)
                         {
-                            NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team);
+                            if (PhotonNetwork.IsMasterClient)
+                                NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
                         }
                     }
                     else

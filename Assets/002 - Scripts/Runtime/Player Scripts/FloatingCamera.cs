@@ -152,8 +152,15 @@ public class FloatingCamera : MonoBehaviour
     private void HandleMouseRotation()
     {
         //mouse input
-        var rotationHorizontal = playerController.rewiredPlayer.GetAxis("Mouse X") / 2;
-        var rotationVertical = playerController.rewiredPlayer.GetAxis("Mouse Y") / 2;
+        var rotationHorizontal = playerController.rewiredPlayer.GetAxis("Mouse X") * 2;
+        var rotationVertical = playerController.rewiredPlayer.GetAxis("Mouse Y") * 2;
+
+        if (playerController.activeControllerType != Rewired.ControllerType.Joystick)
+        {
+            rotationHorizontal /= 10;
+            rotationVertical /= 10;
+        }
+
 
         //applying mouse rotation
         // always rotate Y in global world space to avoid gimbal lock

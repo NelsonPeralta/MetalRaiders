@@ -14,5 +14,11 @@ public class FlagBannerAutoChangeForPlayer : MonoBehaviour
             _redBanner.SetActive(GameManager.instance.gameType == GameManager.GameType.CTF && transform.root.GetComponent<Player>().team == GameManager.Team.Blue);
             _blueBanner.SetActive(GameManager.instance.gameType == GameManager.GameType.CTF && transform.root.GetComponent<Player>().team == GameManager.Team.Red);
         }
+
+        if (transform.root.GetComponent<PlayerCameraSplitScreenBehaviour>())
+        {
+            _redBanner.SetActive(GameManager.instance.gameType == GameManager.GameType.CTF && transform.root.GetComponent<PlayerCameraSplitScreenBehaviour>().player.team == GameManager.Team.Blue);
+            _blueBanner.SetActive(GameManager.instance.gameType == GameManager.GameType.CTF && transform.root.GetComponent<PlayerCameraSplitScreenBehaviour>().player.team == GameManager.Team.Red);
+        }
     }
 }

@@ -137,16 +137,20 @@ public class PlayerCamera : MonoBehaviour
 
     private float _tmpRotationVelocity;
     private float _rotationSmoothTime = 0.1F;
+
+
+
+    // https://www.reddit.com/r/Unity3D/comments/qa6624/why_am_i_getting_camera_jitters_when_rotating/
+
+    //    Oh boy, I've fought with this problem so many times. I'm on phone right now so won't type a long message, but just try ALL of these steps, something will probably work:
+    //    Camera should not be child object of rigidbody, instead separate it and use cam.transform.position = player.transform.position in late update.
+    //    rotate camera using mouse input in late update, store updated rotation in variables (Important for later use, keep reading)
+    //    Rotate player which has rigidbody in FixedUpdate. ATTENTION: rotate rigidbody using MoveRotation, if you use transform.rotation the rigidbody will lag when rotating and moving at the same time.
+    //    In the inspector, set rigidbody interpolation to interpolate.
+    //    Make sure you follow all these steps carefully. I've made rigidbody controllers many times and i was recently finally able to fix all the jitter
+
     private void LateUpdate()
     {
-        //if(horizontalAxisTarget.transform.root.parent.GetComponent<Player>() && verticalAxisTarget.transform.root.parent.GetComponent<Player>())// main cam currently attached to player
-        //{
-        //    mainCam.transform.parent = null;
-
-        //    mainCam.transform.position = _playerCameraHolder.position;
-
-        //}
-
         if (followPlayer)
         {
             mainCam.transform.parent = null;

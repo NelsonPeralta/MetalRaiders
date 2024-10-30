@@ -354,10 +354,10 @@ public class Player : Biped
             {
                 playerVoice.Stop(); playerVoice.clip = null;
 
-                if (playerInventory.playerOddballActive)
+                if (playerInventory.playerOddballActive && PV.IsMine)
                     NetworkGameManager.instance.AskMasterClientToSpawnOddball(weaponDropPoint.position, weaponDropPoint.forward);
 
-                if (playerInventory.hasEnnemyFlag)
+                if (playerInventory.hasEnnemyFlag && PV.IsMine)
                     NetworkGameManager.instance.AskMasterClientToSpawnFlag(weaponDropPoint.position, weaponDropPoint.forward, team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red);
 
                 _rb.isKinematic = true;

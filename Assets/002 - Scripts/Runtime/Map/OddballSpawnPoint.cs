@@ -43,7 +43,8 @@ public class OddballSpawnPoint : MonoBehaviour
 
                     if (_oddball.rb.transform.position.y < -20)
                     {
-                        NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero);
+                        if (PhotonNetwork.IsMasterClient)
+                            NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: true);
                     }
                     if (_oddball.thisRoot.transform.parent == null && !_oddball.gameObject.activeInHierarchy
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
@@ -53,7 +54,8 @@ public class OddballSpawnPoint : MonoBehaviour
 
                         if (_resetBall >= 10)
                         {
-                            NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero);
+                            if (PhotonNetwork.IsMasterClient)
+                                NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: true);
                         }
                     }
                     else if (_oddball.thisRoot.transform.parent == null && _oddball.gameObject.activeInHierarchy && Vector3.Distance(transform.position, _oddball.rb.transform.position) > 3
@@ -64,7 +66,8 @@ public class OddballSpawnPoint : MonoBehaviour
 
                         if (_resetBall >= 30)
                         {
-                            NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero);
+                            if (PhotonNetwork.IsMasterClient)
+                                NetworkGameManager.instance.AskMasterClientToSpawnOddball(Vector3.up * -999, Vector3.zero, caller: false, masterCall: true);
                         }
                     }
                     else

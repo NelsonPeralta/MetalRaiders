@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
+using Steamworks;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -1039,14 +1040,22 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void AskMasterClientToSpawnOddball(Vector3 pos, Vector3 dir, bool caller = true)
+    public void AskMasterClientToSpawnOddball(Vector3 pos, Vector3 dir, bool caller = true, bool masterCall = false)
     {
-        if (caller && PhotonNetwork.IsMasterClient)
+        if (caller && !masterCall) // step 1
         {
             print("AskMasterClientToSpawnOddball");
-            _pv.RPC("AskMasterClientToSpawnOddball", RpcTarget.AllViaServer, pos, dir, false);
+            _pv.RPC("AskMasterClientToSpawnOddball", RpcTarget.AllViaServer, pos, dir, false, false);
         }
-        else if (!caller)
+        else if (!caller && !masterCall) // step 2
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                print("MASTER CALL AskMasterClientToSpawnOddball");
+                _pv.RPC("AskMasterClientToSpawnOddball", RpcTarget.AllViaServer, pos, dir, false, true);
+            }
+        }
+        else if (masterCall) // final step
         {
             if (pos != Vector3.up * -999)
             {
@@ -1077,16 +1086,23 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void AskMasterClientToSpawnFlag(Vector3 pos, Vector3 dir, GameManager.Team flagTeam, bool caller = true)
+    public void AskMasterClientToSpawnFlag(Vector3 pos, Vector3 dir, GameManager.Team flagTeam, bool initialCall = true, bool masterCall = false)
     {
-        if (caller && PhotonNetwork.IsMasterClient)
+        if (initialCall && !masterCall) // step 1
         {
             print("AskMasterClientToSpawnFlag");
-            _pv.RPC("AskMasterClientToSpawnFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false);
+            _pv.RPC("AskMasterClientToSpawnFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false, false);
         }
-        else if (!caller)
+        else if (!initialCall && !masterCall) // step 2
         {
-
+            if (PhotonNetwork.IsMasterClient)
+            {
+                print("MASTER CALL AskMasterClientToSpawnFlag");
+                _pv.RPC("AskMasterClientToSpawnFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false, true);
+            }
+        }
+        else if (masterCall) // final step
+        {
             if (pos != Vector3.up * -999)
             {
 
