@@ -484,45 +484,48 @@ public class PlayerMovement : MonoBehaviour
 
     private void MyInput()
     {
-        _rawRightInput = _correctedRightInput = rewiredPlayer.GetAxis("Move Horizontal");
-        _rawForwardInput = _correctedForwardInput = rewiredPlayer.GetAxis("Move Vertical");
-
-        if (ReInput.controllers.GetLastActiveControllerType() != ControllerType.Joystick)
+        if (player.PV.IsMine && rewiredPlayer != null)
         {
-            _rawRightInput = _correctedRightInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Horizontal") * 2, -1, 1);
-            _rawForwardInput = _correctedForwardInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Vertical") * 2, -1, 1);
+            _rawRightInput = _correctedRightInput = rewiredPlayer.GetAxis("Move Horizontal");
+            _rawForwardInput = _correctedForwardInput = rewiredPlayer.GetAxis("Move Vertical");
+
+            if (ReInput.controllers.GetLastActiveControllerType() != ControllerType.Joystick)
+            {
+                _rawRightInput = _correctedRightInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Horizontal") * 2, -1, 1);
+                _rawForwardInput = _correctedForwardInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Vertical") * 2, -1, 1);
+            }
+
+            if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
+            if (Mathf.Abs(_correctedForwardInput) <= _forwardDeadzone) _correctedForwardInput = 0;
+
+            // when to jump
+            if (rewiredPlayer.GetButtonDown("Jump") && readyToJump && _grounded)
+            {
+                _fpsJumpingAnimator.Play("jump");
+                readyToJump = false; _clickedJumpButtonFromLastGrounded = true; _lastDirectionWhenJumped = movementDirection;
+
+                Jump();
+
+                Invoke(nameof(ResetJump), jumpCooldown);
+            }
+
+            //// start crouch
+            //if (rewiredPlayer.GetButtonDown("Crouch"))
+            //{
+            //    playerCapsule.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            //    //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y + 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
+
+            //    if (grounded)
+            //        _rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+            //}
+
+            //// stop crouch
+            //if (rewiredPlayer.GetButtonUp("Crouch"))
+            //{
+            //    playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
+            //    //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y - 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
+            //}
         }
-
-        if (Mathf.Abs(_correctedRightInput) <= _rightDeadzone) _correctedRightInput = 0;
-        if (Mathf.Abs(_correctedForwardInput) <= _forwardDeadzone) _correctedForwardInput = 0;
-
-        // when to jump
-        if (rewiredPlayer.GetButtonDown("Jump") && readyToJump && _grounded)
-        {
-            _fpsJumpingAnimator.Play("jump");
-            readyToJump = false; _clickedJumpButtonFromLastGrounded = true; _lastDirectionWhenJumped = movementDirection;
-
-            Jump();
-
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }
-
-        //// start crouch
-        //if (rewiredPlayer.GetButtonDown("Crouch"))
-        //{
-        //    playerCapsule.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        //    //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y + 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
-
-        //    if (grounded)
-        //        _rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-        //}
-
-        //// stop crouch
-        //if (rewiredPlayer.GetButtonUp("Crouch"))
-        //{
-        //    playerCapsule.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
-        //    //player.playerThirdPersonModel.transform.localPosition = new Vector3(player.playerThirdPersonModel.transform.localPosition.x, player.playerThirdPersonModel.transform.transform.localPosition.y - 0.5f, player.playerThirdPersonModel.transform.localPosition.z);
-        //}
     }
 
     private void StateHandler()
