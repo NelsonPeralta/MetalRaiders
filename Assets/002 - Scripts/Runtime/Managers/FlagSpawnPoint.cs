@@ -8,12 +8,14 @@ public class FlagSpawnPoint : MonoBehaviour
 {
     public GameManager.Team team;
 
+    public bool teammateOnFlag { set { if (value == true) _teammateOnFlagReset = 0.2f; } }
+
 
     [SerializeField] Flag _flag;
     [SerializeField] GameObject _canvasHolder;
 
     [SerializeField] int _resetFlag;
-    [SerializeField] float _check;
+    [SerializeField] float _check, _teammateOnFlagReset;
 
 
     private void Awake()
@@ -49,6 +51,13 @@ public class FlagSpawnPoint : MonoBehaviour
         if (GameManager.instance.gameType == GameManager.GameType.CTF && PhotonNetwork.IsMasterClient
             && CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
         {
+            if (_teammateOnFlagReset > 0)
+            {
+                _teammateOnFlagReset -= Time.deltaTime;
+            }
+
+
+
             if (_check > 0)
             {
                 _check -= Time.deltaTime;
@@ -57,7 +66,6 @@ public class FlagSpawnPoint : MonoBehaviour
                 {
                     print($"OddballSpawnPoint {_flag.scriptRoot.transform.parent == null} {_flag.gameObject.activeInHierarchy} " +
                         $"{Vector3.Distance(transform.position, _flag.rb.transform.position)} {GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.hasEnnemyFlag).Count()}");
-
 
                     if (_flag.transform.position.y < -20)
                     {
@@ -80,6 +88,12 @@ public class FlagSpawnPoint : MonoBehaviour
                     else if (_flag.scriptRoot.transform.parent == null && _flag.state != Flag.State.atbase && _flag.gameObject.activeInHierarchy && GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.hasEnnemyFlag).Count() == 0)
                     {
                         _resetFlag++;
+
+                        if (_teammateOnFlagReset > 0)
+                            _resetFlag += 2;
+
+
+
                         print($"flag has disapeared for {_resetFlag} seconds");
 
                         if (_resetFlag >= 30)

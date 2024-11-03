@@ -76,6 +76,10 @@ public class Flag : MonoBehaviour
                     //other.transform.root.GetComponent<Player>().playerInventory.EquipFlag(); // do locally then network
                     NetworkGameManager.instance.EquipFlagToPlayer_RPC(other.transform.root.GetComponent<Player>().photonId, (int)(other.transform.root.GetComponent<Player>().team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
                 }
+            }else if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && other.transform.root.GetComponent<Player>()
+                && other.transform.root.GetComponent<Player>().team == spawnPoint.team)
+            {
+                spawnPoint.teammateOnFlag = true;
             }
         }
     }
