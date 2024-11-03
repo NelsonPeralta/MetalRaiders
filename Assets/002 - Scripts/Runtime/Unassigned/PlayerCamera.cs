@@ -101,7 +101,7 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameManager.instance.gameStarted || !pController.PV.IsMine || pController.cameraIsFloating) return;
+        if (!GameManager.instance.gameStarted || !pController.PV.IsMine || pController.cameraIsFloating || player.playerDataCell == null) return;
 
 
         _angleBetweenPlayerForwardAndVertAxis = Vector3.SignedAngle(verticalAxisTarget.forward, transform.root.forward, verticalAxisTarget.right);
