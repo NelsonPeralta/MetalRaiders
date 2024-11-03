@@ -135,8 +135,8 @@ public class CurrentRoomManager : MonoBehaviour
             if (value && _preVal != value)
             {
                 Debug.Log($"mapIsReady");
-                //StartCoroutine(GameManager.instance.SpawnPlayers_Coroutine());
-
+                for (int i = 0; i < GameManager.instance.nbLocalPlayersPreset; i++)
+                    NetworkGameManager.instance.AddPlayerLoadedScene();
             }
         }
     }
@@ -571,8 +571,7 @@ public class CurrentRoomManager : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < GameManager.instance.nbLocalPlayersPreset; i++)
-                NetworkGameManager.instance.AddPlayerLoadedScene();
+
 
 
             if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)

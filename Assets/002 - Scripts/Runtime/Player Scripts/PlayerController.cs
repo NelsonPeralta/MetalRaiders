@@ -1211,11 +1211,12 @@ public class PlayerController : MonoBehaviourPun
             DisableCrouch();
     }
 
-
+    float _crouchForceTime;
     void CrouchForce()
     {
-        if (PV.IsMine && isCrouching && movement.isGrounded) // when gravity is turned off it makes the crouching force down really slow. So we trie to compensate
+        if (PV.IsMine && isCrouching && movement.isGrounded && _crouchForceTime > 0) // when gravity is turned off it makes the crouching force down really slow. So we trie to compensate
         {
+            _crouchForceTime -= Time.deltaTime;
             print($"Crouch {movement.rb.drag} {movement.rb.useGravity} {movement.OnSlope()}");
             if (movement.rb.useGravity)
                 movement.rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
@@ -1227,6 +1228,7 @@ public class PlayerController : MonoBehaviourPun
 
     void EnableCrouch()
     {
+        _crouchForceTime = 0.3f;
         Debug.Log("Crouching");
         OnCrouchDown?.Invoke(this);
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
@@ -1241,6 +1243,7 @@ public class PlayerController : MonoBehaviourPun
 
     public void DisableCrouch()
     {
+        _crouchForceTime = 0;
         OnCrouchUp?.Invoke(this);
 
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Crouch", false);

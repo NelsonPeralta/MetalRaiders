@@ -55,13 +55,20 @@ public class SpawnManager : MonoBehaviour
             return genericSpawnPointsAlpha[i].transform;
         else
         {
-            if (team == GameManager.Team.Red)
+            if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
             {
-                return redSpawnPoints[i].transform;
+                if (team == GameManager.Team.Red)
+                {
+                    return redSpawnPoints[i].transform;
+                }
+                else
+                {
+                    return blueSpawnPoints[i].transform;
+                }
             }
             else
             {
-                return blueSpawnPoints[i].transform;
+                return genericSpawnPointsAlpha[i].transform;
             }
         }
 
