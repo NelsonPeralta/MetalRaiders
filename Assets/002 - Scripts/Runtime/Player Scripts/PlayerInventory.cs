@@ -315,6 +315,7 @@ public class PlayerInventory : MonoBehaviourPun
     [SerializeField] List<Transform> _fakeBulletTrailPool = new List<Transform>();
     [SerializeField] PlayerGunGameManager _playerGunGameManager;
     [SerializeField] WeaponProperties _oddball, _flag;
+    [SerializeField] List<WeaponProperties> _weaponsWithOverheat = new List<WeaponProperties>();
 
 
 
@@ -425,11 +426,19 @@ public class PlayerInventory : MonoBehaviourPun
         {
             fragGrenades = 1;
         }
+
+        _weaponsWithOverheat = allWeaponsInInventory.Where(item => item.GetComponent<WeaponProperties>().ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
+        item.GetComponent<WeaponProperties>().plasmaColor != WeaponProperties.PlasmaColor.Shard).Select(item => item.GetComponent<WeaponProperties>()).ToList();
     }
 
     private void Update()
     {
         LowAmmoIndicatorControl();
+    }
+
+    private void FixedUpdate()
+    {
+        foreach (WeaponProperties wp in _weaponsWithOverheat) wp.HandleOverheat();
     }
 
     void OnActiveWeaponAmmoChanged(WeaponProperties weaponProperties)
@@ -983,6 +992,9 @@ public class PlayerInventory : MonoBehaviourPun
         Debug.Log("OnPLayerDeath_Delegate");
         _oddball.gameObject.SetActive(false); _flag.gameObject.SetActive(false);
         try { activeWeapon.animator.SetBool("Run", false); } catch { }
+
+
+        foreach (WeaponProperties wp in _weaponsWithOverheat) wp.ResetOverheat();
     }
 
     void OnActiveWeaponChangedLate_Delegate(PlayerInventory playerInventory)

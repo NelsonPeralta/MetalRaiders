@@ -331,25 +331,30 @@ public class WeaponProperties : MonoBehaviour
 
 
 
-        if (_currentOverheat > 0)
-            _currentOverheat -= (int)(Time.deltaTime * 100);
-
-        if (overheatCooldown > 0)
-        {
-            overheatCooldown -= Time.deltaTime;
-            if (overheatCooldown <= 0)
-            {
-                overheatSteamHolder.SetActive(false);
-                tpsHolsteredOverheatSteamHolder.SetActive(false);
-                tpsEquippedOverheatSteamHolder.SetActive(false);
-            }
-        }
-
-
 
         BloomIncrease();
         BloomDecrease();
     }
+
+
+    public void HandleOverheat()
+    {
+        if (_currentOverheat > 0) _currentOverheat -= (int)(Time.deltaTime * 100);
+
+        if (overheatCooldown > 0) overheatCooldown -= Time.deltaTime;
+
+        overheatSteamHolder.SetActive(overheatCooldown > 0);
+        tpsHolsteredOverheatSteamHolder.SetActive(overheatCooldown > 0);
+        tpsEquippedOverheatSteamHolder.SetActive(overheatCooldown > 0);
+    }
+
+    public void ResetOverheat()
+    {
+        currentOverheat = 0;
+        overheatCooldown = 0;
+    }
+
+
     public void Recoil()
     {
         if (firingMode == FiringMode.Burst && _recoilCount > 0)

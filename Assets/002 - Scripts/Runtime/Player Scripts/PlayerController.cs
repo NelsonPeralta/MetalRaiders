@@ -407,6 +407,13 @@ public class PlayerController : MonoBehaviourPun
 
     }
 
+    private void FixedUpdate()
+    {
+        CrouchForce();
+    }
+
+
+
     void ToggleInvincible()
     {
         //if (Input.GetKeyDown(KeyCode.Alpha9) && GameManager.instance.gameMode == GameManager.GameMode.Coop)
@@ -1204,6 +1211,20 @@ public class PlayerController : MonoBehaviourPun
             DisableCrouch();
     }
 
+
+    void CrouchForce()
+    {
+        if (PV.IsMine && isCrouching && movement.isGrounded) // when gravity is turned off it makes the crouching force down really slow. So we trie to compensate
+        {
+            print($"Crouch {movement.rb.drag} {movement.rb.useGravity} {movement.OnSlope()}");
+            if (movement.rb.useGravity)
+                movement.rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
+            else
+                movement.rb.AddForce(Vector3.down * 0.5f * (Mathf.Abs(Physics.gravity.y)), ForceMode.Impulse);
+        }
+    }
+
+
     void EnableCrouch()
     {
         Debug.Log("Crouching");
@@ -1235,11 +1256,15 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void EnableCrouch_RPC()
     {
+        print($"EnableCrouch_RPC {movement.isGrounded}");
+
         isCrouching = true; // for motion tracker
         movement.playerCapsule.localScale = new Vector3(transform.localScale.x, movement.crouchYScale, transform.localScale.z);
 
-        if (movement.isGrounded)
-            movement.rb.AddForce(Vector3.down * 0.7f, ForceMode.Impulse);
+
+
+        //if (movement.isGrounded)
+        //    movement.rb.AddForce(Vector3.down * 0.7f, ForceMode.Impulse);
 
 
 

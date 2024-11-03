@@ -305,6 +305,8 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         isGrounded = _groundCheckScript.isGrounded;
 
+
+
         // handle drag
         if (_grounded)
         {

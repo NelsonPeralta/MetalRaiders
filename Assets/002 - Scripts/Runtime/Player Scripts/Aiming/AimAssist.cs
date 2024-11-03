@@ -63,7 +63,7 @@ public class AimAssist : MonoBehaviour
     Vector3 raySpawn;
     RaycastHit hit;
 
-    public Transform bulletSpawnPoint;
+    public Transform aimAssistForward;
     public Quaternion originalBbulletSpawnPointRelativePos;
 
     [SerializeField] Transform bulletSpawnPoint_Forward;
@@ -87,7 +87,7 @@ public class AimAssist : MonoBehaviour
 
     private void Start()
     {
-        originalBbulletSpawnPointRelativePos = bulletSpawnPoint.transform.localRotation;
+        originalBbulletSpawnPointRelativePos = aimAssistForward.transform.localRotation;
     }
 
     private void Update()
@@ -106,12 +106,12 @@ public class AimAssist : MonoBehaviour
                 //Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
                 //Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
 
-                Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-                Vector3 targetDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
+                Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistForward.position).normalized;
+                Vector3 targetDir = (targetHitbox.transform.position - aimAssistForward.position);
 
                 Vector3 middleDir = bspDir + targetDir;
 
-                bulletSpawnPoint.forward = (middleDir);
+                aimAssistForward.forward = (middleDir);
 
                 //bulletSpawnPoint.LookAt(target.transform);
             }
@@ -171,206 +171,52 @@ public class AimAssist : MonoBehaviour
                     (GameManager.instance.teamMode == GameManager.TeamMode.Classic &&
                     targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
                 {
-                    if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                        bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                    if (aimAssistForward.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                        aimAssistForward.transform.localRotation = originalBbulletSpawnPointRelativePos;
 
                     return;
                 }
 
-                Vector3 targetHitboxDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
-                float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, bulletSpawnPoint.position);
+                Vector3 targetHitboxDir = (targetHitbox.transform.position - aimAssistForward.position);
+                float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, aimAssistForward.position);
 
 
 
 
                 if (!Physics.Raycast(player.mainCamera.transform.position, targetHitboxDir, targetHitboxDistance, obstructionMask))
                 {
-                    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-                    Vector3 targetDir = (targetHitbox.transform.position - bulletSpawnPoint.position);
+                    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistForward.position).normalized;
+                    Vector3 targetDir = (targetHitbox.transform.position - aimAssistForward.position);
 
                     Vector3 newDir = bspDir + (targetDir * 0.2f);
 
-                    bulletSpawnPoint.forward = newDir;
+                    aimAssistForward.forward = newDir;
                 }
                 else
                 {
-                    if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                        bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                    if (aimAssistForward.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                        aimAssistForward.transform.localRotation = originalBbulletSpawnPointRelativePos;
                 }
-
-
-
-
-                //if (collidingHitbox && !obstruction)
-                //{
-                //    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
-                //    Vector3 targetDir = (collidingHitbox.transform.position - bulletSpawnPoint.position);
-
-                //    Vector3 newDir = bspDir + (targetDir * 0.25f);
-
-                //    bulletSpawnPoint.forward = newDir;
-                //}
-                //else
-                //{
-                //    if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                //        bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
-                //}
             }
             else
             {
-                if (bulletSpawnPoint.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                    bulletSpawnPoint.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                if (aimAssistForward.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                    aimAssistForward.transform.localRotation = originalBbulletSpawnPointRelativePos;
             }
+        }
+        else
+        {
+            if (aimAssistForward.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                aimAssistForward.transform.localRotation = originalBbulletSpawnPointRelativePos;
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (!player.PV.IsMine)
-            return;
-        RedReticule();
-    }
 
-    void RedReticule()
-    {
-        //if (!player.allPlayerScripts.playerInventory.activeWeapon)
-        //    return;
-        //if (Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out hit, raycastRange, layerMask))
-        //{
-        //    if (hit.transform.root.gameObject != player.gameObject)
-        //    {
-        //        targetDistance = Vector3.Distance(hit.transform.position, player.transform.position);
-        //        firstRayHit = hit.transform.gameObject;
-        //        float gunRRR = player.allPlayerScripts.playerInventory.activeWeapon.GetComponent<WeaponProperties>().currentRedReticuleRange;
-
-        //        if (!hit.transform.gameObject.GetComponent<PlayerHitbox>() && !hit.transform.gameObject.GetComponent<ActorHitbox>())
-        //        {
-        //            ResetRedReticule();
-        //            return;
-        //        }
-
-        //        if (hit.transform.root.GetComponent<Player>() || hit.transform.GetComponent<ActorHitbox>())
-        //            if (player.gameObject && targetDistance <= gunRRR)
-        //                ActivateRedReticule();
-        //            else
-        //                ResetRedReticule();
-        //    }
-        //    else
-        //        ResetRedReticule();
-        //}
-        //else
-        //{
-        //    ResetRedReticule();
-        //}
-        //Debug.DrawRay(mainCam.transform.position, mainCam.transform.forward * 100, Color.green);
-    }
-
-    public void ActivateRedReticule()
-    {
-        redReticuleIsOn = true;
-        targetHitbox = hit.transform.gameObject;
-    }
     public void ResetRedReticule()
     {
         if (player.playerController.rid == 0 && player.isMine) print("RESETREDRETICULE");
         redReticuleIsOn = false;
         targetHitbox = null;
     }
-
-    void ShootInspectorRay()
-    {
-        if (Physics.Raycast(raySpawn, puCollider.transform.forward * raycastRange, out hit, raycastRange, layerMask)) // Need a Raycast Range Overload to work with LayerMask
-        {
-            firstRayHit = hit.transform.gameObject;
-        }
-    }
-
-    void ShootPlayerRay()
-    {
-        Vector3 origin = new Vector3(gameObject.transform.localPosition.x, gameObject.transform.localPosition.y - 0.150f);
-
-        Debug.DrawRay(raySpawn, puCollider.transform.forward * raycastRange, Color.green);
-
-        if (Physics.Raycast(raySpawn, puCollider.transform.forward * raycastRange, out hit, raycastRange, layerMask)) // Need a Raycast Range Overload to work with LayerMask
-        {
-            if (hit.transform.gameObject.GetComponent<ActorHitbox>() != null && hit.transform.gameObject.GetComponent<ActorHitbox>().gameObject.layer == 13)
-            {
-                //Debug.Log("Hitting AI Hitbox");
-                targetHitbox = hit.transform.gameObject.GetComponent<ActorHitbox>().actor.gameObject;
-                ActorHitbox = hit.transform.gameObject.GetComponent<ActorHitbox>();
-                targetDistance = hit.distance;
-            }
-            else if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null && hit.transform.gameObject.GetComponent<PlayerHitbox>().gameObject.layer == 13)
-            {
-
-                targetHitbox = hit.transform.gameObject.GetComponent<PlayerHitbox>().player.gameObject;
-                targetHitb = hit.transform.gameObject.GetComponent<PlayerHitbox>();
-                targetDistance = hit.distance;
-            }
-        }
-    }
-
-    void ShootObstacleRay()
-    {
-        if (Physics.Raycast(raySpawn, puCollider.transform.forward * raycastRange, out hit, 10000, layerMask)) // Need a Raycast Range Overload to work with LayerMask
-        {
-
-            if (hit.transform.gameObject.GetComponent<PlayerHitbox>() != null)
-            {
-                targetDistance = hit.distance;
-                //Debug.Log("Detecting Player Hitbox. Target distance: " + targetDistance + ". RRR: + " + wProperties.RedReticuleRange);
-
-                if (targetDistance <= wProperties.currentRedReticuleRange && targetHitbox != null)
-                {
-
-                }
-                else if (targetDistance > wProperties.currentRedReticuleRange && targetHitbox != null)
-                {
-
-                }
-
-            }
-
-            if (hit.transform.gameObject.GetComponent<ActorHitbox>() != null)
-            {
-
-                //Debug.Log("Check 2");
-                targetDistance = hit.distance;
-
-                if (wProperties != null)
-                {
-                    if (targetDistance <= wProperties.currentRedReticuleRange && targetHitbox != null)
-                    {
-                        //Debug.Log("Here 2");
-                        //if (string.Equals(hit.transform.gameObject.GetComponent<ActorHitbox>().team.Trim(), playerMPProperties.team.Trim()))
-                        //{
-                        //    //Debug.Log("Here 3");
-                        //    crosshairScript.friendlyRRisActive = true;
-                        //}
-                        //else
-                        //if
-                        //{
-                        //    //Debug.Log("Here 4");
-                        //    crosshairScript.RRisActive = true;
-                        //}
-                    }
-                    else if (targetDistance > wProperties.currentRedReticuleRange && targetHitbox != null)
-                    {
-                    }
-
-                }
-            }
-        }
-        else
-        {
-            //Debug.Log("No hit");
-            targetHitbox = null;
-            ActorHitbox = null;
-            targetHitb = null;
-            targetDistance = raycastRange;
-        }
-    }
-
-
 }
 

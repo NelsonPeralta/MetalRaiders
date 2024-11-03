@@ -460,6 +460,9 @@ public class PlayerShooting : MonoBehaviourPun
 
     void shoooo(bool isLeftWeapon = false, bool overcharge = false)
     {
+        playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
+
+
         if (playerController.GetComponent<Player>().isDead || playerController.GetComponent<Player>().isRespawning)
             return;
 
@@ -594,12 +597,12 @@ public class PlayerShooting : MonoBehaviourPun
                         bullet.GetComponent<Bullet>().shard.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Shard && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                     }
 
+                    if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
+                        playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
+
+
                     try
                     {
-                        if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
-                            playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
-
-
                         if (weaponToShoot.isShotgun)
                         {
                             quats[i] = UnityEngine.Random.rotation;
