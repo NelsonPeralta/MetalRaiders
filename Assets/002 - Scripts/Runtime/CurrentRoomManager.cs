@@ -560,7 +560,6 @@ public class CurrentRoomManager : MonoBehaviour
 
         if (scene.buildIndex == 0)
         {
-
             _matchSettingsSet = _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
                   _reachedHalwayGameStartCountdown = _randomInitiQuickMatchSettingsChosen = false;
             _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _nbPlayersSet = _playersLoadedScene = 0;
@@ -574,12 +573,14 @@ public class CurrentRoomManager : MonoBehaviour
 
 
 
-            if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
-                expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length + FindObjectsOfType<Hazard>().Length;
+            //if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
+
+            // we want greandes in all modes as a mean to trigger the loading sequence. If addons is 0, nothing will trigger
+            expectedMapAddOns = FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length + FindObjectsOfType<Hazard>().Length;
 
 
             if (GameManager.instance.gameType != GameManager.GameType.GunGame && GameManager.instance.gameType != GameManager.GameType.Fiesta)
-                foreach (NetworkWeaponSpawnPoint nwsp in FindObjectsOfType<NetworkWeaponSpawnPoint>())
+                foreach (NetworkWeaponSpawnPoint nwsp in FindObjectsOfType<NetworkWeaponSpawnPoint>()) // the spawnpopint disables itself in awake. This is called later and does not get the disabled objects
                     if (nwsp.transform.root.GetComponent<Player>() == null)
                         expectedMapAddOns += 1;
         }

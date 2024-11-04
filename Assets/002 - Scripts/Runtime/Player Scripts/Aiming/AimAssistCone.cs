@@ -124,182 +124,201 @@ public class AimAssistCone : MonoBehaviour
 
     private void Update()
     {
-
-        {// DO NOT REMOVE THIS. This is needed because there is no native way to remove disabled objs without using listeners. Removing this will break aiming
-
-            if (collidingHitboxes.Count > 0)
-                for (int i = collidingHitboxes.Count; i-- > 0;)
-                {
-                    if (collidingHitboxes[i] == null) // if a player leaves while in the list this WILL cause errors for the code below
-                    {
-                        collidingHitboxes.Remove(collidingHitboxes[i]);
-                    }
-                    else
-                    {
-                        if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy)
-                            collidingHitboxes.Remove(collidingHitboxes[i]);
-                    }
-                }
-        }
-
-
-
-
-        if (frictionColliders.Count > 0)
+        if (!player.isAlive)
         {
-            for (int i = frictionColliders.Count; i-- > 0;)
-            {
-                if (frictionColliders[i] == null)// if a player leaves while in the list this WILL cause errors for the code below
-                    frictionColliders.Remove(frictionColliders[i]);
-                else
-                {
-                    if (!frictionColliders[i].gameObject.activeSelf || !frictionColliders[i].gameObject.activeInHierarchy)
-                        frictionColliders.Remove(frictionColliders[i]);
-                }
-            }
-        }
+            frictionColliders.Clear();
+            collidingHitboxes.Clear();
+            _collidingHitboxesTemp.Clear();
 
-
-
-        if (player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
-            reticuleFriction = _reticuleMagnetism.trueHit;
-        else
             reticuleFriction = false;
 
-        //HitboxRay();
-
-
-        _collidingHitboxesTemp = new List<GameObject>(collidingHitboxes);
-
-        if (_collidingHitboxesTemp.Count > 0)
-        {
-            _collidingHitboxesTemp = _collidingHitboxesTemp.OrderBy(item => Vector3.Angle(player.mainCamera.transform.forward, (item.transform.position - player.mainCamera.transform.position))).ToList();
-            //hitboxRayHitGo = _aimAssistRaycastHitsList[0].collider.gameObject;
-
-
-
-            for (int i = _collidingHitboxesTemp.Count; i-- > 0;)
-            {
-
-                if (!_collidingHitboxesTemp[i].gameObject.activeSelf || !_collidingHitboxesTemp[i].gameObject.activeInHierarchy /*|| collidingHitboxes[i].GetComponent<Hitbox>().ignoreForAimAssistList*/)
-                    _collidingHitboxesTemp.Remove(_collidingHitboxesTemp[i]);
-                //else
-                //{
-                //    if (player.playerController.rid == 0)
-                //        print($"{collidingHitboxes[i].transform.name} has an angle of : {Vector3.Angle(player.mainCamera.transform.forward, (collidingHitboxes[i].transform.position - player.mainCamera.transform.position))}");
-                //    _anglesOfCollision.Add(Vector3.Angle(player.mainCamera.transform.forward, (collidingHitboxes[i].transform.position - player.mainCamera.transform.position)));
-                //}
-            }
-        }
-
-
-        if (closestHbToCorsshairCenter && (!closestHbToCorsshairCenter.activeSelf || !closestHbToCorsshairCenter.activeInHierarchy))
-        {
-            _collidingHitboxesTemp.Remove(closestHbToCorsshairCenter);
             closestHbToCorsshairCenter = null;
+            hitboxRayHitGo = null;
+            _obstructionHitGo = null;
         }
-
-
-
-
-
-        if (player && player.playerInventory && player.playerInventory.activeWeapon)
+        else
         {
+            {// DO NOT REMOVE THIS. This is needed because there is no native way to remove disabled objs without using listeners. Removing this will break aiming
 
-            Vector3 v = new Vector3(player.playerInventory.activeWeapon.redReticuleHint * 10, transform.localScale.y, player.playerInventory.activeWeapon.redReticuleHint * 10);
-            if (player.isDualWielding) v = new Vector3((player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f, transform.localScale.y, (player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f);
-            transform.localScale = v;
-
-            v = new Vector3(1, 1, player.playerInventory.activeWeapon.currentRedReticuleRange);
-            transform.parent.localScale = v;
-
-            v = new Vector3(1, 1, 1);
-            if (player.allPlayerScripts.playerController.activeControllerType == Rewired.ControllerType.Joystick)
-                v = new Vector3(2f, 1, 2f);
-
-            _invisibleHitboxDetector.transform.localScale = v;
-            _raycastRange = playerInventory.activeWeapon.currentRedReticuleRange;
-
-
-
-
-
-
-
-
-
-
-
-            if (_collidingHitboxesTemp.Count > 0)
-            {
-                closestHbToCorsshairCenter = _collidingHitboxesTemp[0];
-
-                foreach (var item in _collidingHitboxesTemp)
-                    if ((item.GetComponent<Hitbox>().isHead) && playerInventory.activeWeapon.isHeadshotCapable)
+                if (collidingHitboxes.Count > 0)
+                    for (int i = collidingHitboxes.Count; i-- > 0;)
                     {
-                        closestHbToCorsshairCenter = item;
-                        break;
-                    }
-
-                foreach (var item in _collidingHitboxesTemp)
-                    if ((item.GetComponent<Hitbox>().isGroin) && playerInventory.activeWeapon.isHeadshotCapable)
-                    {
-                        closestHbToCorsshairCenter = item;
-                        break;
-                    }
-
-                //else
-                //{
-                //    if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetCollisionHitbox.transform.position, player.mainCamera.transform.position))
-                //        targetCollisionHitbox = item;
-                //}
-
-
-
-
-
-
-
-                _aimAssistRaycastHitsList = Physics.RaycastAll(player.mainCamera.transform.position, (closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position),
-                     _raycastRange, GameManager.instance.hitboxlayerMask).ToList();
-
-                for (int i = _aimAssistRaycastHitsList.Count; i-- > 0;)
-                {
-                    if (_aimAssistRaycastHitsList[i].collider.gameObject != closestHbToCorsshairCenter)
-                    {
-                        //print($"Removing {_aimAssistRaycastHitsList[i].collider} cuz its not {hitboxRayHitGo.name}");
-                        _aimAssistRaycastHitsList.RemoveAt(i);
-                    }
-                }
-
-
-
-
-
-                //print($"_aimAssistRaycastHitsList {_aimAssistRaycastHitsList.Count} {_aimAssistRaycastHitsList[0].collider.name}");
-                if (_aimAssistRaycastHitsList.Count > 0)
-                {
-                    for (int i = _aimAssistRaycastHitsList.Count; i-- > 0;)
-                        if (_aimAssistRaycastHitsList[i].collider.transform.root == transform.root) _aimAssistRaycastHitsList.RemoveAt(i);
-
-                    if (_aimAssistRaycastHitsList.Count > 0)
-                    {
-                        //_aimAssistRaycastHitsList = _aimAssistRaycastHitsList.OrderBy(x => Vector3.Distance(player.mainCamera.transform.position, x.point)).ToList();
-                        //_aimAssistRaycastHitsList = _aimAssistRaycastHitsList.OrderBy(x => Vector3.Angle(player.mainCamera.transform.forward, x.point)).ToList();
-                        _targetHitboxWitness.forward = closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position;
-                        //print($"_aimAssistRaycastHitsList hit: {_aimAssistRaycastHitsList[0].collider.name}");
-                        hitboxRayHitGo = _aimAssistRaycastHitsList[0].collider.gameObject;
-
-                        distanceToHitbox = Vector3.Distance(_aimAssistRaycastHitsList[0].point, player.mainCamera.transform.position);
-
-                        if (Physics.Raycast(player.mainCamera.transform.position, (closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position)
-                            , out _obsHit, _raycastRange, GameManager.instance.obstructionMask))
+                        if (collidingHitboxes[i] == null) // if a player leaves while in the list this WILL cause errors for the code below
                         {
-                            _obstructionHitGo = _obsHit.transform.gameObject;
-                            distanceToObstruction = Vector3.Distance(_obsHit.point, player.mainCamera.transform.position);
+                            collidingHitboxes.Remove(collidingHitboxes[i]);
                         }
                         else
                         {
+                            if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy)
+                                collidingHitboxes.Remove(collidingHitboxes[i]);
+                        }
+                    }
+            }
+
+
+
+
+            if (frictionColliders.Count > 0)
+            {
+                for (int i = frictionColliders.Count; i-- > 0;)
+                {
+                    if (frictionColliders[i] == null)// if a player leaves while in the list this WILL cause errors for the code below
+                        frictionColliders.Remove(frictionColliders[i]);
+                    else
+                    {
+                        if (!frictionColliders[i].gameObject.activeSelf || !frictionColliders[i].gameObject.activeInHierarchy)
+                            frictionColliders.Remove(frictionColliders[i]);
+                    }
+                }
+            }
+
+
+
+            if (player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
+                reticuleFriction = _reticuleMagnetism.trueHit;
+            else
+                reticuleFriction = false;
+
+            //HitboxRay();
+
+
+            _collidingHitboxesTemp = new List<GameObject>(collidingHitboxes);
+
+            if (_collidingHitboxesTemp.Count > 0)
+            {
+                _collidingHitboxesTemp = _collidingHitboxesTemp.OrderBy(item => Vector3.Angle(player.mainCamera.transform.forward, (item.transform.position - player.mainCamera.transform.position))).ToList();
+                //hitboxRayHitGo = _aimAssistRaycastHitsList[0].collider.gameObject;
+
+
+
+                for (int i = _collidingHitboxesTemp.Count; i-- > 0;)
+                {
+
+                    if (!_collidingHitboxesTemp[i].gameObject.activeSelf || !_collidingHitboxesTemp[i].gameObject.activeInHierarchy /*|| collidingHitboxes[i].GetComponent<Hitbox>().ignoreForAimAssistList*/)
+                        _collidingHitboxesTemp.Remove(_collidingHitboxesTemp[i]);
+                    //else
+                    //{
+                    //    if (player.playerController.rid == 0)
+                    //        print($"{collidingHitboxes[i].transform.name} has an angle of : {Vector3.Angle(player.mainCamera.transform.forward, (collidingHitboxes[i].transform.position - player.mainCamera.transform.position))}");
+                    //    _anglesOfCollision.Add(Vector3.Angle(player.mainCamera.transform.forward, (collidingHitboxes[i].transform.position - player.mainCamera.transform.position)));
+                    //}
+                }
+            }
+
+
+            if (closestHbToCorsshairCenter && (!closestHbToCorsshairCenter.activeSelf || !closestHbToCorsshairCenter.activeInHierarchy))
+            {
+                _collidingHitboxesTemp.Remove(closestHbToCorsshairCenter);
+                closestHbToCorsshairCenter = null;
+            }
+
+
+
+
+
+            if (player && player.playerInventory && player.playerInventory.activeWeapon)
+            {
+
+                Vector3 v = new Vector3(player.playerInventory.activeWeapon.redReticuleHint * 10, transform.localScale.y, player.playerInventory.activeWeapon.redReticuleHint * 10);
+                if (player.isDualWielding) v = new Vector3((player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f, transform.localScale.y, (player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f);
+                transform.localScale = v;
+
+                v = new Vector3(1, 1, player.playerInventory.activeWeapon.currentRedReticuleRange);
+                transform.parent.localScale = v;
+
+                v = new Vector3(1, 1, 1);
+                if (player.allPlayerScripts.playerController.activeControllerType == Rewired.ControllerType.Joystick)
+                    v = new Vector3(2f, 1, 2f);
+
+                _invisibleHitboxDetector.transform.localScale = v;
+                _raycastRange = playerInventory.activeWeapon.currentRedReticuleRange;
+
+
+
+
+
+
+
+
+
+
+
+                if (_collidingHitboxesTemp.Count > 0)
+                {
+                    closestHbToCorsshairCenter = _collidingHitboxesTemp[0];
+
+                    foreach (var item in _collidingHitboxesTemp)
+                        if ((item.GetComponent<Hitbox>().isHead) && playerInventory.activeWeapon.isHeadshotCapable)
+                        {
+                            closestHbToCorsshairCenter = item;
+                            break;
+                        }
+
+                    foreach (var item in _collidingHitboxesTemp)
+                        if ((item.GetComponent<Hitbox>().isGroin) && playerInventory.activeWeapon.isHeadshotCapable)
+                        {
+                            closestHbToCorsshairCenter = item;
+                            break;
+                        }
+
+                    //else
+                    //{
+                    //    if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetCollisionHitbox.transform.position, player.mainCamera.transform.position))
+                    //        targetCollisionHitbox = item;
+                    //}
+
+
+
+
+
+
+
+                    _aimAssistRaycastHitsList = Physics.RaycastAll(player.mainCamera.transform.position, (closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position),
+                         _raycastRange, GameManager.instance.hitboxlayerMask).ToList();
+
+                    for (int i = _aimAssistRaycastHitsList.Count; i-- > 0;)
+                    {
+                        if (_aimAssistRaycastHitsList[i].collider.gameObject != closestHbToCorsshairCenter)
+                        {
+                            //print($"Removing {_aimAssistRaycastHitsList[i].collider} cuz its not {hitboxRayHitGo.name}");
+                            _aimAssistRaycastHitsList.RemoveAt(i);
+                        }
+                    }
+
+
+
+
+
+                    //print($"_aimAssistRaycastHitsList {_aimAssistRaycastHitsList.Count} {_aimAssistRaycastHitsList[0].collider.name}");
+                    if (_aimAssistRaycastHitsList.Count > 0)
+                    {
+                        for (int i = _aimAssistRaycastHitsList.Count; i-- > 0;)
+                            if (_aimAssistRaycastHitsList[i].collider.transform.root == transform.root) _aimAssistRaycastHitsList.RemoveAt(i);
+
+                        if (_aimAssistRaycastHitsList.Count > 0)
+                        {
+                            //_aimAssistRaycastHitsList = _aimAssistRaycastHitsList.OrderBy(x => Vector3.Distance(player.mainCamera.transform.position, x.point)).ToList();
+                            //_aimAssistRaycastHitsList = _aimAssistRaycastHitsList.OrderBy(x => Vector3.Angle(player.mainCamera.transform.forward, x.point)).ToList();
+                            _targetHitboxWitness.forward = closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position;
+                            //print($"_aimAssistRaycastHitsList hit: {_aimAssistRaycastHitsList[0].collider.name}");
+                            hitboxRayHitGo = _aimAssistRaycastHitsList[0].collider.gameObject;
+
+                            distanceToHitbox = Vector3.Distance(_aimAssistRaycastHitsList[0].point, player.mainCamera.transform.position);
+
+                            if (Physics.Raycast(player.mainCamera.transform.position, (closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position)
+                                , out _obsHit, _raycastRange, GameManager.instance.obstructionMask))
+                            {
+                                _obstructionHitGo = _obsHit.transform.gameObject;
+                                distanceToObstruction = Vector3.Distance(_obsHit.point, player.mainCamera.transform.position);
+                            }
+                            else
+                            {
+                                _obstructionHitGo = null;
+                            }
+                        }
+                        else
+                        {
+                            hitboxRayHitGo = null;
                             _obstructionHitGo = null;
                         }
                     }
@@ -308,6 +327,54 @@ public class AimAssistCone : MonoBehaviour
                         hitboxRayHitGo = null;
                         _obstructionHitGo = null;
                     }
+
+
+
+
+
+
+
+
+
+
+                    //if (Physics.Raycast(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position),
+                    //    out hit, _raycastRange, GameManager.instance.hitboxlayerMask))
+                    //{
+                    //    print($"AimAssistCone Raycast {hit.collider.name}");
+                    //    if (hit.transform.root.gameObject != player.gameObject)
+                    //    {
+                    //        hitboxRayHitGo = hit.transform.gameObject;
+                    //        distanceToHitbox = Vector3.Distance(hit.point, player.mainCamera.transform.position);
+
+
+
+                    //        if (Physics.Raycast(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position)
+                    //            , out _obsHit, _raycastRange, GameManager.instance.obstructionMask))
+                    //        {
+                    //            print($"AimAssistCone Raycast 1");
+                    //            _obstructionHitGo = _obsHit.transform.gameObject;
+                    //            distanceToObstruction = Vector3.Distance(_obsHit.point, player.mainCamera.transform.position);
+                    //        }
+                    //        else
+                    //        {
+                    //            print($"AimAssistCone Raycast 2");
+                    //            _obstructionHitGo = null;
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        print($"AimAssistCone Raycast 3");
+
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    distanceToHitbox = distanceToObstruction = 0;
+                    //    print($"AimAssistCone Raycast 4");
+
+                    //    hitboxRayHitGo = null;
+                    //    _obstructionHitGo = null;
+                    //}
                 }
                 else
                 {
@@ -318,121 +385,68 @@ public class AimAssistCone : MonoBehaviour
 
 
 
+                _obstructed = false;
+                if (_obstructionHitGo && hitboxRayHitGo && distanceToObstruction < distanceToHitbox) _obstructed = true;
 
 
 
 
 
 
-                //if (Physics.Raycast(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position),
-                //    out hit, _raycastRange, GameManager.instance.hitboxlayerMask))
-                //{
-                //    print($"AimAssistCone Raycast {hit.collider.name}");
-                //    if (hit.transform.root.gameObject != player.gameObject)
-                //    {
-                //        hitboxRayHitGo = hit.transform.gameObject;
-                //        distanceToHitbox = Vector3.Distance(hit.point, player.mainCamera.transform.position);
-
-
-
-                //        if (Physics.Raycast(player.mainCamera.transform.position, (targetCollisionHitbox.transform.position - player.mainCamera.transform.position)
-                //            , out _obsHit, _raycastRange, GameManager.instance.obstructionMask))
-                //        {
-                //            print($"AimAssistCone Raycast 1");
-                //            _obstructionHitGo = _obsHit.transform.gameObject;
-                //            distanceToObstruction = Vector3.Distance(_obsHit.point, player.mainCamera.transform.position);
-                //        }
-                //        else
-                //        {
-                //            print($"AimAssistCone Raycast 2");
-                //            _obstructionHitGo = null;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        print($"AimAssistCone Raycast 3");
-
-                //    }
-                //}
-                //else
-                //{
-                //    distanceToHitbox = distanceToObstruction = 0;
-                //    print($"AimAssistCone Raycast 4");
-
-                //    hitboxRayHitGo = null;
-                //    _obstructionHitGo = null;
-                //}
-            }
-            else
-            {
-                hitboxRayHitGo = null;
-                _obstructionHitGo = null;
-            }
-
-
-
-
-            _obstructed = false;
-            if (_obstructionHitGo && hitboxRayHitGo && distanceToObstruction < distanceToHitbox) _obstructed = true;
-
-
-
-
-
-
-            if (hitboxRayHitGo && !_obstructed && closestHbToCorsshairCenter)
-            {
-                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                if (hitboxRayHitGo && !_obstructed && closestHbToCorsshairCenter)
                 {
-                    try
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                     {
-                        if (closestHbToCorsshairCenter.GetComponent<ActorHitbox>())
+                        try
                         {
-                            aimAssist.targetHitbox = closestHbToCorsshairCenter;
-                            aimAssist.redReticuleIsOn = true;
-                            playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
+                            if (closestHbToCorsshairCenter.GetComponent<ActorHitbox>())
+                            {
+                                aimAssist.targetHitbox = closestHbToCorsshairCenter;
+                                aimAssist.redReticuleIsOn = true;
+                                playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
 
-                            if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
-                        }
-                        else if (closestHbToCorsshairCenter.GetComponent<PlayerHitbox>().player.team == player.team)
-                        {
-                            aimAssist.targetHitbox = null;
-                            aimAssist.redReticuleIsOn = false;
-                            playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Green;
+                                if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
+                            }
+                            else if (closestHbToCorsshairCenter.GetComponent<PlayerHitbox>().player.team == player.team)
+                            {
+                                aimAssist.targetHitbox = null;
+                                aimAssist.redReticuleIsOn = false;
+                                playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Green;
 
-                            if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Green;
+                                if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Green;
+                            }
+                            else
+                            {
+                                aimAssist.targetHitbox = closestHbToCorsshairCenter;
+                                aimAssist.redReticuleIsOn = true;
+                                playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
+                                if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
+                            }
                         }
-                        else
-                        {
-                            aimAssist.targetHitbox = closestHbToCorsshairCenter;
-                            aimAssist.redReticuleIsOn = true;
-                            playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
-                            if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
-                        }
+                        catch { }
                     }
-                    catch { }
+                    else
+                    {
+                        aimAssist.targetHitbox = closestHbToCorsshairCenter;
+                        aimAssist.redReticuleIsOn = true;
+                        playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
+                        if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
+                    }
+
+                    //aimAssist.crosshairScript.ActivateRedCrosshair();
                 }
                 else
                 {
-                    aimAssist.targetHitbox = closestHbToCorsshairCenter;
-                    aimAssist.redReticuleIsOn = true;
-                    playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
-                    if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
+                    aimAssist.targetHitbox = null;
+                    closestHbToCorsshairCenter = null;
+                    try { playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Blue; } catch { }
+                    if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Blue;
+                    //aimAssist.ResetRedReticule();
                 }
+            }
 
-                //aimAssist.crosshairScript.ActivateRedCrosshair();
-            }
-            else
-            {
-                aimAssist.targetHitbox = null;
-                closestHbToCorsshairCenter = null;
-                try { playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Blue; } catch { }
-                if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Blue;
-                //aimAssist.ResetRedReticule();
-            }
+            //if (player.playerController.rid == 0 && player.isMine) print($"Update {_frame} {doNotClearListThisFrame}");
         }
-
-        //if (player.playerController.rid == 0 && player.isMine) print($"Update {_frame} {doNotClearListThisFrame}");
     }
 
 
@@ -447,16 +461,19 @@ public class AimAssistCone : MonoBehaviour
         }
         else
         {
-            if (other.gameObject.layer != _reticuleFrictionLayer)
-                if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
-                {
-                    //if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay addind {other.name}");
-                    collidingHitboxes.Add(other.gameObject);
-                }
+            if (player.isAlive)
+            {
+                if (other.gameObject.layer != _reticuleFrictionLayer)
+                    if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+                    {
+                        //if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay addind {other.name}");
+                        collidingHitboxes.Add(other.gameObject);
+                    }
 
-            if (other.gameObject.layer == _reticuleFrictionLayer)
-                if (!frictionColliders.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
-                    frictionColliders.Add(other.gameObject);
+                if (other.gameObject.layer == _reticuleFrictionLayer)
+                    if (!frictionColliders.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
+                        frictionColliders.Add(other.gameObject);
+            }
         }
     }
 

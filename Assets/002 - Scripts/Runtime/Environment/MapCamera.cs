@@ -38,7 +38,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
     private void Awake()
     {
         AudioListener.volume = PlayerPrefs.GetFloat("volume");
-        _loadingTimeOut = 15;
+        _loadingTimeOut = 20;
         _instance = this;
     }
     private void Start()

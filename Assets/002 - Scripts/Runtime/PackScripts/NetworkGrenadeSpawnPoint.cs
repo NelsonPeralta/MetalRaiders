@@ -53,10 +53,7 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
 
     private void Awake()
     {
-        if (GameManager.instance.gameType == GameManager.GameType.Fiesta || GameManager.instance.gameType == GameManager.GameType.GunGame)
-        {
-            //gameObject.SetActive(false);
-        }
+
     }
     private void Start()
     {
