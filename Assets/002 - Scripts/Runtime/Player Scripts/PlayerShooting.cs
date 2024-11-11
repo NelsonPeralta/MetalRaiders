@@ -637,7 +637,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                     try { bullet.gameObject.GetComponent<Bullet>().sourcePlayer = playerController.GetComponent<Player>(); } catch { }
                     try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = weaponToShoot; } catch { }
-                    try { bullet.gameObject.GetComponent<Bullet>().damage = (int)(playerController.GetComponent<Player>().playerInventory.activeWeapon.damage * (player.isDualWielding ? 0.7f : 1)); } catch { }
+                    try { bullet.gameObject.GetComponent<Bullet>().damage = (int)(playerController.GetComponent<Player>().playerInventory.activeWeapon.damage * (player.isDualWielding ? 0.72f : 1)); } catch { }
 
 
                     if (overcharge) bullet.GetComponent<Bullet>().damage *= 5;

@@ -78,5 +78,11 @@ public class PlayerRagdoll : Ragdoll
     private void OnDisable()
     {
         GetComponent<Animator>().enabled = true;
+        ResetRigidbodieVelocities();
+    }
+
+    public void ResetRigidbodieVelocities()
+    {
+        foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true)) { rb.velocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
     }
 }

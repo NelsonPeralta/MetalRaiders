@@ -2196,7 +2196,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!1 &3578962335865440181
 GameObject:
   m_ObjectHideFlags: 0
@@ -2953,6 +2953,9 @@ MonoBehaviour:
   team: 1
   _flag: {fileID: 499454010744878791}
   _canvasHolder: {fileID: 1281740864006074530}
+  _resetFlag: 0
+  _check: 0
+  _teammateOnFlagReset: 0
 --- !u!1 &7703944876658224851
 GameObject:
   m_ObjectHideFlags: 0

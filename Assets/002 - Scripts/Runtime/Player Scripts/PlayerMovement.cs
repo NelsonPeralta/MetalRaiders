@@ -287,12 +287,12 @@ public class PlayerMovement : MonoBehaviour
             if (_rb.velocity.y < -1) _timeFalling += Time.deltaTime;
             else _timeFalling = 0;
 
-            if (_timeFalling > 10)
+            if (_timeFalling > 7)
             {
-                if (player.lastPID > 0)
-                    player.Damage((int)player.hitPoints, false, player.lastPID);
-                else
-                    player.Damage((int)player.hitPoints, false, player.photonId);
+                //if (player.lastPID > 0)
+                //    player.Damage((int)player.hitPoints, false, player.lastPID);
+                //else
+                player.Damage((int)player.hitPoints, false, player.photonId);
             }
         }
 

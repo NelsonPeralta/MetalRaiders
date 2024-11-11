@@ -11,12 +11,18 @@ public class OddballSkull : MonoBehaviour
 
 
     Player _player;
-    float _triggerReset;
+    float _triggerReset, _rayCheck;
+
+
+    RaycastHit _playerHit, _obsHit;
+
 
 
     private void Awake()
     {
         GameManager.instance.oddballSkull = this;
+
+        _rayCheck = 0.1f;
     }
 
 
@@ -24,16 +30,41 @@ public class OddballSkull : MonoBehaviour
     {
         if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
         {
-            print($"OODBALL {other.name}");
-            if (_triggerReset <= 0 && thisRoot.gameObject.activeSelf &&
-                other.transform.root.GetComponent<Player>())
+            if (_rayCheck < 0)
             {
-                _player = other.transform.root.GetComponent<Player>();
-                if (!_player.isDead && !_player.isRespawning)
+                print($"OODBALL {other.name}");
+                if (_triggerReset <= 0 && thisRoot.gameObject.activeSelf &&
+                    other.transform.root.GetComponent<Player>())
                 {
-                    print("OODBALL Player");
-                    NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.photonId);
+                    _player = other.transform.root.GetComponent<Player>();
+                    if (!_player.isDead && !_player.isRespawning)
+                    {
+                        print("OODBALL Player");
+
+                        if (Physics.Raycast(transform.position, (_player.playerCapsule.transform.position - transform.position)
+                                , out _playerHit, 5, GameManager.instance.playerCapsuleLayerMask))
+                        {
+                            print($"OODBALL Player Hit {Vector3.Distance(_playerHit.point, transform.position)}");
+
+
+
+                            if (Physics.Raycast(transform.position, (_player.playerCapsule.transform.position - transform.position)
+                                , out _obsHit, 5, GameManager.instance.obstructionMask))
+                            {
+                                print($"OODBALL Obstruction Hit {Vector3.Distance(_obsHit.point, transform.position)}");
+
+                                if (Vector3.Distance(_playerHit.point, transform.position) < Vector3.Distance(_obsHit.point, transform.position))
+                                    NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.photonId);
+                            }
+                            else
+                            {
+                                NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.photonId);
+                            }
+                        }
+                    }
                 }
+
+                _rayCheck = 0.1f;
             }
         }
     }
@@ -42,6 +73,9 @@ public class OddballSkull : MonoBehaviour
     {
         if (_triggerReset > 0)
             _triggerReset -= Time.deltaTime;
+
+        if (_rayCheck > 0)
+            _rayCheck -= Time.deltaTime;
     }
 
     private void OnEnable()

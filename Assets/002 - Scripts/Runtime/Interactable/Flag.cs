@@ -21,7 +21,10 @@ public class Flag : MonoBehaviour
     [SerializeField] State _state;
 
 
-    float  _triggerReset;
+    float _triggerReset, _rayCheck;
+    RaycastHit _playerHit, _obsHit;
+    Player _player;
+
 
     // Start is called before the first frame update
     void Start()
@@ -37,15 +40,17 @@ public class Flag : MonoBehaviour
             if (spawnPoint.team == GameManager.Team.Red) GameManager.instance.redFlag = this;
             if (spawnPoint.team == GameManager.Team.Blue) GameManager.instance.blueFlag = this;
         }
+
+        _rayCheck = 0.1f;
+
     }
 
     // Update is called once per frame
     void Update()
     {
         if (_triggerReset > 0) _triggerReset -= Time.deltaTime;
-
-
-        
+        if (_rayCheck > 0)
+            _rayCheck -= Time.deltaTime;
     }
 
     private void OnEnable()
@@ -65,21 +70,50 @@ public class Flag : MonoBehaviour
     {
         if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
         {
-            print($"FLAG OnTriggerStay {other.transform.root.name}");
-            if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && other.transform.root.GetComponent<Player>() &&
-                !other.transform.root.GetComponent<Player>().hasEnnemyFlag &&
-                other.transform.root.GetComponent<Player>() && other.transform.root.GetComponent<Player>().team != spawnPoint.team)
+            if (_rayCheck < 0)
             {
-                if (other.transform.root.GetComponent<Player>().isAlive)
+                print($"FLAG OnTriggerStay {other.transform.root.name}");
+                if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && other.transform.root.GetComponent<Player>() &&
+                    !other.transform.root.GetComponent<Player>().hasEnnemyFlag &&
+                    other.transform.root.GetComponent<Player>() && other.transform.root.GetComponent<Player>().team != spawnPoint.team)
                 {
-                    print($"{other.name} has taken the flag");
-                    //other.transform.root.GetComponent<Player>().playerInventory.EquipFlag(); // do locally then network
-                    NetworkGameManager.instance.EquipFlagToPlayer_RPC(other.transform.root.GetComponent<Player>().photonId, (int)(other.transform.root.GetComponent<Player>().team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
+                    if (other.transform.root.GetComponent<Player>().isAlive)
+                    {
+                        _player = other.transform.root.GetComponent<Player>();
+                        print($"{other.name} has taken the flag");
+                        //other.transform.root.GetComponent<Player>().playerInventory.EquipFlag(); // do locally then network
+
+
+                        if (Physics.Raycast(transform.position, (_player.playerCapsule.transform.position - transform.position)
+                                    , out _playerHit, 5, GameManager.instance.playerCapsuleLayerMask))
+                        {
+                            print($"FLAG Player Hit {Vector3.Distance(_playerHit.point, transform.position)}");
+
+
+
+                            if (Physics.Raycast(transform.position, (_player.playerCapsule.transform.position - transform.position)
+                                , out _obsHit, 5, GameManager.instance.obstructionMask))
+                            {
+                                print($"FLAG Obstruction Hit {Vector3.Distance(_obsHit.point, transform.position)}");
+
+                                if (Vector3.Distance(_playerHit.point, transform.position) < Vector3.Distance(_obsHit.point, transform.position))
+                                    NetworkGameManager.instance.EquipFlagToPlayer_RPC(other.transform.root.GetComponent<Player>().photonId, (int)(other.transform.root.GetComponent<Player>().team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
+                            }
+                            else
+                            {
+                                NetworkGameManager.instance.EquipFlagToPlayer_RPC(other.transform.root.GetComponent<Player>().photonId, (int)(other.transform.root.GetComponent<Player>().team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
+                            }
+                        }
+                        //NetworkGameManager.instance.EquipFlagToPlayer_RPC(other.transform.root.GetComponent<Player>().photonId, (int)(other.transform.root.GetComponent<Player>().team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));
+                    }
                 }
-            }else if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && other.transform.root.GetComponent<Player>()
-                && other.transform.root.GetComponent<Player>().team == spawnPoint.team)
-            {
-                spawnPoint.teammateOnFlag = true;
+                else if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && other.transform.root.GetComponent<Player>()
+                    && other.transform.root.GetComponent<Player>().team == spawnPoint.team)
+                {
+                    spawnPoint.teammateOnFlag = true;
+                }
+
+                _rayCheck = 0.1f;
             }
         }
     }

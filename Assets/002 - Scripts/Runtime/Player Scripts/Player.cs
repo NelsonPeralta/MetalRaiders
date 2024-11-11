@@ -17,6 +17,7 @@ public class Player : Biped
         get
         {
             if (GameManager.instance.gameMode == GameManager.GameMode.Coop) return 7;
+            if (GameManager.instance.gameType == GameManager.GameType.CTF || GameManager.instance.gameType == GameManager.GameType.Oddball) return 9;
             return 5;
         }
     }
@@ -1218,6 +1219,7 @@ public class Player : Biped
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
         ragdoll.SetActive(true);
+        ragdoll.GetComponent<PlayerRagdoll>().ResetRigidbodieVelocities();
 
 
 
@@ -1782,21 +1784,30 @@ public class Player : Biped
         }
         else
         {
-            _rb.velocity = Vector3.zero;
-            _rb.angularVelocity = Vector3.zero;
+            //_rb.velocity = Vector3.zero;
+            //_rb.angularVelocity = Vector3.zero;
         }
 
         _rb.useGravity = true;
         _rb.drag = 0;
-        _impactDir.y *= 3;
 
-        if (_rb.velocity.y > 2)
+        print($"Grenade jumping: {_rb.velocity} {Vector3.Angle(_impactDir, transform.up)}");
+        if (Mathf.Sign(_impactDir.y) == 1 && _rb.velocity.y > 2 && Vector3.Angle(_impactDir, transform.up) < 21)
         {
-            //_rb.AddForce(_rb.velocity.normalized * 4, ForceMode.Impulse);
-            _rb.AddForce(new Vector3(0, 4, 0), ForceMode.Impulse);
+            print($"Grenade jumping: 1");
+            _rb.AddForce(new Vector3(0, 5, 0), ForceMode.Impulse); // grenade jump
+        }
+        else if (Mathf.Sign(_impactDir.y) == 1 && movement.isGrounded)
+        {
+            print($"Grenade jumping: 2");
+            _impactDir.y *= 3;
+            _rb.AddForce(_impactDir.normalized * 4f, ForceMode.Impulse);
         }
         else
-            _rb.AddForce(_impactDir.normalized * 4f, ForceMode.Impulse);
+        {
+            print($"Grenade jumping: 3");
+            _rb.AddForce(_impactDir.normalized, ForceMode.Impulse);
+        }
     }
 
 

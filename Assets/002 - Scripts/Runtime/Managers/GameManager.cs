@@ -395,7 +395,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask, obstructionMask, reticuleFrictionMask, hitboxlayerMask;
+    public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask, obstructionMask, reticuleFrictionMask, hitboxlayerMask, playerCapsuleLayerMask;
 
 
 
@@ -601,6 +601,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             MultiplayerManager.instance.lootableWeaponsDict.Clear();
 
 
+            UpdateVolume();
 
         }
         else if (scene.buildIndex > 0) // We're in the game scene
