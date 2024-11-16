@@ -199,8 +199,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             _livesLeft = value;
             OnPlayerLivesChanged?.Invoke(this);
 
-            if (_livesLeft <= 0)
-                EndGame();
+
         }
     }
 
@@ -244,7 +243,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
 
 
-    float _timeSinceEnemiesDroped;
+    float _timeSinceEnemiesDroped, _checkForOutOflives;
     public bool gameWon;
 
 
@@ -279,6 +278,21 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (_checkForOutOflives > 0)
+        {
+            _checkForOutOflives -= Time.deltaTime;
+            if (_checkForOutOflives < 0)
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    if (_livesLeft <= 0)
+                        EndGame();
+                    else
+                        _checkForOutOflives = 4;
+                }
+            }
+        }
+
         if (globalActorGrenadeCooldown > 0) globalActorGrenadeCooldown -= Time.deltaTime;
 
         if (!waveEnded)
@@ -337,6 +351,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         currentWave = 0;
         gameWon = false;
         nextWaveDelay = 5;
+        _checkForOutOflives = 4;
 
         if (currentScene.buildIndex > 0) // We are not in the menu
         {

@@ -328,8 +328,11 @@ public class PlayerController : MonoBehaviourPun
 
             if (GameManager.instance.gameStarted)
             {
-                Shooting();
-                LeftShooting();
+                if (!cameraIsFloating)
+                {
+                    Shooting();
+                    LeftShooting();
+                }
                 AutoReloadThirdWeapon();
 
                 if (!isSprinting)
@@ -1228,17 +1231,20 @@ public class PlayerController : MonoBehaviourPun
 
     void EnableCrouch()
     {
-        _crouchForceTime = 0.3f;
-        Debug.Log("Crouching");
-        OnCrouchDown?.Invoke(this);
-        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
-        GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Crouch", true);
-        isCrouching = true;
-        mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.30f, 0);
-        gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.30f, 0);
+        if (!cameraIsFloating)
+        {
+            _crouchForceTime = 0.3f;
+            Debug.Log("Crouching");
+            OnCrouchDown?.Invoke(this);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
+            GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Crouch", true);
+            isCrouching = true;
+            mainCam.GetComponent<Transform>().localPosition += new Vector3(0, -.30f, 0);
+            gwProperties.bulletSpawnPoint.localPosition += new Vector3(0, -.30f, 0);
 
 
-        PV.RPC("EnableCrouch_RPC", RpcTarget.All);
+            PV.RPC("EnableCrouch_RPC", RpcTarget.All);
+        }
     }
 
     public void DisableCrouch()
@@ -1824,7 +1830,7 @@ public class PlayerController : MonoBehaviourPun
 
             floatingCamera.counter = 0;
             _posBeforeTogglingFloatingCamera = transform.position;
-            player.transform.position = Vector3.up * -100;
+            player.transform.position = Vector3.up * -20;
             player.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.None;
             player.GetComponent<Rigidbody>().useGravity = false;
             player.GetComponent<Rigidbody>().isKinematic = true;

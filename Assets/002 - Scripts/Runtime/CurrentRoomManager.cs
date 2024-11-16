@@ -222,11 +222,11 @@ public class CurrentRoomManager : MonoBehaviour
 
                 if (GameManager.instance.GetAllPhotonPlayers().Count != PhotonNetwork.CurrentRoom.PlayerCount)
                 {
+                    _gameReadyStep = 1;
                     GameManager.instance.ReEvaluatePhotonToPlayerDict();
-
                 }
 
-
+                _gameReadyStep = 2;
                 foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                     if (p && p.isMine)
                     {
@@ -239,6 +239,9 @@ public class CurrentRoomManager : MonoBehaviour
             }
         }
     }
+
+    public int GameReadyStep { get { return _gameReadyStep; } }
+
 
     //public bool gameStart
     //{
@@ -385,7 +388,7 @@ public class CurrentRoomManager : MonoBehaviour
     [SerializeField] bool _matchSettingsSet, _gameStarted, _gameOver;
     [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9, _rpcCooldown;
 
-    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersJoined, _nbPlayersSet, _vetos;
+    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersJoined, _nbPlayersSet, _vetos, _gameReadyStep;
 
     [SerializeField] RoomType _roomType;
 
@@ -408,6 +411,7 @@ public class CurrentRoomManager : MonoBehaviour
     string _tempAchievementName = "";
 
     bool _leftRoomManually, _playerDataRetrieved;
+
 
 
     void Awake()
@@ -552,11 +556,11 @@ public class CurrentRoomManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-
+        
         gameStarted = false;
         _reachedHalwayGameStartCountdown = _leftRoomManually = false;
 
-        _expectedMapAddOns = _vetos = 0;
+        _expectedMapAddOns = _vetos = _gameReadyStep = 0;
 
         if (scene.buildIndex == 0)
         {
@@ -1013,8 +1017,11 @@ public class CurrentRoomManager : MonoBehaviour
 
     IEnumerator GameStartDelayMapCamera_Coroutine()
     {
+        _gameReadyStep = 3;
+
         yield return new WaitForSeconds(2);
 
+        _gameReadyStep = 4;
         MapCamera.instance.TriggerGameStartBehaviour();
     }
 

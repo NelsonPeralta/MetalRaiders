@@ -266,7 +266,10 @@ public class Melee : MonoBehaviour
 
                         if (Mathf.Abs(Vector3.SignedAngle(hp.biped.targetTrackingCorrectTarget.transform.forward, player.transform.position - hp.biped.targetTrackingCorrectTarget.transform.position, Vector3.up)) > 130)
                         {
-                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage(999, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Assasination);
+                            if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+                                hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage(999, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Assasination);
+                            else
+                                hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Sword);
                         }
                         else
                         {

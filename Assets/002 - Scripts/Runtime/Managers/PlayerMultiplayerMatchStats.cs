@@ -40,7 +40,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             player.playerDataCell.playerCurrentGameScore.ChangeScore(Mathf.Clamp(value, 0, 999));
 
 
-            if(player.playerDataCell.playerCurrentGameScore.score > previous)
+            if (player.playerDataCell.playerCurrentGameScore.score > previous)
                 player.playerUI.ShowPointWitness(player.playerDataCell.playerCurrentGameScore.score - previous);
 
 
@@ -48,6 +48,9 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
             {
                 OnPlayerScoreChanged?.Invoke(this);
             }
+
+            print($"PlayerMultiplayerMatchStats new val: {value}");
+
             //_score = _score;
         }
     }

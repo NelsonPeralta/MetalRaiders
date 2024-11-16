@@ -57,6 +57,25 @@ public class FloatingCamera : MonoBehaviour
         }
     }
 
+    public float MaximumMovementSpeed
+    {
+        get
+        {
+            if (playerController.activeControllerType != Rewired.ControllerType.Joystick)
+            {
+                if (playerController.rewiredPlayer.GetButton("Sprint")) return _maximumMovementSpeed * 4;
+                else if (playerController.rewiredPlayer.GetButton("Crouch")) return _maximumMovementSpeed / 4;
+            }
+            else
+            {
+                if (playerController.rewiredPlayer.GetButton("Shoot")) return _maximumMovementSpeed * 4;
+                else if (playerController.rewiredPlayer.GetButton("Throw Grenade")) return _maximumMovementSpeed / 4;
+            }
+
+
+            return _maximumMovementSpeed;
+        }
+    }
 
 
     [Header("Constants")]
@@ -66,14 +85,13 @@ public class FloatingCamera : MonoBehaviour
     public float XAxisSensitivity;
     public float YAxisSensitivity;
     public float DecelerationMod;
+    [SerializeField] float _maximumMovementSpeed;
 
     [Space]
 
     [Range(0, 89)] public float MaxXAngle = 60f;
 
-    [Space]
 
-    public float MaximumMovementSpeed = 0.5f;
 
     [Header("Controls")]
 
@@ -84,7 +102,7 @@ public class FloatingCamera : MonoBehaviour
     public KeyCode Up = KeyCode.Q;
     public KeyCode Down = KeyCode.E;
 
-    [SerializeField] Vector3 _moveSpeed;
+    [SerializeField] Vector3 _moveSpeed, _acceleration;
 
 
     float _changeCameraCd, _rotationX;
@@ -98,7 +116,7 @@ public class FloatingCamera : MonoBehaviour
     {
         _changeCameraCd = 0.5f;
         _cam = GetComponent<Camera>();
-        MaximumMovementSpeed = 0.05f;
+        _maximumMovementSpeed = 0.05f;
         XAxisSensitivity = YAxisSensitivity = 2;
     }
 
@@ -118,21 +136,35 @@ public class FloatingCamera : MonoBehaviour
 
         _cam.fieldOfView = 60 - zoomCounter;
         //var acceleration = HandleKeyInput();
-        var acceleration = Vector3.zero;
+        _acceleration = Vector3.zero;
 
-        acceleration.z = playerController.rewiredPlayer.GetAxis("Move Vertical");
-        acceleration.x = playerController.rewiredPlayer.GetAxis("Move Horizontal");
+        _acceleration.z = playerController.rewiredPlayer.GetAxis("Move Vertical");
+        _acceleration.x = playerController.rewiredPlayer.GetAxis("Move Horizontal");
+        _acceleration.y = 0;
 
+        if (playerController.activeControllerType != Rewired.ControllerType.Joystick)
+        {
+            if (playerController.rewiredPlayer.GetButton("Melee")) _acceleration.y = -0.5f;
+            else if (playerController.rewiredPlayer.GetButton("Interact")) _acceleration.y = 0.5f;
 
-        if (playerController.rewiredPlayer.GetButton("Sprint")) acceleration *= 3;
+            if (playerController.rewiredPlayer.GetButton("Sprint")) _acceleration *= 3;
+        }
+        else
+        {
+            if (playerController.rewiredPlayer.GetButton("Jump")) _acceleration.y = -0.5f;
+            else if (playerController.rewiredPlayer.GetButton("Melee")) _acceleration.y = 0.5f;
+
+            if (playerController.rewiredPlayer.GetButton("Shoot")) _acceleration *= 3;
+        }
+
 
         if (!playerController.cameraIsFloating || counter != 99) return;
 
         HandleMouseRotation();
 
-        _moveSpeed += acceleration;
+        _moveSpeed += _acceleration;
 
-        HandleDeceleration(acceleration);
+        HandleDeceleration(_acceleration);
 
         // clamp the move speed
         if (_moveSpeed.magnitude > MaximumMovementSpeed) _moveSpeed = _moveSpeed.normalized * MaximumMovementSpeed;

@@ -229,6 +229,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
                 if (GameManager.instance.gameType != GameManager.GameType.Hill
                 && GameManager.instance.gameType != GameManager.GameType.Oddball
+                && GameManager.instance.gameType != GameManager.GameType.GunGame
                 && GameManager.instance.gameType != GameManager.GameType.CTF)
                 {
                     winningPlayerMS.score++;
@@ -242,8 +243,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     {
                         if (struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Melee && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Frag_Grenade
                             && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Plasma_Grenade
-                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Stuck)
+                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Stuck
+                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Barrel
+                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Assasination)
+                        {
+                            winningPlayerMS.score++;
                             winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
+                        }
 
                         Debug.Log(struc.cleanDamageSource);
                         if (struc.cleanDamageSource == WeaponProperties.KillFeedOutput.Plasma_Pistol)
@@ -271,7 +277,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             losingPlayerMS.deaths++;
 
-            if (PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.IsMasterClient && GameManager.instance.gameType != GameManager.GameType.GunGame)
             {
                 CheckForEndGame();
             }
