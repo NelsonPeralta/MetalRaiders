@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class OddballSkull : MonoBehaviour
@@ -28,7 +29,7 @@ public class OddballSkull : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
+        if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver && PhotonNetwork.IsMasterClient)
         {
             if (_rayCheck < 0)
             {

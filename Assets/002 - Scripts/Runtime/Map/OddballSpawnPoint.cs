@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class OddballSpawnPoint : MonoBehaviour
 {
+    static float DEFAULT_CHECK_TIME = 0.5f;
+
+
     [SerializeField] OddballSkull _oddball;
 
 
@@ -50,7 +53,7 @@ public class OddballSpawnPoint : MonoBehaviour
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
                     {
                         _resetBall++;
-                        print($"oddball has disapeared for {_resetBall} seconds");
+                        print($"oddball has disapeared for {_resetBall / DEFAULT_CHECK_TIME} seconds");
 
                         if (_resetBall >= 10)
                         {
@@ -62,7 +65,7 @@ public class OddballSpawnPoint : MonoBehaviour
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
                     {
                         _resetBall++;
-                        print($"oddball has disapeared for {_resetBall} seconds");
+                        print($"oddball is away for {_resetBall / DEFAULT_CHECK_TIME} ticks");
 
                         if (_resetBall >= 30)
                         {
@@ -74,7 +77,7 @@ public class OddballSpawnPoint : MonoBehaviour
                     {
                         _resetBall = 0;
                     }
-                    _check = 0.5f;
+                    _check = DEFAULT_CHECK_TIME;
                 }
             }
         }

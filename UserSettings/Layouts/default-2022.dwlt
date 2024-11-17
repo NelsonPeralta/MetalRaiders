@@ -193,8 +193,8 @@ MonoBehaviour:
     y: 0
     width: 271
     height: 947
-  m_MinSize: {x: 277, y: 71}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -305,8 +305,8 @@ MonoBehaviour:
     y: 0
     width: 131
     height: 947
-  m_MinSize: {x: 391, y: 411}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 390, y: 390}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 28}
   m_Panes:
   - {fileID: 28}
@@ -451,7 +451,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 4c2efbff9e2efbffe697fbffb0c5fbff960efcffba41fcff0afdfcffe835fdff426afdff92acfdffded9fdff8416feff1078feff60b5feff84dbfeffa43cffff5c70ffff12a2ffff2ed4ffff20e6ffff
+      m_ExpandedIDs: 0aeff1ff60eff1ffa658f2ff6e86f2ff52cff2ff7402f3ffc2bdf3ffa0f6f3fff62af4ff506df4ff9a9af4ff3ed7f4ffc838f5ff1476f5ff369cf5ff54fdf5ff0a31f6ffbe62f6ffd894f6ffc6a6f6ff00fbffffeef10000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1942,7 +1942,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.27684456, y: -0.5811894, z: 0.22031263, w: -0.73333883}
     speed: 2
-    m_Value: {x: 0.27684456, y: 0.58118945, z: -0.22031264, w: 0.7333389}
+    m_Value: {x: -0.27674118, y: -0.5809723, z: 0.22023034, w: -0.73306495}
   m_Size:
     m_Target: 10
     speed: 2
@@ -2007,7 +2007,7 @@ MonoBehaviour:
     m_SaveData: []
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 396020
+  m_LastSelectedObjectID: 63714
 --- !u!114 &22
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -2071,7 +2071,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 79}
     m_SelectedIDs: 14a30100
     m_LastClickedID: 107284
-    m_ExpandedIDs: 0000000010a3010012a3010014a3010016a3010018a301001aa301001ca301001ea3010020a3010022a3010024a3010026a3010028a301002aa301002ca301002ea3010030a3010032a30100
+    m_ExpandedIDs: 000000000ea3010010a3010012a3010014a3010016a3010018a301001aa301001ca301001ea3010020a3010022a3010024a3010026a3010028a301002aa301002ca301002ea3010030a30100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2099,7 +2099,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000010a3010012a3010014a3010016a3010018a301001aa301001ca301001ea3010020a3010022a3010024a3010026a3010028a301002aa301002ca301002ea3010030a3010032a30100
+    m_ExpandedIDs: 000000000ea3010010a3010012a3010014a3010016a3010018a301001aa301001ca301001ea3010020a3010022a3010024a3010026a3010028a301002aa301002ca301002ea3010030a30100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2200,7 +2200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c262c1329a02fa49b5cb4c297106f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MinSize: {x: 129, y: 28}
+  m_MinSize: {x: 133, y: 30}
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
     m_Text: ProBuilder
