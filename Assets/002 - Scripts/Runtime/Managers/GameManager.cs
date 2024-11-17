@@ -303,7 +303,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    public bool devMode, allowLogsInBuild;
+    public bool devMode;
     [SerializeField] int _sceneIndex = 0;
     public static int sceneIndex
     {
@@ -665,7 +665,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         InitialisePlayerPrefs();
         LoadPlayerPrefs();
 
-        Debug.unityLogger.logEnabled = allowLogsInBuild;
+        Debug.unityLogger.logEnabled = false;
 
 #if UNITY_EDITOR
         Debug.unityLogger.logEnabled = true;
@@ -1365,7 +1365,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ReEvaluatePhotonToPlayerDict()
     {
-        print("ReEvaluatePhotonToPlayerDict");
+        Debug.LogError("ReEvaluatePhotonToPlayerDict");
 
         GameManager.instance.ClearPhotonIdToPlayerDict();
         foreach (Player p in FindObjectsOfType<Player>())

@@ -53,7 +53,7 @@ public class OddballSpawnPoint : MonoBehaviour
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
                     {
                         _resetBall++;
-                        print($"oddball has disapeared for {_resetBall / DEFAULT_CHECK_TIME} seconds");
+                        print($"oddball has disapeared for {_resetBall / DEFAULT_CHECK_TIME} ticks");
 
                         if (_resetBall >= 10)
                         {

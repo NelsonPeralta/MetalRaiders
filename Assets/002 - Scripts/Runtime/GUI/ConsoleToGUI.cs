@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 // https://answers.unity.com/questions/125049/is-there-any-way-to-view-the-console-in-a-build.html
 public class ConsoleToGUI : MonoBehaviour
@@ -5,27 +6,55 @@ public class ConsoleToGUI : MonoBehaviour
     string myLog = "*begin log";
     string filename = "";
     bool doShow = true;
-    int kChars = 700;
+    int kChars = 1400;
+
+
+    [SerializeField] List<string> _myLogList = new List<string>();
+    int kLines = 65;
 
 
 
 
     private void Start()
     {
-        if (GameManager.instance.allowLogsInBuild)
+        doShow = false;
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
         {
-            Application.logMessageReceived -= Log;
-            Application.logMessageReceived += Log;
+            doShow = !doShow;
 
-            doShow = false;
+            if (doShow)
+            {
+                Application.logMessageReceived -= Log;
+                Application.logMessageReceived += Log;
+            }
+
+            Debug.unityLogger.logEnabled = doShow;
+
+#if UNITY_EDITOR
+            Debug.unityLogger.logEnabled = true;
+#endif
         }
     }
-    void Update() { if (Input.GetKeyDown(KeyCode.L) && GameManager.instance.allowLogsInBuild) { doShow = !doShow; } }
+
     public void Log(string logString, string stackTrace, LogType type)
     {
         // for onscreen...
-        myLog = myLog + "\n" + logString;
-        if (myLog.Length > kChars) { myLog = myLog.Substring(myLog.Length - kChars); }
+        //myLog = myLog + "\n" + logString;
+        //if (myLog.Length > kChars) { myLog = myLog.Substring(myLog.Length - kChars); }
+
+        //_myLogList.Add(logString);
+        _myLogList.Insert(0, logString);
+
+        if (_myLogList.Count > kLines) _myLogList.RemoveAt(_myLogList.Count - 1);
+
+        myLog = "";
+        foreach (string s in _myLogList)
+        {
+            myLog = myLog + "\n" + s;
+        }
 
 
         // for the file ...
@@ -44,8 +73,8 @@ public class ConsoleToGUI : MonoBehaviour
     void OnGUI()
     {
         if (!doShow) { return; }
-        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity,
-           new Vector3(Screen.width / 1200.0f, Screen.height / 800.0f, 1.0f));
-        GUI.TextArea(new Rect(10, 10, 540, 370), myLog);
+        //GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(Screen.width / 1200.0f, Screen.height / 800.0f, 1.0f));
+        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+        GUI.TextArea(new Rect(10, 10, 540, 1060), myLog);
     }
 }

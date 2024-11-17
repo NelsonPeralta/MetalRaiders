@@ -33,7 +33,7 @@ public class OddballSkull : MonoBehaviour
         {
             if (_rayCheck < 0)
             {
-                print($"OODBALL {other.name}");
+                //print($"OODBALL {other.name}");
                 if (_triggerReset <= 0 && thisRoot.gameObject.activeSelf &&
                     other.transform.root.GetComponent<Player>())
                 {
@@ -45,7 +45,7 @@ public class OddballSkull : MonoBehaviour
                         if (Physics.Raycast(transform.position, (_player.playerCapsule.transform.position - transform.position)
                                 , out _playerHit, 5, GameManager.instance.playerCapsuleLayerMask))
                         {
-                            print($"OODBALL Player Hit {Vector3.Distance(_playerHit.point, transform.position)}");
+                            //print($"OODBALL Player Hit {Vector3.Distance(_playerHit.point, transform.position)}");
 
 
 
@@ -55,10 +55,18 @@ public class OddballSkull : MonoBehaviour
                                 print($"OODBALL Obstruction Hit {Vector3.Distance(_obsHit.point, transform.position)}");
 
                                 if (Vector3.Distance(_playerHit.point, transform.position) < Vector3.Distance(_obsHit.point, transform.position))
+                                {
+                                    print($"EquipOddballToPlayer obstruction clear");
                                     NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.photonId);
+                                }
+                                else
+                                {
+                                    print($"Oddball obstruction {_obsHit.collider.name}");
+                                }
                             }
                             else
                             {
+                                print($"EquipOddballToPlayer no obstruction");
                                 NetworkGameManager.instance.EquipOddballToPlayer_RPC(_player.photonId);
                             }
                         }

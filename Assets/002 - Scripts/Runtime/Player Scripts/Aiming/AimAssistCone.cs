@@ -479,7 +479,7 @@ public class AimAssistCone : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        print($"OnTriggerExit {other.name}");
+        //print($"OnTriggerExit {other.name}");
         if (other.gameObject == closestHbToCorsshairCenter)
         {
             //Debug.Log($"OnTriggerExit from AimAssistCapsule: {other.name}");

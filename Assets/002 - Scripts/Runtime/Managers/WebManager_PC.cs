@@ -99,12 +99,12 @@ public partial class WebManager
             else
             {
                 Debug.Log("GET PLAYER EXTENDED PUBLIC DATA RESULTS");
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                //Debug.Log(www.result);
+                //Debug.Log(www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
-                Debug.Log(jsonarray);
+                //Debug.Log(jsonarray);
                 PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
 
                 CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
