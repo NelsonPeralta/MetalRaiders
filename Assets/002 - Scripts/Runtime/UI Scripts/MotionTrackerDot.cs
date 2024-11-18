@@ -9,11 +9,14 @@ public class MotionTrackerDot : MonoBehaviour
         get { return _biped; }
         set
         {
-            _biped = value;
+            if (value)
+            {
+                _biped = value;
 
-            if (_biped.GetComponent<Player>()) targetPlayerController = _biped.GetComponent<PlayerController>();
+                if (_biped.GetComponent<Player>()) targetPlayerController = _biped.GetComponent<PlayerController>();
 
-            try { _actor = _biped.GetComponent<Actor>(); } catch { }
+                try { _actor = _biped.GetComponent<Actor>(); } catch { }
+            }
         }
     }
 

@@ -425,8 +425,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         else // We are in the menu
         {
             breathersPool.Clear(); ribbiansPool.Clear(); hellhoundPool.Clear(); tyrantPool.Clear(); healthPacks.Clear();
+            _breathersPool.Clear(); _ribbianPool.Clear();
             _reservedActorPhotonIdsForWave.Clear();
-
+            actorsAliveList.Clear();
+            _actorDropships.Clear();
 
             maxWave = 0;
             return;
