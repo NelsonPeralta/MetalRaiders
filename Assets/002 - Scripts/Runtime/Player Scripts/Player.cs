@@ -1714,12 +1714,37 @@ public class Player : Biped
 
                 if (lastPID > 0)// If a source already damaged this player
                 {
-                    if (lastPID == photonId && hitPoints <= maxHitPoints * 0.1f)
+                    if (hitPoints <= maxHitPoints * 0.1f)
                     {
-                        // Do nothing, if players tries to kill himself with only 10% health left, the player that damaged this one before will get the kill
+                        if (lastPID != photonId && sourcePid == photonId) // someone hurt me before I hit 10 percent and i am trying to kms
+                        {
+                            // do nothing
+                        }
+                        else if (lastPID != photonId && sourcePid != photonId) // someone is trying to steal kill
+                        {
+                            // do nothing
+                        }
+                        else if (lastPID == photonId && sourcePid != photonId) // i hurt myself and reached 10 percent, someone is tryng to finish me off
+                        {
+                            // give them the kill
+                            lastPID = sourcePid;
+                        }
                     }
                     else
+                    {
                         lastPID = sourcePid;
+                    }
+
+
+
+                    //if (sourcePid != photonId)
+                    //    lastPID = sourcePid;
+                    //else if (sourcePid == photonId && hitPoints <= maxHitPoints * 0.1f)
+                    //{
+                    //    // Do nothing, if players tries to kill himself with only 10% health left, the player that damaged this one before will get the kill
+                    //}
+                    //else
+                    //    lastPID = sourcePid;
                 }
                 else // No source has damaged this player yet
                     lastPID = sourcePid;
