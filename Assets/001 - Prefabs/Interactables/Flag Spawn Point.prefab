@@ -729,10 +729,10 @@ MonoBehaviour:
   scriptRoot: {fileID: 3578962335514472209}
   spawnPoint: {fileID: 7696789342014485303}
   rb: {fileID: 3578962335514472206}
-  _takenClip: {fileID: 8300000, guid: d0fa597d94974fa4e92e1ccc2d5f239c, type: 3}
-  _stolenClip: {fileID: 8300000, guid: d5c43b2b55c41ef49aae627f217f1edf, type: 3}
-  _droppedClip: {fileID: 8300000, guid: 42792e72c04add94291320bb9d244ad9, type: 3}
-  _resetClip: {fileID: 8300000, guid: ea8e41c159be3fb47b2fcb24dd37be80, type: 3}
+  _takenClip: {fileID: 8300000, guid: e2475bdaeab3cca4a8c589383fbb7b0c, type: 3}
+  _stolenClip: {fileID: 8300000, guid: 3a122ee963bacb548af5e762c20d0d14, type: 3}
+  _droppedClip: {fileID: 8300000, guid: 6becbf89dc2ebd64bbdca18f02961b6d, type: 3}
+  _resetClip: {fileID: 8300000, guid: 4186d87452eda4545b551cc6210faaa5, type: 3}
   _capturedClip: {fileID: 8300000, guid: 8b40a4cf1c59cb741a4b0000c00337c5, type: 3}
   _redBanner: {fileID: 3578962334917933283}
   _blueBanner: {fileID: 3578962335168784541}
