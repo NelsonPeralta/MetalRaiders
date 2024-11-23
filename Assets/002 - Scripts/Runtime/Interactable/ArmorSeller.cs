@@ -11,12 +11,15 @@ public class ArmorSeller : InteractableObject
     [Header("Seller Info")]
     public int cost = -1;
 
-    
+
     private void Start()
     {
 #if UNITY_EDITOR
         cost = 1;
 #endif
+
+        if (GameManager.instance.devMode)
+            cost = 1000;
     }
 
 
