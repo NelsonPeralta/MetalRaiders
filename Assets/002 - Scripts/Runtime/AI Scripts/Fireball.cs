@@ -196,7 +196,10 @@ public class Fireball : MonoBehaviour
 
             //finalHitObject.GetComponent<PropHitbox>().hitPoints.Damage((int)damage, false, sourceBiped.GetComponent<PhotonView>().ViewID);
             if (finalHitObject.GetComponent<PlayerHitbox>())
-                finalHitDamageable.Damage((int)damage, false, sourceBiped.GetComponent<PhotonView>().ViewID);
+            {
+                if (!GameManager.instance.devMode)
+                    finalHitDamageable.Damage((int)damage, false, sourceBiped.GetComponent<PhotonView>().ViewID);
+            }
 
             Despawn(true);
         }

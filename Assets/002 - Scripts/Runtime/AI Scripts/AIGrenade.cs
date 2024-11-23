@@ -77,7 +77,10 @@ public class AIGrenade : MonoBehaviour
                     //Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (sourceBiped.GetComponent<PhotonView>().IsMine && calculatedDamage > 0)
-                        playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, sourceBiped.GetComponent<PhotonView>().ViewID);
+                    {
+                        if (!GameManager.instance.devMode)
+                            playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, sourceBiped.GetComponent<PhotonView>().ViewID);
+                    }
                 }
             }
         }
