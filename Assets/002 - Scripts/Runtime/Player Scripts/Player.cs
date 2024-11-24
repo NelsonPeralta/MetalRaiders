@@ -930,7 +930,15 @@ public class Player : Biped
     {
         print($"Damage: ({damage}) {damageSourceCleanName}");
 
-        if (_spawnProtectionTime > 0) damage /= 2;
+
+        if (headshot && GameManager.GetPlayerWithPhotonView(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
+        {
+            // if its a headshot with the sniper, do nothing
+        }
+        else
+        {
+            if (_spawnProtectionTime > 0) damage /= 2;
+        }
 
         {
             //try

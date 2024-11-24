@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
@@ -19,15 +20,17 @@ public class FieldOfView : MonoBehaviour
 
     [SerializeField] GameObject _obstruction;
     [SerializeField] string _state;
-    [SerializeField] List<Collider> rangeChecks = new List<Collider>();
+    [SerializeField] List<Collider> _playersInRangeRadius = new List<Collider>();
 
     Actor _actor;
     RaycastHit hit;
     Ray ray;
 
+
     private void OnEnable()
     {
-        StartCoroutine(FOVRoutine()); // Stops when obj is disabled
+        if (PhotonNetwork.IsMasterClient)
+            StartCoroutine(FOVRoutine()); // Stops when obj is disabled
     }
 
     private void Start()
@@ -48,6 +51,9 @@ public class FieldOfView : MonoBehaviour
 
     private void FieldOfViewCheck()
     {
+
+
+
         _obstruction = null;
         if (_actor.hitPoints <= 0)
         {
@@ -58,12 +64,39 @@ public class FieldOfView : MonoBehaviour
 
         try { radius = GetComponent<Actor>().longRange; } catch { }
         Transform or = GetComponent<Actor>().losSpawn;
-        rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask).ToList();
+        _playersInRangeRadius = Physics.OverlapSphere(transform.position, radius, targetMask).
+            Where(item => item.transform.root.GetComponent<Player>() && item.transform.root.GetComponent<Player>().isAlive).ToList();
 
-        if (rangeChecks.Count > 0)
+        if (_playersInRangeRadius.Count > 0)
         {
-            if (_actor.targetHitpoints)
-                if (rangeChecks.ToList().Contains(_actor.targetHitpoints.GetComponent<Player>().playerCapsule.GetComponent<Collider>()))
+            if (_actor.isPatroling)
+            {
+                foreach (Collider col in _playersInRangeRadius)
+                {
+                    Transform target = col.transform.root;
+                    Vector3 directionToTarget = (target.position - or.position).normalized;
+
+                    if (Vector3.Angle(or.forward, directionToTarget) < angle / 2)
+                    {
+                        float distanceToTarget = Vector3.Distance(or.position, target.position);
+                        hit = new RaycastHit();
+                        ray = new Ray(or.position, directionToTarget);
+
+                        if (!Physics.Raycast(ray, out hit, distanceToTarget, obstructionMask))
+                        {
+                            _actor.targetHitpoints = col.transform.root.GetComponent<HitPoints>();
+                            _actor.targetTransform = target;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+
+                }
+            }
+            else if (_actor.targetHitpoints)
+                if (_playersInRangeRadius.ToList().Contains(_actor.targetHitpoints.GetComponent<Player>().playerCapsule.GetComponent<Collider>()))
                 {
                     Transform target = GetComponent<Actor>().targetHitpoints.transform;
                     Vector3 directionToTarget = (target.position - or.position).normalized;

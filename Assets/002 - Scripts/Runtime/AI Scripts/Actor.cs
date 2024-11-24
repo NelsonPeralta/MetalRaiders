@@ -90,6 +90,7 @@ abstract public class Actor : Biped
                     {
                         if (hitPoints > 0)
                         {
+                            _isPatroling = false;
                             _isCurrentlyAlertingCooldown = 1;
                             _animator.Play("Boost");
                             _audioSource.clip = _tauntClip;
@@ -136,6 +137,7 @@ abstract public class Actor : Biped
     public bool isThrowingGrenade { get { return _isCurrentlyThrowingGrenadeCooldown > 0; } }
     public bool isSeenByTargetPlayer { get { return _isSeenByTargetPlayerCooldown > 0; } }
     public bool isBoosting { get { return _isCurrentlyAlertingCooldown > 0; } }
+    public bool isPatroling { get { return _isPatroling; } }
 
 
     [SerializeField] protected int _hitPoints, _defaultHitpoints;
@@ -154,7 +156,7 @@ abstract public class Actor : Biped
     protected NavMeshAgent _nma;
     protected FieldOfView _fieldOfView;
     protected Animator _animator;
-    [SerializeField] protected bool isIdling, isRunning, isMeleeing, isTaunting, isFlinching, _isShooting, _isThrowingGrenade;
+    [SerializeField] protected bool _isPatroling, isIdling, isRunning, isMeleeing, isTaunting, isFlinching, _isShooting, _isThrowingGrenade;
     protected List<ActorHitbox> _actorHitboxes = new List<ActorHitbox>();
 
     [SerializeField]
@@ -310,6 +312,8 @@ abstract public class Actor : Biped
         _hitPoints = (int)(_defaultHitpoints);
         foreach (ActorHitbox hitbox in GetComponentsInChildren<ActorHitbox>(true))
             hitbox.gameObject.SetActive(true);
+
+        _isPatroling = true;
     }
 
     public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false, int weIndx = -1)
@@ -395,6 +399,8 @@ abstract public class Actor : Biped
                                                     this.transform.position.y,
                                                     targetTransform.position.z);
                 this.transform.LookAt(targetPostition);
+
+                _isPatroling = false;
             }
         }
         catch { }
@@ -524,6 +530,7 @@ abstract public class Actor : Biped
             // This will trigger FindNewTarget()
             targetTransform = null;
             targetHitpoints = null;
+            _isPatroling = true;
             //FindNewTarget(true);
         }
     }

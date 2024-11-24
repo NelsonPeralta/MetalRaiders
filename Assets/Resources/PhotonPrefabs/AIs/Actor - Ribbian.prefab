@@ -4701,7 +4701,7 @@ MonoBehaviour:
   canSeePlayer: 0
   _obstruction: {fileID: 0}
   _state: 
-  rangeChecks: []
+  _playersInRangeRadius: []
 --- !u!95 &8516912798924777548
 Animator:
   serializedVersion: 5
@@ -4757,6 +4757,7 @@ MonoBehaviour:
   _hurtClip: {fileID: 8300000, guid: a5cf47b8c1aa8c14bb232e34edbda1b9, type: 3}
   _gruntClip: {fileID: 8300000, guid: 0d2e4e34094f2584dbd954967af10431, type: 3}
   _oneShotHeadshot: 0
+  _isPatroling: 0
   isIdling: 0
   isRunning: 0
   isMeleeing: 0
