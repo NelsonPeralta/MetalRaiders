@@ -66,6 +66,7 @@ public class PlayerUI : MonoBehaviour
     public MenuGamePadCursor gamepadCursor;
     [SerializeField] GameObject _yourFlagStolenHolder;
     [SerializeField] TMP_Text _yourFlagStolenText;
+    [SerializeField] TMP_Text _editorText;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft, notKillFeed;
@@ -108,6 +109,8 @@ public class PlayerUI : MonoBehaviour
     private void Awake()
     {
         _player = GetComponent<Player>();
+
+        _editorText.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -220,6 +223,11 @@ public class PlayerUI : MonoBehaviour
         }
 
         OnGrenadeChanged_Delegate(GetComponent<Player>().playerInventory);
+
+
+#if UNITY_EDITOR
+        _editorText.gameObject.SetActive(true);
+#endif
     }
 
 
@@ -654,6 +662,8 @@ public class PlayerUI : MonoBehaviour
                 if (GameManager.instance.redFlag.state == Flag.State.stolen) _yourFlagStolenText.text = "The enemy has your flag!";
             }
         }
+
+        _editorText.text = $"hp: {_player.hitPoints}";
     }
 
 

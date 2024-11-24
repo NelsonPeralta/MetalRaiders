@@ -20,6 +20,10 @@ public class ActorHitbox : Hitbox, IDamageable
         string damageSource = null, bool isGroin = false, int weaponIndx = -1, WeaponProperties.KillFeedOutput kfo = WeaponProperties.KillFeedOutput.Unassigned,
         [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
     {
-        actor.Damage((int)d, pid, isHeadshot: h ,weIndx: weaponIndx);
+        if (kfo == WeaponProperties.KillFeedOutput.Melee)
+            actor.Damage((int)d, pid, isHeadshot: h, weIndx: 555);
+        else
+            actor.Damage((int)d, pid, isHeadshot: h, weIndx: weaponIndx);
+
     }
 }

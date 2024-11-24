@@ -19,12 +19,14 @@ public class PlayerPing : MonoBehaviour
     void Update()
     {
         if (_delay > 0)
+        {
             _delay -= Time.deltaTime;
 
-        if (_delay <= 0)
-        {
-            pingText.text = $"Ping: {PhotonNetwork.GetPing()}";
-            _delay = 1;
+            if (_delay <= 0)
+            {
+                pingText.text = $"Ping: {PhotonNetwork.GetPing()}";
+                _delay = 1;
+            }
         }
     }
 }

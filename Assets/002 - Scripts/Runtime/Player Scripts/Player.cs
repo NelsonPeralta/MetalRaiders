@@ -585,7 +585,7 @@ public class Player : Biped
     [SerializeField] PlayerMedals _playerMedals;
     [SerializeField] int _playerId; // Player ID MUST be a number of equal value set to PhotonNetwork.Nickname which is determined by the player's id in the spacewackos.com database
     [SerializeField] Player _lastPlayerSource;
-    [SerializeField] DeathNature _deathNature;
+    [SerializeField] DeathNature _deathNature, _ragdollPropulsion;
     [SerializeField] int _lastPID;
     [SerializeField] int _maxHitPoints = 250;
     [SerializeField] int _maxHealthPoints = 100;
@@ -1228,7 +1228,7 @@ public class Player : Biped
         impactDir = Vector3.Normalize((Vector3)impactDir);
         Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
 
-        StartCoroutine(GiveRagdollPush_Coroutine((Vector3)impactDir, deathByHeadshot, deathNature, ragdoll.GetComponent<PlayerRagdoll>()));
+        StartCoroutine(GiveRagdollPush_Coroutine((Vector3)impactDir, _ragdollPropulsion, ragdoll.GetComponent<PlayerRagdoll>()));
 
         //if (deathByHeadshot)
         //    ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 6000);
@@ -1242,13 +1242,13 @@ public class Player : Biped
     }
 
 
-    IEnumerator GiveRagdollPush_Coroutine(Vector3 imdir, bool dbh, DeathNature dn, PlayerRagdoll playerRagdoll)
+    IEnumerator GiveRagdollPush_Coroutine(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
     {
         yield return new WaitForEndOfFrame();
 
         playerRagdoll.GetComponent<Animator>().enabled = false;
 
-        if (dbh)
+        if (dn == DeathNature.Headshot || dn == DeathNature.Sniped)
             playerRagdoll.head.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 6000);
         else if (dn.ToString().Contains("renade") || dn == DeathNature.Stuck || dn == DeathNature.RPG
             || dn == DeathNature.Barrel || dn == DeathNature.UltraBind)
@@ -1692,19 +1692,16 @@ public class Player : Biped
 
 
         playerController.Descope();
-        _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
-        print($"Damage_RPC {_killFeedOutput}");
-        try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
 
-        print($"COULD NOT ASSIGN DEATH NATURE {dn} {deathNature = (DeathNature)dn}");
+        _killFeedOutput = WeaponProperties.KillFeedOutput.Unassigned;
+        deathNature = _ragdollPropulsion = DeathNature.None;
 
-        if (deathNature == DeathNature.Melee)
+        if ((DeathNature)dn == DeathNature.Headshot || (DeathNature)dn == DeathNature.Grenade || (DeathNature)dn == DeathNature.Stuck
+            || (DeathNature)dn == DeathNature.RPG || (DeathNature)dn == DeathNature.Melee || (DeathNature)dn == DeathNature.Sniped)
         {
-            if (_killFeedOutput == WeaponProperties.KillFeedOutput.Sword)
-                SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulSwordSlash);
-            else
-                SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulPunch);
+            _ragdollPropulsion = (DeathNature)dn;
         }
+        try { print($"Damage_RPC {_killFeedOutput} {deathNature} {_ragdollPropulsion} {(DeathNature)dn}"); } catch (System.Exception e) { Debug.LogError(e); }
 
 
         try
@@ -1714,43 +1711,122 @@ public class Player : Biped
 
                 if (lastPID > 0)// If a source already damaged this player
                 {
-                    if (hitPoints <= maxHitPoints * 0.1f)
+                    if (hitPoints <= maxHitPoints * 0.1f && GameManager.instance.gameMode == GameManager.GameMode.Versus)
                     {
-                        if (lastPID != photonId && sourcePid == photonId) // someone hurt me before I hit 10 percent and i am trying to kms
+                        if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                         {
-                            // do nothing
+
+                            if (lastPID != photonId && sourcePid == photonId) // someone hurt me before I hit 10 percent and i am trying to kms
+                            {
+                                // do nothing
+                            }
+                            else if (lastPID != photonId && sourcePid != photonId) // the last person that hit me isnt myself and the new person that hit me isnt myself either
+                            {
+                                // the last person that hit me isnt myself and the new person that hit me isnt myself either
+                                // we are at the 10% health mark, so do nothing. The player that made me hit 10% health should get the kill
+
+                                if (sourcePid != lastPID)
+                                {
+                                    // if the new person is not the last person, someone is REALLY trying to steal my kill
+                                    // do nothing
+                                }
+                                else
+                                {
+                                    lastPID = sourcePid;
+                                    _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
+                                    try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
+                                }
+                            }
+                            else if (lastPID == photonId && sourcePid != photonId) // i hurt myself and reached 10 percent, someone is tryng to finish me off
+                            {
+                                // give them the kill
+                                lastPID = sourcePid;
+                                _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
+                                try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
+                            }
                         }
-                        else if (lastPID != photonId && sourcePid != photonId) // someone is trying to steal kill
+                        else
                         {
-                            // do nothing
-                        }
-                        else if (lastPID == photonId && sourcePid != photonId) // i hurt myself and reached 10 percent, someone is tryng to finish me off
-                        {
-                            // give them the kill
-                            lastPID = sourcePid;
+                            if (lastPID != photonId && sourcePid == photonId) // someone hurt me before I hit 10 percent and i am trying to kms
+                            {
+                                // do nothing
+                            }
+                            else if (lastPID != photonId && sourcePid != photonId) // the last person that damaged me is not myself someone is trying to steal kill
+                            {
+                                // do nothing
+
+                                if (GameManager.GetPlayerWithPhotonView(lastPID) != null)
+                                    if (GameManager.GetPlayerWithPhotonView(lastPID).team == this.team)
+                                    {
+                                        // if the last player that hit me is part of my team and the new player that hit me isnt myself/
+                                        // change immediatly to avoid a locked betrayal
+
+                                        lastPID = sourcePid;
+                                        _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
+                                        try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
+                                    }
+                                    else
+                                    {
+                                        // the last person that hit me isnt myself and the new person that hit me isnt myself either
+                                        // we are at the 10% health mark, so do nothing. The player that made me hit 10% health should get the kill
+
+                                        if (sourcePid != lastPID)
+                                        {
+                                            // if the new person is not the last person, someone is REALLY trying to steal my kill
+                                            // do nothing
+                                        }
+                                        else
+                                        {
+                                            lastPID = sourcePid;
+                                            _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
+                                            try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
+                                        }
+                                    }
+                            }
+                            else if (lastPID == photonId && sourcePid != photonId) // i hurt myself and reached 10 percent, someone is tryng to finish me off
+                            {
+                                // give them the kill
+                                lastPID = sourcePid;
+                                _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
+                                try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
+                            }
                         }
                     }
                     else
                     {
                         lastPID = sourcePid;
+                        _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
+                        try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
                     }
 
-
-
-                    //if (sourcePid != photonId)
-                    //    lastPID = sourcePid;
-                    //else if (sourcePid == photonId && hitPoints <= maxHitPoints * 0.1f)
-                    //{
-                    //    // Do nothing, if players tries to kill himself with only 10% health left, the player that damaged this one before will get the kill
-                    //}
-                    //else
-                    //    lastPID = sourcePid;
                 }
-                else // No source has damaged this player yet
+                else
+                {
+                    // No source has damaged this player yet
+
+                    _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo;
+                    try { deathNature = (DeathNature)dn; } catch (System.Exception e) { Debug.LogError($"COULD NOT ASSIGN DEATH NATURE {dn}. {e}"); }
                     lastPID = sourcePid;
+                }
             }
         }
         catch { }
+        try { print($"Damage_RPC {_killFeedOutput} {deathNature} {_ragdollPropulsion} {(DeathNature)dn}"); } catch (System.Exception e) { Debug.LogError(e); }
+
+
+        if ((DeathNature)dn == DeathNature.Melee)
+        {
+            if ((WeaponProperties.KillFeedOutput)kfo == WeaponProperties.KillFeedOutput.Sword)
+                SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulSwordSlash);
+            else
+                SoundManager.instance.PlayAudioClip((Vector3)this.impactPos, SoundManager.instance.successfulPunch);
+        }
+
+
+
+
+
+
         //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
         try
         {
@@ -1782,7 +1858,7 @@ public class Player : Biped
 
         if (!isDead && playerThatKilledMe)
         {
-            if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
+            if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On && playerThatKilledMe.photonId == sourcePid)
                 playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker();
 
 

@@ -755,7 +755,9 @@ abstract public class Actor : Biped
 
         if (playerWhoShotPDI > 0) _lastPlayerPhotonIdWhoDamagedThis = playerWhoShotPDI;
 
-        SoundManager.instance.PlayAudioClip(transform.position, SoundManager.instance.successfulPunch);
+        if (weapIndx == 555)
+            SoundManager.instance.PlayAudioClip(transform.position, SoundManager.instance.successfulPunch);
+
 
 
         Player pp = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
@@ -771,7 +773,7 @@ abstract public class Actor : Biped
             _switchPlayerCooldown = 5;
         }
 
-        Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage} {damageSource}");
+        Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage} {damageSource} {weapIndx}");
         hitPoints -= damage;
 
         if (hitPoints > 0)
