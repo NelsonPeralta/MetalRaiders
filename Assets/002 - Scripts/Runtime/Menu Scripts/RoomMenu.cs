@@ -29,11 +29,14 @@ public class RoomMenu : MonoBehaviour
         Launcher.instance.gameModeText.text = $"Game Mode: {GameManager.instance.gameMode}";
 
         if (CurrentRoomManager.instance.roomType != CurrentRoomManager.RoomType.QuickMatch)
-            FindObjectOfType<Launcher>().gameModeBtns.SetActive(PhotonNetwork.IsMasterClient);
+        {
+
+            //FindObjectOfType<Launcher>().gameModeBtns.SetActive(PhotonNetwork.IsMasterClient);
+        }
         else
         {
             Launcher.instance.multiplayerMcComponentsHolder.SetActive(false);
-            FindObjectOfType<Launcher>().gameModeBtns.SetActive(false);
+            //FindObjectOfType<Launcher>().gameModeBtns.SetActive(false);
             FindObjectOfType<Launcher>().swarmModeBtns.SetActive(false);
             FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
         }

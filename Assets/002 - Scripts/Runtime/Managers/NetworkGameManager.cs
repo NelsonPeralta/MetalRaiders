@@ -130,6 +130,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 GameManager.instance.CreateTeamsBecausePlayerJoined();
                 //Launcher.instance.FindMasterClientAndToggleIcon();
             }
+
+            Launcher.instance.UpdateMapPreviewText();
         }
     }
 

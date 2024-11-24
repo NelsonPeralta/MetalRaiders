@@ -27,6 +27,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public GameObject loginButton;
     public GameObject playerModel { get { return _playerModel; } }
 
+    public bool CountdownStarted { get { return CurrentRoomManager.instance.roomGameStartCountdown != Launcher.DEFAULT_ROOM_COUNTDOWN; } }
+
     #region
     public int levelToLoadIndex
     {
@@ -37,6 +39,8 @@ public class Launcher : MonoBehaviourPunCallbacks
             _mapSelectedPreview.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
             _mapSelectedPreview.gameObject.SetActive((CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.QuickMatch) ||
                 (!PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private));
+
+            _mapSelectedPreview.gameObject.SetActive(true);
             mapSelectedText.text = $"Map: {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().mapName}";
             _mapSelectedPreview.sprite = GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().image;
             //mapSelectedText.text = $"Map: {Launcher.NameFromIndex(_levelToLoadIndex).Replace("PVP - ", "")}";
@@ -73,7 +77,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text _gametypeSelectedText;
     [SerializeField] TMP_Text _gameModeSelectedText;
     [SerializeField] TMP_Text _teamModeText;
-    [SerializeField] TMP_Text _teamText, _difficultyText;
+    [SerializeField] TMP_Text _teamText, _difficultyText, _mapPreviewText;
     [SerializeField] GameObject _teamModeBtns;
     [SerializeField] GameObject _swarmDifficultyBtns;
     [SerializeField] GameObject _vetoBtn;
@@ -85,7 +89,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField registerPasswordText;
 
     [Header("Master Client Only")]
-    [SerializeField] GameObject _startGameButton;
+    [SerializeField] GameObject _mapSelectionBtn, _startGameButton;
     [SerializeField] GameObject _gameModeBtns;
     [SerializeField] GameObject _multiplayerMcComponentsHolder;
     [SerializeField] GameObject _swarmMcComponentsHolder;
@@ -576,6 +580,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
                 _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
+                //_mapSelectionBtn.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
 
                 if (PhotonNetwork.IsMasterClient)
                 {
@@ -842,11 +847,30 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
+    public void OpenMapSelectionPopUpMenu()
+    {
+        if (!CountdownStarted)
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.InRoom)
+                MenuManager.Instance.OpenPopUpMenu("map selection");
+    }
 
+    public void OpenGametypeSelectionPopUpMenu()
+    {
+        if (!CountdownStarted)
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.InRoom)
+                MenuManager.Instance.OpenPopUpMenu("gametype selection");
+    }
+
+    public void OpenGameOptionsPopUpMenu()
+    {
+        if (!CountdownStarted)
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.InRoom)
+                MenuManager.Instance.OpenPopUpMenu("game options");
+    }
 
     public void ChangeLevelToLoadWithIndex(int index)
     {
-        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        if (!CountdownStarted)
         {
             Launcher.instance.levelToLoadIndex = index;
             NetworkGameManager.instance.SendGameParams();
@@ -855,7 +879,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeGameType(string gt)
     {
-        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        if (!CountdownStarted)
         {
             if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.GunGame)
                 if (GameManager.instance.teamMode != TeamMode.None)
@@ -871,23 +895,27 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    public void ChangeGameMode(string gt)
+    public void ToggleGameMode()
     {
-        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
-        {
-            GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gt);
-            if (GameManager.instance.gameMode == GameManager.GameMode.Versus) GameManager.instance.teamMode = GameManager.TeamMode.None;
-            if (GameManager.instance.gameMode == GameManager.GameMode.Coop) GameManager.instance.teamMode = GameManager.TeamMode.Classic;
+        if (!CountdownStarted)
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.InRoom)
+            {
+                if (GameManager.instance.gameMode == GameMode.Versus) GameManager.instance.gameMode = GameMode.Coop;
+                else if (GameManager.instance.gameMode == GameMode.Coop) GameManager.instance.gameMode = GameMode.Versus;
 
-            FindObjectOfType<NetworkGameManager>().SendGameParams();
-        }
+                //GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), gt);
+                if (GameManager.instance.gameMode == GameManager.GameMode.Versus) GameManager.instance.teamMode = GameManager.TeamMode.None;
+                if (GameManager.instance.gameMode == GameManager.GameMode.Coop) GameManager.instance.teamMode = GameManager.TeamMode.Classic;
+
+                FindObjectOfType<NetworkGameManager>().SendGameParams();
+            }
     }
 
     public void ChangeTeamMode(string tm)
     {
         Debug.Log("ChangeTeamMode Btn");
 
-        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        if (!CountdownStarted)
         {
             if ((GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), tm) == TeamMode.Classic)
                 if (GameManager.instance.gameType == GameType.GunGame)
@@ -908,7 +936,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeTeam()
     {
-        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        if (!CountdownStarted)
         {
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
@@ -930,7 +958,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeSprintMode() //  called from a ui button
     {
-        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        if (!CountdownStarted)
         {
             if (GameManager.instance.sprintMode == SprintMode.On)
             {
@@ -948,7 +976,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeHitMarkersMode() //  called from a ui button
     {
-        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        if (!CountdownStarted)
         {
             if (GameManager.instance.hitMarkersMode == HitMarkersMode.On)
             {
@@ -970,7 +998,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeTeamOfLocalPlayer(int localPlayerInd)
     {
-        if (CurrentRoomManager.instance.roomGameStartCountdown == Launcher.DEFAULT_ROOM_COUNTDOWN)
+        if (!CountdownStarted)
         {
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
@@ -990,6 +1018,21 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
+
+    public void UpdateMapPreviewText()
+    {
+        if (GameManager.instance.gameMode == GameMode.Versus)
+        {
+            _mapPreviewText.text = $"{GameManager.instance.gameType} on {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(levelToLoadIndex)).SingleOrDefault().mapName}";
+
+            if (GameManager.instance.teamMode == TeamMode.Classic)
+                _mapPreviewText.text = "Team " + _mapPreviewText.text;
+        }
+        else if (GameManager.instance.gameMode == GameMode.Coop)
+        {
+            _mapPreviewText.text = $"{GameManager.instance.gameType} on {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(levelToLoadIndex)).SingleOrDefault().mapName}";
+        }
+    }
 
 
 
