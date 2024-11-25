@@ -554,6 +554,8 @@ public class Player : Biped
                 else _defaultVerticalFov = 58.72f;
             }
 
+            _defaultVerticalFov = 58.72f; // had to revert. Previsou code makes zooming inconsistent
+
 
             GetComponent<PlayerController>().mainCam.fieldOfView = defaultVerticalFov;
             GetComponent<PlayerController>().uiCam.fieldOfView = defaultVerticalFov;
