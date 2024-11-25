@@ -223,6 +223,7 @@ MonoBehaviour:
   - AskMasterClientToSpawnFlag
   - AskMasterClientToSpawnOddball
   - SpawnOddball_RPC
+  - CancelStartGameButton
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

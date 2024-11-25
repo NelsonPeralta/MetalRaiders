@@ -236,4 +236,18 @@ public class MenuManager : MonoBehaviour
         print("OpenRoomBrowserMenu");
         OpenMenu("room browser");
     }
+
+    public List<string> GetActiveMenusName()
+    {
+        List<string> _menus = new List<string>();
+
+        for (int i = 0; i < menus.Length; i++)
+            if (menus[i].open)
+            {
+                print($"GetActiveMenuName {menus[i].menuName}");
+                _menus.Add(menus[i].name);
+            }
+
+        return _menus;
+    }
 }

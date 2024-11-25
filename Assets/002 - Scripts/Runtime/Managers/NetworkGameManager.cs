@@ -1232,6 +1232,27 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+
+    [PunRPC]
+    public void CancelStartGameButton(bool caller = true)
+    {
+        if (caller && PhotonNetwork.IsMasterClient)
+        {
+            instance._pv.RPC("CancelStartGameButton", RpcTarget.All, false);
+        }
+        else if (!caller)
+        {
+            CurrentRoomManager.instance.matchSettingsSet = false;
+            Launcher.instance.gameCountdownText.gameObject.SetActive(false);
+            CurrentRoomManager.instance.roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;
+        }
+    }
+
+
+
+
+
     [PunRPC]
 
     public void TriggerPlayerOverheatWeapon(int playerPhotonId, int weaponKillFeedOutputInt, bool leftHand, bool caller = true)

@@ -680,11 +680,20 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         print($"OnMasterClientSwitched {newMasterClient.NickName} {PhotonNetwork.IsMasterClient}");
 
+
         GameManager.instance.gameMode = GameMode.Versus;
         GameManager.instance.teamMode = TeamMode.None;
         GameManager.instance.sprintMode = SprintMode.On;
         GameManager.instance.hitMarkersMode = HitMarkersMode.On;
         GameManager.instance.difficulty = SwarmManager.Difficulty.Normal;
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+
+            NetworkGameManager.instance.CancelStartGameButton();
+        }
 
         _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
         _mapSelectedPreview.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
@@ -872,6 +881,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (!CountdownStarted)
         {
+            if (MenuManager.Instance.GetActiveMenusName().Contains("map selection"))
+                MenuManager.Instance.CloseMenu("map selection");
+
             Launcher.instance.levelToLoadIndex = index;
             NetworkGameManager.instance.SendGameParams();
         }
@@ -881,6 +893,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (!CountdownStarted)
         {
+            if (MenuManager.Instance.GetActiveMenusName().Contains("gametype selection"))
+                MenuManager.Instance.CloseMenu("gametype selection");
+
             if ((GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), gt) == GameType.GunGame)
                 if (GameManager.instance.teamMode != TeamMode.None)
                     GameManager.instance.teamMode = TeamMode.None;
