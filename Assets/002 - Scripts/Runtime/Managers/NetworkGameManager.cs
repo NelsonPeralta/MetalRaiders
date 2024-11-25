@@ -7,6 +7,7 @@ using System;
 using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
 using Steamworks;
+using UnityEngine.UIElements;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -683,26 +684,48 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void DamageExplosiveBarrel_RPC(Vector3 sp, int val, int playerPid)
     {
-        foreach (ExplosiveBarrel eb in FindObjectsOfType<ExplosiveBarrel>(false).ToList())
+        foreach (Transform ic in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<ExplosiveBarrel>()))
         {
-            if (eb.spawnPointPosition == sp)
+            if (ic.GetComponent<ExplosiveBarrel>().spawnPointPosition == sp)
             {
-                eb.UpdateLastPlayerWhoDamaged(playerPid);
-                eb._networkHitPoints = val;
+                ic.GetComponent<ExplosiveBarrel>().UpdateLastPlayerWhoDamaged(playerPid);
+                ic.GetComponent<ExplosiveBarrel>()._networkHitPoints = val;
             }
         }
+
+
+
+        //foreach (ExplosiveBarrel eb in FindObjectsOfType<ExplosiveBarrel>(false).ToList())
+        //{
+        //    if (eb.spawnPointPosition == sp)
+        //    {
+        //        eb.UpdateLastPlayerWhoDamaged(playerPid);
+        //        eb._networkHitPoints = val;
+        //    }
+        //}
     }
 
     [PunRPC]
     void ResetAllExplosiveBarrels_RPC()
     {
-        foreach (ExplosiveBarrel ic in FindObjectsOfType<ExplosiveBarrel>(true).ToList())
+
+        foreach (Transform ic in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<ExplosiveBarrel>()))
         {
             ic.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            ic.transform.position = ic.spawnPointPosition;
-            ic.transform.rotation = ic.spawnPointRotation;
+            ic.transform.position = ic.GetComponent<ExplosiveBarrel>().spawnPointPosition;
+            ic.transform.rotation = ic.GetComponent<ExplosiveBarrel>().spawnPointRotation;
             ic.gameObject.SetActive(true);
         }
+
+
+
+        //foreach (ExplosiveBarrel ic in FindObjectsOfType<ExplosiveBarrel>(true).ToList())
+        //{
+        //    ic.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //    ic.transform.position = ic.spawnPointPosition;
+        //    ic.transform.rotation = ic.spawnPointRotation;
+        //    ic.gameObject.SetActive(true);
+        //}
         Debug.Log("All Barrels Reset");
     }
 
@@ -710,29 +733,53 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void EnableExplosiveBarrel_RPC(Vector3 position)
     {
-        foreach (ExplosiveBarrel ic in FindObjectsOfType<ExplosiveBarrel>(true).ToList())
+        foreach (Transform ic in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<ExplosiveBarrel>()))
         {
-            if (ic.spawnPointPosition == position)
+            if (ic.GetComponent<ExplosiveBarrel>().spawnPointPosition == position)
             {
                 ic.gameObject.SetActive(true);
-                ic.transform.position = ic.spawnPointPosition;
-                ic.transform.rotation = ic.spawnPointRotation;
+                ic.transform.position = ic.GetComponent<ExplosiveBarrel>().spawnPointPosition;
+                ic.transform.rotation = ic.GetComponent<ExplosiveBarrel>().spawnPointRotation;
             }
         }
+
+
+        //foreach (ExplosiveBarrel ic in FindObjectsOfType<ExplosiveBarrel>(true).ToList())
+        //{
+        //    if (ic.spawnPointPosition == position)
+        //    {
+        //        ic.gameObject.SetActive(true);
+        //        ic.transform.position = ic.spawnPointPosition;
+        //        ic.transform.rotation = ic.spawnPointRotation;
+        //    }
+        //}
     }
 
     [PunRPC]
     void RelocateExplosiveBarrel_RPC(Vector3 position, Quaternion rotation)
     {
-        foreach (ExplosiveBarrel lw in FindObjectsOfType<ExplosiveBarrel>(true).ToList())
+        foreach (Transform ic in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<ExplosiveBarrel>()))
         {
-            if (lw.spawnPointPosition == position)
+            if (ic.GetComponent<ExplosiveBarrel>().spawnPointPosition == position)
             {
-                lw.GetComponent<Rigidbody>().velocity *= 0;
-                lw.transform.position = position;
-                lw.transform.rotation = rotation;
+                ic.GetComponent<Rigidbody>().velocity *= 0;
+                ic.transform.position = position;
+                ic.transform.rotation = rotation;
             }
         }
+
+
+
+
+        //foreach (ExplosiveBarrel lw in FindObjectsOfType<ExplosiveBarrel>(true).ToList())
+        //{
+        //    if (lw.spawnPointPosition == position)
+        //    {
+        //        lw.GetComponent<Rigidbody>().velocity *= 0;
+        //        lw.transform.position = position;
+        //        lw.transform.rotation = rotation;
+        //    }
+        //}
     }
     #endregion
 
@@ -779,8 +826,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void EnableGrenadePacks_RPC()
     {
-        foreach (NetworkGrenadeSpawnPoint ap in FindObjectsOfType<NetworkGrenadeSpawnPoint>())
-            ap.enable = true;
+        foreach (Transform ap in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<NetworkGrenadeSpawnPoint>()))
+            ap.GetComponent<NetworkGrenadeSpawnPoint>().enable = true;
+
     }
 
     [PunRPC]

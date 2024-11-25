@@ -1787,17 +1787,21 @@ public class PlayerController : MonoBehaviourPun
     {
         //if (GameManager.instance.devMode)
 
-        if (rewiredPlayer.GetButtonLongPressDown("floatingcamera") && PV.IsMine)
+
+        if (GameManager.instance.nbLocalPlayersPreset == 1 && activeControllerType != ControllerType.Joystick)
         {
-            ToggleFloatingCamera();
-        }
-        else if (rewiredPlayer.GetButtonDown("floatingcamera") && PV.IsMine && cameraIsFloating)
-        {
-            PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, false);
-        }
-        else if (rewiredPlayer.GetButtonDown("floatingcameraminus") && PV.IsMine && cameraIsFloating)
-        {
-            PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, true);
+            if (rewiredPlayer.GetButtonLongPressDown("floatingcamera") && PV.IsMine)
+            {
+                ToggleFloatingCamera();
+            }
+            else if (rewiredPlayer.GetButtonDown("floatingcamera") && PV.IsMine && cameraIsFloating)
+            {
+                PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, false);
+            }
+            else if (rewiredPlayer.GetButtonDown("floatingcameraminus") && PV.IsMine && cameraIsFloating)
+            {
+                PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, true);
+            }
         }
     }
 

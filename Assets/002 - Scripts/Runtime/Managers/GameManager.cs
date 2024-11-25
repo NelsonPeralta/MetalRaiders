@@ -954,20 +954,30 @@ public class GameManager : MonoBehaviourPunCallbacks
     //    //return instance._pid_player_Dict.ContainsKey(k);
     //}
 
-    public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null)
+
+
+    List<Transform> _SetLayerRecursivelyList = new List<Transform>();
+    public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null) // do not use runtime. Use as a 1-time
     {
         print($"SetLayerRecursively {go.name} {layerNumber}");
-
+        instance._SetLayerRecursivelyList.Clear();
 
         if (ignoreList == null)
             ignoreList = new List<int>();
         // Reference: https://forum.unity.com/threads/change-gameobject-layer-at-run-time-wont-apply-to-child.10091/
 
-        foreach (Transform trans in go.GetComponentsInChildren<Transform>(true))
+
+        instance._SetLayerRecursivelyList = go.GetComponentsInChildren<Transform>(true).ToList();
+        foreach (Transform trans in instance._SetLayerRecursivelyList) // this is being called so often it is worth keeping in memory or it will create garbage
         {
             if (!ignoreList.Contains(trans.gameObject.layer))
                 trans.gameObject.layer = layerNumber;
         }
+    }
+
+    public static void SetBulletTrailLayer(GameObject _go, int _layer)
+    {
+        _go.layer = _layer;
     }
 
 

@@ -21,9 +21,6 @@ public class GameObjectPool : MonoBehaviour
     public List<GameObject> weaponSmokeCollisions = new List<GameObject>();
     public GameObject weaponSmokeCollisionPrefab;
 
-    [Header("Testing Object")]
-    public List<GameObject> testingObjects = new List<GameObject>();
-    public GameObject testingObjectPrefab;
 
     public List<GameObject> bulletMetalImpactList = new List<GameObject>();
     [SerializeField] GameObject bulletMetalImpactPrefab;
@@ -77,10 +74,6 @@ public class GameObjectPool : MonoBehaviour
 
 
 
-            obj = Instantiate(testingObjectPrefab, transform.position, transform.rotation);
-            obj.SetActive(false);
-            testingObjects.Add(obj);
-            obj.transform.parent = gameObject.transform;
 
             obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
@@ -118,7 +111,6 @@ public class GameObjectPool : MonoBehaviour
             if (!obj.activeSelf)
                 if (!obj.activeSelf)
                 {
-                    StartCoroutine(DisableObjectAfterTime(obj));
                     return obj;
                 }
         return null;
@@ -138,8 +130,6 @@ public class GameObjectPool : MonoBehaviour
 
 
                     obj.SetActive(true);
-
-                    StartCoroutine(DisableObjectAfterTime(obj));
                     return obj;
                 }
         return null;
@@ -152,24 +142,12 @@ public class GameObjectPool : MonoBehaviour
         foreach (GameObject obj in shieldHits)
             if (!obj.activeSelf)
             {
-                StartCoroutine(DisableObjectAfterTime(obj, 0.4f));
                 return obj;
             }
         return null;
     }
 
 
-    public GameObject SpawnPooledTestingObject()
-    {
-        foreach (GameObject obj in testingObjects)
-            if (!obj.activeSelf)
-                if (!obj.activeSelf)
-                {
-                    StartCoroutine(DisableObjectAfterTime(obj));
-                    return obj;
-                }
-        return null;
-    }
 
     public GameObject SpawnBulletHole(Vector3 pos, Vector3 norm)
     {
@@ -181,8 +159,6 @@ public class GameObjectPool : MonoBehaviour
                 obj.transform.position += obj.transform.forward / 1000;
                 obj.SetActive(true);
 
-
-                StartCoroutine(DisableObjectAfterTime(obj, 10));
                 return obj;
             }
         return null;
@@ -196,11 +172,12 @@ public class GameObjectPool : MonoBehaviour
 
                 obj.transform.position = pos;
                 obj.SetActive(true);
-                StartCoroutine(DisableObjectAfterTime(obj, 2));
                 return obj;
             }
         return null;
     }
+
+
     private void OnDestroy()
     {
         foreach (GameObject go in bullets)
@@ -210,9 +187,6 @@ public class GameObjectPool : MonoBehaviour
             Destroy(go);
 
         foreach (GameObject go in genericHits)
-            Destroy(go);
-
-        foreach (GameObject go in testingObjects)
             Destroy(go);
     }
 

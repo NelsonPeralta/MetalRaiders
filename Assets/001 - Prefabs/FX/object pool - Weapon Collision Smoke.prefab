@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2954883329669255025}
   - component: {fileID: 2955661610745214603}
   - component: {fileID: 7338015992874221301}
+  - component: {fileID: -6920826805968031523}
   m_Layer: 0
   m_Name: object pool - Weapon Collision Smoke
   m_TagString: Untagged
@@ -5004,3 +5005,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-6920826805968031523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3153810699896921423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ff91b9e152d0b49bebd68ce2d103b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countdown: 2

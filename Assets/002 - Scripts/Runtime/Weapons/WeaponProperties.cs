@@ -261,6 +261,8 @@ public class WeaponProperties : MonoBehaviour
     int _index, _preLayer, _recoilCount;
     Animator _animator;
 
+    bool _spawnMuzzleFlashNetFrame;
+
 
     private void Start()
     {
@@ -336,6 +338,11 @@ public class WeaponProperties : MonoBehaviour
         BloomDecrease();
     }
 
+    private void FixedUpdate()
+    {
+        ShowMuzzleFlash();
+    }
+
 
     public void HandleOverheat()
     {
@@ -405,7 +412,21 @@ public class WeaponProperties : MonoBehaviour
     public void SpawnMuzzleflash()
     {
         if (fpsMuzzleFlash)
-            StartCoroutine(SpawnMuzzleflash_Coroutine());
+        {
+            DisableMuzzleFlash();
+            _spawnMuzzleFlashNetFrame = true;
+            //StartCoroutine(SpawnMuzzleflash_Coroutine());
+        }
+    }
+
+    void ShowMuzzleFlash()
+    {
+        if (_spawnMuzzleFlashNetFrame)
+        {
+            _spawnMuzzleFlashNetFrame = false;
+            fpsMuzzleFlash.SetActive(true);
+            tpsMuzzleFlash.SetActive(true);
+        }
     }
 
     public void DisableMuzzleFlash()

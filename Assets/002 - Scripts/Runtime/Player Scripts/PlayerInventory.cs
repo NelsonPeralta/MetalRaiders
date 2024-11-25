@@ -312,7 +312,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     [SerializeField] Transform _fakeBulletTrailHolder;
     [SerializeField] Transform _fakeBulleTrailPrefab;
-    [SerializeField] List<Transform> _fakeBulletTrailPool = new List<Transform>();
+    [SerializeField] List<FakeBulletTrail> _fakeBulletTrailPool = new List<FakeBulletTrail>();
     [SerializeField] PlayerGunGameManager _playerGunGameManager;
     [SerializeField] WeaponProperties _oddball, _flag;
     [SerializeField] List<WeaponProperties> _weaponsWithOverheat = new List<WeaponProperties>();
@@ -347,7 +347,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         for (int i = 0; i < 50; i++)
         {
-            Transform fbtt = Instantiate(_fakeBulleTrailPrefab, _fakeBulletTrailHolder);
+            FakeBulletTrail fbtt = Instantiate(_fakeBulleTrailPrefab, _fakeBulletTrailHolder).GetComponent<FakeBulletTrail>();
             _fakeBulletTrailPool.Add(fbtt);
             _fakeBulletTrailPool[i].GetComponent<FakeBulletTrailDisable>().player = player;
             fbtt.gameObject.SetActive(false);
@@ -1021,12 +1021,10 @@ public class PlayerInventory : MonoBehaviourPun
     public void SpawnFakeBulletTrail(int distanceToTravel, Quaternion spray, bool bipedIsMine)
     {
         outOfFakeBullets = true;
-        foreach (Transform fbt in _fakeBulletTrailPool)
+        foreach (FakeBulletTrail fbt in _fakeBulletTrailPool)
         {
             if (!fbt.gameObject.activeInHierarchy)
             {
-                GameManager.SetLayerRecursively(fbt.gameObject, 0);
-
                 if (bipedIsMine)
                 {
                     int ll = 0;
@@ -1040,7 +1038,11 @@ public class PlayerInventory : MonoBehaviourPun
                     else if (player.rid == 3)
                         ll = 31;
 
-                    GameManager.SetLayerRecursively(fbt.gameObject, ll);
+                    GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, ll);
+                }
+                else
+                {
+                    GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
                 }
 
                 Debug.Log("SpawnFakeBulletTrail");

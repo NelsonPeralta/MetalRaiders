@@ -73,7 +73,7 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
         ammoInThisPack = GetNewAmmo();
         UpdateAmmoText();
 
-        CurrentRoomManager.instance.spawnedMapAddOns++;
+        CurrentRoomManager.instance.AddSpawnedMappAddOn(transform);
     }
 
     private void Update()
@@ -86,7 +86,9 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             return;
 
-        _tts -= Time.deltaTime;
+
+        if (CurrentRoomManager.instance.gameStarted)
+            _tts -= Time.deltaTime;
 
         if (_tts < 0)
         {

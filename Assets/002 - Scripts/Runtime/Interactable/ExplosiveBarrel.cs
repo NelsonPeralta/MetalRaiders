@@ -51,7 +51,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
             i++;
         }
 
-        CurrentRoomManager.instance.spawnedMapAddOns++;
+        CurrentRoomManager.instance.AddSpawnedMappAddOn(transform);
     }
 
     private void OnCollisionEnter(Collision collision)

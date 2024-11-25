@@ -125,6 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4530710001294192303}
+  - component: {fileID: -7363909246884191255}
   m_Layer: 0
   m_Name: object pool - Bullet Impact - Metal
   m_TagString: Untagged
@@ -148,3 +149,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7363909246884191255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537056961858913665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ff91b9e152d0b49bebd68ce2d103b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countdown: 10

@@ -40,7 +40,8 @@ public class IceChunk : Hazard, IDamageable
     private void Start()
     {
         OnExploded += OnExplode_Delegate;
-        CurrentRoomManager.instance.spawnedMapAddOns++;
+        //CurrentRoomManager.instance.spawnedMapAddOns++;
+        CurrentRoomManager.instance.AddSpawnedMappAddOn(transform);
         GameManager.instance.hazards.Add(this);
     }
 

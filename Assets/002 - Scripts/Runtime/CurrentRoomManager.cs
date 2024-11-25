@@ -99,10 +99,14 @@ public class CurrentRoomManager : MonoBehaviour
     /// <summary>
     /// Step 2: Wait for spawned items to tell this when they are spawned. When all add-ons are spawned, tell GameManager to spawn local players
     /// </summary>
+    /// 
+
+
+
     public int spawnedMapAddOns
     {
         get { return _spawnedMapAddOns; }
-        set
+        private set
         {
             int _preVal = _spawnedMapAddOns;
             _spawnedMapAddOns = value;
@@ -382,6 +386,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public List<ScriptObjPlayerData> playerDataCells { get { return _playerDataCells; } }
     public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
+    public List<Transform> mapAddOns { get { return _mapAddonsList; } }
     public bool matchSettingsSet { get { return _matchSettingsSet; } set { _matchSettingsSet = value; } }
 
     [SerializeField] bool _mapIsReady, _allPlayersJoined, _gameIsReady;
@@ -411,7 +416,7 @@ public class CurrentRoomManager : MonoBehaviour
     string _tempAchievementName = "";
 
     bool _leftRoomManually, _playerDataRetrieved;
-
+    List<Transform> _mapAddonsList = new List<Transform>();
 
 
     void Awake()
@@ -556,7 +561,6 @@ public class CurrentRoomManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        
         gameStarted = false;
         _reachedHalwayGameStartCountdown = _leftRoomManually = false;
 
@@ -564,6 +568,8 @@ public class CurrentRoomManager : MonoBehaviour
 
         if (scene.buildIndex == 0)
         {
+            _mapAddonsList.Clear();
+
             _matchSettingsSet = _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
                   _reachedHalwayGameStartCountdown = _randomInitiQuickMatchSettingsChosen = false;
             _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _nbPlayersSet = _playersLoadedScene = 0;
@@ -588,6 +594,14 @@ public class CurrentRoomManager : MonoBehaviour
                     if (nwsp.transform.root.GetComponent<Player>() == null)
                         expectedMapAddOns += 1;
         }
+    }
+
+
+    public void AddSpawnedMappAddOn(Transform addOnPos) // Do not add Lootable Weapons Here!!!
+    {
+        if (addOnPos != null)
+            _mapAddonsList.Add(addOnPos);
+        spawnedMapAddOns++;
     }
 
 
