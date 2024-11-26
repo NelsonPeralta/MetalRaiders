@@ -120,6 +120,8 @@ public class PlayerNamePlate : MonoBehaviour
     {
         playerText.text = name;
         _playerData = CurrentRoomManager.GetLocalPlayerData(playerDataCell);
+        GetComponentInChildren<KickPlayerBtn>().SetPlayerDataCell(_playerData);
+
         UpdateColorPalette();
     }
 
