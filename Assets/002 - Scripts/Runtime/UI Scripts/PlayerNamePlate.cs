@@ -38,7 +38,7 @@ public class PlayerNamePlate : MonoBehaviour
 
 
 
-
+            GetComponentInChildren<KickPlayerBtn>().SetPlayerDataCell(value);
         }
     }
 

@@ -13,6 +13,7 @@ using Rewired;
 using System.Linq;
 using Steamworks;
 using UnityEngine.EventSystems;
+using Rewired.Components;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -53,7 +54,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum SprintMode { On, Off }
     public enum HitMarkersMode { On, Off }
 
-    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, Kicked }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -584,8 +585,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 StartCoroutine(LoadTimeOutOpenErrorMenu_Coroutine());
             }
-
-
+            else if (previousScenePayloads.Contains(PreviousScenePayload.Kicked))
+            {
+                MenuManager.Instance.OpenErrorMenu("You were kicked from the game.");
+            }
 
 
 
@@ -1476,5 +1479,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void AddToPreivousScenePayload(PreviousScenePayload psp)
     {
         previousScenePayloads.Add(psp);
+    }
+
+    public static void QuitGameButtonPressed()
+    {
+        if(SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            if (!CurrentRoomManager.instance.gameOver)
+            {
+                GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenMainMenu);
+
+
+                CurrentRoomManager.instance.leftRoomManually = true;
+                GetRootPlayer().playerController.QuitMatch();   
+            }
+        }
     }
 }

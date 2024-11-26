@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class ScoreboardRowRuntime : MonoBehaviour
 {
@@ -35,6 +36,8 @@ public class ScoreboardRowRuntime : MonoBehaviour
                 _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
                 _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
             }
+
+            GetComponentInChildren<KickPlayerBtn>().SetPlayerDataCell(value);
         }
     }
 

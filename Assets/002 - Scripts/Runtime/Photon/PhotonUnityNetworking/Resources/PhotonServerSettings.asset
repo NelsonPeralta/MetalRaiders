@@ -224,6 +224,7 @@ MonoBehaviour:
   - AskMasterClientToSpawnOddball
   - SpawnOddball_RPC
   - CancelStartGameButton
+  - KickPlayerWithDatabaseId
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

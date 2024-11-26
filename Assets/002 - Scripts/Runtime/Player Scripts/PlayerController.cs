@@ -2238,7 +2238,7 @@ public class PlayerController : MonoBehaviourPun
     }
     void StartButton()
     {
-        if (rewiredPlayer.GetButtonDown("Start") || rewiredPlayer.GetButtonDown("Escape"))
+        if (rewiredPlayer.GetButtonDown("Start") || rewiredPlayer.GetButtonDown("Escape") && !allPlayerScripts.scoreboardManager.scoreboardOpen)
         {
             TogglePauseGame();
         }
@@ -2246,14 +2246,18 @@ public class PlayerController : MonoBehaviourPun
 
     void BackButton()
     {
-        if (!player.isDead)
+        if (!player.isDead && !pauseMenuOpen)
             if (rewiredPlayer.GetButtonDown("Back"))
             {
                 allPlayerScripts.scoreboardManager.OpenScoreboard();
+                player.playerUI.gamepadCursor.gameObject.SetActive(true);
+                player.playerUI.gamepadCursor.GetReady(ReInput.controllers.GetLastActiveControllerType());
             }
             else if (rewiredPlayer.GetButtonUp("Back"))
             {
                 allPlayerScripts.scoreboardManager.CloseScoreboard();
+                player.playerUI.gamepadCursor.CloseFromPauseMenu();
+                player.playerUI.gamepadCursor.gameObject.SetActive(false);
             }
     }
 
@@ -2410,65 +2414,66 @@ public class PlayerController : MonoBehaviourPun
     float _timeMarkSpotHasBeenHeld;
     void MarkSpot()
     {
-        if (rewiredPlayer.GetButton("mark"))
-        {
-            if (_timeMarkSpotHasBeenHeld < 0.33f && _timeMarkSpotHasBeenHeld > -1)
-                _timeMarkSpotHasBeenHeld = Mathf.Clamp(_timeMarkSpotHasBeenHeld + Time.deltaTime, 0, 0.33f);
-
-            if (_timeMarkSpotHasBeenHeld == 0.33f)
+        if (!allPlayerScripts.scoreboardManager.scoreboardOpen && !pauseMenuOpen)
+            if (rewiredPlayer.GetButton("mark"))
             {
-                print($"MARK SPOT HELD LONG {_timeMarkSpotHasBeenHeld}");
+                if (_timeMarkSpotHasBeenHeld < 0.33f && _timeMarkSpotHasBeenHeld > -1)
+                    _timeMarkSpotHasBeenHeld = Mathf.Clamp(_timeMarkSpotHasBeenHeld + Time.deltaTime, 0, 0.33f);
 
-                player.playerInteractableObjectHandler.TriggerLongInteract();
-            }
-        }
-        else if (rewiredPlayer.GetButtonUp("mark"))
-        {
-            print($"MarkSpot held: {_timeMarkSpotHasBeenHeld}");
-
-
-            if (_timeMarkSpotHasBeenHeld < 0.2f && _timeMarkSpotHasBeenHeld > -1)
-            {
-                //if (!player.playerInventory.isDualWielding)
+                if (_timeMarkSpotHasBeenHeld == 0.33f)
                 {
-                    RaycastHit hit;
+                    print($"MARK SPOT HELD LONG {_timeMarkSpotHasBeenHeld}");
+
+                    player.playerInteractableObjectHandler.TriggerLongInteract();
+                }
+            }
+            else if (rewiredPlayer.GetButtonUp("mark"))
+            {
+                print($"MarkSpot held: {_timeMarkSpotHasBeenHeld}");
 
 
-                    if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
+                if (_timeMarkSpotHasBeenHeld < 0.2f && _timeMarkSpotHasBeenHeld > -1)
+                {
+                    //if (!player.playerInventory.isDualWielding)
                     {
-                        Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
+                        RaycastHit hit;
 
-                        if (hit.collider.transform.root.GetComponent<Player>())
+
+                        if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
                         {
-                            if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                                MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
+                            Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
+
+                            if (hit.collider.transform.root.GetComponent<Player>())
+                            {
+                                if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                                    MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
+                                else
+                                {
+                                    if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
+                                        PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
+                                    else
+                                        PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
+                                }
+                            }
                             else
                             {
-                                if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
-                                    PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, true);
+                                if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                                    MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
                                 else
                                     PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
                             }
                         }
-                        else
-                        {
-                            if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                                MarkerManager.instance.SpawnNormalMarker(hit.point, player.photonId);
-                            else
-                                PV.RPC("MarkSpot_RPC", RpcTarget.AllViaServer, hit.point, (int)player.team, false);
-                        }
                     }
+                    //else
+                    //{
+                    //    if (player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity)
+                    //        ReloadThirdWeapon();
+                    //}
                 }
-                //else
-                //{
-                //    if (player.playerInventory.thirdWeapon.loadedAmmo < player.playerInventory.thirdWeapon.ammoCapacity)
-                //        ReloadThirdWeapon();
-                //}
+
+
+                _timeMarkSpotHasBeenHeld = 0;
             }
-
-
-            _timeMarkSpotHasBeenHeld = 0;
-        }
     }
 
 

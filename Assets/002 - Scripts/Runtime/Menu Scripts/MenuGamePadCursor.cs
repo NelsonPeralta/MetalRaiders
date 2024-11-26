@@ -192,8 +192,18 @@ public class MenuGamePadCursor : MonoBehaviour
 
                 if (SceneManager.GetActiveScene().buildIndex == 0 || (SceneManager.GetActiveScene().buildIndex > 0) && player)
                 {
-                    _cachedScreenPos += new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) > 0.15f) ? rewiredPlayer.GetAxis("Move Horizontal") * 20 * (rewiredPlayer.GetButton("Shoot") ? 2 : 1) * (rewiredPlayer.GetButton("Throw Grenade") ? 0.5f : 1) : 0),
-                        ((Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) > 0.15f) ? rewiredPlayer.GetAxis("Move Vertical") * 20 * (rewiredPlayer.GetButton("Shoot") ? 2 : 1) * (rewiredPlayer.GetButton("Throw Grenade") ? 0.5f : 1) : 0), 0);
+                    if (SceneManager.GetActiveScene().buildIndex == 0 ||
+                        SceneManager.GetActiveScene().buildIndex > 0 && player && player.playerController.activeControllerType != ControllerType.Joystick ||
+                        (SceneManager.GetActiveScene().buildIndex > 0 && player && player.playerController.activeControllerType == ControllerType.Joystick && player.playerController.pauseMenuOpen && !player.allPlayerScripts.scoreboardManager.scoreboardOpen))
+                    {
+                        _cachedScreenPos += new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) > 0.15f) ? rewiredPlayer.GetAxis("Move Horizontal") * 20 * (rewiredPlayer.GetButton("Shoot") ? 2 : 1) * (rewiredPlayer.GetButton("Throw Grenade") ? 0.5f : 1) : 0),
+                            ((Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) > 0.15f) ? rewiredPlayer.GetAxis("Move Vertical") * 20 * (rewiredPlayer.GetButton("Shoot") ? 2 : 1) * (rewiredPlayer.GetButton("Throw Grenade") ? 0.5f : 1) : 0), 0);
+                    }
+                    else if (SceneManager.GetActiveScene().buildIndex > 0 && player && player.playerController.activeControllerType == ControllerType.Joystick && !player.playerController.pauseMenuOpen && player.allPlayerScripts.scoreboardManager.scoreboardOpen)
+                    {
+                        _cachedScreenPos += new Vector3(((Mathf.Abs(rewiredPlayer.GetAxis("Mouse X")) > 0.15f) ? rewiredPlayer.GetAxis("Mouse X") * 20 * (rewiredPlayer.GetButton("Shoot") ? 2 : 1) * (rewiredPlayer.GetButton("Throw Grenade") ? 0.5f : 1) : 0),
+                           ((Mathf.Abs(rewiredPlayer.GetAxis("Mouse Y")) > 0.15f) ? rewiredPlayer.GetAxis("Mouse Y") * 20 * (rewiredPlayer.GetButton("Shoot") ? 2 : 1) * (rewiredPlayer.GetButton("Throw Grenade") ? 0.5f : 1) : 0), 0);
+                    }
 
 
                     _cachedScreenPos.x = Mathf.Clamp(_cachedScreenPos.x, -900, 900);

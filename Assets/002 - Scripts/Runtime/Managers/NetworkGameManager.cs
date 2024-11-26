@@ -1376,4 +1376,33 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             GrenadePool.instance.DisableExplosive((WeaponProperties.KillFeedOutput)output, ind, pos);
         }
     }
+
+
+    [PunRPC]
+    public void KickPlayerWithDatabaseId(int playerDbId, bool caller = true)
+    {
+        if (caller)
+        {
+            instance._pv.RPC("KickPlayerWithDatabaseId", RpcTarget.AllViaServer, playerDbId, false);
+        }
+        else if (!caller)
+        {
+            print($"KickPlayerWithDatabaseId RPC called {playerDbId}");
+
+            if (CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id == playerDbId)
+            {
+                print($"I am kicked");
+
+                if (SceneManager.GetActiveScene().buildIndex == 0)
+                {
+                    Launcher.instance.LeaveRoomButton();
+                }
+                else if(SceneManager.GetActiveScene().buildIndex > 0)
+                {
+                    GameManager.instance.AddToPreivousScenePayload(GameManager.PreviousScenePayload.Kicked);
+                    GameManager.QuitGameButtonPressed();
+                }
+            }
+        }
+    }
 }

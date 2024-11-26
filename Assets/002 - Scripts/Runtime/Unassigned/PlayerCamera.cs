@@ -103,7 +103,6 @@ public class PlayerCamera : MonoBehaviour
     {
         if (!GameManager.instance.gameStarted || !pController.PV.IsMine || pController.cameraIsFloating || player.playerDataCell == null) return;
 
-
         _angleBetweenPlayerForwardAndVertAxis = Vector3.SignedAngle(verticalAxisTarget.forward, transform.root.forward, verticalAxisTarget.right);
         if (_blockTime > 0) _blockTime -= Time.deltaTime;
 
@@ -161,6 +160,9 @@ public class PlayerCamera : MonoBehaviour
 
             if (player.isMine && !pController.pauseMenuOpen && _blockTime <= 0)
             {
+                if (player.allPlayerScripts.scoreboardManager.scoreboardOpen) return;
+
+
                 xAxisInput = rewiredPlayer.GetAxis("Mouse X");
                 yAxisInput = rewiredPlayer.GetAxis("Mouse Y");
 

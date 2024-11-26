@@ -14,6 +14,7 @@ public class ScoreboardManager : MonoBehaviour
 
 
     public List<ScoreboardRowRuntime> scoreboardRows = new List<ScoreboardRowRuntime>();
+    public bool scoreboardOpen { get { return _scoreboardOpen; } }
 
 
     Dictionary<int, int> _sorted = new Dictionary<int, int>();
@@ -21,7 +22,7 @@ public class ScoreboardManager : MonoBehaviour
 
 
     // Private Variables
-    bool scoreboardOpen;
+    [SerializeField] bool _scoreboardOpen;
 
 
     int _bc, _c;
@@ -54,7 +55,7 @@ public class ScoreboardManager : MonoBehaviour
 
 
         ToggleTeamScoreboard(GameManager.instance.teamMode == GameManager.TeamMode.Classic);
-        if (!scoreboardOpen)
+        if (!_scoreboardOpen)
         {
             SortScoreBoardByScore();
 
@@ -63,7 +64,7 @@ public class ScoreboardManager : MonoBehaviour
 
 
             _scoreboardHolder.SetActive(true);
-            scoreboardOpen = true;
+            _scoreboardOpen = true;
 
             _multiplayerHeaders.SetActive(GameManager.instance.gameMode == GameManager.GameMode.Versus);
             _swarmHeaders.SetActive(GameManager.instance.gameMode == GameManager.GameMode.Coop);
@@ -94,7 +95,7 @@ public class ScoreboardManager : MonoBehaviour
 
             CloseTeamScoreboard();
             _scoreboardHolder.SetActive(false);
-            scoreboardOpen = false;
+            _scoreboardOpen = false;
         }
     }
 
