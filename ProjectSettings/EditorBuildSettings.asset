@@ -77,7 +77,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Lighthouse V2.unity
     guid: 974d14875f785b84b9b2286dd2396afe
-  - enabled: 1
+  - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Babylon.unity
     guid: ffa1a3962a4fe1c4d96dd6e27b371baf
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Babylon v2.unity
+    guid: c40da1c976733fb4cbd419b97a53bf73
   m_configObjects: {}
