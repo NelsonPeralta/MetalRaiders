@@ -55,10 +55,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
 
                 if (CurrentRoomManager.instance.expectedNbPlayers == 2) return 10;
-                else return 20;
-
-                //return 10 + (Mathf.Clamp((CurrentRoomManager.instance.nbPlayersJoined - 2) * 5, 0, 15));
-                return CurrentRoomManager.instance.expectedNbPlayers * 5;
+                else return 15;
             }
             else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                 return 25;

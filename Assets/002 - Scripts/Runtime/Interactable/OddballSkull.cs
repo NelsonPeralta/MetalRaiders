@@ -12,7 +12,7 @@ public class OddballSkull : MonoBehaviour
 
 
     Player _player;
-    float _triggerReset, _rayCheck;
+    float _triggerReset, _onTriggerStayCheck;
 
 
     RaycastHit _playerHit, _obsHit;
@@ -23,7 +23,7 @@ public class OddballSkull : MonoBehaviour
     {
         GameManager.instance.oddballSkull = this;
 
-        _rayCheck = 0.1f;
+        _onTriggerStayCheck = 0.1f;
     }
 
 
@@ -31,9 +31,9 @@ public class OddballSkull : MonoBehaviour
     {
         if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver && PhotonNetwork.IsMasterClient)
         {
-            if (_rayCheck < 0)
+            if (_onTriggerStayCheck < 0)
             {
-                //print($"OODBALL {other.name}");
+                print($"OODBALL OnTriggerStay {other.name}");
                 if (_triggerReset <= 0 && thisRoot.gameObject.activeSelf &&
                     other.transform.root.GetComponent<Player>())
                 {
@@ -72,8 +72,7 @@ public class OddballSkull : MonoBehaviour
                         }
                     }
                 }
-
-                _rayCheck = 0.1f;
+                //_onTriggerStayCheck = 0.1f; DO NOT DO THIS HERE. IT WILL STOP US FROM CHECKING ALL COLLIDERS IN TRIGGER
             }
         }
     }
@@ -83,8 +82,10 @@ public class OddballSkull : MonoBehaviour
         if (_triggerReset > 0)
             _triggerReset -= Time.deltaTime;
 
-        if (_rayCheck > 0)
-            _rayCheck -= Time.deltaTime;
+        if (_onTriggerStayCheck > 0)
+            _onTriggerStayCheck -= Time.deltaTime;
+        else if (_onTriggerStayCheck <= 0)
+            _onTriggerStayCheck = 0.2f; // we do it here because reseting in the triggerstay will prematurely break checking the entire list of colliders
     }
 
     private void OnEnable()

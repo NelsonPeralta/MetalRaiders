@@ -21,7 +21,7 @@ public class Flag : MonoBehaviour
     [SerializeField] State _state;
 
 
-    float _triggerReset, _rayCheck;
+    float _triggerReset, _onTriggerStayCheck;
     RaycastHit _playerHit, _obsHit;
     Player _player;
 
@@ -41,7 +41,7 @@ public class Flag : MonoBehaviour
             if (spawnPoint.team == GameManager.Team.Blue) GameManager.instance.blueFlag = this;
         }
 
-        _rayCheck = 0.1f;
+        _onTriggerStayCheck = 0.1f;
 
     }
 
@@ -49,8 +49,12 @@ public class Flag : MonoBehaviour
     void Update()
     {
         if (_triggerReset > 0) _triggerReset -= Time.deltaTime;
-        if (_rayCheck > 0)
-            _rayCheck -= Time.deltaTime;
+
+
+        if (_onTriggerStayCheck > 0)
+            _onTriggerStayCheck -= Time.deltaTime;
+        else if (_onTriggerStayCheck <= 0)
+            _onTriggerStayCheck = 0.2f;
     }
 
     private void OnEnable()
@@ -70,7 +74,7 @@ public class Flag : MonoBehaviour
     {
         if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
         {
-            if (_rayCheck < 0)
+            if (_onTriggerStayCheck < 0)
             {
                 print($"FLAG OnTriggerStay {other.transform.root.name}");
                 if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && other.transform.root.GetComponent<Player>() &&
@@ -113,7 +117,7 @@ public class Flag : MonoBehaviour
                     spawnPoint.teammateOnFlag = true;
                 }
 
-                _rayCheck = 0.1f;
+                //_onTriggerStayCheck = 0.1f; DO NOT DO THIS HERE. IT WILL STOP US FROM CHECKING ALL COLLIDERS IN TRIGGER
             }
         }
     }

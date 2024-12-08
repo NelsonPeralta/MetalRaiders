@@ -160,7 +160,7 @@ public class PlayerCamera : MonoBehaviour
 
             if (player.isMine && !pController.pauseMenuOpen && _blockTime <= 0)
             {
-                if (player.allPlayerScripts.scoreboardManager.scoreboardOpen) return;
+                if (player.allPlayerScripts.scoreboardManager.scoreboardOpen && !CurrentRoomManager.instance.gameOver) return;
 
 
                 xAxisInput = rewiredPlayer.GetAxis("Mouse X");
