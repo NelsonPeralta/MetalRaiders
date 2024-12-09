@@ -733,7 +733,7 @@ MonoBehaviour:
   _stolenClip: {fileID: 8300000, guid: 3a122ee963bacb548af5e762c20d0d14, type: 3}
   _droppedClip: {fileID: 8300000, guid: 6becbf89dc2ebd64bbdca18f02961b6d, type: 3}
   _resetClip: {fileID: 8300000, guid: 4186d87452eda4545b551cc6210faaa5, type: 3}
-  _capturedClip: {fileID: 8300000, guid: 8b40a4cf1c59cb741a4b0000c00337c5, type: 3}
+  _capturedClip: {fileID: 8300000, guid: 98eef19b05c6ac94e8e491483362312c, type: 3}
   _redBanner: {fileID: 3578962334917933283}
   _blueBanner: {fileID: 3578962335168784541}
   _canvases: {fileID: 3578962336123313537}
