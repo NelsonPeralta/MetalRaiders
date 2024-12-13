@@ -25,15 +25,13 @@ public class HolidayOnlyProp : MonoBehaviour
                 transform.GetChild(0).gameObject.SetActive(DateTime.Now >= new DateTime(DateTime.Now.Year, 10, 1) &&
                     DateTime.Now < new DateTime(DateTime.Now.Year, 11, 1));
             else if (_holiday == holiday.christmas)
-                transform.GetChild(0).gameObject.SetActive(DateTime.Now >= new DateTime(DateTime.Now.Year, 11, 1) &&
-                    DateTime.Now < new DateTime(DateTime.Now.Year + 1, 2, 1));
+                transform.GetChild(0).gameObject.SetActive(DateTime.Now >= new DateTime(DateTime.Now.Year, 12, 1) &&
+                    DateTime.Now <= new DateTime(DateTime.Now.Year, 12, 31));
             else
                 Destroy(gameObject);
         }
         else
             transform.GetChild(0).gameObject.SetActive(false);
-
-        transform.GetChild(0).gameObject.SetActive(false);
     }
 
     // Update is called once per frame
