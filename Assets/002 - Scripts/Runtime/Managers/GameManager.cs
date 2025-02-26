@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum TeamMode { Classic, None }
     public enum SprintMode { On, Off }
     public enum HitMarkersMode { On, Off }
+    public enum ThirdPersonMode { Off, On }
 
     public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, Kicked }
 
@@ -112,6 +113,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] TeamMode _teamMode;
     [SerializeField] SprintMode _sprintMode;
     [SerializeField] HitMarkersMode _hitMarkersMode;
+    [SerializeField] ThirdPersonMode _thirdPersonMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
     [SerializeField] bool _inARoom;
@@ -256,6 +258,20 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 _sprintMode = value;
                 Launcher.instance.sprintModeText.text = $"Sprint: {_sprintMode}";
+            }
+        }
+    }
+
+    public ThirdPersonMode thirdPersonMode
+    {
+        get { return _thirdPersonMode; }
+
+        set
+        {
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                _thirdPersonMode = value;
+                Launcher.instance.thirdPersonModeOptionsHeader.text = $"Third Person Mode: {_thirdPersonMode}";
             }
         }
     }
@@ -1483,7 +1499,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static void QuitGameButtonPressed()
     {
-        if(SceneManager.GetActiveScene().buildIndex > 0)
+        if (SceneManager.GetActiveScene().buildIndex > 0)
         {
             if (!CurrentRoomManager.instance.gameOver)
             {
@@ -1491,7 +1507,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
                 CurrentRoomManager.instance.leftRoomManually = true;
-                GetRootPlayer().playerController.QuitMatch();   
+                GetRootPlayer().playerController.QuitMatch();
             }
         }
     }

@@ -1367,6 +1367,11 @@ public class Player : Biped
 
         if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("<color=\"red\">Spawned Randomly"); _lastSpawnPointIsRandom = false;
         StartCoroutine(DisableAndEnableGunCam());
+
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        {
+            playerCamera.EnableThirdPerson();
+        }
     }
 
     IEnumerator DisableAndEnableGunCam()

@@ -6,6 +6,7 @@ using UnityEngine.ProBuilder.Shapes;
 
 public class PlayerCamera : MonoBehaviour
 {
+    public static Vector3 THIRD_PERSON_LOCAL_OFFSET = new Vector3(0.8f, 0.6f, -2.5f);
     public PlayerRagdoll ragdollPrefab { get { return _ragdollPrefab; } set { _ragdollPrefab = value; } }
 
     public bool followPlayer { get { return _followPlayer; } set { _followPlayer = value; } }
@@ -58,12 +59,16 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] bool _followPlayer;
     float xExtremeDeadzone = 0.98f, yExtremeDeadzone = 0.98f;
 
+    [SerializeField] Transform _thirdPersonCameraPivot, _thirdPersonCameraTarget, _thirdPersonAimingComponentsOffset;
 
 
 
     private void Awake()
     {
-
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        {
+            //_playerCameraHolder.localPosition = ThirdPersonPosition;
+        }
     }
 
     void Start()
@@ -96,11 +101,21 @@ public class PlayerCamera : MonoBehaviour
         mainCam.transform.position = _playerCameraHolder.position;
 
         print($"PlayerCamera: {Vector3.Angle(transform.forward, mainCam.transform.forward)}");
+
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        {
+            _thirdPersonCameraPivot.transform.parent = null;
+            _thirdPersonAimingComponentsOffset.transform.localPosition = new Vector3(0, 0, THIRD_PERSON_LOCAL_OFFSET.z);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On) _thirdPersonCameraPivot.transform.position = _playerCameraHolder.position; ;
+
+
+
         if (!GameManager.instance.gameStarted || !pController.PV.IsMine || pController.cameraIsFloating || player.playerDataCell == null) return;
 
         _angleBetweenPlayerForwardAndVertAxis = Vector3.SignedAngle(verticalAxisTarget.forward, transform.root.forward, verticalAxisTarget.right);
@@ -153,7 +168,8 @@ public class PlayerCamera : MonoBehaviour
         if (followPlayer)
         {
             mainCam.transform.parent = null;
-            mainCam.transform.position = _playerCameraHolder.position;
+            if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+                mainCam.transform.position = _playerCameraHolder.position;
             horizontalAxisTarget = mainCam.transform;
 
 
@@ -208,29 +224,40 @@ public class PlayerCamera : MonoBehaviour
                 // PROCESS PLAYER INPUT
                 else if (player.isAlive && !pController.cameraIsFloating)
                 {
-                    mainCam.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
-                    _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
-
-                    //player.transform.Rotate(Vector3.up * mouseX);
 
 
+                    if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+                    {
+                        mainCam.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
+                        _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
 
 
+                        var targetHorizontalAngle = Mathf.SmoothDampAngle(player.GetComponent<Rigidbody>().rotation.eulerAngles.y,
+                                                       mainCam.transform.eulerAngles.y,
+                                                       ref _tmpRotationVelocity,
+                                                       _rotationSmoothTime,
+                                                       float.MaxValue,
+                                                       Time.fixedDeltaTime);
+                        Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
+                        player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
+                    }
+                    else
+                    {
+                        _thirdPersonCameraPivot.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
+                        _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
+                        mainCam.transform.forward = _thirdPersonCameraPivot.transform.forward;
+                        mainCam.transform.position = _thirdPersonCameraTarget.position;
 
 
-
-
-                    var targetHorizontalAngle = Mathf.SmoothDampAngle(player.GetComponent<Rigidbody>().rotation.eulerAngles.y,
-                                                   mainCam.transform.eulerAngles.y,
-                                                   ref _tmpRotationVelocity,
-                                                   _rotationSmoothTime,
-                                                   float.MaxValue,
-                                                   Time.fixedDeltaTime);
-                    Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
-                    player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
-
-
-
+                        var targetHorizontalAngle = Mathf.SmoothDampAngle(player.GetComponent<Rigidbody>().rotation.eulerAngles.y,
+                                                       mainCam.transform.eulerAngles.y,
+                                                       ref _tmpRotationVelocity,
+                                                       _rotationSmoothTime,
+                                                       float.MaxValue,
+                                                       Time.fixedDeltaTime);
+                        Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
+                        player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
+                    }
 
 
 
@@ -275,15 +302,18 @@ public class PlayerCamera : MonoBehaviour
 
     public void RotateCameraToRotation(Vector3 dirr)
     {
-        mainCam.transform.parent = null;
-        mainCam.transform.position = _playerCameraHolder.position;
-        mainCam.transform.localRotation = Quaternion.identity;
+        //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+        {
+            mainCam.transform.parent = null;
+            mainCam.transform.position = _playerCameraHolder.position;
+            mainCam.transform.localRotation = Quaternion.identity;
 
-        print($"PlayerCamera: {dirr} | {mainCam.transform.forward} {Vector3.Angle(dirr, mainCam.transform.forward)}");
-        print($"PlayerCamera: {dirr} | {mainCam.transform.forward} {Vector3.SignedAngle(mainCam.transform.forward, dirr, mainCam.transform.up)}");
+            print($"PlayerCamera: {dirr} | {mainCam.transform.forward} {Vector3.Angle(dirr, mainCam.transform.forward)}");
+            print($"PlayerCamera: {dirr} | {mainCam.transform.forward} {Vector3.SignedAngle(mainCam.transform.forward, dirr, mainCam.transform.up)}");
 
-        //leftRightRotation = Vector3.Angle(dirr, mainCam.transform.forward);
-        leftRightRotation = Vector3.SignedAngle(mainCam.transform.forward, dirr, mainCam.transform.up);
+            //leftRightRotation = Vector3.Angle(dirr, mainCam.transform.forward);
+            leftRightRotation = Vector3.SignedAngle(mainCam.transform.forward, dirr, mainCam.transform.up);
+        }
     }
 
     void WeaponOffset()
@@ -421,5 +451,12 @@ public class PlayerCamera : MonoBehaviour
     {
         if (player.isAlive)
             upDownRotation += a;
+    }
+
+
+
+    public void EnableThirdPerson()
+    {
+        mainCam.cullingMask = GameManager.instance.obstructionMask;
     }
 }

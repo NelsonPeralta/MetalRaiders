@@ -1158,7 +1158,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         foreach (GameObject w in allWeaponsInInventory)
         {
-            if (player.isMine)
+            if (player.isMine && GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
             {
                 if (pController.rid == 0)
                     GameManager.SetLayerRecursively(w, 24);
@@ -1195,7 +1195,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType == GameManager.GameType.Oddball)
         {
-            if (player.isMine)
+            if (player.isMine && GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
             {
                 if (pController.rid == 0)
                     GameManager.SetLayerRecursively(_oddball.gameObject, 24);
@@ -1214,7 +1214,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (GameManager.instance.gameType == GameManager.GameType.CTF)
         {
-            if (player.isMine)
+            if (player.isMine && GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
             {
                 if (pController.rid == 0)
                     GameManager.SetLayerRecursively(_flag.gameObject, 24);

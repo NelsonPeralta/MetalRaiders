@@ -66,7 +66,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text messageText;
     [SerializeField] GameObject commonRoomTexts;
     [SerializeField] GameObject _teamRoomUI;
-    [SerializeField] TMP_Text _sprintModeText, _hitMarkersMode;
+    [SerializeField] TMP_Text _sprintModeText, _hitMarkersMode, _thirdPersonModeOptionsHeader;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
@@ -147,6 +147,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public GameObject teamRoomUI { get { return _teamRoomUI; } }
     public TMP_Text sprintModeText { get { return _sprintModeText; } }
     public TMP_Text hitMarkersModeText { get { return _hitMarkersMode; } }
+    public TMP_Text thirdPersonModeOptionsHeader { get { return _thirdPersonModeOptionsHeader; } }
 
     public GameObject gameModeBtns { get { return _gameModeBtns; } }
     public GameObject teamModeBtns { get { return _teamModeBtns; } }
@@ -1007,7 +1008,23 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ChangeThirdPersonMode()
+    {
+        if (!CountdownStarted)
+        {
+            if (GameManager.instance.thirdPersonMode == ThirdPersonMode.On)
+            {
+                GameManager.instance.thirdPersonMode = ThirdPersonMode.Off;
+            }
+            else
+            {
+                GameManager.instance.thirdPersonMode = ThirdPersonMode.On;
+            }
 
+            if (PhotonNetwork.IsMasterClient)
+                NetworkGameManager.instance.SendGameParams();
+        }
+    }
 
 
 

@@ -81,63 +81,92 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
-        print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned");
-
-        Scene currentScene = SceneManager.GetActiveScene();
-        if (currentScene.buildIndex > 0) // We are not in the menu
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
         {
-            List<int> ignoreList = new List<int>();
-            ignoreList.Add(7); // 7 = Player Hitbox
-            foreach (GameObject model in models)
-                if (!feet.Contains(model))
+            print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned");
+
+            Scene currentScene = SceneManager.GetActiveScene();
+            if (currentScene.buildIndex > 0) // We are not in the menu
+            {
+                List<int> ignoreList = new List<int>();
+                ignoreList.Add(7); // 7 = Player Hitbox
+                foreach (GameObject model in models)
+                    if (!feet.Contains(model))
+                    {
+                        if (player.PV.IsMine)
+                        {
+                            int l = 0;
+
+                            if (player.rid == 0)
+                                l = 25;
+                            else if (player.rid == 1)
+                                l = 27;
+                            else if (player.rid == 2)
+                                l = 29;
+                            else if (player.rid == 3)
+                                l = 31;
+
+                            GameManager.SetLayerRecursively(model, l, ignoreList);
+                        }
+                        else
+                        {
+                            GameManager.SetLayerRecursively(model, 0, ignoreList);
+                        }
+                    }
+
+
+                undersuitMesh.layer = 0;
+
+                if (player.PV.IsMine)
                 {
-                    if (player.PV.IsMine)
-                    {
-                        int l = 0;
+                    int l = 0;
 
-                        if (player.rid == 0)
-                            l = 25;
-                        else if (player.rid == 1)
-                            l = 27;
-                        else if (player.rid == 2)
-                            l = 29;
-                        else if (player.rid == 3)
-                            l = 31;
-
-                        GameManager.SetLayerRecursively(model, l, ignoreList);
-                    }
-                    else
-                    {
-                        GameManager.SetLayerRecursively(model, 0, ignoreList);
-                    }
+                    if (player.rid == 0)
+                        l = 25;
+                    else if (player.rid == 1)
+                        l = 27;
+                    else if (player.rid == 2)
+                        l = 29;
+                    else if (player.rid == 3)
+                        l = 31;
+                    undersuitMesh.layer = l;
                 }
 
 
-            undersuitMesh.layer = 0;
+                OnModelAssigned?.Invoke(this);
 
-            if (player.PV.IsMine)
-            {
-                int l = 0;
 
-                if (player.rid == 0)
-                    l = 25;
-                else if (player.rid == 1)
-                    l = 27;
-                else if (player.rid == 2)
-                    l = 29;
-                else if (player.rid == 3)
-                    l = 31;
-                undersuitMesh.layer = l;
+                foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
+                {
+                    lw.enabled = false;
+                    lw.ttl = 99999;
+                }
             }
+        }
+        else
+        {
+            print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned THIRPERSON MODE ON");
 
-
-            OnModelAssigned?.Invoke(this);
-
-
-            foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
+            Scene currentScene = SceneManager.GetActiveScene();
+            if (currentScene.buildIndex > 0) // We are not in the menu
             {
-                lw.enabled = false;
-                lw.ttl = 99999;
+                List<int> ignoreList = new List<int>();
+                ignoreList.Add(7); // 7 = Player Hitbox
+                foreach (GameObject model in models)
+                    if (!feet.Contains(model))
+                    {
+                        GameManager.SetLayerRecursively(model, 0, ignoreList);
+                    }
+
+                undersuitMesh.layer = 0;
+
+                OnModelAssigned?.Invoke(this);
+
+                foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
+                {
+                    lw.enabled = false;
+                    lw.ttl = 99999;
+                }
             }
         }
     }

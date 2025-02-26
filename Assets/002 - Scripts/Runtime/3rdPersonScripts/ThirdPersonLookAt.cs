@@ -67,6 +67,12 @@ public class ThirdPersonLookAt : MonoBehaviour
         if (!chest)
             chest = anim.GetBoneTransform(HumanBodyBones.Chest);
         currentOffset = iddleOffset;
+
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        {
+            lookAtGO.localPosition = new Vector3(lookAtGO.localPosition.x,
+                lookAtGO.localPosition.y, lookAtGO.localPosition.z - (PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z * 2));
+        }
     }
 
     private void Update()
@@ -93,10 +99,13 @@ public class ThirdPersonLookAt : MonoBehaviour
 
     void PlayerChestRotation()
     {
-        if (_playerController.player.isAlive && !_playerController.cameraIsFloating)
+        //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
         {
-            chest.LookAt(lookAtGO.position);
-            chest.rotation = chest.rotation * Quaternion.Euler(currentOffset);
+            if (_playerController.player.isAlive && !_playerController.cameraIsFloating)
+            {
+                chest.LookAt(lookAtGO.position);
+                chest.rotation = chest.rotation * Quaternion.Euler(currentOffset);
+            }
         }
     }
 
