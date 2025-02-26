@@ -105,7 +105,7 @@ public class PlayerCamera : MonoBehaviour
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
         {
             _thirdPersonCameraPivot.transform.parent = null;
-            _thirdPersonAimingComponentsOffset.transform.localPosition = new Vector3(0, 0, THIRD_PERSON_LOCAL_OFFSET.z);
+            _thirdPersonAimingComponentsOffset.transform.localPosition = new Vector3(0, 0, 2.4f);
         }
     }
 
