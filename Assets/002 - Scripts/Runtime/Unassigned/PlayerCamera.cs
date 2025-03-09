@@ -11,6 +11,8 @@ public class PlayerCamera : MonoBehaviour
 
     public bool followPlayer { get { return _followPlayer; } set { _followPlayer = value; } }
 
+    public Transform thirdPersonCameraPoint { get { return _thirdPersonCameraPointHit.target; } }
+
     public float frontEndMouseSens;
     public float backEndMouseSens;
     public Transform playerCameraScriptParent;
@@ -60,6 +62,7 @@ public class PlayerCamera : MonoBehaviour
     float xExtremeDeadzone = 0.98f, yExtremeDeadzone = 0.98f;
 
     [SerializeField] Transform _thirdPersonCameraPivot, _thirdPersonCameraTarget, _thirdPersonAimingComponentsOffset;
+    [SerializeField] ThirdPersonCameraPointHit _thirdPersonCameraPointHit;
 
 
 

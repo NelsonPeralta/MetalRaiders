@@ -175,7 +175,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             if (GameManager.instance.gameType == GameManager.GameType.Slayer)
             {
                 if (codeName == "br")
-                    codeName = "smg";
+                    codeName = "ar";
 
                 if (codeName == "pb")
                     codeName = "pr";

@@ -24,7 +24,7 @@ public class FakeBulletTrailDisable : MonoBehaviour
 
             if(timeBeforeDisabling <= 0)
             {
-                transform.parent = player.playerInventory.bulletTrailPool;
+                transform.parent = player.playerInventory.bulletTrailHolder;
 
                 transform.localRotation = Quaternion.identity;
                 transform.localPosition = Vector3.zero;

@@ -122,6 +122,11 @@ public class PlayerShooting : MonoBehaviourPun
                 }
             }
         }
+
+        if(GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On && CurrentRoomManager.instance.gameStarted)
+        {
+            playerController.gwProperties.tpsBulletParent.GetChild(0).LookAt(playerController.player.playerCamera.thirdPersonCameraPoint);
+        }
     }
 
 

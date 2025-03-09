@@ -308,7 +308,7 @@ public class PlayerInventory : MonoBehaviourPun
         }
     }
 
-    public Transform bulletTrailPool { get { return _fakeBulletTrailHolder; } }
+    public Transform bulletTrailHolder { get { return _fakeBulletTrailHolder; } }
 
     [SerializeField] Transform _fakeBulletTrailHolder;
     [SerializeField] Transform _fakeBulleTrailPrefab;
@@ -429,6 +429,14 @@ public class PlayerInventory : MonoBehaviourPun
 
         _weaponsWithOverheat = allWeaponsInInventory.Where(item => item.GetComponent<WeaponProperties>().ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
         item.GetComponent<WeaponProperties>().plasmaColor != WeaponProperties.PlasmaColor.Shard).Select(item => item.GetComponent<WeaponProperties>()).ToList();
+
+        foreach(var weapon in _weaponsWithOverheat)
+        {
+            if (weapon.isDualWieldable)
+            {
+                _weaponsWithOverheat.Add(weapon.leftWeapon);
+            }
+        }
     }
 
     private void Update()
@@ -1041,6 +1049,11 @@ public class PlayerInventory : MonoBehaviourPun
                     GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, ll);
                 }
                 else
+                {
+                    GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
+                }
+
+                if(GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
                 {
                     GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
                 }
