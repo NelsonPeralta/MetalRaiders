@@ -33,7 +33,7 @@ public class CurrentRoomManager : MonoBehaviour
     /// <summary>
     /// Lobby
     /// </summary>
-    public Dictionary<string, int> playerNicknameNbLocalPlayersDict
+    public Dictionary<string, int> playerNickname_To_NbLocalPlayers_DICT
     {
         get { return _playerNicknameNbLocalPlayersDict; }
         set
@@ -41,7 +41,7 @@ public class CurrentRoomManager : MonoBehaviour
             _playerNicknameNbLocalPlayersDict = value;
             int c = 0;
 
-            foreach (KeyValuePair<string, int> items in playerNicknameNbLocalPlayersDict)
+            foreach (KeyValuePair<string, int> items in playerNickname_To_NbLocalPlayers_DICT)
             {
                 print("You have " + items.Value + " " + items.Key);
                 c += items.Value;
@@ -573,7 +573,7 @@ public class CurrentRoomManager : MonoBehaviour
             _matchSettingsSet = _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
                   _reachedHalwayGameStartCountdown = _randomInitiQuickMatchSettingsChosen = false;
             _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _nbPlayersSet = _playersLoadedScene = 0;
-            playerNicknameNbLocalPlayersDict = new Dictionary<string, int>();
+            playerNickname_To_NbLocalPlayers_DICT = new Dictionary<string, int>();
 
             _vetoedGameType = GameManager.GameType.Unassgined; _vetoedMapIndex = 0;
             _roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;

@@ -415,7 +415,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask, obstructionMask, reticuleFrictionMask, hitboxlayerMask, playerCapsuleLayerMask;
+    public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask, obstructionMask, reticuleFrictionMask, hitboxlayerMask, playerCapsuleLayerMask, thirdPersonMainCameraLayerMask;
 
 
 
@@ -612,6 +612,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { gameType = GameType.Slayer; } catch { }
             try { teamMode = TeamMode.None; } catch { }
             sprintMode = SprintMode.On;
+            thirdPersonMode = ThirdPersonMode.Off;
             hitMarkersMode = HitMarkersMode.On;
             //difficulty = SwarmManager.Difficulty.Normal;
             _lootableWeapons.Clear();
@@ -1492,7 +1493,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         previousScenePayloads.Remove(psp);
     }
 
-    public void AddToPreivousScenePayload(PreviousScenePayload psp)
+    public void AddToPreviousScenePayload(PreviousScenePayload psp)
     {
         previousScenePayloads.Add(psp);
     }

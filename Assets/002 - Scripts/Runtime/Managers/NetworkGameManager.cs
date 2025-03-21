@@ -99,7 +99,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             ps.Add("tpmode", GameManager.instance.thirdPersonMode.ToString());
             //ps.Add("teamdict", string.Join(Environment.NewLine, GameManager.instance.teamDict));
             //ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));
-            ps.Add("nbLocalPlayersDict", JsonConvert.SerializeObject(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict));
+            ps.Add("nbLocalPlayersDict", JsonConvert.SerializeObject(CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT));
 
 
             //Debug.Log($"SendGameParams {GameManager.instance.teamDict}");
@@ -122,8 +122,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
                 try
                 {
-                    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["nbLocalPlayersDict"]);
-                    Debug.Log(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict);
+                    CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["nbLocalPlayersDict"]);
+                    Debug.Log(CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT);
                 }
                 catch { }
             }
@@ -198,14 +198,14 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             Debug.Log(d.Keys.First());
             Debug.Log(d[d.Keys.First()]);
 
-            if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(d.Keys.First()))
-                CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[d.Keys.First()] = d[d.Keys.First()];
+            if (CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.ContainsKey(d.Keys.First()))
+                CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT[d.Keys.First()] = d[d.Keys.First()];
             else
-                CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Add(d.Keys.First(), d[d.Keys.First()]);
+                CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Add(d.Keys.First(), d[d.Keys.First()]);
 
-            CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
+            CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT;
 
-            Debug.Log(CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict);
+            Debug.Log(CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT);
 
             SendLocalPlayerDataToEveryone();
             //SendGameParams();
@@ -219,13 +219,13 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("SendLocalPlayerData TO EVERYONE");
 
-            _pv.RPC("SendLocalPlayerDataToEveryone", RpcTarget.All, CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict, false);
+            _pv.RPC("SendLocalPlayerDataToEveryone", RpcTarget.All, CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT, false);
         }
         else if (!caller && !PhotonNetwork.IsMasterClient)
         {
             Debug.Log("SendLocalPlayerData FROM MASTER CLIENT");
 
-            CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = d;
+            CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = d;
         }
     }
 
@@ -1401,7 +1401,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 }
                 else if(SceneManager.GetActiveScene().buildIndex > 0)
                 {
-                    GameManager.instance.AddToPreivousScenePayload(GameManager.PreviousScenePayload.Kicked);
+                    GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.Kicked);
                     GameManager.QuitGameButtonPressed();
                 }
             }

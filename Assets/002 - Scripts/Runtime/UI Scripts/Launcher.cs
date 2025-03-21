@@ -508,7 +508,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.SetCustomProperties(h);
 
 
-        CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Clear();
+        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Clear();
         CurrentRoomManager.instance.expectedNbPlayers = 0;
         CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = DEFAULT_ROOM_COUNTDOWN;
 
@@ -602,11 +602,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
 
-                    if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(PhotonNetwork.NickName))
-                        CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[PhotonNetwork.NickName] = GameManager.instance.nbLocalPlayersPreset;
+                    if (CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.ContainsKey(PhotonNetwork.NickName))
+                        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT[PhotonNetwork.NickName] = GameManager.instance.nbLocalPlayersPreset;
                     else
-                        CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Add(PhotonNetwork.NickName, GameManager.instance.nbLocalPlayersPreset);
-                    CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
+                        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Add(PhotonNetwork.NickName, GameManager.instance.nbLocalPlayersPreset);
+                    CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT;
 
 
                     NetworkGameManager.instance.SendGameParams();
@@ -781,7 +781,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
     {
         Debug.Log("LAUNCHER: OnLeftRoom");
-        CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Clear();
+        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Clear();
         CurrentRoomManager.instance.expectedNbPlayers = 0;
         try
         {
@@ -803,8 +803,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         try
         {
-            CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.Remove(otherPlayer.NickName);
-            CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict = CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict;
+            CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Remove(otherPlayer.NickName);
+            CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT;
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
 

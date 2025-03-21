@@ -59,9 +59,9 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
             plt.GetComponent<PlayerNamePlate>().SetUp(players[i]);
             //plt.GetComponent<PlayerNamePlate>().playerLevel = pda.playerBasicOnlineStats.level;
 
-            if (CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict.ContainsKey(players[i].NickName)
-                && CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[players[i].NickName] > 1)
-                for (int j = 1; j < CurrentRoomManager.instance.playerNicknameNbLocalPlayersDict[players[i].NickName]; j++)
+            if (CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.ContainsKey(players[i].NickName)
+                && CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT[players[i].NickName] > 1)
+                for (int j = 1; j < CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT[players[i].NickName]; j++)
                 {
                     GameObject _plt = Instantiate(Launcher.instance.namePlatePrefab, Launcher.instance.namePlatesParent);
                     _plt.GetComponent<PlayerNamePlate>().SetUp(players[i].NickName + $" ({j})"); // DEPRECATED

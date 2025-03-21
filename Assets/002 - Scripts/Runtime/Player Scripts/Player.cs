@@ -1426,7 +1426,7 @@ public class Player : Biped
 
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
-            GameManager.instance.AddToPreivousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
+            GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
             Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
             PhotonNetwork.LoadLevel(0);
         }

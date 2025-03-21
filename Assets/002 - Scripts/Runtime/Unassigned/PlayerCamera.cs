@@ -436,6 +436,8 @@ public class PlayerCamera : MonoBehaviour
 
         verticalAxisTarget.localRotation = Quaternion.Euler(0, 0, 0f);
         followPlayer = true;
+
+        EnableThirdPerson();
     }
 
 
@@ -460,6 +462,6 @@ public class PlayerCamera : MonoBehaviour
 
     public void EnableThirdPerson()
     {
-        mainCam.cullingMask = GameManager.instance.obstructionMask;
+        mainCam.cullingMask = GameManager.instance.thirdPersonMainCameraLayerMask;
     }
 }

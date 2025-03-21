@@ -8,6 +8,11 @@ public class KickPlayerBtn : MonoBehaviour
     [SerializeField] ScriptObjPlayerData _playerData;
 
 
+    private void Awake()
+    {
+        gameObject.SetActive(false);
+    }
+
     public void SetPlayerDataCell(ScriptObjPlayerData sopd)
     {
         if (GameManager.instance.connection == GameManager.Connection.Online && PhotonNetwork.IsMasterClient)
