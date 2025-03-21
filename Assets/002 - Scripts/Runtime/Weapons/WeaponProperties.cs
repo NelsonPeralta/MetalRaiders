@@ -69,7 +69,7 @@ public class WeaponProperties : MonoBehaviour
     [SerializeField] int _maxAmmo;
     public int ammoCapacity;
     public float bulletSpray;
-    public bool injectLootedAmmo;
+    public bool injectLootedAmmo, hybridHitscan;
     public int overheatPerShot;
     public GameObject overheatSteamHolder, tpsEquippedOverheatSteamHolder, tpsHolsteredOverheatSteamHolder;
     public float overheatCooldown;
@@ -687,6 +687,7 @@ public class WeaponPropertiesEditor : Editor
         if (wp.bulletSize <= 0) wp.bulletSize = 1;
         wp.bulletSize = EditorGUILayout.IntField("Bullet size:", wp.bulletSize);
         wp.bulletSpeed = EditorGUILayout.IntField("Bullet speed:", wp.bulletSpeed);
+        wp.hybridHitscan = GUILayout.Toggle(wp.hybridHitscan, "Hybrid Hitscan");
         wp.range = EditorGUILayout.FloatField("Bullet range:", wp.range);
         wp.bulletSpray = EditorGUILayout.FloatField("Bullet spray:", wp.bulletSpray);
         wp.hipSprayOnly = GUILayout.Toggle(wp.hipSprayOnly, "Hip Spray Only");

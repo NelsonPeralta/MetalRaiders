@@ -123,7 +123,7 @@ public class PlayerShooting : MonoBehaviourPun
             }
         }
 
-        if(GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On && CurrentRoomManager.instance.gameStarted)
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On && CurrentRoomManager.instance.gameStarted)
         {
             playerController.gwProperties.tpsBulletParent.GetChild(0).LookAt(playerController.player.playerCamera.thirdPersonCameraPoint);
         }
@@ -652,11 +652,15 @@ public class PlayerShooting : MonoBehaviourPun
                     //try { bullet.gameObject.GetComponent<Bullet>().allPlayerScripts = playerController.GetComponent<AllPlayerScripts>(); } catch { }
                     bullet.gameObject.GetComponent<Bullet>().range = (int)weaponToShoot.range;
                     bullet.gameObject.GetComponent<Bullet>().speed = (int)weaponToShoot.bulletSpeed;
+
+                    if (weaponToShoot.hybridHitscan && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet && player.aimAssist.redReticuleIsOn) { bullet.gameObject.GetComponent<Bullet>().speed = 999; print("hybrid hitscan working"); }
+
                     if (overcharge) bullet.gameObject.GetComponent<Bullet>().speed = (int)(weaponToShoot.bulletSpeed * 0.65f);
                     //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
                     //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
                     //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
                     //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
+                    print($"bullet spawned at: {Time.time}");
                     bullet.SetActive(true);
 
                     if (weaponToShoot.plasmaColor != WeaponProperties.PlasmaColor.Shard)

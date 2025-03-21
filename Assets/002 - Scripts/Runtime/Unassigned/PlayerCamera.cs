@@ -437,7 +437,7 @@ public class PlayerCamera : MonoBehaviour
         verticalAxisTarget.localRotation = Quaternion.Euler(0, 0, 0f);
         followPlayer = true;
 
-        EnableThirdPerson();
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On) EnableThirdPerson();
     }
 
 
