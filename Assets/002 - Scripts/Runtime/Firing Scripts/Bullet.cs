@@ -75,12 +75,19 @@ public class Bullet : MonoBehaviourPunCallbacks
     float _ignoreOriginPlayerTime;
     bool _addToHits;
 
+
+
+
+
+
     void Awake()
     {
     }
 
     override public void OnEnable()
     {
+        print($"bullet check spawned at: {Time.time}");
+
         _ignoreOriginPlayerTime = 0.2f;
 
         _prePos = transform.position;
@@ -179,7 +186,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 if (objectsHit.Count > 0)
                 {
                     CheckForFinalHit();
-                    print($"bullet hit and despawned at: {Time.time}");
+                    print($"bullet check hit and despawned at: {Time.time}");
 
                     gameObject.SetActive(false);
                 }

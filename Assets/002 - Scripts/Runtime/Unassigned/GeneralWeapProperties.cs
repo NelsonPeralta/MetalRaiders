@@ -46,7 +46,6 @@ public class GeneralWeapProperties : MonoBehaviour
     public Transform bulletSpawnPoint;
     public List<Transform> pelletSpawnPoints = new List<Transform>();
     public Transform grenadeSpawnPoint;
-    public Transform bulletSpTpsOffset, pelletSpTpsOffset, tpsBulletParent;
 
     [Header("UI Components")]
     public GameObject singleFireUIGO;
@@ -59,8 +58,7 @@ public class GeneralWeapProperties : MonoBehaviour
     Quaternion originalBulletLocalRotation;
     void Start()
     {
-        originalBulletLocalRotation = bulletSpawnPoint.localRotation;
-        defaultBulletSpawnPoint = bulletSpawnPoint.localPosition;
+        SetOriginalBulletLocalPositionAndRotation();
         if (hasFoundComponents == false)
         {
             //pInventory = cManager.FindChildWithTagScript("Player Inventory").GetComponent<PlayerInventory>();
@@ -87,11 +85,6 @@ public class GeneralWeapProperties : MonoBehaviour
 
 
         //grenadePrefab.GetComponent<GrenadeScript>().damage = grenadeDamage;
-
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
-        {
-            MoveBulletSpawnPointsForThirdPerson();
-        }
     }
 
     private void Update()
@@ -126,25 +119,14 @@ public class GeneralWeapProperties : MonoBehaviour
             muzzleflashLight.enabled = false;
     }
 
+    public void SetOriginalBulletLocalPositionAndRotation()
+    {
+        originalBulletLocalRotation = bulletSpawnPoint.localRotation;
+        defaultBulletSpawnPoint = bulletSpawnPoint.localPosition;
+    }
+
     public void ResetLocalTransform()
     {
         bulletSpawnPoint.localRotation = originalBulletLocalRotation;
-    }
-
-    public void MoveBulletSpawnPointsForThirdPerson()
-    {
-        print("MoveBulletSpawnPointsForThirdPerson");
-        bulletSpTpsOffset.SetParent(tpsBulletParent.GetChild(0));
-        pelletSpTpsOffset.SetParent(tpsBulletParent.GetChild(0));
-
-        bulletSpTpsOffset.transform.localPosition = new Vector3(0, 0, 0.2f);
-        bulletSpTpsOffset.transform.localRotation = Quaternion.identity;
-
-        pelletSpTpsOffset.transform.localPosition = new Vector3(0, 0, 0.2f);
-        pelletSpTpsOffset.transform.localRotation = Quaternion.identity;
-
-        pInventory.bulletTrailHolder.transform.localPosition = Vector3.zero;
-        //bulletSpTpsOffset.parent = tpsBulletParent;
-        //pelletSpTpsOffset.parent = tpsBulletParent;
     }
 }

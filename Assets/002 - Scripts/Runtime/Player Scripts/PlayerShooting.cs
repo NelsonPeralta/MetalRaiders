@@ -125,7 +125,10 @@ public class PlayerShooting : MonoBehaviourPun
 
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On && CurrentRoomManager.instance.gameStarted)
         {
-            playerController.gwProperties.tpsBulletParent.GetChild(0).LookAt(playerController.player.playerCamera.thirdPersonCameraPoint);
+            //playerController.gwProperties.tpsBulletParent.GetChild(0).LookAt(playerController.player.playerCamera.thirdPersonCameraPoint);
+            //playerController.gwProperties.tpsBulletParent.GetChild(0).LookAt(playerController.player.playerCamera.thirdPersonCameraPoint);
+            //playerController.gwProperties.tpsBulletSpawnPointRotation.LookAt(playerController.player.playerCamera.thirdPersonCameraPoint);
+            //print(Vector3.Angle(playerController.gwProperties.tpsBulletParent.forward, playerController.player.playerCamera.thirdPersonCameraPoint.forward));
         }
     }
 
@@ -515,7 +518,16 @@ public class PlayerShooting : MonoBehaviourPun
                         {
                             //print("spawning FAKE bullet easy");
 
-                            pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat, player.isMine);
+
+                            if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+                            {
+                                pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat, player.isMine);
+                            }
+                            else
+                            {
+                                pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat, player.isMine, playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position);
+
+                            }
                         }
                         else
                         {
@@ -529,10 +541,30 @@ public class PlayerShooting : MonoBehaviourPun
                             if (fakeBulletTrailRaycasthits.Count > 0)
                             {
                                 print($"Fake trail of lenght {Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point)}. Ends at point {fakeBulletTrailRaycasthits[0].point}");
-                                pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point), ranSprayQuat, player.isMine);
+                                //pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point), ranSprayQuat, player.isMine);
+
+
+                                if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+                                {
+                                    pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point), ranSprayQuat, player.isMine);
+                                }
+                                else
+                                {
+                                    pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point), ranSprayQuat, player.isMine, playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position);
+
+                                }
                             }
                             else
-                                pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat, player.isMine);
+                            {
+                                if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+                                {
+                                    pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat, player.isMine);
+                                }
+                                else
+                                {
+                                    pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat, player.isMine, playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position);
+                                }
+                            }
                         }
 
 

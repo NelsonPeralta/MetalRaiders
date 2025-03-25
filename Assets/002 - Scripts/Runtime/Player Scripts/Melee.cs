@@ -19,6 +19,7 @@ public class Melee : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip knifeSuccessSound;
     public AudioClip knifeFailSound;
+    
 
 
 
@@ -31,6 +32,7 @@ public class Melee : MonoBehaviour
 
     [SerializeField] PlayerMovement _movement;
     [SerializeField] LayerMask _meleeMask, _obstructionMask;
+    [SerializeField] Transform _meleeSourcePosition;
 
 
     List<HitPoints> _pushIfAbleList = new List<HitPoints>();
@@ -172,11 +174,39 @@ public class Melee : MonoBehaviour
                 if (player.isMine)
                 {
 
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
+                    //if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
+                    //    (Player.MELEE_DAMAGE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2.5f : 0))
+                    //     && hp.meleeMagnetism)
+                    //{
+                    //    print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
+
+                    //    _lookAtPosition = new Vector3(hp.biped.targetTrackingCorrectTarget.transform.position.x,
+                    //                                movement.transform.position.y,
+                    //                                hp.biped.targetTrackingCorrectTarget.transform.position.z);
+                    //    movement.transform.LookAt(_lookAtPosition);
+
+                    //    player.playerCamera.BlockPlayerCamera(0.3f);
+                    //    player.movement.blockPlayerMoveInput = 0.3f;
+                    //    player.movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
+
+                    //    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) > 1.5f) // arbitrary and tested distance as to which the player should be pushed harder to ensure he closes the distance for the damage to register
+                    //    {
+                    //        if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+                    //            player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);
+                    //        else
+                    //            player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH * 2.2f, ForceMode.Impulse);
+                    //    }
+                    //    else
+                    //        player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * (Player.MELEE_PUSH / 2), ForceMode.Impulse);
+                    //}
+
+
+
+                    if (Vector3.Distance(hp.transform.position, _meleeSourcePosition.position) <=
                         (Player.MELEE_DAMAGE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2.5f : 0))
                          && hp.meleeMagnetism)
                     {
-                        print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
+                        print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, _meleeSourcePosition.position)}");
 
                         _lookAtPosition = new Vector3(hp.biped.targetTrackingCorrectTarget.transform.position.x,
                                                     movement.transform.position.y,
@@ -187,7 +217,7 @@ public class Melee : MonoBehaviour
                         player.movement.blockPlayerMoveInput = 0.3f;
                         player.movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
 
-                        if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) > 1.5f) // arbitrary and tested distance as to which the player should be pushed harder to ensure he closes the distance for the damage to register
+                        if (Vector3.Distance(hp.transform.position, _meleeSourcePosition.position) > 1.5f) // arbitrary and tested distance as to which the player should be pushed harder to ensure he closes the distance for the damage to register
                         {
                             if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
                                 player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);

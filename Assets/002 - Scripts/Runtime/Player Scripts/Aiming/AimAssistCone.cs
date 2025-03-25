@@ -124,6 +124,12 @@ public class AimAssistCone : MonoBehaviour
 
     private void Update()
     {
+
+
+        if (!player.isMine) return;
+
+
+
         if (!player.isAlive)
         {
             frictionColliders.Clear();
@@ -221,20 +227,20 @@ public class AimAssistCone : MonoBehaviour
 
                 Vector3 v = new Vector3(player.playerInventory.activeWeapon.redReticuleHint * 10, transform.localScale.y, player.playerInventory.activeWeapon.redReticuleHint * 10);
                 if (player.isDualWielding) v = new Vector3((player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f, transform.localScale.y, (player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f);
-                transform.localScale = v;
+                transform.localScale = v; // controls the diameter of the cone
 
                 v = new Vector3(1, 1, player.playerInventory.activeWeapon.currentRedReticuleRange);
-                transform.parent.localScale = v;
+                transform.parent.localScale = v; // controls the lenght of the cone
 
                 v = new Vector3(1, 1, 1);
                 if (player.allPlayerScripts.playerController.activeControllerType == Rewired.ControllerType.Joystick)
                     v = new Vector3(2f, 1, 2f);
 
-                _invisibleHitboxDetector.transform.localScale = v;
+                _invisibleHitboxDetector.transform.localScale = v; // controls the diameter of the cone
                 _raycastRange = playerInventory.activeWeapon.currentRedReticuleRange;
 
 
-
+             
 
 
 

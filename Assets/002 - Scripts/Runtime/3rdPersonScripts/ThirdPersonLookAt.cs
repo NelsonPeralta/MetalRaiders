@@ -68,11 +68,6 @@ public class ThirdPersonLookAt : MonoBehaviour
             chest = anim.GetBoneTransform(HumanBodyBones.Chest);
         currentOffset = iddleOffset;
 
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
-        {
-            lookAtGO.localPosition = new Vector3(lookAtGO.localPosition.x,
-                lookAtGO.localPosition.y, lookAtGO.localPosition.z - (PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z * 2));
-        }
     }
 
     private void Update()

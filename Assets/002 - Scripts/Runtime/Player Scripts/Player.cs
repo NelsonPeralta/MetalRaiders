@@ -577,6 +577,7 @@ public class Player : Biped
     public PlayerUI playerUI { get { return _playerUi; } }
     public bool isHealing { get { return _isHealing; } }
     public bool hasEnnemyFlag { get { return playerInventory.hasEnnemyFlag; } }
+    public PlayerThirdPersonComponents playerThirdPersonComponents { get { return _playerThirdPersonComponents; } }
 
     #endregion
 
@@ -607,6 +608,7 @@ public class Player : Biped
     [SerializeField] PlayerCapsule _playerCapsule;
     [SerializeField] PlayerShooting _playerShooting;
     [SerializeField] PlayerUI _playerUi;
+    [SerializeField] PlayerThirdPersonComponents _playerThirdPersonComponents;
     [SerializeField] AssignActorPlayerTargetOnShootingSphere _assignActorPlayerTargetOnShootingSphere;
     [SerializeField] Explosion _ultraMergeExPrefab;
     [SerializeField] Transform _gameplayerRecordingPointsHolder;
@@ -824,7 +826,10 @@ public class Player : Biped
 
 
         //playerArmorManager.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId, rid);
-
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        {
+            _playerThirdPersonComponents.TriggerThirdPersonMode();
+        }
     }
     private void Update()
     {
@@ -1370,7 +1375,7 @@ public class Player : Biped
 
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
         {
-            playerCamera.EnableThirdPerson();
+            _playerThirdPersonComponents.TriggerThirdPersonMode();
         }
     }
 

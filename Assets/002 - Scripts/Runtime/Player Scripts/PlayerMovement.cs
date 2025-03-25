@@ -27,6 +27,16 @@ public class PlayerMovement : MonoBehaviour
             _previousMovementDirEnum = _playerMovementDirection;
             _playerMovementDirection = value;
 
+            if (_previousMovementDirEnum == PlayerMovementDirection.Idle && _previousMovementDirEnum != _playerMovementDirection)
+            {
+                //print("Started moving");
+            }
+
+            if (_previousMovementDirEnum != PlayerMovementDirection.Idle && _playerMovementDirection == PlayerMovementDirection.Idle)
+            {
+                //print("Stopped moving");
+            }
+
             if ((_previousMovementDirEnum == PlayerMovementDirection.Left && _playerMovementDirection == PlayerMovementDirection.Right) ||
                 (_previousMovementDirEnum == PlayerMovementDirection.Right && _playerMovementDirection == PlayerMovementDirection.Left) ||
                 (_previousMovementDirEnum == PlayerMovementDirection.Forward && _playerMovementDirection == PlayerMovementDirection.Backwards) ||
@@ -103,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     public PlayerMotionTracker playerMotionTracker { get { return _playerMotionTracker; } }
+    public ThirdPersonLookAt thirdPersonLookAtScript { get { return _tpLookAt; } }
 
     [SerializeField] GroundCheck _groundCheckScript;
     [SerializeField] ThirdPersonLookAt _tpLookAt;
