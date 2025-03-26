@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Codice.Client.Common.Connection.AskCredentialsToUser;
 
 public class PlayerInventory : MonoBehaviourPun
 {
