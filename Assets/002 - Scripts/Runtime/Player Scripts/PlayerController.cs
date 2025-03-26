@@ -1118,8 +1118,8 @@ public class PlayerController : MonoBehaviourPun
         camScript.backEndMouseSens = camScript.frontEndMouseSens;
         allPlayerScripts.aimingScript.playAimSound();
 
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
-            mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+        //    mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
         gunCam.enabled = true;
     }
 
