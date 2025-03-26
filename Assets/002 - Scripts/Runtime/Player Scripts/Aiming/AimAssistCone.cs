@@ -116,6 +116,10 @@ public class AimAssistCone : MonoBehaviour
     {
         _reticuleMagnetism = GetComponent<ReticuleMagnetism>();
         _rb = GetComponent<Rigidbody>();
+
+
+        player.OnPlayerIdAssigned -= OnPlayerAssigned;
+        player.OnPlayerIdAssigned += OnPlayerAssigned;
     }
 
 
@@ -124,6 +128,9 @@ public class AimAssistCone : MonoBehaviour
 
     private void Update()
     {
+        if (!player.isMine) return;
+
+
         if (!player.isAlive)
         {
             frictionColliders.Clear();
@@ -515,6 +522,14 @@ public class AimAssistCone : MonoBehaviour
                 transform.parent.localScale = v;
             }
             catch (System.Exception e) { }
+        }
+    }
+
+    void OnPlayerAssigned(Player p)
+    {
+        if (p.isMine)
+        {
+            try { GetComponent<Collider>().enabled = false; } catch { }
         }
     }
 }

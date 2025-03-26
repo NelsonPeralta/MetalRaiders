@@ -85,6 +85,8 @@ public class AimAssist : MonoBehaviour
     bool _redReticuleIsOn;
     [SerializeField] int _redReticuleTick;
 
+
+
     private void Start()
     {
         originalBbulletSpawnPointRelativePos = aimAssistForward.transform.localRotation;
@@ -92,6 +94,11 @@ public class AimAssist : MonoBehaviour
 
     private void Update()
     {
+        if (!player.isMine) return;
+
+
+
+
         if (redReticuleIsOn) { _redReticuleTick = Mathf.Clamp(_redReticuleTick + 3, 0, 30); } else { _redReticuleTick = Mathf.Clamp(_redReticuleTick - 2, 0, 30); }
 
 
