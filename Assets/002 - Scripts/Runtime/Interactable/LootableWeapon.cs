@@ -91,6 +91,8 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
     Quaternion _spawnPointRotation;
 
+    float _collisionEffectsCooldown, _heat;
+
     private void Awake()
     {
         _defaultTtl = _ttl;
@@ -100,7 +102,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
     }
     private void OnEnable()
     {
-
+        _collisionEffectsCooldown = _heat = 0;
         try { GetComponent<Rigidbody>().velocity *= 0; } catch { }
 
         try
@@ -116,6 +118,9 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
     private void Update()
     {
+        if (_collisionEffectsCooldown > 0) _collisionEffectsCooldown -= Time.deltaTime;
+        if (_heat > 0) _heat -= Time.deltaTime;
+
         if (!networkWeaponSpawnPoint)
         {
             if (_ttl > 0 && _ttl < 999)
@@ -262,9 +267,15 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
         GetComponent<Rigidbody>().velocity /= 2;
         try
         {
-            GetComponent<AudioSource>().clip = _collisionAudioClip;
-            GetComponent<AudioSource>().Play();
-            GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(transform.position, SoundManager.instance.weaponCollision);
+            if (_collisionEffectsCooldown <= 0 && _heat <= 0.3f)
+            {
+                GetComponent<AudioSource>().clip = _collisionAudioClip;
+                GetComponent<AudioSource>().Play();
+                GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(transform.position, SoundManager.instance.weaponCollision);
+
+                _collisionEffectsCooldown = 0.2f;
+                _heat = Mathf.Clamp(_heat + 0.05f, 0, 1);
+            }
         }
         catch (System.Exception e) { Debug.LogError(e); }
     }

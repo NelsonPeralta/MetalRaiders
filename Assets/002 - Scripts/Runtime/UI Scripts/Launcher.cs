@@ -781,7 +781,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
     {
         Debug.Log("LAUNCHER: OnLeftRoom");
-        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = new Dictionary<string, int>();
+        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Clear();
+        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT;
         CurrentRoomManager.instance.expectedNbPlayers = 0;
         try
         {

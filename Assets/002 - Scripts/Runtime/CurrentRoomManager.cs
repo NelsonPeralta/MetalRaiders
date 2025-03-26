@@ -573,7 +573,8 @@ public class CurrentRoomManager : MonoBehaviour
             _matchSettingsSet = _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
                   _reachedHalwayGameStartCountdown = _randomInitiQuickMatchSettingsChosen = false;
             _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _nbPlayersSet = _playersLoadedScene = 0;
-            playerNickname_To_NbLocalPlayers_DICT = new Dictionary<string, int>();
+            playerNickname_To_NbLocalPlayers_DICT.Clear();
+            playerNickname_To_NbLocalPlayers_DICT = playerNickname_To_NbLocalPlayers_DICT;
 
             _vetoedGameType = GameManager.GameType.Unassgined; _vetoedMapIndex = 0;
             _roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;

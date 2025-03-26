@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Codice.Client.Common.Connection.AskCredentialsToUser;
 
 public class PlayerInventory : MonoBehaviourPun
 {
@@ -430,11 +431,12 @@ public class PlayerInventory : MonoBehaviourPun
         _weaponsWithOverheat = allWeaponsInInventory.Where(item => item.GetComponent<WeaponProperties>().ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
         item.GetComponent<WeaponProperties>().plasmaColor != WeaponProperties.PlasmaColor.Shard).Select(item => item.GetComponent<WeaponProperties>()).ToList();
 
-        foreach(var weapon in _weaponsWithOverheat)
+
+        for (int j = _weaponsWithOverheat.Count; j-- > 0;)
         {
-            if (weapon.isDualWieldable)
+            if (_weaponsWithOverheat[j].isDualWieldable)
             {
-                _weaponsWithOverheat.Add(weapon.leftWeapon);
+                _weaponsWithOverheat.Add(_weaponsWithOverheat[j].leftWeapon);
             }
         }
     }
@@ -1026,7 +1028,8 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     bool outOfFakeBullets;
-    public void SpawnFakeBulletTrail(int distanceToTravel, Quaternion spray, bool bipedIsMine)
+    public void SpawnFakeBulletTrail(int lenghtOfTrail, Quaternion spray, bool bipedIsMine,
+        Vector3? muzzlePosition = null, Vector3? lookAtThisTarget = null)
     {
         outOfFakeBullets = true;
         foreach (FakeBulletTrail fbt in _fakeBulletTrailPool)
@@ -1053,22 +1056,40 @@ public class PlayerInventory : MonoBehaviourPun
                     GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
                 }
 
-                if(GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+                if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
                 {
                     GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
                 }
 
-                Debug.Log("SpawnFakeBulletTrail");
-                fbt.transform.localScale = new Vector3(distanceToTravel * 0.5f, distanceToTravel * 0.5f, Mathf.Clamp(distanceToTravel, 0, 999));
-                fbt.transform.localRotation *= spray;
-                //fbt.GetComponent<FakeBulletTrailDisable>().timeBeforeDisabling = ((float)distanceToTravel / FakeBulletTrailDisable.Speed);
-                fbt.GetComponent<FakeBulletTrailDisable>().timeBeforeDisabling = 0.1f;
+                Debug.Log($"SpawnFakeBulletTrail: {lenghtOfTrail}");
+                fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
+                fbt.scaleToChange.localScale = Vector3.one;
+                fbt.rotationToTarget.localRotation = Quaternion.identity;
+                fbt.sprayRotation.localRotation = Quaternion.identity;
+
+                fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.15f, lenghtOfTrail * 0.15f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+                fbt.sprayRotation.localRotation *= spray;
 
 
 
                 fbt.gameObject.SetActive(true);
                 fbt.transform.parent = null;
                 outOfFakeBullets = false;
+
+
+
+                if (muzzlePosition != null && muzzlePosition != Vector3.zero)
+                {
+                    fbt.transform.position = (Vector3)muzzlePosition;
+                    fbt.scaleToChange.localScale = Vector3.one;
+                    fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.15f, lenghtOfTrail * 0.15f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+                }
+
+                if (lookAtThisTarget != null && lookAtThisTarget != Vector3.zero)
+                {
+                    fbt.rotationToTarget.LookAt((Vector3)lookAtThisTarget);
+                }
+
                 break;
             }
         }

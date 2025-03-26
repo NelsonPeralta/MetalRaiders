@@ -527,7 +527,7 @@ public class AimAssistCone : MonoBehaviour
 
     void OnPlayerAssigned(Player p)
     {
-        if (p.isMine)
+        if (!p.isMine)
         {
             try { GetComponent<Collider>().enabled = false; } catch { }
         }
