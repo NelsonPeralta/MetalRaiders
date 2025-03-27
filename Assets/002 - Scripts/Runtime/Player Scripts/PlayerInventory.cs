@@ -1066,7 +1066,7 @@ public class PlayerInventory : MonoBehaviourPun
                 fbt.rotationToTarget.localRotation = Quaternion.identity;
                 fbt.sprayRotation.localRotation = Quaternion.identity;
 
-                fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.15f, lenghtOfTrail * 0.15f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+                fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
                 fbt.sprayRotation.localRotation *= spray;
 
 
@@ -1081,7 +1081,7 @@ public class PlayerInventory : MonoBehaviourPun
                 {
                     fbt.transform.position = (Vector3)muzzlePosition;
                     fbt.scaleToChange.localScale = Vector3.one;
-                    fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.15f, lenghtOfTrail * 0.15f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+                    fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
                 }
 
                 if (lookAtThisTarget != null && lookAtThisTarget != Vector3.zero)

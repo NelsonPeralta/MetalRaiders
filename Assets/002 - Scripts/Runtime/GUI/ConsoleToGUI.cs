@@ -13,6 +13,8 @@ public class ConsoleToGUI : MonoBehaviour
     int kLines = 65;
 
 
+    float _LKeyHeldTime;
+
 
 
     private void Start()
@@ -21,22 +23,57 @@ public class ConsoleToGUI : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKey(KeyCode.L))
         {
-            doShow = !doShow;
+            if (_LKeyHeldTime < 1) _LKeyHeldTime += Time.deltaTime;
 
-            if (doShow)
+            if (_LKeyHeldTime >= 1 && _LKeyHeldTime < 2)
             {
-                Application.logMessageReceived -= Log;
-                Application.logMessageReceived += Log;
-            }
+                doShow = !doShow;
 
-            Debug.unityLogger.logEnabled = doShow;
+                if (doShow)
+                {
+                    Application.logMessageReceived -= Log;
+                    Application.logMessageReceived += Log;
+                }
+
+                Debug.unityLogger.logEnabled = doShow;
 
 #if UNITY_EDITOR
-            Debug.unityLogger.logEnabled = true;
+                Debug.unityLogger.logEnabled = true;
 #endif
+
+
+
+
+
+
+                _LKeyHeldTime = 3;
+            }
         }
+
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+            _LKeyHeldTime = 0;
+        }
+
+
+        //        if (Input.GetKeyDown(KeyCode.L))
+        //        {
+        //            doShow = !doShow;
+
+        //            if (doShow)
+        //            {
+        //                Application.logMessageReceived -= Log;
+        //                Application.logMessageReceived += Log;
+        //            }
+
+        //            Debug.unityLogger.logEnabled = doShow;
+
+        //#if UNITY_EDITOR
+        //            Debug.unityLogger.logEnabled = true;
+        //#endif
+        //        }
     }
 
     public void Log(string logString, string stackTrace, LogType type)

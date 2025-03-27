@@ -509,10 +509,11 @@ public class PlayerShooting : MonoBehaviourPun
 
                         if (fakeBulletTrailRaycasthits.Count <= 0)
                         {
+
                             // if we find no colliders (default or hitboxes), shoot a fake trail at its maximum lenght
-                            pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range,
+                            pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
                                 ranSprayQuat, player.isMine,
-                               muzzlePosition: playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position);
+                               muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                         }
                         else
                         {
@@ -542,7 +543,7 @@ public class PlayerShooting : MonoBehaviourPun
                                     {
                                         pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point),
                                             ranSprayQuat, player.isMine,
-                               muzzlePosition: playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position,
+                               muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position,
                                lookAtThisTarget: fakeBulletTrailRaycasthits[0].point);
                                     }
                                     else
@@ -565,7 +566,7 @@ public class PlayerShooting : MonoBehaviourPun
                             {
                                 pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range,
                                 ranSprayQuat, player.isMine,
-                               muzzlePosition: playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position);
+                               muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                             }
                         }
 
