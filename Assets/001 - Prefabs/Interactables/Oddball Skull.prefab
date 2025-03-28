@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridTarget: 0
+  _flagScript: {fileID: 0}
 --- !u!1 &4164686963869403501
 GameObject:
   m_ObjectHideFlags: 0
@@ -5376,6 +5377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridTarget: 2
+  _flagScript: {fileID: 0}
 --- !u!1 &6068759975872022787
 GameObject:
   m_ObjectHideFlags: 0
@@ -5466,6 +5468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridTarget: 1
+  _flagScript: {fileID: 0}
 --- !u!1 &6460675204859691048
 GameObject:
   m_ObjectHideFlags: 0
@@ -5556,6 +5559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ridTarget: 3
+  _flagScript: {fileID: 0}
 --- !u!1 &8579367014680229528
 GameObject:
   m_ObjectHideFlags: 0
@@ -5617,6 +5621,6 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1

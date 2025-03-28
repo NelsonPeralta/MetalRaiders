@@ -728,9 +728,28 @@ public class Launcher : MonoBehaviourPunCallbacks
         int c = 0;
         foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied))
         {
-            print($"{s.playerExtendedPublicData.player_id} {s.rewiredId} will get spawn {c}");
-            NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, c);
-            c++;
+            if (GameManager.instance.teamMode == TeamMode.None)
+            {
+                print($"{s.playerExtendedPublicData.player_id} {s.rewiredId} will get spawn {c}");
+                NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, c);
+                c++;
+            }
+            else
+            {
+                int blue = 0;
+                if (s.team == Team.Red)
+                {
+                    print($"{s.playerExtendedPublicData.player_id} {s.rewiredId} will get spawn {c} Red Team");
+                    NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, c);
+                    c++;
+                }
+                else if (s.team == Team.Blue)
+                {
+                    print($"{s.playerExtendedPublicData.player_id} {s.rewiredId} will get spawn {blue} Blue Team");
+                    NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, blue);
+                    blue++;
+                }
+            }
         }
 
 
