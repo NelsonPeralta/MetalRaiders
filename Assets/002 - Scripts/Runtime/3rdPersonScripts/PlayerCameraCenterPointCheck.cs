@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThirdPersonCameraPointHit : MonoBehaviour
+public class PlayerCameraCenterPointCheck : MonoBehaviour
 {
     public Transform target { get { return _witness; } }
 

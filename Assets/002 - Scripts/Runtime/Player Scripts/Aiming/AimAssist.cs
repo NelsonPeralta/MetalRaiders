@@ -63,7 +63,7 @@ public class AimAssist : MonoBehaviour
     Vector3 raySpawn;
     RaycastHit hit;
 
-    public Transform aimAssistForward;
+    public Transform aimAssistRotationControl;
     public Quaternion originalBbulletSpawnPointRelativePos;
 
     [SerializeField] Transform bulletSpawnPoint_Forward;
@@ -89,7 +89,7 @@ public class AimAssist : MonoBehaviour
 
     private void Start()
     {
-        originalBbulletSpawnPointRelativePos = aimAssistForward.transform.localRotation;
+        originalBbulletSpawnPointRelativePos = aimAssistRotationControl.transform.localRotation;
     }
 
     private void Update()
@@ -113,12 +113,12 @@ public class AimAssist : MonoBehaviour
                 //Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
                 //Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
 
-                Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistForward.position).normalized;
-                Vector3 targetDir = (targetHitbox.transform.position - aimAssistForward.position);
+                Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistRotationControl.position).normalized;
+                Vector3 targetDir = (targetHitbox.transform.position - aimAssistRotationControl.position);
 
                 Vector3 middleDir = bspDir + targetDir;
 
-                aimAssistForward.forward = (middleDir);
+                aimAssistRotationControl.forward = (middleDir);
 
                 //bulletSpawnPoint.LookAt(target.transform);
             }
@@ -178,43 +178,43 @@ public class AimAssist : MonoBehaviour
                     (GameManager.instance.teamMode == GameManager.TeamMode.Classic &&
                     targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
                 {
-                    if (aimAssistForward.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                        aimAssistForward.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                    if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                        aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
 
                     return;
                 }
 
-                Vector3 targetHitboxDir = (targetHitbox.transform.position - aimAssistForward.position);
-                float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, aimAssistForward.position);
+                Vector3 targetHitboxDir = (targetHitbox.transform.position - aimAssistRotationControl.position);
+                float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, aimAssistRotationControl.position);
 
 
 
 
                 if (!Physics.Raycast(player.mainCamera.transform.position, targetHitboxDir, targetHitboxDistance, obstructionMask))
                 {
-                    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistForward.position).normalized;
-                    Vector3 targetDir = (targetHitbox.transform.position - aimAssistForward.position);
+                    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistRotationControl.position).normalized;
+                    Vector3 targetDir = (targetHitbox.transform.position - aimAssistRotationControl.position);
 
                     Vector3 newDir = bspDir + (targetDir * 0.2f);
 
-                    aimAssistForward.forward = newDir;
+                    aimAssistRotationControl.forward = newDir;
                 }
                 else
                 {
-                    if (aimAssistForward.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                        aimAssistForward.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                    if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                        aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
                 }
             }
             else
             {
-                if (aimAssistForward.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                    aimAssistForward.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                    aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
             }
         }
         else
         {
-            if (aimAssistForward.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                aimAssistForward.transform.localRotation = originalBbulletSpawnPointRelativePos;
+            if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
+                aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
         }
     }
 

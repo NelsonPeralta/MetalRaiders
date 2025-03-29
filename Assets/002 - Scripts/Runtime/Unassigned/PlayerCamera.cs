@@ -11,7 +11,7 @@ public class PlayerCamera : MonoBehaviour
 
     public bool followPlayer { get { return _followPlayer; } set { _followPlayer = value; } }
 
-    public Transform thirdPersonCameraPoint { get { return _thirdPersonCameraPointHit.target; } }
+    public Transform thirdPersonCameraPoint { get { return _playerCameraCenterPointCheck.target; } }
 
     public float frontEndMouseSens;
     public float backEndMouseSens;
@@ -28,6 +28,10 @@ public class PlayerCamera : MonoBehaviour
     {
         get { return pController.rewiredPlayer; }
     }
+
+    public PlayerCameraCenterPointCheck playerCameraCenterPointCheck { get { return _playerCameraCenterPointCheck; } }
+
+
     public PlayerController pController;
     public Player player;
     public Camera mainCam;
@@ -62,7 +66,7 @@ public class PlayerCamera : MonoBehaviour
     float xExtremeDeadzone = 0.98f, yExtremeDeadzone = 0.98f;
 
     [SerializeField] Transform _thirdPersonCameraPivot, _thirdPersonCameraTarget, _thirdPersonAimingComponentsOffset;
-    [SerializeField] ThirdPersonCameraPointHit _thirdPersonCameraPointHit;
+    [SerializeField] PlayerCameraCenterPointCheck _playerCameraCenterPointCheck;
 
 
 
@@ -437,7 +441,7 @@ public class PlayerCamera : MonoBehaviour
         verticalAxisTarget.localRotation = Quaternion.Euler(0, 0, 0f);
         followPlayer = true;
 
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On) EnableThirdPerson();
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On) EnableThirdPersonLayerMask();
     }
 
 
@@ -460,7 +464,7 @@ public class PlayerCamera : MonoBehaviour
 
 
 
-    public void EnableThirdPerson()
+    public void EnableThirdPersonLayerMask()
     {
         mainCam.cullingMask = GameManager.instance.thirdPersonMainCameraLayerMask;
     }

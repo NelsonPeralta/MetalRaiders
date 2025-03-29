@@ -513,7 +513,20 @@ public class Launcher : MonoBehaviourPunCallbacks
         CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = DEFAULT_ROOM_COUNTDOWN;
 
         if (tl == null)
-            PhotonNetwork.CreateRoom(roomNam, ro);
+        {
+            try
+            {
+                PhotonNetwork.CreateRoom(roomNam, ro);
+            }
+            catch
+            {
+                errorText.text = "Failed to create room";
+                Debug.LogError("Failed to create room");
+
+                GameManager.instance.previousScenePayloads.Add(PreviousScenePayload.ErrorWhileCreatingRoom);
+                MenuManager.Instance.OpenPopUpMenu("error");
+            }
+        }
         else
             PhotonNetwork.JoinOrCreateRoom(roomNam, ro, typedLobby);
     }

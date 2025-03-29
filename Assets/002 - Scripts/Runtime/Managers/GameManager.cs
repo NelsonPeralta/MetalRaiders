@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum HitMarkersMode { On, Off }
     public enum ThirdPersonMode { Off, On }
 
-    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, Kicked }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, Kicked, ErrorWhileCreatingRoom }
 
     public List<int> arenaLevelIndexes = new List<int>();
 

@@ -132,7 +132,16 @@ public class MenuManager : MonoBehaviour
 
 
         if (GameManager.instance.previousScenePayloads.Contains(PreviousScenePayload.LoadTimeOutOpenErrorMenu)) { GameManager.instance.RemoveFromPreviousScenePayload(PreviousScenePayload.LoadTimeOutOpenErrorMenu); }
+
+
+
         menu.Close();
+
+        if (GameManager.instance.previousScenePayloads.Contains(PreviousScenePayload.ErrorWhileCreatingRoom))
+        {
+            GameManager.instance.RemoveFromPreviousScenePayload(PreviousScenePayload.ErrorWhileCreatingRoom);
+            OpenMenu("room browser");
+        }
     }
     public void CloseMenu(string m)
     {

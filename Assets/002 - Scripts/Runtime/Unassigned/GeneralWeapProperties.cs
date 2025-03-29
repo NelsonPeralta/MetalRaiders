@@ -46,15 +46,9 @@ public class GeneralWeapProperties : MonoBehaviour
     public Transform bulletSpawnPoint;
     public List<Transform> pelletSpawnPoints = new List<Transform>();
     public Transform grenadeSpawnPoint;
-    public Transform bulletSpTpsOffset, pelletSpTpsOffset, tpsBulletParent;
+    public Transform tpsBulletSpawnPointParent, tpsRotationToCameraCenterControl;
 
-    [Header("UI Components")]
-    public GameObject singleFireUIGO;
-    public GameObject burstFireUIGO;
-    public GameObject automaticFireUIGO;
 
-    [Header("Bullets Shot by this player")]
-    public List<Bullet> bulletsShotByplayer = new List<Bullet>();
 
     Quaternion originalBulletLocalRotation;
     void Start()
@@ -134,17 +128,16 @@ public class GeneralWeapProperties : MonoBehaviour
     public void MoveBulletSpawnPointsForThirdPerson()
     {
         print("MoveBulletSpawnPointsForThirdPerson");
-        bulletSpTpsOffset.SetParent(tpsBulletParent.GetChild(0));
-        pelletSpTpsOffset.SetParent(tpsBulletParent.GetChild(0));
 
-        bulletSpTpsOffset.transform.localPosition = new Vector3(0, 0, 0.2f);
-        bulletSpTpsOffset.transform.localRotation = Quaternion.identity;
+        // aimAssistRotationControl should already have the bullet spawn point as child
+        // shotgun should not be child cuz shotgun should one the weapons with no aim assist
+        pController.player.aimAssist.aimAssistRotationControl.SetParent(tpsBulletSpawnPointParent);
+        pelletSpawnPoints[0].transform.parent.SetParent(tpsBulletSpawnPointParent);
 
-        pelletSpTpsOffset.transform.localPosition = new Vector3(0, 0, 0.2f);
-        pelletSpTpsOffset.transform.localRotation = Quaternion.identity;
+        pController.player.aimAssist.aimAssistRotationControl.localPosition = Vector3.zero;
+        pelletSpawnPoints[0].transform.parent.localPosition = Vector3.zero;
 
-        pInventory.bulletTrailHolder.transform.localPosition = Vector3.zero;
-        //bulletSpTpsOffset.parent = tpsBulletParent;
-        //pelletSpTpsOffset.parent = tpsBulletParent;
+        pController.player.aimAssist.aimAssistRotationControl.localRotation = Quaternion.identity;
+        pelletSpawnPoints[0].transform.parent.localRotation = Quaternion.identity;
     }
 }

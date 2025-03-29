@@ -825,6 +825,10 @@ public class Player : Biped
 
         //playerArmorManager.playerDataCell = CurrentRoomManager.GetPlayerDataWithId(playerId, rid);
 
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        {
+            playerCamera.EnableThirdPersonLayerMask();
+        }
     }
     private void Update()
     {
@@ -1370,7 +1374,7 @@ public class Player : Biped
 
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
         {
-            playerCamera.EnableThirdPerson();
+            playerCamera.EnableThirdPersonLayerMask();
         }
     }
 

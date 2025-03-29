@@ -122,11 +122,6 @@ public class PlayerShooting : MonoBehaviourPun
                 }
             }
         }
-
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On && CurrentRoomManager.instance.gameStarted)
-        {
-            playerController.gwProperties.tpsBulletParent.GetChild(0).LookAt(playerController.player.playerCamera.thirdPersonCameraPoint);
-        }
     }
 
 
@@ -466,6 +461,23 @@ public class PlayerShooting : MonoBehaviourPun
 
         if (playerController.GetComponent<Player>().isDead || playerController.GetComponent<Player>().isRespawning)
             return;
+
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        {
+            if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
+            {
+                // if the player is allowed no aim assist at all
+                // we will simply correct the angle so that the bullet is fired at whatever is at the center of the players main cam
+                playerController.gwProperties.tpsRotationToCameraCenterControl.localRotation = Quaternion.identity;
+                playerController.gwProperties.tpsRotationToCameraCenterControl.LookAt(playerController.player.playerCamera.playerCameraCenterPointCheck.target.position);
+            }
+            else
+            {
+                // if the player is allowed a certain amount of aim assist, do nothing special for now
+                // make sure its reset so it does not come in control with the aim assist rotation control
+                playerController.gwProperties.tpsRotationToCameraCenterControl.localRotation = Quaternion.identity;
+            }
+        }
 
         playerController.SetCurrentlyShootingReset();
 
