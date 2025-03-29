@@ -16,7 +16,7 @@ public class WeaponProperties : MonoBehaviour
     public WeaponPropertiesEvent OnCurrentAmmoChanged, OnSpareAmmoChanged;
 
     //Enums
-    public enum WeaponType { AR, DMR, Pistol, SMG, Shotgun, Sniper, LMG, Launcher, None }
+    public enum WeaponType { AR, DMR, Pistol, SMG, Shotgun, Sniper, LMG, Launcher, Heavy, None }
     public enum FiringMode { Auto, Burst, Single }
     public enum AmmoType { Heavy, Light, Power }
     public enum AmmoReloadType { Magazine, Shell, Single, Generic }
@@ -30,7 +30,7 @@ public class WeaponProperties : MonoBehaviour
         Unassigned,
         Pistol, SMG, Assault_Rifle, Battle_Rifle, Sniper, RPG, Shotgun, Grenade_Launcher,
         Oddball, Splinter, Plasma_Rifle, Plasma_Blaster, Barrel, Ultra_Bind, Frag_Grenade,
-        Plasma_Grenade, Melee, Stuck, Assasination, Plasma_Pistol, Revolver, Sword, Flag
+        Plasma_Grenade, Melee, Stuck, Assasination, Plasma_Pistol, Revolver, Sword, Flag, Minigun
     }
 
     public Player player { get { return pController.player; } }
