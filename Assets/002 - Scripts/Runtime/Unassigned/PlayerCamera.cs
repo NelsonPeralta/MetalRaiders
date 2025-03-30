@@ -35,7 +35,6 @@ public class PlayerCamera : MonoBehaviour
     public PlayerController pController;
     public Player player;
     public Camera mainCam;
-    public Camera gunCam;
     public Vector3 mainCamDefaultLocalPosition;
     public Quaternion mainCamDefaultLocalRotation;
 
@@ -111,15 +110,16 @@ public class PlayerCamera : MonoBehaviour
 
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
         {
-            _thirdPersonCameraPivot.transform.parent = null;
-            _thirdPersonAimingComponentsOffset.transform.localPosition = new Vector3(0, 0, 2.4f);
+            SetupThirdPersonCamera();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On) _thirdPersonCameraPivot.transform.position = _playerCameraHolder.position; ;
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On ||
+            player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+            _thirdPersonCameraPivot.transform.position = _playerCameraHolder.position; ;
 
 
 
@@ -231,24 +231,8 @@ public class PlayerCamera : MonoBehaviour
                 // PROCESS PLAYER INPUT
                 else if (player.isAlive && !pController.cameraIsFloating)
                 {
-
-
-                    if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
-                        _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
-
-
-                        var targetHorizontalAngle = Mathf.SmoothDampAngle(player.GetComponent<Rigidbody>().rotation.eulerAngles.y,
-                                                       mainCam.transform.eulerAngles.y,
-                                                       ref _tmpRotationVelocity,
-                                                       _rotationSmoothTime,
-                                                       float.MaxValue,
-                                                       Time.fixedDeltaTime);
-                        Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
-                        player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
-                    }
-                    else
+                    if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On
+                        || (player.playerInventory.activeWeapon && player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy))
                     {
                         _thirdPersonCameraPivot.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
                         _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
@@ -265,7 +249,21 @@ public class PlayerCamera : MonoBehaviour
                         Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
                         player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
                     }
+                    else if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+                    {
+                        mainCam.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
+                        _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
 
+
+                        var targetHorizontalAngle = Mathf.SmoothDampAngle(player.GetComponent<Rigidbody>().rotation.eulerAngles.y,
+                                                       mainCam.transform.eulerAngles.y,
+                                                       ref _tmpRotationVelocity,
+                                                       _rotationSmoothTime,
+                                                       float.MaxValue,
+                                                       Time.fixedDeltaTime);
+                        Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
+                        player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
+                    }
 
 
 
@@ -466,6 +464,14 @@ public class PlayerCamera : MonoBehaviour
 
     public void EnableThirdPersonLayerMask()
     {
+        print("EnableThirdPersonLayerMask");
         mainCam.cullingMask = GameManager.instance.thirdPersonMainCameraLayerMask;
+    }
+
+    public void SetupThirdPersonCamera()
+    {
+        print("SetupThirdPersonCamera");
+        _thirdPersonCameraPivot.transform.parent = null;
+        _thirdPersonAimingComponentsOffset.transform.localPosition = new Vector3(0, 0, 2.4f);
     }
 }

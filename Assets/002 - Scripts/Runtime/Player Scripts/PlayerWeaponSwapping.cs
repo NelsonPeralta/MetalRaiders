@@ -256,11 +256,11 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
         gameObject.layer = _originalLayer;
     }
 
-    //TODO: Optimize this
+    // DEPRECATED. Look at PlayerInteractableObjectHandler instead
     void OnPlayerLongInteract_Delegate(PlayerController playerController)
     {
         //if (!PV.IsMine)
-            return;
+        return;
 
         //Debug.Log("Om Player Long Interact Delegate");
 
@@ -438,6 +438,23 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                     player.playerInventory.thirdWeapon = w.GetComponent<WeaponProperties>();
 
             weaponToLoot.gameObject.SetActive(false);
+        }
+        else // its a heavy weapon
+        {
+            LootableWeapon weaponToLoot = WeaponPool.instance.weaponPool.Where(item => item.spawnPointPosition == collidingWeaponPosition).FirstOrDefault();
+
+            foreach (GameObject w in pInventory.allWeaponsInInventory)
+                if (w.GetComponent<WeaponProperties>().weaponType == WeaponProperties.WeaponType.Heavy && w.GetComponent<WeaponProperties>().codeName == weaponToLoot.codeName)
+                {
+                    player.playerInventory.thirdWeapon = w.GetComponent<WeaponProperties>();
+
+                    pInventory.activeWeapon.loadedAmmo = weaponToLoot.networkAmmo;
+                    pInventory.activeWeapon.spareAmmo = weaponToLoot.spareAmmo;
+                    pInventory.player.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up a {pInventory.activeWeapon.cleanName}");
+
+
+                    weaponToLoot.gameObject.SetActive(false);
+                }
         }
     }
 

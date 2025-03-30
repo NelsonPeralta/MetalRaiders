@@ -270,6 +270,9 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
 
 
+
+    int weaponCollidingWithInInventoryIndex;
+    Vector3 lwPosition;
     void OnPlayerLongInteract_Delegate(PlayerController playerController)
     {
         if (!player.PV.IsMine || player.hasEnnemyFlag || player.playerInventory.playerOddballActive)
@@ -290,15 +293,24 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                         if (closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.activeWeapon.codeName
                         && closestInteractableObject.GetComponent<LootableWeapon>().codeName != player.playerInventory.holsteredWeapon.codeName)
                         {
-                            int weaponCollidingWithInInventoryIndex = 0;
+                            weaponCollidingWithInInventoryIndex = -1;
                             for (int i = 0; i < player.playerInventory.allWeaponsInInventory.Length; i++)
-                                if (closestInteractableObject.gameObject == player.playerInventory.allWeaponsInInventory[i])
+                                if (closestInteractableObject.GetComponent<LootableWeapon>().codeName.Equals(player.playerInventory.allWeaponsInInventory[i].GetComponent<WeaponProperties>().codeName))
                                     weaponCollidingWithInInventoryIndex = i;
-                            Vector3 lwPosition = closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition;
+                            lwPosition = closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition;
 
 
+                            print($"{player.playerInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].GetComponent<WeaponProperties>().weaponType.ToString()}");
 
-                            if (!player.playerInventory.holsteredWeapon) // Looks for Secondary Weapon
+                            if (player.playerInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].GetComponent<WeaponProperties>().weaponType == WeaponProperties.WeaponType.Heavy)
+                            {
+                                print("Picking up a heavy weapon");
+
+                                player.playerController.ResetLongInteractFrameCounter(PlayerController.InteractResetMode.thirdweapon);
+                                PV.RPC("PickupThirdWeapon", RpcTarget.All, closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition, false);
+                                player.playerController.ResetLongInteractFrameCounter(PlayerController.InteractResetMode.thirdweapon);
+                            }
+                            else if (!player.playerInventory.holsteredWeapon) // Looks for Secondary Weapon
                             {
                                 //Debug.Log("RPC: Picking up second weapon");
                                 //PickupSecWeap();

@@ -81,7 +81,40 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+        SetupThirdPersonModelLayers();
+    }
+
+
+    public void SetupThirdPersonModelLayers()
+    {
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On ||
+            player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+        {
+            print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned THIRPERSON MODE ON");
+
+            Scene currentScene = SceneManager.GetActiveScene();
+            if (currentScene.buildIndex > 0) // We are not in the menu
+            {
+                List<int> ignoreList = new List<int>();
+                ignoreList.Add(7); // 7 = Player Hitbox
+                foreach (GameObject model in models)
+                    if (!feet.Contains(model))
+                    {
+                        GameManager.SetLayerRecursively(model, 0, ignoreList);
+                    }
+
+                undersuitMesh.layer = 0;
+
+                OnModelAssigned?.Invoke(this);
+
+                foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
+                {
+                    lw.enabled = false;
+                    lw.ttl = 99999;
+                }
+            }
+        }
+        else if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
         {
             print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned");
 
@@ -135,32 +168,6 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
                 OnModelAssigned?.Invoke(this);
 
-
-                foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
-                {
-                    lw.enabled = false;
-                    lw.ttl = 99999;
-                }
-            }
-        }
-        else
-        {
-            print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned THIRPERSON MODE ON");
-
-            Scene currentScene = SceneManager.GetActiveScene();
-            if (currentScene.buildIndex > 0) // We are not in the menu
-            {
-                List<int> ignoreList = new List<int>();
-                ignoreList.Add(7); // 7 = Player Hitbox
-                foreach (GameObject model in models)
-                    if (!feet.Contains(model))
-                    {
-                        GameManager.SetLayerRecursively(model, 0, ignoreList);
-                    }
-
-                undersuitMesh.layer = 0;
-
-                OnModelAssigned?.Invoke(this);
 
                 foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
                 {

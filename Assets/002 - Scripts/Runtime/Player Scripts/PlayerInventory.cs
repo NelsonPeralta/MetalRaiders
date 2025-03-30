@@ -46,6 +46,8 @@ public class PlayerInventory : MonoBehaviourPun
             if (_oddball.gameObject.activeInHierarchy) return _oddball;
             if (_flag.gameObject.activeInHierarchy) return _flag;
 
+            if (_thirdWeapon && _thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy) return _thirdWeapon;
+
             return _activeWeapon;
         }
         set
@@ -140,18 +142,36 @@ public class PlayerInventory : MonoBehaviourPun
                 value.gameObject.SetActive(true);
                 value.equippedModel.SetActive(true);
 
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", true);
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
-                pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("dw draw");
 
-                value.GetComponent<Animator>().SetBool("idle", false);
-                value.GetComponent<Animator>().SetBool("dw idle", true);
-                value.GetComponent<Animator>().Play("dw draw");
+                if (value.weaponType != WeaponProperties.WeaponType.Heavy)
+                {
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", true);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("dw draw");
+                }
+                else
+                {
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("heavy idle", true);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", false);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("sword idle", false);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().Play("heavy draw");
+                }
 
-                activeWeapon.GetComponent<Animator>().SetBool("idle", false);
-                activeWeapon.GetComponent<Animator>().SetBool("dw idle", true);
-                activeWeapon.GetComponent<Animator>().Play("dw idle force");
+
+                if (value.weaponType != WeaponProperties.WeaponType.Heavy)
+                {
+                    value.GetComponent<Animator>().SetBool("idle", false);
+                    value.GetComponent<Animator>().SetBool("dw idle", true);
+                    value.GetComponent<Animator>().Play("dw draw");
+
+                    activeWeapon.GetComponent<Animator>().SetBool("idle", false);
+                    activeWeapon.GetComponent<Animator>().SetBool("dw idle", true);
+                    activeWeapon.GetComponent<Animator>().Play("dw idle force");
+                }
+
                 weaponDrawAudioSource.clip = value.draw;
                 weaponDrawAudioSource.Play();
 
@@ -173,11 +193,25 @@ public class PlayerInventory : MonoBehaviourPun
                     activeWeapon.GetComponent<Animator>().SetBool("dw walk", false);
 
                     pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", false);
+                    pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("heavy idle", false);
                     StartCoroutine(ToggleTPPistolIdle(1));
                 }
             }
 
             _thirdWeapon = value;
+
+            if (value && value.weaponType == WeaponProperties.WeaponType.Heavy && GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+            {
+                print("setting up third person");
+                pController.SetDrawingWeaponCooldown();
+                player.playerCamera.EnableThirdPersonLayerMask();
+                thirdPersonLookAtScript.MoveLookAtTargetToThirdPersonPosition();
+                player.playerController.gwProperties.MoveBulletSpawnPointsForThirdPerson();
+                player.playerCamera.SetupThirdPersonCamera();
+                player.gunCamera.enabled = false;
+                player.playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
+                player.playerInventory.activeWeapon.crosshair.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -214,6 +248,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     public bool isDualWielding { get { return thirdWeapon && thirdWeapon.isDualWieldable; } }
+    public bool isHoldingHeavy { get { return _thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy; } }
     public bool hasADualWieldableWeapon { get { if (activeWeapon.isDualWieldable || holsteredWeapon.isDualWieldable) return true; return false; } }
     public bool activeWeaponIsDualWieldable { get { return activeWeapon.isDualWieldable; } }
 
@@ -309,6 +344,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     public Transform bulletTrailHolder { get { return _fakeBulletTrailHolder; } }
+    public ThirdPersonLookAt thirdPersonLookAtScript { get { return _thirdPersonLookAt; } }
 
     [SerializeField] Transform _fakeBulletTrailHolder;
     [SerializeField] Transform _fakeBulleTrailPrefab;
@@ -316,6 +352,7 @@ public class PlayerInventory : MonoBehaviourPun
     [SerializeField] PlayerGunGameManager _playerGunGameManager;
     [SerializeField] WeaponProperties _oddball, _flag;
     [SerializeField] List<WeaponProperties> _weaponsWithOverheat = new List<WeaponProperties>();
+    [SerializeField] ThirdPersonLookAt _thirdPersonLookAt;
 
 
 
@@ -1055,7 +1092,7 @@ public class PlayerInventory : MonoBehaviourPun
                     GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
                 }
 
-                if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+                if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
                 {
                     GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
                 }
@@ -1273,6 +1310,11 @@ public class PlayerInventory : MonoBehaviourPun
             NetworkGameManager.SpawnNetworkWeapon(thirdWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward, currAmmo: thirdWeapon.loadedAmmo, spareAmmo: thirdWeapon.spareAmmo);
             PV.RPC("RemoveThirdWeapon_RPC", RpcTarget.All);
         }
+    }
+
+    public void RemoveThirdWeaponQuietly()
+    {
+        if (thirdWeapon) { _thirdWeapon = null; }
     }
 
 

@@ -6,6 +6,7 @@ public class PlayerCameraCenterPointCheck : MonoBehaviour
 {
     public Transform target { get { return _witness; } }
 
+    [SerializeField] Player _player;
     [SerializeField] Transform _hitTransform, _witness;
 
 
@@ -24,7 +25,7 @@ public class PlayerCameraCenterPointCheck : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On
+        if ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || _player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
             && CurrentRoomManager.instance.gameStarted)
         {
             // Does the ray intersect any objects excluding the player layer

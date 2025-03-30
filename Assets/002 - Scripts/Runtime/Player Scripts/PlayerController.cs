@@ -1947,15 +1947,19 @@ public class PlayerController : MonoBehaviourPun
             {
                 if (pInventory.activeWeapon != null)
                 {
-                    if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
+                    try
                     {
-                        isFiring = true;
-                    }
-                    else
-                    {
+                        if (weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
+                        {
+                            isFiring = true;
+                        }
+                        else
+                        {
 
-                        isFiring = false;
+                            isFiring = false;
+                        }
                     }
+                    catch { }
 
                     if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
                     {

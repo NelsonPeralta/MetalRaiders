@@ -462,7 +462,7 @@ public class PlayerShooting : MonoBehaviourPun
         if (playerController.GetComponent<Player>().isDead || playerController.GetComponent<Player>().isRespawning)
             return;
 
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || playerController.pInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
         {
             if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
             {

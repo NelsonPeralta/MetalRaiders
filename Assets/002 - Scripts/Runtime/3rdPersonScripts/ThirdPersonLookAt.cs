@@ -70,8 +70,7 @@ public class ThirdPersonLookAt : MonoBehaviour
 
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
         {
-            lookAtGO.localPosition = new Vector3(lookAtGO.localPosition.x,
-                lookAtGO.localPosition.y, lookAtGO.localPosition.z - (PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z * 2));
+            MoveLookAtTargetToThirdPersonPosition();
         }
     }
 
@@ -129,5 +128,19 @@ public class ThirdPersonLookAt : MonoBehaviour
             currentOffset = BackwardsOffset;
         else if (pmd == PlayerMovement.PlayerMovementDirection.BackwardsLeft)// Left Backwards
             currentOffset = LeftBackwardsOffset;
+    }
+
+
+    public void MoveLookAtTargetToThirdPersonPosition()
+    {
+        print("MoveLookAtTargetToThirdPersonPosition");
+        lookAtGO.localPosition = new Vector3(lookAtGO.localPosition.x,
+                lookAtGO.localPosition.y, lookAtGO.localPosition.z - (PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z * 2));
+    }
+
+    public void ReturnLookAtTargetToOriginalPosition()
+    {
+        lookAtGO.localPosition = new Vector3(lookAtGO.localPosition.x,
+                lookAtGO.localPosition.y, lookAtGO.localPosition.z + (PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z * 2));
     }
 }

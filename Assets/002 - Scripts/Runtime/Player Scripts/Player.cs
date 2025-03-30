@@ -1026,6 +1026,8 @@ public class Player : Biped
         NetworkGameManager.SpawnNetworkWeaponOnPlayerDeath(firstWeapon, secondWeapon,
            weaponDropPoint.position, weaponDropPoint.transform.forward, weaponDropPoint.position + new Vector3(0, 1, 0));
 
+        if (playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy) playerInventory.RemoveThirdWeaponQuietly();
+
         //GC.Collect(); // LAG SPIKE
     }
 
@@ -1323,6 +1325,9 @@ public class Player : Biped
     void Respawn()
     {
         Debug.Log("Respawn");
+
+        playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
+
         if (GameManager.instance.gameType == GameManager.GameType.CTF) _spawnProtectionTime = 2;
         _gameplayerRecordingPointsHolder.parent = transform; _gameplayerRecordingPointsHolder.transform.localPosition = Vector3.zero; _gameplayerRecordingPointsHolder.transform.localRotation = Quaternion.identity;
         _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
