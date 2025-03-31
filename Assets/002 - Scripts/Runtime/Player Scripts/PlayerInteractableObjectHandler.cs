@@ -94,36 +94,26 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                     _filteredInteractableObjects = _filteredInteractableObjects.OrderBy(x => Vector3.Distance(this.transform.position, new Vector3(x.transform.position.x, transform.position.y, x.transform.position.z))).ToList();
 
 
-                    for (int i = _filteredInteractableObjects.Count - 1; i >= 0; i--)
+
+                    if (!player.playerInventory.isHoldingHeavy)
                     {
-                        // Do something
-                        if (_filteredInteractableObjects[i].GetComponent<LootableWeapon>())
+                        for (int i = _filteredInteractableObjects.Count - 1; i >= 0; i--)
                         {
-                            if (_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
-                                _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
-                              (_player.playerInventory.thirdWeapon && _player.playerInventory.thirdWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName))
+                            // Do something
+                            if (_filteredInteractableObjects[i].GetComponent<LootableWeapon>())
                             {
-                                _weaponsThePlayerHasInInventory.Add(_filteredInteractableObjects[i]);
+                                if (_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
+                                    _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
+                                  (_player.playerInventory.thirdWeapon && _player.playerInventory.thirdWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName))
+                                {
+                                    _weaponsThePlayerHasInInventory.Add(_filteredInteractableObjects[i]);
+                                }
                             }
-
-
-
-                            //if (_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
-                            //    _player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName ||
-                            //  (_player.playerInventory.thirdWeapon && _player.playerInventory.thirdWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName))
-                            //{
-
-                            //    if ((_player.playerInventory.activeWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.activeWeapon.isDualWieldable)
-                            //        _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
-                            //    else if ((_player.playerInventory.holsteredWeapon.codeName == _filteredInteractableObjects[i].GetComponent<LootableWeapon>().codeName) && _player.playerInventory.holsteredWeapon.isDualWieldable)
-                            //        _weaponsThePlayerHasInInventoryAndAreDualWieldable.Add(_filteredInteractableObjects[i]);
-                            //    else
-                            //        _filteredInteractableObjects.RemoveAt(i);
-                            //}
-
-
-
                         }
+                    }
+                    else
+                    {
+                        _filteredInteractableObjects = _filteredInteractableObjects.Where(item => !item.GetComponent<LootableWeapon>()).ToList();
                     }
                 }
 

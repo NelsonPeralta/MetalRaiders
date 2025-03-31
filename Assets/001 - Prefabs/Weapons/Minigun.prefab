@@ -10363,7 +10363,7 @@ MonoBehaviour:
   _spareAmmo: 0
   _defaultAmmo: 100
   _defaultSpareAmmo: 0
-  _tts: 120
+  _tts: 180
   _collisionAudioClip: {fileID: 8300000, guid: 6d1eb0d6be438c64087584e59b692277, type: 3}
   _networkWeaponSpawnPoint: {fileID: 0}
   _spawnPointPositionIdentity: {x: 0, y: 0, z: 0}
