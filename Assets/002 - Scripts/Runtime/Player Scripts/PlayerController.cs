@@ -1347,11 +1347,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 pInventory.DropThirdWeapon();
             }
-            else if (!pInventory.isDualWielding && player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
-            {
-                ThrowGrenade();
-            }
-            else
+            else if (pInventory.isDualWielding)
             {
                 if (activeControllerType == ControllerType.Joystick)
                 {
@@ -1362,6 +1358,10 @@ public class PlayerController : MonoBehaviourPun
                     pInventory.DropThirdWeapon();
                     ThrowGrenade();
                 }
+            }
+            else if (!pInventory.isDualWielding)
+            {
+                ThrowGrenade();
             }
         }
 

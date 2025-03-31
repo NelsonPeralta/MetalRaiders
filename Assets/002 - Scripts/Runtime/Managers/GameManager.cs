@@ -635,12 +635,20 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
             if (PhotonNetwork.InRoom)
+            {
+
                 try
                 {
                     GameManager.instance.gameMode = (GameMode)Enum.Parse(typeof(GameMode), PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString());
+                }
+                catch (Exception e) { Debug.LogWarning(e.Message); }
+
+                try
+                {
                     GameManager.instance.gameType = (GameType)Enum.Parse(typeof(GameType), PhotonNetwork.CurrentRoom.CustomProperties["gametype"].ToString());
                 }
                 catch (Exception e) { Debug.LogWarning(e.Message); }
+            }
 
             //StartCoroutine(SpawnPlayers_Coroutine());
 

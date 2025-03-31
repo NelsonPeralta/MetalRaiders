@@ -79,11 +79,11 @@ Material:
     - _Cutoff: 0.5
     - _DepthFade: 0.05
     - _DetailNormalMapScale: 1
-    - _DisplacementTexturePanSpeed: 0.1
+    - _DisplacementTexturePanSpeed: 0.05
     - _DisplacementTextureStrength: 0
     - _DstBlend: 0
     - _FresnelGradientPosition: 0.511
-    - _FresnelTexturePanSpeed: 0.1
+    - _FresnelTexturePanSpeed: 0.05
     - _GlossMapScale: 1
     - _Glossiness: 0.25
     - _GlossyReflections: 1
@@ -102,5 +102,5 @@ Material:
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GlowColor: {r: 0.9758564, g: 1, b: 0, a: 0}
+    - _GlowColor: {r: 0.97585636, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

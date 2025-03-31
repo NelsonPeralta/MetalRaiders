@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerShield : MonoBehaviour
@@ -98,9 +99,13 @@ public class PlayerShield : MonoBehaviour
         _player.OnPlayerRespawned += OnPlayerRespawned_Delegate;
 
 
+
+        _shieldRenderers = _player.playerController.playerThirdPersonModelManager.spartanModel.GetComponentsInChildren<Renderer>(includeInactive: true).Where(item => item.GetComponent<PlayerShieldShaderHere>()).ToList();
+
         foreach (Renderer mr in _shieldRenderers)
         {
-            mr.sharedMaterials[1].SetFloat("_Alpha", 0);
+            mr.sharedMaterials[1].SetFloat("_Alpha", 0); // normal shield
+            mr.sharedMaterials[2].SetFloat("_Alpha", 0); // overshield
             //mr.materials[1].SetFloat("_Alpha", 0);
         }
     }
@@ -125,6 +130,18 @@ public class PlayerShield : MonoBehaviour
                         mr.materials[1].SetFloat("_Alpha", 0);
                     else
                         mr.materials[1].SetFloat("_Alpha", shieldDamagePercentage);
+
+                    if (_player.overshieldPoints > 0)
+                    {
+                        mr.materials[2].SetFloat("_Alpha", Mathf.Clamp(_player.overshieldPoints, 0, _player.maxOvershieldPoints - 1) / _player.maxOvershieldPoints);
+                    }
+                    else
+                    {
+                        if (mr.materials[2].GetFloat("_Alpha") != 0)
+                        {
+                            mr.materials[2].SetFloat("_Alpha", 0);
+                        }
+                    }
                 }
             }
         }
