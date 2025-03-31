@@ -629,7 +629,7 @@ public class Player : Biped
     float _shieldHealingIncrement = (150 * 0.5f);
 
     bool _hasArmor;
-    bool _hasMeleeUpgrade;
+    bool _hasMeleeUpgrade, _diedWithHeavyWeaponInHand;
 
     Vector3 _impactPos;
     Vector3 _impactDir;
@@ -637,6 +637,7 @@ public class Player : Biped
 
     private bool deathByHeadshot { get { if (deathNature == DeathNature.Headshot || deathNature == DeathNature.Sniped) return true; else return false; } }
     private bool deathByGroin { get { if (deathNature == DeathNature.Groin) return true; else return false; } }
+    public bool diedWithHeavyWeaponInHand { get { return _diedWithHeavyWeaponInHand; } }
 
     #endregion
 
@@ -1327,6 +1328,23 @@ public class Player : Biped
         Debug.Log("Respawn");
 
         playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
+        //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && _diedWithHeavyWeaponInHand)
+        //{
+        //    mainCamera.GetComponent<PlayerCameraSplitScreenBehaviour>().SetupCameraLayerMask_FirstPerson(rid);
+        //    playerInventory.thirdPersonLookAtScript.ReturnLookAtTargetToOriginalPosition();
+        //    playerCamera.DisableThirdPersonCameraMode();
+        //    playerController.gwProperties.MoveBulletSpawnPointsToFpsPositions();
+
+        //    playerController.gwProperties.MoveBulletSpawnPointsToFpsPositions();
+        //    playerInventory.thirdPersonLookAtScript.ReturnLookAtTargetToOriginalPosition();
+        //    playerCamera.DisableThirdPersonCameraMode();
+
+        //    mainCamera.GetComponent<PlayerCameraSplitScreenBehaviour>().SetupCameraLayerMask_FirstPerson(rid);
+        //    player.playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers(true);
+
+        //    player.gunCamera.enabled = true;
+        //    _activeWeapon.gameObject.SetActive(true);
+        //}
 
         if (GameManager.instance.gameType == GameManager.GameType.CTF) _spawnProtectionTime = 2;
         _gameplayerRecordingPointsHolder.parent = transform; _gameplayerRecordingPointsHolder.transform.localPosition = Vector3.zero; _gameplayerRecordingPointsHolder.transform.localRotation = Quaternion.identity;
@@ -1508,8 +1526,12 @@ public class Player : Biped
 
     void OnPlayerDeath_Delegate(Player playerProperties)
     {
+        _diedWithHeavyWeaponInHand = playerInventory.previouslyHeldHeavyWeapon;
+
+
+
         GameManager.GetRootPlayer().PlayAllyDownClip(this);
-        if (isDualWielding) playerInventory.DropThirdWeapon();
+        if (isDualWielding || playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy) playerInventory.DropThirdWeapon();
 
 
 

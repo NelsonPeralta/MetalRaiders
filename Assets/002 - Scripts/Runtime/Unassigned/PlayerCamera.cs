@@ -15,7 +15,7 @@ public class PlayerCamera : MonoBehaviour
 
     public float frontEndMouseSens;
     public float backEndMouseSens;
-    public Transform playerCameraScriptParent;
+    public Transform playerCameraScriptParent, aimingComponents;
     public Transform horizontalAxisTarget;
     public Transform verticalAxisTarget;
     public float upDownRotation = 0f;
@@ -71,10 +71,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void Awake()
     {
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
-        {
-            //_playerCameraHolder.localPosition = ThirdPersonPosition;
-        }
+
     }
 
     void Start()
@@ -430,13 +427,18 @@ public class PlayerCamera : MonoBehaviour
         //upDownRotation = leftRightRotation = 0;
         upDownRotation = 0;
         ragdollPrefab = null;
-        player.mainCamera.transform.parent = player.mainCamera.GetComponent<PlayerCameraSplitScreenBehaviour>().orignalParent;
 
-        this.transform.parent = playerCameraScriptParent;
-        horizontalAxisTarget = player.transform;
-        verticalAxisTarget = player.playerInventory.transform;
+        {
+            // camera is child of ragdoll. This returns the script go to player go
+            player.mainCamera.transform.parent = player.mainCamera.GetComponent<PlayerCameraSplitScreenBehaviour>().orignalParent;
 
-        verticalAxisTarget.localRotation = Quaternion.Euler(0, 0, 0f);
+            this.transform.parent = playerCameraScriptParent;
+            horizontalAxisTarget = player.transform;
+            verticalAxisTarget = player.playerInventory.transform;
+
+            verticalAxisTarget.localRotation = Quaternion.Euler(0, 0, 0f);
+        }
+
         followPlayer = true;
 
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On) EnableThirdPersonLayerMask();
@@ -473,5 +475,12 @@ public class PlayerCamera : MonoBehaviour
         print("SetupThirdPersonCamera");
         _thirdPersonCameraPivot.transform.parent = null;
         _thirdPersonAimingComponentsOffset.transform.localPosition = new Vector3(0, 0, 2.4f);
+    }
+
+    public void DisableThirdPersonCameraMode()
+    {
+        _thirdPersonCameraPivot.SetParent(player.mainCamera.transform); _thirdPersonCameraPivot.localPosition = Vector3.zero; _thirdPersonCameraPivot.localRotation = Quaternion.identity;
+        _thirdPersonAimingComponentsOffset.localPosition = Vector3.zero; _thirdPersonAimingComponentsOffset.localRotation = Quaternion.identity;
+
     }
 }

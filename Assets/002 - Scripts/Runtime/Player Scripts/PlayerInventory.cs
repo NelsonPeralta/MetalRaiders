@@ -145,6 +145,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                 if (value.weaponType != WeaponProperties.WeaponType.Heavy)
                 {
+                    _previouslyHeldHeavyWeapon = false;
                     pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("dw idle", true);
                     pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
                     pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
@@ -152,6 +153,7 @@ public class PlayerInventory : MonoBehaviourPun
                 }
                 else
                 {
+                    _previouslyHeldHeavyWeapon = true;
                     pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("heavy idle", true);
                     pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Pistol", false);
                     pController.GetComponent<PlayerThirdPersonModelManager>().spartanModel.GetComponent<Animator>().SetBool("Idle Rifle", false);
@@ -171,6 +173,10 @@ public class PlayerInventory : MonoBehaviourPun
                     activeWeapon.GetComponent<Animator>().SetBool("dw idle", true);
                     activeWeapon.GetComponent<Animator>().Play("dw idle force");
                 }
+                else
+                {
+                    _activeWeapon.gameObject.SetActive(false);
+                }
 
                 weaponDrawAudioSource.clip = value.draw;
                 weaponDrawAudioSource.Play();
@@ -184,6 +190,22 @@ public class PlayerInventory : MonoBehaviourPun
                 print($"third weapon becomes null");
                 if (_thirdWeapon != null)
                 {
+                    if (_thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+                    {
+                        pController.SetDrawingWeaponCooldown();
+                        pController.gwProperties.MoveBulletSpawnPointsToFpsPositions();
+                        thirdPersonLookAtScript.ReturnLookAtTargetToOriginalPosition();
+                        player.playerCamera.DisableThirdPersonCameraMode();
+
+                        player.mainCamera.GetComponent<PlayerCameraSplitScreenBehaviour>().SetupCameraLayerMask_FirstPerson(player.rid);
+                        player.playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers(true);
+
+                        player.gunCamera.enabled = true;
+                        _activeWeapon.gameObject.SetActive(true);
+                    }
+
+
+
                     print($"hiding third weapon");
                     _thirdWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                     _thirdWeapon.gameObject.SetActive(false);
@@ -212,6 +234,7 @@ public class PlayerInventory : MonoBehaviourPun
                 player.playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
                 player.playerInventory.activeWeapon.crosshair.gameObject.SetActive(true);
             }
+            _previouslyHeldHeavyWeapon = true;
         }
     }
 
@@ -251,6 +274,7 @@ public class PlayerInventory : MonoBehaviourPun
     public bool isHoldingHeavy { get { return _thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy; } }
     public bool hasADualWieldableWeapon { get { if (activeWeapon.isDualWieldable || holsteredWeapon.isDualWieldable) return true; return false; } }
     public bool activeWeaponIsDualWieldable { get { return activeWeapon.isDualWieldable; } }
+    public bool previouslyHeldHeavyWeapon { get { return _previouslyHeldHeavyWeapon; } }
 
     public bool hasSecWeap = false;
 
@@ -360,7 +384,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     List<WeaponProperties> _allWeapons = new List<WeaponProperties>(); // To replace allWeaponsInInventory variable
 
-
+    bool _previouslyHeldHeavyWeapon;
 
 
     private void Awake()

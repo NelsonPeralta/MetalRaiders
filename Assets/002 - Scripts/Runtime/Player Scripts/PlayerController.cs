@@ -567,7 +567,9 @@ public class PlayerController : MonoBehaviourPun
 
     public void EnableSprint()
     {
-        if (player.playerInventory.isDualWielding) player.playerInventory.DropThirdWeapon();
+        if (player.playerInventory.isDualWielding ||
+            (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && player.playerInventory.isDualWielding))
+            player.playerInventory.DropThirdWeapon();
 
         if (player.movement.blockPlayerMoveInput <= 0)
         {
@@ -1120,7 +1122,7 @@ public class PlayerController : MonoBehaviourPun
 
         //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
         //    mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        gunCam.enabled = true;
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && !player.playerInventory.isHoldingHeavy) gunCam.enabled = true;
     }
 
     int _meleeCount = 0;
@@ -1132,16 +1134,23 @@ public class PlayerController : MonoBehaviourPun
         {
             if ((overwrite) || ((rewiredPlayer.GetButtonDown("Melee") || rewiredPlayer.GetButtonDown("MouseBtn4")) && !isMeleeing && !isThrowingGrenade /*&& !isSprinting*/))
             {
-                _meleeSucc = false;
+                if (player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+                {
+                    pInventory.DropThirdWeapon();
+                }
+                else
+                {
+                    _meleeSucc = false;
 
 
-                Descope();
-                rScript.reloadIsCanceled = true;
+                    Descope();
+                    rScript.reloadIsCanceled = true;
 
-                melee.PushIfAble();
+                    melee.PushIfAble();
 
 
-                StartCoroutine(Melee_Coroutine(player.playerInventory.activeWeapon));
+                    StartCoroutine(Melee_Coroutine(player.playerInventory.activeWeapon));
+                }
             }
         }
 
@@ -1316,7 +1325,11 @@ public class PlayerController : MonoBehaviourPun
     {
         if ((rewiredPlayer.GetButtonDown("Throw Grenade") || rewiredPlayer.GetButtonDown("MouseBtn5")) /*&& !player.isDualWielding*/ /*&& !isMeleeing*/ /*&& !isSprinting*/)
         {
-            if (!pInventory.isDualWielding)
+            if (player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+            {
+                pInventory.DropThirdWeapon();
+            }
+            else if (!pInventory.isDualWielding && player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
             {
                 ThrowGrenade();
             }

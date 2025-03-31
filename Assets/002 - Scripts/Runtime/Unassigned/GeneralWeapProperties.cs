@@ -140,4 +140,11 @@ public class GeneralWeapProperties : MonoBehaviour
         pController.player.aimAssist.aimAssistRotationControl.localRotation = Quaternion.identity;
         pelletSpawnPoints[0].transform.parent.localRotation = Quaternion.identity;
     }
+
+    public void MoveBulletSpawnPointsToFpsPositions()
+    {
+        pController.player.aimAssist.aimAssistRotationControl.SetParent(GetComponent<Player>().playerCamera.aimingComponents); pController.player.aimAssist.aimAssistRotationControl.localRotation = Quaternion.identity; pController.player.aimAssist.aimAssistRotationControl.localPosition = Vector3.zero;
+        pelletSpawnPoints[0].transform.parent.SetParent(GetComponent<Player>().playerCamera.aimingComponents); pelletSpawnPoints[0].transform.parent.localRotation = Quaternion.identity;
+        pelletSpawnPoints[0].transform.parent.localPosition = new Vector3(0, 0, 0.2f); // original pos in prefab
+    }
 }

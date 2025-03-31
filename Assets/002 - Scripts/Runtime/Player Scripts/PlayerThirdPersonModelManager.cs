@@ -85,10 +85,14 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     }
 
 
-    public void SetupThirdPersonModelLayers()
+    public void SetupThirdPersonModelLayers(bool forceFpsMode = false)
     {
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On ||
-            player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+        if (forceFpsMode)
+        {
+            SetupThirdPersonModelLayers_FPS();
+        }
+        else if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On ||
+           (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy))
         {
             print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned THIRPERSON MODE ON");
 
@@ -116,64 +120,70 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         }
         else if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
         {
-            print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned");
+            SetupThirdPersonModelLayers_FPS();
+        }
+    }
 
-            Scene currentScene = SceneManager.GetActiveScene();
-            if (currentScene.buildIndex > 0) // We are not in the menu
-            {
-                List<int> ignoreList = new List<int>();
-                ignoreList.Add(7); // 7 = Player Hitbox
-                foreach (GameObject model in models)
-                    if (!feet.Contains(model))
+
+    void SetupThirdPersonModelLayers_FPS()
+    {
+        print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned");
+
+        Scene currentScene = SceneManager.GetActiveScene();
+        if (currentScene.buildIndex > 0) // We are not in the menu
+        {
+            List<int> ignoreList = new List<int>();
+            ignoreList.Add(7); // 7 = Player Hitbox
+            foreach (GameObject model in models)
+                if (!feet.Contains(model))
+                {
+                    if (player.PV.IsMine)
                     {
-                        if (player.PV.IsMine)
-                        {
-                            int l = 0;
+                        int l = 0;
 
-                            if (player.rid == 0)
-                                l = 25;
-                            else if (player.rid == 1)
-                                l = 27;
-                            else if (player.rid == 2)
-                                l = 29;
-                            else if (player.rid == 3)
-                                l = 31;
+                        if (player.rid == 0)
+                            l = 25;
+                        else if (player.rid == 1)
+                            l = 27;
+                        else if (player.rid == 2)
+                            l = 29;
+                        else if (player.rid == 3)
+                            l = 31;
 
-                            GameManager.SetLayerRecursively(model, l, ignoreList);
-                        }
-                        else
-                        {
-                            GameManager.SetLayerRecursively(model, 0, ignoreList);
-                        }
+                        GameManager.SetLayerRecursively(model, l, ignoreList);
                     }
-
-
-                undersuitMesh.layer = 0;
-
-                if (player.PV.IsMine)
-                {
-                    int l = 0;
-
-                    if (player.rid == 0)
-                        l = 25;
-                    else if (player.rid == 1)
-                        l = 27;
-                    else if (player.rid == 2)
-                        l = 29;
-                    else if (player.rid == 3)
-                        l = 31;
-                    undersuitMesh.layer = l;
+                    else
+                    {
+                        GameManager.SetLayerRecursively(model, 0, ignoreList);
+                    }
                 }
 
 
-                OnModelAssigned?.Invoke(this);
+            undersuitMesh.layer = 0;
+
+            if (player.PV.IsMine)
+            {
+                int l = 0;
+
+                if (player.rid == 0)
+                    l = 25;
+                else if (player.rid == 1)
+                    l = 27;
+                else if (player.rid == 2)
+                    l = 29;
+                else if (player.rid == 3)
+                    l = 31;
+                undersuitMesh.layer = l;
+            }
 
 
-                foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
-                {
-                    lw.enabled = false;
-                    lw.ttl = 99999;
-                }
+            OnModelAssigned?.Invoke(this);
+
+
+            foreach (LootableWeapon lw in spartanModel.transform.GetComponentsInChildren<LootableWeapon>(true))
+            {
+                lw.enabled = false;
+                lw.ttl = 99999;
             }
         }
     }
