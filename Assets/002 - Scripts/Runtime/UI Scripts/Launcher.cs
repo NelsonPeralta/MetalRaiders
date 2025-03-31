@@ -191,6 +191,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void Awake()
     {
+        _creatingRoomTimeOut = 999;
+
         if (instance)
         {
             Debug.Log("There is a MenuManager Instance");
@@ -234,6 +236,18 @@ public class Launcher : MonoBehaviourPunCallbacks
                     FindMasterClientAndToggleIcon();
                 }
                 _masterClientIconCheck = 0.6f;
+            }
+        }
+
+        if (_creatingRoomTimeOut > 0 && _creatingRoomTimeOut != 999)
+        {
+            _creatingRoomTimeOut -= Time.deltaTime;
+            if (_creatingRoomTimeOut <= 0)
+            {
+                _creatingRoomTimeOut = 999;
+                errorText.text = "Error while creating room";
+                GameManager.instance.previousScenePayloads.Add(PreviousScenePayload.ErrorWhileCreatingRoom);
+                MenuManager.Instance.OpenPopUpMenu("error");
             }
         }
     }
@@ -350,11 +364,16 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField]
     private byte maxRandomRoomPlayers = 6;
 
+    float _creatingRoomTimeOut;
+
     public void CreatePrivateRoom()
     {
         if (!RoomBrowserMenu.GAMEPAD_ROOM_NAMES.Contains(roomNameInputField.text) && !RoomBrowserMenu.FORBIDDEN_ROOM_NAMES.Contains(roomNameInputField.text))
         {
             Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
+
+            _creatingRoomTimeOut = 3;
+            return;
 
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
             GameManager.instance.teamMode = GameManager.TeamMode.None;
@@ -554,6 +573,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() // Runs only when My player joined the room
     {
         Debug.Log("Joined room");
+        _creatingRoomTimeOut = 999;
         TriggerOnJoinedRoomBehaviour();
 
         //FindMasterClientAndToggleIcon();
