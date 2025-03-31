@@ -516,11 +516,21 @@ public class PlayerController : MonoBehaviourPun
         if (GameManager.instance.sprintMode == GameManager.SprintMode.Off) return;
 
 
-        if (isHoldingShootBtn || player.hasEnnemyFlag || player.playerInventory.playerOddballActive) return;
+        if (isHoldingShootBtn || player.hasEnnemyFlag || player.playerInventory.playerOddballActive || player.playerInventory.isHoldingHeavy)
+
+        {
+            if (isSprinting)
+            {
+                DisableSprint();
+            }
+
+            return;
+        }
 
 
         if (isSprinting)
         {
+
             currentlyReloadingTimer = 0;
             weaponAnimator.SetBool("Run", true);
 
@@ -568,7 +578,7 @@ public class PlayerController : MonoBehaviourPun
     public void EnableSprint()
     {
         if (player.playerInventory.isDualWielding ||
-            (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && player.playerInventory.isDualWielding))
+            (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && player.playerInventory.isHoldingHeavy))
             player.playerInventory.DropThirdWeapon();
 
         if (player.movement.blockPlayerMoveInput <= 0)
@@ -1218,10 +1228,18 @@ public class PlayerController : MonoBehaviourPun
 
     void Crouch()
     {
-        if (rewiredPlayer.GetButtonDown("Crouch"))
-            EnableCrouch();
-        else if (rewiredPlayer.GetButtonUp("Crouch"))
-            DisableCrouch();
+        if (player.playerInventory.isHoldingHeavy)
+        {
+            if (isCrouching)
+                DisableCrouch();
+        }
+        else
+        {
+            if (rewiredPlayer.GetButtonDown("Crouch"))
+                EnableCrouch();
+            else if (rewiredPlayer.GetButtonUp("Crouch"))
+                DisableCrouch();
+        }
     }
 
     float _crouchForceTime;
@@ -1775,15 +1793,22 @@ public class PlayerController : MonoBehaviourPun
             GameManager.instance.gameType != GameManager.GameType.Swords)
             if (rewiredPlayer.GetButtonDown("Switch Weapons"))
             {
-                try
+                if (pInventory.isHoldingHeavy)
                 {
-                    Debug.Log("SwitchWeapons");
-                    CancelReloadCoroutine();
-                    weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
-                    currentlyReloadingTimer = 0;
-                    OnPlayerSwitchWeapons?.Invoke(this);
+                    pInventory.DropThirdWeapon();
                 }
-                catch { }
+                else
+                {
+                    try
+                    {
+                        Debug.Log("SwitchWeapons");
+                        CancelReloadCoroutine();
+                        weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
+                        currentlyReloadingTimer = 0;
+                        OnPlayerSwitchWeapons?.Invoke(this);
+                    }
+                    catch { }
+                }
             }
     }
     void SwitchGrenades()

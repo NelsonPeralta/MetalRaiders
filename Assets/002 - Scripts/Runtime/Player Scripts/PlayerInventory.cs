@@ -193,15 +193,19 @@ public class PlayerInventory : MonoBehaviourPun
                     if (_thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
                     {
                         pController.SetDrawingWeaponCooldown();
-                        pController.gwProperties.MoveBulletSpawnPointsToFpsPositions();
-                        thirdPersonLookAtScript.ReturnLookAtTargetToOriginalPosition();
-                        player.playerCamera.DisableThirdPersonCameraMode();
 
-                        player.mainCamera.GetComponent<PlayerCameraSplitScreenBehaviour>().SetupCameraLayerMask_FirstPerson(player.rid);
-                        player.playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers(true);
-
-                        player.gunCamera.enabled = true;
+                        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+                        {
+                            pController.gwProperties.MoveBulletSpawnPointsToFpsPositions();
+                            thirdPersonLookAtScript.ReturnLookAtTargetToOriginalPosition();
+                            player.playerCamera.DisableThirdPersonCameraMode();
+                            player.mainCamera.GetComponent<PlayerCameraSplitScreenBehaviour>().SetupCameraLayerMask_FirstPerson(player.rid);
+                            player.playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers(true);
+                            player.gunCamera.enabled = true;
+                        }
                         _activeWeapon.gameObject.SetActive(true);
+                        _activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
+                        _activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
                     }
 
 
@@ -226,15 +230,26 @@ public class PlayerInventory : MonoBehaviourPun
             {
                 print("setting up third person");
                 pController.SetDrawingWeaponCooldown();
-                player.playerCamera.EnableThirdPersonLayerMask();
-                thirdPersonLookAtScript.MoveLookAtTargetToThirdPersonPosition();
-                player.playerController.gwProperties.MoveBulletSpawnPointsForThirdPerson();
-                player.playerCamera.SetupThirdPersonCamera();
-                player.gunCamera.enabled = false;
-                player.playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
+
+
+                if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
+                {
+                    player.playerCamera.EnableThirdPersonLayerMask();
+                    thirdPersonLookAtScript.MoveLookAtTargetToThirdPersonPosition();
+                    player.playerController.gwProperties.MoveBulletSpawnPointsForThirdPerson();
+                    player.playerCamera.SetupThirdPersonCamera();
+                    player.gunCamera.enabled = false;
+                    player.playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
+                }
                 player.playerInventory.activeWeapon.crosshair.gameObject.SetActive(true);
             }
-            _previouslyHeldHeavyWeapon = true;
+
+            if (_previouslyHeldHeavyWeapon)
+            {
+                _previouslyHeldHeavyWeapon = false;
+            }
+            try { OnActiveWeaponChanged?.Invoke(this); } catch { }
+            try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
         }
     }
 
@@ -271,7 +286,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
 
     public bool isDualWielding { get { return thirdWeapon && thirdWeapon.isDualWieldable; } }
-    public bool isHoldingHeavy { get { return _thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy; } }
+    public bool isHoldingHeavy { get { if (_thirdWeapon) return _thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy; return false; } }
     public bool hasADualWieldableWeapon { get { if (activeWeapon.isDualWieldable || holsteredWeapon.isDualWieldable) return true; return false; } }
     public bool activeWeaponIsDualWieldable { get { return activeWeapon.isDualWieldable; } }
     public bool previouslyHeldHeavyWeapon { get { return _previouslyHeldHeavyWeapon; } }
@@ -636,7 +651,7 @@ public class PlayerInventory : MonoBehaviourPun
 
             if (hasEnnemyFlag) PV.RPC("SwitchWeapons_RPC", RpcTarget.All, (int)SwitchWeapons_Mode.dropFlag);
             else if (playerOddballActive) PV.RPC("SwitchWeapons_RPC", RpcTarget.All, (int)SwitchWeapons_Mode.dropOddball);
-            else if (isDualWielding) PV.RPC("SwitchWeapons_RPC", RpcTarget.All, (int)SwitchWeapons_Mode.dropThirdWeapon);
+            else if (isDualWielding || isHoldingHeavy) PV.RPC("SwitchWeapons_RPC", RpcTarget.All, (int)SwitchWeapons_Mode.dropThirdWeapon);
             else PV.RPC("SwitchWeapons_RPC", RpcTarget.All, (int)SwitchWeapons_Mode.normal);
         }
 

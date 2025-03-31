@@ -61,22 +61,26 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     {
         print($"Chaging TPS model stance {playerInventory.activeWeapon.killFeedOutput} {playerInventory.activeWeapon.idleHandlingAnimationType}");
 
-        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Rifle", false);
-        thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
-        thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", false);
 
-        if (playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword || playerInventory.hasEnnemyFlag)
+        if (!playerInventory.isDualWielding && !playerInventory.isHoldingHeavy)
         {
-            thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", true);
-            thirdPersonScript.GetComponent<Animator>().Play("sword draw");
-        }
-        else
-        {
-            thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
+            thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Rifle", false);
+            thirdPersonScript.GetComponent<Animator>().SetBool($"Idle Pistol", false);
             thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", false);
-            thirdPersonScript.GetComponent<Animator>().Play("Draw");
-        }
+            thirdPersonScript.GetComponent<Animator>().SetBool($"heavy idle", false);
 
+            if (playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword || playerInventory.hasEnnemyFlag)
+            {
+                thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", true);
+                thirdPersonScript.GetComponent<Animator>().Play("sword draw");
+            }
+            else
+            {
+                thirdPersonScript.GetComponent<Animator>().SetBool($"Idle {playerInventory.activeWeapon.idleHandlingAnimationType}", true);
+                thirdPersonScript.GetComponent<Animator>().SetBool($"sword idle", false);
+                thirdPersonScript.GetComponent<Animator>().Play("Draw");
+            }
+        }
     }
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
