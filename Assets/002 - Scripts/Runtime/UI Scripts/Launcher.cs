@@ -373,7 +373,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             Debug.Log($"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
 
             _creatingRoomTimeOut = 3;
-            return;
 
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
             GameManager.instance.teamMode = GameManager.TeamMode.None;
