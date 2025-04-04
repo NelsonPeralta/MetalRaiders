@@ -27,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
             _previousMovementDirEnum = _playerMovementDirection;
             _playerMovementDirection = value;
 
+            if (_previousMovementDirEnum != _playerMovementDirection) print($"movementDirection changed: {value}");
+
             if ((_previousMovementDirEnum == PlayerMovementDirection.Left && _playerMovementDirection == PlayerMovementDirection.Right) ||
                 (_previousMovementDirEnum == PlayerMovementDirection.Right && _playerMovementDirection == PlayerMovementDirection.Left) ||
                 (_previousMovementDirEnum == PlayerMovementDirection.Forward && _playerMovementDirection == PlayerMovementDirection.Backwards) ||
@@ -37,8 +39,8 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    public float correctedXInput { get { return _correctedRightInput; } set { _correctedRightInput = value; } }
-    public float correctedZInput { get { return _correctedForwardInput; } set { _correctedForwardInput = value; } }
+    public float correctedRightInput { get { return _correctedRightInput; } set { _correctedRightInput = value; } }
+    public float correctedForwardInput { get { return _correctedForwardInput; } set { _correctedForwardInput = value; } }
     public bool isGrounded
     {
         get { return _grounded; }
@@ -75,17 +77,32 @@ public class PlayerMovement : MonoBehaviour
             _animationSpeed = 0;
             int _c = 0;
 
-            if (correctedXInput != 0) { _c++; _animationSpeed += Mathf.Abs(correctedXInput); }
-            if (correctedZInput != 0) { _c++; _animationSpeed += Mathf.Abs(correctedZInput); }
+            if (correctedRightInput != 0) { _c++; _animationSpeed += Mathf.Abs(correctedRightInput); }
+            if (correctedForwardInput != 0) { _c++; _animationSpeed += Mathf.Abs(correctedForwardInput); }
 
             if (_c > 0)
                 _animationSpeed /= _c;
 
-            Mathf.Clamp(_c * 1.3f, _c, 1);
+            //Mathf.Clamp(_c * 1.3f, _c, 1);
+            Mathf.Clamp(_c * 1.3f, 0.4f, 1);
 
-            if (Mathf.Abs(correctedXInput) == 1 || Mathf.Abs(correctedZInput) == 1)
+            if (Mathf.Abs(correctedRightInput) == 1 || Mathf.Abs(correctedForwardInput) == 1)
                 _animationSpeed = 1;
+            else
+                _animationSpeed = Mathf.Clamp(_animationSpeed, 0.35f, 1);
 
+
+            if (_pController.activeControllerType == ControllerType.Joystick && correctedForwardInput == 0 && correctedRightInput == 0)
+            {
+                if (_rawForwardInput != 0 || _rawRightInput != 0)
+                {
+                    _animationSpeed = 1;
+                }
+            }
+
+
+
+            //print($"returning animation speed {_animationSpeed}");
             return Mathf.Abs(_animationSpeed);
         }
     }
@@ -104,8 +121,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public PlayerMotionTracker playerMotionTracker { get { return _playerMotionTracker; } }
 
-    [SerializeField] GroundCheck _groundCheckScript;
-    [SerializeField] ThirdPersonLookAt _tpLookAt;
+
     public float moveSpeed
     {
         get { return _moveSpeed; }
@@ -118,9 +134,45 @@ public class PlayerMovement : MonoBehaviour
             else
                 _moveSpeed = Mathf.Clamp(_moveSpeed, 1, _moveSpeed);
 
-            //if (GameManager.instance.gameMode == GameManager.GameMode.Swarm && !player.hasArmor) Mathf.Clamp(_moveSpeed * 0.7f, 1, _moveSpeed);
+            //if (_moveSpeed == 1) print($"moveSpeed: {_moveSpeed}");
         }
     }
+
+    public bool isMoving
+    {
+        get { return _isMoving; }
+        private set
+        {
+            if (_isMoving != value)
+            {
+                player.playerController.UpdateIsMoving(value);
+            }
+
+            _isMoving = value;
+        }
+    }
+
+
+
+
+
+
+    [SerializeField] GroundCheck _groundCheckScript;
+    [SerializeField] ThirdPersonLookAt _tpLookAt;
+
+
+
+
+
+
+
+
+
+
+    [SerializeField] float _rawRightInput, _rawForwardInput, _correctedRightInput, _correctedForwardInput;
+    [SerializeField] float _animationSpeed, _currentWorldSpeed;
+
+
 
     [Header("Movement")]
     [SerializeField] float _moveSpeed;
@@ -169,8 +221,8 @@ public class PlayerMovement : MonoBehaviour
     public Transform orientation, slopeOrientation, playerCapsule;
 
 
-    [SerializeField] float _animationSpeed, _currentWorldSpeed;
-    [SerializeField] float _rawRightInput, _rawForwardInput, _correctedRightInput, _correctedForwardInput;
+
+
     [SerializeField] PlayerMotionTracker _playerMotionTracker;
     [SerializeField] bool _clickedJumpButtonFromLastGrounded;
     [SerializeField] PlayerMovementDirection _lastDirectionWhenJumped;
@@ -210,19 +262,7 @@ public class PlayerMovement : MonoBehaviour
     float _footstepClipDelay;
 
 
-    public bool isMoving
-    {
-        get { return _isMoving; }
-        private set
-        {
-            if (_isMoving != value)
-            {
-                player.playerController.UpdateIsMoving(value);
-            }
 
-            _isMoving = value;
-        }
-    }
 
 
     [SerializeField] bool _isMoving;
@@ -344,7 +384,8 @@ public class PlayerMovement : MonoBehaviour
         StateHandler();
 
 
-        CheckDirection(_rawRightInput, _rawForwardInput);
+        //CheckDirection(_rawRightInput, _rawForwardInput);
+        CheckDirection(_correctedRightInput, _correctedForwardInput);
 
 
 
@@ -532,7 +573,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // Mode = Idling
 
-        if (correctedXInput == 0 && correctedZInput == 0)
+        if (correctedRightInput == 0 && correctedForwardInput == 0)
         {
             state = MovementState.idling;
             desiredMoveSpeed = 0;
@@ -543,7 +584,7 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.crouching;
             if (isGrounded)
-                desiredMoveSpeed = crouchSpeed;
+                desiredMoveSpeed = crouchSpeed * Mathf.Max(Mathf.Abs(correctedForwardInput), Mathf.Abs(correctedRightInput));
         }
         // Mode - Sprinting
         else if (player.playerController.isSprinting)
@@ -563,7 +604,7 @@ public class PlayerMovement : MonoBehaviour
         else if (_grounded)
         {
             state = MovementState.walking;
-            desiredMoveSpeed = walkSpeed;
+            desiredMoveSpeed = walkSpeed * Mathf.Max(Mathf.Abs(correctedForwardInput), Mathf.Abs(correctedRightInput));
         }
 
         // Mode - Air
@@ -575,7 +616,7 @@ public class PlayerMovement : MonoBehaviour
         if ((player.playerController.isHoldingShootBtn) && state == MovementState.sprinting)
         {
             state = MovementState.walking;
-            desiredMoveSpeed = walkSpeed;
+            desiredMoveSpeed = walkSpeed * Mathf.Max(Mathf.Abs(correctedForwardInput), Mathf.Abs(correctedRightInput));
         }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop && !player.hasArmor) desiredMoveSpeed *= 0.7f;
@@ -1011,7 +1052,7 @@ public class PlayerMovement : MonoBehaviour
 
     void WalkAnimationControl()
     {
-        if (_rawRightInput != 0 || _rawForwardInput != 0)
+        if (correctedRightInput != 0 || correctedForwardInput != 0)
         {
             if (_grounded) // grounded and moving
             {
