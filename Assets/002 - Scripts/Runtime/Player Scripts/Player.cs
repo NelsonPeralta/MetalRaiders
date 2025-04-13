@@ -31,7 +31,7 @@ public class Player : Biped
     public delegate void PlayerEvent(Player playerProperties);
     public PlayerEvent OnPlayerDeath, OnPlayerDeathLate, OnPlayerHitPointsChanged, OnPlayerDamaged, OnPlayerHealthDamage,
         OnPlayerHealthRechargeStarted, OnPlayerShieldRechargeStarted, OnPlayerShieldDamaged, OnPlayerShieldBroken,
-        OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged, OnPlayerIdAssigned;
+        OnPlayerRespawnEarly, OnPlayerRespawned, OnPlayerOvershieldPointsChanged, OnPlayerTeamChanged, OnPlayerIdAssigned, OnPlayerRespawningInOneSecond;
 
     public enum DeathNature { None, Barrel, Headshot, Groin, Melee, Grenade, RPG, Stuck, Sniped, UltraBind }
 
@@ -577,6 +577,7 @@ public class Player : Biped
     public PlayerUI playerUI { get { return _playerUi; } }
     public bool isHealing { get { return _isHealing; } }
     public bool hasEnnemyFlag { get { return playerInventory.hasEnnemyFlag; } }
+    public float spawnProtectionTime { get { return _spawnProtectionTime; } }
 
     #endregion
 
@@ -1346,6 +1347,7 @@ public class Player : Biped
         //    _activeWeapon.gameObject.SetActive(true);
         //}
 
+        _spawnProtectionTime = 1;
         if (GameManager.instance.gameType == GameManager.GameType.CTF) _spawnProtectionTime = 2;
         _gameplayerRecordingPointsHolder.parent = transform; _gameplayerRecordingPointsHolder.transform.localPosition = Vector3.zero; _gameplayerRecordingPointsHolder.transform.localRotation = Quaternion.identity;
         _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
@@ -1475,6 +1477,7 @@ public class Player : Biped
 
 
 
+
     IEnumerator ShowScoreboardOnDeath_Coroutine()
     {
         yield return new WaitForSeconds(RESPAWN_TIME - 2);
@@ -1483,10 +1486,11 @@ public class Player : Biped
 
     }
 
-    IEnumerator MidRespawn_Coroutine()
+    IEnumerator OneSecondBeforeRespawnCoroutine()
     {
         Debug.Log("MidRespawnAction");
         yield return new WaitForSeconds(RESPAWN_TIME - 1);
+        OnPlayerRespawningInOneSecond.Invoke(this);
         NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId, rid);
     }
     IEnumerator LateRespawnAction()
@@ -1598,9 +1602,9 @@ public class Player : Biped
         SpawnRagdoll();
         StartCoroutine(ShowScoreboardOnDeath_Coroutine());
         StartCoroutine(Respawn_Coroutine());
-        StartCoroutine(MidRespawn_Coroutine());
+        StartCoroutine(OneSecondBeforeRespawnCoroutine());
         StartCoroutine(LateRespawnAction());
-
+        StartCoroutine(OneSecondBeforeRespawnCoroutine());
     }
     void OnPlayerDeath_DelegateLate(Player playerProperties)
     {

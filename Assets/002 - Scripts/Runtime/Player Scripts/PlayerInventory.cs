@@ -86,7 +86,7 @@ public class PlayerInventory : MonoBehaviourPun
                 }
 
                 pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
-                pController.weaponAnimator.Play("Draw", 0, 0f);
+                if (player.spawnProtectionTime <= 0) pController.weaponAnimator.Play("Draw", 0, 0f);
 
                 activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                 activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;

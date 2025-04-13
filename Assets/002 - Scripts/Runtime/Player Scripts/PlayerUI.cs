@@ -67,6 +67,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] GameObject _yourFlagStolenHolder;
     [SerializeField] TMP_Text _yourFlagStolenText;
     [SerializeField] TMP_Text _editorText;
+    [SerializeField] Animator _blackscreenDefault, _blackscreenSplitScreen;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft, notKillFeed;
@@ -125,6 +126,9 @@ public class PlayerUI : MonoBehaviour
         GetComponent<Player>().playerInventory.OnGrenadeChanged += OnGrenadeChanged_Delegate;
         GetComponent<Player>().playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
         GetComponent<Player>().playerInventory.OnHolsteredWeaponChanged += OnHolsteredWeaponChanged_Delegate;
+        GetComponent<Player>().OnPlayerRespawningInOneSecond += OnPlayerRespawningInOneSecond;
+
+
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             //SwarmManager.instance.OnPlayerLivesChanged -= OnPlayerLivesChanged_Delegate;
@@ -736,5 +740,23 @@ public class PlayerUI : MonoBehaviour
     {
         pickedUpGrenadeWitnessText.text = $"+{amm}";
         pickedUpGrenadeWitnessText.GetComponent<Animator>().Play("show");
+    }
+
+
+    void OnPlayerRespawningInOneSecond(Player p)
+    {
+        if (GameManager.instance.nbLocalPlayersPreset == 1 || GameManager.instance.nbLocalPlayersPreset == 4)
+            _blackscreenDefault.Play("play");
+        else if (GameManager.instance.nbLocalPlayersPreset == 3)
+        {
+            if (p.playerController.rid == 0)
+                _blackscreenSplitScreen.Play("play");
+            else
+                _blackscreenDefault.Play("play");
+        }
+        else
+        {
+            _blackscreenSplitScreen.Play("play");
+        }
     }
 }
