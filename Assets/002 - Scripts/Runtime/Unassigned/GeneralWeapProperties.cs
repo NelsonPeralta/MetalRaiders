@@ -46,7 +46,7 @@ public class GeneralWeapProperties : MonoBehaviour
     public Transform bulletSpawnPoint;
     public List<Transform> pelletSpawnPoints = new List<Transform>();
     public Transform grenadeSpawnPoint;
-    public Transform tpsBulletSpawnPointParent, tpsRotationToCameraCenterControl;
+    public Transform tpsBulletSpawnPointParent, tpsBulletRotationToCameraCenterControl;
 
 
 

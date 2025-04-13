@@ -21,7 +21,7 @@ public class AimAssistCone : MonoBehaviour
     public List<GameObject> _collidingHitboxesTemp = new List<GameObject>();
 
     [SerializeField] GameObject _closestHbToCorsshairCenter, _hitboxRayHitGo, _obstructionHitGo;
-    [SerializeField] float distanceToHitbox, distanceToObstruction;
+    [SerializeField] float distanceToHitbox, distanceToObstruction, _angleBetweenCameraCenterAndClosestHitboxToCenter;
 
     [SerializeField] int _reticuleFrictionTick;
 
@@ -79,8 +79,16 @@ public class AimAssistCone : MonoBehaviour
             {
                 _preCollidingHitbox = _closestHbToCorsshairCenter;
                 if (closestHbToCorsshairCenter && !value)
+                {
                     aimAssist.ResetRedReticule();
+                    _angleBetweenCameraCenterAndClosestHitboxToCenter = -1;
+                }
                 _closestHbToCorsshairCenter = value;
+
+                if (_closestHbToCorsshairCenter != null)
+                {
+                    _angleBetweenCameraCenterAndClosestHitboxToCenter = Vector3.Angle(player.mainCamera.transform.forward, _closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position);
+                }
                 //Debug.Log($"AimAssistCone {_preCollidingHitbox} {_collidingHitbox}");
 
             }
@@ -226,18 +234,18 @@ public class AimAssistCone : MonoBehaviour
             if (player && player.playerInventory && player.playerInventory.activeWeapon)
             {
 
-                Vector3 v = new Vector3(player.playerInventory.activeWeapon.redReticuleHint * 10, transform.localScale.y, player.playerInventory.activeWeapon.redReticuleHint * 10);
-                if (player.isDualWielding) v = new Vector3((player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f, transform.localScale.y, (player.playerInventory.activeWeapon.redReticuleHint * 10 + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f);
-                transform.localScale = v;
+                //Vector3 v = new Vector3(player.playerInventory.activeWeapon.redReticuleHint * (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy ? 15 : 10), transform.localScale.y, player.playerInventory.activeWeapon.redReticuleHint * (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy ? 15 : 10));
+                //if (player.isDualWielding) v = new Vector3((player.playerInventory.activeWeapon.redReticuleHint * (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy ? 15 : 10) + player.playerInventory.thirdWeapon.redReticuleHint * 10) / 2f, transform.localScale.y, (player.playerInventory.activeWeapon.redReticuleHint * (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy ? 15 : 10) + player.playerInventory.thirdWeapon.redReticuleHint * (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy ? 15 : 10)) / 2f);
+                //transform.localScale = v;
 
-                v = new Vector3(1, 1, player.playerInventory.activeWeapon.currentRedReticuleRange);
-                transform.parent.localScale = v;
+                //v = new Vector3(1, 1, player.playerInventory.activeWeapon.currentRedReticuleRange);
+                //transform.parent.localScale = v;
 
-                v = new Vector3(1, 1, 1);
-                if (player.allPlayerScripts.playerController.activeControllerType == Rewired.ControllerType.Joystick)
-                    v = new Vector3(2f, 1, 2f);
+                //v = new Vector3(1, 1, 1);
+                //if (player.allPlayerScripts.playerController.activeControllerType == Rewired.ControllerType.Joystick)
+                //    v = new Vector3(2f, 1, 2f);
 
-                _invisibleHitboxDetector.transform.localScale = v;
+                //_invisibleHitboxDetector.transform.localScale = v;
                 _raycastRange = playerInventory.activeWeapon.currentRedReticuleRange;
 
 
@@ -408,7 +416,7 @@ public class AimAssistCone : MonoBehaviour
                         {
                             if (closestHbToCorsshairCenter.GetComponent<ActorHitbox>())
                             {
-                                aimAssist.targetHitbox = closestHbToCorsshairCenter;
+                                aimAssist.closestHbToCrosshairCenter = closestHbToCorsshairCenter;
                                 aimAssist.redReticuleIsOn = true;
                                 playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
 
@@ -416,7 +424,7 @@ public class AimAssistCone : MonoBehaviour
                             }
                             else if (closestHbToCorsshairCenter.GetComponent<PlayerHitbox>().player.team == player.team)
                             {
-                                aimAssist.targetHitbox = null;
+                                aimAssist.closestHbToCrosshairCenter = null;
                                 aimAssist.redReticuleIsOn = false;
                                 playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Green;
 
@@ -424,7 +432,7 @@ public class AimAssistCone : MonoBehaviour
                             }
                             else
                             {
-                                aimAssist.targetHitbox = closestHbToCorsshairCenter;
+                                aimAssist.closestHbToCrosshairCenter = closestHbToCorsshairCenter;
                                 aimAssist.redReticuleIsOn = true;
                                 playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
                                 if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
@@ -434,7 +442,7 @@ public class AimAssistCone : MonoBehaviour
                     }
                     else
                     {
-                        aimAssist.targetHitbox = closestHbToCorsshairCenter;
+                        aimAssist.closestHbToCrosshairCenter = closestHbToCorsshairCenter;
                         aimAssist.redReticuleIsOn = true;
                         playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Red;
                         if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Red;
@@ -444,13 +452,16 @@ public class AimAssistCone : MonoBehaviour
                 }
                 else
                 {
-                    aimAssist.targetHitbox = null;
+                    aimAssist.closestHbToCrosshairCenter = null;
                     closestHbToCorsshairCenter = null;
                     try { playerInventory.activeWeapon.crosshair.color = Crosshair.Color.Blue; } catch { }
                     if (player.isDualWielding) playerInventory.thirdWeapon.crosshair.color = Crosshair.Color.Blue;
                     //aimAssist.ResetRedReticule();
                 }
             }
+
+            if (_closestHbToCorsshairCenter != null)
+                _angleBetweenCameraCenterAndClosestHitboxToCenter = Vector3.Angle(player.mainCamera.transform.forward, _closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position);
 
             //if (player.playerController.rid == 0 && player.isMine) print($"Update {_frame} {doNotClearListThisFrame}");
         }

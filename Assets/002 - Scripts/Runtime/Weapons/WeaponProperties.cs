@@ -53,7 +53,7 @@ public class WeaponProperties : MonoBehaviour
     public int bulletSpeed = 250;
     public float range;
     public bool isShotgun, overcharge;
-    public float redReticuleHint;
+    public float redReticuleHint, redReticuleMaxAngle;
     float _previousRedReticuleHint;
     public bool targetTracking;
     public float trackingSpeed;
@@ -629,6 +629,7 @@ public class WeaponPropertiesEditor : Editor
 
 
         wp.redReticuleHint = EditorGUILayout.FloatField("Red reticule hint:", wp.redReticuleHint);
+        wp.redReticuleMaxAngle = EditorGUILayout.FloatField("Red Reticule Max Angle:", wp.redReticuleMaxAngle);
 
         wp.targetTracking = GUILayout.Toggle(wp.targetTracking, "Target Tracking");
         if (wp.targetTracking)

@@ -140,7 +140,7 @@ public class AimAssistCapsule : MonoBehaviour
         collidingHitbox = chb;
         if (!obstruction && collidingHitbox)
         {
-            aimAssist.targetHitbox = collidingHitbox;
+            aimAssist.closestHbToCrosshairCenter = collidingHitbox;
             aimAssist.redReticuleIsOn = true;
         }
         else

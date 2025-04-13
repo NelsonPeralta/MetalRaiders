@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Rewired;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class AimAssist : MonoBehaviour
 {
-    public GameObject targetHitbox
+    public GameObject closestHbToCrosshairCenter
     {
         get { return _targetHitboxRoot; }
         set
@@ -18,6 +19,11 @@ public class AimAssist : MonoBehaviour
                 //Debug.Log($"targetHitboxRoot {_preTargetHitboxRoot} {_targetHitboxRoot}");
             }
         }
+    }
+
+    public Vector3 targetPointPosition
+    {
+        get { return _targetPointPosition; }
     }
 
     public bool redReticuleIsOn
@@ -41,24 +47,13 @@ public class AimAssist : MonoBehaviour
         }
     }
 
-    public GameObject firstRayHit;
     public Player player;
 
-    public int playerRewiredID;
-    public Transform puCollider;
-    public CrosshairManager crosshairScript;
     [SerializeField] GameObject _targetHitboxRoot;
-    public ActorHitbox ActorHitbox;
-    public PlayerHitbox targetHitb;
     public LayerMask layerMask;
 
-    public PlayerInventory pInventory;
-    public Player pProperties;
-    public WeaponProperties wProperties;
     public PlayerController pController;
 
-    public float raycastRange = 1000;
-    public float targetDistance;
 
     Vector3 raySpawn;
     RaycastHit hit;
@@ -79,11 +74,21 @@ public class AimAssist : MonoBehaviour
 
     [SerializeField] LayerMask obstructionMask;
     [SerializeField] PlayerHitboxDetector _invisibleHitboxDetector;
+    [SerializeField] GameObject _tempTargetHitbox;
+
 
 
     GameObject _preTargetHitboxRoot;
     bool _redReticuleIsOn;
     [SerializeField] int _redReticuleTick;
+
+
+
+
+
+    Vector3 _targetPointPosition, bspDir, targetDir, middleDir, newDir, targetHitboxDir;
+    float targetHitboxDistance;
+
 
 
 
@@ -102,7 +107,7 @@ public class AimAssist : MonoBehaviour
         if (redReticuleIsOn) { _redReticuleTick = Mathf.Clamp(_redReticuleTick + 3, 0, 30); } else { _redReticuleTick = Mathf.Clamp(_redReticuleTick - 2, 0, 30); }
 
 
-        if (targetHitbox)
+        if (closestHbToCrosshairCenter)
         {
             if (redReticuleIsOn)
             {
@@ -113,106 +118,173 @@ public class AimAssist : MonoBehaviour
                 //Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - bulletSpawnPoint.position).normalized;
                 //Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
 
-                Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistRotationControl.position).normalized;
-                Vector3 targetDir = (targetHitbox.transform.position - aimAssistRotationControl.position);
 
-                Vector3 middleDir = bspDir + targetDir;
-
-                aimAssistRotationControl.forward = (middleDir);
-
-                //bulletSpawnPoint.LookAt(target.transform);
-            }
-            else if (_invisibleHitboxDetector.collidingHitboxes.Count > 0)
-            {
-                try { if (player.isDead || player.isRespawning) { return; } } catch { }
-
-                var targetHitbox = _invisibleHitboxDetector.collidingHitboxes[0];
-
-                foreach (var item in _invisibleHitboxDetector.collidingHitboxes)
-                    if (GameManager.instance.teamMode.ToString().Contains("Classic"))
-                    {
-                        try
-                        {
-                            if (targetHitbox.GetComponent<ActorHitbox>() || (targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
-                                if (item.GetComponent<Hitbox>().isHead)
-                                {
-                                    targetHitbox = item;
-                                    break;
-                                }
-                                else
-                                {
-                                    if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
-                                        targetHitbox = item;
-                                }
-                        }
-                        catch
-                        {
-                            if (item.GetComponent<Hitbox>().isHead)
-                            {
-                                targetHitbox = item;
-                                break;
-                            }
-                            else
-                            {
-                                if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
-                                    targetHitbox = item;
-                            }
-                        }
-                    }
-                    else
-                    {
-
-                        if (item.GetComponent<Hitbox>().isHead)
-                        {
-                            targetHitbox = item;
-                            break;
-                        }
-                        else
-                        {
-                            if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(targetHitbox.transform.position, player.mainCamera.transform.position))
-                                targetHitbox = item;
-                        }
-                    }
-
-                if (targetHitbox.GetComponent<PlayerHitbox>() &&
-                    (GameManager.instance.teamMode == GameManager.TeamMode.Classic &&
-                    targetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+                if (GameManager.instance.thirdPersonMode != GameManager.ThirdPersonMode.On && !player.playerInventory.isHoldingHeavy)
                 {
-                    if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
-                        aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                    _targetPointPosition = closestHbToCrosshairCenter.transform.position;
 
-                    return;
-                }
+                    bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistRotationControl.position).normalized;
+                    targetDir = (closestHbToCrosshairCenter.transform.position - aimAssistRotationControl.position);
 
-                Vector3 targetHitboxDir = (targetHitbox.transform.position - aimAssistRotationControl.position);
-                float targetHitboxDistance = Vector3.Distance(targetHitbox.transform.position, aimAssistRotationControl.position);
+                    middleDir = bspDir + targetDir;
 
-
-
-
-                if (!Physics.Raycast(player.mainCamera.transform.position, targetHitboxDir, targetHitboxDistance, obstructionMask))
-                {
-                    Vector3 bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistRotationControl.position).normalized;
-                    Vector3 targetDir = (targetHitbox.transform.position - aimAssistRotationControl.position);
-
-                    Vector3 newDir = bspDir + (targetDir * 0.2f);
-
-                    aimAssistRotationControl.forward = newDir;
+                    aimAssistRotationControl.forward = (middleDir);
                 }
                 else
                 {
                     if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
                         aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                    _targetPointPosition = Vector3.zero;
                 }
+
+                //bulletSpawnPoint.LookAt(target.transform);
             }
+            //else if (_invisibleHitboxDetector.collidingHitboxes.Count > 0) // DEPRECATED
+            //{
+            //    try { if (player.isDead || player.isRespawning) { return; } } catch { }
+
+            //    _tempTargetHitbox = _invisibleHitboxDetector.collidingHitboxes[0];
+
+
+
+            //    for (int i = _invisibleHitboxDetector.collidingHitboxes.Count; i-- > 0;)
+            //        if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            //        {
+            //            if (_tempTargetHitbox.GetComponent<ActorHitbox>() || (_tempTargetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+            //                if (_invisibleHitboxDetector.collidingHitboxes[i].GetComponent<Hitbox>().isHead)
+            //                {
+            //                    _tempTargetHitbox = _invisibleHitboxDetector.collidingHitboxes[i];
+            //                    break;
+            //                }
+            //                else
+            //                {
+            //                    if (Vector3.Distance(_invisibleHitboxDetector.collidingHitboxes[i].transform.position, player.mainCamera.transform.position) < Vector3.Distance(_tempTargetHitbox.transform.position, player.mainCamera.transform.position))
+            //                        _tempTargetHitbox = _invisibleHitboxDetector.collidingHitboxes[i];
+            //                }
+            //        }
+            //        else
+            //        {
+            //            if (_invisibleHitboxDetector.collidingHitboxes[i].GetComponent<Hitbox>().isHead)
+            //            {
+            //                _tempTargetHitbox = _invisibleHitboxDetector.collidingHitboxes[i];
+            //                break;
+            //            }
+            //            else
+            //            {
+            //                if (Vector3.Distance(_invisibleHitboxDetector.collidingHitboxes[i].transform.position, player.mainCamera.transform.position) < Vector3.Distance(_tempTargetHitbox.transform.position, player.mainCamera.transform.position))
+            //                    _tempTargetHitbox = _invisibleHitboxDetector.collidingHitboxes[i];
+            //            }
+            //        }
+
+            //    {
+            //        //foreach (var item in _invisibleHitboxDetector.collidingHitboxes)
+            //        //    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            //        //    {
+            //        //        try
+            //        //        {
+            //        //            if (_tempTargetHitbox.GetComponent<ActorHitbox>() || (_tempTargetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+            //        //                if (item.GetComponent<Hitbox>().isHead)
+            //        //                {
+            //        //                    _tempTargetHitbox = item;
+            //        //                    break;
+            //        //                }
+            //        //                else
+            //        //                {
+            //        //                    if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(_tempTargetHitbox.transform.position, player.mainCamera.transform.position))
+            //        //                        _tempTargetHitbox = item;
+            //        //                }
+            //        //        }
+            //        //        catch
+            //        //        {
+            //        //            if (item.GetComponent<Hitbox>().isHead)
+            //        //            {
+            //        //                _tempTargetHitbox = item;
+            //        //                break;
+            //        //            }
+            //        //            else
+            //        //            {
+            //        //                if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(_tempTargetHitbox.transform.position, player.mainCamera.transform.position))
+            //        //                    _tempTargetHitbox = item;
+            //        //            }
+            //        //        }
+            //        //    }
+            //        //    else
+            //        //    {
+
+            //        //        if (item.GetComponent<Hitbox>().isHead)
+            //        //        {
+            //        //            _tempTargetHitbox = item;
+            //        //            break;
+            //        //        }
+            //        //        else
+            //        //        {
+            //        //            if (Vector3.Distance(item.transform.position, player.mainCamera.transform.position) < Vector3.Distance(_tempTargetHitbox.transform.position, player.mainCamera.transform.position))
+            //        //                _tempTargetHitbox = item;
+            //        //        }
+            //        //    }
+
+            //    }
+
+
+
+            //    if (_tempTargetHitbox.GetComponent<PlayerHitbox>() &&
+            //        (GameManager.instance.teamMode == GameManager.TeamMode.Classic &&
+            //        _tempTargetHitbox.GetComponent<PlayerHitbox>().player.team == player.team))
+            //    {
+            //        if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
+            //            aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
+
+            //        _targetPointPosition = Vector3.zero;
+
+            //        return;
+            //    }
+
+            //    targetHitboxDir = (_tempTargetHitbox.transform.position - aimAssistRotationControl.position);
+            //    targetHitboxDistance = Vector3.Distance(_tempTargetHitbox.transform.position, aimAssistRotationControl.position);
+
+
+
+
+            //    if (!Physics.Raycast(player.mainCamera.transform.position, targetHitboxDir, targetHitboxDistance, obstructionMask))
+            //    {
+            //        if (GameManager.instance.thirdPersonMode != GameManager.ThirdPersonMode.On && !player.playerInventory.isHoldingHeavy)
+            //        {
+            //            _targetPointPosition = _tempTargetHitbox.transform.position;
+
+            //            bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistRotationControl.position).normalized;
+            //            targetDir = (_tempTargetHitbox.transform.position - aimAssistRotationControl.position);
+
+            //            newDir = bspDir + (targetDir * 0.2f);
+
+
+            //            aimAssistRotationControl.forward = newDir;
+            //        }
+            //        else
+            //        {
+            //            if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
+            //                aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
+            //            _targetPointPosition = Vector3.zero;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
+            //            aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
+            //        _targetPointPosition = Vector3.zero;
+            //    }
+            //}
             else
             {
                 if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
                     aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
+                _targetPointPosition = Vector3.zero;
             }
         }
         else
         {
+            _targetPointPosition = Vector3.zero;
+
+
             if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
                 aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
         }
@@ -223,7 +295,7 @@ public class AimAssist : MonoBehaviour
     {
         if (player.playerController.rid == 0 && player.isMine) print("RESETREDRETICULE");
         redReticuleIsOn = false;
-        targetHitbox = null;
+        closestHbToCrosshairCenter = null;
     }
 }
 

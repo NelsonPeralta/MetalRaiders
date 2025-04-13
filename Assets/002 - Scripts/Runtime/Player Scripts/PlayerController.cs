@@ -716,10 +716,10 @@ public class PlayerController : MonoBehaviourPun
             {
                 if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
                 {
-                    SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, false);
+                    SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, false);
                 }
                 else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
-                    player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+                    player.playerShooting.trackingTarget = (player.aimAssist.closestHbToCrosshairCenter != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
             }
 
 
@@ -792,11 +792,11 @@ public class PlayerController : MonoBehaviourPun
         if (PV.IsMine && player.isDualWielding && !isHoldingShootDualWieldedWeapon)
             if (activeControllerType == ControllerType.Joystick)
             {
-                if (rewiredPlayer.GetButton("Throw Grenade")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
+                if (rewiredPlayer.GetButton("Throw Grenade")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
             }
             else
             {
-                if (rewiredPlayer.GetButton("Aim")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.targetHitbox != null) ? player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
+                if (rewiredPlayer.GetButton("Aim")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
             }
 
 
@@ -849,13 +849,13 @@ public class PlayerController : MonoBehaviourPun
         {
             try { Debug.Log("_StartShoot"); } catch (System.Exception e) { Debug.LogWarning(e); }
             try { Debug.Log(player.aimAssist); } catch (System.Exception e) { Debug.LogWarning(e); }
-            try { Debug.Log(player.aimAssist.targetHitbox); } catch (System.Exception e) { Debug.LogWarning(e); }
-            try { Debug.Log(player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped); } catch (System.Exception e) { Debug.LogWarning(e); }
-            try { Debug.Log(player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Debug.Log(player.aimAssist.closestHbToCrosshairCenter); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Debug.Log(player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Debug.Log(player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition); } catch (System.Exception e) { Debug.LogWarning(e); }
 
 
 
-            if (player.aimAssist.targetHitbox) PV.RPC("_StartShoot_RPC", RpcTarget.All, player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition);
+            if (player.aimAssist.closestHbToCrosshairCenter) PV.RPC("_StartShoot_RPC", RpcTarget.All, player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition);
             else PV.RPC("_StartShoot_RPC", RpcTarget.All, Vector3.zero);
         }
     }

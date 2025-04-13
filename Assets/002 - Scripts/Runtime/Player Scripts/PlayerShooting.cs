@@ -466,16 +466,21 @@ public class PlayerShooting : MonoBehaviourPun
         {
             if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
             {
+                print("Third Person Mode NO aim assist");
                 // if the player is allowed no aim assist at all
                 // we will simply correct the angle so that the bullet is fired at whatever is at the center of the players main cam
-                playerController.gwProperties.tpsRotationToCameraCenterControl.localRotation = Quaternion.identity;
-                playerController.gwProperties.tpsRotationToCameraCenterControl.LookAt(playerController.player.playerCamera.playerCameraCenterPointCheck.target.position);
+                playerController.gwProperties.tpsBulletRotationToCameraCenterControl.localRotation = Quaternion.identity;
+                playerController.gwProperties.tpsBulletRotationToCameraCenterControl.LookAt(playerController.player.playerCamera.playerCameraCenterPointCheck.target.position);
             }
             else
             {
+                print("Third Person Mode aim assist");
                 // if the player is allowed a certain amount of aim assist, do nothing special for now
                 // make sure its reset so it does not come in control with the aim assist rotation control
-                playerController.gwProperties.tpsRotationToCameraCenterControl.localRotation = Quaternion.identity;
+                playerController.gwProperties.tpsBulletRotationToCameraCenterControl.localRotation = Quaternion.identity;
+                playerController.gwProperties.tpsBulletRotationToCameraCenterControl.LookAt(playerController.player.aimAssist.closestHbToCrosshairCenter.transform.position);
+                //if (playerController.player.aimAssist.targetPointPosition != Vector3.zero)
+                //    playerController.gwProperties.tpsBulletRotationToCameraCenterControl.LookAt(playerController.player.aimAssist.targetPointPosition);
             }
         }
 
@@ -556,7 +561,7 @@ public class PlayerShooting : MonoBehaviourPun
                                         pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point),
                                             ranSprayQuat, player.isMine,
                                muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position,
-                               lookAtThisTarget: fakeBulletTrailRaycasthits[0].point);
+                               lookAtThisTarget: (playerController.player.aimAssist.targetPointPosition != Vector3.zero ? playerController.player.aimAssist.targetPointPosition : fakeBulletTrailRaycasthits[0].point));
                                     }
                                     else
                                     {
