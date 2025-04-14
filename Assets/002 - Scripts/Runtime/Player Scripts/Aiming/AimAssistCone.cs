@@ -214,6 +214,7 @@ public class AimAssistCone : MonoBehaviour
 
                 _tempRedReticuleAngle = player.playerInventory.activeWeapon.redReticuleMaxRadius;
                 _coneXandYScale = Mathf.Sin((_tempRedReticuleAngle * Mathf.PI) / 180) * player.playerInventory.activeWeapon.currentRedReticuleRange; // must be multiplied by 2 to take into account the whole heigh and width of the cone geometry
+                if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || playerInventory.isHoldingHeavy) _coneXandYScale *= 1.15f;
                 _hitboxDetectorScaleControl.transform.localScale = new Vector3(_coneXandYScale * 2, _coneXandYScale * 2, player.playerInventory.activeWeapon.currentRedReticuleRange);
 
 

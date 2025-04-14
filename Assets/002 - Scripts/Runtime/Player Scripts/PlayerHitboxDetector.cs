@@ -31,6 +31,13 @@ public class PlayerHitboxDetector : MonoBehaviour
 
     private void Update()
     {
+        if (player != null && !player.isAlive)
+        {
+            if (_collidingHitboxes.Count > 0)
+                _collidingHitboxes.Clear();
+        }
+
+
         if (_collidingHitboxes.Count > 0)
         {
             for (int i = _collidingHitboxes.Count; i-- > 0;)

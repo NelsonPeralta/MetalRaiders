@@ -574,11 +574,12 @@ public class PlayerShooting : MonoBehaviourPun
                                 else
                                 {
                                     // The target may be between the position of the camera and the end of the muzzle of the gun
-                                    // we will NOT show a fake trail
+                                    // the player may be in 3PS mode
+
+                                    pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, playerController.player.playerCamera.playerCameraCenterPointCheck.target.position),
+                                ranSprayQuat, player.isMine,
+                               muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                                 }
-
-
-                                //pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point), ranSprayQuat, player.isMine);
                             }
                             else
                             {
