@@ -470,6 +470,7 @@ public class PlayerShooting : MonoBehaviourPun
                 // if the player is allowed no aim assist at all
                 // we will simply correct the angle so that the bullet is fired at whatever is at the center of the players main cam
                 playerController.gwProperties.tpsBulletRotationToCameraCenterControl.localRotation = Quaternion.identity;
+
                 playerController.gwProperties.tpsBulletRotationToCameraCenterControl.LookAt(playerController.player.playerCamera.playerCameraCenterPointCheck.target.position);
             }
             else

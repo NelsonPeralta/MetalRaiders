@@ -23,7 +23,7 @@ public class AimAssist : MonoBehaviour
 
     public Vector3 targetPointPosition
     {
-        get { return _targetPointPosition; }
+        get { print(_targetPointPosition); return _targetPointPosition; }
     }
 
     public bool redReticuleIsOn
@@ -40,54 +40,58 @@ public class AimAssist : MonoBehaviour
     {
         get
         {
-            if (pController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
+            if (player.playerController.activeControllerType == ControllerType.Custom || player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
                 return _redReticuleTick;
 
             return 0;
         }
     }
 
-    public Player player;
-
-    [SerializeField] GameObject _closestHbToCrosshairCenter;
-    public LayerMask layerMask;
-
-    public PlayerController pController;
-
-
-    Vector3 raySpawn;
-    RaycastHit hit;
-
-    public Transform aimAssistRotationControl;
-    public Quaternion originalBbulletSpawnPointRelativePos;
-
-    [SerializeField] Transform bulletSpawnPoint_Forward;
-
-    [Header("MANUAL LINKING")]
-    public Player thisPlayer;
-
-    public Camera mainCam;
-
-
     public bool invisibleAimAssistOn { get { if (_invisibleHitboxDetector.collidingHitboxes.Count > 0) return true; else return false; } }
 
+    public bool theObjectIntheMiddleIsBehindTheCamera { get { return player.playerCamera.playerCameraCenterPointCheck.theObjectIntheMiddleIsBehindTheCamera; } }
 
-    [SerializeField] LayerMask obstructionMask;
+
+
+
+
+
+
+    public Player player;
+    public Transform aimAssistRotationControl;
+
+
+
+
+
+
+
+
+    [SerializeField] LayerMask _layerMask, _obstructionMask;
+    [SerializeField] Transform bulletSpawnPoint_Forward;
     [SerializeField] PlayerHitboxDetector _invisibleHitboxDetector;
-    [SerializeField] GameObject _tempTargetHitbox;
+    [SerializeField] GameObject _tempTargetHitbox, _closestHbToCrosshairCenter;
 
 
 
-    GameObject _preTargetHitboxRoot;
+
+
+
+
     bool _redReticuleIsOn;
-    [SerializeField] int _redReticuleTick;
-
-
-
-
-
-    Vector3 _targetPointPosition, bspDir, targetDir, middleDir, newDir, targetHitboxDir;
+    int _redReticuleTick;
     float targetHitboxDistance;
+    Vector3 raySpawn;
+    RaycastHit hit;
+    Vector3 _targetPointPosition, bspDir, targetDir, middleDir, newDir, targetHitboxDir;
+    Quaternion originalBbulletSpawnPointRelativePos;
+    GameObject _preTargetHitboxRoot;
+
+
+
+
+
+
 
 
 
@@ -119,9 +123,9 @@ public class AimAssist : MonoBehaviour
                 //Vector3 targetDir = (target.transform.position - bulletSpawnPoint.position).normalized;
 
 
+                _targetPointPosition = closestHbToCrosshairCenter.transform.position;
                 if (GameManager.instance.thirdPersonMode != GameManager.ThirdPersonMode.On && !player.playerInventory.isHoldingHeavy)
                 {
-                    _targetPointPosition = closestHbToCrosshairCenter.transform.position;
 
                     bspDir = (bulletSpawnPoint_Forward.transform.position - aimAssistRotationControl.position).normalized;
                     targetDir = (closestHbToCrosshairCenter.transform.position - aimAssistRotationControl.position);
@@ -134,7 +138,6 @@ public class AimAssist : MonoBehaviour
                 {
                     if (aimAssistRotationControl.transform.localRotation != originalBbulletSpawnPointRelativePos)
                         aimAssistRotationControl.transform.localRotation = originalBbulletSpawnPointRelativePos;
-                    _targetPointPosition = Vector3.zero;
                 }
 
                 //bulletSpawnPoint.LookAt(target.transform);
