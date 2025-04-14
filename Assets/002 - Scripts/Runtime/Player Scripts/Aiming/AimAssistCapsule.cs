@@ -103,7 +103,7 @@ public class AimAssistCapsule : MonoBehaviour
             Vector3 v = new Vector3(1, 1, activeWeapon.currentRedReticuleRange / 2);
             transform.parent.localScale = v;
 
-            GetComponent<CapsuleCollider>().radius = activeWeapon.redReticuleHint / 10;
+            //GetComponent<CapsuleCollider>().radius = activeWeapon.redReticuleHint / 10;
         }
         catch (System.Exception e) { }
 

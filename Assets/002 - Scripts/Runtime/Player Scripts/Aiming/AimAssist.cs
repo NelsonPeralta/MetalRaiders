@@ -9,13 +9,13 @@ public class AimAssist : MonoBehaviour
 {
     public GameObject closestHbToCrosshairCenter
     {
-        get { return _targetHitboxRoot; }
+        get { return _closestHbToCrosshairCenter; }
         set
         {
-            if (value != _targetHitboxRoot)
+            if (value != _closestHbToCrosshairCenter)
             {
-                _preTargetHitboxRoot = _targetHitboxRoot;
-                _targetHitboxRoot = value;
+                _preTargetHitboxRoot = _closestHbToCrosshairCenter;
+                _closestHbToCrosshairCenter = value;
                 //Debug.Log($"targetHitboxRoot {_preTargetHitboxRoot} {_targetHitboxRoot}");
             }
         }
@@ -49,7 +49,7 @@ public class AimAssist : MonoBehaviour
 
     public Player player;
 
-    [SerializeField] GameObject _targetHitboxRoot;
+    [SerializeField] GameObject _closestHbToCrosshairCenter;
     public LayerMask layerMask;
 
     public PlayerController pController;

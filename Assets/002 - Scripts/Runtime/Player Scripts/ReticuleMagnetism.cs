@@ -96,7 +96,15 @@ public class ReticuleMagnetism : MonoBehaviour
         {
             raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange * 3;
 
-            if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, raycastRange, magnetismMask))
+            if (player.playerController.rid == 0)
+            {
+                //print($"position of my camera is {player.mainCamera.transform.position} and direction is {player.mainCamera.transform.forward}");
+                //print($"the point is {player.mainCamera.transform.position + (2.4f * player.mainCamera.transform.forward)}");
+            }
+
+            if (Physics.Raycast(player.mainCamera.transform.position
+                + ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy) ? (-PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z * player.mainCamera.transform.forward) : Vector3.zero),
+                player.mainCamera.transform.forward, out hit, raycastRange, magnetismMask))
             {
                 if (hit.transform.root.gameObject != player.gameObject)
                 {
@@ -147,6 +155,7 @@ public class ReticuleMagnetism : MonoBehaviour
                 else
                 {
                     magnetismHit = null;
+
                 }
             }
             else

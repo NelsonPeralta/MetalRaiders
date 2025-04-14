@@ -11,14 +11,15 @@ public class AimAssistCone : MonoBehaviour
     public Player player;
     public PlayerInventory playerInventory;
     public AimAssist aimAssist;
+    public PlayerHitboxDetector hitboxDetector;
 
 
-    public List<GameObject> frictionColliders;
-    [SerializeField] bool _reticuleFriction;
-
-
-    public List<GameObject> collidingHitboxes = new List<GameObject>();
     public List<GameObject> _collidingHitboxesTemp = new List<GameObject>();
+
+
+
+
+    [SerializeField] Transform _hitboxDetectorScaleControl;
 
     [SerializeField] GameObject _closestHbToCorsshairCenter, _hitboxRayHitGo, _obstructionHitGo;
     [SerializeField] float distanceToHitbox, distanceToObstruction, _angleBetweenCameraCenterAndClosestHitboxToCenter;
@@ -45,6 +46,8 @@ public class AimAssistCone : MonoBehaviour
     ReticuleMagnetism _reticuleMagnetism;
     Rigidbody _rb;
 
+    float _coneXandYScale, _tempRedReticuleAngle;
+    bool _reticuleFriction;
 
 
 
@@ -119,7 +122,6 @@ public class AimAssistCone : MonoBehaviour
 
 
 
-
     private void Awake()
     {
         _reticuleMagnetism = GetComponent<ReticuleMagnetism>();
@@ -141,8 +143,6 @@ public class AimAssistCone : MonoBehaviour
 
         if (!player.isAlive)
         {
-            frictionColliders.Clear();
-            collidingHitboxes.Clear();
             _collidingHitboxesTemp.Clear();
 
             reticuleFriction = false;
@@ -153,42 +153,6 @@ public class AimAssistCone : MonoBehaviour
         }
         else
         {
-            {// DO NOT REMOVE THIS. This is needed because there is no native way to remove disabled objs without using listeners. Removing this will break aiming
-
-                if (collidingHitboxes.Count > 0)
-                    for (int i = collidingHitboxes.Count; i-- > 0;)
-                    {
-                        if (collidingHitboxes[i] == null) // if a player leaves while in the list this WILL cause errors for the code below
-                        {
-                            collidingHitboxes.Remove(collidingHitboxes[i]);
-                        }
-                        else
-                        {
-                            if (!collidingHitboxes[i].gameObject.activeSelf || !collidingHitboxes[i].gameObject.activeInHierarchy)
-                                collidingHitboxes.Remove(collidingHitboxes[i]);
-                        }
-                    }
-            }
-
-
-
-
-            if (frictionColliders.Count > 0)
-            {
-                for (int i = frictionColliders.Count; i-- > 0;)
-                {
-                    if (frictionColliders[i] == null)// if a player leaves while in the list this WILL cause errors for the code below
-                        frictionColliders.Remove(frictionColliders[i]);
-                    else
-                    {
-                        if (!frictionColliders[i].gameObject.activeSelf || !frictionColliders[i].gameObject.activeInHierarchy)
-                            frictionColliders.Remove(frictionColliders[i]);
-                    }
-                }
-            }
-
-
-
             if (player.GetComponent<PlayerController>().activeControllerType == ControllerType.Joystick)
                 reticuleFriction = _reticuleMagnetism.trueHit;
             else
@@ -197,7 +161,7 @@ public class AimAssistCone : MonoBehaviour
             //HitboxRay();
 
 
-            _collidingHitboxesTemp = new List<GameObject>(collidingHitboxes);
+            _collidingHitboxesTemp = new List<GameObject>(hitboxDetector.collidingHitboxes);
 
             if (_collidingHitboxesTemp.Count > 0)
             {
@@ -246,6 +210,14 @@ public class AimAssistCone : MonoBehaviour
                 //    v = new Vector3(2f, 1, 2f);
 
                 //_invisibleHitboxDetector.transform.localScale = v;
+
+
+                _tempRedReticuleAngle = player.playerInventory.activeWeapon.redReticuleMaxRadius;
+                _coneXandYScale = Mathf.Sin((_tempRedReticuleAngle * Mathf.PI) / 180) * player.playerInventory.activeWeapon.currentRedReticuleRange; // must be multiplied by 2 to take into account the whole heigh and width of the cone geometry
+                _hitboxDetectorScaleControl.transform.localScale = new Vector3(_coneXandYScale * 2, _coneXandYScale * 2, player.playerInventory.activeWeapon.currentRedReticuleRange);
+
+
+
                 _raycastRange = playerInventory.activeWeapon.currentRedReticuleRange;
 
 
@@ -471,69 +443,18 @@ public class AimAssistCone : MonoBehaviour
 
     private void OnTriggerStay(Collider other) // is called after update
     {
-        //if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay {other.name}");
-        //if (player.playerController.rid == 0) print($"OnTriggerStay {_frame} {doNotClearListThisFrame} {other.name}");
-        if (!other.gameObject.activeSelf || !other.gameObject.activeInHierarchy)
-        {
-            //print($"{other.name} is inactive");
-        }
-        else
-        {
-            if (player.isAlive)
-            {
-                if (other.gameObject.layer != _reticuleFrictionLayer)
-                    if (!collidingHitboxes.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
-                    {
-                        //if (player.playerController.rid == 0 && player.isMine) print($"OnTriggerStay addind {other.name}");
-                        collidingHitboxes.Add(other.gameObject);
-                    }
 
-                if (other.gameObject.layer == _reticuleFrictionLayer)
-                    if (!frictionColliders.Contains(other.gameObject) && other.gameObject.transform.root != player.transform)
-                        frictionColliders.Add(other.gameObject);
-            }
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        //print($"OnTriggerExit {other.name}");
-        if (other.gameObject == closestHbToCorsshairCenter)
-        {
-            //Debug.Log($"OnTriggerExit from AimAssistCapsule: {other.name}");
-            closestHbToCorsshairCenter = null;
-        }
 
-        if (collidingHitboxes.Contains(other.gameObject))
-            collidingHitboxes.Remove(other.gameObject);
-        if (frictionColliders.Contains(other.gameObject))
-            frictionColliders.Remove(other.gameObject);
-
-        //if (collidingHitboxes.Count == 0)
-        //    aimAssist.ResetRedReticule();
     }
 
 
     public void OnActiveWeaponChanged(PlayerInventory playerInventory)
     {
-        if (player.PV.IsMine)
-        {
-            try
-            {
-                WeaponProperties activeWeapon = playerInventory.activeWeapon;
-                float h = activeWeapon.redReticuleHint;
 
-                //Vector3 v = new Vector3(1, 1, activeWeapon.currentRedReticuleRange / 2);
-                //transform.parent.localScale = v;
-
-                Vector3 v = new Vector3(h * 10, transform.localScale.y, h * 10);
-                transform.localScale = v;
-
-                v = new Vector3(1, 1, activeWeapon.currentRedReticuleRange / 2);
-                transform.parent.localScale = v;
-            }
-            catch (System.Exception e) { }
-        }
     }
 
     void OnPlayerAssigned(Player p)

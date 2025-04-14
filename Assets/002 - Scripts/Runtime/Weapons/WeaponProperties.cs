@@ -53,8 +53,7 @@ public class WeaponProperties : MonoBehaviour
     public int bulletSpeed = 250;
     public float range;
     public bool isShotgun, overcharge;
-    public float redReticuleHint, redReticuleMaxAngle;
-    float _previousRedReticuleHint;
+    public float redReticuleMaxRadius;
     public bool targetTracking;
     public float trackingSpeed;
     public Transform trackingTarget;
@@ -276,8 +275,6 @@ public class WeaponProperties : MonoBehaviour
             headshotMultiplier = 1;
 
         currentRedReticuleRange = defaultRedReticuleRange;
-
-        _previousRedReticuleHint = redReticuleHint;
 
         pController.OnControllerTypeChangedToController += OnControllerTypeChanged;
         pController.OnControllerTypeChangedToMouseAndKeyboard += OnControllerTypeChanged;
@@ -562,16 +559,7 @@ public class WeaponProperties : MonoBehaviour
 
     void OnControllerTypeChanged(PlayerController playerController)
     {
-        //Debug.Log("OnControllerTypeChanged");
-        if (playerController.activeControllerType == Rewired.ControllerType.Joystick)
-        {
-            redReticuleHint = _previousRedReticuleHint * 1.2f;
-            redReticuleHint = _previousRedReticuleHint * 1f;
-        }
-        else
-        {
-            redReticuleHint = _previousRedReticuleHint * 1f;
-        }
+        
     }
 
     public static Dictionary<string, int> spriteIdDic = new Dictionary<string, int>()
@@ -628,8 +616,7 @@ public class WeaponPropertiesEditor : Editor
         wp.overcharge = GUILayout.Toggle(wp.overcharge, "Overcharge");
 
 
-        wp.redReticuleHint = EditorGUILayout.FloatField("Red reticule hint:", wp.redReticuleHint);
-        wp.redReticuleMaxAngle = EditorGUILayout.FloatField("Red Reticule Max Angle:", wp.redReticuleMaxAngle);
+        wp.redReticuleMaxRadius = EditorGUILayout.FloatField("Red Reticule Max Angle:", wp.redReticuleMaxRadius);
 
         wp.targetTracking = GUILayout.Toggle(wp.targetTracking, "Target Tracking");
         if (wp.targetTracking)
