@@ -178,36 +178,36 @@ public class PlayerCamera : MonoBehaviour
 
 
 
-            if (player.isMine && !pController.pauseMenuOpen && _blockTime <= 0)
+            if (player.isMine && !pController.pauseMenuOpen)
             {
                 if (player.allPlayerScripts.scoreboardManager.scoreboardOpen && !CurrentRoomManager.instance.gameOver) return;
 
-
-                xAxisInput = rewiredPlayer.GetAxis("Mouse X");
-                yAxisInput = rewiredPlayer.GetAxis("Mouse Y");
-
-                _correctedXAxisInput = xAxisInput; _correctedYAxisInput = yAxisInput;
-
-                if (_controllerType == ControllerType.Joystick) // stick drift
+                if (_blockTime <= 0)
                 {
-                    if (Mathf.Abs(xAxisInput) <= 0.1f) _correctedXAxisInput = 0;
-                    if (Mathf.Abs(yAxisInput) <= 0.1f) _correctedYAxisInput = 0;
-                    _correctedYAxisInput *= 0.75f;
+                    xAxisInput = rewiredPlayer.GetAxis("Mouse X");
+                    yAxisInput = rewiredPlayer.GetAxis("Mouse Y");
+
+                    _correctedXAxisInput = xAxisInput; _correctedYAxisInput = yAxisInput;
+
+                    if (_controllerType == ControllerType.Joystick) // stick drift
+                    {
+                        if (Mathf.Abs(xAxisInput) <= 0.1f) _correctedXAxisInput = 0;
+                        if (Mathf.Abs(yAxisInput) <= 0.1f) _correctedYAxisInput = 0;
+                        _correctedYAxisInput *= 0.75f;
+                    }
+
+                    // turning
+                    if (Mathf.Abs(xAxisInput) >= xExtremeDeadzone) _correctedXAxisInput *= 1.6f;
+                    if (Mathf.Abs(yAxisInput) >= yExtremeDeadzone) _correctedYAxisInput *= 1.6f;
+
+                    mouseX = _correctedXAxisInput * backEndMouseSens * Time.deltaTime;
+                    mouseY = _correctedYAxisInput * backEndMouseSens * 0.75f * Time.deltaTime;
+
+
+                    leftRightRotation += mouseX;
+                    upDownRotation -= mouseY;
+                    upDownRotation = Mathf.Clamp(upDownRotation, minXClamp, maxXClamp);
                 }
-
-                // turning
-                if (Mathf.Abs(xAxisInput) >= xExtremeDeadzone) _correctedXAxisInput *= 1.6f;
-                if (Mathf.Abs(yAxisInput) >= yExtremeDeadzone) _correctedYAxisInput *= 1.6f;
-
-                mouseX = _correctedXAxisInput * backEndMouseSens * Time.deltaTime;
-                mouseY = _correctedYAxisInput * backEndMouseSens * 0.75f * Time.deltaTime;
-
-
-                leftRightRotation += mouseX;
-                upDownRotation -= mouseY;
-                upDownRotation = Mathf.Clamp(upDownRotation, minXClamp, maxXClamp);
-
-
 
 
 
@@ -228,8 +228,22 @@ public class PlayerCamera : MonoBehaviour
                 // PROCESS PLAYER INPUT
                 else if (player.isAlive && !pController.cameraIsFloating)
                 {
-                    if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On
-                        || (player.playerInventory.activeWeapon && player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy))
+                    if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && !player.playerInventory.isHoldingHeavy)
+                    {
+                        mainCam.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
+                        _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
+
+
+                        var targetHorizontalAngle = Mathf.SmoothDampAngle(player.GetComponent<Rigidbody>().rotation.eulerAngles.y,
+                                                       mainCam.transform.eulerAngles.y,
+                                                       ref _tmpRotationVelocity,
+                                                       _rotationSmoothTime,
+                                                       float.MaxValue,
+                                                       Time.fixedDeltaTime);
+                        Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
+                        player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
+                    }
+                    else if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy)
                     {
                         _thirdPersonCameraPivot.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
                         _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
@@ -246,57 +260,6 @@ public class PlayerCamera : MonoBehaviour
                         Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
                         player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
                     }
-                    else if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
-                    {
-                        mainCam.transform.localRotation = Quaternion.Euler(upDownRotation, leftRightRotation, 0f);
-                        _inventoryGo.transform.localRotation = Quaternion.Euler(upDownRotation, 0, 0f);
-
-
-                        var targetHorizontalAngle = Mathf.SmoothDampAngle(player.GetComponent<Rigidbody>().rotation.eulerAngles.y,
-                                                       mainCam.transform.eulerAngles.y,
-                                                       ref _tmpRotationVelocity,
-                                                       _rotationSmoothTime,
-                                                       float.MaxValue,
-                                                       Time.fixedDeltaTime);
-                        Quaternion targetRotation = Quaternion.Euler(0.0F, targetHorizontalAngle, 0.0F);
-                        player.GetComponent<Rigidbody>().MoveRotation(targetRotation);
-                    }
-
-
-
-
-                    //var localTarget = transform.InverseTransformPoint(_rigidBodyMoveRotationTarget.transform.position);
-                    //float angle = Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg;
-                    //Vector3 eulerAngleVelocity = new Vector3(0, angle, 0);
-                    //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
-                    //player.GetComponent<Rigidbody>().MoveRotation(player.GetComponent<Rigidbody>().rotation * deltaRotation);
-
-
-                    return;
-                    verticalAxisTarget.Rotate(Vector3.left * mouseY); // NEW, multiple scripts can now interact with local rotation
-                                                                      //localeulerangles return over 300 when looking up and returns below 90 when looking down
-                    mainCam.transform.Rotate(Vector3.left * mouseY);
-
-
-
-                    _trueLocalX = 0;
-
-
-                    if (verticalAxisTarget.localEulerAngles.x > 0 && verticalAxisTarget.localEulerAngles.x < 180) _trueLocalX -= verticalAxisTarget.localEulerAngles.x;
-                    if (verticalAxisTarget.localEulerAngles.x > 180 && verticalAxisTarget.localEulerAngles.x <= 360) _trueLocalX = 360 - verticalAxisTarget.localEulerAngles.x;
-
-                    _trueLocalX *= -1;
-
-                    if (_trueLocalX > maxXClamp) verticalAxisTarget.localRotation = Quaternion.Euler(new Vector3(maxXClamp, verticalAxisTarget.localRotation.y, verticalAxisTarget.localRotation.z));
-                    else if (_trueLocalX < minXClamp) verticalAxisTarget.localRotation = Quaternion.Euler(new Vector3(minXClamp, verticalAxisTarget.localRotation.y, verticalAxisTarget.localRotation.z));
-
-
-
-                    if (horizontalAxisTarget.transform.root == horizontalAxisTarget)
-                        horizontalAxisTarget.Rotate(Vector3.up * mouseX);
-                    else
-                        horizontalAxisTarget.localRotation = Quaternion.Euler(0, -leftRightRotation, 0f);
-
                 }
             }
         }

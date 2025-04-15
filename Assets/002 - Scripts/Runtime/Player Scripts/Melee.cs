@@ -166,37 +166,36 @@ public class Melee : MonoBehaviour
 
 
             //for (int i = 0; i < _pushIfAbleList.Count; i++)
-            if (_pushIfAbleList.Count > 0)
+            if (_pushIfAbleList.Count > 0 && player.isMine)
             {
                 HitPoints hp = _pushIfAbleList[0];
-                if (player.isMine)
+                print($"MELEE distance to tar: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
+
+                if (hp.meleeMagnetism && Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
+                    (Player.MELEE_DAMAGE_DISTANCE + 1
+                    + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2.5f : 0))
+                     + ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy) ? Mathf.Abs(PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z) : 0))
                 {
+                    print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
 
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
-                        (Player.MELEE_DAMAGE_DISTANCE + 1 + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2.5f : 0))
-                         && hp.meleeMagnetism)
+                    _lookAtPosition = new Vector3(hp.biped.targetTrackingCorrectTarget.transform.position.x,
+                                                movement.transform.position.y,
+                                                hp.biped.targetTrackingCorrectTarget.transform.position.z);
+                    movement.transform.LookAt(_lookAtPosition);
+
+                    player.playerCamera.BlockPlayerCamera(0.3f);
+                    player.movement.blockPlayerMoveInput = 0.3f;
+                    player.movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
+
+                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) > 1.5f) // arbitrary and tested distance as to which the player should be pushed harder to ensure he closes the distance for the damage to register
                     {
-                        print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
-
-                        _lookAtPosition = new Vector3(hp.biped.targetTrackingCorrectTarget.transform.position.x,
-                                                    movement.transform.position.y,
-                                                    hp.biped.targetTrackingCorrectTarget.transform.position.z);
-                        movement.transform.LookAt(_lookAtPosition);
-
-                        player.playerCamera.BlockPlayerCamera(0.3f);
-                        player.movement.blockPlayerMoveInput = 0.3f;
-                        player.movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
-
-                        if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) > 1.5f) // arbitrary and tested distance as to which the player should be pushed harder to ensure he closes the distance for the damage to register
-                        {
-                            if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
-                                player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);
-                            else
-                                player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH * 2.2f, ForceMode.Impulse);
-                        }
+                        if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+                            player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH, ForceMode.Impulse);
                         else
-                            player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * (Player.MELEE_PUSH / 2), ForceMode.Impulse);
+                            player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * Player.MELEE_PUSH * 2.2f, ForceMode.Impulse);
                     }
+                    else
+                        player.GetComponent<Rigidbody>().AddForce((hp.biped.targetTrackingCorrectTarget.transform.position - movement.transform.position).normalized * (Player.MELEE_PUSH / 2), ForceMode.Impulse);
                 }
             }
         }
@@ -219,129 +218,118 @@ public class Melee : MonoBehaviour
         _damageList = new List<HitPoints>(hitPointsInMeleeZone);
         _damageList = _damageList.OrderBy(x => Vector3.Distance(player.mainCamera.transform.position, x.transform.position)).ToList();
 
-        //if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-        //    for (int i = _damageList.Count; i-- > 0;)
-        //        if (_damageList[i].transform.root.GetComponent<Player>() && _damageList[i].transform.root.GetComponent<Player>().team == player.team)
-        //            _damageList.RemoveAt(i);
-
-        if (_damageList.Count > 0)
-        {
-            //for (int i = 0; i < _damageList.Count; i++)
+        if (player.isMine)
+            if (_damageList.Count > 0)
             {
                 HitPoints hp = _damageList[0];
-                //if (hp.hitPoints <= 0 || hp.isDead || !hp.gameObject.activeInHierarchy)
-                //    hitPointsInMeleeZone.Remove(hp);
-                //else
-                if (player.isMine)
+                Vector3 dir = (hp.transform.position - player.transform.position);
+                RaycastHit hit;
+
+                print($"Melee Damage cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
+
+
+
+
+                if (Physics.Raycast(player.mainCamera.transform.position,
+        player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DAMAGE_DISTANCE
+        + ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy) ? Mathf.Abs(PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z) : 0)
+        , _obstructionMask))
+                {
+                    print($"Melee obstruction {hit.transform.name} " +
+                        $" HB Dis{Vector3.Distance(hp.transform.position, movement.transform.position)}" +
+                        $" Obs Dis: {hit.distance}");
+
+                    if (hit.distance < Vector3.Distance(hp.transform.position, movement.transform.position))
+                        _trulyObstructed = true;
+                }
+
+                if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
+                    (Player.MELEE_DAMAGE_DISTANCE + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2 : 0)
+                    + ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy) ? Mathf.Abs(PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z) : 0))
+                    && !_trulyObstructed)
                 {
 
+                    print($"Melee DAMAGE. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
+                    //print($"Melee found no true obstruction. Angle: " +
+                    //    $"{Vector3.SignedAngle(hp.biped.targetTrackingCorrectTarget.transform.forward, player.transform.position - hp.biped.targetTrackingCorrectTarget.transform.position, Vector3.up)}");
 
-                    Vector3 dir = (hp.transform.position - player.transform.position);
-
-                    //print($"Melee. Max dis: ({GameManager.instance.playerMeleeDistance}), cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
-
-
-
-                    RaycastHit hit;
-
-                    if (Physics.Raycast(player.mainCamera.transform.position,
-            player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DAMAGE_DISTANCE, _obstructionMask))
+                    if (Mathf.Abs(Vector3.SignedAngle(hp.biped.targetTrackingCorrectTarget.transform.forward, player.transform.position - hp.biped.targetTrackingCorrectTarget.transform.position, Vector3.up)) > 130)
                     {
-                        print($"Melee obstruction {hit.transform.name} " +
-                            $" HB Dis{Vector3.Distance(hp.transform.position, movement.transform.position)}" +
-                            $" Obs Dis: {hit.distance}");
-
-                        if (hit.distance < Vector3.Distance(hp.transform.position, movement.transform.position))
-                            _trulyObstructed = true;
-                    }
-
-                    if (Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
-                        (Player.MELEE_DAMAGE_DISTANCE + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2 : 0))
-                        && !_trulyObstructed)
-                    {
-
-                        print($"Melee DAMAGE. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
-                        //print($"Melee found no true obstruction. Angle: " +
-                        //    $"{Vector3.SignedAngle(hp.biped.targetTrackingCorrectTarget.transform.forward, player.transform.position - hp.biped.targetTrackingCorrectTarget.transform.position, Vector3.up)}");
-
-                        if (Mathf.Abs(Vector3.SignedAngle(hp.biped.targetTrackingCorrectTarget.transform.forward, player.transform.position - hp.biped.targetTrackingCorrectTarget.transform.position, Vector3.up)) > 130)
-                        {
-                            if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
-                                hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage(999, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Assasination);
-                            else
-                                hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Sword);
-                        }
+                        if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage(999, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Assasination);
                         else
+                            hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Sword);
+                    }
+                    else
+                    {
+
+
+
+                        try
                         {
+                            hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
+                        }
+                        catch { }
 
 
+
+                        if (weaponProperties.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+                        {
 
                             try
                             {
-                                hp.hitboxes[0].GetComponent<ActorHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
+                                hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
                             }
                             catch { }
-
-
-
-                            if (weaponProperties.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
-                            {
-
-                                try
-                                {
-                                    hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Melee);
-                                }
-                                catch { }
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Sword);
-                                }
-                                catch { }
-                            }
                         }
-
-                        return true;
+                        else
+                        {
+                            try
+                            {
+                                hp.hitboxes[0].GetComponent<PlayerHitbox>().Damage((int)player.meleeDamage, false, player.GetComponent<PhotonView>().ViewID, damageSource: "melee", impactPos: hp.transform.position, impactDir: dir, kfo: WeaponProperties.KillFeedOutput.Sword);
+                            }
+                            catch { }
+                        }
                     }
 
-                    return false;
-                }
-            }
-        }
-        else
-        {
-            RaycastHit hit;
-            // Does the ray intersect any objects excluding the player layer. Ex: weapons, wall, trash cans
-            if (Physics.Raycast(player.mainCamera.transform.position,
-                player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DAMAGE_DISTANCE / 2, _meleeMask))
-            {
-                print($"Melee raycast hit: {hit.transform.name}");
-
-                if (hit.transform.gameObject.GetComponent<Rigidbody>())
-                {
-                    print($"Melee pushing: {hit.transform.name}");
-                    hit.transform.gameObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.TransformDirection(Vector3.forward).normalized * 300);
-
-                    GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hit.point, SoundManager.instance.concretePunchHit);
                     return true;
                 }
-                else
-                    GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hit.point, SoundManager.instance.concretePunchHit);
 
-
-                if (hit.transform.gameObject.GetComponent<ExplosiveBarrel>())
+                return false;
+            }
+            else
+            {
+                print("MeleeDamage None");
+                RaycastHit hit;
+                // Does the ray intersect any objects excluding the player layer. Ex: weapons, wall, trash cans
+                if (Physics.Raycast(player.mainCamera.transform.position,
+                    player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DAMAGE_DISTANCE / 2, _meleeMask))
                 {
-                    hit.transform.gameObject.GetComponent<ExplosiveBarrel>().Damage((int)player.meleeDamage, false, player.photonId);
+                    print($"Melee raycast hit: {hit.transform.name}");
+
+                    if (hit.transform.gameObject.GetComponent<Rigidbody>())
+                    {
+                        print($"Melee pushing: {hit.transform.name}");
+                        hit.transform.gameObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.TransformDirection(Vector3.forward).normalized * 300);
+
+                        GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hit.point, SoundManager.instance.concretePunchHit);
+                        return true;
+                    }
+                    else
+                        GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hit.point, SoundManager.instance.concretePunchHit);
+
+
+                    if (hit.transform.gameObject.GetComponent<ExplosiveBarrel>())
+                    {
+                        hit.transform.gameObject.GetComponent<ExplosiveBarrel>().Damage((int)player.meleeDamage, false, player.photonId);
+                    }
+
+
+                    return true;
                 }
 
 
-                return true;
             }
-
-
-        }
 
 
         return false;
