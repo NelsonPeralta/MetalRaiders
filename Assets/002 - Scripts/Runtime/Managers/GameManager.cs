@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum SprintMode { On, Off }
     public enum HitMarkersMode { On, Off }
     public enum ThirdPersonMode { Off, On }
+    public enum OneObjMode { Off, On }
 
     public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, Kicked, ErrorWhileCreatingRoom }
 
@@ -114,6 +115,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] SprintMode _sprintMode;
     [SerializeField] HitMarkersMode _hitMarkersMode;
     [SerializeField] ThirdPersonMode _thirdPersonMode;
+    [SerializeField] OneObjMode _oneObjMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
     [SerializeField] bool _inARoom;
@@ -273,6 +275,15 @@ public class GameManager : MonoBehaviourPunCallbacks
                 _thirdPersonMode = value;
                 Launcher.instance.thirdPersonModeOptionsHeader.text = $"Third Person Mode: {_thirdPersonMode}";
             }
+        }
+    }
+
+    public OneObjMode oneObjMode
+    {
+        get { return _oneObjMode; }
+        set
+        {
+            _oneObjMode = value;
         }
     }
 
