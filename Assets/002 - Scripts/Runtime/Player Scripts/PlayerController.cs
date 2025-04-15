@@ -1015,12 +1015,12 @@ public class PlayerController : MonoBehaviourPun
                     pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Medium)
                 {
                     _tempFov = 35.98f;
-                    if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 18.45f;
+                    //if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 18.45f;
                 }
                 else if (pInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
                 {
                     _tempFov = 17.14f;
-                    if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 8.62f;
+                    //if (GameManager.instance.nbLocalPlayersPreset % 2 == 0) _tempFov = 8.62f;
 
 
 
