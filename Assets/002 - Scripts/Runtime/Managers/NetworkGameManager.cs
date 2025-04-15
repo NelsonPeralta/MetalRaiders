@@ -97,6 +97,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             ps.Add("sprintmode", GameManager.instance.sprintMode.ToString());
             ps.Add("hmmode", GameManager.instance.hitMarkersMode.ToString());
             ps.Add("tpmode", GameManager.instance.thirdPersonMode.ToString());
+            ps.Add("oobjmode", GameManager.instance.oneObjMode.ToString());
             //ps.Add("teamdict", string.Join(Environment.NewLine, GameManager.instance.teamDict));
             //ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));
             ps.Add("nbLocalPlayersDict", JsonConvert.SerializeObject(CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT));
@@ -118,6 +119,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 try { GameManager.instance.sprintMode = (GameManager.SprintMode)System.Enum.Parse(typeof(GameManager.SprintMode), p["sprintmode"]); } catch (System.Exception e) { Debug.Log(e); }
                 try { GameManager.instance.hitMarkersMode = (GameManager.HitMarkersMode)System.Enum.Parse(typeof(GameManager.HitMarkersMode), p["hmmode"]); } catch (System.Exception e) { Debug.Log(e); }
                 try { GameManager.instance.thirdPersonMode = (GameManager.ThirdPersonMode)System.Enum.Parse(typeof(GameManager.ThirdPersonMode), p["tpmode"]); } catch (System.Exception e) { Debug.Log(e); }
+                try { GameManager.instance.oneObjMode = (GameManager.OneObjMode)System.Enum.Parse(typeof(GameManager.OneObjMode), p["oobjmode"]); } catch (System.Exception e) { Debug.Log(e); }
 
 
                 try
