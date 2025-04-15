@@ -53,7 +53,7 @@ public class WeaponProperties : MonoBehaviour
     public int bulletSpeed = 250;
     public float range;
     public bool isShotgun, overcharge;
-    public float redReticuleMaxRadius;
+    public float redReticuleDefaultRadius, redReticuleScopedRadius;
     public bool targetTracking;
     public float trackingSpeed;
     public Transform trackingTarget;
@@ -76,7 +76,7 @@ public class WeaponProperties : MonoBehaviour
     [Header("Range")]
     public bool fakeRRR;
     public float defaultRedReticuleRange;
-    public float currentRedReticuleRange;
+    public float currentRedReticuleRange; // switches between default and scoped RRR
 
     [Header("Aiming")]
     public AimingMechanic aimingMechanic;
@@ -559,7 +559,7 @@ public class WeaponProperties : MonoBehaviour
 
     void OnControllerTypeChanged(PlayerController playerController)
     {
-        
+
     }
 
     public static Dictionary<string, int> spriteIdDic = new Dictionary<string, int>()
@@ -616,7 +616,9 @@ public class WeaponPropertiesEditor : Editor
         wp.overcharge = GUILayout.Toggle(wp.overcharge, "Overcharge");
 
 
-        wp.redReticuleMaxRadius = EditorGUILayout.FloatField("Red Reticule Max Angle:", wp.redReticuleMaxRadius);
+        wp.redReticuleDefaultRadius = EditorGUILayout.FloatField("Red Reticule Default Angle:", wp.redReticuleDefaultRadius);
+        if (wp.aimingMechanic != WeaponProperties.AimingMechanic.None)
+            wp.redReticuleScopedRadius = EditorGUILayout.FloatField("Red Reticule Scoped Angle:", wp.redReticuleScopedRadius);
 
         wp.targetTracking = GUILayout.Toggle(wp.targetTracking, "Target Tracking");
         if (wp.targetTracking)
