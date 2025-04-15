@@ -35,6 +35,10 @@ public class FlagSpawnPoint : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
+            _flag.scriptRoot.gameObject.SetActive(false);
+
+
         if (GameManager.instance.gameType == GameManager.GameType.CTF)
         {
             _check = 1;
@@ -64,8 +68,8 @@ public class FlagSpawnPoint : MonoBehaviour
 
                 if (_check < 0)
                 {
-                    print($"OddballSpawnPoint {_flag.scriptRoot.transform.parent == null} {_flag.gameObject.activeInHierarchy} " +
-                        $"{Vector3.Distance(transform.position, _flag.rb.transform.position)} {GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.hasEnnemyFlag).Count()}");
+                    //print($"OddballSpawnPoint {_flag.scriptRoot.transform.parent == null} {_flag.gameObject.activeInHierarchy} " +
+                    //    $"{Vector3.Distance(transform.position, _flag.rb.transform.position)} {GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.hasEnnemyFlag).Count()}");
 
                     if (_flag.transform.position.y < -20)
                     {
@@ -76,13 +80,42 @@ public class FlagSpawnPoint : MonoBehaviour
                     else if (_flag.scriptRoot.transform.parent == null && !_flag.gameObject.activeInHierarchy
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.playerInventory.hasEnnemyFlag).Count() == 0)
                     {
-                        _resetFlag++;
-                        print($"flag has disapeared for {_resetFlag} seconds");
 
-                        if (_resetFlag >= 10)
+                        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
                         {
-                            if (PhotonNetwork.IsMasterClient)
-                                NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
+                            _resetFlag++;
+                            print($"flag has disapeared for {_resetFlag} seconds");
+
+                            if (_resetFlag >= 10)
+                            {
+                                if (PhotonNetwork.IsMasterClient)
+                                    NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
+                            }
+                        }
+                        else
+                        {
+                            if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
+                            {
+                                _resetFlag++;
+                                print($"flag has disapeared for {_resetFlag} seconds");
+
+                                if (_resetFlag >= 10)
+                                {
+                                    if (PhotonNetwork.IsMasterClient)
+                                        NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
+                                }
+                            }
+                            else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
+                            {
+                                _resetFlag++;
+                                print($"flag has disapeared for {_resetFlag} seconds");
+
+                                if (_resetFlag >= 10)
+                                {
+                                    if (PhotonNetwork.IsMasterClient)
+                                        NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
+                                }
+                            }
                         }
                     }
                     else if (_flag.scriptRoot.transform.parent == null && _flag.state != Flag.State.atbase && _flag.gameObject.activeInHierarchy && GameManager.instance.GetAllPhotonPlayers().Where(item => item.team != team && item.hasEnnemyFlag).Count() == 0)
@@ -115,9 +148,27 @@ public class FlagSpawnPoint : MonoBehaviour
 
     public void SpawnFlagAtStand()
     {
-        _resetFlag = 0;
-        print("SpawnFlag");
-        StartCoroutine(SpawnFlagAtStand_Coroutine());
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
+        {
+            _resetFlag = 0;
+            print("SpawnFlag");
+            StartCoroutine(SpawnFlagAtStand_Coroutine());
+        }
+        else
+        {
+            if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
+            {
+                _resetFlag = 0;
+                print("SpawnFlag");
+                StartCoroutine(SpawnFlagAtStand_Coroutine());
+            }
+            else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
+            {
+                _resetFlag = 0;
+                print("SpawnFlag");
+                StartCoroutine(SpawnFlagAtStand_Coroutine());
+            }
+        }
     }
 
     IEnumerator SpawnFlagAtStand_Coroutine()

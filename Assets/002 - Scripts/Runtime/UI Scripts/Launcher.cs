@@ -66,7 +66,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text messageText;
     [SerializeField] GameObject commonRoomTexts;
     [SerializeField] GameObject _teamRoomUI;
-    [SerializeField] TMP_Text _sprintModeText, _hitMarkersMode, _thirdPersonModeOptionsHeader;
+    [SerializeField] TMP_Text _sprintModeText, _hitMarkersMode, _thirdPersonModeOptionsHeader, _oneObjModeOptionsHeader;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
@@ -148,6 +148,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public TMP_Text sprintModeText { get { return _sprintModeText; } }
     public TMP_Text hitMarkersModeText { get { return _hitMarkersMode; } }
     public TMP_Text thirdPersonModeOptionsHeader { get { return _thirdPersonModeOptionsHeader; } }
+    public TMP_Text oneObjMode { get { return _oneObjModeOptionsHeader; } }
 
     public GameObject gameModeBtns { get { return _gameModeBtns; } }
     public GameObject teamModeBtns { get { return _teamModeBtns; } }
@@ -1088,6 +1089,23 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ChangeOneObjMode()
+    {
+        if (!CountdownStarted)
+        {
+            if (GameManager.instance.oneObjMode == OneObjMode.On)
+            {
+                GameManager.instance.oneObjMode = OneObjMode.Off;
+            }
+            else
+            {
+                GameManager.instance.oneObjMode = OneObjMode.On;
+            }
+
+            if (PhotonNetwork.IsMasterClient)
+                NetworkGameManager.instance.SendGameParams();
+        }
+    }
 
 
     public void ChangeTeamOfLocalPlayer(int localPlayerInd)

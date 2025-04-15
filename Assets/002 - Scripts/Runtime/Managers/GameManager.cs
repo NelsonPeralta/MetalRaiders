@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum SprintMode { On, Off }
     public enum HitMarkersMode { On, Off }
     public enum ThirdPersonMode { Off, On }
+    public enum OneObjMode { Off, On }
 
     public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, Kicked, ErrorWhileCreatingRoom }
 
@@ -114,6 +115,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] SprintMode _sprintMode;
     [SerializeField] HitMarkersMode _hitMarkersMode;
     [SerializeField] ThirdPersonMode _thirdPersonMode;
+    [SerializeField] OneObjMode _oneObjMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
     [SerializeField] bool _inARoom;
@@ -202,6 +204,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
             Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
+
+            if (value == GameType.CTF)
+                Launcher.instance.oneObjMode.text = $"One Flag: {_oneObjMode}";
         }
     }
 
@@ -276,6 +281,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public OneObjMode oneObjMode
+    {
+        get { return _oneObjMode; }
+
+        set
+        {
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                _oneObjMode = value;
+
+                if (GameManager.instance.gameType == GameType.CTF)
+                    Launcher.instance.oneObjMode.text = $"One Flag: {_oneObjMode}";
+            }
+        }
+    }
+
     public HitMarkersMode hitMarkersMode
     {
         get
@@ -306,13 +327,20 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public int OneObjModeRoundCounter
+    {
+        get { return _oneObjModeRoundCounter; }
+    }
+
+
+
     [Header("Ammo Packs")]
     public Transform grenadeAmmoPack;
     public Transform lightAmmoPack;
     public Transform heavyAmmoPack;
     public Transform powerAmmoPack;
 
-    [SerializeField] int _nbLocalPlayersPreset;
+    [SerializeField] int _nbLocalPlayersPreset, _oneObjModeRoundCounter;
     public int nbLocalPlayersPreset
     {
         get { return _nbLocalPlayersPreset; }
@@ -614,6 +642,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             sprintMode = SprintMode.On;
             thirdPersonMode = ThirdPersonMode.Off;
             hitMarkersMode = HitMarkersMode.On;
+            oneObjMode = OneObjMode.Off;
+            _oneObjModeRoundCounter = 0;
             //difficulty = SwarmManager.Difficulty.Normal;
             _lootableWeapons.Clear();
             hazards.Clear();
