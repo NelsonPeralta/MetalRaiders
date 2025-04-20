@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
 using Steamworks;
 using UnityEngine.UIElements;
+using static UnityEditor.PlayerSettings;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
 {
@@ -497,9 +498,17 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ReserveSpawnPoint(int playerPhotonId, int controllerID, Vector3 pos, bool isRandom)
+    {
+        _pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.MasterClient, playerPhotonId, controllerID, pos, false);
 
+    }
 
-
+    public void ResetOneObjRoundOver()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            _pv.RPC("ResetOneObjRoundOver_RPC", RpcTarget.AllViaServer);
+    }
 
 
 
@@ -867,19 +876,19 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
             if ((GameManager.Team)whichFlagNeedsToBeReset == GameManager.Team.Red)
             {
-                GameManager.instance.redFlag.spawnPoint.SpawnFlagAtStand();
-
                 foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>Red Flag Captured!");
+                if (GameManager.instance.oneObjMode != GameManager.OneObjMode.On) GameManager.instance.redFlag.spawnPoint.SpawnFlagAtStand();
             }
             else
             {
                 foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>Blue Flag Captured!");
-                GameManager.instance.blueFlag.spawnPoint.SpawnFlagAtStand();
+                if (GameManager.instance.oneObjMode != GameManager.OneObjMode.On) GameManager.instance.blueFlag.spawnPoint.SpawnFlagAtStand();
             }
         }
 
 
         MultiplayerManager.instance.AddPlayerPoint(pid);
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On) GameManager.instance.OneObjModeRoundOver = true;
     }
 
     [PunRPC]
@@ -1401,12 +1410,20 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 {
                     Launcher.instance.LeaveRoomButton();
                 }
-                else if(SceneManager.GetActiveScene().buildIndex > 0)
+                else if (SceneManager.GetActiveScene().buildIndex > 0)
                 {
                     GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.Kicked);
                     GameManager.QuitGameButtonPressed();
                 }
             }
         }
+    }
+
+
+
+    [PunRPC]
+    void ResetOneObjRoundOver_RPC()
+    {
+        GameManager.instance.OneObjModeRoundOver = false;
     }
 }

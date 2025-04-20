@@ -31,5 +31,9 @@ public class PlayerGameTime : MonoBehaviour
 
         if (GameManager.instance.gameType == GameManager.GameType.Endless)
             _timer.text = $"{(GameTime.instance.timeElapsed / 60).ToString("00")}:{(GameTime.instance.timeElapsed % 60).ToString("00")}";
+
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
+            _timer.text = $"{(GameTime.instance.roundTimeRemaining / 60).ToString("00")}:{(GameTime.instance.roundTimeRemaining % 60).ToString("00")}";
+
     }
 }

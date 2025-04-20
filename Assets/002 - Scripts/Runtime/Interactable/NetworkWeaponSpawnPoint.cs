@@ -101,7 +101,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
         try
         {
-            if (weaponSpawned && (gameTime.timeElapsed % (weaponSpawned.tts - 0) == 0) && gameTime.timeRemaining > 0)
+            if (weaponSpawned && gameTime.timeElapsed > 0 && (gameTime.timeElapsed % (weaponSpawned.tts - 0) == 0) && gameTime.timeRemaining > 0)
             {
                 //EnableWeapon();
 
@@ -115,7 +115,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         catch (System.Exception e) { Debug.LogWarning(e); }
     }
 
-    void EnableWeapon()
+    public void EnableWeapon()
     {
         if (!CurrentRoomManager.instance.gameOver)
         {
@@ -124,6 +124,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             weaponSpawned.localAmmo = weaponSpawned.defaultAmmo;
             weaponSpawned.spareAmmo = weaponSpawned.defaultSpareAmmo;
             weaponSpawned.gameObject.SetActive(true);
+            weaponSpawned.ttl = weaponSpawned.defaultTtl;
         }
     }
 
@@ -254,9 +255,16 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         if (Vector3.Distance(weaponSpawned.transform.position, transform.position) > 2 || !weaponSpawned.gameObject.activeSelf)
         {
             print("ResetWeaponPosition_Coroutine");
-            weaponSpawned.transform.position = transform.position;
-            weaponSpawned.transform.rotation = transform.rotation;
+            ReturnWeaponToSpawnPosition();
         }
+    }
+
+
+
+    public void ReturnWeaponToSpawnPosition()
+    {
+        weaponSpawned.transform.position = transform.position;
+        weaponSpawned.transform.rotation = transform.rotation;
     }
     #endregion
 

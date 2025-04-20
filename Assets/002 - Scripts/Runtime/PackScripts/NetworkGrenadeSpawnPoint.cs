@@ -15,6 +15,7 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
             _model.SetActive(value); ammoInThisPack = defaultAmmo;
             GetComponent<SphereCollider>().enabled = value;
             UpdateAmmoText();
+            _tts = _defaultTts;
         }
     }
     public Vector3 spawnPoint { get { return _spawnPoint; } }

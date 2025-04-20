@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (_grounded == false && value == true /*&& !_fpsJumpingAnimator.GetCurrentAnimatorStateInfo(0).IsName("jump") && _timeFalling > 1*/)
             {
-                print($"may have landed: {_timeFalling}");
+                //print($"may have landed: {_timeFalling}");
 
                 if (_timeFalling > 0.5f)
                     _fpsJumpingAnimator.Play("land");
@@ -425,8 +425,16 @@ public class PlayerMovement : MonoBehaviour
 
         if (!player.playerController.pauseMenuOpen)
         {
-            MovePlayerUsingInput();
-            MovePlayerUsingInputWhileJumping();
+            if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
+            {
+                MovePlayerUsingInput();
+                MovePlayerUsingInputWhileJumping();
+            }
+            else if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && !GameManager.instance.OneObjModeRoundOver)
+            {
+                MovePlayerUsingInput();
+                MovePlayerUsingInputWhileJumping();
+            }
         }
     }
 

@@ -236,4 +236,15 @@ public class SpawnManager : MonoBehaviour
             if (sp.transform.position == p)
                 sp.reserved = true;
     }
+
+    public void RotateSpawns()
+    {
+        List<SpawnPoint> _tempSplRed = new List<SpawnPoint>(redSpawnPoints);
+        List<SpawnPoint> _tempSplBlue = new List<SpawnPoint>(blueSpawnPoints);
+
+        redSpawnPoints.Clear(); blueSpawnPoints.Clear();
+
+        redSpawnPoints = _tempSplBlue;
+        blueSpawnPoints = _tempSplRed;
+    }
 }

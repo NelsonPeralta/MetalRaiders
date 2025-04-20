@@ -443,7 +443,7 @@ public class Player : Biped
         {
             if (rid > 0)
                 return $"{playerId} ({rid})";
-            return "Player {rid}";
+            return $"Player {rid}";
         }
     }
 
@@ -830,6 +830,11 @@ public class Player : Biped
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
         {
             playerCamera.EnableThirdPersonLayerMask();
+        }
+
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
+        {
+            GameManager.instance.OnOneObjRoundOverLocalEvent += OnOneObjRoundOverLocalEvent;
         }
     }
     private void Update()
@@ -1401,6 +1406,8 @@ public class Player : Biped
         {
             playerCamera.EnableThirdPersonLayerMask();
         }
+
+        playerCamera.RotateCameraToRotation(_reservedSpawnPointTrans.forward);
     }
 
     IEnumerator DisableAndEnableGunCam()
@@ -1493,10 +1500,17 @@ public class Player : Biped
         OnPlayerRespawningInOneSecond.Invoke(this);
         NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId, rid);
     }
-    IEnumerator LateRespawnAction()
+    IEnumerator LateRespawn_Coroutine()
     {
         Debug.Log("LateRespawnAction");
         yield return new WaitForSeconds(RESPAWN_TIME * 0.99f);
+        LateRespawn();
+    }
+
+    void LateRespawn()
+    {
+        print("LateRespawn");
+
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
         hitPoints = maxHitPoints;
@@ -1510,10 +1524,21 @@ public class Player : Biped
 
     IEnumerator Respawn_Coroutine()
     {
-        Debug.Log("Respawn_Coroutine");
+        Debug.Log($"{username} {isMine} Respawn_Coroutine");
         yield return new WaitForSeconds(RESPAWN_TIME);
 
-        if (!CurrentRoomManager.instance.gameOver) Respawn();
+        //if (!CurrentRoomManager.instance.gameOver) Respawn();
+
+
+        if (!CurrentRoomManager.instance.gameOver && PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log($"{username} {isMine} Respawn_Coroutine - TellPlayerToRespawn");
+
+            if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
+                PV.RPC("TellPlayerToRespawn", RpcTarget.AllViaServer);
+            else if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && GameTime.instance.roundTimeRemaining > 1)
+                PV.RPC("TellPlayerToRespawn", RpcTarget.AllViaServer);
+        }
     }
 
     IEnumerator MakeThirdPersonModelVisible()
@@ -1603,7 +1628,7 @@ public class Player : Biped
         StartCoroutine(ShowScoreboardOnDeath_Coroutine());
         StartCoroutine(Respawn_Coroutine());
         StartCoroutine(OneSecondBeforeRespawnCoroutine());
-        StartCoroutine(LateRespawnAction());
+        StartCoroutine(LateRespawn_Coroutine());
         StartCoroutine(OneSecondBeforeRespawnCoroutine());
     }
     void OnPlayerDeath_DelegateLate(Player playerProperties)
@@ -2031,6 +2056,16 @@ public class Player : Biped
 
 
     [PunRPC]
+    void TellPlayerToRespawn()
+    {
+        print("SpawnPlayersForNewRound - TellPlayerToRespawn");
+
+        LateRespawn();
+        Respawn();
+    }
+
+
+    [PunRPC]
     public void PlaySprintingSound_RPC()
     {
         if (playerVoice.isPlaying)
@@ -2221,9 +2256,7 @@ public class Player : Biped
     {
         _reservedSpawnPointTrans = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
         _lastSpawnPointIsRandom = isRandom;
-
-
-        transform.position = _reservedSpawnPointTrans.position + new Vector3(0, 2, 0);
+        //transform.position = _reservedSpawnPointTrans.position + new Vector3(0, 2, 0);
     }
 
 
@@ -2239,6 +2272,16 @@ public class Player : Biped
         //        l[i].targetPlayerController = GameManager.instance.pid_player_Dict.ElementAt(i).Value.playerController;
         //    }
     }
+
+
+    void OnOneObjRoundOverLocalEvent()
+    {
+        print("OnOneObjRoundOverLocalEvent");
+        try { StopAllCoroutines(); } catch { }
+        try { StopAllCoroutines(); } catch { }
+    }
+
+
 
 
     [PunRPC]

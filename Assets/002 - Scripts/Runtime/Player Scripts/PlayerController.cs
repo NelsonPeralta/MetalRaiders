@@ -381,6 +381,8 @@ public class PlayerController : MonoBehaviourPun
             if (!GameManager.instance.gameStarted)
                 return;
 
+            if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && GameManager.instance.OneObjModeRoundOver) return;
+
             if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning)
             {
                 if (!pauseMenuOpen)

@@ -51,9 +51,25 @@ public class GameTime : MonoBehaviourPunCallbacks
         }
     }
 
-    [SerializeField] int _timeRemaining = 0, _timeElapsed, _masterTimeRemaining = 0, _masterTimeElapsed;
+    public int roundTimeRemaining
+    {
+        get
+        {
+            return _roundTimeRemaining;
+        }
+        set
+        {
+            _roundTimeRemaining = value;
+            OnGameTimeElapsedChanged?.Invoke(this);
+
+            if (value == 0) GameManager.instance.OneObjModeRoundOver = true;
+        }
+    }
+
+    [SerializeField] int _timeRemaining = 0, _timeElapsed, _masterTimeRemaining = 0, _masterTimeElapsed, _masterRoundTimeRemaining, _roundTimeRemaining;
     [SerializeField] int minPlayers = 2;
     [SerializeField] int timeOutMultiples = 15;
+    [SerializeField] bool _unlimitedTime;
 
     float secondCountdown = 1f;
     bool waitingTimedOut;
@@ -84,12 +100,20 @@ public class GameTime : MonoBehaviourPunCallbacks
         OnGameTimeRemainingChanged = null;
         timeRemaining = 600;
         _masterTimeRemaining = 600;
+        _masterRoundTimeRemaining = 0; _roundTimeRemaining = 0;
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             timeRemaining = 1800;
             _masterTimeRemaining = 1800;
         }
+
+        if (GameManager.instance.gameType == GameManager.GameType.CTF && GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
+        {
+            _unlimitedTime = true;
+            _masterRoundTimeRemaining = GameManager.ROUND_DEFAULT_TIME;
+        }
+        else _unlimitedTime = false;
 
 
         //// tests
@@ -120,14 +144,26 @@ public class GameTime : MonoBehaviourPunCallbacks
 
         if (secondCountdown < 0)
         {
-            _masterTimeRemaining--; _masterTimeElapsed++;
+            if (!_unlimitedTime) _masterTimeRemaining--;
+            _masterTimeElapsed++;
 
             if (PhotonNetwork.IsMasterClient)
             {
-                try { NetworkGameTime.instance.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.AllViaServer, _masterTimeRemaining, _masterTimeElapsed); } catch { }
+                if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && _masterRoundTimeRemaining > 0 && !GameManager.instance.OneObjModeRoundOver)
+                {
+                    if (_masterRoundTimeRemaining > 0) _masterRoundTimeRemaining--;
+                    try { NetworkGameTime.instance.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.AllViaServer, _masterRoundTimeRemaining, _masterTimeElapsed); } catch { }
+                }
+                else if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
+                    try { NetworkGameTime.instance.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.AllViaServer, _masterTimeRemaining, _masterTimeElapsed); } catch { }
             }
 
             secondCountdown = 1;
         }
+    }
+
+    public void ResetOneObjRoundTime()
+    {
+        _masterRoundTimeRemaining = _roundTimeRemaining = GameManager.ROUND_DEFAULT_TIME;
     }
 }

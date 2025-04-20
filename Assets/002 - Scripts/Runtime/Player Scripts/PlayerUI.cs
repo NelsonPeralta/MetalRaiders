@@ -127,6 +127,7 @@ public class PlayerUI : MonoBehaviour
         GetComponent<Player>().playerInventory.OnActiveWeaponChanged += OnActiveWeaponChanged_Delegate;
         GetComponent<Player>().playerInventory.OnHolsteredWeaponChanged += OnHolsteredWeaponChanged_Delegate;
         GetComponent<Player>().OnPlayerRespawningInOneSecond += OnPlayerRespawningInOneSecond;
+        GetComponent<Player>().OnPlayerRespawned += OnPlayerRespawn;
 
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
@@ -232,6 +233,12 @@ public class PlayerUI : MonoBehaviour
 #if UNITY_EDITOR
         _editorText.gameObject.SetActive(true);
 #endif
+
+
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
+        {
+            GameManager.instance.OnOneObjRoundOverLocalEvent += OnOneObjRoundOverLocalEvent;
+        }
     }
 
 
@@ -758,5 +765,50 @@ public class PlayerUI : MonoBehaviour
         {
             _blackscreenSplitScreen.Play("play");
         }
+    }
+
+    void OnPlayerRespawn(Player p)
+    {
+        try
+        {
+            _blackscreenDefault.Play("hide");
+            _blackscreenSplitScreen.Play("hide");
+        }
+        catch { }
+    }
+
+    void OnOneObjRoundOverLocalEvent()
+    {
+        print("OnOneObjRoundOverLocalEvent");
+
+        if (GameManager.instance.nbLocalPlayersPreset == 1 || GameManager.instance.nbLocalPlayersPreset == 4)
+            _blackscreenDefault.Play("play");
+        else if (GameManager.instance.nbLocalPlayersPreset == 3)
+        {
+            if (_player.playerController.rid == 0)
+                _blackscreenSplitScreen.Play("play");
+            else
+                _blackscreenDefault.Play("play");
+        }
+        else
+        {
+            _blackscreenSplitScreen.Play("play");
+        }
+
+
+        scoreboard.OpenScoreboard();
+        StartCoroutine(OnOneObjRoundOverLocalEvent_Coroutine());
+    }
+
+    IEnumerator OnOneObjRoundOverLocalEvent_Coroutine()
+    {
+        yield return new WaitForSeconds(GameManager.DELAY_BEFORE_NEXT_ROUND);
+        try
+        {
+            _blackscreenDefault.Play("hide");
+            _blackscreenSplitScreen.Play("hide");
+        }
+        catch { }
+        scoreboard.CloseScoreboard();
     }
 }

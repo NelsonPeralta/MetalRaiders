@@ -33,10 +33,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static string ROOT_PLAYER_NAME;
     public static int DEFAULT_EXPLOSION_POWER = 300;
     public static int DEFAULT_FRAMERATE = 65;
+    public static int DELAY_BEFORE_NEXT_ROUND = 4;
+    public static int ROUND_DEFAULT_TIME = 180;
 
     // Events
     public delegate void GameManagerEvent();
-    public GameManagerEvent OnGameManagerFinishedLoadingScene_Late, OnCameraSensitivityChanged;
+    public GameManagerEvent OnGameManagerFinishedLoadingScene_Late, OnCameraSensitivityChanged, OnOneObjRoundOverLocalEvent, OnOneObjRoundReset;
     // Enums
     public enum Team { None, Red, Blue, Alien }
     public enum Connection { Unassigned, Local, Online }
@@ -332,6 +334,46 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _oneObjModeRoundCounter; }
     }
 
+    public bool OneObjModeRoundOver
+    {
+        get { return _oneObjModeRoundOver; }
+        set
+        {
+            //if (PhotonNetwork.IsMasterClient)
+            _oneObjModeRoundOver = value;
+            print($"OnOneObjRoundOverLocalEvent {_oneObjModeRoundOver}");
+            if (value)
+            {
+                OnOneObjRoundOverLocalEvent?.Invoke();
+                SpawnManager.spawnManagerInstance.RotateSpawns();
+
+                if (PhotonNetwork.IsMasterClient)
+                {
+
+
+
+
+                    foreach (Player p in _allPlayers)
+                    {
+                        Vector3 nsp = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team).position;
+                        print($"{SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team)}");
+                        NetworkGameManager.instance.ReserveSpawnPoint(p.photonId, p.controllerId, nsp, false);
+                    }
+
+                    StartCoroutine(SpawnPlayersForNewRound());
+                }
+            }
+            else
+            {
+                if (SceneManager.GetActiveScene().buildIndex > 0)
+                {
+                    GameTime.instance.ResetOneObjRoundTime();
+
+                    StartCoroutine(ResetMapHazards());
+                }
+            }
+        }
+    }
 
 
     [Header("Ammo Packs")]
@@ -341,6 +383,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform powerAmmoPack;
 
     [SerializeField] int _nbLocalPlayersPreset, _oneObjModeRoundCounter;
+    [SerializeField] bool _oneObjModeRoundOver;
     public int nbLocalPlayersPreset
     {
         get { return _nbLocalPlayersPreset; }
@@ -644,6 +687,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             hitMarkersMode = HitMarkersMode.On;
             oneObjMode = OneObjMode.Off;
             _oneObjModeRoundCounter = 0;
+            _oneObjModeRoundOver = false;
             //difficulty = SwarmManager.Difficulty.Normal;
             _lootableWeapons.Clear();
             hazards.Clear();
@@ -1523,6 +1567,50 @@ public class GameManager : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMainMenu();
         MenuManager.Instance.OpenErrorMenu("A player could not load level");
         //Debug.Break();
+    }
+
+
+    IEnumerator ResetMapHazards()
+    {
+        print("ResetMapHazards 1");
+        yield return new WaitForSeconds(DELAY_BEFORE_NEXT_ROUND - 1);
+        print("ResetMapHazards 2");
+
+
+        foreach (NetworkWeaponSpawnPoint nws in FindObjectsOfType<NetworkWeaponSpawnPoint>())
+        {
+            nws.ReturnWeaponToSpawnPosition();
+            nws.EnableWeapon();
+        }
+
+
+        foreach (NetworkGrenadeSpawnPoint n in _networkGrenadeSpawnPoints)
+            n.enable = true;
+
+        foreach (Hazard h in hazards)
+        {
+            h.ResetHitPoints();
+            h.gameObject.SetActive(true);
+            h.hazardSpawnPoint.destroyedHazard.gameObject.SetActive(false);
+        }
+    }
+
+    IEnumerator SpawnPlayersForNewRound()
+    {
+        print("SpawnPlayersForNewRound 1");
+
+
+
+        yield return new WaitForSeconds(DELAY_BEFORE_NEXT_ROUND);
+
+
+        print("SpawnPlayersForNewRound 2");
+        foreach (Player p in _allPlayers)
+        {
+            p.PV.RPC("TellPlayerToRespawn", RpcTarget.AllViaServer);
+        }
+
+        NetworkGameManager.instance.ResetOneObjRoundOver();
     }
 
 

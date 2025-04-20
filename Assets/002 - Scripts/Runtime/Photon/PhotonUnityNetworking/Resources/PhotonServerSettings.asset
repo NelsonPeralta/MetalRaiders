@@ -225,6 +225,8 @@ MonoBehaviour:
   - SpawnOddball_RPC
   - CancelStartGameButton
   - KickPlayerWithDatabaseId
+  - TellPlayerToRespawn
+  - ResetOneObjRoundOver_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

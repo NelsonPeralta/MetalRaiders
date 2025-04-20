@@ -84,7 +84,7 @@ public class FlagSpawnPoint : MonoBehaviour
                         if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
                         {
                             _resetFlag++;
-                            print($"flag has disapeared for {_resetFlag} seconds");
+                            print($"flag has disapeared for {_resetFlag} half seconds");
 
                             if (_resetFlag >= 10)
                             {
@@ -94,26 +94,31 @@ public class FlagSpawnPoint : MonoBehaviour
                         }
                         else
                         {
-                            if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
+                            if (!GameManager.instance.OneObjModeRoundOver)
                             {
-                                _resetFlag++;
-                                print($"flag has disapeared for {_resetFlag} seconds");
-
-                                if (_resetFlag >= 10)
+                                //if (team == GameManager.Team.Red && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
+                                if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
                                 {
-                                    if (PhotonNetwork.IsMasterClient)
-                                        NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
+                                    _resetFlag++;
+                                    print($"flag has disapeared for {_resetFlag} half seconds");
+
+                                    if (_resetFlag >= 10)
+                                    {
+                                        if (PhotonNetwork.IsMasterClient)
+                                            NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
+                                    }
                                 }
-                            }
-                            else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
-                            {
-                                _resetFlag++;
-                                print($"flag has disapeared for {_resetFlag} seconds");
-
-                                if (_resetFlag >= 10)
+                                //else if (team == GameManager.Team.Blue && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
+                                else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
                                 {
-                                    if (PhotonNetwork.IsMasterClient)
-                                        NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
+                                    _resetFlag++;
+                                    print($"flag has disapeared for {_resetFlag} halfseconds");
+
+                                    if (_resetFlag >= 10)
+                                    {
+                                        if (PhotonNetwork.IsMasterClient)
+                                            NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
+                                    }
                                 }
                             }
                         }
@@ -127,7 +132,7 @@ public class FlagSpawnPoint : MonoBehaviour
 
 
 
-                        print($"flag has disapeared for {_resetFlag} seconds");
+                        print($"flag has disapeared for {_resetFlag} half seconds");
 
                         if (_resetFlag >= 30)
                         {
@@ -156,12 +161,14 @@ public class FlagSpawnPoint : MonoBehaviour
         }
         else
         {
+            //if (team == GameManager.Team.Red && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
             if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
             {
                 _resetFlag = 0;
                 print("SpawnFlag");
                 StartCoroutine(SpawnFlagAtStand_Coroutine());
             }
+            //else if (team == GameManager.Team.Blue && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
             else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
             {
                 _resetFlag = 0;
@@ -173,6 +180,7 @@ public class FlagSpawnPoint : MonoBehaviour
 
     IEnumerator SpawnFlagAtStand_Coroutine()
     {
+        print("SpawnFlagAtStand_Coroutine 1");
         _flag.ChangeState(Flag.State.atbase);
         _flag.scriptRoot.gameObject.SetActive(false);
         _flag.rb.velocity = Vector3.zero;
@@ -184,7 +192,7 @@ public class FlagSpawnPoint : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        print("SpawnFlag_Coroutine");
+        print("SpawnFlagAtStand_Coroutine 2");
         _flag.scriptRoot.gameObject.SetActive(true);
     }
 }
