@@ -15,10 +15,6 @@ public class PlayerUI : MonoBehaviour
     public GameTime onlineGameTimeInstance;
     public PhotonView PV;
 
-    [Header("Cameras", order = 0)]
-    public Camera mainCamera;
-    public Camera gunCamera;
-    public Camera uiCamera;
 
     [Header("Top Left", order = 1)]
     public Transform topLeft;

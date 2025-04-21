@@ -19,23 +19,18 @@ public class PlayerGunGameManager : MonoBehaviour
                 _index = value;
                 print($"index: {value} {playerInventory.player.name}");
 
-                WeaponProperties _preActiveWeapon = playerInventory.activeWeapon;
 
-                playerInventory.activeWeapon = _gunIndex[_index];
-                playerInventory.activeWeapon.loadedAmmo = playerInventory.activeWeapon.ammoCapacity;
-                playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxSpareAmmo;
+                WeaponProperties _preActiveWeapon = playerInventory.activeWeapon;
+                if (playerInventory.player.isMine)
+                {
+                    playerInventory.activeWeapon = _gunIndex[_index];
+                    playerInventory.activeWeapon.loadedAmmo = playerInventory.activeWeapon.ammoCapacity;
+                    playerInventory.activeWeapon.spareAmmo = playerInventory.activeWeapon.maxSpareAmmo;
+                }
 
                 playerInventory.player.GetComponent<PlayerMultiplayerMatchStats>().score = index;
-                //playerInventory.player.playerDataCell.playerCurrentGameScore.score = index;
 
-
-
-                //playerInventory.holsteredWeapon = playerInventory.weaponCodeNameDict["nailgun"];
-                //playerInventory.holsteredWeapon.currentAmmo = playerInventory.activeWeapon.ammoCapacity;
-                //playerInventory.holsteredWeapon.spareAmmo = playerInventory.activeWeapon.maxAmmo;
-
-                _preActiveWeapon.gameObject.SetActive(false);
-                //playerInventory.holsteredWeapon = 
+                if (playerInventory.player.isMine) _preActiveWeapon.gameObject.SetActive(false);
             }
         }
     }

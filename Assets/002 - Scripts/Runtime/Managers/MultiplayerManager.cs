@@ -236,25 +236,25 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
 
                 if (GameManager.instance.gameType == GameManager.GameType.GunGame)
-                    if (winningPlayerMS.player == GameManager.GetLocalPlayer(winningPlayerMS.player.rid))
+                //if (winningPlayerMS.player == GameManager.GetLocalPlayer(winningPlayerMS.player.rid))
+                {
+                    if (struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Melee && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Frag_Grenade
+                        && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Plasma_Grenade
+                        && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Stuck
+                        && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Barrel
+                        && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Assasination)
                     {
-                        if (struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Melee && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Frag_Grenade
-                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Plasma_Grenade
-                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Stuck
-                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Barrel
-                            && struc.cleanDamageSource != WeaponProperties.KillFeedOutput.Assasination)
-                        {
-                            winningPlayerMS.score++;
-                            winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
-                        }
-
-                        Debug.Log(struc.cleanDamageSource);
-                        if (struc.cleanDamageSource == WeaponProperties.KillFeedOutput.Plasma_Pistol)
-                        {
-                            winningPlayerMS.score++;
-                            NetworkGameManager.instance.EndGame();
-                        }
+                        winningPlayerMS.score++;
+                        winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
                     }
+
+                    Debug.Log(struc.cleanDamageSource);
+                    if (struc.cleanDamageSource == WeaponProperties.KillFeedOutput.Plasma_Pistol)
+                    {
+                        winningPlayerMS.score++;
+                        if (PhotonNetwork.IsMasterClient) NetworkGameManager.instance.EndGame();
+                    }
+                }
             }
             else // Suicide
             {
