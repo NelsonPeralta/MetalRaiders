@@ -2279,7 +2279,8 @@ public class Player : Biped
 
     void OnOneObjRoundOverLocalEvent()
     {
-        print("OnOneObjRoundOverLocalEvent");
+        print("oneobjmode - OnOneObjRoundOverLocalEvent");
+
         try { StopAllCoroutines(); } catch { }
         try { StopAllCoroutines(); } catch { }
     }

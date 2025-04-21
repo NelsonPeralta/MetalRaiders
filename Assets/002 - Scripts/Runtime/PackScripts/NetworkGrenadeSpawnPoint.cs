@@ -12,10 +12,12 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
     {
         set
         {
-            _model.SetActive(value); ammoInThisPack = defaultAmmo;
-            GetComponent<SphereCollider>().enabled = value;
+            print($"oneobjmode - NetworkGrenadeSpawnPoint {value}");
+            ammoInThisPack = defaultAmmo;
             UpdateAmmoText();
-            _tts = _defaultTts;
+            if (value) _tts = _defaultTts;
+            _model.SetActive(value);
+            GetComponent<SphereCollider>().enabled = value;
         }
     }
     public Vector3 spawnPoint { get { return _spawnPoint; } }
@@ -89,7 +91,17 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
 
 
         if (CurrentRoomManager.instance.gameStarted)
-            _tts -= Time.deltaTime;
+        {
+            if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
+                _tts -= Time.deltaTime;
+            else
+            {
+                if (!GameManager.instance.OneObjModeRoundOver && GameTime.instance.roundTimeRemaining > 0)
+                {
+                    _tts -= Time.deltaTime;
+                }
+            }
+        }
 
         if (_tts < 0)
         {

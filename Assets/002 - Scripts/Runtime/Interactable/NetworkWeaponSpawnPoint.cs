@@ -93,22 +93,35 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void OnGameTimeChanged(GameTime gameTime)
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
-        {
-            //EnableWeapon();
-            return;
-        }
+        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) return;
 
         try
         {
-            if (weaponSpawned && gameTime.timeElapsed > 0 && (gameTime.timeElapsed % (weaponSpawned.tts - 0) == 0) && gameTime.timeRemaining > 0)
-            {
-                //EnableWeapon();
 
-                if (!CurrentRoomManager.instance.gameOver)
+            if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
+            {
+                if (weaponSpawned && gameTime.timeElapsed > 0 && (gameTime.timeElapsed % (weaponSpawned.tts - 0) == 0) && gameTime.timeRemaining > 0)
                 {
-                    ResetWeaponPositionIfTooFar();
-                    StartCoroutine(EnableWeapon_Coroutine());
+                    //EnableWeapon();
+
+                    if (!CurrentRoomManager.instance.gameOver)
+                    {
+                        ResetWeaponPositionIfTooFar();
+                        StartCoroutine(EnableWeapon_Coroutine());
+                    }
+                }
+            }
+            else
+            {
+                if (weaponSpawned && gameTime.timeElapsed > 0 && (gameTime.timeElapsed % (weaponSpawned.tts - 0) == 0) && gameTime.timeRemaining > 0)
+                {
+                    //EnableWeapon();
+
+                    if (!CurrentRoomManager.instance.gameOver)
+                    {
+                        ResetWeaponPositionIfTooFar();
+                        StartCoroutine(EnableWeapon_Coroutine());
+                    }
                 }
             }
         }
@@ -154,7 +167,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             weaponSpawned = lw;
             _tts = lw.tts;
 
-            CurrentRoomManager.instance.AddSpawnedMappAddOn(null);
+            CurrentRoomManager.instance.AddSpawnedMappAddOn(transform);
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
     }

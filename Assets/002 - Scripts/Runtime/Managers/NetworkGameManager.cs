@@ -507,7 +507,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     public void ResetOneObjRoundOver()
     {
         if (PhotonNetwork.IsMasterClient)
+        {
+            print($"oneobjmode - ResetOneObjRoundOver");
             _pv.RPC("ResetOneObjRoundOver_RPC", RpcTarget.AllViaServer);
+        }
     }
 
 
@@ -888,7 +891,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
         MultiplayerManager.instance.AddPlayerPoint(pid);
-        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On) GameManager.instance.OneObjModeRoundOver = true;
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
+        {
+            print("oneobjmode - AddPlayerPoint_RPC");
+            GameManager.instance.OneObjModeRoundOver = true;
+            GameManager.instance.OneObjModeRoundCounter++;
+        }
     }
 
     [PunRPC]
@@ -1424,6 +1432,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void ResetOneObjRoundOver_RPC()
     {
+        print($"oneobjmode - ResetOneObjRoundOver_RPC");
         GameManager.instance.OneObjModeRoundOver = false;
     }
 }

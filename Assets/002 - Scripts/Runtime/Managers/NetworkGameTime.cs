@@ -30,12 +30,11 @@ public class NetworkGameTime : MonoBehaviour
     [PunRPC]
     public void UpdateTime_RPC(int newTotalTime, int timeElap)
     {
-
-        if (GameManager.instance.gameType == GameManager.GameType.CTF && GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
         {
             try
             {
-                GameTime.instance.roundTimeRemaining = newTotalTime;
+                GameTime.instance.timeRemaining = newTotalTime;
                 GameTime.instance.timeElapsed = timeElap;
             }
             catch { }
@@ -44,8 +43,8 @@ public class NetworkGameTime : MonoBehaviour
         {
             try
             {
-                GameTime.instance.timeRemaining = newTotalTime;
-                GameTime.instance.timeElapsed = timeElap;
+                GameTime.instance.roundTimeRemaining = newTotalTime;
+                GameTime.instance.roundTimeElapsed = timeElap;
             }
             catch { }
         }

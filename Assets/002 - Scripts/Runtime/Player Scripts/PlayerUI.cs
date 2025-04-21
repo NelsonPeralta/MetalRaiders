@@ -775,30 +775,36 @@ public class PlayerUI : MonoBehaviour
 
     void OnOneObjRoundOverLocalEvent()
     {
-        print("OnOneObjRoundOverLocalEvent");
+        print($"oneobjmode - OnOneObjRoundOverLocalEvent blackscreen PLAY");
 
-        if (GameManager.instance.nbLocalPlayersPreset == 1 || GameManager.instance.nbLocalPlayersPreset == 4)
-            _blackscreenDefault.Play("play");
-        else if (GameManager.instance.nbLocalPlayersPreset == 3)
+
+        if (GameManager.instance.OneObjModeRoundCounter < GameManager.MAX_NB_OF_ROUNDS)
         {
-            if (_player.playerController.rid == 0)
-                _blackscreenSplitScreen.Play("play");
-            else
+
+            if (GameManager.instance.nbLocalPlayersPreset == 1 || GameManager.instance.nbLocalPlayersPreset == 4)
                 _blackscreenDefault.Play("play");
+            else if (GameManager.instance.nbLocalPlayersPreset == 3)
+            {
+                if (_player.playerController.rid == 0)
+                    _blackscreenSplitScreen.Play("play");
+                else
+                    _blackscreenDefault.Play("play");
+            }
+            else
+            {
+                _blackscreenSplitScreen.Play("play");
+            }
+            scoreboard.OpenScoreboard();
+            StartCoroutine(OnOneObjRoundOverLocalEvent_Coroutine());
         }
-        else
-        {
-            _blackscreenSplitScreen.Play("play");
-        }
-
-
-        scoreboard.OpenScoreboard();
-        StartCoroutine(OnOneObjRoundOverLocalEvent_Coroutine());
     }
 
     IEnumerator OnOneObjRoundOverLocalEvent_Coroutine()
     {
+        print($"oneobjmode - OnOneObjRoundOverLocalEvent_Coroutine");
+
         yield return new WaitForSeconds(GameManager.DELAY_BEFORE_NEXT_ROUND);
+        print($"oneobjmode - OnOneObjRoundOverLocalEvent_Coroutine HIDE");
         try
         {
             _blackscreenDefault.Play("hide");

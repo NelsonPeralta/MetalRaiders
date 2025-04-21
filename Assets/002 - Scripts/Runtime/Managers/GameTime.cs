@@ -16,7 +16,11 @@ public class GameTime : MonoBehaviourPunCallbacks
 
     public int timeRemaining
     {
-        get { return _timeRemaining; }
+        get
+        {
+            if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On) return _roundTimeRemaining;
+            return _timeRemaining;
+        }
         set
         {
             if (_timeRemaining != value && value >= 0)
@@ -40,7 +44,11 @@ public class GameTime : MonoBehaviourPunCallbacks
 
     public int timeElapsed
     {
-        get { return _timeElapsed; }
+        get
+        {
+            if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On) return _roundTimeElapsed;
+            return _timeElapsed;
+        }
         set
         {
             if (_timeElapsed != value)
@@ -66,7 +74,20 @@ public class GameTime : MonoBehaviourPunCallbacks
         }
     }
 
-    [SerializeField] int _timeRemaining = 0, _timeElapsed, _masterTimeRemaining = 0, _masterTimeElapsed, _masterRoundTimeRemaining, _roundTimeRemaining;
+    public int roundTimeElapsed
+    {
+        get { return _roundTimeElapsed; }
+        set
+        {
+            if (_roundTimeElapsed != value)
+            {
+                _roundTimeElapsed = value;
+                OnGameTimeElapsedChanged?.Invoke(this);
+            }
+        }
+    }
+
+    [SerializeField] int _timeRemaining = 0, _timeElapsed, _masterTimeRemaining = 0, _masterTimeElapsed, _roundTimeRemaining, _roundTimeElapsed, _masterRoundTimeRemaining, _masterRoundTimeElapsed;
     [SerializeField] int minPlayers = 2;
     [SerializeField] int timeOutMultiples = 15;
     [SerializeField] bool _unlimitedTime;
@@ -126,8 +147,8 @@ public class GameTime : MonoBehaviourPunCallbacks
 
         //timeRemaining = 10; _masterTimeRemaining = 10;
 
-        _timeElapsed = 0;
-        _masterTimeElapsed = 0;
+        _timeElapsed = _roundTimeElapsed = 0;
+        _masterTimeElapsed = _masterRoundTimeElapsed = 0;
         secondCountdown = 1;
     }
 
@@ -140,19 +161,26 @@ public class GameTime : MonoBehaviourPunCallbacks
     {
         if (GameManager.sceneIndex <= 0 || !CurrentRoomManager.instance.gameStarted) return;
         if (_masterTimeRemaining <= 0) return;
+        if (GameManager.instance.oneObjMode != GameManager.OneObjMode.On && _masterRoundTimeRemaining <= 0) return;
+
+
+
+
         secondCountdown -= Time.deltaTime;
 
         if (secondCountdown < 0)
         {
             if (!_unlimitedTime) _masterTimeRemaining--;
-            _masterTimeElapsed++;
+            if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On) _masterRoundTimeElapsed++; else _masterTimeElapsed++;
+
+
 
             if (PhotonNetwork.IsMasterClient)
             {
-                if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && _masterRoundTimeRemaining > 0 && !GameManager.instance.OneObjModeRoundOver)
+                if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && !GameManager.instance.OneObjModeRoundOver)
                 {
                     if (_masterRoundTimeRemaining > 0) _masterRoundTimeRemaining--;
-                    try { NetworkGameTime.instance.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.AllViaServer, _masterRoundTimeRemaining, _masterTimeElapsed); } catch { }
+                    try { NetworkGameTime.instance.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.AllViaServer, _masterRoundTimeRemaining, _masterRoundTimeElapsed); } catch { }
                 }
                 else if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
                     try { NetworkGameTime.instance.GetComponent<PhotonView>().RPC("UpdateTime_RPC", RpcTarget.AllViaServer, _masterTimeRemaining, _masterTimeElapsed); } catch { }

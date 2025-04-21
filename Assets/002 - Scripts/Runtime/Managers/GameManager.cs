@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static int DEFAULT_FRAMERATE = 65;
     public static int DELAY_BEFORE_NEXT_ROUND = 4;
     public static int ROUND_DEFAULT_TIME = 180;
+    public static int MAX_NB_OF_ROUNDS = 3;
 
     // Events
     public delegate void GameManagerEvent();
@@ -332,6 +333,31 @@ public class GameManager : MonoBehaviourPunCallbacks
     public int OneObjModeRoundCounter
     {
         get { return _oneObjModeRoundCounter; }
+
+        set
+        {
+            int _pre = _oneObjModeRoundCounter;
+            _oneObjModeRoundCounter = Mathf.Clamp(value, 0, 3);
+
+            if (_pre != value && _oneObjModeRoundCounter <= MAX_NB_OF_ROUNDS)
+            {
+                print($"oneobjmode - OneObjModeRoundCounter {value}");
+                SpawnManager.spawnManagerInstance.RotateSpawns();
+
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    foreach (Player p in _allPlayers)
+                    {
+                        Vector3 nsp = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team).position;
+                        print($"{SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team)}");
+                        NetworkGameManager.instance.ReserveSpawnPoint(p.photonId, p.controllerId, nsp, false);
+                    }
+
+                    StartCoroutine(ResetMapAddOns());
+                    StartCoroutine(SpawnPlayersForNewRoundAndResetRound_Coroutine());
+                }
+            }
+        }
     }
 
     public bool OneObjModeRoundOver
@@ -340,36 +366,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             //if (PhotonNetwork.IsMasterClient)
-            _oneObjModeRoundOver = value;
-            print($"OnOneObjRoundOverLocalEvent {_oneObjModeRoundOver}");
+            print($"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
+
             if (value)
             {
+                _oneObjModeRoundOver = value;
                 OnOneObjRoundOverLocalEvent?.Invoke();
-                SpawnManager.spawnManagerInstance.RotateSpawns();
-
-                if (PhotonNetwork.IsMasterClient)
-                {
-
-
-
-
-                    foreach (Player p in _allPlayers)
-                    {
-                        Vector3 nsp = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team).position;
-                        print($"{SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team)}");
-                        NetworkGameManager.instance.ReserveSpawnPoint(p.photonId, p.controllerId, nsp, false);
-                    }
-
-                    StartCoroutine(SpawnPlayersForNewRound());
-                }
             }
             else
             {
-                if (SceneManager.GetActiveScene().buildIndex > 0)
+                if (SceneManager.GetActiveScene().buildIndex > 0 && _oneObjModeRoundCounter < 4)
                 {
+                    print($"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
                     GameTime.instance.ResetOneObjRoundTime();
-
-                    StartCoroutine(ResetMapHazards());
                 }
             }
         }
@@ -688,6 +697,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             oneObjMode = OneObjMode.Off;
             _oneObjModeRoundCounter = 0;
             _oneObjModeRoundOver = false;
+            OnOneObjRoundOverLocalEvent = null; // this will prevent exceptions caused by listeners when unloading a scene
             //difficulty = SwarmManager.Difficulty.Normal;
             _lootableWeapons.Clear();
             hazards.Clear();
@@ -1570,41 +1580,37 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    IEnumerator ResetMapHazards()
+    IEnumerator ResetMapAddOns()
     {
-        print("ResetMapHazards 1");
+        print($"oneobjmode - ResetMapHazards 1");
         yield return new WaitForSeconds(DELAY_BEFORE_NEXT_ROUND - 1);
-        print("ResetMapHazards 2");
+        print($"oneobjmode - ResetMapHazards 2");
 
 
-        foreach (NetworkWeaponSpawnPoint nws in FindObjectsOfType<NetworkWeaponSpawnPoint>())
+        foreach (Transform n in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<NetworkWeaponSpawnPoint>()))
         {
-            nws.ReturnWeaponToSpawnPosition();
-            nws.EnableWeapon();
+            n.GetComponent<NetworkWeaponSpawnPoint>().ReturnWeaponToSpawnPosition();
+            n.GetComponent<NetworkWeaponSpawnPoint>().EnableWeapon();
         }
 
+        foreach (Transform n in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<NetworkGrenadeSpawnPoint>()))
+            n.GetComponent<NetworkGrenadeSpawnPoint>().enable = true;
 
-        foreach (NetworkGrenadeSpawnPoint n in _networkGrenadeSpawnPoints)
-            n.enable = true;
+        foreach (Transform n in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<IceChunk>()))
+            n.GetComponent<IceChunk>().hazardSpawnPoint.ResetIceChunk();
 
-        foreach (Hazard h in hazards)
-        {
-            h.ResetHitPoints();
-            h.gameObject.SetActive(true);
-            h.hazardSpawnPoint.destroyedHazard.gameObject.SetActive(false);
-        }
+
+        foreach (Transform n in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<ExplosiveBarrel>()))
+            n.transform.root.GetComponent<ExplosiveBarrelSpawnPoint>().ResetBarrel();
     }
 
-    IEnumerator SpawnPlayersForNewRound()
+    IEnumerator SpawnPlayersForNewRoundAndResetRound_Coroutine()
     {
-        print("SpawnPlayersForNewRound 1");
-
-
+        print($"oneobjmode - SpawnPlayersForNewRoundAndResetRound_Coroutine 1");
 
         yield return new WaitForSeconds(DELAY_BEFORE_NEXT_ROUND);
 
-
-        print("SpawnPlayersForNewRound 2");
+        print($"oneobjmode - SpawnPlayersForNewRoundAndResetRound_Coroutine 2");
         foreach (Player p in _allPlayers)
         {
             p.PV.RPC("TellPlayerToRespawn", RpcTarget.AllViaServer);

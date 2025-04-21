@@ -239,6 +239,8 @@ public class SpawnManager : MonoBehaviour
 
     public void RotateSpawns()
     {
+        print($"oneobjmode - RotateSpawns");
+
         List<SpawnPoint> _tempSplRed = new List<SpawnPoint>(redSpawnPoints);
         List<SpawnPoint> _tempSplBlue = new List<SpawnPoint>(blueSpawnPoints);
 

@@ -43,6 +43,8 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
         barrel.UpdateLastPlayerWhoDamaged(-999);
         placeHolder.SetActive(false);
+
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On) GameManager.instance.OnOneObjRoundOverLocalEvent += OnOneObjRoundOverLocalEvent;
     }
 
     private void Update()
@@ -71,15 +73,20 @@ public class ExplosiveBarrelSpawnPoint : Hazard
             if (gameTime.timeRemaining % tts == 0 && gameTime.timeRemaining > 0)
             {
                 Debug.Log("ExplosiveBarrelSpawnPoint OnGameTimeChanged");
-                explosion.gameObject.SetActive(false);
-
-                barrel.UpdateLastPlayerWhoDamaged(-999);
-                barrel.transform.position = barrel.spawnPointPosition;
-                barrel.transform.rotation = barrel.spawnPointRotation;
-                barrel.GetComponent<Rigidbody>().velocity = Vector3.zero; barrel.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-
-                barrel.gameObject.SetActive(true);
+               ResetBarrel();
             }
+    }
+
+    public void ResetBarrel()
+    {
+        explosion.gameObject.SetActive(false);
+
+        barrel.UpdateLastPlayerWhoDamaged(-999);
+        barrel.transform.position = barrel.spawnPointPosition;
+        barrel.transform.rotation = barrel.spawnPointRotation;
+        barrel.GetComponent<Rigidbody>().velocity = Vector3.zero; barrel.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+        barrel.gameObject.SetActive(true);
     }
 
     public void TriggerExplosionCoroutine()
@@ -93,19 +100,14 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
     IEnumerator BarrelExplosion_Coroutine()
     {
-        //explosion.transform.position = barrel.transform.position + new Vector3(0, 1, 0);
-        //explosion.GetComponent<Explosion>().damageSource = "Barrel";
-        //explosion.GetComponent<Explosion>().player = GameManager.GetPlayerWithPhotonViewId(barrel.lastPid);
-
-
-        //yield return new WaitForSeconds(0.1f);
-
-
-        //explosion.SetActive(true);
-
         print($"BarrelExplosion_Coroutine {barrel.lastPid}");
         yield return new WaitForSeconds(0.05f);
         GrenadePool.SpawnExplosion(GameManager.GetPlayerWithPhotonView(barrel.lastPid), damage: 500, radius: 6, expPower: GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Barrel",
             barrel.transform.position + new Vector3(0, 1, 0), Explosion.Color.Yellow, Explosion.Type.Barrel, GrenadePool.instance.barrelClip, WeaponProperties.KillFeedOutput.Barrel);
+    }
+
+    void OnOneObjRoundOverLocalEvent()
+    {
+        StopAllCoroutines();
     }
 }
