@@ -179,7 +179,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 if (objectsHit.Count > 0)
                 {
                     CheckForFinalHit();
-                    print($"bullet hit and despawned at: {Time.time}");
+                    print($"bullet time test. Despawned at: {Time.time}");
 
                     gameObject.SetActive(false);
                 }

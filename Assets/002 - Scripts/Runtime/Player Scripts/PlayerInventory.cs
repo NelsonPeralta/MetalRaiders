@@ -974,7 +974,7 @@ public class PlayerInventory : MonoBehaviourPun
         StartingWeapon = allWeaponsInInventory[ind].GetComponent<WeaponProperties>().codeName;
 
         int ind2 = ind;
-        while (ind2 == ind) { ind2 = random.Next(allWeaponsInInventory.Length); }
+        while (ind2 == ind || allWeaponsInInventory[ind2].GetComponent<WeaponProperties>().killFeedOutput == WeaponProperties.KillFeedOutput.Minigun) { ind2 = random.Next(allWeaponsInInventory.Length); }
 
         StartingWeapon2 = allWeaponsInInventory[ind2].GetComponent<WeaponProperties>().codeName;
 
