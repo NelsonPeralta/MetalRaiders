@@ -467,7 +467,15 @@ public class CurrentRoomManager : MonoBehaviour
                     MapCamera.instance.gameObject.SetActive(false);
                     foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                         if (p.isMine)
+                        {
                             p.TriggerGameStartBehaviour();
+                        }
+                        else
+                        {
+                            p.mainCamera.enabled = false;
+                            p.gunCamera.enabled = false;
+                            p.uiCamera.enabled = false;
+                        }
 
                     if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                         SwarmManager.instance.Begin();

@@ -720,6 +720,10 @@ public class Player : Biped
 
     private void Awake()
     {
+        mainCamera.enabled = false; gunCamera.enabled = false; uiCamera.enabled = false; // DO NOT REMOVE THIS
+
+
+
         OnPlayerIdAssigned -= OnPlayerIdAssigned_Delegate;
         OnPlayerIdAssigned += OnPlayerIdAssigned_Delegate;
 
@@ -2147,8 +2151,7 @@ public class Player : Biped
         if (GameManager.instance.gameType == GameManager.GameType.GunGame
                     && deathNature == DeathNature.Stuck)
         {
-            if (isMine)
-                playerInventory.playerGunGameManager.index--;
+            playerInventory.playerGunGameManager.index--;
         }
 
         try

@@ -114,8 +114,8 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On ||
-            player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On
+            || (player.playerInventory.activeWeapon && player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy))
             _thirdPersonCameraPivot.transform.position = _playerCameraHolder.position; ;
 
 

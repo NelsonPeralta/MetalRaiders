@@ -968,6 +968,9 @@ public class PlayerInventory : MonoBehaviourPun
         Debug.Log("AssignRandomWeapons");
         var random = new System.Random();
         int ind = random.Next(allWeaponsInInventory.Length);
+
+
+        while (allWeaponsInInventory[ind].GetComponent<WeaponProperties>().killFeedOutput == WeaponProperties.KillFeedOutput.Minigun) ind = random.Next(allWeaponsInInventory.Length);
         StartingWeapon = allWeaponsInInventory[ind].GetComponent<WeaponProperties>().codeName;
 
         int ind2 = ind;
