@@ -578,6 +578,7 @@ public class Player : Biped
     public bool isHealing { get { return _isHealing; } }
     public bool hasEnnemyFlag { get { return playerInventory.hasEnnemyFlag; } }
     public float spawnProtectionTime { get { return _spawnProtectionTime; } }
+    public bool playerJustSpawn { get { return _playerJustSpawned > 0; } }
 
     #endregion
 
@@ -715,7 +716,7 @@ public class Player : Biped
 
     public bool isTakingDamage { get { return _isTakingDamageForIndicator > 0; } }
 
-    float _respawnCountdown, _isTakingDamageForIndicator, _spawnProtectionTime;
+    float _respawnCountdown, _isTakingDamageForIndicator, _spawnProtectionTime, _playerJustSpawned;
     int _respawnBeepCount;
 
     private void Awake()
@@ -839,6 +840,7 @@ public class Player : Biped
     private void Update()
     {
         if (_spawnProtectionTime > 0) _spawnProtectionTime -= Time.deltaTime;
+        if (_playerJustSpawned > 0) _playerJustSpawned -= Time.deltaTime;
         if (_hurtCooldown > 0) _hurtCooldown -= Time.deltaTime;
         if (_isTakingDamageForIndicator > 0) _isTakingDamageForIndicator -= Time.deltaTime;
 
@@ -1331,7 +1333,7 @@ public class Player : Biped
     void Respawn()
     {
         Debug.Log("Respawn");
-
+        _playerJustSpawned = 0.1f;
         playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
         //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && _diedWithHeavyWeaponInHand)
         //{

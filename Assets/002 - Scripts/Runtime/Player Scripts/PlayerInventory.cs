@@ -86,7 +86,7 @@ public class PlayerInventory : MonoBehaviourPun
                 }
 
                 pController.weaponAnimator = activeWeapon.GetComponent<Animator>();
-                if (player.spawnProtectionTime <= 0) pController.weaponAnimator.Play("Draw", 0, 0f);
+                if (!player.playerJustSpawn) pController.weaponAnimator.Play("Draw", 0, 0f);
 
                 activeWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                 activeWeapon.OnCurrentAmmoChanged += OnActiveWeaponAmmoChanged;
@@ -95,8 +95,7 @@ public class PlayerInventory : MonoBehaviourPun
                 try { OnActiveWeaponChanged?.Invoke(this); } catch { }
                 try { OnActiveWeaponChangedLate.Invoke(this); } catch { }
             }
-            PlayDrawSound();
-
+            if (!player.playerJustSpawn) PlayDrawSound();
         }
     }
     public WeaponProperties holsteredWeapon

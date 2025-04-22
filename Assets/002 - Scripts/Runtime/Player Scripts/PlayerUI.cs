@@ -64,6 +64,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] TMP_Text _yourFlagStolenText;
     [SerializeField] TMP_Text _editorText;
     [SerializeField] Animator _blackscreenDefault, _blackscreenSplitScreen;
+    public OffenseOrDefenseRuntimeUiIndicator offenseOrDefenseRuntimeUiIndicator;
 
     [Header("Bottom Left", order = 5)]
     public Transform bottomLeft, notKillFeed;

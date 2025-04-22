@@ -106,6 +106,26 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return GetComponent<CurrentRoomManager>().gameStarted; }
     }
 
+    public Team teamAttackingThisRound
+    {
+        get
+        {
+            if (instance.oneObjMode == OneObjMode.On)
+            {
+                if (instance.OneObjModeRoundCounter % 2 == 1)
+                {
+                    return Team.Red;
+                }
+                else if (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0)
+                {
+                    return Team.Blue;
+                }
+            }
+
+            return Team.None;
+        }
+    }
+
 
     [SerializeField] Connection _connection;
     [SerializeField] Photon.Realtime.ClientState _photonNetworkClientState;
