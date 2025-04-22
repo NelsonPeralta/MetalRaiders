@@ -323,7 +323,7 @@ public class PlayerController : MonoBehaviourPun
         try { weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>(); } catch { }
         if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && GameManager.instance.OneObjModeRoundOver)
         {
-            isHoldingShootBtn = isHoldingShootDualWieldedWeapon = false;
+            _isHoldingShootBtn = _isHoldingShootDualWieldedWeapon = false;
             return;
         }
 
@@ -2422,7 +2422,7 @@ public class PlayerController : MonoBehaviourPun
     }
     public void OnDeath_Delegate(Player player)
     {
-        Debug.Log("OnDeath_Delegate");
+        Debug.Log($"bullet time test OnDeath_Delegate {Time.time}");
         _currentlyThrowingGrenadeTimer = 0;
         _currentlyReloadingTimer = _currentlyReloadingTimer_thirdWeapon = 0;
 
