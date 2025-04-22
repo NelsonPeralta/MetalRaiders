@@ -96,8 +96,8 @@ public class FlagSpawnPoint : MonoBehaviour
                         {
                             if (!GameManager.instance.OneObjModeRoundOver)
                             {
-                                //if (team == GameManager.Team.Red && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
-                                if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
+                                if (team == GameManager.Team.Red && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
+                                //if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
                                 {
                                     _resetFlag++;
                                     print($"flag has disapeared for {_resetFlag} half seconds");
@@ -108,8 +108,8 @@ public class FlagSpawnPoint : MonoBehaviour
                                             NetworkGameManager.instance.AskMasterClientToSpawnFlag(Vector3.up * -999, Vector3.zero, team, initialCall: false, masterCall: false);
                                     }
                                 }
-                                //else if (team == GameManager.Team.Blue && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
-                                else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
+                                else if (team == GameManager.Team.Blue && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
+                                //else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
                                 {
                                     _resetFlag++;
                                     print($"flag has disapeared for {_resetFlag} halfseconds");
@@ -161,15 +161,15 @@ public class FlagSpawnPoint : MonoBehaviour
         }
         else
         {
-            //if (team == GameManager.Team.Red && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
-            if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
+            if (team == GameManager.Team.Red && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
+            //if (team == GameManager.Team.Red && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
             {
                 _resetFlag = 0;
                 print("SpawnFlag");
                 StartCoroutine(SpawnFlagAtStand_Coroutine());
             }
-            //else if (team == GameManager.Team.Blue && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
-            else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
+            else if (team == GameManager.Team.Blue && GameManager.instance.OneObjModeRoundCounter % 2 == 1)
+            //else if (team == GameManager.Team.Blue && (GameManager.instance.OneObjModeRoundCounter == 0 || GameManager.instance.OneObjModeRoundCounter % 2 == 0))
             {
                 _resetFlag = 0;
                 print("SpawnFlag");

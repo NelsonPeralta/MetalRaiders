@@ -880,12 +880,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             if ((GameManager.Team)whichFlagNeedsToBeReset == GameManager.Team.Red)
             {
                 foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>Red Flag Captured!");
-                if (GameManager.instance.oneObjMode != GameManager.OneObjMode.On) GameManager.instance.redFlag.spawnPoint.SpawnFlagAtStand();
+                if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off) GameManager.instance.redFlag.spawnPoint.SpawnFlagAtStand();
             }
             else
             {
                 foreach (Player p in GameManager.GetLocalPlayers()) p.killFeedManager.EnterNewFeed($"<color=#31cff9>Blue Flag Captured!");
-                if (GameManager.instance.oneObjMode != GameManager.OneObjMode.On) GameManager.instance.blueFlag.spawnPoint.SpawnFlagAtStand();
+                if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off) GameManager.instance.blueFlag.spawnPoint.SpawnFlagAtStand();
             }
         }
 
@@ -894,8 +894,17 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
         {
             print("oneobjmode - AddPlayerPoint_RPC");
-            GameManager.instance.OneObjModeRoundOver = true;
-            GameManager.instance.OneObjModeRoundCounter++;
+
+
+            if (GameManager.instance.OneObjModeRoundCounter == GameManager.MAX_NB_OF_ROUNDS - 1)
+            {
+                NetworkGameManager.instance.EndGame();
+            }
+            else
+            {
+                GameManager.instance.OneObjModeRoundOver = true;
+                GameManager.instance.OneObjModeRoundCounter++;
+            }
         }
     }
 

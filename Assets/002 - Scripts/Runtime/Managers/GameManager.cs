@@ -35,7 +35,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static int DEFAULT_FRAMERATE = 65;
     public static int DELAY_BEFORE_NEXT_ROUND = 4;
     public static int ROUND_DEFAULT_TIME = 180;
-    public static int MAX_NB_OF_ROUNDS = 3;
+    public static int MAX_NB_OF_ROUNDS = 4;
+    public static int END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM = 5;
 
     // Events
     public delegate void GameManagerEvent();
@@ -336,26 +337,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         set
         {
-            int _pre = _oneObjModeRoundCounter;
-            _oneObjModeRoundCounter = Mathf.Clamp(value, 0, 3);
-
-            if (_pre != value && _oneObjModeRoundCounter <= MAX_NB_OF_ROUNDS)
+            print($"oneobjmode - OneObjModeRoundCounter {_oneObjModeRoundCounter} {value}");
+            if (_oneObjModeRoundCounter != value && _oneObjModeRoundCounter < MAX_NB_OF_ROUNDS - 1)
             {
-                print($"oneobjmode - OneObjModeRoundCounter {value}");
-                SpawnManager.spawnManagerInstance.RotateSpawns();
-
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    foreach (Player p in _allPlayers)
-                    {
-                        Vector3 nsp = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team).position;
-                        print($"{SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team)}");
-                        NetworkGameManager.instance.ReserveSpawnPoint(p.photonId, p.controllerId, nsp, false);
-                    }
-
-                    StartCoroutine(ResetMapAddOns());
-                    StartCoroutine(SpawnPlayersForNewRoundAndResetRound_Coroutine());
-                }
+                _oneObjModeRoundCounter = value;
+                TriggerNextRoundBehaviour();
             }
         }
     }
@@ -378,7 +364,9 @@ public class GameManager : MonoBehaviourPunCallbacks
                 if (SceneManager.GetActiveScene().buildIndex > 0 && _oneObjModeRoundCounter < 4)
                 {
                     print($"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
+
                     GameTime.instance.ResetOneObjRoundTime();
+                    _oneObjModeRoundOver = value;
                 }
             }
         }
@@ -1580,7 +1568,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    IEnumerator ResetMapAddOns()
+    IEnumerator ResetMapAddOnsAndFlag_Coroutine()
     {
         print($"oneobjmode - ResetMapHazards 1");
         yield return new WaitForSeconds(DELAY_BEFORE_NEXT_ROUND - 1);
@@ -1602,6 +1590,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         foreach (Transform n in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<ExplosiveBarrel>()))
             n.transform.root.GetComponent<ExplosiveBarrelSpawnPoint>().ResetBarrel();
+
+
+        Vector3 _tempPosRed = GameManager.instance.redFlag.spawnPoint.transform.position;
+        GameManager.instance.redFlag.spawnPoint.transform.position = GameManager.instance.blueFlag.spawnPoint.transform.position;
+        GameManager.instance.blueFlag.spawnPoint.transform.position = _tempPosRed;
+
+        GameManager.instance.redFlag.scriptRoot.transform.gameObject.SetActive(false);
+        GameManager.instance.blueFlag.scriptRoot.transform.gameObject.SetActive(false);
+
+        GameManager.instance.redFlag.spawnPoint.SpawnFlagAtStand();
+        GameManager.instance.blueFlag.spawnPoint.SpawnFlagAtStand();
     }
 
     IEnumerator SpawnPlayersForNewRoundAndResetRound_Coroutine()
@@ -1642,6 +1641,25 @@ public class GameManager : MonoBehaviourPunCallbacks
                 CurrentRoomManager.instance.leftRoomManually = true;
                 GetRootPlayer().playerController.QuitMatch();
             }
+        }
+    }
+
+    public void TriggerNextRoundBehaviour()
+    {
+        SpawnManager.spawnManagerInstance.RotateSpawns();
+
+
+        StartCoroutine(ResetMapAddOnsAndFlag_Coroutine());
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (Player p in _allPlayers)
+            {
+                Vector3 nsp = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team).position;
+                print($"{SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team)}");
+                NetworkGameManager.instance.ReserveSpawnPoint(p.photonId, p.controllerId, nsp, false);
+            }
+
+            StartCoroutine(SpawnPlayersForNewRoundAndResetRound_Coroutine());
         }
     }
 }

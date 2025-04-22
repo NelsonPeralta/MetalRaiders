@@ -1189,6 +1189,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
                 }
             }
+
+            pp.playerUI.scoreboard.OpenScoreboard(true);
         }
     }
 

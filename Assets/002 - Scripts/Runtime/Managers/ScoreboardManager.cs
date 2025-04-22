@@ -47,7 +47,7 @@ public class ScoreboardManager : MonoBehaviour
         _scoreboardHolder.SetActive(false);
     }
 
-    public void OpenScoreboard()
+    public void OpenScoreboard(bool triggerEndGameBehaviour = false)
     {
         _player.playerUI.ToggleUIExtremities(false);
 
@@ -85,6 +85,8 @@ public class ScoreboardManager : MonoBehaviour
                 if (!CurrentRoomManager.instance.leftRoomManually) _drawWitness.SetActive(true); else _drawWitness.SetActive(false);
             }
         }
+
+        if(triggerEndGameBehaviour)_player.playerUI.ShowBlackScreenForEndOfGame();
     }
 
     public void CloseScoreboard()

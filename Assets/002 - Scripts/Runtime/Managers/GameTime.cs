@@ -67,10 +67,26 @@ public class GameTime : MonoBehaviourPunCallbacks
         }
         set
         {
-            _roundTimeRemaining = value;
-            OnGameTimeElapsedChanged?.Invoke(this);
+            if (_timeRemaining != value && value >= 0)
+            {
+                _roundTimeRemaining = value;
+                OnGameTimeRemainingChanged?.Invoke(this);
 
-            if (value == 0) GameManager.instance.OneObjModeRoundOver = true;
+                if (value == 0)
+                {
+                    GameManager.instance.OneObjModeRoundOver = true;
+
+                    if(GameManager.instance.OneObjModeRoundCounter ==  GameManager.MAX_NB_OF_ROUNDS - 1)
+                    {
+                        NetworkGameManager.instance.EndGame();
+                    }
+                    else
+                    {
+                        GameManager.instance.OneObjModeRoundOver = true;
+                        GameManager.instance.OneObjModeRoundCounter++;
+                    }
+                }
+            }
         }
     }
 
@@ -129,7 +145,7 @@ public class GameTime : MonoBehaviourPunCallbacks
             _masterTimeRemaining = 1800;
         }
 
-        if (GameManager.instance.gameType == GameManager.GameType.CTF && GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
         {
             _unlimitedTime = true;
             _masterRoundTimeRemaining = GameManager.ROUND_DEFAULT_TIME;
@@ -161,7 +177,7 @@ public class GameTime : MonoBehaviourPunCallbacks
     {
         if (GameManager.sceneIndex <= 0 || !CurrentRoomManager.instance.gameStarted) return;
         if (_masterTimeRemaining <= 0) return;
-        if (GameManager.instance.oneObjMode != GameManager.OneObjMode.On && _masterRoundTimeRemaining <= 0) return;
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && _masterRoundTimeRemaining <= 0) return;
 
 
 
@@ -192,6 +208,7 @@ public class GameTime : MonoBehaviourPunCallbacks
 
     public void ResetOneObjRoundTime()
     {
+        _masterRoundTimeElapsed = _roundTimeElapsed = 0;
         _masterRoundTimeRemaining = _roundTimeRemaining = GameManager.ROUND_DEFAULT_TIME;
     }
 }

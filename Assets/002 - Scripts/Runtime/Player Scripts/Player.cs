@@ -1454,9 +1454,9 @@ public class Player : Biped
 
     // public coroutines
     #region
-    public IEnumerator LeaveLevelButStayInRoom_Coroutine(int delay = 5)
+    public IEnumerator LeaveLevelButStayInRoom_Coroutine()
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
 
 
         int levelToLoad = 0;

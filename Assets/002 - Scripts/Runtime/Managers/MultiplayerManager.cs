@@ -468,7 +468,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 }
             }
 
-            pp.playerUI.scoreboard.OpenScoreboard();
+            pp.playerUI.scoreboard.OpenScoreboard(true);
         }
     }
 

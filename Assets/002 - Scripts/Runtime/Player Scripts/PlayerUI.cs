@@ -778,7 +778,7 @@ public class PlayerUI : MonoBehaviour
         print($"oneobjmode - OnOneObjRoundOverLocalEvent blackscreen PLAY");
 
 
-        if (GameManager.instance.OneObjModeRoundCounter < GameManager.MAX_NB_OF_ROUNDS)
+        if (GameManager.instance.OneObjModeRoundCounter < GameManager.MAX_NB_OF_ROUNDS - 1)
         {
 
             if (GameManager.instance.nbLocalPlayersPreset == 1 || GameManager.instance.nbLocalPlayersPreset == 4)
@@ -812,5 +812,29 @@ public class PlayerUI : MonoBehaviour
         }
         catch { }
         scoreboard.CloseScoreboard();
+    }
+
+    public void ShowBlackScreenForEndOfGame()
+    {
+        StartCoroutine(ShowBlackScreenForEndOfGame_Coroutine());
+    }
+
+    IEnumerator ShowBlackScreenForEndOfGame_Coroutine()
+    {
+        yield return new WaitForSeconds(GameManager.DELAY_BEFORE_NEXT_ROUND);
+
+        if (GameManager.instance.nbLocalPlayersPreset == 1 || GameManager.instance.nbLocalPlayersPreset == 4)
+            _blackscreenDefault.Play("play");
+        else if (GameManager.instance.nbLocalPlayersPreset == 3)
+        {
+            if (_player.playerController.rid == 0)
+                _blackscreenSplitScreen.Play("play");
+            else
+                _blackscreenDefault.Play("play");
+        }
+        else
+        {
+            _blackscreenSplitScreen.Play("play");
+        }
     }
 }
