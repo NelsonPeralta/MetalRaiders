@@ -714,7 +714,7 @@ public class PlayerShooting : MonoBehaviourPun
                     //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
                     //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
                     //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
-                    print($"bullet spawned at: {Time.time}");
+                    print($"bullet time test. Spawned at: {Time.time}");
                     bullet.SetActive(true);
 
                     if (weaponToShoot.plasmaColor != WeaponProperties.PlasmaColor.Shard)

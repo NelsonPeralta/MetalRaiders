@@ -9842,7 +9842,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
   _damageSource: 
-  damage: 140
+  killFeedOutput: 0
+  damage: 120
   radius: 5
   explosionPower: 500
   _obsLayerMask:
