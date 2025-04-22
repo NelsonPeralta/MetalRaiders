@@ -122,6 +122,8 @@ public class MapCamera : MonoBehaviourPunCallbacks
     }
     public void TriggerGameStartBehaviour()
     {
+        print($"oneobjmode - TriggerGameStartBehaviour");
+
         _canvas.gameObject.SetActive(false);
         _announcementPLayed = true;
         GameManager.UpdateVolume();
@@ -129,14 +131,6 @@ public class MapCamera : MonoBehaviourPunCallbacks
 
         try { if (GameManager.instance.gameMode == GameManager.GameMode.Coop) SwarmManager.instance.PlayOpeningMusic(); } catch { }
 
-
-        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
-        {
-            foreach (Player p in GameManager.GetLocalPlayers())
-            {
-                p.playerUI.offenseOrDefenseRuntimeUiIndicator.Trigger();
-            }
-        }
     }
 
     void PlayAnnouncer()

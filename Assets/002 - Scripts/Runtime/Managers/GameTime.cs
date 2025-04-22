@@ -76,7 +76,7 @@ public class GameTime : MonoBehaviourPunCallbacks
                 {
                     GameManager.instance.OneObjModeRoundOver = true;
 
-                    if(GameManager.instance.OneObjModeRoundCounter ==  GameManager.MAX_NB_OF_ROUNDS - 1)
+                    if (GameManager.instance.OneObjModeRoundCounter == GameManager.MAX_NB_OF_ROUNDS - 1)
                     {
                         NetworkGameManager.instance.EndGame();
                     }

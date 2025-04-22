@@ -321,6 +321,13 @@ public class PlayerController : MonoBehaviourPun
 
 
         try { weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>(); } catch { }
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && GameManager.instance.OneObjModeRoundOver)
+        {
+            isHoldingShootBtn = isHoldingShootDualWieldedWeapon = false;
+            return;
+        }
+
+
 
         if (!GetComponent<Player>().isDead && !GetComponent<Player>().isRespawning && !pauseMenuOpen)
         {

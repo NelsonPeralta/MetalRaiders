@@ -917,6 +917,9 @@ public class Player : Biped
         uiCamera.enabled = false;
         uiCamera.enabled = true;
 
+
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On) playerUI.offenseOrDefenseRuntimeUiIndicator.Trigger();
+        _playerJustSpawned = 0.1f;
     }
     public bool CanBeDamaged()
     {
@@ -1337,7 +1340,7 @@ public class Player : Biped
 
     void Respawn()
     {
-        Debug.Log("Respawn");
+        Debug.Log("oneobjmode = Respawn");
         _playerJustSpawned = 0.1f;
         playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
         //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && _diedWithHeavyWeaponInHand)
@@ -1363,57 +1366,70 @@ public class Player : Biped
         _gameplayerRecordingPointsHolder.parent = transform; _gameplayerRecordingPointsHolder.transform.localPosition = Vector3.zero; _gameplayerRecordingPointsHolder.transform.localRotation = Quaternion.identity;
         _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
 
-        if (!isRespawning)
-            return;
-        try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
-        _lastPID = -1;
-        deathNature = DeathNature.None;
-        _killFeedOutput = WeaponProperties.KillFeedOutput.Unassigned;
-        OnPlayerRespawnEarly?.Invoke(this);
-        if (GameManager.instance.gameMode == GameManager.GameMode.Coop) DisableArmorComponentsOnRespawn();
-
-        isRespawning = false;
-        GetComponent<PlayerController>().Descope();
-
-        hitPoints = maxHitPoints;
-
-        mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
-        mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
-        gunCamera.enabled = true;
-        GetComponent<PlayerUI>().ToggleUIExtremities(true);
-
-        StartCoroutine(MakeThirdPersonModelVisible());
-
-        playerInventory.fragGrenades = 2;
-        if (GameManager.instance.gameType == GameManager.GameType.Swat
-                || GameManager.instance.gameType == GameManager.GameType.Retro)
-            playerInventory.fragGrenades = 1;
-
-        if (GameManager.instance.gameType == GameManager.GameType.Hill) playerInventory.fragGrenades = 1;
-
-        //StartCoroutine(playerInventory.EquipStartingWeapon());
-        playerInventory.weaponsEquiped[1] = null;
-
-        hitboxesEnabled = true;
-        impactDir = Vector3.zero;
-        OnPlayerRespawned?.Invoke(this);
-
-        _rb.isKinematic = false;
-        _rb.velocity = Vector3.zero;
-        _rb.angularVelocity = Vector3.zero;
-
-        _respawnBeepCount = 0;
-        if (this.isMine) respawnBeepAudioSource.Play();
-
-        if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("<color=\"red\">Spawned Randomly"); _lastSpawnPointIsRandom = false;
-        StartCoroutine(DisableAndEnableGunCam());
-
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+        if (isRespawning || (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && GameManager.instance.OneObjModeRoundOver))
         {
-            playerCamera.EnableThirdPersonLayerMask();
-        }
 
-        playerCamera.RotateCameraToRotation(_reservedSpawnPointTrans.forward);
+            try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
+            _lastPID = -1;
+            deathNature = DeathNature.None;
+            _killFeedOutput = WeaponProperties.KillFeedOutput.Unassigned;
+            Debug.Log("oneobjmode = Respawn 3");
+            OnPlayerRespawnEarly?.Invoke(this);
+            if (GameManager.instance.gameMode == GameManager.GameMode.Coop) DisableArmorComponentsOnRespawn();
+            Debug.Log("oneobjmode = Respawn 2");
+
+            isRespawning = false;
+            GetComponent<PlayerController>().Descope();
+
+            hitPoints = maxHitPoints;
+
+            mainCamera.gameObject.GetComponent<Transform>().transform.localRotation = allPlayerScripts.cameraScript.mainCamDefaultLocalRotation;
+            mainCamera.gameObject.GetComponent<Transform>().transform.localPosition = allPlayerScripts.cameraScript.mainCamDefaultLocalPosition;
+            gunCamera.enabled = true;
+            GetComponent<PlayerUI>().ToggleUIExtremities(true);
+
+            StartCoroutine(MakeThirdPersonModelVisible());
+
+            playerInventory.fragGrenades = 2;
+            if (GameManager.instance.gameType == GameManager.GameType.Swat
+                    || GameManager.instance.gameType == GameManager.GameType.Retro)
+                playerInventory.fragGrenades = 1;
+
+            if (GameManager.instance.gameType == GameManager.GameType.Hill) playerInventory.fragGrenades = 1;
+
+            //StartCoroutine(playerInventory.EquipStartingWeapon());
+            playerInventory.weaponsEquiped[1] = null;
+
+            hitboxesEnabled = true;
+            impactDir = Vector3.zero;
+            OnPlayerRespawned?.Invoke(this);
+
+            _rb.isKinematic = false;
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+
+            _respawnBeepCount = 0;
+            if (this.isMine)
+            {
+                if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
+                    respawnBeepAudioSource.Play();
+                else
+                {
+                    if (!GameManager.instance.OneObjModeRoundOver)
+                        respawnBeepAudioSource.Play();
+                }
+            }
+
+            if (_lastSpawnPointIsRandom) killFeedManager.EnterNewFeed("<color=\"red\">Spawned Randomly"); _lastSpawnPointIsRandom = false;
+            StartCoroutine(DisableAndEnableGunCam());
+
+            if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
+            {
+                playerCamera.EnableThirdPersonLayerMask();
+            }
+
+            playerCamera.RotateCameraToRotation(_reservedSpawnPointTrans.forward);
+        }
     }
 
     IEnumerator DisableAndEnableGunCam()

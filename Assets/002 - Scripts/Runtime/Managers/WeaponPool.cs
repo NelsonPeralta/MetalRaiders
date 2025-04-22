@@ -4,6 +4,7 @@ using Photon.Pun;
 using System.IO;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 
 // Used to spawn weapons at runtime
@@ -83,5 +84,10 @@ public class WeaponPool : MonoBehaviourPun
         //}
         print($"GetLootableWeapon RETURNING NULL");
         return null;
+    }
+
+    public void ResetAllEnabledObjects()
+    {
+        foreach (LootableWeapon lw in _spawnedWeapons.Where(item => item.gameObject.activeInHierarchy)) lw.gameObject.SetActive(false);
     }
 }

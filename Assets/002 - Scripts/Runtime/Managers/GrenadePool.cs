@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GrenadePool : MonoBehaviour
@@ -274,5 +275,15 @@ public class GrenadePool : MonoBehaviour
                 obj.DisableIn3Seconds();
                 break;
             }
+    }
+
+
+    public void ResetAllEnabledObjects()
+    {
+        foreach (GameObject a in _fragGrenadePool.Where(item => item.activeInHierarchy)) a.SetActive(false);
+        foreach (GameObject b in _stickyGrenadePool.Where(item => item.activeInHierarchy)) b.SetActive(false);
+        foreach (ExplosiveProjectile c in _rocketPool.Where(item => item.gameObject.activeInHierarchy)) c.gameObject.SetActive(false);
+        foreach (ExplosiveProjectile d in _glProjectilePool.Where(item => item.gameObject.activeInHierarchy)) d.gameObject.SetActive(false);
+        foreach (Explosion d in _explosions.Where(item => item.gameObject.activeInHierarchy)) d.gameObject.SetActive(false);
     }
 }

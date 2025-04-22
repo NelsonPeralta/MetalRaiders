@@ -381,11 +381,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                if (SceneManager.GetActiveScene().buildIndex > 0 && _oneObjModeRoundCounter < 4)
+                if (SceneManager.GetActiveScene().buildIndex > 0 && _oneObjModeRoundCounter < GameManager.MAX_NB_OF_ROUNDS && !value && value != _oneObjModeRoundOver)
                 {
                     print($"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
 
                     GameTime.instance.ResetOneObjRoundTime();
+
+
+                    foreach (Player p in GameManager.GetLocalPlayers())
+                    {
+                        p.playerUI.HideBlackScreens();
+                        p.playerUI.scoreboard.CloseScoreboard();
+                        p.playerUI.offenseOrDefenseRuntimeUiIndicator.Trigger();
+                    }
+
+                    GameManager.UpdateVolume();
                     _oneObjModeRoundOver = value;
                 }
             }
@@ -1594,6 +1604,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(DELAY_BEFORE_NEXT_ROUND - 1);
         print($"oneobjmode - ResetMapHazards 2");
 
+        AudioListener.volume = 0;
+
+
+
+
+
+        GrenadePool.instance.ResetAllEnabledObjects();
+        WeaponPool.instance.ResetAllEnabledObjects();
 
         foreach (Transform n in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<NetworkWeaponSpawnPoint>()))
         {
@@ -1611,6 +1629,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         foreach (Transform n in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<ExplosiveBarrel>()))
             n.transform.root.GetComponent<ExplosiveBarrelSpawnPoint>().ResetBarrel();
 
+
+        
 
         Vector3 _tempPosRed = GameManager.instance.redFlag.spawnPoint.transform.position;
         GameManager.instance.redFlag.spawnPoint.transform.position = GameManager.instance.blueFlag.spawnPoint.transform.position;

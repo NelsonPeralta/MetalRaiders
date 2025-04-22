@@ -822,7 +822,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public IEnumerator EquipStartingWeapon()
     {
-        Debug.Log("EquipStartingWeapon");
+        Debug.Log("oneobjmode - EquipStartingWeapon");
 
         _oddball.gameObject.SetActive(false);
         GetWeaponProperties("pr").currentOverheat = 0;
@@ -1228,7 +1228,7 @@ public class PlayerInventory : MonoBehaviourPun
             }
         UpdateThirdPersonGunModelsOnCharacter();
         ChangeActiveAmmoCounter();
-        if (PV.IsMine)
+        if (PV.IsMine && !player.playerJustSpawn)
             PlayDrawSound();
     }
 

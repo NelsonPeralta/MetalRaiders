@@ -796,23 +796,21 @@ public class PlayerUI : MonoBehaviour
                 _blackscreenSplitScreen.Play("play");
             }
             scoreboard.OpenScoreboard();
-            StartCoroutine(OnOneObjRoundOverLocalEvent_Coroutine());
         }
     }
 
-    IEnumerator OnOneObjRoundOverLocalEvent_Coroutine()
-    {
-        print($"oneobjmode - OnOneObjRoundOverLocalEvent_Coroutine");
 
-        yield return new WaitForSeconds(GameManager.DELAY_BEFORE_NEXT_ROUND);
-        print($"oneobjmode - OnOneObjRoundOverLocalEvent_Coroutine HIDE");
+
+    public void HideBlackScreens()
+    {
+
+        print($"oneobjmode - HideBlackScreens");
         try
         {
             _blackscreenDefault.Play("hide");
             _blackscreenSplitScreen.Play("hide");
         }
         catch { }
-        scoreboard.CloseScoreboard();
     }
 
     public void ShowBlackScreenForEndOfGame()
