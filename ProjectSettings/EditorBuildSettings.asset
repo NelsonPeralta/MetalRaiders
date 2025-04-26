@@ -84,6 +84,6 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Babylon v2.unity
     guid: c40da1c976733fb4cbd419b97a53bf73
   - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - 999.unity
+    path: Assets/004 - Scenes/Multiplayer Scenes/map pack 1/PVP - 999.unity
     guid: 51dfef30ad27be34baf744a7292adb54
   m_configObjects: {}
