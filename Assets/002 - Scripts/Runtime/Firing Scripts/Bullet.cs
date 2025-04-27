@@ -147,6 +147,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
         RaycastHit[] hits;
         _hitList = Physics.RaycastAll(_prePos, (_nextPos - _prePos).normalized, maxDistance: _dTravalled, layerMask: GameManager.instance.bulletLayerMask).ToList();
+        _hitList.RemoveAll(hit => hit.collider.GetComponent<ManCannon>());
 
         if (_hitList.Count > 0)
         {

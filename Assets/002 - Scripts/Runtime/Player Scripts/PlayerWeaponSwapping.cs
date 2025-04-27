@@ -84,7 +84,7 @@ public class PlayerWeaponSwapping : MonoBehaviourPun
                         //pickupText.text = "Hold E to pick up " + closestLootableWeapon.cleanName;
                         player.GetComponent<PlayerUI>().ShowInformer("Hold E to pick up " + closestLootableWeapon.cleanName);
 
-                        if (ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick)
+                        if (GameManager.instance.activeControllerType == ControllerType.Joystick)
                             player.GetComponent<PlayerUI>().ShowInformer("Hold RELOAD to pick up " + closestLootableWeapon.cleanName);
                     }
                 }

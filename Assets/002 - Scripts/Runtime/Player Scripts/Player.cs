@@ -1373,10 +1373,8 @@ public class Player : Biped
             _lastPID = -1;
             deathNature = DeathNature.None;
             _killFeedOutput = WeaponProperties.KillFeedOutput.Unassigned;
-            Debug.Log("oneobjmode = Respawn 3");
             OnPlayerRespawnEarly?.Invoke(this);
             if (GameManager.instance.gameMode == GameManager.GameMode.Coop) DisableArmorComponentsOnRespawn();
-            Debug.Log("oneobjmode = Respawn 2");
 
             isRespawning = false;
             GetComponent<PlayerController>().Descope();

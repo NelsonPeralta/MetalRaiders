@@ -40,7 +40,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     // Events
     public delegate void GameManagerEvent();
-    public GameManagerEvent OnGameManagerFinishedLoadingScene_Late, OnCameraSensitivityChanged, OnOneObjRoundOverLocalEvent, OnOneObjRoundReset;
+    public GameManagerEvent OnGameManagerFinishedLoadingScene_Late, OnCameraSensitivityChanged, OnOneObjRoundOverLocalEvent, OnOneObjRoundReset,
+        OnControllerTypeChangedToController, OnControllerTypeChangedToMouseAndKeyboard;
     // Enums
     public enum Team { None, Red, Blue, Alien }
     public enum Connection { Unassigned, Local, Online }
@@ -447,6 +448,28 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public TMP_Text debugText { get { return _deb; } }
 
+    public ControllerType activeControllerType
+    {
+        get { return _activeControllerType; }
+        private set
+        {
+
+            if (value == _activeControllerType)
+                return;
+
+            _activeControllerType = value;
+
+            if (value == ControllerType.Joystick)
+            {
+                OnControllerTypeChangedToController?.Invoke();
+            }
+            else
+            {
+                OnControllerTypeChangedToMouseAndKeyboard?.Invoke();
+            }
+        }
+    }
+
     // called zero
 
     // private Variables
@@ -500,7 +523,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     bool _playerDataRetrieved;
     float _checkCooldown;
-
+    ControllerType _activeControllerType;
 
     [SerializeField] AudioSource _beepConsecutiveAudioSource;
 
@@ -656,7 +679,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             ClearPhotonIdToPlayerDict();
 
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.None;
-            Launcher.instance.menuGamePadCursorScript.GetReady(ReInput.controllers.GetLastActiveControllerType());
+            Launcher.instance.menuGamePadCursorScript.GetReady(GameManager.instance.activeControllerType);
             ActorAddonsPool.instance = null;
 
             instantiation_position_Biped_Dict.Clear();
@@ -876,6 +899,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Update()
     {
 
+        _activeControllerType = ReInput.controllers.GetLastActiveControllerType();
         if (commonPlayerVoiceCooldown > 0) commonPlayerVoiceCooldown -= Time.deltaTime;
 
         if (SceneManager.GetActiveScene().buildIndex == 0 && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private

@@ -414,7 +414,7 @@ public class PlayerController : MonoBehaviourPun
 
             TestButton();
             if (ReInput.controllers != null)
-                activeControllerType = ReInput.controllers.GetLastActiveControllerType();
+                activeControllerType = GameManager.instance.activeControllerType;
         }
 
     }
@@ -530,6 +530,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if (isSprinting)
             {
+                print($"{name} is sprinting - DisableSprint");
                 DisableSprint();
             }
 
@@ -2303,7 +2304,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 allPlayerScripts.scoreboardManager.OpenScoreboard();
                 player.playerUI.gamepadCursor.gameObject.SetActive(true);
-                player.playerUI.gamepadCursor.GetReady(ReInput.controllers.GetLastActiveControllerType());
+                player.playerUI.gamepadCursor.GetReady(GameManager.instance.activeControllerType);
             }
             else if (rewiredPlayer.GetButtonUp("Back"))
             {
@@ -2322,7 +2323,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(true);
                 player.playerUI.gamepadCursor.gameObject.SetActive(true);
-                player.playerUI.gamepadCursor.GetReady(ReInput.controllers.GetLastActiveControllerType());
+                player.playerUI.gamepadCursor.GetReady(GameManager.instance.activeControllerType);
                 pauseMenuOpen = true;
             }
         }
