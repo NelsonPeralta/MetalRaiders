@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2566054728860058017
+--- !u!1 &121857315419722885
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6889396712430577187}
-  - component: {fileID: 7873007926191542714}
-  - component: {fileID: 3886304489922240376}
+  - component: {fileID: 4044125677395617618}
+  - component: {fileID: 8854419937931513824}
+  - component: {fileID: 1199983967136063358}
   m_Layer: 0
-  m_Name: SM_Wep_Heavy_02_(1)
+  m_Name: Grenade Launcher - body_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6889396712430577187
+--- !u!4 &4044125677395617618
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2566054728860058017}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_GameObject: {fileID: 121857315419722885}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7007953590289062821}
+  m_Father: {fileID: 6889396712430577187}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7873007926191542714
+--- !u!33 &8854419937931513824
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2566054728860058017}
-  m_Mesh: {fileID: -7539362220482618416, guid: 46ccac951775bf14cbd0e059be2e07e7, type: 3}
---- !u!23 &3886304489922240376
+  m_GameObject: {fileID: 121857315419722885}
+  m_Mesh: {fileID: 4300000, guid: 6011d58de0a3c0942b83cd65db64c72b, type: 2}
+--- !u!23 &1199983967136063358
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2566054728860058017}
+  m_GameObject: {fileID: 121857315419722885}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -83,6 +83,312 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1156202471021149921
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6034625748036300415}
+  - component: {fileID: 7865503758750730573}
+  - component: {fileID: 7359421611861766811}
+  m_Layer: 0
+  m_Name: SM_Wep_Heavy_02_Chamber_01_LOD0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6034625748036300415
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156202471021149921}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2835589253175665566}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &7865503758750730573
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156202471021149921}
+  m_Mesh: {fileID: 4300002, guid: 31a505005b6bb7149a2582f8aae3920c, type: 3}
+--- !u!23 &7359421611861766811
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156202471021149921}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 739785685243978238, guid: 46ccac951775bf14cbd0e059be2e07e7, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1853311186039986688
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1134866375988453571}
+  - component: {fileID: 1438245414565748529}
+  - component: {fileID: 7647005376119795431}
+  m_Layer: 0
+  m_Name: Grenade Launcher - body_LOD0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1134866375988453571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853311186039986688}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6889396712430577187}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1438245414565748529
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853311186039986688}
+  m_Mesh: {fileID: -7539362220482618416, guid: 46ccac951775bf14cbd0e059be2e07e7, type: 3}
+--- !u!23 &7647005376119795431
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853311186039986688}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 739785685243978238, guid: 46ccac951775bf14cbd0e059be2e07e7, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2098768272978738263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 675202269843335673}
+  - component: {fileID: 767781811667059514}
+  - component: {fileID: 1922230690475053933}
+  m_Layer: 0
+  m_Name: SM_Wep_Heavy_02_Chamber_01_LOD1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &675202269843335673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098768272978738263}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2835589253175665566}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &767781811667059514
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098768272978738263}
+  m_Mesh: {fileID: 4300000, guid: 3453d93a958814d4bb36c92c6317a23d, type: 2}
+--- !u!23 &1922230690475053933
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098768272978738263}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 739785685243978238, guid: 46ccac951775bf14cbd0e059be2e07e7, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2566054728860058017
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6889396712430577187}
+  - component: {fileID: 7995850275051782144}
+  m_Layer: 0
+  m_Name: Grenade Launcher - body
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6889396712430577187
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2566054728860058017}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1134866375988453571}
+  - {fileID: 4044125677395617618}
+  m_Father: {fileID: 7007953590289062821}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &7995850275051782144
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2566054728860058017}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: -0.003481742, y: 0.06256825, z: 0.19907698}
+  m_Size: 0.74328583
+  m_FadeMode: 1
+  m_AnimateCrossFading: 1
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.15
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7647005376119795431}
+  - screenRelativeHeight: 0.03
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 1199983967136063358}
+  m_Enabled: 1
 --- !u!1 &2835589251325886406
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,6 +400,7 @@ GameObject:
   - component: {fileID: 2835589251325886411}
   - component: {fileID: 2835589251325886408}
   - component: {fileID: 2835589251325886409}
+  - component: {fileID: 6748044869633881491}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Trigger_01
   m_TagString: Untagged
@@ -166,6 +473,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!205 &6748044869633881491
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835589251325886406}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.21100001
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2835589251325886409}
+  m_Enabled: 1
 --- !u!1 &2835589251532301279
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,9 +520,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7007953590289062821}
   - {fileID: 2835589253175665566}
   - {fileID: 2835589251325886411}
-  - {fileID: 7007953590289062821}
   m_Father: {fileID: 5361828782445167749}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -211,6 +537,7 @@ GameObject:
   - component: {fileID: 2835589251542481271}
   - component: {fileID: 2835589251542481273}
   - component: {fileID: 2835589251542481270}
+  - component: {fileID: 7810699607034181259}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_05
   m_TagString: Untagged
@@ -283,6 +610,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!205 &7810699607034181259
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835589251542481268}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.21100001
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2835589251542481270}
+  m_Enabled: 1
 --- !u!1 &2835589252549753250
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,6 +640,7 @@ GameObject:
   - component: {fileID: 2835589252549753253}
   - component: {fileID: 2835589252549753255}
   - component: {fileID: 2835589252549753252}
+  - component: {fileID: 6841275284206179640}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_06
   m_TagString: Untagged
@@ -366,6 +713,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!205 &6841275284206179640
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835589252549753250}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.21100001
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2835589252549753252}
+  m_Enabled: 1
 --- !u!1 &2835589252700915388
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,6 +743,7 @@ GameObject:
   - component: {fileID: 2835589252700915391}
   - component: {fileID: 2835589252700915361}
   - component: {fileID: 2835589252700915390}
+  - component: {fileID: 4438668171486672138}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_03
   m_TagString: Untagged
@@ -449,6 +816,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!205 &4438668171486672138
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835589252700915388}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.21100001
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2835589252700915390}
+  m_Enabled: 1
 --- !u!1 &2835589253102912949
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,6 +846,7 @@ GameObject:
   - component: {fileID: 2835589253102912948}
   - component: {fileID: 2835589253102912950}
   - component: {fileID: 2835589253102912951}
+  - component: {fileID: 999453334992557900}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_02
   m_TagString: Untagged
@@ -532,6 +919,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!205 &999453334992557900
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835589253102912949}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.21100001
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2835589253102912951}
+  m_Enabled: 1
 --- !u!1 &2835589253175665565
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,8 +947,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2835589253175665566}
-  - component: {fileID: 2835589253175665567}
-  - component: {fileID: 2835589253175665564}
+  - component: {fileID: 6409637848334632674}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Chamber_01
   m_TagString: Untagged
@@ -568,59 +973,34 @@ Transform:
   - {fileID: 2835589253195293726}
   - {fileID: 2835589251542481271}
   - {fileID: 2835589252549753253}
+  - {fileID: 6034625748036300415}
+  - {fileID: 675202269843335673}
   m_Father: {fileID: 2835589251532301278}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2835589253175665567
-MeshFilter:
+--- !u!205 &6409637848334632674
+LODGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2835589253175665565}
-  m_Mesh: {fileID: 4300002, guid: 31a505005b6bb7149a2582f8aae3920c, type: 3}
---- !u!23 &2835589253175665564
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589253175665565}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0.000000834465, y: -0.000019997358, z: 0.00023959577}
+  m_Size: 0.29163384
+  m_FadeMode: 1
+  m_AnimateCrossFading: 1
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.059035134
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7359421611861766811}
+  - screenRelativeHeight: 0.011822777
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 1922230690475053933}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 739785685243978238, guid: 46ccac951775bf14cbd0e059be2e07e7, type: 3}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2835589253195293727
 GameObject:
   m_ObjectHideFlags: 0
@@ -632,6 +1012,7 @@ GameObject:
   - component: {fileID: 2835589253195293726}
   - component: {fileID: 2835589253195293696}
   - component: {fileID: 2835589253195293697}
+  - component: {fileID: 3369414887989188510}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_04
   m_TagString: Untagged
@@ -704,6 +1085,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!205 &3369414887989188510
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835589253195293727}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.21100001
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2835589253195293697}
+  m_Enabled: 1
 --- !u!1 &2835589253204904861
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +1115,7 @@ GameObject:
   - component: {fileID: 2835589253204904860}
   - component: {fileID: 2835589253204904862}
   - component: {fileID: 2835589253204904863}
+  - component: {fileID: 1049151486052016591}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_01
   m_TagString: Untagged
@@ -787,6 +1188,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!205 &1049151486052016591
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835589253204904861}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.21100001
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2835589253204904863}
+  m_Enabled: 1
 --- !u!1 &5361828782445140133
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,8 +1239,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7033327777244742845}
   - {fileID: 2835589251532301278}
+  - {fileID: 7033327777244742845}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5958,6 +6378,7 @@ GameObject:
   - component: {fileID: 7157403782839604905}
   - component: {fileID: 7156294788660293087}
   - component: {fileID: 7031212456188895420}
+  - component: {fileID: 3558851263815178945}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -10868,6 +11289,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!205 &3558851263815178945
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7031212456188895421}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 1
+  m_AnimateCrossFading: 1
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.20232701
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7156294788660293087}
+    - renderer: {fileID: 7157920812189634921}
+  m_Enabled: 1
 --- !u!1 &7641078071170826527
 GameObject:
   m_ObjectHideFlags: 0
@@ -10892,7 +11333,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7641078071170826527}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

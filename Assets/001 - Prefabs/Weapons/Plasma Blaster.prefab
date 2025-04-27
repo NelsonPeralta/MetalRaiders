@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 124420421374742712}
   - component: {fileID: 116267857040736800}
   m_Layer: 0
-  m_Name: SM_Wep_Alien_03_Trigger_01
+  m_Name: Plasma Blaster - trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &126255504373641666
 Transform:
   m_ObjectHideFlags: 0
@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128830361932894408}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000020033216, y: 0.0073816874, z: 0.05846834}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.000020033218, y: 0.01038169, z: -0.06853167}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 126610087419361220}
-  m_RootOrder: 0
+  m_Father: {fileID: 4070508823915125614}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &124420421374742712
 MeshFilter:
@@ -92,10 +92,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 126610087419361220}
-  - component: {fileID: 124457899206091154}
-  - component: {fileID: 115524129101999660}
+  - component: {fileID: 647054957399044309}
   m_Layer: 0
-  m_Name: SM_Wep_Alien_03
+  m_Name: Plasma Blaster - body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,25 +112,82 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 126255504373641666}
+  - {fileID: 8608132871570196318}
+  - {fileID: 507935187911521032}
   m_Father: {fileID: 4070508823915125614}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &124457899206091154
+--- !u!205 &647054957399044309
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129227761930274858}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0.040163726, z: 0.3215134}
+  m_Size: 1.1936493
+  m_FadeMode: 1
+  m_AnimateCrossFading: 1
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.15
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4191460589631609822}
+  - screenRelativeHeight: 0.04
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 5466203114241870789}
+  m_Enabled: 1
+--- !u!1 &752998892869279046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 507935187911521032}
+  - component: {fileID: 3424955856949005807}
+  - component: {fileID: 5466203114241870789}
+  m_Layer: 0
+  m_Name: Plasma Blaster - body_LOD1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &507935187911521032
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752998892869279046}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 126610087419361220}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3424955856949005807
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 129227761930274858}
-  m_Mesh: {fileID: 4300000, guid: 09d03390f2de5c340a0613210ebee122, type: 3}
---- !u!23 &115524129101999660
+  m_GameObject: {fileID: 752998892869279046}
+  m_Mesh: {fileID: 4300000, guid: e889096601164394988e25d21f2f927e, type: 2}
+--- !u!23 &5466203114241870789
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 129227761930274858}
+  m_GameObject: {fileID: 752998892869279046}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -403,6 +459,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 126610087419361220}
+  - {fileID: 126255504373641666}
   m_Father: {fileID: 3767606288670032394}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -418,6 +475,7 @@ GameObject:
   - component: {fileID: 4975736835441159416}
   - component: {fileID: 4974558573106927502}
   - component: {fileID: 6310489887605200886}
+  - component: {fileID: 5790622761045281513}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -5328,6 +5386,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!205 &5790622761045281513
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5173097628330236652}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.031532053
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4974558573106927502}
+    - renderer: {fileID: 4976303411324169016}
+  m_Enabled: 1
 --- !u!1 &5173218882619016620
 GameObject:
   m_ObjectHideFlags: 0
@@ -10280,3 +10358,86 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &5998349958338183593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8608132871570196318}
+  - component: {fileID: 363667961212468308}
+  - component: {fileID: 4191460589631609822}
+  m_Layer: 0
+  m_Name: Plasma Blaster - body_LOD0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8608132871570196318
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5998349958338183593}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 126610087419361220}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &363667961212468308
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5998349958338183593}
+  m_Mesh: {fileID: 4300000, guid: 09d03390f2de5c340a0613210ebee122, type: 3}
+--- !u!23 &4191460589631609822
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5998349958338183593}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: de6d6ab781ef19743bbdf1511c21c170, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
