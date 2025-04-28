@@ -183,11 +183,11 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.0845185
+  - screenRelativeHeight: 0.04155478
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 4758996121757621524}
-  - screenRelativeHeight: 0.03
+  - screenRelativeHeight: 0.02
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6236357999557953590}
@@ -406,7 +406,7 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.3
+  - screenRelativeHeight: 0.15
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 3200525096614261047}
@@ -513,7 +513,7 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.3
+  - screenRelativeHeight: 0.14606199
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6048911026312337800}
@@ -967,7 +967,7 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.3
+  - screenRelativeHeight: 0.14632167
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 7223554256512046961}
@@ -11205,7 +11205,7 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.09209514
+  - screenRelativeHeight: 0.045633912
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8314157164501940481}
@@ -11258,11 +11258,11 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.0963707
+  - screenRelativeHeight: 0.04753387
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 4761820661436462826}
-  - screenRelativeHeight: 0.03
+  - screenRelativeHeight: 0.02
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 2147201868190552623}
@@ -11365,7 +11365,7 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.3
+  - screenRelativeHeight: 0.25
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8558056130243356047}

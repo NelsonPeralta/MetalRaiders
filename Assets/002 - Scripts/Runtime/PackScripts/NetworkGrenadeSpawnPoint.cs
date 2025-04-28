@@ -125,7 +125,7 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
 
     void UpdateAmmoText()
     {
-        ammoText.text = ammoInThisPack.ToString();
+        //ammoText.text = ammoInThisPack.ToString();
     }
 
     public void SetRandomAmmoAsDefault()
