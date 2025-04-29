@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 514334854932465667}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 673367160626352133}
   - component: {fileID: 6722412955242979249}
   - component: {fileID: 977314190413802395}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Alien_02_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -333,7 +333,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7090561474237265976}
   - component: {fileID: 5927001437404446725}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Alien_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -392,7 +392,7 @@ GameObject:
   - component: {fileID: 7069973512317314562}
   - component: {fileID: 7078480462143719582}
   - component: {fileID: 767406514151257754}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Alien_02_Trigger_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -494,7 +494,7 @@ GameObject:
   - component: {fileID: 7752369981831036659}
   - component: {fileID: 6460946821101609767}
   - component: {fileID: 4339748027595839364}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Wep_Alien_02_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -578,7 +578,7 @@ GameObject:
   - component: {fileID: 8814473197968441237}
   - component: {fileID: 8815581094112806115}
   - component: {fileID: 2400072855077613180}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LootEssenceWhite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5507,7 +5507,7 @@ GameObject:
   - component: {fileID: 8691140487106693867}
   - component: {fileID: 8814118281906687649}
   - component: {fileID: 8813952872457533525}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RisingGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
