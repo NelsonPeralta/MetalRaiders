@@ -20,15 +20,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Oasis.unity
     guid: dbcf95cb10f4af34186b9d0e5b64a468
-  - enabled: 1
+  - enabled: 0
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple V3.unity
     guid: fb06b17e136993342b8ae0e295e1dd7f
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple V3 - mesh merging test.unity
-    guid: e8e8c98186622884babe5a2b1e30e562
-  - enabled: 0
-    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple V2.unity
-    guid: 23aa249cb5877b548bf7ee659810862b
+  - enabled: 1
+    path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Temple V4.unity
+    guid: 6c3f154ce30c8b84a823076e2d5f01fc
   - enabled: 1
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Blizzard.unity
     guid: 4245d0132b4fe14488b413289d52143f

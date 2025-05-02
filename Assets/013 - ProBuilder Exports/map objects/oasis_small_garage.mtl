@@ -1,0 +1,5 @@
+newmtl oasis_garage_material_-_blue
+map_Kd garage texture blue.png
+Kd 1 1 1
+d 1
+

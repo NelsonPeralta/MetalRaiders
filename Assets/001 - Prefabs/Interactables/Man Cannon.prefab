@@ -118,13 +118,14 @@ GameObject:
   - component: {fileID: 620178226330811916}
   - component: {fileID: 744879579795046412}
   - component: {fileID: 743819290348294992}
+  - component: {fileID: 6606399315689877801}
   m_Layer: 0
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &620178226330811916
 Transform:
   m_ObjectHideFlags: 0
@@ -5059,6 +5060,19 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &6606399315689877801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617040578988196424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66a8e45911d75b4a999931668357756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notes: this effect BREAKS static batching
 --- !u!1 &617163724271378194
 GameObject:
   m_ObjectHideFlags: 0
@@ -14984,7 +14998,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3068818756927678639}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -15123,7 +15137,7 @@ MeshRenderer:
   m_GameObject: {fileID: 4694257357780689088}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1

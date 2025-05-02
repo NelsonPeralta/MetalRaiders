@@ -88,7 +88,7 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 2460699542438848848}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &5001784962870691910
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +106,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8241880696070723184
 Transform:
   m_ObjectHideFlags: 0
