@@ -17,6 +17,7 @@ public class OddballSpawnPoint : MonoBehaviour
 
     private void Awake()
     {
+        if (!GameManager.instance) Destroy(gameObject);
         _oddball.thisRoot.parent = null;
     }
 

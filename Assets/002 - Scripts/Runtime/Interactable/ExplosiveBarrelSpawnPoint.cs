@@ -29,6 +29,11 @@ public class ExplosiveBarrelSpawnPoint : Hazard
 
     }
 
+    private void Awake()
+    {
+        if (!GameManager.instance) Destroy(gameObject);
+    }
+
     private void Start()
     {
         tts = _defaultTts;
@@ -73,7 +78,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
             if (gameTime.timeRemaining % tts == 0 && gameTime.timeRemaining > 0)
             {
                 Debug.Log("ExplosiveBarrelSpawnPoint OnGameTimeChanged");
-               ResetBarrel();
+                ResetBarrel();
             }
     }
 

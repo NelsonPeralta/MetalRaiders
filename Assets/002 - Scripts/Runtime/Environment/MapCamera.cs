@@ -76,7 +76,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
         //_text.text += $"\nallPlayersJoined {CurrentRoomManager.instance.allPlayersJoined}";
         //_text.text += $"\ngameIsReady {CurrentRoomManager.instance.gameIsReady}";
 
-
+        if (!GameManager.instance) return;
 
 
         _loadingText.text = $"Mapp Add-Ons: {CurrentRoomManager.instance.spawnedMapAddOns}/{CurrentRoomManager.instance.expectedMapAddOns}";

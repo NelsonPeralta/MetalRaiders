@@ -56,7 +56,7 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
 
     private void Awake()
     {
-
+        if (!GameManager.instance) Destroy(gameObject);
     }
     private void Start()
     {

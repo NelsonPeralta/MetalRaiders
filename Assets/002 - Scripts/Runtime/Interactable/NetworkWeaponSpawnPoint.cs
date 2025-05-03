@@ -26,20 +26,22 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     }
     private void OnDestroy()
     {
-        GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
+        if (GameTime.instance) GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
     }
 
     private void Awake()
     {
-        if (GameManager.instance)
-            if (GameManager.instance.gameType == GameManager.GameType.Fiesta ||
-                GameManager.instance.gameType == GameManager.GameType.GunGame
-                || GameManager.instance.gameType == GameManager.GameType.Rockets
-                || GameManager.instance.gameType == GameManager.GameType.Snipers
-                || GameManager.instance.gameType == GameManager.GameType.Shotguns)
-            {
-                gameObject.SetActive(false);
-            }
+        if (!GameManager.instance) Destroy(gameObject);
+
+
+        if (GameManager.instance.gameType == GameManager.GameType.Fiesta ||
+            GameManager.instance.gameType == GameManager.GameType.GunGame
+            || GameManager.instance.gameType == GameManager.GameType.Rockets
+            || GameManager.instance.gameType == GameManager.GameType.Snipers
+            || GameManager.instance.gameType == GameManager.GameType.Shotguns)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
 
