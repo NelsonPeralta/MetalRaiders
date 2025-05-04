@@ -2660,12 +2660,17 @@ PrefabInstance:
     - target: {fileID: 3684390784267105593, guid: 987fb89d42959704db6f3f1ee11db868,
         type: 3}
       propertyPath: m_Intensity
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3684390784267105593, guid: 987fb89d42959704db6f3f1ee11db868,
         type: 3}
       propertyPath: m_Shadows.m_Type
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3684390784267105593, guid: 987fb89d42959704db6f3f1ee11db868,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3204,7 +3209,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1301286
+  m_Name: pb_Mesh-67150
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -3808,7 +3813,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &269636808
 Transform:
   m_ObjectHideFlags: 0
@@ -5428,12 +5433,17 @@ PrefabInstance:
     - target: {fileID: 3684390784267105593, guid: 987fb89d42959704db6f3f1ee11db868,
         type: 3}
       propertyPath: m_Intensity
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3684390784267105593, guid: 987fb89d42959704db6f3f1ee11db868,
         type: 3}
       propertyPath: m_Shadows.m_Type
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3684390784267105593, guid: 987fb89d42959704db6f3f1ee11db868,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7651,7 +7661,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1318684
+  m_Name: pb_Mesh-70846
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
