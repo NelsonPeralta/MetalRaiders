@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8122986359821786472}
   - component: {fileID: 1229579149753095044}
   - component: {fileID: 8752129976943096716}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Ice Chunk hb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 2874842572647666888}
   - component: {fileID: 2644792019737395784}
   - component: {fileID: 5948063706620015267}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: IceExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5168,7 +5168,7 @@ GameObject:
   - component: {fileID: 2680635597336989884}
   - component: {fileID: 2874157575974253986}
   - component: {fileID: 2874773328322397084}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: CenterGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10066,7 +10066,7 @@ GameObject:
   - component: {fileID: 2679020577553337400}
   - component: {fileID: 2873899360229031312}
   - component: {fileID: 2875210361862727016}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: IceLinger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15054,7 +15054,7 @@ GameObject:
   - component: {fileID: 2680592147959888138}
   - component: {fileID: 2873594766645104314}
   - component: {fileID: 2873410936482461092}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20006,7 +20006,7 @@ GameObject:
   - component: {fileID: 2678727753738857860}
   - component: {fileID: 2874283690373943060}
   - component: {fileID: 2875222503410454298}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: SnowSparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24903,7 +24903,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7266618684954701176}
   - component: {fileID: 3186864384453123481}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Ice Chunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24925,7 +24925,7 @@ Transform:
   - {fileID: 763220888436413764}
   - {fileID: 2680523925974079368}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3186864384453123481
 MonoBehaviour:
