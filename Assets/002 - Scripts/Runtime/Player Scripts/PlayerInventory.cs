@@ -917,6 +917,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
         Debug.Log(GetWeaponProperties(StartingWeapon));
+        GetWeaponProperties(StartingWeapon).animator.Play("Idle");
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
 

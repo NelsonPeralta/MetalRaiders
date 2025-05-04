@@ -229,7 +229,14 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
-    public float currentlyReloadingTimer { set { _currentlyReloadingTimer = value; } }
+    public float currentlyReloadingTimer
+    {
+        set
+        {
+            print($"reload {value}");
+            _currentlyReloadingTimer = value;
+        }
+    }
     public bool triggerOverHeatOnShootingBtnUp { set { _triggerOverHeatOnShootingBtnUp = value; } }
     public bool isReloadingThirWeaponAnimation { get { return _currentlyReloadingTimer_thirdWeapon > 0; } }
 
@@ -1414,13 +1421,16 @@ public class PlayerController : MonoBehaviourPun
     enum ReloadMode { Normal, LeftOnly, RightOnly, Both }
     private void Reload()
     {
-        if (PV.IsMine)
+        if (PV.IsMine && !player.playerJustSpawn)
         {
             if (!player.playerInventory.isDualWielding)
             {
                 if (!isDrawingWeapon && !isThrowingGrenade && !isMeleeing && !isReloading)
                     if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
+                    {
+                        print($"reload");
                         PV.RPC("Reload_RPC", RpcTarget.All, 0);
+                    }
             }
             else
             {
@@ -1490,7 +1500,10 @@ public class PlayerController : MonoBehaviourPun
             if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
             {
                 if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+                {
+                    print($"reload");
                     weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                }
                 else if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
                     weaponAnimator.Play("reload generic", 0, 0f);
 

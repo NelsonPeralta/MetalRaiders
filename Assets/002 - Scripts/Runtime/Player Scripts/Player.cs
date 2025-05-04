@@ -105,6 +105,7 @@ public class Player : Biped
 
         set
         {
+
             float _previousValue = hitPoints;
             float _damage = _previousValue - value;
 
@@ -124,6 +125,7 @@ public class Player : Biped
             }
 
             float newValue = hitPoints - _damage;
+            //print($"damage: {newValue} {hitPoints} {_damage} {overshieldPoints} {_overshieldRecharge} {maxOvershieldPoints}");
 
             if (overshieldPoints <= 0)
                 _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
@@ -628,7 +630,7 @@ public class Player : Biped
     int _defaultHealingCountdown = 4;
 
     float _healthHealingIncrement = (100 * 2);
-    float _shieldHealingIncrement = (150 * 0.5f);
+    float _shieldHealingIncrement = (250 * 0.3f);
 
     bool _hasArmor;
     bool _hasMeleeUpgrade, _diedWithHeavyWeaponInHand;
@@ -1029,6 +1031,8 @@ public class Player : Biped
 
 
             int newHealth = (int)hitPoints - damage;
+
+            if (kfo == WeaponProperties.KillFeedOutput.Killbox) newHealth = 0;
             PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, (int)dsn, impactPos, impactDir, weaponIndx, (int)kfo);
         }
     }
@@ -1940,8 +1944,16 @@ public class Player : Biped
         }
         catch { }
 
-        if (newHealth <= 0 && isInvincible) newHealth = 1;
 
+
+        if ((WeaponProperties.KillFeedOutput)kfo == WeaponProperties.KillFeedOutput.Killbox)
+        {
+            _maxOvershieldPoints = 0;
+            _overshieldPoints = 0;
+            _overshieldRecharge = false;
+            _isInvincible = false;
+        }
+        if (newHealth <= 0 && isInvincible) newHealth = 1;
         hitPoints = newHealth;
 
         if (weaponIndx >= 0)
