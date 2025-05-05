@@ -68,6 +68,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
         _exploded = false;
         _collided = false; _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
+        GetComponent<Collider>().enabled = true;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.layer = 8;
     }
@@ -91,7 +92,7 @@ public class ExplosiveProjectile : MonoBehaviour
         }
 
 
-        if (useConstantForce)
+        if (useConstantForce && !_collided)
             GetComponent<Rigidbody>().AddForce
                 (gameObject.transform.forward * throwForce);
 
@@ -319,6 +320,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Collider>().enabled = false;
 
         stuck = true;
 

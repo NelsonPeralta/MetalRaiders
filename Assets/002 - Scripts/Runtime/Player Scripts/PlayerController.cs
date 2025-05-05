@@ -2512,7 +2512,7 @@ public class PlayerController : MonoBehaviourPun
                             if (hit.collider.transform.root.GetComponent<Player>())
                             {
                                 if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                                    MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
+                                    MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.photonId);
                                 else
                                 {
                                     if (hit.collider.transform.root.GetComponent<Player>().team != player.team)

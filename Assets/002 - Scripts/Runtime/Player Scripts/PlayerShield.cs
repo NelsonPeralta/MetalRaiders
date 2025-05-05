@@ -100,7 +100,7 @@ public class PlayerShield : MonoBehaviour
 
 
 
-        _shieldRenderers = _player.playerController.playerThirdPersonModelManager.spartanModel.GetComponentsInChildren<Renderer>(includeInactive: true).Where(item => item.GetComponent<PlayerShieldShaderHere>()).ToList();
+        _shieldRenderers = _player.playerController.playerThirdPersonModelManager.spartanModel.GetComponentsInChildren<Renderer>(includeInactive: true).Where(item => item.GetComponent<PlayerShieldShaderHere>() && item.GetComponent<Renderer>()).ToList();
 
         foreach (Renderer mr in _shieldRenderers)
         {
@@ -115,7 +115,6 @@ public class PlayerShield : MonoBehaviour
     {
         if (_player)
         {
-            return;
             foreach (Renderer mr in _shieldRenderers)
             {
                 if (mr.gameObject.activeInHierarchy)
@@ -131,11 +130,11 @@ public class PlayerShield : MonoBehaviour
                     {
                         mr.materials[1].SetFloat("_Alpha", 0);
                     }
-                    else if (shieldDamagePercentage == 0 && mr.materials[1].GetFloat("_Alpha") != 1)
+                    else if (shieldDamagePercentage == 0 && mr.materials[1].GetFloat("_Alpha") != 0)
                     {
-                        mr.materials[1].SetFloat("_Alpha", 1);
+                        mr.materials[1].SetFloat("_Alpha", 0);
                     }
-                    else if ((shieldDamagePercentage != 0 && shieldDamagePercentage != 1) &&
+                    else if (!_player.isHealing && (shieldDamagePercentage != 0 && shieldDamagePercentage != 1) &&
                         mr.materials[1].GetFloat("_Alpha") != shieldDamagePercentage)
                     {
                         mr.materials[1].SetFloat("_Alpha", shieldDamagePercentage);
