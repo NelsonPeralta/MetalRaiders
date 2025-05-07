@@ -74,7 +74,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     private void Awake()
     {
-        if (GameManager.instance.connection == GameManager.Connection.Local)
+        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
             GetComponent<AudioSource>().spatialBlend = 0;
 
     }

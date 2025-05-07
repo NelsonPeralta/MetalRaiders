@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -36,10 +37,15 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] AudioSource _stuckSfxAudioSource;
 
     bool _collided, _exploded;
-    float _explosionDelayOnImpact, _resetIgnoredColliders;
+    float _explosionDelayOnImpact, _resetIgnoredColliders, _defaultSpatialBlend;
 
 
 
+
+    private void Awake()
+    {
+        _defaultSpatialBlend = GetComponent<AudioSource>().spatialBlend;
+    }
 
 
     private void OnEnable()
@@ -127,7 +133,31 @@ public class ExplosiveProjectile : MonoBehaviour
         {
             Debug.Log($"Collided with: {collision.gameObject.name} {collision.gameObject.GetComponent<Collider>()} {collision.gameObject.GetComponent<Player>()}");
 
-            try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
+            try
+            {
+                if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
+                {
+                    float _distanceFromRootPlayer = Vector3.Distance(GameManager.GetRootPlayer().transform.position, transform.position);
+                    float _closestDistanceToThisExplosion = _distanceFromRootPlayer;
+
+                    foreach (Player p in GameManager.GetLocalPlayers().Where(item => item != GameManager.GetRootPlayer()))
+                    {
+                        if (Vector3.Distance(p.transform.position, transform.position) < _closestDistanceToThisExplosion)
+                            _closestDistanceToThisExplosion = Vector3.Distance(p.transform.position, transform.position);
+                    }
+
+                    float _ratio = _closestDistanceToThisExplosion / _distanceFromRootPlayer;
+
+                    GetComponent<AudioSource>().spatialBlend = _ratio * _defaultSpatialBlend;
+                }
+
+                GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play();
+            }
+            catch { }
+
+
+
+
 
             if (_sticky && !_collided)
             {
@@ -317,7 +347,7 @@ public class ExplosiveProjectile : MonoBehaviour
         stuck = true;
 
 
-        if (GameManager.instance.connection == GameManager.Connection.Local) _stuckSfxAudioSource.spatialBlend = 0; else _stuckSfxAudioSource.spatialBlend = 1;
+        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1) _stuckSfxAudioSource.spatialBlend = 0; else _stuckSfxAudioSource.spatialBlend = 1;
         _stuckSfxAudioSource.Play();
 
 
