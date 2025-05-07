@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class ExplosiveProjectile : MonoBehaviour
     public bool stuck { get { return _stuck; } set { _stuck = value; } }
 
     [SerializeField] Player _player;
-    [SerializeField] int _damage, _radius, _throwForce, _explosionPower;
+    [SerializeField] int _damage, _radius, _throwForce, _explosionPower, _stuckPlayerPhotonId;
     [SerializeField] string _sourceCleanName;
     [SerializeField] WeaponProperties.KillFeedOutput _killFeedOutput;
     [SerializeField] bool _useConstantForce;
@@ -43,6 +44,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnEnable()
     {
+        _stuckPlayerPhotonId = -999;
         if (_defaultTtl <= 0) { _defaultTtl = 10; }
 
 
@@ -258,29 +260,18 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
+        if (PhotonNetwork.IsMasterClient && _stuckPlayerPhotonId > 0)
+        {
+            GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
+              impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
+        }
+
+
         if (player.isMine && !_exploded)
         {
             _exploded = true;
             NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
         }
-
-
-
-
-
-
-
-
-
-
-        //if (_color == global::Explosion.Color.Yellow)
-        //    GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.fragClip, _killFeedOutput, stuck);
-        //else if (_color == global::Explosion.Color.Blue)
-        //    GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.plasmaClip, _killFeedOutput, stuck);
-
-
-
-        //gameObject.SetActive(false);
     }
 
     public void TriggerExplosion(Vector3 pos)
@@ -315,6 +306,7 @@ public class ExplosiveProjectile : MonoBehaviour
         _collided = true;
 
 
+        _stuckPlayerPhotonId = playerPhotonId;
         gameObject.transform.position = gPos;
         gameObject.transform.SetParent(GameManager.GetPlayerWithPhotonView(playerPhotonId).transform, true);
 

@@ -5160,11 +5160,11 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.25
+  m_Time: 0.125
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 3
+    widthMultiplier: 1.5
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -5246,11 +5246,9 @@ MonoBehaviour:
   PV: {fileID: 2532398821212697507}
   trackingTarget: {fileID: 0}
   allPlayerScripts: {fileID: 0}
-  pInventory: {fileID: 0}
   weaponProperties: {fileID: 0}
   zScript: {fileID: 0}
   crosshairScript: {fileID: 0}
-  gameObjectPool: {fileID: 0}
   collision: {fileID: 0}
   bulletTarget: {fileID: 0}
   _layerMask:
@@ -5266,6 +5264,7 @@ MonoBehaviour:
   blueTeam: 0
   yellowTeam: 0
   greenTeam: 0
+  overcharged: 0
   isNormalBullet: 0
   isHeadshotCapable: 0
   canBleedthroughHeadshot: 0

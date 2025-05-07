@@ -236,8 +236,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
     {
         if (other.GetComponent<InteractableObject>() && !_rawInteractableObjects.Contains(other.GetComponent<InteractableObject>()))
         {
-            print($"PlayerInteractableObjectHandler OnTriggerStay addind: {other.GetComponent<InteractableObject>().name}");
-
+            //print($"PlayerInteractableObjectHandler OnTriggerStay addind: {other.GetComponent<InteractableObject>().name}");
 
             _preRawInteractableObjects = new List<InteractableObject>(_rawInteractableObjects);
 

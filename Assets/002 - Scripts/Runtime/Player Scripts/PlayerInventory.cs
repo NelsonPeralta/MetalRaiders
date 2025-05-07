@@ -1106,14 +1106,23 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     bool outOfFakeBullets;
-    public void SpawnFakeBulletTrail(int lenghtOfTrail, Quaternion spray, bool bipedIsMine,
-        Vector3? muzzlePosition = null, Vector3? lookAtThisTarget = null)
+    Vector3 _realTimeTravelScale = new Vector3(2, 2, 0.5f);
+    public FakeBulletTrail SpawnFakeBulletTrail(int lenghtOfTrail, Quaternion spray, bool bipedIsMine,
+        Vector3? muzzlePosition = null, Vector3? lookAtThisTarget = null, bool realTimeTravel = false, WeaponProperties wp = null)
     {
-        outOfFakeBullets = true;
+        outOfFakeBullets = (_fakeBulletTrailPool.Where(item => !item.gameObject.activeInHierarchy).Count() == 0);
+
+        if (outOfFakeBullets)
+        {
+            GameManager.GetRootPlayer().killFeedManager.EnterNewFeed("Out of trails");
+        }
+
         foreach (FakeBulletTrail fbt in _fakeBulletTrailPool)
         {
             if (!fbt.gameObject.activeInHierarchy)
             {
+                try { fbt.GetComponent<Bullet>().enabled = false; } catch { }
+
                 if (bipedIsMine)
                 {
                     int ll = 0;
@@ -1145,8 +1154,23 @@ public class PlayerInventory : MonoBehaviourPun
                 fbt.rotationToTarget.localRotation = Quaternion.identity;
                 fbt.sprayRotation.localRotation = Quaternion.identity;
 
-                fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
-                fbt.sprayRotation.localRotation *= spray;
+
+
+
+                if (realTimeTravel)
+                {
+                    fbt.GetComponent<Bullet>().weaponProperties = wp;
+                    fbt.GetComponent<Bullet>().damage = 0;
+                    fbt.GetComponent<Bullet>().speed = 200;
+                    fbt.GetComponent<Bullet>().trailOnly = true;
+                    fbt.GetComponent<Bullet>().enabled = true;
+                    //Debug.Break();
+                }
+                else
+                {
+                    fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+                    fbt.sprayRotation.localRotation *= spray;
+                }
 
 
 
@@ -1156,11 +1180,17 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-                if (muzzlePosition != null && muzzlePosition != Vector3.zero)
+                if (muzzlePosition != null && muzzlePosition != Vector3.zero && !realTimeTravel)
                 {
                     fbt.transform.position = (Vector3)muzzlePosition;
                     fbt.scaleToChange.localScale = Vector3.one;
                     fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+                }
+
+                if (realTimeTravel)
+                {
+                    fbt.scaleToChange.localScale = _realTimeTravelScale;
+                    fbt.fakeBulletTrailDisable.timeBeforeDisabling = 2;
                 }
 
                 if (lookAtThisTarget != null && lookAtThisTarget != Vector3.zero)
@@ -1168,14 +1198,15 @@ public class PlayerInventory : MonoBehaviourPun
                     fbt.rotationToTarget.LookAt((Vector3)lookAtThisTarget);
                 }
 
+
+
+
+                return fbt;
                 break;
             }
         }
 
-        if (outOfFakeBullets)
-        {
-            GameManager.GetRootPlayer().killFeedManager.EnterNewFeed("Out of trails");
-        }
+        return null;
     }
 
     public void TriggerStartGameBehaviour()

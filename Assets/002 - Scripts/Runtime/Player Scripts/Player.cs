@@ -1946,7 +1946,7 @@ public class Player : Biped
 
 
 
-        if ((WeaponProperties.KillFeedOutput)kfo == WeaponProperties.KillFeedOutput.Killbox)
+        if ((WeaponProperties.KillFeedOutput)kfo == WeaponProperties.KillFeedOutput.Killbox || (WeaponProperties.KillFeedOutput)kfo == WeaponProperties.KillFeedOutput.Stuck)
         {
             _maxOvershieldPoints = 0;
             _overshieldPoints = 0;
