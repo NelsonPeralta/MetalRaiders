@@ -33,9 +33,9 @@ public class Hurtzone : MonoBehaviour
             if (instantKillzone)
             {
                 if (player.lastPID > 0)
-                    player.Damage((int)player.hitPoints, false, player.lastPID);
+                    player.Damage((int)player.hitPoints, false, player.lastPID, kfo: WeaponProperties.KillFeedOutput.Killbox);
                 else
-                    player.Damage((int)player.hitPoints, false, player.photonId);
+                    player.Damage((int)player.hitPoints, false, player.photonId, kfo: WeaponProperties.KillFeedOutput.Killbox);
             }
             else
             {

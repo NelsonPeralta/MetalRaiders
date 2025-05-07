@@ -69,9 +69,6 @@ public class PlayerShield : MonoBehaviour
     {
         get
         {
-            if (_player.shieldPoints == 0)
-                return 1;
-
             return 1 - (_player.shieldPoints / _player.maxShieldPoints);
         }
     }
@@ -104,22 +101,6 @@ public class PlayerShield : MonoBehaviour
 
 
         _shieldRenderers = _player.playerController.playerThirdPersonModelManager.spartanModel.GetComponentsInChildren<Renderer>(includeInactive: true).Where(item => item.GetComponent<PlayerShieldShaderHere>() && item.GetComponent<Renderer>()).ToList();
-
-
-
-        //for (int j = _shieldRenderers.Count; j-- > 0;)
-        //{
-        //    if (_shieldRenderers[j].GetComponent<LODGroup>() && !_shieldRenderers[j].GetComponent<Renderer>())
-        //    {
-        //        _shieldRenderers.RemoveAt(j);
-        //        foreach(Renderer r in _shieldRenderers[j].GetComponentsInChildren<Renderer>().Where(item => item.name.Contains("_LOD"))){
-        //            r.gameObject.AddComponent<PlayerShieldShaderHere>();
-        //            _shieldRenderers.Add(r);
-        //        }
-        //    }
-        //}
-
-
 
         foreach (Renderer mr in _shieldRenderers)
         {

@@ -1520,7 +1520,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static void PlayerBeeps()
     {
-        if (!instance._beepConsecutiveAudioSource.isPlaying)
+        if (!instance._beepConsecutiveAudioSource.isPlaying && !CurrentRoomManager.instance.gameOver)
             instance._beepConsecutiveAudioSource.Play();
     }
 
@@ -1654,7 +1654,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             n.transform.root.GetComponent<ExplosiveBarrelSpawnPoint>().ResetBarrel();
 
 
-        
+
 
         Vector3 _tempPosRed = GameManager.instance.redFlag.spawnPoint.transform.position;
         GameManager.instance.redFlag.spawnPoint.transform.position = GameManager.instance.blueFlag.spawnPoint.transform.position;

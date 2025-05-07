@@ -74,7 +74,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     private void Awake()
     {
-        if (GameManager.instance.connection == GameManager.Connection.Local)
+        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
             GetComponent<AudioSource>().spatialBlend = 0;
 
     }
@@ -523,70 +523,79 @@ public class PlayerShooting : MonoBehaviourPun
 
 
 
-                        fakeBulletTrailRaycasthits = Physics.RaycastAll(player.mainCamera.transform.position, player.mainCamera.transform.forward, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask).ToList();
-
-                        if (fakeBulletTrailRaycasthits.Count <= 0)
+                        if (GameManager.instance.nbLocalPlayersPreset > 1 || weaponToShoot.isShotgun)
                         {
+                            fakeBulletTrailRaycasthits = Physics.RaycastAll(player.mainCamera.transform.position, player.mainCamera.transform.forward, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask).ToList();
 
-                            // if we find no colliders (default or hitboxes), shoot a fake trail at its maximum lenght
-                            pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
-                                ranSprayQuat, player.isMine,
-                               muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
-                        }
-                        else
-                        {
-                            for (int j = fakeBulletTrailRaycasthits.Count; j-- > 0;)
-                                if (fakeBulletTrailRaycasthits[j].collider.transform.root == player.transform)
-                                    fakeBulletTrailRaycasthits.Remove(fakeBulletTrailRaycasthits[j]);
-                            fakeBulletTrailRaycasthits = fakeBulletTrailRaycasthits.OrderBy(item => Vector3.Distance(player.mainCamera.transform.position, item.point)).ToList();
-
-
-
-
-
-
-                            if (fakeBulletTrailRaycasthits.Count > 0)
+                            if (fakeBulletTrailRaycasthits.Count <= 0)
                             {
 
-                                print("There is a collider at the center of our main camera. " +
-                                $"The dot product is: {Vector3.Dot(fakeBulletTrailRaycasthits[0].point - player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point - playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position)}");
+                                // if we find no colliders (default or hitboxes), shoot a fake trail at its maximum lenght
+                                pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
+                                    ranSprayQuat, player.isMine,
+                                   muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
+                            }
+                            else
+                            {
+                                for (int j = fakeBulletTrailRaycasthits.Count; j-- > 0;)
+                                    if (fakeBulletTrailRaycasthits[j].collider.transform.root == player.transform)
+                                        fakeBulletTrailRaycasthits.Remove(fakeBulletTrailRaycasthits[j]);
+                                fakeBulletTrailRaycasthits = fakeBulletTrailRaycasthits.OrderBy(item => Vector3.Distance(player.mainCamera.transform.position, item.point)).ToList();
 
-                                print($"The distance between the muzzle and the hit at the center of the camera is: " +
-                                    $"{Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point)}");
 
-                                if (Vector3.Dot(fakeBulletTrailRaycasthits[0].point - player.mainCamera.transform.position,
-                                    fakeBulletTrailRaycasthits[0].point - playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position) > 0)
+
+
+
+
+                                if (fakeBulletTrailRaycasthits.Count > 0)
                                 {
-                                    if (Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point) > 4)
+
+                                    print("There is a collider at the center of our main camera. " +
+                                    $"The dot product is: {Vector3.Dot(fakeBulletTrailRaycasthits[0].point - player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point - playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position)}");
+
+                                    print($"The distance between the muzzle and the hit at the center of the camera is: " +
+                                        $"{Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point)}");
+
+                                    if (Vector3.Dot(fakeBulletTrailRaycasthits[0].point - player.mainCamera.transform.position,
+                                        fakeBulletTrailRaycasthits[0].point - playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position) > 0)
                                     {
-                                        pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point),
-                                            ranSprayQuat, player.isMine,
-                               muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position,
-                               lookAtThisTarget: (playerController.player.aimAssist.targetPointPosition != Vector3.zero ? playerController.player.aimAssist.targetPointPosition : fakeBulletTrailRaycasthits[0].point));
+                                        if (Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point) > 4)
+                                        {
+                                            pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point),
+                                                ranSprayQuat, player.isMine,
+                                   muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position,
+                                   lookAtThisTarget: (playerController.player.aimAssist.targetPointPosition != Vector3.zero ? playerController.player.aimAssist.targetPointPosition : fakeBulletTrailRaycasthits[0].point));
+                                        }
+                                        else
+                                        {
+                                            // The target may be too close to the player. The trail could be unrealistically warped
+                                            // this could break immersion
+                                            // we will NOT show a fake trail
+                                        }
                                     }
                                     else
                                     {
-                                        // The target may be too close to the player. The trail could be unrealistically warped
-                                        // this could break immersion
-                                        // we will NOT show a fake trail
+                                        // The target may be between the position of the camera and the end of the muzzle of the gun
+                                        // the player may be in 3PS mode
+
+                                        pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, playerController.player.playerCamera.playerCameraCenterPointCheck.target.position),
+                                    ranSprayQuat, player.isMine,
+                                   muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                                     }
                                 }
                                 else
                                 {
-                                    // The target may be between the position of the camera and the end of the muzzle of the gun
-                                    // the player may be in 3PS mode
-
-                                    pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, playerController.player.playerCamera.playerCameraCenterPointCheck.target.position),
-                                ranSprayQuat, player.isMine,
-                               muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
+                                    pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range,
+                                    ranSprayQuat, player.isMine,
+                                   muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                                 }
                             }
-                            else
-                            {
-                                pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range,
-                                ranSprayQuat, player.isMine,
-                               muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
-                            }
+                        }
+                        else
+                        {
+                            var fbt = pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
+                                      ranSprayQuat, player.isMine,
+                                     muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position, realTimeTravel: true, wp: weaponToShoot);
                         }
 
 
@@ -715,6 +724,8 @@ public class PlayerShooting : MonoBehaviourPun
                     //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
                     //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
                     print($"bullet time test. Spawned at: {Time.time}");
+
+                    //bullet.GetComponent<TrailRenderer>().enabled = GameManager.instance.nbLocalPlayersPreset == 1;
                     bullet.SetActive(true);
 
                     if (weaponToShoot.plasmaColor != WeaponProperties.PlasmaColor.Shard)

@@ -931,7 +931,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            GameManager.GetPlayerWithPhotonView(pid).maxOvershieldPoints = 150;
+            GameManager.GetPlayerWithPhotonView(pid).maxOvershieldPoints = 250;
 
 
 

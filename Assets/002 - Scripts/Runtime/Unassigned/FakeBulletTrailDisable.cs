@@ -11,10 +11,6 @@ public class FakeBulletTrailDisable : MonoBehaviour
     public Player player;
     public float timeBeforeDisabling;
 
-    private void OnEnable()
-    {
-        timeBeforeDisabling = 0.1f;
-    }
 
     private void Update()
     {
@@ -24,23 +20,7 @@ public class FakeBulletTrailDisable : MonoBehaviour
 
             if(timeBeforeDisabling <= 0)
             {
-                transform.parent = player.playerInventory.bulletTrailHolder;
-
-                transform.localRotation = Quaternion.identity;
-                transform.localPosition = Vector3.zero;
-                transform.localScale = Vector3.one;
-
-
-                if (GameManager.instance.connection == GameManager.Connection.Local)
-                {
-                    if (player.rid == 0) transform.GetChild(0).gameObject.layer = 25;
-                    else if (player.rid == 1) transform.GetChild(0).gameObject.layer = 27;
-                    else if (player.rid == 2) transform.GetChild(0).gameObject.layer = 29;
-                    else if (player.rid == 3) transform.GetChild(0).gameObject.layer = 31;
-                }
-
-
-                gameObject.SetActive(false);
+                TriggerDisable();
             }
             //else
             //{
@@ -48,5 +28,26 @@ public class FakeBulletTrailDisable : MonoBehaviour
             //    transform.Translate(Vector3.forward * Time.deltaTime * Speed);
             //}
         }
+    }
+
+    public void TriggerDisable()
+    {
+        transform.parent = player.playerInventory.bulletTrailHolder;
+
+        transform.localRotation = Quaternion.identity;
+        transform.localPosition = Vector3.zero;
+        transform.localScale = Vector3.one;
+
+
+        if (GameManager.instance.connection == GameManager.Connection.Local)
+        {
+            if (player.rid == 0) transform.GetChild(0).gameObject.layer = 25;
+            else if (player.rid == 1) transform.GetChild(0).gameObject.layer = 27;
+            else if (player.rid == 2) transform.GetChild(0).gameObject.layer = 29;
+            else if (player.rid == 3) transform.GetChild(0).gameObject.layer = 31;
+        }
+
+
+        gameObject.SetActive(false);
     }
 }

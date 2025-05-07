@@ -12,6 +12,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     {
         get { return _spawnDir; }
     }
+    public bool trailOnly { get { return _trailOnly; } set { _trailOnly = value; } }
 
     Player _sourcePlayer;
     Vector3 _spawnDir;
@@ -73,7 +74,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 
     float _ignoreOriginPlayerTime;
-    bool _addToHits;
+    bool _addToHits, _trailOnly;
 
     void Awake()
     {
@@ -115,7 +116,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         if (_ignoreOriginPlayerTime > 0) _ignoreOriginPlayerTime -= Time.deltaTime;
 
 
-        Despawn();
+        if (!_trailOnly) Despawn();
         ShootRay();
         Travel();
     }
@@ -155,6 +156,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 for (int i = _hitList.Count; i-- > 0;)
                 {
                     _tempRh = _hitList[i];
+                    print($"bullet hit: {_hitList[i].collider.name}");
                     if (_tempRh.collider.transform.root == weaponProperties.player.transform) _hitList.RemoveAt(i);
                 }
 
@@ -179,10 +181,11 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                 if (objectsHit.Count > 0)
                 {
-                    CheckForFinalHit();
+                    if (damage > 0) CheckForFinalHit();
                     print($"bullet time test. Despawned at: {Time.time}");
 
-                    gameObject.SetActive(false);
+
+                    if (trailOnly && GetComponent<FakeBulletTrailDisable>()) GetComponent<FakeBulletTrailDisable>().TriggerDisable(); else gameObject.SetActive(false);
                 }
             }
         }
@@ -237,7 +240,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         //print($"Bullet has tracking target {weaponProperties.targetTracking} {trackingTarget}");
 
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
-        if (weaponProperties.targetTracking && trackingTarget)
+        if (weaponProperties && weaponProperties.targetTracking && trackingTarget)
         {
             if (!trackingTarget.gameObject.activeInHierarchy || trackingTarget.GetComponent<HitPoints>().isDead) trackingTarget = null;
 
@@ -255,6 +258,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                     transform.rotation = Quaternion.Lerp(transform.rotation, rot, weaponProperties.trackingSpeed * Time.deltaTime);
                 }
             }
+        }
+        else
+        {
+            //Debug.LogWarning("You are missing a reference");
         }
 
         //prePos = transform.position;
@@ -654,6 +661,11 @@ public class Bullet : MonoBehaviourPunCallbacks
             #endregion
         }
 
+    }
+
+    private void OnDisable()
+    {
+        _trailOnly = false;
     }
     public class ObjectHit
     {

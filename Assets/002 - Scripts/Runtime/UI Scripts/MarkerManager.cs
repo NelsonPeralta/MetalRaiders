@@ -111,6 +111,8 @@ public class MarkerManager : MonoBehaviour
             {
                 obj.transform.position = pos;
                 obj.targetPlayer = GameManager.GetPlayerWithPhotonView(player_id);
+                print($"SpawnEnnSpotMarker {obj.gameObject}");
+                print($"SpawnEnnSpotMarker {player_id}");
                 ChangeLayer(obj.gameObject, GameManager.GetPlayerWithPhotonView(player_id).rid);
                 obj.gameObject.SetActive(true);
                 StartCoroutine(DisableObjectAfterTime(obj.gameObject, 4));
