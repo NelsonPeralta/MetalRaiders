@@ -259,4 +259,15 @@ public class MenuManager : MonoBehaviour
 
         return _menus;
     }
+
+    public bool APopUpMenuisOpen()
+    {
+        for (int i = 0; i < menus.Length; i++)
+            if (menus[i].popup && menus[i].open)
+            {
+                return true;
+            }
+
+        return false;
+    }
 }

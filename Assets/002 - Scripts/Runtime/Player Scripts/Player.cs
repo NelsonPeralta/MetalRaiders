@@ -952,7 +952,7 @@ public class Player : Biped
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        print($"Damage: ({damage}) {damageSourceCleanName}");
+        print($"Damage: ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo}");
 
 
         if (headshot && GameManager.GetPlayerWithPhotonView(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
@@ -1013,7 +1013,7 @@ public class Player : Biped
                     dsn = DeathNature.Grenade;
                 else if (damageSourceCleanName.Contains("RPG"))
                     dsn = DeathNature.RPG;
-                else if (damageSourceCleanName.Contains("tuck"))
+                else if (damageSourceCleanName.Contains("tuck") || kfo == WeaponProperties.KillFeedOutput.Stuck)
                     dsn = DeathNature.Stuck;
                 else if (damageSourceCleanName.Contains("elee"))
                     dsn = DeathNature.Melee;
@@ -1027,6 +1027,9 @@ public class Player : Biped
                 //    bytes = Encoding.UTF8.GetBytes(damageSourceCleanName);
             }
             //Debug.LogError($"EMPTY DEATH NATURE");
+
+            if (kfo == WeaponProperties.KillFeedOutput.Stuck)
+                dsn = DeathNature.Stuck;
 
 
 
