@@ -144,7 +144,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 295628925596331392}
-  - component: {fileID: 5558403575244393378}
   m_Layer: 0
   m_Name: Battle Rifle - scope
   m_TagString: Untagged
@@ -169,29 +168,6 @@ Transform:
   m_Father: {fileID: 7185117903858914919}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &5558403575244393378
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 292448858257569706}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: -0.009773612}
-  m_Size: 0.28387684
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.04155478
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 4758996121757621524}
-  - screenRelativeHeight: 0.02
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 6236357999557953590}
-  m_Enabled: 1
 --- !u!1 &903867361611301302
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,7 +343,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2917730816254514780}
-  - component: {fileID: 8060356072171883893}
   m_Layer: 0
   m_Name: Battle Rifle - Body
   m_TagString: Untagged
@@ -392,29 +367,6 @@ Transform:
   m_Father: {fileID: 7185117903858914919}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &8060356072171883893
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1835516244239546382}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: -0.0020291507, z: 0.044586092}
-  m_Size: 0.823408
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.15
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 3200525096614261047}
-  - screenRelativeHeight: 0.04
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 5989499510812546080}
-  m_Enabled: 1
 --- !u!1 &1852053121763760250
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,7 +378,6 @@ GameObject:
   - component: {fileID: 8610594822193511788}
   - component: {fileID: 3934329723322020008}
   - component: {fileID: 6048911026312337800}
-  - component: {fileID: 2008901281978803382}
   m_Layer: 10
   m_Name: Battle Rifle - mag
   m_TagString: Untagged
@@ -499,25 +450,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &2008901281978803382
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852053121763760250}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.14606199
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 6048911026312337800}
-  m_Enabled: 1
 --- !u!1 &3046962409046791798
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,7 +812,6 @@ GameObject:
   - component: {fileID: 3654873941436312247}
   - component: {fileID: 6261635550620616961}
   - component: {fileID: 7223554256512046961}
-  - component: {fileID: 926207818633569359}
   m_Layer: 0
   m_Name: Battle Rifle - SM_Wep_Assault_02_RedDot_01
   m_TagString: Untagged
@@ -953,25 +884,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &926207818633569359
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6433853397819038794}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.14632167
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 7223554256512046961}
-  m_Enabled: 1
 --- !u!1 &7071580644170905504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,6 +1200,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7185117903858914919}
+  - component: {fileID: 3625833184291789781}
   m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
@@ -1316,6 +1229,38 @@ Transform:
   m_Father: {fileID: 7206459119514176669}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &3625833184291789781
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7634725381323050180}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.05
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 3200525096614261047}
+    - renderer: {fileID: 4761820661436462826}
+    - renderer: {fileID: 4758996121757621524}
+    - renderer: {fileID: 6048911026312337800}
+    - renderer: {fileID: 7223554256512046961}
+    - renderer: {fileID: 8558056130243356047}
+    - renderer: {fileID: 8314157164501940481}
+  - screenRelativeHeight: 0.02
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 5989499510812546080}
+    - renderer: {fileID: 2147201868190552623}
+    - renderer: {fileID: 6236357999557953590}
+    - renderer: {fileID: 6236357999557953590}
+  m_Enabled: 1
 --- !u!1 &8188116299299695395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1333,7 +1278,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8190868572953966345
 Transform:
   m_ObjectHideFlags: 0
@@ -6280,7 +6225,6 @@ GameObject:
   - component: {fileID: 8315229327587951223}
   - component: {fileID: 8314157164501940481}
   - component: {fileID: 2066532614295453054}
-  - component: {fileID: 7808181314219574487}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -11191,25 +11135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!205 &7808181314219574487
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8188238653291213923}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.045633912
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 8314157164501940481}
-  m_Enabled: 1
 --- !u!1 &8810593909896766082
 GameObject:
   m_ObjectHideFlags: 0
@@ -11219,7 +11144,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6310196533348153341}
-  - component: {fileID: 7847231165472804839}
   m_Layer: 0
   m_Name: Battle Rifle - SM_Wep_Assault_02_ForeBarrel_01
   m_TagString: Untagged
@@ -11244,29 +11168,6 @@ Transform:
   m_Father: {fileID: 7185117903858914919}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &7847231165472804839
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8810593909896766082}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0.16083603}
-  m_Size: 0.32657722
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.04753387
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 4761820661436462826}
-  - screenRelativeHeight: 0.02
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2147201868190552623}
-  m_Enabled: 1
 --- !u!1 &8887506813820739889
 GameObject:
   m_ObjectHideFlags: 0
@@ -11278,7 +11179,6 @@ GameObject:
   - component: {fileID: 7910118467391267520}
   - component: {fileID: 7576266255054292408}
   - component: {fileID: 8558056130243356047}
-  - component: {fileID: 202067125498691521}
   m_Layer: 0
   m_Name: Battle Rifle - SM_Wep_Assault_02_Trigger_01
   m_TagString: Untagged
@@ -11351,22 +11251,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &202067125498691521
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8887506813820739889}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.25
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 8558056130243356047}
-  m_Enabled: 1

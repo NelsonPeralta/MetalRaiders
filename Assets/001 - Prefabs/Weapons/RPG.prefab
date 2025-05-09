@@ -95,7 +95,6 @@ GameObject:
   - component: {fileID: 913474968959098515}
   - component: {fileID: 912295878233351653}
   - component: {fileID: 8940904640261013705}
-  - component: {fileID: 929358093874108270}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -5006,26 +5005,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!205 &929358093874108270
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1038790052530186375}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.028561242
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 912295878233351653}
-    - renderer: {fileID: 914071813632678227}
-  m_Enabled: 1
 --- !u!1 &1038917287552677831
 GameObject:
   m_ObjectHideFlags: 0
@@ -5043,7 +5022,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1036740721146211309
 Transform:
   m_ObjectHideFlags: 0
@@ -9987,6 +9966,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8911819081340204705}
+  - component: {fileID: 5919990140788865033}
   m_Layer: 10
   m_Name: model
   m_TagString: Untagged
@@ -10011,6 +9991,31 @@ Transform:
   m_Father: {fileID: 3961792897311190888}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &5919990140788865033
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1726161526713970136}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.05
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 881540629954174059}
+    - renderer: {fileID: 3094562851820250513}
+    - renderer: {fileID: 912295878233351653}
+  - screenRelativeHeight: 0.02
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4393176463247290113}
+  m_Enabled: 1
 --- !u!1 &3071969034225006555
 GameObject:
   m_ObjectHideFlags: 0
@@ -10022,7 +10027,6 @@ GameObject:
   - component: {fileID: 3078094123900474861}
   - component: {fileID: 3085391341271541451}
   - component: {fileID: 3094562851820250513}
-  - component: {fileID: 8405193531716790330}
   m_Layer: 0
   m_Name: RPG - trigger
   m_TagString: Untagged
@@ -10095,25 +10099,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &8405193531716790330
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3071969034225006555}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.3
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 3094562851820250513}
-  m_Enabled: 1
 --- !u!1 &3072555623054146243
 GameObject:
   m_ObjectHideFlags: 0
@@ -10123,7 +10108,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3077788063004070497}
-  - component: {fileID: 7378506211496025335}
   m_Layer: 0
   m_Name: RPG - body
   m_TagString: Untagged
@@ -10148,29 +10132,6 @@ Transform:
   m_Father: {fileID: 8911819081340204705}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &7378506211496025335
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3072555623054146243}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.000004142523, y: 0.13845438, z: -0.08973724}
-  m_Size: 1.3163675
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.15
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 881540629954174059}
-  - screenRelativeHeight: 0.04
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 4393176463247290113}
-  m_Enabled: 1
 --- !u!1 &3961792897310896968
 GameObject:
   m_ObjectHideFlags: 0

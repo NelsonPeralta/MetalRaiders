@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7505045049450855433}
+  - component: {fileID: 8989303124608109574}
   m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
@@ -34,6 +35,31 @@ Transform:
   m_Father: {fileID: 8071910260568785388}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &8989303124608109574
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264985390409898665}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.05
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 9217220028313457633}
+    - renderer: {fileID: 6823076102320395680}
+    - renderer: {fileID: 3923946510467545222}
+  - screenRelativeHeight: 0.02
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 8169060882809091207}
+  m_Enabled: 1
 --- !u!1 &3798521061649069540
 GameObject:
   m_ObjectHideFlags: 0
@@ -46,7 +72,6 @@ GameObject:
   - component: {fileID: 3922873250017657840}
   - component: {fileID: 3923946510467545222}
   - component: {fileID: 7919081473161628801}
-  - component: {fileID: 5201449548766143623}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -4957,26 +4982,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!205 &5201449548766143623
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3798521061649069540}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.05371728
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 3923946510467545222}
-    - renderer: {fileID: 3923452983742694448}
-  m_Enabled: 1
 --- !u!1 &3798629124138674852
 GameObject:
   m_ObjectHideFlags: 0
@@ -4994,7 +4999,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3800676321784362638
 Transform:
   m_ObjectHideFlags: 0
@@ -10290,7 +10295,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 438522101056501349}
-  - component: {fileID: 7196219776915707034}
   m_Layer: 0
   m_Name: Pistol - body - pbea
   m_TagString: Untagged
@@ -10315,29 +10319,6 @@ Transform:
   m_Father: {fileID: 7505045049450855433}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &7196219776915707034
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8215945681573393110}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.000042282045, y: 0.045996413, z: 0.11281085}
-  m_Size: 0.37594026
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.07
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 9217220028313457633}
-  - screenRelativeHeight: 0.02
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 8169060882809091207}
-  m_Enabled: 1
 --- !u!1 &8790162575936214864
 GameObject:
   m_ObjectHideFlags: 0

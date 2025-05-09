@@ -341,7 +341,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6889396712430577187}
-  - component: {fileID: 7995850275051782144}
   m_Layer: 0
   m_Name: Grenade Launcher - body
   m_TagString: Untagged
@@ -366,29 +365,6 @@ Transform:
   m_Father: {fileID: 7007953590289062821}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &7995850275051782144
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2566054728860058017}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.003481742, y: 0.06256825, z: 0.19907698}
-  m_Size: 0.74328583
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.15
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 7647005376119795431}
-  - screenRelativeHeight: 0.03
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 1199983967136063358}
-  m_Enabled: 1
 --- !u!1 &2835589251325886406
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,7 +376,6 @@ GameObject:
   - component: {fileID: 2835589251325886411}
   - component: {fileID: 2835589251325886408}
   - component: {fileID: 2835589251325886409}
-  - component: {fileID: 6748044869633881491}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Trigger_01
   m_TagString: Untagged
@@ -473,25 +448,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &6748044869633881491
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589251325886406}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.21100001
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2835589251325886409}
-  m_Enabled: 1
 --- !u!1 &2835589251532301279
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,6 +457,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2835589251532301278}
+  - component: {fileID: 3142872451524045157}
   m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
@@ -526,6 +483,36 @@ Transform:
   m_Father: {fileID: 5361828782445167749}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &3142872451524045157
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835589251532301279}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.05
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7647005376119795431}
+    - renderer: {fileID: 7359421611861766811}
+    - renderer: {fileID: 2835589252700915390}
+    - renderer: {fileID: 2835589253102912951}
+    - renderer: {fileID: 2835589251542481270}
+    - renderer: {fileID: 2835589252549753252}
+    - renderer: {fileID: 7156294788660293087}
+  - screenRelativeHeight: 0.02
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 1199983967136063358}
+    - renderer: {fileID: 1922230690475053933}
+  m_Enabled: 1
 --- !u!1 &2835589251542481268
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,7 +524,6 @@ GameObject:
   - component: {fileID: 2835589251542481271}
   - component: {fileID: 2835589251542481273}
   - component: {fileID: 2835589251542481270}
-  - component: {fileID: 7810699607034181259}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_05
   m_TagString: Untagged
@@ -610,25 +596,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &7810699607034181259
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589251542481268}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.21100001
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2835589251542481270}
-  m_Enabled: 1
 --- !u!1 &2835589252549753250
 GameObject:
   m_ObjectHideFlags: 0
@@ -640,7 +607,6 @@ GameObject:
   - component: {fileID: 2835589252549753253}
   - component: {fileID: 2835589252549753255}
   - component: {fileID: 2835589252549753252}
-  - component: {fileID: 6841275284206179640}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_06
   m_TagString: Untagged
@@ -713,25 +679,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &6841275284206179640
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589252549753250}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.21100001
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2835589252549753252}
-  m_Enabled: 1
 --- !u!1 &2835589252700915388
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,7 +690,6 @@ GameObject:
   - component: {fileID: 2835589252700915391}
   - component: {fileID: 2835589252700915361}
   - component: {fileID: 2835589252700915390}
-  - component: {fileID: 4438668171486672138}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_03
   m_TagString: Untagged
@@ -816,25 +762,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &4438668171486672138
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589252700915388}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.21100001
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2835589252700915390}
-  m_Enabled: 1
 --- !u!1 &2835589253102912949
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,7 +773,6 @@ GameObject:
   - component: {fileID: 2835589253102912948}
   - component: {fileID: 2835589253102912950}
   - component: {fileID: 2835589253102912951}
-  - component: {fileID: 999453334992557900}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_02
   m_TagString: Untagged
@@ -919,25 +845,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &999453334992557900
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589253102912949}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.21100001
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2835589253102912951}
-  m_Enabled: 1
 --- !u!1 &2835589253175665565
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,7 +854,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2835589253175665566}
-  - component: {fileID: 6409637848334632674}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Chamber_01
   m_TagString: Untagged
@@ -978,29 +884,6 @@ Transform:
   m_Father: {fileID: 2835589251532301278}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &6409637848334632674
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589253175665565}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0.000000834465, y: -0.000019997358, z: 0.00023959577}
-  m_Size: 0.29163384
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.059035134
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 7359421611861766811}
-  - screenRelativeHeight: 0.011822777
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 1922230690475053933}
-  m_Enabled: 1
 --- !u!1 &2835589253195293727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,7 +895,6 @@ GameObject:
   - component: {fileID: 2835589253195293726}
   - component: {fileID: 2835589253195293696}
   - component: {fileID: 2835589253195293697}
-  - component: {fileID: 3369414887989188510}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_04
   m_TagString: Untagged
@@ -1085,25 +967,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &3369414887989188510
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589253195293727}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.21100001
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2835589253195293697}
-  m_Enabled: 1
 --- !u!1 &2835589253204904861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1115,7 +978,6 @@ GameObject:
   - component: {fileID: 2835589253204904860}
   - component: {fileID: 2835589253204904862}
   - component: {fileID: 2835589253204904863}
-  - component: {fileID: 1049151486052016591}
   m_Layer: 0
   m_Name: SM_Wep_Heavy_02_Grenade_01
   m_TagString: Untagged
@@ -1188,25 +1050,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &1049151486052016591
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2835589253204904861}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.21100001
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2835589253204904863}
-  m_Enabled: 1
 --- !u!1 &5361828782445140133
 GameObject:
   m_ObjectHideFlags: 0
@@ -1431,7 +1274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7033033017038709719
 Transform:
   m_ObjectHideFlags: 0

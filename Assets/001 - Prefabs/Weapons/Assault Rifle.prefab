@@ -100,7 +100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4016903757502669551
 Transform:
   m_ObjectHideFlags: 0
@@ -5047,7 +5047,6 @@ GameObject:
   - component: {fileID: 3850725268540774289}
   - component: {fileID: 3851975000606911719}
   - component: {fileID: 7427040264916562580}
-  - component: {fileID: 1961454562424087102}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -9958,26 +9957,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!205 &1961454562424087102
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4014766184036540805}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.02
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 3851975000606911719}
-    - renderer: {fileID: 3851345031067537489}
-  m_Enabled: 1
 --- !u!1 &4855473407323235954
 GameObject:
   m_ObjectHideFlags: 0
@@ -9987,6 +9966,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5188290006719422471}
+  - component: {fileID: 760612057092675778}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -10013,6 +9993,33 @@ Transform:
   m_Father: {fileID: 4914801058926115171}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &760612057092675778
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4855473407323235954}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0.000000022351742, y: -0.016679138, z: -0.010236442}
+  m_Size: 0.9237579
+  m_FadeMode: 0
+  m_AnimateCrossFading: 1
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.05
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7363774856695248409}
+    - renderer: {fileID: 1335204536355084068}
+    - renderer: {fileID: 6298727605908652875}
+    - renderer: {fileID: 3851975000606911719}
+  - screenRelativeHeight: 0.02
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 994680383888744065}
+    - renderer: {fileID: 1037175441415681296}
+  m_Enabled: 1
 --- !u!1 &5381266751361430024
 GameObject:
   m_ObjectHideFlags: 0
@@ -10188,7 +10195,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6281331148857284185}
-  - component: {fileID: 720324545335236789}
   m_Layer: 0
   m_Name: SM_Wep_Assault_01_Mag_01
   m_TagString: Untagged
@@ -10213,29 +10219,6 @@ Transform:
   m_Father: {fileID: 5188290006719422471}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &720324545335236789
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6286281221487274837}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0.000000031664968, y: -0.06035524, z: 0.031953588}
-  m_Size: 0.1899602
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.030748842
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 1335204536355084068}
-  - screenRelativeHeight: 0.01
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 1037175441415681296}
-  m_Enabled: 1
 --- !u!1 &6286499556323441091
 GameObject:
   m_ObjectHideFlags: 0
@@ -10247,7 +10230,6 @@ GameObject:
   - component: {fileID: 6284111405530461377}
   - component: {fileID: 6290467146240911869}
   - component: {fileID: 6298727605908652875}
-  - component: {fileID: 5540602979818099116}
   m_Layer: 0
   m_Name: SM_Wep_Assault_01_Trigger_01
   m_TagString: Untagged
@@ -10320,25 +10302,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &5540602979818099116
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6286499556323441091}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.2
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 6298727605908652875}
-  m_Enabled: 1
 --- !u!1 &6307918818170703822
 GameObject:
   m_ObjectHideFlags: 0
@@ -10348,7 +10311,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7376761612760523633}
-  - component: {fileID: 1049546556027529872}
   m_Layer: 0
   m_Name: Assault Rifle - Body
   m_TagString: Untagged
@@ -10373,29 +10335,6 @@ Transform:
   m_Father: {fileID: 5188290006719422471}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &1049546556027529872
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6307918818170703822}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0.000000022351742, y: -0.016679138, z: -0.010236442}
-  m_Size: 0.9237579
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.15
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 7363774856695248409}
-  - screenRelativeHeight: 0.03
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 994680383888744065}
-  m_Enabled: 1
 --- !u!1 &7212868062158377885
 GameObject:
   m_ObjectHideFlags: 0

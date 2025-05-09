@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7311173557663353749}
+  - component: {fileID: 8255621562398133731}
   m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
@@ -35,6 +36,34 @@ Transform:
   m_Father: {fileID: 9031099019893028464}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &8255621562398133731
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079929221702118709}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.05
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 8975506361090507117}
+    - renderer: {fileID: 2949713532555802383}
+    - renderer: {fileID: 2872501141166733134}
+    - renderer: {fileID: 2871694109574846538}
+    - renderer: {fileID: 4261935387475152666}
+  - screenRelativeHeight: 0.02
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2621214263419980441}
+    - renderer: {fileID: 355707858119070591}
+  m_Enabled: 1
 --- !u!1 &2849304056880658560
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +279,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2854788648666239906}
-  - component: {fileID: 4498834905601550838}
   m_Layer: 0
   m_Name: Revolver - SM_Wep_Pistol_02
   m_TagString: Untagged
@@ -275,29 +303,6 @@ Transform:
   m_Father: {fileID: 7311173557663353749}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &4498834905601550838
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2849936447902848356}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0.0000001527369, y: 0.043013692, z: 0.19177508}
-  m_Size: 0.5369476
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.15
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 8975506361090507117}
-  - screenRelativeHeight: 0.03
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2621214263419980441}
-  m_Enabled: 1
 --- !u!1 &2849944035749423834
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,7 +312,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2846459545659732530}
-  - component: {fileID: 8867344764786123709}
   m_Layer: 0
   m_Name: Revolver - SM_Wep_Pistol_02_Cylander_01
   m_TagString: Untagged
@@ -332,29 +336,6 @@ Transform:
   m_Father: {fileID: 7311173557663353749}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &8867344764786123709
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2849944035749423834}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: -0.000000022351742, z: 0.0000003259629}
-  m_Size: 0.08569963
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.024164895
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2949713532555802383}
-  - screenRelativeHeight: 0.0048015104
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 355707858119070591}
-  m_Enabled: 1
 --- !u!1 &3628686279315536674
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,7 +519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4174680528938811666
 Transform:
   m_ObjectHideFlags: 0
@@ -5485,7 +5466,6 @@ GameObject:
   - component: {fileID: 4260721112511280236}
   - component: {fileID: 4261935387475152666}
   - component: {fileID: 6969317727244630813}
-  - component: {fileID: 1841213738749485966}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -10396,26 +10376,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!205 &1841213738749485966
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4172244135278543480}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.07029701
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 4261935387475152666}
-    - renderer: {fileID: 4261285523672052652}
-  m_Enabled: 1
 --- !u!1 &6891869177160590325
 GameObject:
   m_ObjectHideFlags: 0

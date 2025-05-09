@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &126255504373641666
 Transform:
   m_ObjectHideFlags: 0
@@ -92,7 +92,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 126610087419361220}
-  - component: {fileID: 647054957399044309}
   m_Layer: 0
   m_Name: Plasma Blaster - body
   m_TagString: Untagged
@@ -117,29 +116,6 @@ Transform:
   m_Father: {fileID: 4070508823915125614}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &647054957399044309
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 129227761930274858}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0.040163726, z: 0.3215134}
-  m_Size: 1.1936493
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.15
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 4191460589631609822}
-  - screenRelativeHeight: 0.04
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 5466203114241870789}
-  m_Enabled: 1
 --- !u!1 &752998892869279046
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,6 +415,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4070508823915125614}
+  - component: {fileID: 8183574811856805023}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -463,6 +440,31 @@ Transform:
   m_Father: {fileID: 3767606288670032394}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &8183574811856805023
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3683877589957401883}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0.040163726, z: 0.3215134}
+  m_Size: 1.1936493
+  m_FadeMode: 0
+  m_AnimateCrossFading: 1
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.05
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4191460589631609822}
+    - renderer: {fileID: 4974558573106927502}
+    - renderer: {fileID: 116267857040736800}
+  - screenRelativeHeight: 0.02
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 5466203114241870789}
+  m_Enabled: 1
 --- !u!1 &5173097628330236652
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +477,6 @@ GameObject:
   - component: {fileID: 4975736835441159416}
   - component: {fileID: 4974558573106927502}
   - component: {fileID: 6310489887605200886}
-  - component: {fileID: 5790622761045281513}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -5386,26 +5387,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!205 &5790622761045281513
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5173097628330236652}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.031532053
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 4974558573106927502}
-    - renderer: {fileID: 4976303411324169016}
-  m_Enabled: 1
 --- !u!1 &5173218882619016620
 GameObject:
   m_ObjectHideFlags: 0
@@ -5423,7 +5404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5171030534043031942
 Transform:
   m_ObjectHideFlags: 0

@@ -302,7 +302,6 @@ GameObject:
   - component: {fileID: 3616468428734352886}
   - component: {fileID: 3617575776192444032}
   - component: {fileID: 7841497990350676913}
-  - component: {fileID: 901791053839119788}
   m_Layer: 0
   m_Name: LootEssenceWhite
   m_TagString: Untagged
@@ -5213,26 +5212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53535d39e3eaf40a04e9092a53f7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!205 &901791053839119788
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3528447473949457378}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.036229443
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 3617575776192444032}
-    - renderer: {fileID: 3617086750660299318}
-  m_Enabled: 1
 --- !u!1 &3528552167104455842
 GameObject:
   m_ObjectHideFlags: 0
@@ -5250,7 +5229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3530303643301378184
 Transform:
   m_ObjectHideFlags: 0
@@ -10279,7 +10258,6 @@ GameObject:
   - component: {fileID: 4966427002261004932}
   - component: {fileID: 4939153054192702428}
   - component: {fileID: 4949063002314130216}
-  - component: {fileID: 2550002290331111854}
   m_Layer: 0
   m_Name: SM_Wep_Shotgun_02_Trigger_01
   m_TagString: Untagged
@@ -10352,25 +10330,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &2550002290331111854
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4969921033902186928}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.14581348
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 4949063002314130216}
-  m_Enabled: 1
 --- !u!1 &4970184598121446968
 GameObject:
   m_ObjectHideFlags: 0
@@ -10382,7 +10341,6 @@ GameObject:
   - component: {fileID: 4966815676778712052}
   - component: {fileID: 4938836902958842594}
   - component: {fileID: 4947224004673158434}
-  - component: {fileID: 7108444199472694507}
   m_Layer: 0
   m_Name: SM_Wep_Shotgun_02_Forestock_01
   m_TagString: Untagged
@@ -10455,25 +10413,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!205 &7108444199472694507
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4970184598121446968}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
-  m_Size: 1
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.14525378
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 4947224004673158434}
-  m_Enabled: 1
 --- !u!1 &4970415744532576922
 GameObject:
   m_ObjectHideFlags: 0
@@ -10483,7 +10422,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4966905868948097666}
-  - component: {fileID: 2663224354341550374}
   m_Layer: 0
   m_Name: SM_Wep_Shotgun_02
   m_TagString: Untagged
@@ -10508,29 +10446,6 @@ Transform:
   m_Father: {fileID: 8143529040660222704}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &2663224354341550374
-LODGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4970415744532576922}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: 0, y: 0.06696247, z: 0.23333767}
-  m_Size: 1.0421741
-  m_FadeMode: 1
-  m_AnimateCrossFading: 1
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.15
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2891924656930211377}
-  - screenRelativeHeight: 0.03
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 323282416609311752}
-  m_Enabled: 1
 --- !u!1 &5209618701388372179
 GameObject:
   m_ObjectHideFlags: 0
@@ -10540,6 +10455,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8143529040660222704}
+  - component: {fileID: 6961467791003600265}
   m_Layer: 10
   m_Name: model
   m_TagString: Untagged
@@ -10565,3 +10481,29 @@ Transform:
   m_Father: {fileID: 1949347182520655834}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &6961467791003600265
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5209618701388372179}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.05
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2891924656930211377}
+    - renderer: {fileID: 4947224004673158434}
+    - renderer: {fileID: 4949063002314130216}
+    - renderer: {fileID: 3617575776192444032}
+  - screenRelativeHeight: 0.02
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 323282416609311752}
+  m_Enabled: 1
