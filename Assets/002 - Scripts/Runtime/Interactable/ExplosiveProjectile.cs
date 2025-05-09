@@ -44,7 +44,8 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void Awake()
     {
-        _defaultSpatialBlend = GetComponent<AudioSource>().spatialBlend;
+        if (GetComponent<AudioSource>())
+            _defaultSpatialBlend = GetComponent<AudioSource>().spatialBlend;
     }
 
 
