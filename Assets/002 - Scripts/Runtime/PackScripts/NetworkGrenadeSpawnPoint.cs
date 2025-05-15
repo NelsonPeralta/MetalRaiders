@@ -47,12 +47,6 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
     public int defaultAmmo;
     [SerializeField] int ammoInThisPack;
 
-    [Header("Classes")]
-    public TextMeshPro ammoText;
-    public OnlineAmmoPackSpawnPoint onlineAmmoPackSpawnPoint;
-
-    [Header("Other Classes")]
-    public Player playerProperties;
 
     private void Awake()
     {

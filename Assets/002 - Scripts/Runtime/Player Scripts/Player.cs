@@ -507,7 +507,9 @@ public class Player : Biped
             //if(GameManager.instance.pid_player_Dict.ContainsKey(value)) _lastPID = value;else _lastPID = 0;
             _lastPID = value;
 
-            try { playerThatKilledMe = GameManager.GetPlayerWithPhotonView(_lastPID); } catch { _lastPID = 0; }
+
+            if (value > 0)
+                try { playerThatKilledMe = GameManager.GetPlayerWithPhotonView(_lastPID); } catch { _lastPID = 0; }
         }
     }
 
@@ -779,7 +781,7 @@ public class Player : Biped
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
 
-        _lastPID = -1;
+        lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
         gameObjectPool = GameObjectPool.instance;
         weaponPool = FindObjectOfType<WeaponPool>();
@@ -1377,7 +1379,7 @@ public class Player : Biped
         {
 
             try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
-            _lastPID = -1;
+            lastPID = -1;
             deathNature = DeathNature.None;
             _killFeedOutput = WeaponProperties.KillFeedOutput.Unassigned;
             OnPlayerRespawnEarly?.Invoke(this);
@@ -1601,7 +1603,7 @@ public class Player : Biped
         if (isDead)
         {
             if (isMine && GameManager.instance.gameMode == GameManager.GameMode.Versus)
-                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, (int)_killFeedOutput);
+                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, lastPID, PV.ViewID, (int)_deathNature, (int)_killFeedOutput);
 
             {
                 // Spawn Skull
@@ -2170,11 +2172,11 @@ public class Player : Biped
 
 
     [PunRPC]
-    void AddPlayerKill_RPC(int wpid, int lpid, int dni, int kfo)
+    void AddPlayerKill_RPC(int playerWhoSurvivedPhotonId, int playerWhoDiedPhotonId, int dni, int kfo)
     {
         Debug.Log("AddPlayerKill_RPC");
 
-        playerThatKilledMe = GameManager.GetPlayerWithPhotonView(wpid); _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo; deathNature = (DeathNature)dni; _lastPID = wpid;
+        playerThatKilledMe = GameManager.GetPlayerWithPhotonView(playerWhoSurvivedPhotonId); _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo; deathNature = (DeathNature)dni; lastPID = playerWhoSurvivedPhotonId;
 
         playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
 
@@ -2193,7 +2195,7 @@ public class Player : Biped
                 {
                     string f = $"<color=#31cff9>{playerThatKilledMe.username} killed {username}";
 
-                    if (_killFeedOutput != WeaponProperties.KillFeedOutput.Unassigned)
+                    if (_killFeedOutput != WeaponProperties.KillFeedOutput.Unassigned && _killFeedOutput != WeaponProperties.KillFeedOutput.Killbox)
                         f = $"<color=#31cff9>{playerThatKilledMe.username} [ {_killFeedOutput.ToString().Replace("_", " ")} ] {username}";
 
                     if (GameManager.instance.gameType == GameManager.GameType.GunGame
@@ -2239,7 +2241,7 @@ public class Player : Biped
             {
 
                 PlayerMedals sourcePlayerMedals = playerThatKilledMe._playerMedals;
-                if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
+                if (sourcePlayerMedals != this._playerMedals && lastPID != this.photonId)
                 {
                     print($"Spawning medal: {deathByGroin} {deathNature}");
                     if (deathByGroin)
@@ -2266,7 +2268,7 @@ public class Player : Biped
                     //    sourcePlayerMedals.SpawnKilljoySpreeMedal();
                 }
 
-                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, (WeaponProperties.KillFeedOutput)kfo));
+                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoSurvivedPhotonId, playerWhoDiedPhotonId, (DeathNature)dni, (WeaponProperties.KillFeedOutput)kfo));
                 AchievementCheck(lastPID);
             }
 
