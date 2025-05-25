@@ -82,6 +82,10 @@ public class ExplosiveProjectile : MonoBehaviour
         gameObject.layer = 8;
     }
 
+    private void OnDisable()
+    {
+        transform.parent = GrenadePool.instance.transform;
+    }
 
 
 
