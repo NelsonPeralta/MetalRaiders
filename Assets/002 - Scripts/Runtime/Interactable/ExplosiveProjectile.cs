@@ -108,8 +108,8 @@ public class ExplosiveProjectile : MonoBehaviour
         if (_collided)
         {
             _explosionDelayOnImpact -= Time.deltaTime;
-            if (_explosionDelayOnImpact < 0)
-                Explosion();
+            //if (_explosionDelayOnImpact < 0)
+            //    Explosion();
         }
 
 
