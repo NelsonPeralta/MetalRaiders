@@ -39,6 +39,7 @@ public class GrenadePool : MonoBehaviour
             _explosions.Add(Instantiate(_explosionPrefab, transform).GetComponent<Explosion>()); // Prefab must be inactive
 
             _fragGrenadePool[i].SetActive(false); _stickyGrenadePool[i].SetActive(false);
+            _stickyGrenadePool[i].name += $" ({i})";
             _fragGrenadePool[i].transform.SetParent(this.transform); _stickyGrenadePool[i].transform.SetParent(this.transform);
             _explosions[i].transform.SetParent(this.transform);
 

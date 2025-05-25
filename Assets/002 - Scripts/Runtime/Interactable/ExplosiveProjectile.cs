@@ -84,7 +84,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnDisable()
     {
-        transform.parent = GrenadePool.instance.transform;
+        //transform.parent = GrenadePool.instance.transform; // return an error
     }
 
 
@@ -101,6 +101,7 @@ public class ExplosiveProjectile : MonoBehaviour
             {
                 print($"{name} disabled due to ttl");
                 gameObject.SetActive(false);
+                transform.parent = GrenadePool.instance.transform;
             }
         }
 
@@ -320,6 +321,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
         _resetIgnoredColliders = -1;
         gameObject.SetActive(false);
+        transform.parent = GrenadePool.instance.transform;
 
 
         if (_collidersToIgnore.Count > 0)
