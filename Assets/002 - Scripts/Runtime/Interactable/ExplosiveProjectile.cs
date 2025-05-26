@@ -1,3 +1,4 @@
+using MathNet.Numerics;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -347,9 +348,11 @@ public class ExplosiveProjectile : MonoBehaviour
         gameObject.transform.position = gPos;
         gameObject.transform.SetParent(GameManager.GetPlayerWithPhotonView(playerPhotonId).transform, true);
 
-        GetComponent<Rigidbody>().useGravity = false;
-        GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<Rigidbody>().detectCollisions = false;
+        //GetComponent<Rigidbody>().useGravity = false;
+        //GetComponent<Rigidbody>().isKinematic = true;
+        //GetComponent<Rigidbody>().detectCollisions = false;
+        Destroy(GetComponent<Rigidbody>());
+
         GetComponent<Collider>().enabled = false;
 
         stuck = true;

@@ -90,10 +90,13 @@ public class GrenadePool : MonoBehaviour
             if (!_instance._fragGrenadePool[i].activeInHierarchy) _instance._fragGrenadePool[i].transform.SetParent(instance.transform);
             if (!_instance._stickyGrenadePool[i].activeInHierarchy)
             {
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().isKinematic = false;
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().useGravity = true;
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().detectCollisions = true;
-                _instance._stickyGrenadePool[i].GetComponent<ExplosiveProjectile>().stuck = false;
+                //_instance._stickyGrenadePool[i].GetComponent<Rigidbody>().isKinematic = false;
+                //_instance._stickyGrenadePool[i].GetComponent<Rigidbody>().useGravity = true;
+                //_instance._stickyGrenadePool[i].GetComponent<Rigidbody>().detectCollisions = true;
+                //_instance._stickyGrenadePool[i].GetComponent<ExplosiveProjectile>().stuck = false;
+                _instance._stickyGrenadePool[i].AddComponent<Rigidbody>();
+                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 _instance._stickyGrenadePool[i].transform.SetParent(instance.transform);
 
                 _instance._stickyGrenadePool[i].transform.localScale = Vector3.one;
