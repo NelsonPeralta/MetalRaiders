@@ -962,7 +962,7 @@ public class Player : Biped
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        print($"Damage: ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo}");
+        print($"Damage: ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo} {source_pid}");
 
 
         if (headshot && GameManager.GetPlayerWithPhotonView(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
@@ -1794,7 +1794,7 @@ public class Player : Biped
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
-        print($"Damage_RPC {impPos} {impDir}");
+        print($"Damage_RPC {impPos} {impDir} {sourcePid}");
         this.impactPos = transform.position; this.impactDir = Vector3.zero;
         try { this.impactDir = impDir; } catch { }
         try { this.impactPos = impPos; } catch { }
