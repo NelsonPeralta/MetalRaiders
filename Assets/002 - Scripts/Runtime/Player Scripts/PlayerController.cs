@@ -2614,7 +2614,7 @@ public class PlayerController : MonoBehaviourPun
         DisableSprint_RPC();
         player.PlayThrowingGrenadeClip();
 
-        GameObject nade = GrenadePool.GetAndPrepareGrenade(fga, ind);
+        GameObject nade = GrenadePool.GetGrenadeAtIndex(fga, ind);
         nade.transform.position = sp; nade.transform.rotation = sr;
         nade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
         nade.GetComponent<ExplosiveProjectile>().IgnoreTheseCollidersFor1Second(GetComponent<Player>().hitboxes.Select(x => x.GetComponent<Collider>()).ToList());

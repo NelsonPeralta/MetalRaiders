@@ -128,7 +128,7 @@ public class GrenadePool : MonoBehaviour
 
 
 
-    public static GameObject GetAndPrepareGrenade(bool isFrag, int i)
+    public static GameObject GetGrenadeAtIndex(bool isFrag, int i)
     {
         if (isFrag)
         {
@@ -136,19 +136,6 @@ public class GrenadePool : MonoBehaviour
         }
         else
         {
-            if (_instance._stickyGrenadePool[i].GetComponent<Rigidbody>())
-            {
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().isKinematic = false;
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().useGravity = true;
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().detectCollisions = true;
-            }
-            else
-            {
-                _instance._stickyGrenadePool[i].AddComponent<Rigidbody>();
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            }
-
             return _instance._stickyGrenadePool[i];
         }
     }

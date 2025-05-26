@@ -78,7 +78,12 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnDisable()
     {
-        //transform.parent = GrenadePool.instance.transform; // return an error
+        if (_sticky && !GetComponent<Rigidbody>())
+        {
+            gameObject.AddComponent<Rigidbody>();
+            GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+            GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        }
     }
 
 
