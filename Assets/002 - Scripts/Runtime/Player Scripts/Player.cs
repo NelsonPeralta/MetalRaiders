@@ -136,6 +136,14 @@ public class Player : Biped
                 _isTakingDamageForIndicator = 0.3f;
                 OnPlayerDamaged?.Invoke(this);
             }
+            else
+            {
+                if(newValue == maxHitPoints)
+                {
+                    print("player shield recharged completely");
+                    lastPID = -1;
+                }
+            }
 
             if (_previousValue != newValue)
                 OnPlayerHitPointsChanged?.Invoke(this);
