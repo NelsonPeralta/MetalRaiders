@@ -65,13 +65,6 @@ public class ExplosiveProjectile : MonoBehaviour
                 if (p)
                     Physics.IgnoreCollision(p.playerCapsule.GetComponent<Collider>(), GetComponent<Collider>());
             }
-
-
-            GetComponent<ParentConstraint>().constraintActive = false;
-            GetComponent<ParentConstraint>().locked = false;
-
-            for (int j = GetComponent<ParentConstraint>().sourceCount; j-- > 0;)
-                GetComponent<ParentConstraint>().RemoveSource(j);
         }
 
         _ttl = _defaultTtl;
@@ -175,10 +168,6 @@ public class ExplosiveProjectile : MonoBehaviour
                 {
 
                     print("Stuck 1");
-
-                    GetComponent<ParentConstraint>().locked = true;
-                    GetComponent<ParentConstraint>().constraintActive = false;
-
 
                     GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
