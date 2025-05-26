@@ -516,12 +516,15 @@ public class Player : Biped
         set
         {
             //if(GameManager.instance.pid_player_Dict.ContainsKey(value)) _lastPID = value;else _lastPID = 0;
-            print($"{name} lastPID change: {_lastPID} -> {value}");
-            _lastPID = value;
+            if (_lastPID != value)
+            {
+                print($"{name} lastPID change: {_lastPID} -> {value}");
+                _lastPID = value;
 
 
-            if (value > 0)
-                try { playerThatKilledMe = GameManager.GetPlayerWithPhotonView(_lastPID); } catch { _lastPID = 0; }
+                if (value > 0)
+                    try { playerThatKilledMe = GameManager.GetPlayerWithPhotonView(_lastPID); } catch { _lastPID = 0; }
+            }
         }
     }
 
