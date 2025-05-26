@@ -89,7 +89,7 @@ public class ExplosiveProjectile : MonoBehaviour
     {
         if (_ttl > 0)
         {
-            //_ttl -= Time.deltaTime;
+            _ttl -= Time.deltaTime;
 
             if (_ttl <= 0)
             {
