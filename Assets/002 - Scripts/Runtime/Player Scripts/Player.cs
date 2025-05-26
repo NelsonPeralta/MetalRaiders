@@ -138,7 +138,7 @@ public class Player : Biped
             }
             else
             {
-                if(newValue == maxHitPoints)
+                if (newValue == maxHitPoints)
                 {
                     print("player shield recharged completely");
                     lastPID = -1;
@@ -513,6 +513,7 @@ public class Player : Biped
         set
         {
             //if(GameManager.instance.pid_player_Dict.ContainsKey(value)) _lastPID = value;else _lastPID = 0;
+            print($"{name} lastPID change: {_lastPID} -> {value}");
             _lastPID = value;
 
 
