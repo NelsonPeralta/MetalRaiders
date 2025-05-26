@@ -95,7 +95,7 @@ public class ExplosiveProjectile : MonoBehaviour
     {
         if (_ttl > 0)
         {
-            _ttl -= Time.deltaTime;
+            //_ttl -= Time.deltaTime;
 
             if (_ttl <= 0)
             {
@@ -349,6 +349,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Rigidbody>().detectCollisions = false;
         GetComponent<Collider>().enabled = false;
 
         stuck = true;

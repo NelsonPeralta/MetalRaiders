@@ -92,6 +92,7 @@ public class GrenadePool : MonoBehaviour
             {
                 _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().isKinematic = false;
                 _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().useGravity = true;
+                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().detectCollisions = true;
                 _instance._stickyGrenadePool[i].GetComponent<ExplosiveProjectile>().stuck = false;
                 _instance._stickyGrenadePool[i].transform.SetParent(instance.transform);
 
