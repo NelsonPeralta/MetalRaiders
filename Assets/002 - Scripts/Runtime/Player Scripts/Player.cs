@@ -128,7 +128,10 @@ public class Player : Biped
             //print($"damage: {newValue} {hitPoints} {_damage} {overshieldPoints} {_overshieldRecharge} {maxOvershieldPoints}");
 
             if (overshieldPoints <= 0)
-                _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+            {
+                newValue = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+                _hitPoints = newValue;
+            }
 
             if (_previousValue > newValue)
             {
