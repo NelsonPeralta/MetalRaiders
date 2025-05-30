@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Rewired.ComponentControls.Effects.RotateAroundAxis;
 
 public class FakeBulletTrailDisable : MonoBehaviour
 {
-    public static int Speed = 300;
+    public static int Speed = 240;
 
 
     public Player player;
