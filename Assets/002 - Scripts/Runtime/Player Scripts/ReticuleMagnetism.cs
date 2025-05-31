@@ -59,8 +59,7 @@ public class ReticuleMagnetism : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        yMagDir = 0;
-        xMagDir = 0;
+        yMagDir = xMagDir = xMag = yMag = 0;
 
         if (!player.isMine)
             return;
@@ -69,8 +68,8 @@ public class ReticuleMagnetism : MonoBehaviour
             player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Mouse)
             return;
 
-        //if (player.GetComponent<PlayerController>().isAiming)
-        //    return;
+        if (player.GetComponent<PlayerController>().isAiming)
+            return;
 
         Ray();
 
