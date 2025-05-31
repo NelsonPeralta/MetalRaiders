@@ -51,7 +51,7 @@ public class MenuManager : MonoBehaviour
     public void OpenMenu(string menuName, bool closeOthers = true) // Open a menu GO using the name from its Menu script
     {
 
-        Debug.Log($"OPEN MENU: {menuName} {closeOthers}");
+        Debug.Log($"OPEN MENU: {menuName} {closeOthers} {PhotonNetwork.InRoom} {PhotonNetwork.IsMasterClient}");
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits))
         {
@@ -60,7 +60,7 @@ public class MenuManager : MonoBehaviour
             if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
             {
                 PhotonNetwork.CurrentRoom.IsVisible = true;
-                PhotonNetwork.CurrentRoom.IsOpen = false;
+                //PhotonNetwork.CurrentRoom.IsOpen = false;
             }
         }
 
