@@ -728,10 +728,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-            //PhotonNetwork.CurrentRoom.IsVisible = false;
-
             NetworkGameManager.instance.CancelStartGameButton();
+            PhotonNetwork.CurrentRoom.IsOpen = true;
         }
 
         _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);

@@ -344,6 +344,7 @@ MonoBehaviour:
   _rankIm: {fileID: 4159738386684144060}
   _pointerEnterIndicator: {fileID: 7646871395535707914}
   _roomLeaderIcon: {fileID: 6598924396605851349}
+  _kickPlayerBtn: {fileID: 3486831148252238307}
 --- !u!1 &1924207933606656165
 GameObject:
   m_ObjectHideFlags: 0

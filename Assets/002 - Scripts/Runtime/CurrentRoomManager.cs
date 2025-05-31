@@ -44,6 +44,16 @@ public class CurrentRoomManager : MonoBehaviour
             foreach (KeyValuePair<string, int> items in playerNickname_To_NbLocalPlayers_DICT)
             {
                 print($"Player {items.Key} has {items.Value} invites");
+
+                try
+                {
+                    GetDataCellWithDatabaseIdAndRewiredId(int.Parse(items.Key), 0).invites = items.Value;
+                }
+                catch
+                {
+
+                }
+
                 c += items.Value;
             }
 
