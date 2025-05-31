@@ -1554,6 +1554,7 @@ public class Player : Biped
     void LateRespawn()
     {
         print("LateRespawn");
+        print($"oneobjmode {name} spawing at {_reservedSpawnPointTrans.name}");
 
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
@@ -2305,6 +2306,7 @@ public class Player : Biped
     Transform _reservedSpawnPointTrans;
     public void UpdateReservedSpawnPoint(Vector3 t, bool isRandom)
     {
+        print($"oneobjmode {name} UpdateReservedSpawnPoint at {_reservedSpawnPointTrans.name}");
         _reservedSpawnPointTrans = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
         _lastSpawnPointIsRandom = isRandom;
         //transform.position = _reservedSpawnPointTrans.position + new Vector3(0, 2, 0);
