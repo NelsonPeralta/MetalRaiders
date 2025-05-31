@@ -41,6 +41,7 @@ namespace Photon.Realtime
         /// <summary>Used in lobby, to mark rooms that are no longer listed (for being full, closed or hidden).</summary>
         public bool RemovedFromList;
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         private Hashtable customProperties = new Hashtable();
 
@@ -101,6 +102,7 @@ namespace Photon.Realtime
         /// <summary>
         /// Count of players currently in room. This property is overwritten by the Room class (used when you're in a Room).
         /// </summary>
+        [SerializeField]
         public int PlayerCount { get; private set; }
         
         /// <summary>

@@ -40,7 +40,7 @@ public class CurrentRoomManager : MonoBehaviour
         {
             _playerNicknameNbLocalPlayersDict = value;
             int c = 0;
-
+            print($"playerNickname_To_NbLocalPlayers_DICT");
             foreach (KeyValuePair<string, int> items in playerNickname_To_NbLocalPlayers_DICT)
             {
                 print("You have " + items.Value + " " + items.Key);

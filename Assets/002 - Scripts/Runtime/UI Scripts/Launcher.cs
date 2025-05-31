@@ -581,42 +581,42 @@ public class Launcher : MonoBehaviourPunCallbacks
         //FindMasterClientAndToggleIcon();
     }
 
-    public void TriggerOnJoinedRoomBehaviour()
+    public void TriggerOnJoinedRoomBehaviour(bool changeMenusAlso = true)
     {
         if (PhotonNetwork.InRoom)
         {
             DestroyNameplates();
             CreateNameplates();
 
+
+            if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
+                CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.QuickMatch;
+            else
+                CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
+
             { // Room is private
-
-                commonRoomTexts.SetActive(true);
-                MenuManager.Instance.OpenMenu("multiplayer_room"); // Show the "room" menu
-
-                if (PhotonNetwork.CurrentRoom.Name != quickMatchRoomName)
+                if (changeMenusAlso == true)
                 {
-                    roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
-                    _vetoBtn.SetActive(false);
-                    _matchStartCountdownText.text = "";
+
+                    commonRoomTexts.SetActive(true);
+                    MenuManager.Instance.OpenMenu("multiplayer_room"); // Show the "room" menu
+
+                    if (PhotonNetwork.CurrentRoom.Name != quickMatchRoomName)
+                    {
+                        roomNameText.text = PhotonNetwork.CurrentRoom.Name; // Change the name of the room to the one given 
+                        _vetoBtn.SetActive(false);
+                        _matchStartCountdownText.text = "";
+                    }
+                    else
+                    {
+                        CurrentRoomManager.instance.ResetRoomCountdowns();
+                        _vetoBtn.SetActive(true);
+                        _matchStartCountdownText.gameObject.SetActive(true);
+                    }
+
+                    _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
                 }
-                else
-                {
-                    CurrentRoomManager.instance.ResetRoomCountdowns();
-                    _vetoBtn.SetActive(true);
-                    _matchStartCountdownText.gameObject.SetActive(true);
-                }
 
-
-                if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
-                    CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.QuickMatch;
-                else
-                    CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.Private;
-
-                //try { Destroy(FindObjectOfType<NetworkGameManager>().gameObject); } catch { } finally { Debug.Log("Destroying NetworkGameManager"); }
-
-
-                _startGameButton.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
-                //_mapSelectionBtn.SetActive(PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private);
 
                 if (PhotonNetwork.IsMasterClient)
                 {

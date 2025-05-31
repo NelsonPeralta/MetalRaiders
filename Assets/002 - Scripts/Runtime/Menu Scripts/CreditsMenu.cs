@@ -20,7 +20,7 @@ public class CreditsMenu : MonoBehaviour
     {
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates))
         {
-            Launcher.instance.TriggerOnJoinedRoomBehaviour();
+            Launcher.instance.TriggerOnJoinedRoomBehaviour(false);
         }
 
 

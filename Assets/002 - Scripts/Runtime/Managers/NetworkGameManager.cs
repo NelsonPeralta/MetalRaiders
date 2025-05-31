@@ -219,7 +219,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("SendLocalPlayerData TO EVERYONE");
 
-            _pv.RPC("SendLocalPlayerDataToEveryone", RpcTarget.All, CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT, false);
+            _pv.RPC("SendLocalPlayerDataToEveryone", RpcTarget.AllViaServer, CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT, false);
         }
         else if (!caller && !PhotonNetwork.IsMasterClient)
         {
