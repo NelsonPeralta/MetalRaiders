@@ -1733,4 +1733,26 @@ public class GameManager : MonoBehaviourPunCallbacks
             StartCoroutine(SpawnPlayersForNewRoundAndResetRound_Coroutine());
         }
     }
+
+
+
+
+    public IEnumerator LeaveLevelButStayInRoom_Coroutine()
+    {
+        yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
+
+
+
+
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
+            Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+            foreach (Player p in GetLocalPlayers())
+            {
+                PhotonNetwork.Destroy(p.gameObject);
+            }
+            PhotonNetwork.LoadLevel(0);
+        }
+    }
 }

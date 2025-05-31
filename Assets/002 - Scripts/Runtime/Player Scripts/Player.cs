@@ -496,7 +496,7 @@ public class Player : Biped
     }
     [SerializeField] string _username;
 
-    public bool isMine { get { return GetComponent<PhotonView>().IsMine; } }
+    public bool isMine { get { return PV.IsMine; } }
 
     public int rid
     {
@@ -1251,7 +1251,7 @@ public class Player : Biped
         if (controllerId == 0)
         {
             GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
-            StartCoroutine(LeaveLevelButStayInRoom_Coroutine());
+            GameManager.instance.StartCoroutine(GameManager.instance.LeaveLevelButStayInRoom_Coroutine());
         }
     }
 
@@ -1494,22 +1494,20 @@ public class Player : Biped
 
     // public coroutines
     #region
-    public IEnumerator LeaveLevelButStayInRoom_Coroutine()
-    {
-        yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
+    //public IEnumerator LeaveLevelButStayInRoom_Coroutine()
+    //{
+    //    yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
 
 
 
 
-        if (SceneManager.GetActiveScene().buildIndex > 0)
-        {
-            GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
-            Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
-            PhotonNetwork.LoadLevel(0);
-        }
-
-        if (PhotonNetwork.IsMasterClient && rid == 0) PhotonNetwork.DestroyAll();
-    }
+    //    if (SceneManager.GetActiveScene().buildIndex > 0)
+    //    {
+    //        GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
+    //        Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+    //        PhotonNetwork.LoadLevel(0);
+    //    }
+    //}
 
     #endregion
 
