@@ -586,7 +586,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InRoom)
         {
             DestroyNameplates();
-            CreateNameplates();
 
 
             if (PhotonNetwork.CurrentRoom.Name == quickMatchRoomName)
@@ -651,6 +650,10 @@ public class Launcher : MonoBehaviourPunCallbacks
                     StartCoroutine(SendLocalGameParamsToMasterClient_Coroutine());
                 }
             }
+
+
+
+            CreateNameplates();
         }
     }
 
