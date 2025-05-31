@@ -1385,8 +1385,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         SpawnManager.spawnManagerInstance.ReserveSpawnPoint(pos);
 
+        print($"oneobjmode ReserveSpawnPoint_RPC {playerPhotonId} {controllerID} -> {SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(pos).name}");
         foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
         {
+            print($"oneobjmode ReserveSpawnPoint_RPC {p.photonId} {p.rid}");
             if (p.photonId == playerPhotonId && p.rid == controllerID) p.UpdateReservedSpawnPoint(pos, isRandom);
         }
     }
