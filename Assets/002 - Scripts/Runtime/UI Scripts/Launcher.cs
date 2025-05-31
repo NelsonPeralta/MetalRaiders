@@ -165,7 +165,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     bool _tryingToLeaveRoomFromMenu;
 
-    List<RoomInfo> _roomsCached = new List<RoomInfo>();
+    [SerializeField] List<RoomInfo> _roomsCached = new List<RoomInfo>();
 
 
 
