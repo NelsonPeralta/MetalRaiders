@@ -59,7 +59,7 @@ public class MenuManager : MonoBehaviour
 
             if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
             {
-                //PhotonNetwork.CurrentRoom.IsVisible = true;
+                PhotonNetwork.CurrentRoom.IsVisible = true;
                 //PhotonNetwork.CurrentRoom.IsOpen = false;
             }
         }
