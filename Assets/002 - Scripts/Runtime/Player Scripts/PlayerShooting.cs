@@ -593,9 +593,11 @@ public class PlayerShooting : MonoBehaviourPun
                         }
                         else
                         {
-                            var fbt = pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
-                                      ranSprayQuat, player.isMine,
-                                     muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position, realTimeTravel: true, wp: weaponToShoot);
+                            if (weaponToShoot.firingMode != WeaponProperties.FiringMode.Auto
+                                || (weaponToShoot.firingMode == WeaponProperties.FiringMode.Auto && weaponToShoot.loadedAmmo % 2 == 0))
+                                pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
+                                          ranSprayQuat, player.isMine,
+                                         muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position, realTimeTravel: true, wp: weaponToShoot);
                         }
 
 
