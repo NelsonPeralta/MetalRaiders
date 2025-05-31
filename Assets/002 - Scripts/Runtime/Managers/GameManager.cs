@@ -13,7 +13,6 @@ using Rewired;
 using System.Linq;
 using Steamworks;
 using UnityEngine.EventSystems;
-using Rewired.Components;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 

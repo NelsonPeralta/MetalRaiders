@@ -497,8 +497,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void ReserveSpawnPoint(int playerPhotonId, int controllerID, Vector3 pos, bool isRandom)
     {
-        _pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.MasterClient, playerPhotonId, controllerID, pos, false);
-
+        if (PhotonNetwork.IsMasterClient)
+            _pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.AllViaServer, playerPhotonId, controllerID, pos, false);
     }
 
     public void ResetOneObjRoundOver()
