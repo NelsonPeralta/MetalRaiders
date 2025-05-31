@@ -1748,6 +1748,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
             Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+
+            if (PhotonNetwork.IsMasterClient) PhotonNetwork.Destroy(GameTime.instance.gameObject);
+
             foreach (Player p in GetLocalPlayers())
             {
                 PhotonNetwork.Destroy(p.gameObject);
