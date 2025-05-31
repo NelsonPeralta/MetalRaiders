@@ -2112,7 +2112,7 @@ public class Player : Biped
     void TellPlayerToRespawn()
     {
         print("SpawnPlayersForNewRound - TellPlayerToRespawn");
-
+        print($"oneobjmode {name} TellPlayerToRespawn");
         LateRespawn();
         Respawn();
     }
