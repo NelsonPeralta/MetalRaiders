@@ -891,7 +891,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             _roomsCached.Add(roomList[i]);
 
-            if (!roomList[i].IsOpen)
+            if (!roomList[i].IsOpen || roomList[i].RemovedFromList)
                 continue;
 
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
