@@ -710,6 +710,14 @@ public class GameManager : MonoBehaviourPunCallbacks
                 previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReportAndCredits);
                 //MenuManager.Instance.OpenMenu("carnage report");
                 MenuManager.Instance.OpenPopUpMenu("credits");
+
+
+
+                if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+                {
+                    //PhotonNetwork.CurrentRoom.IsVisible = true;
+                    PhotonNetwork.CurrentRoom.IsOpen = true;
+                }
             }
             else if (previousScenePayloads.Contains(PreviousScenePayload.OpenMainMenu))
             {

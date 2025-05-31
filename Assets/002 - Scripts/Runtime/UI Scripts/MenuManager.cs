@@ -56,12 +56,6 @@ public class MenuManager : MonoBehaviour
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits))
         {
             menuName = "carnage report"; print($"Changed to Carnage Report {menuName}");
-
-            if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
-            {
-                //PhotonNetwork.CurrentRoom.IsVisible = true;
-                PhotonNetwork.CurrentRoom.IsOpen = true;
-            }
         }
 
 
