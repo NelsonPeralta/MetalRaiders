@@ -57,6 +57,7 @@ namespace Photon.Realtime
         /// <summary>Backing field for property.</summary>
         protected string[] expectedUsers;
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         protected bool isOpen = true;
 
