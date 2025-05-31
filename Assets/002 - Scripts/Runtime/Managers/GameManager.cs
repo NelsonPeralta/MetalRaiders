@@ -706,6 +706,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReportAndCredits))
             {
+                RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
+
+
+
+
                 CurrentRoomManager.instance.CreateCarnageReportData();
                 previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReportAndCredits);
                 //MenuManager.Instance.OpenMenu("carnage report");
@@ -1760,6 +1765,25 @@ public class GameManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.Destroy(p.gameObject);
             }
             PhotonNetwork.LoadLevel(0);
+        }
+    }
+
+
+    public void RecalculateExpectedNbPlayersUsingPlayerCustomProperties()
+    {
+        print("RecalculateExpectedNbPlayersUsingPlayerCustomProperties");
+        if (PhotonNetwork.InRoom)
+        {
+            int expextedPlayers = 0;
+            foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values.ToList())
+            {
+                print($"Player {p.NickName} has {p.CustomProperties["localPlayerCount"]} total players");
+                expextedPlayers += (int)p.CustomProperties["localPlayerCount"];
+
+                CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(int.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
+            }
+
+            CurrentRoomManager.instance.expectedNbPlayers = expextedPlayers;
         }
     }
 }

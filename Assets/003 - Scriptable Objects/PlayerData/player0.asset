@@ -13,27 +13,46 @@ MonoBehaviour:
   m_Name: player0
   m_EditorClassIdentifier: 
   _occupied: 1
+  _local: 1
+  _photonRoomIndex: 1
+  _rewiredIndex: 0
+  _startingSpawnPosInd: 0
   _team: 0
   _playerExtendedPublicData:
     username: Blazvatan
     player_id: 131
     invites: 0
-    level: 24
-    xp: 46847
+    level: 50
+    xp: 201418
     rank: 1
-    honor: 660
-    credits: 81919
-    armor_data_string: -utility-lta--tactical_kit-ca--sidekick-lta--security-rsa--security-lsa--sidekick_lta--jumper_coda--securitya--sword1_ca--securi--utility_lta--infiltrator_hc-trophy_rsa-cards_lsa
-    unlocked_armor_data_string: helmet1--flaming_helmet--burning_helmet--security_lsa--security_rsa--utility_lta--tactical_kit_ca--sidekick_lta--grenadier_ca--jumper_coda--sword1_ca--infiltrator_hc--haunted_hc--sentry_hc--sniper_lsa--sniper_rsa--tactical_plus_coda--overwatch_ca--pilot_lsa--pilot_rsa--cards--cards_lsa-tropy_rsa
+    honor: 1614
+    credits: 209940
+    armor_data_string: -utility-lta--tactical_kit-ca--sidekick-lta--security-rsa--security-lsa--sidekick_lta--utility_lta--enforcer_lsa--sword1_ca--security_lsa--tacpad-lfa--security_rsa--jumper_coda--infiltrator_hc--flaming_helmet-
+    unlocked_armor_data_string: helmet1--flaming_helmet--burning_helmet--security_lsa--security_rsa--utility_lta--tactical_kit_ca--sidekick_lta--grenadier_ca--jumper_coda--sword1_ca--infiltrator_hc--haunted_hc--sentry_hc--sniper_lsa--sniper_rsa--tactical_plus_coda--overwatch_ca--pilot_lsa--pilot_rsa--cards--cards_lsa--vanguard_hc--tacpad-lfa--enforcer_lsa--commando_lsa--commando_rsa---gps-lfa----gps-lfa----gps-lfa----gps-lfa----geiger-lfa----katana_ca---overseer_ca--guerilla_ca--operator_lsa--operator_rsa-
     armor_color_palette: green
-    kills: 11993
-    deaths: 11122
-    headshots: 5138
-    melee_kills: 621
-    grenade_kills: 438
-    pve_kills: 1593
-    pve_deaths: 15
+    kills: 16375
+    deaths: 15098
+    headshots: 6348
+    melee_kills: 1062
+    grenade_kills: 743
+    pve_kills: 2061
+    pve_deaths: 20
     pve_headshots: 149
-    highest_points: 187634
-  _cardsFound: red-yellow-white-black-
-  _armorPiecesPurchased: 21
+    highest_points: 370369
+  _playerCurrentGameScore:
+    deaths: 0
+    damage: 0
+    headshots: 0
+    nutshots: 0
+    meleeKills: 0
+    grenadeKills: 0
+    stickyKills: 0
+    kd: 0
+    _score: 0
+    _kills: 0
+    _points: 0
+    _totalPoints: 0
+  _invites: 1
+  _cardsFound: 
+  _armorPiecesPurchased: 42
+  sens: 3
