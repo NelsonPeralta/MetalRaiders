@@ -19,6 +19,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
     [SerializeField] AudioClip _FirefightClip, _oddballIntro, _ctfIntro;
     [SerializeField] TMP_Text _loadingText, _gametypePreviewInfo, _mapNameInfo;
     [SerializeField] AudioSource _beepConsecutiveAudioSource;
+    [SerializeField] GameObject _blackscreenCamera;
 
     public Transform disabledJunk;
 
@@ -157,7 +158,11 @@ public class MapCamera : MonoBehaviourPunCallbacks
 
 
 
-
+    public void EnableBlackscreen()
+    {
+        _blackscreenCamera.transform.parent = null;
+        _blackscreenCamera.gameObject.SetActive(true);
+    }
 
     public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
     {

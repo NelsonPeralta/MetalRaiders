@@ -1183,7 +1183,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void LeaveCurrentRoomAndLoadLevelZero()
     {
         if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
             PhotonNetwork.LeaveRoom(); // Will trigger OnLeftRoom
+        }
     }
 
 
@@ -1741,8 +1743,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
 
-
-
+        MapCamera.instance.EnableBlackscreen();
 
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
@@ -1753,6 +1754,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             foreach (Player p in GetLocalPlayers())
             {
+                p.gunCamera.enabled = false;
+                p.uiCamera.enabled = false;
+                p.mainCamera.enabled = false;
                 PhotonNetwork.Destroy(p.gameObject);
             }
             PhotonNetwork.LoadLevel(0);
