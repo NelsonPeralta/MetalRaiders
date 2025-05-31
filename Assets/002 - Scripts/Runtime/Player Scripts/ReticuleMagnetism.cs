@@ -61,7 +61,7 @@ public class ReticuleMagnetism : MonoBehaviour
     {
         yMagDir = xMagDir = xMag = yMag = 0;
 
-        if (!player || !player.isMine || CurrentRoomManager.instance.gameOver) return;
+        if (!player || !player.isMine || CurrentRoomManager.instance.gameOver || !CurrentRoomManager.instance.gameStarted) return;
 
         if (player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Keyboard ||
             player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Mouse)
