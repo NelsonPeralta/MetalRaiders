@@ -726,7 +726,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             //PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.CurrentRoom.IsVisible = false;
+            //PhotonNetwork.CurrentRoom.IsVisible = false;
 
             NetworkGameManager.instance.CancelStartGameButton();
         }
@@ -754,7 +754,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         //PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
+        //PhotonNetwork.CurrentRoom.IsVisible = false;
 
         _startGameButton.SetActive(false);
 
