@@ -1499,9 +1499,6 @@ public class Player : Biped
         yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
 
 
-        int levelToLoad = 0;
-
-        //GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
 
 
         if (SceneManager.GetActiveScene().buildIndex > 0)
@@ -1510,6 +1507,8 @@ public class Player : Biped
             Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
             PhotonNetwork.LoadLevel(0);
         }
+
+        if (PhotonNetwork.IsMasterClient && rid == 0) PhotonNetwork.DestroyAll();
     }
 
     #endregion
