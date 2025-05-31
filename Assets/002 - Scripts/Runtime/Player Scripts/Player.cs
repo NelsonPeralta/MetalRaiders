@@ -2358,14 +2358,13 @@ public class Player : Biped
         }
         else
         {
-            print($"UpdateRewiredId: {name} {playerId}.  {playerController.rid} -> {i}");
+            print($"UpdateRewiredId: player {username} {playerId}");
+            print($"UpdateRewiredId RID changing: {playerController.rid} -> {i}");
             playerController.rid = i;
 
             if (playerId != -99999 && playerController.rid != -99999)
             {
-
-
-                print($"UpdateRewiredId - OnPlayerIdAssigned: {name} {playerId} {playerController.rid}");
+                print($"UpdateRewiredId: OnPlayerIdAssigned");
                 OnPlayerIdAssigned?.Invoke(this);
                 if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
 
