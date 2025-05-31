@@ -876,6 +876,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        print("OnRoomListUpdate");
         _roomsCached.Clear();
 
         foreach (Transform trans in roomListContent)
@@ -885,10 +886,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < roomList.Count; i++)
         {
+            _roomsCached.Add(roomList[i]);
+
             if (roomList[i].RemovedFromList)
                 continue;
 
-            _roomsCached.Add(roomList[i]);
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
         }
     }

@@ -19,8 +19,9 @@ namespace Photon.Realtime
     using System;
     using System.Collections;
     using ExitGames.Client.Photon;
+    using UnityEngine;
 
-    #if SUPPORTED_UNITY || NETFX_CORE
+#if SUPPORTED_UNITY || NETFX_CORE
     using Hashtable = ExitGames.Client.Photon.Hashtable;
     using SupportClass = ExitGames.Client.Photon.SupportClass;
 #endif
@@ -43,6 +44,7 @@ namespace Photon.Realtime
         /// <summary>Backing field for property.</summary>
         private Hashtable customProperties = new Hashtable();
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         protected byte maxPlayers = 0;
 
@@ -58,12 +60,14 @@ namespace Photon.Realtime
         /// <summary>Backing field for property.</summary>
         protected bool isOpen = true;
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         protected bool isVisible = true;
 
         /// <summary>Backing field for property. False unless the GameProperty is set to true (else it's not sent).</summary>
         protected bool autoCleanUp = true;
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         protected string name;
 

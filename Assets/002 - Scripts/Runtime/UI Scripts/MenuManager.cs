@@ -57,8 +57,11 @@ public class MenuManager : MonoBehaviour
         {
             menuName = "carnage report"; print($"Changed to Carnage Report {menuName}");
 
-            if(PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+            {
                 PhotonNetwork.CurrentRoom.IsVisible = true;
+                PhotonNetwork.CurrentRoom.IsOpen = false;
+            }
         }
 
 
