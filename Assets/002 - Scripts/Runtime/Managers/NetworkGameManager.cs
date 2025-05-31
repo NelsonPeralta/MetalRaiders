@@ -259,7 +259,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (!caller)
         {
-            CurrentRoomManager.instance.nbPlayersJoined++;
+            CurrentRoomManager.instance.nbPlayersSpawned++;
         }
 
     }

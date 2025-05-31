@@ -20,7 +20,7 @@ public class PlayerProgressionManager : MonoBehaviour
     {
         get
         {
-            if (CurrentRoomManager.instance.nbPlayersJoined == 1) return 0;
+            if (CurrentRoomManager.instance.nbPlayersSpawned == 1) return 0;
             return 2;
         }
     }
