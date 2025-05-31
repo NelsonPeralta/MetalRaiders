@@ -166,14 +166,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     bool _tryingToLeaveRoomFromMenu;
 
     [SerializeField] List<RoomInfo> _roomsCached = new List<RoomInfo>();
-
-
-
-
-
-
-
-
+    [SerializeField] int nbRooms;
 
 
 
@@ -881,12 +874,10 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         _roomsCached.Clear();
-        UpdateCachedRoomList(roomList);
 
         foreach (Transform trans in roomListContent)
         {
@@ -900,23 +891,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             _roomsCached.Add(roomList[i]);
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
-        }
-    }
-
-    private void UpdateCachedRoomList(List<RoomInfo> roomList)
-    {
-        for (int i = 0; i < roomList.Count; i++)
-        {
-            RoomInfo info = roomList[i];
-            if (info.RemovedFromList)
-            {
-                cachedRoomList.Remove(info.Name);
-            }
-            else
-            {
-                cachedRoomList[info.Name] = info;
-            }
-            Debug.Log($"UpdateCachedRoomList: {info.Name}");
         }
     }
 

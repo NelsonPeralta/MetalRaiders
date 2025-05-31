@@ -59,6 +59,9 @@ public class ReticuleMagnetism : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        yMagDir = 0;
+        xMagDir = 0;
+
         if (!player.isMine)
             return;
 
