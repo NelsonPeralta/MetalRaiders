@@ -18,15 +18,6 @@ public class CreditsMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates))
-        {
-            Launcher.instance.TriggerOnJoinedRoomBehaviour(false);
-        }
-
-
-
-
-
         _backBtn.SetActive(false);
         StartCoroutine(EnableBackBtn_Coroutine());
 
