@@ -108,6 +108,9 @@ public class Hill : MonoBehaviour
 
     private void Awake()
     {
+        if (!GameManager.instance) Destroy(gameObject);
+
+
         _canvases.SetActive(true);
     }
 

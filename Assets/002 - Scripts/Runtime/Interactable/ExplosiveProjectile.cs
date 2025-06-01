@@ -1,5 +1,8 @@
+using MathNet.Numerics;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -14,7 +17,7 @@ public class ExplosiveProjectile : MonoBehaviour
     public bool stuck { get { return _stuck; } set { _stuck = value; } }
 
     [SerializeField] Player _player;
-    [SerializeField] int _damage, _radius, _throwForce, _explosionPower;
+    [SerializeField] int _damage, _radius, _throwForce, _explosionPower, _stuckPlayerPhotonId;
     [SerializeField] string _sourceCleanName;
     [SerializeField] WeaponProperties.KillFeedOutput _killFeedOutput;
     [SerializeField] bool _useConstantForce;
@@ -35,14 +38,21 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] AudioSource _stuckSfxAudioSource;
 
     bool _collided, _exploded;
-    float _explosionDelayOnImpact, _resetIgnoredColliders;
+    float _explosionDelayOnImpact, _resetIgnoredColliders, _defaultSpatialBlend;
 
 
 
+
+    private void Awake()
+    {
+        if (GetComponent<AudioSource>())
+            _defaultSpatialBlend = GetComponent<AudioSource>().spatialBlend;
+    }
 
 
     private void OnEnable()
     {
+        _stuckPlayerPhotonId = -999;
         if (_defaultTtl <= 0) { _defaultTtl = 10; }
 
 
@@ -55,23 +65,26 @@ public class ExplosiveProjectile : MonoBehaviour
                 if (p)
                     Physics.IgnoreCollision(p.playerCapsule.GetComponent<Collider>(), GetComponent<Collider>());
             }
-
-
-            GetComponent<ParentConstraint>().constraintActive = false;
-            GetComponent<ParentConstraint>().locked = false;
-
-            for (int j = GetComponent<ParentConstraint>().sourceCount; j-- > 0;)
-                GetComponent<ParentConstraint>().RemoveSource(j);
         }
 
         _ttl = _defaultTtl;
 
         _exploded = false;
         _collided = false; _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
+        GetComponent<Collider>().enabled = true;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.layer = 8;
     }
 
+    private void OnDisable()
+    {
+        if (_sticky && !GetComponent<Rigidbody>())
+        {
+            gameObject.AddComponent<Rigidbody>();
+            GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+            GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        }
+    }
 
 
 
@@ -87,11 +100,12 @@ public class ExplosiveProjectile : MonoBehaviour
             {
                 print($"{name} disabled due to ttl");
                 gameObject.SetActive(false);
+                transform.SetParent(GrenadePool.instance.transform);
             }
         }
 
 
-        if (useConstantForce)
+        if (useConstantForce && !_collided)
             GetComponent<Rigidbody>().AddForce
                 (gameObject.transform.forward * throwForce);
 
@@ -124,7 +138,31 @@ public class ExplosiveProjectile : MonoBehaviour
         {
             Debug.Log($"Collided with: {collision.gameObject.name} {collision.gameObject.GetComponent<Collider>()} {collision.gameObject.GetComponent<Player>()}");
 
-            try { GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play(); } catch { }
+            try
+            {
+                if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
+                {
+                    float _distanceFromRootPlayer = Vector3.Distance(GameManager.GetRootPlayer().transform.position, transform.position);
+                    float _closestDistanceToThisExplosion = _distanceFromRootPlayer;
+
+                    foreach (Player p in GameManager.GetLocalPlayers().Where(item => item != GameManager.GetRootPlayer()))
+                    {
+                        if (Vector3.Distance(p.transform.position, transform.position) < _closestDistanceToThisExplosion)
+                            _closestDistanceToThisExplosion = Vector3.Distance(p.transform.position, transform.position);
+                    }
+
+                    float _ratio = _closestDistanceToThisExplosion / _distanceFromRootPlayer;
+
+                    GetComponent<AudioSource>().spatialBlend = _ratio * _defaultSpatialBlend;
+                }
+
+                GetComponent<AudioSource>().clip = _collisionSound; GetComponent<AudioSource>().Play();
+            }
+            catch { }
+
+
+
+
 
             if (_sticky && !_collided)
             {
@@ -135,10 +173,6 @@ public class ExplosiveProjectile : MonoBehaviour
                 {
 
                     print("Stuck 1");
-
-                    GetComponent<ParentConstraint>().locked = true;
-                    GetComponent<ParentConstraint>().constraintActive = false;
-
 
                     GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
@@ -257,29 +291,18 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
+        if (PhotonNetwork.IsMasterClient && _stuckPlayerPhotonId > 0)
+        {
+            GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
+              impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
+        }
+
+
         if (player.isMine && !_exploded)
         {
             _exploded = true;
             NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
         }
-
-
-
-
-
-
-
-
-
-
-        //if (_color == global::Explosion.Color.Yellow)
-        //    GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.fragClip, _killFeedOutput, stuck);
-        //else if (_color == global::Explosion.Color.Blue)
-        //    GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, transform.position, _color, _type, GrenadePool.instance.plasmaClip, _killFeedOutput, stuck);
-
-
-
-        //gameObject.SetActive(false);
     }
 
     public void TriggerExplosion(Vector3 pos)
@@ -293,6 +316,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
         _resetIgnoredColliders = -1;
         gameObject.SetActive(false);
+        transform.SetParent(GrenadePool.instance.transform);
 
 
         if (_collidersToIgnore.Count > 0)
@@ -314,16 +338,21 @@ public class ExplosiveProjectile : MonoBehaviour
         _collided = true;
 
 
+        _stuckPlayerPhotonId = playerPhotonId;
         gameObject.transform.position = gPos;
         gameObject.transform.SetParent(GameManager.GetPlayerWithPhotonView(playerPhotonId).transform, true);
 
-        GetComponent<Rigidbody>().useGravity = false;
-        GetComponent<Rigidbody>().isKinematic = true;
+        //GetComponent<Rigidbody>().useGravity = false;
+        //GetComponent<Rigidbody>().isKinematic = true;
+        //GetComponent<Rigidbody>().detectCollisions = false;
+        Destroy(GetComponent<Rigidbody>());
+
+        GetComponent<Collider>().enabled = false;
 
         stuck = true;
 
 
-        if (GameManager.instance.connection == GameManager.Connection.Local) _stuckSfxAudioSource.spatialBlend = 0; else _stuckSfxAudioSource.spatialBlend = 1;
+        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1) _stuckSfxAudioSource.spatialBlend = 0; else _stuckSfxAudioSource.spatialBlend = 1;
         _stuckSfxAudioSource.Play();
 
 

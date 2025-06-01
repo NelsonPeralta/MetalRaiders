@@ -16,13 +16,15 @@
 
 namespace Photon.Realtime
 {
+    using System;
     using System.Collections;
     using ExitGames.Client.Photon;
+    using UnityEngine;
 
-    #if SUPPORTED_UNITY || NETFX_CORE
+#if SUPPORTED_UNITY || NETFX_CORE
     using Hashtable = ExitGames.Client.Photon.Hashtable;
     using SupportClass = ExitGames.Client.Photon.SupportClass;
-    #endif
+#endif
 
 
     /// <summary>
@@ -33,14 +35,17 @@ namespace Photon.Realtime
     /// This class resembles info about available rooms, as sent by the Master server's lobby.
     /// Consider all values as readonly. None are synced (only updated by events by server).
     /// </remarks>
+    [Serializable]
     public class RoomInfo
     {
         /// <summary>Used in lobby, to mark rooms that are no longer listed (for being full, closed or hidden).</summary>
         public bool RemovedFromList;
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         private Hashtable customProperties = new Hashtable();
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         protected byte maxPlayers = 0;
 
@@ -53,15 +58,18 @@ namespace Photon.Realtime
         /// <summary>Backing field for property.</summary>
         protected string[] expectedUsers;
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         protected bool isOpen = true;
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         protected bool isVisible = true;
 
         /// <summary>Backing field for property. False unless the GameProperty is set to true (else it's not sent).</summary>
         protected bool autoCleanUp = true;
 
+        [SerializeField]
         /// <summary>Backing field for property.</summary>
         protected string name;
 
@@ -94,6 +102,7 @@ namespace Photon.Realtime
         /// <summary>
         /// Count of players currently in room. This property is overwritten by the Room class (used when you're in a Room).
         /// </summary>
+        [SerializeField]
         public int PlayerCount { get; private set; }
         
         /// <summary>

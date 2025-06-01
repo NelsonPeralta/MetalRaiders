@@ -13,6 +13,7 @@ public class ScriptObjPlayerData : ScriptableObject
     [SerializeField] GameManager.Team _team;
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
     [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
+    [SerializeField] int _invites;
     [SerializeField] string _cardsFound;
     [SerializeField] int _armorPiecesPurchased;
     public float sens;
@@ -48,10 +49,11 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public string cardsFound { get { return _cardsFound; } }
 
-    public bool occupied { get { return _occupied; } set { _occupied = value;  } }
+    public bool occupied { get { return _occupied; } set { _occupied = value; } }
     public bool local { get { return _local; } set { _local = value; } }
-    public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value;  } }
+    public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value; } }
     public int startingSpawnPosInd { get { return _startingSpawnPosInd; } set { _startingSpawnPosInd = value; } }
+    public int invites { get { return _invites; } set { _invites = value; } }
     public GameManager.Team team { get { return _team; } set { _team = value; } }
     public PlayerCurrentGameScore playerCurrentGameScore
     {
@@ -69,6 +71,7 @@ public class ScriptObjPlayerData : ScriptableObject
         _playerExtendedPublicData = null;
         _cardsFound = "";
         _armorPiecesPurchased = 0;
+        _invites = 0;
 
         if (this == CurrentRoomManager.instance.playerDataCells[0])
             LoadPrefs();

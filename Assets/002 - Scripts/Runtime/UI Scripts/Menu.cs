@@ -9,7 +9,7 @@ public class Menu : MonoBehaviour
 {
     Launcher launcher;
     public string menuName;
-    public bool open;
+    public bool open, popup;
 
     Button _loginButton;
 

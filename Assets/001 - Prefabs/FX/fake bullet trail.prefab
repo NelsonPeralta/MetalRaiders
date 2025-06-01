@@ -190,6 +190,7 @@ GameObject:
   - component: {fileID: 3962547504374141678}
   - component: {fileID: 7920025501911591981}
   - component: {fileID: 6939914252867964493}
+  - component: {fileID: 2868682003151698653}
   m_Layer: 0
   m_Name: fake bullet trail
   m_TagString: Untagged
@@ -244,3 +245,51 @@ MonoBehaviour:
   scaleToChange: {fileID: 7951826903108823289}
   rotationToTarget: {fileID: 1368973119642282107}
   sprayRotation: {fileID: 5424778018365997313}
+--- !u!114 &2868682003151698653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3957096997626318812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e161c5caaa443d4384684416f005073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PV: {fileID: 0}
+  trackingTarget: {fileID: 0}
+  allPlayerScripts: {fileID: 0}
+  weaponProperties: {fileID: 0}
+  zScript: {fileID: 0}
+  crosshairScript: {fileID: 0}
+  collision: {fileID: 0}
+  bulletTarget: {fileID: 0}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  damage: 0
+  size: 0
+  speed: 0
+  range: 0
+  distanceTravelled: 0
+  playerRewiredID: 0
+  redTeam: 0
+  blueTeam: 0
+  yellowTeam: 0
+  greenTeam: 0
+  overcharged: 0
+  isNormalBullet: 0
+  isHeadshotCapable: 0
+  canBleedthroughHeadshot: 0
+  canBleedthroughAnything: 0
+  useUpdateVoid: 0
+  damageDealt: 0
+  genericHit: {fileID: 0}
+  organicBlood: {fileID: 0}
+  magicBlood: {fileID: 0}
+  shieldHit: {fileID: 0}
+  bluePlasma: {fileID: 0}
+  greenPlasma: {fileID: 0}
+  redPlasma: {fileID: 0}
+  shard: {fileID: 0}

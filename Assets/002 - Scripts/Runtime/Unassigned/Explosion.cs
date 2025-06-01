@@ -54,10 +54,37 @@ public class Explosion : MonoBehaviour
     bool _stuck;
     [SerializeField] GameObject _yellowModel, _blueModel, _purpleModel;
     Type _type;
+    float _defaultSpatialBlend, _defaultVolume;
 
+
+
+    private void Awake()
+    {
+        _defaultSpatialBlend = GetComponent<AudioSource>().spatialBlend;
+        _defaultVolume = GetComponent<AudioSource>().volume;
+    }
     private void Start()
     {
         //Explode();
+    }
+
+    private void OnEnable()
+    {
+        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
+        {
+            float _distanceFromRootPlayer = Vector3.Distance(GameManager.GetRootPlayer().transform.position, transform.position);
+            float _closestDistanceToThisExplosion = _distanceFromRootPlayer;
+
+            foreach (Player p in GameManager.GetLocalPlayers().Where(item => item != GameManager.GetRootPlayer()))
+            {
+                if (Vector3.Distance(p.transform.position, transform.position) < _closestDistanceToThisExplosion)
+                    _closestDistanceToThisExplosion = Vector3.Distance(p.transform.position, transform.position);
+            }
+
+            float _ratio = _closestDistanceToThisExplosion / _distanceFromRootPlayer;
+
+            GetComponent<AudioSource>().spatialBlend = _ratio * _defaultSpatialBlend;
+        }
     }
 
     public void Explode()

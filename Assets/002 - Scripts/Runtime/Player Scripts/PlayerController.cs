@@ -229,7 +229,14 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
-    public float currentlyReloadingTimer { set { _currentlyReloadingTimer = value; } }
+    public float currentlyReloadingTimer
+    {
+        set
+        {
+            print($"reload {value}");
+            _currentlyReloadingTimer = value;
+        }
+    }
     public bool triggerOverHeatOnShootingBtnUp { set { _triggerOverHeatOnShootingBtnUp = value; } }
     public bool isReloadingThirWeaponAnimation { get { return _currentlyReloadingTimer_thirdWeapon > 0; } }
 
@@ -414,7 +421,7 @@ public class PlayerController : MonoBehaviourPun
 
             TestButton();
             if (ReInput.controllers != null)
-                activeControllerType = ReInput.controllers.GetLastActiveControllerType();
+                activeControllerType = GameManager.instance.activeControllerType;
         }
 
     }
@@ -530,6 +537,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if (isSprinting)
             {
+                print($"{name} is sprinting - DisableSprint");
                 DisableSprint();
             }
 
@@ -1413,13 +1421,16 @@ public class PlayerController : MonoBehaviourPun
     enum ReloadMode { Normal, LeftOnly, RightOnly, Both }
     private void Reload()
     {
-        if (PV.IsMine)
+        if (PV.IsMine && !player.playerJustSpawn)
         {
             if (!player.playerInventory.isDualWielding)
             {
                 if (!isDrawingWeapon && !isThrowingGrenade && !isMeleeing && !isReloading)
                     if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
+                    {
+                        print($"reload");
                         PV.RPC("Reload_RPC", RpcTarget.All, 0);
+                    }
             }
             else
             {
@@ -1489,7 +1500,10 @@ public class PlayerController : MonoBehaviourPun
             if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine || pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
             {
                 if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
+                {
+                    print($"reload");
                     weaponAnimator.Play("Reload Ammo Left", 0, 0f);
+                }
                 else if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
                     weaponAnimator.Play("reload generic", 0, 0f);
 
@@ -2303,7 +2317,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 allPlayerScripts.scoreboardManager.OpenScoreboard();
                 player.playerUI.gamepadCursor.gameObject.SetActive(true);
-                player.playerUI.gamepadCursor.GetReady(ReInput.controllers.GetLastActiveControllerType());
+                player.playerUI.gamepadCursor.GetReady(GameManager.instance.activeControllerType);
             }
             else if (rewiredPlayer.GetButtonUp("Back"))
             {
@@ -2322,7 +2336,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 GetComponent<PlayerUI>().singlePlayerPauseMenu.gameObject.SetActive(true);
                 player.playerUI.gamepadCursor.gameObject.SetActive(true);
-                player.playerUI.gamepadCursor.GetReady(ReInput.controllers.GetLastActiveControllerType());
+                player.playerUI.gamepadCursor.GetReady(GameManager.instance.activeControllerType);
                 pauseMenuOpen = true;
             }
         }
@@ -2498,7 +2512,7 @@ public class PlayerController : MonoBehaviourPun
                             if (hit.collider.transform.root.GetComponent<Player>())
                             {
                                 if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-                                    MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.playerId);
+                                    MarkerManager.instance.SpawnEnnSpotMarker(hit.point, player.photonId);
                                 else
                                 {
                                     if (hit.collider.transform.root.GetComponent<Player>().team != player.team)
@@ -2600,7 +2614,7 @@ public class PlayerController : MonoBehaviourPun
         DisableSprint_RPC();
         player.PlayThrowingGrenadeClip();
 
-        GameObject nade = GrenadePool.GetGrenade(fga, ind);
+        GameObject nade = GrenadePool.GetGrenadeAtIndex(fga, ind);
         nade.transform.position = sp; nade.transform.rotation = sr;
         nade.GetComponent<ExplosiveProjectile>().player = GetComponent<Player>();
         nade.GetComponent<ExplosiveProjectile>().IgnoreTheseCollidersFor1Second(GetComponent<Player>().hitboxes.Select(x => x.GetComponent<Collider>()).ToList());

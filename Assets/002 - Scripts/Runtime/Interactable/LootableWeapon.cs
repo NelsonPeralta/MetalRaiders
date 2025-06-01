@@ -123,6 +123,11 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
         if (!networkWeaponSpawnPoint)
         {
+            if (transform.position.y < -20 && _ttl > 1)
+            {
+                _ttl = 0.5f;
+            }
+
             if (_ttl > 0 && _ttl < 999)
             {
 

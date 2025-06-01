@@ -30,7 +30,7 @@ public class WeaponProperties : MonoBehaviour
         Unassigned,
         Pistol, SMG, Assault_Rifle, Battle_Rifle, Sniper, RPG, Shotgun, Grenade_Launcher,
         Oddball, Splinter, Plasma_Rifle, Plasma_Blaster, Barrel, Ultra_Bind, Frag_Grenade,
-        Plasma_Grenade, Melee, Stuck, Assasination, Plasma_Pistol, Revolver, Sword, Flag, Minigun
+        Plasma_Grenade, Melee, Stuck, Assasination, Plasma_Pistol, Revolver, Sword, Flag, Minigun, Killbox
     }
 
     public Player player { get { return pController.player; } }

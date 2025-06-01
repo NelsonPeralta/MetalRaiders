@@ -138,7 +138,7 @@ public class AimAssistCone : MonoBehaviour
 
     private void Update()
     {
-        if (!player.isMine) return;
+        if (!player || !player.isMine || CurrentRoomManager.instance.gameOver || !CurrentRoomManager.instance.gameStarted) return;
 
 
         if (!player.isAlive)

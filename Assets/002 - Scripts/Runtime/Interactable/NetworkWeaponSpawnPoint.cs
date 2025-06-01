@@ -26,11 +26,14 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     }
     private void OnDestroy()
     {
-        GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
+        if (GameTime.instance) GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
     }
 
     private void Awake()
     {
+        if (!GameManager.instance) Destroy(gameObject);
+
+
         if (GameManager.instance.gameType == GameManager.GameType.Fiesta ||
             GameManager.instance.gameType == GameManager.GameType.GunGame
             || GameManager.instance.gameType == GameManager.GameType.Rockets
@@ -40,12 +43,17 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
+
     private void Start()
     {
         _respawnListenerDelay = 1;
 
-        GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
-        GameTime.instance.OnGameTimeElapsedChanged += OnGameTimeChanged;
+        if (GameTime.instance)
+        {
+            GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
+            GameTime.instance.OnGameTimeElapsedChanged += OnGameTimeChanged;
+        }
         ReplaceWeaponsByGametype();
         //SpawnWeapon();
 
@@ -59,7 +67,9 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
             FindObjectOfType<SwarmManager>().OnWaveStart += OnWaveStart;
         }
         catch { }
-        StartCoroutine(SpawnWeaponCoroutine());
+
+
+        if (CurrentRoomManager.instance) StartCoroutine(SpawnWeaponCoroutine());
     }
 
     private void Update()
@@ -181,84 +191,83 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     #region
     void ReplaceWeaponsByGametype()
     {
-        //string[] powerWeaponCodeNames = { "r700", "m1100", "rpg", "barett50cal", "m32", "sniper", "shotgun" };
-        //string[] heavyWeaponCodeNames = { "ar", "br", "m16", "c7", "m4", "ak47", "scar", "patriot", "mk14", "m249c" };
-        //string[] lightWeaponCodeNames = { "pistol", "smg", "m1911", "colt", "mp5", "p90", "deagle" };
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
-            if (GameManager.instance.gameType == GameManager.GameType.Slayer)
-            {
-                if (codeName == "br")
-                    codeName = "ar";
-
-                if (codeName == "pb")
-                    codeName = "pr";
-            }
-            else if (GameManager.instance.gameType == GameManager.GameType.Swat)
-            {
-                codeName = "br";
-            }
-            else if (GameManager.instance.gameType == GameManager.GameType.Snipers)
-            {
-                codeName = "sniper";
-            }
-            else if (GameManager.instance.gameType == GameManager.GameType.Rockets)
-            {
-                codeName = "rpg";
-            }
-            else if (GameManager.instance.gameType == GameManager.GameType.Shotguns)
-            {
-                codeName = "shotgun";
-            }
-            else if (GameManager.instance.gameType == GameManager.GameType.PurpleRain)
-            {
-                codeName = "cl";
-            }
-            else if (GameManager.instance.gameType == GameManager.GameType.Swords)
-            {
-                codeName = "sword";
-            }
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Duals)
+        if (GameManager.instance)
         {
-            if (!codeName.Equals("pp") && !codeName.Equals("rvv") && !codeName.Equals("smg"))
-            {
-                if (codeName == "pistol" || codeName == "br")
-                    codeName = "rvv";
-                else if (codeName == "sniper" || codeName == "rpg" || codeName == "shotgun" || codeName == "gl" || codeName == "cl")
-                    codeName = "pp";
-                else
-                    codeName = "smg";
-            }
-        }
+            if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
+                if (GameManager.instance.gameType == GameManager.GameType.Slayer)
+                {
+                    if (codeName == "br")
+                        codeName = "ar";
 
-
-
-
-
-        if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Martian)
-        {
-            if (!codeName.Equals("pp") && !codeName.Equals("pr") && !codeName.Equals("pb"))
-            {
-                if (codeName == "pistol" || codeName == "rvv")
-                    codeName = "pb";
-                else if (codeName == "rvv")
-                    codeName = "pp";
-                else if (codeName == "sniper" || codeName == "rpg" || codeName == "shotgun" || codeName == "gl" || codeName == "cl")
+                    if (codeName == "pb")
+                        codeName = "pr";
+                }
+                else if (GameManager.instance.gameType == GameManager.GameType.Swat)
+                {
+                    codeName = "br";
+                }
+                else if (GameManager.instance.gameType == GameManager.GameType.Snipers)
+                {
+                    codeName = "sniper";
+                }
+                else if (GameManager.instance.gameType == GameManager.GameType.Rockets)
+                {
+                    codeName = "rpg";
+                }
+                else if (GameManager.instance.gameType == GameManager.GameType.Shotguns)
+                {
+                    codeName = "shotgun";
+                }
+                else if (GameManager.instance.gameType == GameManager.GameType.PurpleRain)
+                {
                     codeName = "cl";
-                else
-                    codeName = "pr";
+                }
+                else if (GameManager.instance.gameType == GameManager.GameType.Swords)
+                {
+                    codeName = "sword";
+                }
+
+            if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Duals)
+            {
+                if (!codeName.Equals("pp") && !codeName.Equals("rvv") && !codeName.Equals("smg"))
+                {
+                    if (codeName == "pistol" || codeName == "br")
+                        codeName = "rvv";
+                    else if (codeName == "sniper" || codeName == "rpg" || codeName == "shotgun" || codeName == "gl" || codeName == "cl")
+                        codeName = "pp";
+                    else
+                        codeName = "smg";
+                }
             }
-        }
 
 
 
 
 
-        if ((GameManager.instance.gameType.ToString().Contains("Fiesta")) || GameManager.instance.gameType == GameManager.GameType.GunGame)
-        {
-            gameObject.SetActive(false);
-            //Destroy(gameObject);
+            if (GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.gameType == GameManager.GameType.Martian)
+            {
+                if (!codeName.Equals("pp") && !codeName.Equals("pr") && !codeName.Equals("pb"))
+                {
+                    if (codeName == "pistol" || codeName == "rvv")
+                        codeName = "pb";
+                    else if (codeName == "rvv")
+                        codeName = "pp";
+                    else if (codeName == "sniper" || codeName == "rpg" || codeName == "shotgun" || codeName == "gl" || codeName == "cl")
+                        codeName = "cl";
+                    else
+                        codeName = "pr";
+                }
+            }
+
+
+
+
+
+            if ((GameManager.instance.gameType.ToString().Contains("Fiesta")) || GameManager.instance.gameType == GameManager.GameType.GunGame)
+            {
+                gameObject.SetActive(false);
+                //Destroy(gameObject);
+            }
         }
     }
 

@@ -39,6 +39,7 @@ public class GrenadePool : MonoBehaviour
             _explosions.Add(Instantiate(_explosionPrefab, transform).GetComponent<Explosion>()); // Prefab must be inactive
 
             _fragGrenadePool[i].SetActive(false); _stickyGrenadePool[i].SetActive(false);
+            _stickyGrenadePool[i].name += $" ({i})";
             _fragGrenadePool[i].transform.SetParent(this.transform); _stickyGrenadePool[i].transform.SetParent(this.transform);
             _explosions[i].transform.SetParent(this.transform);
 
@@ -74,29 +75,13 @@ public class GrenadePool : MonoBehaviour
 
 
 
-    public static int GetAvailableGrenadeIndex(bool isFrag, int photonRoomIndex)
+    public static int GetAvailableGrenadeIndex(bool isFrag, int photonRoomIndex) // this is called localy only
     {
         print($"GetAvailableGrenadeIndex {photonRoomIndex}");
 
         for (int i = (photonRoomIndex - 1) * 10; i < (photonRoomIndex * 10) - 1; i++)
         {
-            print(i);
-            print(instance.name);
-            print(_instance._fragGrenadePool[i].name);
-            print("stop");
-
-
-            if (!_instance._fragGrenadePool[i].activeInHierarchy) _instance._fragGrenadePool[i].transform.SetParent(instance.transform);
-            if (!_instance._stickyGrenadePool[i].activeInHierarchy)
-            {
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().isKinematic = false;
-                _instance._stickyGrenadePool[i].GetComponent<Rigidbody>().useGravity = true;
-                _instance._stickyGrenadePool[i].GetComponent<ExplosiveProjectile>().stuck = false;
-                _instance._stickyGrenadePool[i].transform.SetParent(instance.transform);
-
-                _instance._stickyGrenadePool[i].transform.localScale = Vector3.one;
-
-            }
+            print($"GetAvailableGrenadeIndex {photonRoomIndex}   {i}   {_instance._fragGrenadePool[i].name}");
 
             if (isFrag)
             {
@@ -143,10 +128,16 @@ public class GrenadePool : MonoBehaviour
 
 
 
-    public static GameObject GetGrenade(bool isFrag, int index)
+    public static GameObject GetGrenadeAtIndex(bool isFrag, int i)
     {
-        if (isFrag) return _instance._fragGrenadePool[index];
-        else return _instance._stickyGrenadePool[index];
+        if (isFrag)
+        {
+            return _instance._fragGrenadePool[i];
+        }
+        else
+        {
+            return _instance._stickyGrenadePool[i];
+        }
     }
 
     public static void SpawnRocket(Player p, int index, Vector3 pos, Vector3 rot)

@@ -54,8 +54,6 @@ public class AmmoPickup : MonoBehaviour
             //playerProperties.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>Picked up {ammoToRemoveFromThisPack} Grenades");
         }
 
-        ammoPackScript.ammoText.text = ammoPackScript.GetAmmo().ToString();
-
         playerProperties.allPlayerScripts.playerInventory.UpdateAllExtraAmmoHuds();
 
         NetworkGameManager.instance.DisableAmmoPack(ammoPackScript.spawnPoint);

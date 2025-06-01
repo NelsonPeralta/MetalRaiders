@@ -105,6 +105,7 @@ public class Player : Biped
 
         set
         {
+
             float _previousValue = hitPoints;
             float _damage = _previousValue - value;
 
@@ -124,15 +125,27 @@ public class Player : Biped
             }
 
             float newValue = hitPoints - _damage;
+            //print($"damage: {newValue} {hitPoints} {_damage} {overshieldPoints} {_overshieldRecharge} {maxOvershieldPoints}");
 
             if (overshieldPoints <= 0)
-                _hitPoints = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+            {
+                newValue = Mathf.Clamp(newValue, 0, (_maxHealthPoints + _maxShieldPoints));
+                _hitPoints = newValue;
+            }
 
             if (_previousValue > newValue)
             {
                 Debug.Log($"Player Damaged");
                 _isTakingDamageForIndicator = 0.3f;
                 OnPlayerDamaged?.Invoke(this);
+            }
+            else
+            {
+                if (newValue == maxHitPoints)
+                {
+                    print("player shield recharged completely");
+                    lastPID = -1;
+                }
             }
 
             if (_previousValue != newValue)
@@ -483,7 +496,7 @@ public class Player : Biped
     }
     [SerializeField] string _username;
 
-    public bool isMine { get { return GetComponent<PhotonView>().IsMine; } }
+    public bool isMine { get { return PV.IsMine; } }
 
     public int rid
     {
@@ -503,9 +516,15 @@ public class Player : Biped
         set
         {
             //if(GameManager.instance.pid_player_Dict.ContainsKey(value)) _lastPID = value;else _lastPID = 0;
-            _lastPID = value;
+            if (_lastPID != value)
+            {
+                print($"{name} lastPID change: {_lastPID} -> {value}");
+                _lastPID = value;
 
-            try { playerThatKilledMe = GameManager.GetPlayerWithPhotonView(_lastPID); } catch { _lastPID = 0; }
+
+                if (value > 0)
+                    try { playerThatKilledMe = GameManager.GetPlayerWithPhotonView(_lastPID); } catch { _lastPID = 0; }
+            }
         }
     }
 
@@ -628,7 +647,7 @@ public class Player : Biped
     int _defaultHealingCountdown = 4;
 
     float _healthHealingIncrement = (100 * 2);
-    float _shieldHealingIncrement = (150 * 0.5f);
+    float _shieldHealingIncrement = (250 * 0.3f);
 
     bool _hasArmor;
     bool _hasMeleeUpgrade, _diedWithHeavyWeaponInHand;
@@ -777,7 +796,7 @@ public class Player : Biped
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
 
-        _lastPID = -1;
+        lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
         gameObjectPool = GameObjectPool.instance;
         weaponPool = FindObjectOfType<WeaponPool>();
@@ -950,7 +969,7 @@ public class Player : Biped
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        print($"Damage: ({damage}) {damageSourceCleanName}");
+        print($"Damage: ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo} {source_pid}");
 
 
         if (headshot && GameManager.GetPlayerWithPhotonView(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
@@ -1011,7 +1030,7 @@ public class Player : Biped
                     dsn = DeathNature.Grenade;
                 else if (damageSourceCleanName.Contains("RPG"))
                     dsn = DeathNature.RPG;
-                else if (damageSourceCleanName.Contains("tuck"))
+                else if (damageSourceCleanName.Contains("tuck") || kfo == WeaponProperties.KillFeedOutput.Stuck)
                     dsn = DeathNature.Stuck;
                 else if (damageSourceCleanName.Contains("elee"))
                     dsn = DeathNature.Melee;
@@ -1026,9 +1045,14 @@ public class Player : Biped
             }
             //Debug.LogError($"EMPTY DEATH NATURE");
 
+            if (kfo == WeaponProperties.KillFeedOutput.Stuck)
+                dsn = DeathNature.Stuck;
+
 
 
             int newHealth = (int)hitPoints - damage;
+
+            if (kfo == WeaponProperties.KillFeedOutput.Killbox) newHealth = 0;
             PV.RPC("Damage_RPC", RpcTarget.All, newHealth, damage, source_pid, (int)dsn, impactPos, impactDir, weaponIndx, (int)kfo);
         }
     }
@@ -1227,7 +1251,7 @@ public class Player : Biped
         if (controllerId == 0)
         {
             GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
-            StartCoroutine(LeaveLevelButStayInRoom_Coroutine());
+            GameManager.instance.StartCoroutine(GameManager.instance.LeaveLevelButStayInRoom_Coroutine());
         }
     }
 
@@ -1370,7 +1394,7 @@ public class Player : Biped
         {
 
             try { GetComponent<AllPlayerScripts>().scoreboardManager.CloseScoreboard(); } catch { }
-            _lastPID = -1;
+            lastPID = -1;
             deathNature = DeathNature.None;
             _killFeedOutput = WeaponProperties.KillFeedOutput.Unassigned;
             OnPlayerRespawnEarly?.Invoke(this);
@@ -1470,23 +1494,20 @@ public class Player : Biped
 
     // public coroutines
     #region
-    public IEnumerator LeaveLevelButStayInRoom_Coroutine()
-    {
-        yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
+    //public IEnumerator LeaveLevelButStayInRoom_Coroutine()
+    //{
+    //    yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
 
 
-        int levelToLoad = 0;
-
-        //GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
 
 
-        if (SceneManager.GetActiveScene().buildIndex > 0)
-        {
-            GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
-            Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
-            PhotonNetwork.LoadLevel(0);
-        }
-    }
+    //    if (SceneManager.GetActiveScene().buildIndex > 0)
+    //    {
+    //        GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
+    //        Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+    //        PhotonNetwork.LoadLevel(0);
+    //    }
+    //}
 
     #endregion
 
@@ -1530,6 +1551,7 @@ public class Player : Biped
     void LateRespawn()
     {
         print("LateRespawn");
+        print($"oneobjmode {name} spawing at {_reservedSpawnPointTrans.name}");
 
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
@@ -1594,7 +1616,7 @@ public class Player : Biped
         if (isDead)
         {
             if (isMine && GameManager.instance.gameMode == GameManager.GameMode.Versus)
-                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, _lastPID, PV.ViewID, (int)_deathNature, (int)_killFeedOutput);
+                PV.RPC("AddPlayerKill_RPC", RpcTarget.AllViaServer, lastPID, PV.ViewID, (int)_deathNature, (int)_killFeedOutput);
 
             {
                 // Spawn Skull
@@ -1777,7 +1799,7 @@ public class Player : Biped
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
-        print($"Damage_RPC {impPos} {impDir}");
+        print($"Damage_RPC {impPos} {impDir} {sourcePid}");
         this.impactPos = transform.position; this.impactDir = Vector3.zero;
         try { this.impactDir = impDir; } catch { }
         try { this.impactPos = impPos; } catch { }
@@ -1940,8 +1962,16 @@ public class Player : Biped
         }
         catch { }
 
-        if (newHealth <= 0 && isInvincible) newHealth = 1;
 
+
+        if ((WeaponProperties.KillFeedOutput)kfo == WeaponProperties.KillFeedOutput.Killbox || (WeaponProperties.KillFeedOutput)kfo == WeaponProperties.KillFeedOutput.Stuck)
+        {
+            _maxOvershieldPoints = 0;
+            _overshieldPoints = 0;
+            _overshieldRecharge = false;
+            _isInvincible = false;
+        }
+        if (newHealth <= 0 && isInvincible) newHealth = 1;
         hitPoints = newHealth;
 
         if (weaponIndx >= 0)
@@ -2079,7 +2109,7 @@ public class Player : Biped
     void TellPlayerToRespawn()
     {
         print("SpawnPlayersForNewRound - TellPlayerToRespawn");
-
+        print($"oneobjmode {name} TellPlayerToRespawn");
         LateRespawn();
         Respawn();
     }
@@ -2155,11 +2185,11 @@ public class Player : Biped
 
 
     [PunRPC]
-    void AddPlayerKill_RPC(int wpid, int lpid, int dni, int kfo)
+    void AddPlayerKill_RPC(int playerWhoSurvivedPhotonId, int playerWhoDiedPhotonId, int dni, int kfo)
     {
         Debug.Log("AddPlayerKill_RPC");
 
-        playerThatKilledMe = GameManager.GetPlayerWithPhotonView(wpid); _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo; deathNature = (DeathNature)dni; _lastPID = wpid;
+        playerThatKilledMe = GameManager.GetPlayerWithPhotonView(playerWhoSurvivedPhotonId); _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo; deathNature = (DeathNature)dni; lastPID = playerWhoSurvivedPhotonId;
 
         playerThatKilledMe.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
 
@@ -2178,7 +2208,7 @@ public class Player : Biped
                 {
                     string f = $"<color=#31cff9>{playerThatKilledMe.username} killed {username}";
 
-                    if (_killFeedOutput != WeaponProperties.KillFeedOutput.Unassigned)
+                    if (_killFeedOutput != WeaponProperties.KillFeedOutput.Unassigned && _killFeedOutput != WeaponProperties.KillFeedOutput.Killbox)
                         f = $"<color=#31cff9>{playerThatKilledMe.username} [ {_killFeedOutput.ToString().Replace("_", " ")} ] {username}";
 
                     if (GameManager.instance.gameType == GameManager.GameType.GunGame
@@ -2224,7 +2254,7 @@ public class Player : Biped
             {
 
                 PlayerMedals sourcePlayerMedals = playerThatKilledMe._playerMedals;
-                if (sourcePlayerMedals != this._playerMedals && _lastPID != this.photonId)
+                if (sourcePlayerMedals != this._playerMedals && lastPID != this.photonId)
                 {
                     print($"Spawning medal: {deathByGroin} {deathNature}");
                     if (deathByGroin)
@@ -2251,7 +2281,7 @@ public class Player : Biped
                     //    sourcePlayerMedals.SpawnKilljoySpreeMedal();
                 }
 
-                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(wpid, lpid, (DeathNature)dni, (WeaponProperties.KillFeedOutput)kfo));
+                MultiplayerManager.instance.AddPlayerKill(new MultiplayerManager.AddPlayerKillStruct(playerWhoSurvivedPhotonId, playerWhoDiedPhotonId, (DeathNature)dni, (WeaponProperties.KillFeedOutput)kfo));
                 AchievementCheck(lastPID);
             }
 
@@ -2275,6 +2305,7 @@ public class Player : Biped
     {
         _reservedSpawnPointTrans = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
         _lastSpawnPointIsRandom = isRandom;
+        print($"oneobjmode {name} UpdateReservedSpawnPoint at {_reservedSpawnPointTrans.name}");
         //transform.position = _reservedSpawnPointTrans.position + new Vector3(0, 2, 0);
     }
 
@@ -2327,14 +2358,13 @@ public class Player : Biped
         }
         else
         {
-            print($"UpdateRewiredId: {name} {playerId}.  {playerController.rid} -> {i}");
+            print($"UpdateRewiredId: player {username} {playerId}");
+            print($"UpdateRewiredId RID changing: {playerController.rid} -> {i}");
             playerController.rid = i;
 
             if (playerId != -99999 && playerController.rid != -99999)
             {
-
-
-                print($"UpdateRewiredId - OnPlayerIdAssigned: {name} {playerId} {playerController.rid}");
+                print($"UpdateRewiredId: OnPlayerIdAssigned");
                 OnPlayerIdAssigned?.Invoke(this);
                 if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
 

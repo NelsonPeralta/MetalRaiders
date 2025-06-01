@@ -13,7 +13,6 @@ using Rewired;
 using System.Linq;
 using Steamworks;
 using UnityEngine.EventSystems;
-using Rewired.Components;
 
 //# https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager-sceneLoaded.html
 
@@ -40,7 +39,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     // Events
     public delegate void GameManagerEvent();
-    public GameManagerEvent OnGameManagerFinishedLoadingScene_Late, OnCameraSensitivityChanged, OnOneObjRoundOverLocalEvent, OnOneObjRoundReset;
+    public GameManagerEvent OnGameManagerFinishedLoadingScene_Late, OnCameraSensitivityChanged, OnOneObjRoundOverLocalEvent, OnOneObjRoundReset,
+        OnControllerTypeChangedToController, OnControllerTypeChangedToMouseAndKeyboard;
     // Enums
     public enum Team { None, Red, Blue, Alien }
     public enum Connection { Unassigned, Local, Online }
@@ -447,6 +447,28 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public TMP_Text debugText { get { return _deb; } }
 
+    public ControllerType activeControllerType
+    {
+        get { return _activeControllerType; }
+        private set
+        {
+
+            if (value == _activeControllerType)
+                return;
+
+            _activeControllerType = value;
+
+            if (value == ControllerType.Joystick)
+            {
+                OnControllerTypeChangedToController?.Invoke();
+            }
+            else
+            {
+                OnControllerTypeChangedToMouseAndKeyboard?.Invoke();
+            }
+        }
+    }
+
     // called zero
 
     // private Variables
@@ -500,7 +522,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     bool _playerDataRetrieved;
     float _checkCooldown;
-
+    ControllerType _activeControllerType;
 
     [SerializeField] AudioSource _beepConsecutiveAudioSource;
 
@@ -656,7 +678,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             ClearPhotonIdToPlayerDict();
 
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.None;
-            Launcher.instance.menuGamePadCursorScript.GetReady(ReInput.controllers.GetLastActiveControllerType());
+            Launcher.instance.menuGamePadCursorScript.GetReady(GameManager.instance.activeControllerType);
             ActorAddonsPool.instance = null;
 
             instantiation_position_Biped_Dict.Clear();
@@ -684,10 +706,23 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReportAndCredits))
             {
+                RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
+
+
+
+
                 CurrentRoomManager.instance.CreateCarnageReportData();
                 previousScenePayloads.Remove(PreviousScenePayload.OpenCarnageReportAndCredits);
                 //MenuManager.Instance.OpenMenu("carnage report");
                 MenuManager.Instance.OpenPopUpMenu("credits");
+
+
+
+                if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+                {
+                    //PhotonNetwork.CurrentRoom.IsVisible = true;
+                    PhotonNetwork.CurrentRoom.IsOpen = true;
+                }
             }
             else if (previousScenePayloads.Contains(PreviousScenePayload.OpenMainMenu))
             {
@@ -876,6 +911,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Update()
     {
 
+        _activeControllerType = ReInput.controllers.GetLastActiveControllerType();
         if (commonPlayerVoiceCooldown > 0) commonPlayerVoiceCooldown -= Time.deltaTime;
 
         if (SceneManager.GetActiveScene().buildIndex == 0 && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private
@@ -1152,7 +1188,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void LeaveCurrentRoomAndLoadLevelZero()
     {
         if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
             PhotonNetwork.LeaveRoom(); // Will trigger OnLeftRoom
+        }
     }
 
 
@@ -1496,7 +1534,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static void PlayerBeeps()
     {
-        if (!instance._beepConsecutiveAudioSource.isPlaying)
+        if (!instance._beepConsecutiveAudioSource.isPlaying && !CurrentRoomManager.instance.gameOver)
             instance._beepConsecutiveAudioSource.Play();
     }
 
@@ -1630,7 +1668,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             n.transform.root.GetComponent<ExplosiveBarrelSpawnPoint>().ResetBarrel();
 
 
-        
+
 
         Vector3 _tempPosRed = GameManager.instance.redFlag.spawnPoint.transform.position;
         GameManager.instance.redFlag.spawnPoint.transform.position = GameManager.instance.blueFlag.spawnPoint.transform.position;
@@ -1700,6 +1738,52 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
 
             StartCoroutine(SpawnPlayersForNewRoundAndResetRound_Coroutine());
+        }
+    }
+
+
+
+
+    public IEnumerator LeaveLevelButStayInRoom_Coroutine()
+    {
+        yield return new WaitForSeconds(GameManager.END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM);
+
+        MapCamera.instance.EnableBlackscreen();
+
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
+            Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+
+            if (PhotonNetwork.IsMasterClient) PhotonNetwork.Destroy(NetworkGameTime.instance.gameObject);
+
+            foreach (Player p in GetLocalPlayers())
+            {
+                p.gunCamera.enabled = false;
+                p.uiCamera.enabled = false;
+                p.mainCamera.enabled = false;
+                PhotonNetwork.Destroy(p.gameObject);
+            }
+            PhotonNetwork.LoadLevel(0);
+        }
+    }
+
+
+    public void RecalculateExpectedNbPlayersUsingPlayerCustomProperties()
+    {
+        print("RecalculateExpectedNbPlayersUsingPlayerCustomProperties");
+        if (PhotonNetwork.InRoom)
+        {
+            int expextedPlayers = 0;
+            foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values.ToList())
+            {
+                print($"Player {p.NickName} has {p.CustomProperties["localPlayerCount"]} total players");
+                expextedPlayers += (int)p.CustomProperties["localPlayerCount"];
+
+                CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(int.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
+            }
+
+            CurrentRoomManager.instance.expectedNbPlayers = expextedPlayers;
         }
     }
 }

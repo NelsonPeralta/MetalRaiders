@@ -51,10 +51,12 @@ public class MenuManager : MonoBehaviour
     public void OpenMenu(string menuName, bool closeOthers = true) // Open a menu GO using the name from its Menu script
     {
 
-        Debug.Log($"OPEN MENU: {menuName} {closeOthers}");
+        Debug.Log($"OPEN MENU: {menuName} {closeOthers} {PhotonNetwork.InRoom} {PhotonNetwork.IsMasterClient}");
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits))
-        { menuName = "carnage report"; print($"Changed to Carnage Report {menuName}"); }
+        {
+            menuName = "carnage report"; print($"Changed to Carnage Report {menuName}");
+        }
 
 
         for (int i = 0; i < menus.Length; i++)
@@ -258,5 +260,16 @@ public class MenuManager : MonoBehaviour
             }
 
         return _menus;
+    }
+
+    public bool APopUpMenuisOpen()
+    {
+        for (int i = 0; i < menus.Length; i++)
+            if (menus[i].popup && menus[i].open)
+            {
+                return true;
+            }
+
+        return false;
     }
 }

@@ -17,7 +17,7 @@ public class InstructionsMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _gamepadControls.SetActive(ReInput.controllers.GetLastActiveControllerType() == ControllerType.Joystick);
-        _keyboardControls.SetActive(ReInput.controllers.GetLastActiveControllerType() != ControllerType.Joystick);
+        _gamepadControls.SetActive(GameManager.instance.activeControllerType == ControllerType.Joystick);
+        _keyboardControls.SetActive(GameManager.instance.activeControllerType != ControllerType.Joystick);
     }
 }

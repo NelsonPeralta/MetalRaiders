@@ -20,6 +20,7 @@ public class FlagSpawnPoint : MonoBehaviour
 
     private void Awake()
     {
+        if (!GameManager.instance) Destroy(gameObject);
         if (GameManager.instance.gameType == GameManager.GameType.CTF)
         {
             _flag.spawnPoint = this;

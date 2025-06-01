@@ -19,6 +19,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
     [SerializeField] AudioClip _FirefightClip, _oddballIntro, _ctfIntro;
     [SerializeField] TMP_Text _loadingText, _gametypePreviewInfo, _mapNameInfo;
     [SerializeField] AudioSource _beepConsecutiveAudioSource;
+    [SerializeField] GameObject _blackscreenCamera;
 
     public Transform disabledJunk;
 
@@ -76,13 +77,13 @@ public class MapCamera : MonoBehaviourPunCallbacks
         //_text.text += $"\nallPlayersJoined {CurrentRoomManager.instance.allPlayersJoined}";
         //_text.text += $"\ngameIsReady {CurrentRoomManager.instance.gameIsReady}";
 
-
+        if (!GameManager.instance) return;
 
 
         _loadingText.text = $"Mapp Add-Ons: {CurrentRoomManager.instance.spawnedMapAddOns}/{CurrentRoomManager.instance.expectedMapAddOns}";
         _loadingText.text += $"\nMap Loaded: {CurrentRoomManager.instance.mapIsReady}";
         _loadingText.text += $"\nPlayers Loaded Map: {CurrentRoomManager.instance.playersLoadedScene}/{CurrentRoomManager.instance.expectedNbPlayers}";
-        _loadingText.text += $"\nPlayers Spawned: {CurrentRoomManager.instance.nbPlayersJoined}/{CurrentRoomManager.instance.expectedNbPlayers}";
+        _loadingText.text += $"\nPlayers Spawned: {CurrentRoomManager.instance.nbPlayersSpawned}/{CurrentRoomManager.instance.expectedNbPlayers}";
         _loadingText.text += $"\nPlayers Set: {CurrentRoomManager.instance.nbPlayersSet}/{CurrentRoomManager.instance.expectedNbPlayers}";
         _loadingText.text += $"\nAll Players Joined: {CurrentRoomManager.instance.allPlayersJoined}";
         _loadingText.text += $"\nReady: {CurrentRoomManager.instance.gameIsReady} ({CurrentRoomManager.instance.GameReadyStep})";
@@ -157,7 +158,11 @@ public class MapCamera : MonoBehaviourPunCallbacks
 
 
 
-
+    public void EnableBlackscreen()
+    {
+        _blackscreenCamera.transform.parent = null;
+        _blackscreenCamera.gameObject.SetActive(true);
+    }
 
     public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
     {

@@ -99,7 +99,7 @@ public class AimAssist : MonoBehaviour
 
     private void Update()
     {
-        if (!player.isMine) return;
+        if (player && !player.isMine) return;
 
 
 

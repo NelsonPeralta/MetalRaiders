@@ -1,0 +1,6 @@
+newmtl PolygonScifiSpace_Material_01_B
+map_Kd PolygonSciFiSpace_Texture_01_B.png
+map_Ke PolygonSciFiSpace_Emissive_01.png
+Kd 1 1 1
+d 1
+

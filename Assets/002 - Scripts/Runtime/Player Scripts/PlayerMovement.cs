@@ -538,7 +538,7 @@ public class PlayerMovement : MonoBehaviour
             _rawRightInput = _correctedRightInput = rewiredPlayer.GetAxis("Move Horizontal");
             _rawForwardInput = _correctedForwardInput = rewiredPlayer.GetAxis("Move Vertical");
 
-            if (ReInput.controllers.GetLastActiveControllerType() != ControllerType.Joystick)
+            if (GameManager.instance.activeControllerType != ControllerType.Joystick)
             {
                 _rawRightInput = _correctedRightInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Horizontal") * 2, -1, 1);
                 _rawForwardInput = _correctedForwardInput = Mathf.Clamp(rewiredPlayer.GetAxis("Move Vertical") * 2, -1, 1);

@@ -219,7 +219,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("SendLocalPlayerData TO EVERYONE");
 
-            _pv.RPC("SendLocalPlayerDataToEveryone", RpcTarget.All, CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT, false);
+            _pv.RPC("SendLocalPlayerDataToEveryone", RpcTarget.AllViaServer, CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT, false);
         }
         else if (!caller && !PhotonNetwork.IsMasterClient)
         {
@@ -259,7 +259,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (!caller)
         {
-            CurrentRoomManager.instance.nbPlayersJoined++;
+            CurrentRoomManager.instance.nbPlayersSpawned++;
         }
 
     }
@@ -497,8 +497,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void ReserveSpawnPoint(int playerPhotonId, int controllerID, Vector3 pos, bool isRandom)
     {
-        _pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.MasterClient, playerPhotonId, controllerID, pos, false);
-
+        if (PhotonNetwork.IsMasterClient)
+            _pv.RPC("ReserveSpawnPoint_RPC", RpcTarget.AllViaServer, playerPhotonId, controllerID, pos, false);
     }
 
     public void ResetOneObjRoundOver()
@@ -931,7 +931,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            GameManager.GetPlayerWithPhotonView(pid).maxOvershieldPoints = 150;
+            GameManager.GetPlayerWithPhotonView(pid).maxOvershieldPoints = 250;
 
 
 
@@ -1385,8 +1385,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         SpawnManager.spawnManagerInstance.ReserveSpawnPoint(pos);
 
+        print($"oneobjmode ReserveSpawnPoint_RPC {playerPhotonId} {controllerID} -> {SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(pos).name}");
         foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
         {
+            print($"oneobjmode ReserveSpawnPoint_RPC {p.photonId} {p.rid}");
             if (p.photonId == playerPhotonId && p.rid == controllerID) p.UpdateReservedSpawnPoint(pos, isRandom);
         }
     }

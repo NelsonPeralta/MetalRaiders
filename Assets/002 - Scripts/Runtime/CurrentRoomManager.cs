@@ -38,16 +38,27 @@ public class CurrentRoomManager : MonoBehaviour
         get { return _playerNicknameNbLocalPlayersDict; }
         set
         {
-            _playerNicknameNbLocalPlayersDict = value;
-            int c = 0;
+            //_playerNicknameNbLocalPlayersDict = value;
+            //int c = 0;
+            print($"playerNickname_To_NbLocalPlayers_DICT");
+            //foreach (KeyValuePair<string, int> items in playerNickname_To_NbLocalPlayers_DICT)
+            //{
+            //    print($"Player {items.Key} has {items.Value} invites");
 
-            foreach (KeyValuePair<string, int> items in playerNickname_To_NbLocalPlayers_DICT)
-            {
-                print("You have " + items.Value + " " + items.Key);
-                c += items.Value;
-            }
+            //    try
+            //    {
+            //        GetDataCellWithDatabaseIdAndRewiredId(int.Parse(items.Key), 0).invites = items.Value;
+            //    }
+            //    catch
+            //    {
 
-            expectedNbPlayers = c;
+            //    }
+
+            //    c += items.Value;
+            //}
+
+            //expectedNbPlayers = c;
+            GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
         }
     }
     public int expectedNbPlayers
@@ -57,7 +68,7 @@ public class CurrentRoomManager : MonoBehaviour
         {
             int _preVal = _expectedNbPlayers;
             _expectedNbPlayers = value;
-
+            print($"expected number of players {value}");
 
             if (PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
                 if (_preVal == 0 && expectedNbPlayers == 1)
@@ -160,14 +171,14 @@ public class CurrentRoomManager : MonoBehaviour
     /// <summary>
     /// Step 3: Wait for players to tell this when they have spawned
     /// </summary>
-    public int nbPlayersJoined
+    public int nbPlayersSpawned
     {
-        get { return _nbPlayersJoined; }
+        get { return _nbPlayersSpawned; }
         set
         {
-            _nbPlayersJoined = value;
+            _nbPlayersSpawned = value;
 
-            if (nbPlayersJoined == expectedNbPlayers)
+            if (nbPlayersSpawned == expectedNbPlayers)
                 StartCoroutine(TriggerAllPlayersJoined_Coroutine());
         }
     }
@@ -180,7 +191,7 @@ public class CurrentRoomManager : MonoBehaviour
             _nbPlayersSet = value;
             print($"_nbPlayersSet {_nbPlayersSet}");
 
-            if (_nbPlayersSet == expectedNbPlayers && nbPlayersJoined == expectedNbPlayers)
+            if (_nbPlayersSet == expectedNbPlayers && nbPlayersSpawned == expectedNbPlayers)
                 allPlayersJoined = true;
         }
     }
@@ -393,7 +404,7 @@ public class CurrentRoomManager : MonoBehaviour
     [SerializeField] bool _matchSettingsSet, _gameStarted, _gameOver;
     [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9, _rpcCooldown;
 
-    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersJoined, _nbPlayersSet, _vetos, _gameReadyStep;
+    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersSpawned, _nbPlayersSet, _vetos, _gameReadyStep;
 
     [SerializeField] RoomType _roomType;
 
@@ -580,7 +591,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             _matchSettingsSet = _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
                   _reachedHalwayGameStartCountdown = _randomInitiQuickMatchSettingsChosen = false;
-            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersJoined = _nbPlayersSet = _playersLoadedScene = 0;
+            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersSpawned = _nbPlayersSet = _playersLoadedScene = 0;
             playerNickname_To_NbLocalPlayers_DICT.Clear();
             playerNickname_To_NbLocalPlayers_DICT = playerNickname_To_NbLocalPlayers_DICT;
 
@@ -623,7 +634,6 @@ public class CurrentRoomManager : MonoBehaviour
             {
                 print($"nbPlayersJoined {p.name}");
                 p.TriggerAllPlayersJoinedBehaviour();
-
             }
     }
 

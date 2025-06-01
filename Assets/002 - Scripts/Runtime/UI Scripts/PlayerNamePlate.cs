@@ -56,6 +56,7 @@ public class PlayerNamePlate : MonoBehaviour
     [SerializeField] TMP_Text playerText, levelText;
     [SerializeField] Image _mainBg, _secBg, _rankIm;
     [SerializeField] GameObject _pointerEnterIndicator, _roomLeaderIcon;
+    [SerializeField] KickPlayerBtn _kickPlayerBtn; // bugs when not stored, dont touch
 
     Color _tCol;
 
@@ -120,7 +121,7 @@ public class PlayerNamePlate : MonoBehaviour
     {
         playerText.text = name;
         _playerData = CurrentRoomManager.GetLocalPlayerData(playerDataCell);
-        GetComponentInChildren<KickPlayerBtn>().SetPlayerDataCell(_playerData);
+        _kickPlayerBtn.SetPlayerDataCell(_playerData);
 
         UpdateColorPalette();
     }
@@ -163,13 +164,16 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void OnClick()
     {
-        GameManager.PlayClickSound();
-        MenuManager.Instance.OpenMenu("service_record", false);
-        ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
+        if (!MenuManager.Instance.APopUpMenuisOpen())
+        {
+            GameManager.PlayClickSound();
+            MenuManager.Instance.OpenMenu("service_record", false);
+            ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
 
-        s.playerData = _playerData;
-        Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = playerDataCell;
-        Launcher.TogglePlayerModel(true);
+            s.playerData = _playerData;
+            Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = playerDataCell;
+            Launcher.TogglePlayerModel(true);
+        }
     }
 
     public void OnPointerEnter()

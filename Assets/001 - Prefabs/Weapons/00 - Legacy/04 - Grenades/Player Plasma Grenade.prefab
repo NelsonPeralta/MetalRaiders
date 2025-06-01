@@ -14834,7 +14834,6 @@ GameObject:
   - component: {fileID: 3248583250224941726}
   - component: {fileID: 5732484404395741313}
   - component: {fileID: 4846359706036873529}
-  - component: {fileID: 4452243634942057948}
   m_Layer: 8
   m_Name: Player Plasma Grenade
   m_TagString: Untagged
@@ -14907,6 +14906,7 @@ MonoBehaviour:
   _radius: 5
   _throwForce: 300
   _explosionPower: 300
+  _stuckPlayerPhotonId: 0
   _sourceCleanName: Plasma Grenade
   _killFeedOutput: 16
   _useConstantForce: 0
@@ -15060,29 +15060,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1773428102 &4452243634942057948
-ParentConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3334927101774382662}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 0, z: 0}
-  m_RotationAtRest: {x: 0, y: 0, z: 0}
-  m_TranslationOffsets: []
-  m_RotationOffsets: []
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_AffectRotationX: 1
-  m_AffectRotationY: 1
-  m_AffectRotationZ: 1
-  m_Active: 0
-  m_IsLocked: 0
-  m_Sources: []
 --- !u!1 &3896116687662098110
 GameObject:
   m_ObjectHideFlags: 0
