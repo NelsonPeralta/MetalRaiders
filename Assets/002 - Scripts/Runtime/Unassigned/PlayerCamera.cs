@@ -66,7 +66,7 @@ public class PlayerCamera : MonoBehaviour
 
     [SerializeField] Transform _thirdPersonCameraPivot, _thirdPersonCameraTarget, _thirdPersonAimingComponentsOffset;
     [SerializeField] PlayerCameraCenterPointCheck _playerCameraCenterPointCheck;
-
+    [SerializeField] int _reticuleFrictionFact;
 
 
     private void Awake()
@@ -132,7 +132,7 @@ public class PlayerCamera : MonoBehaviour
         if (_controllerType == ControllerType.Joystick) backEndMouseSens *= 1.1f; else backEndMouseSens /= 10;
 
         if (aimAssistCapsule.reticuleFriction)
-            backEndMouseSens *= (1f - (aimAssistCapsule.reticuleFrictionTick / 70f)); // reticuleFrictionTick = 30 max
+            backEndMouseSens *= (1f - (aimAssistCapsule.reticuleFrictionTick / _reticuleFrictionFact)); // reticuleFrictionTick = 30 max
 
         if (pController.isAiming)
         {

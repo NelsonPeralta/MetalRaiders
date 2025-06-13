@@ -61,7 +61,7 @@ public class AimAssistCone : MonoBehaviour
         {
             _reticuleFriction = value;
 
-            if (value) { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick + 3, 0, 30); } else { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick - 2, 0, 30); }
+            if (value) { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick + 4, 0, 30); } else { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick - 2, 0, 30); }
         }
     }
 
