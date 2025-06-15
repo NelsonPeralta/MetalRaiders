@@ -886,9 +886,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Ping ping = new Ping(ip);
         yield return new WaitForSeconds(1f);
-        if (ping.isDone)
+        print(ping.time);
+        if (ping.isDone && ping.time != -1)
         {
             print($"Pinged Google in: {ping.time}");
+
 
             SteamManager.Instance.Init();
             Launcher.instance.ConnectToPhotonMasterServer();
