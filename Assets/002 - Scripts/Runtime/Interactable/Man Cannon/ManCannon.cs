@@ -39,12 +39,12 @@ public class ManCannon : MonoBehaviour
                         rb.GetComponent<PlayerMovement>().blockedMovementType = PlayerMovement.BlockedMovementType.ManCannon;
 
                         print($"ManCannon dir {transform.up * power}");
-                        Debug.Log($"ManCannon BEFORE! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
-                        rb.velocity = Vector3.zero;
+                        Debug.Log($"ManCannon BEFORE! {rb.linearDamping} {rb.angularDamping} ||| {rb.linearVelocity} {rb.angularVelocity}");
+                        rb.linearVelocity = Vector3.zero;
                         rb.angularVelocity = Vector3.zero;
                         rb.useGravity = true;
-                        rb.drag = 0;
-                        Debug.Log($"ManCannon AFTER! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
+                        rb.linearDamping = 0;
+                        Debug.Log($"ManCannon AFTER! {rb.linearDamping} {rb.angularDamping} ||| {rb.linearVelocity} {rb.angularVelocity}");
                         rb.AddForce(transform.up * power, ForceMode.Impulse);
 
                         GetComponent<AudioSource>().clip = onTriggerAudioClip;
@@ -58,7 +58,7 @@ public class ManCannon : MonoBehaviour
                 {
                     print($"ManCannon dir {transform.up * power}");
                     //Debug.Log($"ManCannon LAUNCH! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
-                    rb.velocity = Vector3.zero;
+                    rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
                     //Debug.Log($"ManCannon LAUNCH! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
                     rb.AddForce(transform.up * power, ForceMode.Impulse);

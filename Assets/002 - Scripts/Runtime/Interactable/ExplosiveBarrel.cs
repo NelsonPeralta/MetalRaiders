@@ -34,7 +34,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     }
     private void OnEnable()
     {
-        GetComponent<Rigidbody>().velocity *= 0;
+        GetComponent<Rigidbody>().linearVelocity *= 0;
         _hitPoints = _defaultHitPoints;
     }
 

@@ -83,6 +83,6 @@ public class PlayerRagdoll : Ragdoll
 
     public void ResetRigidbodieVelocities()
     {
-        foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true)) { rb.velocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
+        foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true)) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
     }
 }

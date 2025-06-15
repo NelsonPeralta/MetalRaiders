@@ -60,12 +60,12 @@
     	<div class="main-body">
 	        <div class="logo"><a href="http://guavaman.com/projects/rewired" title="Rewired"><img src="files/images/rewired-logo.png" width="173" height="139" alt="Rewired" /></a></div>
                      
-          <h1>
+            <h1>
             <!-- InstanceBeginEditable name="PageHeader" -->Rewired Documentation<!-- InstanceEndEditable -->
             </h1>
             
 			<!-- InstanceBeginEditable name="MainBody" -->
-    <h2 >For Rewired version 1.1.41.5</h2>
+    <h2 >For Rewired version 1.1.59.0</h2>
     <!--<div style="border: 3px solid; padding: 2em; font-weight: bold; font-size: 24px">Notice:
       <ul>
         <li><a href="KnownIssues.html#windows-standalone-il2cpp-vs2019-hang">Visual Studio 2019 -- All platforms compiled with IL2CPP on Windows: Builds never finish, build fails with errors, builds crash, built exe hangs at launch, or builds throw exceptions about duplicate Actions</a><br />
@@ -86,7 +86,7 @@
       <li><a href="Deployment.html">Deployment</a> - Important notes on deplyoing your game on various platforms.</li>
       <li><a href="BestPractices.html">Best Practices</a> - Important guidelines on various topics.</li>
       <li><a href="RewiredEditor.html">Rewired Editor</a> - Detailed information about the Rewired Input Manager editor.</li>
-      <li><a href="http://guavaman.com/projects/rewired/docs/api-reference" target="_blank">API Reference</a> - A complete reference for the Rewired scripting API.</li>
+      <li><a href="https://guavaman.com/projects/rewired/docs/api-reference" target="_blank">API Reference</a> - A complete reference for the Rewired scripting API.</li>
       </ol>
     <p>&nbsp;</p>
 <h3 style="background-color: #ddd">Concepts:</h3>
@@ -113,17 +113,20 @@
 <h3 style="background-color:#ddd">Extras:</h3>
     <ul>
       <li><a href="ControlMapper.html">Control Mapper</a></li>
+      <li><a href="Glyphs.html">Glyphs</a></li>
       <li><a href="TouchControls.html">Touch Controls</a></li>
-      <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a> - <strong><em>*Required to control Unity UI with Rewired</em></strong><em>*</em> -- If you are not using the Rewired Standalone Input Module instead of the default Standalone Input Module on your EventSystem, <em>Rewired input is not controlling the UI -- Unity is</em>.</li>
       <li><a href="UnityInputOverride.html">Unity Input Override</a></li>
       </ul>
     <p>&nbsp;</p>
 <h3 style="background-color:#ddd">Misc:</h3>
     <ul>
+      <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a> - <strong><em>*Required to control Unity UI with Rewired</em></strong><em>*</em> -- If you are not using the Rewired Standalone Input Module instead of the default Standalone Input Module on your EventSystem, <em>Rewired input is not controlling the UI -- Unity is</em>.</li>
       <li><a href="ComponentControls.html">Component Controls</a></li>
       <li><a href="PlayerControllers.html">Player Controllers</a></li>
       <li><a href="InputMapper.html">Input Mapper</a></li>
       <li><a href="UserDataStore.html">User Data Store</a></li>
+      <li><a href="CustomPlatforms.html">Custom Platforms</a></li>
+      <li><a href="Localization.html">Localization</a></li>
       </ul>
     <p>&nbsp;</p>
 <h3 style="background-color:#ddd">How To's:</h3>
@@ -140,6 +143,7 @@
   <li><a href="HowTos.html#get-element-name-for-action">Displaying a button/axis/key name to the user for an Action</a></li>
   <li><a href="HowTos.html#display-glyph-for-action">Displaying a glyph for a Controller element mapped to an Action</a></li>
   <li><a href="HowTos.html#display-glyph-for-active-elements">Displaying a glyph for the currently active Controller elements</a></li>
+  <li><a href="HowTos.html#get-mappings-for-joystick-not-attached">Getting Controller Maps for a Joystick not currently attached</a></li>
   <li><a href="HowTos.html#get-contributing-input-sources">Getting contributing input sources for an Action</a></li>
   <li><a href="HowTos.html#last-used-controller">Determining which Controller was last used</a></li>
   <li><a href="HowTos.html#is-controller-gamepad">Determining if a Controller is a Gamepad</a></li>
@@ -175,9 +179,18 @@
   <li><a href="HowTos.html#using-arcadeguns-g500">Using ArcadeGuns G-500 AimTrak Light Guns</a><a href="HowTos.html#configuring-arcadeguns-g500"></a></li>
   <li><a href="HowTos.html#dualshock-4-special-features">Using Sony DualShock 4 special features</a></li>
   <li><a href="HowTos.html#dualsense-special-features">Using Sony DualSense special features</a></li>
+  <li><a href="HowTos.html#nintendo-switch-controller-special-features">Using Nintendo Switch controller special features</a></li>
   <li><a href="HowTos.html#raildriver-special-features">Using P.I. Engineering Rail Driver special features</a></li>
   <li><a href="HowTos.html#xbox-one-controller-special-features">Using XBox One controller special features on XBox One platform</a></li>
-  <li><a href="HowTos.html#ps4-gamepad-special-features">Using PS4 gamepad special features on PS4 platform</a></li>
+  <li><a href="HowTos.html#apple-game-controller-framework">Apple Game Controller Framework special features</a></li>
+  <li><a href="HowTos.html#raw-input-controller-extension">Additional Windows Raw Input controller information</a></li>
+  <li><a href="HowTos.html#direct-input-controller-extension">Additional Windows Direct Input controller information</a></li>
+  <li><a href="HowTos.html#xinput-controller-extension">Additional Windows XInput controller information</a></li>
+  <li><a href="HowTos.html#wgi-controller-extension">Additional Windows Windows Gaming Input controller information</a></li>
+  <li><a href="HowTos.html#uwp-controller-extension">Additional Universal Windows Platform (UWP) controller information</a></li>
+  <li><a href="HowTos.html#macos-controller-extension">Additional MacOS controller information</a></li>
+  <li><a href="HowTos.html#linux-controller-extension">Additional Linux controller information</a></li>
+  <li><a href="HowTos.html#enhanced-device-support-linux">Enhanced Device Support permissions on Linux</a></li>
   <li><a href="HowTos.html#asmdef-files">Using asmdef files with Rewired</a></li>
 </ul>
 <p>&nbsp;</p>
@@ -189,14 +202,13 @@
   <li><a href="KnownIssues.html">Known Issues</a></li>
   <li><a href="SpecialPlatformSupport.html">Special Platform Support</a>
     <ul>
-      <li><a href="SpecialPlatformSupport.html#windows-app-store">Windows 8 Store</a></li>
-      <li><a href="SpecialPlatformSupport.html#windows-uwp">Windows 10 Universal</a></li>
-      <li><a href="SpecialPlatformSupport.html#ouya">OUYA</a></li>
-      <li><a href="SpecialPlatformSupport.html#xbox-one">XBox One (XDK)</a></li>
-      <li><a href="SpecialPlatformSupport.html#xbox-game-core">Xbox Game Core</a></li>
-      <li><a href="SpecialPlatformSupport.html#ps4">Playstation 4</a></li>
+      <li><a href="SpecialPlatformSupport.html#windows-uwp">Microsoft Windows 10 Universal</a></li>
+      <li><a href="SpecialPlatformSupport.html#xbox-one">Microsoft XBox One (XDK)</a></li>
+      <li><a href="SpecialPlatformSupport.html#xbox-game-core">Microsoft Xbox Game Core</a></li>
+      <li><a href="SpecialPlatformSupport.html#ps4">PlayStation<sup>&reg;</sup>4</a></li>
+      <li><a href="SpecialPlatformSupport.html#ps5">Playstation<sup>&reg;</sup>5</a></li>
       <li><a href="SpecialPlatformSupport.html#nintendo-switch">Nintendo Switch</a></li>
-      <li><a href="SpecialPlatformSupport.html#stadia">Stadia</a></li>
+      <li><a href="SpecialPlatformSupport.html#nintendo-switch-2">Nintendo Switch 2</a></li>
       <li><a href="SpecialPlatformSupport.html#steam">Steam</a></li>
       </ul>
   </li>
@@ -205,7 +217,8 @@
     <ul>
       <li><a href="Integration.html#BehaviorDesigner">Behavior Designer</a></li>
       <li><a href="Integration.html#Bolt">Bolt</a></li>
-      <li><a href="Integration.html#Cinemachine">Cinemachine</a></li>
+      <li><a href="Integration.html#Cinemachine2">Cinemachine 2</a></li>
+      <li><a href="Integration.html#Cinemachine3">Cinemachine 3</a></li>
       <li><a href="Integration.html#CorgiEngine">Corgi Engine - 2D + 2.5D Platformer</a></li>
       <li><a href="Integration.html#Deftly">Deftly: Top Down Shooter Framework</a></li>
       <li><a href="Integration.html#DialogueSystem">Dialogue System for Unity</a></li>
@@ -225,6 +238,7 @@
       <li><a href="Integration.html#RealisticTankController">Realistic Tank Controller</a></li>
       <li><a href="Integration.html#RexEngine">Rex Engine: A 2D Platformer Engine</a></li>
       <li><a href="Integration.html#Rucksack">Rucksack - Multiplayer Inventory System</a></li>
+      <li><a href="Integration.html#SciFiShipController">Sci-Fi Ship Controller</a></li>
       <li><a href="Integration.html#SpaceCombatKit">Space Combat Kit</a></li>
       <li><a href="Integration.html#UFPM">UFPM: Ultimate First Person Melee</a></li>
       <li><a href="Integration.html#UFPS">UFPS 1.x</a></li>
@@ -275,22 +289,22 @@
 <p>&nbsp;</p>
 <h3 style="background-color:#ddd">Unity Help:</h3>
 <ul>
-  <li><a href="http://docs.unity3d.com/Manual/" target="_blank">Unity Manual</a></li>
-  <li><a href="http://docs.unity3d.com/ScriptReference/" target="_blank">Unity Script Reference</a></li>
-  <li><a href="http://unity3d.com/learn/tutorials/modules" target="_blank">Unity Tutorials</a></li>
+  <li><a href="https://docs.unity3d.com/Manual/" target="_blank">Unity Manual</a></li>
+  <li><a href="https://docs.unity3d.com/ScriptReference/" target="_blank">Unity Script Reference</a></li>
+  <li><a href="https://unity3d.com/learn/tutorials/modules" target="_blank">Unity Tutorials</a></li>
 </ul>
 <p>&nbsp;</p>
 <h3 style="background-color:#ddd">Links:</h3>
 <ul>
-  <li><a href="http://guavaman.com/projects/rewired">Rewired Website</a></li>
-  <li><a href="http://guavaman.com/projects/rewired/docs">Web Documentation</a></li>
+  <li><a href="https://guavaman.com/projects/rewired">Rewired Website</a></li>
+  <li><a href="https://guavaman.com/projects/rewired/docs">Web Documentation</a></li>
 </ul>
       <!-- InstanceEndEditable -->
         </div>
         
     </div>
   <div class="footer clearfix">
-   	<p class="left">Copyright &copy;2014-2019 <a href="http://guavaman.com" title="Guavaman Enterprises">Guavaman Enterprises</a>. All rights reserved. No materials may be reproduced without permission.</p>
+   	<p class="left">Copyright &copy;2014-2021 <a href="http://guavaman.com" title="Guavaman Enterprises">Guavaman Enterprises</a>. All rights reserved. No materials may be reproduced without permission.</p>
   	<p class="right"><a href="http://guavaman.com/projects/rewired" title="Return to Rewired Website">Return to Rewired Website</a></p>
   </div>
   <!-- end .content --></div>

@@ -103,7 +103,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
     private void OnEnable()
     {
         _collisionEffectsCooldown = _heat = 0;
-        try { GetComponent<Rigidbody>().velocity *= 0; } catch { }
+        try { GetComponent<Rigidbody>().linearVelocity *= 0; } catch { }
 
         try
         {
@@ -269,7 +269,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
     private void OnCollisionEnter(Collision collision)
     {
-        GetComponent<Rigidbody>().velocity /= 2;
+        GetComponent<Rigidbody>().linearVelocity /= 2;
         try
         {
             if (_collisionEffectsCooldown <= 0 && _heat <= 0.3f)

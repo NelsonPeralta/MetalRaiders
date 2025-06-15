@@ -95,7 +95,7 @@ public class OddballSpawnPoint : MonoBehaviour
     IEnumerator SpawnOddball_Coroutine()
     {
         _oddball.DisableOddball();
-        _oddball.rb.velocity = Vector3.zero;
+        _oddball.rb.linearVelocity = Vector3.zero;
         _oddball.rb.angularVelocity = Vector3.zero;
 
         _oddball.transform.root.rotation = Quaternion.identity;

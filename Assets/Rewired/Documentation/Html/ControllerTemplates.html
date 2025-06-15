@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -146,9 +149,18 @@
 
     <p>A Controller Template represents a generalized controller layout that applies to all compatible controllers providing a common interface to work with these controllers. When you create a map for a Controller Template, any controller that implements the template will inherit that map automatically without the need for you to create a map specifically for that controller. For example, Rewired comes with a Gamepad Template. When you create a map for this Gamepad Template, you do not need to create individual maps specifically for any of the gamepads <a href="SupportedControllers.html">listed on this page</a> because they are all covered by the Gamepad Template. This makes is much quicker to create pre-defined controller maps for a huge variety of controllers. Additionally, as more controllers are added to the Template in the future, the map you've already created will work with these new controllers as well.</p>
 <p>If you have created a map for a Controller Template but still want to make a map for a specific controller that is covered by the Controller Template, just create the map for the specific controller and it will override the map defined in the Template.</p>
-    <p>Controller Templates can also be <a href="#scripting">accessed at runtime through scripting</a> for a variety of purposes.</p>
-    <p>For information about which controllers are compatible with which Controller Templates, please see <a href="SupportedControllers.html">Supported Controllers</a>.</p>
-    <p><strong><a name="gamepad-template" id="gamepad-template"></a><a name="dual-analog-gamepad-template" id="dual-analog-gamepad-template"></a>Gamepad Template:</strong></p>
+<p>See this for more information about <a href="ControllerMaps.html#controller-templates">how Controller Templates relate to Controller Maps</a>.</p>
+    <p>Controller Templates can also be <a href="#scripting">accessed at runtime through scripting</a> for a variety of purposes.    </p>
+    <p>For information about which controllers are compatible with which Controller Templates, please see <a href="SupportedControllers.html">Supported Controllers</a>. </p>
+<p><strong><a name="supported-controller-elements" id="supported-controller-elements"></a>Supported Controller Elements:</strong></p>
+    <ul>
+      <li>All controller elements mappable on a Controller Template are not guaranteed to exist on every compatible controller.</li>
+      <li>All controller elements on a controller are not guaranteed to be supported on every platform and input source. Which elements are supported is up to the specific input API in use for the controller.</li>
+      <li> If a controller element does not exist on a controller or if that element is not supported on a specific platform and input source, no Action mapping  will be created in the <a href="ControllerMaps.html#controller-templates">final runtime Controller Map</a> for that element.</li>
+      <li>All elements on a controller are not guaranteed to be mappable by a Controller Template. If a controller  contains elements that are not supported by the template, you must create a Controller Map for that specific controller, overriding the template, if you want to map Actions to these unsupported elements.</li>
+      </ul>
+    <p>&nbsp;</p>
+<p><strong><a name="gamepad-template" id="gamepad-template"></a><a name="dual-analog-gamepad-template" id="dual-analog-gamepad-template"></a>Gamepad Template:</strong></p>
     <p>The Gamepad Template allows you to make a map which will cover <a href="SupportedControllers.html#gamepads">all of the gamepads listed here</a>.</p>
     <p><strong>NOTE:</strong> Do not be confused and assume that the Gamepad Template will apply to and work with every gamepad in existence. The Template only applies to and works with <a href="SupportedControllers.html">recognized gamepads</a> that have controller definitions. There is no possible way to create a system that can automatically recognize and map  all gamepads, steering wheels, flight controllers, or any other type of device because the required information to do this simply does not exist in the USB or HID data provided by the device. Only <a href="SupportedControllers.html">devices that have controller definitions</a> can work with the Template system.</p>
     <p> The element names of the Gamepad Template are generalized because not all gamepads use the same names for all elements. Note that even though the Template element names are generalized, during gameplay, Rewired will use the controller's element's actual name instead of the generalized name. For example, an XBox 360 controller will report &quot;A&quot; instead of &quot;Action Bottom Row 1&quot; for the green button.</p>
@@ -156,40 +168,40 @@
     <p><img src="files/images/gamepad-template-element-name-guide.png" alt="Rewired Gamepad Template Name Guide" /></p>
     <p>Scripting Reference:</p>
     <ul>
-      <li>Interface - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IGamepadTemplate.htm">IGamepadTemplate</a></li>
-      <li>Class - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_GamepadTemplate.htm">GamepadTemplate</a></li>
+      <li>Interface - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IGamepadTemplate.htm">IGamepadTemplate</a></li>
+      <li>Class - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_GamepadTemplate.htm">GamepadTemplate</a></li>
       </ul>
     <p>&nbsp;</p>
 <p><strong><a name="racing-wheel-template" id="racing-wheel-template"></a>Racing Wheel Template:</strong></p>
     <p>The Racing Wheel Template allows you to make a map which will cover <a href="SupportedControllers.html#racing-controllers">all of the wheels listed here</a>. No diagram exists showing the elements visually because there is no generally accepted universal racing wheel layout as there is for gamepads. The element names should be straightforward enough to understand what they would map to on a device.</p>
     <p>Scripting Reference:</p>
     <ul>
-      <li>Interface - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IRacingWheelTemplate.htm">IRacingWheelTemplate</a></li>
-      <li>Class - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_RacingWheelTemplate.htm">RacingWheelTemplate</a></li>
+      <li>Interface - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IRacingWheelTemplate.htm">IRacingWheelTemplate</a></li>
+      <li>Class - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_RacingWheelTemplate.htm">RacingWheelTemplate</a></li>
       </ul>
     <p>&nbsp;</p>
 <p><strong><a name="hotas-template" id="hotas-template"></a>Hotas Template:</strong></p>
     <p>The HOTAS  Template allows you to make a map which will cover <a href="SupportedControllers.html#flight-controllers">all of the HOTAS devices and flight sticks listed here</a>. No diagram exists showing the elements visually because there is no generally accepted universal HOTAS  layout as there is for gamepads.  The element names should be straightforward enough to understand what they would map to on a device.</p>
     <p>Scripting Reference:</p>
     <ul>
-      <li>Interface - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IHOTASTemplate.htm">IHOTASTemplate</a></li>
-      <li>Class - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_HOTASTemplate.htm">HOTASTemplate</a></li>
+      <li>Interface - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IHOTASTemplate.htm">IHOTASTemplate</a></li>
+      <li>Class - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_HOTASTemplate.htm">HOTASTemplate</a></li>
       </ul>
     <p>&nbsp;</p>
 <p><strong><a name="flight-yoke-template" id="flight-yoke-template"></a>Flight Yoke Template:</strong></p>
     <p>The Flight Yoke Template allows you to make a map which will cover <a href="SupportedControllers.html#flight-controllers">all of the flight yokes listed here</a>. No diagram exists showing the elements visually because there is no generally accepted universal flight yoke layout as there is for gamepads.  The element names should be straightforward enough to understand what they would map to on a device.</p>
     <p>Scripting Reference:</p>
     <ul>
-      <li>Interface - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IFlightYokeTemplate.htm">IFlightYokeTemplate</a></li>
-      <li>Class - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_FlightYokeTemplate.htm">FlightYokeTemplate</a></li>
+      <li>Interface - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IFlightYokeTemplate.htm">IFlightYokeTemplate</a></li>
+      <li>Class - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_FlightYokeTemplate.htm">FlightYokeTemplate</a></li>
       </ul>
     <p>&nbsp;</p>
 <p><strong><a name="flight-pedals-template" id="flight-pedals-template"></a>Flight Pedals Template:</strong></p>
     <p>The Flight Pedals Template allows you to make a map which will cover <a href="SupportedControllers.html#flight-controllers">all of the flight pedals listed here</a>. No diagram exists showing the elements visually because there is no generally accepted universal flight pedal layout as there is for gamepads. The element names should be straightforward enough to understand what they would map to on a device.</p>
     <p>Scripting Reference:</p>
     <ul>
-      <li>Interface - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IFlightPedalsTemplate.htm">IFlightPedalsTemplate</a></li>
-      <li>Class - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_FlightPedalsTemplate.htm">FlightPedalsTemplate</a></li>
+      <li>Interface - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IFlightPedalsTemplate.htm">IFlightPedalsTemplate</a></li>
+      <li>Class - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_FlightPedalsTemplate.htm">FlightPedalsTemplate</a></li>
       </ul>
     <p>&nbsp;</p>
 <p><strong><a name="6-dof-controller-template" id="6-dof-controller-template"></a>6 DoF Controller Template:</strong></p>
@@ -206,8 +218,8 @@
     <p>No diagram exists showing the elements visually because there is no generally accepted universal 6 DoF controller layout as there is for gamepads. The element names should be straightforward enough to understand what they would map to on a device.</p>
     <p>Scripting Reference:</p>
     <ul>
-      <li>Interface - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ISixDofControllerTemplate.htm">ISixDofControllerTemplate</a></li>
-      <li>Class - <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_SixDofControllerTemplate.htm">SixDofControllerTemplate</a></li>
+      <li>Interface - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ISixDofControllerTemplate.htm">ISixDofControllerTemplate</a></li>
+      <li>Class - <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_SixDofControllerTemplate.htm">SixDofControllerTemplate</a></li>
     </ul>
 <p>&nbsp;</p>
 <hr />
@@ -283,7 +295,7 @@ id = GamepadTemplate.elementId_rightShoulder;
 <span class="comment">// The GUID is also available</span>
 Guid guid = GamepadTemplate.typeGuid;</pre>
 <p><strong><a name="action-map-to-controller-template-element" id="action-map-to-controller-template-element"></a>Getting a Controller Template Element from a Controller Action mapping:</strong></p>
-<p>If you want to determine the Controller Template Element that corresponds to a Player-Action mapping in a Controller Map, it can be converted to a Controller Template Element Target by using the method <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/M_Rewired_IControllerTemplate_GetElementTargets.htm">IControllerTemplate.GetElementTargets</a>.</p>
+<p>If you want to determine the Controller Template Element that corresponds to a Player-Action mapping in a Controller Map, it can be converted to a Controller Template Element Target by using the method <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/M_Rewired_IControllerTemplate_GetElementTargets.htm">IControllerTemplate.GetElementTargets</a>.</p>
 <pre class="code">int count = template.GetElementTargets(actionElementMap, results);</pre>
 <p><span class="comment"> This gets what Controller Template Elements the Action Element Map is pointing to.
 Note that this may return two targets in some rare cases where the Action Element Map
@@ -291,9 +303,11 @@ Note that this may return two targets in some rare cases where the Action Elemen
  Two elements would also be returned if two Template Buttons are mapped to both poles of a single Controller Axis.</span></p>
 <p>A more complete example can be found in the <a href="Examples.html#gamepad-template-ui">Gamepad Template UI example</a>.</p>
 <p><strong>Controller Template Element Sources:</strong></p>
-<p>Each Controller Template Element points back to a Controller Element where input values are actually drawn from. This information can be found in the <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_IControllerTemplateElement_source.htm">IControllerTemplateElement.source</a> property. The source type can be determined using the <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_IControllerTemplateElementSource_type.htm">IControllerTemplateElementSource.type</a> property and then cast to the appropriate <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IControllerTemplateAxisSource.htm">IControllerTemplateAxisSource</a> or <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IControllerTemplateButtonSource.htm">IControllerTemplateButtonSource</a>.</p>
+<p>Each Controller Template Element points back to a Controller Element where input values are actually drawn from. This information can be found in the <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_IControllerTemplateElement_source.htm">IControllerTemplateElement.source</a> property. The source type can be determined using the <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_IControllerTemplateElementSource_type.htm">IControllerTemplateElementSource.type</a> property and then cast to the appropriate <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IControllerTemplateAxisSource.htm">IControllerTemplateAxisSource</a> or <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_IControllerTemplateButtonSource.htm">IControllerTemplateButtonSource</a>.</p>
 <p><a name="saving-and-loading-controller-template-mappings" id="saving-and-loading-controller-template-mappings"></a><strong>Saving and loading Controller Template mappings:</strong></p>
+<p><strong>Update:</strong> As of Rewired 1.1.59.0, a new solution exists to save Controller mappings on one controller and have those mappings apply to other similar controllers. The most common use case is to remap controls and have those changes apply to all recognized gamepads. The included <a href="UserDataStore.html">UserDataStore</a> implementations now <a href="UserDataStore.html#playerprefs-action-mapping-save-mode">allow saving mappings by controller element role</a>.</p>
 <p>Normally, Controller mappings are saved on a per-controller-type basis. However, it is possible to save and load mappings for a Controller Template instead. You would do this if you wanted all Gamepads for example to share saved control mappings instead of each having its own saved data. This would allow you to, for example, map and save on an Xbox 360 Controller, then when plugging in a Sony Dual Shock 4, it would inherit those mappings created for the Xbox 360 Controller.</p>
+<p>Known Limitations: Controller element mappings for Controller elements that are not supported by the Controller Template cannot be saved. Example: Dual Shock 4 touchpad click is not supported by the Gamepad Template, therefore it cannot be saved in a Gamepad Template map.</p>
 <p>Controller Maps always exist per-device, but you can convert the Controller Map to a Controller Template Map before saving. After loading, you convert it back to a Controller Map and load it in the Player:</p>
 <pre class="code">
 <span class="comment">// Quick Example

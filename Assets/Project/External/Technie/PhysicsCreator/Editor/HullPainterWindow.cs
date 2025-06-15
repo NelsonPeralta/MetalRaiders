@@ -92,7 +92,7 @@ namespace Technie.PhysicsCreator
 		private Texture assetsIcon;
 
 		private HullType defaultType = HullType.ConvexHull;
-		private PhysicMaterial defaultMaterial;
+		private PhysicsMaterial defaultMaterial;
 		private bool defaultIsChild;
 		private bool defaultIsTrigger;
 
@@ -599,7 +599,7 @@ namespace Technie.PhysicsCreator
 					hull.type = (HullType)EditorGUILayout.EnumPopup(hull.type, widths[Collumn.Type]);
 
 				if (IsCollumnVisible(Collumn.Material))
-					hull.material = (PhysicMaterial)EditorGUILayout.ObjectField(hull.material, typeof(PhysicMaterial), false, widths[Collumn.Material]);
+					hull.material = (PhysicsMaterial)EditorGUILayout.ObjectField(hull.material, typeof(PhysicsMaterial), false, widths[Collumn.Material]);
 
 				if (IsCollumnVisible(Collumn.Inflate))
 				{
@@ -729,7 +729,7 @@ namespace Technie.PhysicsCreator
 			{
 				GUILayout.Label("Default material:", GUILayout.Width(collumnWidths[0]));
 
-				defaultMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(defaultMaterial, typeof(PhysicMaterial), false, GUILayout.Width(collumnWidths[1]+4));
+				defaultMaterial = (PhysicsMaterial)EditorGUILayout.ObjectField(defaultMaterial, typeof(PhysicsMaterial), false, GUILayout.Width(collumnWidths[1]+4));
 				
 				if (GUILayout.Button("Apply To All", GUILayout.Width(collumnWidths[2])))
 				{

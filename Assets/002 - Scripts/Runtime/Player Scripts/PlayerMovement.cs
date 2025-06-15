@@ -324,7 +324,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
         {
-            if (_rb.velocity.y < -1) _timeFalling += Time.deltaTime;
+            if (_rb.linearVelocity.y < -1) _timeFalling += Time.deltaTime;
             else _timeFalling = 0;
 
             if (_timeFalling > 7)
@@ -353,10 +353,10 @@ public class PlayerMovement : MonoBehaviour
             //if (Mathf.Abs(rewiredPlayer.GetAxis("Move Vertical")) <= _forwardDeadzone && Mathf.Abs(rewiredPlayer.GetAxis("Move Horizontal")) <= _rightDeadzone)
             //    _rb.drag = groundDrag * 10;
             //else
-            _rb.drag = groundDrag;
+            _rb.linearDamping = groundDrag;
         }
         else
-            _rb.drag = 0;
+            _rb.linearDamping = 0;
 
         if (player.playerController.pauseMenuOpen)
         {
@@ -407,7 +407,7 @@ public class PlayerMovement : MonoBehaviour
         if (blockPlayerMoveInput > 0)
         {
             _rb.useGravity = true;
-            _rb.drag = 0;
+            _rb.linearDamping = 0;
             moveSpeed = 1;
             blockPlayerMoveInput -= Time.deltaTime;
 
@@ -720,7 +720,7 @@ public class PlayerMovement : MonoBehaviour
 
             _rb.AddForce((slopeMovement * moveSpeed * 10f) + slopeOrientationMovementFix, ForceMode.Force);
 
-            if (_rb.velocity.y > 0)
+            if (_rb.linearVelocity.y > 0)
                 _rb.AddForce(Vector3.down * 80f, ForceMode.Force);
         }
 
@@ -769,21 +769,21 @@ public class PlayerMovement : MonoBehaviour
         // limiting speed on slope
         if (OnSlope() && !exitingSlope)
         {
-            if (_rb.velocity.magnitude > moveSpeed)
-                _rb.velocity = _rb.velocity.normalized * moveSpeed;
+            if (_rb.linearVelocity.magnitude > moveSpeed)
+                _rb.linearVelocity = _rb.linearVelocity.normalized * moveSpeed;
         }
 
         // limiting speed on ground or in air
         else
         {
-            Vector3 flatVel = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+            Vector3 flatVel = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
 
             // limit velocity if needed
             if (!_pushedByBlockMovement)
                 if (flatVel.magnitude > moveSpeed)
                 {
                     Vector3 limitedVel = flatVel.normalized * moveSpeed;
-                    _rb.velocity = new Vector3(limitedVel.x, _rb.velocity.y, limitedVel.z);
+                    _rb.linearVelocity = new Vector3(limitedVel.x, _rb.linearVelocity.y, limitedVel.z);
 
 
                     //float speed = Vector3.Magnitude(_rb.velocity);  // test current object speed   
@@ -804,7 +804,7 @@ public class PlayerMovement : MonoBehaviour
         exitingSlope = true;
 
         // reset y velocity
-        _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
 
         _tempSpeedVal = jumpForce; if (GameManager.instance.gameMode == GameManager.GameMode.Coop && !player.hasArmor) _tempSpeedVal = jumpForce * 0.7f;
         _rb.AddForce(transform.up * _tempSpeedVal, ForceMode.Impulse);
@@ -1187,7 +1187,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnPlayerRespawnEarly(Player p)
     {
-        _rb.velocity = Vector3.zero; _rb.angularVelocity = Vector3.zero;
+        _rb.linearVelocity = Vector3.zero; _rb.angularVelocity = Vector3.zero;
         blockedMovementType = BlockedMovementType.None;
         blockPlayerMoveInput = 0;
     }

@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -148,7 +151,8 @@
     <ul>
       <li><a href="#BehaviorDesigner">Behavior Designer</a></li>
       <li><a href="#Bolt">Bolt</a></li>
-      <li><a href="#Cinemachine">Cinemachine</a></li>
+      <li><a href="#Cinemachine2">Cinemachine 2</a></li>
+      <li><a href="#Cinemachine3">Cinemachine 3</a></li>
       <li><a href="#CorgiEngine">Corgi Engine - 2D + 2.5D Platformer</a></li>
       <li><a href="#Deftly">Deftly: Top Down Shooter Framework</a></li>
       <li><a href="#DialogueSystem">Dialogue System for Unity</a></li>
@@ -168,6 +172,7 @@
       <li><a href="#RealisticTankController">Realistic Tank Controller</a></li>
       <li><a href="#RexEngine">Rex Engine: A 2D Platformer Engine</a></li>
       <li><a href="#Rucksack">Rucksack - Multiplayer Inventory System</a></li>
+      <li><a href="#SciFiShipController">Sci-Fi Ship Controller</a></li>
       <li><a href="#SpaceCombatKit">Space Combat Kit</a></li>
       <li><a href="#ThirdPersonController">Third Person Controller</a></li>
       <li><a href="#UFPM">UFPM: Ultimate First Person Melee</a></li>
@@ -186,7 +191,7 @@
     <p>&nbsp;</p>
 <hr />
     <h3><a name="BehaviorDesigner" id="UFPS3"></a>Behavior Designer</h3>
-    <p><a href="http://www.opsive.com/assets/BehaviorDesigner/" target="_blank"><img src="files/images/behavior-designer-logo.png" alt="PlayMaker" width="160" height="160" class="right" /></a>Rewired can be used with <a href="https://www.assetstore.unity3d.com/en/#!/content/15277?aid=1011l3LkF" target="_blank">Behavior Designer</a> by Opsive, a popular visual scripting and behavior tree tool for Unity.</p>
+    <p><a href="https://www.opsive.com/assets/BehaviorDesigner/" target="_blank"><img src="files/images/behavior-designer-logo.png" alt="PlayMaker" width="160" height="160" class="right" /></a>Rewired can be used with <a href="https://www.assetstore.unity3d.com/en/#!/content/15277?aid=1011l3LkF" target="_blank">Behavior Designer</a> by Opsive, a popular visual scripting and behavior tree tool for Unity.</p>
     <p><strong>To install the Behavior Designer Integration Pack, do the following:</strong></p>
     <ol>
       <li>Install Rewired and Behavior Designer first. If Behavior Designer is not installed, you will get errors when the integration pack is installed.</li>
@@ -199,7 +204,7 @@
       <li>Delete the Rewired/Integration/BehaviorDesigner folder    </li>
       </ol>
     <p><strong>Documentation:</strong></p>
-    <p>There is no Behavior Designer-specific documentation. Behaviour Designer Tasks are direct analogues to the methods, properties, fields, and events in the <a href="http://guavaman.com/projects/rewired/docs/api-reference" target="_blank">Rewired API</a>. All the standard <a href="Documentation.html">Rewired documentation</a> applies.</p>
+    <p>There is no Behavior Designer-specific documentation. Behaviour Designer Tasks are direct analogues to the methods, properties, fields, and events in the <a href="https://guavaman.com/projects/rewired/docs/api-reference" target="_blank">Rewired API</a>. All the standard <a href="Documentation.html">Rewired documentation</a> applies.</p>
 <p>&nbsp;</p>
     <hr />
     <h3><a name="Bolt" id="Bolt"></a>Bolt</h3>
@@ -245,17 +250,18 @@
     <p><strong>Examples:</strong></p>
     <p>Two very simple examples showing polling for input and using input events are included in the Rewired/Integration/Bolt/Examples/Scenes folder.</p>
 <p><strong>Documentation:</strong></p>
-    <p>There is no Bolt-specific documentation. Bolt Units are direct analogues to the methods, properties, fields, and events in the <a href="http://guavaman.com/projects/rewired/docs/api-reference" target="_blank">Rewired API</a>. All the standard <a href="Documentation.html">Rewired documentation</a> applies.</p>
+    <p>There is no Bolt-specific documentation. Bolt Units are direct analogues to the methods, properties, fields, and events in the <a href="https://guavaman.com/projects/rewired/docs/api-reference" target="_blank">Rewired API</a>. All the standard <a href="Documentation.html">Rewired documentation</a> applies.</p>
     <p>&nbsp;</p>
     <hr />
-    <h3><a name="Cinemachine" id="Cinemachine"></a>Cinemachine</h3>
-    <p><a href="https://assetstore.unity.com/packages/essentials/cinemachine-79898?aid=1011l3LkF">Cinemachine</a> by <a href="https://assetstore.unity.com/publishers/1?aid=1011l3LkF">Unity Technologies</a> is unified procedural camera system for in-game cameras, cinematics and cutscenes, film pre-visualization and virtual cinematography eSports solutions.<br />
+    <h3><a name="Cinemachine" id="Cinemachine"></a><a name="Cinemachine2" id="Cinemachine2"></a>Cinemachine 2</h3>
+    <p>NOTE: The Cinemachine 2 integration is not compatible with Cinemachine 3. See the <a href="#Cinemachine3">Cinemachine 3 integration instructions</a> if you are using Cinemachine 3.</p>
+    <p><a href="https://assetstore.unity.com/packages/essentials/cinemachine-79898?aid=1011l3LkF">Cinemachine 2</a> by <a href="https://assetstore.unity.com/publishers/1?aid=1011l3LkF">Unity Technologies</a> is unified procedural camera system for in-game cameras, cinematics and cutscenes, film pre-visualization and virtual cinematography eSports solutions.<br />
     </p>
-    <p><strong>To install the Cinemachine Integration Pack, do the following:</strong></p>
+<p><strong>To install the Cinemachine Integration Pack, do the following:</strong></p>
     <ol>
       <li>Download and install Cinemachine.</li>
       <li>Run the following menu item in the Unity editor:<br />
-        <strong>Window -&gt; Rewired -&gt; Integration -&gt; Cinemachine -&gt; Install Integration Pack</strong></li>
+        <strong>Window -&gt; Rewired -&gt; Integration -&gt; Cinemachine 2 -&gt; Install Integration Pack</strong></li>
   </ol>
     <p><strong>To Uninstall:</strong></p>
     <ol>
@@ -277,8 +283,37 @@
 <p><img src="files/images/integration_cinemachine_inspector.png" alt="Cinemachine Inspector" /></p>
 <p>&nbsp;</p>
 <hr />
+<h3><a name="Cinemachine3" id="Cinemachine3"></a>Cinemachine 3</h3>
+<p>Cinemachine 3 by <a href="https://assetstore.unity.com/publishers/1?aid=1011l3LkF">Unity Technologies</a> is unified procedural camera system for in-game cameras, cinematics and cutscenes, film pre-visualization and virtual cinematography eSports solutions.<br />
+</p>
+<p><strong>Requirements:</strong></p>
+<ul>
+  <li>Unity 2022+</li>
+  <li>Cinemachine 3<br />
+    (This integration was built for Cinemachine 3.11. No guarantee of compatibility with past or future versions of Cinemachine is implied.)</li>
+</ul>
+<p><strong>To install the Cinemachine 3 Integration Pack, do the following:</strong></p>
+<ol>
+  <li>Install Cinemachine 3 from the Package Manager.</li>
+  <li>Run the following menu item in the Unity editor:<br />
+    <strong>Window -&gt; Rewired -&gt; Integration -&gt; Cinemachine 3 -&gt; Install Integration Pack</strong></li>
+</ol>
+<p><strong>To Uninstall:</strong></p>
+<ol>
+  <li>Delete the Rewired/Integration/Cinemachine3 folder</li>
+</ol>
+<p><strong>Usage:</strong></p>
+<ol>
+  <li>Add a Rewired Cinemachine Input Axis Controller to your Cinemachine Camera from the menu:<br />
+    <strong>Components -&gt; Rewired -&gt; Integrations -&gt; Cinemachine 3 -&gt; Rewired Cinemachine Input Axis Controller</strong></li>
+  <li>All axis string names used by Cinemachine must match exactly to Action names you specify in the Rewired Cinemachine Bridge inspector.</li>
+</ol>
+<p><strong>Advanced Users:</strong></p>
+<p>It is possible to use <a href="HowTos.html#exporting-constants">exported Player and Action constants</a> in the Rewired Cinemachine Input Axis Controller inspector so you can select Actions and Players from <a href="HowTos.html#actionid-property-drawer">drop-down lists</a> instead of having to type strings. Two script templates are included which you can copy and edit for this purpose. They are located in the Cinmachine3/Scripts/Templates and Cinemachine3/Scripts/Templates/Editor directories. There is one runtime script file and one editor script. Instructions are included in the scripts. Add the new axis controller component instead of the default one on your Cinemachine Cameras.</p>
+<p>&nbsp;</p>
+<hr />
     <h3><a name="CorgiEngine" id="CorgiEngine"></a>Corgi Engine - 2D + 2.5D Platformer</h3>
-    <p><a href="https://assetstore.unity.com/packages/templates/systems/corgi-engine-2d-2-5d-platformer-26617?aid=1011l3LkF" target="_blank">Corgi Engine</a> by <a href="http://moremountains.com/" target="_blank">More Mountains</a> is a popular 2D + 2.5D platformer template for Unity.</p>
+    <p><a href="https://assetstore.unity.com/packages/templates/systems/corgi-engine-2d-2-5d-platformer-26617?aid=1011l3LkF" target="_blank">Corgi Engine</a> by <a href="https://moremountains.com/" target="_blank">More Mountains</a> is a popular 2D + 2.5D platformer template for Unity.</p>
     <p><strong>Requirements:</strong></p>
     <ul>
       <li> Corgi Engine v4.0  (No future version compatibility is guaranteed.)</li>
@@ -322,7 +357,7 @@
     <p>&nbsp;</p>
 <hr />
     <h3><a name="DialogueSystem" id="DialogueSystem"></a>Dialogue System for Unity</h3>
-    <p><a href="https://assetstore.unity.com/packages/tools/ai/dialogue-system-for-unity-11672?aid=1011l3LkF" target="_blank">Dialogue System for Unity</a> by <a href="http://www.pixelcrushers.com/" target="_blank">Pixel Crushers</a> makes it easy to add interactive dialogue and quests to your game. It's a complete, robust solution including a visual node-based editor, dialogue UIs, cutscenes, quest logs, save/load, and more.</p>
+    <p><a href="https://assetstore.unity.com/packages/tools/ai/dialogue-system-for-unity-11672?aid=1011l3LkF" target="_blank">Dialogue System for Unity</a> by <a href="https://www.pixelcrushers.com/" target="_blank">Pixel Crushers</a> makes it easy to add interactive dialogue and quests to your game. It's a complete, robust solution including a visual node-based editor, dialogue UIs, cutscenes, quest logs, save/load, and more.</p>
     <p>The Rewired integration is included in the package. Please see the package documentation for details.</p>
     <p>Note: This integration is a 3rd party integration package and not maintained or supported by Guavaman Enterprises.</p>
     <p>&nbsp;</p>
@@ -353,13 +388,13 @@
     <p>&nbsp;</p>
     <hr />
     <h3><a name="MotionController" id="ThirdPersonController2"></a>Motion Controller</h3>
-    <p><a href="https://www.assetstore.unity3d.com/en/#!/content/15672?aid=1011l3LkF" target="_blank">Motion Controller</a> by ootii is an animation framework and character controller for any character and any game. You can download the intregration from <a href="http://www.ootii.com/UnityMotionVault.cshtml" target="_blank">ootii's Vault</a>. (Search the page for Rewired.)</p>
+    <p><a href="https://www.assetstore.unity3d.com/en/#!/content/15672?aid=1011l3LkF" target="_blank">Motion Controller</a> by ootii is an animation framework and character controller for any character and any game. You can download the intregration from <a href="https://www.ootii.com/UnityMotionVault.cshtml" target="_blank">ootii's Vault</a>. (Search the page for Rewired.)</p>
     <p>Note: This integration is a 3rd party integration package and not maintained or supported by Guavaman Enterprises.</p>
     <p>&nbsp;</p>
 <hr />
     <h3><a name="ORKFramework" id="ORKFramework"></a>ORK Framework - RPG Engine</h3>
     <p><a href="https://www.assetstore.unity3d.com/en/#!/content/14419?aid=1011l3LkF" target="_blank">ORK Framework - RPG Engine</a> by Gaming is Love is a highly flexible system that allows you to create your own role-playing game without any coding.</p>
-    <p>Rewired can be used with ORK Framework by following <a href="http://forum.orkframework.com/discussion/3214/using-custom-input-with-rewired-tutorial" target="_blank">braytendo's tutorial here</a>. Or you can use <a href="UnityInputOverride.html">Unity Input Override</a> instead.</p>
+    <p>Rewired can be used with ORK Framework by following <a href="https://forum.orkframework.com/discussion/3214/using-custom-input-with-rewired-tutorial" target="_blank">braytendo's tutorial here</a>. Or you can use <a href="UnityInputOverride.html">Unity Input Override</a> instead.</p>
     <p>Note: This integration is a 3rd party integration package and not maintained or supported by Guavaman Enterprises.</p>
     <p>&nbsp;</p>
     <hr />
@@ -369,7 +404,7 @@
     <p>&nbsp;</p>
     <hr />
     <h3><a name="PlayMaker" id="PlayMaker"></a>PlayMaker</h3>
-    <p><a href="http://hutonggames.com" target="_blank"><img src="files/images/playmaker-logo.png" alt="PlayMaker" width="160" height="160" class="right" /></a>Rewired can be used with <a href="https://www.assetstore.unity3d.com/en/#!/content/368?aid=1011l3LkF" target="_blank">PlayMaker</a> by Hutong Games, a popular visual scripting tool for Unity.</p>
+    <p><a href="https://hutonggames.com" target="_blank"><img src="files/images/playmaker-logo.png" alt="PlayMaker" width="160" height="160" class="right" /></a>Rewired can be used with <a href="https://www.assetstore.unity3d.com/en/#!/content/368?aid=1011l3LkF" target="_blank">PlayMaker</a> by Hutong Games, a popular visual scripting tool for Unity.</p>
     <p>To install the PlayMaker Integration Pack, do the following:</p>
     <ol>
       <li>Install Rewired and PlayMaker first. If PlayMaker is not installed, you will get errors when the integration pack is installed.</li>
@@ -382,7 +417,7 @@
       <li>Delete the Rewired/Integration/PlayMaker folder</li>
       </ol>
     <p><strong>Documentation:</strong></p>
-    <p>There is no PlayMaker-specific documentation. PlayMaker Actions are direct analogues to the methods, properties, fields, and events in the <a href="http://guavaman.com/projects/rewired/docs/api-reference" target="_blank">Rewired API</a>. All the standard <a href="Documentation.html">Rewired documentation</a> applies.</p>
+    <p>There is no PlayMaker-specific documentation. PlayMaker Actions are direct analogues to the methods, properties, fields, and events in the <a href="https://guavaman.com/projects/rewired/docs/api-reference" target="_blank">Rewired API</a>. All the standard <a href="Documentation.html">Rewired documentation</a> applies.</p>
     <p>For example, the Rewired API method:<br />
       player.GetButtonDown</p>
     <p>Corresponds directly to the PlayMaker Action:<br />
@@ -390,7 +425,7 @@
     <p>&nbsp;</p>
     <hr />
     <h3><a name="QuestMachine" id="QuestMachine"></a>Quest Machine</h3>
-    <p><a href="https://www.assetstore.unity3d.com/en/#!/content/39834?aid=1011l3LkF">Quest Machine</a> by <a href="http://www.pixelcrushers.com/">Pixel Crushers</a> is a full-featured, extensible quest system that lets you add procedurally-generated and hand-written quests to your project. The integration is included in the package. Please see the Quest Machine documentation for details.</p>
+    <p><a href="https://www.assetstore.unity3d.com/en/#!/content/39834?aid=1011l3LkF">Quest Machine</a> by <a href="https://www.pixelcrushers.com/">Pixel Crushers</a> is a full-featured, extensible quest system that lets you add procedurally-generated and hand-written quests to your project. The integration is included in the package. Please see the Quest Machine documentation for details.</p>
     <p>Note: This integration is a 3rd party integration package and not maintained or supported by Guavaman Enterprises.</p>
 <p>&nbsp;</p>
     <hr />
@@ -411,13 +446,13 @@
     <p>&nbsp;</p>
 <hr />
     <h3><a name="RealisticTankController" id="RealisticTankController"></a>Realistic Tank Controller</h3>
-    <p><a href="https://www.assetstore.unity3d.com/en/#!/content/18036?aid=1011l3LkF" target="_blank">Realistic Tank Controller</a> by <a href="http://www.bonecrackergames.com/" target="_blank">Bonecracker Games</a> allows you to build highly customizable battle tanks for your project. </p>
+    <p><a href="https://www.assetstore.unity3d.com/en/#!/content/18036?aid=1011l3LkF" target="_blank">Realistic Tank Controller</a> by <a href="https://www.bonecrackergames.com/" target="_blank">Bonecracker Games</a> allows you to build highly customizable battle tanks for your project. </p>
     <p>The Rewired integration is included in the package. Please see the package documentation for details.</p>
     <p>Note: This integration is a 3rd party integration package and not maintained or supported by Guavaman Enterprises.</p>
     <p>&nbsp; </p>
     <hr />
     <h3><a name="RexEngine" id="RexEngine"></a>Rex Engine: A 2D Platformer Engine</h3>
-    <p> <a href="https://assetstore.unity.com/packages/templates/systems/rex-engine-a-2d-platformer-engine-92333?aid=1011l3LkF" target="_blank">Rex Engine: A 2D Platformer Engine</a> is a 2D platformer engine by <a href="http://www.skytyrannosaur.com/" target="_blank">Sky Tyroannosaur</a> with a huge suite of features designed to save you time and help you create amazing 2D games. </p>
+    <p> <a href="https://assetstore.unity.com/packages/templates/systems/rex-engine-a-2d-platformer-engine-92333?aid=1011l3LkF" target="_blank">Rex Engine: A 2D Platformer Engine</a> is a 2D platformer engine by <a href="https://www.skytyrannosaur.com/" target="_blank">Sky Tyroannosaur</a> with a huge suite of features designed to save you time and help you create amazing 2D games. </p>
     <p><strong>Requirements:</strong></p>
     <ul>
       <li>Rex Engine 1.38  (No future version compatibility is guaranteed.)</li>
@@ -443,6 +478,12 @@
     <hr />
     <h3><a name="Rucksack" id="Rucksack"></a>Rucksack - Multiplayer Inventory System</h3>
     <p><a href="https://www.assetstore.unity3d.com/en/?stay#!/content/114921?aid=1011l3LkF" target="_blank">Rucksack - Multiplayer Inventory System</a> by <a href="https://devdog.io/" target="_blank">Devdog</a> enables you to easily setup player inventories, NPC inventories, banks, premium shops and much more in offline and online multiplayer games! </p>
+    <p>The Rewired integration is included in the package. Please see the package documentation for details.</p>
+    <p>Note: This integration is a 3rd party integration package and not maintained or supported by Guavaman Enterprises.</p>
+    <p>&nbsp;</p>
+    <hr />
+    <h3><a name="SciFiShipController" id="SciFiShipController"></a>Sci-Fi Ship Controller</h3>
+    <p>Rewired can be used with <a href="https://scsmmedia.com/sci-fi-ship-controller" target="_blank">Sci-Fi Ship Controller</a> by SCSMMedia which allows you to easily turn your ship models into fully-functioning flying spacecraft..</p>
     <p>The Rewired integration is included in the package. Please see the package documentation for details.</p>
     <p>Note: This integration is a 3rd party integration package and not maintained or supported by Guavaman Enterprises.</p>
     <p>&nbsp;</p>
@@ -496,7 +537,7 @@
     <p>The only way to &quot;fix&quot; the issue with the fire button (right trigger) is to change UFPS source code. In VP_FPInput.cs, search for the function called InputAttack and find the two lines that read. </p>
     <pre class="code">if (!vp_Utility.LockCursor) <strong><span class="comment">// &lt;-- Comment out this line</span></strong>
   return; <strong><span class="comment">// &lt;-- Comment out this line</span></strong></pre>
-    <p>Note that I cannot provide support on how to use UFPS. This information was only added here because I receive support requests on this issue on a regular basis.  If you have issues with UFPS, you should contact the developer, <a href="http://opsive.com" target="_blank">Opsive</a> for support.</p>
+    <p>Note that I cannot provide support on how to use UFPS. This information was only added here because I receive support requests on this issue on a regular basis.  If you have issues with UFPS, you should contact the developer, <a href="https://opsive.com" target="_blank">Opsive</a> for support.</p>
     <p class="question">I get warnings in the console saying the Actions &quot;LeftTrigger&quot; and &quot;RightTrigger&quot; are missing the first time I press the gamepad triggers in every game session. How do I fix this?</p>
     <p>This occurs because the developer of UFPS added LeftTrigger and RightTrigger Actions to UFPS recently when they added joystick support. They were not added to the default UFPS Rewired Input Manager because they were only added to UFPS as a way to convert analog gamepad trigger axis values to button values, but  Rewired handles this already using the default Attack action. Adding the Actions would just add confusion since they would be unused and only added to silence those warnings. The warnings are harmless and only show up the first time you press the triggers. If you really want to get rid of the warnings, add two Actions called LeftTrigger and RightTrigger.</p>
     <p>&nbsp;</p>
@@ -636,7 +677,7 @@
     <p>&nbsp;</p>
 <hr />
 <h3><a name="uSimAirModule" id="uSimAirModule"></a>uSim Air Module</h3>
-<p><a href="https://www.assetstore.unity3d.com/en/#!/content/15674?aid=1011l3LkF" target="_blank">uSim Air Module</a> by <a href="http://softdimensiongames.com/" target="_blank">Softdimension Games</a>  helps you build flight models for any aircraft. Smooth and realistic results. </p>
+<p><a href="https://www.assetstore.unity3d.com/en/#!/content/15674?aid=1011l3LkF" target="_blank">uSim Air Module</a> by <a href="https://softdimensiongames.com/" target="_blank">Softdimension Games</a>  helps you build flight models for any aircraft. Smooth and realistic results. </p>
 <p>The Rewired integration is included in the package. Please see the package documentation for details.</p>
 <p>Note: This integration is a 3rd party integration package and not maintained or supported by Guavaman Enterprises.</p>
 <p>&nbsp;</p>

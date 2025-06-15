@@ -26,7 +26,7 @@ public class ProjectileBullet : MonoBehaviour
     {
         transform.position = Vector3.zero;
         transform.rotation = Quaternion.identity;
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
     }
     private void Start()
     {
@@ -36,7 +36,7 @@ public class ProjectileBullet : MonoBehaviour
         Debug.Log(collision.gameObject.name);
 
         if (collision.gameObject.GetComponent<Rigidbody>())
-            collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            collision.gameObject.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
 
         //GameObject genericHit = FindObjectOfType<GameObjectPool>().SpawnPooledGenericHit();
         //genericHit.transform.position = collision.contacts[0].point;

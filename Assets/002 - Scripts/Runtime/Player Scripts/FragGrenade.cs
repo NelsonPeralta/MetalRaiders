@@ -62,15 +62,15 @@ public class FragGrenade : MonoBehaviour
     {
         try
         {
-            _velocityMagnitude = GetComponent<Rigidbody>().velocity.magnitude;
+            _velocityMagnitude = GetComponent<Rigidbody>().linearVelocity.magnitude;
 
             if (hasHitObject)
-                if (GetComponent<Rigidbody>().velocity.magnitude != 5)
+                if (GetComponent<Rigidbody>().linearVelocity.magnitude != 5)
                 {
-                    Vector3 dir = GetComponent<Rigidbody>().velocity;
+                    Vector3 dir = GetComponent<Rigidbody>().linearVelocity;
                     dir.Normalize();
                     //GetComponent<Rigidbody>().velocity.Normalize();
-                    GetComponent<Rigidbody>().velocity = dir * 5;
+                    GetComponent<Rigidbody>().linearVelocity = dir * 5;
                 }
         }
         catch
@@ -85,7 +85,7 @@ public class FragGrenade : MonoBehaviour
         {
             hasHitObject = true;
             Debug.Log($"Grenade Collided with: {collision.gameObject.name}");
-            Debug.Log(GetComponent<Rigidbody>().velocity.magnitude);
+            Debug.Log(GetComponent<Rigidbody>().linearVelocity.magnitude);
             StartCoroutine(ExplosionCountdown());
             PlaySound(impactSound);
 

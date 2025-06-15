@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -164,7 +167,7 @@
     <p><strong>IMPORTANT:</strong></p>
     <p>The Rewired Standalone Input Module is not a re-invention of Unity's UI system. It is not a new UI system, it does not  attempt to solve issues with Unity UI's design, it does not attempt to add a bunch of new features to Unity UI. It is a simple bridge between Unity UI and Rewired. It does not change how Unity UI works and it has no control over the vast majority of Unity UI functionality which is handled in the UI element components themselves. Once the input is received from Rewired and input events are sent out to the Event System, what happens after that is out of Rewired's responsibility or knowledge.</p>
     <p> The Rewired Standalone Input Module does nothing besides control input in Unity's UI system by changing the underlying input source from UnityEngine.Input to Rewired. If you are having difficulties with controlling the UI, please make sure your problems aren't really  pertaining to usage of Unity's UI system before contacting support. I frequently get questions that are actually issues with Unity UI setup and have nothing to do with Rewired. When in doubt, test with the StandaloneInputModule instead of the RewiredStandaloneInputModule. If the problem persists, you know that the issue is not with Rewired but rather something you've missed when setting up Unity UI. </p>
-<p>Please refer to the <a href="https://docs.unity3d.com/Manual/com.unity.ugui.html">Unity UI documentation</a> and <a href="http://docs.unity3d.com/Manual/script-StandaloneInputModule.html">Unity documentation on the StandaloneInputModule</a> for basic usage.</p>
+<p>Please refer to the <a href="https://docs.unity3d.com/Manual/com.unity.ugui.html">Unity UI documentation</a> and <a href="https://docs.unity3d.com/Manual/script-StandaloneInputModule.html">Unity documentation on the StandaloneInputModule</a> for basic usage.</p>
     <p>&nbsp;</p>
     <hr />
     <h3><a name="quick-setup" id="quick-setup"></a>Quick Setup</h3>
@@ -211,9 +214,10 @@
 </h3>
 <p>This image shows the 4 actions that have been set up for controlling the UI with the keyboard or a joystick.</p>
 <p><img src="files/images/controlmapper_rewiredinputmanager_uiactions.png" width="484" height="291" /></p>
+<p>&nbsp;</p>
 <p><strong>Unknown Controllers:</strong><br />
-    It is recommended that you create a map for the <a href="ControllerMaps.html#unknown-controllers">Unknown Controller</a>. This way, if a user attaches a controller Rewired does not recognize, they should still be able to control the UI reasonably well.</p>
-    <p>There is no way to know what axes or buttons will actually be available on these controllers, but you can make some basic assumptions that should allow most controllers to control the UI.</p>
+  It is recommended that you create a map for the <a href="ControllerMaps.html#unknown-controllers">Unknown Controller</a>. This way, if a user attaches a controller Rewired does not recognize, they should still be able to control the UI reasonably well.</p>
+<p>There is no way to know what axes or buttons will actually be available on these controllers, but you can make some basic assumptions that should allow most controllers to control the UI.</p>
     <ul>
       <li>Axis 0: Map to your &quot;UIHorizontal&quot; Action. (Axis 0 is almost always the horizontal axis on the first joystick)</li>
       <li>Axis 1: Map to your &quot;UIVertical&quot; Action and Invert this axis. (Axis 1 is almost always the vertical axis on the first joystick and is always inverted.)</li>
@@ -222,6 +226,8 @@
     </ul>
     <p><img src="files/images/controlmapper_unknowncontrollermap.png" width="712" height="171" /></p>
     <p>Of course, the above are only recommendations. You can set up your control scheme however you decide.</p>
+    <p><strong>Mouse:</strong></p>
+    <p>DO NOT map any UI Actions to Mouse buttons or axes. This is a very common mistake and will lead to many problems. <a href="#troubleshooting-duplicate-mouse-clicks">See this for more information</a>.</p>
     <p>&nbsp;</p>
     <hr />
     <h3><a name="inspector-options" id="inspector-options"></a>Inspector Options:</h3>
@@ -328,6 +334,7 @@
   <li>See <a href="PlayerControllers.html">Player Controllers</a> and <a href="PlayerControllers.html#player-mouse">Player Mouse</a> to understand the concepts.</li>
   <li>Create a GameObject with a Player Mouse component and configure its Player and element Actions.</li>
   <li>Create a pointer GameObject and drive it from the Player Mouse's screen position.</li>
+  <li>Disable Raycast Target on the pointer's Image component or it will catch the mouse raycasts and block raycasts from hitting the UI elements below the pointer.</li>
   <li>Add the Player Mouse in the Rewired Standalone Input Module inspector (or add it through scripting at runtime).</li>
   <li>Make sure the Player that owns the Player Mouse is allowed to control the UI. (<a href="#inspector-options">See inspector options</a> for setting the Players that can control the UI.)</li>
   <li><em><a href="HowTos.html#enabling-disabling-controller-maps">Make sure you disable UI navigation Actions</a> in all Players that control a software pointer. If you have both UI navigation Actions controlling the UI and are moving a mouse pointer around with the same controls, the UI will be completely uncontrollable as the two control systems fight each other.</em></li>
@@ -356,25 +363,30 @@
     <ul>
       <li>The Rewired Standalone Input Module does nothing besides control input in Unity's UI system by changing the underlying input source from UnityEngine.Input to Rewired. If you are having difficulties with controlling the UI, please make sure your problems aren't really  pertaining to usage of Unity's UI system before contacting support. I frequently get questions that are actually issues with Unity UI setup and have nothing to do with Rewired. When in doubt, test with the StandaloneInputModule instead of the RewiredStandaloneInputModule. If the problem persists, you know that the issue is not with Rewired but rather something you've missed when setting up Unity UI. </li>
       </ul>
-    <p>Please refer to the <a href="https://docs.unity3d.com/Manual/com.unity.ugui.html">Unity UI documentation</a> and <a href="http://docs.unity3d.com/Manual/script-StandaloneInputModule.html">Unity documentation on the StandaloneInputModule</a> for basic usage.</p>
-<p><strong>Problem: Receiving duplicate mouse clicks when clicking on a UI button</strong></p>
+    <p>Please refer to the <a href="https://docs.unity3d.com/Manual/com.unity.ugui.html">Unity UI documentation</a> and <a href="https://docs.unity3d.com/Manual/script-StandaloneInputModule.html">Unity documentation on the StandaloneInputModule</a> for basic usage.</p>
+<p><strong><a name="troubleshooting-duplicate-mouse-clicks" id="troubleshooting-duplicate-mouse-clicks"></a>Problem: Receiving duplicate mouse clicks when clicking on a UI button</strong></p>
     <p>Do not assign UI Submit or Cancel Actions to Mouse Left Button or Mouse Right Button or you will receive double-clicks evey time the mouse button is pressed over a button. The mouse button click on a UI element is based on mouse cursor position and does not use the Action system.</p>
-<p></p>
+    <p>Unity's UI is designed to have two completely different systems for Keyboard/Joystick and Mouse. The Keyboard/Joystick system uses the Navigation system, which involves setting an active selected GameObject in the EventSystem, and the InputModule sends directional navigation events, OnSubmit, and OnCancel events to the currently selected Selectable GameObject in the Event System. This system is only for keyboard/joystick navigation.<br />
+      <br />
+      Mouse navigation does not use any of the above. It uses the mouse pointer position on-screen and the InputModule sends OnClick, OnPointerEnter, OnPointerExit, etc., events to the Selectable on the Game Object under the mouse pointer. Unity's system does not support a Cancel functionality for mouse input.<br />
+      <br />
+      Mapping OnSubmit or OnCancel to mouse buttons will cause the currently selected GameObject in the EventSystem (if one is selected) to receive these events regardless of where the mouse is on the screen. This is normally not what you want to happen when using a mouse pointer.</p>
+    <p></p>
     <p><strong><a name="troubleshooting-joystick-keyboard-doesnt-work" id="troubleshooting-joystick-keyboard-doesnt-work"></a>Problem: Unity UI navigation with joystick or keyboard doesn't work</strong></p>
     <p>While this is a general Unity UI usage issue and not a Rewired issue in any way,  because I've received so many support requests where this ends up being the answer, I've decided to post it here.</p>
     <ul>
       <li><em>Unity UI cannot be controlled by keyboard or joystick unless you specify a current or starting Selectable GameObject in the Unity UI EventSystem.</em></li>
     </ul>
-    <p>Unity UI requires a Selectable to be selected before any navigation will work for joystick or keyboard, otherwise it has no starting point from which to navigate when you press a key or a stick direction. You must either set the <a href="http://docs.unity3d.com/Manual/script-EventSystem.html" target="_blank">First Selected field in the inspector of the EventSystem component</a>, or set the current selected GameObject via scripting as shown below.<br />
+    <p>Unity UI requires a Selectable to be selected before any navigation will work for joystick or keyboard, otherwise it has no starting point from which to navigate when you press a key or a stick direction. You must either set the <a href="https://docs.unity3d.com/Manual/script-EventSystem.html" target="_blank">First Selected field in the inspector of the EventSystem component</a>, or set the current selected GameObject via scripting as shown below.<br />
     </p>
     <pre class="code">using UnityEngine.EventSystems;
 
 void SetSelected(GameObject selectableObject) {
     <span class="comment">// Set the currently selected GameObject</span>
-    EventSystem.current.<a href="http://docs.unity3d.com/ScriptReference/EventSystems.EventSystem.SetSelectedGameObject.html" target="_blank">SetSelectedGameObject</a>(selectableObject);
+    EventSystem.current.<a href="https://docs.unity3d.com/ScriptReference/EventSystems.EventSystem.SetSelectedGameObject.html" target="_blank">SetSelectedGameObject</a>(selectableObject);
 }<br />
     </pre>
-    <p>Please refer to the <a href="http://docs.unity3d.com/Manual/UISystem.html" target="_blank">Unity documentation</a> for information on how to use Unity UI.</p>
+    <p>Please refer to the <a href="https://docs.unity3d.com/Manual/UISystem.html" target="_blank">Unity documentation</a> for information on how to use Unity UI.</p>
     <p>&nbsp;</p>
     <hr />
     <p><strong><a name="troubleshooting-exceptions-in-callbacks-changing-settings" id="troubleshooting-exceptions-in-callbacks-changing-settings"></a>Problem: Exceptions thrown when making changes to various properties in the Rewired Standalone Input Module from a UI button press</strong></p>

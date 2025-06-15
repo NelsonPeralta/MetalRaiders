@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -225,16 +228,16 @@
 <hr />
 <h3><a name="touch-gyro-accelerometer" id="touch-gyro-accelerometer"></a>Does Rewired support touch and gyro/accelerometer control?</h3>
   <p><strong>On-screen touch joysticks</strong><br />
-    Rewired comes with set of pre-built <a href="TouchControls.html">touch controls</a> for use directly in your games. For   other special needs, you can use the <a href="CustomControllers.html">Custom Controller</a> system to pipe in data from any kind of control which you can   either build or download from the <a href="https://www.assetstore.unity3d.com/en/" target="_blank">Unity Asset Store</a> or elsewhere. There is a simple <a href="http://guavaman.com/projects/rewired/docs/Examples.html#touch-controls-1">on-screen touch joystick example</a> included with Rewired showing the concept.</p>
+    Rewired comes with set of pre-built <a href="TouchControls.html">touch controls</a> for use directly in your games. For   other special needs, you can use the <a href="CustomControllers.html">Custom Controller</a> system to pipe in data from any kind of control which you can   either build or download from the <a href="https://www.assetstore.unity3d.com/en/" target="_blank">Unity Asset Store</a> or elsewhere. There is a simple <a href="https://guavaman.com/projects/rewired/docs/Examples.html#touch-controls-1">on-screen touch joystick example</a> included with Rewired showing the concept.</p>
 
 <p><strong>Touch swipes and gestures</strong><br />
   Rewired does not include any handling of swipe or gesture recognition. For   gestures, if it makes sense to map them to input <a href="Actions.html">Actions</a>, you can  use the <a href="CustomControllers.html">Custom Controller</a> system coupled with a gesture recognizer script/asset and pipe   the gestures in as button values in a <a href="CustomControllers.html">Custom Controller</a> and then map those buttons to Actions.</p>
 <p><strong>Gyro and accelerometer input</strong><br />
-  Rewired comes with a <a href="ComponentControls.html#tilt-control">Tilt Control</a> component which can be used for basic tilt input. It also supports <a href="HowTos.html#appletv-siri-remote">tilt and rotate on the Siri Remote on tvOS</a>, and the <a href="HowTos.html#dualshock-4-special-features">gyro on the Sony Dual Shock 4</a> and Nintendo Joy-Cons (Switch platform only). For any other tilt/motion needs,  you can use UnityEngine.Input to get the motion data, process it, and then use that information to feed into a <a href="CustomControllers.html">Custom Controller</a> to map certain types of motion to Actions. Rewired also comes with a simple tilt control  <a href="http://guavaman.com/projects/rewired/docs/Examples.html">example</a>.</p>
+  Rewired comes with a <a href="ComponentControls.html#tilt-control">Tilt Control</a> component which can be used for basic tilt input. It also supports <a href="HowTos.html#appletv-siri-remote">tilt and rotate on the Siri Remote on tvOS</a>, and the <a href="HowTos.html#dualshock-4-special-features">gyro on the Sony Dual Shock 4</a> and Nintendo Joy-Cons (Switch platform only). For any other tilt/motion needs,  you can use UnityEngine.Input to get the motion data, process it, and then use that information to feed into a <a href="CustomControllers.html">Custom Controller</a> to map certain types of motion to Actions. Rewired also comes with a simple tilt control  <a href="https://guavaman.com/projects/rewired/docs/Examples.html">example</a>.</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="force-feedback" id="default-dead-zone5"></a>Does Rewired support force feedback?</h3>
-<p>The only form of force feedback currently supported by Rewired is gamepad vibration. Vibration works with certain controllers on certain platforms and input sources.</p>
+<p>The only forms of force feedback currently supported by Rewired are gamepad vibration and DualSense trigger haptics. Vibration works with certain controllers on certain platforms and input sources.</p>
 <p>Currently vibration is only supported on the following controllers and platforms and input sources:</p>
 <table width="100%" border="0" class="supported-controllers-table">
   <tr>
@@ -247,7 +250,8 @@
     <td align="center"><strong>Xbox One</strong></td>
     <td align="center"><strong>Xbox Series S/X</strong></td>
     <td align="center"><strong>PlayStation 4</strong></td>
-    <td align="center"><strong>Nintendo Switch</strong></td>
+    <td align="center"><strong>PlayStation 5</strong></td>
+    <td align="center"><strong>Nintendo Switch 1 &amp; 2</strong></td>
     <td align="center"><strong>Stadia</strong></td>
   </tr>
   <tr>
@@ -256,8 +260,11 @@
       <li>XInput</li>
       <li> SDL2*</li>
     </ul></td>
-    <td align="center" valign="top">Native<br />
-      <span class="note">(<a href="https://github.com/360Controller/360Controller/releases" target="_blank">Driver required</a>)</span></td>
+    <td align="center" valign="top"><ul>
+      <li>Native<br />
+      </li>
+      <li>Game Controller Framework</li>
+    </ul>      </td>
     <td align="center" valign="top"><ul>
       <li> Native</li>
       <li>SDL2*</li>
@@ -268,6 +275,7 @@
     <td align="center" valign="top">&nbsp;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">Native</td>
   </tr>
   <tr>
@@ -275,12 +283,17 @@
     <td align="center" valign="top"><ul>
       <li>XInput<br />
         <span class="note">(2 of 4 motors supported)</span></li>
+      <li>Windows Gaming Input<br />
+        <span class="note">(All motors supported)</span>      </li>
       <li> SDL2*</li>
     </ul></td>
-    <td align="center" valign="top">Native<br />
-      <span class="note">(2 of 4 motors supported)<br />
-      (<a href="https://github.com/360Controller/360Controller/releases" target="_blank">Driver required</a>) </span></td>
-    <td align="center" valign="top">Not tested</td>
+    <td align="center" valign="top"><ul>
+      <li>Native<br />
+        <span class="note">(2 of 4 motors supported)<br />
+        </span></li>
+      <li>Game Controller Framework</li>
+    </ul>      </td>
+    <td align="center" valign="top">Native</td>
     <td align="center" valign="top">Native<br />
       <span class="note">(2 of 4 motors supported)</span></td>
     <td align="center" valign="top">Native<br />
@@ -289,6 +302,7 @@
       <span class="note">(All 4 motors supported)</span></td>
     <td align="center" valign="top">Native<br />
       <span class="note">(All 4 motors supported)</span></td>
+    <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">Native</td>
@@ -298,9 +312,13 @@
     <td align="center" valign="top"><ul>
       <li>XInput<br />
         <span class="note">(2 of 4 motors supported)</span></li>
+      <li>Windows Gaming Input<br />
+        <span class="note">(All motors supported)<br />
+        </span></li>
+      <li> SDL2*</li>
     </ul></td>
-    <td align="center" valign="top">&mdash;</td>
-    <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">Game Controller Framework</td>
+    <td align="center" valign="top">Native</td>
     <td align="center" valign="top">Native<br />
       <span class="note">(2 of 4 motors supported)</span></td>
     <td align="center" valign="top">Native<br />
@@ -311,20 +329,25 @@
       <span class="note">(All 4 motors supported)</span></td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">Native</td>
   </tr>
   <tr>
     <td valign="top">Sony DualShock 4</td>
     <td align="center" valign="top">Raw Input<br />
       <span class="note">(<a href="RewiredEditor.html#settings-windows-enhanced-device-support">Enhanced Device Support</a> required)</span></td>
-    <td align="center" valign="top">Native<br />
-      <span class="note">(<a href="RewiredEditor.html#settings-osx-enhanced-device-support">Enhanced Device Support</a> required, wired only)</span></td>
-    <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top"><ul>
+      <li>Native<br />
+        <span class="note">(<a href="RewiredEditor.html#settings-osx-enhanced-device-support">Enhanced Device Support</a> required,)</span></li>
+      <li>Game Controller Framework</li>
+    </ul>      </td>
+    <td align="center" valign="top">Native</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&nbsp;</td>
     <td align="center" valign="top">Native</td>
+    <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">Native</td>
   </tr>
@@ -332,32 +355,60 @@
     <td valign="top">Sony DualSense</td>
     <td align="center" valign="top">Raw Input<br />
       <span class="note">(<a href="RewiredEditor.html#settings-windows-enhanced-device-support">Enhanced Device Support</a> required)</span></td>
+    <td align="center" valign="top"><ul>
+      <li>Native<br />
+        <span class="note">(<a href="RewiredEditor.html#settings-osx-enhanced-device-support">Enhanced Device Support</a> required)</span></li>
+      <li>Game Controller Framework</li>
+    </ul>      </td>
     <td align="center" valign="top">Native<br />
-      <span class="note">(<a href="RewiredEditor.html#settings-osx-enhanced-device-support">Enhanced Device Support</a> required, wired only)</span></td>
-    <td align="center" valign="top">&mdash;</td>
+      <span class="note">(<a href="RewiredEditor.html#settings-linux-enhanced-device-support">Enhanced Device Support</a> required for haptic triggers)</span></td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&nbsp;</td>
     <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">Native</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">Native</td>
   </tr>
   <tr>
-    <td valign="top">Nintendo Joy-Cons and Pro Controller</td>
-    <td align="center" valign="top">&mdash;</td>
-    <td align="center" valign="top">&mdash;</td>
-    <td align="center" valign="top">&mdash;</td>
+    <td valign="top">Nintendo Joy-Cons </td>
+    <td align="center" valign="top">Raw Input<br />
+      <span class="note">(<a href="RewiredEditor.html#settings-windows-enhanced-device-support">Enhanced Device Support</a> required)</span></td>
+    <td align="center" valign="top">Native<br />
+      <span class="note">(<a href="RewiredEditor.html#settings-windows-enhanced-device-support">Enhanced Device Support</a> required)</span></td>
+    <td align="center" valign="top">Native</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&nbsp;</td>
     <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">Native<br />
       <span class="note">(All motors and features supported)</span></td>
-    <td align="center" valign="top">Native<br />
-      <span class="note">(Pro Controller)</span></td>
+    <td align="center" valign="top">&mdash;</td>
   </tr>
+  <tr>
+    <td valign="top">Nintendo Pro Controller</td>
+    <td align="center" valign="top">Raw Input<br />
+      <span class="note">(<a href="RewiredEditor.html#settings-windows-enhanced-device-support">Enhanced Device Support</a> required)</span></td>
+    <td align="center" valign="top"><ul>
+      <li>Native<br />
+        <span class="note">(<a href="RewiredEditor.html#settings-osx-enhanced-device-support">Enhanced Device Support</a> required,)</span></li>
+      <li>Game Controller Framework<br />
+        <span class="note">(Wireless only.)</span></li>
+    </ul></td>
+    <td align="center" valign="top">Native</td>
+    <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">&nbsp;</td>
+    <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">&mdash;</td>
+    <td align="center" valign="top">Native<br />
+      <span class="note">(All motors and features supported)</span></td>
+    <td align="center" valign="top">Native</td>
+    </tr>
   <tr>
     <td valign="top">Stadia Controller</td>
     <td align="center" valign="top">&mdash;</td>
@@ -367,6 +418,7 @@
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&nbsp;</td>
+    <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">&mdash;</td>
     <td align="center" valign="top">Native</td>
@@ -503,7 +555,7 @@
 <hr />
 <h3><a name="set-mouse-cursor-position" id="set-mouse-cursor-position"></a>Can Rewired set the mouse cursor position?</h3>
 <p>No. Rewired does not allow you to set the OS mouse cursor position on any platform.</p>
-<p>You can use <a href="http://guavaman.com/projects/rewired/docs/PlayerControllers.html#player-mouse">Player Mouse</a> to move one or more sprite-based cursors with a joystick, keyboard, etc.</p>
+<p>You can use <a href="https://guavaman.com/projects/rewired/docs/PlayerControllers.html#player-mouse">Player Mouse</a> to move one or more sprite-based cursors with a joystick, keyboard, etc.</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="source-code" id="default-dead-zone4"></a>Can I get the Rewired source code?</h3>

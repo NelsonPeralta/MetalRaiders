@@ -89,7 +89,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
         barrel.UpdateLastPlayerWhoDamaged(-999);
         barrel.transform.position = barrel.spawnPointPosition;
         barrel.transform.rotation = barrel.spawnPointRotation;
-        barrel.GetComponent<Rigidbody>().velocity = Vector3.zero; barrel.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        barrel.GetComponent<Rigidbody>().linearVelocity = Vector3.zero; barrel.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         barrel.gameObject.SetActive(true);
     }

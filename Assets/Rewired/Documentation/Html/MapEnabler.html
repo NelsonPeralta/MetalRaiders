@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -265,11 +268,15 @@ player.controllers.maps.mapEnabler.Apply();         </pre>
     </ol>
     <p>When Map Enabler evaluates the Rules, for the specified Controller(s), it will enable or disable any Controller Maps in the Player that match the specified criteria in the Rule.</p>
     <p>Rules can be created in the <a href="RewiredEditor.html#MapEnablerRules">Rewired Editor on the Map Enabler Rules page</a> or created <a href="#creating-rule-sets-scripting">at runtime via scripting</a>.</p>
+    <h3><a name="faq" id="faq"></a>FAQ:</h3>
+    <p><strong>Q: Can I select a Rule Set or Rule at runtime using the Id instead of a Tag?</strong></p>
+    <p>A: The Id cannot be used to select a Rule Set or Rule in a Player at runtime. Rule Sets can be defined entirely in code and can also be duplicated at runtime, in which case they would not have an id that would correspond to  the other Rule Set definitions that exist in the Rewired Input Manager.</p>
+    <p>The Id constant which can be exported for rule sets exists only for the purpose of instantiating that Rule Set (loading it from the Rewired Input Manager) into a Player. That is not a common thing to do since most of the time you will assign these Rule Sets to your Player in the Rewired Editor and they will be loaded for you when the application starts. Once the application starts, Rule Sets are instantiated for each Player, after which point they have no connection anymore to the parent Rule Set definition from which they came.</p>
     <h3>API Reference:</h3>
     <ul>
-      <li><a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ControllerMapEnabler.htm">ControllerMapEnabler</a></li>
-      <li><a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ControllerMapEnabler_RuleSet.htm">ControllerMapEnabler.RuleSet</a></li>
-      <li><a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ControllerMapEnabler_Rule.htm">ControllerMapEnabler.Rule</a></li>
+      <li><a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ControllerMapEnabler.htm">ControllerMapEnabler</a></li>
+      <li><a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ControllerMapEnabler_RuleSet.htm">ControllerMapEnabler.RuleSet</a></li>
+      <li><a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ControllerMapEnabler_Rule.htm">ControllerMapEnabler.Rule</a></li>
     </ul>
     <div class="bottom-pager clearfix">
       <a class="back-button" href="LayoutManager.html" title="Documentation"><span class="button-img"></span>Layout Manager</a>

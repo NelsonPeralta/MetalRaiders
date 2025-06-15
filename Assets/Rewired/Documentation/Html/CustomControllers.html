@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -153,13 +156,13 @@
 <p>Custom Controllers, unlike Joysticks, are instantiated for each player. When you add a Custom Controller, the controller will be created on game start and assigned to the Player. If you add the same controller to multiple Players, the Custom Controller will be instantiated for each, therefore setting a Tag on each can be helpful to differentiate the controllers.</p>
 <p>You can also assign and un-assign Custom Controllers via scripting at runtime. This can be useful if you want to detect the presence of a certain type of non-standard controller (some VR controller for example) and auto-assign that to a Player. Assignment of Custom Controllers is <a href="HowTos.html#assigning-joysticks">similar to assigning Joysticks to Players</a>.</p>
 <p><strong>Instantiating Custom Controllers via scripting</strong></p>
-<p>Normally, Rewired will instantiate the controllers assigned to each Player upon initialization. If you need to instantiate new Custom Controller objects at runtime, they can be instantiated from the pre-defined definitions in the Rewired Input Manager at via scripting using the <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ReInput_ControllerHelper.htm">CreateCustomController methods in ReInput.controllers</a>.</p>
+<p>Normally, Rewired will instantiate the controllers assigned to each Player upon initialization. If you need to instantiate new Custom Controller objects at runtime, they can be instantiated from the pre-defined definitions in the Rewired Input Manager at via scripting using the <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ReInput_ControllerHelper.htm">CreateCustomController methods in ReInput.controllers</a>.</p>
 <p><strong>Updating Element Values</strong></p>
 <p>Element (axes and buttons) values must be updated on the Custom Controller each frame. There are 2 different ways you can do this:</p>
-<p>1) Register for the <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/E_Rewired_ReInput_InputSourceUpdateEvent.htm">ReInput.InputSourceUpdateEvent</a>, then when that event fires, push the new values into the elements directly through <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/Overload_Rewired_CustomController_SetAxisValue.htm">CustomController.SetAxisValue</a> and <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/Overload_Rewired_CustomController_SetButtonValue.htm">CustomController.SetButtonValue</a>.</p>
-<p>2) Set callbacks in the CustomController with <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/M_Rewired_CustomController_SetAxisUpdateCallback.htm">CustomController.SetAxisUpdateCallback</a> and <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/M_Rewired_CustomController_SetButtonUpdateCallback.htm">SetButtonUpdateCallback</a>. These callback functions will be called during the input update step and you can push the latest values into the element at this time.</p>
+<p>1) Register for the <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/E_Rewired_ReInput_InputSourceUpdateEvent.htm">ReInput.InputSourceUpdateEvent</a>, then when that event fires, push the new values into the elements directly through <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/Overload_Rewired_CustomController_SetAxisValue.htm">CustomController.SetAxisValue</a> and <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/Overload_Rewired_CustomController_SetButtonValue.htm">CustomController.SetButtonValue</a>.</p>
+<p>2) Set callbacks in the CustomController with <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/M_Rewired_CustomController_SetAxisUpdateCallback.htm">CustomController.SetAxisUpdateCallback</a> and <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/M_Rewired_CustomController_SetButtonUpdateCallback.htm">SetButtonUpdateCallback</a>. These callback functions will be called during the input update step and you can push the latest values into the element at this time.</p>
 <p>Examples of both methods can be seen in the Touch Controller example in the Rewired/Examples folder.</p>
-<p>Note: Both the <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/E_Rewired_ReInput_InputSourceUpdateEvent.htm">InputSourceUpdateEvent</a> and the callbacks may be called more than once per frame. They will be called each time input is updated, which is dependent on the Update Loop setting in the Input Manager. If you're updating input in multiple loops, for example Update and FixedUpdate, the event and the callbacks will be called once for each update loop.</p>
+<p>Note: Both the <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/E_Rewired_ReInput_InputSourceUpdateEvent.htm">InputSourceUpdateEvent</a> and the callbacks may be called more than once per frame. They will be called each time input is updated, which is dependent on the Update Loop setting in the Input Manager. If you're updating input in multiple loops, for example Update and FixedUpdate, the event and the callbacks will be called once for each update loop.</p>
 <p><strong>Examples</strong></p>
 <ul>
   <li><a href="Examples.html#custom-controllers-touch">Custom Controllers Touch</a></li>

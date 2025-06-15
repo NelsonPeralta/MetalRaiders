@@ -23,7 +23,7 @@ public class Portal : MonoBehaviour
         else if (other.GetComponent<ExplosiveProjectile>())
         {
             Rigidbody rb = other.GetComponent<Rigidbody>();
-            rb.velocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
             other.GetComponent<ExplosiveProjectile>().visualIndicator.SetActive(false); // Good
 
             other.transform.position = _endpoint.transform.position + (_endpoint.transform.forward * 1.5f);

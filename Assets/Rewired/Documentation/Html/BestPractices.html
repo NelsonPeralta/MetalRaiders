@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -144,7 +147,11 @@
             
 			<!-- InstanceBeginEditable name="MainBody" -->
 
-    <h3><a name="controller-mapping" id="controller-mapping"></a>Controller Mapping:</h3>
+    <h3><a name="input-manager" id="input-manager"></a>Input Manager:</h3>
+    <ul>
+      <li>Create the Rewired Input Manager as a prefab and  <a href="InputManager.html#rewired-initializer">Rewired Initializer</a> to manage instantiation of the Rewired Input Manager prefabin all your scenes.</li>
+    </ul>
+<h3><a name="controller-mapping" id="controller-mapping"></a>Controller Mapping:</h3>
     <ul>
       <li><strong>Always make a mapping for the <a href="ControllerMaps.html#gamepad-template">Gamepad Template</a></strong>. The vast majority of players using controllers will be using a gamepad. To save time, map for the Gamepad Template and <a href="SupportedControllers.html">all gamepads recognized by Rewired</a> will just work.</li>
       <li><strong>Always make a mapping for the <a href="ControllerMaps.html#unknown-controllers">Unknown Controller</a></strong>. If a player uses a controller that isn't recognized, they can at least have some kind of input without manual mapping. <a href="ControllerMaps.html#unknown-controllers">Please see this for more information and recommended mapping guidelines</a>.</li>
@@ -157,7 +164,7 @@
     </ul>
 <h3><a name="windows" id="windows"></a>Windows Standalone Platform:</h3>
 <ul>
-  <li><strong>Always enable Use XInput (enabled by default).</strong> XInput provides universal comaptibility with all XInput-compatible  controllers such as Xbox controllers and clones. It also provides support for vibration and independent triggers on these controllers.</li>
+  <li><strong>Always enable Use Windows Gaming Input + Use XInput.</strong> Windows Gaming Input provides universal comaptibility with all XInput-compatible  controllers such as Xbox controllers and clones. It also provides support for vibration including trigger vibration, independent trigger values, and support for more than 4 controllers at once with all special features. Also enabling Use XInput allows for falling back to XInput on older systems that do not support Windows Gaming Input. The only exception to this rule would be if your game requires support for more than 4 XBox controllers at once <a href="KnownIssues.html#more-than-4-xbox-controllers">(XInput has a limit of 4)</a>, in which case, Use XInput can be disabled to allow Raw Input to be used as the fallback in case Windows Gaming Input is not available on the system to be able to support more than 4 XBox controllers at once, <a href="KnownIssues.html#more-than-4-xbox-controllers">albeit with caveats</a>.</li>
   </ul>
 <h3><a name="steam" id="steam"></a>Steam:</h3>
 <ul>

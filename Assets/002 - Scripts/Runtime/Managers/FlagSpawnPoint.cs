@@ -184,7 +184,7 @@ public class FlagSpawnPoint : MonoBehaviour
         print("SpawnFlagAtStand_Coroutine 1");
         _flag.ChangeState(Flag.State.atbase);
         _flag.scriptRoot.gameObject.SetActive(false);
-        _flag.rb.velocity = Vector3.zero;
+        _flag.rb.linearVelocity = Vector3.zero;
         _flag.rb.angularVelocity = Vector3.zero;
         _flag.rb.mass = 999;
 

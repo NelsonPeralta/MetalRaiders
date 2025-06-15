@@ -1427,7 +1427,7 @@ public class Player : Biped
             OnPlayerRespawned?.Invoke(this);
 
             _rb.isKinematic = false;
-            _rb.velocity = Vector3.zero;
+            _rb.linearVelocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
 
             _respawnBeepCount = 0;
@@ -1606,7 +1606,7 @@ public class Player : Biped
 
 
 
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
 
@@ -1999,12 +1999,12 @@ public class Player : Biped
 
     void GrenadeJumping()
     {
-        print($"Grenade jumping: {_rb.velocity}");
+        print($"Grenade jumping: {_rb.linearVelocity}");
 
         movement.blockPlayerMoveInput = 0.2f;
         movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
 
-        if (_rb.velocity.y > 2)
+        if (_rb.linearVelocity.y > 2)
         {
             // do nothing yet
         }
@@ -2015,10 +2015,10 @@ public class Player : Biped
         }
 
         _rb.useGravity = true;
-        _rb.drag = 0;
+        _rb.linearDamping = 0;
 
-        print($"Grenade jumping: {_rb.velocity} {Vector3.Angle(_impactDir, transform.up)}");
-        if (Mathf.Sign(_impactDir.y) == 1 && _rb.velocity.y > 2 && Vector3.Angle(_impactDir, transform.up) < 21)
+        print($"Grenade jumping: {_rb.linearVelocity} {Vector3.Angle(_impactDir, transform.up)}");
+        if (Mathf.Sign(_impactDir.y) == 1 && _rb.linearVelocity.y > 2 && Vector3.Angle(_impactDir, transform.up) < 21)
         {
             print($"Grenade jumping: 1");
             _rb.AddForce(new Vector3(0, 5, 0), ForceMode.Impulse); // grenade jump
@@ -2140,7 +2140,7 @@ public class Player : Biped
     void Teleport_RPC(Vector3 t, Vector3 forr)
     {
         Debug.Log("Teleport_RPC");
-        _rb.velocity = Vector3.zero;
+        _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
         _rb.AddForce(forr.normalized * 100, mode: ForceMode.Impulse);
         transform.position = t;

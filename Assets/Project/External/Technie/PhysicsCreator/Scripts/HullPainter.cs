@@ -505,7 +505,7 @@ namespace Technie.PhysicsCreator
 			}
 		}
 
-		public void SetAllMaterials (PhysicMaterial newMaterial)
+		public void SetAllMaterials (PhysicsMaterial newMaterial)
 		{
 			foreach (Hull h in paintingData.hulls)
 			{

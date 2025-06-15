@@ -559,7 +559,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             if (lw.spawnPointPosition == position)
             {
-                lw.GetComponent<Rigidbody>().velocity *= 0;
+                lw.GetComponent<Rigidbody>().linearVelocity *= 0;
 
                 lw.transform.position = position;
                 lw.transform.rotation = rotation;
@@ -724,7 +724,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
         foreach (Transform ic in CurrentRoomManager.instance.mapAddOns.Where(item => item.GetComponent<ExplosiveBarrel>()))
         {
-            ic.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            ic.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             ic.transform.position = ic.GetComponent<ExplosiveBarrel>().spawnPointPosition;
             ic.transform.rotation = ic.GetComponent<ExplosiveBarrel>().spawnPointRotation;
             ic.gameObject.SetActive(true);
@@ -775,7 +775,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             if (ic.GetComponent<ExplosiveBarrel>().spawnPointPosition == position)
             {
-                ic.GetComponent<Rigidbody>().velocity *= 0;
+                ic.GetComponent<Rigidbody>().linearVelocity *= 0;
                 ic.transform.position = position;
                 ic.transform.rotation = rotation;
             }
@@ -1139,7 +1139,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             if (pos != Vector3.up * -999)
             {
 
-                GameManager.instance.oddballSkull.rb.velocity = Vector3.zero;
+                GameManager.instance.oddballSkull.rb.linearVelocity = Vector3.zero;
                 GameManager.instance.oddballSkull.rb.angularVelocity = Vector3.zero;
 
 
@@ -1195,7 +1195,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 {
                     GameManager.instance.blueFlag.ChangeState(Flag.State.away);
 
-                    GameManager.instance.blueFlag.rb.velocity = Vector3.zero;
+                    GameManager.instance.blueFlag.rb.linearVelocity = Vector3.zero;
                     GameManager.instance.blueFlag.rb.angularVelocity = Vector3.zero;
 
 
@@ -1212,7 +1212,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 {
                     GameManager.instance.redFlag.ChangeState(Flag.State.away);
 
-                    GameManager.instance.redFlag.rb.velocity = Vector3.zero;
+                    GameManager.instance.redFlag.rb.linearVelocity = Vector3.zero;
                     GameManager.instance.redFlag.rb.angularVelocity = Vector3.zero;
 
 

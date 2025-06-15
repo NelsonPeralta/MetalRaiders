@@ -72,7 +72,7 @@ public class ExplosiveProjectile : MonoBehaviour
         _exploded = false;
         _collided = false; _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
         GetComponent<Collider>().enabled = true;
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         gameObject.layer = 8;
     }
 
@@ -174,7 +174,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
                     print("Stuck 1");
 
-                    GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                    GetComponent<Rigidbody>().linearVelocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
                         NetworkGameManager.StickGrenadeOnPlayer(GrenadePool.instance.stickyGrenadePool.IndexOf(gameObject), collision.gameObject.transform.root.GetComponent<Player>().PV.ViewID, collision.contacts[0].point);
                     _stuckVfx.SetActive(true);
@@ -186,7 +186,7 @@ public class ExplosiveProjectile : MonoBehaviour
                     transform.parent = collision.transform;
 
 
-                    GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                    GetComponent<Rigidbody>().linearVelocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
                     try { _stuckVfx.SetActive(true); } catch { }
@@ -230,7 +230,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
 
                     //transform.parent = collision.transform;
-                    GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                    GetComponent<Rigidbody>().linearVelocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     GetComponent<Rigidbody>().useGravity = false;
                     GetComponent<Rigidbody>().isKinematic = true;
                     try { _stuckVfx.SetActive(true); } catch { }
@@ -331,7 +331,7 @@ public class ExplosiveProjectile : MonoBehaviour
     public void TriggerStuckBehaviour(int playerPhotonId, Vector3 gPos)
     {
         Debug.Log($"TriggerStuckBehaviour. of photon id {playerPhotonId}. gPos {gPos}");
-        GetComponent<Rigidbody>().velocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;
         stuck = true;

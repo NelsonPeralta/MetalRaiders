@@ -162,7 +162,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
             if (_inGunRack)
             {
-                lw.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                lw.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
                 lw.GetComponent<Rigidbody>().isKinematic = true;
                 lw.GetComponent<Rigidbody>().useGravity = false;
                 //Destroy(lw.GetComponent<Rigidbody>());

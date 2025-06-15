@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -173,6 +176,11 @@
 <p>The Settings page allows you change the options for the current Input Manager. The options available are as follows:</p>
  <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
+    <td valign="top">Update Mode</td>
+    <td valign="top"><p>Automatic - Rewired updates automatically in the selected update loops.</p>
+      <p>Manual - Update manually by calling ReInput.Update. All automatic updating will be disabled.</p></td>
+  </tr>
+  <tr>
     <td width="22%" valign="top"><strong>Update Loop:</strong></td>
     <td width="78%" valign="top"><p>Updates input in one or more game loops.<br />
         Selecting Multiple will update input in each loop chosen. Each loop is updated and tracked independently so all input calls will work in either loop. Select multiple if you need to be able to get input, for example, from both Update and FixedUpdate.</p></td>
@@ -203,6 +211,11 @@
     <td valign="top">&nbsp;</td>
   </tr>
   <tr>
+    <td valign="top">Use Physical Keys (Unity)</td>
+    <td valign="top"><p>If enabled, keyboard keys will map to their physical location on a US 101-key keyboard regardless of the keyboard layout being used (AZERTY for exampe). This is useful for making a locale-independent input layout. Example: WASD to move. If enabled, the KeyCode returned for a key will match the US 101-key layout, and glyphs and help text will display incorrect information to the user. For example, the A key on a AZERTY keyboard is located where the Q key is on a US 101-key keyboard, and the KeyCode returned for the A key will be KeyCode.Q. Changing this setting will modify it project-wide in the Unity Input Manager settings.</p>
+      <p>It is recommended to disable this option. <a href="KnownIssues.html#unity-physical-keys">See this for more information.</a></p></td>
+  </tr>
+  <tr>
     <td valign="top">Disable Native Input</td>
     <td valign="top"><p>Force Unity Input to be the input source. This will disable all external input sources such as Raw Input, Direct Input, XInput, and native OSX.</p>
       <p>WARNING:
@@ -213,32 +226,45 @@
     <td valign="top">Disable keyboard input on all platforms? Disabling this can improve performance slightly.</td>
   </tr>
   <tr>
+    <td valign="top">Disable Mouse</td>
+    <td valign="top">Disable mouse input on all platforms? Disabling this can improve performance slightly.</td>
+  </tr>
+  <tr>
     <td valign="top"><a name="settings-ignore-input-when-app-not-in-focus" id="settings-ignore-input-when-app-not-in-focus"></a>Ignore Input When App Not In Focus</td>
     <td valign="top"><p>Ignores input if the application is not in focus. This setting has no effect on some platforms.</p>
       <p>NOTE: Disabling this does not guarantee that input will be processed when the application is out of focus. Whether input is received by the application or not is dependent on A) the input device type B) the current platform C) the input source(s) being used.</p></td>
   </tr>
   <tr>
-    <td valign="top"><strong>Windows:</strong></td>
+    <td valign="top"><strong><a name="settings-windows" id="settings-windows"></a>Windows:</strong></td>
     <td valign="top">&nbsp;</td>
   </tr>
   <tr>
     <td valign="top"><a name="settings-windows-input-source" id="settings-windows-input-source"></a>Input Source</td>
     <td valign="top"><p>The primary input source for the Windows Standalone platform.</p>
       <p>Raw Input - Use Raw Input for the input source. Note: Raw Input carries significant advantages over Direct Input such as better Bluetooth controller support, support for more elements on certain controllers, better controller recognition, etc.  Does not require any extra libraries. Windows Control Panel joystick calibration does not affect joystick axes.</p>
-      <p>XInput - Use XInput for the input source. This will use XInput only. All non-XInput compatible controllers will be non-functional. To support both XInput and non-XInput controllers, use Raw Input or Direct Input instead and enable the Use XInput option. Installation of DirectX end-user runtimes is required on Windows XP.</p>
-      <p> Direct Input - Use Direct Input for the input source. Installation of DirectX end-user runtimes may be required for Direct Input support. Windows Control Panel joystick calibration settings affect joystick axes.</p>
+      <p>XInput - Use XInput for the input source. This will use XInput only. All non-XInput compatible controllers will be non-functional. To support both XInput and non-XInput controllers, use Raw Input or Direct Input instead and enable the Use XInput option. Supports XBox Controller 2-motor vibration, independent trigger values, but only supports 4 XInput-compatible controllers at once. Installation of DirectX end-user runtimes is required on Windows XP.</p>
+      <p>Windows Gaming Input - Use Windows.Gaming.Input for the input source. This will use Windows.Gaming.Input only for controllers. All non-WindowsGamingInput compatible controllers will be non-functional. At the present time, only Gamepads are supported. To support all controller types, use Raw Input or Direct Input instead and enable the Use Windows Gaming Input option. Supports XBox Controller 4-motor vibration, independent trigger values, and supports more than 4 XInput-compatible controllers at once. (Requires Windows 10, October 2018 Update version 1809 (10.0.17763.0) or greater.  Will fall back to other input sources on older versions of Windows.)</p>
+<p> Direct Input - Use Direct Input for the input source. Installation of DirectX end-user runtimes may be required for Direct Input support. Windows Control Panel joystick calibration settings affect joystick axes.</p>
 <p> SDL2 - Use SDL2 for the input source. This option requires the SDL2 runtime library to be installed. Note: SDL2 does not support as many devices as other native input sources.</p>
 <p>Unity Input - Use Unity fallback input.</p></td>
   </tr>
   <tr>
-    <td valign="top">Use XInput</td>
-    <td valign="top"><p>On Windows, use XInput for compatible devices. Otherwise fall back to Raw Input or Direct Input. Installation of DirectX end-user runtimes may be required for XInput support. (Windows Vista+ include XInput support without the need for additional drivers.) Required for XBox 360 vibration support.</p>
+    <td valign="top"><a name="settings-windows-use-windows-gaming-input" id="settings-windows-use-windows-gaming-input"></a>Use Windows Gaming Input</td>
+    <td valign="top"><p>On Windows, use Windows.Gaming.Input for compatible devices. Devices not compatible with Windows Gaming Input will be handled by the primary input source. Supports XBox Controller 4-motor vibration, independent trigger values, and supports more than 4 XInput-compatible controllers at once.</p>
+      <p>(Requires Windows 10, October 2018 Update version 1809 (10.0.17763.0) or greater.  Will fall back to other input sources on older versions of Windows.)</p>
+      <p>If both Use XInput and Use Windows Gaming Input are enabled, if Windows Gaming Input is unavalable on the system, XInput will be used as the fallback input source for compatible devices. Otherwise, the primary input source will be used as the fallback input source.</p>
       <p>(Only available when  Input Source is set to Raw Input or Direct Input.)</p></td>
+  </tr>
+  <tr>
+    <td valign="top">Use XInput</td>
+    <td valign="top"><p>On Windows, use XInput for compatible devices. Devices not compatible with XInput will be handled by the primary input source.   Supports XBox Controller 2-motor vibration, independent trigger values, but only supports 4 XInput-compatible controllers at once. Installation of DirectX end-user runtimes is required on Windows XP.</p>
+      <p>If both Use XInput and Use Windows Gaming Input are enabled, if Windows Gaming Input is unavalable on the system, XInput will be used as the fallback input source for compatible devices. Otherwise, the primary input source will be used as the fallback input source.</p>
+      <p>(Only available when  Input Source is set to Raw Input, Direct Input, or Windows Gaming Input.)</p></td>
   </tr>
   <tr>
     <td valign="top">Joystick Refresh Rate</td>
     <td valign="top"><p>The joystick refresh rate in frames per second. Set this to a higher value if you need higher precision input timing at high frame rates such as for a music beat game. Higher values result in higher CPU usage. Note that setting this to a very high value when the game is running at a low frame rate will not result in higher precision input.</p>
-      <p>This settings only applies to input sources that use a separate thread to poll for joystick input values (currently XInput and Direct Input). This setting does not apply to event-based input sources such as Raw Input.</p></td>
+      <p>This settings only applies to input sources that use a separate thread to poll for joystick input values (currently Direct Input, XInput, and Windows Gaming Input). This setting does not apply to event-based input sources such as Raw Input.</p></td>
   </tr>
   <tr>
     <td valign="top"> Native Mouse Handling</td>
@@ -256,20 +282,39 @@
       <p>(Only available when Input Source is set to Raw Input.)</p></td>
   </tr>
   <tr>
-    <td valign="top"><strong>OSX:</strong></td>
+    <td valign="top">Enhanced Device Support Options</td>
+    <td valign="top">Excluded Devices - A list of device types that will be excluded from Enhanced Device Support on this platform. A device that is excluded from Enhanced Device Support will treated like any other controller and will be handled by the primary and/or secondary input sources for the platform, and any special controller features provided by Enhanced Device Support will not be available.</td>
+  </tr>
+  <tr>
+    <td valign="top"><strong><a name="settings-osx" id="settings-osx"></a>OSX:</strong></td>
     <td valign="top">&nbsp;</td>
   </tr>
   <tr>
     <td valign="top">Input Source</td>
     <td valign="top"><p>The primary input source for the OSX Standalone platform.</p>
       <p>Native - Use native input for the input source. This provides the best device support.</p>
+      <p>Game Controller - Use Apple Game Controller framework for the input source. This provides support only for devices supported by the Game Controller framework. This may not include all devices supported by the Native input source.</p>
       <p>SDL2 - Use SDL2 for the input source. May be required for Steam Streaming and Steam Controller support in OSX. This option requires the SDL2 runtime library to be installed. Note: SDL2 does not support as many devices as other native input sources.</p>
-      <p>Unity Input - Use Unity fallback input. </p></td>
+<p>Unity Input - Use Unity fallback input. </p></td>
+  </tr>
+  <tr>
+    <td valign="top"><a name="settings-osx-game-controller-framework" id="settings-osx-game-controller-framework"></a>Use Game Controller Framework</td>
+    <td valign="top"><p>Use the Apple Game Controller Framework for compatible devices.</p>
+      <p>(Only available when Input Source is set to Native.)</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><a name="settings-osx-assign-joysticks-by-system-player-id" id="settings-osx-assign-joysticks-by-system-player-id"></a>Assign Joysticks by System Player Id</td>
+    <td valign="top"><p>If this option is enabled, joysticks will be assigned to Rewired Players based on the native player id assigned by the system. This option ensures that the joystick will match to the correct Rewired Player when auto-assigned. This option overrides some other joystick auto-assignment settings. More than one joystick will be assigned to a Player if multiple joysticks are found for that system player id.</p>
+      <p>NOTE: This option only applies to devices handled by the Apple Game Controller Framework. It does not apply to HID devices handled by IO Kit or any other input source.</p></td>
   </tr>
   <tr>
     <td valign="top"><a name="settings-osx-enhanced-device-support" id="settings-osx-enhanced-device-support"></a>Enhanced Device Support</td>
     <td valign="top"><p>Enable low-level enhanced support for certain devices. If enhanced support is available for a particular device, this will enable device-specific features such as vibration / force feedback, lights, gyroscopes, accelerometers, touchpads, etc.</p>
       <p>(Only available when Input Source is set to Native.)</p></td>
+  </tr>
+  <tr>
+    <td valign="top">Enhanced Device Support Options</td>
+    <td valign="top">Excluded Devices - A list of device types that will be excluded from Enhanced Device Support on this platform. A device that is excluded from Enhanced Device Support will treated like any other controller and will be handled by the primary and/or secondary input sources for the platform, and any special controller features provided by Enhanced Device Support will not be available.</td>
   </tr>
   <tr>
     <td valign="top"><strong>Linux:</strong></td>
@@ -283,6 +328,16 @@
       <p>Unity Input - Use Unity fallback input. </p></td>
   </tr>
   <tr>
+    <td valign="top"><a name="settings-linux-enhanced-device-support" id="settings-linux-enhanced-device-support2"></a>Enhanced Device Support</td>
+    <td valign="top"><p>Enable low-level enhanced support for certain devices. If enhanced support is available for a particular device, this will enable device-specific features such as vibration / force feedback, lights, gyroscopes, accelerometers, touchpads, etc.</p>
+      <p>Enhanced Device Support on Linux requires UDEV rules to be set up by the end-user. <a href="HowTos.html#enhanced-device-support-linux">See this for more information</a>.</p>
+      <p>(Only available when Input Source is set to Native.)</p></td>
+  </tr>
+  <tr>
+    <td valign="top">Enhanced Device Support Options</td>
+    <td valign="top">Excluded Devices - A list of device types that will be excluded from Enhanced Device Support on this platform. A device that is excluded from Enhanced Device Support will treated like any other controller and will be handled by the primary and/or secondary input sources for the platform, and any special controller features provided by Enhanced Device Support will not be available.</td>
+  </tr>
+  <tr>
     <td valign="top"><strong><a name="settings-uwp" id="settings-uwp"></a>Windows UWP:</strong></td>
     <td valign="top">&nbsp;</td>
   </tr>
@@ -293,12 +348,12 @@
       <p>Unity Input - Use Unity fallback input.</p></td>
   </tr>
   <tr>
-    <td valign="top">Use XInput</td>
-    <td valign="top"><p>Use XInput for compatible devices. Also enables special features for XInput devices such as vibration.</p>
+    <td valign="top">Use Gamepad API</td>
+    <td valign="top"><p>Use Windows.Gaming.Input.Gamepad for compatible devices. Also enables special features for compatible devices such as vibration.</p>
       <p>(Only available when Input Source is set to Native.)</p></td>
   </tr>
   <tr>
-    <td valign="top">Support HID Devices</td>
+    <td valign="top">Use HID API</td>
     <td valign="top"><p>This allows support for older gamepads, gamepads made for Android, flight controllers, racing wheels, etc. In order to use this feature, you must add support for HID gamepads and joysticks to the app manifest file. Please see the Special Platform Support  -&gt; Windows 10 Universal documentation for details.</p>
       <p>(Only available when Input Source is set to Native.)</p></td>
   </tr>
@@ -317,7 +372,7 @@
       <p>This option only applies to the Android platform.</p></td>
   </tr>
   <tr>
-    <td valign="top"><strong>Xbox One:</strong></td>
+    <td valign="top"><strong><a name="settings-xbone" id="settings-xbone"></a>Xbox One:</strong></td>
     <td valign="top">&nbsp;</td>
   </tr>
   <tr>
@@ -327,26 +382,16 @@
       <p>Unity Input - Use Unity fallback input.</p></td>
   </tr>
   <tr>
-    <td valign="top"><strong>PS4:</strong></td>
-    <td valign="top">&nbsp;</td>
-  </tr>
-  <tr>
-    <td valign="top">Input Source</td>
-    <td valign="top"><p>The primary input source for the PS4 platform.</p>
-      <p>Native - Use native input for the input source. This provides the best device support.</p>
-      <p>Unity Input - Use Unity fallback input.</p></td>
-  </tr>
-  <tr>
-    <td valign="top">Assign Joysticks by PS4 Joy Id</td>
-    <td valign="top">If this option is enabled, joysticks will be assigned to Rewired Players based on the PS4 joystick id assigned by the system. This option ensures that the PS4 joystick id will match to the Rewired Player when auto-assigned. This option overrides some other joystick auto-assignment settings. More than one joystick will be assigned to a Player if multiple joysticks are found for that PS4 player id.</td>
-  </tr>
-  <tr>
     <td valign="top"><strong>Each Platform:</strong></td>
     <td valign="top">Options here appear in all individual platform pages.</td>
   </tr>
   <tr>
     <td valign="top">Disable Keyboard</td>
     <td valign="top">Disable keyboard input on this platform? Disabling this can improve performance slightly.</td>
+  </tr>
+  <tr>
+    <td valign="top">Disable Mouse</td>
+    <td valign="top">Disable mouse input on this platform? Disabling this can improve performance slightly.</td>
   </tr>
   <tr>
     <td valign="top">Ignore Input When App Not In Focus</td>
@@ -386,7 +431,7 @@
     <td valign="top">&nbsp;</td>
   </tr>
   <tr>
-    <td valign="top"><strong>Global Settings:</strong></td>
+    <td valign="top"><strong><a name="settings-global-settings" id="settings-global-settings"></a>Global Settings:</strong></td>
     <td valign="top">&nbsp;</td>
   </tr>
   <tr>
@@ -430,6 +475,18 @@
   <tr>
     <td valign="top"><a name="settings-defer-controller-connected-events-on-start" id="settings-defer-controller-connected-events-on-start"></a>Defer Controller Connected Events On Start</td>
     <td valign="top">Defer controller connected events for controllers already connected when Rewired initializes until the Start event instead of during initialization. Normally, it's impossible to receive controller connection events at the start of runtime because Rewired initializes before any other script is able to subscribe to the controller connected event. Enabling this will defer the controller connected events until the Start event, allowing your scripts to subscribe to the controller connected event in Awake and still receive the event callback. If disabled, controller connection events for controllers already connected before runtime starts will be missed.</td>
+  </tr>
+  <tr>
+    <td valign="top">Key Combination Override Mode</td>
+    <td valign="top"><p>Determines how Actions bound keys that are also used in key combinations behave. Example: Ctrl is bound to Action1 and Ctrl + W is bound to Action 2. When Ctrl is pressed, Action1 activates until W is also pressed. This enum defines how the underlying Action1 bound to Ctrl will behave when H is pressed and when H is released. When Ctrl + H is pressed, the key combination overrides Action1 and it returns a value of False.</p>
+      <p> None: All key combination override handling is disabled for all keys including modifier and primary keys. Even if a key combination includes a key that is already bound to an Action, both the Action bound to the key combination and the Action bound to the individual key will return true when pressed. Example: W is bound to Action1. Cntl + W is bound to Action2. When Cntl + W is pressed, both Action1 and Action2 return true.</p>
+      <p>Pause:  An Action bound to a modifier key that is a member of a key combination will return False for the duration that the key combination is active. When any key of the overriding key combination is released, the Action bound to the modifier key will no longer be overridden and return a True value if the key is still pressed.</p>
+      <p> Cancel: An Action bound to a modifier key that is a member of a key combination will return False until the key is released and pressed again. The Action of the member key is canceled by the key combination override.</p>
+<p>Overlap: An Action bound to a modifier key that is a member of a key combination will return True as long as the key is held and will not have its value overridden by the key combination unless the modifier key matches the primary key of the key combination. Actions bound to each modifier key in the key combination will return value along with the Action bound to the key combination. Example: Cntl is bound to Action1. Cntl + W is bound to Action2. When Cntl + W is pressed, both Action1 and Action2 return true.  Note that this does not apply to the primary key of a key combination. In the previous example, an Action bound to W alone does not return true when Cntl + W is pressed. This also does not apply to key combinations themselves. Key combinations can be overridden by other key combinations that have more modifiers. Example: Cntl + W is bound to Action1. Cntl + Shift + W is bound to Action2. When Cntl + Shift + W is pressed, Action2 returns true, but Action1 returns false. If a key combination is overridden by another key combination that has more modifiers, the overridden key combination will return false until all constiutent keys are released and pressed again.</p></td>
+  </tr>
+  <tr>
+    <td valign="top">Generate Key Events On Key Combo Override</td>
+    <td valign="top">Determines if key up and down events are generated when the Action(s) bound to one or more modifier keys that are part of a key combination are overridden and resumed when the succeeding key(s) in the key combination are pressed or released. Example: Cntl is bound to Action1. Cntl + W is bound to Action2. When Cntl is pressed, Action1 generates Down and On events. When W is pressed while Cntl is held, should Action1, bound to Cntl, generate an Up event (because it has been overridden and is now off). Similarly, when Cntl + W is held and W is released, if Key Combination Override Mode is set to Momentary, should Action1, bound to Cntl, generate a Down event (because it is no longer overridden and resumes returning True)?</td>
   </tr>
   <tr>
     <td valign="top">Logging</td>
@@ -554,7 +611,20 @@
   </tr>
   <tr>
     <td valign="top">Compact Ids</td>
-    <td valign="top">This  renumbers all id's so they start at 0 and have no gaps.</td>
+    <td valign="top">Re-number all id's so they start at 0 and are sequential with no missing values.</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><strong>Misc:</strong></p>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="top"><a name="tools-export-keys" id="tools-export-keys"></a>Export Keys for Localization</td>
+    <td valign="top"><p>Export keys for all objects in the Rewired Input Manager and Controller Data Files to a JSON file.</p>
+      <p>You can export  keys to a JSON file, then provide a localized string for each key you want translated. Remove any keys for which you do not provide a localized value to save memory and CPU usage during lookups.</p></td>
+  </tr>
+  <tr>
+    <td width="19%" valign="top">Export Keys for Reference</td>
+    <td width="81%" valign="top">Export keys for all objects in the Rewired Input Manager and Controller Data Files to a text file.</td>
   </tr>
 </table>
 <p>&nbsp;</p>
@@ -577,6 +647,10 @@
   <tr>
     <td valign="top">Descriptive Name</td>
     <td valign="top">The descriptive name which can be shown to players.</td>
+  </tr>
+  <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the Player. This is used for localization and glyph lookup.</td>
   </tr>
   <tr>
     <td valign="top">Is Playing on Start</td>
@@ -717,8 +791,12 @@
 <p><img src="files/images/rewirededitor_actions_properties.png" alt="Action Properties" /></p>
  <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
+    <td valign="top">Category</td>
+    <td valign="top">The Action Category to which the Action belongs.</td>
+  </tr>
+  <tr>
     <td width="17%" valign="top">Action Id</td>
-    <td width="83%" valign="top">Can be used to get the value of the action via scripting.</td>
+    <td width="83%" valign="top">Unique identifier for the Action. Can be used to get the value of the action via scripting.</td>
   </tr>
   <tr>
     <td valign="top">Name</td>
@@ -727,6 +805,10 @@
   <tr>
     <td valign="top">Descriptive Name</td>
     <td valign="top">The descriptive name that can be shown to players when mapping controls. This name is shown for axes (when not mapped as a split axis) and for buttons.</td>
+  </tr>
+  <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the Action. This is used for localization and glyph lookup.</td>
   </tr>
   <tr>
     <td valign="top">Type</td>
@@ -881,6 +963,10 @@
     <td valign="top">The descriptive name that can be shown to players.</td>
   </tr>
   <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the Map Category. This is used for localization and glyph lookup.</td>
+  </tr>
+  <tr>
     <td valign="top">Tag</td>
     <td valign="top">Allows you to tag a group of categories and search for categories by tag in scripting.</td>
   </tr>
@@ -920,6 +1006,10 @@
     <td valign="top">The descriptive name that can be shown to players.</td>
   </tr>
   <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the Action Category. This is used for localization and glyph lookup.</td>
+  </tr>
+  <tr>
     <td valign="top">Tag</td>
     <td valign="top">Allows you to tag a group of categories and search for categories by tag in scripting.</td>
   </tr>
@@ -955,6 +1045,10 @@
     <td valign="top">The descriptive name that can be shown to players.</td>
   </tr>
   <tr>
+    <td valign="top">Key</td>
+    <td valign="top">The controller key. This is used for localization and glyph lookup.</td>
+  </tr>
+  <tr>
     <td valign="top">Type Guid</td>
     <td valign="top">The controller type guid. This is used to uniquely identify Custom Controller type using Controller.hardwareTypeGuid. Each Custom Controller should have a different Guid.</td>
   </tr>
@@ -968,8 +1062,28 @@
     <td width="87%" valign="top">The element identifier id of the element. Can be used in scripting.</td>
   </tr>
   <tr>
-    <td valign="top">Name</td>
-    <td valign="top">The name of the element. This can be used in scripting and shown to players. Must be unique.</td>
+    <td valign="top">Descriptive Name</td>
+    <td valign="top">The descriptive name of the element. This can be used in scripting and can be shown to players. Must be unique.</td>
+  </tr>
+  <tr>
+    <td valign="top">Positive Descriptive Name</td>
+    <td valign="top">The descriptive name of the element's positive axis. (Optional)</td>
+  </tr>
+  <tr>
+    <td valign="top">Negative Descriptive Name</td>
+    <td valign="top">The descriptive name of the element's negative axis. (Optional)</td>
+  </tr>
+  <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the element. This is used for localization and glyph lookup.</td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Positive Key</p></td>
+    <td valign="top">Key to identify the element's positive axis direction. This is used for localization and glyph lookup.</td>
+  </tr>
+  <tr>
+    <td valign="top">Negative Key</td>
+    <td valign="top">Key to identify the element's negative axis direction. This is used for localization and glyph lookup.</td>
   </tr>
   <tr>
     <td valign="top">Range</td>
@@ -1039,7 +1153,11 @@
     <td valign="top">Name</td>
     <td valign="top">The name of the element. This can be used in scripting and shown to players. Must be unique.</td>
   </tr>
-</table>
+  <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the element. This is used for localization and glyph lookup.</td>
+  </tr>
+ </table>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="JoystickLayouts" id="JoystickLayouts"></a>Joystick Layouts</h3>
@@ -1060,7 +1178,11 @@
     <td valign="top">Description</td>
     <td valign="top">The descriptive name that can be shown to players.</td>
   </tr>
-</table>
+  <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the Layout. This is used for localization and glyph lookup.</td>
+  </tr>
+ </table>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="KeyboardLayouts" id="KeyboardLayouts"></a>Keyboard Layouts</h3>
@@ -1080,6 +1202,10 @@
   <tr>
     <td valign="top">Description</td>
     <td valign="top">The descriptive name that can be shown to players.</td>
+  </tr>
+  <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the Layout. This is used for localization and glyph lookup.</td>
   </tr>
 </table>
 <p></p>
@@ -1103,6 +1229,10 @@
     <td valign="top">Description</td>
     <td valign="top">The descriptive name that can be shown to players.</td>
   </tr>
+  <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the Layout. This is used for localization and glyph lookup.</td>
+  </tr>
 </table>
 <p></p>
 <p></p>
@@ -1124,6 +1254,10 @@
   <tr>
     <td valign="top">Description</td>
     <td valign="top">The descriptive name that can be shown to players.</td>
+  </tr>
+  <tr>
+    <td valign="top">Key</td>
+    <td valign="top">Key to identify the Layout. This is used for localization and glyph lookup.</td>
   </tr>
 </table>
 <p></p>
@@ -1545,7 +1679,7 @@ Select a Rule Set to modify its properties.</p>
  <p></p>
     <div class="bottom-pager clearfix">
 	    <a class="back-button" href="BestPractices.html" title="Best Practices"><span class="button-img"></span>Best Practices</a>
-    	<a class="forward-button" href="http://guavaman.com/projects/rewired/docs/api-reference" title="API Reference" target="_blank"><span class="button-img"></span>API Reference</a>
+    	<a class="forward-button" href="https://guavaman.com/projects/rewired/docs/api-reference" title="API Reference" target="_blank"><span class="button-img"></span>API Reference</a>
 	</div>
 
 <!-- InstanceEndEditable -->

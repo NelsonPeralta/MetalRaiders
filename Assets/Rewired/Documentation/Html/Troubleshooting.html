@@ -90,16 +90,19 @@
             <strong>Extras:</strong>
             <ul>
               <li><a href="ControlMapper.html" title="Control Mapper">Control Mapper</a></li>
+              <li><a href="Glyphs.html" title="Glyphs">Glyphs</a></li>
 	          <li><a href="TouchControls.html" title="Touch Controls">Touch Controls</a></li>
-              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="UnityInputOverride.html" title="Unity Input Override">Unity Input Override</a></li>
             </ul>
             <strong>Misc:</strong>
             <ul>
+              <li><a href="RewiredStandaloneInputModule.html">Rewired Standalone Input Module</a></li>
 	          <li><a href="ComponentControls.html" title="Component Controls">Component Controls</a></li>
 	          <li><a href="PlayerControllers.html" title="Player Controllers">Player Controllers</a></li>
 	          <li><a href="InputMapper.html" title="Input Mapper">Input Mapper</a></li>
 	          <li><a href="UserDataStore.html" title="User Data Store">User Data Store</a></li>
+	          <li><a href="CustomPlatforms.html" title="User Data Store">Custom Platforms</a></li>
+              <li><a href="Localization.html" title="Localization">Localization</a></li>
             </ul>
             <strong>How To's:</strong>
             <ul>
@@ -172,6 +175,7 @@
     <ul>
       <li><a href="#wrong-rewired-version-installed">Error: The version of Rewired installed  was not designed for Unity X. Please install Rewired for Unity X.</a></li>
       <li><a href="#installation-problems-and-compiler-errors">Rewired does not install or has compiler errors immediately after installation</a></li>
+      <li><a href="#compiler-errors-after-upgrading-unity">Compiler errors after upgrading Unity</a></li>
       <li><a href="#compiler-errors-name-clashes">Compiler errors with Rewired classes such as Rewired.Player</a></li>
       <li><a href="#null-reference-during-recompile">Null reference exception when recompiling scripts in the editor at runtime</a></li>
       <li><a href="#compile-errors-ps4-xbone">Compile errors in PS4, XBox One, WiiU, or other special platforms</a></li>
@@ -187,15 +191,23 @@
       <li><a href="#windows-xinput-multiple-devices">Windows, XInput: XInput-compatible device shows up as multiple controllers</a></li>
       <li><a href="#windows-xinput-device-always-connected">Windows, XInput: XInput-compatible device is always connected even after disconnecting the controller and no connect or disconnect events are sent</a></li>
       <li><a href="#windows-xinput-fallback-handler-messages">Windows, XInput: Fallback handler could not load library C:/.../Mono/xinput1_4.dll</a></li>
+      <li><a href="#windows-wgi-fallback-handler-messages">Windows, Windows Gaming Input: Fallback handler could not load library .../Rewired_WindowsGamingInput.dll</a></li>
       <li><a href="#windows-nintendo-switch-pro-controller-usb">Windows: Nintendo Switch Pro Controller doesn't work</a></li>
       <li><a href="#windows-uwp-serialization-errors">Windows 10 Universal: Serialization errors</a></li>
       </ul>
-    <h3><a href="#osx">OSX:</a></h3>
+    <h3><a href="#macos">MacOS:</a></h3>
     <ul>
-      <li><a href="#osx-xbox-one-controller-vibration">OSX: XBox One Controller vibration doesn't work</a></li>
-      <li><a href="#osx-mac-app-store-joysticks-dont-work">OSX, Mac App Store: Joysticks don't work</a></li>
-    </ul>
-    <h3><a href="#android">Android:</a></h3>
+      <li><a href="#macos-app-store-entitlements-error">MacOS: Mac App Store submission rejected due to Invalid Code Signing Entitlements error</a></li>
+      <li><a href="#macos-bundle-quarantine-error">MacOS: &quot;Rewired_MacOS.bundle&quot; can't be opened because Apple cannot check it for malicious software</a></li>
+      
+      <li><a href="#macos-rewired-macos-bundle-errors">MacOS: Errors that mention Rewired_MacOS.bundle</a></li>
+      <li><a href="#macos-xbox-one-controller-vibration">MacOS: XBox One Controller vibration doesn't work</a></li>
+      <li><a href="#macos-mac-app-store-joysticks-dont-work">MacOS Mac App Store: Joysticks don't work</a></li>
+      </ul>
+    <h3><a href="#linux">Linux:</a></h3>
+    <ul>
+      <li><a href="#linux-enhanced-device-support">Linux: Enhanced Device Support doesn't work</a></li></ul>
+<h3><a href="#android">Android:</a></h3>
     <ul>
       <li><a href="#android-joystick-keyboard-keys">Joystick buttons  activate keyboard keys on Android</a>    </li>
     </ul>
@@ -210,19 +222,14 @@
       <li><a href="#tvos-joystick-keyboard-keys">Joystick buttons  activate keyboard keys on tvOS</a></li>
       <li><a href="#tvos-playermouse-pointer-siri-remote">PlayerMouse software pointer does not work with Apple TV Siri Remote</a></li>
     </ul>
-<h3><a href="#xbox-one">Xbox One:</a></h3>
+<h3><a href="#xbox-one">Xbox One (XDK):</a></h3>
 <ul>
   <li><a href="#xbox-one-crash-on-start">XBox One: Crash/blank screen on start in game build</a></li>
   <li><a href="#xbox-one-profiler">XBox One: High CPU usage in profiler</a></li>
   <li><a href="#xbox-one-controller-events-dont-work">XBox One: Controller connect/disconnect events do not work</a></li>
   <li><a href="#xbox-one-controller-on-dev-pc">XBox One: Controller appearing on console when connected to development PC</a></li>
   </ul>
-<h3><a href="#ps4">Playstation 4:</a></h3>
-<ul>
-  <li><a href="#ps4-compiler-error-loggedinuser-aimhandle">PS4: Compiler error 
-    CS1061:   'LoggedInUser' does not contain a definition for 'aimHandle'</a></li>
-  <li><a href="#ps4-touchpad-mouse">PS4: Gamepad touchpad generates mouse input</a></li>
-</ul>
+
 <h3><a href="#steam">Steam:</a></h3>
     <ul>
       <li><a href="#steam">Important information about Steam</a></li>
@@ -253,7 +260,7 @@
     <p><strong>Prefab Method:<br />
   </strong>For game builds where you do not have access to the inspector, you can use the prefab in Assets/Rewired/DevTools/DebugInformation. Drag this prefab into your scene and build. It will display on screen the same information shown in the Debug Information foldout in the inspector. You can use the mouse or the touch screen to unfold the various items to find the information you want.</p>
 <p><strong>Scripting Method:</strong><br />
-  You can also get this information by using a little bit of debug code. This code will show all Joysticks assigned to each Player and all mappings in each Controller Map. You will be able to tell if a Joystick is assigned to a particular Player, if any Controller Maps were loaded for that Joystick, whether or not those Controller Maps are enabled, and the what Action is bound to each element. There are many more members in each of the <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_Player.htm">Player</a>, <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_Joystick.htm">Joystick</a>, <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_JoystickMap.htm">JoystickMap</a>, and <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ActionElementMap.htm">ActionElementMap</a> classes that you can get useful information from.</p>
+  You can also get this information by using a little bit of debug code. This code will show all Joysticks assigned to each Player and all mappings in each Controller Map. You will be able to tell if a Joystick is assigned to a particular Player, if any Controller Maps were loaded for that Joystick, whether or not those Controller Maps are enabled, and the what Action is bound to each element. There are many more members in each of the <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_Player.htm">Player</a>, <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_Joystick.htm">Joystick</a>, <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_JoystickMap.htm">JoystickMap</a>, and <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/T_Rewired_ActionElementMap.htm">ActionElementMap</a> classes that you can get useful information from.</p>
     <pre class="code">
 <span class="comment">// Log assigned Joystick information for all joysticks regardless of whether or not they've been assigned</span>
 Debug.Log(&quot;Rewired found &quot; + ReInput.controllers.joystickCount + &quot; joysticks attached.&quot;);
@@ -379,8 +386,9 @@ foreach(var p in ReInput.players.Players) {
     <p>Just because a controller is a gamepad does not mean Rewired will recognize it as a gamepad. Just what a &quot;gamepad&quot; is varies from product to product. There is no universal definition of a gamepad and the device itself does not provide any kind of element layout information. The Gamepad Template only applies to <a href="SupportedControllers.html">controllers that have had definitions created for them</a> and have been specifically assigned and configured for that template. If you want to use a gamepad <a href="SupportedControllers.html">that is not listed here</a>, you either have to <a href="HowTos.html#new-controller-definitions">make a controller definition for it</a> and <a href="HowTos.html#add-controller-to-existing-controller-template">add it to the Gamepad Template</a> or <a href="HowTos.html#controller-mapping-screen">provide your users with a control remapping screen</a> so they can map the controls themselves.</p>
     <p><strong><a name="controller-doesnt-work-more-reasons" id="controller-doesnt-work-more-reasons"></a>More reasons why your controller may appear not to work:</strong></p>
     <ul>
-      <li>You have multiple controllers connected, one Player, and have left the default <a href="http://guavaman.com/projects/rewired/docs/RewiredEditor.html#Settings">Joystick Auto-Assignment Settings in the Rewired input manager</a>: 
-        Based on the default settings, Rewired will assign only one controller per-Player. If multiple controllers are present, only one will be assigned to each Player. If you only have one Player, the second controller will be left unassigned. In order to allow auto-assignment of multiple Joysticks to the same Player, Max Joysticks Per Player must be raised to a value greater than 1.  <a href="Controllers.html">See this page for information on Controllers</a>.    </li>
+      <li>You have multiple controllers connected, one Player, and have left the default <a href="https://guavaman.com/projects/rewired/docs/RewiredEditor.html#Settings">Joystick Auto-Assignment Settings in the Rewired input manager</a>: 
+        Based on the default settings, Rewired will assign only one controller per-Player. If multiple controllers are present, only one will be assigned to each Player. If you only have one Player, the second controller will be left unassigned. In order to allow auto-assignment of multiple Joysticks to the same Player, Max Joysticks Per Player must be raised to a value greater than 1.  <a href="Controllers.html">See this page for information on Controllers</a>.</li>
+      <li><strong>Steam</strong>  is very frequently the cause of inexplicable controller input problems such as controllers not appearing or not producing any input. Issues caused by Steam are notoriously difficult to diagnose because few people ever even mention they are using Steam when contacting support for help. If you are using Steam in your project, or in some cases, if Steam is even open in the background during development, it has a major impact on input devices visible to the application. <a href="#steam">See this for important information on Steam</a>.</li>
     </ul>
     <p><strong>How to figure out why it's not working:</strong></p>
     <p>Use the <a href="#debug-information">Debug Information   tool</a> to see exactly what is happening in real-time. When &ldquo;joystick input doesn&rsquo;t work&rdquo; in Rewired, this can mean many different 
@@ -428,7 +436,7 @@ things. All of this information is visible in the Debug Information tool:</p>
 <h3><a name="joystick-problems" id="dll-not-found-xinput2"></a>Joystick control doesn't work</h3>
 <ol>
   <li>Did you create one or more <a href="RewiredEditor.html#Players">Players in the Rewired input manager</a>?</li>
-  <li>Is Auto-assign Joysticks enabled in the <a href="RewiredEditor.html#Settings">Rewired Input Manager Settings</a> page or have you manually <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/Overload_Rewired_Player_ControllerHelper_AddController.htm">assigned joysticks to the Player(s) during runtime through scripting</a>? (<a href="#controller-doesnt-work">See &quot;My Controller Doesn't Work&quot; also</a>.)</li>
+  <li>Is Auto-assign Joysticks enabled in the <a href="RewiredEditor.html#Settings">Rewired Input Manager Settings</a> page or have you manually <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/Overload_Rewired_Player_ControllerHelper_AddController.htm">assigned joysticks to the Player(s) during runtime through scripting</a>? (<a href="#controller-doesnt-work">See &quot;My Controller Doesn't Work&quot; also</a>.)</li>
   <li>Did you create any <a href="RewiredEditor.html#JoystickMaps">Joystick Maps</a> compatible with the controller(s) you're using?</li>
   <li>Did you <a href="RewiredEditor.html#Players">assign those Joystick Maps to your Player(s) on start</a>?</li>
   <li>Are those <a href="RewiredEditor.html#Players">Joystick Maps enabled on start in the Player(s)</a>?</li>
@@ -445,7 +453,7 @@ things. All of this information is visible in the Debug Information tool:</p>
   <li>Did you create any <a href="RewiredEditor.html#KeyboardMaps">Keyboard Maps</a>?</li>
   <li>Did you <a href="RewiredEditor.html#Players">assign those Keyboard Maps to your Player(s) on start</a>?</li>
   <li>Are those <a href="RewiredEditor.html#Players">Keyboard Maps enabled on start in the Player(s)</a>?</li>
-  <li>Did you check <a href="RewiredEditor.html#Players">&quot;Assign Keyboard on Start&quot; in the Player(s)</a> you want to have access to the keyboard or <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_Player_ControllerHelper_hasKeyboard.htm">assign the keyboard manually to the Player(s) during runtime through scripting</a>?</li>
+  <li>Did you check <a href="RewiredEditor.html#Players">&quot;Assign Keyboard on Start&quot; in the Player(s)</a> you want to have access to the keyboard or <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_Player_ControllerHelper_hasKeyboard.htm">assign the keyboard manually to the Player(s) during runtime through scripting</a>?</li>
   <li>Please go through the <a href="QuickStart.html">Quick Start guide</a> and ensure you haven't missed any steps.</li>
   <li>Read the documentation to learn more about how <a href="Controllers.html">Controllers</a> and <a href="ControllerMaps.html">Controller Maps</a> work.</li>
   <li>Use the <a href="#debug-information">Debug Information</a> tool to determine why it isn't working.</li>
@@ -458,7 +466,7 @@ things. All of this information is visible in the Debug Information tool:</p>
   <li>Did you create any <a href="RewiredEditor.html#MouseMaps">Mouse Maps</a>?</li>
   <li>Did you <a href="RewiredEditor.html#Players">assign those Mouse Maps to your Player(s) on start</a>?</li>
   <li>Are those <a href="RewiredEditor.html#Players">Mouse Maps enabled on start in the Player(s)</a>?</li>
-  <li>Did you check <a href="RewiredEditor.html#Players">&quot;Assign Mouse on Start&quot; in the Player(s)</a> you want to have access to the mouse or <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_Player_ControllerHelper_hasMouse.htm">assign the mouse manually to the Player(s) during runtime through scripting</a>?</li>
+  <li>Did you check <a href="RewiredEditor.html#Players">&quot;Assign Mouse on Start&quot; in the Player(s)</a> you want to have access to the mouse or <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_Player_ControllerHelper_hasMouse.htm">assign the mouse manually to the Player(s) during runtime through scripting</a>?</li>
   <li>Please go through the <a href="QuickStart.html">Quick Start guide</a> and ensure you haven't missed any steps.</li>
   <li>Read the documentation to learn more about how <a href="Controllers.html">Controllers</a> and <a href="ControllerMaps.html">Controller Maps</a> work.</li>
   <li>Use the <a href="#debug-information">Debug Information</a> tool to determine why it isn't working.</li>
@@ -478,7 +486,7 @@ things. All of this information is visible in the Debug Information tool:</p>
   <p>UserDataStore   logs a message in the editor every time XML data is loaded 
   specifically for   the purpose of reminding you of this possibility.<br />
   <br />
-  You can <a href="http://guavaman.com/projects/rewired/docs/Troubleshooting.html#debug-information">view Controller   Maps live</a> in both the editor and in builds to see 
+  You can <a href="https://guavaman.com/projects/rewired/docs/Troubleshooting.html#debug-information">view Controller   Maps live</a> in both the editor and in builds to see 
   exactly what configuration   is loaded.<br />
   <br />
   2.   When you create the build, the scene you are building is not the same 
@@ -497,7 +505,7 @@ things. All of this information is visible in the Debug Information tool:</p>
   <p>&nbsp;</p>
 <hr />
 <h3><a name="joystick-count-on-start" id="dll-not-found-xinput7"></a>Joystick count is zero on Start() even when joysticks are connected</h3>
-<p>Please see <a href="http://guavaman.com/projects/rewired/docs/HowTos.html#connect-disconnect-events">How To's - Receiving Joystick connect and disconnect events</a> for important information.</p>
+<p>Please see <a href="https://guavaman.com/projects/rewired/docs/HowTos.html#connect-disconnect-events">How To's - Receiving Joystick connect and disconnect events</a> for important information.</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="not-initialized" id="not-initialized"></a>Rewired is not initialized error</h3>
@@ -610,13 +618,32 @@ things. All of this information is visible in the Debug Information tool:</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="installation-problems-and-compiler-errors" id="installation-problems-and-compiler-errors"></a>Rewired does not install or has compiler errors immediately after installation</h3>
-<p>A very common error users make is to install a version of Rewired built for a newer major version of Unity in an older version of Unity. This happens because of Unity’s very poor choice to save Asset Store   downloads from the Unity 5, 2017, 2018, 2019, 2020, and 2021 branches of Unity in the exact same folder. If you download the Unity 2018 version of Rewired from the Asset   Store in Unity 2018, then go back to Unity 2017 and press Install without downloading Rewired again, Unity   will install the 2017 version of Rewired which contains asset files that were   saved in Unity 2018 and are therefore incompatible with 2017. Download Rewired again from the Unity Asset Store in Unity 2017 before installing Rewired and you   won’t have any issues. You will need to delete the download before you can download it again. <a href="#wrong-rewired-version-installed">See this for  download file locations</a>.</p>
-<p>You will get the following compiler error if you install Rewired for Unity 2018 in Unity 2017:</p>
+<p>A very common error users make is to install a version of Rewired built for a newer major version of Unity in an older version of Unity. This happens because of Unity’s very poor choice to save Asset Store   / Package Manager downloads from the Unity 5, 2017, 2018, 2019, 2020, and 2021 branches of Unity in the exact same folder. If you download the Unity 2021 version of Rewired from the Package Managerin Unity 2021, then go back to Unity 2020 and press Install without downloading Rewired again, Unity   will install the 2021 version of Rewired which contains asset files and code that was built for Unity 2021 and is therefore incompatible with 2020. Download Rewired again from the Package Manager in Unity 2020 before installing Rewired and you   won’t have any issues. You will need to delete the download before you can download it again. <a href="#wrong-rewired-version-installed">See this for  download file locations</a>.</p>
+<p>Since Unity 2021, it is also possible to get errors if you install a version of Rewired built for an older version of Unity in a newer version of Unity. Rewired for Unity 2020 is incompatible with Unity 2021 and will throw errors on installation, or when you upgrade a project from Unity 2020 to Unity 2021.</p>
+<p><strong>You will get the following compiler error if you install Rewired for Unity 2018 in Unity 2017:</strong></p>
 <p>Assets/Rewired/Internal/Scripts/Misc/ExternalTools.cs
   (80,18):   error CS0535: `Rewired.Utils.ExternalTools' does not
   implement interface   member 'Rewired.Utils.Interfaces.IExternalTools.PS4Input_GetSpecialControllerInformation
-  (int,   int, object )'`<br />
+  (int,   int, object )'`</p>
+<p><strong>You will get the following compiler error if you install Rewired for Unity 2021 in Unity 2020:</strong></p>
+<p>Assets\Rewired\Internal\Scripts\Misc\ExternalTools.cs(84,34): error CS0535: 'ExternalTools' does not implement interface member 'IExternalTools.WindowsStandalone_ForwardRawInput(IntPtr, IntPtr, uint, IntPtr, uint)'</p>
+<p><strong>You will get the following compiler error if you install Rewired for Unity 2020 in Unity 2021:</strong></p>
+<p>Assets\Rewired\Internal\Scripts\Misc\ExternalTools.cs(816,13): error
+  CS0234: The type or namespace name 'Windows' does not exist in the
+  namespace 'Rewired.Internal' (are you missing an assembly reference?)</p>
+<p>There are likely more different errors as well, and the exact text of this errors will change in time as code changes.</p>
+<p>Regardless, if you see compiler errors immediately after installing Rewired, you are using the wrong version of Rewired for the version of Unity you are using.<br />
 </p>
+<p>&nbsp;</p>
+<hr />
+<h3><a name="compiler-errors-after-upgrading-unity" id="compiler-errors-after-upgrading-unity"></a>Compiler errors after upgrading Unity</h3>
+<p>This is just another variation of <a href="#installation-problems-and-compiler-errors">this problem</a>. You are using a version of Rewired that was built for a different version of Unity and it is not compatible with it.</p>
+<p>Some possible errors that may be shown:</p>
+<p>Assets\Rewired\Internal\Scripts\Misc\ExternalTools.cs(816,13): error
+  CS0234: The type or namespace name 'Windows' does not exist in the
+  namespace 'Rewired.Internal' (are you missing an assembly reference?)</p>
+<p>Install the correct branch of Rewired for the major version of Unity you are using.</p>
+<p>Because of poor Asset Store / Package Manager design with regard to managing version-specific downloads of assets, you will likely have to <a href="#wrong-rewired-version-installed">clear the Asset Store / Package Manager cache</a> to get the correct version of Rewired to download.</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="compiler-errors-name-clashes" id="compiler-errors-name-clashes"></a>Compiler errors with Rewired classes such as Rewired.Player</h3>
@@ -783,7 +810,7 @@ void CacheRewiredPlayer() {
 <hr />
 <h3><a name="xbox360-triggers" id="dll-not-found-xinput5"></a>Windows: XBox 360 controller L/R triggers can't be pressed at the same time on Windows</h3>
 <p>This is a design issue with the Microsoft XBox 360 controller driver. The XBox 360 controller driver only returns a single byte of data for both the left and right triggers making it impossible to distinguish the two when both are pressed simultaneously when using Raw Input or Direct Input. You can read about this issue and the reasoning behind the design <a href="https://en.wikipedia.org/wiki/DirectInput#Xbox_360_Controller_support" target="_blank">here</a>.</p>
-<p>The solution is to <a href="RewiredEditor.html#Settings">enable XInput in the Rewired Editor - Settings</a>. XInput is able to treat the triggers as separate values.</p>
+<p>The solution is to <a href="RewiredEditor.html#Settings">enable Use Windows Gaming Input or Use XInput in the Rewired Editor - Settings</a>. Both APIs are able to treat the triggers as separate values.</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="windows-xinput-multiple-devices" id="windows-xinput-multiple-devices"></a>Windows, XInput: XInput-compatible device shows up as multiple controllers</h3>
@@ -796,7 +823,7 @@ void CacheRewiredPlayer() {
   creates emulated XInput devices such as DS4Win, PS3 SCP driver, or 
   other tools that emulate XInput devices. Uninstall these tools/drivers and try again.</p>
 <p><strong>If you are seeing multiple devices, one named &quot;XInput Gamepad 1&quot; and one named something else like &quot;Controller (XBOX One For Windows)&quot;:</strong><br />
-  This error can only happen if the XInput-compatible device does not conform to Microsoft's documented standards for how XInput devices identify themselves. If the device deviates from these standards, Rewired will be unable to filter out XInput devices when it populates its Raw Input or Direct Input device list. This causes it to create both a Raw Input / Direct Input device and an XInput device. The only way to fix these problem devices is to add special case code to manually filter them out individually. <a href="http://guavaman.com/rewired#support" target="_blank">Report this device via the support form on the website</a> and include all relevant controller information shown by the Rewired/DevTools/JoystickElementIdentifier tool. (Create a new scene, add the JoystickElementIdentifier tool to the scene at 0, 0, 0, add an empty Rewired Input Manager, and press Play.) To include a screenshot, please include a link to the image on a filesharing service such as Dropbox.</p>
+  This error can only happen if the XInput-compatible device does not conform to Microsoft's documented standards for how XInput devices identify themselves. If the device deviates from these standards, Rewired will be unable to filter out XInput devices when it populates its Raw Input or Direct Input device list. This causes it to create both a Raw Input / Direct Input device and an XInput device. The only way to fix these problem devices is to add special case code to manually filter them out individually. <a href="https://guavaman.com/rewired#support" target="_blank">Report this device via the support form on the website</a> and include all relevant controller information shown by the Rewired/DevTools/JoystickElementIdentifier tool. (Create a new scene, add the JoystickElementIdentifier tool to the scene at 0, 0, 0, add an empty Rewired Input Manager, and press Play.) To include a screenshot, please include a link to the image on a filesharing service such as Dropbox.</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="windows-xinput-device-always-connected" id="windows-xinput-multiple-devices2"></a>Windows, XInput: XInput-compatible device is always connected even after disconnecting the controller and no connect or disconnect events are sent</h3>
@@ -806,7 +833,7 @@ void CacheRewiredPlayer() {
 <p>&nbsp;</p>
 <hr />
 <h3><a name="windows-xinput-fallback-handler-messages" id="windows-xinput-fallback-handler-messages"></a>Windows, XInput: Fallback handler could not load library C:/.../Mono/xinput1_4.dll</h3>
-<p>When XInput is enabled, the build log file will always contain these on Windows XP, Vista, and 7,  and possibly on Windows 8 depending on what version of XInput is installed on the system:</p>
+<p>When XInput is enabled,  the build log file will always contain these on Windows XP, Vista, and 7,  and possibly on Windows 8 depending on what version of XInput is installed on the system:</p>
 <p>Fallback handler could not load library C:/.../Mono/xinput1_4.dll<br />
   Fallback handler could not load library C:/.../Mono/.\xinput1_4.dll<br />
   Fallback handler could not load library C:/.../Mono/xinput1_4.dll<br />
@@ -819,14 +846,11 @@ void CacheRewiredPlayer() {
 <p>Those log messages are completely harmless. Mono makes these log entries the first time you make an extern call to a DLL when it tries to find that DLL. It tries all   permutations of a DLL’s name before giving up and throwing an exception if the DLL was not found. This is   the only way to detect the presence of a DLL in C#.</p>
 <p>Rewired works with all versions of XInput. Rewired will try to detect and use the best possible version of XInput installed on the user's system starting with XInput 1.4 and going backwards to the original release of XInput until it finds one it can use. The more versions it tries before it finds a suitable version, the more entries will be logged.</p>
 <p>These log messages do not indicate any kind of problem with XInput. These log messages are logged by Mono, not Rewired, and cannot be silenced.</p>
-<p><br />
-</p>
+<p>&nbsp;</p>
 <hr />
 <h3><a name="windows-nintendo-switch-pro-controller-usb" id="windows-nintendo-switch-pro-controller-usb"></a>Windows: Nintendo Switch Pro Controller doesn't work</h3>
-<p>The Nintendo Switch Pro Controller cannot be used in Windows via USB. This is documented on the Supported Controllers page:</p>
+<p>The Nintendo Switch Pro Controller can only be used in Windows with Primary Input Source set to Raw Input and Enhanced Device Support enabled. This is documented on the Supported Controllers page:</p>
 <p> <a href="SupportedControllers.html#nintendo-switch-pro-controller">Supported Controllers - Nintendo Switch Pro Controller</a></p>
-<p>The Nintendo Switch Pro Controller does not produce any input when connected via USB. This is not a limitation of Rewired. It is a limitation of the hardware and/or HID driver.</p>
-<p>The only reason it works when using Steam with Pro Controller Configuration Support enabled is the Steam driver which converts it into an XInput device. Windows cannot see the axes or buttons on this device through Raw Input or Direct Input and it is not a native-XInput device, so it will not be handled by XInput without a special driver.</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="windows-uwp-serialization-errors" id="windows-uwp-serialization-errors"></a>Windows 10 Universal: Serialization errors</h3>
@@ -850,20 +874,70 @@ Int64* args, IntPtr method)
 <p>&nbsp;</p>
 <hr />
 <p>&nbsp;</p>
-<h2><a name="osx" id="osx"></a>OSX</h2>
+<h2><a name="osx" id="osx"></a><a name="macos" id="macos"></a>MacOS</h2>
+<h3><a name="macos-app-store-entitlements-error" id="macos-app-store-entitlements-error"></a>MacOS: Mac App Store submission rejected due to Invalid Code Signing Entitlements error</h3>
+<p><strong>IMPORTANT:</strong><br />
+This issue is fundamentally a Mac App Store issue and not a Rewired issue. Rewired happens to contain a native library on MacOS, just as Unity contains many native libraries, and as any application may contain many libraries. The Mac App Store requires that the package be notarized and all binaries be code signed by the developer prior to uploading. You should refer to the Apple documentation on how to notarize a package and code sign binaries. Any information provided here is only for your convienience and may be incorrect. Nothing in this section is authoritative on the subject. I cannot provide additional information on how to notarize your package or code sign binaries for Mac App Store submission.</p>
+<p>-------</p>
+<p>Mac App store has specific code signing requirements that your application must meet to pass testing. I have been getting reports of projects containing Rewired failing testing with the following errors:</p>
+<pre class="code">ITMS-90288: Invalid Code Signing Entitlements - The entitlements in
+your app bundle signature do not match the ones that are contained in
+the provisioning profile. According to the provisioning profile, the
+bundle contains a key value that is not allowed: '' for the key
+'com.apple.application-identifier' in
+'APPLICATION_NAME.app/Contents/PlugIns/Rewired_MacOS.bundle'
+
+ITMS-90286: Invalid Code Signing Entitlements - Your application
+bundle's signature contains code signing entitlements that are not
+supported on macOS. Specifically, value '' for key
+'com.apple.application-identifier' in
+'APPLICATION_NAME.app/Contents/PlugIns/Rewired_MacOS.bundle' is not
+supported. This value should be a string starting with your TEAMID,
+followed by a dot '.', followed by the bundle identifier .</pre>
 <p></p>
-<h3><a name="osx-xbox-one-controller-vibration" id="osx-xbox-one-controller-vibration"></a>OSX: XBox One Controller vibration doesn't work</h3>
-<p>In order for vibration to work on the Xbox One Controller on OSX, the <a href="RewiredEditor.html#Settings">input source must be set to Native</a> and you must have <a href="https://github.com/360Controller/360Controller/releases" target="_blank">this driver installed</a> (at least v0.16).</p>
+<p>This Unity documentation on Mac code recommends running codesign on the project with the --deep flag enabled, which would presumably cause it to sign all the binaries inside the project which would include Rewired_MacOS.bundle:<br />
+  <a href="https://docs.unity3d.com/2022.1/Documentation/Manual/macos-building-notarization.html" target="_blank" rel="nofollow">https://docs.unity3d.com/2022.1/Documentation/Manual/macos-building-notarization.html</a></p>
+<pre class="code">codesign --deep --force --verify --verbose --timestamp --options runtime --entitlements "application_name.entitlements" --sign "Developer ID Application : XXX (YYY)" "application_name.app"
+</pre>
 <p>&nbsp;</p>
 <hr />
-<h3><a name="osx-mac-app-store-joysticks-dont-work" id="osx-mac-app-store-joysticks-dont-work"></a>OSX, Mac App Store: Joysticks don't work</h3>
-<p>To access USB or Bluetooth devices in the Mac App Store sandbox, your application must request specific entitlements.</p>
-<p>  Enable the follow entitlements for your application:</p>
+<h3><a name="macos-bundle-quarantine-error" id="macos-bundle-quarantine-error"></a>MacOS: &quot;Rewired_MacOS.bundle&quot; can't be opened because Apple cannot check it for malicious software</h3>
+<p><strong>IMPORTANT:</strong><br />
+  The following information is provided only for your convenience and the information may be incorrect. Refer to Apple's documentation on how to manage file security on MacOS.
+I cannot provide additional information on how to deal with MacOS file quarantine issues.</p>
+<p>-------</p>
+<p>All files downloaded from the internet in a web browser will be flagged by the OS with the &quot;com.apple.quarantine&quot; attribute. This causes the downloaded file, and any files contained within an archive, to be quarantined if they contain non-notarized executable code. Rewired on MacOS contains Rewired_MacOS.bundle, a library required to support the Game Controller Framework on MacOS. This library is ad-hoc signed, and is therefore automatically quarantined if Rewired was downloaded from a web browser. (This should not happen when Rewired is downloaded from the Unity Asset Store.) Every time you press Play in the Unity Editor, Rewired_MacOS.bundle will be blocked from loading and a security message displayed.</p>
+<p>The quarantine attribute can be removed by using the following command in a terminal:</p>
+<pre class="code">xattr -r -d com.apple.quarantine [FullPathToDir]/Rewired_MacOS.bundle</pre>
+<p><span class="code">Rewired_MacOS.bundle is located in the Unity project's Assets folder under Rewired/Internal/Libraries/Runtime/Native/MacOSStandalone</span>/.</p>
+<p>Games published to Steam and the Mac App Store will not display this warning as the developer is required to notarize their submission including all libraries before publishing.</p>
+<p>&nbsp;</p>
+<hr />
+<h3><a name="macos-rewired-macos-bundle-errors" id="macos-rewired-macos-bundle-errors"></a>MacOS: Errors that mention Rewired_MacOS.bundle</h3>
+<p>Various errors can occur due to  the Rewired_MacOS.bundle version being out of sync with the installed version of Rewired. This can occur because Unity may not attempt to upgrade the Rewired_MacOS.bundle file when updating Rewired from the Unity Asset Store.</p>
+<p>Install Rewired from the Asset Store and ensure that Rewired/Assets/Internal/Libraries/Runtime/Native/MacOS/Rewired_MacOS.bundle is checked.</p>
+<p>If problems persist, delete the Rewired/Assets/Internal/Libraries/Runtime/Native/MacOS/Rewired_MacOS.bundle and associated .meta files in the project and reinstall Rewired from the Unity Asset Store. If an error occurs when trying to delete the file, close the Unity Editor, delete the file, re-open it, and install Rewired again.</p>
+<p>&nbsp;</p>
+<hr />
+<h3><a name="osx-xbox-one-controller-vibration" id="osx-xbox-one-controller-vibration"></a><a name="macos-xbox-one-controller-vibration" id="macos-xbox-one-controller-vibration"></a>MacOS: XBox One Controller vibration doesn't work</h3>
+<p>Enable <a href="RewiredEditor.html#Settings">Use Game Controller Framework</a> for best device and feature support.</p>
+<p>If Use Game Controller Framework is disabled, in order for vibration to work on the Xbox One Controller on MacOS, the <a href="RewiredEditor.html#Settings">input source must be set to Native</a>. Older versions of MacOS may require <a href="https://github.com/360Controller/360Controller/releases" target="_blank">this driver be installed</a> (at least v0.16).</p>
+<p>&nbsp;</p>
+<hr />
+<h3><a name="osx-mac-app-store-joysticks-dont-work" id="osx-mac-app-store-joysticks-dont-work"></a><a name="macos-mac-app-store-joysticks-dont-work" id="macos-mac-app-store-joysticks-dont-work"></a>MacOS, Mac App Store: Joysticks don't work</h3>
+<p>To access USB or Bluetooth devices in sandboxed applications, your application must request specific entitlements. If using <a href="RewiredEditor.html#Settings">Game Controller Framework as the Primary Input Source</a>, no entitlements are necessary, however, not as many devices are supported by Game Controller Framework as the combination of Native + Use Game Controller Framework. For some devices to work when using the Native Primary Input Source, you must enable the following entitlement for your application:</p>
 <ul>
-  <li>com.apple.security.device.bluetooth</li>
   <li>com.apple.security.device.usb</li>
 </ul>
+<p>The com.apple.security.device.bluetooth should not be required to support Bluetooth game controllers, and enabling it may even result in failure to pass Mac App Store review. The Bluetooth entitlement is not required to use Bluetooth devices -- the USB entitlement covers those.</p>
 <p>See the <a href="https://developer.apple.com/library/content/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/EnablingAppSandbox.html#//apple_ref/doc/uid/TP40011195-CH4-SW1" target="_blank">Mac App Store entitlements documentation</a> for more information.</p>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h2><a name="linux" id="linux"></a>Linux</h2>
+<p></p>
+<h3><a name="linux-enhanced-device-support" id="linux-enhanced-device-support"></a>Linux: Enhanced Device Support doesn't work</h3>
+<p>Enhanced Device Support on Linux requires UDEV rules to be set up by the end-user. <a href="HowTos.html#enhanced-device-support-linux">See this for more information</a>.</p>
 <p>&nbsp;</p>
 <hr />
 <p>&nbsp;</p>
@@ -871,18 +945,13 @@ Int64* args, IntPtr method)
 <p></p>
 <h3><a name="android-joystick-keyboard-keys" id="android-joystick-keyboard-keys"></a>Joystick buttons  activate keyboard keys on Android</h3>
 <p>Rewired uses Unity input as the input source in Android so it is subject to its limitations. Most Android joysticks return keyboard keycode values for certain buttons on the controller such as Left Shoulder (Left Shift), Right Shoulder (Right Shift), Back (ESC), Menu (Menu), etc. These keyboard values can be in additon to or instead of a joystick button value. This can be problematic if you've developed your game for both desktop PCs and Android and have keyboard maps already set up for the desktop and you want to use the same input scheme for an Android build. When you press one of these buttons, if it also has an Action assigned through a keyboard map, you may get 2 values returned -- one for the keyboard map and one for the joystick map.</p>
-<p>An easy way to prevent this is to set <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_Controller_enabled.htm">ReInput.controllers.Keyboard.enabled</a> = false to disable all keyboard input on Android. Special provision has been made for certain Android keycodes used by most joysticks such as Back and Menu so that these will still work when activated by a joystick. In addition to solving this issue, disabling keyboard input improves performance slightly. Note that on Android, even when disabling keyboard support certain keys will still function in order to still be able to support certain buttons on joysticks that return keyboard keycodes such as the Back button.</p>
+<p>An easy way to prevent this is to set <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_Controller_enabled.htm">ReInput.controllers.Keyboard.enabled</a> = false to disable all keyboard input on Android. Special provision has been made for certain Android keycodes used by most joysticks such as Back and Menu so that these will still work when activated by a joystick. In addition to solving this issue, disabling keyboard input improves performance slightly. Note that on Android, even when disabling keyboard support certain keys will still function in order to still be able to support certain buttons on joysticks that return keyboard keycodes such as the Back button.</p>
 <p>You can disable keyboard support per-platform on the <a href="RewiredEditor.html#Settings">Rewired Editor - Settings page</a> or through scripting as shown below.</p>
 <pre class="code">void Awake() {
 #if UNITY_ANDROID &amp;&amp; !UNITY_EDITOR
     Rewired.ReInput.controllers.Keyboard.enabled = false; <span class="comment">// Disable keyboard input on Android platform</span>
 #endif
 }</pre>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<hr />
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 <p>&nbsp;</p>
 <hr />
 <h3>&nbsp;</h3>
@@ -895,7 +964,6 @@ Int64* args, IntPtr method)
   <li>The controllers are treated as every other MFI controller because Apple has chosen to expose them as MFI controllers.</li>
   <li>Rewired has no explicit support for these controllers on iOS. It inherited support through the fact they chose to treat them as MFI controllers. There currently has been no update to Rewired to support these <br />
     controllers in any other way than as generic MFI controllers.</li>
-  <li><strong>Extra buttons added in iOS 13 (stick buttons, options, menu) do not currently work because they are not currently supported by Unity.</strong></li>
   <li>Controller.name can be used to identify which MFI controller this is so you can display device specific glyphs. Rewired cannot use the iOS 13 ProductCategory function.  <a href="TestedPlatforms.html">Rewired on iOS uses UnityEngine.Input for all input as shown here, so Apple API calls don't apply.</a></li>
   <li>You must make your Controller Map for the Gamepad Template or the iOS MFI Controller profiles. Controller Maps created for Xbox One Controller, Xbox 360 Controller, or DualShock 4 will not be used on iOS because, to Rewired, these controllers are all simply MFI controllers.</li>
   <li>IF I decide to change the current system implement these new controllers as separate controller definitions for the sole purpose of reporting button element names based on the specific device, that will be done in a future version and listed on the supported controllers page. There are also some very significant disadvantages to doing this including making user mappings no longer universal across MFI devices (when a user changes a mapping for a SteelSeries Nimbus MFI controller, then swaps out with a DS4 or Xbox One controller, it will not inherit those mappings made for the other MFI controller because they would now use different device profiles).</li>
@@ -913,7 +981,7 @@ Int64* args, IntPtr method)
 <h3><a name="ios-controllers-not-detected" id="ios-controllers-not-detected"></a>Game controllers not detected</h3>
 <p>In Unity versions 5.3.0+, game controllers no longer work in Unity because the XCode project Unity builds does not automatically reference the required GameController framework.</p>
 <p>Solution: Manually add a reference to the GameController or GameKit framework in XCode.</p>
-<p><a href="http://forum.unity3d.com/threads/no-mfi-controller-detected.384892/#post-2502963">More details of this issue and the solution can be found here</a>.</p>
+<p><a href="https://forum.unity3d.com/threads/no-mfi-controller-detected.384892/#post-2502963">More details of this issue and the solution can be found here</a>.</p>
 <p>&nbsp;</p>
 <hr />
 <p>&nbsp;</p>
@@ -922,12 +990,12 @@ Int64* args, IntPtr method)
 <h3><a name="tvos-controllers-not-detected" id="tvos-controllers-not-detected"></a>Game controllers not detected</h3>
 <p>In Unity versions 5.3.0+, game controllers no longer work in Unity because the XCode project Unity builds does not automatically reference the required GameController framework.</p>
 <p>Solution: Manually add a reference to the GameController or GameKit framework in XCode.</p>
-<p><a href="http://forum.unity3d.com/threads/no-mfi-controller-detected.384892/#post-2502963">More details of this issue and the solution can be found here</a>.</p>
+<p><a href="https://forum.unity3d.com/threads/no-mfi-controller-detected.384892/#post-2502963">More details of this issue and the solution can be found here</a>.</p>
 <p>&nbsp;</p>
 <hr />
 <h3><a name="tvos-joystick-keyboard-keys" id="tvos-joystick-keyboard-keys"></a>Joystick buttons  activate keyboard keys on tvOS</h3>
 <p>Rewired uses Unity input as the input source in tvOS so it is subject to its limitations. tvOS joysticks return keyboard keycode values for certain buttons on the controller such as Left Shoulder, Right Shoulder,  etc. These keyboard values are in additon to  a joystick button value. This can be problematic if you've developed your game for both desktop PCs and tvOS and have keyboard maps already set up for the desktop and you want to use the same input scheme for a tvOS build. When you press one of these buttons, if it also has an Action assigned through a keyboard map, you may get 2 values returned -- one for the keyboard map and one for the joystick map.</p>
-<p>An easy way to prevent this is to set <a href="http://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_Controller_enabled.htm">ReInput.controllers.Keyboard.enabled</a> = false to disable all keyboard input on tvOS. In addition to solving this issue, disabling keyboard input improves performance slightly.</p>
+<p>An easy way to prevent this is to set <a href="https://guavaman.com/projects/rewired/docs/api-reference/html/P_Rewired_Controller_enabled.htm">ReInput.controllers.Keyboard.enabled</a> = false to disable all keyboard input on tvOS. In addition to solving this issue, disabling keyboard input improves performance slightly.</p>
 <p>You can disable keyboard support per-platform on the <a href="RewiredEditor.html#Settings">Rewired Editor - Settings page</a> or through scripting as shown below.</p>
 <pre class="code">void Awake() {
 #if UNITY_TVOS &amp;&amp; !UNITY_EDITOR
@@ -948,7 +1016,7 @@ Int64* args, IntPtr method)
 <p>&nbsp;</p>
 <hr />
 <p>&nbsp;</p>
-<h2><a name="xbox-one" id="xbox-one"></a>Xbox One</h2>
+<h2><a name="xbox-one" id="xbox-one"></a>Xbox One (XDK)</h2>
 <p></p>
 <h3><a name="xbox-one-crash-on-start" id="rewired-standalone-input-module-issues2"></a>XBox One: Crash/blank screen on start in game build</h3>
 <p>This is always due to improper setup of the required dependencies. See <a href="SpecialPlatformSupport.html#xbox-one">Special Platform Support - XBox One</a> for details on setting up the required dependencies.</p>
@@ -970,39 +1038,6 @@ Int64* args, IntPtr method)
 <hr />
 <h3><a name="xbox-one-controller-on-dev-pc" id="xbox-one-controller-on-dev-pc"></a>XBox One: Controller appearing on console when connected to development PC</h3>
 <p>If an XInput-compatible controller is attached to the development PC, the controller will be detected by the Xbox One console and used. This is not Rewired's doing and the behavior cannot be disabled. This is a feature of the Microsoft Xbox One SDK.</p>
-<p>&nbsp;</p>
-<hr />
-<p>&nbsp;</p>
-<h2><a name="ps4" id="ps4"></a>Playstation 4</h2>
-<p>&nbsp;</p>
-<h3><a name="ps4-compiler-error-loggedinuser-aimhandle" id="ps4-compiler-error-loggedinuser-aimhandle"></a>PS4: Compiler error
-  CS1061:   'LoggedInUser' does not contain a definition for 'aimHandle'</h3>
-<p><strong>Error message:</strong><br />
-  Assets\Rewired\Internal\Scripts\Misc\ExternalTools.cs(348,21): error
-  CS1061:   'LoggedInUser' does not contain a definition for 'aimHandle'
-  and no   accessible extension method 'aimHandle' accepting a first
-  argument of type   'LoggedInUser' could be found (are you missing a
-  using directive or an   assembly reference?)</p>
-<p><strong>Cause:</strong><br />
-  You have Rewired for Unity 5 or  Unity 2017 installed in Unity 2018. This is not supported.</p>
-<p><strong>Solution:</strong><br />
-  Install Rewired for Unity 2018.</p>
-<p><strong>Additional Information:</strong><br />
-  <a href="#wrong-rewired-version-installed">See this for information about downloading the correct version of Rewired from the Unity Asset Store.</a><br />
-</p>
-<p>&nbsp;</p>
-<hr />
-<h3><a name="ps4-touchpad-mouse" id="ps4-touchpad-mouse"></a>PS4: Gamepad touchpad generates mouse input</h3>
-<p>This is coming from Unity's input system. Rewired uses UnityEngine.Input and   UnityEngine.PS4.PS4Input on the PS4 
-  platform for all input (<a href="http://guavaman.com/projects/rewired/docs/Overview.html#tested-platforms">See Tested Platforms.</a>) Rewired cannot disable this. <br />
-  <br />
-  There's   no confirmed way to disable this functionality in Unity. The only possible method that might work is setting <a href="https://docs.unity3d.com/ScriptReference/Input-simulateMouseWithTouches.html" target="_blank">UnityEngine.Input.simulateMouseWithTouches</a> to false.<br />
-  <br />
-  You   can also easily disable Mouse input on the PS4 platform through Rewired so the mouse data coming form Unity isn't processed:
-<pre class="code">#if UNITY_PS4<br />  ReInput.controllers.Mouse.enabled = false;
-#endif<br /></pre>
-  <a href="HowTos.html#assigning-controllers">Or   unassign the mouse from the Players.</a><br />
-  <a href="HowTos.html#enabling-disabling-controller-maps">Or disable the Player's Mouse Maps.</a>
 <p>&nbsp;</p>
 <hr />
 <p>&nbsp;</p>
@@ -1053,17 +1088,18 @@ Int64* args, IntPtr method)
 <p><strong>All Platforms</strong><br />
   Native Steam Controller support is not available at this time. Direct support of the controller's special features is not currently available. The Steam Controller can only be supported through Steam's automatic emulation of a standard controller (type varies by platform.)</p>
 <p><strong>Important<br />
-</strong>The Steam Controller is not a standard HID device and cannot be seen by the OS without Steam being initialized for your process through the Steam API with Steam running in the background. It is not possible to use the Steam Controller without Steam. Rewired does not initialize Steam for you -- you will have to do so using the Steam API or a C# Steam library such as <a href="http://steamworks.net/" target="_blank">Steamworks.net</a>.</p>
+</strong>The Steam Controller is not a standard HID device and cannot be seen by the OS without Steam being initialized for your process through the Steam API with Steam running in the background. It is not possible to use the Steam Controller without Steam. Rewired does not initialize Steam for you -- you will have to do so using the Steam API or a C# Steam library such as <a href="https://steamworks.net/" target="_blank">Steamworks.net</a>.</p>
 <p><strong>Rewired Mappings</strong><br />
   It is recommended you always create a Joystick Map for the <a href="ControllerTemplates.html#gamepad-template">Gamepad Template</a> in the Rewired Editor. This will cover the Steam Controller and <a href="#steam-configured-controllers">Steam-configured controllers</a> on all platforms.</p>
 <p><strong>Windows<br />
-</strong>The Steam Controller works best with Raw Input + XInput or Direct Input + XInput. Unity Input should generally not be set as the Primary Input Source and Disable Native Input should not be checked.</p>
+</strong>The Steam Controller works best with Raw Input + Windows Gaming Input or Direct Input + Windows Gaming Input. Unity Input should generally not be set as the Primary Input Source and Disable Native Input should not be checked.</p>
 <ul>
-  <li>When Use XInput is enabled, the Steam Controller will use the Xbox 360 Controller profile (XInput device).</li>
-  <li>When Use XInput is disabled and Raw Input or Direct Input is the Primary Input Source, the Steam Controller will use the Steam Controller profile and must be mapped using the <a href="ControllerTemplates.html#gamepad-template">Gamepad Template</a>.</li>
+  <li>When Use Windows Gaming Input is enabled, the Steam Controller will use the Steam Controller profile.</li>
+  <li>When Use XInput is enabled but Use Windows Gaming Input is disabled, the Steam Controller will use the Xbox 360 Controller profile (XInput device).</li>
+  <li>When both Use Windows Gaming Input and Use XInput are disabled and Raw Input or Direct Input is the Primary Input Source, the Steam Controller will use the Steam Controller profile and must be mapped using the <a href="ControllerTemplates.html#gamepad-template">Gamepad Template</a>.</li>
   <li>If Unity is the Primary Input Source, the Steam Controller will use the Xbox 360 Controller profile.</li>
   </ul>
-<p>Note: When using XInput devices with XInput enabled, Windows is limited to a maximum of 4 devices. This is a limitation of XInput, not Rewired. <a href="KnownIssues.html#more-than-4-xbox-controllers">See this for information on supporting more than 4 XInput devices</a>.</p>
+<p>Note: When using XInput devices with XInput enabled and Use Windows Gaming Input disabled, Windows is limited to a maximum of 4 devices. This is a limitation of XInput, not Rewired. <a href="KnownIssues.html#more-than-4-xbox-controllers">See this for information on supporting more than 4 XInput devices</a>.</p>
 <p><a href="#steam-windows-steam-controller-unity-editor">See this for important information on using the Steam Controller and Steam-configured devices in the Unity Editor on Windows</a>.</p>
 <p><strong>OSX<br />
 </strong>It is recommended that you leave the input source set to Native for the best device support. The Steam Controller will use the Steam Controller profile and must be mapped using the <a href="ControllerTemplates.html#gamepad-template">Gamepad Template</a>.</p>
@@ -1091,11 +1127,12 @@ Int64* args, IntPtr method)
 <p>In general, it is recommended the end user not enable configuration support for any of these controllers as long as your game provides support for them through Rewired.</p>
 <p><img src="files/images/troubleshooting_steam-big-picture-controller-config.png" alt="Steam Big Picture controller configuration support" /></p>
 <p><strong><a name="steam-configured-controllers-recommendations" id="steam-configured-controllers-recommendations"></a>Should I opt in to Steam Controller Configuration?</strong></p>
-<p>In general, it is recommended that you <strong>do not opt in</strong> to controller configuration for any controllers in the Steam developer backend. Rewired already supports more controllers out of the box than Steam with special features for some controllers such as the Dual Shock 4. As long as your game supports controllers using the Gamepad Template, Rewired will support all of the most important controllers. The user can always opt in themselves if needed.</p>
+<p>In general, it is recommended that you <strong>do not opt in</strong> to controller configuration for any controllers in the Steam developer backend. Rewired already supports more controllers out of the box than Steam with special features for some controllers such as the Dual Shock 4 and DualSense. As long as your game supports controllers using the Gamepad Template, Rewired will support all of the most important controllers. The user can always opt in themselves if needed.</p>
+<p>IMPORTANT: Be aware that Steam Controller Configuration is required to support Steam Link and Steam Remote Play. Whether you choose to opt-in by default or leave it up to the user depends on the specific needs of your game.</p>
 <p>For any of the following reasons, it is recommended you do not opt in to controller configuration  in the developer backend and inform your users to disable this option in the Steam client controller configuration settings:</p>
 <ul>
   <li>If your game needs to support more than just gamepads. (See <a href="#steam-configured-controllers-generic-gamepad">Generic Gamepad Configuration Support</a> below.)</li>
-  <li>If your game needs to support more than 4 players at once. (XInput is limited to 4 controllers and if Steam is allowed configure all controllers, there will be a hard limit of 4 controllers if using XInput.)</li>
+  <li>(Note: This is no longer an issue if Use Windows Gaming Input is enabled.) If your game needs to support more than 4 players at once. (XInput is limited to 4 controllers and if Steam is allowed configure all controllers, there will be a hard limit of 4 controllers if using XInput.)</li>
   <li>If you want to support <a href="SupportedControllers.html">all the recognized gamepads or other devices Rewired supports</a>. When Steam takes over and turns devices into virtual devices, Rewired cannot see the real HID device and instead just sees the virtual device. In current testing, there are a number of devices that Steam either does not support (meaning a dead device) or supports improperly (has certain broken elements). Disable &quot;Generic Gamepad&quot; configuration to prevent these devices from being configured by Steam.</li>
   <li>If you want to support the special features of certain controllers like the Dual Shock 4 like gyro and lights, make sure Dual Shock 4 is excluded from configuration.</li>
   <li>If you display glyps or names for buttons or controller elements in-game or allow remapping of controls in-game. Allowing Steam to configure these controllers allows the user to remap their controls within Steam's interface. This will lead to incorrect element identification in-game as the user may have rebound the A button to the Y button, for example, and there is no way for Rewired to know this.</li>
@@ -1137,7 +1174,7 @@ Int64* args, IntPtr method)
 <hr />
 <h3><a name="steam-controller-not-detected-windows" id="steam-controller-not-detected-windows"></a>Steam Controller is not detected</h3>
 <p><strong>Windows:</strong> <a href="#steam-controller">(See this topic for information on each OS</a>.)</p>
-<p>The Steam Controller automatically emulates an XInput gampad (XBox 360)  on Windows and is supported by XInput, Raw Input, and Direct Input. Unity Input should not be set as the Primary Input Source and Disable Native Input should not be checked. <a href="#steam-controller">Steam Controller settings must be properly configured in Steam in order to expose the Steam Controller as a gamepad.</a> In addition, Steam must be initialized through the Steam API before the Steam Controller can be detected.</p>
+<p>The Steam Controller automatically emulates an XInput gampad (XBox 360)  on Windows and is supported by Windows Gaming Input, XInput, Raw Input, and Direct Input. Unity Input should not be set as the Primary Input Source and Disable Native Input should not be checked. <a href="#steam-controller">Steam Controller settings must be properly configured in Steam in order to expose the Steam Controller as a gamepad.</a> In addition, Steam must be initialized through the Steam API before the Steam Controller can be detected.</p>
 <p><a href="#steam-windows-steam-controller-unity-editor">See this for important information on using the Steam Controller in the Unity Editor on Windows</a>.</p>
 <p>&nbsp;</p>
 <hr />
@@ -1173,7 +1210,7 @@ Int64* args, IntPtr method)
 <h3><a name="steam-streaming-linux" id="steam-streaming-linux"></a><a name="steam-streaming" id="steam-streaming"></a><a name="steam-remote-play" id="steam-remote-play"></a>Steam Remote Play controller support</h3>
 <p>Steam Remote Play only works with devices Steam recognizes<a href="#steam-configured-controllers"></a> and has explicit support for and the <a href="#steam-controller">Steam Controller</a>. It is not possible to use other devices over these Steam features unless Steam has specifically added emulation support for that device. This is not a limitation of Rewired, it is a limitation of Steam.</p>
 <p><strong>Windows<br />
-</strong>Steam Remote Play exposes virtual controllers to the application for all supported remote controllers. Rewired will see these controllers as Steam Controllers when using Raw Input or Direct Input or as XInput controllers when using XInput. Note: When using XInput devices with XInput enabled, Windows is limited to a maximum of 4 devices. This is a limitation of XInput, not Rewired. <a href="KnownIssues.html#more-than-4-xbox-controllers">See this for information on supporting more than 4 XInput devices</a>.</p>
+</strong>Steam Remote Play exposes virtual controllers to the application for all supported remote controllers. Rewired will see these controllers as Steam Controllers when using Raw Input or Direct Input, as XInput controllers when using XInput, and as various different controllers when using Windows Gaming Input (WGI will identify some specific controllers individually such as DS4, Dual Sense, Nintendo Switch Controllers, Xbox 360, and Xbox One. Others will be identified as Steam Controller). Note: When using XInput devices with XInput enabled and Use Windows Gaming Input disabled, Windows is limited to a maximum of 4 devices. This is a limitation of XInput, not Rewired. <a href="KnownIssues.html#more-than-4-xbox-controllers">See this for information on supporting more than 4 XInput devices</a>.</p>
 <p><a href="#steam-windows-steam-controller-unity-editor">See this for important information on using the Steam Controller and Steam-configured devices in the Unity Editor on Windows</a>.</p>
 <p><strong>OSX<br />
 </strong>It is recommended that you leave the input source set to Native for the best device support. </p>

@@ -25,7 +25,7 @@ namespace Technie.PhysicsCreator
 		
 		public Color colour = Color.white;
 
-		public PhysicMaterial material;
+		public PhysicsMaterial material;
 
 		public bool enableInflation = false;
 		public float inflationAmount = 0.01f;
@@ -80,7 +80,7 @@ namespace Technie.PhysicsCreator
 
 		public List<Hull> hulls = new List<Hull>();
 
-		public void AddHull(HullType type, PhysicMaterial material, bool isChild, bool isTrigger)
+		public void AddHull(HullType type, PhysicsMaterial material, bool isChild, bool isTrigger)
 		{
 			hulls.Add( new Hull() );
 			

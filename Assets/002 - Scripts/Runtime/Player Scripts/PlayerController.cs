@@ -1265,7 +1265,7 @@ public class PlayerController : MonoBehaviourPun
         if (PV.IsMine && isCrouching && movement.isGrounded && _crouchForceTime > 0) // when gravity is turned off it makes the crouching force down really slow. So we trie to compensate
         {
             _crouchForceTime -= Time.deltaTime;
-            print($"Crouch {movement.rb.drag} {movement.rb.useGravity} {movement.OnSlope()}");
+            print($"Crouch {movement.rb.linearDamping} {movement.rb.useGravity} {movement.OnSlope()}");
             if (movement.rb.useGravity)
                 movement.rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
             else
@@ -1327,9 +1327,9 @@ public class PlayerController : MonoBehaviourPun
         if (Physics.Raycast((player.mainCamera.transform.position + player.playerCapsule.transform.position) / 2, Vector3.down, out hit, (player.playerCapsule.GetComponent<CapsuleCollider>().height / 2) + 0.5f, GameManager.instance.ragdollHumpLayerMask))
         {
             //Debug.Log($"EnableCrouch_RPC Did Hit: {hit.collider.name}");
-            if (hit.collider.GetComponent<RagdollLimbCollisionDetection>() && hit.collider.GetComponent<Rigidbody>() && hit.collider.GetComponent<Rigidbody>().velocity.magnitude < 20)
+            if (hit.collider.GetComponent<RagdollLimbCollisionDetection>() && hit.collider.GetComponent<Rigidbody>() && hit.collider.GetComponent<Rigidbody>().linearVelocity.magnitude < 20)
             {
-                Debug.Log($"EnableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().velocity.magnitude}");
+                Debug.Log($"EnableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().linearVelocity.magnitude}");
                 hit.collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 250 * hit.collider.GetComponent<Rigidbody>().mass);
             }
         }
@@ -1348,7 +1348,7 @@ public class PlayerController : MonoBehaviourPun
             //Debug.Log($"DisableCrouch_RPC Did Hit: {hit.collider.name}");
             if (hit.collider.GetComponent<RagdollLimbCollisionDetection>() && hit.collider.GetComponent<Rigidbody>())
             {
-                Debug.Log($"DisableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().velocity.magnitude}");
+                Debug.Log($"DisableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().linearVelocity.magnitude}");
                 hit.collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 150 * hit.collider.GetComponent<Rigidbody>().mass);
             }
         }
@@ -2625,7 +2625,7 @@ public class PlayerController : MonoBehaviourPun
 
         nade.GetComponent<Rigidbody>().useGravity = true;
         nade.GetComponent<Rigidbody>().isKinematic = false;
-        nade.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        nade.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         nade.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         nade.SetActive(true);
 
