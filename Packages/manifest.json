@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.alexismorin.lightprobepopulator": "file:../Assets/Project/External/Light-Probe-Populator-master/Light-Probe-Populator-master/com.alexismorin.lightprobepopulator@1.0.0",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.8",
     "com.unity.collab-proxy": "2.8.2",
