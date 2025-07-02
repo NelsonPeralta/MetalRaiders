@@ -1782,7 +1782,14 @@ public class GameManager : MonoBehaviourPunCallbacks
                 print($"Player {p.NickName} has {p.CustomProperties["localPlayerCount"]} total players");
                 expextedPlayers += (int)p.CustomProperties["localPlayerCount"];
 
-                CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(int.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
+                try
+                {
+                    CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(int.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
+                }
+                catch
+                {
+                    Debug.LogError("Error. You might need to give the game time to finish populating the Player Data Cells");
+                }
             }
 
             CurrentRoomManager.instance.expectedNbPlayers = expextedPlayers;
