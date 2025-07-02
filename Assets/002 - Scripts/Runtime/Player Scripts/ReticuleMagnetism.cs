@@ -54,6 +54,7 @@ public class ReticuleMagnetism : MonoBehaviour
     Vector3 _obsDir;
     float _obsDis;
     bool _friendly, _trueHit;
+    ReticuleFriction _tempRf;
 
 
     // Update is called once per frame
@@ -67,13 +68,13 @@ public class ReticuleMagnetism : MonoBehaviour
             player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Mouse)
             return;
 
-        Ray();
-
         if (player.GetComponent<PlayerController>().isAiming)
         {
-            _hitScreenPosList.Clear();
+            CheckForTrueHitOnly(); // needed to fix a non-reachable code from Ray() that fixed scoping and reticule friction relation
             return;
         }
+
+        Ray();
 
         if (!_friendly && _distFromMagTrans > 0)
         {
@@ -88,13 +89,77 @@ public class ReticuleMagnetism : MonoBehaviour
     }
 
 
+    void CheckForTrueHitOnly()
+    {
+        _tempRf = null;
+        if (player && player.playerInventory && player.playerInventory.activeWeapon)
+        {
+            raycastRange = player.playerInventory.activeWeapon.currentRedReticuleRange * 3;
 
+            if (Physics.Raycast(player.mainCamera.transform.position
+                + ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy) ? (-PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z * player.mainCamera.transform.forward) : Vector3.zero),
+                player.mainCamera.transform.forward, out hit, raycastRange, magnetismMask))
+            {
+                if (hit.transform.root.gameObject != player.gameObject)
+                {
+                    magnetismHit = hit.transform.gameObject;
+
+                    _obsDir = (hit.point - player.mainCamera.transform.position).normalized;
+                    _obsDis = Vector3.Distance(hit.point, player.mainCamera.transform.position);
+
+                    if (!Physics.Raycast(player.mainCamera.transform.position, _obsDir, out _obsHit, _obsDis, obstructionMask))
+                    {
+                        _tempRf = magnetismHit.GetComponent<ReticuleFriction>(); if (_tempRf == null) try { _tempRf = hit.transform.GetComponent<Player>().reticuleFriction; } catch { }
+
+                        if (_tempRf)
+                        {
+                            _distFromMagTrans = Vector3.Distance(_tempRf.transform.position, transform.position);
+
+                            _playerTeam = player.team;
+                            if (_tempRf.player) _hitTeam = _tempRf.player.team;
+
+
+                            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                                if (_tempRf.player && (_tempRf.player.team == player.team))
+                                {
+                                    _trueHit = false;
+                                    _friendly = true;
+                                    return;
+                                }
+
+
+                            _trueHit = true;
+                        }
+                        else
+                        {
+                            _trueHit = false;
+
+                        }
+                    }
+                    else
+                    {
+                        _trueHit = false;
+
+                    }
+                }
+                else
+                {
+                    _trueHit = false;
+
+                }
+            }
+            else
+            {
+                _trueHit = false;
+            }
+        }
+    }
 
     void Ray()
     {
+        _tempRf = null;
         _distFromMagTrans = 0;
         _friendly = _obstruction = _trueHit = false;
-        _obstructionHit = null;
 
 
         if (player && player.playerInventory && player.playerInventory.activeWeapon)
@@ -120,18 +185,18 @@ public class ReticuleMagnetism : MonoBehaviour
 
                     if (!Physics.Raycast(player.mainCamera.transform.position, _obsDir, out _obsHit, _obsDis, obstructionMask))
                     {
-                        ReticuleFriction rf = magnetismHit.GetComponent<ReticuleFriction>(); if (rf == null) try { rf = hit.transform.GetComponent<Player>().reticuleFriction; } catch { }
+                        _tempRf = magnetismHit.GetComponent<ReticuleFriction>(); if (_tempRf == null) try { _tempRf = hit.transform.GetComponent<Player>().reticuleFriction; } catch { }
 
-                        if (rf)
+                        if (_tempRf)
                         {
-                            _distFromMagTrans = Vector3.Distance(rf.transform.position, transform.position);
+                            _distFromMagTrans = Vector3.Distance(_tempRf.transform.position, transform.position);
 
                             _playerTeam = player.team;
-                            if (rf.player) _hitTeam = rf.player.team;
+                            if (_tempRf.player) _hitTeam = _tempRf.player.team;
 
 
                             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-                                if (rf.player && (rf.player.team == player.team))
+                                if (_tempRf.player && (_tempRf.player.team == player.team))
                                 {
                                     _friendly = true;
                                     return;

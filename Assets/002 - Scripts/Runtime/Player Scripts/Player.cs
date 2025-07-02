@@ -1283,7 +1283,7 @@ public class Player : Biped
 
         impactDir = Vector3.Normalize((Vector3)impactDir);
         Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
-
+        Debug.Break();
         StartCoroutine(GiveRagdollPush_Coroutine((Vector3)impactDir, _ragdollPropulsion, ragdoll.GetComponent<PlayerRagdoll>()));
 
         //if (deathByHeadshot)

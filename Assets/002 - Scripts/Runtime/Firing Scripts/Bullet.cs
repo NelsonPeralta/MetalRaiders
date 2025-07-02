@@ -12,7 +12,6 @@ public class Bullet : MonoBehaviourPunCallbacks
     {
         get { return _spawnDir; }
     }
-    public bool trailOnly { get { return _trailOnly; } set { _trailOnly = value; } }
 
     Player _sourcePlayer;
     Vector3 _spawnDir;
@@ -74,7 +73,6 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 
     float _ignoreOriginPlayerTime;
-    bool _addToHits, _trailOnly;
 
     void Awake()
     {
@@ -116,7 +114,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         if (_ignoreOriginPlayerTime > 0) _ignoreOriginPlayerTime -= Time.deltaTime;
 
 
-        if (!_trailOnly) Despawn();
+        Despawn();
         ShootRay();
         Travel();
     }
@@ -185,7 +183,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     print($"bullet time test. Despawned at: {Time.time}");
 
 
-                    if (trailOnly && GetComponent<FakeBulletTrailDisable>()) GetComponent<FakeBulletTrailDisable>().TriggerDisable(); else gameObject.SetActive(false);
+                    gameObject.SetActive(false);
                 }
             }
         }
@@ -193,42 +191,42 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 
         return;
-        RaycastHit[] m_Results = new RaycastHit[5];
-        Ray r = new Ray(_prePos, (_nextPos - _prePos).normalized);
+        //RaycastHit[] m_Results = new RaycastHit[5];
+        //Ray r = new Ray(_prePos, (_nextPos - _prePos).normalized);
 
 
-        RaycastHit fhit;
-        if (Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, layerMask: GameManager.instance.bulletLayerMask))
-        {
-            _addToHits = true;
-            Debug.Log($"Bullet hit: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}. Root: {fhit.transform.root.name}. Check :{_ignoreOriginPlayerTime}");
-
-
-
-            if (fhit.collider.GetComponent<IDamageable>() != null || fhit.collider)
-            {
-                if (fhit.transform.root.GetComponent<Player>())
-                    if (fhit.transform.root.GetComponent<Player>() == weaponProperties.transform.root.GetComponent<Player>() && _ignoreOriginPlayerTime > 0)
-                        _addToHits = false;
+        //RaycastHit fhit;
+        //if (Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, layerMask: GameManager.instance.bulletLayerMask))
+        //{
+        //    _addToHits = true;
+        //    Debug.Log($"Bullet hit: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}. Root: {fhit.transform.root.name}. Check :{_ignoreOriginPlayerTime}");
 
 
 
-                GameObject hit = fhit.collider.gameObject;
-                float _distanceFromSpawnToHit = Vector3.Distance(originalPos, fhit.point);
+        //    if (fhit.collider.GetComponent<IDamageable>() != null || fhit.collider)
+        //    {
+        //        if (fhit.transform.root.GetComponent<Player>())
+        //            if (fhit.transform.root.GetComponent<Player>() == weaponProperties.transform.root.GetComponent<Player>() && _ignoreOriginPlayerTime > 0)
+        //                _addToHits = false;
 
-                if (_distanceFromSpawnToHit <= weaponProperties.range && _addToHits)
-                {
-                    ObjectHit newHit = new ObjectHit(hit, fhit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
-                    objectsHit.Add(newHit);
-                }
-            }
 
-            if (objectsHit.Count > 0)
-            {
-                CheckForFinalHit();
-                gameObject.SetActive(false);
-            }
-        }
+
+        //        GameObject hit = fhit.collider.gameObject;
+        //        float _distanceFromSpawnToHit = Vector3.Distance(originalPos, fhit.point);
+
+        //        if (_distanceFromSpawnToHit <= weaponProperties.range && _addToHits)
+        //        {
+        //            ObjectHit newHit = new ObjectHit(hit, fhit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
+        //            objectsHit.Add(newHit);
+        //        }
+        //    }
+
+        //    if (objectsHit.Count > 0)
+        //    {
+        //        CheckForFinalHit();
+        //        gameObject.SetActive(false);
+        //    }
+        //}
     }
 
 
@@ -665,7 +663,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     private void OnDisable()
     {
-        _trailOnly = false;
+
     }
     public class ObjectHit
     {
