@@ -772,7 +772,7 @@ public class CurrentRoomManager : MonoBehaviour
         _gameStartCountdown = 9;
     }
 
-    public void AddExtendedPlayerData(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
+    public void AddExtendedPlayerDataCell(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
     {
         Debug.Log($"AddExtendedPlayerData {pepd.player_id} {pepd.username}");
         Debug.Log(GameManager.ROOT_PLAYER_NAME);
@@ -912,6 +912,8 @@ public class CurrentRoomManager : MonoBehaviour
                 }
             }
         }
+
+        GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
     }
 
 
@@ -928,6 +930,7 @@ public class CurrentRoomManager : MonoBehaviour
                     instance._playerDataCells[i].playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
                 }
         }
+        GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
     }
 
     public bool PlayerExtendedDataContainsPlayerName(string n)

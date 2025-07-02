@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 
 public class GrenadePool : MonoBehaviour
@@ -39,11 +40,12 @@ public class GrenadePool : MonoBehaviour
             _explosions.Add(Instantiate(_explosionPrefab, transform).GetComponent<Explosion>()); // Prefab must be inactive
 
             _fragGrenadePool[i].SetActive(false); _stickyGrenadePool[i].SetActive(false);
-            _stickyGrenadePool[i].name += $" ({i})";
             _fragGrenadePool[i].transform.SetParent(this.transform); _stickyGrenadePool[i].transform.SetParent(this.transform);
             _explosions[i].transform.SetParent(this.transform);
 
-            //_explosions[i].name += $"{Random.Range(1, 99999)}";
+            _fragGrenadePool[i].name += $" ({i})";
+            _stickyGrenadePool[i].name += $" ({i})";
+            _explosions[i].name += $" ({i})";
         }
 
 
@@ -53,6 +55,7 @@ public class GrenadePool : MonoBehaviour
 
             _rocketPool[i].gameObject.SetActive(false);
             _rocketPool[i].transform.SetParent(this.transform);
+            _rocketPool[i].name += $" ({i})";
         }
 
         for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * GL_INC; i++)
@@ -61,6 +64,7 @@ public class GrenadePool : MonoBehaviour
 
             _glProjectilePool[i].gameObject.SetActive(false);
             _glProjectilePool[i].transform.SetParent(this.transform);
+            _glProjectilePool[i].name += $" ({i})";
         }
     }
 
@@ -220,6 +224,7 @@ public class GrenadePool : MonoBehaviour
 
     public void DisableExplosive(WeaponProperties.KillFeedOutput kfo, int ind, Vector3 pos)
     {
+        print($"DisableExplosive {PhotonNetwork.IsMasterClient} {kfo} {ind}");
         if (kfo == WeaponProperties.KillFeedOutput.Frag_Grenade)
         {
             _fragGrenadePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
