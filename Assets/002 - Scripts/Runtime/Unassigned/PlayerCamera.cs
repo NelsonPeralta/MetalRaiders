@@ -136,7 +136,6 @@ public class PlayerCamera : MonoBehaviour
 
         if (pController.isAiming)
         {
-
             if (player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Medium)
             {
                 backEndMouseSens *= 0.65f;
@@ -145,11 +144,10 @@ public class PlayerCamera : MonoBehaviour
                 {
                     if (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Battle_Rifle)
                     {
-                        backEndMouseSens *= 0.9f;
+                        backEndMouseSens *= 0.8f;
                     }
                 }
             }
-
             else if (player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
             {
                 backEndMouseSens *= 0.4f;

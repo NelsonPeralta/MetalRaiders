@@ -67,10 +67,13 @@ public class ReticuleMagnetism : MonoBehaviour
             player.GetComponent<PlayerController>().activeControllerType == Rewired.ControllerType.Mouse)
             return;
 
-        if (player.GetComponent<PlayerController>().isAiming)
-            return;
-
         Ray();
+
+        if (player.GetComponent<PlayerController>().isAiming)
+        {
+            _hitScreenPosList.Clear();
+            return;
+        }
 
         if (!_friendly && _distFromMagTrans > 0)
         {
@@ -91,6 +94,7 @@ public class ReticuleMagnetism : MonoBehaviour
     {
         _distFromMagTrans = 0;
         _friendly = _obstruction = _trueHit = false;
+        _obstructionHit = null;
 
 
         if (player && player.playerInventory && player.playerInventory.activeWeapon)
