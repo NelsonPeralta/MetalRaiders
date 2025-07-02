@@ -136,9 +136,21 @@ public class PlayerCamera : MonoBehaviour
 
         if (pController.isAiming)
         {
-            backEndMouseSens *= 0.65f;
 
-            if (player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
+            if (player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Medium)
+            {
+                backEndMouseSens *= 0.65f;
+
+                if (_controllerType == ControllerType.Joystick)
+                {
+                    if (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Battle_Rifle)
+                    {
+                        backEndMouseSens *= 0.9f;
+                    }
+                }
+            }
+
+            else if (player.playerInventory.activeWeapon.scopeMagnification == WeaponProperties.ScopeMagnification.Long)
             {
                 backEndMouseSens *= 0.4f;
                 if (_controllerType == ControllerType.Joystick) backEndMouseSens *= 1.2f;
