@@ -60,7 +60,7 @@ public class RagdollPool : MonoBehaviour
 
         obj.transform.parent = null;
         SceneManager.MoveGameObjectToScene(obj, SceneManager.GetActiveScene()); // Undos DontDestroyOnLoad
-        StartCoroutine(DisableObjectAfterTime(obj, Player.RESPAWN_TIME));
+        StartCoroutine(DisableRagdollAfterTime(obj, Player.RESPAWN_TIME));
         obj.GetComponent<PlayerRagdoll>().isMine = isMine;
         return obj;
 
@@ -100,6 +100,23 @@ public class RagdollPool : MonoBehaviour
     IEnumerator DisableObjectAfterTime(GameObject obj, int time = 1)
     {
         yield return new WaitForSeconds(time);
+        obj.SetActive(false);
+    }
+
+    IEnumerator DisableRagdollAfterTime(GameObject obj, int time = 1)
+    {
+        yield return new WaitForSeconds(time);
+        obj.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(true);
+        //transform.position = Vector3.one * -1000; // does not work
+        //transform.SetPositionAndRotation(Vector3.one * -222, Quaternion.identity); // does not work
+        obj.GetComponent<Animator>().enabled = true;
+        StartCoroutine(DisableRagdoll(obj));
+    }
+
+    IEnumerator DisableRagdoll(GameObject obj)
+    {
+        yield return new WaitForEndOfFrame();
+
         obj.SetActive(false);
     }
 }

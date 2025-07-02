@@ -81,12 +81,38 @@ public class PlayerRagdoll : Ragdoll
         ResetRigidbodieVelocities();
     }
 
+    public void ToggleAllRigidbodiesToKinetmatic(bool b)
+    {
+        //for (int i = 0; i < GetComponentsInChildren<Rigidbody>(true).Count(); i++)
+        //{
+        //    if (i < 1)
+        //    {
+        //        print($"ToggleAllRigidbodiesToKinetmatic {GetComponentsInChildren<Rigidbody>(true)[i].name}");
+        //        GetComponentsInChildren<Rigidbody>(true)[i].isKinematic = b;
+        //    }
+        //}
+
+
+        foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true))
+        {
+            rb.isKinematic = b;
+        }
+    }
+
     public void ResetRigidbodieVelocities()
     {
-        foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true).Where(item => item.GetComponent<CharacterJoint>()))
+        foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true))
         {
-            print($"ResetRigidbodieVelocities {rb.name} {rb.linearVelocity} {rb.angularVelocity} {rb.linearDamping} {rb.angularDamping}");
             rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
+        }
+    }
+
+    public void PrintRigibodiesVelocities()
+    {
+        print("PrintRigibodiesVelocities");
+        foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>())
+        {
+            print($"ResetRigidbodieVelocities {rb.name} {rb.linearVelocity} {rb.angularVelocity}");
         }
     }
 }

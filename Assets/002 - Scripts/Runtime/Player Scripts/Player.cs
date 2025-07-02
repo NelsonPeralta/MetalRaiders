@@ -1274,8 +1274,10 @@ public class Player : Biped
 
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
+        ragdoll.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(true);
         ragdoll.SetActive(true);
-        ragdoll.GetComponent<PlayerRagdoll>().ResetRigidbodieVelocities();
+        //ragdoll.GetComponent<PlayerRagdoll>().ResetRigidbodieVelocities();
+        //Debug.Break();
 
 
 
@@ -1283,7 +1285,6 @@ public class Player : Biped
 
         impactDir = Vector3.Normalize((Vector3)impactDir);
         Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
-        Debug.Break();
         StartCoroutine(GiveRagdollPush_Coroutine((Vector3)impactDir, _ragdollPropulsion, ragdoll.GetComponent<PlayerRagdoll>()));
 
         //if (deathByHeadshot)
@@ -1302,7 +1303,11 @@ public class Player : Biped
     {
         yield return new WaitForEndOfFrame();
 
+
         playerRagdoll.GetComponent<Animator>().enabled = false;
+        playerRagdoll.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(false);
+
+        //playerRagdoll.GetComponent<PlayerRagdoll>().ResetRigidbodieVelocities();
 
         if (dn == DeathNature.Headshot || dn == DeathNature.Sniped)
             playerRagdoll.head.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 6000);
