@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Codice.Client.Common;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,20 +15,15 @@ public class RagdollPool : MonoBehaviour
 
     private void Awake()
     {
-        int amountOfWeaponsToPool = 8;
         instance = this;
 
-
-
-        for (int j = 0; j < amountOfWeaponsToPool; j++)
+        for (int j = 0; j < CurrentRoomManager.instance.expectedNbPlayers; j++)
         {
             GameObject obj = Instantiate(ragdollPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             ragdollPoolList.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
-
-
     }
 
     // Start is called before the first frame update
@@ -60,6 +56,7 @@ public class RagdollPool : MonoBehaviour
 
         obj.transform.parent = null;
         SceneManager.MoveGameObjectToScene(obj, SceneManager.GetActiveScene()); // Undos DontDestroyOnLoad
+        StartCoroutine(ChangeRagdollLayer(obj, Player.RESPAWN_TIME * 0.95f));
         StartCoroutine(DisableRagdollAfterTime(obj, Player.RESPAWN_TIME));
         obj.GetComponent<PlayerRagdoll>().isMine = isMine;
         return obj;
@@ -103,6 +100,15 @@ public class RagdollPool : MonoBehaviour
         obj.SetActive(false);
     }
 
+
+
+    IEnumerator ChangeRagdollLayer(GameObject obj, float time = 1)
+    {
+        yield return new WaitForSeconds(time);
+        GameManager.SetLayerRecursively(obj.transform.GetChild(0).gameObject, 3);
+        obj.transform.GetChild(1).gameObject.layer = 3;
+    }
+
     IEnumerator DisableRagdollAfterTime(GameObject obj, int time = 1)
     {
         yield return new WaitForSeconds(time);
@@ -118,5 +124,7 @@ public class RagdollPool : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         obj.SetActive(false);
+        GameManager.SetLayerRecursively(obj.transform.GetChild(0).gameObject, 10);
+        obj.transform.GetChild(1).gameObject.layer = 0;
     }
 }

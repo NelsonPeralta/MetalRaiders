@@ -38,7 +38,7 @@ public class CurrentRoomManager : MonoBehaviour
         get { return _playerNicknameNbLocalPlayersDict; }
         set
         {
-           // deprecated
+            // deprecated
         }
     }
     public int expectedNbPlayers
@@ -222,12 +222,6 @@ public class CurrentRoomManager : MonoBehaviour
                 }
 
                 _gameReadyStep = 2;
-                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
-                    if (p && p.isMine)
-                    {
-                        p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
-                        p.SetupMotionTracker();
-                    }
 
                 StartCoroutine(GameStartDelayMapCamera_Coroutine());
                 TriggerGameStartCountdown();
@@ -1036,6 +1030,13 @@ public class CurrentRoomManager : MonoBehaviour
         _gameReadyStep = 3;
 
         yield return new WaitForSeconds(2);
+
+        foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+            if (p && p.isMine)
+            {
+                p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
+                p.SetupMotionTracker();
+            }
 
         _gameReadyStep = 4;
         MapCamera.instance.TriggerGameStartBehaviour();
