@@ -137,7 +137,7 @@ public class Explosion : MonoBehaviour
 
 
 
-
+            return;
 
             //Add force to nearby rigidbodies
             if (rb != null && !rb.isKinematic) // does not actually detect rb in player root, grenade jumping is handled in player script
