@@ -291,14 +291,11 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-
         if (PhotonNetwork.IsMasterClient && _stuckPlayerPhotonId > 0)
         {
             GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
               impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
         }
-
-        return;
 
         if (player.isMine && !_exploded)
         {

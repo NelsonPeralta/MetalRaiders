@@ -1804,6 +1804,7 @@ public class Player : Biped
         if (hitPoints <= 0 || isRespawning || isDead)
             return;
 
+
         print($"Damage_RPC {impPos} {impDir} {sourcePid}");
         this.impactPos = transform.position; this.impactDir = Vector3.zero;
         try { this.impactDir = impDir; } catch { }
