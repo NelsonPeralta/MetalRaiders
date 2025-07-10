@@ -291,6 +291,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
+        return;
         if (PhotonNetwork.IsMasterClient && _stuckPlayerPhotonId > 0)
         {
             GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
