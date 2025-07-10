@@ -386,6 +386,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                     print($"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
 
                     GameTime.instance.ResetOneObjRoundTime();
+                    if (NetworkGameManager.instance.overshield) NetworkGameManager.instance.overshield.gameObject.SetActive(true);
 
 
                     foreach (Player p in GameManager.GetLocalPlayers())

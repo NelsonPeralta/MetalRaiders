@@ -33,6 +33,8 @@ public class Overshield : MonoBehaviour
             //GameTime.instance.OnGameTimeElapsedChanged -= OnGameTimeChanged;
             //GameTime.instance.OnGameTimeElapsedChanged += OnGameTimeChanged;
         }
+
+        if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On) GameManager.instance.OnOneObjRoundOverLocalEvent += OnOneObjRoundOverLocalEvent;
     }
 
 
@@ -57,5 +59,10 @@ public class Overshield : MonoBehaviour
             }
             catch (System.Exception e) { Debug.LogWarning(e); }
         }
+    }
+
+    void OnOneObjRoundOverLocalEvent()
+    {
+        StopAllCoroutines();
     }
 }

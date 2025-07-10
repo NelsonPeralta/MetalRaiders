@@ -379,6 +379,7 @@ public class Player : Biped
                 _gameplayerRecordingPointsHolder.transform.parent = null;
                 OnPlayerDeath?.Invoke(this);
                 OnPlayerDeathLate?.Invoke(this);
+                _overshieldFx.SetActive(false);
             }
 
         }
