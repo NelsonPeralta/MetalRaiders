@@ -297,7 +297,6 @@ public class ExplosiveProjectile : MonoBehaviour
               impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
         }
 
-
         if (player.isMine && !_exploded)
         {
             _exploded = true;

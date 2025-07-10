@@ -107,7 +107,7 @@ public partial class WebManager
                 //Debug.Log(jsonarray);
                 PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
 
-                CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
+                CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd);
 
                 try
                 {
@@ -204,7 +204,7 @@ public partial class WebManager
                 PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
                 try
                 {
-                    CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
+                    CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd);
                 }
                 catch (Exception e) { Debug.LogWarning(e); }
 

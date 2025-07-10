@@ -9,6 +9,7 @@ public class RagdollLimbCollisionDetection : MonoBehaviour
     {
         if (collision.relativeVelocity.sqrMagnitude > 15)
         {
+            print($"RagdollLimbCollisionDetection {collision.collider.name}");
             ragdoll.HandleCollision(collision);
         }
     }

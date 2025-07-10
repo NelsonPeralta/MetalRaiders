@@ -671,6 +671,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             StartCoroutine(InstantiateNetworkGameManager_Coroutine());
             //StartCoroutine(SendGameParamsWithDelay());
         }
+        //GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties(); // Triggers Error here. Not enough time given for DB to send data and populate DataCell
     }
 
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)

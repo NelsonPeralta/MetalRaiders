@@ -59,9 +59,16 @@ public class AimAssistCone : MonoBehaviour
         get { return _reticuleFriction; }
         set
         {
-            _reticuleFriction = value;
+            if (player.rid == 0)
+            {
+                if (value != _reticuleFriction)
+                {
+                    print($"{_reticuleFriction} -> {value}");
+                }
+            }
 
-            if (value) { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick + 4, 0, 30); } else { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick - 2, 0, 30); }
+            _reticuleFriction = value;
+            if (value) { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick + 3, 0, 30); } else { _reticuleFrictionTick = Mathf.Clamp(_reticuleFrictionTick - 2, 0, 30); }
         }
     }
 
@@ -219,8 +226,8 @@ public class AimAssistCone : MonoBehaviour
                 _tempRedReticuleRange = player.playerInventory.activeWeapon.currentRedReticuleRange;
                 if (player.isDualWielding) _tempRedReticuleRange = (player.playerInventory.activeWeapon.defaultRedReticuleRange + player.playerInventory.thirdWeapon.defaultRedReticuleRange) / 2f;
                 _coneXandYScale = Mathf.Tan((_tempRedReticuleAngle * Mathf.PI) / 180) * _tempRedReticuleRange; // we calculate the opposite side of a triangle using the default RRR as the adjacent. Must be multiplied by 2 to take into account the whole heigh and width of the cone geometry
-                //if (player.playerController.isAiming && player.playerInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Zoom) _coneXandYScale = _coneXandYScale * 0.8f; // ARBITRARY because of geometry when zooming camera
-                
+                                                                                                               //if (player.playerController.isAiming && player.playerInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Zoom) _coneXandYScale = _coneXandYScale * 0.8f; // ARBITRARY because of geometry when zooming camera
+
                 if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || playerInventory.isHoldingHeavy) _coneXandYScale *= 1.15f;
                 _hitboxDetectorScaleControl.transform.localScale = new Vector3(_coneXandYScale * 2, _coneXandYScale * 2, _tempRedReticuleRange);
                 _raycastRange = _tempRedReticuleRange;

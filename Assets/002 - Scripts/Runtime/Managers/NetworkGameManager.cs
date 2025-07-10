@@ -203,7 +203,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             else
                 CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Add(d.Keys.First(), d[d.Keys.First()]);
 
-            CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT;
+            //CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT; // Triggers Error here. Not enough time given for DB to send data and populate DataCell
 
             Debug.Log(CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT);
 

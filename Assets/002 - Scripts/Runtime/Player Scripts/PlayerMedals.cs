@@ -113,59 +113,59 @@ public class PlayerMedals : MonoBehaviour
     public void SpawnHeadshotMedal()
     {
         if (!player.isMine) return;
+        kills++;
         Transform h = Instantiate(headshotMedalPrefab, grid);
         h.SetAsFirstSibling();
-        kills++;
     }
 
     public void SpawnSniperHeadshotMedal()
     {
         if (!player.isMine) return;
+        kills++;
         Transform h = Instantiate(sniperHeadshotMedalPrefab, grid);
         h.SetAsFirstSibling();
-        kills++;
         announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
     }
 
     public void SpawnNutshotMedal()
     {
         if (!player.isMine) return;
+        kills++;
         Transform h = Instantiate(nutshotMedalPrefab, grid);
         h.SetAsFirstSibling();
-        kills++;
         announcer.AddClip(h.GetComponent<PlayerMedal>().clip);
     }
 
     public void SpawnMeleeMedal()
     {
         if (!player.isMine) return;
+        kills++;
         Transform h = Instantiate(meleeMedalPrefab, grid);
         h.SetAsFirstSibling();
-        kills++;
     }
 
     public void SpawnAssasinationMedal()
     {
         if (!player.isMine) return;
+        kills++;
         Transform h = Instantiate(assasinationMedalPrefab, grid);
         h.SetAsFirstSibling();
-        kills++;
     }
 
     public void SpawnGrenadeMedal()
     {
         if (!player.isMine) return;
+        kills++;
         Transform h = Instantiate(grenadeMedalPrefab, grid);
         h.SetAsFirstSibling();
-        kills++;
     }
 
     public void SpawnStuckKillMedal()
     {
         if (!player.isMine) return;
+        kills++;
         Transform h = Instantiate(stuckMedalPrefab, grid);
         h.SetAsFirstSibling();
-        kills++;
 
         if (player.isMine)
             AchievementManager.instance.stickiesThisGame++;

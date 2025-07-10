@@ -38,27 +38,7 @@ public class CurrentRoomManager : MonoBehaviour
         get { return _playerNicknameNbLocalPlayersDict; }
         set
         {
-            //_playerNicknameNbLocalPlayersDict = value;
-            //int c = 0;
-            print($"playerNickname_To_NbLocalPlayers_DICT");
-            //foreach (KeyValuePair<string, int> items in playerNickname_To_NbLocalPlayers_DICT)
-            //{
-            //    print($"Player {items.Key} has {items.Value} invites");
-
-            //    try
-            //    {
-            //        GetDataCellWithDatabaseIdAndRewiredId(int.Parse(items.Key), 0).invites = items.Value;
-            //    }
-            //    catch
-            //    {
-
-            //    }
-
-            //    c += items.Value;
-            //}
-
-            //expectedNbPlayers = c;
-            GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
+            // deprecated
         }
     }
     public int expectedNbPlayers
@@ -242,12 +222,6 @@ public class CurrentRoomManager : MonoBehaviour
                 }
 
                 _gameReadyStep = 2;
-                foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
-                    if (p && p.isMine)
-                    {
-                        p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
-                        p.SetupMotionTracker();
-                    }
 
                 StartCoroutine(GameStartDelayMapCamera_Coroutine());
                 TriggerGameStartCountdown();
@@ -772,7 +746,7 @@ public class CurrentRoomManager : MonoBehaviour
         _gameStartCountdown = 9;
     }
 
-    public void AddExtendedPlayerData(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
+    public void AddExtendedPlayerDataCell(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
     {
         Debug.Log($"AddExtendedPlayerData {pepd.player_id} {pepd.username}");
         Debug.Log(GameManager.ROOT_PLAYER_NAME);
@@ -912,6 +886,8 @@ public class CurrentRoomManager : MonoBehaviour
                 }
             }
         }
+
+        GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
     }
 
 
@@ -928,6 +904,7 @@ public class CurrentRoomManager : MonoBehaviour
                     instance._playerDataCells[i].playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
                 }
         }
+        GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
     }
 
     public bool PlayerExtendedDataContainsPlayerName(string n)
@@ -1053,6 +1030,13 @@ public class CurrentRoomManager : MonoBehaviour
         _gameReadyStep = 3;
 
         yield return new WaitForSeconds(2);
+
+        foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
+            if (p && p.isMine)
+            {
+                p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
+                p.SetupMotionTracker();
+            }
 
         _gameReadyStep = 4;
         MapCamera.instance.TriggerGameStartBehaviour();

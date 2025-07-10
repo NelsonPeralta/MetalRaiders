@@ -523,7 +523,7 @@ public class PlayerShooting : MonoBehaviourPun
 
 
 
-                        if (GameManager.instance.nbLocalPlayersPreset > 1 || weaponToShoot.isShotgun)
+                        //if (GameManager.instance.nbLocalPlayersPreset > 0 || weaponToShoot.isShotgun)
                         {
                             fakeBulletTrailRaycasthits = Physics.RaycastAll(player.mainCamera.transform.position, player.mainCamera.transform.forward, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask).ToList();
 
@@ -591,14 +591,14 @@ public class PlayerShooting : MonoBehaviourPun
                                 }
                             }
                         }
-                        else
-                        {
-                            if (weaponToShoot.firingMode != WeaponProperties.FiringMode.Auto
-                                || (weaponToShoot.firingMode == WeaponProperties.FiringMode.Auto && weaponToShoot.loadedAmmo % 2 == 0))
-                                pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
-                                          ranSprayQuat, player.isMine,
-                                         muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position, realTimeTravel: true, wp: weaponToShoot);
-                        }
+                        //else // CUT
+                        //{
+                        //    if (weaponToShoot.firingMode != WeaponProperties.FiringMode.Auto
+                        //        || (weaponToShoot.firingMode == WeaponProperties.FiringMode.Auto && weaponToShoot.loadedAmmo % 2 == 0))
+                        //        pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
+                        //                  ranSprayQuat, player.isMine,
+                        //                 muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position, realTimeTravel: true, wp: weaponToShoot);
+                        //}
 
 
 

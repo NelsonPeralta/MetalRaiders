@@ -1108,7 +1108,7 @@ public class PlayerInventory : MonoBehaviourPun
     bool outOfFakeBullets;
     Vector3 _realTimeTravelScale = new Vector3(2, 2, 0.5f);
     public FakeBulletTrail SpawnFakeBulletTrail(int lenghtOfTrail, Quaternion spray, bool bipedIsMine,
-        Vector3? muzzlePosition = null, Vector3? lookAtThisTarget = null, bool realTimeTravel = false, WeaponProperties wp = null)
+        Vector3? muzzlePosition = null, Vector3? lookAtThisTarget = null, /*bool realTimeTravel = false,*/ WeaponProperties wp = null)
     {
         outOfFakeBullets = (_fakeBulletTrailPool.Where(item => !item.gameObject.activeInHierarchy).Count() == 0);
 
@@ -1157,20 +1157,20 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-                if (realTimeTravel)
-                {
-                    fbt.GetComponent<Bullet>().weaponProperties = wp;
-                    fbt.GetComponent<Bullet>().damage = 0;
-                    fbt.GetComponent<Bullet>().speed = 200;
-                    fbt.GetComponent<Bullet>().trailOnly = true;
-                    fbt.GetComponent<Bullet>().enabled = true;
-                    //Debug.Break();
-                }
-                else
-                {
-                    fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
-                    fbt.sprayRotation.localRotation *= spray;
-                }
+                //if (realTimeTravel)
+                //{
+                //    //fbt.GetComponent<Bullet>().weaponProperties = wp;
+                //    //fbt.GetComponent<Bullet>().damage = 0;
+                //    ////fbt.GetComponent<Bullet>().speed = 120;
+                //    ////fbt.GetComponent<Bullet>().trailOnly = true;
+                //    //fbt.GetComponent<Bullet>().enabled = true;
+                //    ////Debug.Break();
+                //}
+                //else
+                //{
+                fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+                fbt.sprayRotation.localRotation *= spray;
+                //}
 
 
 
@@ -1180,18 +1180,18 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-                if (muzzlePosition != null && muzzlePosition != Vector3.zero && !realTimeTravel)
+                if (muzzlePosition != null && muzzlePosition != Vector3.zero /*&& !realTimeTravel*/)
                 {
                     fbt.transform.position = (Vector3)muzzlePosition;
                     fbt.scaleToChange.localScale = Vector3.one;
                     fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
                 }
 
-                if (realTimeTravel)
-                {
-                    fbt.scaleToChange.localScale = _realTimeTravelScale;
-                    fbt.fakeBulletTrailDisable.timeBeforeDisabling = 2;
-                }
+                //if (realTimeTravel)
+                //{
+                //    fbt.scaleToChange.localScale = _realTimeTravelScale;
+                //    fbt.fakeBulletTrailDisable.timeBeforeDisabling = 2;
+                //}
 
                 if (lookAtThisTarget != null && lookAtThisTarget != Vector3.zero)
                 {
