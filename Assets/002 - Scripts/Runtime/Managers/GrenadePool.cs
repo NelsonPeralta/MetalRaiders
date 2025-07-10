@@ -267,7 +267,7 @@ public class GrenadePool : MonoBehaviour
                 obj.damageSource = damageCleanNameSource;
                 obj.type = t;
                 obj.gameObject.SetActive(true);
-                obj.Explode();
+                //obj.Explode();
                 obj.DisableIn3Seconds();
                 break;
             }
