@@ -35,6 +35,8 @@ public class PlayerHitboxDetector : MonoBehaviour
         {
             if (_collidingHitboxes.Count > 0)
                 _collidingHitboxes.Clear();
+
+            if (!GetComponent<Rigidbody>().isKinematic) Debug.LogError("Make sure the RB is Kinematic");
         }
 
 
