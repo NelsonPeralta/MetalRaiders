@@ -4381,8 +4381,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 567944050}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 50, y: 10, z: 10}
+  m_LocalPosition: {x: 0, y: 0, z: -20}
+  m_LocalScale: {x: 50, y: 10, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1688349361}
@@ -5703,7 +5703,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913778446}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -1, z: 30}
+  m_LocalPosition: {x: 0, y: -1, z: 50}
   m_LocalScale: {x: 2, y: 2.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6403,25 +6403,9 @@ MonoBehaviour:
   m_Mesh: {fileID: 1827983171}
   m_VersionIndex: 750
   m_IsSelectable: 1
-  m_SelectedFaces: 0400000005000000
-  m_SelectedEdges:
-  - a: 17
-    b: 16
-  - a: 16
-    b: 18
-  - a: 18
-    b: 19
-  - a: 19
-    b: 17
-  - a: 21
-    b: 20
-  - a: 20
-    b: 22
-  - a: 22
-    b: 23
-  - a: 23
-    b: 21
-  m_SelectedVertices: 1200000011000000100000001300000016000000150000001400000017000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!65 &1179192900
 BoxCollider:
   m_ObjectHideFlags: 0
