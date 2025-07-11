@@ -98,6 +98,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     float CalculateTimeToDespawn()
     {
+        if (weaponProperties && weaponProperties.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Blaster) return 2;
         return (range / speed);
     }
 
@@ -115,8 +116,11 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 
         Despawn();
-        ShootRay();
-        Travel();
+
+        if (speed > 0)
+            ShootRay();
+        if (speed > 0)
+            Travel();
     }
     private void LateUpdate()
     {
@@ -177,13 +181,10 @@ public class Bullet : MonoBehaviourPunCallbacks
                     objectsHit.Add(newHit);
                 }
 
-                if (objectsHit.Count > 0)
+                if (objectsHit.Count > 0 && !damageDealt)
                 {
                     if (damage > 0) CheckForFinalHit();
                     print($"bullet time test. Despawned at: {Time.time}");
-
-
-                    gameObject.SetActive(false);
                 }
             }
         }
@@ -267,7 +268,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void CheckForFinalHit()
     {
-        if (objectsHit.Count > 0)
+        if (objectsHit.Count > 0 && !damageDealt)
         {
             RaycastHit hitInfo = objectsHit[0].raycastHit;
             GameObject finalHitObject = objectsHit[0].gameObject;
@@ -285,6 +286,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     hitInfo = objectsHit[i].raycastHit;
                 }
             }
+            transform.position = finalHitPoint;
 
             _spawnDir = finalHitPoint - _spawnDir;
             Debug.Log($"BULLET CheckForFinalHit {finalHitObject.name}");
@@ -572,9 +574,15 @@ public class Bullet : MonoBehaviourPunCallbacks
                 //    damageDealt = true;
                 //}
                 #endregion
-                gameObject.SetActive(false);
+
+
             }
             catch (System.Exception e) { Debug.LogWarning(e); }
+
+            if (weaponProperties.killFeedOutput != WeaponProperties.KillFeedOutput.Plasma_Blaster)
+                gameObject.SetActive(false);
+            else
+                speed = 0;
 
             // Old
             #region

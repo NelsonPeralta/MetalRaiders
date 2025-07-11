@@ -514,7 +514,7 @@ public class PlayerShooting : MonoBehaviourPun
                 if (playerController.isAiming && weaponToShoot.hipSprayOnly)
                     ranSprayQuat = Quaternion.identity;
 
-                if (weaponToShoot.ammoProjectileType != WeaponProperties.AmmoProjectileType.Plasma)
+                if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
                 {
                     //if (!player.isMine/* || GameManager.instance.connection == GameManager.Connection.Local*/)
                     {
@@ -661,6 +661,8 @@ public class PlayerShooting : MonoBehaviourPun
                     {
                         Debug.Log(bullet);
                         Debug.Log(weaponToShoot);
+
+                        if (bullet.GetComponent<DisableAfterXSeconds>()) bullet.GetComponent<DisableAfterXSeconds>().enabled = false;
                         bullet.GetComponent<Bullet>().bluePlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Blue && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                         bullet.GetComponent<Bullet>().redPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Red && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                         bullet.GetComponent<Bullet>().greenPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Green && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
