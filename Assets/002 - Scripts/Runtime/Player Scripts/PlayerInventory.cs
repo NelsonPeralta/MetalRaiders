@@ -874,7 +874,7 @@ public class PlayerInventory : MonoBehaviourPun
         if (GameManager.instance.gameType == GameManager.GameType.Swat)
         {
             StartingWeapon = "br";
-            StartingWeapon2 = "ar";
+            StartingWeapon2 = "pistol";
         }
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop

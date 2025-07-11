@@ -204,7 +204,9 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
                 }
                 else if (GameManager.instance.gameType == GameManager.GameType.Swat)
                 {
-                    codeName = "br";
+                    if (codeName == "pb" || codeName == "pr") codeName = "pb";
+                    else if (codeName == "pistol" || codeName == "rvv" || codeName == "pp" || codeName == "smg") codeName = "pistol";
+                    else codeName = "br";
                 }
                 else if (GameManager.instance.gameType == GameManager.GameType.Snipers)
                 {
