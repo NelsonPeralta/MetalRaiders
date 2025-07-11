@@ -90,3 +90,4 @@ EditorBuildSettings:
     path: Assets/004 - Scenes/Multiplayer Scenes/PVP - Parasite - opt.unity
     guid: 36dea769aadf52e48a430c61a416d5da
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
