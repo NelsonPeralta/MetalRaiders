@@ -9,7 +9,7 @@ using UnityEngine.Animations;
 public class ExplosiveProjectile : MonoBehaviour
 {
     public Player player { get { return _player; } set { _player = value; } }
-    public int throwForce { get { return _throwForce; } set { _throwForce = value; } }
+    //public int throwForce { get { return _throwForce; } set { _throwForce = value; } }
     public bool useConstantForce { get { return _useConstantForce; } set { _useConstantForce = value; } }
     public GameObject model { get { return _model; } }
     public GameObject visualIndicator { get { return _visualIndicator; } }
@@ -17,7 +17,7 @@ public class ExplosiveProjectile : MonoBehaviour
     public bool stuck { get { return _stuck; } set { _stuck = value; } }
 
     [SerializeField] Player _player;
-    [SerializeField] int _damage, _radius, _throwForce, _explosionPower, _stuckPlayerPhotonId;
+    [SerializeField] int _damage, _radius, /*_throwForce,*/ _explosionPower, _stuckPlayerPhotonId;
     [SerializeField] string _sourceCleanName;
     [SerializeField] WeaponProperties.KillFeedOutput _killFeedOutput;
     [SerializeField] bool _useConstantForce;
@@ -105,9 +105,9 @@ public class ExplosiveProjectile : MonoBehaviour
         }
 
 
-        if (useConstantForce && !_collided)
-            GetComponent<Rigidbody>().AddForce
-                (gameObject.transform.forward * throwForce);
+        //if (useConstantForce && !_collided)
+        //    GetComponent<Rigidbody>().AddForce
+        //        (gameObject.transform.forward * throwForce);
 
         if (_collided)
         {
@@ -136,6 +136,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
         if (collision.gameObject.layer != 9)
         {
+            if (_killFeedOutput == WeaponProperties.KillFeedOutput.Frag_Grenade && GetComponent<Rigidbody>().mass != 2) GetComponent<Rigidbody>().mass = 2;
             Debug.Log($"Collided with: {collision.gameObject.name} {collision.gameObject.GetComponent<Collider>()} {collision.gameObject.GetComponent<Player>()}");
 
             try

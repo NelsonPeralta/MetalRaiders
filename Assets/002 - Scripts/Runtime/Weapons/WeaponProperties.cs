@@ -12,6 +12,10 @@ public class WeaponProperties : MonoBehaviour
     public static float OVERCHARGE_TIME_LOW = 0.3f;
     public static float OVERCHARGE_TIME_FULL = 0.9f;
 
+
+    public static int GRENADE_THROW_FORCE = 625;
+    public static int ROCKET_LAUNCHER_CONTINUOUS_FORCE = 1500;
+
     public delegate void WeaponPropertiesEvent(WeaponProperties weaponProperties);
     public WeaponPropertiesEvent OnCurrentAmmoChanged, OnSpareAmmoChanged;
 

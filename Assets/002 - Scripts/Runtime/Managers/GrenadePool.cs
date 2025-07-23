@@ -136,6 +136,7 @@ public class GrenadePool : MonoBehaviour
     {
         if (isFrag)
         {
+            _instance._fragGrenadePool[i].GetComponent<Rigidbody>().mass = 1;
             return _instance._fragGrenadePool[i];
         }
         else
@@ -165,7 +166,7 @@ public class GrenadePool : MonoBehaviour
         _instance._rocketPool[index].gameObject.SetActive(true);
 
         if (!_instance._rocketPool[index].useConstantForce)
-            _instance._rocketPool[index].GetComponent<Rigidbody>().AddForce(_instance._rocketPool[index].gameObject.transform.forward * _instance._rocketPool[index].throwForce);
+            _instance._rocketPool[index].GetComponent<Rigidbody>().AddForce(_instance._rocketPool[index].gameObject.transform.forward * WeaponProperties.ROCKET_LAUNCHER_CONTINUOUS_FORCE);
     }
 
     public static void SpawnGrenadeLauncherProjectile(Player p, int index, Vector3 pos, Vector3 rot)
@@ -187,7 +188,7 @@ public class GrenadePool : MonoBehaviour
         _instance._glProjectilePool[index].GetComponent<Rigidbody>().linearVelocity = Vector3.zero; _instance._glProjectilePool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         _instance._glProjectilePool[index].gameObject.SetActive(true);
         if (!_instance._glProjectilePool[index].useConstantForce)
-            _instance._glProjectilePool[index].GetComponent<Rigidbody>().AddForce(_instance._glProjectilePool[index].gameObject.transform.forward * _instance._glProjectilePool[index].throwForce);
+            _instance._glProjectilePool[index].GetComponent<Rigidbody>().AddForce(_instance._glProjectilePool[index].gameObject.transform.forward * WeaponProperties.ROCKET_LAUNCHER_CONTINUOUS_FORCE);
     }
 
 

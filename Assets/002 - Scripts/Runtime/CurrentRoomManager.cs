@@ -565,7 +565,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             _matchSettingsSet = _mapIsReady = _allPlayersJoined = _gameIsReady = _gameOver = _gameStarted =
                   _reachedHalwayGameStartCountdown = _randomInitiQuickMatchSettingsChosen = false;
-            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns = _expectedNbPlayers = _nbPlayersSpawned = _nbPlayersSet = _playersLoadedScene = 0;
+            _gameStartCountdown = _expectedMapAddOns = _spawnedMapAddOns /*= _expectedNbPlayers DO NOT DO THIS*/ = _nbPlayersSpawned = _nbPlayersSet = _playersLoadedScene = 0;
             playerNickname_To_NbLocalPlayers_DICT.Clear();
             playerNickname_To_NbLocalPlayers_DICT = playerNickname_To_NbLocalPlayers_DICT;
 

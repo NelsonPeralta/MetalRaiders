@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum ThirdPersonMode { Off, On }
     public enum OneObjMode { Off, On }
 
-    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, Kicked, ErrorWhileCreatingRoom }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -705,6 +705,11 @@ public class GameManager : MonoBehaviourPunCallbacks
                 previousScenePayloads.Remove(PreviousScenePayload.ResetPlayerDataCells);
             }
 
+            if (previousScenePayloads.Contains(PreviousScenePayload.PlayerQuitGame))
+            {
+                CurrentRoomManager.instance.expectedNbPlayers = 0;
+            }
+
             if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReportAndCredits))
             {
                 RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
@@ -735,7 +740,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 StartCoroutine(LoadTimeOutOpenErrorMenu_Coroutine());
             }
-            else if (previousScenePayloads.Contains(PreviousScenePayload.Kicked))
+            else if (previousScenePayloads.Contains(PreviousScenePayload.PlayerWasKicked))
             {
                 MenuManager.Instance.OpenErrorMenu("You were kicked from the game.");
             }
@@ -1707,11 +1712,16 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void AddToPreviousScenePayload(PreviousScenePayload psp)
     {
-        previousScenePayloads.Add(psp);
+        if (!previousScenePayloads.Contains(psp))
+            previousScenePayloads.Add(psp);
+        else
+            Debug.LogError("GameManager already contains that payload");
     }
 
-    public static void QuitGameButtonPressed()
+    public static void QuitGameButtonPressed(GameManager.PreviousScenePayload pl)
     {
+        GameManager.instance.AddToPreviousScenePayload(pl);
+
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
             if (!CurrentRoomManager.instance.gameOver)
@@ -1775,25 +1785,33 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void RecalculateExpectedNbPlayersUsingPlayerCustomProperties()
     {
         print("RecalculateExpectedNbPlayersUsingPlayerCustomProperties");
-        if (PhotonNetwork.InRoom)
+        if (GameManager.instance.connection == Connection.Online)
         {
-            int expextedPlayers = 0;
-            foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values.ToList())
+
+            if (PhotonNetwork.InRoom)
             {
-                print($"Player {p.NickName} has {p.CustomProperties["localPlayerCount"]} total players");
-                expextedPlayers += (int)p.CustomProperties["localPlayerCount"];
+                int expextedPlayers = 0;
+                foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values.ToList())
+                {
+                    print($"Player {p.NickName} has {p.CustomProperties["localPlayerCount"]} total players");
+                    expextedPlayers += (int)p.CustomProperties["localPlayerCount"];
 
-                try
-                {
-                    CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(int.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
+                    try
+                    {
+                        CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(int.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
+                    }
+                    catch
+                    {
+                        Debug.LogError("Error. You might need to give the game time to finish populating the Player Data Cells");
+                    }
                 }
-                catch
-                {
-                    Debug.LogError("Error. You might need to give the game time to finish populating the Player Data Cells");
-                }
+
+                CurrentRoomManager.instance.expectedNbPlayers = expextedPlayers;
             }
-
-            CurrentRoomManager.instance.expectedNbPlayers = expextedPlayers;
+        }
+        else
+        {
+            CurrentRoomManager.instance.expectedNbPlayers = GameManager.instance.nbLocalPlayersPreset;
         }
     }
 }

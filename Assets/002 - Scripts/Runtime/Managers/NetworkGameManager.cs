@@ -1428,8 +1428,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 }
                 else if (SceneManager.GetActiveScene().buildIndex > 0)
                 {
-                    GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.Kicked);
-                    GameManager.QuitGameButtonPressed();
+                    GameManager.QuitGameButtonPressed(GameManager.PreviousScenePayload.PlayerWasKicked);
                 }
             }
         }

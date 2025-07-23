@@ -12,7 +12,7 @@ public class QuitCurrentGameButton : MonoBehaviour
         if (!CurrentRoomManager.instance.gameOver)
         {
             button.SetActive(false);
-            GameManager.QuitGameButtonPressed();
+            GameManager.QuitGameButtonPressed( GameManager.PreviousScenePayload.PlayerQuitGame);
         }
     }
 }

@@ -531,6 +531,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = new Dictionary<string, int>();
         CurrentRoomManager.instance.expectedNbPlayers = 0;
+        if(GameManager.instance.connection == Connection.Local) { GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties(); }
         CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = DEFAULT_ROOM_COUNTDOWN;
 
         if (tl == null)
