@@ -176,11 +176,11 @@ public class AlienShooter : Actor
             _animator.Play("Throw");
 
 
-            ActorAddonsPool.instance.SpawnPooledGrenade(losSpawn.transform.position, (Vector3)_dir, gameObject, actorHitboxes, 100, 7, 700);
-            _throwExplosiveCooldown = 3.1f;
+            ActorAddonsPool.instance.SpawnPooledGrenade(losSpawn.transform.position, (Vector3)_dir, gameObject, actorHitboxes, 250, 7, 700);
+            _throwExplosiveCooldown = 5f;
 
-            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _throwExplosiveCooldown = 2.9f;
-            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _throwExplosiveCooldown = 2.7f;
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _throwExplosiveCooldown = 4f;
+            if (GameManager.instance.difficulty == SwarmManager.Difficulty.Legendary) _throwExplosiveCooldown = 3f;
         }
     }
 

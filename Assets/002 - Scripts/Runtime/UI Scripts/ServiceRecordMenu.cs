@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Linq;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class ServiceRecordMenu : MonoBehaviour
 {
@@ -40,7 +38,7 @@ public class ServiceRecordMenu : MonoBehaviour
             PlayerProgressionManager.Rank[] rank = PlayerProgressionManager.GetClosestAndNextRank(_playerData.playerExtendedPublicData.honor);
             _rankCleanNameText.text = $"Rank: {rank[0].cleanName}";
             _honorText.text = $"Honor: {_playerData.playerExtendedPublicData.honor.ToString()}";
-            if(rank[1].honorRequired > 0)
+            if (rank[1].honorRequired > 0)
                 _honorText.text += $"\n\nNext rank: {rank[1].cleanName} at {rank[1].honorRequired} honor";
 
 
@@ -151,7 +149,9 @@ public class ServiceRecordMenu : MonoBehaviour
             _whiteWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
             _blackWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
 
-            if(GameManager.instance.connection == GameManager.Connection.Online && playerData != CurrentRoomManager.instance.playerDataCells[0])_allCardsWitness.SetActive(false);
+
+            if (GameManager.instance.connection == GameManager.Connection.Online && playerData && !playerData.local) _allCardsWitness.SetActive(false);
+            else _allCardsWitness.SetActive(true);
         }
     }
 

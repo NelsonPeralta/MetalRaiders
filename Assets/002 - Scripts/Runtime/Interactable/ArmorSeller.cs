@@ -46,7 +46,7 @@ public class ArmorSeller : InteractableObject
         Steamworks.SteamUserStats.GetAchievement("UPGRADE", out achUnl);
         if (achUnl == false)
         {
-            Steamworks.SteamUserStats.SetAchievement("UPGRADE");
+            AchievementManager.UnlockAchievement("UPGRADE");
         }
     }
 
