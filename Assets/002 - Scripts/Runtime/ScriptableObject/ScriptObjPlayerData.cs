@@ -14,7 +14,7 @@ public class ScriptObjPlayerData : ScriptableObject
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
     [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
     [SerializeField] int _invites;
-    [SerializeField] string _cardsFound;
+    [SerializeField] string _cardsFound, _toysFound;
     [SerializeField] int _armorPiecesPurchased;
     public float sens;
 
@@ -82,25 +82,68 @@ public class ScriptObjPlayerData : ScriptableObject
         if (!_cardsFound.Contains(_n))
         {
             _cardsFound += $"{_n}-";
-            if (_cardsFound.Contains("red") &&
+            if (AllCardsFound())
+            {
+                CheckIfAllItemsHaveBeenFound();
+            }
+
+            SavePrefs();
+        }
+    }
+
+
+    public void AddFoundToy(string _n)
+    {
+        if (!_toysFound.Contains(_n))
+        {
+            _toysFound += $"{_n}";
+
+            if (AllToysFound())
+            {
+                CheckIfAllItemsHaveBeenFound();
+            }
+            SavePrefs();
+        }
+    }
+
+    bool AllCardsFound()
+    {
+        if (_cardsFound.Contains("red") &&
                 _cardsFound.Contains("blue") &&
                 _cardsFound.Contains("yellow") &&
                 _cardsFound.Contains("green") &&
                 _cardsFound.Contains("orange") &&
                 _cardsFound.Contains("white") &&
                 _cardsFound.Contains("black"))
-            {
-                Steamworks.SteamUserStats.GetAchievement("COLLECTOR", out _achUnl);
-                if (!_achUnl && !CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-geiger-lfa-"));
+        {
+            return true;
+        }
+        return false;
+    }
 
-                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
-                    AchievementManager.UnlockAchievement("COLLECTOR");
-            }
+    bool AllToysFound()
+    {
+        if (_toysFound.Length == 12)
+        {
+            return true;
+        }
+        return false;
+    }
 
-            SavePrefs();
+    void CheckIfAllItemsHaveBeenFound()
+    {
+        if (AllCardsFound() && AllToysFound())
+        {
+            Steamworks.SteamUserStats.GetAchievement("COLLECTOR", out _achUnl);
+            if (rewiredId == 0 && !_achUnl)
+                AchievementManager.UnlockAchievement("COLLECTOR");
+
+            if (rewiredId == 0)
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("sword1_ca"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-sword1_ca-"));
         }
     }
+
 
     public void UpdateArmorPiecesPurchasedCount(int n)
     {
@@ -118,6 +161,7 @@ public class ScriptObjPlayerData : ScriptableObject
     public void SavePrefs()
     {
         PlayerPrefs.SetString("cardsUnlocked", _cardsFound);
+        PlayerPrefs.SetString("toysUnlocked", _toysFound);
         PlayerPrefs.Save();
     }
 
@@ -126,5 +170,6 @@ public class ScriptObjPlayerData : ScriptableObject
         if (this != CurrentRoomManager.instance.playerDataCells[0]) return;
 
         _cardsFound = PlayerPrefs.GetString("cardsUnlocked", "");
+        _toysFound = PlayerPrefs.GetString("toysUnlocked", "");
     }
 }

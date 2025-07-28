@@ -15,29 +15,19 @@ public class MainMenu : MonoBehaviour
     {
         try
         {
-            if (GameManager.instance.connection == GameManager.Connection.Online)
+            int unlockedCount = GameManager.instance.GetHowManyAchievementsPlayerHasUnlocked().Item1;
+            int totalAchievements = GameManager.instance.GetHowManyAchievementsPlayerHasUnlocked().Item2;
+
+            if (unlockedCount == totalAchievements)
             {
-                int totalAchievements = (int)SteamUserStats.GetNumAchievements();
-                int unlockedCount = 0;
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("flaming_helmet"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("flaming_helmet"));
+            }
 
-                for (uint i = 0; i < totalAchievements; i++)
-                {
-                    string achievementName = SteamUserStats.GetAchievementName(i);
-                    bool achieved;
-
-                    if (SteamUserStats.GetAchievement(achievementName, out achieved) && achieved)
-                    {
-                        unlockedCount++;
-                    }
-                }
-
-                Debug.Log($"Player has unlocked {unlockedCount} out of {totalAchievements} achievements.");
-
-                if (unlockedCount == totalAchievements)
-                {
-                    if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("katana_ca"))
-                        WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-katana_ca-"));
-                }
+            if (unlockedCount >= 12)
+            {
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("katana"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-katana-"));
             }
         }
         catch { }

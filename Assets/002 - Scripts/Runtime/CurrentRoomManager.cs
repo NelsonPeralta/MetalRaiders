@@ -787,8 +787,8 @@ public class CurrentRoomManager : MonoBehaviour
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
-
-              
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("warden_ca"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-warden_ca-"));
             }
 
 
@@ -803,8 +803,8 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("flaming_helmet"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-flaming_helmet-"));
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("burning_helmet"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-burning_helmet-"));
             }
 
 
@@ -832,8 +832,11 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("sword1_ca"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-sword1_ca-"));
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("security_lsa"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-security_lsa-"));
+
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("security_rsa"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-security_rsa-"));
             }
 
 

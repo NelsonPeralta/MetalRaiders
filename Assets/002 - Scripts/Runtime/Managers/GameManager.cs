@@ -767,6 +767,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             try { teamMode = TeamMode.None; } catch { }
             sprintMode = SprintMode.On;
             thirdPersonMode = ThirdPersonMode.Off;
+            flyingCameraMode = FlyingCamera.Disabled;
             hitMarkersMode = HitMarkersMode.On;
             oneObjMode = OneObjMode.Off;
             _oneObjModeRoundCounter = 0;
@@ -1828,5 +1829,35 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             CurrentRoomManager.instance.expectedNbPlayers = GameManager.instance.nbLocalPlayersPreset;
         }
+    }
+
+    public (int, int) GetHowManyAchievementsPlayerHasUnlocked()
+    {
+        try
+        {
+            if (GameManager.instance.connection == GameManager.Connection.Online)
+            {
+                int totalAchievements = (int)SteamUserStats.GetNumAchievements();
+                int unlockedCount = 0;
+
+                for (uint i = 0; i < totalAchievements; i++)
+                {
+                    string achievementName = SteamUserStats.GetAchievementName(i);
+                    bool achieved;
+
+                    if (SteamUserStats.GetAchievement(achievementName, out achieved) && achieved)
+                    {
+                        unlockedCount++;
+                    }
+                }
+
+                Debug.Log($"Player has unlocked {unlockedCount} out of {totalAchievements} achievements.");
+
+                return (unlockedCount, totalAchievements);
+            }
+        }
+        catch { }
+
+        return (-1, -1);
     }
 }
