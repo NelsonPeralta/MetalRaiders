@@ -69,7 +69,8 @@ public partial class WebManager : MonoBehaviour
 
     public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript, bool sgw)
     {
-        if (GameManager.instance.connection == GameManager.Connection.Online)
+        if (GameManager.instance.connection == GameManager.Connection.Online
+            && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled)
         {
             StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
             StartCoroutine(SaveXp_Coroutine(onlinePlayerSwarmScript, swarmGameWon: sgw));
@@ -81,7 +82,8 @@ public partial class WebManager : MonoBehaviour
 
     public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<int> winPlayers)
     {
-        if (GameManager.instance.connection == GameManager.Connection.Online)
+        if (GameManager.instance.connection == GameManager.Connection.Online
+            && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled)
         {
             StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
             StartCoroutine(SaveXp_Coroutine(playerMultiplayerStats: playerMultiplayerStats, winPlayers: winPlayers));
