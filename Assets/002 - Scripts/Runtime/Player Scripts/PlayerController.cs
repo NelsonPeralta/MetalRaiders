@@ -1847,22 +1847,22 @@ public class PlayerController : MonoBehaviourPun
 
     void FloatingCamera()
     {
-        //if (GameManager.instance.devMode)
-
-
-        if (GameManager.instance.nbLocalPlayersPreset == 1 && activeControllerType != ControllerType.Joystick)
+        if (GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Enabled)
         {
-            if (rewiredPlayer.GetButtonLongPressDown("floatingcamera") && PV.IsMine)
+            if (GameManager.instance.nbLocalPlayersPreset == 1 && activeControllerType != ControllerType.Joystick)
             {
-                ToggleFloatingCamera();
-            }
-            else if (rewiredPlayer.GetButtonDown("floatingcamera") && PV.IsMine && cameraIsFloating)
-            {
-                PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, false);
-            }
-            else if (rewiredPlayer.GetButtonDown("floatingcameraminus") && PV.IsMine && cameraIsFloating)
-            {
-                PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, true);
+                if (rewiredPlayer.GetButtonLongPressDown("floatingcamera") && PV.IsMine)
+                {
+                    ToggleFloatingCamera();
+                }
+                else if (rewiredPlayer.GetButtonDown("floatingcamera_plus") && PV.IsMine && cameraIsFloating)
+                {
+                    PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, false);
+                }
+                else if (rewiredPlayer.GetButtonDown("floatingcamera_minus") && PV.IsMine && cameraIsFloating)
+                {
+                    PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, true);
+                }
             }
         }
     }
@@ -1918,7 +1918,8 @@ public class PlayerController : MonoBehaviourPun
             }
 
 
-            player.transform.position = _posBeforeTogglingFloatingCamera;
+            //player.transform.position = _posBeforeTogglingFloatingCamera;
+            player.transform.position = mainCam.transform.position;
             //player.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
             player.GetComponent<Rigidbody>().useGravity = true;
             player.GetComponent<Rigidbody>().isKinematic = false;

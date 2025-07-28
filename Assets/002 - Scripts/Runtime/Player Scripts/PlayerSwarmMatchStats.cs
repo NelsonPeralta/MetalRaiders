@@ -36,16 +36,23 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
         {
             _player.playerDataCell.playerCurrentGameScore.totalPoints = value;
 
-            if (_player.playerDataCell.playerCurrentGameScore.totalPoints >= 1000000 && !player.hasArmor)
+            if (_player.playerDataCell.local
+                && _player.playerDataCell.rewiredId == 0
+                && _player.playerDataCell.playerCurrentGameScore.totalPoints >= 1000000
+                && !player.hasArmor
+                && !_achvCheck)
             {
                 bool _achUn = false;
 
                 Steamworks.SteamUserStats.GetAchievement("OMA", out _achUn);
                 if (!_achUn && _player.isMine)
+                {
+                    _achvCheck = true;
                     AchievementManager.UnlockAchievement("OMA");
 
-                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("gps-lfa"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-gps-lfa-"));
+                    if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("gps-lfa"))
+                        WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-burning-helmet-"));
+                }
             }
         }
     }
@@ -100,6 +107,25 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
     }
 
     public Player player { get { return _player; } }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    bool _achvCheck;
+
+
+
 
     private void Awake()
     {

@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum HitMarkersMode { On, Off }
     public enum ThirdPersonMode { Off, On }
     public enum OneObjMode { Off, On }
+    public enum FlyingCamera { Enabled, Disabled }
 
     public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom }
 
@@ -139,6 +140,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] SprintMode _sprintMode;
     [SerializeField] HitMarkersMode _hitMarkersMode;
     [SerializeField] ThirdPersonMode _thirdPersonMode;
+    [SerializeField] FlyingCamera _flyingCameraMode; 
     [SerializeField] OneObjMode _oneObjMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
@@ -301,6 +303,19 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 _thirdPersonMode = value;
                 Launcher.instance.thirdPersonModeOptionsHeader.text = $"Third Person Mode: {_thirdPersonMode}";
+            }
+        }
+    }
+
+    public FlyingCamera flyingCameraMode
+    {
+        get {return _flyingCameraMode; }
+        set
+        {
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                _flyingCameraMode = value;
+                Launcher.instance.flyingCameraMode.text = $"Flying Camera: {_flyingCameraMode}";
             }
         }
     }

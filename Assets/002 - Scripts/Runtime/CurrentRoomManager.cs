@@ -788,8 +788,7 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("burning_helmet"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-burning_helmet-"));
+              
             }
 
 
@@ -848,12 +847,6 @@ public class CurrentRoomManager : MonoBehaviour
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
-
-                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("katana_ca"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-katana_ca-"));
-
-
-                if (instance._playerDataCells[0].playerExtendedPublicData.level == 50)
                     if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("haunted_hc"))
                         WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-haunted_hc-"));
             }

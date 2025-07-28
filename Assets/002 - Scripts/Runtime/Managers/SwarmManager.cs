@@ -1025,13 +1025,18 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (currentWave % 10 == 0 && GameManager.instance.gameType == GameManager.GameType.Survival)
         {
             bool _achievementUnlocked = false;
-            Steamworks.SteamUserStats.GetAchievement("YAWA", out _achievementUnlocked);
+            Steamworks.SteamUserStats.GetAchievement("ENDURE", out _achievementUnlocked);
+
 
             if (!_achievementUnlocked)
             {
-                Debug.Log("Unlocked Achievement You and What Army");
-                AchievementManager.UnlockAchievement("YAWA");
+                Debug.Log("Unlocked Achievement ENDURE");
+                AchievementManager.UnlockAchievement("ENDURE");
+
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("gps-lfa"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-gps-lfa-"));
             }
+            
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Coop && GameManager.instance.gameType != GameManager.GameType.Endless)
             {
@@ -1055,6 +1060,8 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                     p.killFeedManager.EnterNewFeed($"<color=#31cff9>Lives added: {livesToAdd}");
                     p.killFeedManager.EnterNewFeed("<color=#31cff9>Health Packs Respawned");
                     p.killFeedManager.EnterNewFeed("<color=#31cff9>Weapons respawned");
+
+                    p.hitPoints = p.maxHitPoints;
                 }
             }
             foreach (HealthPack hp in healthPacks)
