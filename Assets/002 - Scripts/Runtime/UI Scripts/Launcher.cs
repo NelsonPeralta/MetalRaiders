@@ -1196,7 +1196,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
         //    ConnectToPhotonMasterServer();
 
-        MenuManager.Instance.OpenLoadingMenu();
+        MenuManager.Instance.OpenLoadingMenu("Loging in...");
         //loginButton.SetActive(false);
     }
 

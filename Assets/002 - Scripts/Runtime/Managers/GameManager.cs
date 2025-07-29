@@ -571,12 +571,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         if (instance)
         {
+            Debug.Log($"GameManager Awake {name} Destroyed");
             Destroy(gameObject);
             return;
         }
         else
         {
 
+            Debug.Log($"GameManager Awake {name} Kept");
             DontDestroyOnLoad(gameObject);
             instance = this;
             PhotonNetwork.GameVersion = "171";
@@ -622,7 +624,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called first
     void OnEnable()
     {
-        Debug.Log("GameManager OnEnable");
+        Debug.Log($"GameManager OnEnable {name}");
         base.OnEnable(); // need this for OnRoomPropertiesUpdate to work
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -649,7 +651,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-
+        print($"Game Manager OnSceneLoaded {name}");
         string[] names = QualitySettings.names;
         for (int i = 0; i < names.Length; i++)
         {
@@ -687,6 +689,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
+            print($"Game Manager OnSceneLoaded  {name} =0");
+
             oddballSkull = null; redFlag = blueFlag = null;
             //Debug.Break();
             //Cursor.lockState = CursorLockMode.None; // Must Unlock Cursor so it can detect buttons
@@ -1651,7 +1655,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         // When the MapCamera script run PhotonNetwork.LoadLevel(), it is ASYNCHRONUS. This causes instances bugs. In this case, the game thinks there is 2 MapManager Instances.
         // Waiting 0.1 seconds is a ghetto solution, but works
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1);
 
         print($"LoadTimeOutOpenErrorMenu_Coroutine {name}");
         MenuManager.Instance.OpenMainMenu();

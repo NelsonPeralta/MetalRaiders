@@ -114,7 +114,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
                     //GameManager.SendErrorEmailReport(_text.text);
                     GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.LoadTimeOutOpenErrorMenu);
 
-                    PhotonNetwork.LeaveRoom(); // Will trigger on OnLeftRoom
+                    PhotonNetwork.LeaveRoom(); // Will trigger on OnLeftRoom in the GameManager script!!!! Not Here!!!
                     //PhotonNetwork.LoadLevel(0);
                 }
                 catch { }
@@ -166,7 +166,13 @@ public class MapCamera : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
     {
-        Debug.Log("MAP CAMERA: OnLeftRoom");
-        PhotonNetwork.LoadLevel(0);
+        //Debug.Log("MAP CAMERA: OnLeftRoom");
+        //PhotonNetwork.LoadLevel(0); // This is handled in the GameManager Script. If you enable this, you will be calling it TWICE!
+    }
+
+    public void ResetLoadingTimeOut()
+    {
+        if (_loadingTimeOut < 10)
+            _loadingTimeOut = 10;
     }
 }

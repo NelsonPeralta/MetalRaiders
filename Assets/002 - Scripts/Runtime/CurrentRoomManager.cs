@@ -141,7 +141,10 @@ public class CurrentRoomManager : MonoBehaviour
         get { return _playersLoadedScene; }
         set
         {
+            int _pre = _playersLoadedScene;
             _playersLoadedScene = value;
+
+            if (_playersLoadedScene < value) MapCamera.instance.ResetLoadingTimeOut();
 
             if (_playersLoadedScene == expectedNbPlayers)
                 StartCoroutine(GameManager.instance.SpawnPlayersCheck_Coroutine());
@@ -156,7 +159,9 @@ public class CurrentRoomManager : MonoBehaviour
         get { return _nbPlayersSpawned; }
         set
         {
+            int _pre = _nbPlayersSpawned;
             _nbPlayersSpawned = value;
+            if (_nbPlayersSpawned < value) MapCamera.instance.ResetLoadingTimeOut();
 
             if (nbPlayersSpawned == expectedNbPlayers)
                 StartCoroutine(TriggerAllPlayersJoined_Coroutine());

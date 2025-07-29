@@ -274,12 +274,8 @@ public class PlayerMovement : MonoBehaviour
     Vector3 _weaponOffsetLocalRotation = new Vector3();
 
 
-
-
-
     private void Awake()
     {
-
         _player = GetComponent<Player>();
         _pController = GetComponent<PlayerController>();
         _rewiredPlayer = _pController.rewiredPlayer;
@@ -1187,6 +1183,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnPlayerRespawnEarly(Player p)
     {
+        print($"OnPlayerRespawnEarly {_fpsJumpingAnimator.transform.localPosition.y}");
         _rb.linearVelocity = Vector3.zero; _rb.angularVelocity = Vector3.zero;
         blockedMovementType = BlockedMovementType.None;
         blockPlayerMoveInput = 0;
