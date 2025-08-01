@@ -55,12 +55,10 @@ public partial class WebManager
                 pda.playerLoginData = pld;
                 try
                 {
-
-
-                    StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.steamid));
-                    StartCoroutine(GetPlayerExtendedPublicData_Coroutine(pda.steamid));
-                    StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.steamid));
-                    StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.steamid));
+                    //StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.steamid));
+                    //StartCoroutine(GetPlayerExtendedPublicData_Coroutine(pda.steamid));
+                    //StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.steamid));
+                    //StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.steamid));
 
                     GameManager.instance.playerDataRetrieved = true;
                 }
@@ -90,82 +88,45 @@ public partial class WebManager
         {
             yield return www.SendWebRequest();
 
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(www.error);
-            }
-            else
-            {
-                Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA RESULTS {playerid}");
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+            //if (www.result != UnityWebRequest.Result.Success)
+            //{
+            //    Debug.Log(www.error);
+            //}
+            //else
+            //{
+            //    Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA RESULTS {playerid}");
+            //    Debug.Log(www.result);
+            //    Debug.Log(www.downloadHandler.text);
 
-                string jsonarray = www.downloadHandler.text;
+            //    string jsonarray = www.downloadHandler.text;
 
-                Debug.Log(jsonarray);
-                PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
+            //    Debug.Log(jsonarray);
+            //    PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
 
-                CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd); // ERROR IF NULL, BREAKS GAME
+            //    CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd); // ERROR IF NULL, BREAKS GAME
 
-                try
-                {
-                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerid, 0);
+            //    try
+            //    {
+            //        playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerid, 0);
 
-                    if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
-                    {
-                        playerNamePlateInstance.playerDataCell.team = GameManager.Team.Red;
-                        playerNamePlateInstance.UpdateColorPalette();
-                    }
-                }
-                catch (Exception e) { Debug.LogWarning(e); }
+            //        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+            //        {
+            //            playerNamePlateInstance.playerDataCell.team = GameManager.Team.Red;
+            //            playerNamePlateInstance.UpdateColorPalette();
+            //        }
+            //    }
+            //    catch (Exception e) { Debug.LogWarning(e); }
 
-                try
-                {
-                    foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
-                    {
-                        if (long.Parse(p.NickName) == playerNamePlateInstance.playerDataCell.steamId)
-                            playerNamePlateInstance.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
-                    }
-                }
-                catch (Exception e) { Debug.LogWarning(e); }
-
-                try
-                {
-                    //pda.player = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
-
-                    //StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id, pda));
-                    //StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
-                    //StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
-
-                    //var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
-                    //if (!d.ContainsKey(pda.username))
-                    //{
-                    //    //Debug.Log($"Adding key {}")
-                    //    d.Add(pda.username, pda);
-                    //}
-                    //else
-                    //    d[pda.username] = pda;
-
-                    //GameManager.instance.roomPlayerData = d;
-
-                    //if (pli)
-                    //    pli.pda = pda;
-
-
-                    //Launcher.instance.ShowPlayerMessage("Fetched player extended data successfully!");
-                    //if (!pli)
-                    //    MenuManager.Instance.OpenMenu("online title");
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning(e);
-                    if (www.downloadHandler.text.Contains("wrong credentials"))
-                    {
-                        Launcher.instance.OnCreateRoomFailed(0, "Wrong credentials");
-                        Launcher.instance.loginButton.SetActive(true);
-                    }
-                }
-            }
+            //    try
+            //    {
+            //        foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
+            //        {
+            //            if (long.Parse(p.NickName) == playerNamePlateInstance.playerDataCell.steamId)
+            //                playerNamePlateInstance.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
+            //        }
+            //    }
+            //    catch (Exception e) { Debug.LogWarning(e); }
+            //}
         }
     }
 
