@@ -66,7 +66,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text messageText;
     [SerializeField] GameObject commonRoomTexts;
     [SerializeField] GameObject _teamRoomUI;
-    [SerializeField] TMP_Text _sprintModeText, _hitMarkersMode,_flyingCameraModeText, _thirdPersonModeOptionsHeader, _oneObjModeOptionsHeader;
+    [SerializeField] TMP_Text _sprintModeText, _hitMarkersMode, _flyingCameraModeText, _thirdPersonModeOptionsHeader, _oneObjModeOptionsHeader;
     [SerializeField] TMP_Text roomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
@@ -385,7 +385,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                 options.CustomRoomProperties.Add("gamemode", "multiplayer");
 
 
-                if (GameManager.instance.connection == GameManager.Connection.Online && PhotonNetwork.NetworkClientState != ClientState.Disconnected)
+                if (GameManager.instance.connection == GameManager.NetworkType.Internet && PhotonNetwork.NetworkClientState != ClientState.Disconnected)
                 {
 
 
@@ -413,7 +413,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                     // When creating a room is done, OnJoinedRoom() will automatically trigger
                     OnCreateMultiplayerRoomButton?.Invoke(this);
                 }
-                else if (GameManager.instance.connection == GameManager.Connection.Local)
+                else if (GameManager.instance.connection == GameManager.NetworkType.Local)
                 {
                     PhotonNetwork.OfflineMode = true; PhotonNetwork.NickName = "0";
                     CreateRoom(roomNameInputField.text, options);
@@ -462,7 +462,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void CreatePrivateRoomFromGamepad()
     {
-        if (GameManager.instance.connection == GameManager.Connection.Local)
+        if (GameManager.instance.connection == GameManager.NetworkType.Local)
         {
             CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
             Launcher.CreateLocalModePlayerDataCells();
@@ -495,7 +495,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             options.CustomRoomProperties.Add("gamemode", "multiplayer");
 
 
-            if (GameManager.instance.connection == GameManager.Connection.Online && PhotonNetwork.NetworkClientState != ClientState.Disconnected)
+            if (GameManager.instance.connection == GameManager.NetworkType.Internet && PhotonNetwork.NetworkClientState != ClientState.Disconnected)
             {
                 //PhotonNetwork.CreateRoom(roomNameInputField.text, options); // Create a room with the text in parameter
                 CreateRoom(roomNameToUse, options);
@@ -504,7 +504,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                 // When creating a room is done, OnJoinedRoom() will automatically trigger
                 OnCreateMultiplayerRoomButton?.Invoke(this);
             }
-            else if (GameManager.instance.connection == GameManager.Connection.Local)
+            else if (GameManager.instance.connection == GameManager.NetworkType.Local)
             {
                 PhotonNetwork.OfflineMode = true; PhotonNetwork.NickName = "0";
                 CreateRoom(roomNameToUse, options);
@@ -526,13 +526,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     void CreateRoom(string roomNam, RoomOptions ro, TypedLobby tl = null)
     {
 
-        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", int.Parse(nbLocalPlayersText.text) } };
+        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", int.Parse(nbLocalPlayersText.text) }/*, { "databaseID", GameManager.STEAM_ID }*/ };
         PhotonNetwork.LocalPlayer.SetCustomProperties(h);
 
 
         CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = new Dictionary<string, int>();
         CurrentRoomManager.instance.expectedNbPlayers = 0;
-        if(GameManager.instance.connection == Connection.Local) { GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties(); }
+        GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
         CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = DEFAULT_ROOM_COUNTDOWN;
 
         if (tl == null)
@@ -576,7 +576,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom() // Runs only when My player joined the room
     {
-        Debug.Log("Joined room");
+        Debug.Log($"Joined room {PhotonNetwork.CurrentRoom.Name}");
         _creatingRoomTimeOut = 999;
         TriggerOnJoinedRoomBehaviour();
 
@@ -585,6 +585,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void TriggerOnJoinedRoomBehaviour(bool changeMenusAlso = true)
     {
+        GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
+
         if (PhotonNetwork.InRoom)
         {
             DestroyNameplates();
@@ -664,7 +666,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         print("Other player joined room");
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
-        Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(newPlayer);
+
 
         DestroyAndCreateNameplates();
 
@@ -712,11 +714,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     //    }
     //}
 
-    public void UpdateNickname() // Deprecated. Used to be used when changing username with a text field and button
-    {
-        //PhotonNetwork.NickName = nicknameInputField.text;
-        FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("UpdatePlayerList", RpcTarget.All);
-    }
+
+
+
+
+
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
     {
@@ -769,8 +771,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             if (GameManager.instance.teamMode == TeamMode.None)
             {
-                print($"{s.playerExtendedPublicData.player_id} {s.rewiredId} will get spawn {c}");
-                NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, c);
+                print($"{s.steamId} {s.rewiredId} will get spawn {c}");
+                NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.steamId, s.rewiredId, c);
                 c++;
             }
             else
@@ -778,14 +780,14 @@ public class Launcher : MonoBehaviourPunCallbacks
                 int blue = 0;
                 if (s.team == Team.Red)
                 {
-                    print($"{s.playerExtendedPublicData.player_id} {s.rewiredId} will get spawn {c} Red Team");
-                    NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, c);
+                    print($"{s.steamId} {s.rewiredId} will get spawn {c} Red Team");
+                    NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.steamId, s.rewiredId, c);
                     c++;
                 }
                 else if (s.team == Team.Blue)
                 {
-                    print($"{s.playerExtendedPublicData.player_id} {s.rewiredId} will get spawn {blue} Blue Team");
-                    NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.playerExtendedPublicData.player_id, s.rewiredId, blue);
+                    print($"{s.steamId} {s.rewiredId} will get spawn {blue} Blue Team");
+                    NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.steamId, s.rewiredId, blue);
                     blue++;
                 }
             }
@@ -808,7 +810,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         CurrentRoomManager.instance.ResetAllPlayerDataExceptMine();
 
         //MenuManager.Instance.OpenMenu("loading");
-        if (GameManager.instance.connection == GameManager.Connection.Online)
+        if (GameManager.instance.connection == GameManager.NetworkType.Internet)
         {
             _tryingToLeaveRoomFromMenu = true;
             MenuManager.Instance.OpenLoadingMenu("Leaving Room...");
@@ -826,7 +828,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void JoinRoomPlateBtn(RoomInfo info)
     {
-        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", int.Parse(nbLocalPlayersText.text) } };
+        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", int.Parse(nbLocalPlayersText.text) }/*, { "databaseID", GameManager.STEAM_ID }*/ };
         PhotonNetwork.LocalPlayer.SetCustomProperties(h);
 
 
@@ -848,16 +850,17 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         catch (System.Exception e) { Debug.LogWarning(e); }
 
-        if (_tryingToLeaveRoomFromMenu && GameManager.instance.connection == GameManager.Connection.Online)
+        if (_tryingToLeaveRoomFromMenu && GameManager.instance.connection == GameManager.NetworkType.Internet)
         {
             _tryingToLeaveRoomFromMenu = false;
             MenuManager.Instance.OpenMenu("online title");
         }
 
+        DestroyNameplates();
         //MenuManager.Instance.OpenMenu("offline title");
     }
 
-    // Triggers when other player left room
+    // Runs only when other player left room
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         try
@@ -1260,7 +1263,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     void CreateNameplates()
     {
         Debug.Log($"CreateNameplates. Steam State: {SteamAPI.IsSteamRunning()}. Nb local: {_nbLocalPlayersInputed.text}");
-        if (GameManager.instance.connection == GameManager.Connection.Online)
+        if (GameManager.instance.connection == GameManager.NetworkType.Internet)
         {
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
             foreach (Photon.Realtime.Player player in newListPlayers)
@@ -1296,8 +1299,8 @@ public class Launcher : MonoBehaviourPunCallbacks
                             s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
                             s.playerExtendedPublicData.player_id = int.Parse(player.NickName);
                             s.playerExtendedPublicData.username = $"{(string)player.CustomProperties["username"]} - {i}";
-                            s.playerExtendedPublicData.armor_data_string = "helmet1";
-                            s.playerExtendedPublicData.armor_color_palette = "grey";
+                            s.playerExtendedPublicData.armorDataString = "helmet1";
+                            s.playerExtendedPublicData.armorColorPalette = "grey";
                             s.playerExtendedPublicData.level = 1;
 
                             s.local = (PhotonNetwork.NickName == player.NickName);
@@ -1331,32 +1334,32 @@ public class Launcher : MonoBehaviourPunCallbacks
             CurrentRoomManager.GetLocalPlayerData(i).rewiredId = i;
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.player_id = i;
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.username = $"player{i + 1}";
-            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "helmet1";
-            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "grey";
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "helmet1";
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "grey";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.level = 1;
 
 
             if (i == 1)
             {
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "vanguard_hc-commando_rsa-commando_lsa-overseer_ca";
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "blue";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "vanguard_hc-commando_rsa-commando_lsa-overseer_ca";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "blue";
             }
             else if (i == 2)
             {
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "infiltrator_hc-pilot_rsa-pilot_lsa-grenadier_ca";
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "yellow";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "infiltrator_hc-pilot_rsa-pilot_lsa-grenadier_ca";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "yellow";
             }
             else if (i == 3)
             {
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_data_string = "sentry_hc-guerilla_ca-security_lsa-security_rsa";
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armor_color_palette = "green";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "sentry_hc-guerilla_ca-security_lsa-security_rsa";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "green";
             }
         }
 
 
 
-        CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armor_data_string = "helmet1-operator_lsa-operator_rsa-patrol_ca";
-        CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armor_color_palette = "red";
+        CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armorDataString = "helmet1-operator_lsa-operator_rsa-patrol_ca";
+        CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armorColorPalette = "red";
     }
 
     public static void TogglePlayerModel(bool b)

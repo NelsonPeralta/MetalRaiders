@@ -39,7 +39,7 @@ public partial class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine(steamid, username, password));
     }
 
-    public void SetPlayerListItemInRoom(int playerid, PlayerNamePlate pli)
+    public void SetPlayerListItemInRoom(long playerid, PlayerNamePlate pli)
     {
         Debug.Log("SetPlayerListItemInRoom");
 
@@ -49,17 +49,17 @@ public partial class WebManager : MonoBehaviour
 
     public void UpdatePlayerCommonData()
     {
-        StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id));
+        StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.steamid));
     }
 
     public void UpdatePlayerCommonPVPData()
     {
-        StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id));
+        StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.steamid));
     }
 
     public void UpdatePlayerCommonPVEData()
     {
-        StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id));
+        StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.steamid));
     }
 
 
@@ -69,7 +69,7 @@ public partial class WebManager : MonoBehaviour
 
     public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript, bool sgw)
     {
-        if (GameManager.instance.connection == GameManager.Connection.Online
+        if (GameManager.instance.connection == GameManager.NetworkType.Internet
             && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled)
         {
             StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
@@ -80,9 +80,9 @@ public partial class WebManager : MonoBehaviour
         }
     }
 
-    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<int> winPlayers)
+    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<long> winPlayers)
     {
-        if (GameManager.instance.connection == GameManager.Connection.Online
+        if (GameManager.instance.connection == GameManager.NetworkType.Internet
             && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled)
         {
             StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));

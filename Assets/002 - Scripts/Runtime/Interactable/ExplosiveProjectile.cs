@@ -141,7 +141,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
             try
             {
-                if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
+                if (GameManager.instance.connection == GameManager.NetworkType.Local || GameManager.instance.nbLocalPlayersPreset > 1)
                 {
                     float _distanceFromRootPlayer = Vector3.Distance(GameManager.GetRootPlayer().transform.position, transform.position);
                     float _closestDistanceToThisExplosion = _distanceFromRootPlayer;
@@ -352,7 +352,7 @@ public class ExplosiveProjectile : MonoBehaviour
         stuck = true;
 
 
-        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1) _stuckSfxAudioSource.spatialBlend = 0; else _stuckSfxAudioSource.spatialBlend = 1;
+        if (GameManager.instance.connection == GameManager.NetworkType.Local || GameManager.instance.nbLocalPlayersPreset > 1) _stuckSfxAudioSource.spatialBlend = 0; else _stuckSfxAudioSource.spatialBlend = 1;
         _stuckSfxAudioSource.Play();
 
 

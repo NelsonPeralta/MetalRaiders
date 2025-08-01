@@ -38,7 +38,7 @@ public class FakeBulletTrailDisable : MonoBehaviour
         transform.localScale = Vector3.one;
 
 
-        if (GameManager.instance.connection == GameManager.Connection.Local)
+        if (GameManager.instance.connection == GameManager.NetworkType.Local)
         {
             if (player.rid == 0) transform.GetChild(0).gameObject.layer = 25;
             else if (player.rid == 1) transform.GetChild(0).gameObject.layer = 27;

@@ -456,14 +456,14 @@ public class Player : Biped
         get
         {
             if (rid > 0)
-                return $"{playerId} ({rid})";
+                return $"{playerSteamId} ({rid})";
             return $"Player {rid}";
         }
     }
 
-    public int playerId
+    public long playerSteamId
     {
-        get { return _playerId; }
+        get { return _playerSteamId; }
         //private protected set
         //{
         //    if (PV.IsMine)
@@ -607,7 +607,7 @@ public class Player : Biped
 
     [SerializeField] NetworkPlayer _networkPlayer;
     [SerializeField] PlayerMedals _playerMedals;
-    [SerializeField] int _playerId; // Player ID MUST be a number of equal value set to PhotonNetwork.Nickname which is determined by the player's id in the spacewackos.com database
+    [SerializeField] long _playerSteamId; // Player ID MUST be a number of equal value set to PhotonNetwork.Nickname which is determined by the player's id in the spacewackos.com database
     [SerializeField] Player _lastPlayerSource;
     [SerializeField] DeathNature _deathNature, _ragdollPropulsion;
     [SerializeField] int _lastPID;
@@ -748,10 +748,11 @@ public class Player : Biped
         OnPlayerIdAssigned -= OnPlayerIdAssigned_Delegate;
         OnPlayerIdAssigned += OnPlayerIdAssigned_Delegate;
 
-        Debug.Log($"Player Awake {GameManager.instance.GetAllPhotonPlayers().Count()}");
-        _playerId = -99999; _playerId = int.Parse(PV.Owner.NickName);
-        if (GameManager.instance.connection == GameManager.Connection.Local)
-            _playerId = GameManager.instance.GetAllPhotonPlayers().Count();
+        Debug.Log($"Player Awake {GameManager.instance.GetAllPhotonPlayers().Count()} {PV.Owner.CustomProperties["databaseID"]}");
+        _playerSteamId = -99999; _playerSteamId = long.Parse(PV.Owner.NickName);
+        //_playerId = int.Parse(PV.Owner.CustomProperties["databaseID"]);
+        if (GameManager.instance.connection == GameManager.NetworkType.Local)
+            _playerSteamId = GameManager.instance.GetAllPhotonPlayers().Count();
 
         _rb = GetComponent<Rigidbody>(); if (!PV.IsMine) _rb.isKinematic = true;
 
@@ -1268,8 +1269,8 @@ public class Player : Biped
         Debug.Log($"SPAWNING PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
 
 
-        if (GameManager.instance.connection == GameManager.Connection.Online)
-            ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(playerId, rid);
+        if (GameManager.instance.connection == GameManager.NetworkType.Internet)
+            ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerSteamId, rid);
         else
             ragdoll.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(rid);
 
@@ -2094,12 +2095,12 @@ public class Player : Biped
     void OnPlayerIdAssigned_Delegate(Player p)
     {
         print("OnPlayerIdAssigned_Delegate");
-        playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(_playerId, rid);
-        username = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(_playerId, rid).playerExtendedPublicData.username;
+        playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(_playerSteamId, rid);
+        username = PV.Owner.CustomProperties["username"].ToString();
         foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.text.text = _username;
 
         playerUI.SetScoreWitnesses();
-        playerArmorManager.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(playerId, rid);
+        playerArmorManager.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerSteamId, rid);
 
         gameObject.name = $"Player {playerDataCell.playerExtendedPublicData.username}"; if (PV.IsMine) gameObject.name += " - IM";
     }
@@ -2181,7 +2182,7 @@ public class Player : Biped
     [PunRPC]
     void SendHitPointsCheck_RPC(int h, bool im, int tt)
     {
-        GameManager.report += $"SendHitPointsCheck_RPC<br>===============<br>PLAYER: {playerId}<br>Is mine: {im}<br>Health: {h}<br>Time: {tt}<br><br>";
+        GameManager.report += $"SendHitPointsCheck_RPC<br>===============<br>PLAYER: {playerSteamId}<br>Is mine: {im}<br>Health: {h}<br>Time: {tt}<br><br>";
         if (!im)
             GameManager.report += "<br><br><br>";
     }
@@ -2367,11 +2368,11 @@ public class Player : Biped
         }
         else
         {
-            print($"UpdateRewiredId: player {username} {playerId}");
+            print($"UpdateRewiredId: player {username} {playerSteamId}");
             print($"UpdateRewiredId RID changing: {playerController.rid} -> {i}");
             playerController.rid = i;
 
-            if (playerId != -99999 && playerController.rid != -99999)
+            if (playerSteamId != -99999 && playerController.rid != -99999)
             {
                 print($"UpdateRewiredId: OnPlayerIdAssigned");
                 OnPlayerIdAssigned?.Invoke(this);

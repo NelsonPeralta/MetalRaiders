@@ -157,7 +157,7 @@ public class SteamManager : MonoBehaviour
         {
             //GameManager.instance.debugText.text += " You ave internet.";
             GameManager.ROOT_PLAYER_NAME = SteamFriends.GetPersonaName();
-            GameManager.instance.connection = GameManager.Connection.Online;
+            GameManager.instance.connection = GameManager.NetworkType.Internet;
             Launcher.instance.LoginWithSteamName();
         }
 

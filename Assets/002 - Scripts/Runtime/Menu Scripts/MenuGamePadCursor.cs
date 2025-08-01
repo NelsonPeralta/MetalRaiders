@@ -156,7 +156,7 @@ public class MenuGamePadCursor : MonoBehaviour
 
 
 
-            if (SceneManager.GetActiveScene().buildIndex == 0 && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private && GameManager.instance.connection == GameManager.Connection.Local)
+            if (SceneManager.GetActiveScene().buildIndex == 0 && CurrentRoomManager.instance.roomType == CurrentRoomManager.RoomType.Private && GameManager.instance.connection == GameManager.NetworkType.Local)
             {
                 if (rewiredPlayer.GetButtonDown("Jump") || rewiredPlayer.GetButtonDown("Melee"))
                 {

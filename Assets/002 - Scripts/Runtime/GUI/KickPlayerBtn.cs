@@ -15,7 +15,7 @@ public class KickPlayerBtn : MonoBehaviour
 
     public void SetPlayerDataCell(ScriptObjPlayerData sopd)
     {
-        if (GameManager.instance.connection == GameManager.Connection.Online && PhotonNetwork.IsMasterClient)
+        if (GameManager.instance.connection == GameManager.NetworkType.Internet && PhotonNetwork.IsMasterClient)
         {
             _playerData = sopd;
 

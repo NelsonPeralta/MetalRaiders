@@ -9,11 +9,13 @@ using UnityEngine;
 public class ScriptObjPlayerData : ScriptableObject
 {
     [SerializeField] bool _occupied, _local;
+    [SerializeField] long _steamId;
+    [SerializeField] string _steamName;
     [SerializeField] int _photonRoomIndex, _rewiredIndex, _startingSpawnPosInd;
+    [SerializeField] int _invites;
     [SerializeField] GameManager.Team _team;
     [SerializeField] PlayerDatabaseAdaptor.PlayerExtendedPublicData _playerExtendedPublicData;
     [SerializeField] PlayerCurrentGameScore _playerCurrentGameScore;
-    [SerializeField] int _invites;
     [SerializeField] string _cardsFound, _toysFound;
     [SerializeField] int _armorPiecesPurchased;
     public float sens;
@@ -21,6 +23,8 @@ public class ScriptObjPlayerData : ScriptableObject
 
     bool _achUnl = false;
 
+    public long steamId { get { return _steamId; } set { _steamId = value; } }
+    public string steamName { get { return _steamName; } set{ _steamName = value; } }
     public int photonRoomIndex { set { _photonRoomIndex = value; } get { return _photonRoomIndex; } }
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData playerExtendedPublicData
     {
@@ -41,7 +45,7 @@ public class ScriptObjPlayerData : ScriptableObject
                 sb.Replace("--", "-");
                 sb.Replace("--", "-");
 
-                if (GameManager.instance.connection == GameManager.Connection.Online)
+                if (GameManager.instance.connection == GameManager.NetworkType.Internet)
                     UpdateArmorPiecesPurchasedCount(sb.ToString().Split(char.Parse("-")).Count() - 2);
             }
         }
@@ -63,8 +67,9 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public void InitialReset()
     {
+        _steamId = -999; _steamName = "";
         _playerCurrentGameScore = new PlayerCurrentGameScore();
-        _photonRoomIndex = -999;
+        _photonRoomIndex = -999; 
         _occupied = _local = false;
         _rewiredIndex = _startingSpawnPosInd = 0;
         _team = GameManager.Team.None;
@@ -76,6 +81,7 @@ public class ScriptObjPlayerData : ScriptableObject
         if (this == CurrentRoomManager.instance.playerDataCells[0])
             LoadPrefs();
     }
+
 
     public void AddFoundCard(string _n)
     {

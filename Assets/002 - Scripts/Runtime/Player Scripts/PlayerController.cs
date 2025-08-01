@@ -669,7 +669,7 @@ public class PlayerController : MonoBehaviourPun
         {
             _disableSprintRPCCooldown = 0.1f;
 
-            if (GameManager.instance.connection == GameManager.Connection.Online) PV.RPC("DisableSprint_RPC", RpcTarget.All);
+            if (GameManager.instance.connection == GameManager.NetworkType.Internet) PV.RPC("DisableSprint_RPC", RpcTarget.All);
             else DisableSprint_RPC();
         }
     }
@@ -2567,13 +2567,13 @@ public class PlayerController : MonoBehaviourPun
         if (enSpot)
         {
 
-            if (GameManager.instance.connection == GameManager.Connection.Online)
+            if (GameManager.instance.connection == GameManager.NetworkType.Internet)
             {
                 foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
                     if (p.team == (GameManager.Team)teamm && p.isMine)
                         MarkerManager.instance.SpawnEnnSpotMarker(pointt, p.PV.ViewID);
             }
-            else if (GameManager.instance.connection == GameManager.Connection.Local)
+            else if (GameManager.instance.connection == GameManager.NetworkType.Local)
             {
                 foreach (Player p in GameManager.GetLocalPlayers())
                     if (p.team == (GameManager.Team)teamm && p.isMine)
@@ -2582,7 +2582,7 @@ public class PlayerController : MonoBehaviourPun
         }
         else
         {
-            if (GameManager.instance.connection == GameManager.Connection.Online)
+            if (GameManager.instance.connection == GameManager.NetworkType.Internet)
             {
 
                 foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
@@ -2591,7 +2591,7 @@ public class PlayerController : MonoBehaviourPun
                         MarkerManager.instance.SpawnNormalMarker(pointt, p.PV.ViewID);
                     }
             }
-            else if (GameManager.instance.connection == GameManager.Connection.Local)
+            else if (GameManager.instance.connection == GameManager.NetworkType.Local)
             {
                 foreach (Player p in GameManager.GetLocalPlayers())
                     if (p.team == (GameManager.Team)teamm && p.isMine)

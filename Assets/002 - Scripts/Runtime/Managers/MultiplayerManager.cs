@@ -94,7 +94,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public int redTeamScore { get { return _redTeamScore; } private set { _redTeamScore = value; foreach (Player p in GameManager.instance.GetAllPhotonPlayers()) if (p) p.playerUI.UpdateScoreWitnesses(); } }
     public int blueTeamScore { get { return _blueTeamScore; } private set { _blueTeamScore = value; foreach (Player p in GameManager.instance.GetAllPhotonPlayers()) if (p) p.playerUI.UpdateScoreWitnesses(); } }
     public List<Player> winningPlayers { get { return _winningPlayers; } }
-    public List<int> winningPlayersId { get { return _winninPlayersId; } }
+    public List<long> winningPlayersId { get { return _winninPlayersId; } }
 
 
     public GameManager.Team winningTeam
@@ -134,7 +134,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     [SerializeField] int _blueTeamScore;
 
     [SerializeField] List<Player> _winningPlayers = new List<Player>();
-    [SerializeField] List<int> _winninPlayersId = new List<int>();
+    [SerializeField] List<long> _winninPlayersId = new List<long>();
 
     int _initialRoomPlayercount;
     bool _isADraw;
@@ -450,7 +450,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                if (GameManager.instance.connection == GameManager.Connection.Online)
+                if (GameManager.instance.connection == GameManager.NetworkType.Internet)
                 {
                     //if (!GameManager.instance.devMode)
                     {
@@ -489,7 +489,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     if (pms.score >= highestScore)
                     {
                         this.winningPlayers.Add(pms.player);
-                        this.winningPlayersId.Add(pms.player.playerId);
+                        this.winningPlayersId.Add(pms.player.playerSteamId);
                     }
                 }
             else if (GameManager.instance.gameType == GameManager.GameType.GunGame)
@@ -499,7 +499,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     if (pms.player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
                     {
                         this.winningPlayers.Add(pms.player);
-                        this.winningPlayersId.Add(pms.player.playerId);
+                        this.winningPlayersId.Add(pms.player.playerSteamId);
                         break;
                     }
                 }
@@ -528,7 +528,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         if (pms.player.team == GameManager.Team.Red)
                         {
                             this.winningPlayers.Add(pms.player);
-                            this.winningPlayersId.Add(pms.player.playerId);
+                            this.winningPlayersId.Add(pms.player.playerSteamId);
                         }
                 }
                 else
@@ -539,7 +539,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         if (pms.player.team == GameManager.Team.Blue)
                         {
                             this.winningPlayers.Add(pms.player);
-                            this.winningPlayersId.Add(pms.player.playerId);
+                            this.winningPlayersId.Add(pms.player.playerSteamId);
                         }
                 }
             }

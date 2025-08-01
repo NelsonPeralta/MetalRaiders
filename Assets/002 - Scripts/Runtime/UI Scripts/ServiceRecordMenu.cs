@@ -98,6 +98,7 @@ public class ServiceRecordMenu : MonoBehaviour
 
 
         PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
+        print(pda != null);
 
         float kd = 0;
 
@@ -150,7 +151,7 @@ public class ServiceRecordMenu : MonoBehaviour
             _blackWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
 
 
-            if (GameManager.instance.connection == GameManager.Connection.Online && playerData && !playerData.local) _allCardsWitness.SetActive(false);
+            if (GameManager.instance.connection == GameManager.NetworkType.Internet && playerData && !playerData.local) _allCardsWitness.SetActive(false);
             else _allCardsWitness.SetActive(true);
         }
     }

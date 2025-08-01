@@ -7,8 +7,8 @@ public class KickPlayerBtnParent : MonoBehaviour
 {
     private void Awake()
     {
-        if(GameManager.instance.connection == GameManager.Connection.Local || 
-           (GameManager.instance.connection == GameManager.Connection.Online && !PhotonNetwork.IsMasterClient))
+        if(GameManager.instance.connection == GameManager.NetworkType.Local || 
+           (GameManager.instance.connection == GameManager.NetworkType.Internet && !PhotonNetwork.IsMasterClient))
         {
             transform.GetChild(0).gameObject.SetActive(false);  
         }

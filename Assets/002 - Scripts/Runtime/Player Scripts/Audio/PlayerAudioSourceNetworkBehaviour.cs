@@ -6,7 +6,7 @@ public class PlayerAudioSourceNetworkBehaviour : MonoBehaviour
 {
     private void Start()
     {
-        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
+        if (GameManager.instance.connection == GameManager.NetworkType.Local || GameManager.instance.nbLocalPlayersPreset > 1)
         {
             GetComponent<AudioSource>().spatialBlend = 0;
         }

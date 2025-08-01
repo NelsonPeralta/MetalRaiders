@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // https://stackoverflow.com/questions/150479/order-of-items-in-classes-fields-properties-constructors-methods
 
     public static string ROOT_PLAYER_NAME;
+    public static long STEAM_ID { get { return CurrentRoomManager.instance.playerDataCells[0].steamId; } }
     public static int DEFAULT_EXPLOSION_POWER = 300;
     public static int DEFAULT_FRAMERATE = 65;
     public static int DELAY_BEFORE_NEXT_ROUND = 4;
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         OnControllerTypeChangedToController, OnControllerTypeChangedToMouseAndKeyboard;
     // Enums
     public enum Team { None, Red, Blue, Alien }
-    public enum Connection { Unassigned, Local, Online }
+    public enum NetworkType { Unassigned, Local, Internet }
     public enum GameMode { Versus, Coop, Unassigned }
     public enum GameType
     {
@@ -132,7 +133,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    [SerializeField] Connection _connection;
+    [SerializeField] NetworkType _connection;
     [SerializeField] Photon.Realtime.ClientState _photonNetworkClientState;
     [SerializeField] GameMode _gameMode;
     [SerializeField] GameType _gameType;
@@ -140,7 +141,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] SprintMode _sprintMode;
     [SerializeField] HitMarkersMode _hitMarkersMode;
     [SerializeField] ThirdPersonMode _thirdPersonMode;
-    [SerializeField] FlyingCamera _flyingCameraMode; 
+    [SerializeField] FlyingCamera _flyingCameraMode;
     [SerializeField] OneObjMode _oneObjMode;
     [SerializeField] GameManager.Team _onlineTeam;
     [SerializeField] Player _rootPlayer;
@@ -148,19 +149,19 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] List<Player> _allPlayers = new List<Player>();
     // Public variables
 
-    public Connection connection
+    public NetworkType connection
     {
         get { return _connection; }
         set
         {
             _connection = value;
 
-            if (value == Connection.Online)
+            if (value == NetworkType.Internet)
             {
                 //if (SteamAPI.IsSteamRunning())
                 //    Launcher.instance.LoginWithSteamName();
             }
-            else if (value == Connection.Local)
+            else if (value == NetworkType.Local)
             {
                 Launcher.CreateLocalModePlayerDataCells();
                 MenuManager.Instance.OpenMenu("online title");
@@ -257,7 +258,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                if (GameManager.instance.connection == Connection.Online)
+                if (GameManager.instance.connection == NetworkType.Internet)
                 {
                     if (gameMode == GameMode.Versus)
                         FindObjectOfType<Launcher>().teamRoomUI.SetActive(true);
@@ -309,7 +310,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public FlyingCamera flyingCameraMode
     {
-        get {return _flyingCameraMode; }
+        get { return _flyingCameraMode; }
         set
         {
             if (SceneManager.GetActiveScene().buildIndex == 0)
@@ -657,7 +658,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             //QualitySettings.SetQualityLevel(i, true);
 
-            if (instance.connection == Connection.Online)
+            if (instance.connection == NetworkType.Internet)
             {
                 if (names[i].Equals("High"))
                     QualitySettings.SetQualityLevel(i, true);
@@ -925,7 +926,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             Debug.LogError("YOU DONT HAVE INTERNET");
 
-            GameManager.instance.connection = GameManager.Connection.Local;
+            GameManager.instance.connection = GameManager.NetworkType.Local;
             PhotonNetwork.OfflineMode = true;
         }
     }
@@ -1028,14 +1029,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         //Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["gametype"]);
     }
 
-    void UpdateRoomSettings()
-    {
-        Dictionary<string, string> roomParams = new Dictionary<string, string>();
-        roomParams.Add("gamemode", gameMode.ToString());
-        roomParams.Add("gametype", gameType.ToString());
 
-        FindObjectOfType<NetworkMainMenu>().GetComponent<PhotonView>().RPC("UpdateRoomSettings_RPC", RpcTarget.All, roomParams);
-    }
+
+
+
+
+
+
+
 
     List<Vector3> _orSpPts = new List<Vector3>();
     public IEnumerator SpawnPlayersCheck_Coroutine()
@@ -1804,8 +1805,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void RecalculateExpectedNbPlayersUsingPlayerCustomProperties()
     {
-        print("RecalculateExpectedNbPlayersUsingPlayerCustomProperties");
-        if (GameManager.instance.connection == Connection.Online)
+        print($"RecalculateExpectedNbPlayersUsingPlayerCustomProperties {PhotonNetwork.InRoom}");
+        if (GameManager.instance.connection == NetworkType.Internet)
         {
 
             if (PhotonNetwork.InRoom)
@@ -1818,7 +1819,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
                     try
                     {
-                        CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(int.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
+                        CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(long.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
                     }
                     catch
                     {
@@ -1839,7 +1840,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         try
         {
-            if (GameManager.instance.connection == GameManager.Connection.Online)
+            if (GameManager.instance.connection == GameManager.NetworkType.Internet)
             {
                 int totalAchievements = (int)SteamUserStats.GetNumAchievements();
                 int unlockedCount = 0;

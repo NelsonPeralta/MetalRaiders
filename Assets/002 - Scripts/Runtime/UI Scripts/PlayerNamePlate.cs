@@ -80,35 +80,20 @@ public class PlayerNamePlate : MonoBehaviour
     public void SetUp(Photon.Realtime.Player _player, bool masterClient = false) // MAIN
     {
         Debug.Log($"SetUp PlayerListItem {_player.NickName}");
-        //Debug.Log($"{_player.NickName.Split(char.Parse("-"))[0]}");
-
-        WebManager.webManagerInstance.SetPlayerListItemInRoom(int.Parse(_player.NickName), this);
 
 
-        //if (!GameManager.instance.devMode)
-        //    WebManager.webManagerInstance.SetPlayerListItemInRoom(int.Parse(_player.NickName), this);
-        //else
-        //{
+        playerText.text = _player.CustomProperties["username"].ToString();
 
-        //    PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
-        //    pepd.username = _player.NickName;
-        //    pepd.player_id = int.Parse(_player.NickName);
-        //    pepd.armor_color_palette = "grey";
-        //    pepd.armor_data_string = "helmet1";
+        ColorUtility.TryParseHtmlString("grey", out _tCol);
+        mainBg.color = _tCol;
+        _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
+        secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
 
-
-
-        //    CurrentRoomManager.instance.AddExtendedPlayerData(pepd);
-        //    this.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
-
-
-
-        //    foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
-        //    {
-        //        if (int.Parse(p.NickName) == pepd.player_id)
-        //            this.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
-        //    }
-        //}
+        try
+        {
+            WebManager.webManagerInstance.SetPlayerListItemInRoom(long.Parse(_player.NickName), this);
+        }
+        catch { }
     }
 
     public void SetUp(string s)
@@ -133,7 +118,7 @@ public class PlayerNamePlate : MonoBehaviour
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
 
-            ScriptObjPlayerData spd = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(_playerData.playerExtendedPublicData.player_id, _playerData.rewiredId);
+            ScriptObjPlayerData spd = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(_playerData.playerExtendedPublicData.player_id, _playerData.rewiredId);
 
             if ((spd.team != GameManager.Team.None))
             {
@@ -151,8 +136,8 @@ public class PlayerNamePlate : MonoBehaviour
         {
             try
             {
-                Debug.Log($"Setup Solo Color: {playerDataCell.playerExtendedPublicData.armor_color_palette}");
-                ColorUtility.TryParseHtmlString(playerDataCell.playerExtendedPublicData.armor_color_palette, out _tCol);
+                Debug.Log($"Setup Solo Color: {playerDataCell.playerExtendedPublicData.armorColorPalette}");
+                ColorUtility.TryParseHtmlString(playerDataCell.playerExtendedPublicData.armorColorPalette, out _tCol);
                 mainBg.color = _tCol;
 
                 _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
@@ -167,12 +152,19 @@ public class PlayerNamePlate : MonoBehaviour
         if (!MenuManager.Instance.APopUpMenuisOpen())
         {
             GameManager.PlayClickSound();
-            MenuManager.Instance.OpenMenu("service_record", false);
-            ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
 
-            s.playerData = _playerData;
-            Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = playerDataCell;
-            Launcher.TogglePlayerModel(true);
+            if (_playerData)
+            {
+                MenuManager.Instance.OpenMenu("service_record", false);
+                ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
+                s.playerData = _playerData;
+                Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = playerDataCell;
+                Launcher.TogglePlayerModel(true);
+            }
+            else
+            {
+                MenuManager.Instance.OpenErrorMenu($"Could not fetch player data.");
+            }
         }
     }
 

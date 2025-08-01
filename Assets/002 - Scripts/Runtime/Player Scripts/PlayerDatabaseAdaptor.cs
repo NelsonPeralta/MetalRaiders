@@ -51,11 +51,11 @@ public class PlayerDatabaseAdaptor
     //}
 
     // ********** GETTERS **********
-    public int id
+    public long steamid
     {
         get
         {
-            try { return _playerLoginData.id; }
+            try { return _playerLoginData.steamid; }
             catch { return 0; }
         }
     }
@@ -191,8 +191,8 @@ public class PlayerDatabaseAdaptor
     [System.Serializable]
     public class PlayerLoginData
     {
-
         public int id;
+        public long steamid;
         public string username;
 
         public static PlayerLoginData CreateFromJSON(string jsonString)
@@ -245,10 +245,31 @@ public class PlayerDatabaseAdaptor
     [System.Serializable]
     public class PlayerExtendedPublicData
     {
+        public string armorDataString
+        {
+            get
+            {
+                return armor_data_string;
+            }
+            set
+            {
+                armor_data_string = value;
+            }
+        }
+        public string armorColorPalette
+        {
+            get
+            {
+                return armor_color_palette;
+            }
+            set { armor_color_palette = value; }
+        }
+
         public string username;
         public int player_id, invites;
         public int level, xp, rank, honor, credits;
-        public string armor_data_string, unlocked_armor_data_string, armor_color_palette;
+        public string unlocked_armor_data_string;
+        [SerializeField] string armor_data_string, armor_color_palette;
         public int kills, deaths, headshots, melee_kills, grenade_kills, pve_kills, pve_deaths, pve_headshots, highest_points;
 
         public static PlayerExtendedPublicData CreateFromJSON(string jsonString)
@@ -256,5 +277,10 @@ public class PlayerDatabaseAdaptor
             return JsonUtility.FromJson<PlayerExtendedPublicData>(jsonString);
         }
 
+        public PlayerExtendedPublicData()
+        {
+            armor_data_string = "helmet1-";
+            armor_color_palette = "grey";
+        }
     }
 }

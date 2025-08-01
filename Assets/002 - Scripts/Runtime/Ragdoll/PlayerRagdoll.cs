@@ -67,7 +67,7 @@ public class PlayerRagdoll : Ragdoll
     {
         _respawnCountdown = Player.RESPAWN_TIME;
         _respawnBeepCount = 0;
-        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
+        if (GameManager.instance.connection == GameManager.NetworkType.Local || GameManager.instance.nbLocalPlayersPreset > 1)
         {
             _deathClipAudioSource.spatialBlend = .1f;
             _collisionAudioSource.spatialBlend = .1f;

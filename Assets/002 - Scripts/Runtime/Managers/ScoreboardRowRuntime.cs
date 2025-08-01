@@ -15,7 +15,7 @@ public class ScoreboardRowRuntime : MonoBehaviour
             pss = value;
 
 
-            ColorUtility.TryParseHtmlString(GameManager.colorDict[playerScoreStruct.playerExtendedPublicData.armor_color_palette.ToString().ToLower()], out _tCol);
+            ColorUtility.TryParseHtmlString(GameManager.colorDict[playerScoreStruct.playerExtendedPublicData.armorColorPalette.ToString().ToLower()], out _tCol);
             _dynamicBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)

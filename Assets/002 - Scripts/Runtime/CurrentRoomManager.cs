@@ -983,7 +983,7 @@ public class CurrentRoomManager : MonoBehaviour
                 MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().AddStruct(
                     new CarnageReportStruc(instance._playerDataCells[i].playerCurrentGameScore,
                     instance._playerDataCells[i].playerExtendedPublicData.username,
-                    instance._playerDataCells[i].playerExtendedPublicData.armor_color_palette, instance._playerDataCells[i].team));
+                    instance._playerDataCells[i].playerExtendedPublicData.armorColorPalette, instance._playerDataCells[i].team));
             }
         }
     }
@@ -1059,14 +1059,14 @@ public class CurrentRoomManager : MonoBehaviour
 
         return null;
     }
-    public static ScriptObjPlayerData GetDataCellWithDatabaseIdAndRewiredId(int playerId, int rewiredId)
+    public static ScriptObjPlayerData GetDataCellWithSteamIdAndRewiredId(long playerId, int rewiredId)
     {
         Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
         //foreach (ScriptObjPlayerData s in instance.playerDataCells)
         //    if (s.occupied)
         //        print($"{s.playerExtendedPublicData.player_id} {s.rewiredId}");
 
-        return CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId && item.rewiredId == rewiredId);
+        return CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.steamId == playerId && item.rewiredId == rewiredId);
         //return instance.playerDataCells.FirstOrDefault(item => item.playerExtendedPublicData.player_id == playerId && item.rewiredId == rewiredId);
     }
 

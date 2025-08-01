@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using System.Timers;
 using System.Linq;
+using Steamworks;
 
 public partial class WebManager
 {
@@ -20,7 +21,16 @@ public partial class WebManager
         form.AddField("steamid", steamid);
         form.AddField("username", username);
         form.AddField("password", password);
-        Debug.Log($"Password: {password}");
+        Debug.Log($"Password: {password} {m}");
+
+
+        PhotonNetwork.NickName = SteamUser.GetSteamID().m_SteamID.ToString();
+        CurrentRoomManager.instance.playerDataCells[0].steamId = (long)SteamUser.GetSteamID().m_SteamID;
+        CurrentRoomManager.instance.playerDataCells[0].steamName = SteamFriends.GetPersonaName();
+        CurrentRoomManager.instance.playerDataCells[0].occupied = true;
+        CurrentRoomManager.instance.playerDataCells[0].local = true;
+
+
 
         //using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/unity/database.php", form))
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
@@ -40,44 +50,32 @@ public partial class WebManager
 
                 string jsonarray = www.downloadHandler.text;
 
+
+                PlayerDatabaseAdaptor.PlayerLoginData pld = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
+                pda.playerLoginData = pld;
                 try
                 {
-                    //Steamworks.SteamUserStats.ResetAllStats(true);
-                    PlayerDatabaseAdaptor.PlayerLoginData pld = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
-                    pda.playerLoginData = pld;
-                    //PhotonNetwork.NickName = $"{pda.id}-{pda.username}";
-                    PhotonNetwork.NickName = $"{pda.id}";
-
-                    StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id));
-                    StartCoroutine(GetPlayerExtendedPublicData_Coroutine(pda.id));
-                    StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id));
-                    StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id));
-
-                    //Launcher.instance.ShowPlayerMessage("Logged in successfully!");
-                    //MenuManager.Instance.OpenMenu("online title");
 
 
+                    StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.steamid));
+                    StartCoroutine(GetPlayerExtendedPublicData_Coroutine(pda.steamid));
+                    StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.steamid));
+                    StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.steamid));
 
                     GameManager.instance.playerDataRetrieved = true;
-                    CurrentRoomManager.instance.playerDataCells[0].occupied = true;
-                    CurrentRoomManager.instance.playerDataCells[0].local = true;
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
-                    if (www.downloadHandler.text.Contains("wrong credentials"))
-                    {
-                        Launcher.instance.OnCreateRoomFailed(0, "Wrong credentials");
-                        Launcher.instance.loginButton.SetActive(true);
-                    }
+                    Debug.LogError(e);
+                    MenuManager.Instance.OpenErrorMenu($"Failed to fetch stats: {e}");
                 }
             }
         }
     }
 
-    IEnumerator GetPlayerExtendedPublicData_Coroutine(int playerid, PlayerNamePlate playerNamePlateInstance = null)
+    IEnumerator GetPlayerExtendedPublicData_Coroutine(long playerid, PlayerNamePlate playerNamePlateInstance = null)
     {
-        Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA {playerNamePlateInstance}");
+        Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA {playerNamePlateInstance != null} {playerid}");
         // DISCLAIMER
         // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
 
@@ -86,7 +84,7 @@ public partial class WebManager
         //    pda.playerListItem = pli;
         WWWForm form = new WWWForm();
         form.AddField("service", "getplayerpublicdata");
-        form.AddField("playerid", playerid);
+        form.AddField("playerid", playerid.ToString());
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -98,20 +96,20 @@ public partial class WebManager
             }
             else
             {
-                Debug.Log("GET PLAYER EXTENDED PUBLIC DATA RESULTS");
-                //Debug.Log(www.result);
-                //Debug.Log(www.downloadHandler.text);
+                Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA RESULTS {playerid}");
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
-                //Debug.Log(jsonarray);
+                Debug.Log(jsonarray);
                 PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
 
-                CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd);
+                CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd); // ERROR IF NULL, BREAKS GAME
 
                 try
                 {
-                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
+                    playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerid, 0);
 
                     if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
                     {
@@ -125,7 +123,7 @@ public partial class WebManager
                 {
                     foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
                     {
-                        if (int.Parse(p.NickName) == pepd.player_id)
+                        if (long.Parse(p.NickName) == playerNamePlateInstance.playerDataCell.steamId)
                             playerNamePlateInstance.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
                     }
                 }
@@ -172,145 +170,145 @@ public partial class WebManager
     }
 
 
-    IEnumerator GetForeignPlayerExtendedPublicData_Coroutine(string steamid, PlayerNamePlate pli = null)
-    {
-        Debug.Log("GetPlayerExtendedPublicData_Coroutine");
-        // DISCLAIMER
-        // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
+    //IEnumerator GetForeignPlayerExtendedPublicData_Coroutine(string steamid, PlayerNamePlate pli = null)
+    //{
+    //    Debug.Log("GetPlayerExtendedPublicData_Coroutine");
+    //    // DISCLAIMER
+    //    // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
 
-        PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
-        //if (pli)
-        //    pda.playerListItem = pli;
-        WWWForm form = new WWWForm();
-        form.AddField("service", "getplayerpublicdata");
-        form.AddField("steamid", steamid);
+    //    PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
+    //    //if (pli)
+    //    //    pda.playerListItem = pli;
+    //    WWWForm form = new WWWForm();
+    //    form.AddField("service", "getplayerpublicdata");
+    //    form.AddField("steamid", steamid);
 
-        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
-        {
-            yield return www.SendWebRequest();
+    //    using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+    //    {
+    //        yield return www.SendWebRequest();
 
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(www.error);
-            }
-            else
-            {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+    //        if (www.result != UnityWebRequest.Result.Success)
+    //        {
+    //            Debug.Log(www.error);
+    //        }
+    //        else
+    //        {
+    //            Debug.Log(www.result);
+    //            Debug.Log(www.downloadHandler.text);
 
-                string jsonarray = www.downloadHandler.text;
+    //            string jsonarray = www.downloadHandler.text;
 
-                Debug.Log(jsonarray);
-                PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
-                try
-                {
-                    CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd);
-                }
-                catch (Exception e) { Debug.LogWarning(e); }
+    //            Debug.Log(jsonarray);
+    //            PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
+    //            try
+    //            {
+    //                CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd);
+    //            }
+    //            catch (Exception e) { Debug.LogWarning(e); }
 
-                try
-                {
-                    pli.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
-                }
-                catch (Exception e) { Debug.LogWarning(e); }
+    //            try
+    //            {
+    //                pli.playerDataCell = CurrentRoomManager.GetDataCellWithDatabaseIdAndRewiredId(pepd.player_id, 0);
+    //            }
+    //            catch (Exception e) { Debug.LogWarning(e); }
 
-                try
-                {
-                    //pda.player = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
+    //            try
+    //            {
+    //                //pda.player = PlayerDatabaseAdaptor.PlayerLoginData.CreateFromJSON(jsonarray);
 
-                    //StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id, pda));
-                    //StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
-                    //StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
+    //                //StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.id, pda));
+    //                //StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.id, pda));
+    //                //StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.id, pda));
 
-                    //var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
-                    //if (!d.ContainsKey(pda.username))
-                    //{
-                    //    //Debug.Log($"Adding key {}")
-                    //    d.Add(pda.username, pda);
-                    //}
-                    //else
-                    //    d[pda.username] = pda;
+    //                //var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
+    //                //if (!d.ContainsKey(pda.username))
+    //                //{
+    //                //    //Debug.Log($"Adding key {}")
+    //                //    d.Add(pda.username, pda);
+    //                //}
+    //                //else
+    //                //    d[pda.username] = pda;
 
-                    //GameManager.instance.roomPlayerData = d;
+    //                //GameManager.instance.roomPlayerData = d;
 
-                    //if (pli)
-                    //    pli.pda = pda;
-
-
-                    //Launcher.instance.ShowPlayerMessage("Fetched player extended data successfully!");
-                    //if (!pli)
-                    //    MenuManager.Instance.OpenMenu("online title");
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning(e);
-                    if (www.downloadHandler.text.Contains("wrong credentials"))
-                    {
-                        Launcher.instance.OnCreateRoomFailed(0, "Wrong credentials");
-                        Launcher.instance.loginButton.SetActive(true);
-                    }
-                }
-            }
-        }
-    }
+    //                //if (pli)
+    //                //    pli.pda = pda;
 
 
-    IEnumerator SaveArmorData_Coroutine(string newDataString)
-    {
-        int xpAndCreditGain = Random.Range(160, 240);
-
-        int playerId = pda.id;
-        int newLevel = pda.playerBasicOnlineStats.level;
-        int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
-        int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
-        int dbXpToLevel = 0;
-
-        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
-        {
-            dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
-
-            if (dbXpToLevel < newXp)
-                newLevel = pda.playerBasicOnlineStats.level + 1;
-        }
-
+    //                //Launcher.instance.ShowPlayerMessage("Fetched player extended data successfully!");
+    //                //if (!pli)
+    //                //    MenuManager.Instance.OpenMenu("online title");
+    //            }
+    //            catch (Exception e)
+    //            {
+    //                Debug.LogWarning(e);
+    //                if (www.downloadHandler.text.Contains("wrong credentials"))
+    //                {
+    //                    Launcher.instance.OnCreateRoomFailed(0, "Wrong credentials");
+    //                    Launcher.instance.loginButton.SetActive(true);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
 
-        WWWForm form = new WWWForm();
-        form.AddField("service", "SaveBasicOnlineStats");
+    //IEnumerator SaveArmorData_Coroutine(string newDataString)
+    //{
+    //    int xpAndCreditGain = Random.Range(160, 240);
 
-        form.AddField("playerId", playerId);
-        form.AddField("newLevel", newLevel);
-        form.AddField("newXp", newXp);
-        form.AddField("newCredits", newCredits);
+    //    long playerId = pda.steamid;
+    //    int newLevel = pda.playerBasicOnlineStats.level;
+    //    int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
+    //    int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
+    //    int dbXpToLevel = 0;
 
-        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
-        {
-            yield return www.SendWebRequest();
+    //    if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
+    //    {
+    //        dbXpToLevel = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
 
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(www.error);
-            }
-            else
-            {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+    //        if (dbXpToLevel < newXp)
+    //            newLevel = pda.playerBasicOnlineStats.level + 1;
+    //    }
 
-                if (www.downloadHandler.text.Contains("Could not save swarm stats"))
-                {
-                    Debug.LogError("Could not save swarm stats");
 
-                }
-                else if (www.downloadHandler.text.Contains("Swarm stats saved"))
-                {
-                    Debug.Log("Swarm stats saved successfully");
-                }
-            }
-        }
-        StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
-    }
 
-    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<int> winPlayers = null, bool swarmGameWon = false)
+    //    WWWForm form = new WWWForm();
+    //    form.AddField("service", "SaveBasicOnlineStats");
+
+    //    form.AddField("playerId", playerId.ToString());
+    //    form.AddField("newLevel", newLevel);
+    //    form.AddField("newXp", newXp);
+    //    form.AddField("newCredits", newCredits);
+
+    //    using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+    //    {
+    //        yield return www.SendWebRequest();
+
+    //        if (www.result != UnityWebRequest.Result.Success)
+    //        {
+    //            Debug.Log(www.error);
+    //        }
+    //        else
+    //        {
+    //            Debug.Log(www.result);
+    //            Debug.Log(www.downloadHandler.text);
+
+    //            if (www.downloadHandler.text.Contains("Could not save swarm stats"))
+    //            {
+    //                Debug.LogError("Could not save swarm stats");
+
+    //            }
+    //            else if (www.downloadHandler.text.Contains("Swarm stats saved"))
+    //            {
+    //                Debug.Log("Swarm stats saved successfully");
+    //            }
+    //        }
+    //    }
+    //    StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
+    //}
+
+    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<long> winPlayers = null, bool swarmGameWon = false)
     {
         {
             int xpAndCreditGain = PlayerProgressionManager.xpGainPerMatch;
@@ -352,7 +350,7 @@ public partial class WebManager
 
             Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {pda.playerBasicOnlineStats.xp} -> {pda.playerBasicOnlineStats.xp + xpAndCreditGain}");
 
-            int playerId = pda.id;
+            long playerId = pda.steamid;
             int newLevel = pda.playerBasicOnlineStats.level;
             int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
             int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
@@ -380,7 +378,7 @@ public partial class WebManager
             WWWForm form = new WWWForm();
             form.AddField("service", "SaveBasicOnlineStats");
 
-            form.AddField("playerId", playerId);
+            form.AddField("playerId", playerId.ToString());
             form.AddField("newLevel", newLevel);
             form.AddField("newXp", newXp);
             form.AddField("newCredits", newCredits);
@@ -404,12 +402,12 @@ public partial class WebManager
                     if (www.result.ToString().Contains("uccess"))
                         if (xpAndCreditGain > 0)
                             //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Cuckbucks");
-                    //else
-                    //    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
-                    if (newXp >= minXpToLevelUp)
-                    {
-                        //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
-                    }
+                            //else
+                            //    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
+                            if (newXp >= minXpToLevelUp)
+                            {
+                                //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
+                            }
 
 
                     if (www.downloadHandler.text.Contains("Could not save swarm stats"))
@@ -432,7 +430,7 @@ public partial class WebManager
 
     IEnumerator SaveSwarmStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
-        int playerId = pda.id;
+        long playerId = pda.steamid;
         int newKills = pda.GetPvEKills() + onlinePlayerSwarmScript.kills;
         int newDeaths = pda.GetPvEDeaths() + onlinePlayerSwarmScript.deaths;
         int newHeadshots = pda.GetPvEHeadshots() + onlinePlayerSwarmScript.headshots;
@@ -447,7 +445,7 @@ public partial class WebManager
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveSwarmStats");
-        form.AddField("playerId", playerId);
+        form.AddField("playerId", playerId.ToString());
         form.AddField("newKills", newKills);
         form.AddField("newDeaths", newDeaths);
         form.AddField("newHeadshots", newHeadshots);
@@ -481,7 +479,7 @@ public partial class WebManager
 
     IEnumerator SaveMultiplayerStats_Coroutine(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
-        int playerId = pda.id;
+        long playerId = pda.steamid;
         int newKills = pda.GetPvPKills() + playerMultiplayerStats.kills;
         int newDeaths = pda.GetPvPDeaths() + playerMultiplayerStats.deaths;
         int newHeadshots = pda.GetPvPHeadshots() + playerMultiplayerStats.headshots;
@@ -490,7 +488,7 @@ public partial class WebManager
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveMultiplayerStats");
-        form.AddField("playerId", playerId);
+        form.AddField("playerId", playerId.ToString());
         form.AddField("newKills", newKills);
         form.AddField("newDeaths", newDeaths);
         form.AddField("newHeadshots", newHeadshots);
@@ -559,12 +557,12 @@ public partial class WebManager
 
 
 
-    IEnumerator Login_Coroutine_Set_Online_Stats(int playerId, PlayerDatabaseAdaptor _pda = null)
+    IEnumerator Login_Coroutine_Set_Online_Stats(long playerId, PlayerDatabaseAdaptor _pda = null)
     {
         Debug.Log("Login_Coroutine_Set_Online_Stats");
         WWWForm form = new WWWForm();
         form.AddField("service", "getBasicOnlineData");
-        form.AddField("playerId", playerId);
+        form.AddField("playerId", playerId.ToString());
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -609,11 +607,11 @@ public partial class WebManager
         }
     }
 
-    IEnumerator Login_Coroutine_Set_PvP_Stats(int playerId, PlayerDatabaseAdaptor _pda = null)
+    IEnumerator Login_Coroutine_Set_PvP_Stats(long playerId, PlayerDatabaseAdaptor _pda = null)
     {
         WWWForm form = new WWWForm();
         form.AddField("service", "getBasicPvPStats");
-        form.AddField("playerId", playerId);
+        form.AddField("playerId", playerId.ToString());
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -651,11 +649,11 @@ public partial class WebManager
         }
     }
 
-    IEnumerator Login_Coroutine_Set_PvE_Stats(int playerId, PlayerDatabaseAdaptor _pda = null)
+    IEnumerator Login_Coroutine_Set_PvE_Stats(long playerId, PlayerDatabaseAdaptor _pda = null)
     {
         WWWForm form = new WWWForm();
         form.AddField("service", "getBasicPvEStats");
-        form.AddField("playerId", playerId);
+        form.AddField("playerId", playerId.ToString());
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -712,7 +710,7 @@ public partial class WebManager
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveUnlockedArmorStringData");
-        form.AddField("playerId", pda.id);
+        form.AddField("playerId", pda.steamid.ToString());
 
         form.AddField("newUnlockedArmorStringData", pda.unlockedArmorDataString);
         form.AddField("newPlayerCredits", pda.credits);
@@ -754,7 +752,7 @@ public partial class WebManager
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveUnlockedArmorStringData");
-        form.AddField("playerId", webManagerInstance.pda.id);
+        form.AddField("playerId", webManagerInstance.pda.ToString());
 
         form.AddField("newUnlockedArmorStringData", webManagerInstance.pda.unlockedArmorDataString);
         form.AddField("newPlayerCredits", webManagerInstance.pda.credits);
@@ -789,7 +787,7 @@ public partial class WebManager
     {
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveEquippedArmorDataString");
-        form.AddField("playerId", pda.id);
+        form.AddField("playerId", pda.steamid.ToString());
 
         form.AddField("newEquippedArmorStringData", data);
 
@@ -828,7 +826,7 @@ public partial class WebManager
         Debug.Log("SaveArmorColorPalette_Coroutine");
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveArmorColorPalette");
-        form.AddField("playerId", pda.id);
+        form.AddField("playerId", pda.steamid.ToString());
 
         form.AddField("newArmorColorPaletteData", colorName);
 

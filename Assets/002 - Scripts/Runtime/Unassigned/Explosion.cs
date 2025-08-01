@@ -70,7 +70,7 @@ public class Explosion : MonoBehaviour
 
     private void OnEnable()
     {
-        if (GameManager.instance.connection == GameManager.Connection.Local || GameManager.instance.nbLocalPlayersPreset > 1)
+        if (GameManager.instance.connection == GameManager.NetworkType.Local || GameManager.instance.nbLocalPlayersPreset > 1)
         {
             float _distanceFromRootPlayer = Vector3.Distance(GameManager.GetRootPlayer().transform.position, transform.position);
             float _closestDistanceToThisExplosion = _distanceFromRootPlayer;
