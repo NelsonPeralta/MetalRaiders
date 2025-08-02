@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using NUnit.Framework;
 
 public class MenuGamePadCursor : MonoBehaviour
 {
@@ -259,26 +260,28 @@ public class MenuGamePadCursor : MonoBehaviour
             print($"MenuGamePadCursor {_eventSystemRaycastResults.Count} {_preEentSystemRaycastResults.Count}");
 
 
-
-            foreach (var r in _preEentSystemRaycastResults)
-                if (r.gameObject.GetComponent<Button>() && r.gameObject.GetComponent<Button>().transition == Selectable.Transition.SpriteSwap)
+            for (int i = _preEentSystemRaycastResults.Count - 1; i >= 0; i--)
+            {
+                if (_preEentSystemRaycastResults[i].gameObject != null)
+                if (_preEentSystemRaycastResults[i].gameObject.GetComponent<Button>() && _preEentSystemRaycastResults[i].gameObject.GetComponent<Button>().transition == Selectable.Transition.SpriteSwap)
                 {
-                    r.gameObject.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
-                    if (r.gameObject.GetComponent<EventTrigger>())
+                        _preEentSystemRaycastResults[i].gameObject.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
+                    if (_preEentSystemRaycastResults[i].gameObject.GetComponent<EventTrigger>())
                     {
-                        print($"MenuGamePadCursor OnPointerExit {r.gameObject.name} {r.gameObject.activeSelf}");
+                        //print($"MenuGamePadCursor OnPointerExit {r.gameObject.name} {r.gameObject.activeSelf}");
 
-                        if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !r.gameObject.activeSelf)
+                        if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !_preEentSystemRaycastResults[i].gameObject.activeSelf)
                         {
                             // do nothing
                         }
                         else
                         {
-                            r.gameObject.GetComponent<EventTrigger>().OnPointerExit(pointerData);
+                            _preEentSystemRaycastResults[i].gameObject.GetComponent<EventTrigger>().OnPointerExit(pointerData);
                         }
 
                     }
                 }
+            }
 
 
 
