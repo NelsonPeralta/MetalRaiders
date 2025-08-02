@@ -1679,7 +1679,7 @@ public class Player : Biped
         StartCoroutine(Respawn_Coroutine());
         StartCoroutine(OneSecondBeforeRespawnCoroutine());
         StartCoroutine(LateRespawn_Coroutine());
-        StartCoroutine(OneSecondBeforeRespawnCoroutine());
+        //StartCoroutine(OneSecondBeforeRespawnCoroutine());
     }
     void OnPlayerDeath_DelegateLate(Player playerProperties)
     {

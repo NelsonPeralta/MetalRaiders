@@ -105,13 +105,51 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
             {
                 List<int> ignoreList = new List<int>();
                 ignoreList.Add(7); // 7 = Player Hitbox
-                foreach (GameObject model in models)
-                    if (!feet.Contains(model))
-                    {
-                        GameManager.SetLayerRecursively(model, 0, ignoreList);
-                    }
 
-                undersuitMesh.layer = 0;
+                if (!player.isMine)
+                {
+                    foreach (GameObject model in models)
+                        if (!feet.Contains(model))
+                        {
+                            GameManager.SetLayerRecursively(model, 0, ignoreList);
+                        }
+
+                    undersuitMesh.layer = 0;
+                }
+                else
+                {
+                    if (GameManager.instance.nbLocalPlayersPreset == 0)
+                    {
+                        foreach (GameObject model in models)
+                            if (!feet.Contains(model))
+                            {
+                                GameManager.SetLayerRecursively(model, 0, ignoreList);
+                            }
+
+                        undersuitMesh.layer = 0;
+                    }
+                    else
+                    {
+                        int l = 0;
+
+                        if (player.rid == 0)
+                            l = 25;
+                        else if (player.rid == 1)
+                            l = 27;
+                        else if (player.rid == 2)
+                            l = 29;
+                        else if (player.rid == 3)
+                            l = 31;
+
+                        foreach (GameObject model in models)
+                            if (!feet.Contains(model))
+                            {
+                                GameManager.SetLayerRecursively(model, l, ignoreList);
+                            }
+
+                        undersuitMesh.layer = l;
+                    }
+                }
 
                 OnModelAssigned?.Invoke(this);
 

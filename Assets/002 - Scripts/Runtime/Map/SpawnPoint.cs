@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,20 +8,19 @@ public class SpawnPoint : MonoBehaviour
 {
     public static int SeenResetTime = 1;
 
-    public enum Layer { Alpha, Beta }
     public bool constested { get { return players.Count > 0; } }
-    public bool seen
-    {
-        get { return _seen; }
-        set
-        {
-            if (value == true)
-            {
-                _seen = value;
-                _seenReset = SeenResetTime;
-            }
-        }
-    }
+    //public bool seen
+    //{
+    //    get { return _seen; }
+    //    set
+    //    {
+    //        if (value == true)
+    //        {
+    //            _seen = value;
+    //            _seenReset = SeenResetTime;
+    //        }
+    //    }
+    //}
 
     public bool reserved
     {
@@ -33,10 +33,11 @@ public class SpawnPoint : MonoBehaviour
         }
     }
 
+    public int dangerLevel { get { return _dangerLevel; } }
+
     public GameManager.Team team { get { return _team; } }
 
 
-    public Layer layer;
     public List<Player> players = new List<Player>();
     public enum SpawnPointType { Player, Computer }
     public SpawnPointType spawnPointType;
@@ -44,10 +45,13 @@ public class SpawnPoint : MonoBehaviour
 
     [SerializeField] int _radius;
 
-    [SerializeField] bool _seen, _reserved;
-    [SerializeField] float _seenReset;
+    [SerializeField] bool /*_seen,*/ _reserved;
+    //[SerializeField] float _seenReset;
+    [SerializeField] int _dangerLevel;
+    [SerializeField] List<DangerEntry> _dangerEntries = new List<DangerEntry>();
 
     float _reservedReset;
+    float _evaluateDangerCooldown;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -105,6 +109,33 @@ public class SpawnPoint : MonoBehaviour
 
     private void Update()
     {
+        for (int i = _dangerEntries.Count - 1; i >= 0; i--)
+        {
+            if (_dangerEntries[i].ttl > 0) _dangerEntries[i].ttl -= Time.deltaTime;
+            if (_dangerEntries[i].ttl <= 0) _dangerEntries.RemoveAt(i);
+        }
+
+        if (_evaluateDangerCooldown > 0)
+        {
+            _evaluateDangerCooldown -= Time.deltaTime;
+
+            if (_evaluateDangerCooldown <= 0)
+            {
+                _dangerLevel = 0;
+
+                if (_dangerEntries.Count > 0)
+                {
+                    for (int i = _dangerEntries.Count - 1; i >= 0; i--)
+                        _dangerLevel += _dangerEntries[i].dangerLevel;
+
+                    _evaluateDangerCooldown = SeenResetTime * 0.3f;
+                }
+            }
+        }
+
+
+
+
         if (_reservedReset > 0)
         {
             _reservedReset -= Time.deltaTime;
@@ -118,18 +149,48 @@ public class SpawnPoint : MonoBehaviour
 
 
 
-        if (_seenReset > 0)
-        {
-            _seenReset -= Time.deltaTime;
+        //if (_seenReset > 0)
+        //{
+        //    _seenReset -= Time.deltaTime;
 
-            if (_seenReset <= 0)
+        //    if (_seenReset <= 0)
+        //    {
+        //        _seen = false;
+        //    }
+        //}
+    }
+
+    public void AddDanger(int idd, int levl, int ttll)
+    {
+        if (_dangerEntries.Count == 0) _evaluateDangerCooldown = SeenResetTime * 0.3f;
+
+        for (int i = 0; i < _dangerEntries.Count; i++)
+        {
+            if (_dangerEntries[i].id == idd)
             {
-                _seen = false;
+                _dangerEntries[i].ttl = SeenResetTime;
+                return;
             }
         }
+
+        _dangerEntries.Add(new DangerEntry(idd, levl, ttll));
     }
 
 
+    [Serializable]
+    class DangerEntry
+    {
+        public int id;
+        public int dangerLevel;
+        public float ttl;
+
+        public DangerEntry(int idd, int lvl, int tt)
+        {
+            id = idd;
+            dangerLevel = lvl;
+            ttl = tt;
+        }
+    }
 
     //_players = Physics.OverlapSphere(transform.position, 25, 7).ToList().Select(collider => collider.GetComponent<PlayerCapsule>()).Where(g=>g!= null).ToList();
 
