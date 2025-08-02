@@ -1231,10 +1231,10 @@ public class Launcher : MonoBehaviourPunCallbacks
                     PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key, 0, (int)player.CustomProperties["localPlayerCount"]));
             }
             test.Sort((a, b) => a.supposedRoomIndex.CompareTo(b.supposedRoomIndex));
-            for (int i = 1; i < test.Count; i++)
+            for (int i = 0; i < test.Count; i++)
             {
                 print($"CreateDataCellsFromRoomDataWhenJoiningRoom_Online {test[i].steamName} {test[i].supposedRoomIndex} will become {i}");
-                test[i] = (test[i].steamIdd, test[i].steamName, test[i].supposedRoomIndex, i, test[i].nbLocalPlayers);
+                test[i] = (test[i].steamIdd, test[i].steamName, test[i].supposedRoomIndex, i + 1, test[i].nbLocalPlayers);
             }
             // DO NOT DELETE THIS
 

@@ -11,7 +11,7 @@ public class PlayerNamePlate : MonoBehaviour
         get { return _playerData; }
         set
         {
-            Debug.Log($"ScriptObjPlayerData {value != null}");
+            //Debug.Log($"ScriptObjPlayerData {value != null}");
             _playerData = value;
 
             playerText.text = _playerData.steamName;
@@ -130,7 +130,7 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void UpdateColorPalette()
     {
-        Debug.Log($"UpdateColorPalette of: {_playerData.steamName}. TeamMode: {GameManager.instance.teamMode}");
+        //Debug.Log($"UpdateColorPalette of: {_playerData.steamName}. TeamMode: {GameManager.instance.teamMode}");
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
@@ -152,7 +152,7 @@ public class PlayerNamePlate : MonoBehaviour
         {
             try
             {
-                Debug.Log($"Setup Solo Color: {playerDataCell.playerExtendedPublicData.armorColorPalette}");
+                //Debug.Log($"Setup Solo Color: {playerDataCell.playerExtendedPublicData.armorColorPalette}");
                 ColorUtility.TryParseHtmlString(playerDataCell.playerExtendedPublicData.armorColorPalette, out _tCol);
                 mainBg.color = _tCol;
 

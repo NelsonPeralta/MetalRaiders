@@ -85,6 +85,7 @@ public class GrenadePool : MonoBehaviour
 
         for (int i = (photonRoomIndex - 1) * 10; i < (photonRoomIndex * 10) - 1; i++)
         {
+            print($"GetAvailableGrenadeIndex {i}");
             print($"GetAvailableGrenadeIndex {photonRoomIndex}   {i}   {_instance._fragGrenadePool[i].name}");
 
             if (isFrag)

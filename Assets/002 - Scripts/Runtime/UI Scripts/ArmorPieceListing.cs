@@ -157,7 +157,9 @@ public class ArmorPieceListing : MonoBehaviour
         newData = newData.Replace($"---", "--");
 
         MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString = newData;
-        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString));
+        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(
+            MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.player_id,
+            MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString));
 
         model.gameObject.SetActive(true);
         equipButton.gameObject.SetActive(false);
@@ -174,7 +176,9 @@ public class ArmorPieceListing : MonoBehaviour
         newData = newData.Replace($"---", "--");
 
         MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString = newData;
-        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString));
+        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(
+            MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.player_id,
+            MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString));
 
         model.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);

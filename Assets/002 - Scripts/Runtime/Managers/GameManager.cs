@@ -1626,7 +1626,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
                 foreach (ScriptObjPlayerData pdc in CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied))
                 {
-                    if (pdc.playerExtendedPublicData.player_id.Equals(long.Parse(kvp.Value.NickName)))
+                    if (pdc.steamId == long.Parse(kvp.Value.NickName))
                     {
                         pdc.team = t;
                         //CurrentRoomManager.GetDataCellWithDatabaseId(int.Parse(kvp.Value.NickName), 0).team = t;

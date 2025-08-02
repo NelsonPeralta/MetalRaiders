@@ -35,9 +35,10 @@ public class ColorPaletteButton : MonoBehaviour
     void SaveColorPalette(string name)
     {
         Debug.Log($"SaveColorPalette: {name}");
-        WebManager.webManagerInstance.pda.playerBasicOnlineStats.armor_color_palette = name;
+        MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorColorPalette = name;
 
-        StartCoroutine(WebManager.webManagerInstance.SaveArmorColorPalette_Coroutine(name));
-
+        StartCoroutine(WebManager.webManagerInstance.SaveArmorColorPalette_Coroutine(
+            MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.player_id,
+            name));
     }
 }

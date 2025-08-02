@@ -738,11 +738,11 @@ public partial class WebManager
         }
     }
 
-    public IEnumerator SaveEquippedArmorStringData_Coroutine(string data)
+    public IEnumerator SaveEquippedArmorStringData_Coroutine(int playerDbId, string data)
     {
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveEquippedArmorDataString");
-        form.AddField("playerId", pda.steamid.ToString());
+        form.AddField("playerId", playerDbId);
 
         form.AddField("newEquippedArmorStringData", data);
 
@@ -776,12 +776,12 @@ public partial class WebManager
 
 
 
-    public IEnumerator SaveArmorColorPalette_Coroutine(string colorName)
+    public IEnumerator SaveArmorColorPalette_Coroutine(int steamid, string colorName)
     {
         Debug.Log("SaveArmorColorPalette_Coroutine");
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveArmorColorPalette");
-        form.AddField("playerId", pda.steamid.ToString());
+        form.AddField("playerId", steamid);
 
         form.AddField("newArmorColorPaletteData", colorName);
 
