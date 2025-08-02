@@ -180,7 +180,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         get { return _gametypeSelectedText; }
     }
 
-    public TMP_InputField nbLocalPlayersText { get { return _nbLocalPlayersInputed; } }
 
 
     void Awake()
@@ -218,6 +217,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] float _masterClientIconCheck;
     private void Update()
     {
+        _nbLocalPlayersInputed.text = GameManager.instance.nbLocalPlayersPreset.ToString();
+
         if (_masterClientIconCheck > 0)
         {
             _masterClientIconCheck -= Time.deltaTime;
@@ -526,7 +527,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     void CreateRoom(string roomNam, RoomOptions ro, TypedLobby tl = null)
     {
 
-        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", int.Parse(nbLocalPlayersText.text) }/*, { "databaseID", GameManager.STEAM_ID }*/ };
+        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", GameManager.instance.nbLocalPlayersPreset }/*, { "databaseID", GameManager.STEAM_ID }*/ };
         PhotonNetwork.LocalPlayer.SetCustomProperties(h);
 
 
@@ -787,7 +788,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void JoinRoomPlateBtn(RoomInfo info)
     {
-        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", int.Parse(nbLocalPlayersText.text) }/*, { "databaseID", GameManager.STEAM_ID }*/ };
+        ExitGames.Client.Photon.Hashtable h = new ExitGames.Client.Photon.Hashtable { { "username", GameManager.ROOT_PLAYER_NAME }, { "localPlayerCount", GameManager.instance.nbLocalPlayersPreset }/*, { "databaseID", GameManager.STEAM_ID }*/ };
         PhotonNetwork.LocalPlayer.SetCustomProperties(h);
 
 

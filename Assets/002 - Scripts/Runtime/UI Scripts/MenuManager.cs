@@ -251,7 +251,6 @@ public class MenuManager : MonoBehaviour
         if (GameManager.instance.connection == GameManager.NetworkType.Local)
         {
             Launcher.instance.nbLocalPlayersHolder.SetActive(true);
-            Launcher.instance.nbLocalPlayersText.text = GameManager.instance.nbLocalPlayersPreset.ToString();
         }
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates))

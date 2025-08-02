@@ -1139,9 +1139,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         return instance._allPlayers.Where(item => item != null && item.photonId == playerPhotonView).FirstOrDefault();
     }
 
-    public static Player GetPlayerWithUsername(string u)
+    public static Player GetPlayerWithSteamIdAndRewId(long steamId, int rewiredId)
     {
-        return instance._allPlayers.Where(item => item != null && item.username.Equals(u)).FirstOrDefault();
+        return instance._allPlayers.Where(item => item != null && 
+        item.playerDataCell.steamId == steamId && 
+        item.controllerId == rewiredId).FirstOrDefault();
     }
 
 
